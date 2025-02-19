@@ -67,7 +67,7 @@ export function EnvActions({
                       accent={Accent.TERTIARY}
                       Icon={Icon.Duplicate}
                       onClick={duplicateAction}
-                      title="dupliquer"
+                      title="Dupliquer l'action"
                     />
                     <IconButton
                       accent={Accent.TERTIARY}
@@ -75,7 +75,7 @@ export function EnvActions({
                       data-cy={`actioncard-delete-button-${action.id}`}
                       Icon={Icon.Delete}
                       onClick={removeAction}
-                      title="supprimer"
+                      title="Supprimer l'action"
                     />
                   </ActionButtons>
                   {action.actionType === ActionTypeEnum.CONTROL && action.formattedReportingId && (

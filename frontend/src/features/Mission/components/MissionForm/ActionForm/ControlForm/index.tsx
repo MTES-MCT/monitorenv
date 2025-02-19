@@ -1,4 +1,5 @@
 import { actionFactory } from '@features/Mission/Missions.helpers'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
@@ -42,7 +43,7 @@ import { VehicleTypeSelector } from '../../../../../commonComponents/VehicleType
 import { getFormattedReportingId } from '../../../../../Reportings/utils'
 import { HIDDEN_ERROR } from '../../constants'
 import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActionsCompletion'
-import { getNumberOfInfractionTarget } from '../../slice'
+import { getNumberOfInfractionTarget, missionFormsActions } from '../../slice'
 import { Separator } from '../../style'
 import { MissingFieldsText } from '../MissingFieldsText'
 import {
@@ -67,6 +68,7 @@ export function ControlForm({
   removeControlAction: () => void
 }) {
   const { newWindowContainerRef } = useNewWindow()
+  const dispatch = useAppDispatch()
   const {
     errors,
     setFieldValue,
@@ -195,9 +197,13 @@ export function ControlForm({
     if (!currentAction) {
       return
     }
-    const duplicatedAction = actionFactory(currentAction)
+
+    const newControl = { ...currentAction, reportingIds: [] }
+    const duplicatedAction = actionFactory(newControl)
+
     setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
-  }, [currentAction, setFieldValue, envActions])
+    dispatch(missionFormsActions.setActiveActionId(duplicatedAction.id))
+  }, [currentAction, setFieldValue, envActions, dispatch])
 
   const updateIsControlAttachedToReporting = (checked: boolean | undefined) => {
     setIsReportingListVisible(checked ?? false)
@@ -339,7 +345,13 @@ export function ControlForm({
           <ActionThemes>{themesAsText}</ActionThemes>
         </TitleWithIcon>
         <HeaderButtons>
-          <Button accent={Accent.SECONDARY} Icon={Icon.Duplicate} onClick={duplicateControl} size={Size.SMALL}>
+          <Button
+            accent={Accent.SECONDARY}
+            Icon={Icon.Duplicate}
+            onClick={duplicateControl}
+            size={Size.SMALL}
+            title="Dupliquer le contrôle"
+          >
             Dupliquer
           </Button>
 
@@ -348,7 +360,7 @@ export function ControlForm({
             Icon={Icon.Delete}
             onClick={handleRemoveAction}
             size={Size.SMALL}
-            title="supprimer"
+            title="Supprimer le contrôle"
           />
         </HeaderButtons>
       </Header>
