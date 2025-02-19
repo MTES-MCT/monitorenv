@@ -44,72 +44,53 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
 
   const listener = useAppSelector(state => state.draw.listener)
   const { setFieldValue, values } = useFormikContext<Mission>()
-  const [actionGeom, setActionGeom] = useState(
-    values.geom && firstActionWithDate?.geom ? firstActionWithDate?.geom : undefined
-  )
+  const [actionGeom, setActionGeom] = useState<GeoJSON.MultiPolygon | GeoJSON.MultiPoint | undefined>(undefined)
+  console.log('values', values)
   console.log('firstActionWithDate', firstActionWithDate)
   console.log('actionGeom', actionGeom)
 
-  const updateMissionZoneGeometry = useCallback(
-    forceUpdate => {
-      if ((!firstActionWithDate?.geom || isEqual(firstActionWithDate.geom, actionGeom)) && !forceUpdate) {
+  const updateMissionZoneGeometry = useCallback(() => {
+    if (!firstActionWithDate?.geom || isEqual(firstActionWithDate.geom, actionGeom)) {
+      return
+    }
+
+    // for control action we need to compute a circle for mission zone
+    const updateGeometryForControlAction = () => {
+      const { coordinates } = firstActionWithDate?.geom as GeoJSON.Polygon | GeoJSON.MultiPolygon
+
+      if (coordinates.length === 0) {
         return
       }
 
-      // for control action we need to compute a circle for mission zone
-      const updateGeometryForControlAction = () => {
-        const { coordinates } = firstActionWithDate?.geom as GeoJSON.Polygon | GeoJSON.MultiPolygon
-
-        if (coordinates.length === 0) {
-          return
-        }
-
-        const circleZone = computeCircleZone(coordinates[0])
-        if (!isEqual(values.geom, circleZone)) {
-          setFieldValue('geom', circleZone)
-        }
+      const circleZone = computeCircleZone(coordinates[0])
+      if (!isEqual(values.geom, circleZone)) {
+        setFieldValue('geom', circleZone)
       }
-
-      const updateGeometryForSurveillanceAction = () => {
-        if (!isEqual(values.geom, firstActionWithDate?.geom)) {
-          setFieldValue('geom', firstActionWithDate?.geom)
-        }
-      }
-
-      // Handle geometry update based on action type
-      switch (firstActionWithDate?.actionType) {
-        case ActionTypeEnum.CONTROL:
-          updateGeometryForControlAction()
-          break
-        case ActionTypeEnum.SURVEILLANCE:
-          updateGeometryForSurveillanceAction()
-          break
-        default:
-          break
-      }
-
-      if (!values.isGeometryComputedFromControls) {
-        setFieldValue('isGeometryComputedFromControls', true)
-      }
-      setActionGeom(firstActionWithDate?.geom)
-    },
-    [actionGeom, firstActionWithDate, setFieldValue, values.geom, values.isGeometryComputedFromControls]
-  )
-
-  // when we open the mission we want to calculate new geom if monitorfish has deleted last action
-  useEffect(() => {
-    if (
-      values.geom &&
-      values.geom.coordinates.length === 0 &&
-      values.isGeometryComputedFromControls &&
-      firstActionWithDate?.geom &&
-      firstActionWithDate.geom.coordinates?.length > 0
-    ) {
-      updateMissionZoneGeometry(true)
     }
-    // it's just necessary when the mission is open
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+
+    const updateGeometryForSurveillanceAction = () => {
+      if (!isEqual(values.geom, firstActionWithDate?.geom)) {
+        setFieldValue('geom', firstActionWithDate?.geom)
+      }
+    }
+
+    // Handle geometry update based on action type
+    switch (firstActionWithDate?.actionType) {
+      case ActionTypeEnum.CONTROL:
+        updateGeometryForControlAction()
+        break
+      case ActionTypeEnum.SURVEILLANCE:
+        updateGeometryForSurveillanceAction()
+        break
+      default:
+        break
+    }
+
+    if (!values.isGeometryComputedFromControls) {
+      setFieldValue('isGeometryComputedFromControls', true)
+    }
+    setActionGeom(firstActionWithDate?.geom)
+  }, [actionGeom, firstActionWithDate, setFieldValue, values.geom, values.isGeometryComputedFromControls])
 
   useEffect(() => {
     console.log('ENTER IN USE EFFECT')
@@ -164,7 +145,7 @@ export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine
 
       return
     }
-    updateMissionZoneGeometry(false)
+    updateMissionZoneGeometry()
   }, [
     values.isGeometryComputedFromControls,
     values.geom,
