@@ -206,7 +206,7 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
 
       layersVectorSourceRef.current.addFeatures([...features, dashboardFeature])
 
-      await zoomToFeatures([...features, dashboardFeature])
+      await zoomToFeatures([dashboardFeature])
 
       mapRef.current
         ?.getTargetElement()
