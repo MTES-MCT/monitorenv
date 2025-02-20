@@ -70,7 +70,7 @@ class CreateOrUpdateControlUnitContactUTests {
         val repositoryOutputMock = newControlUnitContact.copy(id = 1)
         given(controlUnitContactRepository.save(newControlUnitContact))
             .willReturn(repositoryOutputMock)
-        given(controlUnitRepository.findById(repositoryOutputMock.controlUnitId))
+        given(controlUnitRepository.findFullControlUnitById(repositoryOutputMock.controlUnitId))
             .willReturn(controlUnitDTO)
         // When
         val result =
@@ -131,7 +131,7 @@ class CreateOrUpdateControlUnitContactUTests {
                     ),
                 controlUnitResources = listOf(),
             )
-        given(controlUnitRepository.findById(updatedControlUnitContact.controlUnitId))
+        given(controlUnitRepository.findFullControlUnitById(updatedControlUnitContact.controlUnitId))
             .willReturn(firstRepositoryOutputMock)
 
         val secondRepositoryInputExpectation =
@@ -230,7 +230,7 @@ class CreateOrUpdateControlUnitContactUTests {
                     ),
                 controlUnitResources = listOf(),
             )
-        given(controlUnitRepository.findById(updatedControlUnitContact.controlUnitId))
+        given(controlUnitRepository.findFullControlUnitById(updatedControlUnitContact.controlUnitId))
             .willReturn(firstRepositoryOutputMock)
 
         val secondRepositoryExpectedInput =
@@ -312,7 +312,7 @@ class CreateOrUpdateControlUnitContactUTests {
                     ),
                 controlUnitResources = listOf(),
             )
-        given(controlUnitRepository.findById(newControlUnitContact.controlUnitId))
+        given(controlUnitRepository.findFullControlUnitById(newControlUnitContact.controlUnitId))
             .willReturn(controlUnit)
 
         given(controlUnitContactRepository.save(newControlUnitContact))
@@ -397,7 +397,7 @@ class CreateOrUpdateControlUnitContactUTests {
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
             )
-        given(controlUnitRepository.findById(newControlUnitContact.controlUnitId))
+        given(controlUnitRepository.findFullControlUnitById(newControlUnitContact.controlUnitId))
             .willReturn(controlUnitDTO)
 
         val repositoryOutputMock = newControlUnitContact.copy(id = 1)
