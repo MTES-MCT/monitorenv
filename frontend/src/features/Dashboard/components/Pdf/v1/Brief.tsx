@@ -1,8 +1,7 @@
 import { Document, Page, View } from '@react-pdf/renderer'
 
 import { Amps } from './Amps'
-import { Comments } from './Comments'
-import { ControlUnits } from './ControlUnits'
+import { Cover } from './Layout/Cover'
 import { Headings } from './Layout/Headings'
 import { RegulatoryAreas } from './RegulatoryAreas'
 import { Reportings } from './Reportings'
@@ -25,13 +24,10 @@ export function Brief({ author, brief, description, title }: BriefProps) {
   return (
     <Document author={author} subject={description} title={title}>
       <Page style={layoutStyle.page}>
+        <Cover brief={brief} />
+      </Page>
+      <Page style={layoutStyle.page}>
         <Headings name={brief.name} />
-        <View style={layoutStyle.section}>
-          <ControlUnits controlUnits={brief.controlUnits} />
-        </View>
-        <View style={layoutStyle.section}>
-          <Comments comments={brief.comments} />
-        </View>
         <View style={layoutStyle.section}>
           <AreaTable
             amps={brief.amps}

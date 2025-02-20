@@ -1,5 +1,5 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
-import { Text, View, StyleSheet } from '@react-pdf/renderer'
+import { StyleSheet, Text, View } from '@react-pdf/renderer'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 
 import { layoutStyle } from '../style'
@@ -20,7 +20,7 @@ export function Headings({ name }: { name: string }) {
       <Text>
         Brief : <Text style={layoutStyle.bold}>{name}</Text>
       </Text>
-      <Text style={{ ...layoutStyle.italic, marginRight: '40px' }}>
+      <Text style={{ ...layoutStyle.italic, marginRight: 40 }}>
         Édité le {getDateAsLocalizedStringVeryCompact(customDayjs().toISOString(), true)}
       </Text>
       <Text fixed render={({ pageNumber, totalPages }) => `p ${pageNumber} / ${totalPages}`} />{' '}
