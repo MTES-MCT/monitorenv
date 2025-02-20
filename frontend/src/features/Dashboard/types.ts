@@ -124,4 +124,14 @@ export namespace Dashboard {
     [Layer.DASHBOARD_VIGILANCE_AREAS]: 'DASHBOARD_VIGILANCE_AREAS',
     [Layer.DASHBOARD_AMP]: 'DASHBOARD_AMP'
   }
+
+  export type BriefExport = {
+    dashboard: Dashboard
+    images: ExportImageType[] | undefined
+  }
+
+  export type BriefFileExport = {
+    fileContent: string
+    fileName: string
+  }
 }

@@ -6,8 +6,9 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import { CreateMailButton } from './CreateMailButton'
-import { GenerateEditableDocButton } from './GenerateEditableDocButton'
+import { EditableDocButton } from './EditableDocButton'
 import { GeneratePdfButton } from '../../Pdf/GeneratePdfButton'
+// import { GenerateEditableDocButton } from './GenerateEditableDocButton'
 
 import type { DashboardType } from '@features/Dashboard/slice'
 
@@ -94,8 +95,11 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
 
         <ButtonsWrapper>
           <CreateMailButton dashboard={dashboard.dashboard} />
-          <GenerateEditableDocButton dashboard={dashboard.dashboard} />
           <GeneratePdfButton dashboard={dashboard.dashboard} />
+
+          <EditableDocButton dashboard={dashboard.dashboard} />
+          {/*           <GenerateEditableDocButton dashboard={dashboard.dashboard} />
+           */}
           <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={handleSave}>
             Enregistrer le tableau
           </Button>
