@@ -77,7 +77,8 @@ export const layoutStyle = StyleSheet.create({
     color: THEME.color.gunMetal,
     fontFamily: 'Mariane',
     fontWeight: 'normal',
-    padding: '20 22'
+    padding: '20 22',
+    position: 'relative'
   },
   regular: {
     fontWeight: 'normal'

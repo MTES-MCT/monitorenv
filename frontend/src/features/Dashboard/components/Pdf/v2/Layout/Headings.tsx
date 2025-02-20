@@ -4,7 +4,7 @@ import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedSt
 
 import { layoutStyle } from '../style'
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   headings: {
     display: 'flex',
     flexDirection: 'row',
@@ -20,7 +20,7 @@ export function Headings({ name }: { name: string }) {
       <Text>
         Brief : <Text style={layoutStyle.bold}>{name}</Text>
       </Text>
-      <Text style={{ ...layoutStyle.italic, marginRight: '40px' }}>
+      <Text style={{ ...layoutStyle.italic, marginRight: 40 }}>
         Édité le {getDateAsLocalizedStringVeryCompact(customDayjs().toISOString(), true)}
       </Text>
       <Text fixed render={({ pageNumber, totalPages }) => `p ${pageNumber} / ${totalPages}`} />
