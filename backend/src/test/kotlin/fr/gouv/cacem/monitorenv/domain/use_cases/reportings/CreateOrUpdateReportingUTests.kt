@@ -105,7 +105,7 @@ class CreateOrUpdateReportingUTests {
             .willReturn(reportingWithControlUnitDTO)
         given(facadeRepository.findFacadeFromGeometry(aReportingWithSemaphore.geom!!)).willReturn("Facade 1")
         given(semaphoreRepository.findById(1)).willReturn(semaphore)
-        given(controlUnitRepository.findById(1)).willReturn(fullControlUnit)
+        given(controlUnitRepository.findFullControlUnitById(1)).willReturn(fullControlUnit)
         given(postgisFunctionRepository.normalizeGeometry(aReportingWithSemaphore.geom!!)).willReturn(
             aReportingWithSemaphore.geom,
         )

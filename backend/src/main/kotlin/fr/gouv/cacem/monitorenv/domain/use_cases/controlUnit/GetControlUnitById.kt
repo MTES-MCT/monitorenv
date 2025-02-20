@@ -12,6 +12,6 @@ class GetControlUnitById(private val controlUnitRepository: IControlUnitReposito
     fun execute(controlUnitId: Int): FullControlUnitDTO {
         logger.info("GET control unit $controlUnitId")
 
-        return controlUnitRepository.findById(controlUnitId)
+        return controlUnitRepository.findFullControlUnitById(controlUnitId)
     }
 }

@@ -74,6 +74,10 @@ dependencies {
     implementation("io.sentry:sentry:8.1.0")
     implementation("io.sentry:sentry-log4j2:8.1.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
+    // the two following apoche poi dependencies should have the same version
+    implementation("org.apache.poi:poi:5.3.0")
+    implementation("org.apache.poi:poi-ooxml:5.3.0")
+    implementation("org.jodconverter:jodconverter-local-lo:4.4.7")
     runtimeOnly("org.springframework.boot:spring-boot-devtools:3.4.2")
     runtimeOnly("org.postgresql:postgresql:42.7.5")
     testImplementation("org.assertj:assertj-core:3.27.3")

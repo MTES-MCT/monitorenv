@@ -34,8 +34,13 @@ class JpaControlUnitRepository(
     }
 
     @Transactional
-    override fun findById(controlUnitId: Int): FullControlUnitDTO {
+    override fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO {
         return dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
+    }
+
+    @Transactional
+    override fun findById(controlUnitId: Int): ControlUnitEntity {
+        return dbControlUnitRepository.findById(controlUnitId).get().toControlUnit()
     }
 
     @Transactional
