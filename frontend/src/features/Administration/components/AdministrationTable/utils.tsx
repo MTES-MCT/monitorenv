@@ -8,8 +8,8 @@ import type { CellContext, ColumnDef } from '@tanstack/react-table'
 import type { Promisable } from 'type-fest'
 
 export function getAdministrationTableColumns(
-  askForArchivingConfirmation: (cellContext: CellContext<Administration.Administration, unknown>) => Promisable<void>,
-  askForDeletionConfirmation: (cellContext: CellContext<Administration.Administration, unknown>) => Promisable<void>,
+  askForArchivingConfirmation: (cellContext: CellContext<Administration.Administration, any>) => Promisable<void>,
+  askForDeletionConfirmation: (cellContext: CellContext<Administration.Administration, any>) => Promisable<void>,
   isArchived: boolean = false
 ): Array<ColumnDef<Administration.Administration>> {
   const archiveColumn: ColumnDef<Administration.Administration> = {
