@@ -86,6 +86,8 @@ export function AreaTable({
 
   const totalSelected = amps.length + regulatoryAreas.length + vigilanceAreas.length
 
+  const tableHeight = (nbCell: number) => Math.ceil(nbCell / nbColumn) * 20
+
   return (
     <>
       {image && <Image src={image.image} style={{ marginBottom: 6.2 }} />}
