@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
