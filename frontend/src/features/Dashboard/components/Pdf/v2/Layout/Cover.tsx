@@ -65,7 +65,7 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
       <Text style={styles.title}>Briefing de mission</Text>
       <View style={styles.separatorXL} />
       <Text style={styles.confidential}>Diffusion limitée aux seules unités/personnes concernées par ce document </Text>
-      <View debug style={{ marginBottom: footerHeight - 2 * footerPadding, position: 'relative' }}>
+      <View style={{ marginBottom: footerHeight - 2 * footerPadding, position: 'relative' }}>
         <View style={{ gap: 34, height: '100%', justifyContent: 'space-between' }}>
           <View style={{ gap: 34 }}>
             <View style={styles.row}>
@@ -73,11 +73,9 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 <Text>Unité(s)</Text>
               </View>
               <View style={styles.details}>
-                {brief.controlUnits.map(({ administration, id, name }) => (
-                  <Text key={id}>
-                    {name} - {administration.name}
-                  </Text>
-                ))}{' '}
+                {brief.controlUnits.map(({ id, name }) => (
+                  <Text key={id}>{name}</Text>
+                ))}
               </View>
             </View>
             <View style={layoutStyle.row}>
@@ -86,7 +84,7 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
               </View>
               <View style={styles.details}>
                 <Text>{brief.regulatoryAreas.length} zones réglementaires</Text>
-                <Text>{brief.amps.length} aires marines protégées</Text>
+                <Text>{brief.amps.length} Aires Marines Protégées</Text>
                 <Text>{brief.vigilanceAreas.length} zones de vigilance</Text>
               </View>
             </View>
@@ -95,7 +93,7 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 <Text>Signalements</Text>
               </View>
               <View style={styles.details}>
-                <Text>{brief.reportings.length} sélectionnées</Text>
+                <Text>{brief.reportings.length} sélectionnés</Text>
               </View>
             </View>
             <View style={styles.row}>
