@@ -1,6 +1,6 @@
 import { isCypress } from '@utils/isCypress'
 import { undefinedize } from '@utils/undefinedize'
-import { isEqual, omit } from 'lodash'
+import { isEqual, omit } from 'lodash-es'
 
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 

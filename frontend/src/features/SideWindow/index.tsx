@@ -20,7 +20,7 @@ import {
   isMissionPage,
   isReportingsPage
 } from '@utils/routes'
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
 import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
