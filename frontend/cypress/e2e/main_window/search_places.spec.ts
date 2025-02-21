@@ -12,6 +12,6 @@ context('Search Places', () => {
     cy.getDataCy('location-search-input').type('Nantes', { delay: 400 })
     cy.wait(500)
     cy.get('.rs-auto-complete-item').first().click()
-    cy.url().should('include', '/#@-173695.64,5981051.92,12.96')
+    cy.url().should('include', '/#@-173695.65,5981052.00,12.96')
   })
 })

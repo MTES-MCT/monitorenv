@@ -120,14 +120,22 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
   )
 
   const handleDuplicateAction = useCallback(
-    id => {
+    (e, id) => {
+      e.stopPropagation()
       const envAction = envActions && envActions.find(action => action.id === id)
 
-      if (envAction) {
-        const duplicatedAction = actionFactory(envAction)
-        setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
-        setCurrentActionId(undefined)
+      if (!envAction) {
+        return
       }
+
+      let newAction = { ...envAction }
+      if ('reportingIds' in envAction) {
+        newAction = { ...envAction, reportingIds: [] }
+      }
+
+      const duplicatedAction = actionFactory(newAction)
+      setFieldValue('envActions', [duplicatedAction, ...envActions])
+      setCurrentActionId(duplicatedAction.id)
     },
     [envActions, setFieldValue, setCurrentActionId]
   )
@@ -174,7 +182,7 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
                 <ActionCard
                   key={action.id}
                   action={action}
-                  duplicateAction={() => handleDuplicateAction(action.id)}
+                  duplicateAction={e => handleDuplicateAction(e, action.id)}
                   hasError={!!envActionsErrors}
                   removeAction={event => handleRemoveAction(action.id, event)}
                   selectAction={() => handleSelectAction(action.id)}

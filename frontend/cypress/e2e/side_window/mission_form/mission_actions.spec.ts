@@ -159,6 +159,37 @@ context('Side Window > Mission Form > Mission actions', () => {
     )
   })
 
+  it('Should duplicate control and surveillance', () => {
+    cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
+
+    cy.getDataCy('action-card').eq(1).click()
+    cy.get('input[name="isControlAttachedToReporting"]').should('be.checked')
+
+    cy.clickButton('Dupliquer le contrôle')
+    // The duplicate control should be the "active" action and attached reporting should be removed
+    cy.get('input[name="isControlAttachedToReporting"]').should('be.not.checked')
+    cy.clickButton('Supprimer le contrôle')
+
+    // Attach reprting to surveillance
+    cy.wait(250)
+    cy.getDataCy('action-card').eq(0).click()
+    cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
+    cy.fill('Signalements', ['6'])
+    cy.wait(250)
+    // duplicate surveillance from timeline
+    cy.clickButton("Dupliquer l'action")
+    cy.wait(500)
+    cy.getDataCy('action-card').eq(0).click()
+    // The duplicate surveillance should be the "active" action and attached reporting should be removed
+    cy.get('input[name="isSurveillanceAttachedToReporting"]').should('be.not.checked')
+    // The duplicate control should be the "active" action and attached reporting should be removed
+    cy.get('input[name="isSurveillanceAttachedToReporting"]').should('be.not.checked')
+    cy.clickButton('Supprimer la surveillance')
+
+    cy.getDataCy('action-card').eq(0).click()
+    cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
+  })
+
   it(`Should be able to delete action with linked reporting`, () => {
     // Given
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })

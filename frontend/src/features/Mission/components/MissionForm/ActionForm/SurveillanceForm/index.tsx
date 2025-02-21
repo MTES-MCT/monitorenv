@@ -1,4 +1,5 @@
 import { actionFactory } from '@features/Mission/Missions.helpers'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import {
@@ -38,6 +39,7 @@ import { dateDifferenceInHours } from '../../../../../../utils/dateDifferenceInH
 import { getFormattedReportingId } from '../../../../../Reportings/utils'
 import { HIDDEN_ERROR } from '../../constants'
 import { useMissionAndActionsCompletion } from '../../hooks/useMissionAndActionsCompletion'
+import { missionFormsActions } from '../../slice'
 import { Separator } from '../../style'
 import { MissingFieldsText } from '../MissingFieldsText'
 import {
@@ -54,6 +56,8 @@ import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
 
 export function SurveillanceForm({ currentActionId, remove }) {
   const { newWindowContainerRef } = useNewWindow()
+
+  const dispatch = useAppDispatch()
 
   const {
     errors,
@@ -165,9 +169,13 @@ export function SurveillanceForm({ currentActionId, remove }) {
     if (!currentAction) {
       return
     }
-    const duplicatedAction = actionFactory(currentAction)
+
+    const newSurveillance = { ...currentAction, reportingIds: [] }
+    const duplicatedAction = actionFactory(newSurveillance)
+
     setFieldValue('envActions', [duplicatedAction, ...(envActions || [])])
-  }, [currentAction, setFieldValue, envActions])
+    dispatch(missionFormsActions.setActiveActionId(duplicatedAction.id))
+  }, [currentAction, setFieldValue, envActions, dispatch])
 
   const updateStartDateTime = (date: string | undefined) => {
     const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
@@ -205,7 +213,13 @@ export function SurveillanceForm({ currentActionId, remove }) {
           <ActionThemes>{themeIds && themeIds?.length > 1 ? themesAsText?.join(', ') : themesAsText}</ActionThemes>
         </TitleWithIcon>
         <HeaderButtons>
-          <Button accent={Accent.SECONDARY} Icon={Icon.Duplicate} onClick={duplicateSurveillance} size={Size.SMALL}>
+          <Button
+            accent={Accent.SECONDARY}
+            Icon={Icon.Duplicate}
+            onClick={duplicateSurveillance}
+            size={Size.SMALL}
+            title="Dupliquer la surveillance"
+          >
             Dupliquer
           </Button>
 
@@ -214,7 +228,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
             Icon={Icon.Delete}
             onClick={handleRemoveAction}
             size={Size.SMALL}
-            title="supprimer"
+            title="Supprimer la surveillance"
           />
         </HeaderButtons>
       </Header>
