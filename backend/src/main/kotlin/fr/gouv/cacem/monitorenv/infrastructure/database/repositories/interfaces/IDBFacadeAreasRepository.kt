@@ -9,7 +9,7 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
     @Query(
         """
         WITH geom AS (
-            SELECT st_setsrid(ST_Union(:geometry), 4326) AS geom
+            SELECT st_setsrid(:geometry, 4326) AS geom
         ),
 
         facades_intersection_areas AS (
