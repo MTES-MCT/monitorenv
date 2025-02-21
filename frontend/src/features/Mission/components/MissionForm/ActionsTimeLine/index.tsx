@@ -129,8 +129,8 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
       }
 
       let newAction = { ...envAction }
-      if ('reportingIds' in newAction) {
-        newAction = { ...newAction, reportingIds: [] }
+      if ('reportingIds' in envAction) {
+        newAction = { ...envAction, reportingIds: [] }
       }
 
       const duplicatedAction = actionFactory(newAction)
