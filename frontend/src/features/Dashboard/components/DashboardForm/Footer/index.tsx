@@ -93,7 +93,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
         </DeleteButton>
 
         <ButtonsWrapper>
-          {isBriefWithImagesEnabled ? (
+          {false ? (
             <GeneratePdfButton dashboard={dashboard.dashboard} />
           ) : (
             <GeneratePdfWithoutImagesButton dashboard={dashboard.dashboard} />
