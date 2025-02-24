@@ -63,6 +63,6 @@ class RecentActivityITests {
         mockMvc.perform(get("/bff/v1/recent-activity/controls"))
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.controls.[0].id", equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b")))
+            .andExpect(jsonPath("$[0].id", equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b")))
     }
 }

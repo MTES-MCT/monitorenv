@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.config.SecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.recentActivity.RecentControlActivityProperties
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
@@ -14,8 +13,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeMo
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.locationtech.jts.geom.Geometry
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import java.time.ZonedDateTime
@@ -30,8 +27,6 @@ class JpaEnvActionRepository(
     private val idbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val objectMapper: ObjectMapper,
 ) : IEnvActionRepository {
-    private val logger: Logger = LoggerFactory.getLogger(SecurityConfig::class.java)
-
     override fun findById(id: UUID): EnvActionEntity? {
         return idbEnvActionRepository.findByIdOrNull(id)?.toActionEntity(objectMapper)
     }
