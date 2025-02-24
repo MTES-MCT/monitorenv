@@ -2,10 +2,9 @@ import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { THEME } from '@mtes-mct/monitor-ui'
-import { StyleSheet, Text, View, Image } from '@react-pdf/renderer'
+import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { getTitle } from 'domain/entities/layers/utils'
 import { groupBy } from 'lodash'
-import { Fragment } from 'react/jsx-runtime'
 
 import { layoutStyle } from '../style'
 
@@ -14,6 +13,7 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
+const maxHeightCell = 30
 const styles = StyleSheet.create({
   amp: {
     backgroundColor: '#D6DF64',
@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
     border: `0.5 solid ${THEME.color.blueGray25}`,
     flexDirection: 'row',
     fontSize: 6.8,
-    padding: '4.3 12',
+    maxHeight: maxHeightCell,
+    padding: '4.3 5 4.3 5.6',
     width: '50%'
   },
   header: {
@@ -39,6 +40,7 @@ const styles = StyleSheet.create({
     border: `0.5 solid ${THEME.color.blueGray25}`,
     fontSize: 6.8,
     fontWeight: 'bold',
+    maxHeight: maxHeightCell,
     padding: '4.3 12',
     width: '50%'
   },
@@ -81,91 +83,88 @@ export function AreaTable({
   )
   const nbColumn = 2
 
-  // const nbCharAmps = amps.reduce((sum, amp) => sum + amp.name.length + (amp.type?.length ?? 0), 0)
   const totalSelected = amps.length + regulatoryAreas.length + vigilanceAreas.length
 
-  const tableHeight = (nbCell: number) => Math.ceil(nbCell / nbColumn) * 20
+  const tableHeight = (nbCell: number) => Math.ceil(nbCell / nbColumn) * maxHeightCell
 
   return (
     <>
       {image && <Image src={image.image} style={{ marginBottom: 6.2 }} />}
 
-      <View>
-        <View style={layoutStyle.header}>
-          <Text style={layoutStyle.title}>Zones</Text>
-          <Text style={layoutStyle.selected}>{totalSelected} sélectionnée(s)</Text>
-        </View>
+      <View style={layoutStyle.header}>
+        <Text style={layoutStyle.title}>Zones</Text>
+        <Text style={layoutStyle.selected}>{totalSelected} sélectionnée(s)</Text>
+      </View>
 
-        <View style={[styles.regulatoryArea, styles.header]}>
-          <Text>Zones réglementaires</Text>
-          <Text>{regulatoryAreas.length} sélectionnée(s)</Text>
-        </View>
-        <View
-          style={[
-            styles.table,
-            { height: tableHeight(Object.keys(groupedRegulatoryAreas).length + regulatoryAreas.length) }
-          ]}
-        >
-          {Object.entries(groupedRegulatoryAreas).map(([groupName, layers]) => (
-            <Fragment key={groupName}>
-              <Text style={styles.layerGroup}>{getTitle(groupName)}</Text>
-              {layers.map(layer => (
-                <View key={layer.id} style={styles.cell} wrap={false}>
-                  <View
-                    style={[
-                      styles.layerLegend,
-                      {
-                        backgroundColor: getRegulatoryEnvColorWithAlpha(layer.thematique, layer.entityName)
-                      }
-                    ]}
-                  />
-                  <Text>{layer.entityName || 'AUCUN NOM'}</Text>
-                </View>
-              ))}
-            </Fragment>
-          ))}
-        </View>
+      <View style={[styles.regulatoryArea, styles.header]}>
+        <Text>Zones réglementaires</Text>
+        <Text>{regulatoryAreas.length} sélectionnée(s)</Text>
+      </View>
+      <View
+        style={[
+          styles.table,
+          { height: tableHeight(Object.keys(groupedRegulatoryAreas).length + regulatoryAreas.length) }
+        ]}
+      >
+        {Object.entries(groupedRegulatoryAreas).map(([groupName, layers]) => (
+          <View key={groupName} style={{ width: '50%' }}>
+            <Text style={[styles.layerGroup, { width: '100%' }]}>{getTitle(groupName)}</Text>
+            {layers.map(layer => (
+              <View key={layer.id} style={[styles.cell, { width: '100%' }]}>
+                <View
+                  style={[
+                    styles.layerLegend,
+                    {
+                      backgroundColor: getRegulatoryEnvColorWithAlpha(layer.thematique, layer.entityName)
+                    }
+                  ]}
+                />
+                <Text>{layer.entityName || 'AUCUN NOM'}</Text>
+              </View>
+            ))}
+          </View>
+        ))}
+      </View>
 
-        <View style={[styles.amp, styles.header]}>
-          <Text>Zones AMP</Text>
-          <Text>{amps.length} sélectionnée(s)</Text>
-        </View>
-        <View style={[styles.table, { height: tableHeight(amps.length) }]}>
-          {amps.map(amp => (
-            <View key={amp.id} style={styles.cell} wrap={false}>
-              <View
-                style={[
-                  styles.layerLegend,
-                  {
-                    backgroundColor: getAMPColorWithAlpha(amp.type, amp.name)
-                  }
-                ]}
-              />
-              <Text style={{ fontWeight: 'bold' }}>
-                {getTitle(amp.name)} <Text style={{ fontWeight: 'normal' }}> / {amp.type ?? 'AUCUN NOM'}</Text>
-              </Text>
-            </View>
-          ))}
-        </View>
-        <View style={[styles.vigilanceArea, styles.header]}>
-          <Text>Zones de vigilance</Text>
-          <Text>{vigilanceAreas.length} sélectionnée(s)</Text>
-        </View>
-        <View style={[styles.table, { height: tableHeight(vigilanceAreas.length) }]}>
-          {vigilanceAreas.map(vigilanceArea => (
-            <View key={vigilanceArea.id} debug style={styles.cell} wrap={false}>
-              <View
-                style={[
-                  styles.layerLegend,
-                  {
-                    backgroundColor: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments)
-                  }
-                ]}
-              />
-              <Text>{vigilanceArea.name}</Text>
-            </View>
-          ))}
-        </View>
+      <View style={[styles.amp, styles.header]}>
+        <Text>Zones AMP</Text>
+        <Text>{amps.length} sélectionnée(s)</Text>
+      </View>
+      <View style={[styles.table, { height: tableHeight(amps.length) }]}>
+        {amps.map(amp => (
+          <View key={amp.id} style={styles.cell}>
+            <View
+              style={[
+                styles.layerLegend,
+                {
+                  backgroundColor: getAMPColorWithAlpha(amp.type, amp.name)
+                }
+              ]}
+            />
+            <Text style={{ fontWeight: 'bold' }}>
+              {getTitle(amp.name)} <Text style={{ fontWeight: 'normal' }}> / {amp.type ?? 'AUCUN NOM'}</Text>
+            </Text>
+          </View>
+        ))}
+      </View>
+      <View style={[styles.vigilanceArea, styles.header]}>
+        <Text>Zones de vigilance</Text>
+        <Text>{vigilanceAreas.length} sélectionnée(s)</Text>
+      </View>
+      <View style={[styles.table, { height: tableHeight(vigilanceAreas.length) }]}>
+        {vigilanceAreas.map(vigilanceArea => (
+          <View key={vigilanceArea.id} style={styles.cell}>
+            <View
+              style={[
+                styles.layerLegend,
+                {
+                  backgroundColor: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments)
+                }
+              ]}
+            />
+            <Text>{vigilanceArea.name}</Text>
+          </View>
+        ))}
       </View>
     </>
   )
