@@ -14,18 +14,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntit
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OrderBy
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -38,7 +27,7 @@ import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
-import java.util.UUID
+import java.util.*
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
