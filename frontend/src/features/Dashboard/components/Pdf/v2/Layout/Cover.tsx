@@ -73,8 +73,10 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 <Text>Unité(s)</Text>
               </View>
               <View style={styles.details}>
-                {brief.controlUnits.map(({ id, name }) => (
-                  <Text key={id}>{name}</Text>
+                {brief.controlUnits.map(({ administration, id, name }) => (
+                  <Text key={id}>
+                    {name} - {administration.name}
+                  </Text>
                 ))}
               </View>
             </View>
