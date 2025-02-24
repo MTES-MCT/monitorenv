@@ -1,22 +1,25 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.cacem.monitorenv.config.SecurityConfig
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.recentActivity.RecentControlActivityProperties
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanSubThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanTagModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import org.locationtech.jts.geom.Geometry
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
-import java.util.UUID
+import java.time.ZonedDateTime
+import java.util.*
 
 @Repository
 class JpaEnvActionRepository(
@@ -27,6 +30,8 @@ class JpaEnvActionRepository(
     private val idbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val objectMapper: ObjectMapper,
 ) : IEnvActionRepository {
+    private val logger: Logger = LoggerFactory.getLogger(SecurityConfig::class.java)
+
     override fun findById(id: UUID): EnvActionEntity? {
         return idbEnvActionRepository.findByIdOrNull(id)?.toActionEntity(objectMapper)
     }
@@ -35,12 +40,12 @@ class JpaEnvActionRepository(
         envAction.missionId?.let { missionId ->
             val mission = idbMissionRepository.getReferenceById(missionId)
             val controlPlanThemesReferenceModelMap: MutableMap<Int, ControlPlanThemeModel> = mutableMapOf()
-            val controlPlanTagssReferenceModelMap: MutableMap<Int, ControlPlanTagModel> = mutableMapOf()
+            val controlPlanTagsReferenceModelMap: MutableMap<Int, ControlPlanTagModel> = mutableMapOf()
             val controlPlanSubThemesReferenceModelMap: MutableMap<Int, ControlPlanSubThemeModel> = mutableMapOf()
 
             envAction.controlPlans?.forEach { controlPlan ->
                 controlPlan.tagIds?.forEach { tagId ->
-                    controlPlanTagssReferenceModelMap[tagId] = idbControlPlanTagRepository.getReferenceById(tagId)
+                    controlPlanTagsReferenceModelMap[tagId] = idbControlPlanTagRepository.getReferenceById(tagId)
                 }
                 controlPlan.themeId?.let { themeId ->
                     controlPlanThemesReferenceModelMap[themeId] =
@@ -56,7 +61,7 @@ class JpaEnvActionRepository(
                     envAction,
                     mission = mission,
                     controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap,
-                    controlPlanTagsReferenceModelMap = controlPlanTagssReferenceModelMap,
+                    controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
                     controlPlanSubThemesReferenceModelMap = controlPlanSubThemesReferenceModelMap,
                     mapper = objectMapper,
                 ),
@@ -66,5 +71,32 @@ class JpaEnvActionRepository(
             BackendUsageErrorCode.ENTITY_NOT_FOUND,
             "Trying to save an envAction without mission",
         )
+    }
+
+    override fun getRecentControlsActivity(): List<RecentControlsActivityListDTO> {
+        return idbEnvActionRepository.getRecentControlsActivity().map { row ->
+
+            val valueJson = row[2] as String
+            val valueObject =
+                objectMapper.readValue(valueJson, RecentControlActivityProperties::class.java)
+
+            RecentControlsActivityListDTO(
+                id = row[0] as UUID,
+                missionId = row[1] as Int,
+                actionStartDateTimeUtc = row[3] as? ZonedDateTime,
+                geom = row[4] as? Geometry,
+                facade = row[5] as? String,
+                department = row[6] as? String,
+                themesIds = (row[7] as Array<Int>).toList(),
+                subThemesIds = (row[8] as Array<Int>).toList(),
+                controlUnitsIds = (row[9] as Array<Int>).toList(),
+                administrationIds = (row[10] as Array<Int>).toList(),
+                actionNumberOfControls = valueObject.actionNumberOfControls,
+                actionTargetType = valueObject.actionTargetType,
+                vehicleType = valueObject.vehicleType,
+                infractions = valueObject.infractions,
+                observations = valueObject.observations,
+            )
+        }
     }
 }

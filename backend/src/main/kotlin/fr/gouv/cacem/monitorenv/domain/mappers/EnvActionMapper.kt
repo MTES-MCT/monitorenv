@@ -2,11 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.mappers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteProperties
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlProperties
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
@@ -15,7 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.EntityConversionException
 import org.locationtech.jts.geom.Geometry
 import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @Component
 object EnvActionMapper {
@@ -64,6 +60,7 @@ object EnvActionMapper {
                                 observationsByUnit = observationsByUnit,
                                 openBy = openBy,
                             )
+
                     ActionTypeEnum.CONTROL ->
                         mapper.readValue(
                             value,
@@ -89,6 +86,7 @@ object EnvActionMapper {
                                 observationsByUnit = observationsByUnit,
                                 openBy = openBy,
                             )
+
                     ActionTypeEnum.NOTE ->
                         mapper.readValue(
                             value,
@@ -122,12 +120,14 @@ object EnvActionMapper {
                             envAction as EnvActionSurveillanceEntity,
                         ),
                     )
+
                 ActionTypeEnum.CONTROL ->
                     mapper.writeValueAsString(
                         EnvActionControlProperties.fromEnvActionControlEntity(
                             envAction as EnvActionControlEntity,
                         ),
                     )
+
                 ActionTypeEnum.NOTE ->
                     mapper.writeValueAsString(
                         EnvActionNoteProperties.fromEnvActionNoteEntity(
