@@ -6,6 +6,8 @@ import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ExtractedAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.DeleteDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.ExtractArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboard
@@ -13,7 +15,10 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboards
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.SaveDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.DashboardDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.ImageDataInput
+import io.ktor.util.*
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
@@ -147,7 +152,7 @@ class DashboardsITests {
         // Given
         val id = UUID.randomUUID()
         val name = "dashboard1"
-        val comments = "comments"
+        val comments = ""
         val geometry = WKTReader().read(geometry)
         val amps = listOf(1)
         val regulatoryAreas = listOf(2)
@@ -157,6 +162,23 @@ class DashboardsITests {
         val inseeCode = "94"
         val createdAt = ZonedDateTime.parse("2024-01-01T00:00Z")
         val updatedAt = ZonedDateTime.parse("2024-01-02T00:00Z")
+        val links =
+            listOf(
+                LinkEntity(linkUrl = "https://www.google.fr", linkText = "google"),
+                LinkEntity(linkUrl = "https://www.yahoo.fr", linkText = "yahoo"),
+            )
+        val imageId = UUID.randomUUID()
+        val images =
+            listOf(
+                ImageDataInput(
+                    id = imageId,
+                    dashboardId = id,
+                    name = "image1",
+                    content = "content1",
+                    mimeType = MediaType.IMAGE_JPEG.toString(),
+                    size = 1,
+                ),
+            )
         val input =
             DashboardDataInput(
                 id = id,
@@ -171,6 +193,8 @@ class DashboardsITests {
                 vigilanceAreaIds = vigilanceAreas,
                 reportingIds = reportings,
                 controlUnitIds = controlUnits,
+                links = links,
+                images = images,
             )
         val dashboard =
             aDashboard(
@@ -186,6 +210,18 @@ class DashboardsITests {
                 regulatoryAreas = regulatoryAreas,
                 inseeCode = inseeCode,
                 controlUnits = controlUnits,
+                links = links,
+                images =
+                    listOf(
+                        ImageEntity(
+                            id = imageId,
+                            name = "image1",
+                            content = "content1".decodeBase64Bytes(),
+                            dashboardId = id,
+                            size = 1,
+                            mimeType = MediaType.IMAGE_JPEG.toString(),
+                        ),
+                    ),
             )
         given(saveDashboard.execute(dashboard)).willReturn(dashboard)
 
@@ -219,6 +255,18 @@ class DashboardsITests {
             .andExpect(jsonPath("$.reportingIds", equalTo(reportings)))
             .andExpect(jsonPath("$.vigilanceAreaIds", equalTo(vigilanceAreas)))
             .andExpect(jsonPath("$.controlUnitIds", equalTo(controlUnits)))
+            .andExpect(jsonPath("$.links", hasSize<Int>(2)))
+            .andExpect(jsonPath("$.links[0].linkUrl", equalTo("https://www.google.fr")))
+            .andExpect(jsonPath("$.links[0].linkText", equalTo("google")))
+            .andExpect(jsonPath("$.links[1].linkUrl", equalTo("https://www.yahoo.fr")))
+            .andExpect(jsonPath("$.links[1].linkText", equalTo("yahoo")))
+            .andExpect(jsonPath("$.images", hasSize<Int>(1)))
+            .andExpect(jsonPath("$.images[0].id", equalTo(imageId.toString())))
+            .andExpect(jsonPath("$.images[0].name", equalTo("image1")))
+            .andExpect(jsonPath("$.images[0].content", equalTo("content1")))
+            .andExpect(jsonPath("$.images[0].dashboardId", equalTo(id.toString())))
+            .andExpect(jsonPath("$.images[0].size", equalTo(1)))
+            .andExpect(jsonPath("$.images[0].mimeType", equalTo(MediaType.IMAGE_JPEG.toString())))
     }
 
     @Test

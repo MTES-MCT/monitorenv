@@ -35,14 +35,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 
-val createdAt = "2025-12-31T23:59:59Z"
-
-val updatedAt = "2026-12-31T23:59:59Z"
-
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(VigilanceAreas::class)])
 class VigilanceAreasITests {
+    val createdAt = "2025-12-31T23:59:59Z"
+
+    val updatedAt = "2026-12-31T23:59:59Z"
+
     @Autowired
     private lateinit var mockMvc: MockMvc
 

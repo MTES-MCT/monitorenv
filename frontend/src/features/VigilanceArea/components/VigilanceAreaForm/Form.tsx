@@ -4,7 +4,7 @@ import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditMo
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { ZonePicker } from '@features/commonComponents/ZonePicker'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
-import { VigilanceAreaFormTypeOpen, vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
 import { hideLayers } from '@features/VigilanceArea/useCases/hideLayers'
@@ -28,7 +28,7 @@ import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOption
 import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { AddAMPs } from './AddAMPs'
@@ -40,7 +40,6 @@ import { PhotoUploader } from './PhotoUploader'
 
 export function Form() {
   const dispatch = useAppDispatch()
-  const uploaderRef = useRef<HTMLInputElement | null>(null)
   const isCancelModalOpen = useAppSelector(state => state.vigilanceArea.isCancelModalOpen)
   const {
     dirty,
@@ -218,7 +217,7 @@ export function Form() {
         />
         <AddRegulatoryAreas />
         <AddAMPs />
-        <PhotoUploader ref={uploaderRef} />
+        <PhotoUploader />
         <Links />
         <Separator />
         <Wrapper>

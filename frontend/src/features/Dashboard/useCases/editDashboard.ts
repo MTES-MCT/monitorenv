@@ -42,7 +42,12 @@ export const editDashboard =
 
       const extractedArea = await getPopulatedExtractedArea(data, dispatch)
 
-      const formattedDashboard = { ...initialDashboard, dashboard, extractedArea, unsavedDashboard: dashboard }
+      const formattedDashboard = {
+        ...initialDashboard,
+        dashboard,
+        extractedArea,
+        unsavedDashboard: dashboard
+      }
       dispatch(dashboardFiltersActions.setDashboardFilters({ filters: dashboardFilters, id }))
       dispatch(dashboardActions.editDashboard(formattedDashboard))
       dispatch(dashboardActions.setActiveDashboardId(id))

@@ -10,6 +10,7 @@ import { populateExtractAreaFromApi } from '../utils'
 import { closeDrawDashboard } from './closeDrawDashboard'
 import { dashboardFiltersActions } from '../components/DashboardForm/slice'
 
+import type { Dashboard } from '../types'
 import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -24,12 +25,14 @@ export const createDashboard =
         dispatch(closeDrawDashboard())
         const newId = `new-${Object.keys(getState().dashboard.dashboards).length}`
         const newDashboardName = `Tab ${customDayjs().format('DD/MM/YYYY')}`
-        const dashboard = {
+        const dashboard: Dashboard.Dashboard = {
           ampIds: [],
           controlUnitIds: [],
           geom: geometry,
           id: newId,
+          images: [],
           inseeCode: data.inseeCode,
+          links: [],
           name: newDashboardName,
           regulatoryAreaIds: [],
           reportingIds: [],

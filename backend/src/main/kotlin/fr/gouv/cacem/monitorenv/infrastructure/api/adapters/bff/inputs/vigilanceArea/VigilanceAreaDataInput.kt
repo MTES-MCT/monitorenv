@@ -1,12 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
-import io.ktor.util.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -53,17 +47,7 @@ data class VigilanceAreaDataInput(
             isArchived = this.isArchived,
             isDeleted = false,
             isDraft = this.isDraft,
-            images =
-                this.images?.map { image ->
-                    ImageEntity(
-                        id = image.id,
-                        vigilanceAreaId = image.vigilanceAreaId,
-                        name = image.name,
-                        content = image.content.decodeBase64Bytes(),
-                        mimeType = image.mimeType,
-                        size = image.size,
-                    )
-                },
+            images = this.images?.map { image -> image.toImageEntity() },
             links = this.links,
             linkedAMPs = this.linkedAMPs,
             linkedRegulatoryAreas = this.linkedRegulatoryAreas,

@@ -1,10 +1,11 @@
-import { IMAGES_WIDTH_LANDSCAPE, IMAGES_WIDTH_PORTRAIT } from '@features/VigilanceArea/constants'
+import { IMAGES_WIDTH_LANDSCAPE, IMAGES_WIDTH_PORTRAIT } from '@components/Form/Images/ImageUploader'
+import { getImagesForFront } from '@components/Form/Images/utils'
+import { Orientation, type ImageFrontProps } from '@components/Form/types'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useEffect, useState } from 'react'
 
 import { ImageViewer } from '../ImageViewer'
 import { PanelImageContainer, StyledImageButton } from '../style'
-import { getImages } from '../utils'
 
 export function PanelImages({
   images,
@@ -16,11 +17,11 @@ export function PanelImages({
   vigilanceAreaName: string | undefined
 }) {
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
-  const [imagesList, setImagesList] = useState<VigilanceArea.ImageForFrontProps[]>([])
+  const [imagesList, setImagesList] = useState<ImageFrontProps[]>([])
 
   useEffect(() => {
     const fetchImages = async () => {
-      const formattedImages = await getImages(images)
+      const formattedImages = await getImagesForFront(images)
       setImagesList(formattedImages)
     }
 
@@ -41,11 +42,7 @@ export function PanelImages({
               alt={`${vigilanceAreaName}-${image.name}`}
               height="82px"
               src={image?.image}
-              width={
-                image?.orientation === VigilanceArea.Orientation.LANDSCAPE
-                  ? IMAGES_WIDTH_LANDSCAPE
-                  : IMAGES_WIDTH_PORTRAIT
-              }
+              width={image?.orientation === Orientation.LANDSCAPE ? IMAGES_WIDTH_LANDSCAPE : IMAGES_WIDTH_PORTRAIT}
             />
           </StyledImageButton>
         ))}

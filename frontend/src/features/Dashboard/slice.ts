@@ -8,6 +8,7 @@ import { type Reporting } from 'domain/entities/reporting'
 import { Dashboard } from './types'
 import { filterReportings } from './useCases/filters/filterReportings'
 
+import type { Link } from '@components/Form/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
@@ -17,6 +18,8 @@ export const initialDashboard: DashboardType = {
     controlUnitIds: [],
     geom: undefined,
     id: '',
+    images: [],
+    links: [],
     name: '',
     regulatoryAreaIds: [],
     reportingIds: [],
@@ -305,6 +308,15 @@ export const dashboardSlice = createSlice({
       state.geometry = action.payload
       state.isGeometryValid = action.payload ? isGeometryValid(action.payload) : true
     },
+    setImages(state, action: PayloadAction<Dashboard.ImagePropsForApi[]>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].dashboard.images = action.payload
+    },
     setInitialGeometry(state, action: PayloadAction<GeoJSON.Geometry | undefined>) {
       state.initialGeometry = action.payload
     },
@@ -331,6 +343,15 @@ export const dashboardSlice = createSlice({
       }
 
       state.dashboards[id].isEditingTabName = action.payload.isEditing
+    },
+    setLinks(state, action: PayloadAction<Link[]>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].dashboard.links = action.payload
     },
     setName(state, action: PayloadAction<{ key: string; name: string }>) {
       const id = action.payload.key

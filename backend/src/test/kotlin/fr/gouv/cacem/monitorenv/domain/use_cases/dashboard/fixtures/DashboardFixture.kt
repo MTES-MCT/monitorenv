@@ -1,10 +1,12 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures
 
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 class DashboardFixture {
     companion object {
@@ -23,6 +25,8 @@ class DashboardFixture {
             controlUnits: List<Int> = listOf(),
             inseeCode: String? = null,
             isDeleted: Boolean = false,
+            links: List<LinkEntity> = listOf(),
+            images: List<ImageEntity> = listOf(),
         ): DashboardEntity {
             return DashboardEntity(
                 id = id,
@@ -39,6 +43,8 @@ class DashboardFixture {
                 controlUnitIds = controlUnits,
                 seaFront = seaFront,
                 isDeleted = isDeleted,
+                links = links,
+                images = images,
             )
         }
     }

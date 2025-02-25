@@ -11,6 +11,7 @@ import { ControlUnits } from '../ControlUnits'
 import { Weather } from '../Weather'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
+import { Attachments } from '../Attachments'
 import { type BookmarkType, Bookmark } from '../Bookmark'
 
 type ThirdColumnProps = {
@@ -94,6 +95,13 @@ export function ThirdColumn({
             dashboardKey={key}
             isExpanded={expandedAccordion === Dashboard.Block.COMMENTS}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.COMMENTS)}
+          />
+          <Attachments
+            dashboardId={dashboard.dashboard.id}
+            images={dashboard.dashboard.images}
+            isExpanded={expandedAccordion === Dashboard.Block.ATTACHMENTS}
+            links={dashboard.dashboard.links}
+            setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.ATTACHMENTS)}
           />
           <Weather ref={weatherRef} geom={dashboard.dashboard.geom} />
         </BaseColumn>

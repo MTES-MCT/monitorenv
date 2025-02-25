@@ -25,7 +25,7 @@ describe('Edit Vigilance Area', () => {
     cy.fill('Url du lien', 'https://www.google.com')
     cy.clickButton('Valider')
 
-    cy.getDataCy('vigilance-area-link-1').should('have.text', 'Ceci est un lien en rapport avec la zone de vigilance')
+    cy.getDataCy('link-1').should('have.text', 'Ceci est un lien en rapport avec la zone de vigilance')
 
     cy.clickButton('Enregistrer')
     cy.wait('@editVigilanceArea').then(({ request, response }) => {
@@ -37,8 +37,8 @@ describe('Edit Vigilance Area', () => {
       expect(updatedVigilanceArea.links[1].linkUrl).equal('https://www.google.com')
 
       // Reset data
-      cy.clickButton('Editer')
-      cy.clickButton('delete-vigilance-area-link')
+      cy.clickButton('Editer ce lien')
+      cy.clickButton('Supprimer ce lien')
       cy.clickButton('Enregistrer')
     })
   })

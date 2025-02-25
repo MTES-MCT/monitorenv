@@ -4,22 +4,17 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardDatasModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardModel.Companion.fromDashboardEntity
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAMPRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardDatasRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.util.UUID
+import java.util.*
 
 @Repository
 class JpaDashboardRepository(
     private val dashboardRepository: IDBDashboardRepository,
     private val dashboardDatasRepository: IDBDashboardDatasRepository,
+    private val dashboardImageRepository: IDBDashboardImageRepository,
     private val ampRepository: IDBAMPRepository,
     private val controlUnitRepository: IDBControlUnitRepository,
     private val regulatoryAreaRepository: IDBRegulatoryAreaRepository,
@@ -29,7 +24,10 @@ class JpaDashboardRepository(
     IDashboardRepository {
     @Transactional
     override fun save(dashboard: DashboardEntity): DashboardEntity {
-        dashboard.id?.let { dashboardDatasRepository.deleteAllByDashboardId(dashboardId = it) }
+        dashboard.id?.let {
+            dashboardDatasRepository.deleteAllByDashboardId(dashboardId = it)
+            dashboardImageRepository.deleteAllByDashboardId(dashboardId = it)
+        }
         val dashboardDatasToSave: MutableList<DashboardDatasModel> = mutableListOf()
         addAmps(dashboard, dashboardDatasToSave)
         addInseeCode(dashboard, dashboardDatasToSave)

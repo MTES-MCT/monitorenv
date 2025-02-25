@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.dashboards
 
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -18,6 +19,8 @@ class DashboardDataOutput(
     val regulatoryAreaIds: List<Int>,
     val reportingIds: List<Int>,
     val vigilanceAreaIds: List<Int>,
+    val links: List<LinkEntity>?,
+    val images: List<DashboardImageDataOutput>,
 ) {
     companion object {
         fun fromDashboardEntity(dashboardEntity: DashboardEntity): DashboardDataOutput {
@@ -34,6 +37,8 @@ class DashboardDataOutput(
                 regulatoryAreaIds = dashboardEntity.regulatoryAreaIds,
                 reportingIds = dashboardEntity.reportingIds,
                 vigilanceAreaIds = dashboardEntity.vigilanceAreaIds,
+                images = dashboardEntity.images.map { DashboardImageDataOutput.fromDashboardImageEntity(it) },
+                links = dashboardEntity.links,
             )
         }
     }
