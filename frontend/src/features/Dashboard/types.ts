@@ -6,6 +6,7 @@ import type {
   RegulatoryLayerWithMetadata
 } from '../../domain/entities/regulatory'
 import type { Reporting } from '../../domain/entities/reporting'
+import type { Link, ImageApiProps } from '@components/Form/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
 import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
@@ -34,13 +35,19 @@ export namespace Dashboard {
     createdAt?: string
     geom?: GeoJSON.Geometry
     id: string
+    images: ImagePropsForApi[]
     inseeCode?: string
+    links: Link[]
     name: string
     regulatoryAreaIds: number[]
     reportingIds: number[]
     seaFront?: string
     updatedAt?: string
     vigilanceAreaIds: number[]
+  }
+
+  export type ImagePropsForApi = ImageApiProps & {
+    dashboardId?: string
   }
 
   export type Brief = {
@@ -66,7 +73,9 @@ export namespace Dashboard {
     createdAt?: string
     geom?: GeoJSON.Geometry
     id?: string
+    images: ImagePropsForApi[]
     inseeCode?: string
+    links: Link[]
     name: string
     regulatoryAreaIds: number[]
     reportingIds: number[]
@@ -93,6 +102,7 @@ export namespace Dashboard {
 
   export enum Block {
     AMP = 'AMP',
+    ATTACHMENTS = 'ATTACHMENTS',
     COMMENTS = 'COMMENTS',
     CONTROL_UNITS = 'CONTROL_UNITS',
     REGULATORY_AREAS = 'REGULATORY_AREAS',

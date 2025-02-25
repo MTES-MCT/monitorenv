@@ -1,14 +1,18 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
+import io.ktor.util.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
-class JpaDashboardsRepositoryITest : AbstractDBTests() {
+class JpaDashboardRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaDashboardRepository: JpaDashboardRepository
 
@@ -62,6 +66,22 @@ class JpaDashboardsRepositoryITest : AbstractDBTests() {
                 reportings = listOf(1),
                 regulatoryAreas = listOf(523),
                 vigilanceAreas = listOf(1),
+                links =
+                    listOf(
+                        LinkEntity(linkUrl = "https://www.google.fr", linkText = "google"),
+                        LinkEntity(linkUrl = "https://www.yahoo.fr", linkText = "yahoo"),
+                    ),
+                images =
+                    listOf(
+                        ImageEntity(
+                            id = null,
+                            name = "image1",
+                            content = "content1".decodeBase64Bytes(),
+                            dashboardId = null,
+                            size = 1,
+                            mimeType = MediaType.IMAGE_JPEG.toString(),
+                        ),
+                    ),
             )
         val createdDashboard = jpaDashboardRepository.save(dashboard)
 
@@ -86,6 +106,8 @@ class JpaDashboardsRepositoryITest : AbstractDBTests() {
                 regulatoryAreaIds = regulatoryAreas,
                 reportingIds = reportings,
                 vigilanceAreaIds = vigilanceAreas,
+                links = listOf(),
+                images = listOf(),
             )
 
         // When

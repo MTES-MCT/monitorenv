@@ -36,6 +36,7 @@ abstract class AbstractDBTests {
                         Wait.forLogMessage(".*ready to accept connections.*\\s", 2),
                     )
                     withStartupTimeout(Duration.of(60L, ChronoUnit.SECONDS))
+                    withReuse(true)
                     this.start()
                 }
 

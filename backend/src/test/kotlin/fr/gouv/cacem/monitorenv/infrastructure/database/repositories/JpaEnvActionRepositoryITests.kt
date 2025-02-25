@@ -16,7 +16,7 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 
-class JpaEnvActionRepositoryITest : AbstractDBTests() {
+class JpaEnvActionRepositoryITests : AbstractDBTests() {
     @Autowired
     private val customQueryCountListener: CustomQueryCountListener? = null
 

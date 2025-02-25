@@ -75,7 +75,7 @@ export const Wrapper = styled.div<{ $left: number }>`
   margin-top: -16px;
   position: fixed;
   box-shadow: 0px 3px 6px ${p => p.theme.color.gainsboro};
-  z-index: 1000;
+  z-index: 5;
 `
 
 export const BottomWrapper = styled(Wrapper)`

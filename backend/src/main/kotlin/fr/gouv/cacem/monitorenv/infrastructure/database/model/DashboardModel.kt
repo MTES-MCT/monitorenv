@@ -1,6 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardImageModel.Companion.fromDashboardImageEntity
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -12,6 +16,9 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -37,6 +44,18 @@ data class DashboardModel(
         cascade = [CascadeType.ALL],
     )
     val dashboardDatas: MutableList<DashboardDatasModel>,
+    @OneToMany(
+        mappedBy = "dashboard",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.LAZY,
+    )
+    @JsonManagedReference
+    @Fetch(value = FetchMode.SUBSELECT)
+    var images: MutableList<DashboardImageModel> = mutableListOf(),
+    @Column(name = "links", columnDefinition = "jsonb")
+    @Type(JsonBinaryType::class)
+    val links: List<LinkEntity>?,
 ) {
     fun toDashboardEntity(): DashboardEntity {
         val amps: MutableList<Int> = mutableListOf()
@@ -90,12 +109,19 @@ data class DashboardModel(
             vigilanceAreaIds = vigilanceAreas,
             seaFront = seaFront,
             isDeleted = isDeleted,
+            images = images.map { it.toDashboardImage() },
+            links = links,
         )
     }
 
     fun addDashboardDatas(dashboardDatasModel: DashboardDatasModel) {
         dashboardDatasModel.dashboard = this
         this.dashboardDatas.add(dashboardDatasModel)
+    }
+
+    fun addDashboardImages(dashboardImageModel: DashboardImageModel) {
+        dashboardImageModel.dashboard = this
+        this.images.add(dashboardImageModel)
     }
 
     @PrePersist
@@ -124,10 +150,14 @@ data class DashboardModel(
                     seaFront = dashboardEntity.seaFront,
                     dashboardDatas = mutableListOf(),
                     isDeleted = dashboardEntity.isDeleted,
+                    links = dashboardEntity.links,
                 )
             dashboardDatasModels.forEach {
                 dashboardModel.addDashboardDatas(it)
             }
+            val images = dashboardEntity.images.map { fromDashboardImageEntity(it, dashboardModel) }
+            images.forEach { dashboardModel.addDashboardImages(it) }
+
             return dashboardModel
         }
     }

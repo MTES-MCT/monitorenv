@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.entities.dashboard
 
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class DashboardEntity(
     val id: UUID?,
@@ -19,4 +19,6 @@ data class DashboardEntity(
     val regulatoryAreaIds: List<Int>,
     val reportingIds: List<Int>,
     val vigilanceAreaIds: List<Int>,
+    val images: List<ImageEntity>,
+    val links: List<LinkEntity>?,
 )

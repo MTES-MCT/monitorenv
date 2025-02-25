@@ -1,14 +1,15 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
 import io.ktor.util.*
 import kotlinx.serialization.Serializable
+import java.util.UUID
 
-@Serializable
 data class ImageDataInput(
-    val id: Int? = null,
-    val vigilanceAreaId: Int? = null,
+    val id: UUID?,
+    val dashboardId: UUID?,
     val name: String,
+    @Serializable
     val content: String,
     val mimeType: String,
     val size: Int,
@@ -16,7 +17,7 @@ data class ImageDataInput(
     fun toImageEntity(): ImageEntity {
         return ImageEntity(
             id = id,
-            vigilanceAreaId = vigilanceAreaId,
+            dashboardId = dashboardId,
             name = name,
             content = content.decodeBase64Bytes(),
             mimeType = mimeType,

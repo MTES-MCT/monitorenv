@@ -26,29 +26,3 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     visibility: VigilanceArea.Visibility.PRIVATE
   }
 }
-
-export async function getImages(images: VigilanceArea.ImagePropsForApi[]) {
-  const processedImages = await Promise.all(
-    images.map(async image => {
-      try {
-        const base64Image = `data:${image.mimeType};base64,${image.content}`
-        const img = new Image()
-        img.src = base64Image
-
-        await img.decode()
-        const { naturalHeight, naturalWidth } = img
-
-        return {
-          image: base64Image,
-          name: image.name,
-          orientation:
-            naturalWidth > naturalHeight ? VigilanceArea.Orientation.LANDSCAPE : VigilanceArea.Orientation.PORTRAIT
-        }
-      } catch (error) {
-        return undefined
-      }
-    })
-  )
-
-  return processedImages.filter(image => image !== undefined) as VigilanceArea.ImageForFrontProps[]
-}

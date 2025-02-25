@@ -7,9 +7,9 @@ import {
   PanelSubPart
 } from '../style'
 
-import type { VigilanceArea } from '@features/VigilanceArea/types'
+import type { Link } from '@components/Form/types'
 
-export function PanelLinks({ links }: { links: VigilanceArea.Link[] }) {
+export function PanelLinks({ links }: { links: Link[] }) {
   return (
     <PanelSubPart>
       <PanelInlineItemLabel>Liens utiles</PanelInlineItemLabel>

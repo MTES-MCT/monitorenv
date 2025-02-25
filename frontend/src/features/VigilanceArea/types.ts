@@ -1,4 +1,5 @@
 /* eslint-disable typescript-sort-keys/string-enum */
+import type { ImageApiProps, Link } from '@components/Form/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace VigilanceArea {
@@ -58,10 +59,6 @@ export namespace VigilanceArea {
     visibility?: Visibility
   }
 
-  export interface Link {
-    linkText?: string
-    linkUrl?: string
-  }
   export enum Frequency {
     NONE = 'NONE',
     ALL_WEEKS = 'ALL_WEEKS',
@@ -129,25 +126,8 @@ export namespace VigilanceArea {
 
   export type VigilanceAreaLayer = VigilanceArea.VigilanceAreaFromApi & { bbox: number[] }
 
-  export type ImageForFrontProps = {
-    id?: string
-    image: string
-    name: string
-    orientation: Orientation
-  }
-
-  export type ImagePropsForApi = {
-    content: string
-    id?: string
-    mimeType: string
-    name: string
-    size: number
+  export type ImagePropsForApi = ImageApiProps & {
     vigilanceAreaId?: number
-  }
-
-  export enum Orientation {
-    LANDSCAPE = 'landscape',
-    PORTRAIT = 'portrait'
   }
 
   export type StatusType = 'DRAFT' | 'PUBLISHED'
