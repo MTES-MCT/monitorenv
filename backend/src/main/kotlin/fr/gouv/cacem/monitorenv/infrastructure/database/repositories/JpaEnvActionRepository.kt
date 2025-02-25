@@ -15,6 +15,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
+import java.time.Instant
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -68,8 +69,23 @@ class JpaEnvActionRepository(
         )
     }
 
-    override fun getRecentControlsActivity(): List<RecentControlsActivityListDTO> {
-        return idbEnvActionRepository.getRecentControlsActivity().map { row ->
+    override fun getRecentControlsActivity(
+        startedAfter: Instant,
+        startedBefore: Instant,
+        infractionsStatus: List<String>?,
+        controlUnitIds: List<Int>?,
+        administrationIds: List<Int>?,
+    ): List<RecentControlsActivityListDTO> {
+        val filteredControlUnitIds = if (controlUnitIds.isNullOrEmpty()) null else controlUnitIds
+        val filteredAdministrationIds =
+            if (administrationIds.isNullOrEmpty()) null else administrationIds
+
+        return idbEnvActionRepository.getRecentControlsActivity(
+            startedAfter = startedAfter,
+            startedBefore = startedBefore,
+            controlUnitIds = filteredControlUnitIds,
+            administrationIds = filteredAdministrationIds,
+        ).map { row ->
 
             val valueJson = row[2] as String
             val valueObject =
@@ -92,6 +108,13 @@ class JpaEnvActionRepository(
                 infractions = valueObject.infractions,
                 observations = valueObject.observations,
             )
+        }.filter { recentControl ->
+            when {
+                infractionsStatus.isNullOrEmpty() -> true
+                infractionsStatus.contains("WITH_INFRACTIONS") && recentControl.infractions?.isNotEmpty() == true -> true
+                infractionsStatus.contains("WITHOUT_INFRACTIONS") && recentControl.infractions.isNullOrEmpty() -> true
+                else -> false
+            }
         }
     }
 }

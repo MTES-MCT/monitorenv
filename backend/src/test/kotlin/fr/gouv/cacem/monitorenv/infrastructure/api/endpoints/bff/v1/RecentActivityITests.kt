@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.GetRecentControlActivity
+import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.GetRecentControlsActivity
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -31,7 +31,7 @@ class RecentActivityITests {
     private lateinit var mockMvc: MockMvc
 
     @MockitoBean
-    private lateinit var getRecentControlActivity: GetRecentControlActivity
+    private lateinit var getRecentControlsActivity: GetRecentControlsActivity
 
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
@@ -57,7 +57,7 @@ class RecentActivityITests {
                 administrationIds = listOf(1),
                 controlUnitsIds = listOf(1, 2),
             )
-        given(getRecentControlActivity.execute()).willReturn(listOf(controls))
+        given(getRecentControlsActivity.execute()).willReturn(listOf(controls))
 
         // When
         mockMvc.perform(get("/bff/v1/recent-activity/controls"))

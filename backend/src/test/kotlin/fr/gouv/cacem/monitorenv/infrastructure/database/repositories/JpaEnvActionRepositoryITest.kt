@@ -1,10 +1,12 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,9 +16,17 @@ import java.util.*
 
 class JpaEnvActionRepositoryITest : AbstractDBTests() {
     @Autowired
+    private val customQueryCountListener: CustomQueryCountListener? = null
+
+    @Autowired
     private lateinit var jpaEnvActionRepository: JpaEnvActionRepository
 
     private val objectMapper: ObjectMapper = ObjectMapper()
+
+    @BeforeEach
+    fun setUp() {
+        customQueryCountListener!!.resetQueryCount() // Reset the count before each test
+    }
 
     @Test
     fun `findById() should return the appropriate envAction`() {
@@ -93,9 +103,80 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
     @Test
     fun `getRecentControlsActivity() should return the appropriate envActions`() {
         // When
-        val recentControlsActivity = jpaEnvActionRepository.getRecentControlsActivity()
+        val recentControlsActivity =
+            jpaEnvActionRepository.getRecentControlsActivity(
+                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+                startedBefore = ZonedDateTime.parse("2050-08-08T23:59:00Z").toInstant(),
+                infractionsStatus = null,
+                controlUnitIds = null,
+                // administrationIds = null,
+            )
 
         // Then
-        assertThat(recentControlsActivity.size).isEqualTo(5)
+        assertThat(recentControlsActivity.size).isEqualTo(4)
+
+        val queryCount = customQueryCountListener!!.getQueryCount()
+        println("Number of Queries Executed: $queryCount")
+    }
+
+    @Test
+    fun `getRecentControlsActivity() should return envActions when infractionsStatus is set with 'with infractions'`() {
+        // When
+        val recentControlsActivity =
+            jpaEnvActionRepository.getRecentControlsActivity(
+                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+                startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
+                infractionsStatus = listOf("WITH_INFRACTIONS"),
+                controlUnitIds = null,
+                administrationIds = null,
+            )
+
+        // Then
+        assertThat(recentControlsActivity.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `getRecentControlsActivity() should return envActions when infractionsStatus is set with 'without infractions'`() {
+        // When
+        val recentControlsActivity =
+            jpaEnvActionRepository.getRecentControlsActivity(
+                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+                startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
+                infractionsStatus = listOf("WITHOUT_INFRACTIONS"),
+                controlUnitIds = null,
+                administrationIds = null,
+            )
+        // Then
+        assertThat(recentControlsActivity.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `getRecentControlsActivity() should return envActions when controlUnitIds filter is set`() {
+        // When
+        val recentControlsActivity =
+            jpaEnvActionRepository.getRecentControlsActivity(
+                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+                startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
+                infractionsStatus = null,
+                controlUnitIds = listOf(10002),
+                administrationIds = null,
+            )
+        // Then
+        assertThat(recentControlsActivity.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `getRecentControlsActivity() should return envActions when administrationIds filter is set`() {
+        // When
+        val recentControlsActivity =
+            jpaEnvActionRepository.getRecentControlsActivity(
+                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+                startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
+                infractionsStatus = null,
+                controlUnitIds = null,
+                administrationIds = listOf(1005),
+            )
+        // Then
+        assertThat(recentControlsActivity.size).isEqualTo(2)
     }
 }
