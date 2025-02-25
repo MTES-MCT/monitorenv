@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
+import java.time.Instant
 import java.util.*
 
 interface IEnvActionRepository {
@@ -9,5 +10,11 @@ interface IEnvActionRepository {
 
     fun save(envAction: EnvActionEntity): EnvActionEntity
 
-    fun getRecentControlsActivity(): List<RecentControlsActivityListDTO>
+    fun getRecentControlsActivity(
+        startedAfter: Instant,
+        startedBefore: Instant,
+        infractionsStatus: List<String>?,
+        controlUnitIds: List<Int>? = null,
+        administrationIds: List<Int>? = null,
+    ): List<RecentControlsActivityListDTO>
 }
