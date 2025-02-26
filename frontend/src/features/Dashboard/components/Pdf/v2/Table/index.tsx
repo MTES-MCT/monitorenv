@@ -89,7 +89,8 @@ export function AreaTable({
   return (
     <>
       {image && <Image src={image.image} style={{ marginBottom: 6.2 }} />}
-      <View style={layoutStyle.header}>
+
+      <View style={layoutStyle.header2}>
         <Text style={layoutStyle.title}>Zones</Text>
         <Text style={layoutStyle.selected}>{totalSelected} sélectionnée(s)</Text>
       </View>

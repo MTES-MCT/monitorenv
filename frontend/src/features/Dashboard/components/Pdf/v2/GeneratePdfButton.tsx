@@ -3,6 +3,7 @@ import { getControlUnitsByIds } from '@api/controlUnitsAPI'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
+import { useImageConverter } from '@components/Form/Images/hook/useImageConverter'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
@@ -49,11 +50,17 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   const { images, loading } = useExportImages({ triggerExport: shouldTriggerExport })
 
+  const imagesFront = useImageConverter(dashboard.images)
+
   const brief: Dashboard.Brief = useMemo(
     () => ({
       allLinkedAMPs,
       allLinkedRegulatoryAreas,
       amps,
+      attachments: {
+        images: imagesFront,
+        links: dashboard.links
+      },
       comments: dashboard.comments,
       controlUnits,
       images,
@@ -69,6 +76,8 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       allLinkedAMPs,
       allLinkedRegulatoryAreas,
       amps,
+      imagesFront,
+      dashboard.links,
       dashboard.comments,
       dashboard.name,
       dashboard.updatedAt,
@@ -89,7 +98,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   useEffect(() => {
     const renderPdf = async () => {
-      if (brief.images && !loading && shouldTriggerExport) {
+      if (brief.images && brief.attachments.images && !loading && shouldTriggerExport) {
         setIsOpening(true)
 
         const blob = await renderPDF({ brief })

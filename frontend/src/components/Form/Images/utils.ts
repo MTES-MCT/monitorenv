@@ -1,6 +1,10 @@
-import { Orientation, type ImageApiProps, type ImageFrontProps } from '../types'
+import { Orientation, type ImageApi, type ImageFront } from '../types'
 
-export async function getImagesForFront(images: ImageApiProps[]): Promise<ImageFrontProps[]> {
+export const IMAGES_INFORMATIONS_TEXT = '5 photos maximum. Formats autorisés: jpeg, png, webp'
+const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
+const IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR = 'Vous ne pouvez charger que 5 images au total'
+
+export async function getImagesForFront(images: ImageApi[]): Promise<ImageFront[]> {
   const processedImages = await Promise.all(
     images.map(async image => {
       try {
@@ -36,4 +40,27 @@ export const compressImage = (img: HTMLImageElement, type: string, quality = 0.3
   ctx?.drawImage(img, 0, 0, width, height)
 
   return canvas.toDataURL(type, quality)
+}
+
+export const areFilesValid = (numberOfFiles: number, callback?: (message: string) => void) => {
+  if (numberOfFiles > 5) {
+    if (callback) {
+      callback(IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR)
+    }
+
+    return false
+  }
+  if (numberOfFiles === 5) {
+    if (callback) {
+      callback(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
+    }
+
+    return true
+  }
+
+  if (callback) {
+    callback(IMAGES_INFORMATIONS_TEXT)
+  }
+
+  return true
 }

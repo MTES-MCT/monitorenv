@@ -19,7 +19,7 @@ export function RegulatoryAreas({
 }) {
   return (
     <>
-      <View style={layoutStyle.header}>
+      <View style={layoutStyle.header2}>
         <Text style={layoutStyle.title}>Zones réglementaires</Text>
         <Text style={layoutStyle.selected}>{regulatoryAreas.length} sélectionnée(s)</Text>
       </View>
@@ -97,7 +97,9 @@ export function RegulatoryAreas({
                       <Text>→</Text>
                     </View>
                     <View style={{ paddingLeft: 18 }}>
-                      <Link href={regulatoryArea.url}>{regulatoryArea.refReg}</Link>
+                      <Link href={regulatoryArea.url} style={layoutStyle.link}>
+                        {regulatoryArea.refReg}
+                      </Link>
                     </View>
                   </View>
                 </View>

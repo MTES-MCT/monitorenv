@@ -1,6 +1,7 @@
 import { Document, Page, View } from '@react-pdf/renderer'
 
 import { Amps } from './Amps'
+import { Attachments } from './Attachments'
 import { Cover } from './Layout/Cover'
 import { Headings } from './Layout/Headings'
 import { RegulatoryAreas } from './RegulatoryAreas'
@@ -70,6 +71,14 @@ export function Brief({ author, brief, description, title }: BriefProps) {
               linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}
               vigilanceAreas={brief.vigilanceAreas}
             />
+          </View>
+        </Page>
+      )}
+      {((brief.attachments.images && brief.attachments.images.length > 0) ?? brief.attachments.links.length > 0) && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <Attachments images={brief.attachments.images} links={brief.attachments.links} />
           </View>
         </Page>
       )}

@@ -57,11 +57,11 @@ describe('Create Vigilance Area', () => {
     })
     cy.clickButton('Valider les tracés')
 
-    cy.fixture('vigilanceAreaImage.png', null).then(fileContent => {
+    cy.fixture('image.png', null).then(fileContent => {
       cy.get('input[type=file]').selectFile(
         {
           contents: Cypress.Buffer.from(fileContent),
-          fileName: 'vigilanceAreaImage.png',
+          fileName: 'image.png',
           mimeType: 'image/png'
         },
         {
@@ -97,7 +97,7 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.createdBy).equal('ABC')
       expect(createdVigilanceArea.isDraft).equal(true)
       expect(createdVigilanceArea.images).to.have.length(1)
-      expect(createdVigilanceArea.images[0].name).equal('vigilanceAreaImage.png')
+      expect(createdVigilanceArea.images[0].name).equal('image.png')
       expect(createdVigilanceArea.images[0].size).equal(396656)
       expect(createdVigilanceArea.images[0].mimeType).equal('image/png')
 

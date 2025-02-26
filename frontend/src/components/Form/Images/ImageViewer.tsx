@@ -4,11 +4,11 @@ import { useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
-import type { ImageFrontProps } from '../types'
+import type { ImageFront } from '../types'
 
 interface ImageViewerProps {
   currentIndex?: number
-  images: ImageFrontProps[]
+  images: ImageFront[]
   isSideWindow?: boolean
   onClose: () => void
 }

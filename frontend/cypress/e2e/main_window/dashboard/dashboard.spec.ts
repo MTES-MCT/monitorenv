@@ -4,7 +4,6 @@ context('Dashboard', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.visit('/#@-394744.20,6104201.66,8.72')
-    Cypress.env('CYPRESS_', 'true')
   })
 
   describe('dashboard', () => {

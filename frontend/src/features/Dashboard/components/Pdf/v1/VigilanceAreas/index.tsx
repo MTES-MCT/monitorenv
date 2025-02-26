@@ -21,7 +21,7 @@ export function VigilanceAreas({
 }) {
   return (
     <>
-      <View style={layoutStyle.header}>
+      <View style={layoutStyle.header2}>
         <Text style={layoutStyle.title}>Zones de vigilances</Text>
         <Text style={layoutStyle.selected}>{vigilanceAreas.length} sélectionnée(s)</Text>
       </View>
@@ -121,7 +121,7 @@ export function VigilanceAreas({
                   <View>
                     <Text style={[areaStyle.description, { width: 'auto' }]}>Liens utiles</Text>
                     {vigilanceArea.links.map(link => (
-                      <Link key={link.linkUrl} href={link.linkUrl}>
+                      <Link key={link.linkUrl} href={link.linkUrl} style={layoutStyle.link}>
                         <Text>{link.linkText}</Text>
                       </Link>
                     ))}
