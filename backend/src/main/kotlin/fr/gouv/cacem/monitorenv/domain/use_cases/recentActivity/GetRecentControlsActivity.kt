@@ -12,13 +12,13 @@ class GetRecentControlsActivity(private val envActionRepository: IEnvActionRepos
     private val logger = LoggerFactory.getLogger(GetRecentControlsActivity::class.java)
 
     fun execute(
-        administrationIds: List<Int>? = listOf(),
-        controlUnitIds: List<Int>? = listOf(),
+        administrationIds: List<Int>?,
+        controlUnitIds: List<Int>?,
         geometry: Geometry?,
-        infractionsStatus: List<String>? = listOf(),
-        themeIds: List<Int>? = listOf(),
-        startedAfter: ZonedDateTime? = null,
-        startedBefore: ZonedDateTime? = null,
+        infractionsStatus: List<String>?,
+        themeIds: List<Int>?,
+        startedAfter: ZonedDateTime?,
+        startedBefore: ZonedDateTime?,
     ): List<RecentControlsActivityListDTO> {
         logger.info("Attempt to get recent controls activity")
 

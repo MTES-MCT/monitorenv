@@ -16,6 +16,7 @@ class GetRecentControlsActivityUTest {
 
     @Test
     fun `execute should return recent controls activity`() {
+        val now = ZonedDateTime.now()
         // Given
         val expectedRecentControlsActivity =
             listOf(RecentControlsActivityListDTOFixture.aRecentControlsActivityListDTO())
@@ -27,8 +28,8 @@ class GetRecentControlsActivityUTest {
                 geometry = null,
                 infractionsStatus = null,
                 themeIds = listOf(8),
-                startedAfter = ZonedDateTime.now().minusDays(30).toInstant(),
-                startedBefore = ZonedDateTime.now().toInstant(),
+                startedAfter = now.minusDays(30).toInstant(),
+                startedBefore = now.toInstant(),
             ),
         ).willReturn(expectedRecentControlsActivity)
 
@@ -40,12 +41,10 @@ class GetRecentControlsActivityUTest {
                 geometry = null,
                 infractionsStatus = null,
                 themeIds = listOf(8),
-                startedAfter = ZonedDateTime.now().minusDays(30),
-                startedBefore = ZonedDateTime.now(),
+                startedAfter = now.minusDays(30),
+                startedBefore = now,
             )
-
-        println("recentControlsActivity: $recentControlsActivity")
-        println("expectedRecentControlsActivity: $expectedRecentControlsActivity")
+        
         // Then
         assertThat(expectedRecentControlsActivity).isEqualTo(recentControlsActivity)
     }

@@ -21,6 +21,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
@@ -102,6 +103,23 @@ class RecentActivityITests {
         )
             // Then
             .andExpect(status().isOk)
+            .andDo(MockMvcResultHandlers.print())
             .andExpect(jsonPath("$[0].id", equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b")))
+            .andExpect(jsonPath("$[0].actionStartDateTimeUtc", equalTo("2022-01-15T04:50:09Z")))
+            .andExpect(jsonPath("$[0].actionNumberOfControls", equalTo(2)))
+            .andExpect(jsonPath("$[0].themeIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$[0].subThemeIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$[0].subThemeIds[1]", equalTo(2)))
+            .andExpect(jsonPath("$[0].facade", equalTo("Outre-Mer")))
+            .andExpect(jsonPath("$[0].department", equalTo("29")))
+            .andExpect(jsonPath("$[0].missionId", equalTo(1)))
+            .andExpect(jsonPath("$[0].observations", equalTo("Observations de l'action de contrôle")))
+            .andExpect(jsonPath("$[0].actionNumberOfControls", equalTo(2)))
+            .andExpect(jsonPath("$[0].actionTargetType", equalTo("VEHICLE")))
+            .andExpect(jsonPath("$[0].vehicleType", equalTo("VEHICLE_LAND")))
+            .andExpect(jsonPath("$[0].infractions[0].id", equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b")))
+            .andExpect(jsonPath("$[0].administrationIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$[0].controlUnitIds[0]", equalTo(1)))
+            .andExpect(jsonPath("$[0].controlUnitIds[1]", equalTo(2)))
     }
 }
