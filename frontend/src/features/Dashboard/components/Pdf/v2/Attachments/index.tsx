@@ -28,7 +28,7 @@ export function Attachments({ images, links }: { images?: ImageFront[]; links: L
           <Text style={layoutStyle.header2}>Liens utiles</Text>
           <View style={{ gap: 8 }}>
             {links.map(link => (
-              <View style={layoutStyle.column}>
+              <View key={link.linkUrl} style={layoutStyle.column}>
                 <Text style={[layoutStyle.bold, { fontSize: 9 }]}>{link.linkText}</Text>
                 <LinkComponent href={link.linkUrl} style={[layoutStyle.link, { fontSize: 8 }]}>
                   <Text>{link.linkUrl}</Text>
@@ -43,7 +43,7 @@ export function Attachments({ images, links }: { images?: ImageFront[]; links: L
           <Text style={layoutStyle.header2}>Photos</Text>
           <View style={style.imageWrapper}>
             {images.map(image => (
-              <Image src={image.image} style={style.image} />
+              <Image key={image.id} src={image.image} style={style.image} />
             ))}
           </View>
         </View>

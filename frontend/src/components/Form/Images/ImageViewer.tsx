@@ -77,7 +77,7 @@ export function ImageViewer({ currentIndex, images, isSideWindow = false, onClos
     </>
   )
 
-  return createPortal(imageViewerContent, isSideWindow ? newWindowContainerRef.current : (document.body as HTMLElement))
+  return createPortal(imageViewerContent, isSideWindow ? newWindowContainerRef.current : document.body)
 }
 
 const Background = styled.div`

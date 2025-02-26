@@ -46,7 +46,7 @@ export function Tooltip({
           <StyledTooltip $left={refLeftPosition} $top={refTopPosition} id={id} role="tooltip">
             {children}
           </StyledTooltip>,
-          isSideWindow ? newWindowContainerRef.current : (document.body as HTMLElement)
+          isSideWindow ? newWindowContainerRef.current : document.body
         )}
     </>
   )

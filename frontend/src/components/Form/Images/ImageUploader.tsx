@@ -39,7 +39,7 @@ export function ImageUploader({ idParentProps, images, isSideWindow = false, onD
 
   const uploadImageDisplay = async () => {
     const { current } = inputRef
-    if (!current || !current.files) {
+    if (!current?.files) {
       return
     }
 
@@ -115,25 +115,24 @@ export function ImageUploader({ idParentProps, images, isSideWindow = false, onD
       </Button>
       <Text $hasError={imagesText !== IMAGES_INFORMATIONS_TEXT}>{imagesText}</Text>
       <PreviewList>
-        {imagesFront &&
-          imagesFront.map((image, index) => (
-            <PreviewImagesContainer key={image.id ?? index}>
-              <StyledImageButton onClick={() => openImageViewer(index)} type="button">
-                <img
-                  alt={image.name}
-                  height="82px"
-                  src={image.image}
-                  width={image.orientation === Orientation.LANDSCAPE ? IMAGES_WIDTH_LANDSCAPE : IMAGES_WIDTH_PORTRAIT}
-                />
-              </StyledImageButton>
-              <StyledButton
-                accent={Accent.SECONDARY}
-                Icon={Icon.Delete}
-                onClick={() => deleteImage(index)}
-                size={Size.SMALL}
+        {imagesFront?.map((image, index) => (
+          <PreviewImagesContainer key={image.id ?? index}>
+            <StyledImageButton onClick={() => openImageViewer(index)} type="button">
+              <img
+                alt={image.name}
+                height="82px"
+                src={image.image}
+                width={image.orientation === Orientation.LANDSCAPE ? IMAGES_WIDTH_LANDSCAPE : IMAGES_WIDTH_PORTRAIT}
               />
-            </PreviewImagesContainer>
-          ))}
+            </StyledImageButton>
+            <StyledButton
+              accent={Accent.SECONDARY}
+              Icon={Icon.Delete}
+              onClick={() => deleteImage(index)}
+              size={Size.SMALL}
+            />
+          </PreviewImagesContainer>
+        ))}
       </PreviewList>
       {imageViewerCurrentIndex !== -1 && (
         <ImageViewer
