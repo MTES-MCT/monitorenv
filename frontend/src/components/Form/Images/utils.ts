@@ -8,6 +8,10 @@ export async function getImagesForFront(images: ImageApi[]): Promise<ImageFront[
   const processedImages = await Promise.all(
     images.map(async image => {
       try {
+        const base64Pattern = /^[a-zA-Z0-9+/]+={0,2}$/
+        if (!base64Pattern.test(image.content)) {
+          throw new Error('Invalid base64 content')
+        }
         const base64Image = `data:${image.mimeType};base64,${image.content}`
         const img = new Image()
         img.src = base64Image
