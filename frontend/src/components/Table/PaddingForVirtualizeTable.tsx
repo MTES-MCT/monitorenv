@@ -17,7 +17,7 @@ export function PaddingForVirtualizeTable({
 }
 
 export const getPaddingValuesForVirtualizeTable = (
-  virtualRows: VirtualItem[],
+  virtualRows: VirtualItem<any>[],
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>
 ): [number, number] =>
   virtualRows?.length > 0
