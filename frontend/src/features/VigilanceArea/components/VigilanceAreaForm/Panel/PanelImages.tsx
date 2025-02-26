@@ -1,8 +1,8 @@
+import { useImageConverter } from '@components/Form/Images/hook/useImageConverter'
 import { IMAGES_WIDTH_LANDSCAPE, IMAGES_WIDTH_PORTRAIT } from '@components/Form/Images/ImageUploader'
-import { getImagesForFront } from '@components/Form/Images/utils'
-import { Orientation, type ImageFrontProps } from '@components/Form/types'
+import { Orientation } from '@components/Form/types'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { ImageViewer } from '../ImageViewer'
 import { PanelImageContainer, StyledImageButton } from '../style'
@@ -17,16 +17,7 @@ export function PanelImages({
   vigilanceAreaName: string | undefined
 }) {
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
-  const [imagesList, setImagesList] = useState<ImageFrontProps[]>([])
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      const formattedImages = await getImagesForFront(images)
-      setImagesList(formattedImages)
-    }
-
-    fetchImages()
-  }, [images])
+  const imagesFront = useImageConverter(images)
 
   const openImageViewer = (currentIndex: number) => {
     setImageViewerCurrentIndex(currentIndex)
@@ -35,7 +26,7 @@ export function PanelImages({
   return (
     <>
       <PanelImageContainer>
-        {imagesList.map((image, index) => (
+        {imagesFront?.map((image, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <StyledImageButton key={index} onClick={() => openImageViewer(index)} type="button">
             <img
@@ -50,7 +41,7 @@ export function PanelImages({
       {imageViewerCurrentIndex >= 0 && (
         <ImageViewer
           currentIndex={imageViewerCurrentIndex}
-          images={imagesList.map(image => image.image)}
+          images={(imagesFront ?? []).map(image => image.image)}
           isSideWindow={isSideWindow}
           onClose={() => setImageViewerCurrentIndex(-1)}
         />

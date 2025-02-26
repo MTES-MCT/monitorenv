@@ -10,7 +10,7 @@ import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 export function RegulatoryAreas({ regulatoryAreas }: { regulatoryAreas: RegulatoryLayerWithMetadata[] }) {
   return (
     <>
-      <View style={layoutStyle.header}>
+      <View style={layoutStyle.header2}>
         <Text style={layoutStyle.title}>Zones réglementaires</Text>
         <Text style={layoutStyle.selected}>{regulatoryAreas.length} sélectionnée(s)</Text>
       </View>
@@ -74,7 +74,9 @@ export function RegulatoryAreas({ regulatoryAreas }: { regulatoryAreas: Regulato
                   <Text>→</Text>
                 </View>
                 <View style={{ paddingLeft: 18 }}>
-                  <Link href={regulatoryArea.url}>{regulatoryArea.refReg}</Link>
+                  <Link href={regulatoryArea.url} style={layoutStyle.link}>
+                    <Text>{regulatoryArea.refReg}</Text>
+                  </Link>
                 </View>
               </View>
             </View>

@@ -162,7 +162,7 @@ export function Reportings({
 }) {
   return (
     <>
-      <View style={layoutStyle.header}>
+      <View style={layoutStyle.header2}>
         <Text style={layoutStyle.title}>Signalements</Text>
         <Text style={layoutStyle.selected}>{reportings.length} sélectionnée(s)</Text>
       </View>

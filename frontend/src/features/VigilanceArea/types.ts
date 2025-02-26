@@ -1,5 +1,5 @@
 /* eslint-disable typescript-sort-keys/string-enum */
-import type { ImageApiProps, Link } from '@components/Form/types'
+import type { ImageApi, Link } from '@components/Form/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace VigilanceArea {
@@ -126,7 +126,7 @@ export namespace VigilanceArea {
 
   export type VigilanceAreaLayer = VigilanceArea.VigilanceAreaFromApi & { bbox: number[] }
 
-  export type ImagePropsForApi = ImageApiProps & {
+  export type ImagePropsForApi = ImageApi & {
     vigilanceAreaId?: number
   }
 

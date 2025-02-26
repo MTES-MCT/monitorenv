@@ -43,7 +43,7 @@ export const Attachments = forwardRef<HTMLDivElement, AttachmentsProps>(
         setExpandedAccordion={setExpandedAccordion}
         title={
           <TitleContainer>
-            <Title>Pièce-jointes</Title>
+            <Title>Pièces jointes</Title>
           </TitleContainer>
         }
         titleRef={ref}

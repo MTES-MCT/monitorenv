@@ -6,7 +6,7 @@ import type {
   RegulatoryLayerWithMetadata
 } from '../../domain/entities/regulatory'
 import type { Reporting } from '../../domain/entities/reporting'
-import type { Link, ImageApiProps } from '@components/Form/types'
+import type { Link, ImageApi, ImageFront } from '@components/Form/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
 import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
@@ -46,7 +46,7 @@ export namespace Dashboard {
     vigilanceAreaIds: number[]
   }
 
-  export type ImagePropsForApi = ImageApiProps & {
+  export type ImagePropsForApi = ImageApi & {
     dashboardId?: string
   }
 
@@ -54,6 +54,10 @@ export namespace Dashboard {
     allLinkedAMPs: AMPFromAPI[]
     allLinkedRegulatoryAreas: RegulatoryLayerWithMetadata[]
     amps: AMPFromAPI[]
+    attachments: {
+      images?: ImageFront[]
+      links: Link[]
+    }
     comments?: string
     controlUnits: ControlUnit.ControlUnit[]
     images: ExportImageType[] | undefined

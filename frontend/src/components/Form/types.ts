@@ -3,14 +3,14 @@ export enum Orientation {
   PORTRAIT = 'portrait'
 }
 
-export type ImageFrontProps = {
+export type ImageFront = {
   id?: string
   image: string
   name: string
   orientation: Orientation
 }
 
-export type ImageApiProps = {
+export type ImageApi = {
   content: string
   id?: string
   mimeType: string

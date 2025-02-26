@@ -27,6 +27,29 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.wait(250)
     cy.getDataCy('dashboard-control-unit-selected-10023').click()
 
+    cy.get('h2').contains('Pièces jointes').click({ force: true })
+    cy.wait(250)
+    cy.clickButton('Ajouter un lien utile')
+    cy.fill('Texte à afficher', 'Ceci est un lien en rapport avec le tableau de bord')
+    cy.fill('Url du lien', 'https://www.google.com')
+
+    cy.fixture('image.png', null).then(fileContent => {
+      cy.get('input[type=file]').selectFile(
+        {
+          contents: Cypress.Buffer.from(fileContent),
+          fileName: 'image.png',
+          mimeType: 'image/png'
+        },
+        {
+          action: 'select',
+          force: true,
+          log: true
+        }
+      )
+    })
+
+    cy.clickButton('Valider')
+
     cy.clickButton('Prévisualiser la sélection')
 
     cy.intercept('PUT', `/bff/v1/dashboards`).as('saveDashboard')
@@ -37,10 +60,16 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
       if (!interception.response) {
         assert.fail('`interception.response` is undefined.')
       }
+      const bodyWithoutImageContent = {
+        ...interception.request.body,
+        images: interception.request.body.images.map(({ content, ...rest }) => rest)
+      }
 
-      assert.deepInclude(interception.request.body, {
+      assert.deepInclude(bodyWithoutImageContent, {
         controlUnitIds: [10000, 10023],
         id,
+        images: [{ dashboardId: id, mimeType: 'image/png', name: 'image.png', size: 396656 }],
+        links: [{ linkText: 'Ceci est un lien en rapport avec le tableau de bord', linkUrl: 'https://www.google.com' }],
         vigilanceAreaIds: [9, 8]
       })
     })

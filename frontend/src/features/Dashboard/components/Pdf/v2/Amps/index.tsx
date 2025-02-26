@@ -13,7 +13,7 @@ import type { AMPFromAPI } from 'domain/entities/AMPs'
 export function Amps({ amps, images }: { amps: AMPFromAPI[]; images: ExportImageType[] }) {
   return (
     <>
-      <View style={layoutStyle.header}>
+      <View style={layoutStyle.header2}>
         <Text style={layoutStyle.title}>Zones AMP</Text>
         <Text style={layoutStyle.selected}>{amps.length} sélectionnée(s)</Text>
       </View>
@@ -65,7 +65,7 @@ export function Amps({ amps, images }: { amps: AMPFromAPI[]; images: ExportImage
                         <Text>→</Text>
                       </View>
                       <View style={{ paddingLeft: 18 }}>
-                        <Link href={amp.urlLegicem}>
+                        <Link href={amp.urlLegicem} style={layoutStyle.link}>
                           <Text>{amp.refReg}</Text>
                         </Link>
                       </View>

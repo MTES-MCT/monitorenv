@@ -140,7 +140,7 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 <Text>Légicem</Text>
               </View>
               <View style={[styles.detailsExternal]}>
-                <Link href="https://extranet.legicem.metier.developpement-durable.gouv.fr">
+                <Link href="https://extranet.legicem.metier.developpement-durable.gouv.fr" style={layoutStyle.link}>
                   https://extranet.legicem.metier.developpement-durable.gouv.fr
                 </Link>
                 <Text style={{ fontWeight: 'medium' }}>
@@ -156,7 +156,7 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 <Text>Monitor Ext</Text>
               </View>
               <View style={[styles.detailsExternal]}>
-                <Link href="https://monitorenv.din.developpement-durable.gouv.fr/ext">
+                <Link href="https://monitorenv.din.developpement-durable.gouv.fr/ext" style={layoutStyle.link}>
                   https://monitorenv.din.developpement-durable.gouv.fr/ext
                 </Link>
                 <Text style={{ fontWeight: 'medium' }}>
@@ -177,7 +177,9 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
             <Image source="logo-CACEM.jpeg" style={{ width: 55 }} />
             <View>
               <Text>02 90 74 32 55</Text>
-              <Link href="mailto:cacem@mer.gouv.fr">cacem@mer.gouv.fr</Link>
+              <Link href="mailto:cacem@mer.gouv.fr" style={layoutStyle.link}>
+                cacem@mer.gouv.fr
+              </Link>
             </View>
           </View>
           <View style={{ alignItems: 'flex-end', display: 'flex', flexDirection: 'column' }}>

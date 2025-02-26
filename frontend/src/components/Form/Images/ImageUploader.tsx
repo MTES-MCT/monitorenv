@@ -1,28 +1,25 @@
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, Label, Level, Size } from '@mtes-mct/monitor-ui'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { Orientation, type ImageApiProps, type ImageFrontProps } from '../types'
+import { Orientation, type ImageApi } from '../types'
+import { useImageConverter } from './hook/useImageConverter'
 import { ImageViewer } from './ImageViewer'
-import { compressImage, getImagesForFront } from './utils'
+import { areFilesValid, compressImage, IMAGES_INFORMATIONS_TEXT } from './utils'
 
 export const IMAGES_WIDTH_LANDSCAPE = '122px'
 export const IMAGES_WIDTH_PORTRAIT = '57px'
-
-const IMAGES_INFORMATIONS_TEXT = '5 photos maximum. Formats autorisés: jpeg, png, webp'
-const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
-const IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR = 'Vous ne pouvez charger que 5 images au total'
 
 type IdProps = Record<string, number | string | undefined>
 
 type ImageUploaderProps = {
   idParentProps: IdProps
-  images?: ImageApiProps[]
+  images?: ImageApi[]
   isSideWindow?: boolean
-  onDelete: (images: (ImageApiProps & IdProps)[]) => void
-  onUpload: (images: (ImageApiProps & IdProps)[]) => void
+  onDelete: (images: (ImageApi & IdProps)[]) => void
+  onUpload: (images: (ImageApi & IdProps)[]) => void
 }
 
 export function ImageUploader({ idParentProps, images, isSideWindow = false, onDelete, onUpload }: ImageUploaderProps) {
@@ -32,21 +29,7 @@ export function ImageUploader({ idParentProps, images, isSideWindow = false, onD
 
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
   const [imagesText, setImagesText] = useState<string>(IMAGES_INFORMATIONS_TEXT)
-  const [imagesList, setImagesList] = useState<ImageFrontProps[]>([])
-
-  useEffect(() => {
-    const fetchImages = async () => {
-      const imagesForFront = await getImagesForFront(images ?? [])
-      setImagesList(imagesForFront)
-      if (imagesForFront.length === 5) {
-        setImagesText(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
-      }
-    }
-
-    fetchImages()
-    // we have no dependency here because we want to fetch the images only once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const imagesFront = useImageConverter(images)
 
   const handleFileChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const { current } = inputRef
@@ -60,73 +43,50 @@ export function ImageUploader({ idParentProps, images, isSideWindow = false, onD
       return
     }
 
-    if (current.files.length + imagesList.length > 5) {
-      setImagesText(IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR)
+    const uploadImages = async (filesToUpload: FileList) => {
+      const compressedImages: ImageApi[] = []
+      try {
+        await Promise.all(
+          Array.from(filesToUpload).map(async file => {
+            const img = new Image()
+            img.src = URL.createObjectURL(file)
+            await img.decode()
+            const base64Image = compressImage(img, file.type)
+            const content = base64Image.split(',')[1] ?? ''
+            const compressedImageForApi = {
+              content,
+              mimeType: file.type,
+              name: file.name,
+              size: file.size,
+              ...idParentProps
+            }
+            compressedImages.push(compressedImageForApi)
+          })
+        )
 
+        onUpload([...(images ?? []), ...compressedImages])
+      } catch (error) {
+        dispatch(
+          addMainWindowBanner({
+            children: "Un problème est survenu lors de l'ajout de la photo. Veuillez recommencer",
+            isClosable: true,
+            isFixed: true,
+            level: Level.ERROR,
+            withAutomaticClosing: true
+          })
+        )
+      }
+    }
+    if (!areFilesValid(current.files.length + (images ?? []).length, setImagesText)) {
       return
     }
-
-    const tempImageListForFront: ImageFrontProps[] = []
-    const tempImageList: ImageApiProps[] = []
-    try {
-      await Promise.all(
-        Array.from(current.files).map(async file => {
-          const img = new Image()
-          img.src = URL.createObjectURL(file)
-          await img.decode()
-          const base64Image = compressImage(img, file.type)
-          const base64String = base64Image.split(',')[1] ?? ''
-          const compressedImageForApi = {
-            content: base64String,
-            mimeType: file.type,
-            name: file.name,
-            size: file.size,
-            ...idParentProps
-          }
-          const compressedImageForFront = {
-            image: base64Image,
-            name: file.name,
-            orientation: img.width > img.height ? Orientation.LANDSCAPE : Orientation.PORTRAIT
-          }
-
-          tempImageListForFront.push(compressedImageForFront)
-          tempImageList.push(compressedImageForApi)
-        })
-      )
-
-      if (tempImageList.length + imagesList.length === 5) {
-        setImagesText(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
-      }
-
-      setImagesList([...imagesList, ...tempImageListForFront])
-
-      onUpload([...(images ?? []), ...tempImageList])
-    } catch (error) {
-      dispatch(
-        addMainWindowBanner({
-          children: "Un problème est survenu lors de l'ajout de la photo. Veuillez recommencer",
-          isClosable: true,
-          isFixed: true,
-          level: Level.ERROR,
-          withAutomaticClosing: true
-        })
-      )
-    }
+    uploadImages(current.files)
   }
 
   const deleteImage = (indexToRemove: number) => {
-    const newFileList = imagesList.filter((__, index) => index !== indexToRemove)
-    const newImageList = (images ?? []).filter((__, index) => index !== indexToRemove)
-
-    setImagesList(newFileList)
-    onDelete(newImageList)
-
-    if (newFileList.length < 5) {
-      setImagesText(IMAGES_INFORMATIONS_TEXT)
-    }
-    if (newFileList.length === 5) {
-      setImagesText(IMAGES_INFORMATIONS_LIMIT_MAX_ERROR)
-    }
+    const updatedImages = (images ?? []).filter((__, index) => index !== indexToRemove)
+    areFilesValid(updatedImages.length, setImagesText)
+    onDelete(updatedImages)
   }
   const openImageViewer = (currentIndex: number) => {
     setImageViewerCurrentIndex(currentIndex)
@@ -146,7 +106,7 @@ export function ImageUploader({ idParentProps, images, isSideWindow = false, onD
       />
       <Button
         accent={Accent.SECONDARY}
-        disabled={imagesList.length >= 5}
+        disabled={imagesFront && imagesFront.length >= 5}
         Icon={Icon.Plus}
         isFullWidth
         onClick={handleFileChange}
@@ -155,8 +115,8 @@ export function ImageUploader({ idParentProps, images, isSideWindow = false, onD
       </Button>
       <Text $hasError={imagesText !== IMAGES_INFORMATIONS_TEXT}>{imagesText}</Text>
       <PreviewList>
-        {imagesList &&
-          imagesList.map((image, index) => (
+        {imagesFront &&
+          imagesFront.map((image, index) => (
             <PreviewImagesContainer key={image.id ?? index}>
               <StyledImageButton onClick={() => openImageViewer(index)} type="button">
                 <img
@@ -178,7 +138,7 @@ export function ImageUploader({ idParentProps, images, isSideWindow = false, onD
       {imageViewerCurrentIndex !== -1 && (
         <ImageViewer
           currentIndex={imageViewerCurrentIndex}
-          images={imagesList}
+          images={imagesFront ?? []}
           isSideWindow={isSideWindow}
           onClose={() => setImageViewerCurrentIndex(-1)}
         />

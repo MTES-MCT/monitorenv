@@ -56,11 +56,16 @@ export const layoutStyle = StyleSheet.create({
   column: {
     flexDirection: 'column'
   },
-  header: {
+  header1: {
+    fontSize: 18.6,
+    fontWeight: 'bold',
+    marginBottom: 16
+  },
+  header2: {
     display: 'flex',
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 6.2
+    marginBottom: 8
   },
   headings: {
     display: 'flex',
@@ -72,6 +77,9 @@ export const layoutStyle = StyleSheet.create({
   italic: {
     fontFamily: 'Mariane',
     fontStyle: 'italic'
+  },
+  link: {
+    color: '#295edb'
   },
   page: {
     fontFamily: 'Mariane',
