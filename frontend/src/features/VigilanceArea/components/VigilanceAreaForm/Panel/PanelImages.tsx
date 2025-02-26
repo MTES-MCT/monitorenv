@@ -1,10 +1,9 @@
 import { useImageConverter } from '@components/Form/Images/hook/useImageConverter'
 import { IMAGES_WIDTH_LANDSCAPE, IMAGES_WIDTH_PORTRAIT } from '@components/Form/Images/ImageUploader'
-import { Orientation } from '@components/Form/types'
-import { VigilanceArea } from '@features/VigilanceArea/types'
+import { ImageViewer } from '@components/Form/Images/ImageViewer'
+import { Orientation, type ImageApi } from '@components/Form/types'
 import { useState } from 'react'
 
-import { ImageViewer } from '../ImageViewer'
 import { PanelImageContainer, StyledImageButton } from '../style'
 
 export function PanelImages({
@@ -12,7 +11,7 @@ export function PanelImages({
   isSideWindow = false,
   vigilanceAreaName
 }: {
-  images: VigilanceArea.ImagePropsForApi[]
+  images: ImageApi[]
   isSideWindow?: boolean
   vigilanceAreaName: string | undefined
 }) {
@@ -41,7 +40,7 @@ export function PanelImages({
       {imageViewerCurrentIndex >= 0 && (
         <ImageViewer
           currentIndex={imageViewerCurrentIndex}
-          images={(imagesFront ?? []).map(image => image.image)}
+          images={imagesFront ?? []}
           isSideWindow={isSideWindow}
           onClose={() => setImageViewerCurrentIndex(-1)}
         />

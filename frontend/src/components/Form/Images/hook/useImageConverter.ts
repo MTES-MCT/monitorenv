@@ -5,12 +5,12 @@ import { getImagesForFront } from '../utils'
 import type { ImageApi, ImageFront } from '@components/Form/types'
 
 export const useImageConverter = (imagesApi?: ImageApi[]) => {
-  const [imagesFront, setImageFront] = useState<ImageFront[]>()
+  const [imagesFront, setImagesFront] = useState<ImageFront[]>()
 
   useEffect(() => {
     const fetchImages = async () => {
       const imagesForFront = await getImagesForFront(imagesApi ?? [])
-      setImageFront(imagesForFront)
+      setImagesFront(imagesForFront)
     }
 
     fetchImages()
