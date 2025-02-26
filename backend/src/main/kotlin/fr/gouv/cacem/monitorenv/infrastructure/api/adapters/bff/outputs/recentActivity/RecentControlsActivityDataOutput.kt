@@ -5,40 +5,44 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
 import org.locationtech.jts.geom.Geometry
+import java.time.ZonedDateTime
 import java.util.*
 
 data class RecentControlsActivityDataOutput(
     val id: UUID,
     val actionNumberOfControls: Int? = null,
+    val actionStartDateTimeUtc: ZonedDateTime? = null,
     val actionTargetType: ActionTargetTypeEnum? = null,
-    val themeIds: List<Int>,
-    val subThemeIds: List<Int>,
+    val administrationIds: List<Int>,
+    val controlUnitIds: List<Int>,
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
     val infractions: List<InfractionEntity>? = listOf(),
     val missionId: Int? = null,
     val observations: String? = null,
+    val subThemeIds: List<Int>,
+    val themeIds: List<Int>,
     val vehicleType: VehicleTypeEnum? = null,
-    val administrationIds: List<Int>,
-    val controlUnitIds: List<Int>,
 ) {
     companion object {
         fun fromRecentControlsActivityDTO(recentControlActivity: RecentControlsActivityListDTO) =
             RecentControlsActivityDataOutput(
                 id = recentControlActivity.id,
                 actionNumberOfControls = recentControlActivity.actionNumberOfControls,
+                actionStartDateTimeUtc = recentControlActivity.actionStartDateTimeUtc,
                 actionTargetType = recentControlActivity.actionTargetType,
-                themeIds = recentControlActivity.themesIds,
-                subThemeIds = recentControlActivity.subThemesIds,
+                administrationIds = recentControlActivity.administrationIds,
+                controlUnitIds = recentControlActivity.controlUnitsIds,
                 department = recentControlActivity.department,
                 facade = recentControlActivity.facade,
                 geom = recentControlActivity.geom,
                 infractions = recentControlActivity.infractions,
+                missionId = recentControlActivity.missionId,
                 observations = recentControlActivity.observations,
+                subThemeIds = recentControlActivity.subThemesIds,
+                themeIds = recentControlActivity.themesIds,
                 vehicleType = recentControlActivity.vehicleType,
-                administrationIds = recentControlActivity.administrationIds,
-                controlUnitIds = recentControlActivity.controlUnitsIds,
             )
     }
 }
