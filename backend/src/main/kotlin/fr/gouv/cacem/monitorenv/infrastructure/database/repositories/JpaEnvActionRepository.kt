@@ -70,21 +70,25 @@ class JpaEnvActionRepository(
     }
 
     override fun getRecentControlsActivity(
+        administrationIds: List<Int>?,
+        controlUnitIds: List<Int>?,
+        geometry: Geometry?,
+        infractionsStatus: List<String>?,
+        themeIds: List<Int>?,
         startedAfter: Instant,
         startedBefore: Instant,
-        infractionsStatus: List<String>?,
-        controlUnitIds: List<Int>?,
-        administrationIds: List<Int>?,
     ): List<RecentControlsActivityListDTO> {
         val filteredControlUnitIds = if (controlUnitIds.isNullOrEmpty()) null else controlUnitIds
         val filteredAdministrationIds =
             if (administrationIds.isNullOrEmpty()) null else administrationIds
 
         return idbEnvActionRepository.getRecentControlsActivity(
+            administrationIds = filteredAdministrationIds,
+            controlUnitIds = filteredControlUnitIds,
+            geometry = geometry,
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            controlUnitIds = filteredControlUnitIds,
-            administrationIds = filteredAdministrationIds,
+            themeIds = themeIds,
         ).map { row ->
 
             val valueJson = row[2] as String

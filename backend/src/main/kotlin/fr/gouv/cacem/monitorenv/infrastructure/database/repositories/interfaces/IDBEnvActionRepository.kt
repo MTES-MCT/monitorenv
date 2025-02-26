@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
+import org.locationtech.jts.geom.Geometry
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.time.Instant
@@ -32,15 +33,19 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
             AND (env_action.action_start_datetime_utc <= :startedBefore)
             AND (COALESCE(:controlUnitIds, NULL) IS NULL OR control_units.id IN (:controlUnitIds))
             AND (COALESCE(:administrationIds, NULL) IS NULL OR control_units.administration_id IN (:administrationIds))
+            AND (COALESCE(:themeIds, NULL) IS NULL OR themes.theme_id IN (:themeIds))
+            AND (CAST(:geometry AS geometry) IS NULL OR ST_INTERSECTS(st_setsrid(CAST(env_action.geom AS geometry), 4326), st_setsrid(CAST(:geometry AS geometry), 4326)))
             GROUP BY env_action.id
             ORDER BY env_action.action_start_datetime_utc DESC;
         """,
         nativeQuery = true,
     )
     fun getRecentControlsActivity(
+        administrationIds: List<Int>?,
+        controlUnitIds: List<Int>?,
+        geometry: Geometry?,
+        themeIds: List<Int>?,
         startedAfter: Instant,
         startedBefore: Instant,
-        controlUnitIds: List<Int>?,
-        administrationIds: List<Int>?,
     ): List<Array<Any>>
 }
