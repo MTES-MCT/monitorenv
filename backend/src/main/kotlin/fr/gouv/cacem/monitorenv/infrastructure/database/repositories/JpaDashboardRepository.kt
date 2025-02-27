@@ -45,13 +45,14 @@ class JpaDashboardRepository(
         addControlUnits(dashboard, dashboardDatasToSave)
         val dashboardImagesToSave = dashboard.images.map { fromDashboardImageEntity(it) }
 
-        val dashboardModel = dashboardRepository.saveAndFlush(
-            fromDashboardEntity(
-                dashboard,
-                dashboardDatasToSave,
-                dashboardImagesToSave
+        val dashboardModel =
+            dashboardRepository.saveAndFlush(
+                fromDashboardEntity(
+                    dashboard,
+                    dashboardDatasToSave,
+                    dashboardImagesToSave,
+                ),
             )
-        )
         return dashboardModel.toDashboardEntity()
     }
 

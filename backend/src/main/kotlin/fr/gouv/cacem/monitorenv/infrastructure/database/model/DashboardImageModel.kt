@@ -35,16 +35,15 @@ data class DashboardImageModel(
     val size: Int,
 ) : Serializable {
     companion object {
-        fun fromDashboardImageEntity(
-            image: ImageEntity,
-        ) = DashboardImageModel(
-            id = null,
-            content = image.content,
-            name = image.name,
-            mimeType = image.mimeType,
-            dashboard = null,
-            size = image.size,
-        )
+        fun fromDashboardImageEntity(image: ImageEntity) =
+            DashboardImageModel(
+                id = null,
+                content = image.content,
+                name = image.name,
+                mimeType = image.mimeType,
+                dashboard = null,
+                size = image.size,
+            )
     }
 
     fun toDashboardImage() =
