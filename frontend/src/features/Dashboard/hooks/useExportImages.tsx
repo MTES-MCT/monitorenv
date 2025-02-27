@@ -170,15 +170,12 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
       if (!mapRef.current || !mapCanvas || !mapContext || !dashboardFeature) {
         return allImages
       }
-
       if (isBriefWithImagesEnabled) {
         // eslint-disable-next-line no-restricted-syntax
         for (const feature of features) {
           mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
           layersVectorSourceRef.current.clear()
           layersVectorSourceRef.current.addFeature(feature)
-
-          dashboardFeature.setStyle([measurementStyle, measurementStyleWithCenter])
           layersVectorSourceRef.current.addFeature(dashboardFeature)
 
           // eslint-disable-next-line no-await-in-loop
@@ -195,9 +192,6 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
               })
             })
         }
-      } else {
-        dashboardFeature.setStyle([measurementStyle, measurementStyleWithCenter])
-        layersVectorSourceRef.current.addFeature(dashboardFeature)
       }
 
       extractReportingFeatures(features)
@@ -246,6 +240,9 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
 
     const features = extractFeatures(activeDashboard, regulatoryLayers, ampLayers, vigilanceAreas)
     const dashboardFeature = dashboard?.dashboard.geom ? getFeature(dashboard.dashboard.geom) : undefined
+    if (dashboardFeature) {
+      dashboardFeature.setStyle([measurementStyle, measurementStyleWithCenter])
+    }
 
     const generateImages = async () => {
       setLoading(true)

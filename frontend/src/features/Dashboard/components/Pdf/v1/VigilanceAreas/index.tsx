@@ -70,7 +70,7 @@ export function VigilanceAreas({
                     <Text>Thématique</Text>
                   </View>
                   <View style={areaStyle.details}>
-                    <Text> {vigilanceArea.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}</Text>
+                    <Text>{vigilanceArea.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}</Text>
                   </View>
                 </View>
                 <View style={[layoutStyle.row]}>
