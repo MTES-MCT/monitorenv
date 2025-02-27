@@ -68,7 +68,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
       assert.deepInclude(bodyWithoutImageContent, {
         controlUnitIds: [10000, 10023],
         id,
-        images: [{ dashboardId: id, mimeType: 'image/png', name: 'image.png', size: 396656 }],
+        images: [{ mimeType: 'image/png', name: 'image.png', size: 396656 }],
         links: [{ linkText: 'Ceci est un lien en rapport avec le tableau de bord', linkUrl: 'https://www.google.com' }],
         vigilanceAreaIds: [9, 8]
       })

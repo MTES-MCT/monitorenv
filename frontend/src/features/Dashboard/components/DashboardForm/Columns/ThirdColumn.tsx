@@ -97,7 +97,6 @@ export function ThirdColumn({
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.COMMENTS)}
           />
           <Attachments
-            dashboardId={dashboard.dashboard.id}
             images={dashboard.dashboard.images}
             isExpanded={expandedAccordion === Dashboard.Block.ATTACHMENTS}
             links={dashboard.dashboard.links}

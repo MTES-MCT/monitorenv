@@ -77,7 +77,6 @@ class JpaDashboardRepositoryITests : AbstractDBTests() {
                             id = null,
                             name = "image1",
                             content = "content1".decodeBase64Bytes(),
-                            dashboardId = null,
                             size = 1,
                             mimeType = MediaType.IMAGE_JPEG.toString(),
                         ),

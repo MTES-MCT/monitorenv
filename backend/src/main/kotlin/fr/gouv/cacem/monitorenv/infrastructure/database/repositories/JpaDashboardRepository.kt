@@ -3,12 +3,20 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardDatasModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardImageModel.Companion.fromDashboardImageEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardModel.Companion.fromDashboardEntity
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAMPRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardDatasRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardImageRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
+import java.util.UUID
 
 @Repository
 class JpaDashboardRepository(
@@ -35,7 +43,15 @@ class JpaDashboardRepository(
         addVigilanceAreas(dashboard, dashboardDatasToSave)
         addRegulatoryAreas(dashboard, dashboardDatasToSave)
         addControlUnits(dashboard, dashboardDatasToSave)
-        val dashboardModel = dashboardRepository.saveAndFlush(fromDashboardEntity(dashboard, dashboardDatasToSave))
+        val dashboardImagesToSave = dashboard.images.map { fromDashboardImageEntity(it) }
+
+        val dashboardModel = dashboardRepository.saveAndFlush(
+            fromDashboardEntity(
+                dashboard,
+                dashboardDatasToSave,
+                dashboardImagesToSave
+            )
+        )
         return dashboardModel.toDashboardEntity()
     }
 

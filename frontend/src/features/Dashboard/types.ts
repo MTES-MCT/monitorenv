@@ -35,7 +35,7 @@ export namespace Dashboard {
     createdAt?: string
     geom?: GeoJSON.Geometry
     id: string
-    images: ImagePropsForApi[]
+    images: ImageApi[]
     inseeCode?: string
     links: Link[]
     name: string
@@ -44,10 +44,6 @@ export namespace Dashboard {
     seaFront?: string
     updatedAt?: string
     vigilanceAreaIds: number[]
-  }
-
-  export type ImagePropsForApi = ImageApi & {
-    dashboardId?: string
   }
 
   export type Brief = {
@@ -77,7 +73,7 @@ export namespace Dashboard {
     createdAt?: string
     geom?: GeoJSON.Geometry
     id?: string
-    images: ImagePropsForApi[]
+    images: ImageApi[]
     inseeCode?: string
     links: Link[]
     name: string

@@ -15,7 +15,7 @@ export namespace VigilanceArea {
     frequency?: Frequency
     geom?: GeoJSON.MultiPolygon
     id?: number
-    images?: ImagePropsForApi[]
+    images?: ImageApi[]
     isArchived: boolean
     isAtAllTimes: boolean
     isDraft: boolean
@@ -43,7 +43,7 @@ export namespace VigilanceArea {
     frequency: Frequency | undefined
     geom?: GeoJSON.MultiPolygon
     id: number
-    images?: ImagePropsForApi[]
+    images?: ImageApi[]
     isArchived: boolean
     isAtAllTimes: boolean
     isDraft: boolean
@@ -125,10 +125,6 @@ export namespace VigilanceArea {
   }
 
   export type VigilanceAreaLayer = VigilanceArea.VigilanceAreaFromApi & { bbox: number[] }
-
-  export type ImagePropsForApi = ImageApi & {
-    vigilanceAreaId?: number
-  }
 
   export type StatusType = 'DRAFT' | 'PUBLISHED'
 
