@@ -8,7 +8,7 @@ describe('Edit Vigilance Area', () => {
   })
   it('Should successfully update a vigilance area', () => {
     cy.visit('/#@-192242.97,5819420.73,9.93')
-    cy.wait(1000)
+    cy.wait(2000)
     cy.clickButton('Arbre des couches')
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
     cy.wait(1000)
@@ -37,7 +37,7 @@ describe('Edit Vigilance Area', () => {
       expect(updatedVigilanceArea.links[1].linkUrl).equal('https://www.google.com')
 
       // Reset data
-      cy.clickButton('Editer ce lien')
+      cy.clickButton('Editer')
       cy.clickButton('Supprimer ce lien')
       cy.clickButton('Enregistrer')
     })
