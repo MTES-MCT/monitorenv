@@ -15,9 +15,17 @@ const styles = StyleSheet.create({
     fontSize: 13,
     width: '30%'
   },
-  details: {
+  descriptionExternal: {
     fontSize: 10.5,
     fontWeight: 'bold',
+    width: '30%'
+  },
+  details: {
+    fontSize: 10.5,
+    width: '70%'
+  },
+  detailsExternal: {
+    fontSize: 9.3,
     width: '70%'
   },
   footer: {
@@ -28,7 +36,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0
   },
-  footerContent: { display: 'flex', flexDirection: 'row', fontSize: 10.5, justifyContent: 'space-between' },
+  footerContent: { display: 'flex', flexDirection: 'row', fontSize: 9.3, justifyContent: 'space-between' },
   row: {
     ...layoutStyle.row,
     alignItems: 'flex-start'
@@ -74,10 +82,13 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
               </View>
               <View style={styles.details}>
                 {brief.controlUnits.map(({ administration, id, name }) => (
-                  <Text key={id}>
+                  <Text key={id} style={{ fontWeight: 'bold' }}>
                     {name} - {administration.name}
                   </Text>
                 ))}
+                {brief.controlUnits.length === 0 && (
+                  <Text style={{ fontStyle: 'italic' }}>Aucune unité sélectionnée</Text>
+                )}
               </View>
             </View>
             <View style={layoutStyle.row}>
@@ -85,34 +96,50 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 <Text>Zones</Text>
               </View>
               <View style={styles.details}>
-                <Text>{brief.regulatoryAreas.length} zones réglementaires</Text>
-                <Text>{brief.amps.length} Aires Marines Protégées</Text>
-                <Text>{brief.vigilanceAreas.length} zones de vigilance</Text>
+                {brief.regulatoryAreas.length > 0 ? (
+                  <Text style={{ fontWeight: 'bold' }}>{brief.regulatoryAreas.length} zones réglementaires</Text>
+                ) : (
+                  <Text style={{ fontStyle: 'italic' }}>Aucune zone réglementaire</Text>
+                )}
+                {brief.amps.length > 0 ? (
+                  <Text style={{ fontWeight: 'bold' }}>{brief.amps.length} aires marines protégées</Text>
+                ) : (
+                  <Text style={{ fontStyle: 'italic' }}>Aucune aire marine protégée</Text>
+                )}
+                {brief.vigilanceAreas.length > 0 ? (
+                  <Text style={{ fontWeight: 'bold' }}>{brief.vigilanceAreas.length} zones de vigilance</Text>
+                ) : (
+                  <Text style={{ fontStyle: 'italic' }}>Aucune zone de vigilance</Text>
+                )}
               </View>
             </View>
-            <View style={styles.row}>
-              <View style={styles.description}>
-                <Text>Signalements</Text>
+            {brief.reportings.length > 0 && (
+              <View style={styles.row}>
+                <View style={styles.description}>
+                  <Text>Signalements</Text>
+                </View>
+                <View style={styles.details}>
+                  <Text style={{ fontWeight: 'bold' }}>{brief.reportings.length} sélectionnés</Text>
+                </View>
               </View>
-              <View style={styles.details}>
-                <Text>{brief.reportings.length} sélectionnés</Text>
+            )}
+            {!!brief.comments && (
+              <View style={styles.row}>
+                <View style={styles.description}>
+                  <Text>Commentaire</Text>
+                </View>
+                <View style={styles.details}>
+                  <Text>{brief.comments}</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.description}>
-                <Text>Commentaire</Text>
-              </View>
-              <View style={[styles.details, { fontWeight: 'normal' }]}>
-                <Text>{brief.comments}</Text>
-              </View>
-            </View>
+            )}
           </View>
           <View style={{ gap: 21 }} wrap={false}>
             <View style={styles.row}>
-              <View style={styles.description}>
+              <View style={styles.descriptionExternal}>
                 <Text>Légicem</Text>
               </View>
-              <View style={[styles.details, { fontWeight: 'normal' }]}>
+              <View style={[styles.detailsExternal]}>
                 <Link href="https://extranet.legicem.metier.developpement-durable.gouv.fr">
                   https://extranet.legicem.metier.developpement-durable.gouv.fr
                 </Link>
@@ -125,10 +152,10 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
               </View>
             </View>
             <View style={styles.row}>
-              <View style={styles.description}>
+              <View style={styles.descriptionExternal}>
                 <Text>Monitor Ext</Text>
               </View>
-              <View style={[styles.details, { fontWeight: 'normal' }]}>
+              <View style={[styles.detailsExternal]}>
                 <Link href="https://monitorenv.din.developpement-durable.gouv.fr/ext">
                   https://monitorenv.din.developpement-durable.gouv.fr/ext
                 </Link>
