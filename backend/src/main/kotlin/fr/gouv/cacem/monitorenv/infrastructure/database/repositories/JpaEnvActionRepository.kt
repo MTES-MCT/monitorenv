@@ -12,10 +12,15 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanTagMode
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import org.geolatte.geom.MultiPoint
+import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.GeometryFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
+import java.sql.Timestamp
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -78,19 +83,37 @@ class JpaEnvActionRepository(
         startedAfter: Instant,
         startedBefore: Instant,
     ): List<RecentControlsActivityListDTO> {
-        val filteredControlUnitIds = if (controlUnitIds.isNullOrEmpty()) null else controlUnitIds
-        val filteredAdministrationIds =
-            if (administrationIds.isNullOrEmpty()) null else administrationIds
-
         return idbEnvActionRepository.getRecentControlsActivity(
-            administrationIds = filteredAdministrationIds,
-            controlUnitIds = filteredControlUnitIds,
+            administrationIds = administrationIds,
+            controlUnitIds = controlUnitIds,
             geometry = geometry,
             startedAfter = startedAfter,
             startedBefore = startedBefore,
             themeIds = themeIds,
         ).map { row ->
 
+            // convert geometry to JTS Geometry
+            val geomFactory = GeometryFactory()
+            val geom =
+                when (val rawGeom = row[4]) {
+                    is MultiPoint<*> -> {
+                        val coordinates =
+                            rawGeom.positions.map { position ->
+                                val longitude = position.getCoordinate(0)
+                                val latitude = position.getCoordinate(1)
+                                Coordinate(longitude, latitude)
+                            }.toTypedArray()
+                        geomFactory.createMultiPointFromCoords(coordinates)
+                    }
+
+                    else -> null
+                }
+
+            // convert timestamp to ZonedDateTime
+            val timestamp = row[3] as? Timestamp
+            val zonedDateTime = timestamp?.toLocalDateTime()?.atZone(ZoneId.of("UTC"))
+
+            // convert valueJson to RecentControlActivityProperties
             val valueJson = row[2] as String
             val valueObject =
                 objectMapper.readValue(valueJson, RecentControlActivityProperties::class.java)
@@ -98,8 +121,8 @@ class JpaEnvActionRepository(
             RecentControlsActivityListDTO(
                 id = row[0] as UUID,
                 missionId = row[1] as Int,
-                actionStartDateTimeUtc = row[3] as? ZonedDateTime,
-                geom = row[4] as? Geometry,
+                actionStartDateTimeUtc = zonedDateTime as ZonedDateTime,
+                geom = geom as Geometry,
                 facade = row[5] as? String,
                 department = row[6] as? String,
                 themesIds = (row[7] as Array<Int>).toList(),

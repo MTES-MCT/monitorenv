@@ -117,7 +117,17 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
             )
 
         // Then
-        assertThat(recentControlsActivity.size).isEqualTo(4)
+        assertThat(recentControlsActivity.size).isEqualTo(3)
+        recentControlsActivity.forEach { envAction ->
+            if (envAction.actionStartDateTimeUtc != null) {
+                assertThat(envAction.actionStartDateTimeUtc).isAfterOrEqualTo(
+                    ZonedDateTime.parse("2022-01-01T10:54:00Z"),
+                )
+                assertThat(envAction.actionStartDateTimeUtc).isBeforeOrEqualTo(
+                    ZonedDateTime.parse("2050-08-08T23:59:00Z"),
+                )
+            }
+        }
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -139,6 +149,9 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(2)
+        recentControlsActivity.forEach { envAction ->
+            assertThat(envAction.infractions?.size).isGreaterThan(0)
+        }
     }
 
     @Test
@@ -155,7 +168,10 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
                 geometry = null,
             )
         // Then
-        assertThat(recentControlsActivity.size).isEqualTo(2)
+        assertThat(recentControlsActivity.size).isEqualTo(1)
+        recentControlsActivity.forEach { envAction ->
+            assertThat(envAction.infractions?.size).isEqualTo(0)
+        }
     }
 
     @Test
@@ -173,6 +189,9 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(1)
+        recentControlsActivity.forEach { envAction ->
+            assertThat(envAction.controlUnitsIds).contains(10002)
+        }
     }
 
     @Test
@@ -189,7 +208,10 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
                 geometry = null,
             )
         // Then
-        assertThat(recentControlsActivity.size).isEqualTo(2)
+        assertThat(recentControlsActivity.size).isEqualTo(1)
+        recentControlsActivity.forEach { envAction ->
+            assertThat(envAction.administrationIds).contains(1005)
+        }
     }
 
     @Test
@@ -207,6 +229,9 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(1)
+        recentControlsActivity.forEach { envAction ->
+            assertThat(envAction.themesIds).contains(112)
+        }
     }
 
     @Test
@@ -229,5 +254,9 @@ class JpaEnvActionRepositoryITest : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(2)
+        println("Number of Queries Executed: $recentControlsActivity")
+        recentControlsActivity.forEach { envAction ->
+            assertThat(envAction.geom).isNotNull()
+        }
     }
 }

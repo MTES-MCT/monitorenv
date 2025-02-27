@@ -15,7 +15,42 @@ class GetRecentControlsActivityUTest {
     private val getRecentControlsActivity = GetRecentControlsActivity(envActionRepository)
 
     @Test
-    fun `execute should return recent controls activity`() {
+    fun `execute should return recent controls activity with default filter `() {
+        val now = ZonedDateTime.now()
+        // Given
+        val expectedRecentControlsActivity =
+            listOf(RecentControlsActivityListDTOFixture.aRecentControlsActivityListDTO())
+
+        given(
+            envActionRepository.getRecentControlsActivity(
+                administrationIds = null,
+                controlUnitIds = null,
+                geometry = null,
+                infractionsStatus = null,
+                themeIds = null,
+                startedAfter = now.minusDays(30).toInstant(),
+                startedBefore = now.toInstant(),
+            ),
+        ).willReturn(expectedRecentControlsActivity)
+
+        // When
+        val recentControlsActivity =
+            getRecentControlsActivity.execute(
+                administrationIds = null,
+                controlUnitIds = null,
+                geometry = null,
+                infractionsStatus = null,
+                themeIds = null,
+                startedAfter = now.minusDays(30),
+                startedBefore = now,
+            )
+
+        // Then
+        assertThat(expectedRecentControlsActivity).isEqualTo(recentControlsActivity)
+    }
+
+    @Test
+    fun `execute should return recent controls activity with filters`() {
         val now = ZonedDateTime.now()
         // Given
         val expectedRecentControlsActivity =
@@ -44,7 +79,7 @@ class GetRecentControlsActivityUTest {
                 startedAfter = now.minusDays(30),
                 startedBefore = now,
             )
-        
+
         // Then
         assertThat(expectedRecentControlsActivity).isEqualTo(recentControlsActivity)
     }
