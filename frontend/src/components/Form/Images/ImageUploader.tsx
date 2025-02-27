@@ -12,17 +12,14 @@ import { areFilesValid, compressImage, IMAGES_INFORMATIONS_TEXT } from './utils'
 export const IMAGES_WIDTH_LANDSCAPE = '122px'
 export const IMAGES_WIDTH_PORTRAIT = '57px'
 
-type IdProps = Record<string, number | string | undefined>
-
 type ImageUploaderProps = {
-  idParentProps: IdProps
   images?: ImageApi[]
   isSideWindow?: boolean
-  onDelete: (images: (ImageApi & IdProps)[]) => void
-  onUpload: (images: (ImageApi & IdProps)[]) => void
+  onDelete: (images: ImageApi[]) => void
+  onUpload: (images: ImageApi[]) => void
 }
 
-export function ImageUploader({ idParentProps, images, isSideWindow = false, onDelete, onUpload }: ImageUploaderProps) {
+export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const dispatch = useAppDispatch()
@@ -57,8 +54,7 @@ export function ImageUploader({ idParentProps, images, isSideWindow = false, onD
               content,
               mimeType: file.type,
               name: file.name,
-              size: file.size,
-              ...idParentProps
+              size: file.size
             }
             compressedImages.push(compressedImageForApi)
           })
@@ -116,7 +112,7 @@ export function ImageUploader({ idParentProps, images, isSideWindow = false, onD
       <Text $hasError={imagesText !== IMAGES_INFORMATIONS_TEXT}>{imagesText}</Text>
       <PreviewList>
         {imagesFront?.map((image, index) => (
-          <PreviewImagesContainer key={image.id ?? index}>
+          <PreviewImagesContainer key={image.id ?? image.name}>
             <StyledImageButton onClick={() => openImageViewer(index)} type="button">
               <img
                 alt={image.name}

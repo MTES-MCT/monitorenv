@@ -75,7 +75,6 @@ data class VigilanceAreaImageModel(
             content = content,
             name = name,
             mimeType = mimeType,
-            vigilanceAreaId = vigilanceArea.id,
             size = size,
         )
 }

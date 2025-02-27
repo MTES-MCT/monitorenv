@@ -2,6 +2,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { isEmpty } from 'lodash'
 import * as Yup from 'yup'
 
+import type { ImageApi } from '@components/Form/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const DraftSchema: Yup.Schema<
@@ -21,7 +22,7 @@ export const DraftSchema: Yup.Schema<
     frequency: Yup.mixed<VigilanceArea.Frequency>().optional(),
     geom: Yup.mixed<GeoJSON.MultiPolygon>().optional(),
     id: Yup.number().optional(),
-    images: Yup.array<VigilanceArea.ImagePropsForApi>().optional(),
+    images: Yup.array<ImageApi>().optional(),
     isArchived: Yup.boolean().required(),
     isAtAllTimes: Yup.boolean().required(),
     isDraft: Yup.boolean().required(),
@@ -88,7 +89,7 @@ export const PublishedSchema: Yup.Schema<
       })
       .required(),
     id: Yup.number().optional(),
-    images: Yup.array<VigilanceArea.ImagePropsForApi>().optional(),
+    images: Yup.array<ImageApi>().optional(),
     isArchived: Yup.boolean().required(),
     isAtAllTimes: Yup.boolean().required(),
     isDraft: Yup.boolean().required(),

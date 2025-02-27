@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea
 
 data class ImageEntity(
     val id: Int? = null,
-    val vigilanceAreaId: Int? = null,
     val name: String,
     val content: ByteArray,
     val mimeType: String,
@@ -17,7 +16,6 @@ data class ImageEntity(
         if (id != other.id) return false
         if (name != other.name) return false
         if (mimeType != other.mimeType) return false
-        if (vigilanceAreaId != other.vigilanceAreaId) return false
         if (size != other.size) return false
 
         return true
@@ -27,7 +25,6 @@ data class ImageEntity(
         var result = id?.hashCode() ?: 0
         result = 31 * result + name.hashCode()
         result = 31 * result + mimeType.hashCode()
-        result = 31 * result + vigilanceAreaId.hashCode()
         result = 31 * result + size
         return result
     }

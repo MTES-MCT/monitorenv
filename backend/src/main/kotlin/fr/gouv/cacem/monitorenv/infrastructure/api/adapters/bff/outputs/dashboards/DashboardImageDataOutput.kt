@@ -7,7 +7,6 @@ import java.util.UUID
 
 class DashboardImageDataOutput(
     val id: UUID?,
-    val dashboardId: UUID?,
     val name: String,
     @Serializable
     val content: String,
@@ -18,7 +17,6 @@ class DashboardImageDataOutput(
         fun fromDashboardImageEntity(dashboardImage: ImageEntity): DashboardImageDataOutput {
             return DashboardImageDataOutput(
                 id = dashboardImage.id,
-                dashboardId = dashboardImage.dashboardId,
                 name = dashboardImage.name,
                 content = dashboardImage.content.encodeBase64(),
                 mimeType = dashboardImage.mimeType,

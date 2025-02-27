@@ -2,9 +2,17 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import java.io.Serializable
-import java.util.*
+import java.util.UUID
 
 @Entity
 @Table(name = "dashboard_images")
@@ -22,20 +30,19 @@ data class DashboardImageModel(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dashboard_id", nullable = false)
     @JsonBackReference
-    var dashboard: DashboardModel,
+    var dashboard: DashboardModel?,
     @Column(name = "size", nullable = false)
     val size: Int,
 ) : Serializable {
     companion object {
         fun fromDashboardImageEntity(
             image: ImageEntity,
-            dashboard: DashboardModel,
         ) = DashboardImageModel(
             id = null,
             content = image.content,
             name = image.name,
             mimeType = image.mimeType,
-            dashboard = dashboard,
+            dashboard = null,
             size = image.size,
         )
     }
@@ -46,7 +53,6 @@ data class DashboardImageModel(
             content = content,
             name = name,
             mimeType = mimeType,
-            dashboardId = dashboard.id,
             size = size,
         )
 

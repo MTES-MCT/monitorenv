@@ -172,7 +172,6 @@ class DashboardsITests {
             listOf(
                 ImageDataInput(
                     id = imageId,
-                    dashboardId = id,
                     name = "image1",
                     content = "content1",
                     mimeType = MediaType.IMAGE_JPEG.toString(),
@@ -217,7 +216,6 @@ class DashboardsITests {
                             id = imageId,
                             name = "image1",
                             content = "content1".decodeBase64Bytes(),
-                            dashboardId = id,
                             size = 1,
                             mimeType = MediaType.IMAGE_JPEG.toString(),
                         ),
@@ -264,7 +262,6 @@ class DashboardsITests {
             .andExpect(jsonPath("$.images[0].id", equalTo(imageId.toString())))
             .andExpect(jsonPath("$.images[0].name", equalTo("image1")))
             .andExpect(jsonPath("$.images[0].content", equalTo("content1")))
-            .andExpect(jsonPath("$.images[0].dashboardId", equalTo(id.toString())))
             .andExpect(jsonPath("$.images[0].size", equalTo(1)))
             .andExpect(jsonPath("$.images[0].mimeType", equalTo(MediaType.IMAGE_JPEG.toString())))
     }

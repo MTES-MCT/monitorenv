@@ -1,10 +1,9 @@
 package fr.gouv.cacem.monitorenv.domain.entities.dashboard
 
-import java.util.*
+import java.util.UUID
 
 data class ImageEntity(
-    val id: UUID? = null,
-    val dashboardId: UUID? = null,
+    val id: UUID?,
     val name: String,
     val content: ByteArray,
     val mimeType: String,
@@ -18,7 +17,6 @@ data class ImageEntity(
 
         if (size != other.size) return false
         if (id != other.id) return false
-        if (dashboardId != other.dashboardId) return false
         if (name != other.name) return false
         if (!content.contentEquals(other.content)) return false
         if (mimeType != other.mimeType) return false
@@ -29,7 +27,6 @@ data class ImageEntity(
     override fun hashCode(): Int {
         var result = size
         result = 31 * result + (id?.hashCode() ?: 0)
-        result = 31 * result + (dashboardId?.hashCode() ?: 0)
         result = 31 * result + name.hashCode()
         result = 31 * result + content.contentHashCode()
         result = 31 * result + mimeType.hashCode()

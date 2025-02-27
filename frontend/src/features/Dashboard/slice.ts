@@ -8,7 +8,7 @@ import { type Reporting } from 'domain/entities/reporting'
 import { Dashboard } from './types'
 import { filterReportings } from './useCases/filters/filterReportings'
 
-import type { Link } from '@components/Form/types'
+import type { ImageApi, Link } from '@components/Form/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
@@ -308,7 +308,7 @@ export const dashboardSlice = createSlice({
       state.geometry = action.payload
       state.isGeometryValid = action.payload ? isGeometryValid(action.payload) : true
     },
-    setImages(state, action: PayloadAction<Dashboard.ImagePropsForApi[]>) {
+    setImages(state, action: PayloadAction<ImageApi[]>) {
       const id = state.activeDashboardId
 
       if (!id || !state.dashboards[id]) {

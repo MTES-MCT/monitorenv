@@ -6,14 +6,13 @@ import type { ImageFront, Link } from '@components/Form/types'
 
 export const style = StyleSheet.create({
   image: {
-    height: 240,
+    height: 179,
     objectFit: 'cover'
   },
   imageWrapper: {
     ...layoutStyle.row,
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    rowGap: 10.8
+    gap: 7.4
   }
 })
 
@@ -26,7 +25,7 @@ export function Attachments({ images, links }: { images?: ImageFront[]; links: L
       {links.length > 0 && (
         <View style={{ marginBottom: 20 }}>
           <Text style={layoutStyle.header2}>Liens utiles</Text>
-          <View style={{ gap: 8 }}>
+          <View style={{ gap: 7.4 }}>
             {links.map(link => (
               <View key={link.linkUrl} style={layoutStyle.column}>
                 <Text style={[layoutStyle.bold, { fontSize: 9 }]}>{link.linkText}</Text>

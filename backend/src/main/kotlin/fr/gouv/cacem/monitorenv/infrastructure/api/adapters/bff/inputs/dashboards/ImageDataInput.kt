@@ -7,7 +7,6 @@ import java.util.UUID
 
 data class ImageDataInput(
     val id: UUID?,
-    val dashboardId: UUID?,
     val name: String,
     @Serializable
     val content: String,
@@ -17,7 +16,6 @@ data class ImageDataInput(
     fun toImageEntity(): ImageEntity {
         return ImageEntity(
             id = id,
-            dashboardId = dashboardId,
             name = name,
             content = content.decodeBase64Bytes(),
             mimeType = mimeType,

@@ -7,19 +7,17 @@ import styled from 'styled-components'
 
 import { Accordion, Title, TitleContainer } from '../Accordion'
 
-import type { Link } from '@components/Form/types'
-import type { Dashboard } from '@features/Dashboard/types'
+import type { ImageApi, Link } from '@components/Form/types'
 
 type AttachmentsProps = {
-  dashboardId?: string
-  images: Dashboard.ImagePropsForApi[]
+  images: ImageApi[]
   isExpanded: boolean
   links: Link[]
   setExpandedAccordion: () => void
 }
 
 export const Attachments = forwardRef<HTMLDivElement, AttachmentsProps>(
-  ({ dashboardId, images, isExpanded, links, setExpandedAccordion }, ref) => {
+  ({ images, isExpanded, links, setExpandedAccordion }, ref) => {
     const dispatch = useAppDispatch()
     const handleDeleteLink = (updatedLink: Link[]) => {
       dispatch(dashboardActions.setLinks(updatedLink))
@@ -29,11 +27,11 @@ export const Attachments = forwardRef<HTMLDivElement, AttachmentsProps>(
       dispatch(dashboardActions.setLinks(updatedLink))
     }
 
-    const handleDeleteImage = (updatedImages: Dashboard.ImagePropsForApi[]) => {
+    const handleDeleteImage = (updatedImages: ImageApi[]) => {
       dispatch(dashboardActions.setImages(updatedImages))
     }
 
-    const handleUploadImage = (updatedImages: Dashboard.ImagePropsForApi[]) => {
+    const handleUploadImage = (updatedImages: ImageApi[]) => {
       dispatch(dashboardActions.setImages(updatedImages))
     }
 
@@ -50,13 +48,7 @@ export const Attachments = forwardRef<HTMLDivElement, AttachmentsProps>(
       >
         <StyledContainer>
           <Links links={links} onDelete={handleDeleteLink} onValidate={handleValidateLink} />
-          <ImageUploader
-            idParentProps={{ dashboardId }}
-            images={images}
-            isSideWindow
-            onDelete={handleDeleteImage}
-            onUpload={handleUploadImage}
-          />
+          <ImageUploader images={images} isSideWindow onDelete={handleDeleteImage} onUpload={handleUploadImage} />
         </StyledContainer>
       </Accordion>
     )

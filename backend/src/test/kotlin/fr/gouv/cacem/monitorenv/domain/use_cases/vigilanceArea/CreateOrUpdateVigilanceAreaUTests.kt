@@ -31,7 +31,6 @@ class CreateOrUpdateVigilanceAreaUTests {
         val image =
             ImageEntity(
                 id = 1,
-                vigilanceAreaId = 1,
                 name = "test_image.jpg",
                 content = byteArrayOf(1, 2, 3, 4),
                 mimeType = "image/jpeg",

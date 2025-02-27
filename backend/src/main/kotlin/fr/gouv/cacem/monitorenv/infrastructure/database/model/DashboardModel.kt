@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardImageModel.Companion.fromDashboardImageEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -138,6 +137,7 @@ data class DashboardModel(
         fun fromDashboardEntity(
             dashboardEntity: DashboardEntity,
             dashboardDatasModels: List<DashboardDatasModel>,
+            dashboardImagesModels: List<DashboardImageModel>,
         ): DashboardModel {
             val dashboardModel =
                 DashboardModel(
@@ -152,11 +152,8 @@ data class DashboardModel(
                     isDeleted = dashboardEntity.isDeleted,
                     links = dashboardEntity.links,
                 )
-            dashboardDatasModels.forEach {
-                dashboardModel.addDashboardDatas(it)
-            }
-            val images = dashboardEntity.images.map { fromDashboardImageEntity(it, dashboardModel) }
-            images.forEach { dashboardModel.addDashboardImages(it) }
+            dashboardDatasModels.forEach { dashboardModel.addDashboardDatas(it) }
+            dashboardImagesModels.forEach { dashboardModel.addDashboardImages(it) }
 
             return dashboardModel
         }

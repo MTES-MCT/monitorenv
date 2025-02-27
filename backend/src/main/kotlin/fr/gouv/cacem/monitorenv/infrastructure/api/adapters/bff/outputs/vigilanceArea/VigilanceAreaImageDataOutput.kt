@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 class VigilanceAreaImageDataOutput(
     val id: Int?,
-    val vigilanceAreaId: Int?,
     val name: String,
     val content: String,
     val mimeType: String,
@@ -17,7 +16,6 @@ class VigilanceAreaImageDataOutput(
         fun fromVigilanceAreaImage(vigilanceAreaImage: ImageEntity): VigilanceAreaImageDataOutput {
             return VigilanceAreaImageDataOutput(
                 id = vigilanceAreaImage.id,
-                vigilanceAreaId = vigilanceAreaImage.vigilanceAreaId,
                 name = vigilanceAreaImage.name,
                 content = vigilanceAreaImage.content.encodeBase64(),
                 mimeType = vigilanceAreaImage.mimeType,

@@ -7,7 +7,6 @@ export function PhotoUploader() {
 
   return (
     <ImageUploader
-      idParentProps={{ vigilanceAreaId: values.id }}
       images={values.images}
       onDelete={images => setFieldValue('images', images)}
       onUpload={images => setFieldValue('images', images)}
