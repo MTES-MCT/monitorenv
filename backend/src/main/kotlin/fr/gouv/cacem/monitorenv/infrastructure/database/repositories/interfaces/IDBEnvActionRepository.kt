@@ -29,6 +29,8 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
             LEFT JOIN missions_control_units ON env_action.mission_id = missions_control_units.mission_id
             LEFT JOIN control_units ON missions_control_units.control_unit_id = control_units.id
             WHERE env_action.action_type = 'CONTROL'
+            AND env_action.geom IS NOT NULL
+            AND env_action.action_start_datetime_utc IS NOT NULL
             AND (env_action.action_start_datetime_utc >= :startedAfter)
             AND (env_action.action_start_datetime_utc <= :startedBefore)
             AND (COALESCE(:controlUnitIds, NULL) IS NULL OR control_units.id IN (:controlUnitIds))
