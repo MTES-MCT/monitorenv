@@ -1,13 +1,13 @@
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { Accent, Button, Icon, Label, Level, Size } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, Label, Level, Size, useNewWindow } from '@mtes-mct/monitor-ui'
 import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { Orientation, type ImageApi } from '../types'
 import { useImageConverter } from './hook/useImageConverter'
 import { ImageViewer } from './ImageViewer'
-import { areFilesValid, compressImage, IMAGES_INFORMATIONS_TEXT } from './utils'
+import { areFilesValid, compressImage, createInmemoryImage, IMAGES_INFORMATIONS_TEXT } from './utils'
 
 export const IMAGES_WIDTH_LANDSCAPE = '122px'
 export const IMAGES_WIDTH_PORTRAIT = '57px'
@@ -26,7 +26,8 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
 
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
   const [imagesText, setImagesText] = useState<string>(IMAGES_INFORMATIONS_TEXT)
-  const imagesFront = useImageConverter(images)
+  const imagesFront = useImageConverter(images, isSideWindow)
+  const { newWindowContainerRef } = useNewWindow()
 
   const handleFileChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const { current } = inputRef
@@ -36,6 +37,7 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
 
   const uploadImageDisplay = async () => {
     const { current } = inputRef
+
     if (!current?.files) {
       return
     }
@@ -45,8 +47,11 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
       try {
         await Promise.all(
           Array.from(filesToUpload).map(async file => {
-            const img = new Image()
-            img.src = URL.createObjectURL(file)
+            const { container, img } = createInmemoryImage(
+              isSideWindow ? newWindowContainerRef.current : document.body,
+              file
+            )
+
             await img.decode()
             const base64Image = compressImage(img, file.type)
             const content = base64Image.split(',')[1] ?? ''
@@ -55,6 +60,11 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
               mimeType: file.type,
               name: file.name,
               size: file.size
+            }
+            if (isSideWindow) {
+              newWindowContainerRef.current.removeChild(container)
+            } else {
+              document.body.removeChild(container)
             }
             compressedImages.push(compressedImageForApi)
           })
@@ -73,9 +83,11 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
         )
       }
     }
+
     if (!areFilesValid(current.files.length + (images ?? []).length, setImagesText)) {
       return
     }
+
     uploadImages(current.files)
   }
 

@@ -4,7 +4,7 @@ export const IMAGES_INFORMATIONS_TEXT = '5 photos maximum. Formats autorisés: j
 const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
 const IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR = 'Vous ne pouvez charger que 5 images au total'
 
-export async function getImagesForFront(images: ImageApi[]): Promise<ImageFront[]> {
+export async function convertImagesForFront(images: ImageApi[], ref: HTMLElement): Promise<ImageFront[]> {
   const processedImages = await Promise.all(
     images.map(async image => {
       try {
@@ -17,11 +17,12 @@ export async function getImagesForFront(images: ImageApi[]): Promise<ImageFront[
           throw new Error('Invalid base64 content')
         }
         const base64Image = `data:${image.mimeType};base64,${image.content}`
-        const img = new Image()
+        const { container, img } = createInmemoryImage(ref)
         img.src = base64Image
 
         await img.decode()
         const { naturalHeight, naturalWidth } = img
+        ref.removeChild(container)
 
         return {
           image: base64Image,
@@ -71,4 +72,28 @@ export const areFilesValid = (numberOfFiles: number, callback?: (message: string
   }
 
   return true
+}
+
+/** Create a <img> attached to a <div> attached to the given ref. Resolve a Chrome bug on sidewindow that blocks `img.decode` to work
+ *
+ * @param ref ref of the container
+ * @param file source of the image
+ * @returns the image and the container that the image is attached to. Don't forget to unattached it to avoid memory leak
+ */
+export const createInmemoryImage = (ref: HTMLElement, file?: File) => {
+  const img = document.createElement('img')
+  if (file) {
+    img.src = URL.createObjectURL(file)
+  }
+  img.style.display = 'none'
+
+  const container = document.createElement('div')
+  container.style.position = 'absolute'
+  container.style.width = '1px'
+  container.style.height = '1px'
+  container.style.overflow = 'hidden'
+  container.appendChild(img)
+  ref.appendChild(container)
+
+  return { container, img }
 }
