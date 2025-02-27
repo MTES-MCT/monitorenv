@@ -18,7 +18,7 @@ export function Account() {
     auth.signoutRedirect()
   }
   const toggle = () => {
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideAllDialogs())
     dispatch(globalActions.setDisplayedItems({ visibility: { isAccountDialogVisible: !isAccountVisible } }))
   }
 

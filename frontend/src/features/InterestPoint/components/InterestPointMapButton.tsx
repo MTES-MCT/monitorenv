@@ -45,7 +45,7 @@ export function InterestPointMapButton() {
 
   const toggleInterestPointMenu = useCallback(() => {
     if (!isOpen) {
-      dispatch(globalActions.hideSideButtons())
+      dispatch(globalActions.hideAllDialogs())
       dispatch(reduceReportingFormOnMap())
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
       dispatch(closeAllOverlays())

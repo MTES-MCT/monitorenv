@@ -4,6 +4,7 @@ import { DashboardMenuButton } from '@features/Dashboard/components/MenuButton'
 import { InterestPointMapButton } from '@features/InterestPoint/components/InterestPointMapButton'
 import { MeasurementMapButton } from '@features/map/tools/measurements/MeasurementMapButton'
 import { MissionsMenu } from '@features/Mission/components/MissionsButton'
+import { RecentActivityMenuButton } from '@features/RecentActivity/components/RecentActivityMenuButton'
 import { ReportingsButton } from '@features/Reportings/components/ReportingsButton'
 import { SearchSemaphoreButton } from '@features/Semaphore/components/SearchSemaphoreButton'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -22,6 +23,7 @@ export function Menu({ isSuperUser }: MenuProps) {
   const displayReportingsButton = useAppSelector(state => state.global.menus.displayReportingsButton)
   const displayAccountButton = useAppSelector(state => state.global.menus.displayAccountButton)
   const displayDashboard = useAppSelector(state => state.global.menus.displayDashboard)
+  const displayRecentActivityMenuButton = useAppSelector(state => state.global.menus.displayRecentActivityMenuButton)
   const isRightMenuControlUnitListButtonVisible = useAppSelector(
     state => state.global.menus.displayRightMenuControlUnitListButton
   )
@@ -53,6 +55,11 @@ export function Menu({ isSuperUser }: MenuProps) {
       {displayDashboard && isSuperUser && (
         <li>
           <DashboardMenuButton />
+        </li>
+      )}
+      {displayRecentActivityMenuButton && isSuperUser && (
+        <li>
+          <RecentActivityMenuButton />
         </li>
       )}
 

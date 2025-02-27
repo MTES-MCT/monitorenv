@@ -35,7 +35,7 @@ export function MissionsMenu() {
 
   const toggleMissionsMenu = e => {
     e.preventDefault()
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideAllDialogs())
     dispatch(
       setDisplayedItems({
         visibility: { isSearchMissionsVisible: !isSearchMissionsVisible }

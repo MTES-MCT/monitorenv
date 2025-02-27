@@ -41,16 +41,19 @@ type GlobalStateType = {
     displayMissionSelectedLayer: boolean
     displayMissionToAttachLayer: boolean
     displayMissionsLayer: boolean
+
+    displayRecentActivityLayer: boolean
+
     displayReportingEditingLayer: boolean
     displayReportingSelectedLayer: boolean
-
     displayReportingToAttachLayer: boolean
     displayReportingsLayer: boolean
     displayReportingsOverlay: boolean
-    displaySemaphoresLayer: boolean
 
+    displaySemaphoresLayer: boolean
     displayStationLayer: boolean
     displayVigilanceAreaLayer: boolean
+
     isLayersSidebarVisible: boolean
   }
   menus: {
@@ -62,6 +65,7 @@ type GlobalStateType = {
     displayLocateOnMap: boolean
     displayMeasurement: boolean
     displayMissionMenuButton: boolean
+    displayRecentActivityMenuButton: boolean
     displayReportingsButton: boolean
     displayRightMenuControlUnitListButton: boolean
     displaySearchSemaphoreButton: boolean
@@ -77,6 +81,7 @@ type GlobalStateType = {
     isDashboardDialogVisible: boolean
     isLayersSidebarVisible: boolean
     isMapToolVisible?: MapToolType
+    isRecentActivityDialogVisible: boolean
     isSearchMissionsVisible: boolean
     isSearchReportingsVisible: boolean
     isSearchSemaphoreVisible: boolean
@@ -93,6 +98,7 @@ const initialMenuState = {
   displayLocateOnMap: true,
   displayMeasurement: true,
   displayMissionMenuButton: true,
+  displayRecentActivityMenuButton: true,
   displayReportingsButton: true,
   displayRightMenuControlUnitListButton: true,
   displaySearchSemaphoreButton: true
@@ -105,16 +111,19 @@ const initialLayers = {
   displayMissionSelectedLayer: true,
   displayMissionsLayer: true,
   displayMissionToAttachLayer: true,
+
+  displayRecentActivityLayer: false,
+
   displayReportingEditingLayer: true,
   displayReportingSelectedLayer: true,
-
   displayReportingsLayer: true,
   displayReportingsOverlay: true,
   displayReportingToAttachLayer: true,
-  displaySemaphoresLayer: true,
 
+  displaySemaphoresLayer: true,
   displayStationLayer: false,
   displayVigilanceAreaLayer: true,
+
   isLayersSidebarVisible: true
 }
 
@@ -124,6 +133,7 @@ const initialVisibility = {
   isControlUnitListDialogVisible: false,
   isDashboardDialogVisible: false,
   isLayersSidebarVisible: false,
+  isRecentActivityDialogVisible: false,
   isSearchMissionsVisible: false,
   isSearchReportingsVisible: false,
   isSearchSemaphoreVisible: false,
@@ -154,11 +164,11 @@ const globalSlice = createSlice({
       state.openedOverlayId = 'NONE'
     },
 
-    // TODO Rename to `hideAllDialogs`.
-    hideSideButtons(state) {
+    hideAllDialogs(state) {
       state.visibility.isAccountDialogVisible = false
       state.visibility.isControlUnitDialogVisible = false
       state.visibility.isControlUnitListDialogVisible = false
+      state.visibility.isRecentActivityDialogVisible = false
       state.visibility.isSearchReportingsVisible = false
       state.visibility.isSearchSemaphoreVisible = false
       state.visibility.isSearchMissionsVisible = false
@@ -238,7 +248,7 @@ const globalSlice = createSlice({
 
 export const {
   closeOpenedOverlay,
-  hideSideButtons,
+  hideAllDialogs,
   removeOverlayStroke,
   removeToast,
   restorePreviousDisplayedItems,

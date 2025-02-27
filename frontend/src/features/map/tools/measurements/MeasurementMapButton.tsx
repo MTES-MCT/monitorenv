@@ -46,7 +46,7 @@ export function MeasurementMapButton() {
   }, [dispatch, isOpen, isMeasurementToolOpen, measurementTypeToAdd])
 
   const makeMeasurement = nextMeasurementTypeToAdd => {
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideAllDialogs())
     dispatch(setMeasurementTypeToAdd(nextMeasurementTypeToAdd))
     dispatch(globalActions.setIsMapToolVisible(MapToolType.MEASUREMENT))
     dispatch(closeAllOverlays())
@@ -68,7 +68,7 @@ export function MeasurementMapButton() {
       dispatch(setMeasurementTypeToAdd(undefined))
       dispatch(globalActions.setIsMapToolVisible(undefined))
     } else {
-      dispatch(globalActions.hideSideButtons())
+      dispatch(globalActions.hideAllDialogs())
       dispatch(globalActions.setIsMapToolVisible(MapToolType.MEASUREMENT_MENU))
     }
     dispatch(reduceReportingFormOnMap())

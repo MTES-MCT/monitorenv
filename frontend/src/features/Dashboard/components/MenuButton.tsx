@@ -25,7 +25,7 @@ export function DashboardMenuButton() {
   const toggleDashboardDialog = e => {
     e.preventDefault()
 
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideAllDialogs())
     dispatch(
       setDisplayedItems({
         visibility: { isDashboardDialogVisible: !isDashboardDialogVisible }
@@ -41,8 +41,6 @@ export function DashboardMenuButton() {
   const goToDashboardsList = () => dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.DASHBOARDS))
 
   const openDrawModal = () => {
-    // TODO: delete this line, it's just to test the Weather block which needs a geometry
-    dispatch(resetDrawing())
     dispatch(dashboardActions.setIsDrawing(true))
   }
 
