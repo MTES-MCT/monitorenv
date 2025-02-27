@@ -33,6 +33,7 @@ export function ThirdColumn({
   const controlUnitRef = useRef<HTMLDivElement>(null)
   const commentsRef = useRef<HTMLDivElement>(null)
   const weatherRef = useRef<HTMLDivElement>(null)
+  const attachmentsRef = useRef<HTMLDivElement>(null)
 
   const [controlUnitBookmark, setControlUnitBookmark] = useState<BookmarkType>({
     ref: controlUnitRef,
@@ -51,10 +52,15 @@ export function ThirdColumn({
     title: 'Météo',
     visible: false
   })
-  const topBookmarks = [controlUnitBookmark, commentsBookmark, weatherBookmark].filter(
+  const [attachmentsBookmark, setAttachmentsBookmark] = useState<BookmarkType>({
+    ref: attachmentsRef,
+    title: 'Pièces jointes',
+    visible: false
+  })
+  const topBookmarks = [controlUnitBookmark, commentsBookmark, weatherBookmark, attachmentsBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'top'
   )
-  const bottomBookmarks = [controlUnitBookmark, commentsBookmark, weatherBookmark].filter(
+  const bottomBookmarks = [controlUnitBookmark, commentsBookmark, weatherBookmark, attachmentsBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'bottom'
   )
 
@@ -63,7 +69,8 @@ export function ThirdColumn({
   useObserverAccordion(columnRef, [
     { ref: controlUnitRef, setState: setControlUnitBookmark },
     { ref: commentsRef, setState: setCommentsBookmark },
-    { ref: weatherRef, setState: setWeatherBookmark }
+    { ref: weatherRef, setState: setWeatherBookmark },
+    { ref: attachmentsRef, setState: setAttachmentsBookmark }
   ])
 
   useEffect(() => {
@@ -97,6 +104,7 @@ export function ThirdColumn({
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.COMMENTS)}
           />
           <Attachments
+            ref={attachmentsRef}
             images={dashboard.dashboard.images}
             isExpanded={expandedAccordion === Dashboard.Block.ATTACHMENTS}
             links={dashboard.dashboard.links}
