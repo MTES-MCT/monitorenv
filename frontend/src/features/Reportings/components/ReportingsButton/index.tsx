@@ -12,7 +12,7 @@ export function ReportingsButton() {
   const isSearchReportingsVisible = useAppSelector(state => state.global.visibility.isSearchReportingsVisible)
 
   const toggleSearchReportings = () => {
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideAllDialogs())
     dispatch(reduceReportingFormOnMap())
     dispatch(globalActions.setDisplayedItems({ visibility: { isSearchReportingsVisible: !isSearchReportingsVisible } }))
   }

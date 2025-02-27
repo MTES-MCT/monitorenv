@@ -72,7 +72,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
 
   const modifyInterestPoint = useCallback(
     (uuid: string) => {
-      dispatch(globalActions.hideSideButtons())
+      dispatch(globalActions.hideAllDialogs())
       dispatch(editInterestPoint(uuid))
       dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
     },
@@ -80,7 +80,7 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
   )
 
   const openEdition = useCallback(() => {
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideAllDialogs())
     dispatch(globalActions.setIsMapToolVisible(MapToolType.INTEREST_POINT))
   }, [dispatch])
 

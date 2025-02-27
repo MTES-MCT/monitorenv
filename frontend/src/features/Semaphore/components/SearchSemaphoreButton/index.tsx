@@ -12,7 +12,7 @@ export function SearchSemaphoreButton() {
   const isSearchSemaphoreVisible = useAppSelector(state => state.global.visibility.isSearchSemaphoreVisible)
 
   const openOrCloseSearchSemaphore = () => {
-    dispatch(globalActions.hideSideButtons())
+    dispatch(globalActions.hideAllDialogs())
     dispatch(reduceReportingFormOnMap())
     dispatch(globalActions.setDisplayedItems({ visibility: { isSearchSemaphoreVisible: !isSearchSemaphoreVisible } }))
   }

@@ -16,6 +16,11 @@ export const StyledMapMenuDialogContainer = styled(MapMenuDialog.Container)`
   transform: translateX(-100%);
 `
 
+export const StyledMapMenuDialogTitle = styled(MapMenuDialog.Title)`
+  font-weight: normal;
+  margin: auto;
+`
+
 // TODO delete when Monitor-ui component have good padding
 export const DialogButton = styled(Button)`
   padding: 4px 12px;

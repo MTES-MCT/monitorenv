@@ -41,7 +41,7 @@ import {
   ReportingTypeLabels
 } from 'domain/entities/reporting'
 import {
-  hideSideButtons,
+  hideAllDialogs,
   ReportingContext,
   setReportingFormVisibility,
   VisibilityState
@@ -221,7 +221,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
 
   const reduceOrCollapseReporting = () => {
     if (isMapContext) {
-      dispatch(hideSideButtons())
+      dispatch(hideAllDialogs())
     }
     dispatch(reduceOrCollapseReportingForm(reportingContext))
   }

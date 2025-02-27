@@ -6,7 +6,7 @@ import { ReportingFormWithContext } from './components/ReportingForm'
 import { Header } from './components/ReportingForm/Header'
 import { reduceOrCollapseReportingForm } from './useCases/reduceOrCollapseReportingForm'
 import { switchReporting } from './useCases/switchReporting'
-import { hideSideButtons, ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
+import { hideAllDialogs, ReportingContext, VisibilityState } from '../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
@@ -42,7 +42,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
     }
 
     if (reporting.context === ReportingContext.MAP) {
-      dispatch(hideSideButtons())
+      dispatch(hideAllDialogs())
     }
 
     return dispatch(switchReporting(id, context))
