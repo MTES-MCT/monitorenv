@@ -140,7 +140,6 @@ const initialState: GlobalStateType = {
 
   previousDisplayedItems: {
     layers: initialLayers,
-    menus: initialMenuState,
     visibility: initialVisibility
   },
 
@@ -177,7 +176,7 @@ const globalSlice = createSlice({
 
     restorePreviousDisplayedItems(state) {
       state.layers = state.previousDisplayedItems.layers
-      state.menus = state.previousDisplayedItems.menus
+      state.menus = initialMenuState
       state.visibility = {
         ...state.previousDisplayedItems.visibility,
         reportingFormVisibility: state.visibility.reportingFormVisibility
@@ -191,7 +190,7 @@ const globalSlice = createSlice({
         visibility?: Partial<GlobalStateType['visibility']>
       }>
     ) {
-      state.previousDisplayedItems = { layers: state.layers, menus: state.menus, visibility: state.visibility }
+      state.previousDisplayedItems = { layers: state.layers, visibility: state.visibility }
 
       state.layers = { ...state.layers, ...(action.payload.layers ?? {}) }
       state.menus = { ...state.menus, ...(action.payload.menus ?? {}) }
