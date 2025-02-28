@@ -15,8 +15,9 @@ type MenuProps = {
 }
 
 export function Menu({ isSuperUser }: MenuProps) {
-  const displaySearchSemaphoreButton = useAppSelector(state => state.global.menus.displaySearchSemaphoreButton)
+  const isRecentActivityEnabled = import.meta.env.FRONTEND_RECENT_ACTIVITY_ENABLED === 'true'
 
+  const displaySearchSemaphoreButton = useAppSelector(state => state.global.menus.displaySearchSemaphoreButton)
   const displayInterestPoint = useAppSelector(state => state.global.menus.displayInterestPoint)
   const displayMeasurement = useAppSelector(state => state.global.menus.displayMeasurement)
   const displayMissionMenuButton = useAppSelector(state => state.global.menus.displayMissionMenuButton)
@@ -57,7 +58,7 @@ export function Menu({ isSuperUser }: MenuProps) {
           <DashboardMenuButton />
         </li>
       )}
-      {displayRecentActivityMenuButton && isSuperUser && (
+      {displayRecentActivityMenuButton && isSuperUser && isRecentActivityEnabled && (
         <li>
           <RecentActivityMenuButton />
         </li>
