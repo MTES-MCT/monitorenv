@@ -89,7 +89,6 @@ export function AreaTable({
   return (
     <>
       <Text style={layoutStyle.header1}>Récapitulatif</Text>
-
       {image && <Image src={image.image} style={{ marginBottom: 6.2 }} />}
 
       <View style={layoutStyle.header2}>
@@ -118,7 +117,13 @@ export function AreaTable({
             </View>
             <View style={{ flex: 0.8 }}>
               {layers.map(layer => (
-                <View key={layer.id} style={[styles.cell, getTitle(groupName).length > 30 ? { height: '100%' } : {}]}>
+                <View
+                  key={layer.id}
+                  style={[
+                    styles.cell,
+                    layers.length === 1 && getTitle(groupName).length > 30 ? { height: '100%' } : {}
+                  ]}
+                >
                   <View
                     style={[
                       styles.layerLegend,
