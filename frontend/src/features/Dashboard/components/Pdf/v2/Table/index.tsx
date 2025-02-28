@@ -29,6 +29,9 @@ const styles = StyleSheet.create({
     minHeight: minHeightCell,
     padding: '4.3 5 4.3 5.6'
   },
+  cellText: {
+    padding: '0 4.3'
+  },
   header: {
     flexDirection: 'row',
     fontSize: 6.8,
@@ -48,7 +51,6 @@ const styles = StyleSheet.create({
   layerLegend: {
     border: `0.5 solid ${THEME.color.slateGray}`,
     height: 8,
-    marginRight: 5,
     width: 8
   },
   regulatoryArea: {
@@ -122,7 +124,7 @@ export function AreaTable({
                       }
                     ]}
                   />
-                  <Text>{layer.entityName || 'AUCUN NOM'}</Text>
+                  <Text style={styles.cellText}>{layer.entityName || 'AUCUN NOM'}</Text>
                 </View>
               ))}
             </View>
@@ -146,7 +148,7 @@ export function AreaTable({
                     }
                   ]}
                 />
-                <Text style={{ fontWeight: 'bold' }}>
+                <Text style={[styles.cellText, { fontWeight: 'bold' }]}>
                   {getTitle(amp.name)} <Text style={{ fontWeight: 'normal' }}> / {amp.type ?? 'AUCUN NOM'}</Text>
                 </Text>
               </View>
@@ -169,7 +171,7 @@ export function AreaTable({
                     }
                   ]}
                 />
-                <Text>{vigilanceArea.name}</Text>
+                <Text style={styles.cellText}>{vigilanceArea.name}</Text>
               </View>
             ))}
           </View>
