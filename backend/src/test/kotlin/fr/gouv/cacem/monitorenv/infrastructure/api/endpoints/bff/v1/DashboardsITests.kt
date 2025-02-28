@@ -152,7 +152,7 @@ class DashboardsITests {
         // Given
         val id = UUID.randomUUID()
         val name = "dashboard1"
-        val comments = ""
+        val comments = "comments"
         val geometry = WKTReader().read(geometry)
         val amps = listOf(1)
         val regulatoryAreas = listOf(2)

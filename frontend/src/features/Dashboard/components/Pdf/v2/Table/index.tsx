@@ -88,6 +88,8 @@ export function AreaTable({
 
   return (
     <>
+      <Text style={layoutStyle.header1}>Récapitulatif</Text>
+
       {image && <Image src={image.image} style={{ marginBottom: 6.2 }} />}
 
       <View style={layoutStyle.header2}>

@@ -17,7 +17,7 @@ export async function convertImagesForFront(images: ImageApi[], ref: HTMLElement
           throw new Error('Invalid base64 content')
         }
         const base64Image = `data:${image.mimeType};base64,${image.content}`
-        const { container, img } = createInmemoryImage(ref)
+        const { container, img } = createInMemoryImage(ref)
         img.src = base64Image
 
         await img.decode()
@@ -80,7 +80,7 @@ export const areFilesValid = (numberOfFiles: number, callback?: (message: string
  * @param file source of the image
  * @returns the image and the container that the image is attached to. Don't forget to unattached it to avoid memory leak
  */
-export const createInmemoryImage = (ref: HTMLElement, file?: File) => {
+export const createInMemoryImage = (ref: HTMLElement, file?: File) => {
   const img = document.createElement('img')
   if (file) {
     img.src = URL.createObjectURL(file)

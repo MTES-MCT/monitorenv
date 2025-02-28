@@ -1,4 +1,5 @@
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, Label, Level, Size, useNewWindow } from '@mtes-mct/monitor-ui'
 import { useRef, useState } from 'react'
@@ -7,7 +8,7 @@ import styled from 'styled-components'
 import { Orientation, type ImageApi } from '../types'
 import { useImageConverter } from './hook/useImageConverter'
 import { ImageViewer } from './ImageViewer'
-import { areFilesValid, compressImage, createInmemoryImage, IMAGES_INFORMATIONS_TEXT } from './utils'
+import { areFilesValid, compressImage, createInMemoryImage, IMAGES_INFORMATIONS_TEXT } from './utils'
 
 export const IMAGES_WIDTH_LANDSCAPE = '122px'
 export const IMAGES_WIDTH_PORTRAIT = '57px'
@@ -47,7 +48,7 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
       try {
         await Promise.all(
           Array.from(filesToUpload).map(async file => {
-            const { container, img } = createInmemoryImage(
+            const { container, img } = createInMemoryImage(
               isSideWindow ? newWindowContainerRef.current : document.body,
               file
             )
@@ -72,14 +73,23 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
 
         onUpload([...(images ?? []), ...compressedImages])
       } catch (error) {
+        const errorMessage = "Un problème est survenu lors de l'ajout de la photo. Veuillez recommencer"
         dispatch(
-          addMainWindowBanner({
-            children: "Un problème est survenu lors de l'ajout de la photo. Veuillez recommencer",
-            isClosable: true,
-            isFixed: true,
-            level: Level.ERROR,
-            withAutomaticClosing: true
-          })
+          isSideWindow
+            ? addSideWindowBanner({
+                children: errorMessage,
+                isClosable: true,
+                isFixed: true,
+                level: Level.ERROR,
+                withAutomaticClosing: true
+              })
+            : addMainWindowBanner({
+                children: errorMessage,
+                isClosable: true,
+                isFixed: true,
+                level: Level.ERROR,
+                withAutomaticClosing: true
+              })
         )
       }
     }

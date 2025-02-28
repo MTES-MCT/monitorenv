@@ -16,7 +16,7 @@ export function PanelImages({
   vigilanceAreaName: string | undefined
 }) {
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
-  const imagesFront = useImageConverter(images)
+  const imagesFront = useImageConverter(images, isSideWindow)
 
   const openImageViewer = (currentIndex: number) => {
     setImageViewerCurrentIndex(currentIndex)
