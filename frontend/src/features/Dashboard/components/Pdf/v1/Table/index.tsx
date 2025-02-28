@@ -14,6 +14,7 @@ import type { AMPFromAPI } from 'domain/entities/AMPs'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
 const maxHeightCell = 30
+const minHeightCell = 20
 const styles = StyleSheet.create({
   amp: {
     backgroundColor: '#D6DF64',
@@ -25,8 +26,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     fontSize: 6.8,
     maxHeight: maxHeightCell,
-    padding: '4.3 5 4.3 5.6',
-    width: '100%'
+    minHeight: minHeightCell,
+    padding: '4.3 5 4.3 5.6'
   },
   header: {
     flexDirection: 'row',
@@ -38,11 +39,11 @@ const styles = StyleSheet.create({
   },
   layerGroup: {
     border: `0.5 solid ${THEME.color.blueGray25}`,
+    flex: 0.2,
     fontSize: 6.8,
     fontWeight: 'bold',
     justifyContent: 'center',
-    padding: '4.3 12',
-    width: '20%'
+    padding: '4.3 12'
   },
   layerLegend: {
     border: `0.5 solid ${THEME.color.slateGray}`,
@@ -86,29 +87,33 @@ export function AreaTable({
   return (
     <>
       {image && <Image src={image.image} style={{ marginBottom: 6.2 }} />}
-
       <View style={layoutStyle.header}>
         <Text style={layoutStyle.title}>Zones</Text>
         <Text style={layoutStyle.selected}>{totalSelected} sélectionnée(s)</Text>
       </View>
-
       <View style={[styles.regulatoryArea, styles.header]}>
         <Text>Zones réglementaires</Text>
         <Text>{regulatoryAreas.length} sélectionnée(s)</Text>
       </View>
-      <View style={[styles.table, { marginBottom: 7.4 }]}>
+      <View style={{ marginBottom: 7.4 }}>
         {Object.entries(groupedRegulatoryAreas).map(([groupName, layers]) => (
           <View
             key={groupName}
-            style={[layoutStyle.row, { maxHeight: layers.length * maxHeightCell, width: '100%' }]}
+            style={[
+              layoutStyle.row,
+              {
+                maxHeight: layers.length * maxHeightCell,
+                minHeight: layers.length * minHeightCell
+              }
+            ]}
             wrap={false}
           >
-            <View style={[styles.layerGroup, { height: '100%' }]}>
+            <View style={[styles.layerGroup]}>
               <Text>{getTitle(groupName)}</Text>
             </View>
-            <View style={[layoutStyle.column, { height: '100%', width: '80%' }]}>
+            <View style={{ flex: 0.8 }}>
               {layers.map(layer => (
-                <View key={layer.id} style={[styles.cell, { height: '100%' }]}>
+                <View key={layer.id} style={[styles.cell, getTitle(groupName).length > 30 ? { height: '100%' } : {}]}>
                   <View
                     style={[
                       styles.layerLegend,
@@ -124,7 +129,6 @@ export function AreaTable({
           </View>
         ))}
       </View>
-
       <View break style={layoutStyle.row}>
         <View style={{ width: '50%' }}>
           <View style={[styles.amp, styles.header]}>
