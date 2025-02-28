@@ -177,7 +177,7 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
             <Image source="logo-CACEM.jpeg" style={{ width: 55 }} />
             <View>
               <Text>02 90 74 32 55</Text>
-              <Link href="cacem@mer.gouv.fr">cacem@mer.gouv.fr</Link>
+              <Link href="mailto:cacem@mer.gouv.fr">cacem@mer.gouv.fr</Link>
             </View>
           </View>
           <View style={{ alignItems: 'flex-end', display: 'flex', flexDirection: 'column' }}>
