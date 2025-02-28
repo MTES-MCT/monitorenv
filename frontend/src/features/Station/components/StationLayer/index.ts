@@ -76,7 +76,19 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
             filteredControlUnits.some(controlUnit => controlUnit.controlUnitResourceIds.includes(stationId))
           )
         })
-        .map(getStationPointFeature),
+        .map(station => {
+          const filteredControlUnitResourceIds = filteredControlUnits
+            .map(controlUnit => controlUnit.controlUnitResourceIds)
+            .flat()
+
+          return getStationPointFeature({
+            ...station,
+            controlUnitResourceIds: filteredControlUnitResourceIds,
+            controlUnitResources: station.controlUnitResources.filter(controlUnitResource =>
+              filteredControlUnitResourceIds.includes(controlUnitResource.id)
+            )
+          })
+        }),
     [filteredControlUnits, stations]
   )
 

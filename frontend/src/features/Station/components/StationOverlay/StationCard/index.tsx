@@ -1,5 +1,5 @@
+import { getFilteredControlUnits } from '@features/ControlUnit/useCases/getFilteredControlUnits'
 import { type ControlUnit, MapMenuDialog } from '@mtes-mct/monitor-ui'
-import { isNotArchived } from '@utils/isNotArchived'
 import { uniq } from 'lodash/fp'
 import { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -21,6 +21,8 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
 
   const dispatch = useAppDispatch()
   const displayStationLayer = useAppSelector(state => state.global.layers.displayStationLayer)
+  const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
+
   const hasMapInteraction = useHasMapInteraction()
 
   const featureProperties = feature.getProperties() as {
@@ -42,7 +44,6 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
     const controlUnitIds = uniq(
       featureProperties.station.controlUnitResources.map(controlUnitResource => controlUnitResource.controlUnitId)
     )
-
     const controlUnitsFromApi = await Promise.all(
       controlUnitIds.map(async controlUnitResourceId => {
         const { data: controlUnit } = await dispatch(
@@ -55,10 +56,12 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
         return controlUnit
       })
     )
-    const filteredControlUnits = controlUnitsFromApi?.filter(isNotArchived)
+
+    // Appliquer les filtres de mapControlUnitListDialog
+    const filteredControlUnits = getFilteredControlUnits('', mapControlUnitListDialog.filtersState, controlUnitsFromApi)
 
     setControlUnits(filteredControlUnits)
-  }, [dispatch, featureProperties.station])
+  }, [dispatch, featureProperties.station, mapControlUnitListDialog.filtersState])
 
   useEffect(() => {
     updateControlUnits()
