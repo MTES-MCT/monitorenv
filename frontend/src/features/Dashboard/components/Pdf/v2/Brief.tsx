@@ -75,7 +75,8 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           </View>
         </Page>
       )}
-      {((brief.attachments.images && brief.attachments.images.length > 0) ?? brief.attachments.links.length > 0) && (
+      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+      {((brief.attachments.images && brief.attachments.images?.length > 0) || brief.attachments.links.length > 0) && (
         <Page style={layoutStyle.page}>
           <Headings name={brief.name} />
           <View style={layoutStyle.section}>
