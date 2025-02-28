@@ -1,5 +1,5 @@
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import { difference, intersection } from 'lodash'
+import { difference, intersection } from 'lodash-es'
 
 import type { SelectionState } from '.'
 import type { Dashboard } from '@features/Dashboard/types'

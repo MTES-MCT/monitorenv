@@ -1,5 +1,5 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
-import _ from 'lodash'
+import { chain } from 'lodash-es'
 
 import {
   ReportingSourceEnum,
@@ -41,7 +41,7 @@ export function isNewReporting(id: string | number | undefined) {
 }
 
 export const createIdForNewReporting = reportings => {
-  const maxNewReportingId = _.chain(reportings)
+  const maxNewReportingId = chain(reportings)
     .filter(newReporting => isNewReporting(newReporting.reporting.id))
     .maxBy(filteredNewReporting => Number(filteredNewReporting?.reporting?.id?.split('new-')[1]))
     .value()

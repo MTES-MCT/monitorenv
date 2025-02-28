@@ -7,7 +7,7 @@ import { getFeature } from '@utils/getFeature'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { addSemaphore, setSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
-import { reduce } from 'lodash'
+import { reduce } from 'lodash-es'
 import { useRef, useState } from 'react'
 import styled from 'styled-components'
 

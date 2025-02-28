@@ -1,5 +1,5 @@
 import { useDrawVectorLayer } from '@hooks/useDrawVectorLayer'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { Modify } from 'ol/interaction'
 import Draw, { createBox, createRegularPolygon, type GeometryFunction } from 'ol/interaction/Draw'
 import React, { useCallback, useEffect } from 'react'
