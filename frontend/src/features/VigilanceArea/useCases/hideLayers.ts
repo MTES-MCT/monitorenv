@@ -15,6 +15,7 @@ export const hideLayers =
           displayMissionSelectedLayer: false,
           displayMissionsLayer: false,
           displayMissionToAttachLayer: false,
+          displayRecentActivityLayer: false,
           displayReportingEditingLayer: false,
           displayReportingSelectedLayer: false,
           displayReportingsLayer: false,

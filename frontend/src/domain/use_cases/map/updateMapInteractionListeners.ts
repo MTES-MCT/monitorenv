@@ -62,6 +62,7 @@ const openDrawLayerModal = (dispatch, hideSidebarAndInterestPoint = true) => {
         displayLocateOnMap: true,
         displayMeasurement: false,
         displayMissionMenuButton: false,
+        displayRecentActivityMenuButton: false,
         displayReportingsButton: false,
         displayRightMenuControlUnitListButton: false,
         displaySearchSemaphoreButton: false

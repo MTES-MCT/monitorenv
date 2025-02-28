@@ -1,5 +1,6 @@
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
@@ -16,8 +17,8 @@ import type { Geometry } from 'ol/geom'
 
 export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
-
-  const isLayerVisible = displayRecentActivityLayer
+  const hasMapInteraction = useHasMapInteraction()
+  const isLayerVisible = displayRecentActivityLayer && !hasMapInteraction
 
   const [getRecentControlsActivity, { data: recentControlsActivity }] = useGetRecentControlsActivityMutation()
 
