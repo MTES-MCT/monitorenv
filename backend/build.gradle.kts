@@ -61,7 +61,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-configuration-processor:3.4.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
-    implementation("org.http4k:http4k-client-apache:5.46.0.0")
+    implementation("org.http4k:http4k-client-apache:6.0.1.0")
     implementation("com.google.code.gson:gson:2.12.1")
     implementation("org.springframework.boot:spring-boot-starter-cache:3.4.3")
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
