@@ -142,7 +142,7 @@ export function AreaTable({
       <View break style={layoutStyle.row}>
         <View style={{ width: '50%' }}>
           <View style={[styles.amp, styles.header]}>
-            <Text>Zones AMP</Text>
+            <Text>Aires marines protégées</Text>
             <Text>{amps.length} sélectionnée(s)</Text>
           </View>
           <View style={styles.table}>

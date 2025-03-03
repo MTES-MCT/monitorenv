@@ -14,7 +14,7 @@ export function Amps({ amps, images }: { amps: AMPFromAPI[]; images: ExportImage
   return (
     <>
       <View style={layoutStyle.header2}>
-        <Text style={layoutStyle.title}>Zones AMP</Text>
+        <Text style={layoutStyle.title}>Aires marines protégées</Text>
         <Text style={layoutStyle.selected}>{amps.length} sélectionnée(s)</Text>
       </View>
       <View style={layoutStyle.cardWrapper}>
