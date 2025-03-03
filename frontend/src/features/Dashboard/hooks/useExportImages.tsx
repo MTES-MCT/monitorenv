@@ -29,7 +29,7 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 import type { ImageLike } from 'ol/DataTile'
 import type { Geometry } from 'ol/geom'
 
-const resolution = { height: '720px', width: '1280px' }
+const resolution = { height: '480px', width: '720px' }
 
 function loadImage(src: string) {
   return new Promise<ImageLike>((resolve, reject) => {
