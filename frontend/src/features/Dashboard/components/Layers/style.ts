@@ -2,14 +2,16 @@ import { Dashboard } from '@features/Dashboard/types'
 import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { editingReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
+import { getFormattedReportingId } from '@features/Reportings/utils'
 import { getVigilanceAreaLayerStyle } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
+import { THEME } from '@mtes-mct/monitor-ui'
 import { getCenter } from 'ol/extent'
 import { Point } from 'ol/geom'
-import { Icon, Style } from 'ol/style'
+import { Fill, Icon, Stroke, Style, Text } from 'ol/style'
 
 import type { FeatureLike } from 'ol/Feature'
 
-export const getDashboardStyle = (feature: FeatureLike) => {
+export const getDashboardStyle = (feature: FeatureLike, { withReportingOverlay = false } = {}) => {
   const featureId = String(feature.getId())
   if (!featureId) {
     return undefined
@@ -29,7 +31,27 @@ export const getDashboardStyle = (feature: FeatureLike) => {
   }
 
   if (featureType === Dashboard.Layer.DASHBOARD_REPORTINGS) {
-    return editingReportingStyleFn(feature, { withLinkedMissions: false })
+    const reportingStyles = editingReportingStyleFn(feature, { withLinkedMissions: false })
+    if (withReportingOverlay) {
+      const geometry = feature.getGeometry()
+      const center = geometry?.getExtent() && getCenter(geometry?.getExtent())
+      const reportingOverlay = new Style({
+        geometry: center && new Point(center),
+        text: new Text({
+          backgroundFill: new Fill({ color: THEME.color.white }),
+          backgroundStroke: new Stroke({ color: reportingStyles[1]?.getStroke()?.getColor(), width: 2 }),
+          fill: new Fill({ color: THEME.color.gunMetal }),
+          font: '16px Marianne',
+          offsetX: 72,
+          offsetY: -18,
+          padding: [2, 8, 2, 8],
+          text: getFormattedReportingId(feature.get('reportingId'))
+        })
+      })
+      reportingStyles.push(reportingOverlay)
+    }
+
+    return reportingStyles
   }
 
   return undefined
