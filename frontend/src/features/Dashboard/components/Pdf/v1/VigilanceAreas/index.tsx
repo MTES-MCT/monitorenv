@@ -25,6 +25,16 @@ export function VigilanceAreas({
         <Text style={layoutStyle.title}>Zones de vigilances</Text>
         <Text style={layoutStyle.selected}>{vigilanceAreas.length} sélectionnée(s)</Text>
       </View>
+      <View style={[layoutStyle.definition, { marginBottom: 15 }]}>
+        <Text>
+          Une zone de vigilance permet d&apos;orienter les contrôles en attirant l&apos;attention et rappelant des
+          informations utiles sur un endroit / une période donnés.
+        </Text>
+        <Text>
+          Les informations consignées dans les ZV ont – contrairement aux signalements – une validité dans le temps plus
+          longue ou récurrente.
+        </Text>
+      </View>
       <View style={layoutStyle.cardWrapper}>
         {vigilanceAreas.map(vigilanceArea => {
           const formattedStartPeriod = vigilanceArea.startDatePeriod

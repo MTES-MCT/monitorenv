@@ -163,8 +163,19 @@ export function Reportings({
   return (
     <>
       <View style={layoutStyle.header2}>
-        <Text style={layoutStyle.title}>Signalements</Text>
+        <Text style={layoutStyle.title}>Signalements (détails)</Text>
         <Text style={layoutStyle.selected}>{reportings.length} sélectionnée(s)</Text>
+      </View>
+
+      <View style={[layoutStyle.definition, { marginBottom: 15 }]}>
+        <Text>
+          Les signalements sont des remontées d&apos;informations ponctuelles faites par le terrain (unités,
+          sémaphores...).
+        </Text>
+        <Text>
+          Ils peuvent concerner des suspicions d&apos;infractions ou des observations et appellent à une prise en compte
+          rapide.
+        </Text>
       </View>
 
       <View style={layoutStyle.cardWrapper}>
