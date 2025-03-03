@@ -55,7 +55,7 @@ const hoveredReportingZoneStyleFactory = (color, fillColor) => [
   })
 ]
 
-const selectedReportingStyleFactory = (color, fillColor) => [
+const selectedReportingStyleFactory = (color: string, fillColor: string) => [
   new Style({
     fill: new Fill({
       color: fillColor
