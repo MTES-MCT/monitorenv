@@ -56,6 +56,7 @@ export const layoutStyle = StyleSheet.create({
   column: {
     flexDirection: 'column'
   },
+  definition: { fontSize: 8, fontStyle: 'italic' },
   header1: {
     fontSize: 18.6,
     fontWeight: 'bold',
@@ -81,6 +82,7 @@ export const layoutStyle = StyleSheet.create({
   link: {
     color: '#295edb'
   },
+
   page: {
     color: THEME.color.gunMetal,
     fontFamily: 'Mariane',

@@ -9,7 +9,7 @@ import type { Dashboard } from '@features/Dashboard/types'
 const footerHeight = 137
 const footerPadding = 20
 const styles = StyleSheet.create({
-  confidential: { ...layoutStyle.italic, fontSize: 9.3, marginBottom: 42 },
+  confidential: { ...layoutStyle.definition, fontSize: 9.3, marginBottom: 42 },
   contact: { alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 12 },
   description: {
     fontSize: 13,
