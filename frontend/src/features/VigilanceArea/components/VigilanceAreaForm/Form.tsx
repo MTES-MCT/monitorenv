@@ -28,7 +28,7 @@ import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOption
 import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash-es'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { AddAMPs } from './AddAMPs'
