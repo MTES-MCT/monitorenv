@@ -67,7 +67,7 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
       filteredControlUnits = getFilteredControlUnits(
         'MAP_CONTROL_UNIT_FOR_STATION',
         mapControlUnitListDialog.filtersState,
-        controlUnitsFromApi
+        controlUnitsFromApi ?? []
       )
     }
     setControlUnits(filteredControlUnits)
