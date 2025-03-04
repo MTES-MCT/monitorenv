@@ -8,6 +8,11 @@ context('Dashboard', () => {
 
   describe('dashboard', () => {
     it('should extract insee code, amps, regulatory and vigilance areas from the given geometry', () => {
+      // Avoid sidewindow from opening that make the next test to crash
+      cy.window().then(window => {
+        cy.stub(window, 'open').callsFake(() => {})
+      })
+
       cy.intercept('GET', `/bff/v1/dashboards/extract?geometry=*`).as('extractAreas')
 
       // When
