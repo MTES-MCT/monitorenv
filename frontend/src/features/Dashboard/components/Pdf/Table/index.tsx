@@ -5,7 +5,6 @@ import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { getTitle } from 'domain/entities/layers/utils'
 import { groupBy } from 'lodash-es'
-import { Fragment } from 'react/jsx-runtime'
 
 import { layoutStyle } from '../style'
 
