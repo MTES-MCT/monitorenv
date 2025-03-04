@@ -3,19 +3,20 @@ import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 describe('Edit Vigilance Area', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
+    cy.intercept('GET', '/bff/v1/amps').as('getAmps')
+    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
 
     cy.viewport(1580, 1024)
   })
   it('Should successfully update a vigilance area', () => {
     cy.visit('/#@-192242.97,5819420.73,9.93')
-    cy.wait(2000)
+    cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
     cy.clickButton('Arbre des couches')
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    cy.wait(1000)
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/6').as('editVigilanceArea')
-    cy.get('#root').click(850, 350)
-    cy.wait(250)
+    cy.wait(500).get('#root').click(850, 350)
 
     cy.getDataCy('vigilance-area-title').should('have.text', 'Zone de vigilance 6')
     cy.clickButton('Editer')
@@ -45,14 +46,12 @@ describe('Edit Vigilance Area', () => {
 
   it('Should successfully add regulatory area to a vigilance area and consult them', () => {
     cy.visit('/#@-668012.81,6169323.28,8.44')
-    cy.wait(1000)
+    cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
     cy.clickButton('Arbre des couches')
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    cy.wait(1000)
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/7').as('editVigilanceArea')
-    cy.get('#root').click(970, 500)
-    cy.wait(250)
+    cy.wait(500).get('#root').click(970, 500)
 
     cy.clickButton('Editer')
 
@@ -60,7 +59,6 @@ describe('Edit Vigilance Area', () => {
     cy.getDataCy('my-amp-layers-zones').should('not.exist')
     cy.clickButton('Filtrer par type de zones')
     cy.fill('Thématique réglementaire', ['AMP', 'Dragage', 'Mixte'])
-    cy.wait(250)
     cy.get('#root').click(1030, 490)
 
     cy.clickButton("Ajouter la zone réglementaire Partie marine (plus basses eaux) RNN d'Iroise")
@@ -79,7 +77,6 @@ describe('Edit Vigilance Area', () => {
 
       cy.clickButton('Filtrer par type de zones')
       cy.getDataCy('my-regulatory-layers').click({ force: true })
-      cy.wait(250)
       // add regulatory area to "Mes zones réglementaires"
       cy.clickButton('Ajouter la zone à Mes zones réglementaires')
       // check if the regulatory area is added
@@ -97,14 +94,13 @@ describe('Edit Vigilance Area', () => {
 
   it('Should successfully add AMP to a vigilance area and consult them', () => {
     cy.visit('/#@-181811.71,5844094.04,9.31')
-    cy.wait(1000)
+    cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
+
     cy.clickButton('Arbre des couches')
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    cy.wait(1000)
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/1').as('editVigilanceArea')
-    cy.get('#root').click(800, 630)
-    cy.wait(250)
+    cy.wait(500).get('#root').click(800, 630)
 
     cy.clickButton('Editer')
 
@@ -112,11 +108,10 @@ describe('Edit Vigilance Area', () => {
     cy.getDataCy('my-regulatory-layers').should('not.exist')
     cy.clickButton('Filtrer par type de zones')
     cy.fill("Type d'AMP", ['Natura 2000'])
-    cy.wait(250)
     cy.get('#root').click(970, 840)
     cy.clickButton("Ajouter l'AMP Natura 2000")
     cy.get('#root').click(720, 400)
-    cy.clickButton("Ajouter l'AMP Natura 2000").wait(250).first()
+    cy.clickButton("Ajouter l'AMP Natura 2000").first()
     cy.getDataCy('amp-item').should('have.length', 2)
 
     cy.clickButton('Valider la sélection')
@@ -131,7 +126,6 @@ describe('Edit Vigilance Area', () => {
 
       cy.clickButton('Filtrer par type de zones')
       cy.getDataCy('my-amp-layers-zones').click({ force: true })
-      cy.wait(250)
       // add AMP to "Mes AMP"
       cy.clickButton('Ajouter la zone à Mes AMP').first()
       // check if the AMP is added
@@ -148,7 +142,7 @@ describe('Edit Vigilance Area', () => {
   })
   it('Should edit the vigilance area and no longer see it in the list of draft vigilance areas', () => {
     cy.visit('/')
-    cy.wait(500)
+    cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
 
     cy.clickButton('Arbre des couches')
     cy.getDataCy('my-vigilance-areas-layers').click()

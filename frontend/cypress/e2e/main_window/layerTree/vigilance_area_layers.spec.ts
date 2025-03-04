@@ -3,11 +3,13 @@ import { getBaseLayerSnapShot } from '../utils'
 
 context('LayerTree > Vigilance Area Layers', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
+    cy.intercept('GET', '/bff/v1/amps').as('getAmps')
+    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
+    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
 
     cy.visit('/#@-444365.78,6153753.97,7.20')
-    cy.wait(300) // wait for rendering initial zoom
+    cy.wait(['@getAmps', '@getRegulatoryAreas'])
 
     cy.wait('@getVigilanceAreas').then(({ response }) => expect(response?.statusCode).equal(200))
 
