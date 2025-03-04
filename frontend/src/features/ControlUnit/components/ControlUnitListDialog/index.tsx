@@ -31,7 +31,7 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
     const results = getFilteredControlUnits(
       'MAP_CONTROL_UNIT_LIST',
       mapControlUnitListDialog.filtersState,
-      controlUnits
+      controlUnits ?? []
     )
 
     return results

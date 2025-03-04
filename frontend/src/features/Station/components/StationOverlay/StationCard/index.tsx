@@ -58,7 +58,11 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
     )
 
     // Appliquer les filtres de mapControlUnitListDialog
-    const filteredControlUnits = getFilteredControlUnits('', mapControlUnitListDialog.filtersState, controlUnitsFromApi)
+    const filteredControlUnits = getFilteredControlUnits(
+      'MAP_CONTROL_UNIT_FOR_STATION',
+      mapControlUnitListDialog.filtersState,
+      controlUnitsFromApi
+    )
 
     setControlUnits(filteredControlUnits)
   }, [dispatch, featureProperties.station, mapControlUnitListDialog.filtersState])
