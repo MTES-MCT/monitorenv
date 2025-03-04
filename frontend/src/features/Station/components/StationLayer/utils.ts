@@ -1,7 +1,7 @@
 import { overlayStroke } from '@features/map/overlays/style'
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { uniq } from 'lodash-es'
 import { Layers } from 'domain/entities/layers/constants'
+import { uniq } from 'lodash-es'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
 import { Fill, Icon, Style, Text } from 'ol/style'
