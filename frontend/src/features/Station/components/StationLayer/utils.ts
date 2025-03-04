@@ -6,8 +6,6 @@ import { GeoJSON } from 'ol/format'
 import { Fill, Icon, Style, Text } from 'ol/style'
 import CircleStyle from 'ol/style/Circle'
 
-import { Layers } from '../../../../domain/entities/layers/constants'
-
 import type { Station } from '../../../../domain/entities/station'
 import type { StyleFunction } from 'ol/style/Style'
 
@@ -47,7 +45,7 @@ export const getFeatureStyle = ((feature: Feature) => {
   return [iconStyle, badgeStyle, counterStyle, overlayStroke]
 }) as StyleFunction
 
-export function getStationPointFeature(station: Station.Station) {
+export function getStationPointFeature(station: Station.Station, layerName: string, isHighlighted: boolean = false) {
   const controlUnitsCount = uniq(station.controlUnitResources.map(({ controlUnitId }) => controlUnitId)).length
 
   const geoJSON = new GeoJSON()
@@ -65,10 +63,10 @@ export function getStationPointFeature(station: Station.Station) {
   const feature = new Feature({
     geometry
   })
-  feature.setId(`${Layers.STATIONS.code}:${station.id}`)
+  feature.setId(`${layerName}:${station.id}`)
   feature.setProperties({
     controlUnitsCount,
-    isHighlighted: false,
+    isHighlighted,
     isSelected: false,
     station
   })

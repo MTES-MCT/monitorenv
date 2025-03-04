@@ -9,6 +9,7 @@ import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { MissionsLayer } from '@features/Mission/components/Layers'
 import { EditingMissionLayer } from '@features/Mission/components/Layers/EditingMissionLayer'
 import { HoveredMissionLayer } from '@features/Mission/components/Layers/HoveredMissionLayer'
+import { MissionStationLayer } from '@features/Mission/components/Layers/MissionStationLayer'
 import { ReportingToAttachLayer } from '@features/Mission/components/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '@features/Mission/components/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
 import { SelectedMissionLayer } from '@features/Mission/components/Layers/SelectedMissionLayer'
@@ -162,6 +163,8 @@ export function Map({ isSuperUser }) {
       <EditingMissionLayer />
       {/* @ts-ignore */}
       <HoveredMissionLayer />
+      {/* @ts-ignore */}
+      <MissionStationLayer />
       {/* @ts-ignore */}
       <MissionOverlays />
       {/* @ts-ignore */}

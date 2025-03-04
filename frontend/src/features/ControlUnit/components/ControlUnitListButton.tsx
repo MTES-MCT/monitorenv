@@ -1,3 +1,4 @@
+import { missionFormsActions } from '@features/Mission/components/MissionForm/slice'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 
@@ -20,6 +21,7 @@ export function ControlUnitListButton() {
         visibility: { isControlUnitListDialogVisible: !isControlUnitListDialogVisible }
       })
     )
+    dispatch(missionFormsActions.setMissionCenteredControlUnitId())
   }, [dispatch, isControlUnitListDialogVisible])
 
   return (
