@@ -1,8 +1,12 @@
 context('Side Window > Vigilance Areas List > Filter Bar', () => {
   beforeEach(() => {
+    cy.intercept('GET', '/bff/v1/amps').as('getAmps')
+    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`).wait(1000)
+    cy.visit(`/side_window`)
     cy.clickButton('Zones de vigilance')
+    cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
   })
 
   afterEach(() => {
@@ -25,7 +29,6 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
   })
 
   it('Should filter vigilance areas by themes filter', () => {
-    cy.wait(500)
     cy.fill('Thématique réglementaire', ['Dragage'])
     cy.getDataCy('vigilance-areas-filter-tags').find('.Component-SingleTag > span').contains('Dragage')
     verifyVigilanceAreaRows('Dragage')

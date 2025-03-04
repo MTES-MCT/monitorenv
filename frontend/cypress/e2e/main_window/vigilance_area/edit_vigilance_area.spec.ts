@@ -16,7 +16,7 @@ describe('Edit Vigilance Area', () => {
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/6').as('editVigilanceArea')
-    cy.wait(500).get('#root').click(850, 350)
+    cy.wait(1000).get('#root').click(850, 350).wait(250)
 
     cy.getDataCy('vigilance-area-title').should('have.text', 'Zone de vigilance 6')
     cy.clickButton('Editer')
@@ -51,7 +51,7 @@ describe('Edit Vigilance Area', () => {
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/7').as('editVigilanceArea')
-    cy.wait(500).get('#root').click(970, 500)
+    cy.wait(1000).get('#root').click(970, 500).wait(250)
 
     cy.clickButton('Editer')
 
@@ -100,7 +100,7 @@ describe('Edit Vigilance Area', () => {
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/1').as('editVigilanceArea')
-    cy.wait(500).get('#root').click(800, 630)
+    cy.wait(1000).get('#root').click(800, 630).wait(250)
 
     cy.clickButton('Editer')
 
