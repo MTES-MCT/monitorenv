@@ -5,9 +5,12 @@ import { visitSideWindow } from '../../utils/visitSideWindow'
 
 context('Side Window > Dashboard List > Filter Bar', () => {
   beforeEach(() => {
+    cy.intercept('GET', '/bff/v1/dashboards').as('getDashboards')
+    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
     cy.viewport(1280, 1024)
     visitSideWindow()
     cy.clickButton('Tableaux de bord')
+    cy.wait(['@getDashboards', '@getRegulatoryAreas'])
   })
 
   it('Should filter dashboard for today', () => {

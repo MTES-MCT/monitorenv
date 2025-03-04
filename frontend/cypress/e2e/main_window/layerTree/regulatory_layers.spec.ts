@@ -6,15 +6,10 @@ context('LayerTree > Regulatory Layers', () => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
     cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
-    cy.visit(`/`)
-    cy.wait(['@getAmps', '@getRegulatoryAreas'])
 
     cy.visit('/#@-481936.30,6137793.76,8.69')
-    cy.wait(300) // wait for rendering initial zoom
+    cy.wait(['@getAmps', '@getRegulatoryAreas'])
 
-    cy.log('load the regulation layer')
-    cy.wait('@getRegulatoryAreas').then(({ response }) => expect(response?.statusCode).equal(200))
-    cy.log('search for a regulation by zone')
     cy.clickButton('Arbre des couches')
   })
   it('A regulation Should be searched, added to My Zones and showed on the map with the Zone button', () => {
