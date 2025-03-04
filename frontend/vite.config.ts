@@ -20,12 +20,12 @@ export default defineConfig(
         treeshake: true,
         input: {
           index: './index.html'
+        },
+        output: {
+          manualChunks: {
+            'monitor-ui': ['@mtes-mct/monitor-ui']
+          }
         }
-        // output: {
-        //   manualChunks: {
-        //     'monitor-ui': ['@mtes-mct/monitor-ui']
-        //   }
-        // }
       },
       target: 'esnext'
     },
