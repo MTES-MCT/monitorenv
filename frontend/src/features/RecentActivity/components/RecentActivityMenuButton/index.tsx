@@ -7,6 +7,8 @@ import { Accent, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { globalActions } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
+import { RecentActivityFilters } from './RecentActivityFilters'
+
 export function RecentActivityMenuButton() {
   const dispatch = useAppDispatch()
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
@@ -42,6 +44,9 @@ export function RecentActivityMenuButton() {
               onClick={handleRecentActivityVisibility}
             />
           </MapMenuDialog.Header>
+          <MapMenuDialog.Body>
+            <RecentActivityFilters />
+          </MapMenuDialog.Body>
         </StyledMapMenuDialogContainer>
       )}
       <MenuWithCloseButton.ButtonOnMap
