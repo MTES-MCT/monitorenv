@@ -6,7 +6,6 @@ import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { groupBy } from 'lodash-es'
-import { Fragment } from 'react/jsx-runtime'
 
 import { layoutStyle } from '../style'
 
