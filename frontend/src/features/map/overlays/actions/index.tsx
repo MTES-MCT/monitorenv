@@ -28,7 +28,7 @@ export function ActionOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMa
       mapClickEvent={mapClickEvent}
       zIndex={5500}
     >
-      {displayControlCard && <ControlCard feature={hoveredFeature} />}
+      {displayControlCard && hoveredFeature && <ControlCard feature={hoveredFeature} />}
       {displaySurveillanceCard && <SurveillanceCard feature={hoveredFeature} />}
     </OverlayPositionOnCentroid>
   )

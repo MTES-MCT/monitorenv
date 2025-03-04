@@ -1,4 +1,5 @@
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
+import { RecentActivity } from '@features/RecentActivity/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { customDayjs } from '@mtes-mct/monitor-ui'
@@ -19,18 +20,48 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const hasMapInteraction = useHasMapInteraction()
   const isLayerVisible = displayRecentActivityLayer && !hasMapInteraction
+  const filters = useAppSelector(state => state.recentActivity.filters)
 
   const [getRecentControlsActivity, { data: recentControlsActivity }] = useGetRecentControlsActivityMutation()
 
   useEffect(() => {
-    // TODO: add filters
+    let startAfterFilter = filters.startedAfter
+    let startBeforeFilter = filters.startedBefore
+
+    if (
+      filters.periodFilter === RecentActivity.RecentActivityDateRangeEnum.CUSTOM &&
+      !filters.startedAfter &&
+      !filters.startedBefore
+    ) {
+      return
+    }
+
+    switch (filters.periodFilter) {
+      case RecentActivity.RecentActivityDateRangeEnum.THREE_LAST_DAYS:
+        startAfterFilter = customDayjs().utc().subtract(3, 'day').startOf('day').toISOString()
+        startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
+        break
+      case RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS:
+        startAfterFilter = customDayjs().utc().subtract(30, 'day').startOf('day').toISOString()
+        startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
+        break
+      case RecentActivity.RecentActivityDateRangeEnum.THREE_LAST_MONTHS:
+        startAfterFilter = customDayjs().utc().subtract(3, 'month').startOf('day').toISOString()
+        startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
+        break
+      case RecentActivity.RecentActivityDateRangeEnum.CUSTOM:
+        break
+      default:
+        break
+    }
     getRecentControlsActivity({
-      startedAfter: customDayjs().subtract(1, 'month').toISOString(),
-      startedBefore: customDayjs().add(6, 'month').toISOString()
+      administrationIds: filters.administrationIds,
+      controlUnitIds: filters.controlUnitIds,
+      startedAfter: startAfterFilter,
+      startedBefore: startBeforeFilter,
+      themeIds: filters.themeIds
     })
-    // we just need to call the mutation once
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [filters, getRecentControlsActivity])
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
