@@ -1,6 +1,7 @@
 import { dashboardFiltersPersistedReducer } from '@features/Dashboard/components/DashboardForm/slice'
 import { dashboardReducer } from '@features/Dashboard/slice'
 import { interestPointSlicePersistedReducer } from '@features/InterestPoint/slice'
+import { recentActivityPersitedReducer } from '@features/RecentActivity/slice'
 import { attachMissionToReportingSliceReducer } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingFiltersPersistedReducer } from '@features/Reportings/Filters/slice'
 import { reportingSliceReducer } from '@features/Reportings/slice'
@@ -60,6 +61,7 @@ export const homeReducers = {
   missionFilters: missionFiltersPersistedReducer,
   missionForms: missionFormsSliceReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
+  recentActivity: recentActivityPersitedReducer,
   regulatory: regulatorySlicePersistedReducer,
   reporting: reportingSliceReducer,
   reportingFilters: reportingFiltersPersistedReducer,
