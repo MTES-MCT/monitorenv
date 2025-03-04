@@ -1,6 +1,6 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { isEqual, omit } from 'lodash'
+import { isEqual, omit } from 'lodash-es'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 

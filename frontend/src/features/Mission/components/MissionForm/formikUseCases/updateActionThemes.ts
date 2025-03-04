@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 
 import type { ControlPlansData } from '../../../../../domain/entities/controlPlan'
 import type { Mission } from '../../../../../domain/entities/missions'

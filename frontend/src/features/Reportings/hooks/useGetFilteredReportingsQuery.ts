@@ -1,6 +1,6 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { filter } from 'lodash'
+import { filter } from 'lodash-es'
 import { useMemo } from 'react'
 
 import { useGetReportingsQuery } from '../../../api/reportingsAPI'

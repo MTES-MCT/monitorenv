@@ -1,4 +1,4 @@
-import { sortBy } from 'lodash/fp'
+import { sortBy } from 'lodash-es'
 import { useMemo } from 'react'
 
 import { useGetControlPlansByYearQuery } from '../api/controlPlans'
@@ -38,10 +38,10 @@ export function useGetControlPlansByYear({
   const tagsByYearAsOptions: Array<Option<number>> = useMemo(
     () =>
       sortBy(
-        'label',
         Object.values(data?.tags ?? {})
           ?.filter(({ themeId }) => themeId === selectedTheme)
-          .map(({ id, tag }) => ({ label: tag, value: id }))
+          .map(({ id, tag }) => ({ label: tag, value: id })),
+        'label'
       ) || [],
     [data?.tags, selectedTheme]
   )
