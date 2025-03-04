@@ -4,13 +4,16 @@ import { getBaseLayerSnapShot } from '../utils'
 context('LayerTree > Regulatory Layers', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
-    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulation')
+    cy.intercept('GET', '/bff/v1/amps').as('getAmps')
+    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.visit(`/`)
+    cy.wait(['@getAmps', '@getRegulatoryAreas'])
 
     cy.visit('/#@-481936.30,6137793.76,8.69')
     cy.wait(300) // wait for rendering initial zoom
 
     cy.log('load the regulation layer')
-    cy.wait('@getRegulation').then(({ response }) => expect(response?.statusCode).equal(200))
+    cy.wait('@getRegulatoryAreas').then(({ response }) => expect(response?.statusCode).equal(200))
     cy.log('search for a regulation by zone')
     cy.clickButton('Arbre des couches')
   })

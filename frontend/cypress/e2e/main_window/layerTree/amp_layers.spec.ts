@@ -3,8 +3,10 @@ import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 context('LayerTree > AMP Layers', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
-
-    cy.visit(`/`).wait(1000)
+    cy.intercept('GET', '/bff/v1/amps').as('getAmps')
+    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.visit(`/`)
+    cy.wait(['@getAmps', '@getRegulatoryAreas'])
     cy.clickButton('Arbre des couches').wait(1000)
   })
   it('An AMP Should be searched, added to My Zones and showed on the map with the Zone button', () => {

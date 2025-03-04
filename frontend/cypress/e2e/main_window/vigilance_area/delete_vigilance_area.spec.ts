@@ -3,9 +3,13 @@ import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFor
 
 describe('Create Vigilance Area', () => {
   beforeEach(() => {
+    cy.intercept('GET', '/bff/v1/amps').as('getAmps')
+    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
+
     cy.viewport(1580, 1024)
     cy.visit('/#@-1049081.65,5909154.00,6.00')
-    cy.wait(500)
+    cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas').as('createVigilanceArea')
     cy.clickButton('Arbre des couches')
