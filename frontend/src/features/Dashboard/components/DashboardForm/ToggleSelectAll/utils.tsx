@@ -1,6 +1,6 @@
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import React from 'react'
 import { difference, intersection, isEqual } from 'lodash-es'
+import React from 'react'
 
 import type { SelectionState } from '.'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
