@@ -48,7 +48,7 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     const results = getFilteredControlUnits(
       'MAP_CONTROL_UNIT_FOR_STATION',
       mapControlUnitListDialog.filtersState,
-      controlUnits
+      controlUnits ?? []
     )
 
     return results
