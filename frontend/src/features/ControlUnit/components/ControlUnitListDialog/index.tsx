@@ -2,6 +2,7 @@ import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { StyledMapMenuDialogContainer } from '@components/style'
 import { getFilteredControlUnits } from '@features/ControlUnit/useCases/getFilteredControlUnits'
+import { missionFormsActions } from '@features/Mission/components/MissionForm/slice'
 import { Accent, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo } from 'react'
 
@@ -45,6 +46,7 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
         layers: { displayStationLayer: !displayBaseLayer }
       })
     )
+    dispatch(missionFormsActions.setMissionCenteredControlUnitId())
   }, [dispatch, displayBaseLayer])
 
   return (

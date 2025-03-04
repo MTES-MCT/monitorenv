@@ -14,8 +14,11 @@ import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 export function StationOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const selectedBaseFeatureId = useAppSelector(state => state.station.selectedFeatureId)
   const hoveredFeature = convertToFeature(currentFeatureOver)
+  const missionCenteredControlUnitId = useAppSelector(state => state.missionForms.missionCenteredControlUnitId)
+
+  const layerName = missionCenteredControlUnitId ? Layers.MISSION_STATION.code : Layers.STATIONS.code
   const selectedFeature = useMemo(
-    () => findMapFeatureById(map, Layers.STATIONS.code, selectedBaseFeatureId),
+    () => findMapFeatureById(map, layerName, selectedBaseFeatureId),
 
     // We ignore `map` dependency because it's an instance and it's not supposed to change.
     // Moreover, it will be refactored into a non-React instance later on.
@@ -26,7 +29,7 @@ export function StationOverlay({ currentFeatureOver, map, mapClickEvent }: BaseM
 
   const hoveredFeatureId = hoveredFeature?.getId()?.toString()
   const canDisplayHoveredFeature =
-    !!hoveredFeatureId?.startsWith(Layers.STATIONS.code) && hoveredFeatureId !== selectedBaseFeatureId
+    !!hoveredFeatureId?.startsWith(layerName) && hoveredFeatureId !== selectedBaseFeatureId
 
   return (
     <>
