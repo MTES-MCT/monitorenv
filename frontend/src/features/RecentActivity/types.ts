@@ -1,3 +1,4 @@
+/* eslint-disable typescript-sort-keys/string-enum */
 import type { Infraction } from 'domain/entities/missions'
 import type { TargetTypeEnum } from 'domain/entities/targetType'
 import type { VehicleTypeEnum } from 'domain/entities/vehicleType'
@@ -30,5 +31,28 @@ export namespace RecentActivity {
     startedAfter?: string
     startedBefore?: string
     themeIds?: number[]
+  }
+
+  export enum StatusFilterEnum {
+    WITH_INFRACTION = 'WITH_INFRACTION',
+    WITHOUT_INFRACTION = 'WITHOUT_INFRACTION'
+  }
+
+  export enum InfractionsStatusFilterLabels {
+    WITH_INFRACTION = 'Avec infraction',
+    WITHOUT_INFRACTION = 'Sans infraction'
+  }
+  export enum RecentActivityDateRangeEnum {
+    THREE_LAST_DAYS = 'THREE_LAST_DAYS',
+    THIRTY_LAST_DAYS = 'THIRTY_LAST_DAYS',
+    THREE_LAST_MONTHS = 'THREE_LAST_MONTHS',
+    CUSTOM = 'CUSTOM'
+  }
+
+  export enum RecentActivityDateRangeLabels {
+    THREE_LAST_DAYS = '3 derniers jours',
+    THIRTY_LAST_DAYS = '30 derniers jours',
+    THREE_LAST_MONTHS = '3 derniers mois',
+    CUSTOM = 'Période spécifique'
   }
 }
