@@ -1,5 +1,4 @@
 import { useGetStationsQuery } from '@api/stationsAPI'
-import { controlUnitListDialogActions } from '@features/ControlUnit/components/ControlUnitListDialog/slice'
 import { centerOnStation } from '@features/ControlUnit/useCases/centerOnStation'
 import { isMissionNew } from '@features/Mission/utils'
 import {
@@ -201,10 +200,11 @@ export function ControlUnitSelector({
 
     dispatch(
       globalActions.setDisplayedItems({
-        layers: { displayStationLayer: true }
+        layers: { displayStationLayer: false },
+        visibility: { isControlUnitListDialogVisible: false }
       })
     )
-    await dispatch(controlUnitListDialogActions.resetFilters())
+    dispatch(missionFormsActions.setMissionCenteredControlUnitId(selectedControlUnit.id))
     dispatch(centerOnStation(stations))
   }
 

@@ -24,12 +24,14 @@ type SelectedActionType = {
 type MissionFormsState = {
   activeMissionId: number | string | undefined
   isListeningToEvents: boolean
+  missionCenteredControlUnitId: number | undefined
   missions: SelectedMissionType
 }
 
 const INITIAL_STATE: MissionFormsState = {
   activeMissionId: undefined,
   isListeningToEvents: true,
+  missionCenteredControlUnitId: undefined,
   missions: {}
 }
 
@@ -78,7 +80,9 @@ const missionFormsSlice = createSlice({
 
     setActiveMissionId(state, action: PayloadAction<number | string>) {
       state.activeMissionId = action.payload
+      state.missionCenteredControlUnitId = undefined
     },
+
     setCreatedMission(state, action: PayloadAction<{ createdMission: MissionInStateType; previousId: string }>) {
       const { previousId } = action.payload
       const createdMissionId = action.payload.createdMission.missionForm.id
@@ -94,6 +98,7 @@ const missionFormsSlice = createSlice({
         }
       }
       state.activeMissionId = createdMissionId
+      state.missionCenteredControlUnitId = undefined
     },
     setEngagedControlUnit(state, action: PayloadAction<ControlUnit.EngagedControlUnit | undefined>) {
       const { activeMissionId } = state
@@ -121,6 +126,9 @@ const missionFormsSlice = createSlice({
         state.missions = { ...state.missions, [id]: action.payload }
       }
       state.activeMissionId = id
+    },
+    setMissionCenteredControlUnitId(state, action: PayloadAction<number | undefined>) {
+      state.missionCenteredControlUnitId = action.payload
     },
     setShowCreatedBanner(state, action: PayloadAction<{ id: number; showBanner: boolean }>) {
       const { id, showBanner } = action.payload

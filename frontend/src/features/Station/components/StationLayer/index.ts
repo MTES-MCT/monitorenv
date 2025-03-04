@@ -48,7 +48,7 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     const results = getFilteredControlUnits(
       'MAP_CONTROL_UNIT_FOR_STATION',
       mapControlUnitListDialog.filtersState,
-      controlUnits
+      controlUnits ?? []
     )
 
     return results
@@ -76,7 +76,22 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
             filteredControlUnits.some(controlUnit => controlUnit.controlUnitResourceIds.includes(stationId))
           )
         })
-        .map(getStationPointFeature),
+        .map(station => {
+          const filteredControlUnitResourceIds = filteredControlUnits
+            .map(controlUnit => controlUnit.controlUnitResourceIds)
+            .flat()
+
+          return getStationPointFeature(
+            {
+              ...station,
+              controlUnitResourceIds: filteredControlUnitResourceIds,
+              controlUnitResources: station.controlUnitResources.filter(controlUnitResource =>
+                filteredControlUnitResourceIds.includes(controlUnitResource.id)
+              )
+            },
+            Layers.STATIONS.code
+          )
+        }),
     [filteredControlUnits, stations]
   )
 

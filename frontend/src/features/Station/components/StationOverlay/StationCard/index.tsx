@@ -1,3 +1,4 @@
+import { getFilteredControlUnits } from '@features/ControlUnit/useCases/getFilteredControlUnits'
 import { type ControlUnit, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
 import { uniq } from 'lodash/fp'
@@ -21,8 +22,10 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
 
   const dispatch = useAppDispatch()
   const displayStationLayer = useAppSelector(state => state.global.layers.displayStationLayer)
-  const hasMapInteraction = useHasMapInteraction()
+  const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
 
+  const hasMapInteraction = useHasMapInteraction()
+  const missionCenteredControlUnitId = useAppSelector(state => state.missionForms.missionCenteredControlUnitId)
   const featureProperties = feature.getProperties() as {
     station: Station.Station
   }
@@ -39,15 +42,15 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
       return
     }
 
-    const controlUnitIds = uniq(
-      featureProperties.station.controlUnitResources.map(controlUnitResource => controlUnitResource.controlUnitId)
-    )
+    const controlUnitIds = missionCenteredControlUnitId
+      ? [missionCenteredControlUnitId]
+      : uniq(
+          featureProperties.station.controlUnitResources.map(controlUnitResource => controlUnitResource.controlUnitId)
+        )
 
     const controlUnitsFromApi = await Promise.all(
-      controlUnitIds.map(async controlUnitResourceId => {
-        const { data: controlUnit } = await dispatch(
-          controlUnitsAPI.endpoints.getControlUnit.initiate(controlUnitResourceId)
-        )
+      controlUnitIds.map(async controlUnitId => {
+        const { data: controlUnit } = await dispatch(controlUnitsAPI.endpoints.getControlUnit.initiate(controlUnitId))
         if (!controlUnit) {
           throw new FrontendError('`controlUnit` is undefined.')
         }
@@ -55,16 +58,26 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
         return controlUnit
       })
     )
-    const filteredControlUnits = controlUnitsFromApi?.filter(isNotArchived)
 
+    let filteredControlUnits: ControlUnit.ControlUnit[] = [...controlUnitsFromApi]
+    if (missionCenteredControlUnitId) {
+      filteredControlUnits = controlUnitsFromApi.filter(isNotArchived)
+    } else {
+      // Appliquer les filtres de mapControlUnitListDialog
+      filteredControlUnits = getFilteredControlUnits(
+        'MAP_CONTROL_UNIT_FOR_STATION',
+        mapControlUnitListDialog.filtersState,
+        controlUnitsFromApi ?? []
+      )
+    }
     setControlUnits(filteredControlUnits)
-  }, [dispatch, featureProperties.station])
+  }, [dispatch, featureProperties.station, mapControlUnitListDialog.filtersState, missionCenteredControlUnitId])
 
   useEffect(() => {
     updateControlUnits()
-  }, [updateControlUnits])
+  }, [updateControlUnits, missionCenteredControlUnitId])
 
-  if (!displayStationLayer || !featureProperties.station || hasMapInteraction) {
+  if ((!displayStationLayer && !missionCenteredControlUnitId) || !featureProperties.station || hasMapInteraction) {
     return null
   }
 
@@ -76,9 +89,10 @@ export function StationCard({ feature, selected = false }: { feature: FeatureLik
       title={featureProperties.station.name}
     >
       <StyledMapMenuDialogBody>
-        {controlUnits.map(controlUnit => (
+        {controlUnits.map((controlUnit, index) => (
           <Item
-            key={controlUnit.id}
+            // eslint-disable-next-line react/no-array-index-key
+            key={`${controlUnit.id}-${index}`}
             controlUnit={controlUnit}
             onClose={close}
             stationId={featureProperties.station.id}
