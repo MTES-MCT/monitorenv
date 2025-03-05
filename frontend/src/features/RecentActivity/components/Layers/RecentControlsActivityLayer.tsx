@@ -57,6 +57,7 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
     getRecentControlsActivity({
       administrationIds: filters.administrationIds,
       controlUnitIds: filters.controlUnitIds,
+      infractionsStatus: filters.infractionsStatus,
       startedAfter: startAfterFilter,
       startedBefore: startBeforeFilter,
       themeIds: filters.themeIds

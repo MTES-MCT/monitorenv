@@ -1,0 +1,146 @@
+import { RecentActivity } from '@features/RecentActivity/types'
+import { customDayjs } from '@mtes-mct/monitor-ui'
+
+import { FAKE_MAPBOX_RESPONSE } from '../../constants'
+import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+
+function setDateRangeWithControlsFilter(): {
+  endDateFilter: string
+  startDateFilter: string
+} {
+  cy.fill('Période', 'Période spécifique')
+  const startDateFilter = getUtcDateInMultipleFormats('2024-01-01T00:00:00.000Z')
+  const futureDate = customDayjs.utc().endOf('day').add(4, 'month').format('YYYY-MM-DDT23:59:59.000Z')
+  const endDateFilter = getUtcDateInMultipleFormats(futureDate)
+  cy.fill('Période spécifique', [startDateFilter.asDatePickerDate, endDateFilter.asDatePickerDate])
+
+  return { endDateFilter: endDateFilter.asStringUtcDate, startDateFilter: startDateFilter.asStringUtcDate }
+}
+
+context('Recent Activity -> Filters', () => {
+  beforeEach(() => {
+    cy.intercept('GET', '/api/v1/control_plans').as('getControlPlans')
+    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
+    cy.intercept('POST', `/bff/v1/recent-activity/controls`).as('postRecentActivityControls')
+    cy.visit('/#@-824534.42,6082993.21,8.70')
+    cy.wait('@getControlPlans')
+
+    cy.clickButton("Voir l'activité récente")
+    cy.wait('@postRecentActivityControls')
+  })
+
+  afterEach(() => {
+    cy.fill('Période', '30 derniers jours')
+    cy.fill('Administration', undefined)
+    cy.fill('Unité', undefined)
+    cy.fill('Thématique', undefined)
+  })
+
+  it('Should filter recent control activity with custom date range', () => {
+    const { endDateFilter, startDateFilter } = setDateRangeWithControlsFilter()
+
+    cy.wait('@postRecentActivityControls').then(({ request, response }) => {
+      if (!response) {
+        assert.fail('response is undefined.')
+      }
+      assert.deepEqual(request.body, {
+        administrationIds: null,
+        controlUnitIds: null,
+        infractionsStatus: [
+          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
+          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
+        ],
+        startedAfter: startDateFilter,
+        startedBefore: endDateFilter,
+        themeIds: null
+      })
+
+      assert.equal(response.statusCode, 200)
+      assert.equal(response.body.length, 2)
+    })
+  })
+
+  it('Should filter recent control activity with administration filters', () => {
+    const { endDateFilter, startDateFilter } = setDateRangeWithControlsFilter()
+    cy.wait('@postRecentActivityControls')
+    cy.fill('Administration', ['DDTM'])
+
+    cy.wait('@postRecentActivityControls').then(({ request, response }) => {
+      if (!response) {
+        assert.fail('response is undefined.')
+      }
+      assert.deepEqual(request.body, {
+        administrationIds: [1005],
+        controlUnitIds: null,
+        infractionsStatus: [
+          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
+          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
+        ],
+        startedAfter: startDateFilter,
+        startedBefore: endDateFilter,
+        themeIds: null
+      })
+
+      assert.equal(response.statusCode, 200)
+      assert.equal(response.body.length, 1)
+      assert.equal(response.body[0].id, 'f3e90d3a-6ba4-4bb3-805e-d391508aa46d')
+      assert.equal(response.body[0].administrationIds, 1005)
+    })
+  })
+
+  it('Should filter recent control activity with control unit filters', () => {
+    const { endDateFilter, startDateFilter } = setDateRangeWithControlsFilter()
+    cy.wait('@postRecentActivityControls')
+    cy.fill('Unité', ['BSN Ste Maxime'])
+
+    cy.wait('@postRecentActivityControls').then(({ request, response }) => {
+      if (!response) {
+        assert.fail('response is undefined.')
+      }
+      assert.deepEqual(request.body, {
+        administrationIds: null,
+        controlUnitIds: [10015],
+        infractionsStatus: [
+          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
+          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
+        ],
+        startedAfter: startDateFilter,
+        startedBefore: endDateFilter,
+        themeIds: null
+      })
+
+      assert.equal(response.statusCode, 200)
+      assert.equal(response.body.length, 1)
+      assert.equal(response.body[0].id, 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
+      assert.include(response.body[0].controlUnitIds, 10015)
+    })
+  })
+
+  it('Should filter recent control activity with theme filters', () => {
+    const { endDateFilter, startDateFilter } = setDateRangeWithControlsFilter()
+    cy.wait('@postRecentActivityControls')
+    cy.fill('Thématique', ['Mouillage individuel'])
+
+    cy.wait('@postRecentActivityControls').then(({ request, response }) => {
+      if (!response) {
+        assert.fail('response is undefined.')
+      }
+      assert.deepEqual(request.body, {
+        administrationIds: null,
+        controlUnitIds: null,
+        infractionsStatus: [
+          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
+          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
+        ],
+        startedAfter: startDateFilter,
+        startedBefore: endDateFilter,
+        themeIds: [100]
+      })
+
+      assert.equal(response.statusCode, 200)
+      assert.equal(response.body.length, 1)
+      assert.equal(response.body[0].id, 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
+      assert.include(response.body[0].themeIds, 100)
+    })
+  })
+})
