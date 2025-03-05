@@ -200,7 +200,9 @@ export function RecentActivityFilters() {
           options={administrationsOptions}
           placeholder="Administration"
           renderValue={() =>
-            filters.administrationIds && <OptionValue>{`Type (${filters.administrationIds.length})`}</OptionValue>
+            filters.administrationIds && (
+              <OptionValue>{`Administration (${filters.administrationIds.length})`}</OptionValue>
+            )
           }
           searchable
           value={filters.administrationIds}
@@ -226,7 +228,7 @@ export function RecentActivityFilters() {
           options={controlUnitsAsOptions}
           placeholder="Unité"
           renderValue={() =>
-            filters.controlUnitIds && <OptionValue>{`Type (${filters.controlUnitIds.length})`}</OptionValue>
+            filters.controlUnitIds && <OptionValue>{`Unité (${filters.controlUnitIds.length})`}</OptionValue>
           }
           searchable
           value={filters.controlUnitIds}

@@ -1,12 +1,14 @@
+import { RecentActivity } from '@features/RecentActivity/types'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
 import { getArea } from 'ol/sphere'
 
-import type { RecentActivity } from '@features/RecentActivity/types'
-
-export const getRecentControlActivityGeometry = (control: RecentActivity.RecentControlsActivity) => {
+export const getRecentControlActivityGeometry = (
+  control: RecentActivity.RecentControlsActivity,
+  distinctionFilter: string
+) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(control.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -21,6 +23,8 @@ export const getRecentControlActivityGeometry = (control: RecentActivity.RecentC
   feature.setId(`${Layers.RECENT_CONTROLS_ACTIVITY.code}:${control.id}`)
   feature.setProperties({
     area,
+    hasInfraction: control.infractions.length > 0,
+    withDistinction: distinctionFilter === RecentActivity.DistinctionFilterEnum.WITH_DISTINCTION,
     ...control
   })
 
