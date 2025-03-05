@@ -67,7 +67,6 @@ export function SideWindowLauncher() {
       dispatch(missionActions.resetSelectedMissionIdOnMap())
     }
     dispatch(missionFormsActions.resetMissions())
-    dispatch(missionFormsActions.setMissionCenteredControlUnitId())
 
     dispatch(dashboardActions.resetDashboards())
 

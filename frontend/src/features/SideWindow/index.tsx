@@ -101,7 +101,6 @@ export function SideWindow() {
       return
     }
 
-    dispatch(missionFormsActions.setMissionCenteredControlUnitId())
     dispatch(sideWindowActions.removeBanners())
 
     const isCurrentPathIsMissionPage = isMissionPage(currentPath)

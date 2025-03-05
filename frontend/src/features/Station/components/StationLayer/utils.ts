@@ -1,5 +1,6 @@
 import { overlayStroke } from '@features/map/overlays/style'
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Layers } from 'domain/entities/layers/constants'
 import { uniq } from 'lodash/fp'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
@@ -45,7 +46,7 @@ export const getFeatureStyle = ((feature: Feature) => {
   return [iconStyle, badgeStyle, counterStyle, overlayStroke]
 }) as StyleFunction
 
-export function getStationPointFeature(station: Station.Station, layerName: string, isHighlighted: boolean = false) {
+export function getStationPointFeature(station: Station.Station, isHighlighted: boolean = false) {
   const controlUnitsCount = uniq(station.controlUnitResources.map(({ controlUnitId }) => controlUnitId)).length
 
   const geoJSON = new GeoJSON()
@@ -63,7 +64,7 @@ export function getStationPointFeature(station: Station.Station, layerName: stri
   const feature = new Feature({
     geometry
   })
-  feature.setId(`${layerName}:${station.id}`)
+  feature.setId(`${Layers.STATIONS.code}:${station.id}`)
   feature.setProperties({
     controlUnitsCount,
     isHighlighted,

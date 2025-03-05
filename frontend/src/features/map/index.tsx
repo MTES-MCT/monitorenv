@@ -9,7 +9,6 @@ import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { MissionsLayer } from '@features/Mission/components/Layers'
 import { EditingMissionLayer } from '@features/Mission/components/Layers/EditingMissionLayer'
 import { HoveredMissionLayer } from '@features/Mission/components/Layers/HoveredMissionLayer'
-import { MissionStationLayer } from '@features/Mission/components/Layers/MissionStationLayer'
 import { ReportingToAttachLayer } from '@features/Mission/components/Layers/ReportingToAttach'
 import { HoveredReportingToAttachLayer } from '@features/Mission/components/Layers/ReportingToAttach/HoveredReportingToAttachLayer'
 import { SelectedMissionLayer } from '@features/Mission/components/Layers/SelectedMissionLayer'
@@ -126,6 +125,7 @@ export function Map({ isSuperUser }) {
       <MapCoordinatesBox />
       {/* @ts-ignore */}
       <MapLayer />
+
       {/* ZONE */}
       {/* @ts-ignore */}
       <AMPLayers />
@@ -143,6 +143,7 @@ export function Map({ isSuperUser }) {
       <LayerEvents />
       {/* @ts-ignore */}
       <LayersOverlay />
+
       {/* MAP */}
       {/* @ts-ignore */}
       <MeasurementLayer />
@@ -154,6 +155,7 @@ export function Map({ isSuperUser }) {
       <MapHistory />
       {/* @ts-ignore */}
       <DrawLayer />
+
       {/* MISSION */}
       {/* @ts-ignore */}
       <MissionsLayer />
@@ -164,8 +166,6 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       <HoveredMissionLayer />
       {/* @ts-ignore */}
-      <MissionStationLayer />
-      {/* @ts-ignore */}
       <MissionOverlays />
       {/* @ts-ignore */}
       <ActionOverlay />
@@ -175,6 +175,7 @@ export function Map({ isSuperUser }) {
       <HoveredReportingToAttachLayer />
       {/* @ts-ignore */}
       <ReportingToAttachOverlays />
+
       {/* SEMAPHORE */}
       {/* @ts-ignore */}
       <SemaphoresLayer />
@@ -184,6 +185,7 @@ export function Map({ isSuperUser }) {
       <SelectedSemaphoreLayer />
       {/* @ts-ignore */}
       <SemaphoreOverlay isSuperUser />
+
       {/* REPORTING */}
       {/* @ts-ignore */}
       <EditingReportingLayer />
@@ -196,10 +198,6 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       <ReportingOverlay />
       {/* @ts-ignore */}
-      <StationLayer />
-      {/* @ts-ignore */}
-      <StationOverlay />
-      {/* @ts-ignore */}
       <MissionToAttachLayer />
       {/* @ts-ignore */}
       <HoveredMissionToAttachLayer />
@@ -207,6 +205,13 @@ export function Map({ isSuperUser }) {
       <SelectedMissionToAttachLayer />
       {/* @ts-ignore */}
       <MissionToAttachOverlays />
+
+      {/* STATION */}
+      {/* @ts-ignore */}
+      <StationLayer />
+      {/* @ts-ignore */}
+      <StationOverlay />
+
       {/* VIGILANCE AREA */}
       {/* @ts-ignore */}
       <VigilanceAreasLayer />
@@ -218,6 +223,7 @@ export function Map({ isSuperUser }) {
       <SelectedVigilanceAreaLayer />
       {/* @ts-ignore */}
       <EditingVigilanceAreaLayer />
+
       {/* DASHBOARD */}
       {/* @ts-ignore */}
       <DrawDashboardLayer />

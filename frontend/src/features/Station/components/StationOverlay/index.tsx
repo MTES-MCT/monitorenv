@@ -14,9 +14,8 @@ import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 export function StationOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const selectedBaseFeatureId = useAppSelector(state => state.station.selectedFeatureId)
   const hoveredFeature = convertToFeature(currentFeatureOver)
-  const missionCenteredControlUnitId = useAppSelector(state => state.missionForms.missionCenteredControlUnitId)
 
-  const layerName = missionCenteredControlUnitId ? Layers.MISSION_STATION.code : Layers.STATIONS.code
+  const layerName = Layers.STATIONS.code
   const selectedFeature = useMemo(
     () => findMapFeatureById(map, layerName, selectedBaseFeatureId),
 
