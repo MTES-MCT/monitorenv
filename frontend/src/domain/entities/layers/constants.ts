@@ -46,7 +46,6 @@ export enum MonitorEnvLayers {
   MEASUREMENT = 'MEASUREMENT',
   MISSIONS = 'MISSIONS',
   MISSION_SELECTED = 'MISSION_SELECTED',
-  MISSION_STATION = 'MISSION_STATION',
   MISSION_TO_ATTACH_ON_REPORTING = 'MISSION_TO_ATTACH_ON_REPORTING',
   RECENT_CONTROLS_ACTIVITY = 'RECENT_CONTROLS_ACTIVITY',
   REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA = 'REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA',
@@ -239,10 +238,6 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.HOVERED_MISSION,
     zIndex: 1800
   },
-  [MonitorEnvLayers.MISSION_STATION]: {
-    code: MonitorEnvLayers.MISSION_STATION,
-    zIndex: 2000
-  },
   [MonitorEnvLayers.REPORTINGS]: {
     code: MonitorEnvLayers.REPORTINGS,
     zIndex: 1700
@@ -344,7 +339,6 @@ export const BaseLayerLabel: Record<BaseLayer, string> = {
 export const SelectableLayers0To7 = [
   [MonitorEnvLayers.MISSIONS],
   [MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING],
-  [MonitorEnvLayers.MISSION_STATION],
   [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION],
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
@@ -367,7 +361,6 @@ export const SelectableLayers0To7 = [
 export const SelectableLayers7To26 = [
   [MonitorEnvLayers.MISSIONS],
   [MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING],
-  [MonitorEnvLayers.MISSION_STATION],
   [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION],
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
@@ -396,7 +389,6 @@ export const HoverableLayers0To7 = [
   [MonitorEnvLayers.ACTIONS],
   [MonitorEnvLayers.MISSIONS],
   [MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING],
-  [MonitorEnvLayers.MISSION_STATION],
   [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION],
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],
@@ -413,7 +405,6 @@ export const HoverableLayers7To26 = [
   [MonitorEnvLayers.ACTIONS],
   [MonitorEnvLayers.MISSIONS],
   [MonitorEnvLayers.MISSION_TO_ATTACH_ON_REPORTING],
-  [MonitorEnvLayers.MISSION_STATION],
   [MonitorEnvLayers.REPORTING_TO_ATTACH_ON_MISSION],
   [MonitorEnvLayers.REPORTINGS],
   [MonitorEnvLayers.SEMAPHORES],

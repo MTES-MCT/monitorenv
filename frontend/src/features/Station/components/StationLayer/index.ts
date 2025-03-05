@@ -37,6 +37,8 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   const highlightedFeatureIds = useAppSelector(state => state.station.highlightedFeatureIds)
   const selectedFeatureId = useAppSelector(state => state.station.selectedFeatureId)
 
+  const missionCenteredControlUnitId = useAppSelector(state => state.missionForms.missionCenteredControlUnitId)
+
   const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
@@ -58,8 +60,8 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   // or if user have interaction on map (edit mission zone, attach reporting or mission)
   const hasMapInteraction = useHasMapInteraction()
   const isLayerVisible = useMemo(
-    () => displayStationLayer && !hasMapInteraction,
-    [displayStationLayer, hasMapInteraction]
+    () => (displayStationLayer && !hasMapInteraction) || (!!missionCenteredControlUnitId && !hasMapInteraction),
+    [displayStationLayer, hasMapInteraction, missionCenteredControlUnitId]
   )
 
   const { data: stations } = useGetStationsQuery()
@@ -72,27 +74,45 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
             return false
           }
 
+          if (missionCenteredControlUnitId) {
+            return station.controlUnitResources.some(
+              controlUnitResource => controlUnitResource.controlUnitId === missionCenteredControlUnitId
+            )
+          }
+
           return station.controlUnitResourceIds.some(stationId =>
             filteredControlUnits.some(controlUnit => controlUnit.controlUnitResourceIds.includes(stationId))
           )
         })
         .map(station => {
+          if (missionCenteredControlUnitId) {
+            const filteredControlUnitResources = station.controlUnitResources.filter(
+              controlUnitResource => controlUnitResource.controlUnitId === missionCenteredControlUnitId
+            )
+
+            return getStationPointFeature(
+              {
+                ...station,
+                controlUnitResourceIds: filteredControlUnitResources.map(({ id }) => id),
+                controlUnitResources: filteredControlUnitResources
+              },
+              true
+            )
+          }
+
           const filteredControlUnitResourceIds = filteredControlUnits
             .map(controlUnit => controlUnit.controlUnitResourceIds)
             .flat()
 
-          return getStationPointFeature(
-            {
-              ...station,
-              controlUnitResourceIds: filteredControlUnitResourceIds,
-              controlUnitResources: station.controlUnitResources.filter(controlUnitResource =>
-                filteredControlUnitResourceIds.includes(controlUnitResource.id)
-              )
-            },
-            Layers.STATIONS.code
-          )
+          return getStationPointFeature({
+            ...station,
+            controlUnitResourceIds: filteredControlUnitResourceIds,
+            controlUnitResources: station.controlUnitResources.filter(controlUnitResource =>
+              filteredControlUnitResourceIds.includes(controlUnitResource.id)
+            )
+          })
         }),
-    [filteredControlUnits, stations]
+    [filteredControlUnits, missionCenteredControlUnitId, stations]
   )
 
   // ---------------------------------------------------------------------------

@@ -14,7 +14,6 @@ import {
   Select,
   Size
 } from '@mtes-mct/monitor-ui'
-import { globalActions } from 'domain/shared_slices/Global'
 import { useField } from 'formik'
 import { uniq, uniqBy } from 'lodash'
 import { useMemo } from 'react'
@@ -198,12 +197,6 @@ export function ControlUnitSelector({
       return
     }
 
-    dispatch(
-      globalActions.setDisplayedItems({
-        layers: { displayStationLayer: false },
-        visibility: { isControlUnitListDialogVisible: false }
-      })
-    )
     dispatch(missionFormsActions.setMissionCenteredControlUnitId(selectedControlUnit.id))
     dispatch(centerOnStation(stations))
   }
