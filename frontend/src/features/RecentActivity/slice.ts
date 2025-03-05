@@ -5,7 +5,8 @@ import storage from 'redux-persist/lib/storage'
 
 import { RecentActivity } from './types'
 
-export const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
+const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
+const CURRENT_DATE = customDayjs.utc().toISOString()
 
 const persistConfig = {
   key: 'recentActivity',
@@ -24,6 +25,11 @@ export enum RecentActivityFiltersEnum {
 }
 
 export type RecentActivityState = {
+  data: {
+    controlUnitsWithInfraction: number
+    controlUnitsWithoutInfraction: number
+  }
+  distinctionFilter: string
   filters: {
     administrationIds?: number[]
     controlUnitIds?: number[]
@@ -37,6 +43,11 @@ export type RecentActivityState = {
 }
 
 const INITIAL_STATE: RecentActivityState = {
+  data: {
+    controlUnitsWithInfraction: 0,
+    controlUnitsWithoutInfraction: 0
+  },
+  distinctionFilter: RecentActivity.DistinctionFilterEnum.WITHOUT_DISTINCTION,
   filters: {
     infractionsStatus: [
       RecentActivity.StatusFilterEnum.WITH_INFRACTION,
@@ -44,7 +55,7 @@ const INITIAL_STATE: RecentActivityState = {
     ],
     periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS,
     startedAfter: LAST_30_DAYS,
-    startedBefore: customDayjs.utc().toISOString()
+    startedBefore: CURRENT_DATE
   }
 }
 const recentActivitySlice = createSlice({
@@ -54,6 +65,12 @@ const recentActivitySlice = createSlice({
     resetRecentActivityFilters() {
       return { ...INITIAL_STATE }
     },
+    updateData(state: RecentActivityState, action: PayloadAction<RecentActivityState['data']>) {
+      state.data = action.payload
+    },
+    updateDistinctionFilter(state: RecentActivityState, action: PayloadAction<string>) {
+      state.distinctionFilter = action.payload
+    },
     updateFilters(
       state: RecentActivityState,
       action: PayloadAction<{
@@ -61,12 +78,9 @@ const recentActivitySlice = createSlice({
         value: RecentActivityState['filters'][keyof RecentActivityState['filters']]
       }>
     ) {
-      return {
-        ...state,
-        filters: {
-          ...state.filters,
-          [action.payload.key]: action.payload.value
-        }
+      state.filters = {
+        ...state.filters,
+        [action.payload.key]: action.payload.value
       }
     }
   }

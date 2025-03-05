@@ -55,4 +55,14 @@ export namespace RecentActivity {
     THREE_LAST_MONTHS = '3 derniers mois',
     CUSTOM = 'Période spécifique'
   }
+
+  export enum DistinctionFilterEnum {
+    WITH_DISTINCTION = 'WITH_DISTINCTION',
+    WITHOUT_DISTINCTION = 'WITHOUT_DISTINCTION'
+  }
+
+  export enum DistinctionFilterLabels {
+    WITH_DISTINCTION = 'Distinction avec ou sans infraction',
+    WITHOUT_DISTINCTION = 'Sans distinction'
+  }
 }
