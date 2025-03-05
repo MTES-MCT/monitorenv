@@ -15,6 +15,7 @@ import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Checkbox,
   CheckPicker,
+  CustomSearch,
   DateRangePicker,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
@@ -47,7 +48,9 @@ export function RecentActivityFilters() {
     const activeControlUnits = (controlUnits ?? []).filter(isNotArchived)
     const selectableControlUnits = activeControlUnits?.filter(
       activeControlUnit =>
-        !filters.administrationIds?.length || filters.administrationIds?.includes(activeControlUnit.administration.id)
+        filters.administrationIds?.length === 0 ||
+        !filters.administrationIds ||
+        filters.administrationIds?.includes(activeControlUnit.administrationId)
     )
 
     return getOptionsFromIdAndName(selectableControlUnits) ?? []
@@ -55,6 +58,13 @@ export function RecentActivityFilters() {
 
   const dateRangeOptions = getOptionsFromLabelledEnum(RecentActivity.RecentActivityDateRangeLabels)
   const infractionsStatusOptions = getOptionsFromLabelledEnum(RecentActivity.InfractionsStatusFilterLabels)
+
+  const controlUnitCustomSearch = useMemo(
+    () => new CustomSearch(controlUnitsAsOptions ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
+    [controlUnitsAsOptions]
+  )
+
+  const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions ?? [], ['label']), [themesAsOptions])
 
   const updateCheckboxFilter = (isChecked: boolean | undefined, value: string) => {
     const updatedFilter = [...(filters.infractionsStatus ?? [])]
@@ -130,7 +140,7 @@ export function RecentActivityFilters() {
             <Checkbox
               key={status.label}
               checked={filters?.infractionsStatus?.includes(status.value)}
-              data-cy={`status-filter-${status.label}`}
+              data-cy={`recent-activity-filter-${status.label}`}
               label={status.label}
               name={status.label}
               onChange={isChecked => updateCheckboxFilter(isChecked, status.value)}
@@ -162,8 +172,8 @@ export function RecentActivityFilters() {
               isCompact
               isLabelHidden
               isStringDate
-              label="Date de début entre le et le"
-              name="reportingDateRange"
+              label="Période spécifique"
+              name="recentActivityDateRange"
               onChange={updateDateRangeFilter}
             />
           </StyledCustomPeriodContainer>
@@ -182,6 +192,7 @@ export function RecentActivityFilters() {
           renderValue={() =>
             filters.administrationIds && <OptionValue>{`Type (${filters.administrationIds.length})`}</OptionValue>
           }
+          searchable
           value={filters.administrationIds}
         />
         {filters.administrationIds &&
@@ -195,6 +206,8 @@ export function RecentActivityFilters() {
             </SingleTag>
           ))}
         <CheckPicker
+          key={controlUnitsAsOptions?.length}
+          customSearch={controlUnitCustomSearch}
           isLabelHidden
           isTransparent
           label="Unité"
@@ -205,6 +218,7 @@ export function RecentActivityFilters() {
           renderValue={() =>
             filters.controlUnitIds && <OptionValue>{`Type (${filters.controlUnitIds.length})`}</OptionValue>
           }
+          searchable
           value={filters.controlUnitIds}
         />
         {filters.controlUnitIds &&
@@ -220,6 +234,7 @@ export function RecentActivityFilters() {
       </StyledBloc>
       <StyledBloc>
         <CheckPicker
+          customSearch={themeCustomSearch}
           isLabelHidden
           isTransparent
           label="Thématique"
@@ -228,6 +243,7 @@ export function RecentActivityFilters() {
           options={themesAsOptions}
           placeholder="Thématique"
           renderValue={() => filters.themeIds && <OptionValue>{`Type (${filters.themeIds.length})`}</OptionValue>}
+          searchable
           value={filters.themeIds}
         />
         {filters.themeIds &&

@@ -138,8 +138,8 @@ class JpaEnvActionRepository(
         }.filter { recentControl ->
             when {
                 infractionsStatus.isNullOrEmpty() -> true
-                infractionsStatus.contains("WITH_INFRACTIONS") && recentControl.infractions?.isNotEmpty() == true -> true
-                infractionsStatus.contains("WITHOUT_INFRACTIONS") && recentControl.infractions.isNullOrEmpty() -> true
+                infractionsStatus.contains("WITH_INFRACTION") && recentControl.infractions?.isNotEmpty() == true -> true
+                infractionsStatus.contains("WITHOUT_INFRACTION") && recentControl.infractions.isNullOrEmpty() -> true
                 else -> false
             }
         }
