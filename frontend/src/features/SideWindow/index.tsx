@@ -47,8 +47,6 @@ export function SideWindow() {
   const missionEvent = useListenMissionEventUpdates()
   const reportingEvent = useListenReportingEventUpdates()
 
-  const missionCenteredControlUnitId = useAppSelector(state => state.missionForms.missionCenteredControlUnitId)
-
   const isMissionButtonIsActive = useMemo(() => isMissionOrMissionsPage(currentPath), [currentPath])
   const isReportingsButtonIsActive = useMemo(() => isReportingsPage(currentPath), [currentPath])
   const isDashboardsButtonIsActive = useMemo(
@@ -80,9 +78,6 @@ export function SideWindow() {
   }, [dispatch, reportingEvent])
 
   useEffect(() => {
-    if (missionCenteredControlUnitId) {
-      dispatch(missionFormsActions.setMissionCenteredControlUnitId())
-    }
     const isCurrentPathIsMissionPage = isMissionPage(currentPath)
     if (!isCurrentPathIsMissionPage) {
       dispatch(missionFormsActions.resetActiveMissionId())
@@ -92,8 +87,6 @@ export function SideWindow() {
     if (!isCurrentPathDashboard) {
       dispatch(dashboardActions.setActiveDashboardId(undefined))
     }
-    // we don't want to run this effect on every missionCenteredControlUnitId change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPath, dispatch])
 
   const navigate = (nextPath: string) => {
