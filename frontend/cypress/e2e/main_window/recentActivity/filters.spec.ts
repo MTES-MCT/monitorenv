@@ -23,9 +23,9 @@ context('Recent Activity -> Filters', () => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('POST', `/bff/v1/recent-activity/controls`).as('postRecentActivityControls')
     cy.visit('/#@-824534.42,6082993.21,8.70')
-    cy.wait('@getControlPlans')
 
     cy.clickButton("Voir l'activité récente")
+    cy.wait('@getControlPlans')
     cy.wait('@postRecentActivityControls')
   })
 

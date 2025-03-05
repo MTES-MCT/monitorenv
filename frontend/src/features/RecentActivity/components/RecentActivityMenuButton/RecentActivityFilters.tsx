@@ -31,9 +31,15 @@ export function RecentActivityFilters() {
   const dispatch = useAppDispatch()
   const filters = useAppSelector(state => state.recentActivity.filters)
 
-  const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { themesAsOptions } = useGetControlPlans()
+  const { data: administrations, isLoading: isLoadingAdministrations } = useGetAdministrationsQuery(
+    undefined,
+    RTK_DEFAULT_QUERY_OPTIONS
+  )
+  const { data: controlUnits, isLoading: isLoadingControlUnits } = useGetControlUnitsQuery(
+    undefined,
+    RTK_DEFAULT_QUERY_OPTIONS
+  )
+  const { isLoading: isLoadingThemes, themesAsOptions } = useGetControlPlans()
 
   const administrationsOptions = useMemo(
     () =>
@@ -130,6 +136,10 @@ export function RecentActivityFilters() {
         })
       )
     )
+  }
+
+  if (isLoadingThemes || isLoadingAdministrations || isLoadingControlUnits) {
+    return null
   }
 
   return (
@@ -234,6 +244,7 @@ export function RecentActivityFilters() {
       </StyledBloc>
       <StyledBloc>
         <CheckPicker
+          key={themesAsOptions?.length}
           customSearch={themeCustomSearch}
           isLabelHidden
           isTransparent

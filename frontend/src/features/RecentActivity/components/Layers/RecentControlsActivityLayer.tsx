@@ -4,7 +4,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
-import VectorLayer from 'ol/layer/Vector'
+import { WebGLVector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useRef } from 'react'
 
@@ -12,7 +12,7 @@ import { getRecentControlActivityGeometry } from './recentControlActivityGeometr
 import { recentControlActivityStyle } from './style'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-import type { VectorLayerWithName } from 'domain/types/layer'
+import type { WebGLVectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
@@ -66,14 +66,12 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
-    new VectorLayer({
-      renderBuffer: 7,
-      renderOrder: (a, b) => b.get('area') - a.get('area'),
+    new WebGLVector({
       source: vectorSourceRef.current,
       style: recentControlActivityStyle,
       zIndex: Layers.RECENT_CONTROLS_ACTIVITY.zIndex
     })
-  ) as React.MutableRefObject<VectorLayerWithName>
+  ) as React.MutableRefObject<WebGLVectorLayerWithName>
   vectorLayerRef.current.name = Layers.RECENT_CONTROLS_ACTIVITY.code
 
   useEffect(() => {
