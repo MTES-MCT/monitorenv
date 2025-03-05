@@ -7,7 +7,9 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
-export function ControlCard({ feature }: { feature: any }) {
+import type { Feature } from 'ol'
+
+export function ControlCard({ children = undefined, feature }: { children?: React.ReactNode; feature: Feature }) {
   const listener = useAppSelector(state => state.draw.listener)
   const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, controlPlans, infractions } =
     feature.getProperties()
@@ -15,18 +17,23 @@ export function ControlCard({ feature }: { feature: any }) {
   const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
 
   const { isLoading, themes } = useGetControlPlans()
-  if (listener || isLoading) {
+
+  if (listener ?? isLoading) {
     return null
   }
 
   return (
     <StyledControlCardHeader>
       <StyledControlThemes>
-        {controlPlans?.length > 0 ? (
-          <StyledThemes>{extractThemesAsText(controlPlans, themes)}</StyledThemes>
-        ) : (
-          <StyledGrayText>Thématique à renseigner</StyledGrayText>
-        )}{' '}
+        {children ?? (
+          <>
+            {controlPlans?.length > 0 ? (
+              <StyledThemes>{extractThemesAsText(controlPlans, themes)}</StyledThemes>
+            ) : (
+              <StyledGrayText>Thématique à renseigner</StyledGrayText>
+            )}
+          </>
+        )}
         <Accented>
           {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}{' '}
           {TargetTypeLabels[actionTargetType] ? (

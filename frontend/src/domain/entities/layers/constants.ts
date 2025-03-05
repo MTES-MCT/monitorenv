@@ -398,7 +398,8 @@ export const HoverableLayers0To7 = [
   [MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA],
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
-  [MonitorEnvLayers.DASHBOARD_PREVIEW]
+  [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 
 export const HoverableLayers7To26 = [
@@ -421,7 +422,8 @@ export const HoverableLayers7To26 = [
   ],
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
-  [MonitorEnvLayers.DASHBOARD_PREVIEW]
+  [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 
 export type RegulatoryOrAMPOrViglanceAreaLayerType =

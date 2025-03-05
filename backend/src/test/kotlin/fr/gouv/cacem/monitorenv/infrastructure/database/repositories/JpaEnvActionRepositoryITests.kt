@@ -140,7 +140,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = listOf("WITH_INFRACTIONS"),
+                infractionsStatus = listOf("WITH_INFRACTION"),
                 controlUnitIds = null,
                 administrationIds = null,
                 themeIds = null,
@@ -161,7 +161,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = listOf("WITHOUT_INFRACTIONS"),
+                infractionsStatus = listOf("WITHOUT_INFRACTION"),
                 controlUnitIds = null,
                 administrationIds = null,
                 themeIds = null,
