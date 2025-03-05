@@ -1,12 +1,14 @@
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
+import { recentActivityActions } from '@features/RecentActivity/slice'
 import { RecentActivity } from '@features/RecentActivity/types'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { WebGLVector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import { getRecentControlActivityGeometry } from './recentControlActivityGeometryHelper'
 import { recentControlActivityStyle } from './style'
@@ -17,10 +19,13 @@ import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
+  const dispatch = useAppDispatch()
+
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const hasMapInteraction = useHasMapInteraction()
   const isLayerVisible = displayRecentActivityLayer && !hasMapInteraction
   const filters = useAppSelector(state => state.recentActivity.filters)
+  const distinctionFilter = useAppSelector(state => state.recentActivity.distinctionFilter)
 
   const [getRecentControlsActivity, { data: recentControlsActivity }] = useGetRecentControlsActivityMutation()
 
@@ -74,17 +79,32 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   ) as React.MutableRefObject<WebGLVectorLayerWithName>
   vectorLayerRef.current.name = Layers.RECENT_CONTROLS_ACTIVITY.code
 
+  const controlUnitsWithInfraction = useMemo(
+    () => recentControlsActivity?.filter(control => control.infractions.length > 0) ?? [],
+    [recentControlsActivity]
+  )
+
   useEffect(() => {
     if (map) {
       vectorSourceRef.current.clear(true)
 
       if (recentControlsActivity) {
-        const features = recentControlsActivity.map(control => getRecentControlActivityGeometry(control))
+        // we save total of controlUnits with or without infraction  in store
+        dispatch(
+          recentActivityActions.updateData({
+            controlUnitsWithInfraction: controlUnitsWithInfraction.length,
+            controlUnitsWithoutInfraction: recentControlsActivity.length - controlUnitsWithInfraction.length
+          })
+        )
+
+        const features = recentControlsActivity.map(control =>
+          getRecentControlActivityGeometry(control, distinctionFilter)
+        )
 
         vectorSourceRef.current.addFeatures(features)
       }
     }
-  }, [map, recentControlsActivity])
+  }, [map, distinctionFilter, dispatch, controlUnitsWithInfraction.length, recentControlsActivity])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

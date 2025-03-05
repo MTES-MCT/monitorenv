@@ -7,6 +7,7 @@ import { Accent, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { globalActions } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
+import { DistinctionFilters } from './DistinctionFilters'
 import { RecentActivityFilters } from './RecentActivityFilters'
 
 export function RecentActivityMenuButton() {
@@ -34,20 +35,25 @@ export function RecentActivityMenuButton() {
   return (
     <>
       {isRecentActivityDialogVisible && (
-        <StyledMapMenuDialogContainer>
-          <MapMenuDialog.Header>
-            <CloseButton Icon={Icon.Close} onClick={closeModal} />
-            <StyledMapMenuDialogTitle as="h2">Activité récente</StyledMapMenuDialogTitle>
-            <MapMenuDialog.VisibilityButton
-              accent={Accent.SECONDARY}
-              Icon={displayRecentActivityLayer ? Icon.Display : Icon.Hide}
-              onClick={handleRecentActivityVisibility}
-            />
-          </MapMenuDialog.Header>
-          <MapMenuDialog.Body>
-            <RecentActivityFilters />
-          </MapMenuDialog.Body>
-        </StyledMapMenuDialogContainer>
+        <div>
+          <StyledMapMenuDialogContainer>
+            <MapMenuDialog.Header>
+              <CloseButton Icon={Icon.Close} onClick={closeModal} />
+              <StyledMapMenuDialogTitle as="h2">Activité récente</StyledMapMenuDialogTitle>
+              <MapMenuDialog.VisibilityButton
+                accent={Accent.SECONDARY}
+                Icon={displayRecentActivityLayer ? Icon.Display : Icon.Hide}
+                onClick={handleRecentActivityVisibility}
+              />
+            </MapMenuDialog.Header>
+            <MapMenuDialog.Body>
+              <RecentActivityFilters />
+              <DistinctionFiltersContainer>
+                <DistinctionFilters />
+              </DistinctionFiltersContainer>
+            </MapMenuDialog.Body>
+          </StyledMapMenuDialogContainer>
+        </div>
       )}
       <MenuWithCloseButton.ButtonOnMap
         className={isRecentActivityDialogVisible ? '_active' : undefined}
@@ -62,4 +68,11 @@ export function RecentActivityMenuButton() {
 
 const CloseButton = styled(MapMenuDialog.CloseButton)`
   margin: auto 0;
+`
+
+const DistinctionFiltersContainer = styled(MapMenuDialog.Container)`
+  display: flex;
+  position: absolute;
+  margin-left: -12px;
+  margin-top: 16px;
 `
