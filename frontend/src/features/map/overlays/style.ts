@@ -1,5 +1,5 @@
 import { THEME } from '@mtes-mct/monitor-ui'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { getCenter } from 'ol/extent'
 import { LineString } from 'ol/geom'
 import { Style, Stroke } from 'ol/style'

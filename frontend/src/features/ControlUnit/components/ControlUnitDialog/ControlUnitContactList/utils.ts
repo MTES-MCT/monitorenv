@@ -1,5 +1,5 @@
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
-import { sortBy } from 'lodash/fp'
+import { sortBy } from 'lodash-es'
 
 import { CONTROL_UNIT_CONTACT_PREDEFINED_NAMES } from './constants'
 
@@ -18,8 +18,8 @@ export function sortControlUnitContactsByQualifiedName(
   const customNamedContacts = controlUnitContacts.filter(
     ({ name }) => !CONTROL_UNIT_CONTACT_PREDEFINED_NAMES.includes(name)
   )
-  const sortedPredefinedNamedContacts = sortBy(['name'], predefinedNamedContacts)
-  const sortedCustomNamedContacts = sortBy(['name'], customNamedContacts)
+  const sortedPredefinedNamedContacts = sortBy(predefinedNamedContacts, ['name'])
+  const sortedCustomNamedContacts = sortBy(customNamedContacts, ['name'])
 
   return [...sortedPredefinedNamedContacts, ...sortedCustomNamedContacts]
 }
