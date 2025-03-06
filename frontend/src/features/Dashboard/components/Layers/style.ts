@@ -35,15 +35,21 @@ export const getDashboardStyle = (feature: FeatureLike, { withReportingOverlay =
     if (withReportingOverlay) {
       const geometry = feature.getGeometry()
       const center = geometry?.getExtent() && getCenter(geometry?.getExtent())
+      const isArchived = feature.get('isArchived')
+
       const reportingOverlay = new Style({
         geometry: center && new Point(center),
         text: new Text({
-          backgroundFill: new Fill({ color: THEME.color.white }),
-          backgroundStroke: new Stroke({ color: reportingStyles[1]?.getStroke()?.getColor(), width: 2 }),
-          fill: new Fill({ color: THEME.color.gunMetal }),
-          font: '16px Marianne',
-          offsetX: 72,
-          offsetY: -18,
+          backgroundFill: new Fill({
+            color: isArchived ? THEME.color.white : reportingStyles[1]?.getStroke()?.getColor()
+          }),
+          backgroundStroke: new Stroke({
+            color: isArchived ? reportingStyles[1]?.getStroke()?.getColor() : THEME.color.white
+          }),
+          fill: new Fill({ color: isArchived ? THEME.color.gunMetal : THEME.color.white }),
+          font: '12px Marianne',
+          offsetX: 50,
+          offsetY: -16,
           padding: [2, 8, 2, 8],
           text: getFormattedReportingId(feature.get('reportingId'))
         })
