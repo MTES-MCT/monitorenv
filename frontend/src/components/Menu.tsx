@@ -53,17 +53,16 @@ export function Menu({ isSuperUser }: MenuProps) {
           <ControlUnitListButton />
         </li>
       )}
-      {displayDashboard && isSuperUser && (
-        <li>
-          <DashboardMenuButton />
-        </li>
-      )}
       {displayRecentActivityMenuButton && isSuperUser && isRecentActivityEnabled && (
         <li>
           <RecentActivityMenuButton />
         </li>
       )}
-
+      {displayDashboard && isSuperUser && (
+        <li>
+          <DashboardMenuButton />
+        </li>
+      )}
       <ToolWrapper>
         <ToolButtons>
           {displayMeasurement && isSuperUser && <MeasurementMapButton />}
