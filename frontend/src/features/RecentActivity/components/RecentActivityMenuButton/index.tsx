@@ -14,7 +14,7 @@ export function RecentActivityMenuButton() {
   const dispatch = useAppDispatch()
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
-
+  const withoutDistinction = useAppSelector(state => state.recentActivity.distinctionFilter === 'WITHOUT_DISTINCTION')
   const toggleRecentActivityDialog = e => {
     e.preventDefault()
 
@@ -36,7 +36,7 @@ export function RecentActivityMenuButton() {
     <>
       {isRecentActivityDialogVisible && (
         <div>
-          <StyledMapMenuDialogContainer>
+          <MapMenuDialogContainer>
             <MapMenuDialog.Header>
               <CloseButton Icon={Icon.Close} onClick={closeModal} />
               <StyledMapMenuDialogTitle as="h2">Activité récente</StyledMapMenuDialogTitle>
@@ -48,11 +48,11 @@ export function RecentActivityMenuButton() {
             </MapMenuDialog.Header>
             <MapMenuDialog.Body>
               <RecentActivityFilters />
-              <DistinctionFiltersContainer>
-                <DistinctionFilters />
-              </DistinctionFiltersContainer>
             </MapMenuDialog.Body>
-          </StyledMapMenuDialogContainer>
+            <DistinctionFiltersContainer $withSmallBottomMargin={withoutDistinction}>
+              <DistinctionFilters />
+            </DistinctionFiltersContainer>
+          </MapMenuDialogContainer>
         </div>
       )}
       <MenuWithCloseButton.ButtonOnMap
@@ -65,14 +65,17 @@ export function RecentActivityMenuButton() {
     </>
   )
 }
+const MapMenuDialogContainer = styled(StyledMapMenuDialogContainer)`
+  max-height: 480px;
+`
 
 const CloseButton = styled(MapMenuDialog.CloseButton)`
   margin: auto 0;
 `
 
-const DistinctionFiltersContainer = styled(MapMenuDialog.Container)`
+const DistinctionFiltersContainer = styled(MapMenuDialog.Container)<{ $withSmallBottomMargin: boolean }>`
   display: flex;
   position: absolute;
-  margin-left: -12px;
   margin-top: 16px;
+  bottom: ${p => (p.$withSmallBottomMargin ? '-59px' : '-138px')};
 `
