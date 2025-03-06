@@ -26,7 +26,7 @@
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
-    "@mtes-mct/monitor-ui": "24.14.0",
+    "@mtes-mct/monitor-ui": "24.12.0",
     "@react-pdf/renderer": "4.2.2",
     "@reduxjs/toolkit": "2.6.0",
     "@sentry/browser": "8.54.0",
