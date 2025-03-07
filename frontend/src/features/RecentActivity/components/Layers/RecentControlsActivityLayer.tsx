@@ -5,6 +5,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import { geoJsonToWKT } from '@utils/geojsonToWKT'
 import { Layers } from 'domain/entities/layers/constants'
 import { WebGLVector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
@@ -59,9 +60,14 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
       default:
         break
     }
+
     getRecentControlsActivity({
       administrationIds: filters.administrationIds,
       controlUnitIds: filters.controlUnitIds,
+      geometry:
+        filters.geometry?.type && 'coordinates' in filters.geometry && filters.geometry.coordinates?.length > 0
+          ? geoJsonToWKT(filters.geometry)
+          : undefined,
       infractionsStatus: filters.infractionsStatus,
       startedAfter: startAfterFilter,
       startedBefore: startBeforeFilter,

@@ -8,6 +8,7 @@ import { globalActions } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
 import { DistinctionFilters } from './DistinctionFilters'
+import { DrawZone } from './DrawZone'
 import { RecentActivityFilters } from './RecentActivityFilters'
 
 export function RecentActivityMenuButton() {
@@ -15,6 +16,8 @@ export function RecentActivityMenuButton() {
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const withoutDistinction = useAppSelector(state => state.recentActivity.distinctionFilter === 'WITHOUT_DISTINCTION')
+  const isDrawing = useAppSelector(state => state.recentActivity.isDrawing)
+
   const toggleRecentActivityDialog = e => {
     e.preventDefault()
 
@@ -46,12 +49,18 @@ export function RecentActivityMenuButton() {
                 onClick={handleRecentActivityVisibility}
               />
             </MapMenuDialog.Header>
-            <MapMenuDialog.Body>
-              <RecentActivityFilters />
-            </MapMenuDialog.Body>
-            <DistinctionFiltersContainer $withSmallBottomMargin={withoutDistinction}>
-              <DistinctionFilters />
-            </DistinctionFiltersContainer>
+            {isDrawing ? (
+              <StyledDrawZone />
+            ) : (
+              <>
+                <MapMenuDialog.Body>
+                  <RecentActivityFilters />
+                </MapMenuDialog.Body>
+                <DistinctionFiltersContainer $withSmallBottomMargin={withoutDistinction}>
+                  <DistinctionFilters />
+                </DistinctionFiltersContainer>
+              </>
+            )}
           </MapMenuDialogContainer>
         </div>
       )}
@@ -67,7 +76,7 @@ export function RecentActivityMenuButton() {
 }
 const MapMenuDialogContainer = styled(StyledMapMenuDialogContainer)`
   max-height: 480px;
-  flex-gap: 16px;
+  width: 400px;
 `
 
 const CloseButton = styled(MapMenuDialog.CloseButton)`
@@ -75,9 +84,12 @@ const CloseButton = styled(MapMenuDialog.CloseButton)`
 `
 
 const DistinctionFiltersContainer = styled(MapMenuDialog.Container)<{ $withSmallBottomMargin: boolean }>`
+  bottom: ${p => (p.$withSmallBottomMargin ? '-59px' : '-138px')};
   display: flex;
-  position: absolute;
   margin-top: 16px;
-  bottom: -59px;
-  /*  bottom: ${p => (p.$withSmallBottomMargin ? '-59px' : '-138px')}; */
+  position: absolute;
+  width: 400px;
+`
+const StyledDrawZone = styled(DrawZone)`
+  margin-top: 2px;
 `
