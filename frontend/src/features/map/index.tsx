@@ -14,6 +14,7 @@ import { HoveredReportingToAttachLayer } from '@features/Mission/components/Laye
 import { SelectedMissionLayer } from '@features/Mission/components/Layers/SelectedMissionLayer'
 import { MissionOverlays } from '@features/Mission/components/Overlays'
 import { ReportingToAttachOverlays } from '@features/Mission/components/Overlays/ReportingToAttach'
+import { DrawRecentActivityLayer } from '@features/RecentActivity/components/Layers/DrawRecentActivityLayer'
 import { RecentControlsActivityLayer } from '@features/RecentActivity/components/Layers/RecentControlsActivityLayer'
 import { RecentControlActivityOverlay } from '@features/RecentActivity/components/Overlays/RecentControlActivityOverlay'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
@@ -246,6 +247,8 @@ export function Map({ isSuperUser }) {
       <RecentControlsActivityLayer />
       {/* @ts-ignore */}
       <RecentControlActivityOverlay />
+      {/* @ts-ignore */}
+      <DrawRecentActivityLayer />
     </BaseMap>
   )
 }
