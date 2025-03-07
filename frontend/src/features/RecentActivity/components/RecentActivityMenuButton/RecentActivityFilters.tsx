@@ -8,24 +8,33 @@ import {
   type RecentActivityState
 } from '@features/RecentActivity/slice'
 import { RecentActivity } from '@features/RecentActivity/types'
+import { resetDrawingZone } from '@features/RecentActivity/useCases/resetDrawingZone'
 import { OptionValue } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
+  Accent,
+  Button,
   Checkbox,
   CheckPicker,
   CustomSearch,
   DateRangePicker,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
+  Icon,
+  IconButton,
+  Label,
   Select,
   SingleTag,
   type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
 import { isNotArchived } from '@utils/isNotArchived'
+import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useMemo } from 'react'
 import styled from 'styled-components'
+
+import type { Coordinate } from 'ol/coordinate'
 
 export function RecentActivityFilters() {
   const dispatch = useAppDispatch()
@@ -136,6 +145,25 @@ export function RecentActivityFilters() {
         })
       )
     )
+  }
+
+  const onDrawZone = () => {
+    dispatch(recentActivityActions.setIsDrawing(true))
+  }
+
+  const handleCenterOnMap = (coordinates: Coordinate[][]) => {
+    dispatch(centerOnMap(coordinates[0]))
+  }
+
+  const handleAddZone = () => {
+    dispatch(recentActivityActions.setIsDrawing(true))
+  }
+
+  const deleteZone = () => {
+    dispatch(resetDrawingZone())
+    dispatch(recentActivityActions.setIsDrawing(false))
+    dispatch(recentActivityActions.setInitialGeometry(undefined))
+    dispatch(recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.GEOMETRY, value: undefined }))
   }
 
   if (isLoadingThemes || isLoadingAdministrations || isLoadingControlUnits) {
@@ -267,6 +295,36 @@ export function RecentActivityFilters() {
             </SingleTag>
           ))}
       </StyledBloc>
+      <div>
+        <Label>Filter sur une zone</Label>
+        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={onDrawZone}>
+          Définir un tracé pour la zone à filtrer
+        </Button>
+        {filters.geometry &&
+          'coordinates' in filters.geometry &&
+          (filters.geometry.coordinates as Coordinate[][][]).map((polygonCoordinates, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <Row key={`zone-${index}`}>
+              <ZoneWrapper>
+                Polygone dessiné {index + 1}
+                <Center onClick={() => handleCenterOnMap(polygonCoordinates as Coordinate[][])}>
+                  <Icon.SelectRectangle />
+                  Centrer sur la carte
+                </Center>
+              </ZoneWrapper>
+
+              <>
+                <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={handleAddZone} />
+                <IconButton
+                  accent={Accent.SECONDARY}
+                  aria-label="Supprimer cette zone"
+                  Icon={Icon.Delete}
+                  onClick={deleteZone}
+                />
+              </>
+            </Row>
+          ))}
+      </div>
     </FilterWrapper>
   )
 }
@@ -294,4 +352,37 @@ const StyledBloc = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+`
+
+const Center = styled.a`
+  cursor: pointer;
+  display: flex;
+  margin-left: auto;
+  margin-right: 8px;
+  color: ${p => p.theme.color.slateGray};
+  text-decoration: underline;
+
+  > .Element-IconBox {
+    margin-right: 8px;
+  }
+`
+
+const Row = styled.div`
+  align-items: center;
+  display: flex;
+  margin: 4px 0 0;
+  width: 100%;
+
+  > button {
+    margin: 0 0 0 4px;
+  }
+`
+
+const ZoneWrapper = styled.div`
+  background-color: ${p => p.theme.color.gainsboro};
+  display: flex;
+  flex-grow: 1;
+  font-size: 13px;
+  justify-content: space-between;
+  padding: 4px 8px 4px;
 `

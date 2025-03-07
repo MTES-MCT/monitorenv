@@ -34,6 +34,7 @@ export enum MonitorEnvLayers {
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
   DRAW_DASHBOARD = 'DRAW_DASHBOARD',
+  DRAW_RECENT_ACTIVITY = 'DRAW_RECENT_ACTIVITY',
   DRAW_VIGILANCE_AREA = 'DRAW_VIGILANCE_AREA',
   EEZ = 'EEZ',
   EXPORT_PDF = 'EXPORT_PDF',
@@ -314,7 +315,11 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]: {
     code: MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY,
-    zIndex: 1500
+    zIndex: 1300
+  },
+  [MonitorEnvLayers.DRAW_RECENT_ACTIVITY]: {
+    code: MonitorEnvLayers.DRAW_RECENT_ACTIVITY,
+    zIndex: 1300
   }
 }
 

@@ -1,8 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { isGeometryValid } from '@utils/geometryValidation'
+import { InteractionType } from 'domain/entities/map/constants'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { RecentActivity } from './types'
+
+import type { GeoJSON } from 'domain/types/GeoJSON'
 
 const persistConfig = {
   key: 'recentActivity',
@@ -31,13 +35,18 @@ export type RecentActivityState = {
   filters: {
     administrationIds?: number[]
     controlUnitIds?: number[]
-    geometry?: string
+    geometry?: GeoJSON.Geometry | undefined
     infractionsStatus?: string[]
     periodFilter: string
     startedAfter?: string
     startedBefore?: string
     themeIds?: number[]
   }
+  geometry: GeoJSON.Geometry | undefined
+  initialGeometry: GeoJSON.Geometry | undefined
+  interactionType: InteractionType
+  isDrawing: boolean
+  isGeometryValid: boolean
 }
 
 const INITIAL_STATE: RecentActivityState = {
@@ -56,7 +65,12 @@ const INITIAL_STATE: RecentActivityState = {
     periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS,
     startedAfter: undefined,
     startedBefore: undefined
-  }
+  },
+  geometry: undefined,
+  initialGeometry: undefined,
+  interactionType: InteractionType.POLYGON,
+  isDrawing: false,
+  isGeometryValid: true
 }
 const recentActivitySlice = createSlice({
   initialState: INITIAL_STATE,
@@ -64,6 +78,22 @@ const recentActivitySlice = createSlice({
   reducers: {
     resetRecentActivityFilters() {
       return { ...INITIAL_STATE }
+    },
+    setGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.Geometry | undefined>) {
+      state.geometry = action.payload
+      state.isGeometryValid = action.payload ? isGeometryValid(action.payload) : true
+    },
+    setInitialGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.Geometry | undefined>) {
+      state.initialGeometry = action.payload
+    },
+    setInteractionType(state: RecentActivityState, action: PayloadAction<InteractionType>) {
+      state.interactionType = action.payload
+    },
+    setIsDrawing(state: RecentActivityState, action: PayloadAction<boolean>) {
+      state.isDrawing = action.payload
+    },
+    setIsGeometryValid(state: RecentActivityState, action: PayloadAction<boolean>) {
+      state.isGeometryValid = action.payload
     },
     updateDistinctionFilter(state: RecentActivityState, action: PayloadAction<RecentActivity.DistinctionFilterEnum>) {
       state.distinctionFilter = action.payload
