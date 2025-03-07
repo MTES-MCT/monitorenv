@@ -20,7 +20,15 @@ export const recentControlActivityStyle: FlatStyleLike = [
         'case',
         featureHas('withDistinction'),
         ['case', featureHas('hasInfraction'), THEME.color.maximumRed, THEME.color.yellowGreen],
-        THEME.color.charcoal
+        [
+          'interpolate',
+          ['linear'],
+          ['get', 'actionNumberOfControls'],
+          0,
+          THEME.color.goldenPoppy,
+          500,
+          THEME.color.maximumRed
+        ]
       ],
       'icon-scale': 0.6,
       'icon-src': 'Close.svg'
