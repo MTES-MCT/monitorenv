@@ -255,9 +255,29 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(2)
-        println("Number of Queries Executed: $recentControlsActivity")
         recentControlsActivity.forEach { envAction ->
             assertThat(envAction.geom).isNotNull()
+        }
+    }
+
+    @Test
+    fun `getRecentControlsActivity() should return envActions when multiple filter are set`() {
+        // When
+        val recentControlsActivity =
+            jpaEnvActionRepository.getRecentControlsActivity(
+                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
+                startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
+                infractionsStatus = null,
+                controlUnitIds = listOf(10002, 10018),
+                administrationIds = listOf(1005, 1008),
+                themeIds = null,
+                geometry = null,
+            )
+        // Then
+        assertThat(recentControlsActivity.size).isEqualTo(2)
+        recentControlsActivity.forEach { envAction ->
+            assertThat(envAction.controlUnitsIds).containsAnyOf(10002, 10018)
+            assertThat(envAction.administrationIds).containsAnyOf(1005, 1008)
         }
     }
 }
