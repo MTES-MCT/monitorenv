@@ -1,5 +1,4 @@
 import { drawStyle } from '@features/map/layers/styles/draw.style'
-import { drawFeature } from '@features/RecentActivity/useCases/drawFeature'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useDrawVectorLayer } from '@hooks/useDrawVectorLayer'
@@ -10,6 +9,7 @@ import {
 } from '@utils/drawFunctions'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
 import { Layers } from 'domain/entities/layers/constants'
+import { drawFeature } from 'domain/use_cases/draw/drawFeature'
 import { isEmpty } from 'lodash'
 import { Modify } from 'ol/interaction'
 import Draw from 'ol/interaction/Draw'
@@ -21,7 +21,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 function UnmemoizeDrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
-  const geometry = useAppSelector(state => state.recentActivity.geometry)
+  const geometry = useAppSelector(state => state.recentActivity.drawedGeometry)
   const interactionType = useAppSelector(state => state.recentActivity.interactionType)
   const isDrawing = useAppSelector(state => state.recentActivity.isDrawing)
 
@@ -96,7 +96,13 @@ function UnmemoizeDrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
     map.addInteraction(draw)
 
     draw.on('drawend', event => {
-      dispatch(drawFeature(event.feature))
+      dispatch(
+        drawFeature(
+          event.feature,
+          geom => dispatch(recentActivityActions.setGeometry(geom)),
+          state => state.recentActivity.drawedGeometry
+        )
+      )
       event.stopPropagation()
       drawVectorSourceRef.current.clear(true)
     })

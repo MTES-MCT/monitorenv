@@ -1,5 +1,4 @@
 import { DrawModalInMenu } from '@components/DrawModalInMenu'
-import { resetDrawing } from '@features/Dashboard/useCases/resetDrawing'
 import { recentActivityActions } from '@features/RecentActivity/slice'
 import { resetDrawingZone } from '@features/RecentActivity/useCases/resetDrawingZone'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -9,19 +8,19 @@ import type { InteractionType } from 'domain/entities/map/constants'
 
 export function DrawZone({ className }: { className?: string }) {
   const dispatch = useAppDispatch()
-  const geometry = useAppSelector(state => state.recentActivity.geometry)
+  const drawedGeometry = useAppSelector(state => state.recentActivity.drawedGeometry)
   const interactionType = useAppSelector(state => state.recentActivity.interactionType)
   const isGeometryValid = useAppSelector(state => state.recentActivity.isGeometryValid)
   const initialGeometry = useAppSelector(state => state.recentActivity.initialGeometry)
 
   const handleSelectInteraction = (nextInteraction: InteractionType) => () => {
-    dispatch(resetDrawing())
+    dispatch(resetDrawingZone())
     dispatch(recentActivityActions.setInteractionType(nextInteraction))
   }
 
   const handleValidate = () => {
-    if (geometry) {
-      dispatch(recentActivityActions.updateFilters({ key: 'geometry', value: geometry }))
+    if (drawedGeometry) {
+      dispatch(recentActivityActions.updateFilters({ key: 'geometry', value: drawedGeometry }))
     }
     dispatch(recentActivityActions.setInitialGeometry(undefined))
     dispatch(recentActivityActions.setIsDrawing(false))
@@ -44,7 +43,7 @@ export function DrawZone({ className }: { className?: string }) {
   return (
     <DrawModalInMenu
       className={className}
-      geometry={geometry}
+      geometry={drawedGeometry}
       handleSelectInteraction={handleSelectInteraction}
       handleValidate={handleValidate}
       interactionType={interactionType}
