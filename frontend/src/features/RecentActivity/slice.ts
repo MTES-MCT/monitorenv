@@ -32,6 +32,7 @@ export type RecentActivityState = {
       withoutInfraction: number
     }
   }
+  drawedGeometry: GeoJSON.Geometry | undefined
   filters: {
     administrationIds?: number[]
     controlUnitIds?: number[]
@@ -42,7 +43,6 @@ export type RecentActivityState = {
     startedBefore?: string
     themeIds?: number[]
   }
-  geometry: GeoJSON.Geometry | undefined
   initialGeometry: GeoJSON.Geometry | undefined
   interactionType: InteractionType
   isDrawing: boolean
@@ -57,6 +57,7 @@ const INITIAL_STATE: RecentActivityState = {
       withoutInfraction: 0
     }
   },
+  drawedGeometry: undefined,
   filters: {
     infractionsStatus: [
       RecentActivity.StatusFilterEnum.WITH_INFRACTION,
@@ -66,7 +67,6 @@ const INITIAL_STATE: RecentActivityState = {
     startedAfter: undefined,
     startedBefore: undefined
   },
-  geometry: undefined,
   initialGeometry: undefined,
   interactionType: InteractionType.POLYGON,
   isDrawing: false,
@@ -80,7 +80,7 @@ const recentActivitySlice = createSlice({
       return { ...INITIAL_STATE }
     },
     setGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.Geometry | undefined>) {
-      state.geometry = action.payload
+      state.drawedGeometry = action.payload
       state.isGeometryValid = action.payload ? isGeometryValid(action.payload) : true
     },
     setInitialGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.Geometry | undefined>) {

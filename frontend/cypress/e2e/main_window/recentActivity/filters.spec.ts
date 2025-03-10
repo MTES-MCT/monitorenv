@@ -22,7 +22,7 @@ context('Recent Activity -> Filters', () => {
     cy.intercept('GET', '/api/v1/control_plans').as('getControlPlans')
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('POST', `/bff/v1/recent-activity/controls`).as('postRecentActivityControls')
-    cy.visit('/#@-824534.42,6082993.21,8.70')
+    cy.visit('/#@57126.60,5961745.35,6.50')
 
     cy.clickButton("Voir l'activité récente")
     cy.wait('@getControlPlans')
@@ -46,6 +46,7 @@ context('Recent Activity -> Filters', () => {
       assert.deepEqual(request.body, {
         administrationIds: null,
         controlUnitIds: null,
+        geometry: null,
         infractionsStatus: [
           RecentActivity.StatusFilterEnum.WITH_INFRACTION,
           RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
@@ -72,6 +73,7 @@ context('Recent Activity -> Filters', () => {
       assert.deepEqual(request.body, {
         administrationIds: [1005],
         controlUnitIds: null,
+        geometry: null,
         infractionsStatus: [
           RecentActivity.StatusFilterEnum.WITH_INFRACTION,
           RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
@@ -100,6 +102,7 @@ context('Recent Activity -> Filters', () => {
       assert.deepEqual(request.body, {
         administrationIds: null,
         controlUnitIds: [10015],
+        geometry: null,
         infractionsStatus: [
           RecentActivity.StatusFilterEnum.WITH_INFRACTION,
           RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
@@ -128,6 +131,7 @@ context('Recent Activity -> Filters', () => {
       assert.deepEqual(request.body, {
         administrationIds: null,
         controlUnitIds: null,
+        geometry: null,
         infractionsStatus: [
           RecentActivity.StatusFilterEnum.WITH_INFRACTION,
           RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
@@ -141,6 +145,45 @@ context('Recent Activity -> Filters', () => {
       assert.equal(response.body.length, 1)
       assert.equal(response.body[0].id, 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
       assert.include(response.body[0].themeIds, 100)
+    })
+  })
+  it('Should filter recent control activity with geometry filters', () => {
+    const { endDateFilter, startDateFilter } = setDateRangeWithControlsFilter()
+    cy.wait('@postRecentActivityControls')
+    cy.clickButton('Définir un tracé pour la zone à filtrer')
+
+    cy.get('#root').click(490, 180)
+    cy.wait(250)
+    cy.get('#root').click(490, 380)
+    cy.wait(250)
+    cy.get('#root').click(690, 380)
+    cy.wait(250)
+    cy.get('#root').click(690, 180)
+    cy.wait(250)
+    cy.get('#root').click(490, 180)
+    cy.clickButton('Valider la zone à filtrer')
+
+    cy.wait('@postRecentActivityControls').then(({ request, response }) => {
+      if (!response) {
+        assert.fail('response is undefined.')
+      }
+      assert.deepEqual(request.body, {
+        administrationIds: null,
+        controlUnitIds: null,
+        geometry:
+          'MULTIPOLYGON (((-1.8173751561605742 50.51509312378761, -1.8173751561605742 48.497649410921696, 1.29002769085062 48.497649410921696, 1.29002769085062 50.51509312378761, -1.8173751561605742 50.51509312378761)))',
+        infractionsStatus: [
+          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
+          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
+        ],
+        startedAfter: startDateFilter,
+        startedBefore: endDateFilter,
+        themeIds: null
+      })
+
+      assert.equal(response.statusCode, 200)
+      assert.equal(response.body.length, 1)
+      assert.equal(response.body[0].id, 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
     })
   })
 })

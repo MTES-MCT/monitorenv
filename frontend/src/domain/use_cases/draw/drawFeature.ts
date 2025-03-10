@@ -2,17 +2,23 @@ import { addGeometryToMultiGeometryGeoJSON, convertToGeoJSONGeometryObject } fro
 import { OLGeometryType } from 'domain/entities/map/constants'
 import { Geometry, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom'
 
-import { dashboardActions } from '../slice'
-
-import type { HomeAppThunk } from '@store/index'
+import type { HomeAppThunk, HomeRootState } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type Feature from 'ol/Feature'
 
+type GeometryAction = (geometry: GeoJSON.Geometry) => void
+type GeometrySelector = (state: HomeRootState) => GeoJSON.Geometry | undefined
+
 export const drawFeature =
-  (featureToAdd: Feature<Geometry>): HomeAppThunk =>
-  (dispatch, getState) => {
-    const { geometry } = getState().dashboard
+  (
+    featureToAdd: Feature<Geometry>,
+    setGeometryAction: GeometryAction,
+    selectGeometry: GeometrySelector
+  ): HomeAppThunk =>
+  (_, getState) => {
+    const geometry = selectGeometry(getState())
     const geometryToAdd = featureToAdd.getGeometry()
+
     if (!geometryToAdd) {
       return
     }
@@ -30,13 +36,13 @@ export const drawFeature =
           nextGeometry = convertToGeoJSONGeometryObject(new MultiPoint([(geometryToAdd as Point).getCoordinates()]))
           break
       }
-      dispatch(dashboardActions.setGeometry(nextGeometry))
+      setGeometryAction(nextGeometry)
 
       return
     }
 
     const nextGeometry = addGeometryToMultiGeometryGeoJSON(geometry, geometryToAdd)
     if (nextGeometry) {
-      dispatch(dashboardActions.setGeometry(nextGeometry))
+      setGeometryAction(nextGeometry)
     }
   }
