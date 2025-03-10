@@ -85,12 +85,12 @@ class JpaEnvActionRepository(
         startedBefore: Instant,
     ): List<RecentControlsActivityListDTO> {
         return idbEnvActionRepository.getRecentControlsActivity(
-            administrationIds = administrationIds,
-            controlUnitIds = controlUnitIds,
+            administrationIds = administrationIds ?: emptyList(),
+            controlUnitIds = controlUnitIds ?: emptyList(),
             geometry = geometry,
             startedAfter = startedAfter,
             startedBefore = startedBefore,
-            themeIds = themeIds,
+            themeIds = themeIds ?: emptyList(),
         ).map { row ->
 
             // convert geometry to JTS Geometry
