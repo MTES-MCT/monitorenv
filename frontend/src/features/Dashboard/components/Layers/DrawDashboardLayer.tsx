@@ -1,10 +1,10 @@
-import { drawFeature } from '@features/Dashboard/useCases/drawFeature'
 import { drawStyle } from '@features/map/layers/styles/draw.style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useDrawVectorLayer } from '@hooks/useDrawVectorLayer'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
 import { InteractionType, OLGeometryType } from 'domain/entities/map/constants'
+import { drawFeature } from 'domain/use_cases/draw/drawFeature'
 import { isEmpty } from 'lodash'
 import { Modify } from 'ol/interaction'
 import Draw, { createBox, createRegularPolygon, type GeometryFunction } from 'ol/interaction/Draw'
@@ -91,7 +91,13 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
     map.addInteraction(draw)
 
     draw.on('drawend', event => {
-      dispatch(drawFeature(event.feature))
+      dispatch(
+        drawFeature(
+          event.feature,
+          geom => dispatch(dashboardActions.setGeometry(geom)),
+          state => state.dashboard.geometry
+        )
+      )
       event.stopPropagation()
       drawVectorSourceRef.current.clear(true)
     })

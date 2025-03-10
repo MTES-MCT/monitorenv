@@ -6,7 +6,9 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { geoJsonToWKT } from '@utils/geojsonToWKT'
+import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
+import { Feature } from 'ol'
 import { WebGLVector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
@@ -16,7 +18,6 @@ import { recentControlActivityStyle } from './style'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { WebGLVectorLayerWithName } from 'domain/types/layer'
-import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
@@ -27,6 +28,7 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   const isLayerVisible = displayRecentActivityLayer && !hasMapInteraction
   const filters = useAppSelector(state => state.recentActivity.filters)
   const distinctionFilter = useAppSelector(state => state.recentActivity.distinctionFilter)
+  const drawedGeometry = useAppSelector(state => state.recentActivity.drawedGeometry)
 
   const [getRecentControlsActivity, { data: recentControlsActivity }] = useGetRecentControlsActivityMutation()
 
@@ -80,6 +82,9 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
     new WebGLVector({
       source: vectorSourceRef.current,
       style: recentControlActivityStyle,
+      variables: {
+        drawedGeometryId: ''
+      },
       zIndex: Layers.RECENT_CONTROLS_ACTIVITY.zIndex
     })
   ) as React.MutableRefObject<WebGLVectorLayerWithName>
@@ -111,8 +116,22 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
         vectorSourceRef.current.addFeatures(features)
       }
+
+      if (drawedGeometry) {
+        const feature = getFeature(drawedGeometry)
+
+        if (!feature) {
+          return
+        }
+        feature.setId(`${Layers.RECENT_CONTROLS_ACTIVITY.code}:DRAWED_GEOMETRY`)
+
+        vectorSourceRef.current.addFeature(feature)
+
+        const id = feature.getId() ?? ''
+        vectorLayerRef.current.updateStyleVariables({ drawedGeometryId: id })
+      }
     }
-  }, [map, distinctionFilter, dispatch, controlUnitsWithInfraction.length, recentControlsActivity])
+  }, [map, distinctionFilter, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

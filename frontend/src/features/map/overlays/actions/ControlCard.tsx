@@ -41,7 +41,7 @@ export function ControlCard({ children = undefined, feature }: { children?: Reac
           ) : (
             <StyledGrayText>(cible non renseignée)</StyledGrayText>
           )}
-          <Bullet $color={infractions.length > 0 ? THEME.color.maximumRed : THEME.color.mediumSeaGreen} />
+          <Bullet $color={infractions?.length > 0 ? THEME.color.maximumRed : THEME.color.mediumSeaGreen} />
         </Accented>
       </StyledControlThemes>
       {infractions && (
