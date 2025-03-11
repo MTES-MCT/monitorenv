@@ -27,12 +27,12 @@ function UnmemoizeDrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
       dispatch(
         drawFeature(
           event.feature,
-          geom => dispatch(recentActivityActions.setGeometry(geom)),
+          geom => dispatch(recentActivityActions.setGeometry(geom as GeoJSON.MultiPolygon)),
           state => state.recentActivity.drawedGeometry
         )
       )
     },
-    onModifyEnd: (geom: GeoJSON.Geometry) => dispatch(recentActivityActions.setGeometry(geom))
+    onModifyEnd: (geom: GeoJSON.Geometry) => dispatch(recentActivityActions.setGeometry(geom as GeoJSON.MultiPolygon))
   })
 
   return null

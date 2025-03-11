@@ -3,8 +3,7 @@ import { recentActivityActions } from '@features/RecentActivity/slice'
 import { resetDrawingZone } from '@features/RecentActivity/useCases/resetDrawingZone'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-
-import type { InteractionType } from 'domain/entities/map/constants'
+import { InteractionType } from 'domain/entities/map/constants'
 
 export function DrawZone({ className }: { className?: string }) {
   const dispatch = useAppDispatch()
@@ -12,6 +11,7 @@ export function DrawZone({ className }: { className?: string }) {
   const interactionType = useAppSelector(state => state.recentActivity.interactionType)
   const isGeometryValid = useAppSelector(state => state.recentActivity.isGeometryValid)
   const initialGeometry = useAppSelector(state => state.recentActivity.initialGeometry)
+  const geometryFilter = useAppSelector(state => state.recentActivity.filters.geometry)
 
   const handleSelectInteraction = (nextInteraction: InteractionType) => () => {
     dispatch(resetDrawingZone())
@@ -36,7 +36,13 @@ export function DrawZone({ className }: { className?: string }) {
   }
 
   const cancel = () => {
-    dispatch(resetDrawingZone())
+    if (drawedGeometry?.coordinates.length === 0) {
+      dispatch(recentActivityActions.setGeometry(geometryFilter))
+      dispatch(recentActivityActions.setIsDrawing(false))
+
+      return
+    }
+    dispatch(recentActivityActions.setInteractionType(InteractionType.POLYGON))
     dispatch(recentActivityActions.setIsDrawing(false))
   }
 
