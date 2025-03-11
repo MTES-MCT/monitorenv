@@ -167,31 +167,28 @@ context('Recent Activity -> Filters', () => {
       if (!response) {
         assert.fail('response is undefined.')
       }
-      assert.deepEqual(request.body, {
-        administrationIds: null,
-        controlUnitIds: null,
-        geometry: {
-          coordinates: [
-            [
-              [
-                [-1.8173751561605742, 50.51015306637933],
-                [-1.8173751561605742, 48.492501342300756],
-                [1.29002769085062, 48.492501342300756],
-                [1.29002769085062, 50.51015306637933],
-                [-1.8173751561605742, 50.51015306637933]
-              ]
-            ]
-          ],
-          type: 'MultiPolygon'
-        },
-        infractionsStatus: [
-          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
-          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
-        ],
-        startedAfter: startDateFilter,
-        startedBefore: endDateFilter,
-        themeIds: null
-      })
+
+      assert.equal(request.body.administrationIds, null)
+      assert.equal(request.body.controlUnitIds, null)
+      assert.deepEqual(request.body.infractionsStatus, [
+        RecentActivity.StatusFilterEnum.WITH_INFRACTION,
+        RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
+      ])
+      assert.equal(request.body.startedAfter, startDateFilter)
+      assert.equal(request.body.startedBefore, endDateFilter)
+      assert.equal(request.body.themeIds, null)
+      assert.equal(request.body.geometry.type, 'MultiPolygon')
+      assert.deepEqual(request.body.geometry.coordinates, [
+        [
+          [
+            [-1.8173751561605742, 50.51015306637933],
+            [-1.8173751561605742, 48.492501342300756],
+            [1.29002769085062, 48.492501342300756],
+            [1.29002769085062, 50.51015306637933],
+            [-1.8173751561605742, 50.51015306637933]
+          ]
+        ]
+      ])
 
       assert.equal(response.statusCode, 200)
       assert.equal(response.body.length, 1)
