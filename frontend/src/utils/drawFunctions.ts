@@ -17,6 +17,11 @@ export function getOLTypeAndGeometryFunctionFromInteractionType(interactionType:
         geometryFunction: createRegularPolygon(),
         geometryType: OLGeometryType.CIRCLE
       }
+    case InteractionType.POINT:
+      return {
+        geometryFunction: undefined,
+        geometryType: OLGeometryType.POINT
+      }
     case InteractionType.POLYGON:
     default:
       return {
