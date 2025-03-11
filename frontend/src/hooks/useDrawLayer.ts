@@ -15,7 +15,7 @@ import { Draw, Modify } from 'ol/interaction'
 import VectorLayer from 'ol/layer/Vector'
 import OpenLayerMap from 'ol/Map'
 import VectorSource from 'ol/source/Vector'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import type { GeoJSON as GeoJSONType } from '../domain/types/GeoJSON'
 import type { InteractionType } from 'domain/entities/map/constants'
@@ -67,8 +67,8 @@ export function useDrawLayer({
       source: vectorSourceRef.current,
       style: [dottedLayerStyle, editStyle],
       zIndex: Layers[layerName].zIndex
-    }) as VectorLayerWithName
-  )
+    })
+  ) as MutableRefObject<VectorLayerWithName>
   // Set the name for the vector layer
   vectorLayerRef.current.name = Layers[layerName].code
 

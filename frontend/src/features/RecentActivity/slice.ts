@@ -36,7 +36,7 @@ export type RecentActivityState = {
   filters: {
     administrationIds?: number[]
     controlUnitIds?: number[]
-    geometry?: GeoJSON.MultiPolygon | undefined
+    geometry?: GeoJSON.MultiPolygon
     infractionsStatus?: string[]
     periodFilter: string
     startedAfter?: string
