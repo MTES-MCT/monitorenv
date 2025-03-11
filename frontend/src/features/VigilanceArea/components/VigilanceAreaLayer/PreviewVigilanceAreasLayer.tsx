@@ -15,6 +15,7 @@ import type { Geometry } from 'ol/geom'
 
 export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const displayVigilanceAreaLayer = useAppSelector(state => state.global.layers.displayVigilanceAreaLayer)
+  const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
   const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
   const isVigilanceAreaSearchResultsVisible = useAppSelector(
@@ -45,6 +46,9 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
       const vigilanceAreasToDisplay = vigilanceAreaSearchResult ?? vigilanceAreas?.ids ?? []
 
       features = vigilanceAreasToDisplay.reduce((layers, id) => {
+        if (id === editingVigilanceAreaId) {
+          return layers
+        }
         const layer = vigilanceAreas?.entities[id]
 
         if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
@@ -58,7 +62,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     }
 
     return features
-  }, [isolatedLayer, vigilanceAreaSearchResult, vigilanceAreas])
+  }, [isolatedLayer, vigilanceAreaSearchResult, vigilanceAreas, editingVigilanceAreaId])
 
   useEffect(() => {
     vectorSourceRef.current?.clear(true)
