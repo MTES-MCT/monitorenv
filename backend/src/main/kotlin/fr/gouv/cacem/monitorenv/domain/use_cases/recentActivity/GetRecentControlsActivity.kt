@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity
 
 import fr.gouv.cacem.monitorenv.config.UseCase
+import fr.gouv.cacem.monitorenv.domain.entities.recentActivity.InfractionEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
 import org.locationtech.jts.geom.Geometry
@@ -15,7 +16,7 @@ class GetRecentControlsActivity(private val envActionRepository: IEnvActionRepos
         administrationIds: List<Int>?,
         controlUnitIds: List<Int>?,
         geometry: Geometry?,
-        infractionsStatus: List<String>?,
+        infractionsStatus: List<InfractionEnum>?,
         themeIds: List<Int>?,
         startedAfter: ZonedDateTime?,
         startedBefore: ZonedDateTime?,

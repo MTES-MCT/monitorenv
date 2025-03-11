@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
+import fr.gouv.cacem.monitorenv.domain.entities.recentActivity.InfractionEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
 import org.assertj.core.api.Assertions.assertThat
@@ -140,7 +141,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = listOf("WITH_INFRACTION"),
+                infractionsStatus = listOf(InfractionEnum.WITH_INFRACTION),
                 controlUnitIds = null,
                 administrationIds = null,
                 themeIds = null,
@@ -161,7 +162,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = listOf("WITHOUT_INFRACTION"),
+                infractionsStatus = listOf(InfractionEnum.WITHOUT_INFRACTION),
                 controlUnitIds = null,
                 administrationIds = null,
                 themeIds = null,

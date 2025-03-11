@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.recentActivity.InfractionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.recentActivity.RecentControlActivityProperties
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
@@ -78,7 +79,7 @@ class JpaEnvActionRepository(
         administrationIds: List<Int>?,
         controlUnitIds: List<Int>?,
         geometry: Geometry?,
-        infractionsStatus: List<String>?,
+        infractionsStatus: List<InfractionEnum>?,
         themeIds: List<Int>?,
         startedAfter: Instant,
         startedBefore: Instant,
@@ -138,8 +139,8 @@ class JpaEnvActionRepository(
         }.filter { recentControl ->
             when {
                 infractionsStatus.isNullOrEmpty() -> true
-                infractionsStatus.contains("WITH_INFRACTION") && recentControl.infractions?.isNotEmpty() == true -> true
-                infractionsStatus.contains("WITHOUT_INFRACTION") && recentControl.infractions.isNullOrEmpty() -> true
+                infractionsStatus.contains(InfractionEnum.WITH_INFRACTION) && recentControl.infractions?.isNotEmpty() == true -> true
+                infractionsStatus.contains(InfractionEnum.WITHOUT_INFRACTION) && recentControl.infractions.isNullOrEmpty() -> true
                 else -> false
             }
         }
