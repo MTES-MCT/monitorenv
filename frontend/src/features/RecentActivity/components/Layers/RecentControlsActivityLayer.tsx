@@ -89,11 +89,13 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
       vectorSourceRef.current.clear(true)
 
       if (recentControlsActivity) {
-        // we save total of controlUnits with or without infraction  in store
+        // we save total of controls with or without infraction  in store
         dispatch(
-          recentActivityActions.updateData({
-            controlUnitsWithInfraction: controlUnitsWithInfraction.length,
-            controlUnitsWithoutInfraction: recentControlsActivity.length - controlUnitsWithInfraction.length
+          recentActivityActions.updateDistinctionFiltersItems({
+            infractions: {
+              withInfraction: controlUnitsWithInfraction.length,
+              withoutInfraction: recentControlsActivity.length - controlUnitsWithInfraction.length
+            }
           })
         )
 

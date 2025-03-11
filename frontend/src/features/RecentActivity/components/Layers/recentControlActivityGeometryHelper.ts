@@ -7,7 +7,7 @@ import { getArea } from 'ol/sphere'
 
 export const getRecentControlActivityGeometry = (
   control: RecentActivity.RecentControlsActivity,
-  distinctionFilter: string
+  distinctionFilter: RecentActivity.DistinctionFilterEnum
 ) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(control.geom, {

@@ -8,15 +8,19 @@ import styled from 'styled-components'
 export function DistinctionFilters() {
   const dispatch = useAppDispatch()
   const distinctionFilter = useAppSelector(state => state.recentActivity.distinctionFilter)
-  const controlUnitsWithInfraction = useAppSelector(state => state.recentActivity.data.controlUnitsWithInfraction)
-  const controlUnitsWithoutInfraction = useAppSelector(state => state.recentActivity.data.controlUnitsWithoutInfraction)
+  const controlUnitsWithInfraction = useAppSelector(
+    state => state.recentActivity.distinctionFiltersItems.infractions.withInfraction
+  )
+  const controlUnitsWithoutInfraction = useAppSelector(
+    state => state.recentActivity.distinctionFiltersItems.infractions.withoutInfraction
+  )
   const distinctionOptions = getOptionsFromLabelledEnum(RecentActivity.DistinctionFilterLabels)
 
   const updateDistinctionFilter = (value: string | undefined) => {
     if (!value) {
       return
     }
-    dispatch(recentActivityActions.updateDistinctionFilter(value))
+    dispatch(recentActivityActions.updateDistinctionFilter(value as RecentActivity.DistinctionFilterEnum))
   }
 
   return (
