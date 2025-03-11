@@ -25,11 +25,13 @@ export enum RecentActivityFiltersEnum {
 }
 
 export type RecentActivityState = {
-  data: {
-    controlUnitsWithInfraction: number
-    controlUnitsWithoutInfraction: number
+  distinctionFilter: RecentActivity.DistinctionFilterEnum
+  distinctionFiltersItems: {
+    infractions: {
+      withInfraction: number
+      withoutInfraction: number
+    }
   }
-  distinctionFilter: string
   filters: {
     administrationIds?: number[]
     controlUnitIds?: number[]
@@ -43,11 +45,13 @@ export type RecentActivityState = {
 }
 
 const INITIAL_STATE: RecentActivityState = {
-  data: {
-    controlUnitsWithInfraction: 0,
-    controlUnitsWithoutInfraction: 0
-  },
   distinctionFilter: RecentActivity.DistinctionFilterEnum.WITHOUT_DISTINCTION,
+  distinctionFiltersItems: {
+    infractions: {
+      withInfraction: 0,
+      withoutInfraction: 0
+    }
+  },
   filters: {
     infractionsStatus: [
       RecentActivity.StatusFilterEnum.WITH_INFRACTION,
@@ -65,11 +69,17 @@ const recentActivitySlice = createSlice({
     resetRecentActivityFilters() {
       return { ...INITIAL_STATE }
     },
-    updateData(state: RecentActivityState, action: PayloadAction<RecentActivityState['data']>) {
-      state.data = action.payload
-    },
-    updateDistinctionFilter(state: RecentActivityState, action: PayloadAction<string>) {
+    updateDistinctionFilter(state: RecentActivityState, action: PayloadAction<RecentActivity.DistinctionFilterEnum>) {
       state.distinctionFilter = action.payload
+    },
+    updateDistinctionFiltersItems(
+      state: RecentActivityState,
+      action: PayloadAction<RecentActivityState['distinctionFiltersItems']>
+    ) {
+      state.distinctionFiltersItems = {
+        ...state.distinctionFiltersItems,
+        ...action.payload
+      }
     },
     updateFilters(
       state: RecentActivityState,

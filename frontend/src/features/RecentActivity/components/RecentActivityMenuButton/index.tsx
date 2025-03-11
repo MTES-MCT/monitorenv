@@ -67,6 +67,7 @@ export function RecentActivityMenuButton() {
 }
 const MapMenuDialogContainer = styled(StyledMapMenuDialogContainer)`
   max-height: 480px;
+  flex-gap: 16px;
 `
 
 const CloseButton = styled(MapMenuDialog.CloseButton)`
@@ -77,5 +78,6 @@ const DistinctionFiltersContainer = styled(MapMenuDialog.Container)<{ $withSmall
   display: flex;
   position: absolute;
   margin-top: 16px;
-  bottom: ${p => (p.$withSmallBottomMargin ? '-59px' : '-138px')};
+  bottom: -59px;
+  /*  bottom: ${p => (p.$withSmallBottomMargin ? '-59px' : '-138px')}; */
 `
