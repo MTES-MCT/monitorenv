@@ -1,12 +1,8 @@
-import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { RecentActivity } from './types'
-
-const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
-const CURRENT_DATE = customDayjs.utc().toISOString()
 
 const persistConfig = {
   key: 'recentActivity',
@@ -38,8 +34,8 @@ export type RecentActivityState = {
     geometry?: string
     infractionsStatus?: string[]
     periodFilter: string
-    startedAfter: string
-    startedBefore: string
+    startedAfter?: string
+    startedBefore?: string
     themeIds?: number[]
   }
 }
@@ -58,8 +54,8 @@ const INITIAL_STATE: RecentActivityState = {
       RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
     ],
     periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS,
-    startedAfter: LAST_30_DAYS,
-    startedBefore: CURRENT_DATE
+    startedAfter: undefined,
+    startedBefore: undefined
   }
 }
 const recentActivitySlice = createSlice({
