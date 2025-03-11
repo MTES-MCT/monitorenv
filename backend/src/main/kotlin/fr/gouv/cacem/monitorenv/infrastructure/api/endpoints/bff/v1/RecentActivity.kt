@@ -6,7 +6,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.recentAct
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.recentActivity.RecentControlsActivityDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.locationtech.jts.io.WKTReader
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -29,14 +28,11 @@ class RecentActivity(
     fun get(
         @RequestBody params: RecentControlsActivityDataInput,
     ): List<RecentControlsActivityDataOutput> {
-        val wktReader = WKTReader()
-        val geometry = params.geometry?.let { wktReader.read(it) }
-
         val recentControlsActivity =
             getRecentControlActivity.execute(
                 administrationIds = params.administrationIds,
                 controlUnitIds = params.controlUnitIds,
-                geometry = geometry,
+                geometry = params.geometry,
                 infractionsStatus = params.infractionsStatus,
                 startedAfter = params.startedAfter,
                 startedBefore = params.startedBefore,
