@@ -34,7 +34,6 @@ context('Recent Activity -> Filters', () => {
     cy.fill('Administration', undefined)
     cy.fill('Unité', undefined)
     cy.fill('Thématique', undefined)
-    cy.clickButton('Supprimer cette zone')
   })
 
   it('Should filter recent control activity with custom date range', () => {
@@ -197,6 +196,9 @@ context('Recent Activity -> Filters', () => {
       assert.equal(response.statusCode, 200)
       assert.equal(response.body.length, 1)
       assert.equal(response.body[0].id, 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
+
+      // clean
+      cy.clickButton('Supprimer cette zone')
     })
   })
 })

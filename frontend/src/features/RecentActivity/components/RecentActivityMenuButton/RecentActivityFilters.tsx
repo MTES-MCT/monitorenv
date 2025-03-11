@@ -111,13 +111,13 @@ export function RecentActivityFilters() {
     dispatch(
       recentActivityActions.updateFilters({
         key: RecentActivityFiltersEnum.STARTED_AFTER,
-        value: date && date[0] ? date[0] : undefined
+        value: date?.[0] ?? undefined
       })
     )
     dispatch(
       recentActivityActions.updateFilters({
         key: RecentActivityFiltersEnum.STARTED_BEFORE,
-        value: date && date[1] ? date[1] : undefined
+        value: date?.[1] ?? undefined
       })
     )
   }
@@ -309,7 +309,7 @@ export function RecentActivityFilters() {
             <Row key={`zone-${index}`}>
               <ZoneWrapper>
                 Polygone dessiné {index + 1}
-                <Center onClick={() => handleCenterOnMap(polygonCoordinates as Coordinate[][])}>
+                <Center onClick={() => handleCenterOnMap(polygonCoordinates)}>
                   <Icon.SelectRectangle />
                   Centrer sur la carte
                 </Center>
