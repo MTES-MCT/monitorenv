@@ -262,11 +262,11 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     zIndex: 1500
   },
   [MonitorEnvLayers.DRAW]: {
-    code: 'draw_layer',
+    code: MonitorEnvLayers.DRAW,
     zIndex: 1500
   },
   [MonitorEnvLayers.DRAW_VIGILANCE_AREA]: {
-    code: 'draw_vigilance_area_layer',
+    code: MonitorEnvLayers.DRAW_VIGILANCE_AREA,
     zIndex: 1500
   },
   [MonitorEnvLayers.STATIONS]: {
