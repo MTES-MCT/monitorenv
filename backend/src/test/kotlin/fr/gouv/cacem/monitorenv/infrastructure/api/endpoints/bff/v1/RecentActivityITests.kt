@@ -75,8 +75,6 @@ class RecentActivityITests {
                 themeIds = null,
                 geometry = null,
             )
-        val wktReader = WKTReader()
-        val geometry = request.geometry?.let { wktReader.read(it) }
 
         given(
             getRecentControlsActivity.execute(
@@ -86,7 +84,7 @@ class RecentActivityITests {
                 controlUnitIds = request.controlUnitIds,
                 administrationIds = request.administrationIds,
                 themeIds = request.themeIds,
-                geometry = geometry,
+                geometry = request.geometry,
             ),
         ).willReturn(listOf(controls))
 

@@ -32,18 +32,18 @@ export type RecentActivityState = {
       withoutInfraction: number
     }
   }
-  drawedGeometry: GeoJSON.Geometry | undefined
+  drawedGeometry: GeoJSON.MultiPolygon | undefined
   filters: {
     administrationIds?: number[]
     controlUnitIds?: number[]
-    geometry?: GeoJSON.Geometry | undefined
+    geometry?: GeoJSON.MultiPolygon | undefined
     infractionsStatus?: string[]
     periodFilter: string
     startedAfter?: string
     startedBefore?: string
     themeIds?: number[]
   }
-  initialGeometry: GeoJSON.Geometry | undefined
+  initialGeometry: GeoJSON.MultiPolygon | undefined
   interactionType: InteractionType
   isDrawing: boolean
   isGeometryValid: boolean
@@ -79,11 +79,11 @@ const recentActivitySlice = createSlice({
     resetRecentActivityFilters() {
       return { ...INITIAL_STATE }
     },
-    setGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.Geometry | undefined>) {
+    setGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.MultiPolygon | undefined>) {
       state.drawedGeometry = action.payload
       state.isGeometryValid = action.payload ? isGeometryValid(action.payload) : true
     },
-    setInitialGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.Geometry | undefined>) {
+    setInitialGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.MultiPolygon | undefined>) {
       state.initialGeometry = action.payload
     },
     setInteractionType(state: RecentActivityState, action: PayloadAction<InteractionType>) {
@@ -91,9 +91,6 @@ const recentActivitySlice = createSlice({
     },
     setIsDrawing(state: RecentActivityState, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
-    },
-    setIsGeometryValid(state: RecentActivityState, action: PayloadAction<boolean>) {
-      state.isGeometryValid = action.payload
     },
     updateDistinctionFilter(state: RecentActivityState, action: PayloadAction<RecentActivity.DistinctionFilterEnum>) {
       state.distinctionFilter = action.payload

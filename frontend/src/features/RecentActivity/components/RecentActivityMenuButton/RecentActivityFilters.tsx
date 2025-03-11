@@ -155,8 +155,9 @@ export function RecentActivityFilters() {
     dispatch(centerOnMap(coordinates[0]))
   }
 
-  const handleAddZone = () => {
+  const updateZone = () => {
     dispatch(recentActivityActions.setIsDrawing(true))
+    dispatch(recentActivityActions.setInitialGeometry(filters.geometry))
   }
 
   const deleteZone = () => {
@@ -302,6 +303,7 @@ export function RecentActivityFilters() {
         </Button>
         {filters.geometry &&
           'coordinates' in filters.geometry &&
+          filters.geometry.coordinates.length > 0 &&
           (filters.geometry.coordinates as Coordinate[][][]).map((polygonCoordinates, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <Row key={`zone-${index}`}>
@@ -314,7 +316,7 @@ export function RecentActivityFilters() {
               </ZoneWrapper>
 
               <>
-                <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={handleAddZone} />
+                <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={updateZone} />
                 <IconButton
                   accent={Accent.SECONDARY}
                   aria-label="Supprimer cette zone"

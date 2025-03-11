@@ -34,6 +34,7 @@ context('Recent Activity -> Filters', () => {
     cy.fill('Administration', undefined)
     cy.fill('Unité', undefined)
     cy.fill('Thématique', undefined)
+    cy.clickButton('Supprimer cette zone')
   })
 
   it('Should filter recent control activity with custom date range', () => {
@@ -170,8 +171,20 @@ context('Recent Activity -> Filters', () => {
       assert.deepEqual(request.body, {
         administrationIds: null,
         controlUnitIds: null,
-        geometry:
-          'MULTIPOLYGON (((-1.8173751561605742 50.51509312378761, -1.8173751561605742 48.497649410921696, 1.29002769085062 48.497649410921696, 1.29002769085062 50.51509312378761, -1.8173751561605742 50.51509312378761)))',
+        geometry: {
+          coordinates: [
+            [
+              [
+                [-1.8173751561605742, 50.51015306637933],
+                [-1.8173751561605742, 48.492501342300756],
+                [1.29002769085062, 48.492501342300756],
+                [1.29002769085062, 50.51015306637933],
+                [-1.8173751561605742, 50.51015306637933]
+              ]
+            ]
+          ],
+          type: 'MultiPolygon'
+        },
         infractionsStatus: [
           RecentActivity.StatusFilterEnum.WITH_INFRACTION,
           RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
