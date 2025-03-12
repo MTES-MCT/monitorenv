@@ -1,7 +1,10 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
@@ -13,18 +16,12 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.LegacyMissions
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions.SSEMission
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
-import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.verify
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -34,14 +31,15 @@ import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers.log
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.ZonedDateTime
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [LegacyMissions::class, SSEMission::class])
-class ApiLegacyMissionsITests {
+class LegacyMissionsITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -129,7 +127,7 @@ class ApiLegacyMissionsITests {
                 .contentType(MediaType.APPLICATION_JSON),
         )
             // Then
-            .andDo(MockMvcResultHandlers.print())
+            .andDo(print())
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.createdAtUtc", equalTo("2022-01-23T20:29:03Z")))
             .andExpect(jsonPath("$.updatedAtUtc", equalTo("2022-01-23T20:29:03Z")))
@@ -179,7 +177,7 @@ class ApiLegacyMissionsITests {
         // When
         mockMvc.perform(get("/api/v1/missions"))
             // Then
-            .andDo(MockMvcResultHandlers.print())
+            .andDo(print())
             .andExpect(status().isOk)
     }
 
@@ -216,7 +214,7 @@ class ApiLegacyMissionsITests {
         // When
         mockMvc.perform(get("/api/v1/missions/find?ids=55,52"))
             // Then
-            .andDo(MockMvcResultHandlers.print())
+            .andDo(print())
             .andExpect(status().isOk)
     }
 
@@ -250,7 +248,12 @@ class ApiLegacyMissionsITests {
         mockMvc.perform(get("/api/v1/missions/$requestedId"))
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
+            .andExpect(
+                jsonPath(
+                    "$.missionTypes[0]",
+                    equalTo(MissionTypeEnum.SEA.toString()),
+                ),
+            )
         verify(getMissionWithRapportNavActions).execute(requestedId)
     }
 
@@ -311,8 +314,9 @@ class ApiLegacyMissionsITests {
 
     @Test
     fun `Should delete mission`() {
-        mockMvc.perform(delete("/api/v1/missions/20")).andExpect(status().isOk)
-        Mockito.verify(bypassActionCheckAndDeleteMission).execute(20)
+        mockMvc.perform(delete("/api/v1/missions/20"))
+            .andExpect(status().isOk)
+        verify(bypassActionCheckAndDeleteMission).execute(20)
     }
 
     @Test
@@ -423,7 +427,7 @@ class ApiLegacyMissionsITests {
                 .andExpect(request().asyncStarted())
                 .andExpect(request().asyncResult(nullValue()))
                 .andExpect(header().string("Content-Type", "text/event-stream"))
-                .andDo(MockMvcResultHandlers.log())
+                .andDo(log())
                 .andReturn()
                 .response
                 .contentAsString
