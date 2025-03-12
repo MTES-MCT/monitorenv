@@ -9,9 +9,22 @@ import { getCenter } from 'ol/extent'
 import { Point } from 'ol/geom'
 import { Fill, Icon, Stroke, Style, Text } from 'ol/style'
 
+import type { Color } from 'ol/color'
+import type { ColorLike } from 'ol/colorlike'
+import type { Coordinate } from 'ol/coordinate'
 import type { FeatureLike } from 'ol/Feature'
 
-export const getDashboardStyle = (feature: FeatureLike, { withReportingOverlay = false } = {}) => {
+function getOrientation(reference: number | undefined, point: number | undefined) {
+  return (point ?? 0) < (reference ?? 0) ? 'left' : 'right'
+}
+
+export const getDashboardStyle = (
+  feature: FeatureLike,
+  {
+    viewCenter,
+    withReportingOverlay = false
+  }: { viewCenter?: Coordinate | undefined; withReportingOverlay?: boolean } = {}
+) => {
   const featureId = String(feature.getId())
   if (!featureId) {
     return undefined
@@ -35,26 +48,15 @@ export const getDashboardStyle = (feature: FeatureLike, { withReportingOverlay =
     if (withReportingOverlay) {
       const geometry = feature.getGeometry()
       const center = geometry?.getExtent() && getCenter(geometry?.getExtent())
-      const isArchived = feature.get('isArchived')
-
-      const reportingOverlay = new Style({
-        geometry: center && new Point(center),
-        text: new Text({
-          backgroundFill: new Fill({
-            color: isArchived ? THEME.color.white : reportingStyles[1]?.getStroke()?.getColor()
-          }),
-          backgroundStroke: new Stroke({
-            color: isArchived ? reportingStyles[1]?.getStroke()?.getColor() : THEME.color.white
-          }),
-          fill: new Fill({ color: isArchived ? THEME.color.gunMetal : THEME.color.white }),
-          font: '12px Marianne',
-          offsetX: 50,
-          offsetY: -16,
-          padding: [2, 8, 2, 8],
-          text: getFormattedReportingId(feature.get('reportingId'))
-        })
-      })
-      reportingStyles.push(reportingOverlay)
+      const point = center && new Point(center)
+      reportingStyles.push(
+        reportingOverlay(
+          feature,
+          point,
+          reportingStyles[1]?.getStroke()?.getColor(),
+          getOrientation(viewCenter?.[0], point?.getCoordinates()[0])
+        )
+      )
     }
 
     return reportingStyles
@@ -75,3 +77,30 @@ export const dashboardIcon = () =>
       src: 'icons/bullseye_border.svg'
     })
   })
+
+const reportingOverlay = (
+  feature: FeatureLike,
+  point: Point | undefined,
+  reportingColor: Color | ColorLike | undefined,
+  orientation: 'left' | 'right'
+) => {
+  const isArchived = feature.get('isArchived')
+
+  return new Style({
+    geometry: point,
+    text: new Text({
+      backgroundFill: new Fill({
+        color: isArchived ? THEME.color.white : reportingColor
+      }),
+      backgroundStroke: new Stroke({
+        color: isArchived ? reportingColor : THEME.color.white
+      }),
+      fill: new Fill({ color: isArchived ? THEME.color.gunMetal : THEME.color.white }),
+      font: '12px Marianne',
+      offsetX: orientation === 'left' ? -55 : 55,
+      offsetY: -18,
+      padding: [2, 8, 2, 8],
+      text: getFormattedReportingId(feature.get('reportingId'))
+    })
+  })
+}
