@@ -41,6 +41,7 @@ data class MissionWithRapportNavActionsDataOutput(
                 controlUnits = mission.controlUnits,
                 openBy = mission.openBy,
                 completedBy = mission.completedBy,
+                observationsByUnit = mission.observationsByUnit,
                 observationsCacem = mission.observationsCacem,
                 observationsCnsp = mission.observationsCnsp,
                 facade = mission.facade,
