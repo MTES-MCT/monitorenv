@@ -167,12 +167,12 @@ export function ControlForm({
     }
 
     setFieldValue(`envActions[${envActionIndex}].actionTargetType`, selectedTargetType)
+    setFieldValue(`envActions[${envActionIndex}].vehicleType`, undefined)
     if (
       selectedTargetType !== TargetTypeEnum.VEHICLE &&
       currentAction?.infractions &&
       currentAction?.infractions?.length > 0
     ) {
-      setFieldValue(`envActions[${envActionIndex}].vehicleType`, undefined)
       setFieldValue(
         `envActions[${envActionIndex}].infractions`,
         currentAction.infractions?.map(infraction => omit(infraction, ['vesselSize', 'vesselType']))

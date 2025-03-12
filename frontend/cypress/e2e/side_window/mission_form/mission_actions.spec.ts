@@ -682,6 +682,15 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.wait(500)
 
       cy.fill('Nb total de contrôles', 1)
+
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Autre véhicule marin')
+
+      // update target type and check if vehicle type is cleaned
+      cy.fill('Type de cible', 'Personne morale')
+      cy.get('[id="envActions.0.vehicleType"]').should('have.value', '')
+
+      // re add vehicle type
       cy.fill('Type de cible', 'Véhicule')
       cy.fill('Type de véhicule', 'Navire')
 
