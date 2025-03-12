@@ -104,7 +104,8 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
       renderBuffer: 7,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: layersVectorSourceRef.current,
-      style: feature => getDashboardStyle(feature, { withReportingOverlay: true }),
+      style: feature =>
+        getDashboardStyle(feature, { viewCenter: mapRef.current?.getView().getCenter(), withReportingOverlay: true }),
       zIndex: Layers.EXPORT_PDF.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
