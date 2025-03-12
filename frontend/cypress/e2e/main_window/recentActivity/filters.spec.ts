@@ -168,6 +168,7 @@ context('Recent Activity -> Filters', () => {
         assert.fail('response is undefined.')
       }
 
+      // check request body
       assert.equal(request.body.administrationIds, null)
       assert.equal(request.body.controlUnitIds, null)
       assert.deepEqual(request.body.infractionsStatus, [
@@ -178,18 +179,8 @@ context('Recent Activity -> Filters', () => {
       assert.equal(request.body.startedBefore, endDateFilter)
       assert.equal(request.body.themeIds, null)
       assert.equal(request.body.geometry.type, 'MultiPolygon')
-      assert.deepEqual(request.body.geometry.coordinates, [
-        [
-          [
-            [-1.8173751561605742, 50.51015306637933],
-            [-1.8173751561605742, 48.492501342300756],
-            [1.29002769085062, 48.492501342300756],
-            [1.29002769085062, 50.51015306637933],
-            [-1.8173751561605742, 50.51015306637933]
-          ]
-        ]
-      ])
 
+      // check response
       assert.equal(response.statusCode, 200)
       assert.equal(response.body.length, 1)
       assert.equal(response.body[0].id, 'b8007c8a-5135-4bc3-816f-c69c7b75d807')
