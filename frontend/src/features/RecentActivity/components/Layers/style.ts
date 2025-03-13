@@ -19,7 +19,7 @@ export const recentControlActivityStyle: FlatStyleLike = [
       'icon-color': [
         'case',
         featureHas('withDistinction'),
-        ['case', featureHas('hasInfraction'), THEME.color.maximumRed, THEME.color.yellowGreen],
+        ['case', featureHas('hasInfraction'), THEME.color.maximumRed, THEME.color.mediumSeaGreen],
         THEME.color.charcoal
       ],
       'icon-scale': 0.6,
