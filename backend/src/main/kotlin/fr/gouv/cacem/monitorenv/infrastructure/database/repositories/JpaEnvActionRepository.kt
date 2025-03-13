@@ -17,6 +17,7 @@ import org.geolatte.geom.MultiPoint
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.geom.GeometryFactory
+import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import java.sql.Timestamp
@@ -34,6 +35,8 @@ class JpaEnvActionRepository(
     private val idbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val objectMapper: ObjectMapper,
 ) : IEnvActionRepository {
+    private val logger = LoggerFactory.getLogger(JpaEnvActionRepository::class.java)
+
     override fun findById(id: UUID): EnvActionEntity? {
         return idbEnvActionRepository.findByIdOrNull(id)?.toActionEntity(objectMapper)
     }
@@ -137,10 +140,18 @@ class JpaEnvActionRepository(
                 observations = valueObject.observations,
             )
         }.filter { recentControl ->
+            val totalControlledTarget =
+                recentControl.infractions?.map { it.nbTarget }?.reduceOrNull { acc, nbTarget -> acc + nbTarget } ?: 0
+            logger.info("totalControlledTarget: $totalControlledTarget")
             when {
                 infractionsStatus.isNullOrEmpty() -> true
-                infractionsStatus.contains(InfractionEnum.WITH_INFRACTION) && recentControl.infractions?.isNotEmpty() == true -> true
-                infractionsStatus.contains(InfractionEnum.WITHOUT_INFRACTION) && recentControl.infractions.isNullOrEmpty() -> true
+                infractionsStatus.contains(InfractionEnum.WITH_INFRACTION) && infractionsStatus.contains(InfractionEnum.WITHOUT_INFRACTION) -> true
+                infractionsStatus.contains(InfractionEnum.WITH_INFRACTION) && recentControl.infractions?.isNotEmpty() == true && totalControlledTarget > 0 -> true
+                infractionsStatus.contains(InfractionEnum.WITHOUT_INFRACTION) && (
+                    (recentControl.actionNumberOfControls ?: 0) - totalControlledTarget > 0 ||
+                        recentControl.infractions.isNullOrEmpty()
+                ) -> true
+
                 else -> false
             }
         }

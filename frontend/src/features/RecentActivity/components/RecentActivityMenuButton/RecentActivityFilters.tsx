@@ -81,10 +81,10 @@ export function RecentActivityFilters() {
 
   const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions ?? [], ['label']), [themesAsOptions])
 
-  const updateCheckboxFilter = (isChecked: boolean | undefined, value: string) => {
+  const updateCheckboxFilter = (isChecked: boolean | undefined, value: RecentActivity.StatusFilterEnum) => {
     const updatedFilter = [...(filters.infractionsStatus ?? [])]
 
-    if (!isChecked && updatedFilter.includes(String(value))) {
+    if (!isChecked && updatedFilter.includes(value)) {
       const newFilter = updatedFilter.filter(status => status !== String(value))
       dispatch(
         recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.INFRACTIONS_STATUS, value: newFilter })
@@ -134,9 +134,7 @@ export function RecentActivityFilters() {
       return
     }
 
-    const nextSelectedValues = filters[filterKey].filter(selectedValue => selectedValue !== valueToDelete) as
-      | string[]
-      | number[]
+    const nextSelectedValues = filters[filterKey].filter(selectedValue => selectedValue !== valueToDelete)
     dispatch(
       dispatch(
         recentActivityActions.updateFilters({
@@ -199,11 +197,11 @@ export function RecentActivityFilters() {
           {infractionsStatusOptions.map(status => (
             <Checkbox
               key={status.label}
-              checked={filters?.infractionsStatus?.includes(status.value)}
+              checked={filters?.infractionsStatus?.includes(status.value as RecentActivity.StatusFilterEnum)}
               data-cy={`recent-activity-filter-${status.label}`}
               label={status.label}
               name={status.label}
-              onChange={isChecked => updateCheckboxFilter(isChecked, status.value)}
+              onChange={isChecked => updateCheckboxFilter(isChecked, status.value as RecentActivity.StatusFilterEnum)}
             />
           ))}
         </StyledStatusFilter>
