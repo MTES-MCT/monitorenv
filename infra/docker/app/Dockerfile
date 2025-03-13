@@ -8,7 +8,7 @@ ARG VERSION=NO_VERSION
 ########################################
 # Build monitorenv backend with maven #
 ########################################
-FROM gradle:8.4-jdk17 as buildBack
+FROM gradle:8.5-jdk21 as buildBack
 
 ARG GITHUB_SHA
 ARG VERSION
@@ -54,7 +54,7 @@ RUN npx pkg ./node_modules/@import-meta-env/cli/bin/import-meta-env.js \
 ######################
 # Create final image #
 ######################
-FROM azul/zulu-openjdk-alpine:17-jre
+FROM azul/zulu-openjdk-alpine:21-jre
 
 ARG VERSION
 ENV VERSION=$VERSION
