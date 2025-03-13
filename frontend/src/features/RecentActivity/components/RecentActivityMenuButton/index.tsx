@@ -17,7 +17,6 @@ export function RecentActivityMenuButton() {
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const withoutDistinction = useAppSelector(state => state.recentActivity.distinctionFilter === 'WITHOUT_DISTINCTION')
   const isDrawing = useAppSelector(state => state.recentActivity.isDrawing)
-  const hasGeomFilter = useAppSelector(state => state.recentActivity.filters.geometry?.coordinates)
 
   const toggleRecentActivityDialog = e => {
     e.preventDefault()
@@ -40,7 +39,7 @@ export function RecentActivityMenuButton() {
     <>
       {isRecentActivityDialogVisible && (
         <div>
-          <MapMenuDialogContainer $withBigWidth={!!hasGeomFilter && hasGeomFilter.length > 0}>
+          <MapMenuDialogContainer>
             <MapMenuDialog.Header>
               <CloseButton Icon={Icon.Close} onClick={closeModal} />
               <StyledMapMenuDialogTitle as="h2">Activité récente</StyledMapMenuDialogTitle>
@@ -57,10 +56,7 @@ export function RecentActivityMenuButton() {
                 <MapMenuDialog.Body>
                   <RecentActivityFilters />
                 </MapMenuDialog.Body>
-                <DistinctionFiltersContainer
-                  $withBigWidth={!!hasGeomFilter && hasGeomFilter.length > 0}
-                  $withSmallBottomMargin={withoutDistinction}
-                >
+                <DistinctionFiltersContainer $withSmallBottomMargin={withoutDistinction}>
                   <DistinctionFilters />
                 </DistinctionFiltersContainer>
               </>
@@ -78,8 +74,7 @@ export function RecentActivityMenuButton() {
     </>
   )
 }
-const MapMenuDialogContainer = styled(StyledMapMenuDialogContainer)<{ $withBigWidth: boolean }>`
-  width: ${p => (p.$withBigWidth ? '400px' : '320px')};
+const MapMenuDialogContainer = styled(StyledMapMenuDialogContainer)`
   max-height: 480px;
 `
 
@@ -88,14 +83,13 @@ const CloseButton = styled(MapMenuDialog.CloseButton)`
 `
 
 const DistinctionFiltersContainer = styled(MapMenuDialog.Container)<{
-  $withBigWidth: boolean
   $withSmallBottomMargin: boolean
 }>`
   bottom: ${p => (p.$withSmallBottomMargin ? '-59px' : '-138px')};
   display: flex;
   margin-top: 16px;
   position: absolute;
-  width: ${p => (p.$withBigWidth ? '400px' : '320px')};
+  width: 320px;
 `
 const StyledDrawZone = styled(DrawZone)`
   margin-top: 2px;
