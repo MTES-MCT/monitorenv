@@ -329,11 +329,13 @@ export function RecentActivityFilters() {
             // eslint-disable-next-line react/no-array-index-key
             <Row key={`zone-${index}`}>
               <ZoneWrapper>
-                Polygone dessiné {index + 1}
-                <Center onClick={() => handleCenterOnMap(polygonCoordinates)}>
-                  <Icon.SelectRectangle />
-                  Centrer sur la carte
-                </Center>
+                <span>Polygone dessiné {index + 1}</span>
+                <IconButton
+                  accent={Accent.TERTIARY}
+                  Icon={Icon.FocusZones}
+                  onClick={() => handleCenterOnMap(polygonCoordinates)}
+                  title="Centrer sur la carte"
+                />
               </ZoneWrapper>
 
               <>
@@ -377,19 +379,6 @@ const StyledBloc = styled.div`
   gap: 8px;
 `
 
-const Center = styled.a`
-  cursor: pointer;
-  display: flex;
-  margin-left: auto;
-  margin-right: 8px;
-  color: ${p => p.theme.color.slateGray};
-  text-decoration: underline;
-
-  > .Element-IconBox {
-    margin-right: 8px;
-  }
-`
-
 const Row = styled.div`
   align-items: center;
   display: flex;
@@ -402,10 +391,15 @@ const Row = styled.div`
 `
 
 const ZoneWrapper = styled.div`
+  align-items: center;
   background-color: ${p => p.theme.color.gainsboro};
   display: flex;
   flex-grow: 1;
-  font-size: 13px;
   justify-content: space-between;
-  padding: 4px 8px 4px;
+  padding: 5px 8px 5px;
+  line-height: 1;
+
+  > button {
+    padding: 0px;
+  }
 `
