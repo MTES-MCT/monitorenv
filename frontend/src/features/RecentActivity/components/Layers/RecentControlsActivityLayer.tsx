@@ -107,7 +107,7 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         )
 
         const features = recentControlsActivity.map(control =>
-          getRecentControlActivityGeometry(control, distinctionFilter)
+          getRecentControlActivityGeometry(control, distinctionFilter, filters.infractionsStatus)
         )
 
         vectorSourceRef.current.addFeatures(features)
@@ -127,7 +127,15 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         vectorLayerRef.current.updateStyleVariables({ drawedGeometryId: id })
       }
     }
-  }, [map, distinctionFilter, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry])
+  }, [
+    map,
+    distinctionFilter,
+    dispatch,
+    controlUnitsWithInfraction.length,
+    recentControlsActivity,
+    drawedGeometry,
+    filters.infractionsStatus
+  ])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)
