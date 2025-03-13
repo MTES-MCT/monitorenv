@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -38,6 +39,7 @@ class PatchMissionUTest {
                 observationsByUnit = Optional.of(patchedObservationsByUnit),
                 startDateTimeUtc = today,
                 endDateTimeUtc = Optional.of(tomorrow),
+                missionTypes = listOf(MissionTypeEnum.LAND)
             )
         val missionFromDatabase = aMissionEntity(id = id)
         val missionPatched =
@@ -46,6 +48,7 @@ class PatchMissionUTest {
                 observationsByUnit = patchedObservationsByUnit,
                 startDateTimeUtc = today,
                 endDateTimeUtc = tomorrow,
+                missionTypes = listOf(MissionTypeEnum.SEA)
             )
 
         given(missionRepository.findById(id)).willReturn(missionFromDatabase)
@@ -58,6 +61,7 @@ class PatchMissionUTest {
         assertThat(savedMission.mission.observationsByUnit).isEqualTo(missionPatched.observationsByUnit)
         assertThat(savedMission.mission.startDateTimeUtc).isEqualTo(missionPatched.startDateTimeUtc)
         assertThat(savedMission.mission.endDateTimeUtc).isEqualTo(missionPatched.endDateTimeUtc)
+        assertThat(savedMission.mission.missionTypes).isEqualTo(missionPatched.missionTypes)
         verify(missionRepository).save(missionPatched)
         assertThat(log.out).contains("Attempt to PATCH mission $id")
         assertThat(log.out).contains("Mission $id patched")
@@ -72,6 +76,7 @@ class PatchMissionUTest {
                 observationsByUnit = null,
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
+                missionTypes = null
             )
 
         given(missionRepository.findById(id)).willReturn(null)
