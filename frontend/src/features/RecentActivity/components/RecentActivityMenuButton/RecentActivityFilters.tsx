@@ -160,11 +160,32 @@ export function RecentActivityFilters() {
     dispatch(recentActivityActions.setInitialGeometry(filters.geometry))
   }
 
-  const deleteZone = () => {
-    dispatch(resetDrawingZone())
-    dispatch(recentActivityActions.setIsDrawing(false))
-    dispatch(recentActivityActions.setInitialGeometry(undefined))
-    dispatch(recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.GEOMETRY, value: undefined }))
+  const deleteZone = (index: number) => {
+    const nextCoordinates = filters?.geometry?.coordinates.filter((_, i) => i !== index)
+    if (!filters.geometry) {
+      return
+    }
+
+    if (filters.geometry?.coordinates?.length === 1 || !nextCoordinates || nextCoordinates.length === 0) {
+      dispatch(resetDrawingZone())
+      dispatch(recentActivityActions.setInitialGeometry(undefined))
+      dispatch(recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.GEOMETRY, value: undefined }))
+
+      return
+    }
+
+    const newGeom = {
+      ...filters.geometry,
+      coordinates: nextCoordinates
+    }
+
+    dispatch(
+      recentActivityActions.updateFilters({
+        key: RecentActivityFiltersEnum.GEOMETRY,
+        value: newGeom
+      })
+    )
+    dispatch(recentActivityActions.setGeometry(newGeom))
   }
 
   if (isLoadingThemes || isLoadingAdministrations || isLoadingControlUnits) {
@@ -321,7 +342,7 @@ export function RecentActivityFilters() {
                   accent={Accent.SECONDARY}
                   aria-label="Supprimer cette zone"
                   Icon={Icon.Delete}
-                  onClick={deleteZone}
+                  onClick={() => deleteZone(index)}
                 />
               </>
             </Row>
