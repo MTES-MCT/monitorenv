@@ -10,6 +10,7 @@ import { recentActivityActions } from '../../slice'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { GeoJSON } from 'domain/types/GeoJSON'
+import type { Geometry } from 'ol/geom'
 
 function UnmemoizeDrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
@@ -32,7 +33,8 @@ function UnmemoizeDrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
         )
       )
     },
-    onModifyEnd: (geom: GeoJSON.Geometry) => dispatch(recentActivityActions.setGeometry(geom as GeoJSON.MultiPolygon))
+    onModifyEnd: (geom: GeoJSON.Geometry | Geometry) =>
+      dispatch(recentActivityActions.setGeometry(geom as GeoJSON.MultiPolygon))
   })
 
   return null
