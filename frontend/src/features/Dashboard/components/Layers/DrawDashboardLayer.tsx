@@ -10,6 +10,7 @@ import { dashboardActions } from '../../slice'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { GeoJSON } from 'domain/types/GeoJSON'
+import type { Geometry } from 'ol/geom'
 
 function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
@@ -32,7 +33,8 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
         )
       )
     },
-    onModifyEnd: (geom: GeoJSON.Geometry) => dispatch(dashboardActions.setGeometry(geom)),
+    onModifyEnd: (geom: GeoJSON.Geometry | Geometry) =>
+      dispatch(dashboardActions.setGeometry(geom as GeoJSON.Geometry)),
     withConversionToGeoJSONGeometryObject: false
   })
 

@@ -32,7 +32,7 @@ type UseDrawLayerProps = {
   layerName: string
   map: OpenLayerMap
   onDrawEnd: (event: DrawEvent) => void
-  onModifyEnd: (event: GeoJSONType.Geometry) => void
+  onModifyEnd: (event: GeoJSONType.Geometry | Geometry) => void
   withConversionToGeoJSONGeometryObject?: boolean
 }
 
@@ -82,7 +82,7 @@ export function useDrawLayer({
         const convertedGeometry = convertToGeoJSONGeometryObject(nextGeometry)
         onModifyEnd(convertedGeometry)
       } else {
-        onModifyEnd(nextGeometry)
+        onModifyEnd(nextGeometry as Geometry)
       }
     },
     [onModifyEnd, withConversionToGeoJSONGeometryObject]

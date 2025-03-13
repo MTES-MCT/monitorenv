@@ -26,7 +26,7 @@ function UnmemoizedDrawLayer({ map }: BaseMapChildrenProps) {
     onDrawEnd: (event: DrawEvent) => {
       dispatch(addFeatureToDrawedFeature(event.feature))
     },
-    onModifyEnd: (geom: GeoJSONType.Geometry) => dispatch(setGeometry(geom as unknown as Geometry)),
+    onModifyEnd: (geom: GeoJSONType.Geometry | Geometry) => dispatch(setGeometry(geom as Geometry)),
     withConversionToGeoJSONGeometryObject: false
   })
 

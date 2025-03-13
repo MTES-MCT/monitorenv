@@ -9,6 +9,7 @@ import React from 'react'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { GeoJSON } from 'domain/types/GeoJSON'
+import type { Geometry } from 'ol/geom'
 
 function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
@@ -26,7 +27,8 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     onDrawEnd: (event: DrawEvent) => {
       dispatch(addFeatureToDrawedFeature(event.feature))
     },
-    onModifyEnd: (geom: GeoJSON.Geometry) => dispatch(vigilanceAreaActions.setGeometry(geom)),
+    onModifyEnd: (geom: GeoJSON.Geometry | Geometry) =>
+      dispatch(vigilanceAreaActions.setGeometry(geom as GeoJSON.Geometry)),
     withConversionToGeoJSONGeometryObject: false
   })
 

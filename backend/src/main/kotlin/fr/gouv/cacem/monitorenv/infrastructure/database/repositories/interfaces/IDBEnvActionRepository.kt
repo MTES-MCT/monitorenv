@@ -47,7 +47,7 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
             )
             AND (
                 CAST(:geometry AS geometry) IS NULL
-                OR ST_INTERSECTS(st_setsrid(CAST(env_action.geom AS geometry), 4326), st_setsrid(CAST(:geometry AS geometry), 4326))
+                OR ST_INTERSECTS(ST_SETSRID(CAST(env_action.geom AS geometry), 4326), ST_SETSRID(CAST(:geometry AS geometry), 4326))
             )
             GROUP BY env_action.id
             ORDER BY env_action.action_start_datetime_utc DESC;

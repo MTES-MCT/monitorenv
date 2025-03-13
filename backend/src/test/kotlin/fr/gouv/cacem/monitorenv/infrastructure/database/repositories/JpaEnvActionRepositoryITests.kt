@@ -104,7 +104,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `getRecentControlsActivity() should return the appropriate envActions`() {
+    fun `getRecentControlsActivity() should return the appropriate controls`() {
         // When
         val recentControlsActivity =
             jpaEnvActionRepository.getRecentControlsActivity(
@@ -119,12 +119,12 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(3)
-        recentControlsActivity.forEach { envAction ->
-            if (envAction.actionStartDateTimeUtc != null) {
-                assertThat(envAction.actionStartDateTimeUtc).isAfterOrEqualTo(
+        recentControlsActivity.forEach { control ->
+            if (control.actionStartDateTimeUtc != null) {
+                assertThat(control.actionStartDateTimeUtc).isAfterOrEqualTo(
                     ZonedDateTime.parse("2022-01-01T10:54:00Z"),
                 )
-                assertThat(envAction.actionStartDateTimeUtc).isBeforeOrEqualTo(
+                assertThat(control.actionStartDateTimeUtc).isBeforeOrEqualTo(
                     ZonedDateTime.parse("2050-08-08T23:59:00Z"),
                 )
             }
@@ -135,7 +135,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `getRecentControlsActivity() should return envActions when infractionsStatus is set with 'with infractions'`() {
+    fun `getRecentControlsActivity() should return controls when infractionsStatus is set with 'with infractions'`() {
         // When
         val recentControlsActivity =
             jpaEnvActionRepository.getRecentControlsActivity(
@@ -150,13 +150,13 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(2)
-        recentControlsActivity.forEach { envAction ->
-            assertThat(envAction.infractions?.size).isGreaterThan(0)
+        recentControlsActivity.forEach { control ->
+            assertThat(control.infractions?.size).isGreaterThan(0)
         }
     }
 
     @Test
-    fun `getRecentControlsActivity() should return envActions when infractionsStatus is set with 'without infractions'`() {
+    fun `getRecentControlsActivity() should return controls when infractionsStatus is set with 'without infractions'`() {
         // When
         val recentControlsActivity =
             jpaEnvActionRepository.getRecentControlsActivity(
@@ -170,13 +170,13 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(1)
-        recentControlsActivity.forEach { envAction ->
-            assertThat(envAction.infractions?.size).isEqualTo(0)
+        recentControlsActivity.forEach { control ->
+            assertThat(control.infractions?.size).isEqualTo(0)
         }
     }
 
     @Test
-    fun `getRecentControlsActivity() should return envActions when controlUnitIds filter is set`() {
+    fun `getRecentControlsActivity() should return controls when controlUnitIds filter is set`() {
         // When
         val recentControlsActivity =
             jpaEnvActionRepository.getRecentControlsActivity(
@@ -190,13 +190,13 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(1)
-        recentControlsActivity.forEach { envAction ->
-            assertThat(envAction.controlUnitsIds).contains(10002)
+        recentControlsActivity.forEach { control ->
+            assertThat(control.controlUnitsIds).contains(10002)
         }
     }
 
     @Test
-    fun `getRecentControlsActivity() should return envActions when administrationIds filter is set`() {
+    fun `getRecentControlsActivity() should return controls when administrationIds filter is set`() {
         // When
         val recentControlsActivity =
             jpaEnvActionRepository.getRecentControlsActivity(
@@ -210,13 +210,13 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(1)
-        recentControlsActivity.forEach { envAction ->
-            assertThat(envAction.administrationIds).contains(1005)
+        recentControlsActivity.forEach { control ->
+            assertThat(control.administrationIds).contains(1005)
         }
     }
 
     @Test
-    fun `getRecentControlsActivity() should return envActions when themeIds filter is set`() {
+    fun `getRecentControlsActivity() should return controls when themeIds filter is set`() {
         // When
         val recentControlsActivity =
             jpaEnvActionRepository.getRecentControlsActivity(
@@ -230,13 +230,13 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(1)
-        recentControlsActivity.forEach { envAction ->
-            assertThat(envAction.themesIds).contains(112)
+        recentControlsActivity.forEach { control ->
+            assertThat(control.themesIds).contains(112)
         }
     }
 
     @Test
-    fun `getRecentControlsActivity() should return envActions when geometry filter is set`() {
+    fun `getRecentControlsActivity() should return controls when geometry filter is set`() {
         // When
         val wktReader = WKTReader()
         val multipolygonString =
@@ -255,13 +255,13 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(2)
-        recentControlsActivity.forEach { envAction ->
-            assertThat(envAction.geom).isNotNull()
+        recentControlsActivity.forEach { control ->
+            assertThat(control.geom).isNotNull()
         }
     }
 
     @Test
-    fun `getRecentControlsActivity() should return envActions when multiple filter are set`() {
+    fun `getRecentControlsActivity() should return controls when multiple filters are set`() {
         // When
         val recentControlsActivity =
             jpaEnvActionRepository.getRecentControlsActivity(
@@ -275,9 +275,9 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(2)
-        recentControlsActivity.forEach { envAction ->
-            assertThat(envAction.controlUnitsIds).containsAnyOf(10002, 10018)
-            assertThat(envAction.administrationIds).containsAnyOf(1005, 1008)
+        recentControlsActivity.forEach { control ->
+            assertThat(control.controlUnitsIds).containsAnyOf(10002, 10018)
+            assertThat(control.administrationIds).containsAnyOf(1005, 1008)
         }
     }
 }
