@@ -7,7 +7,8 @@ import { getArea } from 'ol/sphere'
 
 export const getRecentControlActivityGeometry = (
   control: RecentActivity.RecentControlsActivity,
-  distinctionFilter: RecentActivity.DistinctionFilterEnum
+  distinctionFilter: RecentActivity.DistinctionFilterEnum,
+  infractionsStatus: RecentActivity.StatusFilterEnum[] | undefined
 ) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(control.geom, {
@@ -20,10 +21,20 @@ export const getRecentControlActivityGeometry = (
     geometry
   })
 
+  const totalControlsInInfractions = control.infractions.reduce((acc, infraction) => acc + infraction.nbTarget, 0)
+
+  let totalControls = control.actionNumberOfControls
+  if (infractionsStatus && infractionsStatus.length === 1) {
+    if (infractionsStatus[0] === RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION) {
+      totalControls -= totalControlsInInfractions
+    }
+  }
+
   feature.setId(`${Layers.RECENT_CONTROLS_ACTIVITY.code}:${control.id}`)
   feature.setProperties({
     area,
     hasInfraction: control.infractions.length > 0,
+    totalControls,
     withDistinction: distinctionFilter === RecentActivity.DistinctionFilterEnum.WITH_DISTINCTION,
     ...control
   })

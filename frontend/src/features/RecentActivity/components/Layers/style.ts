@@ -19,11 +19,25 @@ export const recentControlActivityStyle: FlatStyleLike = [
       'icon-color': [
         'case',
         featureHas('withDistinction'),
-        ['case', featureHas('hasInfraction'), THEME.color.maximumRed, THEME.color.mediumSeaGreen],
-        THEME.color.charcoal
+        ['case', featureHas('hasInfraction'), THEME.color.maximumRed, THEME.color.yellowGreen],
+        [
+          'interpolate',
+          ['linear'],
+          ['get', 'totalControls'],
+          0,
+          '#FFC300',
+          5,
+          '#EF9100',
+          10,
+          '#D6610A',
+          15,
+          '#B72F15',
+          20,
+          '#880030'
+        ]
       ],
       'icon-scale': 0.6,
-      'icon-src': 'Close.svg'
+      'icon-src': 'icons/CircleFilled.svg'
     }
   }
 ]
