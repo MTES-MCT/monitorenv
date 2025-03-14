@@ -8,7 +8,7 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
-import { WebGLVector } from 'ol/layer'
+import WebGLVectorLayer from 'ol/layer/WebGLVector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
 
@@ -75,11 +75,12 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
-    new WebGLVector({
+    new WebGLVectorLayer({
       source: vectorSourceRef.current,
       style: recentControlActivityStyle,
       variables: {
-        drawedGeometryId: ''
+        drawedGeometryId: '',
+        withDistinction: distinctionFilter === RecentActivity.DistinctionFilterEnum.WITH_DISTINCTION
       },
       zIndex: Layers.RECENT_CONTROLS_ACTIVITY.zIndex
     })
@@ -90,6 +91,12 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
     () => recentControlsActivity?.filter(control => control.infractions.length > 0) ?? [],
     [recentControlsActivity]
   )
+
+  useEffect(() => {
+    vectorLayerRef.current.updateStyleVariables({
+      withDistinction: distinctionFilter === RecentActivity.DistinctionFilterEnum.WITH_DISTINCTION
+    })
+  }, [distinctionFilter])
 
   useEffect(() => {
     if (map) {
@@ -106,10 +113,48 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
           })
         )
 
-        const features = recentControlsActivity.map(control =>
-          getRecentControlActivityGeometry(control, distinctionFilter, filters.infractionsStatus)
-        )
+        const features = recentControlsActivity.flatMap(control => {
+          // total number  of control in action
+          let totalControls = control.actionNumberOfControls
 
+          // total number of persons controlled in all infractions
+          const totalControlsInInfractions = control.infractions.reduce(
+            (acc, infraction) => acc + infraction.nbTarget,
+            0
+          )
+          // console.log('totalControlsInInfractions', control.id, totalControlsInInfractions)
+
+          if (distinctionFilter === RecentActivity.DistinctionFilterEnum.WITH_DISTINCTION) {
+            // feature with total of control with infraction
+            const featureWithInfraction = getRecentControlActivityGeometry({
+              control,
+              totalControlsWithInfractions: totalControlsInInfractions > 0 ? totalControlsInInfractions : 0,
+              withInfractions: true
+            })
+
+            // feature with total of control without infraction
+            const featureWithoutInfraction = getRecentControlActivityGeometry({
+              control,
+              totalControlsWithoutInfractions: totalControlsInInfractions > 0 ? 0 : totalControls,
+              withInfractions: false
+            })
+
+            return [featureWithInfraction, featureWithoutInfraction]
+          }
+
+          if (filters.infractionsStatus && filters.infractionsStatus.length === 1) {
+            // if filter is set to "without infraction" we need to remove the controls with infraction
+            if (filters.infractionsStatus[0] === RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION) {
+              totalControls -= totalControlsInInfractions
+            }
+          }
+
+          return getRecentControlActivityGeometry({
+            control,
+            totalControls
+          })
+        })
+        // console.log('features', features)
         vectorSourceRef.current.addFeatures(features)
       }
 
