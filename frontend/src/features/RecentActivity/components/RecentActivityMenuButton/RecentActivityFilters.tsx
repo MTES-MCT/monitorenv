@@ -83,19 +83,18 @@ export function RecentActivityFilters() {
 
   const updateCheckboxFilter = (isChecked: boolean | undefined, value: string) => {
     const updatedFilter = [...(filters.infractionsStatus ?? [])]
-
+    let newFilter
     if (!isChecked && updatedFilter.includes(String(value))) {
-      const newFilter = updatedFilter.filter(status => status !== String(value))
-      dispatch(
-        recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.INFRACTIONS_STATUS, value: newFilter })
-      )
+      newFilter = updatedFilter.filter(status => status !== String(value))
     }
     if (isChecked && !updatedFilter.includes(value)) {
-      const newFilter = [...updatedFilter, value]
-
-      dispatch(
-        recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.INFRACTIONS_STATUS, value: newFilter })
-      )
+      newFilter = [...updatedFilter, value]
+    }
+    dispatch(
+      recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.INFRACTIONS_STATUS, value: newFilter })
+    )
+    if (newFilter.length === 1) {
+      dispatch(recentActivityActions.updateDistinctionFilter(RecentActivity.DistinctionFilterEnum.WITHOUT_DISTINCTION))
     }
   }
 

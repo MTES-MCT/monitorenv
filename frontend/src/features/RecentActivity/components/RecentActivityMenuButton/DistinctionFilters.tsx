@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 export function DistinctionFilters() {
   const dispatch = useAppDispatch()
+  const infractionFilters = useAppSelector(state => state.recentActivity.filters.infractionsStatus)
   const distinctionFilter = useAppSelector(state => state.recentActivity.distinctionFilter)
   const controlUnitsWithInfraction = useAppSelector(
     state => state.recentActivity.distinctionFiltersItems.infractions.withInfraction
@@ -26,6 +27,7 @@ export function DistinctionFilters() {
   return (
     <Wrapper>
       <Select
+        disabled={!!(infractionFilters?.length === 1)}
         isCleanable={false}
         isLabelHidden
         isTransparent
