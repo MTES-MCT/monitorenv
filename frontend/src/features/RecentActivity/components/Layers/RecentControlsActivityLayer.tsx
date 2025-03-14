@@ -114,7 +114,7 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         )
 
         const features = recentControlsActivity.flatMap(control => {
-          // total number  of control in action
+          // total number of controls in action
           let totalControls = control.actionNumberOfControls
 
           // total number of persons controlled in all infractions
@@ -122,39 +122,39 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
             (acc, infraction) => acc + infraction.nbTarget,
             0
           )
-          // console.log('totalControlsInInfractions', control.id, totalControlsInInfractions)
 
-          if (distinctionFilter === RecentActivity.DistinctionFilterEnum.WITH_DISTINCTION) {
-            // feature with total of control with infraction
-            const featureWithInfraction = getRecentControlActivityGeometry({
-              control,
-              totalControlsWithInfractions: totalControlsInInfractions > 0 ? totalControlsInInfractions : 0,
-              withInfractions: true
-            })
-
-            // feature with total of control without infraction
-            const featureWithoutInfraction = getRecentControlActivityGeometry({
-              control,
-              totalControlsWithoutInfractions: totalControlsInInfractions > 0 ? 0 : totalControls,
-              withInfractions: false
-            })
-
-            return [featureWithInfraction, featureWithoutInfraction]
-          }
-
-          if (filters.infractionsStatus && filters.infractionsStatus.length === 1) {
-            // if filter is set to "without infraction" we need to remove the controls with infraction
-            if (filters.infractionsStatus[0] === RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION) {
-              totalControls -= totalControlsInInfractions
+          if (distinctionFilter === RecentActivity.DistinctionFilterEnum.WITHOUT_DISTINCTION) {
+            if (filters.infractionsStatus && filters.infractionsStatus.length === 1) {
+              if (filters.infractionsStatus[0] === RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION) {
+                totalControls -= totalControlsInInfractions
+              } else {
+                totalControls = totalControlsInInfractions
+              }
             }
+
+            return getRecentControlActivityGeometry({
+              control,
+              totalControls
+            })
           }
 
-          return getRecentControlActivityGeometry({
+          // feature with total of controls with infraction
+          const featureWithInfraction = getRecentControlActivityGeometry({
             control,
-            totalControls
+            totalControlsWithInfractions: totalControlsInInfractions,
+            withInfractions: true
           })
+
+          // feature with total of controls without infraction
+          const featureWithoutInfraction = getRecentControlActivityGeometry({
+            control,
+            totalControlsWithoutInfractions: totalControls - totalControlsInInfractions,
+            withInfractions: false
+          })
+
+          return [featureWithInfraction, featureWithoutInfraction]
         })
-        // console.log('features', features)
+
         vectorSourceRef.current.addFeatures(features)
       }
 
