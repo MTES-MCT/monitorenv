@@ -11,6 +11,8 @@ SELECT
     EXTRACT(year FROM action_start_datetime_utc) AS year,
     m.start_datetime_utc AS mission_start_datetime_utc,
     m.end_datetime_utc AS mission_end_datetime_utc,
+    m.created_at_utc AS mission_created_at_utc,
+    m.updated_at_utc AS mission_updated_at_utc,
     mission_type,
     action_type,
     COALESCE(m.facade, 'Hors façade') AS mission_facade,
@@ -36,7 +38,7 @@ SELECT
     COALESCE(a.department, 'Hors département') AS action_department,
     CASE COALESCE(t3.theme, 'Aucun thème')
         WHEN 'Activités et manifestations soumises à évaluation d’incidence Natura 2000' THEN 'EIN2000'
-        ELSE t3.theme
+        ELSE COALESCE(t3.theme, 'Aucun thème')
     END AS theme_level_1,
     COALESCE(t2.subtheme, 'Aucun sous-thème') AS theme_level_2,
     CASE
