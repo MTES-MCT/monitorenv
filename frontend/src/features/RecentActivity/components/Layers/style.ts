@@ -2,8 +2,6 @@ import { THEME } from '@mtes-mct/monitor-ui'
 
 import type { FlatStyleLike } from 'ol/style/flat'
 
-const featureHas = (key: string) => ['==', ['get', key], 1]
-
 export const stateIs = (key: string) => ['==', ['var', key], 1]
 export const recentControlActivityStyle: FlatStyleLike = [
   {
@@ -15,76 +13,29 @@ export const recentControlActivityStyle: FlatStyleLike = [
     }
   },
   {
-    filter: ['!', stateIs('withDistinction')],
+    else: true,
     style: {
       'icon-color': [
         'interpolate',
         ['linear'],
-        ['get', 'totalControls'],
+        ['get', 'ratioInfractionsInControls'],
         0,
-        '#FFFF33',
-        1,
-        '#FFC300',
+        '#87C20D',
         5,
-        '#EF9100',
-        10,
-        '#D6610A',
-        15,
-        '#B72F15',
-        20,
-        '#880030'
+        '#FAC200',
+        25,
+        '#E79000',
+        37,
+        '#CE6000',
+        50,
+        '#AF2E12',
+        90,
+        '#480135',
+        100,
+        '#480135'
       ],
-      'icon-scale': 0.6,
+      'icon-scale': ['interpolate', ['linear'], ['get', 'ratioTotalControls'], 0, 0.05, 100, 1],
       'icon-src': 'icons/dot.svg'
-    }
-  },
-  {
-    filter: ['all', stateIs('withDistinction'), ['!', !featureHas('withInfractions')]],
-    style: {
-      'icon-color': [
-        'interpolate',
-        ['linear'],
-        ['get', 'totalControlsWithoutInfractions'],
-        0,
-        '#FFFF33',
-        1,
-        '#FFC300',
-        5,
-        '#EF9100',
-        10,
-        '#D6610A',
-        15,
-        '#B72F15',
-        20,
-        '#880030'
-      ],
-      'icon-scale': 0.6,
-      'icon-src': 'icons/dot.svg'
-    }
-  },
-  {
-    filter: ['all', stateIs('withDistinction'), featureHas('withInfractions')],
-    style: {
-      'icon-color': [
-        'interpolate',
-        ['linear'],
-        ['get', 'totalControlsWithInfractions'],
-        0,
-        '#FFFF33',
-        1,
-        '#FFC300',
-        5,
-        '#EF9100',
-        10,
-        '#D6610A',
-        15,
-        '#B72F15',
-        20,
-        '#880030'
-      ],
-      'icon-displacement': [-10, 0],
-      'icon-scale': 0.7,
-      'icon-src': 'icons/dot_with_cross.svg'
     }
   }
 ]

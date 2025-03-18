@@ -1,8 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-  <g id="Groupe_5118" data-name="Groupe 5118" transform="translate(-505 -481)">
-    <g id="Groupe_5089" data-name="Groupe 5089" transform="translate(506 482)">
-      <path id="Tracé_1691" data-name="Tracé 1691" d="M11,2a9,9,0,1,0,9,9A9,9,0,0,0,11,2Z" transform="translate(-2 -2)" fill="#fff"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_2" data-name="Calque 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+    <defs>
+        <style>
+            .cls-1 {
+                fill: #FFFF;
+            }
+        </style>
+    </defs>
+    <g id="Calque_1-2" data-name="Calque 1">
+        <circle class="cls-1" cx="20" cy="20" r="20" />
     </g>
-    <rect id="Rectangle_6493" data-name="Rectangle 6493" width="20" height="20" transform="translate(505 481)" fill="none"/>
-  </g>
 </svg>

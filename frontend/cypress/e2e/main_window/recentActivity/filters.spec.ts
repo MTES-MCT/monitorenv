@@ -1,4 +1,3 @@
-import { RecentActivity } from '@features/RecentActivity/types'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
@@ -47,10 +46,6 @@ context('Recent Activity -> Filters', () => {
         administrationIds: null,
         controlUnitIds: null,
         geometry: null,
-        infractionsStatus: [
-          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
-          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
-        ],
         startedAfter: startDateFilter,
         startedBefore: endDateFilter,
         themeIds: null
@@ -74,10 +69,6 @@ context('Recent Activity -> Filters', () => {
         administrationIds: [1005],
         controlUnitIds: null,
         geometry: null,
-        infractionsStatus: [
-          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
-          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
-        ],
         startedAfter: startDateFilter,
         startedBefore: endDateFilter,
         themeIds: null
@@ -103,10 +94,6 @@ context('Recent Activity -> Filters', () => {
         administrationIds: null,
         controlUnitIds: [10015],
         geometry: null,
-        infractionsStatus: [
-          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
-          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
-        ],
         startedAfter: startDateFilter,
         startedBefore: endDateFilter,
         themeIds: null
@@ -132,10 +119,6 @@ context('Recent Activity -> Filters', () => {
         administrationIds: null,
         controlUnitIds: null,
         geometry: null,
-        infractionsStatus: [
-          RecentActivity.StatusFilterEnum.WITH_INFRACTION,
-          RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
-        ],
         startedAfter: startDateFilter,
         startedBefore: endDateFilter,
         themeIds: [100]
@@ -171,10 +154,6 @@ context('Recent Activity -> Filters', () => {
       // check request body
       assert.equal(request.body.administrationIds, null)
       assert.equal(request.body.controlUnitIds, null)
-      assert.deepEqual(request.body.infractionsStatus, [
-        RecentActivity.StatusFilterEnum.WITH_INFRACTION,
-        RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
-      ])
       assert.equal(request.body.startedAfter, startDateFilter)
       assert.equal(request.body.startedBefore, endDateFilter)
       assert.equal(request.body.themeIds, null)

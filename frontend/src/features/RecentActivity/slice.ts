@@ -25,19 +25,11 @@ export enum RecentActivityFiltersEnum {
 }
 
 export type RecentActivityState = {
-  distinctionFilter: RecentActivity.DistinctionFilterEnum
-  distinctionFiltersItems: {
-    infractions: {
-      withInfraction: number
-      withoutInfraction: number
-    }
-  }
   drawedGeometry: GeoJSON.MultiPolygon | undefined
   filters: {
     administrationIds?: number[]
     controlUnitIds?: number[]
     geometry?: GeoJSON.MultiPolygon
-    infractionsStatus?: RecentActivity.StatusFilterEnum[]
     periodFilter: string
     startedAfter?: string
     startedBefore?: string
@@ -50,19 +42,8 @@ export type RecentActivityState = {
 }
 
 const INITIAL_STATE: RecentActivityState = {
-  distinctionFilter: RecentActivity.DistinctionFilterEnum.WITHOUT_DISTINCTION,
-  distinctionFiltersItems: {
-    infractions: {
-      withInfraction: 0,
-      withoutInfraction: 0
-    }
-  },
   drawedGeometry: undefined,
   filters: {
-    infractionsStatus: [
-      RecentActivity.StatusFilterEnum.WITH_INFRACTION,
-      RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION
-    ],
     periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS,
     startedAfter: undefined,
     startedBefore: undefined
@@ -91,18 +72,6 @@ const recentActivitySlice = createSlice({
     },
     setIsDrawing(state: RecentActivityState, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
-    },
-    updateDistinctionFilter(state: RecentActivityState, action: PayloadAction<RecentActivity.DistinctionFilterEnum>) {
-      state.distinctionFilter = action.payload
-    },
-    updateDistinctionFiltersItems(
-      state: RecentActivityState,
-      action: PayloadAction<RecentActivityState['distinctionFiltersItems']>
-    ) {
-      state.distinctionFiltersItems = {
-        ...state.distinctionFiltersItems,
-        ...action.payload
-      }
     },
     updateFilters(
       state: RecentActivityState,

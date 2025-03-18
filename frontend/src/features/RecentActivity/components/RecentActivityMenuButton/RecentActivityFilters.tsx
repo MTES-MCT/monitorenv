@@ -16,7 +16,6 @@ import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Accent,
   Button,
-  Checkbox,
   CheckPicker,
   CustomSearch,
   DateRangePicker,
@@ -72,7 +71,6 @@ export function RecentActivityFilters() {
   }, [controlUnits, filters.administrationIds])
 
   const dateRangeOptions = getOptionsFromLabelledEnum(RecentActivity.RecentActivityDateRangeLabels)
-  const infractionsStatusOptions = getOptionsFromLabelledEnum(RecentActivity.InfractionsStatusFilterLabels)
 
   const controlUnitCustomSearch = useMemo(
     () => new CustomSearch(controlUnitsAsOptions ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -80,23 +78,6 @@ export function RecentActivityFilters() {
   )
 
   const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions ?? [], ['label']), [themesAsOptions])
-
-  const updateCheckboxFilter = (isChecked: boolean | undefined, value: RecentActivity.StatusFilterEnum) => {
-    const updatedFilter = [...(filters.infractionsStatus ?? [])]
-    let newFilter
-    if (!isChecked && updatedFilter.includes(value)) {
-      newFilter = updatedFilter.filter(status => status !== value)
-    }
-    if (isChecked && !updatedFilter.includes(value)) {
-      newFilter = [...updatedFilter, value]
-    }
-    dispatch(
-      recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.INFRACTIONS_STATUS, value: newFilter })
-    )
-    if (newFilter.length === 1) {
-      dispatch(recentActivityActions.updateDistinctionFilter(RecentActivity.DistinctionFilterEnum.WITHOUT_DISTINCTION))
-    }
-  }
 
   const updatePeriodFilter = period => {
     dispatch(recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.PERIOD_FILTER, value: period }))
@@ -192,19 +173,6 @@ export function RecentActivityFilters() {
   return (
     <FilterWrapper>
       <StyledBloc>
-        <StyledStatusFilter>
-          {infractionsStatusOptions.map(status => (
-            <Checkbox
-              key={status.label}
-              checked={filters?.infractionsStatus?.includes(status.value as RecentActivity.StatusFilterEnum)}
-              data-cy={`recent-activity-filter-${status.label}`}
-              label={status.label}
-              name={status.label}
-              onChange={isChecked => updateCheckboxFilter(isChecked, status.value as RecentActivity.StatusFilterEnum)}
-            />
-          ))}
-        </StyledStatusFilter>
-
         <Select
           cleanable={false}
           isLabelHidden

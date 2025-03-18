@@ -1,5 +1,4 @@
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
-import { recentActivityActions } from '@features/RecentActivity/slice'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -26,7 +25,6 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   const hasMapInteraction = useHasMapInteraction()
   const isLayerVisible = displayRecentActivityLayer && !hasMapInteraction
   const filters = useAppSelector(state => state.recentActivity.filters)
-  const distinctionFilter = useAppSelector(state => state.recentActivity.distinctionFilter)
   const drawedGeometry = useAppSelector(state => state.recentActivity.drawedGeometry)
 
   const [getRecentControlsActivity, { data: recentControlsActivity }] = useGetRecentControlsActivityMutation()
@@ -66,7 +64,6 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
       administrationIds: filters.administrationIds,
       controlUnitIds: filters.controlUnitIds,
       geometry: filters.geometry,
-      infractionsStatus: filters.infractionsStatus,
       startedAfter: startAfterFilter,
       startedBefore: startBeforeFilter,
       themeIds: filters.themeIds
@@ -79,8 +76,7 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
       source: vectorSourceRef.current,
       style: recentControlActivityStyle,
       variables: {
-        drawedGeometryId: '',
-        withDistinction: distinctionFilter === RecentActivity.DistinctionFilterEnum.WITH_DISTINCTION
+        drawedGeometryId: ''
       },
       zIndex: Layers.RECENT_CONTROLS_ACTIVITY.zIndex
     })
@@ -93,29 +89,20 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   )
 
   useEffect(() => {
-    vectorLayerRef.current.updateStyleVariables({
-      withDistinction: distinctionFilter === RecentActivity.DistinctionFilterEnum.WITH_DISTINCTION
-    })
-  }, [distinctionFilter])
-
-  useEffect(() => {
     if (map) {
       vectorSourceRef.current.clear(true)
 
       if (recentControlsActivity) {
-        // we save total of controls with or without infraction  in store
-        dispatch(
-          recentActivityActions.updateDistinctionFiltersItems({
-            infractions: {
-              withInfraction: controlUnitsWithInfraction.length,
-              withoutInfraction: recentControlsActivity.length - controlUnitsWithInfraction.length
-            }
-          })
+        const totalControlsInAllActions = recentControlsActivity.reduce(
+          (acc, control) => acc + control.actionNumberOfControls,
+          0
         )
-
         const features = recentControlsActivity.flatMap(control => {
+          if (control.actionNumberOfControls === 0) {
+            return []
+          }
           // total number of controls in action
-          let totalControls = control.actionNumberOfControls
+          const totalControls = control.actionNumberOfControls
 
           // total number of persons controlled in all infractions
           const totalControlsInInfractions = control.infractions.reduce(
@@ -123,38 +110,15 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
             0
           )
 
-          if (distinctionFilter === RecentActivity.DistinctionFilterEnum.WITHOUT_DISTINCTION) {
-            if (filters.infractionsStatus && filters.infractionsStatus.length === 1) {
-              if (filters.infractionsStatus[0] === RecentActivity.StatusFilterEnum.WITHOUT_INFRACTION) {
-                totalControls -= totalControlsInInfractions
-              } else {
-                totalControls = totalControlsInInfractions
-              }
-            }
+          const ratioInfractionsInControls = (totalControlsInInfractions / totalControls) * 100
+          const ratioTotalControls = (totalControls * 100) / totalControlsInAllActions
 
-            return getRecentControlActivityGeometry({
-              control,
-              totalControls
-            })
-          }
-
-          // feature with total of controls with infraction
-          const featureWithInfraction = getRecentControlActivityGeometry({
+          return getRecentControlActivityGeometry({
             control,
-            totalControlsWithInfractions: totalControlsInInfractions,
-            withInfractions: true
+            ratioInfractionsInControls,
+            ratioTotalControls
           })
-
-          // feature with total of controls without infraction
-          const featureWithoutInfraction = getRecentControlActivityGeometry({
-            control,
-            totalControlsWithoutInfractions: totalControls - totalControlsInInfractions,
-            withInfractions: false
-          })
-
-          return [featureWithInfraction, featureWithoutInfraction]
         })
-
         vectorSourceRef.current.addFeatures(features)
       }
 
@@ -172,15 +136,7 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         vectorLayerRef.current.updateStyleVariables({ drawedGeometryId: id })
       }
     }
-  }, [
-    map,
-    distinctionFilter,
-    dispatch,
-    controlUnitsWithInfraction.length,
-    recentControlsActivity,
-    drawedGeometry,
-    filters.infractionsStatus
-  ])
+  }, [map, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)
