@@ -36,7 +36,7 @@ export const recentControlActivityStyle: FlatStyleLike = [
         100,
         '#810030'
       ],
-      'icon-scale': ['interpolate', ['linear'], ['get', 'ratioTotalControls'], 0, 0.05, 100, 1],
+      'icon-scale': ['interpolate', ['linear'], ['get', 'ratioTotalControls'], 0, 0.1, 100, 1],
       'icon-src': 'icons/dot.svg'
     }
   }
