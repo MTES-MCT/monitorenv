@@ -33,15 +33,6 @@ export namespace RecentActivity {
     themeIds?: number[]
   }
 
-  export enum StatusFilterEnum {
-    WITH_INFRACTION = 'WITH_INFRACTION',
-    WITHOUT_INFRACTION = 'WITHOUT_INFRACTION'
-  }
-
-  export enum InfractionsStatusFilterLabels {
-    WITH_INFRACTION = 'Avec infraction',
-    WITHOUT_INFRACTION = 'Sans infraction'
-  }
   export enum RecentActivityDateRangeEnum {
     THREE_LAST_DAYS = 'THREE_LAST_DAYS',
     THIRTY_LAST_DAYS = 'THIRTY_LAST_DAYS',

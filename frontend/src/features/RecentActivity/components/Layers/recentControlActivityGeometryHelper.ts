@@ -6,18 +6,14 @@ import { GeoJSON } from 'ol/format'
 
 type RecentControlActivityGeometryProps = {
   control: RecentActivity.RecentControlsActivity
-  totalControls?: number
-  totalControlsWithInfractions?: number
-  totalControlsWithoutInfractions?: number
-  withInfractions?: boolean
+  ratioInfractionsInControls: number
+  ratioTotalControls: number
 }
 
 export const getRecentControlActivityGeometry = ({
   control,
-  totalControls = 0,
-  totalControlsWithInfractions = 0,
-  totalControlsWithoutInfractions = 0,
-  withInfractions = false
+  ratioInfractionsInControls,
+  ratioTotalControls
 }: RecentControlActivityGeometryProps): Feature => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(control.geom, {
@@ -30,17 +26,12 @@ export const getRecentControlActivityGeometry = ({
   })
 
   feature.setId(`${Layers.RECENT_CONTROLS_ACTIVITY.code}:${control.id}`)
-  if (withInfractions) {
-    feature.setId(`${Layers.RECENT_CONTROLS_ACTIVITY.code}:${control.id}-with-infractions`)
-  }
 
   feature.setProperties({
     hasInfraction: control.infractions.length > 0,
-    totalControls,
-    totalControlsWithInfractions,
-    totalControlsWithoutInfractions,
-    ...control,
-    ...(withInfractions && { withInfractions: true })
+    ratioInfractionsInControls,
+    ratioTotalControls,
+    ...control
   })
 
   return feature
