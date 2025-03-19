@@ -1,7 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -30,36 +31,42 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
             "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
         val searchedRegulatoryArea =
-            RegulatoryAreaModel.fromRegulatoryAreaEntity(
-                RegulatoryAreaEntity(
-                    id = 17,
-                    geom = polygon,
-                    entityName = "Zone au sud de la cale",
-                    url =
-                        "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
-                    layerName = "ZMEL_Cale_Querlen",
-                    facade = "NAMO",
-                    refReg =
-                        "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel",
-                    edition = "2021-11-02",
-                    editeur = "Alexis Pré",
-                    source = "",
-                    observation = "",
-                    thematique = "Mouillage, PN",
-                    date = "2020-07-01",
-                    dureeValidite = "15 ans",
-                    dateFin = "2035-07-01",
-                    temporalite = "temporaire",
-                ),
+            RegulatoryAreaModel(
+                id = 17,
+                geom = polygon,
+                entityName = "Zone au sud de la cale",
+                url =
+                    "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
+                layerName = "ZMEL_Cale_Querlen",
+                facade = "NAMO",
+                refReg =
+                    "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel",
+                edition = "2021-11-02",
+                editeur = "Alexis Pré",
+                source = "",
+                observation = "",
+                type = null,
+                themes = listOf(),
+                subThemes = listOf(),
+                date = "2020-07-01",
+                dureeValidite = "15 ans",
+                dateFin = "2035-07-01",
+                temporalite = "temporaire",
             )
+        val themes =
+            listOf(
+                aTheme(name = "Mouillage"),
+                aTheme(name = "PN"),
+            )
+        searchedRegulatoryArea.themes =
+            themes.map { ThemeRegulatoryAreaModel.fromThemeEntity(it, regulatoryArea = searchedRegulatoryArea) }
 
         // When
         val requestedRegulatoryArea = jpaRegulatoryAreasRepository.findById(17)
         // Then
         assertThat(requestedRegulatoryArea.id).isEqualTo(searchedRegulatoryArea.id)
         assertThat(requestedRegulatoryArea.geom).isEqualTo(searchedRegulatoryArea.geom)
-        assertThat(requestedRegulatoryArea.entityName)
-            .isEqualTo(searchedRegulatoryArea.entityName)
+        assertThat(requestedRegulatoryArea.entityName).isEqualTo(searchedRegulatoryArea.entityName)
         assertThat(requestedRegulatoryArea.url).isEqualTo(searchedRegulatoryArea.url)
         assertThat(requestedRegulatoryArea.layerName).isEqualTo(searchedRegulatoryArea.layerName)
         assertThat(requestedRegulatoryArea.facade).isEqualTo(searchedRegulatoryArea.facade)
@@ -67,17 +74,16 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea.edition).isEqualTo(searchedRegulatoryArea.edition)
         assertThat(requestedRegulatoryArea.editeur).isEqualTo(searchedRegulatoryArea.editeur)
         assertThat(requestedRegulatoryArea.source).isEqualTo(searchedRegulatoryArea.source)
-        assertThat(requestedRegulatoryArea.observation)
-            .isEqualTo(searchedRegulatoryArea.observation)
-        assertThat(requestedRegulatoryArea.thematique).isEqualTo(searchedRegulatoryArea.thematique)
+        assertThat(requestedRegulatoryArea.observation).isEqualTo(searchedRegulatoryArea.observation)
+        assertThat(requestedRegulatoryArea.themes).hasSameSizeAs(searchedRegulatoryArea.themes)
+        assertThat(requestedRegulatoryArea.themes[0].name).isEqualTo("PN")
+        assertThat(requestedRegulatoryArea.themes[0].subThemes[0].name).isEqualTo("subtheme2")
+        assertThat(requestedRegulatoryArea.themes[1].name).isEqualTo("Mouillage")
+        assertThat(requestedRegulatoryArea.themes[1].subThemes).isEmpty()
         assertThat(requestedRegulatoryArea.date).isEqualTo(searchedRegulatoryArea.date)
-        assertThat(requestedRegulatoryArea.dureeValidite)
-            .isEqualTo(searchedRegulatoryArea.dureeValidite)
+        assertThat(requestedRegulatoryArea.dureeValidite).isEqualTo(searchedRegulatoryArea.dureeValidite)
         assertThat(requestedRegulatoryArea.dateFin).isEqualTo(searchedRegulatoryArea.dateFin)
-        assertThat(requestedRegulatoryArea.temporalite)
-            .isEqualTo(searchedRegulatoryArea.temporalite)
-        assertThat(requestedRegulatoryArea.observation)
-            .isEqualTo(searchedRegulatoryArea.observation)
+        assertThat(requestedRegulatoryArea.temporalite).isEqualTo(searchedRegulatoryArea.temporalite)
     }
 
     @Test
