@@ -20,11 +20,10 @@ data class MissionControlResourceModel(
     @JoinColumn(name = "control_resource_id")
     var resource: ControlUnitResourceModel,
 ) {
-    fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity {
-        return LegacyControlUnitResourceEntity(
+    fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity =
+        LegacyControlUnitResourceEntity(
             id = requireNotNull(resource.id),
             controlUnitId = requireNotNull(resource.controlUnit.id),
             name = resource.name,
         )
-    }
 }

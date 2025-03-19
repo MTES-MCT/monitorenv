@@ -29,18 +29,15 @@ class JpaControlUnitRepository(
     }
 
     @Transactional
-    override fun findAll(): List<FullControlUnitDTO> {
-        return dbControlUnitRepository.findAll().map { it.toFullControlUnit() }
-    }
+    override fun findAll(): List<FullControlUnitDTO> = dbControlUnitRepository.findAll().map { it.toFullControlUnit() }
 
     @Transactional
-    override fun findById(controlUnitId: Int): FullControlUnitDTO {
-        return dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
-    }
+    override fun findById(controlUnitId: Int): FullControlUnitDTO =
+        dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
 
     @Transactional
-    override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity {
-        return try {
+    override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity =
+        try {
             val administrationModel = requirePresent(dbAdministrationRepository.findById(controlUnit.administrationId))
             val departmentAreaModel =
                 controlUnit.departmentAreaInseeCode?.let { dbDepartmentAreaRepository.findByInseeCode(it) }
@@ -54,5 +51,4 @@ class JpaControlUnitRepository(
                 e,
             )
         }
-    }
 }

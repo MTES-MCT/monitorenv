@@ -44,7 +44,6 @@ class DeleteStationUTests {
 
         assertThatThrownBy {
             DeleteStation(stationRepository, canDeleteStation).execute(stationId)
-        }
-            .isInstanceOf(CouldNotDeleteException::class.java)
+        }.isInstanceOf(CouldNotDeleteException::class.java)
     }
 }

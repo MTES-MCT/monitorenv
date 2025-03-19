@@ -69,7 +69,8 @@ class ControlPlansITests {
             )
         BDDMockito.given(getControlPlans.execute()).willReturn(controlPlan)
         // When
-        mockMvc.perform(get("/api/v1/control_plans"))
+        mockMvc
+            .perform(get("/api/v1/control_plans"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.themes[\"1\"].id").value(controlPlanTheme1.id))
@@ -78,11 +79,9 @@ class ControlPlansITests {
             .andExpect(
                 jsonPath("$.subThemes[\"10\"].subTheme")
                     .value(controlPlanSubTheme1.subTheme),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath("$.subThemes[\"10\"].themeId").value(controlPlanSubTheme1.themeId),
-            )
-            .andExpect(jsonPath("$.tags[\"100\"].id").value(controlPlanTag.id))
+            ).andExpect(jsonPath("$.tags[\"100\"].id").value(controlPlanTag.id))
             .andExpect(jsonPath("$.tags[\"100\"].tag").value(controlPlanTag.tag))
             .andExpect(jsonPath("$.tags[\"100\"].themeId").value(controlPlanTag.themeId))
 
@@ -123,7 +122,8 @@ class ControlPlansITests {
             )
         BDDMockito.given(getControlPlansByYear.execute(2024)).willReturn(controlPlan)
         // When
-        mockMvc.perform(get("/api/v1/control_plans/2024"))
+        mockMvc
+            .perform(get("/api/v1/control_plans/2024"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.themes[\"1\"].id").value(controlPlanTheme1.id))
@@ -132,11 +132,9 @@ class ControlPlansITests {
             .andExpect(
                 jsonPath("$.subThemes[\"10\"].subTheme")
                     .value(controlPlanSubTheme1.subTheme),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath("$.subThemes[\"10\"].themeId").value(controlPlanSubTheme1.themeId),
-            )
-            .andExpect(jsonPath("$.tags[\"100\"].id").value(controlPlanTag.id))
+            ).andExpect(jsonPath("$.tags[\"100\"].id").value(controlPlanTag.id))
             .andExpect(jsonPath("$.tags[\"100\"].tag").value(controlPlanTag.tag))
             .andExpect(jsonPath("$.tags[\"100\"].themeId").value(controlPlanTag.themeId))
 

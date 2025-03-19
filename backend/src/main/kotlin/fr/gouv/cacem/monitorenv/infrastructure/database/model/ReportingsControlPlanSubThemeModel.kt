@@ -70,7 +70,5 @@ data class ReportingsSubThemePk(
             subthemeId == other.subthemeId
     }
 
-    override fun hashCode(): Int {
-        return listOf(reportingId, subthemeId).hashCode()
-    }
+    override fun hashCode(): Int = listOf(reportingId, subthemeId).hashCode()
 }

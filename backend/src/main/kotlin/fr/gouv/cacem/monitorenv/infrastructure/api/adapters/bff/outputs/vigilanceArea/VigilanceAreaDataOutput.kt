@@ -36,8 +36,8 @@ data class VigilanceAreaDataOutput(
     val updatedAt: ZonedDateTime?,
 ) {
     companion object {
-        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaDataOutput {
-            return VigilanceAreaDataOutput(
+        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaDataOutput =
+            VigilanceAreaDataOutput(
                 id = vigilanceArea.id,
                 comments = vigilanceArea.comments,
                 computedEndDate = vigilanceArea.computedEndDate,
@@ -66,6 +66,5 @@ data class VigilanceAreaDataOutput(
                 updatedAt = vigilanceArea.updatedAt,
                 isAtAllTimes = vigilanceArea.isAtAllTimes,
             )
-        }
     }
 }

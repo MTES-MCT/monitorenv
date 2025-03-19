@@ -38,9 +38,7 @@ class ControlUnits(
         @PathParam("Control unit ID")
         @PathVariable(name = "controlUnitId")
         controlUnitId: Int,
-    ): BooleanDataOutput {
-        return canDeleteControlUnit.execute(controlUnitId).let { BooleanDataOutput.get(it) }
-    }
+    ): BooleanDataOutput = canDeleteControlUnit.execute(controlUnitId).let { BooleanDataOutput.get(it) }
 
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit")

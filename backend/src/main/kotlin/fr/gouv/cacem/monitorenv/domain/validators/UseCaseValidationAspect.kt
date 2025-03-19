@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component
 
 @Component
 @Aspect
-class UseCaseValidationAspect(private val applicationContext: ApplicationContext) {
+class UseCaseValidationAspect(
+    private val applicationContext: ApplicationContext,
+) {
     @Before("execution(* fr.gouv.cacem.monitorenv.domain.use_cases..*.execute(..))")
     fun before(joinPoint: JoinPoint) {
         val method = (joinPoint.signature as MethodSignature).method

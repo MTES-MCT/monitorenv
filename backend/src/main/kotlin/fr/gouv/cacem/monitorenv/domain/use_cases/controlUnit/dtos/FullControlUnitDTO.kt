@@ -14,13 +14,12 @@ data class FullControlUnitDTO(
     // `FullControlUnitResourceDTO` and not `ControlUnitResourceEntity` because we need `base` data for each resource
     val controlUnitResources: List<FullControlUnitResourceDTO>,
 ) {
-    fun toLegacyControlUnit(): LegacyControlUnitEntity {
-        return LegacyControlUnitEntity(
+    fun toLegacyControlUnit(): LegacyControlUnitEntity =
+        LegacyControlUnitEntity(
             id = requireNotNull(controlUnit.id),
             administration = administration.name,
             isArchived = controlUnit.isArchived,
             name = controlUnit.name,
             resources = controlUnitResources.map { it.toLegacyControlUnitResource() },
         )
-    }
 }

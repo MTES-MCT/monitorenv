@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test
 class RequireIdsUTest {
     @Test
     fun `Should return the collection IDs when none of them is null`() {
-        data class Item(val id: Int?)
+        data class Item(
+            val id: Int?,
+        )
 
         val items = listOf(Item(1), Item(2), Item(3))
         val expectedIds = listOf(1, 2, 3)
@@ -18,7 +20,9 @@ class RequireIdsUTest {
 
     @Test
     fun `Should throw an IllegalArgumentException when any of the collection IDs is null`() {
-        data class Item(val id: Int?)
+        data class Item(
+            val id: Int?,
+        )
 
         val items = listOf(Item(1), Item(null), Item(3))
 

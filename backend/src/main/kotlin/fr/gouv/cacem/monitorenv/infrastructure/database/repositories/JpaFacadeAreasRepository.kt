@@ -6,9 +6,9 @@ import org.locationtech.jts.geom.Geometry
 import org.springframework.stereotype.Repository
 
 @Repository
-class JpaFacadeAreasRepository(private val dbFacadeAreasRepository: IDBFacadeAreasRepository) :
-    IFacadeAreasRepository {
-    override fun findFacadeFromGeometry(geometry: Geometry): String? {
-        return dbFacadeAreasRepository.findFacadeFromGeometry(geometry)
-    }
+class JpaFacadeAreasRepository(
+    private val dbFacadeAreasRepository: IDBFacadeAreasRepository,
+) : IFacadeAreasRepository {
+    override fun findFacadeFromGeometry(geometry: Geometry): String? =
+        dbFacadeAreasRepository.findFacadeFromGeometry(geometry)
 }

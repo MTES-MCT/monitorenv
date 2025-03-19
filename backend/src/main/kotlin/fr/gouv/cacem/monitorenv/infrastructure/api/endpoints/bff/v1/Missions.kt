@@ -57,7 +57,8 @@ class Missions(
 
         val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
 
-        return ResponseEntity.status(returnCode)
+        return ResponseEntity
+            .status(returnCode)
             .body(MissionDataOutput.fromMissionDTO(createdMission))
     }
 
@@ -80,9 +81,7 @@ class Missions(
         @Parameter(description = "Request source")
         @RequestParam(name = "source")
         source: MissionSourceEnum,
-    ): CanDeleteMissionResponse {
-        return canDeleteMission.execute(missionId = missionId, source = source)
-    }
+    ): CanDeleteMissionResponse = canDeleteMission.execute(missionId = missionId, source = source)
 
     @GetMapping("/{missionId}")
     @Operation(summary = "Get mission by Id")
@@ -148,11 +147,10 @@ class Missions(
     // migration is done
     @GetMapping("/engaged_control_units")
     @Operation(summary = "Get engaged control units")
-    fun getEngagedControlUnits(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
-        return getEngagedControlUnits.execute().map {
+    fun getEngagedControlUnits(): List<LegacyControlUnitAndMissionSourcesDataOutput> =
+        getEngagedControlUnits.execute().map {
             LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it)
         }
-    }
 
     @PutMapping(value = ["/{missionId}"], consumes = ["application/json"])
     @Operation(summary = "Update a mission")

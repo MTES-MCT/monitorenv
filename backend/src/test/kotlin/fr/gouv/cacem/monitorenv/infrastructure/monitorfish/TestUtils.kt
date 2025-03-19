@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.monitorfish
 
 class TestUtils {
     companion object {
-        fun getMissionWithAction(): String {
-            return """[{
+        fun getMissionWithAction(): String =
+            """[{
                             "id":1,
                             "vesselId":1234,
                             "vesselName":"TY NOEM",
@@ -80,6 +80,5 @@ class TestUtils {
                             "isComplianceWithWaterRegulationsControl":null,
                             "isSafetyEquipmentAndStandardsComplianceControl":null,"isSeafarersControl":null
                         }]"""
-        }
     }
 }

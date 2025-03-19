@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUni
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetControlUnitContactById(private val controlUnitContactRepository: IControlUnitContactRepository) {
+class GetControlUnitContactById(
+    private val controlUnitContactRepository: IControlUnitContactRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetControlUnitById::class.java)
 
     fun execute(controlUnitContactId: Int): FullControlUnitContactDTO {

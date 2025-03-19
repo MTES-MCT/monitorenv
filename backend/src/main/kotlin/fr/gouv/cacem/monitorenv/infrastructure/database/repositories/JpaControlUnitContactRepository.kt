@@ -23,18 +23,18 @@ class JpaControlUnitContactRepository(
     }
 
     @Transactional
-    override fun findAll(): List<FullControlUnitContactDTO> {
-        return dbControlUnitContactRepository.findAll().map { it.toFullControlUnitContact() }
-    }
+    override fun findAll(): List<FullControlUnitContactDTO> =
+        dbControlUnitContactRepository.findAll().map {
+            it.toFullControlUnitContact()
+        }
 
     @Transactional
-    override fun findById(controlUnitContactId: Int): FullControlUnitContactDTO {
-        return dbControlUnitContactRepository.findById(controlUnitContactId).get().toFullControlUnitContact()
-    }
+    override fun findById(controlUnitContactId: Int): FullControlUnitContactDTO =
+        dbControlUnitContactRepository.findById(controlUnitContactId).get().toFullControlUnitContact()
 
     @Transactional
-    override fun save(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
-        return try {
+    override fun save(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity =
+        try {
             val controlUnitModel = requirePresent(dbControlUnitRepository.findById(controlUnitContact.controlUnitId))
             val controlUnitContactModel =
                 ControlUnitContactModel.fromControlUnitContact(controlUnitContact, controlUnitModel)
@@ -46,5 +46,4 @@ class JpaControlUnitContactRepository(
                 e,
             )
         }
-    }
 }

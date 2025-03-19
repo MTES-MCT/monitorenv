@@ -23,17 +23,17 @@ class JpaAdministrationRepository(
         dbAdministrationRepository.deleteById(administrationId)
     }
 
-    override fun findAll(): List<FullAdministrationDTO> {
-        return dbAdministrationRepository.findAll().map { it.toFullAdministration() }
-    }
+    override fun findAll(): List<FullAdministrationDTO> =
+        dbAdministrationRepository.findAll().map {
+            it.toFullAdministration()
+        }
 
-    override fun findById(administrationId: Int): FullAdministrationDTO {
-        return dbAdministrationRepository.findById(administrationId).get().toFullAdministration()
-    }
+    override fun findById(administrationId: Int): FullAdministrationDTO =
+        dbAdministrationRepository.findById(administrationId).get().toFullAdministration()
 
     @Transactional
-    override fun save(administration: AdministrationEntity): AdministrationEntity {
-        return try {
+    override fun save(administration: AdministrationEntity): AdministrationEntity =
+        try {
             val administrationModel = AdministrationModel.fromAdministration(administration)
 
             dbAdministrationRepository.save(administrationModel).toAdministration()
@@ -43,5 +43,4 @@ class JpaAdministrationRepository(
                 e,
             )
         }
-    }
 }

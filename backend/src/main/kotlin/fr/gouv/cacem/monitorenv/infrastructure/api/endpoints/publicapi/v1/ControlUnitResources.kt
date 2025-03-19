@@ -38,9 +38,7 @@ class ControlUnitResources(
         @PathParam("Control unit resource ID")
         @PathVariable(name = "controlUnitResourceId")
         controlUnitResourceId: Int,
-    ): BooleanDataOutput {
-        return canDeleteControlUnitResource.execute(controlUnitResourceId).let { BooleanDataOutput.get(it) }
-    }
+    ): BooleanDataOutput = canDeleteControlUnitResource.execute(controlUnitResourceId).let { BooleanDataOutput.get(it) }
 
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit resource")
@@ -79,10 +77,10 @@ class ControlUnitResources(
 
     @GetMapping("")
     @Operation(summary = "List control unit resources")
-    fun getAll(): List<FullControlUnitResourceDataOutput> {
-        return getControlUnitResources.execute()
+    fun getAll(): List<FullControlUnitResourceDataOutput> =
+        getControlUnitResources
+            .execute()
             .map { FullControlUnitResourceDataOutput.fromFullControlUnitResource(it) }
-    }
 
     @PutMapping(value = ["/{controlUnitResourceId}"], consumes = ["application/json"])
     @Operation(summary = "Update a control unit resource")

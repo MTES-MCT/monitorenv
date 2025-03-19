@@ -4,8 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEnt
 
 class ControlUnitFixture {
     companion object {
-        fun aLegacyControlUnit(): LegacyControlUnitEntity {
-            return LegacyControlUnitEntity(
+        fun aLegacyControlUnit(): LegacyControlUnitEntity =
+            LegacyControlUnitEntity(
                 id = 1,
                 administration = "DIRM / DM",
                 isArchived = false,
@@ -13,6 +13,5 @@ class ControlUnitFixture {
                 resources = listOf(),
                 contact = null,
             )
-        }
     }
 }

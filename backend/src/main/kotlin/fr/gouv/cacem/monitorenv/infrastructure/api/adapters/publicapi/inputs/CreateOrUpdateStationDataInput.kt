@@ -8,12 +8,11 @@ data class CreateOrUpdateStationDataInput(
     val longitude: Double,
     val name: String,
 ) {
-    fun toStation(): StationEntity {
-        return StationEntity(
+    fun toStation(): StationEntity =
+        StationEntity(
             id = this.id,
             latitude = this.latitude,
             longitude = this.longitude,
             name = this.name,
         )
-    }
 }

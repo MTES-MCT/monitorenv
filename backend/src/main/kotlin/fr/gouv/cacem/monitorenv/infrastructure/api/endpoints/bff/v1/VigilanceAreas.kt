@@ -78,7 +78,5 @@ class VigilanceAreas(
 
     @GetMapping("/trigrams")
     @Operation(summary = "List vigilance areas trigrams")
-    fun getTrigrams(): List<String> {
-        return getTrigrams.execute()
-    }
+    fun getTrigrams(): List<String> = getTrigrams.execute()
 }

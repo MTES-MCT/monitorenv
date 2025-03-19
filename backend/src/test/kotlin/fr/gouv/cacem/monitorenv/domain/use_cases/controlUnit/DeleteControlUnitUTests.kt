@@ -57,7 +57,6 @@ class DeleteControlUnitUTests {
 
         assertThatThrownBy {
             deleteControlUnit.execute(controlUnitId)
-        }
-            .isInstanceOf(CouldNotDeleteException::class.java)
+        }.isInstanceOf(CouldNotDeleteException::class.java)
     }
 }

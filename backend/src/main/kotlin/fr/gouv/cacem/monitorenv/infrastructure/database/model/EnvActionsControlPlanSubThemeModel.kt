@@ -70,7 +70,5 @@ data class EnvActionsSubThemePk(
         return envActionId == other.envActionId && subthemeId == other.subthemeId
     }
 
-    override fun hashCode(): Int {
-        return listOf(envActionId, subthemeId).hashCode()
-    }
+    override fun hashCode(): Int = listOf(envActionId, subthemeId).hashCode()
 }

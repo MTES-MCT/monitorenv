@@ -74,7 +74,8 @@ class RegulatoryAreasITests {
         given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
 
         // When
-        mockMvc.perform(get("/bff/v1/regulatory"))
+        mockMvc
+            .perform(get("/bff/v1/regulatory"))
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -113,7 +114,8 @@ class RegulatoryAreasITests {
         given(getRegulatoryAreaById.execute(17)).willReturn(regulatoryArea)
 
         // When
-        mockMvc.perform(get("/bff/v1/regulatory/17"))
+        mockMvc
+            .perform(get("/bff/v1/regulatory/17"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(regulatoryArea.id)))

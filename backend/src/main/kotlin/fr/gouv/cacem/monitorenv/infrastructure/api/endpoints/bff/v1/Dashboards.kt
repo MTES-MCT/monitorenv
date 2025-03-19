@@ -57,9 +57,7 @@ class Dashboards(
     @Operation(summary = "create or update the given dashboard")
     fun put(
         @RequestBody dashboardDataInput: DashboardDataInput,
-    ): DashboardDataOutput {
-        return fromDashboardEntity(saveDashboard.execute(dashboardDataInput.toDashboardEntity()))
-    }
+    ): DashboardDataOutput = fromDashboardEntity(saveDashboard.execute(dashboardDataInput.toDashboardEntity()))
 
     @DeleteMapping("/{id}")
     @Operation(summary = "create or update the given dashboard")
@@ -77,7 +75,5 @@ class Dashboards(
         @PathParam("Dashboard id")
         @PathVariable(name = "dashboardId")
         dashboardId: UUID,
-    ): DashboardDataOutput {
-        return fromDashboardEntity(getDashboard.execute(dashboardId))
-    }
+    ): DashboardDataOutput = fromDashboardEntity(getDashboard.execute(dashboardId))
 }

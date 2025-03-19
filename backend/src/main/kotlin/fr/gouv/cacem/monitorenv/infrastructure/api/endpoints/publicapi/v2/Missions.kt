@@ -43,14 +43,13 @@ class Missions(
         @PathVariable(name = "missionId")
         id: Int,
         @RequestBody patchableMissionDataInput: PatchableMissionDataInput,
-    ): MissionDataOutput {
-        return MissionDataOutput.fromMissionDTO(
+    ): MissionDataOutput =
+        MissionDataOutput.fromMissionDTO(
             patchMission.execute(
                 id,
                 patchableMissionDataInput.toPatchableMissionEntity(),
             ),
         )
-    }
 
     @GetMapping("/{missionId}")
     @Operation(summary = "Get mission by Id and retrieve action from source")

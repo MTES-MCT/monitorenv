@@ -6,7 +6,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 @UseCase
-class DeleteVigilanceArea(private val vigilanceAreaRepository: IVigilanceAreaRepository) {
+class DeleteVigilanceArea(
+    private val vigilanceAreaRepository: IVigilanceAreaRepository,
+) {
     private val logger: Logger = LoggerFactory.getLogger(DeleteVigilanceArea::class.java)
 
     fun execute(id: Int) {

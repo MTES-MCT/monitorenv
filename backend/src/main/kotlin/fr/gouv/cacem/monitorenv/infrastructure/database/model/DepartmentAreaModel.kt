@@ -19,25 +19,22 @@ data class DepartmentAreaModel(
     val name: String,
 ) {
     companion object {
-        fun fromDepartmentArea(departmentArea: DepartmentAreaEntity): DepartmentAreaModel {
-            return DepartmentAreaModel(
+        fun fromDepartmentArea(departmentArea: DepartmentAreaEntity): DepartmentAreaModel =
+            DepartmentAreaModel(
                 inseeCode = departmentArea.inseeCode,
                 geometry = departmentArea.geometry,
                 name = departmentArea.name,
             )
-        }
     }
 
-    fun toDepartmentArea(): DepartmentAreaEntity {
-        return DepartmentAreaEntity(
+    fun toDepartmentArea(): DepartmentAreaEntity =
+        DepartmentAreaEntity(
             inseeCode,
             geometry,
             name,
         )
-    }
 
     @Override
-    override fun toString(): String {
-        return this::class.simpleName + "(inseeCode = $inseeCode , geometry = geometry , name = $name)"
-    }
+    override fun toString(): String =
+        this::class.simpleName + "(inseeCode = $inseeCode , geometry = geometry , name = $name)"
 }

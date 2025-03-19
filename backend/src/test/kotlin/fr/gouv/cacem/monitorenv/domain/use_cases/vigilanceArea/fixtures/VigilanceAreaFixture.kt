@@ -31,8 +31,8 @@ class VigilanceAreaFixture {
             isAtAllTimes: Boolean = false,
             geom: MultiPolygon? = polygon,
             comments: String? = "Basic area comments",
-        ): VigilanceAreaEntity {
-            return VigilanceAreaEntity(
+        ): VigilanceAreaEntity =
+            VigilanceAreaEntity(
                 id = 1,
                 comments = comments,
                 computedEndDate = ZonedDateTime.parse("2024-01-25T00:00:00Z"),
@@ -59,10 +59,9 @@ class VigilanceAreaFixture {
                 updatedAt = null,
                 isAtAllTimes = isAtAllTimes,
             )
-        }
 
-        fun aVigilanceAreaEntityWithImagesAndLink(): VigilanceAreaEntity {
-            return VigilanceAreaEntity(
+        fun aVigilanceAreaEntityWithImagesAndLink(): VigilanceAreaEntity =
+            VigilanceAreaEntity(
                 id = 2,
                 comments = "Basic area comments",
                 computedEndDate = null,
@@ -113,10 +112,9 @@ class VigilanceAreaFixture {
                 updatedAt = null,
                 isAtAllTimes = false,
             )
-        }
 
-        fun anArchivedVigilanceAreaEntity(): VigilanceAreaEntity {
-            return VigilanceAreaEntity(
+        fun anArchivedVigilanceAreaEntity(): VigilanceAreaEntity =
+            VigilanceAreaEntity(
                 id = 3,
                 comments = "Basic area comments",
                 computedEndDate = null,
@@ -143,6 +141,5 @@ class VigilanceAreaFixture {
                 updatedAt = ZonedDateTime.parse("2024-01-01T12:00:00Z"),
                 isAtAllTimes = false,
             )
-        }
     }
 }

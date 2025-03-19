@@ -13,8 +13,8 @@ data class ControlUnitDataOutput(
     val termsNote: String? = null,
 ) {
     companion object {
-        fun fromControlUnit(controlUnit: ControlUnitEntity): ControlUnitDataOutput {
-            return ControlUnitDataOutput(
+        fun fromControlUnit(controlUnit: ControlUnitEntity): ControlUnitDataOutput =
+            ControlUnitDataOutput(
                 id = requireNotNull(controlUnit.id),
                 areaNote = controlUnit.areaNote,
                 administrationId = controlUnit.administrationId,
@@ -23,10 +23,9 @@ data class ControlUnitDataOutput(
                 name = controlUnit.name,
                 termsNote = controlUnit.termsNote,
             )
-        }
 
-        fun fromFullControlUnit(fullControlUnit: FullControlUnitDTO): ControlUnitDataOutput {
-            return ControlUnitDataOutput(
+        fun fromFullControlUnit(fullControlUnit: FullControlUnitDTO): ControlUnitDataOutput =
+            ControlUnitDataOutput(
                 id = requireNotNull(fullControlUnit.controlUnit.id),
                 areaNote = fullControlUnit.controlUnit.areaNote,
                 administrationId = fullControlUnit.controlUnit.administrationId,
@@ -35,6 +34,5 @@ data class ControlUnitDataOutput(
                 name = fullControlUnit.controlUnit.name,
                 termsNote = fullControlUnit.controlUnit.termsNote,
             )
-        }
     }
 }

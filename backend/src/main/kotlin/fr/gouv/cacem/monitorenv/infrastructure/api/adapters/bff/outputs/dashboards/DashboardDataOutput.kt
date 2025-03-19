@@ -23,8 +23,8 @@ class DashboardDataOutput(
     val images: List<DashboardImageDataOutput>,
 ) {
     companion object {
-        fun fromDashboardEntity(dashboardEntity: DashboardEntity): DashboardDataOutput {
-            return DashboardDataOutput(
+        fun fromDashboardEntity(dashboardEntity: DashboardEntity): DashboardDataOutput =
+            DashboardDataOutput(
                 id = dashboardEntity.id,
                 name = dashboardEntity.name,
                 geom = dashboardEntity.geom,
@@ -40,6 +40,5 @@ class DashboardDataOutput(
                 images = dashboardEntity.images.map { DashboardImageDataOutput.fromDashboardImageEntity(it) },
                 links = dashboardEntity.links,
             )
-        }
     }
 }

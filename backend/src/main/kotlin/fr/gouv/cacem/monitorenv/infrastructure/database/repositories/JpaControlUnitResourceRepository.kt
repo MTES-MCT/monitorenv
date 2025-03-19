@@ -28,23 +28,22 @@ class JpaControlUnitResourceRepository(
         dbControlUnitResourceRepository.deleteById(controlUnitResourceId)
     }
 
-    override fun findAll(): List<FullControlUnitResourceDTO> {
-        return dbControlUnitResourceRepository.findAll().map { it.toFullControlUnitResource() }
-    }
-
-    override fun findAllById(controlUnitResourceIds: List<Int>): List<FullControlUnitResourceDTO> {
-        return dbControlUnitResourceRepository.findAllById(controlUnitResourceIds).map {
+    override fun findAll(): List<FullControlUnitResourceDTO> =
+        dbControlUnitResourceRepository.findAll().map {
             it.toFullControlUnitResource()
         }
-    }
 
-    override fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO {
-        return dbControlUnitResourceRepository.findById(controlUnitResourceId).get().toFullControlUnitResource()
-    }
+    override fun findAllById(controlUnitResourceIds: List<Int>): List<FullControlUnitResourceDTO> =
+        dbControlUnitResourceRepository.findAllById(controlUnitResourceIds).map {
+            it.toFullControlUnitResource()
+        }
+
+    override fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO =
+        dbControlUnitResourceRepository.findById(controlUnitResourceId).get().toFullControlUnitResource()
 
     @Transactional
-    override fun save(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceEntity {
-        return try {
+    override fun save(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceEntity =
+        try {
             val controlUnitModel =
                 requirePresent(dbControlUnitRepository.findById(controlUnitResource.controlUnitId))
             val stationModel = requirePresent(dbBaseRepository.findById(controlUnitResource.stationId))
@@ -62,5 +61,4 @@ class JpaControlUnitResourceRepository(
                 e,
             )
         }
-    }
 }

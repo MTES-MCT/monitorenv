@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test
 class MapOrElseEmptyUTest {
     @Test
     fun `Should map the list as expected when the list is not null`() {
-        data class Item(val name: String)
+        data class Item(
+            val name: String,
+        )
 
         val items = listOf(Item("a"), Item("b"), Item("c"))
 
@@ -17,7 +19,9 @@ class MapOrElseEmptyUTest {
 
     @Test
     fun `Should return an empty list when the list is null`() {
-        data class Item(val name: String)
+        data class Item(
+            val name: String,
+        )
 
         val items: List<Item>? = null
 

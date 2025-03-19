@@ -69,10 +69,10 @@ class ControlUnitResourcesITests {
     fun `archive should archive a control unit resource`() {
         val controlUnitResourceId = 1
 
-        mockMvc.perform(
-            put("/api/v1/control_unit_resources/$controlUnitResourceId/archive"),
-        )
-            .andExpect(status().isOk)
+        mockMvc
+            .perform(
+                put("/api/v1/control_unit_resources/$controlUnitResourceId/archive"),
+            ).andExpect(status().isOk)
 
         BDDMockito.verify(archiveControlUnitResource).execute(controlUnitResourceId)
     }
@@ -83,7 +83,8 @@ class ControlUnitResourcesITests {
 
         given(canDeleteControlUnitResource.execute(controlUnitResourceId)).willReturn(true)
 
-        mockMvc.perform(get("/api/v1/control_unit_resources/$controlUnitResourceId/can_delete"))
+        mockMvc
+            .perform(get("/api/v1/control_unit_resources/$controlUnitResourceId/can_delete"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(true))
 
@@ -120,12 +121,12 @@ class ControlUnitResourcesITests {
             expectedCreatedControlUnitResource,
         )
 
-        mockMvc.perform(
-            post("/api/v1/control_unit_resources")
-                .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                post("/api/v1/control_unit_resources")
+                    .content(requestBody)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
     }
 
@@ -133,10 +134,10 @@ class ControlUnitResourcesITests {
     fun `delete should delete a control unit resource`() {
         val controlUnitResourceId = 1
 
-        mockMvc.perform(
-            delete("/api/v1/control_unit_resources/$controlUnitResourceId"),
-        )
-            .andExpect(status().isOk)
+        mockMvc
+            .perform(
+                delete("/api/v1/control_unit_resources/$controlUnitResourceId"),
+            ).andExpect(status().isOk)
 
         BDDMockito.verify(deleteControlUnitResource).execute(controlUnitResourceId)
     }
@@ -179,7 +180,8 @@ class ControlUnitResourcesITests {
 
         given(getControlUnitResourceById.execute(requestedId)).willReturn(expectedFullControlUnitResource)
 
-        mockMvc.perform(get("/api/v1/control_unit_resources/$requestedId"))
+        mockMvc
+            .perform(get("/api/v1/control_unit_resources/$requestedId"))
             .andExpect(status().isOk)
 
         BDDMockito.verify(getControlUnitResourceById).execute(requestedId)
@@ -253,7 +255,8 @@ class ControlUnitResourcesITests {
 
         given(getControlUnitResources.execute()).willReturn(expectedFullControlUnitResources)
 
-        mockMvc.perform(get("/api/v1/control_unit_resources"))
+        mockMvc
+            .perform(get("/api/v1/control_unit_resources"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize<Any>(2)))
 
@@ -291,12 +294,12 @@ class ControlUnitResourcesITests {
             expectedUpdatedControlUnitResource,
         )
 
-        mockMvc.perform(
-            put("/api/v1/control_unit_resources/1")
-                .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                put("/api/v1/control_unit_resources/1")
+                    .content(requestBody)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
     }
 }

@@ -5,7 +5,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IStationRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class CanDeleteStation(private val stationRepository: IStationRepository) {
+class CanDeleteStation(
+    private val stationRepository: IStationRepository,
+) {
     private val logger = LoggerFactory.getLogger(CanDeleteStation::class.java)
 
     fun execute(stationId: Int): Boolean {

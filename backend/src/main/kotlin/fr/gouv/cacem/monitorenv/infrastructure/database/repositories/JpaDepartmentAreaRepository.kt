@@ -10,15 +10,12 @@ import org.springframework.stereotype.Repository
 class JpaDepartmentAreaRepository(
     private val dbDepartmentAreasRepository: IDBDepartmentAreaRepository,
 ) : IDepartmentAreaRepository {
-    override fun findAll(): List<DepartmentAreaEntity> {
-        return dbDepartmentAreasRepository.findAll().map { it.toDepartmentArea() }
-    }
+    override fun findAll(): List<DepartmentAreaEntity> =
+        dbDepartmentAreasRepository.findAll().map { it.toDepartmentArea() }
 
-    override fun findByInseeCode(inseeCode: String): DepartmentAreaEntity {
-        return dbDepartmentAreasRepository.findByInseeCode(inseeCode).toDepartmentArea()
-    }
+    override fun findByInseeCode(inseeCode: String): DepartmentAreaEntity =
+        dbDepartmentAreasRepository.findByInseeCode(inseeCode).toDepartmentArea()
 
-    override fun findDepartmentFromGeometry(geometry: Geometry): String? {
-        return dbDepartmentAreasRepository.findDepartmentFromGeometry(geometry)
-    }
+    override fun findDepartmentFromGeometry(geometry: Geometry): String? =
+        dbDepartmentAreasRepository.findDepartmentFromGeometry(geometry)
 }

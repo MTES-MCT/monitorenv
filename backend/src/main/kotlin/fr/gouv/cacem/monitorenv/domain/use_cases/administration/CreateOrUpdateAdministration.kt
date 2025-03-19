@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class CreateOrUpdateAdministration(private val administrationRepository: IAdministrationRepository) {
+class CreateOrUpdateAdministration(
+    private val administrationRepository: IAdministrationRepository,
+) {
     private val logger = LoggerFactory.getLogger(CreateOrUpdateAdministration::class.java)
 
     fun execute(administration: AdministrationEntity): AdministrationEntity {

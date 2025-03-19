@@ -39,9 +39,7 @@ class Administrations(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
         administrationId: Int,
-    ): BooleanDataOutput {
-        return canArchiveAdministration.execute(administrationId).let { BooleanDataOutput.get(it) }
-    }
+    ): BooleanDataOutput = canArchiveAdministration.execute(administrationId).let { BooleanDataOutput.get(it) }
 
     @GetMapping("/{administrationId}/can_delete")
     @Operation(summary = "Can this administration be deleted?")
@@ -49,9 +47,7 @@ class Administrations(
         @PathParam("Administration ID")
         @PathVariable(name = "administrationId")
         administrationId: Int,
-    ): BooleanDataOutput {
-        return canDeleteAdministration.execute(administrationId).let { BooleanDataOutput.get(it) }
-    }
+    ): BooleanDataOutput = canDeleteAdministration.execute(administrationId).let { BooleanDataOutput.get(it) }
 
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create an administration")

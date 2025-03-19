@@ -130,14 +130,14 @@ class MissionsITests {
                 attachedReportingIds = listOf(),
                 envActionsAttachedToReportingIds = listOf(),
             ),
-        )
-            .willReturn(Pair(true, expectedNewMission))
+        ).willReturn(Pair(true, expectedNewMission))
         // When
-        mockMvc.perform(
-            put("/bff/v1/missions")
-                .content(requestbody)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                put("/bff/v1/missions")
+                    .content(requestbody)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -177,7 +177,8 @@ class MissionsITests {
             )
 
         // When
-        mockMvc.perform(get("/bff/v1/missions/$requestedId"))
+        mockMvc
+            .perform(get("/bff/v1/missions/$requestedId"))
             // Then
             .andExpect(status().isPartialContent)
             .andExpect(jsonPath("$.missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())))
@@ -275,11 +276,11 @@ class MissionsITests {
                 pageSize = null,
                 searchQuery = null,
             ),
-        )
-            .willReturn(listOf(expectedFirstMission))
+        ).willReturn(listOf(expectedFirstMission))
 
         // When
-        mockMvc.perform(get("/bff/v1/missions"))
+        mockMvc
+            .perform(get("/bff/v1/missions"))
             // Then
             .andExpect(status().isOk)
             .andDo(MockMvcResultHandlers.print())
@@ -287,8 +288,7 @@ class MissionsITests {
             .andExpect(jsonPath("$[0].id", equalTo(10)))
             .andExpect(
                 jsonPath("$[0].missionTypes[0]", equalTo(MissionTypeEnum.SEA.toString())),
-            )
-            .andExpect(jsonPath("$[0].controlUnits[0].id", equalTo(1)))
+            ).andExpect(jsonPath("$[0].controlUnits[0].id", equalTo(1)))
             .andExpect(jsonPath("$[0].openBy", equalTo("OpenBy")))
             .andExpect(jsonPath("$[0].completedBy", equalTo("CompletedBy")))
             .andExpect(jsonPath("$[0].facade", equalTo("Outre-Mer")))
@@ -307,25 +307,21 @@ class MissionsITests {
                     "$[0].envActions[0].id",
                     equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 ),
-            )
-            .andExpect(jsonPath("$[0].envActions[0].actionType", equalTo("CONTROL")))
+            ).andExpect(jsonPath("$[0].envActions[0].actionType", equalTo("CONTROL")))
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].actionStartDateTimeUtc",
                     equalTo("2022-01-15T04:50:09Z"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].actionEndDateTimeUtc",
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
-            )
-            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].themeId", equalTo(1)))
+            ).andExpect(jsonPath("$[0].envActions[0].controlPlans[0].themeId", equalTo(1)))
             .andExpect(
                 jsonPath("$[0].envActions[0].controlPlans[0].subThemeIds[0]", equalTo(1)),
-            )
-            .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].tagIds[0]", equalTo(1)))
+            ).andExpect(jsonPath("$[0].envActions[0].controlPlans[0].tagIds[0]", equalTo(1)))
             .andExpect(jsonPath("$[0].envActions[0].controlPlans[0].tagIds[1]", equalTo(2)))
             .andExpect(jsonPath("$[0].envActions[0].geom.type", equalTo("Point")))
             .andExpect(jsonPath("$[0].envActions[0].facade", equalTo("Outre-Mer")))
@@ -338,85 +334,71 @@ class MissionsITests {
                     "$[0].envActions[0].isComplianceWithWaterRegulationsControl",
                     equalTo(false),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].isSafetyEquipmentAndStandardsComplianceControl",
                     equalTo(false),
                 ),
-            )
-            .andExpect(jsonPath("$[0].envActions[0].isSeafarersControl", equalTo(false)))
+            ).andExpect(jsonPath("$[0].envActions[0].isSeafarersControl", equalTo(false)))
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].observations",
                     equalTo("Observations de l'action de contrôle"),
                 ),
-            )
-            .andExpect(jsonPath("$[0].envActions[0].actionNumberOfControls", equalTo(2)))
+            ).andExpect(jsonPath("$[0].envActions[0].actionNumberOfControls", equalTo(2)))
             .andExpect(
                 jsonPath(
                     "$[0].envActions[0].actionTargetType",
                     equalTo(ActionTargetTypeEnum.VEHICLE.toString()),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].vehicleType",
                     equalTo(VehicleTypeEnum.VEHICLE_LAND.toString()),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].id",
                     equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath("$[0].envActions[0].infractions[0].natinf[0]", equalTo("27001")),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].observations",
                     equalTo("Observations de l'infraction"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].registrationNumber",
                     equalTo("AB-123-CD"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].companyName",
                     equalTo("Company Name"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].infractionType",
                     equalTo(InfractionTypeEnum.WAITING.toString()),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].formalNotice",
                     equalTo(FormalNoticeEnum.NO.toString()),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].controlledPersonIdentity",
                     equalTo("Captain Flame"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].vesselType",
                     equalTo(VesselTypeEnum.COMMERCIAL.toString()),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$[0].envActions[0].infractions[0].vesselSize",
                     equalTo(23),
@@ -552,7 +534,8 @@ class MissionsITests {
             )
 
         // When
-        mockMvc.perform(get("/bff/v1/missions/$requestedId"))
+        mockMvc
+            .perform(get("/bff/v1/missions/$requestedId"))
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
@@ -573,8 +556,7 @@ class MissionsITests {
                     "$.missionSource",
                     equalTo(MissionSourceEnum.MONITORENV.toString()),
                 ),
-            )
-            .andExpect(jsonPath("$.hasMissionOrder", equalTo(false)))
+            ).andExpect(jsonPath("$.hasMissionOrder", equalTo(false)))
             .andExpect(jsonPath("$.isUnderJdp", equalTo(false)))
             .andExpect(jsonPath("$.attachedReportingIds", equalTo(listOf(1))))
             .andExpect(jsonPath("$.envActions.length()", equalTo(1)))
@@ -583,21 +565,18 @@ class MissionsITests {
                     "$.envActions[0].id",
                     equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 ),
-            )
-            .andExpect(jsonPath("$.envActions[0].actionType", equalTo("CONTROL")))
+            ).andExpect(jsonPath("$.envActions[0].actionType", equalTo("CONTROL")))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].actionStartDateTimeUtc",
                     equalTo("2022-01-15T04:50:09Z"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].actionEndDateTimeUtc",
                     equalTo("2022-01-23T20:29:03Z"),
                 ),
-            )
-            .andExpect(jsonPath("$.envActions[0].controlPlans[0].themeId", equalTo(1)))
+            ).andExpect(jsonPath("$.envActions[0].controlPlans[0].themeId", equalTo(1)))
             .andExpect(jsonPath("$.envActions[0].controlPlans[0].subThemeIds[0]", equalTo(1)))
             .andExpect(jsonPath("$.envActions[0].controlPlans[0].tagIds[0]", equalTo(1)))
             .andExpect(jsonPath("$.envActions[0].controlPlans[0].tagIds[1]", equalTo(2)))
@@ -612,84 +591,71 @@ class MissionsITests {
                     "$.envActions[0].isComplianceWithWaterRegulationsControl",
                     equalTo(false),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].isSafetyEquipmentAndStandardsComplianceControl",
                     equalTo(false),
                 ),
-            )
-            .andExpect(jsonPath("$.envActions[0].isSeafarersControl", equalTo(false)))
+            ).andExpect(jsonPath("$.envActions[0].isSeafarersControl", equalTo(false)))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].observations",
                     equalTo("Observations de l'action de contrôle"),
                 ),
-            )
-            .andExpect(jsonPath("$.envActions[0].actionNumberOfControls", equalTo(2)))
+            ).andExpect(jsonPath("$.envActions[0].actionNumberOfControls", equalTo(2)))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].actionTargetType",
                     equalTo(ActionTargetTypeEnum.VEHICLE.toString()),
                 ),
-            )
-            .andExpect(jsonPath("$.envActions[0].reportingIds.length()", equalTo(0)))
+            ).andExpect(jsonPath("$.envActions[0].reportingIds.length()", equalTo(0)))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].vehicleType",
                     equalTo(VehicleTypeEnum.VEHICLE_LAND.toString()),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].id",
                     equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
                 ),
-            )
-            .andExpect(jsonPath("$.envActions[0].infractions[0].natinf[0]", equalTo("27001")))
+            ).andExpect(jsonPath("$.envActions[0].infractions[0].natinf[0]", equalTo("27001")))
             .andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].observations",
                     equalTo("Observations de l'infraction"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].registrationNumber",
                     equalTo("AB-123-CD"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].companyName",
                     equalTo("Company Name"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].infractionType",
                     equalTo(InfractionTypeEnum.WAITING.toString()),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].formalNotice",
                     equalTo(FormalNoticeEnum.NO.toString()),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].controlledPersonIdentity",
                     equalTo("Captain Flame"),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].vesselType",
                     equalTo(VesselTypeEnum.COMMERCIAL.toString()),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.envActions[0].infractions[0].vesselSize",
                     equalTo(23),
@@ -755,14 +721,14 @@ class MissionsITests {
                 attachedReportingIds = listOf(1),
                 envActionsAttachedToReportingIds = envActionsAttachedToReportingIds,
             ),
-        )
-            .willReturn(Pair(true, expectedUpdatedMission))
+        ).willReturn(Pair(true, expectedUpdatedMission))
         // When
-        mockMvc.perform(
-            put("/bff/v1/missions/14")
-                .content(objectMapper.writeValueAsString(requestBody))
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                put("/bff/v1/missions/14")
+                    .content(objectMapper.writeValueAsString(requestBody))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(
@@ -777,7 +743,8 @@ class MissionsITests {
     fun `Should delete mission`() {
         val source = MissionSourceEnum.MONITORENV
         val missionId = 20
-        mockMvc.perform(delete("/bff/v1/missions/$missionId"))
+        mockMvc
+            .perform(delete("/bff/v1/missions/$missionId"))
             // Then
             .andExpect(status().isOk)
         verify(deleteMission).execute(missionId, source)
@@ -803,7 +770,8 @@ class MissionsITests {
             )
 
         // When
-        mockMvc.perform(get("/bff/v1/missions/engaged_control_units"))
+        mockMvc
+            .perform(get("/bff/v1/missions/engaged_control_units"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].controlUnit.name", equalTo("Control Unit Name")))

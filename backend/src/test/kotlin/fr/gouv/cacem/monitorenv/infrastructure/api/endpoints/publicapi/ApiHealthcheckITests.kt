@@ -40,7 +40,8 @@ class ApiHealthcheckITests {
                 numberOfReportings = 50,
             ),
         )
-        mockMvc.perform(get("/api/v1/healthcheck"))
+        mockMvc
+            .perform(get("/api/v1/healthcheck"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("numberOfRegulatoryAreas", equalTo(13)))

@@ -140,10 +140,10 @@ class LegacyMissions(
         if ((updateMissionDataInput.id == null) || (missionId != updateMissionDataInput.id)) {
             throw java.lang.IllegalArgumentException("missionId doesn't match with request param")
         }
-        return createOrUpdateMission.execute(
-            mission = updateMissionDataInput.toMissionEntity(),
-        )
-            .let { MissionDataOutput.fromMissionEntity(it) }
+        return createOrUpdateMission
+            .execute(
+                mission = updateMissionDataInput.toMissionEntity(),
+            ).let { MissionDataOutput.fromMissionEntity(it) }
     }
 
     @DeleteMapping(value = ["/{missionId}"])
@@ -165,24 +165,20 @@ class LegacyMissions(
         @Parameter(description = "Request source")
         @RequestParam(name = "source")
         source: MissionSourceEnum,
-    ): CanDeleteMissionResponse {
-        return canDeleteMission.execute(missionId = missionId, source = source)
-    }
+    ): CanDeleteMissionResponse = canDeleteMission.execute(missionId = missionId, source = source)
 
     // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity
     // migration is done
     @GetMapping("/engaged_control_units")
     @Operation(summary = "Get engaged control units")
-    fun getEngagedControlUnits(): List<LegacyControlUnitAndMissionSourcesDataOutput> {
-        return getEngagedControlUnits.execute()
+    fun getEngagedControlUnits(): List<LegacyControlUnitAndMissionSourcesDataOutput> =
+        getEngagedControlUnits
+            .execute()
             .map { LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it) }
-    }
 
     /**
      * This method create the connexion to the frontend (with EventSource)
      */
     @GetMapping(value = ["/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    fun createMissionSSE(): SseEmitter {
-        return sseMission.registerListener()
-    }
+    fun createMissionSSE(): SseEmitter = sseMission.registerListener()
 }

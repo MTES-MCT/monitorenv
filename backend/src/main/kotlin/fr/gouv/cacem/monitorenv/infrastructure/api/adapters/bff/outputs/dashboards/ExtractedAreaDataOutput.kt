@@ -10,14 +10,13 @@ class ExtractedAreaDataOutput(
     val vigilanceAreaIds: List<Int>,
 ) {
     companion object {
-        fun fromExtractAreaEntity(extractedAreaEntity: ExtractedAreaEntity): ExtractedAreaDataOutput {
-            return ExtractedAreaDataOutput(
+        fun fromExtractAreaEntity(extractedAreaEntity: ExtractedAreaEntity): ExtractedAreaDataOutput =
+            ExtractedAreaDataOutput(
                 inseeCode = extractedAreaEntity.inseeCode,
                 reportingIds = extractedAreaEntity.reportingIds,
                 regulatoryAreaIds = extractedAreaEntity.regulatoryAreaIds,
                 ampIds = extractedAreaEntity.ampIds,
                 vigilanceAreaIds = extractedAreaEntity.vigilanceAreaIds,
             )
-        }
     }
 }

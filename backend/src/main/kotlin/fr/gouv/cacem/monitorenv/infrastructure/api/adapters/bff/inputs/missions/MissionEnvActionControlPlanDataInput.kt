@@ -7,11 +7,10 @@ data class MissionEnvActionControlPlanDataInput(
     val tagIds: List<Int>? = emptyList(),
     val themeId: Int? = null,
 ) {
-    fun toEnvActionControlPlanEntity(): EnvActionControlPlanEntity {
-        return EnvActionControlPlanEntity(
+    fun toEnvActionControlPlanEntity(): EnvActionControlPlanEntity =
+        EnvActionControlPlanEntity(
             subThemeIds = this.subThemeIds,
             tagIds = this.tagIds,
             themeId = this.themeId,
         )
-    }
 }

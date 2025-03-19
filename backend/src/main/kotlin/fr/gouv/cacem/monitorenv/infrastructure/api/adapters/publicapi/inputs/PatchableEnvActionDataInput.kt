@@ -9,11 +9,10 @@ data class PatchableEnvActionDataInput(
     val actionEndDateTimeUtc: Optional<ZonedDateTime>?,
     val observationsByUnit: Optional<String>?,
 ) {
-    fun toPatchableEnvActionEntity(): PatchableEnvActionEntity {
-        return PatchableEnvActionEntity(
+    fun toPatchableEnvActionEntity(): PatchableEnvActionEntity =
+        PatchableEnvActionEntity(
             actionStartDateTimeUtc = actionStartDateTimeUtc,
             actionEndDateTimeUtc = actionEndDateTimeUtc,
             observationsByUnit = observationsByUnit,
         )
-    }
 }

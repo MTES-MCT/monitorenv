@@ -21,9 +21,7 @@ class CustomQueryCountListener : QueryExecutionListener {
         queryCount.incrementAndGet()
     }
 
-    fun getQueryCount(): Int {
-        return queryCount.get()
-    }
+    fun getQueryCount(): Int = queryCount.get()
 
     fun resetQueryCount() {
         queryCount.set(0)

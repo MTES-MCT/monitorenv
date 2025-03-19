@@ -9,13 +9,12 @@ data class StationDataOutput(
     val name: String,
 ) {
     companion object {
-        fun fromStation(station: StationEntity): StationDataOutput {
-            return StationDataOutput(
+        fun fromStation(station: StationEntity): StationDataOutput =
+            StationDataOutput(
                 id = requireNotNull(station.id),
                 latitude = station.latitude,
                 longitude = station.longitude,
                 name = station.name,
             )
-        }
     }
 }

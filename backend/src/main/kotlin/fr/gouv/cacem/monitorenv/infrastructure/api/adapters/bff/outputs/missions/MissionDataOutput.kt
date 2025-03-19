@@ -75,8 +75,7 @@ data class MissionDataOutput(
                                                     ?.find { action ->
                                                         action.first ==
                                                             it.id
-                                                    }
-                                                    ?.second
+                                                    }?.second
                                                     ?: listOf(),
                                         )
 
@@ -89,8 +88,7 @@ data class MissionDataOutput(
                                                 dto.envActionsAttachedToReportingIds
                                                     ?.find { action ->
                                                         action.first == it.id
-                                                    }
-                                                    ?.second
+                                                    }?.second
                                                     ?: listOf(),
                                         )
                                 }

@@ -27,10 +27,9 @@ data class EnvActionSurveillanceEntity(
     override val openBy: String? = null,
     val awareness: AwarenessEntity?,
     val observations: String? = null,
-) :
-    EnvActionEntity(
-            id = id,
-            actionType = ActionTypeEnum.SURVEILLANCE,
-            missionId = missionId,
-            observationsByUnit = observationsByUnit,
-        )
+) : EnvActionEntity(
+        id = id,
+        actionType = ActionTypeEnum.SURVEILLANCE,
+        missionId = missionId,
+        observationsByUnit = observationsByUnit,
+    )

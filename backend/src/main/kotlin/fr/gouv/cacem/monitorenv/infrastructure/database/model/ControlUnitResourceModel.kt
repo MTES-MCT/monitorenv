@@ -79,8 +79,8 @@ data class ControlUnitResourceModel(
             controlUnitResource: ControlUnitResourceEntity,
             controlUnitModel: ControlUnitModel,
             stationModel: StationModel,
-        ): ControlUnitResourceModel {
-            return ControlUnitResourceModel(
+        ): ControlUnitResourceModel =
+            ControlUnitResourceModel(
                 id = controlUnitResource.id,
                 controlUnit = controlUnitModel,
                 isArchived = controlUnitResource.isArchived,
@@ -90,7 +90,6 @@ data class ControlUnitResourceModel(
                 station = stationModel,
                 type = controlUnitResource.type,
             )
-        }
     }
 
     override fun hashCode(): Int {
@@ -108,8 +107,8 @@ data class ControlUnitResourceModel(
         return result
     }
 
-    fun toControlUnitResource(): ControlUnitResourceEntity {
-        return ControlUnitResourceEntity(
+    fun toControlUnitResource(): ControlUnitResourceEntity =
+        ControlUnitResourceEntity(
             id,
             controlUnitId = requireNotNull(controlUnit.id),
             isArchived,
@@ -119,26 +118,23 @@ data class ControlUnitResourceModel(
             stationId = requireNotNull(station.id),
             type,
         )
-    }
 
-    fun toFullControlUnitResource(): FullControlUnitResourceDTO {
-        return FullControlUnitResourceDTO(
+    fun toFullControlUnitResource(): FullControlUnitResourceDTO =
+        FullControlUnitResourceDTO(
             station = station.toStation(),
             controlUnit = controlUnit.toControlUnit(),
             controlUnitResource = toControlUnitResource(),
         )
-    }
 
-    fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity {
-        return LegacyControlUnitResourceEntity(
+    fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity =
+        LegacyControlUnitResourceEntity(
             id = requireNotNull(id),
             controlUnitId = requireNotNull(controlUnit.id),
             name,
         )
-    }
 
     @Override
-    override fun toString(): String {
-        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , isArchived = $isArchived , name = $name , note = $note, name = $name , photo = $photo; stationId = ${station.id}, type = $type)"
-    }
+    override fun toString(): String =
+        this::class.simpleName +
+            "(id = $id , controlUnitId = ${controlUnit.id} , isArchived = $isArchived , name = $name , note = $note, name = $name , photo = $photo; stationId = ${station.id}, type = $type)"
 }

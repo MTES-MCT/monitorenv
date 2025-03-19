@@ -13,8 +13,8 @@ data class ControlUnitResourceDataOutput(
     val type: String,
 ) {
     companion object {
-        fun fromControlUnitResource(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceDataOutput {
-            return ControlUnitResourceDataOutput(
+        fun fromControlUnitResource(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceDataOutput =
+            ControlUnitResourceDataOutput(
                 id = requireNotNull(controlUnitResource.id),
                 controlUnitId = controlUnitResource.controlUnitId,
                 isArchived = controlUnitResource.isArchived,
@@ -24,6 +24,5 @@ data class ControlUnitResourceDataOutput(
                 stationId = controlUnitResource.stationId,
                 type = controlUnitResource.type.name,
             )
-        }
     }
 }

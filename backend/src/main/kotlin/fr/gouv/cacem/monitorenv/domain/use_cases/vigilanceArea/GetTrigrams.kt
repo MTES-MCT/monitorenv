@@ -5,7 +5,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetTrigrams(private val vigilanceAreaRepository: IVigilanceAreaRepository) {
+class GetTrigrams(
+    private val vigilanceAreaRepository: IVigilanceAreaRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetTrigrams::class.java)
 
     fun execute(): List<String> {

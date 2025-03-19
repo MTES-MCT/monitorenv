@@ -11,13 +11,12 @@ data class MissionEnvActionNoteDataOutput(
     override val actionType: ActionTypeEnum = ActionTypeEnum.NOTE,
     override val observationsByUnit: String? = null,
     val observations: String? = null,
-) :
-    MissionEnvActionDataOutput(
-            id = id,
-            actionStartDateTimeUtc = actionStartDateTimeUtc,
-            actionType = ActionTypeEnum.NOTE,
-            observationsByUnit = observationsByUnit,
-        ) {
+) : MissionEnvActionDataOutput(
+        id = id,
+        actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionType = ActionTypeEnum.NOTE,
+        observationsByUnit = observationsByUnit,
+    ) {
     companion object {
         fun fromEnvActionNoteEntity(envActionNoteEntity: EnvActionNoteEntity) =
             MissionEnvActionNoteDataOutput(

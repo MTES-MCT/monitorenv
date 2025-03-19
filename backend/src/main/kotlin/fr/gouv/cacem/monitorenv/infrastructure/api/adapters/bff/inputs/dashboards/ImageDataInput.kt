@@ -13,13 +13,12 @@ data class ImageDataInput(
     val mimeType: String,
     val size: Int,
 ) {
-    fun toImageEntity(): ImageEntity {
-        return ImageEntity(
+    fun toImageEntity(): ImageEntity =
+        ImageEntity(
             id = id,
             name = name,
             content = content.decodeBase64Bytes(),
             mimeType = mimeType,
             size = size,
         )
-    }
 }

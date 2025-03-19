@@ -34,4 +34,4 @@ typealias ControlPlanThemes = Triple<
     List<ControlPlanThemeEntity>,
     List<ControlPlanSubThemeEntity>,
     List<ControlPlanTagEntity>,
-    >
+>

@@ -16,9 +16,8 @@ class JpaVigilanceAreaRepository(
     private val dbVigilanceAreaRepository: IDBVigilanceAreaRepository,
 ) : IVigilanceAreaRepository {
     @Transactional
-    override fun findById(id: Int): VigilanceAreaEntity? {
-        return dbVigilanceAreaRepository.findByIdOrNull(id)?.toVigilanceAreaEntity()
-    }
+    override fun findById(id: Int): VigilanceAreaEntity? =
+        dbVigilanceAreaRepository.findByIdOrNull(id)?.toVigilanceAreaEntity()
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
@@ -47,13 +46,13 @@ class JpaVigilanceAreaRepository(
     }
 
     @Transactional
-    override fun findAll(): List<VigilanceAreaEntity> {
-        return dbVigilanceAreaRepository.findAllByIsDeletedFalseOrderByName().map { it.toVigilanceAreaEntity() }
-    }
+    override fun findAll(): List<VigilanceAreaEntity> =
+        dbVigilanceAreaRepository.findAllByIsDeletedFalseOrderByName().map {
+            it.toVigilanceAreaEntity()
+        }
 
-    override fun findAllIdsByGeometry(geometry: Geometry): List<Int> {
-        return dbVigilanceAreaRepository.findAllIdsByGeom(geometry)
-    }
+    override fun findAllIdsByGeometry(geometry: Geometry): List<Int> =
+        dbVigilanceAreaRepository.findAllIdsByGeom(geometry)
 
     @Transactional
     override fun delete(id: Int) {
@@ -61,12 +60,8 @@ class JpaVigilanceAreaRepository(
     }
 
     @Transactional
-    override fun archiveOutdatedVigilanceAreas(): Int {
-        return dbVigilanceAreaRepository.archiveOutdatedVigilanceAreas()
-    }
+    override fun archiveOutdatedVigilanceAreas(): Int = dbVigilanceAreaRepository.archiveOutdatedVigilanceAreas()
 
     @Transactional
-    override fun findAllTrigrams(): List<String> {
-        return dbVigilanceAreaRepository.findAllTrigrams()
-    }
+    override fun findAllTrigrams(): List<String> = dbVigilanceAreaRepository.findAllTrigrams()
 }

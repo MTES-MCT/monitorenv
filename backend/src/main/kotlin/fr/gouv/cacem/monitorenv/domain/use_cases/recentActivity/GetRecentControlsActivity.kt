@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
-class GetRecentControlsActivity(private val envActionRepository: IEnvActionRepository) {
+class GetRecentControlsActivity(
+    private val envActionRepository: IEnvActionRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetRecentControlsActivity::class.java)
 
     fun execute(

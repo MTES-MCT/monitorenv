@@ -37,16 +37,16 @@ object EnvActionMapper {
         observationsByUnit: String?,
         openBy: String?,
         value: String?,
-    ): EnvActionEntity {
-        return try {
+    ): EnvActionEntity =
+        try {
             if (!value.isNullOrEmpty() && value != JSONB_NULL_STRING) {
                 when (actionType) {
                     ActionTypeEnum.SURVEILLANCE ->
-                        mapper.readValue(
-                            value,
-                            EnvActionSurveillanceProperties::class.java,
-                        )
-                            .toEnvActionSurveillanceEntity(
+                        mapper
+                            .readValue(
+                                value,
+                                EnvActionSurveillanceProperties::class.java,
+                            ).toEnvActionSurveillanceEntity(
                                 id = id,
                                 actionEndDateTimeUtc = actionEndDateTimeUtc,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
@@ -62,11 +62,11 @@ object EnvActionMapper {
                             )
 
                     ActionTypeEnum.CONTROL ->
-                        mapper.readValue(
-                            value,
-                            EnvActionControlProperties::class.java,
-                        )
-                            .toEnvActionControlEntity(
+                        mapper
+                            .readValue(
+                                value,
+                                EnvActionControlProperties::class.java,
+                            ).toEnvActionControlEntity(
                                 id = id,
                                 actionEndDateTimeUtc = actionEndDateTimeUtc,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
@@ -88,11 +88,11 @@ object EnvActionMapper {
                             )
 
                     ActionTypeEnum.NOTE ->
-                        mapper.readValue(
-                            value,
-                            EnvActionNoteProperties::class.java,
-                        )
-                            .toEnvActionNoteEntity(
+                        mapper
+                            .readValue(
+                                value,
+                                EnvActionNoteProperties::class.java,
+                            ).toEnvActionNoteEntity(
                                 id = id,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
                                 completion = completion,
@@ -106,13 +106,12 @@ object EnvActionMapper {
         } catch (e: Exception) {
             throw EntityConversionException("Error while converting 'action'. $value", e)
         }
-    }
 
     fun envActionEntityToJSON(
         mapper: ObjectMapper,
         envAction: EnvActionEntity,
-    ): String {
-        return try {
+    ): String =
+        try {
             when (envAction.actionType) {
                 ActionTypeEnum.SURVEILLANCE ->
                     mapper.writeValueAsString(
@@ -138,5 +137,4 @@ object EnvActionMapper {
         } catch (e: Exception) {
             throw EntityConversionException("Error while converting action to json $envAction", e)
         }
-    }
 }

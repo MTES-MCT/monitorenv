@@ -12,11 +12,10 @@ data class EnvActionNoteEntity(
     override val missionId: Int? = null,
     @Patchable override var observationsByUnit: String? = null,
     val observations: String? = null,
-) :
-    EnvActionEntity(
-            id = id,
-            actionType = ActionTypeEnum.NOTE,
-            completion = completion,
-            missionId = missionId,
-            observationsByUnit = observationsByUnit,
-        )
+) : EnvActionEntity(
+        id = id,
+        actionType = ActionTypeEnum.NOTE,
+        completion = completion,
+        missionId = missionId,
+        observationsByUnit = observationsByUnit,
+    )

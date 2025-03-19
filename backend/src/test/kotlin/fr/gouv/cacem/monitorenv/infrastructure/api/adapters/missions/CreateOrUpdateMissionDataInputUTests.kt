@@ -79,12 +79,11 @@ class CreateOrUpdateMissionDataInputUTests {
         val result = missionDataInput.getEnvActionsAttachedToReportings()
         assertThat(
             result,
+        ).isEqualTo(
+            listOf(
+                Pair(envActionControl.id, listOf(1)),
+                Pair(envActionSurveillance.id, listOf(2, 3)),
+            ),
         )
-            .isEqualTo(
-                listOf(
-                    Pair(envActionControl.id, listOf(1)),
-                    Pair(envActionSurveillance.id, listOf(2, 3)),
-                ),
-            )
     }
 }

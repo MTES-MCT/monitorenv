@@ -49,7 +49,8 @@ class AmpsITests {
         given(getAllAMPs.execute()).willReturn(listOf(amp))
 
         // When
-        mockMvc.perform(get("/bff/v1/amps"))
+        mockMvc
+            .perform(get("/bff/v1/amps"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(amp.id)))

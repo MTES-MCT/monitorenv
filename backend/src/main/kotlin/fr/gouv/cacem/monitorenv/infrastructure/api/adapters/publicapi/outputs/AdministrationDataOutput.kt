@@ -8,12 +8,11 @@ data class AdministrationDataOutput(
     val name: String,
 ) {
     companion object {
-        fun fromAdministration(administration: AdministrationEntity): AdministrationDataOutput {
-            return AdministrationDataOutput(
+        fun fromAdministration(administration: AdministrationEntity): AdministrationDataOutput =
+            AdministrationDataOutput(
                 id = requireNotNull(administration.id),
                 isArchived = administration.isArchived,
                 name = administration.name,
             )
-        }
     }
 }

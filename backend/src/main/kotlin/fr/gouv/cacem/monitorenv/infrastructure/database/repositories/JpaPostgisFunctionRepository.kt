@@ -12,33 +12,31 @@ class JpaPostgisFunctionRepository : IPostgisFunctionRepository {
     @PersistenceContext
     private lateinit var entityManager: EntityManager
 
-    override fun normalizeMultipolygon(geometry: MultiPolygon): MultiPolygon {
-        return entityManager.createNativeQuery(
-            """
-            SELECT CASE
-               WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
-                   THEN CAST(CAST(:geom AS geography) AS geometry)
-               ELSE :geom END
-            """.trimIndent(),
-            MultiPolygon::class.java,
-        )
-            .setParameter("geom", geometry)
+    override fun normalizeMultipolygon(geometry: MultiPolygon): MultiPolygon =
+        entityManager
+            .createNativeQuery(
+                """
+                SELECT CASE
+                   WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
+                       THEN CAST(CAST(:geom AS geography) AS geometry)
+                   ELSE :geom END
+                """.trimIndent(),
+                MultiPolygon::class.java,
+            ).setParameter("geom", geometry)
             .singleResult as MultiPolygon
-    }
 
-    override fun normalizeGeometry(geometry: Geometry): Geometry {
-        return entityManager.createNativeQuery(
-            """
-            SELECT CASE
-               WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
-                   THEN CAST(CAST(:geom AS geography) AS geometry)
-               ELSE :geom END
-            """.trimIndent(),
-            Geometry::class.java,
-        )
-            .setParameter("geom", geometry)
+    override fun normalizeGeometry(geometry: Geometry): Geometry =
+        entityManager
+            .createNativeQuery(
+                """
+                SELECT CASE
+                   WHEN st_xmax(:geom)> $MAXIMUM_EASTBOUND OR st_xmin(:geom)< $MINIMUM_WESTBOUND
+                       THEN CAST(CAST(:geom AS geography) AS geometry)
+                   ELSE :geom END
+                """.trimIndent(),
+                Geometry::class.java,
+            ).setParameter("geom", geometry)
             .singleResult as Geometry
-    }
 
     companion object {
         // Allow a geometry to cross the date line

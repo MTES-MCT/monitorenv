@@ -28,7 +28,9 @@ import java.util.regex.Pattern
 
 @RestControllerAdvice
 @Order(HIGHEST_PRECEDENCE)
-class ControllersExceptionHandler(val sentryConfig: SentryConfig) {
+class ControllersExceptionHandler(
+    val sentryConfig: SentryConfig,
+) {
     private val logger: Logger = LoggerFactory.getLogger(ControllersExceptionHandler::class.java)
 
     // -------------------------------------------------------------------------
@@ -36,15 +38,13 @@ class ControllersExceptionHandler(val sentryConfig: SentryConfig) {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(BackendInternalException::class)
-    fun handleBackendInternalException(e: BackendInternalException): BackendInternalErrorDataOutput {
-        return BackendInternalErrorDataOutput()
-    }
+    fun handleBackendInternalException(e: BackendInternalException): BackendInternalErrorDataOutput =
+        BackendInternalErrorDataOutput()
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(BackendRequestException::class)
-    fun handleBackendRequestException(e: BackendRequestException): BackendRequestErrorDataOutput {
-        return BackendRequestErrorDataOutput(code = e.code, data = e.data, message = e.message)
-    }
+    fun handleBackendRequestException(e: BackendRequestException): BackendRequestErrorDataOutput =
+        BackendRequestErrorDataOutput(code = e.code, data = e.data, message = e.message)
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BackendUsageException::class)
@@ -67,13 +67,12 @@ class ControllersExceptionHandler(val sentryConfig: SentryConfig) {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ParseException::class)
-    fun handleHttpMessageNotReadable(e: ParseException): BackendRequestErrorDataOutput {
-        return BackendRequestErrorDataOutput(
+    fun handleHttpMessageNotReadable(e: ParseException): BackendRequestErrorDataOutput =
+        BackendRequestErrorDataOutput(
             code = BackendRequestErrorCode.WRONG_REQUEST_PARAM_PROPERTY_TYPE,
             data = null,
             message = "Error: geometry is not valid",
         )
-    }
 
     private fun extractFieldFromErrorMessage(errorMessage: String): String {
         val pattern = Pattern.compile("\"(.*?)\"")
@@ -146,7 +145,6 @@ class ControllersExceptionHandler(val sentryConfig: SentryConfig) {
     //   They should be caught or transformed into domain exceptions.
     //   If that happens, it's a bug, thus an unexpected exception.
 
-    /** Catch-all for unexpected exceptions. */
     /*     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception::class)
     fun handleUnexpectedException(e: Exception): BackendInternalErrorDataOutput {

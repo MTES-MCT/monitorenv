@@ -9,8 +9,8 @@ data class CreateControlUnitContactDataInputV1(
     val name: String,
     val phone: String?,
 ) {
-    fun toControlUnitContact(): ControlUnitContactEntity {
-        return ControlUnitContactEntity(
+    fun toControlUnitContact(): ControlUnitContactEntity =
+        ControlUnitContactEntity(
             id = this.id,
             controlUnitId = this.controlUnitId,
             email = this.email,
@@ -19,5 +19,4 @@ data class CreateControlUnitContactDataInputV1(
             name = this.name,
             phone = this.phone,
         )
-    }
 }

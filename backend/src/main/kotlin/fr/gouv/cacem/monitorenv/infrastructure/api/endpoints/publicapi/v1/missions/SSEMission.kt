@@ -11,11 +11,13 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event
 import java.time.ZonedDateTime
 
 @Component
-class SSEMission(private val sseEmitterFactory: () -> SseEmitter = { SseEmitter(TWENTY_FOUR_HOURS) }) {
+class SSEMission(
+    private val sseEmitterFactory: () -> SseEmitter = { SseEmitter(TWENTY_FOUR_HOURS) },
+) {
     private val logger = LoggerFactory.getLogger(SSEMission::class.java)
     val mutexLock = Any()
 
-    private val MISSION_UPDATE_EVENT_NAME = "MISSION_UPDATE"
+    private val missionUpdateEventName = "MISSION_UPDATE"
 
     companion object {
         private const val TWENTY_FOUR_HOURS = (24 * 60 * 60 * 1000).toLong()
@@ -67,7 +69,7 @@ class SSEMission(private val sseEmitterFactory: () -> SseEmitter = { SseEmitter(
                     val data = MissionWithRapportNavActionsDataOutput.fromMissionEntity(event.mission)
                     val sseEvent =
                         event()
-                            .name(MISSION_UPDATE_EVENT_NAME)
+                            .name(missionUpdateEventName)
                             .data(data)
                             .reconnectTime(0)
                             .build()

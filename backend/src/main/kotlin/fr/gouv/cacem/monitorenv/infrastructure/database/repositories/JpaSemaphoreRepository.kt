@@ -6,16 +6,12 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import org.springframework.stereotype.Repository
 
 @Repository
-class JpaSemaphoreRepository(private val dbSemaphoreRepository: IDBSemaphoreRepository) : ISemaphoreRepository {
-    override fun findAll(): List<SemaphoreEntity> {
-        return dbSemaphoreRepository.findAll().map { it.toSemaphore() }
-    }
+class JpaSemaphoreRepository(
+    private val dbSemaphoreRepository: IDBSemaphoreRepository,
+) : ISemaphoreRepository {
+    override fun findAll(): List<SemaphoreEntity> = dbSemaphoreRepository.findAll().map { it.toSemaphore() }
 
-    override fun findById(id: Int): SemaphoreEntity {
-        return dbSemaphoreRepository.findById(id).get().toSemaphore()
-    }
+    override fun findById(id: Int): SemaphoreEntity = dbSemaphoreRepository.findById(id).get().toSemaphore()
 
-    override fun count(): Long {
-        return dbSemaphoreRepository.count()
-    }
+    override fun count(): Long = dbSemaphoreRepository.count()
 }

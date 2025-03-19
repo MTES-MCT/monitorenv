@@ -484,8 +484,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         updatedAtUtc = null,
                     ),
             ),
-        )
-            .isEqualTo(firstMission)
+        ).isEqualTo(firstMission)
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -501,8 +500,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(missionDTO.mission.envActions).hasSize(2)
         assertThat(
             missionDTO.envActionsAttachedToReportingIds?.get(0)?.first,
-        )
-            .isEqualTo(UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807"))
+        ).isEqualTo(UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807"))
         assertThat(missionDTO.envActionsAttachedToReportingIds?.get(0)?.second).isEqualTo(listOf(6))
 
         val queryCount = customQueryCountListener!!.getQueryCount()
@@ -627,31 +625,74 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(newMissionCreated.mission.updatedAtUtc)
             .isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(newMissionCreated.mission.controlUnits).hasSize(1)
-        assertThat(newMissionCreated.mission.controlUnits.first().id).isEqualTo(10121)
-        assertThat(newMissionCreated.mission.controlUnits.first().name)
-            .isEqualTo("PAM Jeanne Barret")
-        assertThat(newMissionCreated.mission.controlUnits.first().administration)
-            .isEqualTo("DIRM / DM")
-        assertThat(newMissionCreated.mission.controlUnits.first().resources).hasSize(1)
-        assertThat(newMissionCreated.mission.controlUnits.first().resources.first().id).isEqualTo(8)
-        assertThat(newMissionCreated.mission.controlUnits.first().resources.first().controlUnitId)
-            .isEqualTo(10121)
-        assertThat(newMissionCreated.mission.controlUnits.first().resources.first().name)
-            .isEqualTo("PAM Jeanne Barret")
+        assertThat(
+            newMissionCreated.mission.controlUnits
+                .first()
+                .id,
+        ).isEqualTo(10121)
+        assertThat(
+            newMissionCreated.mission.controlUnits
+                .first()
+                .name,
+        ).isEqualTo("PAM Jeanne Barret")
+        assertThat(
+            newMissionCreated.mission.controlUnits
+                .first()
+                .administration,
+        ).isEqualTo("DIRM / DM")
+        assertThat(
+            newMissionCreated.mission.controlUnits
+                .first()
+                .resources,
+        ).hasSize(1)
+        assertThat(
+            newMissionCreated.mission.controlUnits
+                .first()
+                .resources
+                .first()
+                .id,
+        ).isEqualTo(8)
+        assertThat(
+            newMissionCreated.mission.controlUnits
+                .first()
+                .resources
+                .first()
+                .controlUnitId,
+        ).isEqualTo(10121)
+        assertThat(
+            newMissionCreated.mission.controlUnits
+                .first()
+                .resources
+                .first()
+                .name,
+        ).isEqualTo("PAM Jeanne Barret")
         assertThat(newMissionCreated.mission.envActions).hasSize(3)
-        assertThat(newMissionCreated.mission.envActions?.first()?.facade).isEqualTo("Facade 1")
-        assertThat(newMissionCreated.mission.envActions?.first()?.department)
-            .isEqualTo("Department 1")
-        assertThat(newMissionCreated.mission.envActions?.get(1)?.facade).isEqualTo("Facade 2")
-        assertThat(newMissionCreated.mission.envActions?.get(1)?.department)
-            .isEqualTo("Department 2")
+        assertThat(
+            newMissionCreated.mission.envActions
+                ?.first()
+                ?.facade,
+        ).isEqualTo("Facade 1")
+        assertThat(
+            newMissionCreated.mission.envActions
+                ?.first()
+                ?.department,
+        ).isEqualTo("Department 1")
+        assertThat(
+            newMissionCreated.mission.envActions
+                ?.get(1)
+                ?.facade,
+        ).isEqualTo("Facade 2")
+        assertThat(
+            newMissionCreated.mission.envActions
+                ?.get(1)
+                ?.department,
+        ).isEqualTo("Department 2")
         assertThat(
             (newMissionCreated.mission.envActions?.get(2) as EnvActionNoteEntity)
                 .observations,
+        ).isEqualTo(
+            noteObservations,
         )
-            .isEqualTo(
-                noteObservations,
-            )
         assertThat(newMissionCreated.mission.observationsByUnit).isEqualTo(noteObservationsByUnit)
 
         assertThat(jpaMissionRepository.findById(newMissionCreated.mission.id!!)).isEqualTo(newMissionCreated.mission)
@@ -726,21 +767,68 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(updatedMission.mission.controlUnits).hasSize(1)
-        assertThat(updatedMission.mission.controlUnits.first().id).isEqualTo(10002)
-        assertThat(updatedMission.mission.controlUnits.first().name).isEqualTo("DML 2A")
-        assertThat(updatedMission.mission.controlUnits.first().administration)
-            .isEqualTo("DDTM")
-        assertThat(updatedMission.mission.controlUnits.first().resources).hasSize(2)
-        assertThat(updatedMission.mission.controlUnits.first().resources.first().id).isEqualTo(3)
-        assertThat(updatedMission.mission.controlUnits.first().resources.first().controlUnitId)
-            .isEqualTo(10002)
-        assertThat(updatedMission.mission.controlUnits.first().resources.first().name)
-            .isEqualTo("Semi-rigide 1")
-        assertThat(updatedMission.mission.controlUnits.first().resources.last().id).isEqualTo(5)
-        assertThat(updatedMission.mission.controlUnits.first().resources.last().controlUnitId)
-            .isEqualTo(10002)
-        assertThat(updatedMission.mission.controlUnits.first().resources.last().name)
-            .isEqualTo("Voiture")
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .id,
+        ).isEqualTo(10002)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .name,
+        ).isEqualTo("DML 2A")
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .administration,
+        ).isEqualTo("DDTM")
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources,
+        ).hasSize(2)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources
+                .first()
+                .id,
+        ).isEqualTo(3)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources
+                .first()
+                .controlUnitId,
+        ).isEqualTo(10002)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources
+                .first()
+                .name,
+        ).isEqualTo("Semi-rigide 1")
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources
+                .last()
+                .id,
+        ).isEqualTo(5)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources
+                .last()
+                .controlUnitId,
+        ).isEqualTo(10002)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources
+                .last()
+                .name,
+        ).isEqualTo("Voiture")
     }
 
     @Test
@@ -778,16 +866,54 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(updatedMission.mission.createdAtUtc).isNotNull()
         assertThat(updatedMission.mission.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(updatedMission.mission.controlUnits).hasSize(2)
-        assertThat(updatedMission.mission.controlUnits.first().id).isEqualTo(10002)
-        assertThat(updatedMission.mission.controlUnits.first().resources).hasSize(1)
-        assertThat(updatedMission.mission.controlUnits.first().resources.first().id).isEqualTo(3)
-        assertThat(updatedMission.mission.controlUnits.first().resources.first().controlUnitId)
-            .isEqualTo(10002)
-        assertThat(updatedMission.mission.controlUnits.last().id).isEqualTo(10018)
-        assertThat(updatedMission.mission.controlUnits.last().resources).hasSize(1)
-        assertThat(updatedMission.mission.controlUnits.last().resources.first().id).isEqualTo(10)
-        assertThat(updatedMission.mission.controlUnits.last().resources.first().controlUnitId)
-            .isEqualTo(10018)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .id,
+        ).isEqualTo(10002)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources,
+        ).hasSize(1)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources
+                .first()
+                .id,
+        ).isEqualTo(3)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .first()
+                .resources
+                .first()
+                .controlUnitId,
+        ).isEqualTo(10002)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .last()
+                .id,
+        ).isEqualTo(10018)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .last()
+                .resources,
+        ).hasSize(1)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .last()
+                .resources
+                .first()
+                .id,
+        ).isEqualTo(10)
+        assertThat(
+            updatedMission.mission.controlUnits
+                .last()
+                .resources
+                .first()
+                .controlUnitId,
+        ).isEqualTo(10018)
     }
 
     @Test
@@ -974,8 +1100,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         updatedAtUtc = null,
                     ),
             ),
-        )
-            .isEqualTo(expectedUpdatedMission)
+        ).isEqualTo(expectedUpdatedMission)
     }
 
     @Test
@@ -1053,8 +1178,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         updatedAtUtc = null,
                     ),
             ),
-        )
-            .isEqualTo(expectedUpdatedMission)
+        ).isEqualTo(expectedUpdatedMission)
     }
 
     @Test
@@ -1066,7 +1190,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
             }
         assertThat(envAction?.controlPlans?.size).isEqualTo(1)
-        assertThat(envAction?.controlPlans?.get(0)?.subThemeIds?.size).isEqualTo(1)
+        assertThat(
+            envAction
+                ?.controlPlans
+                ?.get(0)
+                ?.subThemeIds
+                ?.size,
+        ).isEqualTo(1)
         val nextControlPlans =
             listOf(
                 EnvActionControlPlanEntity(
@@ -1088,7 +1218,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         if (it.id ==
                             UUID.fromString(
                                 "b8007c8a-5135-4bc3-816f-c69c7b75d807",
-                            ) && it is EnvActionControlEntity
+                            ) &&
+                            it is EnvActionControlEntity
                         ) {
                             it.copy(controlPlans = nextControlPlans)
                         } else {

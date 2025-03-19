@@ -40,7 +40,8 @@ class NatinfsITests {
         given(getAllNatinfs.execute()).willReturn(listOf(natinf))
 
         // When
-        mockMvc.perform(get("/bff/v1/natinfs"))
+        mockMvc
+            .perform(get("/bff/v1/natinfs"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].natinfCode", equalTo(natinf.natinfCode)))

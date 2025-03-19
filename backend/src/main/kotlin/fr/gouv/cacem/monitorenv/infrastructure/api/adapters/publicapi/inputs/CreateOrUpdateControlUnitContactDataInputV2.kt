@@ -14,8 +14,8 @@ data class CreateOrUpdateControlUnitContactDataInputV2(
 ) : PatchableDataInput<CreateOrUpdateControlUnitContactDataInputV2>(
         CreateOrUpdateControlUnitContactDataInputV2::class,
     ) {
-    fun toControlUnitContact(): ControlUnitContactEntity {
-        return ControlUnitContactEntity(
+    fun toControlUnitContact(): ControlUnitContactEntity =
+        ControlUnitContactEntity(
             id = this.id,
             controlUnitId = this.controlUnitId,
             email = this.email,
@@ -24,13 +24,12 @@ data class CreateOrUpdateControlUnitContactDataInputV2(
             name = this.name,
             phone = this.phone,
         )
-    }
 
     companion object {
         fun fromControlUnitContact(
             controlUnitContact: ControlUnitContactEntity,
-        ): CreateOrUpdateControlUnitContactDataInputV2 {
-            return CreateOrUpdateControlUnitContactDataInputV2(
+        ): CreateOrUpdateControlUnitContactDataInputV2 =
+            CreateOrUpdateControlUnitContactDataInputV2(
                 id = controlUnitContact.id,
                 controlUnitId = controlUnitContact.controlUnitId,
                 email = controlUnitContact.email,
@@ -39,6 +38,5 @@ data class CreateOrUpdateControlUnitContactDataInputV2(
                 name = controlUnitContact.name,
                 phone = controlUnitContact.phone,
             )
-        }
     }
 }

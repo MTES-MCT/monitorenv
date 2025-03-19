@@ -12,8 +12,8 @@ data class ReportingSourceDataInput(
     val controlUnitId: Int?,
     val sourceName: String?,
 ) {
-    fun toReportingSourceEntity(): ReportingSourceEntity {
-        return ReportingSourceEntity(
+    fun toReportingSourceEntity(): ReportingSourceEntity =
+        ReportingSourceEntity(
             id = this.id,
             reportingId = this.reportingId,
             sourceType = this.sourceType,
@@ -21,5 +21,4 @@ data class ReportingSourceDataInput(
             controlUnitId = this.controlUnitId,
             sourceName = this.sourceName,
         )
-    }
 }

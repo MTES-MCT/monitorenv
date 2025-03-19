@@ -64,7 +64,8 @@ class ApiStationsITests {
 
         given(canDeleteStation.execute(stationId)).willReturn(true)
 
-        mockMvc.perform(get("/api/v1/stations/$stationId/can_delete"))
+        mockMvc
+            .perform(get("/api/v1/stations/$stationId/can_delete"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(true))
 
@@ -91,12 +92,12 @@ class ApiStationsITests {
 
         given(createOrUpdateStation.execute(station = any())).willReturn(expectedCreatedStation)
 
-        mockMvc.perform(
-            post("/api/v1/stations")
-                .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                post("/api/v1/stations")
+                    .content(requestBody)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
     }
 
@@ -104,10 +105,10 @@ class ApiStationsITests {
     fun `delete() should delete a base`() {
         val stationId = 1
 
-        mockMvc.perform(
-            delete("/api/v1/stations/$stationId"),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                delete("/api/v1/stations/$stationId"),
+            ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
 
         BDDMockito.verify(deleteStation).execute(stationId)
@@ -131,7 +132,8 @@ class ApiStationsITests {
 
         given(getStationById.execute(requestedId)).willReturn(expectedFullStation)
 
-        mockMvc.perform(get("/api/v1/stations/$requestedId"))
+        mockMvc
+            .perform(get("/api/v1/stations/$requestedId"))
             .andExpect(status().isOk)
 
         BDDMockito.verify(getStationById).execute(requestedId)
@@ -165,7 +167,8 @@ class ApiStationsITests {
 
         given(getstations.execute()).willReturn(expectedFullStations)
 
-        mockMvc.perform(get("/api/v1/stations"))
+        mockMvc
+            .perform(get("/api/v1/stations"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize<Any>(2)))
 
@@ -193,12 +196,12 @@ class ApiStationsITests {
 
         given(createOrUpdateStation.execute(station = any())).willReturn(expectedUpdatedStation)
 
-        mockMvc.perform(
-            put("/api/v1/stations/1")
-                .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                put("/api/v1/stations/1")
+                    .content(requestBody)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
     }
 }

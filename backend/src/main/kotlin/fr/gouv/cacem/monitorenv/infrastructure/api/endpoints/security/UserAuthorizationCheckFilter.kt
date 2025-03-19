@@ -6,8 +6,9 @@ import fr.gouv.cacem.monitorenv.config.ProtectedPathsAPIProperties
 import fr.gouv.cacem.monitorenv.domain.use_cases.authorization.GetIsAuthorizedUser
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.security.input.UserInfo
 import io.ktor.client.call.*
-import io.ktor.client.request.*
+import io.ktor.client.request.get
 import io.ktor.http.HttpHeaders.Authorization
+import io.ktor.http.headers
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -25,19 +26,19 @@ class UserAuthorizationCheckFilter(
     private val getIsAuthorizedUser: GetIsAuthorizedUser,
 ) : OncePerRequestFilter() {
     companion object {
-        val EMAIL_HEADER = "EMAIL"
+        const val EMAIL_HEADER = "EMAIL"
     }
 
-    private val CURRENT_USER_AUTHORIZATION_CONTROLLER_PATH = "/bff/v1/authorization/current"
+    private val currentUserAuthorizationControllerPath = "/bff/v1/authorization/current"
 
-    private val BEARER_HEADER_TYPE = "Bearer"
-    private val MALFORMED_BEARER_MESSAGE =
+    private val bearerHeaderType = "Bearer"
+    private val malformedBearerMessage =
         "Malformed authorization header, header type should be 'Bearer'"
-    private val MISSING_OIDC_ENDPOINT_MESSAGE = "Missing OIDC user info endpoint"
-    private val MISSING_OIDC_ISSUER_ENDPOINT_MESSAGE = "Missing issuer URI endpoint"
-    private val COULD_NOT_FETCH_USER_INFO_MESSAGE =
+    private val missingOidcEndpointMessage = "Missing OIDC user info endpoint"
+    private val missingOidcIssuerEndpointMessage = "Missing issuer URI endpoint"
+    private val couldNotFetchUserInfoMessage =
         "Could not fetch user info at ${oidcProperties.issuerUri + oidcProperties.userinfoEndpoint}"
-    private val INSUFFICIENT_AUTHORIZATION_MESSAGE = "Insufficient authorization"
+    private val insufficientAuthorizationMessage = "Insufficient authorization"
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -56,25 +57,25 @@ class UserAuthorizationCheckFilter(
 
         logger.debug("Authorization header: $authorizationHeaderContent")
 
-        if (!headerType.equals(BEARER_HEADER_TYPE)) {
-            logger.warn(MALFORMED_BEARER_MESSAGE)
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, MALFORMED_BEARER_MESSAGE)
+        if (!headerType.equals(bearerHeaderType)) {
+            logger.warn(malformedBearerMessage)
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, malformedBearerMessage)
 
             return@runBlocking
         }
 
         if (oidcProperties.userinfoEndpoint == null) {
-            logger.warn(MISSING_OIDC_ENDPOINT_MESSAGE)
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, MISSING_OIDC_ENDPOINT_MESSAGE)
+            logger.warn(missingOidcEndpointMessage)
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, missingOidcEndpointMessage)
 
             return@runBlocking
         }
 
         if (oidcProperties.issuerUri == null) {
-            logger.warn(MISSING_OIDC_ISSUER_ENDPOINT_MESSAGE)
+            logger.warn(missingOidcIssuerEndpointMessage)
             response.sendError(
                 HttpServletResponse.SC_UNAUTHORIZED,
-                MISSING_OIDC_ISSUER_ENDPOINT_MESSAGE,
+                missingOidcIssuerEndpointMessage,
             )
 
             return@runBlocking
@@ -99,11 +100,11 @@ class UserAuthorizationCheckFilter(
             val isAuthorized = getIsAuthorizedUser.execute(userInfoResponse.email, isSuperUserPath)
             if (!isAuthorized) {
                 logger.info(
-                    "$INSUFFICIENT_AUTHORIZATION_MESSAGE: ${request.requestURI!!} (${userInfoResponse.email})",
+                    "$insufficientAuthorizationMessage: ${request.requestURI!!} (${userInfoResponse.email})",
                 )
                 response.sendError(
                     HttpServletResponse.SC_UNAUTHORIZED,
-                    INSUFFICIENT_AUTHORIZATION_MESSAGE,
+                    insufficientAuthorizationMessage,
                 )
             }
 
@@ -112,21 +113,20 @@ class UserAuthorizationCheckFilter(
                     "HTTP request: access granted.",
                     userInfoResponse.email,
                     request.requestURI!!,
-                )
-                    .toString(),
+                ).toString(),
             )
 
-            if (request.requestURI == CURRENT_USER_AUTHORIZATION_CONTROLLER_PATH) {
+            if (request.requestURI == currentUserAuthorizationControllerPath) {
                 // The email is added as a header so the email will be known by the controller
                 response.addHeader(EMAIL_HEADER, userInfoResponse.email)
             }
 
             filterChain.doFilter(request, response)
         } catch (e: Exception) {
-            logger.warn(COULD_NOT_FETCH_USER_INFO_MESSAGE, e)
+            logger.warn(couldNotFetchUserInfoMessage, e)
             response.sendError(
                 HttpServletResponse.SC_UNAUTHORIZED,
-                COULD_NOT_FETCH_USER_INFO_MESSAGE,
+                couldNotFetchUserInfoMessage,
             )
         }
     }

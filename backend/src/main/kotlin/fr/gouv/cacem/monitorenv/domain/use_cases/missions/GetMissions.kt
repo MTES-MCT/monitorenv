@@ -11,7 +11,9 @@ import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
-class GetMissions(private val missionRepository: IMissionRepository) {
+class GetMissions(
+    private val missionRepository: IMissionRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetMissions::class.java)
 
     fun execute(

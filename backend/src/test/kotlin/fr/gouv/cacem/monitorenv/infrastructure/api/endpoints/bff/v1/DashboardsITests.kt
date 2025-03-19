@@ -85,10 +85,11 @@ class DashboardsITests {
             )
 
         // When
-        mockMvc.perform(
-            get("/bff/v1/dashboards/extract?geometry=$geometry")
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                get("/bff/v1/dashboards/extract?geometry=$geometry")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.inseeCode", equalTo("44")))
@@ -119,10 +120,11 @@ class DashboardsITests {
             )
 
         // When
-        mockMvc.perform(
-            get("/bff/v1/dashboards/extract?geometry=$geometry")
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                get("/bff/v1/dashboards/extract?geometry=$geometry")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.inseeCode", equalTo(null)))
@@ -138,10 +140,11 @@ class DashboardsITests {
         val geometry = "Wrong geometry param"
 
         // When
-        mockMvc.perform(
-            get("/bff/v1/dashboards/extract?geometry=$geometry")
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                get("/bff/v1/dashboards/extract?geometry=$geometry")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isBadRequest)
             .andExpect(jsonPath("$.message", equalTo("Error: geometry is not valid")))
@@ -224,11 +227,12 @@ class DashboardsITests {
         given(saveDashboard.execute(dashboard)).willReturn(dashboard)
 
         // When
-        mockMvc.perform(
-            put("/bff/v1/dashboards")
-                .content(objectMapper.writeValueAsString(input))
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                put("/bff/v1/dashboards")
+                    .content(objectMapper.writeValueAsString(input))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(id.toString())))
@@ -240,14 +244,12 @@ class DashboardsITests {
                     "$.createdAt",
                     equalTo(createdAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.updatedAt",
                     equalTo(updatedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
                 ),
-            )
-            .andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
+            ).andExpect(jsonPath("$.inseeCode", equalTo(inseeCode)))
             .andExpect(jsonPath("$.ampIds", equalTo(amps)))
             .andExpect(jsonPath("$.regulatoryAreaIds", equalTo(regulatoryAreas)))
             .andExpect(jsonPath("$.reportingIds", equalTo(reportings)))
@@ -281,9 +283,10 @@ class DashboardsITests {
         given(getDashboards.execute()).willReturn(dashboards)
 
         // When
-        mockMvc.perform(
-            get("/bff/v1/dashboards").contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                get("/bff/v1/dashboards").contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(dashboard1.id.toString())))
@@ -309,9 +312,10 @@ class DashboardsITests {
         given(getDashboard.execute(id)).willReturn(dashboard)
 
         // When
-        mockMvc.perform(
-            get("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                get("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(id.toString())))
@@ -334,9 +338,10 @@ class DashboardsITests {
         val id = UUID.randomUUID()
 
         // When
-        mockMvc.perform(
-            delete("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                delete("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
 

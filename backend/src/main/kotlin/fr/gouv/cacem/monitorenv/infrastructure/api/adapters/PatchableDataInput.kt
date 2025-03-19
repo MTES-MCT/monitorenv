@@ -9,7 +9,9 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
-abstract class PatchableDataInput<T : PatchableDataInput<T>>(private val clazz: KClass<T>) {
+abstract class PatchableDataInput<T : PatchableDataInput<T>>(
+    private val clazz: KClass<T>,
+) {
     fun patchFromRequestData(
         objectMapper: ObjectMapper,
         requestDataJson: String,
@@ -52,8 +54,8 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(private val clazz: 
         jsonNode: JsonNode,
         propName: String,
         propType: KClass<*>,
-    ): Any {
-        return when (propType) {
+    ): Any =
+        when (propType) {
             Boolean::class ->
                 if (jsonNode.isBoolean) {
                     jsonNode.asBoolean()
@@ -88,5 +90,4 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(private val clazz: 
                 "${this::class.simpleName}: Unsupported type `$propType` for property `$propName`.",
             )
         }
-    }
 }

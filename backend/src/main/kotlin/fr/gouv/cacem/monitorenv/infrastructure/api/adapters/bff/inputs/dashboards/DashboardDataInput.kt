@@ -22,8 +22,8 @@ class DashboardDataInput(
     val links: List<LinkEntity>,
     val images: List<ImageDataInput>,
 ) {
-    fun toDashboardEntity(): DashboardEntity {
-        return DashboardEntity(
+    fun toDashboardEntity(): DashboardEntity =
+        DashboardEntity(
             id = id,
             name = name,
             geom = geom,
@@ -40,5 +40,4 @@ class DashboardDataInput(
             links = links,
             images = images.map { it.toImageEntity() },
         )
-    }
 }

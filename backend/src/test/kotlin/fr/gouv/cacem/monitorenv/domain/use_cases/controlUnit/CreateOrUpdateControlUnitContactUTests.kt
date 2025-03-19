@@ -77,8 +77,7 @@ class CreateOrUpdateControlUnitContactUTests {
             CreateOrUpdateControlUnitContact(
                 controlUnitRepository,
                 controlUnitContactRepository,
-            )
-                .execute(newControlUnitContact)
+            ).execute(newControlUnitContact)
 
         // Then
         assertThat(result).isEqualTo(repositoryOutputMock)
@@ -150,8 +149,7 @@ class CreateOrUpdateControlUnitContactUTests {
             CreateOrUpdateControlUnitContact(
                 controlUnitRepository,
                 controlUnitContactRepository,
-            )
-                .execute(updatedControlUnitContact)
+            ).execute(updatedControlUnitContact)
 
         // Then
         assertThat(result).isEqualTo(secondRepositoryInputExpectation)
@@ -257,8 +255,7 @@ class CreateOrUpdateControlUnitContactUTests {
             CreateOrUpdateControlUnitContact(
                 controlUnitRepository,
                 controlUnitContactRepository,
-            )
-                .execute(updatedControlUnitContact)
+            ).execute(updatedControlUnitContact)
 
         // Then
         assertThat(result).isEqualTo(updatedControlUnitContact)
@@ -326,8 +323,7 @@ class CreateOrUpdateControlUnitContactUTests {
             CreateOrUpdateControlUnitContact(
                 controlUnitRepository,
                 controlUnitContactRepository,
-            )
-                .execute(newControlUnitContact)
+            ).execute(newControlUnitContact)
 
         val updatedControlUnitContact =
             controlUnit.controlUnitContacts[0].copy(
@@ -360,8 +356,7 @@ class CreateOrUpdateControlUnitContactUTests {
                 CreateOrUpdateControlUnitContact(
                     controlUnitRepository,
                     controlUnitContactRepository,
-                )
-                    .execute(newControlUnitContact)
+                ).execute(newControlUnitContact)
             }
         assertThat(backendUsageException.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(backendUsageException.message).isEqualTo("Invalid phone number")

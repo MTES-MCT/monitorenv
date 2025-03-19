@@ -47,7 +47,8 @@ class SemaphoresITests {
             )
         given(getAllSemaphores.execute()).willReturn(listOf(semaphore))
         // When
-        mockMvc.perform(get("/bff/v1/semaphores"))
+        mockMvc
+            .perform(get("/bff/v1/semaphores"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(semaphore.id)))
@@ -71,7 +72,8 @@ class SemaphoresITests {
             )
         given(getSemaphoreById.execute(21)).willReturn(semaphore)
         // When
-        mockMvc.perform(get("/bff/v1/semaphores/21"))
+        mockMvc
+            .perform(get("/bff/v1/semaphores/21"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(semaphore.id)))

@@ -85,12 +85,12 @@ class ControlUnitContactsITests {
             .willReturn(useCaseOutputMock)
 
         // When
-        mockMvc.perform(
-            post("/api/v1/control_unit_contacts")
-                .content(requestDataAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                post("/api/v1/control_unit_contacts")
+                    .content(requestDataAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isCreated)
 
@@ -130,12 +130,12 @@ class ControlUnitContactsITests {
             .willReturn(useCaseOutputMock)
 
         // When
-        mockMvc.perform(
-            post("/api/v2/control_unit_contacts")
-                .content(requestDataAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                post("/api/v2/control_unit_contacts")
+                    .content(requestDataAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isCreated)
 
@@ -148,7 +148,8 @@ class ControlUnitContactsITests {
         val requestedId = 1
 
         // When
-        mockMvc.perform(delete("/api/v1/control_unit_contacts/$requestedId"))
+        mockMvc
+            .perform(delete("/api/v1/control_unit_contacts/$requestedId"))
             .andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isNoContent)
@@ -187,7 +188,8 @@ class ControlUnitContactsITests {
         given(getControlUnitContactById.execute(requestedId)).willReturn(useCaseOutputMock)
 
         // When
-        mockMvc.perform(get("/api/v1/control_unit_contacts/$requestedId"))
+        mockMvc
+            .perform(get("/api/v1/control_unit_contacts/$requestedId"))
             .andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -248,7 +250,8 @@ class ControlUnitContactsITests {
         given(getControlUnitContacts.execute()).willReturn(useCaseOutputMock)
 
         // When
-        mockMvc.perform(get("/api/v1/control_unit_contacts"))
+        mockMvc
+            .perform(get("/api/v1/control_unit_contacts"))
             .andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -262,10 +265,12 @@ class ControlUnitContactsITests {
         // Given
         val requestedId = 1
         val requestDataAsJson =
-            objectMapper.createObjectNode().apply {
-                put("id", 1)
-                put("name", "Updated Contact Name")
-            }.toString()
+            objectMapper
+                .createObjectNode()
+                .apply {
+                    put("id", 1)
+                    put("name", "Updated Contact Name")
+                }.toString()
 
         val firstUseCaseOutputMock =
             FullControlUnitContactDTO(
@@ -308,12 +313,12 @@ class ControlUnitContactsITests {
             .willReturn(secondUseCaseOutputMock)
 
         // When
-        mockMvc.perform(
-            patch("/api/v1/control_unit_contacts/$requestedId")
-                .content(requestDataAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                patch("/api/v1/control_unit_contacts/$requestedId")
+                    .content(requestDataAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
 
@@ -326,13 +331,15 @@ class ControlUnitContactsITests {
         // Given
         val requestedId = 1
         val requestDataAsJson =
-            objectMapper.createObjectNode().apply {
-                put("id", 1)
-                put("email", "bob@example.org")
-                put("controlUnitId", 2)
-                put("name", "Updated Contact Name")
-                put("phone", "0033123456789")
-            }.toString()
+            objectMapper
+                .createObjectNode()
+                .apply {
+                    put("id", 1)
+                    put("email", "bob@example.org")
+                    put("controlUnitId", 2)
+                    put("name", "Updated Contact Name")
+                    put("phone", "0033123456789")
+                }.toString()
 
         val firstUseCaseOutputMock =
             FullControlUnitContactDTO(
@@ -375,12 +382,12 @@ class ControlUnitContactsITests {
             .willReturn(secondUseCaseOutputMock)
 
         // When
-        mockMvc.perform(
-            put("/api/v1/control_unit_contacts/$requestedId")
-                .content(requestDataAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                put("/api/v1/control_unit_contacts/$requestedId")
+                    .content(requestDataAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
 

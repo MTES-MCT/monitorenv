@@ -93,18 +93,14 @@ class Reportings(
         @PathParam("reporting id")
         @PathVariable(name = "id")
         id: Int,
-    ): ReportingDataOutput {
-        return getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
-    }
+    ): ReportingDataOutput = getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
 
     @PostMapping("/v1/reportings")
     @Operation(summary = "Get reportings by ids")
     fun getAll(
         @RequestBody
         ids: List<Int>,
-    ): List<ReportingDataOutput> {
-        return getReportingByIds.execute(ids).map { ReportingDataOutput.fromReportingDTO(it) }
-    }
+    ): List<ReportingDataOutput> = getReportingByIds.execute(ids).map { ReportingDataOutput.fromReportingDTO(it) }
 
     @GetMapping("/v1/reportings")
     @Operation(summary = "Get reportings")
@@ -144,22 +140,21 @@ class Reportings(
         @Parameter(description = "Search query")
         @RequestParam(name = "searchQuery", required = false)
         searchQuery: String?,
-    ): List<ReportingsDataOutput> {
-        return getReportings.execute(
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-            reportingType = reportingType,
-            seaFronts = seaFronts,
-            sourcesType = sourcesType,
-            startedAfterDateTime = startedAfterDateTime,
-            startedBeforeDateTime = startedBeforeDateTime,
-            status = status,
-            targetTypes = targetTypes,
-            isAttachedToMission = isAttachedToMission,
-            searchQuery = searchQuery,
-        )
-            .map { ReportingsDataOutput.fromReportingDTO(it) }
-    }
+    ): List<ReportingsDataOutput> =
+        getReportings
+            .execute(
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+                reportingType = reportingType,
+                seaFronts = seaFronts,
+                sourcesType = sourcesType,
+                startedAfterDateTime = startedAfterDateTime,
+                startedBeforeDateTime = startedBeforeDateTime,
+                status = status,
+                targetTypes = targetTypes,
+                isAttachedToMission = isAttachedToMission,
+                searchQuery = searchQuery,
+            ).map { ReportingsDataOutput.fromReportingDTO(it) }
 
     @PutMapping(value = ["/v1/reportings/{id}"], consumes = ["application/json"])
     @Operation(summary = "update a reporting")
@@ -170,10 +165,10 @@ class Reportings(
         @RequestBody reporting: CreateOrUpdateReportingDataInput,
     ): ReportingDataOutput {
         require(id == reporting.id) { "id in path and body must be the same" }
-        return createOrUpdateReporting.execute(
-            reporting.toReportingEntity(),
-        )
-            .let { ReportingDataOutput.fromReportingDTO(it) }
+        return createOrUpdateReporting
+            .execute(
+                reporting.toReportingEntity(),
+            ).let { ReportingDataOutput.fromReportingDTO(it) }
     }
 
     /**
@@ -181,7 +176,5 @@ class Reportings(
      */
     // TODO: secure SSE endpoint with JWT authentication
     @GetMapping(value = ["/reportings/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    fun createReportingSSE(): SseEmitter {
-        return sseReporting.registerListener()
-    }
+    fun createReportingSSE(): SseEmitter = sseReporting.registerListener()
 }

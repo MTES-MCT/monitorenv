@@ -82,8 +82,7 @@ class GetControlPlansByYearUTest {
                 controlPlanThemeRepository = controlPlanThemeRepository,
                 controlPlanSubThemeRepository = controlPlanSubThemeRepository,
                 controlPlanTagRepository = controlPlanTagRepository,
-            )
-                .execute(year)
+            ).execute(year)
 
         assertThat(result.first).isEqualTo(controlPlanThemes)
         assertThat(result.second).isEqualTo(controlPlanSubThemes)

@@ -8,16 +8,18 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 fun getControlStatus(
     reporting: ReportingEntity,
     attachedMission: MissionEntity?,
-): ControlStatusEnum? {
-    return when {
+): ControlStatusEnum? =
+    when {
         reporting.attachedEnvActionId != null &&
-            attachedMission?.envActions
+            attachedMission
+                ?.envActions
                 ?.find { it.id == reporting.attachedEnvActionId }
                 ?.actionType == ActionTypeEnum.SURVEILLANCE ->
             ControlStatusEnum.SURVEILLANCE_DONE
 
         reporting.attachedEnvActionId != null &&
-            attachedMission?.envActions
+            attachedMission
+                ?.envActions
                 ?.find { it.id == reporting.attachedEnvActionId }
                 ?.actionType == ActionTypeEnum.CONTROL ->
             ControlStatusEnum.CONTROL_DONE
@@ -27,4 +29,3 @@ fun getControlStatus(
 
         else -> null
     }
-}

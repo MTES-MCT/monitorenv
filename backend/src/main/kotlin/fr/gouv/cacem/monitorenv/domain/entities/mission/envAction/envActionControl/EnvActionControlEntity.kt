@@ -9,7 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntit
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class EnvActionControlEntity(
     override val id: UUID,
@@ -36,10 +36,9 @@ data class EnvActionControlEntity(
     val infractions: List<InfractionEntity>? = listOf(),
     val observations: String? = null,
     val vehicleType: VehicleTypeEnum? = null,
-) :
-    EnvActionEntity(
-            id = id,
-            actionType = ActionTypeEnum.CONTROL,
-            missionId = missionId,
-            observationsByUnit = observationsByUnit,
-        )
+) : EnvActionEntity(
+        id = id,
+        actionType = ActionTypeEnum.CONTROL,
+        missionId = missionId,
+        observationsByUnit = observationsByUnit,
+    )

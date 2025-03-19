@@ -31,8 +31,8 @@ data class FakeDataInput(
     val rank: Int,
 ) : PatchableDataInput<FakeDataInput>(FakeDataInput::class) {
     companion object {
-        fun fromFakeEntity(entity: FakeEntity): FakeDataInput {
-            return FakeDataInput(
+        fun fromFakeEntity(entity: FakeEntity): FakeDataInput =
+            FakeDataInput(
                 id = entity.id,
                 name = entity.name,
                 description = entity.description,
@@ -41,7 +41,6 @@ data class FakeDataInput(
                 isUpdated = entity.isUpdated,
                 rank = entity.rank,
             )
-        }
     }
 }
 

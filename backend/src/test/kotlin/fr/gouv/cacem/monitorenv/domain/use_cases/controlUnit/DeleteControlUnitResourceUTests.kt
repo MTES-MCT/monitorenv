@@ -50,7 +50,6 @@ class DeleteControlUnitResourceUTests {
             DeleteControlUnitResource(canDeleteControlUnitResource, controlUnitResourceRepository).execute(
                 controlUnitResourceId,
             )
-        }
-            .isInstanceOf(CouldNotDeleteException::class.java)
+        }.isInstanceOf(CouldNotDeleteException::class.java)
     }
 }

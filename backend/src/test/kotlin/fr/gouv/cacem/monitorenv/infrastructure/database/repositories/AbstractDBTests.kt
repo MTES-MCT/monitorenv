@@ -26,19 +26,18 @@ abstract class AbstractDBTests {
         val container: GenericContainer<Nothing> =
             GenericContainer<Nothing>(
                 "ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg17-postgis3.5.1",
-            )
-                .apply {
-                    withExposedPorts(5432)
-                    withEnv("POSTGRES_DB", "testdb")
-                    withEnv("POSTGRES_USER", "postgres")
-                    withEnv("POSTGRES_PASSWORD", "postgres")
-                    waitingFor(
-                        Wait.forLogMessage(".*ready to accept connections.*\\s", 2),
-                    )
-                    withStartupTimeout(Duration.of(60L, ChronoUnit.SECONDS))
-                    withReuse(true)
-                    this.start()
-                }
+            ).apply {
+                withExposedPorts(5432)
+                withEnv("POSTGRES_DB", "testdb")
+                withEnv("POSTGRES_USER", "postgres")
+                withEnv("POSTGRES_PASSWORD", "postgres")
+                waitingFor(
+                    Wait.forLogMessage(".*ready to accept connections.*\\s", 2),
+                )
+                withStartupTimeout(Duration.of(60L, ChronoUnit.SECONDS))
+                withReuse(true)
+                this.start()
+            }
 
         @JvmStatic
         @DynamicPropertySource
@@ -57,8 +56,7 @@ abstract class AbstractDBTests {
                 container
                     .getMappedPort(
                         PostgreSQLContainer.POSTGRESQL_PORT,
-                    )
-                    .toString() +
+                    ).toString() +
                 "/testdb?user=postgres&password=postgres"
         }
     }

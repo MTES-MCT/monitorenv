@@ -31,8 +31,8 @@ data class VigilanceAreaDataInput(
     val createdAt: ZonedDateTime? = null,
     val updatedAt: ZonedDateTime? = null,
 ) {
-    fun toVigilanceAreaEntity(): VigilanceAreaEntity {
-        return VigilanceAreaEntity(
+    fun toVigilanceAreaEntity(): VigilanceAreaEntity =
+        VigilanceAreaEntity(
             id = this.id,
             comments = this.comments,
             computedEndDate = this.computedEndDate,
@@ -60,5 +60,4 @@ data class VigilanceAreaDataInput(
             createdAt = this.createdAt,
             updatedAt = this.updatedAt,
         )
-    }
 }

@@ -6,13 +6,10 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import org.springframework.stereotype.Repository
 
 @Repository
-class JpaNatinfRepository(private val dbNatinfRepository: IDBNatinfRepository) :
-    INatinfRepository {
-    override fun findAll(): List<NatinfEntity> {
-        return dbNatinfRepository.findAll().map { it.toNatinf() }
-    }
+class JpaNatinfRepository(
+    private val dbNatinfRepository: IDBNatinfRepository,
+) : INatinfRepository {
+    override fun findAll(): List<NatinfEntity> = dbNatinfRepository.findAll().map { it.toNatinf() }
 
-    override fun count(): Long {
-        return dbNatinfRepository.count()
-    }
+    override fun count(): Long = dbNatinfRepository.count()
 }

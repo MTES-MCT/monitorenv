@@ -38,34 +38,32 @@ class CaffeineConfiguration(
         name: String,
         ticker: Ticker,
         minutesToExpire: Int,
-    ): CaffeineCache {
-        return CaffeineCache(
+    ): CaffeineCache =
+        CaffeineCache(
             name,
-            Caffeine.newBuilder()
+            Caffeine
+                .newBuilder()
                 .expireAfterWrite(minutesToExpire.toLong(), TimeUnit.MINUTES)
                 .recordStats()
                 .ticker(ticker)
                 .build(),
         )
-    }
 
     private fun buildSecondsCache(
         name: String,
         ticker: Ticker,
         secondsToExpire: Int,
-    ): CaffeineCache {
-        return CaffeineCache(
+    ): CaffeineCache =
+        CaffeineCache(
             name,
-            Caffeine.newBuilder()
+            Caffeine
+                .newBuilder()
                 .expireAfterWrite(secondsToExpire.toLong(), TimeUnit.SECONDS)
                 .recordStats()
                 .ticker(ticker)
                 .build(),
         )
-    }
 
     @Bean
-    fun ticker(): Ticker? {
-        return Ticker.systemTicker()
-    }
+    fun ticker(): Ticker? = Ticker.systemTicker()
 }

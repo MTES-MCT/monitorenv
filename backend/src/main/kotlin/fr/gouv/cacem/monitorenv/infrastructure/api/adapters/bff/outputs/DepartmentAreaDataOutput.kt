@@ -8,11 +8,10 @@ data class DepartmentAreaDataOutput(
     val name: String,
 ) {
     companion object {
-        fun fromDepartmentArea(departmentArea: DepartmentAreaEntity): DepartmentAreaDataOutput {
-            return DepartmentAreaDataOutput(
+        fun fromDepartmentArea(departmentArea: DepartmentAreaEntity): DepartmentAreaDataOutput =
+            DepartmentAreaDataOutput(
                 inseeCode = departmentArea.inseeCode,
                 name = departmentArea.name,
             )
-        }
     }
 }

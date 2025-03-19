@@ -57,7 +57,8 @@ class SSEReporting {
                 try {
                     val data = ReportingDataOutput.fromReportingDTO(event.reporting)
                     val sseEvent =
-                        event().name(REPORTING_UPDATE_EVENT_NAME)
+                        event()
+                            .name(REPORTING_UPDATE_EVENT_NAME)
                             .data(data)
                             .reconnectTime(0)
                             .build()

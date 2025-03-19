@@ -9,13 +9,13 @@ import org.springframework.stereotype.Repository
 class JpaControlPlanSubThemeRepository(
     private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
 ) : IControlPlanSubThemeRepository {
-    override fun findAll(): List<ControlPlanSubThemeEntity> {
-        return dbControlPlanSubThemeRepository.findAll().map { it.toControlPlanSubThemeEntity() }
-    }
-
-    override fun findByYear(year: Int): List<ControlPlanSubThemeEntity> {
-        return dbControlPlanSubThemeRepository.findByYearOrderById(year).map {
+    override fun findAll(): List<ControlPlanSubThemeEntity> =
+        dbControlPlanSubThemeRepository.findAll().map {
             it.toControlPlanSubThemeEntity()
         }
-    }
+
+    override fun findByYear(year: Int): List<ControlPlanSubThemeEntity> =
+        dbControlPlanSubThemeRepository.findByYearOrderById(year).map {
+            it.toControlPlanSubThemeEntity()
+        }
 }

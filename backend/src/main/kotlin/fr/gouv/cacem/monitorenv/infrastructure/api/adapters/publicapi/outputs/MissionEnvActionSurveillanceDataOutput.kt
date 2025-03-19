@@ -21,13 +21,12 @@ data class MissionEnvActionSurveillanceDataOutput(
     override val observationsByUnit: String? = null,
     val observations: String? = null,
     val openBy: String? = null,
-) :
-    MissionEnvActionDataOutput(
-            id = id,
-            actionStartDateTimeUtc = actionStartDateTimeUtc,
-            actionType = ActionTypeEnum.SURVEILLANCE,
-            observationsByUnit = observationsByUnit,
-        ) {
+) : MissionEnvActionDataOutput(
+        id = id,
+        actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionType = ActionTypeEnum.SURVEILLANCE,
+        observationsByUnit = observationsByUnit,
+    ) {
     companion object {
         fun fromEnvActionSurveillanceEntity(envActionSurveillanceEntity: EnvActionSurveillanceEntity) =
             MissionEnvActionSurveillanceDataOutput(
