@@ -32,10 +32,10 @@ const LEGEND_COLORS = [
   },
   {
     color: RecentActivity.CONTROLS_COLORS[6],
-    label: '928%'
+    label: '91-100%'
   }
 ]
-export function Legend() {
+export function RecentActivityLegend() {
   const dispatch = useAppDispatch()
   const isLegendOpen = useAppSelector(state => state.recentActivity.isLegendOpen)
   const { minControls, totalControls } = useAppSelector(state => state.recentActivity.totalControlsInAllActions)
