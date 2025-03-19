@@ -94,11 +94,12 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
       if (recentControlsActivity) {
         const totalControlsInAllActions = recentControlsActivity.reduce(
-          (acc, control) => acc + control.actionNumberOfControls,
+          (acc, control) => acc + (control.actionNumberOfControls ?? 0),
           0
         )
+
         const features = recentControlsActivity.flatMap(control => {
-          if (control.actionNumberOfControls === 0) {
+          if (control.actionNumberOfControls === 0 || !control.actionNumberOfControls) {
             return []
           }
           // total number of controls in action
