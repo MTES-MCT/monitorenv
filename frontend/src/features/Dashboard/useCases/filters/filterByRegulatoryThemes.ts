@@ -16,8 +16,8 @@ export function filterByRegulatoryThemes(
     dashboard.regulatoryAreaIds?.includes(regulatoryArea.id)
   )
   const uniqueThemes = uniq(
-    filteredRegulatoryAreas.map(regulatoryArea => regulatoryArea?.thematique.split(', ')).flatMap(theme => theme)
+    filteredRegulatoryAreas.map(regulatoryArea => regulatoryArea?.themes).flatMap(theme => theme)
   )
 
-  return uniqueThemes.some(reg => regulatoryThemesFilter.includes(reg))
+  return uniqueThemes.some(({ name }) => regulatoryThemesFilter.includes(name))
 }
