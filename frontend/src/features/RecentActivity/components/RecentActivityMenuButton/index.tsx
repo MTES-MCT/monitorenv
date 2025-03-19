@@ -8,6 +8,7 @@ import { globalActions } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
 import { DrawZone } from './DrawZone'
+import { Legend } from './Legend'
 import { RecentActivityFilters } from './RecentActivityFilters'
 
 export function RecentActivityMenuButton() {
@@ -56,6 +57,7 @@ export function RecentActivityMenuButton() {
                 </MapMenuDialog.Body>
               </>
             )}
+            <Legend />
           </MapMenuDialogContainer>
         </div>
       )}

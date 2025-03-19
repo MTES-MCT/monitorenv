@@ -9,6 +9,7 @@ import { RecentActivity } from './types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 const persistConfig = {
+  blacklist: ['isDrawing', 'isGeometryValid', 'isLegendOpen', 'initialGeometrys'],
   key: 'recentActivity',
   storage
 }
@@ -39,6 +40,8 @@ export type RecentActivityState = {
   interactionType: InteractionType
   isDrawing: boolean
   isGeometryValid: boolean
+  isLegendOpen: boolean
+  totalControlsInAllActions: { minControls: number; totalControls: number }
 }
 
 const INITIAL_STATE: RecentActivityState = {
@@ -51,7 +54,9 @@ const INITIAL_STATE: RecentActivityState = {
   initialGeometry: undefined,
   interactionType: InteractionType.POLYGON,
   isDrawing: false,
-  isGeometryValid: true
+  isGeometryValid: true,
+  isLegendOpen: false,
+  totalControlsInAllActions: { minControls: 0, totalControls: 0 }
 }
 const recentActivitySlice = createSlice({
   initialState: INITIAL_STATE,
@@ -72,6 +77,15 @@ const recentActivitySlice = createSlice({
     },
     setIsDrawing(state: RecentActivityState, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
+    },
+    setIsLegenOpen(state: RecentActivityState, action: PayloadAction<boolean>) {
+      state.isLegendOpen = action.payload
+    },
+    setTotalControlsInAllActions(
+      state: RecentActivityState,
+      action: PayloadAction<{ minControls: number; totalControls: number }>
+    ) {
+      state.totalControlsInAllActions = action.payload
     },
     updateFilters(
       state: RecentActivityState,

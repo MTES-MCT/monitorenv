@@ -1,4 +1,5 @@
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
+import { recentActivityActions } from '@features/RecentActivity/slice'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -96,6 +97,13 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         const totalControlsInAllActions = recentControlsActivity.reduce(
           (acc, control) => acc + (control.actionNumberOfControls ?? 0),
           0
+        )
+
+        const minControls = Math.min(...recentControlsActivity.map(control => control.actionNumberOfControls ?? 0))
+
+        // we need this information in Legend component
+        dispatch(
+          recentActivityActions.setTotalControlsInAllActions({ minControls, totalControls: totalControlsInAllActions })
         )
 
         const features = recentControlsActivity.flatMap(control => {
