@@ -117,8 +117,7 @@ class CreateOrUpdateReportingUTests {
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
-            )
-                .execute(aReportingWithSemaphore)
+            ).execute(aReportingWithSemaphore)
 
         // Then
         verify(postgisFunctionRepository, times(1)).normalizeGeometry(aReportingWithSemaphore.geom!!)
@@ -132,8 +131,7 @@ class CreateOrUpdateReportingUTests {
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
-            )
-                .execute(aReportingWithControlUnit)
+            ).execute(aReportingWithControlUnit)
 
         // Then
         verify(reportingRepository, times(1)).save(aReportingWithControlUnit)
@@ -167,8 +165,7 @@ class CreateOrUpdateReportingUTests {
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
-                )
-                    .execute(reporting)
+                ).execute(reporting)
             }
 
         // Then
@@ -203,8 +200,7 @@ class CreateOrUpdateReportingUTests {
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
-                )
-                    .execute(reporting)
+                ).execute(reporting)
             }
 
         // Then
@@ -269,8 +265,7 @@ class CreateOrUpdateReportingUTests {
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
-                )
-                    .execute(reportingWithControlUnitId)
+                ).execute(reportingWithControlUnitId)
             }
 
         // Then
@@ -286,8 +281,7 @@ class CreateOrUpdateReportingUTests {
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
-                )
-                    .execute(reportingWithSemaphoreId)
+                ).execute(reportingWithSemaphoreId)
             }
 
         // Then
@@ -303,8 +297,7 @@ class CreateOrUpdateReportingUTests {
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
-                )
-                    .execute(reportingWithoutSourceName)
+                ).execute(reportingWithoutSourceName)
             }
 
         // Then
@@ -329,9 +322,7 @@ class CreateOrUpdateReportingUTests {
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
-            )
-                .execute(reportingWithNewAttachedMission)
-        }
-            .isInstanceOf(ReportingAlreadyAttachedException::class.java)
+            ).execute(reportingWithNewAttachedMission)
+        }.isInstanceOf(ReportingAlreadyAttachedException::class.java)
     }
 }

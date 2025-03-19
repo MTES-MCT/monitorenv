@@ -12,8 +12,8 @@ data class ControlUnitContactDataOutput(
     val phone: String?,
 ) {
     companion object {
-        fun fromControlUnitContact(controlUnitContact: ControlUnitContactEntity): ControlUnitContactDataOutput {
-            return ControlUnitContactDataOutput(
+        fun fromControlUnitContact(controlUnitContact: ControlUnitContactEntity): ControlUnitContactDataOutput =
+            ControlUnitContactDataOutput(
                 id = requireNotNull(controlUnitContact.id),
                 controlUnitId = controlUnitContact.controlUnitId,
                 email = controlUnitContact.email,
@@ -22,6 +22,5 @@ data class ControlUnitContactDataOutput(
                 name = controlUnitContact.name,
                 phone = controlUnitContact.phone,
             )
-        }
     }
 }

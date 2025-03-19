@@ -39,8 +39,8 @@ class EnvActionFixture {
             observationsByUnit: String? = null,
             missionId: Int? = 1,
             controlPlans: List<EnvActionControlPlanEntity>? = null,
-        ): EnvActionEntity {
-            return EnvActionMapper.getEnvActionEntityFromJSON(
+        ): EnvActionEntity =
+            EnvActionMapper.getEnvActionEntityFromJSON(
                 mapper,
                 id = id,
                 actionType = ActionTypeEnum.SURVEILLANCE,
@@ -61,7 +61,6 @@ class EnvActionFixture {
                 missionId = missionId,
                 value = "{}",
             )
-        }
 
         fun anEnvActionControl(
             startTime: ZonedDateTime? = null,
@@ -73,8 +72,8 @@ class EnvActionFixture {
             controlPlans: List<EnvActionControlPlanEntity>? =
                 listOf(EnvActionControlPlanEntity(subThemeIds = listOf(1))),
             geom: Geometry? = polygon,
-        ): EnvActionControlEntity {
-            return EnvActionControlEntity(
+        ): EnvActionControlEntity =
+            EnvActionControlEntity(
                 id = UUID.randomUUID(),
                 actionStartDateTimeUtc = startTime,
                 openBy = openBy,
@@ -85,7 +84,6 @@ class EnvActionFixture {
                 controlPlans = controlPlans,
                 geom = geom,
             )
-        }
 
         fun anEnvActionSurveillance(
             startTime: ZonedDateTime? = null,
@@ -94,8 +92,8 @@ class EnvActionFixture {
             controlPlans: List<EnvActionControlPlanEntity>? =
                 listOf(EnvActionControlPlanEntity(subThemeIds = listOf(1))),
             geom: Geometry? = polygon,
-        ): EnvActionSurveillanceEntity {
-            return EnvActionSurveillanceEntity(
+        ): EnvActionSurveillanceEntity =
+            EnvActionSurveillanceEntity(
                 id = UUID.randomUUID(),
                 actionStartDateTimeUtc = startTime,
                 actionEndDateTimeUtc = endTime,
@@ -104,7 +102,6 @@ class EnvActionFixture {
                 controlPlans = controlPlans,
                 geom = geom,
             )
-        }
 
         fun anInfraction(
             infractionType: InfractionTypeEnum = InfractionTypeEnum.WITHOUT_REPORT,
@@ -123,8 +120,8 @@ class EnvActionFixture {
             natinf = natinf,
         )
 
-        fun aMonitorFishAction(missionId: Int): MonitorFishMissionActionEntity {
-            return MonitorFishMissionActionEntity(
+        fun aMonitorFishAction(missionId: Int): MonitorFishMissionActionEntity =
+            MonitorFishMissionActionEntity(
                 id = 1,
                 actionDatetimeUtc = ZonedDateTime.now().toString(),
                 actionType = MonitorFishActionTypeEnum.AIR_CONTROL,
@@ -132,6 +129,5 @@ class EnvActionFixture {
                 missionId = missionId,
                 numberOfVesselsFlownOver = null,
             )
-        }
     }
 }

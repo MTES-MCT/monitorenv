@@ -5,7 +5,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class CanDeleteAdministration(private val administrationRepository: IAdministrationRepository) {
+class CanDeleteAdministration(
+    private val administrationRepository: IAdministrationRepository,
+) {
     private val logger = LoggerFactory.getLogger(CanDeleteAdministration::class.java)
 
     fun execute(administrationId: Int): Boolean {

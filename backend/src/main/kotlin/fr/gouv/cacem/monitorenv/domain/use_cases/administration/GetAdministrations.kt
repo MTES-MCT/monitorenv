@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdminis
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetAdministrations(private val administrationRepository: IAdministrationRepository) {
+class GetAdministrations(
+    private val administrationRepository: IAdministrationRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetAdministrations::class.java)
 
     fun execute(): List<FullAdministrationDTO> {

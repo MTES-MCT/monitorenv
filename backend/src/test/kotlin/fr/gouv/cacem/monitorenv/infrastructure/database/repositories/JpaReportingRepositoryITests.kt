@@ -634,14 +634,12 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             secondAlreadyAttachedReportingDetachedFromMission
                 .reporting
                 .attachedToMissionAtUtc,
-        )
-            .isNotNull()
+        ).isNotNull()
         assertThat(
             secondAlreadyAttachedReportingDetachedFromMission
                 .reporting
                 .detachedFromMissionAtUtc,
-        )
-            .isNotNull()
+        ).isNotNull()
 
         assertThat(attachedReportingToOtherMissionNotAttachedToMission.reporting.missionId)
             .isEqualTo(38)
@@ -649,14 +647,12 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             attachedReportingToOtherMissionNotAttachedToMission
                 .reporting
                 .attachedToMissionAtUtc,
-        )
-            .isNotNull()
+        ).isNotNull()
         assertThat(
             attachedReportingToOtherMissionNotAttachedToMission
                 .reporting
                 .detachedFromMissionAtUtc,
-        )
-            .isNull()
+        ).isNull()
     }
 
     @Test

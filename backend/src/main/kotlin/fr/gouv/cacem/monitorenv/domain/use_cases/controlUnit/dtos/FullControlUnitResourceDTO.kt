@@ -10,11 +10,10 @@ data class FullControlUnitResourceDTO(
     val controlUnitResource: ControlUnitResourceEntity,
     val station: StationEntity,
 ) {
-    fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity {
-        return LegacyControlUnitResourceEntity(
+    fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity =
+        LegacyControlUnitResourceEntity(
             id = requireNotNull(controlUnitResource.id),
             controlUnitId = requireNotNull(controlUnit.id),
             name = controlUnitResource.name,
         )
-    }
 }

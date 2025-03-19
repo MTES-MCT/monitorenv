@@ -35,4 +35,4 @@ typealias ControlPlanByYear =
         List<ControlPlanThemeEntity>,
         List<ControlPlanSubThemeEntity>,
         List<ControlPlanTagEntity>,
-        >
+    >

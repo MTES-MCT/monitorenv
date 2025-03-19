@@ -51,7 +51,8 @@ class LegacyControlUnitsITests {
         given(getLegacyControlUnits.execute()).willReturn(listOf(controlUnit))
 
         // When
-        mockMvc.perform(get("/api/v1/control_units"))
+        mockMvc
+            .perform(get("/api/v1/control_units"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(controlUnit.id)))

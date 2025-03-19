@@ -14,9 +14,7 @@ class DataSourceProxyBeanPostProcessor(
     override fun postProcessBeforeInitialization(
         bean: Any,
         beanName: String,
-    ): Any? {
-        return bean
-    }
+    ): Any? = bean
 
     @Throws(BeansException::class)
     override fun postProcessAfterInitialization(

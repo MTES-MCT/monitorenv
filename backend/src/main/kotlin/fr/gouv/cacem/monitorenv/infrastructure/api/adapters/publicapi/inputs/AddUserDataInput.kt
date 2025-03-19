@@ -7,10 +7,9 @@ data class AddUserDataInput(
     val email: String,
     val isSuperUser: Boolean,
 ) {
-    fun toUserAuthorization(): UserAuthorization {
-        return UserAuthorization(
+    fun toUserAuthorization(): UserAuthorization =
+        UserAuthorization(
             hashedEmail = hash(email),
             isSuperUser = isSuperUser,
         )
-    }
 }

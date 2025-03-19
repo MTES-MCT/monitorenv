@@ -11,8 +11,8 @@ data class CreateOrUpdateControlUnitDataInput(
     val name: String,
     val termsNote: String? = null,
 ) {
-    fun toControlUnit(): ControlUnitEntity {
-        return ControlUnitEntity(
+    fun toControlUnit(): ControlUnitEntity =
+        ControlUnitEntity(
             id = this.id,
             areaNote = this.areaNote,
             administrationId = this.administrationId,
@@ -21,5 +21,4 @@ data class CreateOrUpdateControlUnitDataInput(
             name = this.name,
             termsNote = this.termsNote,
         )
-    }
 }

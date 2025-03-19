@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetLegacyControlUnits(private val controlUnitRepository: IControlUnitRepository) {
+class GetLegacyControlUnits(
+    private val controlUnitRepository: IControlUnitRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetLegacyControlUnits::class.java)
 
     fun execute(): List<LegacyControlUnitEntity> {

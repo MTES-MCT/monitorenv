@@ -89,12 +89,13 @@ class MissionsITest {
             .willReturn(MissionDetailsDTO(mission = patchedMission))
 
         // When
-        mockMvc.perform(
-            patch("/api/v2/missions/$id")
-                .characterEncoding("utf-8")
-                .content(partialMissionAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                patch("/api/v2/missions/$id")
+                    .characterEncoding("utf-8")
+                    .content(partialMissionAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(
@@ -135,11 +136,12 @@ class MissionsITest {
             """.trimIndent()
 
         // When
-        mockMvc.perform(
-            patch("/api/v2/missions/$id")
-                .content(partialMissionAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                patch("/api/v2/missions/$id")
+                    .content(partialMissionAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isBadRequest())
     }
@@ -159,15 +161,15 @@ class MissionsITest {
                 eq(unknownId),
                 any(),
             ),
-        )
-            .willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, message))
+        ).willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, message))
 
         // When
-        mockMvc.perform(
-            patch("/api/v2/missions/$unknownId")
-                .content(partialMissionAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                patch("/api/v2/missions/$unknownId")
+                    .content(partialMissionAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isBadRequest())
     }
@@ -188,11 +190,12 @@ class MissionsITest {
             )
 
         // When
-        mockMvc.perform(
-            get("/api/v2/missions/$id")
-                .param("source", source.name)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                get("/api/v2/missions/$id")
+                    .param("source", source.name)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(jsonPath("$.id").value(mission.id))
             .andExpect(jsonPath("$.hasRapportNavActions").isNotEmpty())
@@ -216,11 +219,12 @@ class MissionsITest {
             )
 
         // When
-        mockMvc.perform(
-            get("/api/v2/missions/$id")
-                .param("source", source.name)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                get("/api/v2/missions/$id")
+                    .param("source", source.name)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(jsonPath("$.id").value(mission.id))
             .andExpect(jsonPath("$.hasRapportNavActions").isEmpty())
@@ -241,9 +245,10 @@ class MissionsITest {
                 ),
             )
         // When
-        mockMvc.perform(
-            get("/api/v2/missions/$id").contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                get("/api/v2/missions/$id").contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(jsonPath("$.id").value(mission.id))
             .andExpect(jsonPath("$.hasRapportNavActions").isEmpty())

@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IStationRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class CreateOrUpdateStation(private val stationRepository: IStationRepository) {
+class CreateOrUpdateStation(
+    private val stationRepository: IStationRepository,
+) {
     private val logger = LoggerFactory.getLogger(CreateOrUpdateStation::class.java)
 
     fun execute(station: StationEntity): StationEntity {

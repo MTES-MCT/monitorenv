@@ -24,11 +24,10 @@ class RegulatoryAreas(
         @PathParam("regulatoryArea id")
         @PathVariable(name = "regulatoryAreaId")
         regulatoryAreaId: Int,
-    ): RegulatoryAreaWithMetadataDataOutput {
-        return RegulatoryAreaWithMetadataDataOutput.fromRegulatoryAreaEntity(
+    ): RegulatoryAreaWithMetadataDataOutput =
+        RegulatoryAreaWithMetadataDataOutput.fromRegulatoryAreaEntity(
             getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId),
         )
-    }
 
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")

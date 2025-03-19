@@ -62,14 +62,12 @@ class JpaReportingRepository(
     }
 
     // FIXME (25/07/2024) : passer par le findByIdOrNull et refacto
-    override fun findById(reportingId: Int): ReportingDetailsDTO {
-        return dbReportingRepository.findById(reportingId).get().toReportingDetailsDTO(mapper)
-    }
+    override fun findById(reportingId: Int): ReportingDetailsDTO =
+        dbReportingRepository.findById(reportingId).get().toReportingDetailsDTO(mapper)
 
     @Transactional
-    override fun findAllById(reportingId: List<Int>): List<ReportingDetailsDTO> {
-        return dbReportingRepository.findAllById(reportingId).map { it.toReportingDetailsDTO(mapper) }
-    }
+    override fun findAllById(reportingId: List<Int>): List<ReportingDetailsDTO> =
+        dbReportingRepository.findAllById(reportingId).map { it.toReportingDetailsDTO(mapper) }
 
     @Transactional
     override fun findAll(
@@ -91,18 +89,19 @@ class JpaReportingRepository(
             } else {
                 Pageable.unpaged()
             }
-        return dbReportingRepository.findAll(
-            pageable,
-            reportingType = reportingType,
-            seaFronts = seaFronts,
-            sourcesType = sourcesType,
-            startedAfter = startedAfter,
-            startedBefore = startedBefore,
-            status = status,
-            targetTypes = targetTypes,
-            isAttachedToMission = isAttachedToMission,
-        )
-            .map { it.toReportingListDTO(mapper) }.filter { findBySearchQuery(it.reporting, searchQuery) }
+        return dbReportingRepository
+            .findAll(
+                pageable,
+                reportingType = reportingType,
+                seaFronts = seaFronts,
+                sourcesType = sourcesType,
+                startedAfter = startedAfter,
+                startedBefore = startedBefore,
+                status = status,
+                targetTypes = targetTypes,
+                isAttachedToMission = isAttachedToMission,
+            ).map { it.toReportingListDTO(mapper) }
+            .filter { findBySearchQuery(it.reporting, searchQuery) }
     }
 
     private fun findBySearchQuery(
@@ -129,18 +128,16 @@ class JpaReportingRepository(
         } ?: false
     }
 
-    private fun normalizeField(input: String): String {
-        return StringUtils.stripAccents(input.replace(" ", ""))
-    }
+    private fun normalizeField(input: String): String = StringUtils.stripAccents(input.replace(" ", ""))
 
     @Transactional
-    override fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity> {
-        return dbReportingRepository.findByControlUnitId(controlUnitId).map { it.toReporting() }
-    }
+    override fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity> =
+        dbReportingRepository.findByControlUnitId(controlUnitId).map { it.toReporting() }
 
-    override fun findByMissionId(missionId: Int): List<ReportingDetailsDTO> {
-        return dbReportingRepository.findByMissionId(missionId).map { it.toReportingDetailsDTO(mapper) }
-    }
+    override fun findByMissionId(missionId: Int): List<ReportingDetailsDTO> =
+        dbReportingRepository.findByMissionId(missionId).map {
+            it.toReportingDetailsDTO(mapper)
+        }
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
@@ -244,23 +241,18 @@ class JpaReportingRepository(
     }
 
     @Transactional
-    override fun findAllIdsByGeometry(geometry: Geometry): List<Int> {
-        return dbReportingRepository.findAllIdsByGeom(geometry = geometry)
-    }
+    override fun findAllIdsByGeometry(geometry: Geometry): List<Int> =
+        dbReportingRepository.findAllIdsByGeom(geometry = geometry)
 
     @Transactional
     override fun delete(reportingId: Int) {
         dbReportingRepository.delete(reportingId)
     }
 
-    override fun count(): Long {
-        return dbReportingRepository.count()
-    }
+    override fun count(): Long = dbReportingRepository.count()
 
     @Transactional
-    override fun archiveOutdatedReportings(): Int {
-        return dbReportingRepository.archiveOutdatedReportings()
-    }
+    override fun archiveOutdatedReportings(): Int = dbReportingRepository.archiveOutdatedReportings()
 
     @Transactional
     override fun archiveReportings(ids: List<Int>) {

@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.mappers
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.Patchable
-import java.util.*
+import java.util.Optional
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
@@ -48,11 +48,10 @@ class PatchEntity<T : Any, S : Any> {
     private fun getValueFromOptional(
         existingValue: Any?,
         optional: Optional<*>?,
-    ): Any? {
-        return when {
+    ): Any? =
+        when {
             optional == null -> existingValue
             optional.isPresent -> optional.get()
             else -> null
         }
-    }
 }

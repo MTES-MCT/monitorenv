@@ -15,7 +15,9 @@ import org.springframework.stereotype.Component
 private const val NB_CHAR_MAX = 3
 
 @Component
-class MissionWithEnvActionsValidator(private val missionValidator: MissionValidator) : Validator<MissionEntity> {
+class MissionWithEnvActionsValidator(
+    private val missionValidator: MissionValidator,
+) : Validator<MissionEntity> {
     private val logger = LoggerFactory.getLogger(MissionWithEnvActionsValidator::class.java)
 
     override fun validate(mission: MissionEntity) {

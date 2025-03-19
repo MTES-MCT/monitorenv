@@ -27,8 +27,8 @@ class DashboardFixture {
             isDeleted: Boolean = false,
             links: List<LinkEntity> = listOf(),
             images: List<ImageEntity> = listOf(),
-        ): DashboardEntity {
-            return DashboardEntity(
+        ): DashboardEntity =
+            DashboardEntity(
                 id = id,
                 name = name,
                 geom = geom,
@@ -46,6 +46,5 @@ class DashboardFixture {
                 links = links,
                 images = images,
             )
-        }
     }
 }

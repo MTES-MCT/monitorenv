@@ -14,21 +14,21 @@ class SwaggerConfig {
     private val hostProperties: HostProperties? = null
 
     @Bean
-    fun api(): OpenAPI {
-        return OpenAPI()
+    fun api(): OpenAPI =
+        OpenAPI()
             .info(
-                Info().title("MonitorEnv public & BFF API")
+                Info()
+                    .title("MonitorEnv public & BFF API")
                     .description("MonitorEnv")
                     .version("v0.0.1")
                     .license(
-                        License().name("Apache 2.0")
+                        License()
+                            .name("Apache 2.0")
                             .url("https://github.com/MTES-MCT/monitorenv/blob/main/LICENSE"),
                     ),
-            )
-            .externalDocs(
+            ).externalDocs(
                 ExternalDocumentation()
                     .description("MonitorEnv is part of the beta.gouv.fr program")
                     .url("https://beta.gouv.fr/startups/monitorfish.html"),
             )
-    }
 }

@@ -90,15 +90,16 @@ class RecentActivityITests {
 
         // When
 
-        mockMvc.perform(
-            post("/bff/v1/recent-activity/controls")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(
-                    objectMapper.writeValueAsString(
-                        request,
+        mockMvc
+            .perform(
+                post("/bff/v1/recent-activity/controls")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        objectMapper.writeValueAsString(
+                            request,
+                        ),
                     ),
-                ),
-        )
+            )
             // Then
             .andExpect(status().isOk)
             .andDo(MockMvcResultHandlers.print())

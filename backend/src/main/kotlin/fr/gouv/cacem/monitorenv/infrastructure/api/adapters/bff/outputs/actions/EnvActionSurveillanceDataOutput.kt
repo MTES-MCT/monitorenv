@@ -23,12 +23,11 @@ data class EnvActionSurveillanceDataOutput(
     val openBy: String? = null,
     val reportingIds: List<Int>,
     val awareness: AwarenessDataOuput?,
-) :
-    EnvActionDataOutput(
-            id = id,
-            actionStartDateTimeUtc = actionStartDateTimeUtc,
-            actionType = ActionTypeEnum.SURVEILLANCE,
-        ) {
+) : EnvActionDataOutput(
+        id = id,
+        actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionType = ActionTypeEnum.SURVEILLANCE,
+    ) {
     companion object {
         fun fromEnvActionSurveillanceEntity(
             envActionSurveillanceEntity: EnvActionSurveillanceEntity,

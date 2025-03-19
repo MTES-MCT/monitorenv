@@ -38,25 +38,23 @@ data class StationModel(
         fun fromStation(
             station: StationEntity,
             controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
-        ): StationModel {
-            return StationModel(
+        ): StationModel =
+            StationModel(
                 id = station.id,
                 controlUnitResources = controlUnitResourceModels ?: listOf(),
                 latitude = station.latitude,
                 longitude = station.longitude,
                 name = station.name,
             )
-        }
     }
 
-    fun toStation(): StationEntity {
-        return StationEntity(
+    fun toStation(): StationEntity =
+        StationEntity(
             id,
             latitude,
             longitude,
             name,
         )
-    }
 
     fun toFullStation(): FullStationDTO {
         val controlUnitResourceModels = controlUnitResources
@@ -68,7 +66,6 @@ data class StationModel(
     }
 
     @Override
-    override fun toString(): String {
-        return this::class.simpleName + "(id = $id , latitude = $latitude , longitude = $longitude , name = $name)"
-    }
+    override fun toString(): String =
+        this::class.simpleName + "(id = $id , latitude = $latitude , longitude = $longitude , name = $name)"
 }

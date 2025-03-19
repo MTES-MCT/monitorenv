@@ -14,8 +14,8 @@ data class ControlPlanDataOutput(
             themes: List<ControlPlanThemeEntity>,
             subThemes: List<ControlPlanSubThemeEntity>,
             tags: List<ControlPlanTagEntity>,
-        ): ControlPlanDataOutput {
-            return ControlPlanDataOutput(
+        ): ControlPlanDataOutput =
+            ControlPlanDataOutput(
                 themes = themes.associateBy({ it.id }, { ControlPlanThemeDataOutput.fromControlPlanThemeEntity(it) }),
                 subThemes =
                     subThemes.associateBy(
@@ -24,6 +24,5 @@ data class ControlPlanDataOutput(
                     ),
                 tags = tags.associateBy({ it.id }, { ControlPlanTagDataOutput.fromControlPlanTagEntity(it) }),
             )
-        }
     }
 }

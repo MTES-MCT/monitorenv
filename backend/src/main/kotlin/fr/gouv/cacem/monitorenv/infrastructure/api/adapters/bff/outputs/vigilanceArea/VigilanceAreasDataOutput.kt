@@ -33,8 +33,8 @@ data class VigilanceAreasDataOutput(
     val visibility: VisibilityEnum? = null,
 ) {
     companion object {
-        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreasDataOutput {
-            return VigilanceAreasDataOutput(
+        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreasDataOutput =
+            VigilanceAreasDataOutput(
                 id = vigilanceArea.id,
                 comments = vigilanceArea.comments,
                 computedEndDate = vigilanceArea.computedEndDate,
@@ -58,6 +58,5 @@ data class VigilanceAreasDataOutput(
                 themes = vigilanceArea.themes,
                 visibility = vigilanceArea.visibility,
             )
-        }
     }
 }

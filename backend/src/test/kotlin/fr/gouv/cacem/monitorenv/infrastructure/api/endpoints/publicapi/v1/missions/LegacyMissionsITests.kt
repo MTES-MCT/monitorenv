@@ -118,14 +118,14 @@ class LegacyMissionsITests {
             createOrUpdateMission.execute(
                 mission = newMissionRequest.toMissionEntity(),
             ),
-        )
-            .willReturn(expectedNewMission)
+        ).willReturn(expectedNewMission)
         // When
-        mockMvc.perform(
-            post("/api/v1/missions")
-                .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                post("/api/v1/missions")
+                    .content(requestBody)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andDo(print())
             .andExpect(status().isOk)
@@ -171,11 +171,11 @@ class LegacyMissionsITests {
                 pageSize = any(),
                 searchQuery = any(),
             ),
-        )
-            .willReturn(listOf(expectedFirstMission))
+        ).willReturn(listOf(expectedFirstMission))
 
         // When
-        mockMvc.perform(get("/api/v1/missions"))
+        mockMvc
+            .perform(get("/api/v1/missions"))
             // Then
             .andDo(print())
             .andExpect(status().isOk)
@@ -208,11 +208,11 @@ class LegacyMissionsITests {
             )
         given(
             getMissionsByIds.execute(any()),
-        )
-            .willReturn(listOf(expectedFirstMission))
+        ).willReturn(listOf(expectedFirstMission))
 
         // When
-        mockMvc.perform(get("/api/v1/missions/find?ids=55,52"))
+        mockMvc
+            .perform(get("/api/v1/missions/find?ids=55,52"))
             // Then
             .andDo(print())
             .andExpect(status().isOk)
@@ -245,7 +245,8 @@ class LegacyMissionsITests {
         given(getMissionWithRapportNavActions.execute(requestedId)).willReturn(expectedFirstMission)
 
         // When
-        mockMvc.perform(get("/api/v1/missions/$requestedId"))
+        mockMvc
+            .perform(get("/api/v1/missions/$requestedId"))
             // Then
             .andExpect(status().isOk)
             .andExpect(
@@ -294,14 +295,14 @@ class LegacyMissionsITests {
             createOrUpdateMission.execute(
                 mission = requestBody.toMissionEntity(),
             ),
-        )
-            .willReturn(expectedUpdatedMission)
+        ).willReturn(expectedUpdatedMission)
         // When
-        mockMvc.perform(
-            post("/api/v1/missions/14")
-                .content(objectMapper.writeValueAsString(requestBody))
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                post("/api/v1/missions/14")
+                    .content(objectMapper.writeValueAsString(requestBody))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(
@@ -314,7 +315,8 @@ class LegacyMissionsITests {
 
     @Test
     fun `Should delete mission`() {
-        mockMvc.perform(delete("/api/v1/missions/20"))
+        mockMvc
+            .perform(delete("/api/v1/missions/20"))
             .andExpect(status().isOk)
         verify(bypassActionCheckAndDeleteMission).execute(20)
     }
@@ -327,7 +329,8 @@ class LegacyMissionsITests {
         given(canDeleteMission.execute(missionId = missionId, source = source))
             .willReturn(CanDeleteMissionResponse(true, listOf()))
 
-        mockMvc.perform(get("/api/v1/missions/$missionId/can_delete?source=$source"))
+        mockMvc
+            .perform(get("/api/v1/missions/$missionId/can_delete?source=$source"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.canDelete").value(true))
     }
@@ -345,7 +348,8 @@ class LegacyMissionsITests {
                 ),
             )
 
-        mockMvc.perform(get("/api/v1/missions/$missionId/can_delete?source=$source"))
+        mockMvc
+            .perform(get("/api/v1/missions/$missionId/can_delete?source=$source"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.canDelete").value(false))
     }
@@ -370,7 +374,8 @@ class LegacyMissionsITests {
             )
 
         // When
-        mockMvc.perform(get("/api/v1/missions/engaged_control_units"))
+        mockMvc
+            .perform(get("/api/v1/missions/engaged_control_units"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].controlUnit.name", equalTo("Control Unit Name")))
@@ -417,12 +422,12 @@ class LegacyMissionsITests {
                     println(ex)
                 }
             }
-        }
-            .start()
+        }.start()
 
         // Then
         val missionUpdateEvent =
-            mockMvc.perform(get("/api/v1/missions/sse"))
+            mockMvc
+                .perform(get("/api/v1/missions/sse"))
                 .andExpect(status().isOk)
                 .andExpect(request().asyncStarted())
                 .andExpect(request().asyncResult(nullValue()))

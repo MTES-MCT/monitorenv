@@ -42,33 +42,28 @@ data class AdministrationModel(
         fun fromAdministration(
             administration: AdministrationEntity,
             controlUnitModels: List<ControlUnitModel>? = mutableListOf(),
-        ): AdministrationModel {
-            return AdministrationModel(
+        ): AdministrationModel =
+            AdministrationModel(
                 id = administration.id,
                 controlUnits = controlUnitModels,
                 isArchived = administration.isArchived,
                 name = administration.name,
             )
-        }
     }
 
-    fun toAdministration(): AdministrationEntity {
-        return AdministrationEntity(
+    fun toAdministration(): AdministrationEntity =
+        AdministrationEntity(
             id,
             isArchived,
             name,
         )
-    }
 
-    fun toFullAdministration(): FullAdministrationDTO {
-        return FullAdministrationDTO(
+    fun toFullAdministration(): FullAdministrationDTO =
+        FullAdministrationDTO(
             administration = toAdministration(),
             controlUnits = requireNotNullList(controlUnits).map { it.toControlUnit() },
         )
-    }
 
     @Override
-    override fun toString(): String {
-        return this::class.simpleName + "(id = $id , isArchived = $isArchived , name = $name)"
-    }
+    override fun toString(): String = this::class.simpleName + "(id = $id , isArchived = $isArchived , name = $name)"
 }

@@ -33,12 +33,11 @@ data class EnvActionControlDataOutput(
     val openBy: String? = null,
     val reportingIds: List<Int>,
     val vehicleType: VehicleTypeEnum? = null,
-) :
-    EnvActionDataOutput(
-            id = id,
-            actionStartDateTimeUtc = actionStartDateTimeUtc,
-            actionType = ActionTypeEnum.CONTROL,
-        ) {
+) : EnvActionDataOutput(
+        id = id,
+        actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionType = ActionTypeEnum.CONTROL,
+    ) {
     companion object {
         fun fromEnvActionControlEntity(
             envActionControlEntity: EnvActionControlEntity,

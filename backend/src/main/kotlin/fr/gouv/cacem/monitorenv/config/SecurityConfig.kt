@@ -23,7 +23,8 @@ class SecurityConfig(
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http.csrf { it.disable() }
+        http
+            .csrf { it.disable() }
             .cors { it.configurationSource(corsConfigurationSource()) }
             .authorizeHttpRequests { authorize ->
                 if (oidcProperties.enabled == true) {
@@ -56,8 +57,7 @@ class SecurityConfig(
                             "/actuator/**",
                             // TODO: secure SSE endpoints
                             "/bff/reportings/sse/**",
-                        )
-                        .permitAll()
+                        ).permitAll()
                         .anyRequest()
                         .authenticated()
                 } else {

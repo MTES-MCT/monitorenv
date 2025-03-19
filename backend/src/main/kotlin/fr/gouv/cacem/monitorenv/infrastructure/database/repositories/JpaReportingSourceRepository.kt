@@ -46,13 +46,14 @@ class JpaReportingSourceRepository(
                 )
             }
 
-        return dbReportingSourceRepository.save(
-            ReportingSourceModel.fromReportingSourceEntity(
-                reportingSourceEntity,
-                semaphore,
-                controlUnit,
-                reporting = reportingModel,
-            ),
-        ).toReportingSourceDTO()
+        return dbReportingSourceRepository
+            .save(
+                ReportingSourceModel.fromReportingSourceEntity(
+                    reportingSourceEntity,
+                    semaphore,
+                    controlUnit,
+                    reporting = reportingModel,
+                ),
+            ).toReportingSourceDTO()
     }
 }

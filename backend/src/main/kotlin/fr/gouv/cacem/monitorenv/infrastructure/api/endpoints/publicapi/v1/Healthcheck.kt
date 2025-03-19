@@ -16,7 +16,5 @@ class Healthcheck(
 ) {
     @GetMapping("")
     @Operation(summary = "Get healtcheck for all resources")
-    fun getHealthcheck(): HealthcheckDataOutput {
-        return HealthcheckDataOutput.fromHealth(getHealthcheck.execute())
-    }
+    fun getHealthcheck(): HealthcheckDataOutput = HealthcheckDataOutput.fromHealth(getHealthcheck.execute())
 }

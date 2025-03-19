@@ -58,8 +58,8 @@ class CreateOrUpdateControlUnitContact(
      * If the contact is subscribed to emails/sms but has no email/phone, we unsubscribe them from
      * emails/sms.
      */
-    private fun validateSubscriptions(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
-        return controlUnitContact.copy(
+    private fun validateSubscriptions(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity =
+        controlUnitContact.copy(
             isEmailSubscriptionContact =
                 if (controlUnitContact.isEmailSubscriptionContact &&
                     controlUnitContact.email == null
@@ -77,7 +77,6 @@ class CreateOrUpdateControlUnitContact(
                     controlUnitContact.isSmsSubscriptionContact
                 },
         )
-    }
 
     private fun validatePhone(controlUnitContact: ControlUnitContactEntity) {
         val frenchPhoneRegex = Regex("^0[1-9]\\d{8}$")

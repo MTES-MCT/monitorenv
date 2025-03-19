@@ -26,7 +26,8 @@ class GetMissionUTest {
 
         // When
         val backendUsageException =
-            org.junit.jupiter.api.assertThrows<BackendUsageException> { getMission.execute(missionId) }
+            org.junit.jupiter.api
+                .assertThrows<BackendUsageException> { getMission.execute(missionId) }
 
         // Then
         assertThat(backendUsageException.code).isEqualTo(BackendUsageErrorCode.ENTITY_NOT_FOUND)

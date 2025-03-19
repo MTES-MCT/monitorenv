@@ -14,7 +14,24 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttached
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import jakarta.persistence.*
+import jakarta.persistence.Basic
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.NamedAttributeNode
+import jakarta.persistence.NamedEntityGraph
+import jakarta.persistence.NamedSubgraph
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -223,8 +240,8 @@ class MissionModel(
     private fun buildMissionEntity(
         mappedControlUnits: List<LegacyControlUnitEntity>? = null,
         objectMapper: ObjectMapper,
-    ): MissionEntity {
-        return MissionEntity(
+    ): MissionEntity =
+        MissionEntity(
             id = id,
             completedBy = completedBy,
             controlUnits = mappedControlUnits ?: emptyList(),
@@ -246,7 +263,6 @@ class MissionModel(
             openBy = openBy,
             startDateTimeUtc = startDateTimeUtc.atZone(UTC),
         )
-    }
 
     fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
         val mappedControlUnits =
@@ -268,9 +284,8 @@ class MissionModel(
         return buildMissionEntity(mappedControlUnits, objectMapper)
     }
 
-    fun toMissionEntityWithoutControlUnit(objectMapper: ObjectMapper): MissionEntity {
-        return buildMissionEntity(null, objectMapper)
-    }
+    fun toMissionEntityWithoutControlUnit(objectMapper: ObjectMapper): MissionEntity =
+        buildMissionEntity(null, objectMapper)
 
     fun toMissionDTO(objectMapper: ObjectMapper): MissionDetailsDTO {
         val envActionsAttachedToReportingIds =
@@ -304,8 +319,7 @@ class MissionModel(
                             } else {
                                 return@map actionWithReportings
                             }
-                        }
-                        .toMutableList()
+                        }.toMutableList()
                 }
 
                 return@fold listOfActionsAttached
@@ -351,8 +365,8 @@ class MissionModel(
         return buildMissionEntity(mappedControlUnits, objectMapper)
     }
 
-    fun toMissionListDTO(objectMapper: ObjectMapper): MissionListDTO {
-        return MissionListDTO(
+    fun toMissionListDTO(objectMapper: ObjectMapper): MissionListDTO =
+        MissionListDTO(
             mission = this.toMissionsEntity(objectMapper),
             attachedReportingIds =
                 this.attachedReportings
@@ -360,7 +374,6 @@ class MissionModel(
                     ?.map { it.id as Int }
                     ?: listOf(),
         )
-    }
 
     companion object {
         fun fromMissionEntity(

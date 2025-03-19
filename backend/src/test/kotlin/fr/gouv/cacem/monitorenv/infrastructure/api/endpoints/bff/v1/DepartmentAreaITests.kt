@@ -44,7 +44,8 @@ class DepartmentAreaITests {
 
         given(getDepartmentAreaByInseeCode.execute(requestedId)).willReturn(expectedDepartmentArea)
 
-        mockMvc.perform(get("/bff/v1/department_areas/$requestedId"))
+        mockMvc
+            .perform(get("/bff/v1/department_areas/$requestedId"))
             .andExpect(status().isOk)
 
         BDDMockito.verify(getDepartmentAreaByInseeCode).execute(requestedId)
@@ -66,7 +67,8 @@ class DepartmentAreaITests {
 
         given(getDepartmentAreas.execute()).willReturn(expectedAFulldministrations)
 
-        mockMvc.perform(get("/bff/v1/department_areas"))
+        mockMvc
+            .perform(get("/bff/v1/department_areas"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize<Any>(2)))
 

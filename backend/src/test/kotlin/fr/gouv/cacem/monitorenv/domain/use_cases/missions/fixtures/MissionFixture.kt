@@ -22,8 +22,8 @@ class MissionFixture {
             openBy: String? = null,
             completedBy: String? = null,
             envActions: List<EnvActionEntity> = emptyList(),
-        ): MissionEntity {
-            return MissionEntity(
+        ): MissionEntity =
+            MissionEntity(
                 id = id,
                 controlUnits = controlUnits,
                 observationsByUnit = observationsByUnit,
@@ -43,13 +43,10 @@ class MissionFixture {
                 createdAtUtc = null,
                 envActions = envActions,
             )
-        }
 
         fun aMissionDetailsDTO(
             missionEntity: MissionEntity = aMissionEntity(),
             attachedReportingIds: List<Int> = listOf(),
-        ): MissionDetailsDTO {
-            return MissionDetailsDTO(mission = missionEntity, attachedReportingIds = attachedReportingIds)
-        }
+        ): MissionDetailsDTO = MissionDetailsDTO(mission = missionEntity, attachedReportingIds = attachedReportingIds)
     }
 }

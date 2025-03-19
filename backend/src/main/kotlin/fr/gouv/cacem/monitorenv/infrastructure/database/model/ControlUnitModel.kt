@@ -66,8 +66,8 @@ data class ControlUnitModel(
             departmentAreaModel: DepartmentAreaModel? = null,
             controlUnitContactModels: List<ControlUnitContactModel>? = null,
             controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
-        ): ControlUnitModel {
-            return ControlUnitModel(
+        ): ControlUnitModel =
+            ControlUnitModel(
                 id = controlUnit.id,
                 areaNote = controlUnit.areaNote,
                 administration = administrationModel,
@@ -78,11 +78,10 @@ data class ControlUnitModel(
                 name = controlUnit.name,
                 termsNote = controlUnit.termsNote,
             )
-        }
     }
 
-    fun toControlUnit(): ControlUnitEntity {
-        return ControlUnitEntity(
+    fun toControlUnit(): ControlUnitEntity =
+        ControlUnitEntity(
             id,
             administrationId = requireNotNull(administration.id),
             areaNote,
@@ -91,20 +90,18 @@ data class ControlUnitModel(
             name,
             termsNote,
         )
-    }
 
-    fun toFullControlUnit(): FullControlUnitDTO {
-        return FullControlUnitDTO(
+    fun toFullControlUnit(): FullControlUnitDTO =
+        FullControlUnitDTO(
             administration = administration.toAdministration(),
             departmentArea = departmentArea?.toDepartmentArea(),
             controlUnit = toControlUnit(),
             controlUnitContacts = requireNotNull(controlUnitContacts).map { it.toControlUnitContact() },
             controlUnitResources = requireNotNull(controlUnitResources).map { it.toFullControlUnitResource() },
         )
-    }
 
-    fun toLegacyControlUnit(): LegacyControlUnitEntity {
-        return LegacyControlUnitEntity(
+    fun toLegacyControlUnit(): LegacyControlUnitEntity =
+        LegacyControlUnitEntity(
             id = requireNotNull(id),
             administration = administration.name,
             isArchived,
@@ -112,10 +109,9 @@ data class ControlUnitModel(
             resources = requireNotNull(controlUnitResources).map { it.toLegacyControlUnitResource() },
             contact = "",
         )
-    }
 
     @Override
-    override fun toString(): String {
-        return this::class.simpleName + "(id = $id , administrationId = ${administration.id} , areaNote = $areaNote , departmentAreaInseeCode = ${departmentArea?.inseeCode} , isArchived = $isArchived, name = $name , termsNote = $termsNote)"
-    }
+    override fun toString(): String =
+        this::class.simpleName +
+            "(id = $id , administrationId = ${administration.id} , areaNote = $areaNote , departmentAreaInseeCode = ${departmentArea?.inseeCode} , isArchived = $isArchived, name = $name , termsNote = $termsNote)"
 }

@@ -83,8 +83,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
 
     private fun getListOfEnvActionIds(
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?,
-    ): List<UUID> {
-        return envActionsAttachedToReportingIds?.filter { it.second.isNotEmpty() }?.map { it.first }
+    ): List<UUID> =
+        envActionsAttachedToReportingIds?.filter { it.second.isNotEmpty() }?.map { it.first }
             ?: emptyList()
-    }
 }

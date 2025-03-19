@@ -18,7 +18,5 @@ data class LegacyControlUnitEntity(
         return id == other.id
     }
 
-    override fun hashCode(): Int {
-        return id
-    }
+    override fun hashCode(): Int = id
 }

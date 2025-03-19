@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetVigilanceAreaById(private val vigilanceAreaRepository: IVigilanceAreaRepository) {
+class GetVigilanceAreaById(
+    private val vigilanceAreaRepository: IVigilanceAreaRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetVigilanceAreas::class.java)
 
     fun execute(vigilanceAreaId: Int): VigilanceAreaEntity? {

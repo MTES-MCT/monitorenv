@@ -12,21 +12,20 @@ import java.net.InetAddress
 @Configuration
 class AJPConfig {
     @Autowired
-    private val AJPProperties: AJPProperties? = null
+    private val ajpProperties: AJPProperties? = null
 
     @Bean
-    fun servletContainer(): WebServerFactoryCustomizer<TomcatServletWebServerFactory?>? {
-        return WebServerFactoryCustomizer { server: TomcatServletWebServerFactory? ->
+    fun servletContainer(): WebServerFactoryCustomizer<TomcatServletWebServerFactory?>? =
+        WebServerFactoryCustomizer { server: TomcatServletWebServerFactory? ->
             if (server is TomcatServletWebServerFactory) {
                 server.addAdditionalTomcatConnectors(redirectConnector())
             }
         }
-    }
 
     private fun redirectConnector(): Connector? {
         val connector = Connector("AJP/1.3")
         connector.scheme = "http"
-        connector.port = AJPProperties?.port?.toInt() ?: 8000
+        connector.port = ajpProperties?.port?.toInt() ?: 8000
         connector.secure = false
         connector.allowTrace = false
         (connector.protocolHandler as AbstractAjpProtocol<*>).secretRequired = false

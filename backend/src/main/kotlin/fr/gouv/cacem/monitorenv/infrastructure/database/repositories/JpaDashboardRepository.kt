@@ -28,8 +28,7 @@ class JpaDashboardRepository(
     private val regulatoryAreaRepository: IDBRegulatoryAreaRepository,
     private val reportingRepository: IDBReportingRepository,
     private val vigilanceAreaRepository: IDBVigilanceAreaRepository,
-) :
-    IDashboardRepository {
+) : IDashboardRepository {
     @Transactional
     override fun save(dashboard: DashboardEntity): DashboardEntity {
         dashboard.id?.let {
@@ -56,13 +55,12 @@ class JpaDashboardRepository(
         return dashboardModel.toDashboardEntity()
     }
 
-    override fun findAll(): List<DashboardEntity> {
-        return dashboardRepository.findAllByIsDeletedIsFalse().map { it.toDashboardEntity() }
-    }
+    override fun findAll(): List<DashboardEntity> =
+        dashboardRepository.findAllByIsDeletedIsFalse().map {
+            it.toDashboardEntity()
+        }
 
-    override fun findById(id: UUID): DashboardEntity? {
-        return dashboardRepository.findByIdOrNull(id)?.toDashboardEntity()
-    }
+    override fun findById(id: UUID): DashboardEntity? = dashboardRepository.findByIdOrNull(id)?.toDashboardEntity()
 
     @Transactional
     override fun delete(id: UUID) {

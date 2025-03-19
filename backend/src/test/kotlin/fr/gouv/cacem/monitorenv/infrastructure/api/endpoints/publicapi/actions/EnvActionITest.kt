@@ -66,11 +66,12 @@ class EnvActionITest {
         given(patchEnvAction.execute(id, patchableEnvActionEntity)).willReturn(patchedEnvAction)
 
         // When
-        mockMvc.perform(
-            patch("/api/v1/actions/$id")
-                .content(partialEnvActionAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                patch("/api/v1/actions/$id")
+                    .content(partialEnvActionAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
@@ -78,14 +79,12 @@ class EnvActionITest {
                     "$.actionEndDateTimeUtc",
                     equalTo(patchedEnvAction.actionEndDateTimeUtc?.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.actionStartDateTimeUtc",
                     equalTo(patchedEnvAction.actionStartDateTimeUtc?.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.observationsByUnit",
                     equalTo(patchedEnvAction.observationsByUnit),
@@ -122,11 +121,12 @@ class EnvActionITest {
             """.trimIndent()
 
         // When
-        mockMvc.perform(
-            patch("/api/v1/actions/$id")
-                .content(partialEnvActionAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                patch("/api/v1/actions/$id")
+                    .content(partialEnvActionAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
     }
@@ -149,11 +149,12 @@ class EnvActionITest {
         ).willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, message))
 
         // When
-        mockMvc.perform(
-            patch("/api/v1/actions/$unknownId")
-                .content(partialEnvActionAsJson)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
+        mockMvc
+            .perform(
+                patch("/api/v1/actions/$unknownId")
+                    .content(partialEnvActionAsJson)
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
     }

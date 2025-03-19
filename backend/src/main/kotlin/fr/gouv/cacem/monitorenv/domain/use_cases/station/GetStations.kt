@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.station.dtos.FullStationDTO
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetStations(private val stationRepository: IStationRepository) {
+class GetStations(
+    private val stationRepository: IStationRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetStations::class.java)
 
     fun execute(): List<FullStationDTO> {

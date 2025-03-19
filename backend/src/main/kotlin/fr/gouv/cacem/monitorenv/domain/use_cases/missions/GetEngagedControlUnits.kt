@@ -1,5 +1,3 @@
-@file:Suppress("ktlint:standard:package-name")
-
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
@@ -10,7 +8,9 @@ import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
-class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
+class GetEngagedControlUnits(
+    private val getFullMissions: GetFullMissions,
+) {
     private val logger = LoggerFactory.getLogger(GetEngagedControlUnits::class.java)
 
     fun execute(): List<ControlUnitToMissionSources> {
@@ -34,18 +34,17 @@ class GetEngagedControlUnits(private val getFullMissions: GetFullMissions) {
                     mission.mission.controlUnits.map { controlUnit ->
                         Pair(controlUnit, mission.mission.missionSource)
                     }
-                }
-                .groupBy { it.first.id }
+                }.groupBy { it.first.id }
                 .map {
-                        entry: Map.Entry<
-                            Int,
-                            List<
-                                Pair<
-                                    LegacyControlUnitEntity,
-                                    MissionSourceEnum,
-                                    >,
-                                >,
+                    entry: Map.Entry<
+                        Int,
+                        List<
+                            Pair<
+                                LegacyControlUnitEntity,
+                                MissionSourceEnum,
                             >,
+                        >,
+                    >,
                     ->
                     // As we grouped by controlUnit, all control units in
                     // Pair<LegacyControlUnitEntity, MissionSourceEnum> are equals

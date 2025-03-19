@@ -18,21 +18,19 @@ class JpaStationRepository(
         dbStationRepository.deleteById(stationId)
     }
 
-    override fun findAll(): List<FullStationDTO> {
-        return dbStationRepository.findAll().map { it.toFullStation() }
-    }
+    override fun findAll(): List<FullStationDTO> = dbStationRepository.findAll().map { it.toFullStation() }
 
-    override fun findAllById(stationIds: List<Int>): List<FullStationDTO> {
-        return dbStationRepository.findAllById(stationIds).map { it.toFullStation() }
-    }
+    override fun findAllById(stationIds: List<Int>): List<FullStationDTO> =
+        dbStationRepository.findAllById(stationIds).map {
+            it.toFullStation()
+        }
 
-    override fun findById(stationId: Int): FullStationDTO {
-        return dbStationRepository.findById(stationId).get().toFullStation()
-    }
+    override fun findById(stationId: Int): FullStationDTO =
+        dbStationRepository.findById(stationId).get().toFullStation()
 
     @Transactional
-    override fun save(station: StationEntity): StationEntity {
-        return try {
+    override fun save(station: StationEntity): StationEntity =
+        try {
             val stationModel = StationModel.fromStation(station)
 
             dbStationRepository.save(stationModel).toStation()
@@ -42,5 +40,4 @@ class JpaStationRepository(
                 e,
             )
         }
-    }
 }

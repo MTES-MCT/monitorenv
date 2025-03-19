@@ -70,13 +70,17 @@ class VigilanceAreaValidator : Validator<VigilanceAreaEntity> {
                     "La condition de fin est obligatoire",
                 )
             }
-            if (vigilanceArea.endingCondition === EndingConditionEnum.END_DATE && vigilanceArea.endingOccurrenceDate === null) {
+            if (vigilanceArea.endingCondition === EndingConditionEnum.END_DATE &&
+                vigilanceArea.endingOccurrenceDate === null
+            ) {
                 throw BackendUsageException(
                     BackendUsageErrorCode.UNVALID_PROPERTY,
                     "La date de fin de l'occurence est obligatoire",
                 )
             }
-            if (vigilanceArea.endingCondition === EndingConditionEnum.OCCURENCES_NUMBER && (vigilanceArea.endingOccurrencesNumber === null || vigilanceArea.endingOccurrencesNumber == 0)) {
+            if (vigilanceArea.endingCondition === EndingConditionEnum.OCCURENCES_NUMBER &&
+                (vigilanceArea.endingOccurrencesNumber === null || vigilanceArea.endingOccurrencesNumber == 0)
+            ) {
                 throw BackendUsageException(
                     BackendUsageErrorCode.UNVALID_PROPERTY,
                     "Le nombre d'occurence est obligatoire",

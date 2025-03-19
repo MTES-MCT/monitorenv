@@ -14,14 +14,13 @@ class DashboardImageDataOutput(
     val size: Int,
 ) {
     companion object {
-        fun fromDashboardImageEntity(dashboardImage: ImageEntity): DashboardImageDataOutput {
-            return DashboardImageDataOutput(
+        fun fromDashboardImageEntity(dashboardImage: ImageEntity): DashboardImageDataOutput =
+            DashboardImageDataOutput(
                 id = dashboardImage.id,
                 name = dashboardImage.name,
                 content = dashboardImage.content.encodeBase64(),
                 mimeType = dashboardImage.mimeType,
                 size = dashboardImage.size,
             )
-        }
     }
 }

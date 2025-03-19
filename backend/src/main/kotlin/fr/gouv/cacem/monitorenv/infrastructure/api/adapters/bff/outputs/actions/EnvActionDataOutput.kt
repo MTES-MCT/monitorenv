@@ -18,8 +18,8 @@ abstract class EnvActionDataOutput(
         fun fromEnvActionEntity(
             envActionEntity: EnvActionEntity,
             envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?,
-        ): EnvActionDataOutput {
-            return when (envActionEntity.actionType) {
+        ): EnvActionDataOutput =
+            when (envActionEntity.actionType) {
                 ActionTypeEnum.CONTROL ->
                     EnvActionControlDataOutput.fromEnvActionControlEntity(
                         envActionControlEntity = envActionEntity as EnvActionControlEntity,
@@ -46,6 +46,5 @@ abstract class EnvActionDataOutput(
                         envActionEntity as EnvActionNoteEntity,
                     )
             }
-        }
     }
 }

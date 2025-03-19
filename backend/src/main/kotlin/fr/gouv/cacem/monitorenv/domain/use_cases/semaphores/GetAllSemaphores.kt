@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetAllSemaphores(private val semaphoreRepository: ISemaphoreRepository) {
+class GetAllSemaphores(
+    private val semaphoreRepository: ISemaphoreRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetAllSemaphores::class.java)
 
     fun execute(): List<SemaphoreEntity> {

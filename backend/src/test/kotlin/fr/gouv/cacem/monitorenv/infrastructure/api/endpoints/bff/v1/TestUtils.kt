@@ -5,8 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 
 class TestUtils {
     companion object {
-        fun getControlInfraction(): List<InfractionEntity> {
-            return listOf(
+        fun getControlInfraction(): List<InfractionEntity> =
+            listOf(
                 InfractionEntity(
                     id = "d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b",
                     administrativeResponse = AdministrativeResponseEnum.SANCTION,
@@ -25,6 +25,5 @@ class TestUtils {
                     seizure = SeizureTypeEnum.NO,
                 ),
             )
-        }
     }
 }

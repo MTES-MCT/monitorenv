@@ -101,13 +101,12 @@ class GetEngagedControlUnitsUTests {
                 anyOrNull(),
                 anyOrNull(),
             ),
+        ).willReturn(
+            listOf(
+                firstMission,
+                secondMission,
+            ),
         )
-            .willReturn(
-                listOf(
-                    firstMission,
-                    secondMission,
-                ),
-            )
 
         val controlUnits = GetEngagedControlUnits(getFullMissions).execute()
 

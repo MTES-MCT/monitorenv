@@ -60,8 +60,7 @@ class CanDeleteMissionUTests {
                 monitorFishMissionActionsRepository =
                 monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
-            )
-                .execute(missionId, MissionSourceEnum.MONITORFISH)
+            ).execute(missionId, MissionSourceEnum.MONITORFISH)
 
         assertThat(result).isEqualTo(CanDeleteMissionResponse(true, listOf()))
         assertThat(log.out).contains("Can mission $missionId be deleted")
@@ -98,8 +97,7 @@ class CanDeleteMissionUTests {
                 monitorFishMissionActionsRepository =
                 monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
-            )
-                .execute(missionId, MissionSourceEnum.MONITORFISH)
+            ).execute(missionId, MissionSourceEnum.MONITORFISH)
 
         assertThat(result).isEqualTo(CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORENV)))
         assertThat(log.out).contains("Can mission $missionId be deleted")
@@ -135,8 +133,7 @@ class CanDeleteMissionUTests {
                 monitorFishMissionActionsRepository =
                 monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
-            )
-                .execute(missionId, MissionSourceEnum.MONITORFISH)
+            ).execute(missionId, MissionSourceEnum.MONITORFISH)
 
         assertThat(result).isEqualTo(
             CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORENV, MissionSourceEnum.RAPPORT_NAV)),
@@ -167,8 +164,7 @@ class CanDeleteMissionUTests {
                 monitorFishMissionActionsRepository =
                 monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
-            )
-                .execute(missionId, MissionSourceEnum.MONITORENV)
+            ).execute(missionId, MissionSourceEnum.MONITORENV)
 
         assertThat(result).isEqualTo(CanDeleteMissionResponse(true, listOf()))
     }
@@ -212,8 +208,7 @@ class CanDeleteMissionUTests {
                 monitorFishMissionActionsRepository =
                 monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
-            )
-                .execute(missionId, MissionSourceEnum.MONITORENV)
+            ).execute(missionId, MissionSourceEnum.MONITORENV)
 
         assertThat(result).isEqualTo(CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORFISH)))
     }
@@ -267,8 +262,7 @@ class CanDeleteMissionUTests {
                 monitorFishMissionActionsRepository =
                 monitorFishMissionActionsRepository,
                 rapportNavMissionActionsRepository = rapportNavMissionActionsRepository,
-            )
-                .execute(missionId, MissionSourceEnum.MONITORENV)
+            ).execute(missionId, MissionSourceEnum.MONITORENV)
 
         assertThat(result).isEqualTo(
             CanDeleteMissionResponse(false, listOf(MissionSourceEnum.MONITORFISH, MissionSourceEnum.RAPPORT_NAV)),

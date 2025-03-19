@@ -8,7 +8,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.INatinfRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetAllNatinfs(private val natinfRepository: INatinfRepository) {
+class GetAllNatinfs(
+    private val natinfRepository: INatinfRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetAllNatinfs::class.java)
 
     fun execute(): List<NatinfEntity> {

@@ -13,8 +13,8 @@ data class CreateOrUpdateControlUnitResourceDataInput(
     val stationId: Int,
     val type: ControlUnitResourceType,
 ) {
-    fun toControlUnitResource(): ControlUnitResourceEntity {
-        return ControlUnitResourceEntity(
+    fun toControlUnitResource(): ControlUnitResourceEntity =
+        ControlUnitResourceEntity(
             id = this.id,
             controlUnitId = this.controlUnitId,
             isArchived = this.isArchived,
@@ -24,5 +24,4 @@ data class CreateOrUpdateControlUnitResourceDataInput(
             stationId = this.stationId,
             type = this.type,
         )
-    }
 }

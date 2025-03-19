@@ -26,8 +26,8 @@ data class CreateOrUpdateMissionDataInput(
     val createdAtUtc: ZonedDateTime?,
     val updatedAtUtc: ZonedDateTime?,
 ) {
-    fun toMissionEntity(): MissionEntity {
-        return MissionEntity(
+    fun toMissionEntity(): MissionEntity =
+        MissionEntity(
             id = id,
             missionTypes = missionTypes,
             controlUnits = controlUnits,
@@ -47,5 +47,4 @@ data class CreateOrUpdateMissionDataInput(
             createdAtUtc = createdAtUtc,
             updatedAtUtc = updatedAtUtc,
         )
-    }
 }

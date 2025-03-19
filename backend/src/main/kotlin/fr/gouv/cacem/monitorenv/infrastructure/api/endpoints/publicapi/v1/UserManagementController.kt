@@ -21,9 +21,7 @@ class UserManagementController(
     @Operation(summary = "Create a new user")
     fun saveUser(
         @RequestBody user: AddUserDataInput,
-    ) {
-        return saveUser.execute(user.toUserAuthorization())
-    }
+    ) = saveUser.execute(user.toUserAuthorization())
 
     @DeleteMapping(value = ["/{email}"])
     @Operation(summary = "Delete a given user")
@@ -31,7 +29,5 @@ class UserManagementController(
         @PathParam("User email")
         @PathVariable(name = "email")
         email: String,
-    ) {
-        return deleteUser.execute(email)
-    }
+    ) = deleteUser.execute(email)
 }

@@ -80,12 +80,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+            ).execute(
+                mission = missionToCreate,
+                attachedReportingIds = attachedReportingIds,
+                envActionsAttachedToReportingIds = listOf(),
             )
-                .execute(
-                    mission = missionToCreate,
-                    attachedReportingIds = attachedReportingIds,
-                    envActionsAttachedToReportingIds = listOf(),
-                )
 
         // Then
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
@@ -117,14 +116,12 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+            ).execute(
+                mission = missionToCreate,
+                attachedReportingIds = attachedReportingIds,
+                envActionsAttachedToReportingIds = listOf(),
             )
-                .execute(
-                    mission = missionToCreate,
-                    attachedReportingIds = attachedReportingIds,
-                    envActionsAttachedToReportingIds = listOf(),
-                )
-        }
-            .isInstanceOf(ReportingAlreadyAttachedException::class.java)
+        }.isInstanceOf(ReportingAlreadyAttachedException::class.java)
     }
 
     @Test
@@ -194,15 +191,14 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+            ).execute(
+                mission = missionToCreate,
+                attachedReportingIds = attachedReportingIds,
+                envActionsAttachedToReportingIds =
+                    listOf(
+                        envActionAttachedToReportingIds,
+                    ),
             )
-                .execute(
-                    mission = missionToCreate,
-                    attachedReportingIds = attachedReportingIds,
-                    envActionsAttachedToReportingIds =
-                        listOf(
-                            envActionAttachedToReportingIds,
-                        ),
-                )
 
         // Then
         verify(reportingRepository, times(1))
@@ -214,11 +210,10 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         verify(
             reportingRepository,
             times(1),
+        ).attachEnvActionsToReportings(
+            envActionAttachedToReportingIds.first,
+            envActionAttachedToReportingIds.second,
         )
-            .attachEnvActionsToReportings(
-                envActionAttachedToReportingIds.first,
-                envActionAttachedToReportingIds.second,
-            )
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
         assertThat(log.out).contains(
             "Attempt to CREATE or UPDATE mission: ${missionToCreate.id} with attached reporting ids: $attachedReportingIds and env actions attached to reporting ids: ${
@@ -256,12 +251,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+            ).execute(
+                mission = missionToCreate,
+                attachedReportingIds = listOf(),
+                envActionsAttachedToReportingIds = listOf(),
             )
-                .execute(
-                    mission = missionToCreate,
-                    attachedReportingIds = listOf(),
-                    envActionsAttachedToReportingIds = listOf(),
-                )
 
         // Then
         assertThat(fishResponds).isFalse()
@@ -287,12 +281,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+            ).execute(
+                mission = missionToCreate,
+                attachedReportingIds = listOf(),
+                envActionsAttachedToReportingIds = listOf(),
             )
-                .execute(
-                    mission = missionToCreate,
-                    attachedReportingIds = listOf(),
-                    envActionsAttachedToReportingIds = listOf(),
-                )
 
         // Then
         verifyNoMoreInteractions(getFullMissionWithFishAndRapportNavActions)

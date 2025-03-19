@@ -32,12 +32,11 @@ data class MissionEnvActionControlDataOutput(
     val observations: String? = null,
     val openBy: String? = null,
     val vehicleType: VehicleTypeEnum? = null,
-) :
-    MissionEnvActionDataOutput(
-            id = id,
-            actionStartDateTimeUtc = actionStartDateTimeUtc,
-            actionType = ActionTypeEnum.CONTROL,
-        ) {
+) : MissionEnvActionDataOutput(
+        id = id,
+        actionStartDateTimeUtc = actionStartDateTimeUtc,
+        actionType = ActionTypeEnum.CONTROL,
+    ) {
     companion object {
         fun fromEnvActionControlEntity(envActionControlEntity: EnvActionControlEntity) =
             MissionEnvActionControlDataOutput(

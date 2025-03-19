@@ -27,9 +27,7 @@ class ApiStationsController(
         @PathParam("Station ID")
         @PathVariable(name = "stationId")
         stationId: Int,
-    ): BooleanDataOutput {
-        return canDeleteStation.execute(stationId).let { BooleanDataOutput.get(it) }
-    }
+    ): BooleanDataOutput = canDeleteStation.execute(stationId).let { BooleanDataOutput.get(it) }
 
     @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a station")

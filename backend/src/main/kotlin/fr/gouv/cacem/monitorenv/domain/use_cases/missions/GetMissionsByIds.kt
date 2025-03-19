@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetMissionsByIds(private val missionRepository: IMissionRepository) {
+class GetMissionsByIds(
+    private val missionRepository: IMissionRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetMissions::class.java)
 
     fun execute(ids: List<Int>): List<MissionEntity> {

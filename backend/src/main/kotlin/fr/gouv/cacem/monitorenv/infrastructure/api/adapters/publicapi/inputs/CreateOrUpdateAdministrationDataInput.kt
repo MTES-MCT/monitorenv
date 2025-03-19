@@ -7,11 +7,10 @@ data class CreateOrUpdateAdministrationDataInput(
     val isArchived: Boolean,
     val name: String,
 ) {
-    fun toAdministration(): AdministrationEntity {
-        return AdministrationEntity(
+    fun toAdministration(): AdministrationEntity =
+        AdministrationEntity(
             id = this.id,
             isArchived = this.isArchived,
             name = this.name,
         )
-    }
 }

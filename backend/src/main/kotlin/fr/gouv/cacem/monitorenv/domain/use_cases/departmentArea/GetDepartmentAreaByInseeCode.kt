@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
-class GetDepartmentAreaByInseeCode(private val departmentAreaRepository: IDepartmentAreaRepository) {
+class GetDepartmentAreaByInseeCode(
+    private val departmentAreaRepository: IDepartmentAreaRepository,
+) {
     private val logger = LoggerFactory.getLogger(GetDepartmentAreaByInseeCode::class.java)
 
     fun execute(departmentAreaInseeCode: String): DepartmentAreaEntity {

@@ -70,7 +70,5 @@ data class EnvActionsTagPk(
         return envActionId == other.envActionId && tagId == other.tagId
     }
 
-    override fun hashCode(): Int {
-        return listOf(envActionId, tagId).hashCode()
-    }
+    override fun hashCode(): Int = listOf(envActionId, tagId).hashCode()
 }

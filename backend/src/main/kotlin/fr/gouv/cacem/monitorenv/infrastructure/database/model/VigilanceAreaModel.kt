@@ -102,8 +102,8 @@ data class VigilanceAreaModel(
     @Column(name = "updated_at") var updatedAt: ZonedDateTime?,
 ) {
     companion object {
-        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel {
-            return VigilanceAreaModel(
+        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel =
+            VigilanceAreaModel(
                 id = vigilanceArea.id,
                 comments = vigilanceArea.comments,
                 computedEndDate = vigilanceArea.computedEndDate?.toInstant(),
@@ -130,11 +130,10 @@ data class VigilanceAreaModel(
                 createdAt = vigilanceArea.createdAt,
                 updatedAt = vigilanceArea.updatedAt,
             )
-        }
     }
 
-    fun toVigilanceAreaEntity(): VigilanceAreaEntity {
-        return VigilanceAreaEntity(
+    fun toVigilanceAreaEntity(): VigilanceAreaEntity =
+        VigilanceAreaEntity(
             id = id,
             comments = comments,
             computedEndDate = computedEndDate?.atZone(UTC),
@@ -162,7 +161,6 @@ data class VigilanceAreaModel(
             createdAt = createdAt,
             updatedAt = updatedAt,
         )
-    }
 
     @PrePersist
     private fun prePersist() {

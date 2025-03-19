@@ -18,8 +18,8 @@ data class MonitorFishMissionActionDataInput(
     val otherComments: String? = null,
     val vesselName: String? = null,
 ) {
-    fun toMonitorFishMissionActionEntity(): MonitorFishMissionActionEntity {
-        return MonitorFishMissionActionEntity(
+    fun toMonitorFishMissionActionEntity(): MonitorFishMissionActionEntity =
+        MonitorFishMissionActionEntity(
             id = this.id,
             actionDatetimeUtc = this.actionDatetimeUtc,
             actionType = this.actionType,
@@ -31,5 +31,4 @@ data class MonitorFishMissionActionDataInput(
             otherComments = this.otherComments,
             vesselName = this.vesselName,
         )
-    }
 }

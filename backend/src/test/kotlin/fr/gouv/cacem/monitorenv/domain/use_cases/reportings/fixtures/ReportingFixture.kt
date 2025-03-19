@@ -62,8 +62,8 @@ class ReportingFixture {
             id: Int? = 1,
             attachedEnvActionId: UUID? = null,
             reporting: ReportingEntity = aReporting(id, attachedEnvActionId = attachedEnvActionId),
-        ): ReportingDetailsDTO {
-            return ReportingDetailsDTO(
+        ): ReportingDetailsDTO =
+            ReportingDetailsDTO(
                 reporting = reporting,
                 reportingSources =
                     listOf(
@@ -74,14 +74,13 @@ class ReportingFixture {
                         ),
                     ),
             )
-        }
 
         fun aReportingListDTO(
             id: Int? = 1,
             attachedEnvActionId: UUID? = null,
             reporting: ReportingEntity = aReporting(id, attachedEnvActionId = attachedEnvActionId),
-        ): ReportingListDTO {
-            return ReportingListDTO(
+        ): ReportingListDTO =
+            ReportingListDTO(
                 reporting = reporting,
                 reportingSources =
                     listOf(
@@ -92,13 +91,12 @@ class ReportingFixture {
                         ),
                     ),
             )
-        }
 
         fun aReportingSourceSemaphore(
             reportingId: Int? = null,
             semaphoreId: Int = 1,
-        ): ReportingSourceEntity {
-            return ReportingSourceEntity(
+        ): ReportingSourceEntity =
+            ReportingSourceEntity(
                 id = null,
                 reportingId = reportingId,
                 sourceType = SourceTypeEnum.SEMAPHORE,
@@ -106,13 +104,12 @@ class ReportingFixture {
                 controlUnitId = null,
                 sourceName = null,
             )
-        }
 
         fun aReportingSourceControlUnit(
             reportingId: Int? = null,
             controlUnitId: Int = 1,
-        ): ReportingSourceEntity {
-            return ReportingSourceEntity(
+        ): ReportingSourceEntity =
+            ReportingSourceEntity(
                 id = null,
                 reportingId = reportingId,
                 sourceType = SourceTypeEnum.CONTROL_UNIT,
@@ -120,13 +117,12 @@ class ReportingFixture {
                 controlUnitId = controlUnitId,
                 sourceName = null,
             )
-        }
 
         fun aReportingSourceOther(
             reportingId: Int? = null,
             sourceName: String = "test",
-        ): ReportingSourceEntity {
-            return ReportingSourceEntity(
+        ): ReportingSourceEntity =
+            ReportingSourceEntity(
                 id = null,
                 reportingId = reportingId,
                 sourceType = SourceTypeEnum.OTHER,
@@ -134,6 +130,5 @@ class ReportingFixture {
                 controlUnitId = null,
                 sourceName = sourceName,
             )
-        }
     }
 }

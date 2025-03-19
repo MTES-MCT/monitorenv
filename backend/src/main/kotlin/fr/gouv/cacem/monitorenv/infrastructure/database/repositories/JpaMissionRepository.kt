@@ -9,7 +9,11 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.apache.commons.lang3.StringUtils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -27,9 +31,7 @@ class JpaMissionRepository(
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
 ) : IMissionRepository {
-    override fun count(): Long {
-        return dbMissionRepository.count()
-    }
+    override fun count(): Long = dbMissionRepository.count()
 
     @Transactional
     override fun delete(missionId: Int) {
@@ -55,39 +57,37 @@ class JpaMissionRepository(
             } else {
                 Pageable.unpaged()
             }
-        return dbMissionRepository.findAll(
-            controlUnitIds = controlUnitIds,
-            missionSources = missionSources,
-            missionStatuses = missionStatuses,
-            missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
-            missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
-            missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
-            pageable = pageable,
-            seaFronts = seaFronts,
-            startedAfter = startedAfter,
-            startedBefore = startedBefore,
-        )
-            .map { it.toMissionListDTO(mapper) }.filter { findBySearchQuery(it.mission, searchQuery) }
+        return dbMissionRepository
+            .findAll(
+                controlUnitIds = controlUnitIds,
+                missionSources = missionSources,
+                missionStatuses = missionStatuses,
+                missionTypeAIR = MissionTypeEnum.AIR in missionTypes.orEmpty(),
+                missionTypeLAND = MissionTypeEnum.LAND in missionTypes.orEmpty(),
+                missionTypeSEA = MissionTypeEnum.SEA in missionTypes.orEmpty(),
+                pageable = pageable,
+                seaFronts = seaFronts,
+                startedAfter = startedAfter,
+                startedBefore = startedBefore,
+            ).map { it.toMissionListDTO(mapper) }
+            .filter { findBySearchQuery(it.mission, searchQuery) }
     }
 
     @Transactional
-    override fun findByIds(ids: List<Int>): List<MissionEntity> {
-        return dbMissionRepository.findNotDeletedByIds(ids).map { it.toMissionEntity(mapper) }
-    }
+    override fun findByIds(ids: List<Int>): List<MissionEntity> =
+        dbMissionRepository.findNotDeletedByIds(ids).map { it.toMissionEntity(mapper) }
 
     @Transactional
-    override fun findByControlUnitId(controlUnitId: Int): List<MissionEntity> {
-        return dbMissionRepository.findByControlUnitId(controlUnitId).map {
+    override fun findByControlUnitId(controlUnitId: Int): List<MissionEntity> =
+        dbMissionRepository.findByControlUnitId(controlUnitId).map {
             it.toMissionEntity(mapper)
         }
-    }
 
     @Transactional
-    override fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionEntity> {
-        return dbMissionRepository.findByControlUnitResourceId(controlUnitResourceId).map {
+    override fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionEntity> =
+        dbMissionRepository.findByControlUnitResourceId(controlUnitResourceId).map {
             it.toMissionEntity(mapper)
         }
-    }
 
     @Transactional
     override fun findAll(
@@ -156,19 +156,15 @@ class JpaMissionRepository(
             } ?: false
     }
 
-    private fun normalizeField(input: String): String {
-        return StringUtils.stripAccents(input.replace(" ", ""))
-    }
+    private fun normalizeField(input: String): String = StringUtils.stripAccents(input.replace(" ", ""))
 
     @Transactional
-    override fun findFullMissionById(missionId: Int): MissionDetailsDTO? {
-        return dbMissionRepository.findByIdOrNull(missionId)?.toMissionDTO(mapper)
-    }
+    override fun findFullMissionById(missionId: Int): MissionDetailsDTO? =
+        dbMissionRepository.findByIdOrNull(missionId)?.toMissionDTO(mapper)
 
     @Transactional
-    override fun findById(missionId: Int): MissionEntity? {
-        return dbMissionRepository.findByIdOrNull(missionId)?.toMissionEntity(mapper)
-    }
+    override fun findById(missionId: Int): MissionEntity? =
+        dbMissionRepository.findByIdOrNull(missionId)?.toMissionEntity(mapper)
 
     @Transactional
     override fun save(mission: MissionEntity): MissionDetailsDTO {

@@ -40,8 +40,8 @@ data class ControlUnitContactModel(
         fun fromControlUnitContact(
             controlUnitContact: ControlUnitContactEntity,
             controlUnitModel: ControlUnitModel,
-        ): ControlUnitContactModel {
-            return ControlUnitContactModel(
+        ): ControlUnitContactModel =
+            ControlUnitContactModel(
                 id = controlUnitContact.id,
                 controlUnit = controlUnitModel,
                 email = controlUnitContact.email,
@@ -50,11 +50,10 @@ data class ControlUnitContactModel(
                 name = controlUnitContact.name,
                 phone = controlUnitContact.phone,
             )
-        }
     }
 
-    fun toControlUnitContact(): ControlUnitContactEntity {
-        return ControlUnitContactEntity(
+    fun toControlUnitContact(): ControlUnitContactEntity =
+        ControlUnitContactEntity(
             id,
             controlUnitId = requireNotNull(controlUnit.id),
             email,
@@ -63,17 +62,15 @@ data class ControlUnitContactModel(
             name,
             phone,
         )
-    }
 
-    fun toFullControlUnitContact(): FullControlUnitContactDTO {
-        return FullControlUnitContactDTO(
+    fun toFullControlUnitContact(): FullControlUnitContactDTO =
+        FullControlUnitContactDTO(
             controlUnit = controlUnit.toControlUnit(),
             controlUnitContact = toControlUnitContact(),
         )
-    }
 
     @Override
-    override fun toString(): String {
-        return this::class.simpleName + "(id = $id , controlUnitId = ${controlUnit.id} , email = $email , name = $name , phone = $phone, isEmailSubscriptionContact = $isEmailSubscriptionContact, isSmsSubscriptionContact = $isSmsSubscriptionContact)"
-    }
+    override fun toString(): String =
+        this::class.simpleName +
+            "(id = $id , controlUnitId = ${controlUnit.id} , email = $email , name = $name , phone = $phone, isEmailSubscriptionContact = $isEmailSubscriptionContact, isSmsSubscriptionContact = $isSmsSubscriptionContact)"
 }

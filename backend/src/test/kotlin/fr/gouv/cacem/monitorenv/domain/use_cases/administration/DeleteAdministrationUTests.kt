@@ -44,7 +44,6 @@ class DeleteAdministrationUTests {
 
         assertThatThrownBy {
             DeleteAdministration(administrationRepository, canDeleteAdministration).execute(administrationId)
-        }
-            .isInstanceOf(CouldNotDeleteException::class.java)
+        }.isInstanceOf(CouldNotDeleteException::class.java)
     }
 }

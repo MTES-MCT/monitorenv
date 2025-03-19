@@ -4,10 +4,9 @@ data class BooleanDataOutput(
     val value: Boolean,
 ) {
     companion object {
-        fun get(value: Boolean): BooleanDataOutput {
-            return BooleanDataOutput(
+        fun get(value: Boolean): BooleanDataOutput =
+            BooleanDataOutput(
                 value,
             )
-        }
     }
 }

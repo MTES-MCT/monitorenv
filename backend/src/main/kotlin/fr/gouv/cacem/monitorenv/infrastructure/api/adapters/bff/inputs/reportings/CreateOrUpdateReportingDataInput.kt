@@ -36,8 +36,8 @@ data class CreateOrUpdateReportingDataInput(
     val withVHFAnswer: Boolean? = null,
     val isInfractionProven: Boolean,
 ) {
-    fun toReportingEntity(): ReportingEntity {
-        return ReportingEntity(
+    fun toReportingEntity(): ReportingEntity =
+        ReportingEntity(
             id = this.id,
             reportingId = this.reportingId,
             reportingSources = reportingSources.map { it.toReportingSourceEntity() },
@@ -65,5 +65,4 @@ data class CreateOrUpdateReportingDataInput(
             withVHFAnswer = this.withVHFAnswer,
             isInfractionProven = this.isInfractionProven,
         )
-    }
 }

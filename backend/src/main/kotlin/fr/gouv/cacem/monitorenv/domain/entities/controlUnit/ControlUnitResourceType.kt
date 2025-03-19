@@ -1,7 +1,9 @@
 package fr.gouv.cacem.monitorenv.domain.entities.controlUnit
 
 // Don't forget to mirror any update here in both Postgre & Frontend enums, for both Env & Fish.
-enum class ControlUnitResourceType(val label: String) {
+enum class ControlUnitResourceType(
+    val label: String,
+) {
     AIRPLANE("Avion"),
     BARGE("Barge"),
     CAR("Voiture"),

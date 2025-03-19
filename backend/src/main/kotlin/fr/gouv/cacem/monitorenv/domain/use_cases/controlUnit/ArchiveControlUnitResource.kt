@@ -5,7 +5,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceReposito
 import org.slf4j.LoggerFactory
 
 @UseCase
-class ArchiveControlUnitResource(private val controlUnitResourceRepository: IControlUnitResourceRepository) {
+class ArchiveControlUnitResource(
+    private val controlUnitResourceRepository: IControlUnitResourceRepository,
+) {
     private val logger = LoggerFactory.getLogger(ArchiveControlUnitResource::class.java)
 
     fun execute(controlUnitResourceId: Int) {

@@ -185,8 +185,7 @@ class ReportingsITests {
                 put("/bff/v1/reportings")
                     .contentType(
                         MediaType.APPLICATION_JSON,
-                    )
-                    .content(
+                    ).content(
                         objectMapper.writeValueAsString(
                             request,
                         ),
@@ -207,8 +206,7 @@ class ReportingsITests {
             .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
-            )
-            .andExpect(jsonPath("$.isControlRequired").value(true))
+            ).andExpect(jsonPath("$.isControlRequired").value(true))
             .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
@@ -300,8 +298,7 @@ class ReportingsITests {
             .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
-            )
-            .andExpect(jsonPath("$.isControlRequired").value(true))
+            ).andExpect(jsonPath("$.isControlRequired").value(true))
             .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
@@ -361,8 +358,7 @@ class ReportingsITests {
                 isAttachedToMission = any(),
                 searchQuery = any(),
             ),
-        )
-            .willReturn(listOf(reporting))
+        ).willReturn(listOf(reporting))
 
         // When
         mockedApi
@@ -475,8 +471,7 @@ class ReportingsITests {
             .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
-            )
-            .andExpect(jsonPath("$.isControlRequired").value(true))
+            ).andExpect(jsonPath("$.isControlRequired").value(true))
             .andExpect(jsonPath("$.hasNoUnitAvailable").value(true))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.validityTime").value(10))
@@ -608,8 +603,7 @@ class ReportingsITests {
                     println(ex)
                 }
             }
-        }
-            .start()
+        }.start()
 
         // Then
         val reportingUpdateEvent =
@@ -619,18 +613,18 @@ class ReportingsITests {
                 .andExpect(MockMvcResultMatchers.request().asyncStarted())
                 .andExpect(
                     MockMvcResultMatchers.request().asyncResult(Matchers.nullValue()),
-                )
-                .andExpect(
-                    MockMvcResultMatchers.header()
+                ).andExpect(
+                    MockMvcResultMatchers
+                        .header()
                         .string("Content-Type", "text/event-stream"),
-                )
-                .andDo(MockMvcResultHandlers.log())
+                ).andDo(MockMvcResultHandlers.log())
                 .andReturn()
                 .response
                 .contentAsString
 
         Assertions.assertThat(reportingUpdateEvent).contains("event:REPORTING_UPDATE")
-        Assertions.assertThat(reportingUpdateEvent)
+        Assertions
+            .assertThat(reportingUpdateEvent)
             .containsIgnoringWhitespaces(
                 """
                 {

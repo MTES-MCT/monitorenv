@@ -144,7 +144,8 @@ class VigilanceAreasITests {
             )
         given(getAllVigilanceAreas.execute()).willReturn(listOf(vigilanceArea1, vigilanceArea2))
         // When
-        mockMvc.perform(get("/bff/v1/vigilance_areas"))
+        mockMvc
+            .perform(get("/bff/v1/vigilance_areas"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(1)))
@@ -152,8 +153,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[0].isDraft", equalTo(false)))
             .andExpect(
                 jsonPath("$[0].comments", equalTo("Commentaires sur la zone de vigilance")),
-            )
-            .andExpect(jsonPath("$[0].createdBy", equalTo("ABC")))
+            ).andExpect(jsonPath("$[0].createdBy", equalTo("ABC")))
             .andExpect(jsonPath("$[0].endingCondition", equalTo("OCCURENCES_NUMBER")))
             .andExpect(jsonPath("$[0].endingOccurrenceDate").doesNotExist())
             .andExpect(jsonPath("$[0].endingOccurrencesNumber", equalTo(2)))
@@ -162,8 +162,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            )
-            .andExpect(jsonPath("$[0].source", equalTo("Source de la zone de vigilance")))
+            ).andExpect(jsonPath("$[0].source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].themes").doesNotExist())
             .andExpect(jsonPath("$[0].visibility", equalTo("PRIVATE")))
@@ -181,8 +180,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[1].geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            )
-            .andExpect(jsonPath("$[1].source", equalTo("Un particulier")))
+            ).andExpect(jsonPath("$[1].source", equalTo("Un particulier")))
             .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
             .andExpect(jsonPath("$[1].themes").doesNotExist())
             .andExpect(jsonPath("$[1].visibility", equalTo("PUBLIC")))
@@ -194,7 +192,8 @@ class VigilanceAreasITests {
         // Given
         given(getVigilanceAreaById.execute(1)).willReturn(vigilanceArea1)
         // When
-        mockMvc.perform(get("/bff/v1/vigilance_areas/1"))
+        mockMvc
+            .perform(get("/bff/v1/vigilance_areas/1"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(1)))
@@ -210,8 +209,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            )
-            .andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
+            ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
@@ -272,11 +270,12 @@ class VigilanceAreasITests {
         given(createOrUpdateVigilanceArea.execute(vigilanceArea1)).willReturn(vigilanceArea1)
 
         // When
-        mockMvc.perform(
-            put("/bff/v1/vigilance_areas")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(vigilanceAreaDataInput)),
-        )
+        mockMvc
+            .perform(
+                put("/bff/v1/vigilance_areas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(vigilanceAreaDataInput)),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(1)))
@@ -292,8 +291,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            )
-            .andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
+            ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
@@ -346,11 +344,12 @@ class VigilanceAreasITests {
 
         given(createOrUpdateVigilanceArea.execute(updatedVigilanceArea)).willReturn(updatedVigilanceArea)
         // When
-        mockMvc.perform(
-            put("/bff/v1/vigilance_areas/1")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(vigilanceAreaDataInput)),
-        )
+        mockMvc
+            .perform(
+                put("/bff/v1/vigilance_areas/1")
+                    .contentType("application/json")
+                    .content(objectMapper.writeValueAsString(vigilanceAreaDataInput)),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(1)))
@@ -366,8 +365,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            )
-            .andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
+            ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").doesNotExist())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
@@ -381,7 +379,8 @@ class VigilanceAreasITests {
         // Given
         val vigilanceAreaId = 20
         // When
-        mockMvc.perform(delete("/bff/v1/vigilance_areas/$vigilanceAreaId"))
+        mockMvc
+            .perform(delete("/bff/v1/vigilance_areas/$vigilanceAreaId"))
             // Then
             .andExpect(status().isNoContent())
     }
@@ -392,7 +391,8 @@ class VigilanceAreasITests {
         val trigrams = listOf("ABC", "DEF", "GHI")
         given(getTrigrams.execute()).willReturn(trigrams)
         // When
-        mockMvc.perform(get("/bff/v1/vigilance_areas/trigrams"))
+        mockMvc
+            .perform(get("/bff/v1/vigilance_areas/trigrams"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0]", equalTo("ABC")))

@@ -21,8 +21,8 @@ class DashboardsDataOutput(
     val seaFront: String?,
 ) {
     companion object {
-        fun fromDashboardEntity(dashboardEntity: DashboardEntity): DashboardsDataOutput {
-            return DashboardsDataOutput(
+        fun fromDashboardEntity(dashboardEntity: DashboardEntity): DashboardsDataOutput =
+            DashboardsDataOutput(
                 id = dashboardEntity.id,
                 name = dashboardEntity.name,
                 geom = dashboardEntity.geom,
@@ -37,6 +37,5 @@ class DashboardsDataOutput(
                 seaFront = dashboardEntity.seaFront,
                 vigilanceAreaIds = dashboardEntity.vigilanceAreaIds,
             )
-        }
     }
 }

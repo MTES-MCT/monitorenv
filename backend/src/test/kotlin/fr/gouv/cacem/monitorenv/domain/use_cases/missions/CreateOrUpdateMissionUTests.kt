@@ -141,8 +141,7 @@ class CreateOrUpdateMissionUTests {
                         )
                 },
             ),
-        )
-            .willReturn(MissionDetailsDTO(mission = expectedCreatedMission))
+        ).willReturn(MissionDetailsDTO(mission = expectedCreatedMission))
 
         // When
         val createdMission =
@@ -151,10 +150,9 @@ class CreateOrUpdateMissionUTests {
                 facadeRepository = facadeAreasRepository,
                 eventPublisher = applicationEventPublisher,
                 postgisFunctionRepository = postgisFunctionRepository,
+            ).execute(
+                missionToUpdate,
             )
-                .execute(
-                    missionToUpdate,
-                )
 
         // Then
         verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == polygon })
@@ -225,10 +223,9 @@ class CreateOrUpdateMissionUTests {
                 facadeRepository = facadeAreasRepository,
                 eventPublisher = applicationEventPublisher,
                 postgisFunctionRepository = postgisFunctionRepository,
+            ).execute(
+                missionToUpdate,
             )
-                .execute(
-                    missionToUpdate,
-                )
 
         // Then
         assertThat(createdMission.createdAtUtc).isEqualTo(ZonedDateTime.parse("2022-01-23T20:29:03Z"))

@@ -70,10 +70,10 @@ class AdministrationsITests {
     fun `archive() should archive an administration`() {
         val administrationId = 1
 
-        mockMvc.perform(
-            put("/api/v1/administrations/$administrationId/archive"),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                put("/api/v1/administrations/$administrationId/archive"),
+            ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
 
         BDDMockito.verify(archiveAdministration).execute(administrationId)
@@ -85,7 +85,8 @@ class AdministrationsITests {
 
         given(canArchiveAdministration.execute(administrationId)).willReturn(true)
 
-        mockMvc.perform(get("/api/v1/administrations/$administrationId/can_archive"))
+        mockMvc
+            .perform(get("/api/v1/administrations/$administrationId/can_archive"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(true))
 
@@ -98,7 +99,8 @@ class AdministrationsITests {
 
         given(canDeleteAdministration.execute(administrationId)).willReturn(true)
 
-        mockMvc.perform(get("/api/v1/administrations/$administrationId/can_delete"))
+        mockMvc
+            .perform(get("/api/v1/administrations/$administrationId/can_delete"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.value").value(true))
 
@@ -123,12 +125,12 @@ class AdministrationsITests {
 
         given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedCreatedAdministration)
 
-        mockMvc.perform(
-            post("/api/v1/administrations")
-                .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                post("/api/v1/administrations")
+                    .content(requestBody)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
     }
 
@@ -136,10 +138,10 @@ class AdministrationsITests {
     fun `delete() should delete an administration`() {
         val administrationId = 1
 
-        mockMvc.perform(
-            delete("/api/v1/administrations/$administrationId"),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                delete("/api/v1/administrations/$administrationId"),
+            ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
 
         BDDMockito.verify(deleteAdministration).execute(administrationId)
@@ -162,7 +164,8 @@ class AdministrationsITests {
 
         given(getAdministrationById.execute(requestedId)).willReturn(expectedFullAdministration)
 
-        mockMvc.perform(get("/api/v1/administrations/$requestedId"))
+        mockMvc
+            .perform(get("/api/v1/administrations/$requestedId"))
             .andExpect(status().isOk)
 
         BDDMockito.verify(getAdministrationById).execute(requestedId)
@@ -194,7 +197,8 @@ class AdministrationsITests {
 
         given(getAdministrations.execute()).willReturn(expectedAFulldministrations)
 
-        mockMvc.perform(get("/api/v1/administrations"))
+        mockMvc
+            .perform(get("/api/v1/administrations"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize<Any>(2)))
 
@@ -220,12 +224,12 @@ class AdministrationsITests {
 
         given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedUpdatedAdministration)
 
-        mockMvc.perform(
-            put("/api/v1/administrations/1")
-                .content(requestBody)
-                .contentType(MediaType.APPLICATION_JSON),
-        )
-            .andDo(MockMvcResultHandlers.print())
+        mockMvc
+            .perform(
+                put("/api/v1/administrations/1")
+                    .content(requestBody)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
     }
 }

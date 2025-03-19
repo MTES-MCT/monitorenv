@@ -5,7 +5,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepositor
 import org.slf4j.LoggerFactory
 
 @UseCase
-class DeleteControlUnitContact(private val controlUnitContactRepository: IControlUnitContactRepository) {
+class DeleteControlUnitContact(
+    private val controlUnitContactRepository: IControlUnitContactRepository,
+) {
     private val logger = LoggerFactory.getLogger(DeleteControlUnitContact::class.java)
 
     fun execute(controlUnitContactId: Int) {

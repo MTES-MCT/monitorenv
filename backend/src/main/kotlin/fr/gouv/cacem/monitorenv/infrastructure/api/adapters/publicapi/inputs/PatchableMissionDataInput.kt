@@ -9,11 +9,10 @@ data class PatchableMissionDataInput(
     val startDateTimeUtc: ZonedDateTime?,
     val endDateTimeUtc: Optional<ZonedDateTime>?,
 ) {
-    fun toPatchableMissionEntity(): PatchableMissionEntity {
-        return PatchableMissionEntity(
+    fun toPatchableMissionEntity(): PatchableMissionEntity =
+        PatchableMissionEntity(
             observationsByUnit = observationsByUnit,
             startDateTimeUtc = startDateTimeUtc,
             endDateTimeUtc = endDateTimeUtc,
         )
-    }
 }

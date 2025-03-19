@@ -163,11 +163,10 @@ class CreateOrPatchEnvActionsUTests {
                 missionRepository = missionRepository,
                 facadeRepository = facadeAreasRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
+            ).execute(
+                mission = missionToUpdate,
+                envActions = envActions,
             )
-                .execute(
-                    mission = missionToUpdate,
-                    envActions = envActions,
-                )
 
         // Then
         verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == point })

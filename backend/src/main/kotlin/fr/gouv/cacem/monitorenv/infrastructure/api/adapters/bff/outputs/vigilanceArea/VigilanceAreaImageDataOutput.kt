@@ -13,14 +13,13 @@ class VigilanceAreaImageDataOutput(
     val size: Int,
 ) {
     companion object {
-        fun fromVigilanceAreaImage(vigilanceAreaImage: ImageEntity): VigilanceAreaImageDataOutput {
-            return VigilanceAreaImageDataOutput(
+        fun fromVigilanceAreaImage(vigilanceAreaImage: ImageEntity): VigilanceAreaImageDataOutput =
+            VigilanceAreaImageDataOutput(
                 id = vigilanceAreaImage.id,
                 name = vigilanceAreaImage.name,
                 content = vigilanceAreaImage.content.encodeBase64(),
                 mimeType = vigilanceAreaImage.mimeType,
                 size = vigilanceAreaImage.size,
             )
-        }
     }
 }
