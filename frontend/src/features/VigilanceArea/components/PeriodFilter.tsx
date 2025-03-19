@@ -41,6 +41,7 @@ export function PeriodFilter({ style }: { style?: React.CSSProperties }) {
       nextVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
         ? vigilanceAreaSpecificPeriodFilter
         : undefined
+
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,

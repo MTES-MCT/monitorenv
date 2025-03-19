@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -65,7 +66,7 @@ class RegulatoryAreasITests {
                 editeur = "Alexis Pré",
                 source = "",
                 observation = "",
-                thematique = "Mouillage",
+                themes = listOf(aTheme(name = "Mouillage")),
                 date = "2020-07-01",
                 dureeValidite = "15 ans",
                 dateFin = "2035-07-01",
@@ -83,7 +84,7 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$[0].entityName", equalTo(regulatoryArea.entityName)))
             .andExpect(jsonPath("$[0].layerName", equalTo(regulatoryArea.layerName)))
             .andExpect(jsonPath("$[0].refReg", equalTo(regulatoryArea.refReg)))
-            .andExpect(jsonPath("$[0].thematique", equalTo(regulatoryArea.thematique)))
+            .andExpect(jsonPath("$[0].themes[0].name", equalTo("Mouillage")))
             .andExpect(jsonPath("$[0].type", equalTo(regulatoryArea.type)))
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
     }
@@ -104,7 +105,7 @@ class RegulatoryAreasITests {
                 editeur = "Alexis Pré",
                 source = "",
                 observation = "",
-                thematique = "Mouillage",
+                themes = listOf(aTheme(name = "Mouillage")),
                 date = "2020-07-01",
                 dureeValidite = "15 ans",
                 dateFin = "2035-07-01",
@@ -124,7 +125,7 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(jsonPath("$.layerName", equalTo(regulatoryArea.layerName)))
             .andExpect(jsonPath("$.refReg", equalTo(regulatoryArea.refReg)))
-            .andExpect(jsonPath("$.thematique", equalTo(regulatoryArea.thematique)))
+            .andExpect(jsonPath("$.themes[0].name", equalTo("Mouillage")))
             .andExpect(jsonPath("$.type", equalTo(regulatoryArea.type)))
             .andExpect(jsonPath("$.url", equalTo(regulatoryArea.url)))
     }

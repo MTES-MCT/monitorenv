@@ -83,7 +83,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
         legendKey={layer?.entityName ?? 'aucun'}
-        type={layer?.thematique ?? 'aucun'}
+        type={layer?.themes.map(({ name }) => name).join(', ') ?? 'aucun'}
       />
       <LayerSelector.Name
         $withLargeWidth

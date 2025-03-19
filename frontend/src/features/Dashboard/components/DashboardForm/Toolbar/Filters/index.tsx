@@ -1,4 +1,6 @@
+import { useGetThemesByRegulatoryAreasQuery } from '@api/themesAPI'
 import { type DashboardType } from '@features/Dashboard/slice'
+import { getThemesAsOptions } from '@features/Themes/useCases/getThemesAsOptions'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -13,7 +15,6 @@ import {
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
-import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -31,14 +32,16 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
 
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
-  const regulatoryThemesAsOption = getRegulatoryThemesAsOptions(extractedArea?.regulatoryAreas ?? [])
+  const allRegulatoryAreaIds = extractedArea?.regulatoryAreas.flatMap(reg => reg.id) ?? []
+  const { data: regulatoryThemes } = useGetThemesByRegulatoryAreasQuery(allRegulatoryAreaIds)
+  const regulatoryThemesAsOptions = getThemesAsOptions(Object.values(regulatoryThemes ?? []))
   const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemesAsOption, ['label']),
-    [regulatoryThemesAsOption]
+    () => new CustomSearch(regulatoryThemesAsOptions, ['label']),
+    [regulatoryThemesAsOptions]
   )
 
   const ampsAsOptions = useMemo(() => getAmpsAsOptions(extractedArea?.amps ?? []), [extractedArea?.amps])
-  const AMPCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions, ['label']), [ampsAsOptions])
+  const ampCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions, ['label']), [ampsAsOptions])
 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
@@ -47,8 +50,8 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   }
 
   const areAllRegulatoryChecked = useMemo(
-    () => filters?.regulatoryThemes?.length === regulatoryThemesAsOption?.length,
-    [filters?.regulatoryThemes, regulatoryThemesAsOption]
+    () => filters?.regulatoryThemes?.length === regulatoryThemesAsOptions?.length,
+    [filters?.regulatoryThemes, regulatoryThemesAsOptions]
   )
 
   const indeterminate = useMemo(
@@ -62,7 +65,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
 
       return
     }
-    const allRegulatoryAreasIds = regulatoryThemesAsOption.map(regulatory => regulatory.value)
+    const allRegulatoryAreasIds = regulatoryThemesAsOptions.map(regulatory => regulatory.value)
 
     dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: allRegulatoryAreasIds }, id }))
   }
@@ -98,13 +101,13 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
     <FiltersContainer>
       <div>
         <CheckPicker
-          customSearch={regulatoryThemesAsOption.length > 10 ? regulatoryThemesCustomSearch : undefined}
+          customSearch={regulatoryThemesAsOptions.length > 10 ? regulatoryThemesCustomSearch : undefined}
           isLabelHidden
           isTransparent
           label="Thématique réglementaire"
           name="regulatoryThemes"
           onChange={setFilteredRegulatoryThemes}
-          options={regulatoryThemesAsOption}
+          options={regulatoryThemesAsOptions}
           placeholder="Thématique réglementaire"
           renderExtraFooter={renderExtraFooter}
           renderValue={() =>
@@ -127,7 +130,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
           value={filters?.vigilanceAreaPeriod}
         />
         <CheckPicker
-          customSearch={ampsAsOptions.length > 10 ? AMPCustomSearch : undefined}
+          customSearch={ampsAsOptions.length > 10 ? ampCustomSearch : undefined}
           isLabelHidden
           isTransparent
           label="Type d'AMP"
