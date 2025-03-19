@@ -1,9 +1,10 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { StyledSelect } from '@features/Reportings/Filters/style'
+import { getThemesAsOptions } from '@features/Themes/useCases/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -15,7 +16,6 @@ import {
   type DateAsStringRange,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
-import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { getTitle } from 'domain/entities/layers/utils'
@@ -63,13 +63,13 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     [activeControlUnitsOptions]
   )
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: themes } = useGetThemesQuery()
 
-  const regulatoryThemesOptions = getRegulatoryThemesAsOptions(regulatoryLayers ?? [])
+  const regulatoryThemesAsOptions = getThemesAsOptions(Object.values(themes ?? []))
 
   const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemesOptions, ['label']),
-    [regulatoryThemesOptions]
+    () => new CustomSearch(regulatoryThemesAsOptions, ['label']),
+    [regulatoryThemesAsOptions]
   )
 
   const onDeleteTag = (
@@ -201,14 +201,14 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
         </FilterWrapper>
         <FilterWrapper $orientation={orientation}>
           <CheckPicker
-            key={regulatoryThemesOptions.length}
+            key={regulatoryThemesAsOptions.length}
             customSearch={regulatoryThemesCustomSearch}
             isLabelHidden
             isTransparent
             label="Thématique réglementaire"
             name="regulatoryThemes"
             onChange={updateRegulatoryThemesFilter}
-            options={regulatoryThemesOptions || []}
+            options={regulatoryThemesAsOptions}
             placeholder="Thématique réglementaire"
             renderValue={() =>
               regulatoryThemes && <OptionValue>{`Thématique réglementaire (${regulatoryThemes.length})`}</OptionValue>

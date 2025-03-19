@@ -1,12 +1,18 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -31,7 +37,22 @@ data class RegulatoryAreaModel(
     @Column(name = "ref_reg") val refReg: String?,
     @Column(name = "source") val source: String?,
     @Column(name = "temporalite") val temporalite: String?,
-    @Column(name = "thematique") val thematique: String?,
+    @OneToMany(
+        mappedBy = "regulatoryArea",
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.ALL],
+    )
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    var themes: List<ThemeRegulatoryAreaModel>,
+    @OneToMany(
+        mappedBy = "regulatoryArea",
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.ALL],
+    )
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    var subThemes: List<SubThemeRegulatoryAreaModel>,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
@@ -51,31 +72,15 @@ data class RegulatoryAreaModel(
             refReg = refReg,
             source = source,
             temporalite = temporalite,
-            thematique = thematique,
+            themes =
+                this.themes.map {
+                    it.toThemeEntity(
+                        subThemes
+                            .filter { subThemes -> subThemes.subTheme.theme === it.theme }
+                            .map { subtheme -> subtheme.toSubThemeEntity() },
+                    )
+                },
             type = type,
             url = url,
         )
-
-    companion object {
-        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) =
-            RegulatoryAreaModel(
-                id = regulatoryArea.id,
-                date = regulatoryArea.date,
-                dateFin = regulatoryArea.dateFin,
-                dureeValidite = regulatoryArea.dureeValidite,
-                editeur = regulatoryArea.editeur,
-                edition = regulatoryArea.edition,
-                entityName = regulatoryArea.entityName,
-                facade = regulatoryArea.facade,
-                geom = regulatoryArea.geom,
-                layerName = regulatoryArea.layerName,
-                observation = regulatoryArea.observation,
-                refReg = regulatoryArea.refReg,
-                source = regulatoryArea.source,
-                temporalite = regulatoryArea.temporalite,
-                thematique = regulatoryArea.thematique,
-                type = regulatoryArea.type,
-                url = regulatoryArea.url,
-            )
-    }
 }

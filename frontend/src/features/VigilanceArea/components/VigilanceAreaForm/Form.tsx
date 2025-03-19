@@ -1,8 +1,9 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { Tooltip } from '@components/Tooltip'
 import { ZonePicker } from '@components/ZonePicker'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
+import { getThemesAsOptions } from '@features/Themes/useCases/getThemesAsOptions'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -21,10 +22,8 @@ import {
   FormikTextInput,
   getOptionsFromLabelledEnum,
   THEME,
-  type DateAsStringRange,
-  type Option
+  type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
-import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
@@ -53,13 +52,10 @@ export function Form() {
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: themes } = useGetThemesQuery()
 
-  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers ?? []), [regulatoryLayers])
-  const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemes as Array<Option>, ['label']),
-    [regulatoryThemes]
-  )
+  const themesOptions = getThemesAsOptions(Object.values(themes ?? []))
+  const regulatoryThemesCustomSearch = useMemo(() => new CustomSearch(themesOptions, ['label']), [themesOptions])
 
   const publish = () => {
     validateForm({ ...values, isDraft: false }).then(errors => {
@@ -187,7 +183,7 @@ export function Form() {
           isRequired
           label="Thématiques"
           name="themes"
-          options={regulatoryThemes || []}
+          options={themesOptions || []}
           placeholder="Sélectionner un/des thématique(s)"
         />
         <FormikMultiRadio

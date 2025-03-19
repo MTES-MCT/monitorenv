@@ -29,7 +29,7 @@ export function useSearchLayers() {
     const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
       ignoreLocation: true,
       includeScore: false,
-      keys: ['layerName', 'entityName', 'refReg', 'type', 'thematique'],
+      keys: ['layerName', 'entityName', 'refReg', 'type', 'themes.name'],
       minMatchCharLength: 2,
       threshold: 0.2
     })
@@ -102,7 +102,7 @@ export function useSearchLayers() {
               }
             : undefined
           const filterWithType = shouldSeachTroughAMPTypes
-            ? { $or: ampTypes.map(theme => ({ $path: 'type', $val: theme })) }
+            ? { $or: ampTypes.map(type => ({ $path: 'type', $val: type })) }
             : undefined
 
           const filterExpression = [filterWithTextExpression, filterWithType].filter(f => !!f) as Expression[]
@@ -143,7 +143,7 @@ export function useSearchLayers() {
             : undefined
 
           const filterWithTheme = shouldSearchThroughRegulatoryThemes
-            ? { $or: regulatoryThemes.map(theme => ({ $path: ['thematique'], $val: theme })) }
+            ? { $or: regulatoryThemes.map(theme => ({ $path: ['themes.name'], $val: theme })) }
             : undefined
 
           const filterExpression = [filterWithTextExpression, filterWithTheme].filter(f => !!f) as Expression[]
@@ -180,7 +180,7 @@ export function useSearchLayers() {
             : undefined
 
           const filterWithTheme = shouldSearchThroughRegulatoryThemes
-            ? { $or: regulatoryThemes.map(theme => ({ $path: ['themes'], $val: theme })) }
+            ? { $or: regulatoryThemes.map(theme => ({ $path: ['themes.name'], $val: theme })) }
             : undefined
 
           const filterExpression = [filterVigilanceAreaWithTextExpression, filterWithTheme].filter(
