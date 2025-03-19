@@ -16,7 +16,6 @@ import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Accent,
   Button,
-  Checkbox,
   CheckPicker,
   CustomSearch,
   DateRangePicker,
@@ -72,7 +71,6 @@ export function RecentActivityFilters() {
   }, [controlUnits, filters.administrationIds])
 
   const dateRangeOptions = getOptionsFromLabelledEnum(RecentActivity.RecentActivityDateRangeLabels)
-  const infractionsStatusOptions = getOptionsFromLabelledEnum(RecentActivity.InfractionsStatusFilterLabels)
 
   const controlUnitCustomSearch = useMemo(
     () => new CustomSearch(controlUnitsAsOptions ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -80,24 +78,6 @@ export function RecentActivityFilters() {
   )
 
   const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions ?? [], ['label']), [themesAsOptions])
-
-  const updateCheckboxFilter = (isChecked: boolean | undefined, value: string) => {
-    const updatedFilter = [...(filters.infractionsStatus ?? [])]
-
-    if (!isChecked && updatedFilter.includes(String(value))) {
-      const newFilter = updatedFilter.filter(status => status !== String(value))
-      dispatch(
-        recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.INFRACTIONS_STATUS, value: newFilter })
-      )
-    }
-    if (isChecked && !updatedFilter.includes(value)) {
-      const newFilter = [...updatedFilter, value]
-
-      dispatch(
-        recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.INFRACTIONS_STATUS, value: newFilter })
-      )
-    }
-  }
 
   const updatePeriodFilter = period => {
     dispatch(recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.PERIOD_FILTER, value: period }))
@@ -134,9 +114,7 @@ export function RecentActivityFilters() {
       return
     }
 
-    const nextSelectedValues = filters[filterKey].filter(selectedValue => selectedValue !== valueToDelete) as
-      | string[]
-      | number[]
+    const nextSelectedValues = filters[filterKey].filter(selectedValue => selectedValue !== valueToDelete)
     dispatch(
       dispatch(
         recentActivityActions.updateFilters({
@@ -195,19 +173,6 @@ export function RecentActivityFilters() {
   return (
     <FilterWrapper>
       <StyledBloc>
-        <StyledStatusFilter>
-          {infractionsStatusOptions.map(status => (
-            <Checkbox
-              key={status.label}
-              checked={filters?.infractionsStatus?.includes(status.value)}
-              data-cy={`recent-activity-filter-${status.label}`}
-              label={status.label}
-              name={status.label}
-              onChange={isChecked => updateCheckboxFilter(isChecked, status.value)}
-            />
-          ))}
-        </StyledStatusFilter>
-
         <Select
           cleanable={false}
           isLabelHidden

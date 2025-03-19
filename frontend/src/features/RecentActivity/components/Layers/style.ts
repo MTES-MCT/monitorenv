@@ -2,8 +2,7 @@ import { THEME } from '@mtes-mct/monitor-ui'
 
 import type { FlatStyleLike } from 'ol/style/flat'
 
-const featureHas = (key: string) => ['==', ['get', key], 1]
-
+export const stateIs = (key: string) => ['==', ['var', key], 1]
 export const recentControlActivityStyle: FlatStyleLike = [
   {
     filter: ['==', ['var', 'drawedGeometryId'], ['id']],
@@ -17,13 +16,28 @@ export const recentControlActivityStyle: FlatStyleLike = [
     else: true,
     style: {
       'icon-color': [
-        'case',
-        featureHas('withDistinction'),
-        ['case', featureHas('hasInfraction'), THEME.color.maximumRed, THEME.color.mediumSeaGreen],
-        THEME.color.charcoal
+        'interpolate',
+        ['linear'],
+        ['get', 'ratioInfractionsInControls'],
+        0,
+        '#87C20D',
+        6,
+        '#FAC200',
+        11,
+        '#E79000',
+        26,
+        '#CE6000',
+        51,
+        '#AF2E12',
+        76,
+        '#8C0D3A',
+        91,
+        '#810030',
+        100,
+        '#810030'
       ],
-      'icon-scale': 0.6,
-      'icon-src': 'Close.svg'
+      'icon-scale': ['interpolate', ['linear'], ['get', 'ratioTotalControls'], 0, 0.1, 100, 1],
+      'icon-src': 'icons/dot.svg'
     }
   }
 ]

@@ -1,5 +1,4 @@
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
-import { recentActivityActions } from '@features/RecentActivity/slice'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -8,7 +7,7 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
-import { WebGLVector } from 'ol/layer'
+import WebGLVectorLayer from 'ol/layer/WebGLVector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
 
@@ -26,7 +25,6 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   const hasMapInteraction = useHasMapInteraction()
   const isLayerVisible = displayRecentActivityLayer && !hasMapInteraction
   const filters = useAppSelector(state => state.recentActivity.filters)
-  const distinctionFilter = useAppSelector(state => state.recentActivity.distinctionFilter)
   const drawedGeometry = useAppSelector(state => state.recentActivity.drawedGeometry)
 
   const [getRecentControlsActivity, { data: recentControlsActivity }] = useGetRecentControlsActivityMutation()
@@ -66,7 +64,6 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
       administrationIds: filters.administrationIds,
       controlUnitIds: filters.controlUnitIds,
       geometry: filters.geometry,
-      infractionsStatus: filters.infractionsStatus,
       startedAfter: startAfterFilter,
       startedBefore: startBeforeFilter,
       themeIds: filters.themeIds
@@ -75,7 +72,7 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
-    new WebGLVector({
+    new WebGLVectorLayer({
       source: vectorSourceRef.current,
       style: recentControlActivityStyle,
       variables: {
@@ -96,20 +93,33 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
       vectorSourceRef.current.clear(true)
 
       if (recentControlsActivity) {
-        // we save total of controls with or without infraction  in store
-        dispatch(
-          recentActivityActions.updateDistinctionFiltersItems({
-            infractions: {
-              withInfraction: controlUnitsWithInfraction.length,
-              withoutInfraction: recentControlsActivity.length - controlUnitsWithInfraction.length
-            }
+        const totalControlsInAllActions = recentControlsActivity.reduce(
+          (acc, control) => acc + (control.actionNumberOfControls ?? 0),
+          0
+        )
+
+        const features = recentControlsActivity.flatMap(control => {
+          if (control.actionNumberOfControls === 0 || !control.actionNumberOfControls) {
+            return []
+          }
+          // total number of controls in action
+          const totalControls = control.actionNumberOfControls
+
+          // total number of persons controlled in all infractions
+          const totalControlsInInfractions = control.infractions.reduce(
+            (acc, infraction) => acc + infraction.nbTarget,
+            0
+          )
+
+          const ratioInfractionsInControls = (totalControlsInInfractions / totalControls) * 100
+          const ratioTotalControls = (totalControls * 100) / totalControlsInAllActions
+
+          return getRecentControlActivityGeometry({
+            control,
+            ratioInfractionsInControls,
+            ratioTotalControls
           })
-        )
-
-        const features = recentControlsActivity.map(control =>
-          getRecentControlActivityGeometry(control, distinctionFilter)
-        )
-
+        })
         vectorSourceRef.current.addFeatures(features)
       }
 
@@ -127,7 +137,7 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         vectorLayerRef.current.updateStyleVariables({ drawedGeometryId: id })
       }
     }
-  }, [map, distinctionFilter, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry])
+  }, [map, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)
