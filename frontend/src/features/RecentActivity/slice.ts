@@ -11,7 +11,7 @@ import type { OverlayItem } from 'domain/types/map'
 import type { Coordinate } from 'ol/coordinate'
 
 const persistConfig = {
-  blacklist: ['isDrawing', 'isGeometryValid', 'layersAndOverlays'],
+  blacklist: ['isDrawing', 'isGeometryValid', 'isLegendOpen', 'initialGeometrys', 'layersAndOverlays'],
   key: 'recentActivity',
   storage
 }
@@ -41,6 +41,7 @@ export type RecentActivityState = {
   interactionType: InteractionType
   isDrawing: boolean
   isGeometryValid: boolean
+  isLegendOpen: boolean
   layersAndOverlays: {
     isControlsListClicked: boolean
     layerOverlayCoordinates: Coordinate | undefined
@@ -60,6 +61,7 @@ const INITIAL_STATE: RecentActivityState = {
   interactionType: InteractionType.POLYGON,
   isDrawing: false,
   isGeometryValid: true,
+  isLegendOpen: false,
   layersAndOverlays: {
     isControlsListClicked: false,
     layerOverlayCoordinates: undefined,
@@ -94,6 +96,9 @@ const recentActivitySlice = createSlice({
     },
     setIsDrawing(state: RecentActivityState, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
+    },
+    setIsLegenOpen(state: RecentActivityState, action: PayloadAction<boolean>) {
+      state.isLegendOpen = action.payload
     },
     setLayerOverlayCoordinates(state: RecentActivityState, action: PayloadAction<Coordinate | undefined>) {
       state.layersAndOverlays.layerOverlayCoordinates = action.payload

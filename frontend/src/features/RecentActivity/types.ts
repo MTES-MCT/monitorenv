@@ -57,4 +57,6 @@ export namespace RecentActivity {
     WITH_DISTINCTION = 'Distinction avec ou sans infraction',
     WITHOUT_DISTINCTION = 'Sans distinction'
   }
+
+  export const CONTROLS_COLORS = ['#87C20D', '#FAC200', '#E79000', '#CE6000', '#AF2E12', '#810030', '#480135']
 }
