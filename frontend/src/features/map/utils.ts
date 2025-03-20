@@ -51,6 +51,13 @@ export const getClickedVigilanceAreasFeatures = (mapClickEvent: MapClickEvent) =
     )
   })
 
+export const getClickedRecentActivityFeatures = (mapClickEvent: MapClickEvent) =>
+  mapClickEvent.featureList?.filter(feature => {
+    const featureId = String(feature.id).split(':')[0]
+
+    return featureId === Layers.RECENT_CONTROLS_ACTIVITY.code
+  })
+
 export const getOverlayItemsFromFeatures = (
   features: SerializedFeature<Record<string, any>>[] | undefined,
   isLinkingZonesToVigilanceArea: boolean
