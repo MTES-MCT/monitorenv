@@ -5,8 +5,9 @@ import { useMemo } from 'react'
 import { useGetInfractionsQuery } from '../../../../../../../api/infractionsAPI'
 
 import type { Infraction } from '../../../../../../../domain/entities/missions'
+import type { NatinfType } from 'domain/entities/natinfs'
 
-const sortNatinf = (a, b) => {
+const sortNatinf = (a: NatinfType, b: NatinfType) => {
   if (a?.natinfCode < b?.natinfCode) {
     return -1
   }
@@ -23,14 +24,12 @@ export function NatinfSelector({ infractionPath }) {
 
   const sortedNatinfs = useMemo(
     () =>
-      (data &&
-        [...data]
-          ?.sort(sortNatinf)
-          .map(item => ({ label: `${item.natinfCode} - ${item.infraction}`, value: item.natinfCode.toString() }))) ||
-      [],
+      data
+        ?.sort(sortNatinf)
+        .map(item => ({ label: `${item.natinfCode} - ${item.infraction}`, value: item.natinfCode.toString() })) ?? [],
     [data]
   )
-  const setValue = nextValue => {
+  const setValue = (nextValue: string[]) => {
     natinfHelpers.setValue(nextValue)
   }
 
