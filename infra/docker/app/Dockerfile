@@ -8,7 +8,7 @@ ARG VERSION=NO_VERSION
 ########################################
 # Build monitorenv backend with maven #
 ########################################
-FROM gradle:8.5-jdk21 as buildBack
+FROM gradle:8.5-jdk21 AS build-back
 
 ARG GITHUB_SHA
 ARG VERSION
@@ -29,7 +29,7 @@ RUN gradle assemble
 ###########################
 # Build frontend with npm #
 ###########################
-FROM node:20-alpine as buildFront
+FROM node:20-alpine AS build-front
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DISABLE_ESLINT_PLUGIN=true
@@ -84,19 +84,19 @@ ENV JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false \
   -Djava.rmi.server.hostname=0.0.0.0"
 
 # Copy files for the back
-COPY --from=buildBack /tmp/build/libs/monitorenv-${VERSION}.jar /home/monitorenv
+COPY --from=build-back /tmp/build/libs/monitorenv-${VERSION}.jar /home/monitorenv
 COPY infra/configurations /home/monitorenv/configurations/
 
 USER monitorenv
 
 # Copy files for the front
 RUN mkdir /home/monitorenv/public
-COPY --from=buildFront /tmp/frontend/build /home/monitorenv/public/
+COPY --from=build-front /tmp/frontend/build /home/monitorenv/public/
 
 # Copy import-meta-env
-COPY --from=buildFront /tmp/frontend/import-meta-env /home/monitorenv/
-COPY --from=buildFront /tmp/infra/docker/app/env.sh /home/monitorenv/
-COPY --from=buildFront /tmp/frontend/.env.frontend.example /home/monitorenv/
+COPY --from=build-front /tmp/frontend/import-meta-env /home/monitorenv/
+COPY --from=build-front /tmp/infra/docker/app/env.sh /home/monitorenv/
+COPY --from=build-front /tmp/frontend/.env.frontend.example /home/monitorenv/
 
 # Add logs folder to be mounted as volume
 RUN mkdir /home/monitorenv/logs
@@ -125,8 +125,13 @@ USER monitorenv
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 
-CMD exec java -Dhttp.proxyHost=${MONITORENV_HTTP_PROXY_HOST} -Dhttp.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
-              -Dhttps.proxyHost=${MONITORENV_HTTP_PROXY_HOST} -Dhttps.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
-              -Dhttp.nonProxyHosts=${MONITORENV_HTTP_NON_PROXY_HOSTS} -Dhttps.nonProxyHosts=${MONITORENV_HTTP_NON_PROXY_HOSTS} \
-              -Dspring.config.additional-location="/home/monitorenv/configurations/" \
-              -jar "monitorenv-${VERSION}.jar"
+CMD ["sh", "-c", "exec java \
+    -Dhttp.proxyHost=${MONITORENV_HTTP_PROXY_HOST} \
+    -Dhttp.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
+    -Dhttps.proxyHost=${MONITORENV_HTTP_PROXY_HOST} \
+    -Dhttps.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
+    -Dhttp.nonProxyHosts=${MONITORENV_HTTP_NON_PROXY_HOSTS} \
+    -Dhttps.nonProxyHosts=${MONITORENV_HTTP_NON_PROXY_HOSTS} \
+    -Dspring.config.additional-location=\"/home/monitorenv/configurations/\" \
+    -jar \"monitorenv-${VERSION}.jar\""]
+

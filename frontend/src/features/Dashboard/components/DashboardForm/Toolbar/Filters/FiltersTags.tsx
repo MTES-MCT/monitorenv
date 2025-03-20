@@ -46,8 +46,8 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
   }
 
   const hasFilters = !!(
-    (filters?.regulatoryThemes && filters?.regulatoryThemes.length > 0) ||
-    (filters?.amps && filters?.amps.length > 0) ||
+    (filters?.regulatoryThemes && filters?.regulatoryThemes.length > 0) ??
+    (filters?.amps && filters?.amps.length > 0) ??
     filters?.vigilanceAreaPeriod
   )
   if (!hasFilters && filters?.vigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD) {
