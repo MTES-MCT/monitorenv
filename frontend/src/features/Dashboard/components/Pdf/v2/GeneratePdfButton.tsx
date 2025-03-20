@@ -7,7 +7,7 @@ import { useImageConverter } from '@components/Form/Images/hook/useImageConverte
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { useExportImages } from '../../../hooks/useExportImages'
@@ -20,9 +20,7 @@ type GeneratePdfButtonProps = {
 }
 
 export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
-  const [shouldTriggerExport, setShouldTriggerExport] = useState(false)
-  const [isOpening, setIsOpening] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingBrief, setIsLoadingBrief] = useState(false)
 
   const { subThemes, themes } = useGetControlPlans()
 
@@ -48,17 +46,19 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
 
   const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
 
-  const { images, loading } = useExportImages({ triggerExport: shouldTriggerExport })
+  const { getImages, loading } = useExportImages()
 
-  const imagesFront = useImageConverter(dashboard.images)
+  const attachementImages = useImageConverter(dashboard.images)
 
-  const brief: Dashboard.Brief = useMemo(
-    () => ({
+  const handleDownload = async () => {
+    const images = await getImages()
+
+    const brief: Dashboard.Brief = {
       allLinkedAMPs,
       allLinkedRegulatoryAreas,
       amps,
       attachments: {
-        images: imagesFront,
+        images: attachementImages,
         links: dashboard.links
       },
       comments: dashboard.comments,
@@ -71,60 +71,37 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       themes,
       updatedAt: dashboard.updatedAt,
       vigilanceAreas
-    }),
-    [
-      allLinkedAMPs,
-      allLinkedRegulatoryAreas,
-      amps,
-      imagesFront,
-      dashboard.links,
-      dashboard.comments,
-      dashboard.name,
-      dashboard.updatedAt,
-      controlUnits,
-      images,
-      regulatoryAreas,
-      reportings?.entities,
-      subThemes,
-      themes,
-      vigilanceAreas
-    ]
-  )
-
-  const handleDownload = async () => {
-    setShouldTriggerExport(true)
-    setIsLoading(true)
+    }
+    download(brief)
   }
 
-  useEffect(() => {
+  const download = (brief: Dashboard.Brief) => {
     const renderPdf = async () => {
-      if (brief.images && brief.attachments.images && !loading && shouldTriggerExport) {
-        setIsOpening(true)
+      setIsLoadingBrief(true)
 
-        const blob = await renderPDF({ brief })
-        const url = URL.createObjectURL(blob)
+      const blob = await renderPDF({ brief })
 
-        if (url) {
-          const link = document.createElement('a')
-          link.href = url
-          link.download = `${dashboard.name}.pdf`
-          link.click()
-          link.remove()
-          URL.revokeObjectURL(url)
-        }
-        setShouldTriggerExport(false)
-        setIsOpening(false)
-        setIsLoading(false)
+      const url = URL.createObjectURL(blob)
+
+      if (url) {
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `${dashboard.name}.pdf`
+        link.click()
+        link.remove()
+        URL.revokeObjectURL(url)
       }
+      setIsLoadingBrief(false)
     }
+
     renderPdf()
-  }, [brief, dashboard.name, loading, shouldTriggerExport])
+  }
 
   const getLoadingText = () => {
     if (loading) {
       return 'Chargement des images'
     }
-    if (isOpening) {
+    if (isLoadingBrief) {
       return 'Chargement du brief'
     }
 
@@ -132,15 +109,17 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
   }
 
   return (
-    <>
-      <StyledLinkButton disabled={isLoading} Icon={isLoading ? Icon.Reset : Icon.Document} onClick={handleDownload}>
-        {getLoadingText()}
-      </StyledLinkButton>
-    </>
+    <StyledLinkButton
+      disabled={isLoadingBrief || loading}
+      Icon={isLoadingBrief || loading ? Icon.Reset : Icon.Document}
+      onClick={handleDownload}
+    >
+      {getLoadingText()}
+    </StyledLinkButton>
   )
 }
 
-const StyledLinkButton = styled(Button)<{ disabled: boolean }>`
+export const StyledLinkButton = styled(Button)<{ disabled: boolean }>`
   ${p =>
     p.disabled &&
     `@keyframes spin {

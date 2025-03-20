@@ -11,7 +11,6 @@ import { getReportingZoneFeature } from '@features/Reportings/components/Reporti
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
-import { Layers } from 'domain/entities/layers/constants'
 import { Feature, View } from 'ol'
 import { createEmpty, extend, type Extent } from 'ol/extent'
 import TileLayer from 'ol/layer/Tile'
@@ -25,7 +24,6 @@ import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 
 
 import { getDashboardStyle } from '../components/Layers/style'
 
-import type { VectorLayerWithName } from 'domain/types/layer'
 import type { ImageLike } from 'ol/DataTile'
 import type { Geometry } from 'ol/geom'
 
@@ -75,14 +73,9 @@ export type ExportImageType = {
   image: string
 }
 
-type ExportLayerProps = {
-  triggerExport: boolean
-}
-
-export function useExportImages({ triggerExport }: ExportLayerProps) {
+export function useExportImages() {
   const isBriefWithImagesEnabled = import.meta.env.FRONTEND_DASHBOARD_BRIEF_IMAGES_ENABLED === 'true'
 
-  const [images, setImages] = useState<ExportImageType[]>()
   const [loading, setLoading] = useState(false)
   const mapRef = useRef(null) as MutableRefObject<OpenLayerMap | null>
 
@@ -98,18 +91,16 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
 
   const activeDashboard = dashboard?.dashboard
 
-  const layersVectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
+  const layersVectorSourceRef = useRef(new VectorSource())
   const layersVectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: layersVectorSourceRef.current,
       style: feature =>
-        getDashboardStyle(feature, { viewCenter: mapRef.current?.getView().getCenter(), withReportingOverlay: true }),
-      zIndex: Layers.EXPORT_PDF.zIndex
+        getDashboardStyle(feature, { viewCenter: mapRef.current?.getView().getCenter(), withReportingOverlay: true })
     })
-  ) as React.MutableRefObject<VectorLayerWithName>
-  layersVectorLayerRef.current.name = Layers.EXPORT_PDF.code
+  )
 
   const zoomToFeatures = async (features: Feature[]) =>
     new Promise<void>(resolve => {
@@ -232,11 +223,9 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
     }
   }, [])
 
-  useEffect(() => {
-    if (!mapRef.current || !triggerExport) {
-      setImages(undefined)
-
-      return
+  const getImages = () => {
+    if (!mapRef.current) {
+      return undefined
     }
 
     const features = extractFeatures(activeDashboard, regulatoryLayers, ampLayers, vigilanceAreas)
@@ -248,24 +237,15 @@ export function useExportImages({ triggerExport }: ExportLayerProps) {
     const generateImages = async () => {
       setLoading(true)
       const allImages = await exportImages(features, dashboardFeature)
-
-      setImages(allImages)
       setLoading(false)
+
+      return allImages
     }
 
-    generateImages()
-  }, [
-    activeDashboard,
-    ampLayers,
-    regulatoryLayers,
-    reportings,
-    vigilanceAreas,
-    triggerExport,
-    dashboard?.dashboard.geom,
-    exportImages
-  ])
+    return generateImages()
+  }
 
-  return { images, loading }
+  return { getImages, loading }
 }
 
 function combineExtent(features: Feature[]): Extent {
