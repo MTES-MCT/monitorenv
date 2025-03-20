@@ -7,7 +7,7 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
-import WebGLVectorLayer from 'ol/layer/WebGLVector'
+import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
 
@@ -15,7 +15,7 @@ import { getRecentControlActivityGeometry } from './recentControlActivityGeometr
 import { recentControlActivityStyle } from './style'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-import type { WebGLVectorLayerWithName } from 'domain/types/layer'
+import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
 export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
@@ -76,15 +76,12 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
-    new WebGLVectorLayer({
+    new VectorLayer({
       source: vectorSourceRef.current,
       style: recentControlActivityStyle,
-      variables: {
-        drawedGeometryId: ''
-      },
       zIndex: Layers.RECENT_CONTROLS_ACTIVITY.zIndex
     })
-  ) as React.MutableRefObject<WebGLVectorLayerWithName>
+  ) as React.MutableRefObject<VectorLayerWithName>
   vectorLayerRef.current.name = Layers.RECENT_CONTROLS_ACTIVITY.code
 
   const controlUnitsWithInfraction = useMemo(
@@ -137,8 +134,8 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
         vectorSourceRef.current.addFeature(feature)
 
-        const id = feature.getId() ?? ''
-        vectorLayerRef.current.updateStyleVariables({ drawedGeometryId: id })
+        // const id = feature.getId() ?? ''
+        // vectorLayerRef.current.updateStyleVariables({ drawedGeometryId: id })
       }
     }
   }, [map, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry])

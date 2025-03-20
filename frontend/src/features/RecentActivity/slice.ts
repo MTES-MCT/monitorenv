@@ -7,6 +7,8 @@ import storage from 'redux-persist/lib/storage'
 import { RecentActivity } from './types'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
+import type { OverlayItem } from 'domain/types/map'
+import type { Coordinate } from 'ol/coordinate'
 
 const persistConfig = {
   key: 'recentActivity',
@@ -38,6 +40,12 @@ export type RecentActivityState = {
   interactionType: InteractionType
   isDrawing: boolean
   isGeometryValid: boolean
+  layersAndOverlays: {
+    isControlsListClicked: boolean
+    layerOverlayCoordinates: Coordinate | undefined
+    layerOverlayItems: OverlayItem<string, RecentActivity.RecentControlsActivity>[] | undefined
+    selectedControl: number | undefined
+  }
 }
 
 const INITIAL_STATE: RecentActivityState = {
@@ -50,7 +58,13 @@ const INITIAL_STATE: RecentActivityState = {
   initialGeometry: undefined,
   interactionType: InteractionType.POLYGON,
   isDrawing: false,
-  isGeometryValid: true
+  isGeometryValid: true,
+  layersAndOverlays: {
+    isControlsListClicked: false,
+    layerOverlayCoordinates: undefined,
+    layerOverlayItems: undefined,
+    selectedControl: undefined
+  }
 }
 const recentActivitySlice = createSlice({
   initialState: INITIAL_STATE,
@@ -69,8 +83,23 @@ const recentActivitySlice = createSlice({
     setInteractionType(state: RecentActivityState, action: PayloadAction<InteractionType>) {
       state.interactionType = action.payload
     },
+    setIsControlsListClicked(state: RecentActivityState, action: PayloadAction<boolean>) {
+      state.layersAndOverlays.isControlsListClicked = action.payload
+    },
     setIsDrawing(state: RecentActivityState, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
+    },
+    setLayerOverlayCoordinates(state: RecentActivityState, action: PayloadAction<Coordinate | undefined>) {
+      state.layersAndOverlays.layerOverlayCoordinates = action.payload
+    },
+    setLayerOverlayItems(
+      state: RecentActivityState,
+      action: PayloadAction<OverlayItem<string, RecentActivity.RecentControlsActivity>[] | undefined>
+    ) {
+      state.layersAndOverlays.layerOverlayItems = action.payload
+    },
+    setSelectedControl(state: RecentActivityState, action: PayloadAction<number | undefined>) {
+      state.layersAndOverlays.selectedControl = action.payload
     },
     updateFilters(
       state: RecentActivityState,
