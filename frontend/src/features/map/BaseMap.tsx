@@ -40,15 +40,15 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened'
 
-import type { VectorLayerWithName } from '../../domain/types/layer'
+import type { VectorLayerWithName, WebGLVectorLayerWithName } from '../../domain/types/layer'
 import type { MapBrowserEvent } from 'ol'
 
 export type BaseMapChildrenProps = {
-  currentFeatureListOver: SerializedFeature<Record<string, any>>[] | undefined
+  currentFeatureListOver?: SerializedFeature<Record<string, any>>[] | undefined
   currentFeatureOver: SerializedFeature<Record<string, any>> | undefined
   map: OpenLayerMap
   mapClickEvent: MapClickEvent
-  pixel: number[] | undefined
+  pixel?: number[] | undefined
 }
 
 export const CENTERED_ON_FRANCE = [2.99049, 46.82801]
@@ -140,7 +140,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
           const features = current_map.getFeaturesAtPixel(event.pixel, {
             hitTolerance: HIT_PIXEL_TO_TOLERANCE,
             layerFilter: layer => {
-              const typedLayer = layer as VectorLayerWithName
+              const typedLayer = layer as VectorLayerWithName | WebGLVectorLayerWithName
 
               const layerName = typedLayer.name ?? typedLayer.get('name')
 
@@ -148,7 +148,6 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
             }
           })
           const priorityFeatures = getHighestPriorityFeatures(features, priorityLayersOrder)
-
           setCurrentFeatureListOver(getGeoJSONFromFeatureList(priorityFeatures))
 
           setCurrentFeatureOver(getGeoJSONFromFeature(priorityFeatures?.[0]))
