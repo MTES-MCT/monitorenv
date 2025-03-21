@@ -34,16 +34,18 @@ export namespace RecentActivity {
   }
 
   export enum RecentActivityDateRangeEnum {
-    THREE_LAST_DAYS = 'THREE_LAST_DAYS',
+    SEVEN_LAST_DAYS = 'SEVEN_LAST_DAYS',
     THIRTY_LAST_DAYS = 'THIRTY_LAST_DAYS',
     THREE_LAST_MONTHS = 'THREE_LAST_MONTHS',
+    CURRENT_YEAR = 'CURRENT_YEAR',
     CUSTOM = 'CUSTOM'
   }
 
   export enum RecentActivityDateRangeLabels {
-    THREE_LAST_DAYS = '3 derniers jours',
+    SEVEN_LAST_DAYS = '7 derniers jours',
     THIRTY_LAST_DAYS = '30 derniers jours',
     THREE_LAST_MONTHS = '3 derniers mois',
+    CURRENT_YEAR = 'Année en cours',
     CUSTOM = 'Période spécifique'
   }
 
