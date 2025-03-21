@@ -37,12 +37,15 @@ export const recentControlActivityStyle = feature => {
     })
   }
 
+  const iconSize = feature.get('iconSize')
+
   return [
     new Style({
       image: new Icon({
         color: getIconColor(feature.get('ratioInfractionsInControls')),
-        scale: Math.max(0.1, Math.min(1, feature.get('ratioTotalControls') / 100)),
-        src: 'icons/dot.svg'
+        height: iconSize,
+        src: 'icons/dot.svg',
+        width: iconSize
       })
     }),
     overlayStroke

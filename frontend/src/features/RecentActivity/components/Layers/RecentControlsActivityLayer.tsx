@@ -19,6 +19,22 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
+const MIN_CONTROLS = 1
+const MAX_CONTROLS = 653
+
+function calculateDotSize(totalControls: number): number {
+  const minPixel = Number(import.meta.env.FRONTEND_MIN_PIXEL)
+  const maxPixel = Number(import.meta.env.FRONTEND_MAX_PIXEL)
+  const coefficient = Number(import.meta.env.FRONTEND_COEFFICIENT)
+
+  return (
+    minPixel +
+    ((Math.log(totalControls + coefficient) - Math.log(MIN_CONTROLS + coefficient)) /
+      (Math.log(MAX_CONTROLS + coefficient) - Math.log(MIN_CONTROLS + coefficient))) *
+      (maxPixel - minPixel)
+  )
+}
+
 export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
 
@@ -100,11 +116,6 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
       vectorSourceRef.current.clear(true)
 
       if (recentControlsActivity) {
-        const totalControlsInAllActions = recentControlsActivity.reduce(
-          (acc, control) => acc + (control.actionNumberOfControls ?? 0),
-          0
-        )
-
         const features = recentControlsActivity.flatMap(control => {
           if (control.actionNumberOfControls === 0 || !control.actionNumberOfControls) {
             return []
@@ -119,12 +130,13 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
           )
 
           const ratioInfractionsInControls = (totalControlsInInfractions / totalControls) * 100
-          const ratioTotalControls = (totalControls * 100) / totalControlsInAllActions
+
+          const iconSize = calculateDotSize(totalControls)
 
           return getRecentControlActivityGeometry({
             control,
-            ratioInfractionsInControls,
-            ratioTotalControls
+            iconSize,
+            ratioInfractionsInControls
           })
         })
         vectorSourceRef.current.addFeatures(features)
