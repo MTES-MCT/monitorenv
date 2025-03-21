@@ -35,18 +35,18 @@ export function HoveredOverlay({
 }
 
 const Menu = styled.div<{ $x: number | undefined; $y: number | undefined }>`
+  box-shadow: 0px 2px 4px ${p => p.theme.color.slateGray}bf;
   font-size: 13px;
+  left: ${p => String(p.$x)}px;
+  pointer-events: none;
   position: absolute;
   top: ${p => String(p.$y)}px;
-  left: ${p => String(p.$x)}px;
-  box-shadow: 0px 2px 4px ${p => p.theme.color.slateGray}bf;
-  pointer-events: none;
 `
 const Footer = styled.div`
   background-color: ${p => p.theme.color.white};
+  border-top: 1px solid ${p => p.theme.color.lightGray};
   color: ${p => p.theme.color.slateGray};
-  padding: 5px;
-  padding-left: 10px;
+  padding: 5px 5px 5px 10px;
 `
 const More = styled.span`
   font-weight: 700;

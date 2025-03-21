@@ -84,22 +84,22 @@ const Wrapper = styled.div`
   }
 `
 const StyledThemes = styled.div`
-  white-space: nowrap;
   font-weight: 500;
+  white-space: nowrap;
 `
 
 const Accented = styled.div`
-  display: flex;
   align-items: baseline;
-  white-space: nowrap;
+  display: flex;
   gap: 5px;
+  white-space: nowrap;
 `
 
 const Bullet = styled.div<{ $color: string }>`
   border-radius: 50%;
-  width: 10px;
-  height: 10px;
   background-color: ${p => p.$color};
+  height: 10px;
+  width: 10px;
 `
 
 const StyledGrayText = styled.p`

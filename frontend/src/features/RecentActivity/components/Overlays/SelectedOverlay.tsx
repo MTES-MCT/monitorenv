@@ -35,19 +35,19 @@ export function SelectedOverlay({ items }: { items: OverlayItem<string, RecentAc
 }
 
 const Card = styled.div`
-  width: 440px;
   box-shadow: 0px 2px 4px ${p => p.theme.color.slateGray}bf;
   cursor: pointer;
+  width: 440px;
   > * {
     user-select: none;
   }
 `
 const Header = styled.div`
-  display: flex;
-  height: 32px;
-  justify-content: space-between;
   align-items: center;
   background-color: ${p => p.theme.color.lightGray};
   color: ${p => p.theme.color.gunMetal};
+  display: flex;
+  height: 32px;
+  justify-content: space-between;
   padding: 8px 7px;
 `
