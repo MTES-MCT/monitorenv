@@ -4,12 +4,15 @@ import styled from 'styled-components'
 import { OverlayContent } from './OverlayContent'
 
 import type { RecentActivity } from '@features/RecentActivity/types'
+import type OpenLayerMap from 'ol/Map'
 
 export function HoveredOverlay({
   items,
+  map,
   pixel
 }: {
   items: OverlayItem<string, RecentActivity.RecentControlsActivity>[]
+  map: OpenLayerMap
   pixel: number[]
 }) {
   if (!pixel) {
@@ -19,14 +22,12 @@ export function HoveredOverlay({
 
   return (
     <Menu $x={x} $y={y}>
-      <OverlayContent items={items?.slice(0, 3)} />
+      <OverlayContent items={items?.slice(0, 3)} map={map} />
       {items?.length > 1 && (
         <Footer>
-          {items?.length === 4 && <More>1 autre zone</More>}
-          {items && items.length > 4 && <More>{items.length - 2} autres zones</More>}
-          <ClickForMore>
-            {items && items.length > 3 && ' – '}cliquez pour tout afficher et sélectionner une zone
-          </ClickForMore>
+          {items?.length === 4 && <More>1 autre contrôle</More>}
+          {items && items.length > 4 && <More>{items.length - 2} autres contrôles</More>}
+          <ClickForMore>{items && items.length > 3 && ' – '}cliquez pour tout afficher</ClickForMore>
         </Footer>
       )}
     </Menu>
@@ -34,6 +35,7 @@ export function HoveredOverlay({
 }
 
 const Menu = styled.div<{ $x: number | undefined; $y: number | undefined }>`
+  font-size: 13px;
   position: absolute;
   top: ${p => String(p.$y)}px;
   left: ${p => String(p.$x)}px;
@@ -47,8 +49,9 @@ const Footer = styled.div`
   padding-left: 10px;
 `
 const More = styled.span`
-  font: italic normal bold 13px/18px Marianne;
+  font-weight: 700;
+  font-style: italic;
 `
 const ClickForMore = styled.span`
-  font: italic normal normal 13px/18px Marianne;
+  font-style: italic;
 `

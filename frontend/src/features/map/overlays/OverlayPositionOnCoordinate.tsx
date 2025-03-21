@@ -1,6 +1,5 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useMoveOverlayWhenDragging } from '@hooks/useMoveOverlayWhenDragging'
-import { Layers } from 'domain/entities/layers/constants'
 import { setOverlayCoordinates } from 'domain/shared_slices/Global'
 import Overlay from 'ol/Overlay'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -15,12 +14,14 @@ type OverlayPositionOnCoordinatesProps = {
   coordinates: number[] | undefined
   layerOverlayIsOpen: boolean
   map: OpenLayerMap
+  name: string
 }
 export function OverlayPositionOnCoordinates({
   children,
   coordinates,
   layerOverlayIsOpen,
-  map
+  map,
+  name
 }: OverlayPositionOnCoordinatesProps) {
   const dispatch = useAppDispatch()
 
@@ -70,14 +71,13 @@ export function OverlayPositionOnCoordinates({
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
 
-          const FEATURE_ID = 'AreaIconFeature'
-          dispatch(setOverlayCoordinates({ coordinates: nextCoordinates, name: `${Layers.AREA_ICON}:${FEATURE_ID}` }))
+          dispatch(setOverlayCoordinates({ coordinates: nextCoordinates, name }))
 
           isThrottled.current = false
         }
       }, delay)
     },
-    [dispatch, map, coordinates]
+    [dispatch, map, coordinates, name]
   )
 
   useEffect(() => {

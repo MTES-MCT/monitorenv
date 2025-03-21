@@ -1,25 +1,56 @@
 import { ControlInfractionsTags } from '@features/Mission/components/ControlInfractionsTags'
+import { recentActivityActions } from '@features/RecentActivity/slice'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { getLocalizedDayjs, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, getLocalizedDayjs, Icon, IconButton, pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { TargetTypeLabels } from 'domain/entities/targetType'
+import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
-export function ControlCard({ control }) {
+import type { Feature } from 'ol'
+
+export function ControlCard({ control, isSelected = false }: { control: Feature; isSelected?: boolean }) {
+  const dispatch = useAppDispatch()
+
+  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, infractions, themeIds } =
+    control.getProperties()
+
   const { themes } = useGetControlPlans()
-  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, infractions, themeIds } = control.properties
   const controlThemes = themeIds?.map(themeId => themes[themeId]?.theme).join(',')
 
   const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
   const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
 
+  const closeControl = () => {
+    if (isSelected) {
+      dispatch(removeOverlayStroke())
+      // we need this timeout to delete the overlay stroke before delete the selected control
+      setTimeout(() => {
+        dispatch(recentActivityActions.setSelectedControl())
+      }, 100)
+    }
+  }
+
   return (
     <StyledControlCardHeader>
       <StyledControlThemes>
-        {themeIds?.length > 0 ? (
-          <StyledThemes>{controlThemes}</StyledThemes>
-        ) : (
-          <StyledGrayText>Thématique à renseigner</StyledGrayText>
-        )}
+        <ThemesAndCloseButton>
+          {themeIds?.length > 0 ? (
+            <StyledThemes>{controlThemes}</StyledThemes>
+          ) : (
+            <StyledGrayText>Thématique à renseigner</StyledGrayText>
+          )}
+          {isSelected && (
+            <CloseButton
+              $isVisible={isSelected}
+              accent={Accent.TERTIARY}
+              data-cy="mission-overlay-close"
+              Icon={Icon.Close}
+              iconSize={14}
+              onClick={closeControl}
+            />
+          )}
+        </ThemesAndCloseButton>
         <Accented>
           {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}{' '}
           {TargetTypeLabels[actionTargetType] ? (
@@ -37,11 +68,21 @@ export function ControlCard({ control }) {
     </StyledControlCardHeader>
   )
 }
+
+const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
+  padding: 0px;
+  margin-left: 5px;
+  ${p => !p.$isVisible && 'visibility: hidden;'};
+`
+
 const StyledThemes = styled.div`
   white-space: nowrap;
   font: normal normal bold 13px/18px Marianne;
 `
-
+const ThemesAndCloseButton = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
 const StyledControlCardHeader = styled.div`
   background: ${p => p.theme.color.white};
   padding: 12px;
