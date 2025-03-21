@@ -20,7 +20,7 @@ interface IDBDepartmentAreaRepository : CrudRepository<DepartmentAreaModel, Int>
     @Query(
         """
         WITH geom AS (
-            SELECT ST_SetSRID(ST_Union(:geometry), 4326) AS geom
+            SELECT ST_SetSRID(:geometry, 4326) AS geom
         ),
 
         departments_intersection_areas AS (
