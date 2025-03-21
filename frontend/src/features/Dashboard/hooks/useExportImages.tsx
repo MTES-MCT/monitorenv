@@ -74,8 +74,6 @@ export type ExportImageType = {
 }
 
 export function useExportImages() {
-  const isBriefWithImagesEnabled = import.meta.env.FRONTEND_DASHBOARD_BRIEF_IMAGES_ENABLED === 'true'
-
   const [loading, setLoading] = useState(false)
   const mapRef = useRef(null) as MutableRefObject<OpenLayerMap | null>
 
@@ -162,28 +160,26 @@ export function useExportImages() {
       if (!mapRef.current || !mapCanvas || !mapContext || !dashboardFeature) {
         return allImages
       }
-      if (isBriefWithImagesEnabled) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const feature of features) {
-          mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
-          layersVectorSourceRef.current.clear()
-          layersVectorSourceRef.current.addFeature(feature)
-          layersVectorSourceRef.current.addFeature(dashboardFeature)
+      // eslint-disable-next-line no-restricted-syntax
+      for (const feature of features) {
+        mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
+        layersVectorSourceRef.current.clear()
+        layersVectorSourceRef.current.addFeature(feature)
+        layersVectorSourceRef.current.addFeature(dashboardFeature)
 
-          // eslint-disable-next-line no-await-in-loop
-          await zoomToFeatures([dashboardFeature, feature])
+        // eslint-disable-next-line no-await-in-loop
+        await zoomToFeatures([dashboardFeature, feature])
 
-          mapRef.current
-            .getViewport()
-            .querySelectorAll('canvas')
-            .forEach(canvas => {
-              mapContext.drawImage(canvas, 0, 0)
-              allImages.push({
-                featureId: feature.getId(),
-                image: mapCanvas.toDataURL('image/png')
-              })
+        mapRef.current
+          .getViewport()
+          .querySelectorAll('canvas')
+          .forEach(canvas => {
+            mapContext.drawImage(canvas, 0, 0)
+            allImages.push({
+              featureId: feature.getId(),
+              image: mapCanvas.toDataURL('image/png')
             })
-        }
+          })
       }
 
       extractReportingFeatures(features)
@@ -207,7 +203,7 @@ export function useExportImages() {
 
       return allImages
     },
-    [extractReportingFeatures, isBriefWithImagesEnabled]
+    [extractReportingFeatures]
   )
 
   useEffect(() => {

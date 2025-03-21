@@ -4,14 +4,14 @@ import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
 import { useImageConverter } from '@components/Form/Images/hook/useImageConverter'
+import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { useExportImages } from '../../../hooks/useExportImages'
-import { renderPDF } from '../renderPdf'
+import { renderPDF } from './renderPdf'
 
 import type { Dashboard } from '@features/Dashboard/types'
 

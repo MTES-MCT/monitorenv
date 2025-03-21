@@ -8,7 +8,7 @@ import { groupBy } from 'lodash'
 
 import { layoutStyle } from '../style'
 
-import type { ExportImageType } from '../../../../hooks/useExportImages'
+import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'

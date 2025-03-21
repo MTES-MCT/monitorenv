@@ -9,7 +9,7 @@ import { Image, Link, Text, View } from '@react-pdf/renderer'
 import { areaStyle, layoutStyle } from '../style'
 import { getImage } from '../utils'
 
-import type { ExportImageType } from '../../../../hooks/useExportImages'
+import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
