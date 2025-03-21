@@ -1,6 +1,6 @@
 FROM python:3.10.12-slim-bullseye
 
-ENV TINI_VERSION v0.19.0
+ENV TINI_VERSION=v0.19.0
 ENV USER="monitorenv-pipeline"
 ENV VIRTUAL_ENV=/opt/venv
 
