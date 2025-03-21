@@ -6,14 +6,14 @@ import { GeoJSON } from 'ol/format'
 
 type RecentControlActivityGeometryProps = {
   control: RecentActivity.RecentControlsActivity
+  iconSize: number
   ratioInfractionsInControls: number
-  ratioTotalControls: number
 }
 
 export const getRecentControlActivityGeometry = ({
   control,
-  ratioInfractionsInControls,
-  ratioTotalControls
+  iconSize,
+  ratioInfractionsInControls
 }: RecentControlActivityGeometryProps): Feature => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(control.geom, {
@@ -29,8 +29,8 @@ export const getRecentControlActivityGeometry = ({
 
   feature.setProperties({
     hasInfraction: control.infractions.length > 0,
+    iconSize,
     ratioInfractionsInControls,
-    ratioTotalControls,
     ...control
   })
 
