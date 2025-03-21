@@ -70,7 +70,7 @@ export function OverlayPositionOnCoordinates({
 
           const nextCoordinates = map.getCoordinateFromPixel([nextXPixelCenter, nextYPixelCenter])
 
-          const FEATURE_ID = 'AreaIconFeature'
+          const FEATURE_ID = 'RecentActivityAreaIconFeature'
           dispatch(
             setOverlayCoordinates({
               coordinates: nextCoordinates,

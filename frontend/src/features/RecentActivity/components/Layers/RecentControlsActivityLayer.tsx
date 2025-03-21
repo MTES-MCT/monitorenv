@@ -6,6 +6,7 @@ import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
+import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
@@ -26,6 +27,11 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   const isLayerVisible = displayRecentActivityLayer && !hasMapInteraction
   const filters = useAppSelector(state => state.recentActivity.filters)
   const drawedGeometry = useAppSelector(state => state.recentActivity.drawedGeometry)
+  const selectedControlId = useAppSelector(state => state.recentActivity.layersAndOverlays.selectedControlId)
+
+  const overlayCoordinates = useAppSelector(state =>
+    getOverlayCoordinates(state.global, `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${selectedControlId}`)
+  )
 
   const [getRecentControlsActivity, { data: recentControlsActivity }] = useGetRecentControlsActivityMutation()
 
@@ -133,12 +139,16 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         feature.setId(`${Layers.RECENT_CONTROLS_ACTIVITY.code}:DRAWED_GEOMETRY`)
 
         vectorSourceRef.current.addFeature(feature)
-
-        // const id = feature.getId() ?? ''
-        // vectorLayerRef.current.updateStyleVariables({ drawedGeometryId: id })
       }
     }
   }, [map, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry])
+
+  useEffect(() => {
+    const feature = vectorSourceRef.current.getFeatureById(
+      `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${selectedControlId}`
+    )
+    feature?.setProperties({ overlayCoordinates })
+  }, [overlayCoordinates, selectedControlId, dispatch])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

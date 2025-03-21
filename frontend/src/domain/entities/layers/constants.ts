@@ -360,7 +360,8 @@ export const SelectableLayers0To7 = [
   ],
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
-  [MonitorEnvLayers.DASHBOARD_PREVIEW]
+  [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 
 export const SelectableLayers7To26 = [
@@ -382,7 +383,8 @@ export const SelectableLayers7To26 = [
   ],
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
-  [MonitorEnvLayers.DASHBOARD_PREVIEW]
+  [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 
 // Priority of hoverable items is determined by the order of the layers in this array
