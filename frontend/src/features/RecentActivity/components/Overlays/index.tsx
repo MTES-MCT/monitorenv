@@ -105,7 +105,7 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
         isHoveredOverlayVisible && hoveredItems.length > 1 && !isControlsListClicked && (
           <HoveredOverlay items={hoveredItems} map={map} pixel={pixel} />
         ),
-        document.body as HTMLElement
+        document.body
       )}
     </>
   )
