@@ -42,8 +42,8 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
     }
 
     switch (filters.periodFilter) {
-      case RecentActivity.RecentActivityDateRangeEnum.THREE_LAST_DAYS:
-        startAfterFilter = customDayjs().utc().subtract(3, 'day').startOf('day').toISOString()
+      case RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS:
+        startAfterFilter = customDayjs().utc().subtract(7, 'day').startOf('day').toISOString()
         startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
         break
       case RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS:
@@ -52,6 +52,10 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         break
       case RecentActivity.RecentActivityDateRangeEnum.THREE_LAST_MONTHS:
         startAfterFilter = customDayjs().utc().subtract(3, 'month').startOf('day').toISOString()
+        startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
+        break
+      case RecentActivity.RecentActivityDateRangeEnum.CURRENT_YEAR:
+        startAfterFilter = customDayjs().utc().startOf('year').toISOString()
         startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
         break
       case RecentActivity.RecentActivityDateRangeEnum.CUSTOM:
