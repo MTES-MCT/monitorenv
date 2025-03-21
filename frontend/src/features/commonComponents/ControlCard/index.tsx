@@ -1,39 +1,52 @@
 import { ControlInfractionsTags } from '@features/Mission/components/ControlInfractionsTags'
-import { THEME, getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
+import { Accent, getLocalizedDayjs, Icon, IconButton, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { TargetTypeEnum, TargetTypeLabels } from 'domain/entities/targetType'
 import styled from 'styled-components'
 
-import { TargetTypeLabels } from '../../../../domain/entities/targetType'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
-import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
+import type { Infraction } from 'domain/entities/missions'
 
-import type { Feature } from 'ol'
-
-export function ControlCard({ children = undefined, feature }: { children?: React.ReactNode; feature: Feature }) {
-  const listener = useAppSelector(state => state.draw.listener)
-  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, controlPlans, infractions } =
-    feature.getProperties()
+export function ControlCard({
+  actionNumberOfControls,
+  actionStartDateTimeUtc,
+  actionTargetType,
+  controlThemes,
+  infractions,
+  isSelected = false,
+  onClose
+}: {
+  actionNumberOfControls: number
+  actionStartDateTimeUtc: string
+  actionTargetType: TargetTypeEnum
+  controlThemes: string
+  infractions: Infraction[]
+  isSelected?: boolean
+  onClose?: () => void
+}) {
   const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
   const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
-
-  const { isLoading, themes } = useGetControlPlans()
-
-  if (listener ?? isLoading) {
-    return null
-  }
 
   return (
     <StyledControlCardHeader>
       <StyledControlThemes>
-        {children ?? (
-          <>
-            {controlPlans?.length > 0 ? (
-              <StyledThemes>{extractThemesAsText(controlPlans, themes)}</StyledThemes>
-            ) : (
-              <StyledGrayText>Thématique à renseigner</StyledGrayText>
-            )}
-          </>
-        )}
+        <ThemesAndCloseButton>
+          {controlThemes && controlThemes?.length > 0 ? (
+            <StyledThemes>{controlThemes}</StyledThemes>
+          ) : (
+            <StyledGrayText>Thématique à renseigner</StyledGrayText>
+          )}
+
+          {isSelected && (
+            <CloseButton
+              $isVisible={isSelected}
+              accent={Accent.TERTIARY}
+              data-cy="mission-overlay-close"
+              Icon={Icon.Close}
+              iconSize={14}
+              onClick={onClose}
+            />
+          )}
+        </ThemesAndCloseButton>
+
         <Accented>
           {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}{' '}
           {TargetTypeLabels[actionTargetType] ? (
@@ -52,6 +65,16 @@ export function ControlCard({ children = undefined, feature }: { children?: Reac
   )
 }
 
+const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
+  padding: 0px;
+  margin-left: 8px;
+  ${p => !p.$isVisible && 'visibility: hidden;'};
+`
+const ThemesAndCloseButton = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
 const StyledControlCardHeader = styled.div`
   background: ${p => p.theme.color.white};
   padding: 12px;
@@ -69,7 +92,7 @@ const StyledControlThemes = styled.div`
 `
 const StyledThemes = styled.div`
   white-space: nowrap;
-  font: normal normal bold 13px/18px Marianne;
+  font-weight: 700;
 `
 
 const Accented = styled.div`

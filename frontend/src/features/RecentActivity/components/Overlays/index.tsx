@@ -6,8 +6,8 @@ import { findMapFeatureById } from '@utils/findMapFeatureById'
 import { Layers } from 'domain/entities/layers/constants'
 import { createPortal } from 'react-dom'
 
-import { ControlCard } from './ControlCard'
 import { HoveredOverlay } from './HoveredOverlay'
+import { RecentActivityControlCard } from './RecentActivityControlCard'
 import { SelectedOverlay } from './SelectedOverlay'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
@@ -46,14 +46,27 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
 
   const isHoveredOverlayVisible = !hasMapListener && hoveredItems && hoveredItems.length > 0 && pixel
 
-  const feature = findMapFeatureById(
+  const isHoveredFeatureSameAsSelected =
+    hoveredItems?.length === 1 && hoveredItems[0] && selectedControlId === hoveredItems[0].properties.id
+
+  const selectedFeature = findMapFeatureById(
     map,
     Layers.RECENT_CONTROLS_ACTIVITY.code,
     `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${selectedControlId}`
   )
 
+  const hoveredFeature =
+    hoveredItems && hoveredItems.length === 1 && hoveredItems[0]
+      ? findMapFeatureById(
+          map,
+          Layers.RECENT_CONTROLS_ACTIVITY.code,
+          `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${hoveredItems?.[0].properties.id}`
+        )
+      : undefined
+
   return (
     <>
+      {/* To display list of recent controls after click */}
       <OverlayPositionOnCoordinates
         coordinates={layerOverlayCoordinates}
         layerOverlayIsOpen={isControlsListClicked}
@@ -62,18 +75,34 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
       >
         {isControlsListClicked && layerOverlayItems && <SelectedOverlay items={layerOverlayItems} />}
       </OverlayPositionOnCoordinates>
+
+      {/* To display recent control after click */}
       <OverlayPositionOnCentroid
         appClassName="overlay-recent-control-activity-selected"
-        feature={selectedControlId ? feature : undefined}
+        feature={selectedControlId ? selectedFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
         zIndex={5000}
       >
-        {selectedControlId && feature && <ControlCard control={feature} isSelected />}
+        {selectedControlId && selectedFeature && <RecentActivityControlCard control={selectedFeature} isSelected />}
       </OverlayPositionOnCentroid>
 
+      {/* If only one recent controls hovered */}
+      <OverlayPositionOnCentroid
+        appClassName="overlay-recent-control-activity-hovered"
+        feature={hoveredFeature}
+        map={map}
+        mapClickEvent={mapClickEvent}
+        zIndex={5000}
+      >
+        {isHoveredOverlayVisible && hoveredFeature && !isHoveredFeatureSameAsSelected && (
+          <RecentActivityControlCard control={hoveredFeature} />
+        )}
+      </OverlayPositionOnCentroid>
+
+      {/* To display list of recent controls on hover */}
       {createPortal(
-        isHoveredOverlayVisible && !isControlsListClicked && !selectedControlId && (
+        isHoveredOverlayVisible && hoveredItems.length > 1 && !isControlsListClicked && (
           <HoveredOverlay items={hoveredItems} map={map} pixel={pixel} />
         ),
         document.body as HTMLElement
