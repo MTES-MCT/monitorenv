@@ -1,5 +1,6 @@
 import { StyledMapMenuDialogContainer, StyledMapMenuDialogTitle } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { recentActivityActions } from '@features/RecentActivity/slice'
 import { reduceReportingFormOnMap } from '@features/Reportings/useCases/reduceReportingFormOnMap'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -31,6 +32,7 @@ export function RecentActivityMenuButton() {
 
   const handleRecentActivityVisibility = () => {
     dispatch(globalActions.setDisplayedItems({ layers: { displayRecentActivityLayer: !displayRecentActivityLayer } }))
+    dispatch(recentActivityActions.resetControlListOverlay())
   }
 
   return (

@@ -15,8 +15,9 @@ import { SelectedMissionLayer } from '@features/Mission/components/Layers/Select
 import { MissionOverlays } from '@features/Mission/components/Overlays'
 import { ReportingToAttachOverlays } from '@features/Mission/components/Overlays/ReportingToAttach'
 import { DrawRecentActivityLayer } from '@features/RecentActivity/components/Layers/DrawRecentActivityLayer'
+import { RecentActivityLayerEvents } from '@features/RecentActivity/components/Layers/RecentActivityLayerEvents'
 import { RecentControlsActivityLayer } from '@features/RecentActivity/components/Layers/RecentControlsActivityLayer'
-import { RecentControlActivityOverlay } from '@features/RecentActivity/components/Overlays/RecentControlActivityOverlay'
+import { RecentActvityOverlay } from '@features/RecentActivity/components/Overlays'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
 import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/DrawVigilanceAreaLayer'
 import { EditingVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/EditingVigilanceAreaLayer'
@@ -247,9 +248,11 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       {isRecentActivityEnabled ? <RecentControlsActivityLayer /> : null}
       {/* @ts-ignore */}
-      {isRecentActivityEnabled ? <RecentControlActivityOverlay /> : null}
-      {/* @ts-ignore */}
       {isRecentActivityEnabled ? <DrawRecentActivityLayer /> : null}
+      {/* @ts-ignore */}
+      {isRecentActivityEnabled ? <RecentActivityLayerEvents /> : null}
+      {/* @ts-ignore */}
+      {isRecentActivityEnabled ? <RecentActvityOverlay /> : null}
     </BaseMap>
   )
 }

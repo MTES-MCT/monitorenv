@@ -6,8 +6,9 @@ import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
+import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { Feature } from 'ol'
-import WebGLVectorLayer from 'ol/layer/WebGLVector'
+import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
 
@@ -15,8 +16,24 @@ import { getRecentControlActivityGeometry } from './recentControlActivityGeometr
 import { recentControlActivityStyle } from './style'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-import type { WebGLVectorLayerWithName } from 'domain/types/layer'
+import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
+
+const MIN_CONTROLS = 1
+const MAX_CONTROLS = 653
+
+function calculateDotSize(totalControls: number): number {
+  const minPixel = Number(import.meta.env.FRONTEND_MIN_PIXEL)
+  const maxPixel = Number(import.meta.env.FRONTEND_MAX_PIXEL)
+  const coefficient = Number(import.meta.env.FRONTEND_COEFFICIENT)
+
+  return (
+    minPixel +
+    ((Math.log(totalControls + coefficient) - Math.log(MIN_CONTROLS + coefficient)) /
+      (Math.log(MAX_CONTROLS + coefficient) - Math.log(MIN_CONTROLS + coefficient))) *
+      (maxPixel - minPixel)
+  )
+}
 
 export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
@@ -26,6 +43,11 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   const isLayerVisible = displayRecentActivityLayer && !hasMapInteraction
   const filters = useAppSelector(state => state.recentActivity.filters)
   const drawedGeometry = useAppSelector(state => state.recentActivity.drawedGeometry)
+  const selectedControlId = useAppSelector(state => state.recentActivity.layersAndOverlays.selectedControlId)
+
+  const overlayCoordinates = useAppSelector(state =>
+    getOverlayCoordinates(state.global, `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${selectedControlId}`)
+  )
 
   const [getRecentControlsActivity, { data: recentControlsActivity }] = useGetRecentControlsActivityMutation()
 
@@ -76,15 +98,12 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
-    new WebGLVectorLayer({
+    new VectorLayer({
       source: vectorSourceRef.current,
       style: recentControlActivityStyle,
-      variables: {
-        drawedGeometryId: ''
-      },
       zIndex: Layers.RECENT_CONTROLS_ACTIVITY.zIndex
     })
-  ) as React.MutableRefObject<WebGLVectorLayerWithName>
+  ) as React.MutableRefObject<VectorLayerWithName>
   vectorLayerRef.current.name = Layers.RECENT_CONTROLS_ACTIVITY.code
 
   const controlUnitsWithInfraction = useMemo(
@@ -97,11 +116,6 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
       vectorSourceRef.current.clear(true)
 
       if (recentControlsActivity) {
-        const totalControlsInAllActions = recentControlsActivity.reduce(
-          (acc, control) => acc + (control.actionNumberOfControls ?? 0),
-          0
-        )
-
         const features = recentControlsActivity.flatMap(control => {
           if (control.actionNumberOfControls === 0 || !control.actionNumberOfControls) {
             return []
@@ -116,12 +130,13 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
           )
 
           const ratioInfractionsInControls = (totalControlsInInfractions / totalControls) * 100
-          const ratioTotalControls = (totalControls * 100) / totalControlsInAllActions
+
+          const iconSize = calculateDotSize(totalControls)
 
           return getRecentControlActivityGeometry({
             control,
-            ratioInfractionsInControls,
-            ratioTotalControls
+            iconSize,
+            ratioInfractionsInControls
           })
         })
         vectorSourceRef.current.addFeatures(features)
@@ -136,12 +151,16 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         feature.setId(`${Layers.RECENT_CONTROLS_ACTIVITY.code}:DRAWED_GEOMETRY`)
 
         vectorSourceRef.current.addFeature(feature)
-
-        const id = feature.getId() ?? ''
-        vectorLayerRef.current.updateStyleVariables({ drawedGeometryId: id })
       }
     }
   }, [map, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry])
+
+  useEffect(() => {
+    const feature = vectorSourceRef.current.getFeatureById(
+      `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${selectedControlId}`
+    )
+    feature?.setProperties({ overlayCoordinates })
+  }, [overlayCoordinates, selectedControlId, dispatch])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

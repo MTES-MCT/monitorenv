@@ -48,6 +48,7 @@ export enum MonitorEnvLayers {
   MISSIONS = 'MISSIONS',
   MISSION_SELECTED = 'MISSION_SELECTED',
   MISSION_TO_ATTACH_ON_REPORTING = 'MISSION_TO_ATTACH_ON_REPORTING',
+  RECENT_ACTIVITY_AREA_ICON = 'RECENT_ACTIVITY_AREA_ICON',
   RECENT_CONTROLS_ACTIVITY = 'RECENT_CONTROLS_ACTIVITY',
   REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA = 'REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA',
   REGULATORY_ENV = 'REGULATORY_ENV',
@@ -320,6 +321,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   [MonitorEnvLayers.DRAW_RECENT_ACTIVITY]: {
     code: MonitorEnvLayers.DRAW_RECENT_ACTIVITY,
     zIndex: 1300
+  },
+  [MonitorEnvLayers.RECENT_ACTIVITY_AREA_ICON]: {
+    code: MonitorEnvLayers.RECENT_ACTIVITY_AREA_ICON,
+    zIndex: 1500
   }
 }
 
@@ -360,7 +365,8 @@ export const SelectableLayers0To7 = [
   ],
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
-  [MonitorEnvLayers.DASHBOARD_PREVIEW]
+  [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 
 export const SelectableLayers7To26 = [
@@ -382,7 +388,8 @@ export const SelectableLayers7To26 = [
   ],
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
-  [MonitorEnvLayers.DASHBOARD_PREVIEW]
+  [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 
 // Priority of hoverable items is determined by the order of the layers in this array
