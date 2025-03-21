@@ -1,6 +1,6 @@
 import { convertToFeature } from 'domain/types/map'
 
-import { ControlCard } from './ControlCard'
+import { MissionControlCard } from './MissionControlCard'
 import { SurveillanceCard } from './SurveillanceCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { ActionTypeEnum } from '../../../../domain/entities/missions'
@@ -28,7 +28,7 @@ export function ActionOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMa
       mapClickEvent={mapClickEvent}
       zIndex={5500}
     >
-      {displayControlCard && hoveredFeature && <ControlCard feature={hoveredFeature} />}
+      {displayControlCard && hoveredFeature && <MissionControlCard feature={hoveredFeature} />}
       {displaySurveillanceCard && <SurveillanceCard feature={hoveredFeature} />}
     </OverlayPositionOnCentroid>
   )

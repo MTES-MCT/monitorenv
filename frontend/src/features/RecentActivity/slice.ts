@@ -45,7 +45,7 @@ export type RecentActivityState = {
     isControlsListClicked: boolean
     layerOverlayCoordinates: Coordinate | undefined
     layerOverlayItems: OverlayItem<string, RecentActivity.RecentControlsActivity>[] | undefined
-    selectedControlId: number | undefined
+    selectedControlId: string | undefined
   }
 }
 
@@ -104,7 +104,7 @@ const recentActivitySlice = createSlice({
     ) {
       state.layersAndOverlays.layerOverlayItems = action.payload
     },
-    setSelectedControl(state: RecentActivityState, action: PayloadAction<number | undefined>) {
+    setSelectedControlId(state: RecentActivityState, action: PayloadAction<string | undefined>) {
       state.layersAndOverlays.selectedControlId = action.payload
     },
     updateFilters(
