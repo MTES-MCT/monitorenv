@@ -19,6 +19,7 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useRef } from 'react'
 
+import { FEATURE_ID } from '.'
 import { layerListIconStyle } from './style'
 import {
   closeMetadataPanel,
@@ -29,8 +30,6 @@ import {
 } from '../metadataPanel/slice'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-
-const FEATURE_ID = 'AreaIconFeature'
 
 export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()

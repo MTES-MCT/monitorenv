@@ -11,6 +11,7 @@ import type { OverlayItem } from 'domain/types/map'
 import type { Coordinate } from 'ol/coordinate'
 
 const persistConfig = {
+  blacklist: ['isDrawing', 'isGeometryValid', 'layersAndOverlays'],
   key: 'recentActivity',
   storage
 }
@@ -44,7 +45,7 @@ export type RecentActivityState = {
     isControlsListClicked: boolean
     layerOverlayCoordinates: Coordinate | undefined
     layerOverlayItems: OverlayItem<string, RecentActivity.RecentControlsActivity>[] | undefined
-    selectedControl: number | undefined
+    selectedControlId: number | undefined
   }
 }
 
@@ -63,13 +64,18 @@ const INITIAL_STATE: RecentActivityState = {
     isControlsListClicked: false,
     layerOverlayCoordinates: undefined,
     layerOverlayItems: undefined,
-    selectedControl: undefined
+    selectedControlId: undefined
   }
 }
 const recentActivitySlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'recentActivity',
   reducers: {
+    resetControlListOverlay(state: RecentActivityState) {
+      state.layersAndOverlays.layerOverlayItems = undefined
+      state.layersAndOverlays.isControlsListClicked = false
+      state.layersAndOverlays.layerOverlayCoordinates = undefined
+    },
     resetRecentActivityFilters() {
       return { ...INITIAL_STATE }
     },
@@ -99,7 +105,7 @@ const recentActivitySlice = createSlice({
       state.layersAndOverlays.layerOverlayItems = action.payload
     },
     setSelectedControl(state: RecentActivityState, action: PayloadAction<number | undefined>) {
-      state.layersAndOverlays.selectedControl = action.payload
+      state.layersAndOverlays.selectedControlId = action.payload
     },
     updateFilters(
       state: RecentActivityState,

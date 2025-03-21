@@ -12,10 +12,10 @@ import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useRef } from 'react'
 
+import { FEATURE_ID } from '../Overlays'
+
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { RecentActivity } from '@features/RecentActivity/types'
-
-const FEATURE_ID = 'RecentActivityAreaIconFeature'
 
 export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
@@ -88,7 +88,7 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
       const items = mapClickEvent?.featureList?.reduce((acc, recentActivityFeature) => {
         const type = String(recentActivityFeature.id).split(':')[0]
 
-        if (type === Layers.RECENT_ACTIVITY_AREA_ICON.code) {
+        if (type === Layers.RECENT_CONTROLS_ACTIVITY.code) {
           const { properties } = recentActivityFeature
 
           acc.push({

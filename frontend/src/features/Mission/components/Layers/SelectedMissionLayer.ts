@@ -76,6 +76,7 @@ export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildre
     const feature = selectedMissionVectorSourceRef.current.getFeatureById(
       `${Layers.MISSION_SELECTED.code}:${selectedMissionIdOnMap}`
     )
+
     feature?.setProperties({ overlayCoordinates })
   }, [overlayCoordinates, selectedMissionIdOnMap])
 
