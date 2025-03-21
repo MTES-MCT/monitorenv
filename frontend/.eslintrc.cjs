@@ -104,7 +104,6 @@ module.exports = {
       }
     ],
     '@typescript-eslint/no-use-before-define': 'off',
-    '@typescript-eslint/prefer-nullish-coalescing': 'warn',
 
     'typescript-sort-keys/interface': 'error',
     'typescript-sort-keys/string-enum': 'error'
