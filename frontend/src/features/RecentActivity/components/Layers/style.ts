@@ -1,3 +1,4 @@
+import { RecentActivity } from '@features/RecentActivity/types'
 import { THEME } from '@mtes-mct/monitor-ui'
 
 import type { FlatStyleLike } from 'ol/style/flat'
@@ -20,21 +21,21 @@ export const recentControlActivityStyle: FlatStyleLike = [
         ['linear'],
         ['get', 'ratioInfractionsInControls'],
         0,
-        '#87C20D',
+        RecentActivity.CONTROLS_COLORS[0],
         6,
-        '#FAC200',
+        RecentActivity.CONTROLS_COLORS[1],
         11,
-        '#E79000',
+        RecentActivity.CONTROLS_COLORS[2],
         26,
-        '#CE6000',
+        RecentActivity.CONTROLS_COLORS[3],
         51,
-        '#AF2E12',
+        RecentActivity.CONTROLS_COLORS[4],
         76,
-        '#8C0D3A',
+        RecentActivity.CONTROLS_COLORS[5],
         91,
-        '#810030',
+        RecentActivity.CONTROLS_COLORS[6],
         100,
-        '#810030'
+        RecentActivity.CONTROLS_COLORS[6]
       ],
       'icon-scale': ['interpolate', ['linear'], ['get', 'ratioTotalControls'], 0, 0.1, 100, 1],
       'icon-src': 'icons/dot.svg'
