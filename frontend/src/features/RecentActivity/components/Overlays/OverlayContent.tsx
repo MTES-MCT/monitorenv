@@ -7,7 +7,7 @@ import { Layers } from 'domain/entities/layers/constants'
 import { TargetTypeLabels } from 'domain/entities/targetType'
 import styled from 'styled-components'
 
-import { ControlCard } from './ControlCard'
+import { RecentActivityControlCard } from './RecentActivityControlCard'
 
 import type { RecentActivity } from '@features/RecentActivity/types'
 import type { OverlayItem } from 'domain/types/map'
@@ -30,7 +30,7 @@ export function OverlayContent({
       return
     }
     dispatch(recentActivityActions.resetControlListOverlay())
-    dispatch(recentActivityActions.setSelectedControl(id))
+    dispatch(recentActivityActions.setSelectedControlId(id))
   }
 
   if (items.length === 1 && items[0] && map) {
@@ -43,7 +43,7 @@ export function OverlayContent({
       return null
     }
 
-    return <ControlCard control={feature} />
+    return <RecentActivityControlCard control={feature} />
   }
 
   return (

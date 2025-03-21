@@ -4,7 +4,7 @@ import { recentActivityActions } from '@features/RecentActivity/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
-import { getOverlayCoordinates } from 'domain/shared_slices/Global'
+import { getOverlayCoordinates, removeOverlayStroke } from 'domain/shared_slices/Global'
 import { type OverlayItem } from 'domain/types/map'
 import { Feature } from 'ol'
 import { Point } from 'ol/geom'
@@ -79,12 +79,17 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
     }
 
     if (numberOfClickedFeatures === 1) {
-      dispatch(recentActivityActions.setSelectedControl(clickedFeatures?.[0]?.properties.id))
+      dispatch(removeOverlayStroke())
+      dispatch(recentActivityActions.resetControlListOverlay())
+      setTimeout(() => {
+        dispatch(recentActivityActions.setSelectedControlId(clickedFeatures?.[0]?.properties.id))
+      }, 100)
 
       return
     }
 
     if (numberOfClickedFeatures > 1 && mapClickEvent.coordinates) {
+      dispatch(removeOverlayStroke())
       const items = mapClickEvent?.featureList?.reduce((acc, recentActivityFeature) => {
         const type = String(recentActivityFeature.id).split(':')[0]
 
@@ -103,6 +108,9 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
       dispatch(recentActivityActions.setLayerOverlayItems(items))
       dispatch(recentActivityActions.setLayerOverlayCoordinates(mapClickEvent.coordinates))
       dispatch(recentActivityActions.setIsControlsListClicked(true))
+      setTimeout(() => {
+        dispatch(recentActivityActions.setSelectedControlId())
+      }, 100)
     }
 
     // we don't want to listen editingVigilanceAreaId changes
