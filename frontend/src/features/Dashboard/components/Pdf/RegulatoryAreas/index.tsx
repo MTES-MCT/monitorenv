@@ -7,7 +7,7 @@ import { getTitle } from 'domain/entities/layers/utils'
 import { areaStyle, layoutStyle } from '../style'
 import { getImage } from '../utils'
 
-import type { ExportImageType } from '../../../../hooks/useExportImages'
+import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
 export function RegulatoryAreas({

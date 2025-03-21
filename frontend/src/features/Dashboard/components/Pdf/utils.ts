@@ -1,6 +1,6 @@
 import { Dashboard } from '@features/Dashboard/types'
 
-import type { ExportImageType } from '../../../hooks/useExportImages'
+import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 
 export function getImage(images: ExportImageType[], type: Dashboard.Layer, id: number | undefined): string | undefined {
   return images.find(image => {
