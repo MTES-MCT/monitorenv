@@ -44,12 +44,12 @@ export function FilterTags() {
   const hasTagFilters = useMemo(() => {
     if (
       hasFilters &&
-      ((selectedAdministrationNames && selectedAdministrationNames?.length > 0) ??
-        (selectedCompletionStatus && selectedCompletionStatus?.length > 0) ??
-        (selectedControlUnitIds && selectedControlUnitIds?.length > 0) ??
-        (selectedMissionTypes && selectedMissionTypes?.length > 0) ??
-        (selectedSeaFronts && selectedSeaFronts?.length > 0) ??
-        (selectedStatuses && selectedStatuses?.length > 0) ??
+      ((selectedAdministrationNames && selectedAdministrationNames?.length > 0) ||
+        (selectedCompletionStatus && selectedCompletionStatus?.length > 0) ||
+        (selectedControlUnitIds && selectedControlUnitIds?.length > 0) ||
+        (selectedMissionTypes && selectedMissionTypes?.length > 0) ||
+        (selectedSeaFronts && selectedSeaFronts?.length > 0) ||
+        (selectedStatuses && selectedStatuses?.length > 0) ||
         (selectedThemes && selectedThemes?.length > 0))
     ) {
       return true

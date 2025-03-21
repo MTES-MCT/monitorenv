@@ -24,9 +24,11 @@ export function NatinfSelector({ infractionPath }) {
 
   const sortedNatinfs = useMemo(
     () =>
-      data
-        ?.sort(sortNatinf)
-        .map(item => ({ label: `${item.natinfCode} - ${item.infraction}`, value: item.natinfCode.toString() })) ?? [],
+      (data &&
+        [...data]
+          ?.sort(sortNatinf)
+          .map(item => ({ label: `${item.natinfCode} - ${item.infraction}`, value: item.natinfCode.toString() }))) ||
+      [],
     [data]
   )
   const setValue = (nextValue: string[]) => {
