@@ -46,10 +46,7 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
       >
         {layerOverlayIsOpen && <PinnedOverlay items={layerOverlayItems} />}
       </OverlayPositionOnCoordinates>
-      {createPortal(
-        isHoveredOverlayVisible && <HoveredOverlay items={hoveredItems} pixel={pixel} />,
-        document.body as HTMLElement
-      )}
+      {createPortal(isHoveredOverlayVisible && <HoveredOverlay items={hoveredItems} pixel={pixel} />, document.body)}
     </>
   )
 }

@@ -44,11 +44,11 @@ import type { VectorLayerWithName, WebGLVectorLayerWithName } from '../../domain
 import type { MapBrowserEvent } from 'ol'
 
 export type BaseMapChildrenProps = {
-  currentFeatureListOver?: SerializedFeature<Record<string, any>>[] | undefined
+  currentFeatureListOver?: SerializedFeature<Record<string, any>>[]
   currentFeatureOver: SerializedFeature<Record<string, any>> | undefined
   map: OpenLayerMap
   mapClickEvent: MapClickEvent
-  pixel?: number[] | undefined
+  pixel?: number[]
 }
 
 export const CENTERED_ON_FRANCE = [2.99049, 46.82801]
