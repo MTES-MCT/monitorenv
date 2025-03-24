@@ -20,11 +20,9 @@ class GetRecentControlsActivityUTest {
     private val envActionRepository: IEnvActionRepository = mock()
     private val getRecentControlsActivity = GetRecentControlsActivity(envActionRepository)
 
-    @Captor
-    private lateinit var startedAfterCaptor: ArgumentCaptor<java.time.Instant>
+    @Captor private lateinit var startedAfterCaptor: ArgumentCaptor<java.time.Instant>
 
-    @Captor
-    private lateinit var startedBeforeCaptor: ArgumentCaptor<java.time.Instant>
+    @Captor private lateinit var startedBeforeCaptor: ArgumentCaptor<java.time.Instant>
 
     @BeforeEach
     fun setup() {
@@ -44,7 +42,6 @@ class GetRecentControlsActivityUTest {
                 anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
-                anyOrNull(),
                 any(),
                 any(),
             ),
@@ -60,25 +57,26 @@ class GetRecentControlsActivityUTest {
                 administrationIds = null,
                 controlUnitIds = null,
                 geometry = null,
-                infractionsStatus = null,
                 themeIds = null,
                 startedAfter = null,
                 startedBefore = null,
             )
 
         // Then
-        verify(envActionRepository).getRecentControlsActivity(
-            anyOrNull(),
-            anyOrNull(),
-            anyOrNull(),
-            anyOrNull(),
-            anyOrNull(),
-            capture(startedAfterCaptor),
-            capture(startedBeforeCaptor),
-        )
+        verify(envActionRepository)
+            .getRecentControlsActivity(
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                anyOrNull(),
+                capture(startedAfterCaptor),
+                capture(startedBeforeCaptor),
+            )
 
-        assertThat(startedAfterCaptor.value).isCloseTo(expectedStartedAfter, within(Duration.ofSeconds(1)))
-        assertThat(startedBeforeCaptor.value).isCloseTo(expectedStartedBefore, within(Duration.ofSeconds(1)))
+        assertThat(startedAfterCaptor.value)
+            .isCloseTo(expectedStartedAfter, within(Duration.ofSeconds(1)))
+        assertThat(startedBeforeCaptor.value)
+            .isCloseTo(expectedStartedBefore, within(Duration.ofSeconds(1)))
         assertThat(expectedRecentControlsActivity).isEqualTo(recentControlsActivity)
     }
 
@@ -94,7 +92,6 @@ class GetRecentControlsActivityUTest {
                 administrationIds = listOf(1),
                 controlUnitIds = listOf(1),
                 geometry = null,
-                infractionsStatus = null,
                 themeIds = listOf(8),
                 startedAfter = now.minusDays(30).toInstant(),
                 startedBefore = now.toInstant(),
@@ -107,7 +104,6 @@ class GetRecentControlsActivityUTest {
                 administrationIds = listOf(1),
                 controlUnitIds = listOf(1),
                 geometry = null,
-                infractionsStatus = null,
                 themeIds = listOf(8),
                 startedAfter = now.minusDays(30),
                 startedBefore = now,
