@@ -21,6 +21,10 @@ export function RecentActivityMenuButton() {
   const toggleRecentActivityDialog = e => {
     e.preventDefault()
 
+    if (isRecentActivityDialogVisible && !displayRecentActivityLayer) {
+      dispatch(recentActivityActions.setIsLegenOpen(false))
+    }
+
     dispatch(globalActions.hideAllDialogs())
     dispatch(reduceReportingFormOnMap())
     dispatch(
@@ -29,6 +33,7 @@ export function RecentActivityMenuButton() {
   }
   const closeModal = () => {
     dispatch(globalActions.setDisplayedItems({ visibility: { isRecentActivityDialogVisible: false } }))
+    dispatch(recentActivityActions.setIsLegenOpen(false))
   }
 
   const handleRecentActivityVisibility = () => {
@@ -40,6 +45,7 @@ export function RecentActivityMenuButton() {
     <>
       {isRecentActivityDialogVisible && (
         <div>
+          <RecentActivityLegend />
           <MapMenuDialogContainer>
             <MapMenuDialog.Header>
               <CloseButton Icon={Icon.Close} onClick={closeModal} />
@@ -53,13 +59,10 @@ export function RecentActivityMenuButton() {
             {isDrawing ? (
               <StyledDrawZone />
             ) : (
-              <>
-                <MapMenuDialog.Body>
-                  <RecentActivityFilters />
-                </MapMenuDialog.Body>
-              </>
+              <MapMenuDialog.Body>
+                <RecentActivityFilters />
+              </MapMenuDialog.Body>
             )}
-            <RecentActivityLegend />
           </MapMenuDialogContainer>
         </div>
       )}

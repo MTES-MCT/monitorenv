@@ -3,7 +3,7 @@ import { RecentActivity } from '@features/RecentActivity/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const LEGEND_COLORS = [
   {
@@ -35,13 +35,12 @@ const LEGEND_COLORS = [
     label: '91-100%'
   }
 ]
-export function RecentActivityLegend() {
+export function RecentActivityLegend({ forceVisibility = false }: { forceVisibility?: boolean }) {
   const dispatch = useAppDispatch()
   const isLegendOpen = useAppSelector(state => state.recentActivity.isLegendOpen)
-  const { minControls, totalControls } = useAppSelector(state => state.recentActivity.totalControlsInAllActions)
 
   return (
-    <LegendContainer $isOpen={isLegendOpen}>
+    <LegendContainer $forceVisibility={forceVisibility} $isOpen={isLegendOpen}>
       {isLegendOpen ? (
         <>
           <Header>
@@ -52,11 +51,12 @@ export function RecentActivityLegend() {
             <SubTitle>Nombre de contrôles</SubTitle>
             <TotalControlsLegend>
               <CircleNumbers>
-                <TotalControlLabel>{totalControls}</TotalControlLabel>
+                {/* TODO wait for real values */}
+                <TotalControlLabel>650</TotalControlLabel>
                 <DottedLine />
-                <TotalControlLabel>{Math.round(totalControls / 2)}</TotalControlLabel>
+                <TotalControlLabel>325</TotalControlLabel>
                 <DottedLine />
-                <TotalControlLabel>{minControls}</TotalControlLabel>
+                <TotalControlLabel>1</TotalControlLabel>
                 <DottedLine />
               </CircleNumbers>
 
@@ -89,10 +89,16 @@ export function RecentActivityLegend() {
   )
 }
 
-const LegendContainer = styled.div<{ $isOpen: boolean }>`
+const LegendContainer = styled.div<{ $forceVisibility: boolean; $isOpen: boolean }>`
   position: absolute;
-  right: ${p => (p.$isOpen ? '325px' : '201px')};
-  width: 164px;
+  right: 370px;
+  width: ${p => (p.$isOpen ? '164px;' : 'auto')};
+  ${p =>
+    p.$forceVisibility &&
+    css`
+      bottom: 12px;
+      right: 12px;
+    `}
 `
 const StyledIconButton = styled(IconButton)`
   padding: 6px;

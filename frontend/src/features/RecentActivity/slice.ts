@@ -11,7 +11,7 @@ import type { OverlayItem } from 'domain/types/map'
 import type { Coordinate } from 'ol/coordinate'
 
 const persistConfig = {
-  blacklist: ['isDrawing', 'isGeometryValid', 'isLegendOpen', 'initialGeometrys', 'layersAndOverlays'],
+  blacklist: ['drawedGeometry', 'isDrawing', 'isGeometryValid', 'isLegendOpen', 'initialGeometry', 'layersAndOverlays'],
   key: 'recentActivity',
   storage
 }

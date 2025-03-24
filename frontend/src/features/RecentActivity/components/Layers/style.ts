@@ -1,29 +1,30 @@
 import { overlayStroke } from '@features/map/overlays/style'
+import { RecentActivity } from '@features/RecentActivity/types'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { Icon, Stroke, Style } from 'ol/style'
 
 const getIconColor = (ratioInfractionsInControls: number) => {
   if (ratioInfractionsInControls < 6) {
-    return '#87C20D'
+    return RecentActivity.CONTROLS_COLORS[0]
   }
   if (ratioInfractionsInControls < 11) {
-    return '#FAC200'
+    return RecentActivity.CONTROLS_COLORS[1]
   }
   if (ratioInfractionsInControls < 26) {
-    return '#E79000'
+    return RecentActivity.CONTROLS_COLORS[2]
   }
   if (ratioInfractionsInControls < 51) {
-    return '#AF2E12'
+    return RecentActivity.CONTROLS_COLORS[3]
   }
   if (ratioInfractionsInControls < 76) {
-    return '#8C0D3A'
+    return RecentActivity.CONTROLS_COLORS[4]
   }
   if (ratioInfractionsInControls < 91) {
-    return '#810030'
+    return RecentActivity.CONTROLS_COLORS[5]
   }
 
-  return '#810030' // Default
+  return RecentActivity.CONTROLS_COLORS[6]
 }
 
 export const recentControlActivityStyle = feature => {
