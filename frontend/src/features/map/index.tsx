@@ -18,11 +18,13 @@ import { DrawRecentActivityLayer } from '@features/RecentActivity/components/Lay
 import { RecentActivityLayerEvents } from '@features/RecentActivity/components/Layers/RecentActivityLayerEvents'
 import { RecentControlsActivityLayer } from '@features/RecentActivity/components/Layers/RecentControlsActivityLayer'
 import { RecentActvityOverlay } from '@features/RecentActivity/components/Overlays'
+import { RecentActivityLegend } from '@features/RecentActivity/components/RecentActivityMenuButton/RecentActivityLegend'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
 import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/DrawVigilanceAreaLayer'
 import { EditingVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/EditingVigilanceAreaLayer'
 import { PreviewVigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/PreviewVigilanceAreasLayer'
 import { SelectedVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/SelectedVigilanceAreaLayer'
+import { useAppSelector } from '@hooks/useAppSelector'
 
 import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
@@ -62,6 +64,9 @@ import { ActionOverlay } from './overlays/actions'
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
 export function Map({ isSuperUser }) {
   const isRecentActivityEnabled = import.meta.env.FRONTEND_RECENT_ACTIVITY_ENABLED === 'true'
+  const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
+  const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
+
   if (!isSuperUser) {
     return (
       <BaseMap
@@ -253,6 +258,10 @@ export function Map({ isSuperUser }) {
       {isRecentActivityEnabled ? <RecentActivityLayerEvents /> : null}
       {/* @ts-ignore */}
       {isRecentActivityEnabled ? <RecentActvityOverlay /> : null}
+      {/* @ts-ignore */}
+      {isRecentActivityEnabled && displayRecentActivityLayer && !isRecentActivityDialogVisible ? (
+        <RecentActivityLegend forceVisibility />
+      ) : null}
     </BaseMap>
   )
 }
