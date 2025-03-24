@@ -2,7 +2,6 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly FRONTEND_COEFFICIENT: string
   readonly FRONTEND_GEOSERVER_NAMESPACE: string
   readonly FRONTEND_GEOSERVER_REMOTE_URL: string
   readonly FRONTEND_GOOGLEMAPS_API_KEY: string
@@ -11,9 +10,7 @@ interface ImportMetaEnv {
   readonly FRONTEND_MAPBOX_KEY: string
   readonly FRONTEND_MATOMO_ID: string
   readonly FRONTEND_MATOMO_URL: string
-  readonly FRONTEND_MAX_PIXEL: string
   readonly FRONTEND_METABASE_URL: string
-  readonly FRONTEND_MIN_PIXEL: string
   readonly FRONTEND_MISSION_FORM_AUTO_SAVE_ENABLED: string
   readonly FRONTEND_MISSION_FORM_AUTO_UPDATE: string
   readonly FRONTEND_MONITORENVEXT_ID: string
@@ -23,7 +20,10 @@ interface ImportMetaEnv {
   readonly FRONTEND_OIDC_CLIENT_ID: string
   readonly FRONTEND_OIDC_ENABLED: string
   readonly FRONTEND_OIDC_REDIRECT_URI: string
+  readonly FRONTEND_RECENT_ACTIVITY_COEFFICIENT: string
   readonly FRONTEND_RECENT_ACTIVITY_ENABLED: string
+  readonly FRONTEND_RECENT_ACTIVITY_MAX_PIXEL: string
+  readonly FRONTEND_RECENT_ACTIVITY_MIN_PIXEL: string
   readonly FRONTEND_REPORTING_FORM_AUTO_SAVE_ENABLED: string
   readonly FRONTEND_REPORTING_FORM_AUTO_UPDATE: string
   readonly FRONTEND_SENTRY_AUTH_TOKEN: string
@@ -31,7 +31,6 @@ interface ImportMetaEnv {
   readonly FRONTEND_SENTRY_ENV: string
   readonly FRONTEND_SENTRY_TRACING_ORIGIN: string
   readonly FRONTEND_SHOM_KEY: string
-  readonly FRONTEND_SHOM_URL: string
 }
 
 interface ImportMeta {

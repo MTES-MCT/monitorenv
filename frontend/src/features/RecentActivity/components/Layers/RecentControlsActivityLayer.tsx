@@ -23,9 +23,9 @@ const MIN_CONTROLS = 1
 const MAX_CONTROLS = 653
 
 function calculateDotSize(totalControls: number): number {
-  const minPixel = Number(import.meta.env.FRONTEND_MIN_PIXEL)
-  const maxPixel = Number(import.meta.env.FRONTEND_MAX_PIXEL)
-  const coefficient = Number(import.meta.env.FRONTEND_COEFFICIENT)
+  const minPixel = Number(import.meta.env.FRONTEND_RECENT_ACTIVITY_MIN_PIXEL)
+  const maxPixel = Number(import.meta.env.FRONTEND_RECENT_ACTIVITY_MAX_PIXEL)
+  const coefficient = Number(import.meta.env.FRONTEND_RECENT_ACTIVITY_COEFFICIENT)
 
   return (
     minPixel +
