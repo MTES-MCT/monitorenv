@@ -27,7 +27,6 @@ export namespace RecentActivity {
     administrationIds?: number[]
     controlUnitIds?: number[]
     geometry?: GeoJSON.MultiPolygon
-    infractionsStatus?: string[]
     startedAfter?: string
     startedBefore?: string
     themeIds?: number[]

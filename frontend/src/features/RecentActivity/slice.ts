@@ -17,7 +17,6 @@ export enum RecentActivityFiltersEnum {
   ADMINISTRATION_IDS = 'administrationIds',
   CONTROL_UNIT_IDS = 'controlUnitIds',
   GEOMETRY = 'geometry',
-  INFRACTIONS_STATUS = 'infractionsStatus',
   PERIOD_FILTER = 'periodFilter',
   STARTED_AFTER = 'startedAfter',
   STARTED_BEFORE = 'startedBefore',

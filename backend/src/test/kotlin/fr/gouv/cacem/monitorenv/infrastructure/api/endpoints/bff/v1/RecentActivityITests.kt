@@ -31,14 +31,11 @@ import java.util.*
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(RecentActivity::class)])
 class RecentActivityITests {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+    @Autowired private lateinit var mockMvc: MockMvc
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    @Autowired private lateinit var objectMapper: ObjectMapper
 
-    @MockitoBean
-    private lateinit var getRecentControlsActivity: GetRecentControlsActivity
+    @MockitoBean private lateinit var getRecentControlsActivity: GetRecentControlsActivity
 
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
@@ -69,7 +66,6 @@ class RecentActivityITests {
             RecentControlsActivityDataInput(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z"),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z"),
-                infractionsStatus = null,
                 controlUnitIds = null,
                 administrationIds = null,
                 themeIds = null,
@@ -80,7 +76,6 @@ class RecentActivityITests {
             getRecentControlsActivity.execute(
                 startedAfter = request.startedAfter,
                 startedBefore = request.startedBefore,
-                infractionsStatus = request.infractionsStatus,
                 controlUnitIds = request.controlUnitIds,
                 administrationIds = request.administrationIds,
                 themeIds = request.themeIds,
@@ -112,12 +107,20 @@ class RecentActivityITests {
             .andExpect(jsonPath("$[0].facade", equalTo("Outre-Mer")))
             .andExpect(jsonPath("$[0].department", equalTo("29")))
             .andExpect(jsonPath("$[0].missionId", equalTo(1)))
-            .andExpect(jsonPath("$[0].observations", equalTo("Observations de l'action de contrôle")))
-            .andExpect(jsonPath("$[0].actionNumberOfControls", equalTo(2)))
+            .andExpect(
+                jsonPath(
+                    "$[0].observations",
+                    equalTo("Observations de l'action de contrôle"),
+                ),
+            ).andExpect(jsonPath("$[0].actionNumberOfControls", equalTo(2)))
             .andExpect(jsonPath("$[0].actionTargetType", equalTo("VEHICLE")))
             .andExpect(jsonPath("$[0].vehicleType", equalTo("VEHICLE_LAND")))
-            .andExpect(jsonPath("$[0].infractions[0].id", equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b")))
-            .andExpect(jsonPath("$[0].administrationIds[0]", equalTo(1)))
+            .andExpect(
+                jsonPath(
+                    "$[0].infractions[0].id",
+                    equalTo("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
+                ),
+            ).andExpect(jsonPath("$[0].administrationIds[0]", equalTo(1)))
             .andExpect(jsonPath("$[0].controlUnitIds[0]", equalTo(1)))
             .andExpect(jsonPath("$[0].controlUnitIds[1]", equalTo(2)))
     }

@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
-import fr.gouv.cacem.monitorenv.domain.entities.recentActivity.InfractionEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
 import org.assertj.core.api.Assertions.assertThat
@@ -18,11 +17,9 @@ import java.time.ZonedDateTime
 import java.util.*
 
 class JpaEnvActionRepositoryITests : AbstractDBTests() {
-    @Autowired
-    private val customQueryCountListener: CustomQueryCountListener? = null
+    @Autowired private val customQueryCountListener: CustomQueryCountListener? = null
 
-    @Autowired
-    private lateinit var jpaEnvActionRepository: JpaEnvActionRepository
+    @Autowired private lateinit var jpaEnvActionRepository: JpaEnvActionRepository
 
     private val objectMapper: ObjectMapper = ObjectMapper()
 
@@ -74,7 +71,11 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
                 missionId = 38,
                 controlPlans =
                     listOf(
-                        EnvActionControlPlanEntity(themeId = 11, subThemeIds = listOf(51), tagIds = listOf()),
+                        EnvActionControlPlanEntity(
+                            themeId = 11,
+                            subThemeIds = listOf(51),
+                            tagIds = listOf(),
+                        ),
                     ),
             )
 
@@ -94,13 +95,16 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val observationsByUnit = "observationsByUnit"
 
-        val anEnvAction = anEnvAction(objectMapper, id, today, tomorrow, observationsByUnit, missionId = null)
+        val anEnvAction =
+            anEnvAction(objectMapper, id, today, tomorrow, observationsByUnit, missionId = null)
 
         // When
-        val backendUsageException = assertThrows<BackendUsageException> { jpaEnvActionRepository.save(anEnvAction) }
+        val backendUsageException =
+            assertThrows<BackendUsageException> { jpaEnvActionRepository.save(anEnvAction) }
 
         // Then
-        assertThat(backendUsageException.message).isEqualTo("Trying to save an envAction without mission")
+        assertThat(backendUsageException.message)
+            .isEqualTo("Trying to save an envAction without mission")
     }
 
     @Test
@@ -110,7 +114,6 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T23:59:00Z").toInstant(),
-                infractionsStatus = null,
                 controlUnitIds = null,
                 administrationIds = null,
                 themeIds = null,
@@ -121,58 +124,19 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
         assertThat(recentControlsActivity.size).isEqualTo(3)
         recentControlsActivity.forEach { control ->
             if (control.actionStartDateTimeUtc != null) {
-                assertThat(control.actionStartDateTimeUtc).isAfterOrEqualTo(
-                    ZonedDateTime.parse("2022-01-01T10:54:00Z"),
-                )
-                assertThat(control.actionStartDateTimeUtc).isBeforeOrEqualTo(
-                    ZonedDateTime.parse("2050-08-08T23:59:00Z"),
-                )
+                assertThat(control.actionStartDateTimeUtc)
+                    .isAfterOrEqualTo(
+                        ZonedDateTime.parse("2022-01-01T10:54:00Z"),
+                    )
+                assertThat(control.actionStartDateTimeUtc)
+                    .isBeforeOrEqualTo(
+                        ZonedDateTime.parse("2050-08-08T23:59:00Z"),
+                    )
             }
         }
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
-    }
-
-    @Test
-    fun `getRecentControlsActivity() should return controls when infractionsStatus is set with 'with infractions'`() {
-        // When
-        val recentControlsActivity =
-            jpaEnvActionRepository.getRecentControlsActivity(
-                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
-                startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = listOf(InfractionEnum.WITH_INFRACTION),
-                controlUnitIds = null,
-                administrationIds = null,
-                themeIds = null,
-                geometry = null,
-            )
-
-        // Then
-        assertThat(recentControlsActivity.size).isEqualTo(2)
-        recentControlsActivity.forEach { control ->
-            assertThat(control.infractions?.size).isGreaterThan(0)
-        }
-    }
-
-    @Test
-    fun `getRecentControlsActivity() should return controls when infractionsStatus is set with 'without infractions'`() {
-        // When
-        val recentControlsActivity =
-            jpaEnvActionRepository.getRecentControlsActivity(
-                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
-                startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = listOf(InfractionEnum.WITHOUT_INFRACTION),
-                controlUnitIds = null,
-                administrationIds = null,
-                themeIds = null,
-                geometry = null,
-            )
-        // Then
-        assertThat(recentControlsActivity.size).isEqualTo(1)
-        recentControlsActivity.forEach { control ->
-            assertThat(control.infractions?.size).isEqualTo(0)
-        }
     }
 
     @Test
@@ -182,7 +146,6 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = null,
                 controlUnitIds = listOf(10002),
                 administrationIds = null,
                 themeIds = null,
@@ -202,7 +165,6 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = null,
                 controlUnitIds = null,
                 administrationIds = listOf(1005),
                 themeIds = null,
@@ -222,7 +184,6 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = null,
                 controlUnitIds = null,
                 administrationIds = null,
                 themeIds = listOf(112),
@@ -230,9 +191,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(1)
-        recentControlsActivity.forEach { control ->
-            assertThat(control.themesIds).contains(112)
-        }
+        recentControlsActivity.forEach { control -> assertThat(control.themesIds).contains(112) }
     }
 
     @Test
@@ -247,7 +206,6 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = null,
                 controlUnitIds = null,
                 administrationIds = null,
                 themeIds = null,
@@ -255,9 +213,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(2)
-        recentControlsActivity.forEach { control ->
-            assertThat(control.geom).isNotNull()
-        }
+        recentControlsActivity.forEach { control -> assertThat(control.geom).isNotNull() }
     }
 
     @Test
@@ -267,7 +223,6 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             jpaEnvActionRepository.getRecentControlsActivity(
                 startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
                 startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z").toInstant(),
-                infractionsStatus = null,
                 controlUnitIds = listOf(10002, 10018),
                 administrationIds = listOf(1005, 1008),
                 themeIds = null,

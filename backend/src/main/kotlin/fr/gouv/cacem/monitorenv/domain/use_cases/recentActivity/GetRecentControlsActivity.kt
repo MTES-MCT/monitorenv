@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.recentActivity.InfractionEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
 import org.locationtech.jts.geom.Geometry
@@ -18,7 +17,6 @@ class GetRecentControlsActivity(
         administrationIds: List<Int>?,
         controlUnitIds: List<Int>?,
         geometry: Geometry?,
-        infractionsStatus: List<InfractionEnum>?,
         themeIds: List<Int>?,
         startedAfter: ZonedDateTime?,
         startedBefore: ZonedDateTime?,
@@ -30,12 +28,13 @@ class GetRecentControlsActivity(
                 administrationIds = administrationIds,
                 controlUnitIds = controlUnitIds,
                 geometry = geometry,
-                infractionsStatus = infractionsStatus,
                 themeIds = themeIds,
                 startedAfter =
                     startedAfter?.toInstant()
                         ?: ZonedDateTime.now().minusDays(30).toInstant(),
-                startedBefore = startedBefore?.toInstant() ?: ZonedDateTime.now().toInstant(),
+                startedBefore =
+                    startedBefore?.toInstant()
+                        ?: ZonedDateTime.now().toInstant(),
             )
 
         logger.info("Found ${recentControlsActivityList.size} recentControlsActivity with criteria")

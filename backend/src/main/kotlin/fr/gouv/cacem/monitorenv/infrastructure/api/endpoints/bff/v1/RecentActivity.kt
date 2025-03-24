@@ -33,12 +33,13 @@ class RecentActivity(
                 administrationIds = params.administrationIds,
                 controlUnitIds = params.controlUnitIds,
                 geometry = params.geometry,
-                infractionsStatus = params.infractionsStatus,
                 startedAfter = params.startedAfter,
                 startedBefore = params.startedBefore,
                 themeIds = params.themeIds,
             )
 
-        return recentControlsActivity.map { RecentControlsActivityDataOutput.fromRecentControlsActivityDTO(it) }
+        return recentControlsActivity.map {
+            RecentControlsActivityDataOutput.fromRecentControlsActivityDTO(it)
+        }
     }
 }
