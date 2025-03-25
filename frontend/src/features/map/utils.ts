@@ -1,8 +1,6 @@
 // selectors taht will be moved to the slice
 
-import { Dashboard } from '@features/Dashboard/types'
 import {
-  Layers,
   MonitorEnvLayers,
   type RegulatoryOrAMPOrViglanceAreaLayerType,
   RegulatoryOrAMPOrViglanceAreaLayerTypeAsList
@@ -15,47 +13,20 @@ import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulator
 import type { MapClickEvent, OverlayItem, SerializedFeature } from 'domain/types/map'
 import type { FeatureLike } from 'ol/Feature'
 
-export const getClickedRegulatoryFeatures = (mapClickEvent: MapClickEvent) =>
+type GetClickedFeatureType = {
+  isRegulatoryOrAmp: boolean
+  mapClickEvent: MapClickEvent
+  typesList: string[]
+}
+export const getClickedFeatures = ({
+  isRegulatoryOrAmp,
+  mapClickEvent,
+  typesList
+}: GetClickedFeatureType): SerializedFeature<Record<string, any>>[] | undefined =>
   mapClickEvent.featureList?.filter(feature => {
-    const featureId = String(feature.id)
+    const featureId = isRegulatoryOrAmp ? String(feature.id) : String(feature.id).split(':')[0]
 
-    return (
-      (featureId &&
-        (featureId.includes(Layers.REGULATORY_ENV_PREVIEW.code) || featureId.includes(Layers.REGULATORY_ENV.code))) ||
-      featureId.includes(Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code) ||
-      featureId.includes(Dashboard.Layer.DASHBOARD_REGULATORY_AREAS)
-    )
-  })
-
-export const getClickedAmpFeatures = (mapClickEvent: MapClickEvent) =>
-  mapClickEvent.featureList?.filter(feature => {
-    const featureId = String(feature.id)
-
-    return (
-      featureId &&
-      (featureId.includes(Layers.AMP_PREVIEW.code) ||
-        featureId.includes(Layers.AMP.code) ||
-        featureId.includes(Layers.AMP_LINKED_TO_VIGILANCE_AREA.code) ||
-        featureId.includes(Dashboard.Layer.DASHBOARD_AMP))
-    )
-  })
-
-export const getClickedVigilanceAreasFeatures = (mapClickEvent: MapClickEvent) =>
-  mapClickEvent.featureList?.filter(feature => {
-    const featureId = String(feature.id).split(':')[0]
-
-    return (
-      featureId === Layers.VIGILANCE_AREA.code ||
-      featureId === Layers.VIGILANCE_AREA_PREVIEW.code ||
-      featureId === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
-    )
-  })
-
-export const getClickedRecentActivityFeatures = (mapClickEvent: MapClickEvent) =>
-  mapClickEvent.featureList?.filter(feature => {
-    const featureId = String(feature.id).split(':')[0]
-
-    return featureId === Layers.RECENT_CONTROLS_ACTIVITY.code
+    return featureId && typesList.some(type => featureId.includes(type))
   })
 
 export const getOverlayItemsFromFeatures = (

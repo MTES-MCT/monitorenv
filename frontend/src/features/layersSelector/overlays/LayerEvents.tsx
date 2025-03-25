@@ -1,9 +1,5 @@
-import {
-  getClickedAmpFeatures,
-  getClickedItems,
-  getClickedRegulatoryFeatures,
-  getClickedVigilanceAreasFeatures
-} from '@features/map/utils'
+import { Dashboard } from '@features/Dashboard/types'
+import { getClickedFeatures, getClickedItems } from '@features/map/utils'
 import { getIsLinkingZonesToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -88,9 +84,35 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [map, vectorLayer])
 
   useEffect(() => {
-    const clickedAmpFeatures = getClickedAmpFeatures(mapClickEvent)
-    const clickedRegulatoryFeatures = getClickedRegulatoryFeatures(mapClickEvent)
-    const clickedVigilanceAreaFeatures = getClickedVigilanceAreasFeatures(mapClickEvent)
+    const clickedAmpFeatures = getClickedFeatures({
+      isRegulatoryOrAmp: true,
+      mapClickEvent,
+      typesList: [
+        Layers.AMP_PREVIEW.code,
+        Layers.AMP.code,
+        Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
+        Dashboard.Layer.DASHBOARD_AMP
+      ]
+    })
+    const clickedRegulatoryFeatures = getClickedFeatures({
+      isRegulatoryOrAmp: true,
+      mapClickEvent,
+      typesList: [
+        Layers.REGULATORY_ENV_PREVIEW.code,
+        Layers.REGULATORY_ENV.code,
+        Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
+        Dashboard.Layer.DASHBOARD_REGULATORY_AREAS
+      ]
+    })
+    const clickedVigilanceAreaFeatures = getClickedFeatures({
+      isRegulatoryOrAmp: false,
+      mapClickEvent,
+      typesList: [
+        Layers.VIGILANCE_AREA.code,
+        Layers.VIGILANCE_AREA_PREVIEW.code,
+        Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
+      ]
+    })
 
     const numberOfClickedFeatures =
       (clickedAmpFeatures?.length ?? 0) +

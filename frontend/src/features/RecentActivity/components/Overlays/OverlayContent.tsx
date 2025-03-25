@@ -1,9 +1,7 @@
-import { recentActivityActions } from '@features/RecentActivity/slice'
+import { updateSelectedControlId } from '@features/RecentActivity/useCases/updateSelectedControlId'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { pluralize, THEME } from '@mtes-mct/monitor-ui'
-import { findMapFeatureById } from '@utils/findMapFeatureById'
-import { Layers } from 'domain/entities/layers/constants'
 import { TargetTypeLabels } from 'domain/entities/targetType'
 import styled from 'styled-components'
 
@@ -11,16 +9,16 @@ import { RecentActivityControlCard } from './RecentActivityControlCard'
 
 import type { RecentActivity } from '@features/RecentActivity/types'
 import type { OverlayItem } from 'domain/types/map'
-import type OpenLayerMap from 'ol/Map'
+import type { Feature } from 'ol'
 
 export function OverlayContent({
   isSelected,
   items,
-  map
+  singleFeature
 }: {
   isSelected?: boolean
   items: OverlayItem<string, RecentActivity.RecentControlsActivity>[]
-  map?: OpenLayerMap
+  singleFeature?: Feature
 }) {
   const dispatch = useAppDispatch()
   const { themes } = useGetControlPlans()
@@ -29,21 +27,11 @@ export function OverlayContent({
     if (!isSelected) {
       return
     }
-    dispatch(recentActivityActions.resetControlListOverlay())
-    dispatch(recentActivityActions.setSelectedControlId(id))
+    dispatch(updateSelectedControlId(id))
   }
 
-  if (items.length === 1 && items[0] && map) {
-    const feature = findMapFeatureById(
-      map,
-      Layers.RECENT_CONTROLS_ACTIVITY.code,
-      `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${items[0].properties.id}`
-    )
-    if (!feature) {
-      return null
-    }
-
-    return <RecentActivityControlCard control={feature} />
+  if (singleFeature) {
+    return <RecentActivityControlCard control={singleFeature} />
   }
 
   return (
