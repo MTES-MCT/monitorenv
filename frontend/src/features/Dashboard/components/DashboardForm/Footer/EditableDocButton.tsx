@@ -6,9 +6,10 @@ import { Button } from '@mtes-mct/monitor-ui'
 export function EditableDocButton({ dashboard }) {
   const dispatch = useAppDispatch()
 
-  const { images } = useExportImages({ triggerExport: true })
+  const { getImages } = useExportImages()
 
   const exportBrief = async () => {
+    const images = await getImages()
     const { data } = await dispatch(dashboardsAPI.endpoints.exportBrief.initiate({ dashboard, images }))
 
     if (data) {

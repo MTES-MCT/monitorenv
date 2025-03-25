@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 
 class BriefInput(
     val dashboard: DashboardEntity,
-    val images: List<BriefImageEntity>,
+    val images: List<BriefImageEntity>? = listOf(),
 ) {
     fun toBriefEntity(): BriefEntity =
         BriefEntity(
