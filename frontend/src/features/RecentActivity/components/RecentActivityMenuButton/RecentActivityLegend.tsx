@@ -5,6 +5,8 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import styled, { css } from 'styled-components'
 
+export type LegendLocation = 'OUTSIDE' | 'INSIDE'
+
 const LEGEND_COLORS = [
   {
     color: RecentActivity.CONTROLS_COLORS[0],
@@ -35,16 +37,16 @@ const LEGEND_COLORS = [
     label: '91-100%'
   }
 ]
-export function RecentActivityLegend({ forceVisibility = false }: { forceVisibility?: boolean }) {
+export function RecentActivityLegend({ location }: { location: LegendLocation }) {
   const dispatch = useAppDispatch()
   const isLegendOpen = useAppSelector(state => state.recentActivity.isLegendOpen)
 
   return (
-    <LegendContainer $forceVisibility={forceVisibility} $isOpen={isLegendOpen}>
+    <LegendContainer $isOpen={isLegendOpen} $location={location}>
       {isLegendOpen ? (
         <>
           <Header>
-            <CloseButton Icon={Icon.Minus} onClick={() => dispatch(recentActivityActions.setIsLegenOpen(false))} />
+            <ReduceButton Icon={Icon.Minus} onClick={() => dispatch(recentActivityActions.setIsLegenOpen(false))} />
             <Title>Légende</Title>
           </Header>
           <Body>
@@ -52,9 +54,9 @@ export function RecentActivityLegend({ forceVisibility = false }: { forceVisibil
             <TotalControlsLegend>
               <CircleNumbers>
                 {/* TODO wait for real values */}
-                <TotalControlLabel>650</TotalControlLabel>
+                <TotalControlLabel>300</TotalControlLabel>
                 <DottedLine />
-                <TotalControlLabel>325</TotalControlLabel>
+                <TotalControlLabel>50</TotalControlLabel>
                 <DottedLine />
                 <TotalControlLabel>1</TotalControlLabel>
                 <DottedLine />
@@ -89,12 +91,12 @@ export function RecentActivityLegend({ forceVisibility = false }: { forceVisibil
   )
 }
 
-const LegendContainer = styled.div<{ $forceVisibility: boolean; $isOpen: boolean }>`
+const LegendContainer = styled.div<{ $isOpen: boolean; $location: LegendLocation }>`
   position: absolute;
   right: 370px;
   width: ${p => (p.$isOpen ? '164px;' : 'auto')};
   ${p =>
-    p.$forceVisibility &&
+    p.$location === 'OUTSIDE' &&
     css`
       bottom: 12px;
       right: 12px;
@@ -112,7 +114,7 @@ const Header = styled.div`
   justify-content: space-between;
   padding: 8px 10px 8px 3px;
 `
-const CloseButton = styled(IconButton)`
+const ReduceButton = styled(IconButton)`
   color: ${p => p.theme.color.white};
 
   &:hover,
@@ -150,7 +152,7 @@ const SubTitle = styled.h3`
 `
 
 const TotalControlsLegend = styled.div`
-  height: 76px;
+  height: 57px;
 `
 const ColorsLegend = styled.div`
   display: flex;
@@ -176,32 +178,32 @@ const CircleNumbers = styled.div`
   flex-direction: column;
   font-size: 9.5px;
   position: absolute;
-  right: 30px;
+  right: 34px;
 `
 
 const DottedLine = styled.div`
   position: absolute;
-  width: 94px;
+  width: 100px;
   right: 4px;
   border-bottom: 1px dashed ${p => p.theme.color.gainsboro};
 
   &:nth-child(2) {
-    top: 7px;
+    top: 9px;
   }
   &:nth-child(4) {
-    top: 32px;
+    top: 20px;
   }
   &:nth-child(6) {
-    top: 58px;
+    top: 37px;
   }
 `
 const TotalControlLabel = styled.span`
   position: absolute;
   &:nth-child(3) {
-    top: 26px;
+    top: 12px;
   }
   &:nth-child(5) {
-    top: 50px;
+    top: 28px;
   }
 `
 
@@ -211,23 +213,25 @@ const CircleContainer = styled.div`
   top: 83px;
 `
 const Circle = styled.div`
-  border: 1px solid ${p => p.theme.color.slateGray};
+  border: 2px solid ${p => p.theme.color.slateGray};
   border-radius: 50%;
   position: absolute;
+
   &:nth-child(1) {
-    width: 52px;
-    height: 52px;
+    left: 6px;
+    height: 30px;
+    width: 30px;
   }
   &:nth-child(2) {
-    width: 28px;
-    height: 28px;
-    top: 24px;
-    left: 12px;
+    height: 19px;
+    left: 11px;
+    top: 11px;
+    width: 19px;
   }
   &:nth-child(3) {
-    width: 7px;
-    height: 7px;
-    top: 44px;
-    left: 22px;
+    height: 8px;
+    left: 17px;
+    top: 22px;
+    width: 8px;
   }
 `

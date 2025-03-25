@@ -260,7 +260,7 @@ export function Map({ isSuperUser }) {
       {isRecentActivityEnabled ? <RecentActvityOverlay /> : null}
       {/* @ts-ignore */}
       {isRecentActivityEnabled && displayRecentActivityLayer && !isRecentActivityDialogVisible ? (
-        <RecentActivityLegend forceVisibility />
+        <RecentActivityLegend location="OUTSIDE" />
       ) : null}
     </BaseMap>
   )

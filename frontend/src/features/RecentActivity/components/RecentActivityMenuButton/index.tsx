@@ -45,7 +45,7 @@ export function RecentActivityMenuButton() {
     <>
       {isRecentActivityDialogVisible && (
         <div>
-          <RecentActivityLegend />
+          <RecentActivityLegend location="INSIDE" />
           <MapMenuDialogContainer>
             <MapMenuDialog.Header>
               <CloseButton Icon={Icon.Close} onClick={closeModal} />
