@@ -1,4 +1,5 @@
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
+import { MAX_CONTROLS, MIN_CONTROLS } from '@features/RecentActivity/constants'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -19,10 +20,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
-const MIN_CONTROLS = 1
-const MAX_CONTROLS = 653
-
-function calculateDotSize(totalControls: number): number {
+export function calculateDotSize(totalControls: number): number {
   const minPixel = Number(import.meta.env.FRONTEND_RECENT_ACTIVITY_MIN_PIXEL)
   const maxPixel = Number(import.meta.env.FRONTEND_RECENT_ACTIVITY_MAX_PIXEL)
   const coefficient = Number(import.meta.env.FRONTEND_RECENT_ACTIVITY_COEFFICIENT)
