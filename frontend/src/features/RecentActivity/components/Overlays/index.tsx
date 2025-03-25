@@ -103,7 +103,7 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
       {/* To display list of recent controls on hover */}
       {createPortal(
         isHoveredOverlayVisible && hoveredItems.length > 1 && !isControlsListClicked && (
-          <HoveredOverlay items={hoveredItems} map={map} pixel={pixel} />
+          <HoveredOverlay items={hoveredItems} pixel={pixel} singleFeature={hoveredFeature} />
         ),
         document.body
       )}

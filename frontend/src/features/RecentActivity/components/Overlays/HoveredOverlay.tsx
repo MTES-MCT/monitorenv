@@ -4,16 +4,16 @@ import styled from 'styled-components'
 import { OverlayContent } from './OverlayContent'
 
 import type { RecentActivity } from '@features/RecentActivity/types'
-import type OpenLayerMap from 'ol/Map'
+import type { Feature } from 'ol'
 
 export function HoveredOverlay({
   items,
-  map,
-  pixel
+  pixel,
+  singleFeature
 }: {
   items: OverlayItem<string, RecentActivity.RecentControlsActivity>[]
-  map: OpenLayerMap
   pixel: number[]
+  singleFeature?: Feature
 }) {
   if (!pixel) {
     return null
@@ -22,7 +22,7 @@ export function HoveredOverlay({
 
   return (
     <Menu $x={x} $y={y}>
-      <OverlayContent items={items?.slice(0, 3)} map={map} />
+      <OverlayContent items={items?.slice(0, 3)} singleFeature={singleFeature} />
       {items?.length > 1 && (
         <Footer>
           {items?.length === 4 && <More>1 autre contrôle</More>}

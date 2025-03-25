@@ -1,8 +1,7 @@
 import { ControlCard } from '@features/commonComponents/ControlCard'
-import { recentActivityActions } from '@features/RecentActivity/slice'
+import { updateSelectedControlId } from '@features/RecentActivity/useCases/updateSelectedControlId'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { removeOverlayStroke } from 'domain/shared_slices/Global'
 
 import type { Feature } from 'ol'
 
@@ -17,11 +16,7 @@ export function RecentActivityControlCard({ control, isSelected = false }: { con
 
   const closeControl = () => {
     if (isSelected) {
-      dispatch(removeOverlayStroke())
-      // we need this timeout to delete the overlay stroke before delete the selected control
-      setTimeout(() => {
-        dispatch(recentActivityActions.setSelectedControlId())
-      }, 100)
+      dispatch(updateSelectedControlId())
     }
   }
 
