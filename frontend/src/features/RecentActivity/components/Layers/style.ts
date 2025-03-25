@@ -1,11 +1,11 @@
 import { overlayStroke } from '@features/map/overlays/style'
-import { RecentActivity } from '@features/RecentActivity/types'
+import { CONTROL_THRESHOLDS } from '@features/RecentActivity/constants'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { Icon, Stroke, Style } from 'ol/style'
 
 const getIconColor = (ratioInfractionsInControls: number) =>
-  RecentActivity.CONTROL_THRESHOLDS.find(({ limit }) => ratioInfractionsInControls < limit)?.color
+  CONTROL_THRESHOLDS.find(({ limit }) => ratioInfractionsInControls < limit)?.color
 
 export const recentControlActivityStyle = feature => {
   if (feature.getId() === `${Layers.RECENT_CONTROLS_ACTIVITY.code}:DRAWED_GEOMETRY`) {

@@ -1,45 +1,51 @@
+import { CONTROLS_COLORS, MAX_CONTROLS, MIN_CONTROLS } from '@features/RecentActivity/constants'
 import { recentActivityActions } from '@features/RecentActivity/slice'
-import { RecentActivity } from '@features/RecentActivity/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import styled, { css } from 'styled-components'
 
+import { calculateDotSize } from '../Layers/RecentControlsActivityLayer'
+
 export type LegendLocation = 'OUTSIDE' | 'INSIDE'
 
 const LEGEND_COLORS = [
   {
-    color: RecentActivity.CONTROLS_COLORS[0],
+    color: CONTROLS_COLORS[0],
     label: '0-5%'
   },
   {
-    color: RecentActivity.CONTROLS_COLORS[1],
+    color: CONTROLS_COLORS[1],
     label: '6-10%'
   },
   {
-    color: RecentActivity.CONTROLS_COLORS[2],
+    color: CONTROLS_COLORS[2],
     label: '11-25%'
   },
   {
-    color: RecentActivity.CONTROLS_COLORS[3],
+    color: CONTROLS_COLORS[3],
     label: '26-50%'
   },
   {
-    color: RecentActivity.CONTROLS_COLORS[4],
+    color: CONTROLS_COLORS[4],
     label: '51-75%'
   },
   {
-    color: RecentActivity.CONTROLS_COLORS[5],
+    color: CONTROLS_COLORS[5],
     label: '76-90%'
   },
   {
-    color: RecentActivity.CONTROLS_COLORS[6],
+    color: CONTROLS_COLORS[6],
     label: '91-100%'
   }
 ]
+
+const MEDIUM_DOT_SIZE = 50
 export function RecentActivityLegend({ location }: { location: LegendLocation }) {
   const dispatch = useAppDispatch()
   const isLegendOpen = useAppSelector(state => state.recentActivity.isLegendOpen)
+
+  const mediumDotSize = calculateDotSize(MEDIUM_DOT_SIZE)
 
   return (
     <LegendContainer $isOpen={isLegendOpen} $location={location}>
@@ -53,18 +59,17 @@ export function RecentActivityLegend({ location }: { location: LegendLocation })
             <SubTitle>Nombre de contrôles</SubTitle>
             <TotalControlsLegend>
               <CircleNumbers>
-                {/* TODO wait for real values */}
-                <TotalControlLabel>300</TotalControlLabel>
+                <TotalControlLabel>{MAX_CONTROLS}</TotalControlLabel>
                 <DottedLine />
-                <TotalControlLabel>50</TotalControlLabel>
+                <TotalControlLabel>{MEDIUM_DOT_SIZE}</TotalControlLabel>
                 <DottedLine />
-                <TotalControlLabel>1</TotalControlLabel>
+                <TotalControlLabel>{MIN_CONTROLS}</TotalControlLabel>
                 <DottedLine />
               </CircleNumbers>
 
               <CircleContainer>
                 <Circle />
-                <Circle />
+                <Circle $size={mediumDotSize} />
                 <Circle />
               </CircleContainer>
             </TotalControlsLegend>
@@ -182,37 +187,43 @@ const CircleNumbers = styled.div`
 `
 
 const DottedLine = styled.div`
-  position: absolute;
-  width: 100px;
-  right: 4px;
   border-bottom: 1px dashed ${p => p.theme.color.gainsboro};
+  position: absolute;
 
   &:nth-child(2) {
+    right: 4px;
     top: 9px;
+    width: 100px;
   }
   &:nth-child(4) {
-    top: 20px;
+    right: 0px;
+    top: 19px;
+    width: 105px;
   }
   &:nth-child(6) {
-    top: 37px;
+    right: -9px;
+    top: 30px;
+    width: 108px;
   }
 `
 const TotalControlLabel = styled.span`
   position: absolute;
   &:nth-child(3) {
-    top: 12px;
+    left: 5px;
+    top: 10px;
   }
   &:nth-child(5) {
-    top: 28px;
+    left: 12px;
+    top: 20px;
   }
 `
 
 const CircleContainer = styled.div`
-  position: absolute;
   left: 10px;
+  position: absolute;
   top: 83px;
 `
-const Circle = styled.div`
+const Circle = styled.div<{ $size?: number }>`
   border: 2px solid ${p => p.theme.color.slateGray};
   border-radius: 50%;
   position: absolute;
@@ -223,10 +234,10 @@ const Circle = styled.div`
     width: 30px;
   }
   &:nth-child(2) {
-    height: 19px;
+    height: ${p => p.$size ?? 19}px;
     left: 11px;
-    top: 11px;
-    width: 19px;
+    top: 10px;
+    width: ${p => p.$size ?? 19}px;
   }
   &:nth-child(3) {
     height: 8px;
