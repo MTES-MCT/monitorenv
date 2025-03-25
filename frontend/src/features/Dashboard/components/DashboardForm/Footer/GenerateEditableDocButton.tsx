@@ -62,15 +62,18 @@ export function GenerateEditableDocButton({ dashboard }: { dashboard: Dashboard.
     zip.file('mimetype', 'application/vnd.oasis.opendocument.text')
     zip.file('content.xml', finalXml)
     // Le fichier META-INF/manifest.xml est requis pour les documents ODF valides
-    zip.folder('META-INF').file(
-      'manifest.xml',
+    const metaInfFolder = zip.folder('META-INF')
+    if (metaInfFolder) {
+      metaInfFolder.file(
+        'manifest.xml',
+        `
+      <manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0">
+        <manifest:file-entry manifest:full-path="/" manifest:version="1.2" manifest:media-type="application/vnd.oasis.opendocument.text"/>
+        <manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/>
+      </manifest:manifest>
       `
-    <manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0">
-      <manifest:file-entry manifest:full-path="/" manifest:version="1.2" manifest:media-type="application/vnd.oasis.opendocument.text"/>
-      <manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/>
-    </manifest:manifest>
-    `
-    )
+      )
+    }
 
     const blob = await zip.generateAsync({ type: 'blob' })
     const url = URL.createObjectURL(blob)

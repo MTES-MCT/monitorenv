@@ -106,6 +106,12 @@ dependencies {
     // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
 
+    // JodConverter
+    implementation("org.jodconverter:jodconverter-local-lo:4.4.7")
+    // the two following apoche poi dependencies should have the same version
+    implementation("org.apache.poi:poi:5.3.0")
+    implementation("org.apache.poi:poi-ooxml:5.3.0")
+
     // Devtools
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
 
