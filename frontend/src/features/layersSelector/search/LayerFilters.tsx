@@ -1,4 +1,4 @@
-import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
+import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { Tooltip } from '@components/Tooltip'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
 import {
@@ -27,21 +27,21 @@ import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } fro
 type LayerFiltersProps = {
   ampTypes: Option<string>[]
   filteredAmpTypes: string[]
-  filteredRegulatoryThemes: string[]
+  filteredRegulatoryTags: string[]
   filteredVigilanceAreaPeriod: string | undefined
   handleResetFilters: () => void
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
-  setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
+  setFilteredRegulatoryTags: (filteredRegulatoryTags: string[]) => void
   updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
 }
 export function LayerFilters({
   ampTypes,
   filteredAmpTypes,
-  filteredRegulatoryThemes,
+  filteredRegulatoryTags,
   filteredVigilanceAreaPeriod,
   handleResetFilters,
   setFilteredAmpTypes,
-  setFilteredRegulatoryThemes,
+  setFilteredRegulatoryTags,
   updateDateRangeFilter
 }: LayerFiltersProps) {
   const dispatch = useAppDispatch()
@@ -63,11 +63,11 @@ export function LayerFilters({
     setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete))
   }
 
-  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: string) => () => {
-    if (filteredRegulatoryThemes.length === 1) {
+  const handleDeleteRegulatoryTag = (regulatoryTagToDelete: string) => () => {
+    if (filteredRegulatoryTags.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
-    setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== regulatoryThemeToDelete))
+    setFilteredRegulatoryTags(filteredRegulatoryTags.filter(tag => tag !== regulatoryTagToDelete))
   }
 
   const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
@@ -76,7 +76,7 @@ export function LayerFilters({
     <FiltersWrapper>
       {!isLinkingAmpToVigilanceArea && (
         <SelectContainer>
-          <RegulatoryThemesFilter style={{ flex: 1 }} />
+          <RegulatoryTagsFilter style={{ flex: 1 }} />
           <Tooltip>
             Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
           </Tooltip>
@@ -126,16 +126,11 @@ export function LayerFilters({
         />
       )}
 
-      {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes?.length > 0) && (
+      {(filteredRegulatoryTags?.length > 0 || filteredAmpTypes?.length > 0) && (
         <TagWrapper>
-          {filteredRegulatoryThemes?.map(theme => (
-            <SingleTag
-              key={theme}
-              accent={Accent.SECONDARY}
-              onDelete={handleDeleteRegulatoryTheme(theme)}
-              title={theme}
-            >
-              {theme}
+          {filteredRegulatoryTags?.map(tag => (
+            <SingleTag key={tag} accent={Accent.SECONDARY} onDelete={handleDeleteRegulatoryTag(tag)} title={tag}>
+              {tag}
             </SingleTag>
           ))}
 
@@ -146,7 +141,7 @@ export function LayerFilters({
           ))}
         </TagWrapper>
       )}
-      {(filteredRegulatoryThemes?.length > 0 ||
+      {(filteredRegulatoryTags?.length > 0 ||
         filteredAmpTypes?.length > 0 ||
         filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS) && (
         <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>

@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
 import org.locationtech.jts.geom.MultiPolygon
 
 data class RegulatoryAreaEntity(
@@ -15,7 +15,7 @@ data class RegulatoryAreaEntity(
     val editeur: String? = null,
     val source: String? = null,
     val observation: String? = null,
-    val themes: List<ThemeEntity>,
+    val tags: List<TagEntity>,
     val date: String? = null,
     val dureeValidite: String? = null,
     val dateFin: String? = null,

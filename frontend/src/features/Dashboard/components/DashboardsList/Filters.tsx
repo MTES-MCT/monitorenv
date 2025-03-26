@@ -1,10 +1,10 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
-import { useGetThemesQuery } from '@api/themesAPI'
+import { useGetTagsQuery } from '@api/tagsAPI'
 import { TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { StyledSelect } from '@features/Reportings/Filters/style'
-import { getThemesAsOptions } from '@features/Themes/useCases/getThemesAsOptions'
+import { getTagsAsOptions } from '@features/Tags/useCases/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -29,7 +29,7 @@ import { dashboardFiltersActions, INITIAL_LIST_FILTERS_STATE, type DashboardsLis
 type Orientation = 'row' | 'column'
 export function Filters({ orientation = 'row' }: { orientation?: Orientation }) {
   const dispatch = useAppDispatch()
-  const { controlUnits, regulatoryThemes, seaFronts, specificPeriod, updatedAt } = useAppSelector(
+  const { controlUnits, regulatoryTags, seaFronts, specificPeriod, updatedAt } = useAppSelector(
     state => state.dashboardFilters.filters
   )
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
@@ -48,8 +48,8 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
   const updateControlUnitFilter = (nextValue: number[] | undefined) => {
     dispatch(dashboardFiltersActions.setListFilters({ controlUnits: nextValue ?? [] }))
   }
-  const updateRegulatoryThemesFilter = (nextValue: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.setListFilters({ regulatoryThemes: nextValue ?? [] }))
+  const updateRegulatoryTagsFilter = (nextValue: string[] | undefined) => {
+    dispatch(dashboardFiltersActions.setListFilters({ regulatoryTags: nextValue ?? [] }))
   }
   const updateUpdatedAtFilter = (nextValue: OptionValueType | undefined) => {
     const value = nextValue as DateRangeEnum
@@ -63,13 +63,13 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     [activeControlUnitsOptions]
   )
 
-  const { data: themes } = useGetThemesQuery()
+  const { data: tags } = useGetTagsQuery()
 
-  const regulatoryThemesAsOptions = getThemesAsOptions(Object.values(themes ?? []))
+  const regulatoryTagsAsOptions = getTagsAsOptions(Object.values(tags ?? []))
 
-  const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemesAsOptions, ['label']),
-    [regulatoryThemesAsOptions]
+  const regulatoryTagsCustomSearch = useMemo(
+    () => new CustomSearch(regulatoryTagsAsOptions, ['label']),
+    [regulatoryTagsAsOptions]
   )
 
   const onDeleteTag = (
@@ -92,7 +92,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
 
   const hasFilters = !isEqual(INITIAL_LIST_FILTERS_STATE, {
     controlUnits,
-    regulatoryThemes,
+    regulatoryTags,
     seaFronts,
     specificPeriod,
     updatedAt
@@ -118,14 +118,11 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     </>
   )
 
-  const regulatoryThemesTags = (
+  const regulatoryTagsTags = (
     <>
-      {regulatoryThemes?.map(regulatoryTheme => (
-        <SingleTag
-          key={regulatoryTheme}
-          onDelete={() => onDeleteTag(regulatoryTheme, 'regulatoryThemes', regulatoryThemes)}
-        >
-          {String(`${orientation === 'row' ? 'Thématique ' : ''}${getTitle(regulatoryTheme)}`)}
+      {regulatoryTags?.map(tag => (
+        <SingleTag key={tag} onDelete={() => onDeleteTag(tag, 'regulatoryTags', regulatoryTags)}>
+          {String(`${orientation === 'row' ? 'Thématique ' : ''}${getTitle(tag)}`)}
         </SingleTag>
       ))}
     </>
@@ -201,26 +198,26 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
         </FilterWrapper>
         <FilterWrapper $orientation={orientation}>
           <CheckPicker
-            key={regulatoryThemesAsOptions.length}
-            customSearch={regulatoryThemesCustomSearch}
+            key={regulatoryTagsAsOptions.length}
+            customSearch={regulatoryTagsCustomSearch}
             isLabelHidden
             isTransparent
             label="Thématique réglementaire"
-            name="regulatoryThemes"
-            onChange={updateRegulatoryThemesFilter}
-            options={regulatoryThemesAsOptions}
+            name="regulatoryTags"
+            onChange={updateRegulatoryTagsFilter}
+            options={regulatoryTagsAsOptions}
             placeholder="Thématique réglementaire"
             renderValue={() =>
-              regulatoryThemes && <OptionValue>{`Thématique réglementaire (${regulatoryThemes.length})`}</OptionValue>
+              regulatoryTags && <OptionValue>{`Thématique réglementaire (${regulatoryTags.length})`}</OptionValue>
             }
             style={{ width: 320 }}
-            value={regulatoryThemes}
+            value={regulatoryTags}
           />
-          {orientation === 'column' && regulatoryThemesTags}
+          {orientation === 'column' && regulatoryTagsTags}
         </FilterWrapper>
       </FiltersContainer>
       <TagsContainer>
-        {orientation === 'row' && [specificPeriodDatePicker, seaFrontTags, controlUnitTags, regulatoryThemesTags]}
+        {orientation === 'row' && [specificPeriodDatePicker, seaFrontTags, controlUnitTags, regulatoryTagsTags]}
 
         {orientation === 'row' && hasFilters && <ReinitializeFiltersButton onClick={resetFilter} />}
       </TagsContainer>

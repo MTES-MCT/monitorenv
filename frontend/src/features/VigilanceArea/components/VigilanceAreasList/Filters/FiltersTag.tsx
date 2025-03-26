@@ -1,4 +1,4 @@
-import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
+import { setFilteredRegulatoryTags } from '@features/layersSelector/search/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { SingleTag } from '@mtes-mct/monitor-ui'
@@ -9,7 +9,7 @@ import { vigilanceAreaFiltersActions } from './slice'
 export function FilterTags() {
   const dispatch = useAppDispatch()
   const { createdBy, seaFronts } = useAppSelector(state => state.vigilanceAreaFilters)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: string, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
@@ -21,11 +21,11 @@ export function FilterTags() {
     )
   }
 
-  const deleteRegulatoryTheme = (regulatoryThemeToDelete: string) => {
-    dispatch(setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== regulatoryThemeToDelete)))
+  const deleteRegulatoryTag = (regulatoryTagToDelete: string) => {
+    dispatch(setFilteredRegulatoryTags(filteredRegulatoryTags.filter(theme => theme !== regulatoryTagToDelete)))
   }
 
-  const hasFilters = createdBy?.length > 0 || seaFronts?.length > 0 || filteredRegulatoryThemes?.length > 0
+  const hasFilters = createdBy?.length > 0 || seaFronts?.length > 0 || filteredRegulatoryTags?.length > 0
 
   if (!hasFilters) {
     return null
@@ -43,8 +43,8 @@ export function FilterTags() {
           {String(`Façade ${seaFront}`)}
         </SingleTag>
       ))}
-      {filteredRegulatoryThemes?.map(theme => (
-        <SingleTag key={theme} onDelete={() => deleteRegulatoryTheme(theme)}>
+      {filteredRegulatoryTags?.map(theme => (
+        <SingleTag key={theme} onDelete={() => deleteRegulatoryTag(theme)}>
           {theme}
         </SingleTag>
       ))}

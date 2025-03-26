@@ -86,7 +86,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
                 <LayerLegend
                   layerType={MonitorEnvLayers.REGULATORY_ENV}
                   legendKey={regulatoryArea?.entityName ?? 'aucun'}
-                  type={regulatoryArea?.themes.map(({ name }) => name).join(', ') ?? 'aucun'}
+                  type={regulatoryArea?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
                 />
                 <span title={regulatoryArea?.entityName}>{regulatoryArea?.entityName}</span>
               </Name>

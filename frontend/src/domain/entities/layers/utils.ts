@@ -78,6 +78,6 @@ export const getLegendType = (layer: GenericLayerType, layerType: RegulatoryOrAM
       return (layer as VigilanceArea.VigilanceAreaProperties).name
 
     default:
-      return (layer as RegulatoryLayerCompactProperties).themes.map(({ name }) => name).join(', ')
+      return (layer as RegulatoryLayerCompactProperties).tags.map(({ name }) => name).join(', ')
   }
 }

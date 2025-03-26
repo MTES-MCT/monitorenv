@@ -1,11 +1,11 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.themes
+package fr.gouv.cacem.monitorenv.domain.use_cases.tags
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.repositories.IThemeRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
+import fr.gouv.cacem.monitorenv.domain.repositories.ITagRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,19 +17,19 @@ import java.time.Duration
 import java.time.ZonedDateTime
 
 @ExtendWith(OutputCaptureExtension::class)
-class GetThemesByRegulatoryAreasUTest {
-    private val themesRepository: IThemeRepository = mock()
-    private val getThemesByRegulatoryAreas = GetThemesByRegulatoryAreas(themesRepository)
+class GetTagsByRegulatoryAreasUTest {
+    private val themesRepository: ITagRepository = mock()
+    private val getTagsByRegulatoryAreas = GetTagsByRegulatoryAreas(themesRepository)
 
     @Test
     fun `execute should return a list of themes`(log: CapturedOutput) {
         // Given
         val regulationIds = listOf(1, 2, 3)
-        val expectedThemes = listOf(aTheme())
+        val expectedThemes = listOf(aTag())
         given(themesRepository.findAllWithinByRegulatoryAreaIds(anyList(), any())).willReturn(expectedThemes)
 
         // When
-        val themes = getThemesByRegulatoryAreas.execute(regulationIds)
+        val themes = getTagsByRegulatoryAreas.execute(regulationIds)
 
         // Then
         assertThat(themes).containsAll(expectedThemes)
@@ -39,7 +39,7 @@ class GetThemesByRegulatoryAreasUTest {
                 Duration.between(time, ZonedDateTime.now()).abs() <= Duration.ofSeconds(1)
             },
         )
-        assertThat(log.out).contains("Attempt to GET all themes from regulations $regulationIds")
-        assertThat(log.out).contains("Found ${themes.size} themes")
+        assertThat(log.out).contains("Attempt to GET all tags from regulations $regulationIds")
+        assertThat(log.out).contains("Found ${themes.size} tags")
     }
 }

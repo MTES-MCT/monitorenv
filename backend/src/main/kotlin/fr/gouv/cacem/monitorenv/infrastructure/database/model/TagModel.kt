@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
-import fr.gouv.cacem.monitorenv.domain.entities.themes.SubThemeEntity
-import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.SubTagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -17,8 +17,8 @@ import org.hibernate.annotations.FetchMode
 import java.time.ZonedDateTime
 
 @Entity
-@Table(name = "themes")
-data class ThemeModel(
+@Table(name = "tags")
+data class TagModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,38 +27,38 @@ data class ThemeModel(
     val startedAt: ZonedDateTime,
     val endedAt: ZonedDateTime?,
     @OneToMany(
-        mappedBy = "theme",
+        mappedBy = "tag",
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
     )
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
-    var subThemes: List<SubThemeModel>,
+    var subTags: List<SubTagModel>,
 ) {
-    fun toThemeEntity(subThemes: List<SubThemeEntity>? = null): ThemeEntity =
-        ThemeEntity(
+    fun toTagEntity(subTags: List<SubTagEntity>? = null): TagEntity =
+        TagEntity(
             id = id,
             name = name,
             startedAt = startedAt,
             endedAt = endedAt,
-            subThemes = subThemes ?: this.subThemes.map { it.toSubThemeEntity() },
+            subTags = subTags ?: this.subTags.map { it.toSubTagEntity() },
         )
 
     companion object {
-        fun fromThemeEntity(themeEntity: ThemeEntity): ThemeModel {
-            val themeModel =
-                ThemeModel(
-                    id = themeEntity.id,
-                    name = themeEntity.name,
-                    startedAt = themeEntity.startedAt,
-                    endedAt = themeEntity.endedAt,
-                    subThemes = listOf(),
+        fun fromTagEntity(tagEntity: TagEntity): TagModel {
+            val tagModel =
+                TagModel(
+                    id = tagEntity.id,
+                    name = tagEntity.name,
+                    startedAt = tagEntity.startedAt,
+                    endedAt = tagEntity.endedAt,
+                    subTags = listOf(),
                 )
-            themeModel.subThemes = themeEntity.subThemes.map { SubThemeModel.fromSubThemeEntity(it, themeModel) }
-            return themeModel
+            tagModel.subTags = tagEntity.subTags.map { SubTagModel.fromSubTagEntity(it, tagModel) }
+            return tagModel
         }
     }
 
     override fun toString(): String =
-        "ThemeModel(id=$id, name='$name', startedAt=$startedAt, endedAt=$endedAt, subThemes=$subThemes)"
+        "TagModel(id=$id, name='$name', startedAt=$startedAt, endedAt=$endedAt, subTags=$subTags)"
 }

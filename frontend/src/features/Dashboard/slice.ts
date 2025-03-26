@@ -8,6 +8,7 @@ import { type Reporting } from 'domain/entities/reporting'
 import { Dashboard } from './types'
 import { filterReportings } from './useCases/filters/filterReportings'
 
+import type { DashboardFilters } from './components/DashboardForm/slice'
 import type { ImageApi, Link } from '@components/Form/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -472,9 +473,9 @@ export const getFilteredRegulatoryAreas = createSelector(
   [
     (state: DashboardState) => state.dashboards,
     (state: DashboardState) => state.activeDashboardId,
-    (_, regulatoryThemesFilter) => regulatoryThemesFilter
+    (_, regulatoryTagsFilter: string[] | undefined) => regulatoryTagsFilter
   ],
-  (dashboards, activeDashboardId, regulatoryThemesFilter) => {
+  (dashboards, activeDashboardId, regulatoryTagsFilter) => {
     if (!activeDashboardId) {
       return undefined
     }
@@ -482,11 +483,11 @@ export const getFilteredRegulatoryAreas = createSelector(
     if (dashboards[activeDashboardId]) {
       const regulatoryAreas = dashboards[activeDashboardId].extractedArea?.regulatoryAreas
 
-      if (!regulatoryThemesFilter || regulatoryThemesFilter.length === 0) {
+      if (!regulatoryTagsFilter || regulatoryTagsFilter.length === 0) {
         return regulatoryAreas
       }
 
-      return regulatoryAreas?.filter(({ themes }) => themes.some(({ id }) => regulatoryThemesFilter?.includes(id)))
+      return regulatoryAreas?.filter(({ tags }) => tags.some(({ name }) => regulatoryTagsFilter?.includes(name)))
     }
 
     return undefined
@@ -497,7 +498,7 @@ export const getFilteredAmps = createSelector(
   [
     (state: DashboardState) => state.dashboards,
     (state: DashboardState) => state.activeDashboardId,
-    (_, ampFilter) => ampFilter
+    (_, ampFilter: string[] | undefined) => ampFilter
   ],
   (dashboards, activeDashboardId, ampFilter) => {
     if (!activeDashboardId) {
@@ -522,7 +523,7 @@ export const getFilteredVigilanceAreas = createSelector(
   [
     (state: DashboardState) => state.dashboards,
     (state: DashboardState) => state.activeDashboardId,
-    (_, filters) => filters
+    (_, filters: DashboardFilters | undefined) => filters
   ],
   (dashboards, activeDashboardId, filters) => {
     if (!activeDashboardId) {
@@ -530,16 +531,16 @@ export const getFilteredVigilanceAreas = createSelector(
     }
 
     if (dashboards[activeDashboardId]) {
-      const regulatoryThemesFilter = filters?.regulatoryThemes
+      const regulatoryTagsFilter = filters?.regulatoryTags
       const periodFilter = filters?.vigilanceAreaPeriod
       const specificPeriodFilter = filters?.specificPeriod
       const vigilanceAreas = dashboards[activeDashboardId].extractedArea?.vigilanceAreas ?? []
 
       let filteredVigilanceAreasByThemes = vigilanceAreas
 
-      if (regulatoryThemesFilter && regulatoryThemesFilter.length > 0) {
+      if (regulatoryTagsFilter && regulatoryTagsFilter.length > 0) {
         filteredVigilanceAreasByThemes = vigilanceAreas?.filter(({ themes }) =>
-          themes?.some(theme => regulatoryThemesFilter?.includes(theme))
+          themes?.some(theme => regulatoryTagsFilter?.includes(theme))
         )
       }
 
