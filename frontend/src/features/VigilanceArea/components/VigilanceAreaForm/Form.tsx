@@ -1,9 +1,9 @@
-import { useGetThemesQuery } from '@api/themesAPI'
+import { useGetTagsQuery } from '@api/tagsAPI'
 import { Tooltip } from '@components/Tooltip'
 import { ZonePicker } from '@components/ZonePicker'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
-import { getThemesAsOptions } from '@features/Themes/useCases/getThemesAsOptions'
+import { getTagsAsOptions } from '@features/Tags/useCases/getTagsAsOptions'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -52,10 +52,10 @@ export function Form() {
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
-  const { data: themes } = useGetThemesQuery()
+  const { data: tags } = useGetTagsQuery()
 
-  const themesOptions = getThemesAsOptions(Object.values(themes ?? []))
-  const regulatoryThemesCustomSearch = useMemo(() => new CustomSearch(themesOptions, ['label']), [themesOptions])
+  const tagsOptions = getTagsAsOptions(Object.values(tags ?? []))
+  const regulatoryTagsCustomSearch = useMemo(() => new CustomSearch(tagsOptions, ['label']), [tagsOptions])
 
   const publish = () => {
     validateForm({ ...values, isDraft: false }).then(errors => {
@@ -178,12 +178,12 @@ export function Form() {
         </DateWrapper>
         <Frequency />
         <FormikMultiSelect
-          customSearch={regulatoryThemesCustomSearch}
+          customSearch={regulatoryTagsCustomSearch}
           isErrorMessageHidden
           isRequired
           label="Thématiques"
           name="themes"
-          options={themesOptions || []}
+          options={tagsOptions || []}
           placeholder="Sélectionner un/des thématique(s)"
         />
         <FormikMultiRadio

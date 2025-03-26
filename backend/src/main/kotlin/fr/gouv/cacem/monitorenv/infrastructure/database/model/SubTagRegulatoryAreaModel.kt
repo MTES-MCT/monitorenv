@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import fr.gouv.cacem.monitorenv.domain.entities.themes.SubThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.SubTagEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
@@ -14,25 +14,25 @@ import jakarta.persistence.Table
 import java.io.Serializable
 
 @Entity
-@Table(name = "sub_themes_regulatory_area")
-data class SubThemeRegulatoryAreaModel(
+@Table(name = "sub_tags_regulatory_area")
+data class SubTagRegulatoryAreaModel(
     @EmbeddedId
-    val id: SubThemeRegulationPk,
+    val id: SubTagRegulatoryAreaPk,
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "sub_themes_id")
-    @MapsId("subThemeId")
-    val subTheme: SubThemeModel,
+    @JoinColumn(name = "sub_tags_id")
+    @MapsId("subTagId")
+    val subTags: SubTagModel,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regulatory_area_id")
     @MapsId("regulatoryAreaId")
     @JsonBackReference
     val regulatoryArea: RegulatoryAreaModel,
 ) {
-    fun toSubThemeEntity(): SubThemeEntity = subTheme.toSubThemeEntity()
+    fun toSubTagEntity(): SubTagEntity = subTags.toSubTagEntity()
 }
 
 @Embeddable
-data class SubThemeRegulationPk(
-    val subThemeId: Int,
+data class SubTagRegulatoryAreaPk(
+    val subTagId: Int,
     val regulatoryAreaId: Int,
 ) : Serializable

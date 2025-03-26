@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaModel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -46,8 +46,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 source = "",
                 observation = "",
                 type = null,
-                themes = listOf(),
-                subThemes = listOf(),
+                tags = listOf(),
+                subTags = listOf(),
                 date = "2020-07-01",
                 dureeValidite = "15 ans",
                 dateFin = "2035-07-01",
@@ -55,11 +55,11 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
             )
         val themes =
             listOf(
-                aTheme(name = "Mouillage"),
-                aTheme(name = "PN"),
+                aTag(name = "Mouillage"),
+                aTag(name = "PN"),
             )
-        searchedRegulatoryArea.themes =
-            themes.map { ThemeRegulatoryAreaModel.fromThemeEntity(it, regulatoryArea = searchedRegulatoryArea) }
+        searchedRegulatoryArea.tags =
+            themes.map { TagRegulatoryAreaModel.fromTagEntity(it, regulatoryArea = searchedRegulatoryArea) }
 
         // When
         val requestedRegulatoryArea = jpaRegulatoryAreasRepository.findById(17)
@@ -75,11 +75,11 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea.editeur).isEqualTo(searchedRegulatoryArea.editeur)
         assertThat(requestedRegulatoryArea.source).isEqualTo(searchedRegulatoryArea.source)
         assertThat(requestedRegulatoryArea.observation).isEqualTo(searchedRegulatoryArea.observation)
-        assertThat(requestedRegulatoryArea.themes).hasSameSizeAs(searchedRegulatoryArea.themes)
-        assertThat(requestedRegulatoryArea.themes[0].name).isEqualTo("PN")
-        assertThat(requestedRegulatoryArea.themes[0].subThemes[0].name).isEqualTo("subtheme2")
-        assertThat(requestedRegulatoryArea.themes[1].name).isEqualTo("Mouillage")
-        assertThat(requestedRegulatoryArea.themes[1].subThemes).isEmpty()
+        assertThat(requestedRegulatoryArea.tags).hasSameSizeAs(searchedRegulatoryArea.tags)
+        assertThat(requestedRegulatoryArea.tags[0].name).isEqualTo("PN")
+        assertThat(requestedRegulatoryArea.tags[0].subTags[0].name).isEqualTo("subtag2")
+        assertThat(requestedRegulatoryArea.tags[1].name).isEqualTo("Mouillage")
+        assertThat(requestedRegulatoryArea.tags[1].subTags).isEmpty()
         assertThat(requestedRegulatoryArea.date).isEqualTo(searchedRegulatoryArea.date)
         assertThat(requestedRegulatoryArea.dureeValidite).isEqualTo(searchedRegulatoryArea.dureeValidite)
         assertThat(requestedRegulatoryArea.dateFin).isEqualTo(searchedRegulatoryArea.dateFin)
