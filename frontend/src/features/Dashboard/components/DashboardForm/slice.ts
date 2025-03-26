@@ -9,7 +9,7 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit, DateAsStringRange } from '@mtes-mct/monitor-ui'
 
 const persistConfig = {
-  key: 'dashboardFilters',
+  key: 'dashboardFilters_V2',
   storage
 }
 
@@ -30,14 +30,14 @@ export type ControlUnitFilters = {
 export type DashboardFilters = {
   amps?: string[]
   previewSelection?: boolean
-  regulatoryThemes?: string[]
+  regulatoryTags?: string[]
   specificPeriod?: DateAsStringRange | undefined
   vigilanceAreaPeriod?: VigilanceArea.VigilanceAreaFilterPeriod | undefined
 }
 
 export type DashboardsListFilters = {
   controlUnits: number[]
-  regulatoryThemes: string[]
+  regulatoryTags: string[]
   seaFronts: string[]
   specificPeriod?: DateAsStringRange
   updatedAt: DateRangeEnum
@@ -58,7 +58,7 @@ type DashboardFiltersState = {
 
 export const INITIAL_LIST_FILTERS_STATE: DashboardsListFilters = {
   controlUnits: [],
-  regulatoryThemes: [],
+  regulatoryTags: [],
   seaFronts: [],
   specificPeriod: undefined,
   updatedAt: DateRangeEnum.MONTH

@@ -36,7 +36,7 @@ export function RegulatoryMetadata() {
             <LayerLegend
               layerType={MonitorEnvLayers.REGULATORY_ENV}
               legendKey={regulatoryMetadata.entityName}
-              type={regulatoryMetadata.themes.map(({ name }) => name).join(', ')}
+              type={regulatoryMetadata.tags.map(({ name }) => name).join(', ')}
             />
             <RegulatoryZoneName title={getTitle(regulatoryMetadata.layerName)}>
               {getTitle(regulatoryMetadata.layerName)}
@@ -52,7 +52,7 @@ export function RegulatoryMetadata() {
             <Identification
               entityName={regulatoryMetadata.entityName}
               facade={regulatoryMetadata.facade}
-              themes={regulatoryMetadata.themes}
+              tags={regulatoryMetadata.tags}
               type={regulatoryMetadata.type}
             />
             <RegulatorySummary
