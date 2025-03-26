@@ -4,13 +4,13 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useMemo } from 'react'
 
 import { TWO_MINUTES } from '../../../constants'
-import { filterByRegulatoryThemes } from '../useCases/filters/filterByRegulatoryThemes'
+import { filterByRegulatoryTags } from '../useCases/filters/filterByRegulatoryTags'
 import { filterBySeaFronts } from '../useCases/filters/filterBySeaFronts'
 import { filterByUnits } from '../useCases/filters/filterByUnits'
 import { filterByUpdatedAt } from '../useCases/filters/filterByUpdatedAt'
 
 export const useGetFilteredDashboardsQuery = (skip = false) => {
-  const { controlUnits, regulatoryThemes, seaFronts, specificPeriod, updatedAt } = useAppSelector(
+  const { controlUnits, regulatoryTags, seaFronts, specificPeriod, updatedAt } = useAppSelector(
     state => state.dashboardFilters.filters
   )
   const { data: regulatoryAreas } = useGetRegulatoryLayersQuery()
@@ -31,10 +31,10 @@ export const useGetFilteredDashboardsQuery = (skip = false) => {
         ?.filter(dashboard => filterBySeaFronts(seaFronts, dashboard))
         .filter(dashboard => filterByUnits(controlUnits, dashboard))
         .filter(dashboard =>
-          filterByRegulatoryThemes(regulatoryThemes, dashboard, Object.values(regulatoryAreas?.entities ?? []))
+          filterByRegulatoryTags(regulatoryTags, dashboard, Object.values(regulatoryAreas?.entities ?? []))
         )
         .filter(dashboard => filterByUpdatedAt(updatedAt, dashboard.updatedAt, specificPeriod)),
-    [controlUnits, dashboards, regulatoryAreas?.entities, regulatoryThemes, seaFronts, specificPeriod, updatedAt]
+    [controlUnits, dashboards, regulatoryAreas?.entities, regulatoryTags, seaFronts, specificPeriod, updatedAt]
   )
 
   return { dashboards: filteredDashboards, isError, isFetching, isLoading }

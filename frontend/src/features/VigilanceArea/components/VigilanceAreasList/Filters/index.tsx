@@ -1,10 +1,10 @@
 import { useGetTrigramsQuery } from '@api/vigilanceAreasAPI'
-import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
+import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import {
-  setFilteredRegulatoryThemes,
+  setFilteredRegulatoryTags,
   setFilteredVigilanceAreaPeriod,
   setIsRegulatorySearchResultsVisible,
   setIsVigilanceAreaSearchResultsVisible,
@@ -30,7 +30,7 @@ export function VigilanceAreasFilters() {
   const trigramsAsOptions = trigrams?.map(trigram => ({ label: trigram, value: trigram })) ?? []
 
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
 
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
@@ -52,7 +52,7 @@ export function VigilanceAreasFilters() {
     statusFilter.length !== 2 ||
     !!searchQueryFilter ||
     filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS ||
-    filteredRegulatoryThemes?.length > 0
+    filteredRegulatoryTags?.length > 0
 
   const updateSeaFrontFilter = (selectedSeaFronts: string[] | undefined) => {
     dispatch(vigilanceAreaFiltersActions.setSeaFronts(selectedSeaFronts ?? []))
@@ -78,7 +78,7 @@ export function VigilanceAreasFilters() {
   const resetFilters = () => {
     dispatch(vigilanceAreaFiltersActions.resetFilters())
 
-    dispatch(setFilteredRegulatoryThemes([]))
+    dispatch(setFilteredRegulatoryTags([]))
     dispatch(setIsRegulatorySearchResultsVisible(false))
     dispatch(setFilteredVigilanceAreaPeriod(VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS))
     dispatch(setIsVigilanceAreaSearchResultsVisible(false))
@@ -87,7 +87,7 @@ export function VigilanceAreasFilters() {
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
-      regulatoryThemes: [],
+      regulatoryTags: [],
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
@@ -103,7 +103,7 @@ export function VigilanceAreasFilters() {
 
       <FilterContainer>
         <PeriodFilter style={{ width: 320 }} />
-        <RegulatoryThemesFilter style={{ width: 320 }} />
+        <RegulatoryTagsFilter style={{ width: 320 }} />
 
         <CheckPicker
           isLabelHidden

@@ -120,7 +120,7 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={regulatoryArea?.entityName ?? 'aucun'}
-          type={regulatoryArea?.themes.map(({ name }) => name).join(', ') ?? 'aucun'}
+          type={regulatoryArea?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
         />
         <span title={regulatoryArea?.entityName}>{regulatoryArea?.entityName}</span>
       </RegulatoryAreaName>

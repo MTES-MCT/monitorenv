@@ -16,7 +16,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
   const { createdBy, seaFronts, searchQuery, status } = useAppSelector(state => state.vigilanceAreaFilters)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
 
   const { data, isError, isFetching, isLoading } = useGetVigilanceAreasQuery(undefined, {
     pollingInterval: TWO_MINUTES,
@@ -35,7 +35,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
         isVigilanceAreaPartOfCreatedBy(vigilanceArea, createdBy) &&
         isVigilanceAreaPartOfSeaFront(vigilanceArea, seaFronts) &&
         isVigilanceAreaPartOfStatus(vigilanceArea, status) &&
-        isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes)
+        isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryTags)
     )
 
     const vigilanceAreasByPeriod = getFilterVigilanceAreasPerPeriod(
@@ -81,7 +81,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
     createdBy,
     seaFronts,
     status,
-    filteredRegulatoryThemes
+    filteredRegulatoryTags
   ])
 
   return { isError, isFetching, isLoading, vigilanceAreas: filteredVigilanceAreas }

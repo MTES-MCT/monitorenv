@@ -31,7 +31,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
               <LayerLegend
                 layerType={MonitorEnvLayers.REGULATORY_ENV}
                 legendKey={regulatoryMetadata.entityName}
-                type={regulatoryMetadata.themes.map(({ name }) => name).join(', ')}
+                type={regulatoryMetadata.tags.map(({ name }) => name).join(', ')}
               />
               <RegulatoryZoneName title={getTitle(regulatoryMetadata.layerName)}>
                 {getTitle(regulatoryMetadata.layerName)}
@@ -42,7 +42,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
               <Identification
                 entityName={regulatoryMetadata.entityName}
                 facade={regulatoryMetadata.facade}
-                themes={regulatoryMetadata.themes}
+                tags={regulatoryMetadata.tags}
                 type={regulatoryMetadata.type}
               />
               <RegulatorySummary regulatoryReference={regulatoryMetadata.refReg} url={regulatoryMetadata.url} />

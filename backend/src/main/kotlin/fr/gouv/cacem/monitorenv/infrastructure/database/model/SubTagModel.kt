@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import fr.gouv.cacem.monitorenv.domain.entities.themes.SubThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.SubTagEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -14,8 +14,8 @@ import jakarta.persistence.Table
 import java.time.ZonedDateTime
 
 @Entity
-@Table(name = "sub_themes")
-data class SubThemeModel(
+@Table(name = "sub_tags")
+data class SubTagModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,24 +24,23 @@ data class SubThemeModel(
     val startedAt: ZonedDateTime,
     val endedAt: ZonedDateTime?,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "themes_id")
+    @JoinColumn(name = "tags_id")
     @JsonBackReference
-    val theme: ThemeModel,
+    val tag: TagModel,
 ) {
-    fun toSubThemeEntity(): SubThemeEntity =
-        SubThemeEntity(id = id, name = name, startedAt = startedAt, endedAt = endedAt)
+    fun toSubTagEntity(): SubTagEntity = SubTagEntity(id = id, name = name, startedAt = startedAt, endedAt = endedAt)
 
     companion object {
-        fun fromSubThemeEntity(
-            subThemeEntity: SubThemeEntity,
-            theme: ThemeModel,
-        ): SubThemeModel =
-            SubThemeModel(
-                id = subThemeEntity.id,
-                name = subThemeEntity.name,
-                startedAt = subThemeEntity.startedAt,
-                endedAt = subThemeEntity.endedAt,
-                theme = theme,
+        fun fromSubTagEntity(
+            subTagEntity: SubTagEntity,
+            theme: TagModel,
+        ): SubTagModel =
+            SubTagModel(
+                id = subTagEntity.id,
+                name = subTagEntity.name,
+                startedAt = subTagEntity.startedAt,
+                endedAt = subTagEntity.endedAt,
+                tag = theme,
             )
     }
 

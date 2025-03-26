@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import fr.gouv.cacem.monitorenv.domain.entities.themes.SubThemeEntity
-import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.SubTagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
@@ -15,37 +15,37 @@ import jakarta.persistence.Table
 import java.io.Serializable
 
 @Entity
-@Table(name = "themes_regulatory_area")
-data class ThemeRegulatoryAreaModel(
+@Table(name = "tags_regulatory_area")
+data class TagRegulatoryAreaModel(
     @EmbeddedId
-    val id: ThemeRegulatoryAreaPk,
+    val id: TagRegulatoryAreaPk,
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "themes_id")
-    @MapsId("themeId")
-    val theme: ThemeModel,
+    @JoinColumn(name = "tags_id")
+    @MapsId("tagId")
+    val tag: TagModel,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regulatory_area_id")
     @MapsId("regulatoryAreaId")
     @JsonBackReference
     val regulatoryArea: RegulatoryAreaModel,
 ) {
-    fun toThemeEntity(subThemes: List<SubThemeEntity>): ThemeEntity = theme.toThemeEntity(subThemes)
+    fun toTagEntity(subTags: List<SubTagEntity>): TagEntity = tag.toTagEntity(subTags)
 
     companion object {
-        fun fromThemeEntity(
-            theme: ThemeEntity,
+        fun fromTagEntity(
+            tag: TagEntity,
             regulatoryArea: RegulatoryAreaModel,
-        ): ThemeRegulatoryAreaModel =
-            ThemeRegulatoryAreaModel(
-                id = ThemeRegulatoryAreaPk(theme.id, regulatoryArea.id),
-                theme = ThemeModel.fromThemeEntity(theme),
+        ): TagRegulatoryAreaModel =
+            TagRegulatoryAreaModel(
+                id = TagRegulatoryAreaPk(tag.id, regulatoryArea.id),
+                tag = TagModel.fromTagEntity(tag),
                 regulatoryArea = regulatoryArea,
             )
     }
 }
 
 @Embeddable
-data class ThemeRegulatoryAreaPk(
-    val themeId: Int?,
+data class TagRegulatoryAreaPk(
+    val tagId: Int?,
     val regulatoryAreaId: Int,
 ) : Serializable
