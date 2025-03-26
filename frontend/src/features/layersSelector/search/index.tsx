@@ -14,7 +14,7 @@ import { SearchOnExtentExtraButtons } from './SearchOnExtentExtraButtons'
 import {
   resetFilters,
   setFilteredAmpTypes,
-  setFilteredRegulatoryThemes,
+  setFilteredRegulatoryTags,
   setGlobalSearchText,
   setVigilanceAreaSpecificPeriodFilter
 } from './slice'
@@ -34,7 +34,7 @@ export function LayerSearch() {
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
@@ -46,10 +46,11 @@ export function LayerSearch() {
 
   const handleSearchInputChange = searchedText => {
     dispatch(setGlobalSearchText(searchedText))
+
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
-      regulatoryThemes: filteredRegulatoryThemes,
+      regulatoryTags: filteredRegulatoryTags,
       searchedText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -62,7 +63,7 @@ export function LayerSearch() {
     debouncedSearchLayers({
       ampTypes: filteredTypes,
       extent: searchExtent,
-      regulatoryThemes: filteredRegulatoryThemes,
+      regulatoryTags: filteredRegulatoryTags,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -70,12 +71,12 @@ export function LayerSearch() {
     })
   }
 
-  const handleSetFilteredRegulatoryThemes = filteredThemes => {
-    dispatch(setFilteredRegulatoryThemes(filteredThemes))
+  const handleSetFilteredRegulatoryTags = (filteredTags: string[]) => {
+    dispatch(setFilteredRegulatoryTags(filteredTags))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
-      regulatoryThemes: filteredThemes,
+      regulatoryTags: filteredTags,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -88,7 +89,7 @@ export function LayerSearch() {
     debouncedSearchLayers({
       ampTypes: [],
       extent: searchExtent,
-      regulatoryThemes: [],
+      regulatoryTags: [],
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
@@ -101,7 +102,7 @@ export function LayerSearch() {
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
-      regulatoryThemes: filteredRegulatoryThemes,
+      regulatoryTags: filteredRegulatoryTags,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -127,7 +128,7 @@ export function LayerSearch() {
         <SearchInput
           displayRegFilters={displayRegFilters}
           filteredAmpTypes={filteredAmpTypes}
-          filteredRegulatoryThemes={filteredRegulatoryThemes}
+          filteredRegulatoryTags={filteredRegulatoryTags}
           filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
           globalSearchText={globalSearchText}
           placeholder="Rechercher une zone"
@@ -138,11 +139,11 @@ export function LayerSearch() {
           <LayerFilters
             ampTypes={ampTypes}
             filteredAmpTypes={filteredAmpTypes}
-            filteredRegulatoryThemes={filteredRegulatoryThemes}
+            filteredRegulatoryTags={filteredRegulatoryTags}
             filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
             handleResetFilters={handleResetFilters}
             setFilteredAmpTypes={handleSetFilteredAmpTypes}
-            setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
+            setFilteredRegulatoryTags={handleSetFilteredRegulatoryTags}
             updateDateRangeFilter={updateDateRangeFilter}
           />
         )}

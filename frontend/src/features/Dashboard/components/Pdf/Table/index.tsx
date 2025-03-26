@@ -129,7 +129,7 @@ export function AreaTable({
                       styles.layerLegend,
                       {
                         backgroundColor: getRegulatoryEnvColorWithAlpha(
-                          layer.themes.map(({ name }) => name).join(', '),
+                          layer.tags.map(({ name }) => name).join(', '),
                           layer.entityName
                         )
                       }

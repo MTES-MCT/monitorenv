@@ -18,9 +18,11 @@ import {
 } from './slice'
 import { closeMetadataPanel } from '../metadataPanel/slice'
 
+import type { SearchProps } from './hooks/useSearchLayers'
+
 type SearchOnExtentExtraButtonsProps = {
   allowResetResults: boolean
-  debouncedSearchLayers: Function
+  debouncedSearchLayers: (args: SearchProps) => void
 }
 export function SearchOnExtentExtraButtons({
   allowResetResults,
@@ -33,9 +35,12 @@ export function SearchOnExtentExtraButtons({
   const currentMapExtentTracker = useAppSelector(state => state.map.currentMapExtentTracker)
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
+  const filteredVigilanceAreaSpecificPeriod = useAppSelector(
+    state => state.layerSearch.vigilanceAreaSpecificPeriodFilter
+  )
 
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
@@ -57,10 +62,11 @@ export function SearchOnExtentExtraButtons({
       debouncedSearchLayers({
         ampTypes: filteredAmpTypes,
         extent: currentMapExtentTracker,
-        regulatoryThemes: filteredRegulatoryThemes,
+        regulatoryTags: filteredRegulatoryTags,
         searchedText: globalSearchText,
         shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-        vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
+        vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+        vigilanceAreaSpecificPeriodFilter: filteredVigilanceAreaSpecificPeriod
       })
       dispatch(setSearchExtent(currentMapExtentTracker))
       dispatch(setFitToExtent(currentMapExtentTracker))
@@ -92,10 +98,11 @@ export function SearchOnExtentExtraButtons({
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: currentMapExtentTracker,
-      regulatoryThemes: filteredRegulatoryThemes,
+      regulatoryTags: filteredRegulatoryTags,
       searchedText: globalSearchText,
       shouldSearchByExtent: !shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter: filteredVigilanceAreaSpecificPeriod
     })
   }
 

@@ -44,7 +44,7 @@ data class RegulatoryAreaModel(
     )
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
-    var themes: List<ThemeRegulatoryAreaModel>,
+    var tags: List<TagRegulatoryAreaModel>,
     @OneToMany(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
@@ -52,7 +52,7 @@ data class RegulatoryAreaModel(
     )
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
-    var subThemes: List<SubThemeRegulatoryAreaModel>,
+    var subTags: List<SubTagRegulatoryAreaModel>,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
@@ -72,12 +72,12 @@ data class RegulatoryAreaModel(
             refReg = refReg,
             source = source,
             temporalite = temporalite,
-            themes =
-                this.themes.map {
-                    it.toThemeEntity(
-                        subThemes
-                            .filter { subThemes -> subThemes.subTheme.theme === it.theme }
-                            .map { subtheme -> subtheme.toSubThemeEntity() },
+            tags =
+                this.tags.map {
+                    it.toTagEntity(
+                        subTags
+                            .filter { subTags -> subTags.subTags.tag === it.tag }
+                            .map { subTag -> subTag.toSubTagEntity() },
                     )
                 },
             type = type,
