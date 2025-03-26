@@ -1,13 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
 import java.time.ZonedDateTime
 
-interface IThemeRepository {
-    fun findAllWithin(time: ZonedDateTime = ZonedDateTime.now()): List<ThemeEntity>
+interface ITagRepository {
+    fun findAllWithin(time: ZonedDateTime = ZonedDateTime.now()): List<TagEntity>
 
     fun findAllWithinByRegulatoryAreaIds(
         regulatoryAreaIds: List<Int>,
         time: ZonedDateTime = ZonedDateTime.now(),
-    ): List<ThemeEntity>
+    ): List<TagEntity>
 }

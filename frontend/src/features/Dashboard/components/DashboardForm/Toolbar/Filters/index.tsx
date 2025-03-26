@@ -1,6 +1,6 @@
-import { useGetThemesByRegulatoryAreasQuery } from '@api/themesAPI'
+import { useGetTagsByRegulatoryAreasQuery } from '@api/tagsAPI'
 import { type DashboardType } from '@features/Dashboard/slice'
-import { getThemesAsOptions } from '@features/Themes/useCases/getThemesAsOptions'
+import { getTagsAsOptions } from '@features/Tags/useCases/getTagsAsOptions'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -33,11 +33,11 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
   const allRegulatoryAreaIds = extractedArea?.regulatoryAreas.flatMap(reg => reg.id) ?? []
-  const { data: regulatoryThemes } = useGetThemesByRegulatoryAreasQuery(allRegulatoryAreaIds)
-  const regulatoryThemesAsOptions = getThemesAsOptions(Object.values(regulatoryThemes ?? []))
-  const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemesAsOptions, ['label']),
-    [regulatoryThemesAsOptions]
+  const { data: regulatoryTags } = useGetTagsByRegulatoryAreasQuery(allRegulatoryAreaIds)
+  const regulatoryTagsAsOptions = getTagsAsOptions(Object.values(regulatoryTags ?? []))
+  const regulatoryTagsCustomSearch = useMemo(
+    () => new CustomSearch(regulatoryTagsAsOptions, ['label']),
+    [regulatoryTagsAsOptions]
   )
 
   const ampsAsOptions = useMemo(() => getAmpsAsOptions(extractedArea?.amps ?? []), [extractedArea?.amps])
@@ -45,29 +45,29 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
-  const setFilteredRegulatoryThemes = (value: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: value }, id }))
+  const setFilteredRegulatoryTags = (value: string[] | undefined) => {
+    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: value }, id }))
   }
 
   const areAllRegulatoryChecked = useMemo(
-    () => filters?.regulatoryThemes?.length === regulatoryThemesAsOptions?.length,
-    [filters?.regulatoryThemes, regulatoryThemesAsOptions]
+    () => filters?.regulatoryTags?.length === regulatoryTagsAsOptions?.length,
+    [filters?.regulatoryTags, regulatoryTagsAsOptions]
   )
 
   const indeterminate = useMemo(
-    () => filters?.regulatoryThemes && filters.regulatoryThemes.length > 0 && !areAllRegulatoryChecked,
-    [filters?.regulatoryThemes, areAllRegulatoryChecked]
+    () => filters?.regulatoryTags && filters.regulatoryTags.length > 0 && !areAllRegulatoryChecked,
+    [filters?.regulatoryTags, areAllRegulatoryChecked]
   )
 
   const checkAll = () => {
     if (areAllRegulatoryChecked) {
-      dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: undefined }, id }))
+      dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: undefined }, id }))
 
       return
     }
-    const allRegulatoryAreasIds = regulatoryThemesAsOptions.map(regulatory => regulatory.value)
+    const allRegulatoryAreasIds = regulatoryTagsAsOptions.map(regulatory => regulatory.value)
 
-    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: allRegulatoryAreasIds }, id }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: allRegulatoryAreasIds }, id }))
   }
   const renderExtraFooter = () => (
     <SelectAllRegulatoryAreasContainer>
@@ -101,22 +101,22 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
     <FiltersContainer>
       <div>
         <CheckPicker
-          customSearch={regulatoryThemesAsOptions.length > 10 ? regulatoryThemesCustomSearch : undefined}
+          customSearch={regulatoryTagsAsOptions.length > 10 ? regulatoryTagsCustomSearch : undefined}
           isLabelHidden
           isTransparent
           label="Thématique réglementaire"
-          name="regulatoryThemes"
-          onChange={setFilteredRegulatoryThemes}
-          options={regulatoryThemesAsOptions}
+          name="regulatoryTags"
+          onChange={setFilteredRegulatoryTags}
+          options={regulatoryTagsAsOptions}
           placeholder="Thématique réglementaire"
           renderExtraFooter={renderExtraFooter}
           renderValue={() =>
-            filters?.regulatoryThemes && (
-              <OptionValue>{`Thématique réglementaire (${filters?.regulatoryThemes.length})`}</OptionValue>
+            filters?.regulatoryTags && (
+              <OptionValue>{`Thématique réglementaire (${filters?.regulatoryTags.length})`}</OptionValue>
             )
           }
           style={{ width: '310px' }}
-          value={filters?.regulatoryThemes}
+          value={filters?.regulatoryTags}
         />
         <Select
           isLabelHidden

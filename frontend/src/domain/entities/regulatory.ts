@@ -1,4 +1,4 @@
-import type { ThemeAPI } from './themes'
+import type { TagAPI } from './tags'
 import type { GeoJSON } from '../types/GeoJSON'
 
 export type RegulatoryLayerWithMetadataFromAPI = {
@@ -8,7 +8,7 @@ export type RegulatoryLayerWithMetadataFromAPI = {
   id: number
   layerName: string
   refReg: string
-  themes: ThemeAPI[]
+  tags: TagAPI[]
   type: string
   url: string
 }
@@ -19,7 +19,7 @@ export type RegulatoryLayerCompactFromAPI = {
   id: number
   layerName: string
   refReg: string
-  themes: ThemeAPI[]
+  tags: TagAPI[]
   type: string
 }
 export type RegulatoryLayerCompact = RegulatoryLayerCompactFromAPI & { bbox: number[] }
