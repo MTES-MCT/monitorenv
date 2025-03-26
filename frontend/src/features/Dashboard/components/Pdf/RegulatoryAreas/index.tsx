@@ -39,7 +39,7 @@ export function RegulatoryAreas({
                       areaStyle.layerLegend,
                       {
                         backgroundColor: getRegulatoryEnvColorWithAlpha(
-                          regulatoryArea.themes.map(({ name }) => name).join(', '),
+                          regulatoryArea.tags.map(({ name }) => name).join(', '),
                           regulatoryArea.entityName
                         )
                       }
@@ -69,7 +69,7 @@ export function RegulatoryAreas({
                       <Text>Thématique</Text>
                     </View>
                     <View style={areaStyle.details}>
-                      <Text>{regulatoryArea.themes.map(({ name }) => name).join(', ') || '-'}</Text>
+                      <Text>{regulatoryArea.tags.map(({ name }) => name).join(', ') || '-'}</Text>
                     </View>
                   </View>
                   <View>
