@@ -6,7 +6,7 @@ import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
 type LayerSearchState = {
   ampsSearchResult: number[] | undefined
   filteredAmpTypes: string[]
-  filteredRegulatoryThemes: string[]
+  filteredRegulatoryTags: string[]
   filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
   globalSearchText: string
   isAmpSearchResultsVisible: boolean
@@ -21,7 +21,7 @@ type LayerSearchState = {
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
   filteredAmpTypes: [],
-  filteredRegulatoryThemes: [],
+  filteredRegulatoryTags: [],
   filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
   globalSearchText: '',
   isAmpSearchResultsVisible: false,
@@ -39,7 +39,7 @@ const layerSearchSlice = createSlice({
   name: 'layerSearch',
   reducers: {
     resetFilters(state) {
-      state.filteredRegulatoryThemes = []
+      state.filteredRegulatoryTags = []
       state.isRegulatorySearchResultsVisible = false
       state.filteredAmpTypes = []
       state.isAmpSearchResultsVisible = false
@@ -50,7 +50,7 @@ const layerSearchSlice = createSlice({
     resetSearch(state) {
       state.regulatoryLayersSearchResult = undefined
       state.isRegulatorySearchResultsVisible = false
-      state.filteredRegulatoryThemes = []
+      state.filteredRegulatoryTags = []
       state.ampsSearchResult = undefined
       state.isAmpSearchResultsVisible = false
       state.filteredAmpTypes = []
@@ -79,8 +79,8 @@ const layerSearchSlice = createSlice({
       state.filteredAmpTypes = action.payload
     },
 
-    setFilteredRegulatoryThemes(state, action: PayloadAction<string[]>) {
-      state.filteredRegulatoryThemes = action.payload
+    setFilteredRegulatoryTags(state, action: PayloadAction<string[]>) {
+      state.filteredRegulatoryTags = action.payload
     },
 
     setFilteredVigilanceAreaPeriod(state, action: PayloadAction<VigilanceArea.VigilanceAreaFilterPeriod | undefined>) {
@@ -129,7 +129,7 @@ export const {
   resetSearchExtent,
   setAMPsSearchResult,
   setFilteredAmpTypes,
-  setFilteredRegulatoryThemes,
+  setFilteredRegulatoryTags,
   setFilteredVigilanceAreaPeriod,
   setGlobalSearchText,
   setIsAmpSearchResultsVisible,

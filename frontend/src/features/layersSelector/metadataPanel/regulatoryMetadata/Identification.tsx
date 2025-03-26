@@ -1,16 +1,16 @@
-import { Body, Key, Value, Fields, Field, Zone, NoValue } from '../MetadataPanel.style'
+import { Body, Field, Fields, Key, NoValue, Value, Zone } from '../MetadataPanel.style'
 
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagAPI } from 'domain/entities/tags'
 
 export function Identification({
   entityName,
   facade,
-  themes,
+  tags,
   type
 }: {
   entityName: string
   facade: string
-  themes: ThemeAPI[]
+  tags: TagAPI[]
   type: string
 }) {
   return (
@@ -28,7 +28,7 @@ export function Identification({
           <Field>
             <Key>Thématique</Key>
             <Value data-cy="regulatory-layers-metadata-topic">
-              {themes.map(theme => theme.name).join(', ') || <NoValue>-</NoValue>}
+              {tags.map(theme => theme.name).join(', ') || <NoValue>-</NoValue>}
             </Value>
           </Field>
           <Field>
