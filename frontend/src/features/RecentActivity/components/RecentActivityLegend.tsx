@@ -5,7 +5,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import styled, { css } from 'styled-components'
 
-import { calculateDotSize } from '../Layers/RecentControlsActivityLayer'
+import { calculateDotSize } from './Layers/RecentControlsActivityLayer'
 
 export type LegendLocation = 'OUTSIDE' | 'INSIDE'
 
@@ -49,7 +49,7 @@ export function RecentActivityLegend({ location }: { location: LegendLocation })
 
   return (
     <LegendContainer $isOpen={isLegendOpen} $location={location}>
-      {isLegendOpen ? (
+      {isLegendOpen && (
         <>
           <Header>
             <ReduceButton Icon={Icon.Minus} onClick={() => dispatch(recentActivityActions.setIsLegenOpen(false))} />
@@ -85,12 +85,19 @@ export function RecentActivityLegend({ location }: { location: LegendLocation })
             </ColorsLegend>
           </Body>
         </>
-      ) : (
+      )}
+      {!isLegendOpen && location === 'INSIDE' && (
         <StyledIconButton
           Icon={Icon.ListLines}
           onClick={() => dispatch(recentActivityActions.setIsLegenOpen(true))}
           size={Size.LARGE}
         />
+      )}
+      {!isLegendOpen && location === 'OUTSIDE' && (
+        <Header>
+          <ReduceButton Icon={Icon.Plus} onClick={() => dispatch(recentActivityActions.setIsLegenOpen(true))} />
+          <Title>Légende</Title>
+        </Header>
       )}
     </LegendContainer>
   )
@@ -100,10 +107,11 @@ const LegendContainer = styled.div<{ $isOpen: boolean; $location: LegendLocation
   position: absolute;
   right: 370px;
   width: ${p => (p.$isOpen ? '164px;' : 'auto')};
+  z-index: 1;
   ${p =>
     p.$location === 'OUTSIDE' &&
     css`
-      bottom: 12px;
+      bottom: 9px;
       right: 12px;
     `}
 `
@@ -118,7 +126,9 @@ const Header = styled.div`
   height: 40px;
   justify-content: space-between;
   padding: 8px 10px 8px 3px;
+  width: 164px;
 `
+
 const ReduceButton = styled(IconButton)`
   color: ${p => p.theme.color.white};
 

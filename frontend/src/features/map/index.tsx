@@ -18,7 +18,7 @@ import { DrawRecentActivityLayer } from '@features/RecentActivity/components/Lay
 import { RecentActivityLayerEvents } from '@features/RecentActivity/components/Layers/RecentActivityLayerEvents'
 import { RecentControlsActivityLayer } from '@features/RecentActivity/components/Layers/RecentControlsActivityLayer'
 import { RecentActvityOverlay } from '@features/RecentActivity/components/Overlays'
-import { RecentActivityLegend } from '@features/RecentActivity/components/RecentActivityMenuButton/RecentActivityLegend'
+import { RecentActivityLegend } from '@features/RecentActivity/components/RecentActivityLegend'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
 import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/DrawVigilanceAreaLayer'
 import { EditingVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/EditingVigilanceAreaLayer'
