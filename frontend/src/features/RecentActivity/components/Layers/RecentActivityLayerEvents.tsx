@@ -7,6 +7,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { type OverlayItem } from 'domain/types/map'
+import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
 import { Feature } from 'ol'
 import { Point } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
@@ -90,6 +91,9 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
     }
 
     if (numberOfClickedFeatures > 1 && mapClickEvent.coordinates) {
+      // close AMP and regulatory areas list
+      dispatch(closeAreaOverlay())
+
       const items = mapClickEvent?.featureList?.reduce((acc, recentActivityFeature) => {
         const type = String(recentActivityFeature.id).split(':')[0]
 

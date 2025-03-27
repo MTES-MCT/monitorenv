@@ -11,7 +11,6 @@ import type { OverlayItem } from 'domain/types/map'
 
 export function SelectedOverlay({ items }: { items: OverlayItem<string, RecentActivity.RecentControlsActivity>[] }) {
   const ref = useRef<HTMLDivElement>(null)
-
   const dispatch = useAppDispatch()
 
   const close = () => {
@@ -37,7 +36,7 @@ export function SelectedOverlay({ items }: { items: OverlayItem<string, RecentAc
 const Card = styled.div`
   box-shadow: 0px 2px 4px ${p => p.theme.color.slateGray}bf;
   cursor: pointer;
-  width: 440px;
+  width: 470px;
   > * {
     user-select: none;
   }
