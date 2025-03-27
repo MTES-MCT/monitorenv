@@ -10,7 +10,7 @@ import styled from 'styled-components'
 
 import { DrawZone } from './DrawZone'
 import { RecentActivityFilters } from './RecentActivityFilters'
-import { RecentActivityLegend } from './RecentActivityLegend'
+import { RecentActivityLegend } from '../RecentActivityLegend'
 
 export function RecentActivityMenuButton() {
   const dispatch = useAppDispatch()
