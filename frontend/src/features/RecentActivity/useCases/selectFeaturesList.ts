@@ -15,7 +15,6 @@ export const selectFeaturesList =
   ({ coordinates, items }: SelectFeaturesListType): HomeAppThunk =>
   async dispatch => {
     dispatch(removeOverlayStroke())
-    await dispatch(recentActivityActions.resetControlListOverlay())
     dispatch(recentActivityActions.setLayerOverlayItems(items))
     dispatch(recentActivityActions.setLayerOverlayCoordinates(coordinates))
     dispatch(recentActivityActions.setIsControlsListClicked(true))

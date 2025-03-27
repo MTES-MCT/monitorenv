@@ -35,19 +35,20 @@ export function OverlayContent({
   }
 
   return (
-    <div>
+    <Wrapper>
       {items.map(item => {
         const { actionNumberOfControls, actionTargetType, id, infractions, themeIds } = item.properties
         const controlThemes = themeIds?.map(themeId => themes[themeId]?.theme).join(',')
 
         return (
-          <Wrapper key={id} onClick={() => selectControl(id)}>
+          <ItemContainer key={id} onClick={() => selectControl(id)}>
             {themeIds?.length > 0 ? (
-              <StyledThemes>{controlThemes} /</StyledThemes>
+              <StyledThemes title={controlThemes}>{controlThemes} </StyledThemes>
             ) : (
-              <StyledGrayText>Thématique à renseigner /</StyledGrayText>
+              <StyledGrayText>Thématique à renseigner</StyledGrayText>
             )}
             <Accented>
+              &nbsp;/&nbsp;
               {actionNumberOfControls} {pluralize('contrôle', actionNumberOfControls)}{' '}
               {TargetTypeLabels[actionTargetType] ? (
                 <>({TargetTypeLabels[actionTargetType]})</>
@@ -56,14 +57,18 @@ export function OverlayContent({
               )}
               <Bullet $color={infractions?.length > 0 ? THEME.color.maximumRed : THEME.color.mediumSeaGreen} />
             </Accented>
-          </Wrapper>
+          </ItemContainer>
         )
       })}
-    </div>
+    </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
+  max-height: 300px;
+  overflow-y: auto;
+`
+const ItemContainer = styled.div`
   background-color: ${p => p.theme.color.white};
   display: flex;
   padding: 7px 8px;
@@ -71,9 +76,12 @@ const Wrapper = styled.div`
     border-bottom: 1px solid ${p => p.theme.color.lightGray};
   }
 `
-const StyledThemes = styled.div`
+const StyledThemes = styled.span`
   font-weight: 500;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
 `
 
 const Accented = styled.div`
@@ -90,6 +98,6 @@ const Bullet = styled.div<{ $color: string }>`
   width: 10px;
 `
 
-const StyledGrayText = styled.p`
+const StyledGrayText = styled.span`
   color: ${p => p.theme.color.slateGray};
 `

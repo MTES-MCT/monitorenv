@@ -1,5 +1,6 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { getClickedFeatures, getClickedItems } from '@features/map/utils'
+import { recentActivityActions } from '@features/RecentActivity/slice'
 import { getIsLinkingZonesToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -184,8 +185,12 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
     }
 
     if (numberOfClickedFeatures > 1 && mapClickEvent.coordinates) {
+      // close recent controls activity list
+      dispatch(recentActivityActions.resetControlListOverlay())
+
       dispatch(closeMetadataPanel())
       dispatch(openLayerOverlay(mapClickEvent.coordinates))
+
       const items = getClickedItems(mapClickEvent, isLinkingZonesToVigilanceArea)
       dispatch(setLayerOverlayItems(items))
 
