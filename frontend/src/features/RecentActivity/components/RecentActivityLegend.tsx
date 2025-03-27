@@ -112,7 +112,7 @@ const LegendContainer = styled.div<{ $isOpen: boolean; $location: LegendLocation
     p.$location === 'OUTSIDE' &&
     css`
       bottom: 9px;
-      right: 12px;
+      right: 10px;
     `}
 `
 const StyledIconButton = styled(IconButton)`
