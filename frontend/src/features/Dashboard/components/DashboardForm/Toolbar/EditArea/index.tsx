@@ -1,3 +1,4 @@
+import { DrawedPolygonWithCenterButton } from '@components/ZonePicker/DrawedPolygonWithCenterButton'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
@@ -52,33 +53,12 @@ export function EditArea({ dashboardKey, geometry, onValidate }: EditAreaProps) 
 
   return (
     <Row>
-      <ZoneWrapper>
-        Polygone dessiné
-        {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
-        {/* eslint-disable jsx-a11y/anchor-is-valid */}
-        {/* eslint-disable jsx-a11y/click-events-have-key-events */}
-        {/* eslint-disable jsx-a11y/no-static-element-interactions */}
-        <Center onClick={handleCenterOnMap}>
-          <Icon.SelectRectangle />
-          Centrer sur la carte
-        </Center>
-      </ZoneWrapper>
+      <StyledDrawedPolygonWithCenterButton onCenterOnMap={() => handleCenterOnMap()} />
 
       <IconButton accent={Accent.SECONDARY} Icon={Icon.EditUnbordered} onClick={handleEditArea} />
     </Row>
   )
 }
-
-const Center = styled.a`
-  cursor: pointer;
-  display: flex;
-  color: ${p => p.theme.color.slateGray};
-  text-decoration: underline;
-
-  > .Element-IconBox {
-    margin-right: 8px;
-  }
-`
 
 const Row = styled.div`
   align-items: center;
@@ -88,14 +68,6 @@ const Row = styled.div`
     margin: 0 0 0 4px;
   }
 `
-
-const ZoneWrapper = styled.div`
-  background-color: ${p => p.theme.color.gainsboro};
-  display: flex;
-  gap: 14px;
-
-  flex-grow: 1;
-  font-size: 13px;
-  justify-content: space-between;
-  padding: 5px 12px;
+const StyledDrawedPolygonWithCenterButton = styled(DrawedPolygonWithCenterButton)`
+  gap: 64px;
 `
