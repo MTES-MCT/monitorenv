@@ -10,7 +10,7 @@ data class RegulatoryAreaWithMetadataDataOutput(
     val geom: MultiPolygon? = null,
     val layerName: String? = null,
     val refReg: String? = null,
-    val thematique: String? = null,
+    val tags: List<TagOutput>,
     val type: String? = null,
     val url: String? = null,
 ) {
@@ -23,7 +23,7 @@ data class RegulatoryAreaWithMetadataDataOutput(
                 geom = regulatoryArea.geom,
                 layerName = regulatoryArea.layerName,
                 refReg = regulatoryArea.refReg,
-                thematique = regulatoryArea.thematique,
+                tags = regulatoryArea.tags.map { TagOutput.fromTagEntity(it) },
                 type = regulatoryArea.type,
                 url = regulatoryArea.url,
             )
