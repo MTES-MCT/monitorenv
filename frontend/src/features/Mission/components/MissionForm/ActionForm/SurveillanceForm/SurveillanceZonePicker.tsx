@@ -1,3 +1,4 @@
+import { DrawedPolygonWithCenterButton } from '@components/ZonePicker/DrawedPolygonWithCenterButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
@@ -79,17 +80,11 @@ export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerPr
         {polygons.map((polygonCoordinates, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <Row key={`zone-${index}`}>
-            <ZoneWrapper>
-              Polygone dessiné {index + 1}
-              {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
-              {/* eslint-disable jsx-a11y/anchor-is-valid */}
-              {/* eslint-disable jsx-a11y/click-events-have-key-events */}
-              {/* eslint-disable jsx-a11y/no-static-element-interactions */}
-              <Center onClick={() => handleCenterOnMap(polygonCoordinates as Coordinate[][])}>
-                <Icon.SelectRectangle />
-                Centrer sur la carte
-              </Center>
-            </ZoneWrapper>
+            <StyledDrawedPolygonWithCenterButton
+              className="surveillance-zones"
+              index={index}
+              onCenterOnMap={() => handleCenterOnMap(polygonCoordinates)}
+            />
 
             <>
               <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
@@ -113,17 +108,8 @@ const Field = styled.div`
   flex-direction: column;
   width: 100%;
 `
-const Center = styled.a`
-  cursor: pointer;
-  display: flex;
-  margin-left: auto;
-  margin-right: 8px;
-  color: ${p => p.theme.color.slateGray};
-  text-decoration: underline;
-
-  > .Element-IconBox {
-    margin-right: 8px;
-  }
+const StyledDrawedPolygonWithCenterButton = styled(DrawedPolygonWithCenterButton)`
+  background-color: ${p => p.theme.color.white};
 `
 
 const Row = styled.div`
@@ -135,13 +121,4 @@ const Row = styled.div`
   > button {
     margin: 0 0 0 4px;
   }
-`
-
-const ZoneWrapper = styled.div`
-  background-color: ${p => p.theme.color.white};
-  display: flex;
-  flex-grow: 1;
-  font-size: 13px;
-  justify-content: space-between;
-  padding: 4px 8px 4px;
 `

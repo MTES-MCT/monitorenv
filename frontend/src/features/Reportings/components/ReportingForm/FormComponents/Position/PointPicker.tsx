@@ -1,3 +1,4 @@
+import { ZoneWrapper } from '@components/ZonePicker/DrawedPolygonWithCenterButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
@@ -51,11 +52,13 @@ export function PointPicker() {
       {value?.coordinates?.length > 0 && value.type === OLGeometryType.MULTIPOINT && (
         <Row>
           <ZoneWrapper>
-            {formatCoordinates(value.coordinates[0] as Coordinate, coordinatesFormat)}
-            <Center onClick={handleCenterOnMap}>
-              <Icon.SelectRectangle />
-              Centrer sur la carte
-            </Center>
+            <span>{formatCoordinates(value.coordinates[0] as Coordinate, coordinatesFormat)}</span>
+            <IconButton
+              accent={Accent.TERTIARY}
+              Icon={Icon.FocusZones}
+              onClick={handleCenterOnMap}
+              title="Centrer sur la carte"
+            />
           </ZoneWrapper>
 
           <IconButton accent={Accent.SECONDARY} disabled={isAddingAPoint} Icon={Icon.Edit} onClick={handleAddPoint} />
@@ -77,18 +80,6 @@ const Field = styled.div`
   display: flex;
   flex-direction: column;
 `
-const Center = styled.div`
-  cursor: pointer;
-  display: flex;
-  margin-left: auto;
-  margin-right: 8px;
-  color: ${p => p.theme.color.slateGray};
-  text-decoration: underline;
-
-  > .Element-IconBox {
-    margin-right: 8px;
-  }
-`
 
 const Row = styled.div`
   &:first-of-type {
@@ -102,13 +93,4 @@ const Row = styled.div`
   > button {
     margin: 0 0 0 4px;
   }
-`
-
-const ZoneWrapper = styled.div`
-  background-color: ${p => p.theme.color.gainsboro};
-  display: flex;
-  flex-grow: 1;
-  font-size: 13px;
-  justify-content: space-between;
-  padding: 4px 8px 4px;
 `
