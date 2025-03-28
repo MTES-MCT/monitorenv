@@ -167,7 +167,7 @@ $$
                 true, NULL, 'Zone de vigilance 7', 'Sémaphore de Fécamp',
                 date_within_quarter - INTERVAL '1 day',
                 NULL, NULL, '{}', '{}',
-                date_within_quarter + INTERVAL '3 months');
+                date_within_quarter + INTERVAL '4 months');
 
         -- period : outer this year
         INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition,

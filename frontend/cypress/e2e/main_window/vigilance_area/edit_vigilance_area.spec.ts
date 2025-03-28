@@ -47,6 +47,7 @@ describe('Edit Vigilance Area', () => {
   it('Should successfully add regulatory area to a vigilance area and consult them', () => {
     cy.visit('/#@-668012.81,6169323.28,8.44')
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
+    cy.wait(300)
     cy.clickButton('Arbre des couches')
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
 
