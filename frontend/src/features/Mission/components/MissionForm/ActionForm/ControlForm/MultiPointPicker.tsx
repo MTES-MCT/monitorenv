@@ -1,3 +1,4 @@
+import { ZoneWrapper } from '@components/ZonePicker/DrawedPolygonWithCenterButton'
 import { Accent, Button, Icon, IconButton, Label, Message } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
@@ -12,8 +13,6 @@ import { drawPoint } from '../../../../../../domain/use_cases/draw/drawGeometry'
 import { useAppDispatch } from '../../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../../hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '../../../../../../hooks/useListenForDrawing'
-
-import type { Coordinate } from 'ol/coordinate'
 
 const CONTROL_INTERACTION_LISTENER = InteractionListener.CONTROL_POINT
 
@@ -86,17 +85,15 @@ export function MultiPointPicker({ actionIndex, isGeomSameAsAttachedReportingGeo
           {points.map((coordinates, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <Row key={`zone-${index}`}>
-              <ZoneWrapper>
-                {formatCoordinates(coordinates, coordinatesFormat)}
-                {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
-                {/* eslint-disable jsx-a11y/anchor-is-valid */}
-                {/* eslint-disable jsx-a11y/click-events-have-key-events */}
-                {/* eslint-disable jsx-a11y/no-static-element-interactions */}
-                <Center onClick={() => handleCenterOnMap(coordinates as Coordinate)}>
-                  <Icon.SelectRectangle />
-                  Centrer sur la carte
-                </Center>
-              </ZoneWrapper>
+              <StyledZoneWrapper>
+                <span>{formatCoordinates(coordinates, coordinatesFormat)}</span>
+                <IconButton
+                  accent={Accent.TERTIARY}
+                  Icon={Icon.FocusZones}
+                  onClick={() => handleCenterOnMap(coordinates)}
+                  title="Centrer sur la carte"
+                />
+              </StyledZoneWrapper>
 
               <>
                 <IconButton
@@ -129,18 +126,6 @@ const Field = styled.div`
   display: flex;
   flex-direction: column;
 `
-const Center = styled.div`
-  cursor: pointer;
-  display: flex;
-  margin-left: auto;
-  margin-right: 8px;
-  color: ${p => p.theme.color.slateGray};
-  text-decoration: underline;
-
-  > .Element-IconBox {
-    margin-right: 8px;
-  }
-`
 
 const Row = styled.div`
   &:first-of-type {
@@ -155,12 +140,6 @@ const Row = styled.div`
     margin: 0 0 0 4px;
   }
 `
-
-const ZoneWrapper = styled.div`
+const StyledZoneWrapper = styled(ZoneWrapper)`
   background-color: ${p => p.theme.color.white};
-  display: flex;
-  flex-grow: 1;
-  font-size: 13px;
-  justify-content: space-between;
-  padding: 4px 8px 4px;
 `

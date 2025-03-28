@@ -2,6 +2,7 @@ import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { CustomPeriodContainer } from '@components/style'
+import { DrawedPolygonWithCenterButton } from '@components/ZonePicker/DrawedPolygonWithCenterButton'
 import {
   recentActivityActions,
   RecentActivityFiltersEnum,
@@ -293,15 +294,10 @@ export function RecentActivityFilters() {
           (filters.geometry.coordinates as Coordinate[][][]).map((polygonCoordinates, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <Row key={`zone-${index}`}>
-              <ZoneWrapper>
-                <span>Polygone dessiné {index + 1}</span>
-                <IconButton
-                  accent={Accent.TERTIARY}
-                  Icon={Icon.FocusZones}
-                  onClick={() => handleCenterOnMap(polygonCoordinates)}
-                  title="Centrer sur la carte"
-                />
-              </ZoneWrapper>
+              <DrawedPolygonWithCenterButton
+                index={index}
+                onCenterOnMap={() => handleCenterOnMap(polygonCoordinates)}
+              />
 
               <>
                 <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={updateZone} />
@@ -352,19 +348,5 @@ const Row = styled.div`
 
   > button {
     margin: 0 0 0 4px;
-  }
-`
-
-const ZoneWrapper = styled.div`
-  align-items: center;
-  background-color: ${p => p.theme.color.gainsboro};
-  display: flex;
-  flex-grow: 1;
-  justify-content: space-between;
-  padding: 5px 8px 5px;
-  line-height: 1;
-
-  > button {
-    padding: 0px;
   }
 `

@@ -39,10 +39,12 @@ export function Location({ geom }) {
         <ZoneWrapper>
           <TextInput isLabelHidden label="Zone" name="position" plaintext value={localizationText} />
 
-          <Center onClick={() => handleCenterOnMap()}>
-            <Icon.SelectRectangle />
-            Centrer sur la carte
-          </Center>
+          <IconButton
+            accent={Accent.TERTIARY}
+            Icon={Icon.FocusZones}
+            onClick={handleCenterOnMap}
+            title="Centrer sur la carte"
+          />
         </ZoneWrapper>
 
         <IconButtonsContainer>
@@ -76,19 +78,6 @@ const ZoneWrapper = styled.div`
   font-size: 13px;
   justify-content: space-between;
   padding: 4px 8px 4px;
-`
-
-const Center = styled.div`
-  cursor: pointer;
-  display: flex;
-  margin-left: auto;
-  margin-right: 8px;
-  color: ${p => p.theme.color.slateGray};
-  text-decoration: underline;
-
-  > .Element-IconBox {
-    margin-right: 8px;
-  }
 `
 
 const IconButtonsContainer = styled.div`

@@ -1,3 +1,4 @@
+import { DrawedPolygonWithCenterButton } from '@components/ZonePicker/DrawedPolygonWithCenterButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
@@ -6,7 +7,7 @@ import { InteractionListener, OLGeometryType } from 'domain/entities/map/constan
 import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
-import _ from 'lodash'
+import { isEqual } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -20,7 +21,7 @@ export function ZonePicker() {
   const isEditingZone = useMemo(() => listener === InteractionListener.REPORTING_ZONE, [listener])
 
   useEffect(() => {
-    if (geometry?.type === OLGeometryType.MULTIPOLYGON && !_.isEqual(geometry, value)) {
+    if (geometry?.type === OLGeometryType.MULTIPOLYGON && !isEqual(geometry, value)) {
       helpers.setValue(geometry)
     }
   }, [geometry, helpers, value])
@@ -46,14 +47,7 @@ export function ZonePicker() {
     <Field>
       {value?.coordinates?.length > 0 && value.type === OLGeometryType.MULTIPOLYGON && (
         <Row>
-          <ZoneWrapper>
-            Polygone dessiné
-            <Center onClick={handleCenterOnMap}>
-              <Icon.SelectRectangle />
-              Centrer sur la carte
-            </Center>
-          </ZoneWrapper>
-
+          <DrawedPolygonWithCenterButton onCenterOnMap={() => handleCenterOnMap()} />
           <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
           <IconButton
             accent={Accent.SECONDARY}
@@ -72,18 +66,6 @@ const Field = styled.div`
   display: flex;
   flex-direction: column;
 `
-const Center = styled.a`
-  cursor: pointer;
-  display: flex;
-  margin-left: auto;
-  margin-right: 8px;
-  color: ${p => p.theme.color.slateGray};
-  text-decoration: underline;
-
-  > .Element-IconBox {
-    margin-right: 8px;
-  }
-`
 
 const Row = styled.div`
   align-items: center;
@@ -94,13 +76,4 @@ const Row = styled.div`
   > button {
     margin: 0 0 0 4px;
   }
-`
-
-const ZoneWrapper = styled.div`
-  background-color: ${p => p.theme.color.gainsboro};
-  display: flex;
-  flex-grow: 1;
-  font-size: 13px;
-  justify-content: space-between;
-  padding: 4px 8px 4px;
 `

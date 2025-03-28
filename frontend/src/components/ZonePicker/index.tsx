@@ -8,7 +8,8 @@ import { isEqual } from 'lodash'
 import { useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { useAppSelector } from '../../../hooks/useAppSelector'
+import { DrawedPolygonWithCenterButton } from './DrawedPolygonWithCenterButton'
+import { useAppSelector } from '../../hooks/useAppSelector'
 
 import type { Coordinate } from 'ol/coordinate'
 
@@ -73,17 +74,10 @@ export function ZonePicker({
       <>
         {polygons.map((polygonCoordinates, index) => (
           <Row key={`zone-${polygonCoordinates[0][0]}`}>
-            <ZoneWrapper>
-              Polygone dessiné {index + 1}
-              {/* TODO Add `Accent.LINK` accent in @mtes-mct/monitor-ui and use it here. */}
-              {/* eslint-disable jsx-a11y/anchor-is-valid */}
-              {/* eslint-disable jsx-a11y/click-events-have-key-events */}
-              {/* eslint-disable jsx-a11y/no-static-element-interactions */}
-              <Center onClick={() => handleCenterOnMap(polygonCoordinates as Coordinate[][])}>
-                <Icon.SelectRectangle />
-                Centrer sur la carte
-              </Center>
-            </ZoneWrapper>
+            <DrawedPolygonWithCenterButton
+              index={index}
+              onCenterOnMap={() => handleCenterOnMap(polygonCoordinates as Coordinate[][])}
+            />
 
             <>
               <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
@@ -107,18 +101,6 @@ const Field = styled.div`
   flex-direction: column;
   width: 100%;
 `
-const Center = styled.a`
-  cursor: pointer;
-  display: flex;
-  margin-left: auto;
-  margin-right: 8px;
-  color: ${p => p.theme.color.slateGray};
-  text-decoration: underline;
-
-  > .Element-IconBox {
-    margin-right: 8px;
-  }
-`
 
 const Row = styled.div`
   align-items: center;
@@ -130,13 +112,4 @@ const Row = styled.div`
   > button {
     margin: 0 0 0 4px;
   }
-`
-
-const ZoneWrapper = styled.div`
-  background-color: ${p => p.theme.color.gainsboro};
-  display: flex;
-  flex-grow: 1;
-  font-size: 13px;
-  justify-content: space-between;
-  padding: 4px 8px 4px;
 `
