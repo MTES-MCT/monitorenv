@@ -12,6 +12,35 @@ import org.junit.jupiter.api.Test
 
 class APIFishMissionActionsRepositoryITests {
     @Test
+    fun `findFishMissionActionsById Should send monitorFish Api key`() {
+        // Given
+        val monitorfishProperties = MonitorfishProperties()
+        monitorfishProperties.url = "http://test"
+        monitorfishProperties.xApiKey = "TEST"
+
+        runBlocking {
+            val mockEngine =
+                MockEngine { request ->
+                    // Then
+                    assertThat(request.headers["x-api-key"]).isEqualTo(monitorfishProperties.xApiKey)
+                    respond(
+                        content =
+                            ByteReadChannel(
+                                getMissionWithAction(),
+                            ),
+                        status = HttpStatusCode.OK,
+                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                    )
+                }
+            val apiClient = ApiClient(mockEngine)
+
+            // When
+            APIFishMissionActionsRepository(apiClient, monitorfishProperties)
+                .findFishMissionActionsById(1)
+        }
+    }
+
+    @Test
     fun `findFishMissionActionsById Should return the mission actions with array of actions`() {
         runBlocking {
             val mockEngine =
