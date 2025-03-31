@@ -55,6 +55,9 @@ class JpaVigilanceAreaRepository(
     }
 
     private fun saveSubTags(vigilanceAreaModel: VigilanceAreaModel) {
+        vigilanceAreaModel.id?.let {
+            dbSubTagVigilanceAreaRepository.deleteAllByVigilanceAreaId(it)
+        }
         vigilanceAreaModel.subTags.forEach { vigilanceAreaSubTag ->
             vigilanceAreaSubTag.id = SubTagVigilanceAreaPk(vigilanceAreaSubTag.subTag.id, vigilanceAreaModel.id)
         }
@@ -62,6 +65,9 @@ class JpaVigilanceAreaRepository(
     }
 
     private fun saveTags(vigilanceAreaModel: VigilanceAreaModel) {
+        vigilanceAreaModel.id?.let {
+            dbTagVigilanceAreaRepository.deleteAllByVigilanceAreaId(it)
+        }
         vigilanceAreaModel.tags.forEach { vigilanceAreaTag ->
             vigilanceAreaTag.id = TagVigilanceAreaPk(vigilanceAreaTag.tag.id, vigilanceAreaModel.id)
         }

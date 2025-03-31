@@ -52,8 +52,10 @@ export function PanelPeriodAndThemes({ vigilanceArea }: { vigilanceArea: Vigilan
         </PanelInlineItem>
         <PanelInlineItem>
           <PanelInlineItemLabel $isInline>Thématique</PanelInlineItemLabel>
-          <PanelInlineItemValue $maxLine={2} title={vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : ''}>
-            {vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}
+          <PanelInlineItemValue $maxLine={2} title={vigilanceArea?.tags?.map(({ name }) => name).join(', ') ?? ''}>
+            {vigilanceArea?.tags && vigilanceArea?.tags.length > 0
+              ? vigilanceArea?.tags?.map(({ name }) => name).join(', ')
+              : EMPTY_VALUE}
           </PanelInlineItemValue>
         </PanelInlineItem>
         <PanelInlineItem>
