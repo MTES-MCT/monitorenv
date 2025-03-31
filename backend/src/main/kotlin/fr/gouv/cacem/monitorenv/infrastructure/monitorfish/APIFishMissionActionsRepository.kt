@@ -26,12 +26,9 @@ class APIFishMissionActionsRepository(
         return runBlocking {
             try {
                 val missionActions =
-                    apiClient
-                        .httpClient
+                    apiClient.httpClient
                         .get(missionActionsUrl) {
-                            headers {
-                                append("x-api-key", monitorfishProperties.xApiKey)
-                            }
+                            headers { append("x-api-key", monitorfishProperties.xApiKey) }
                         }.body<List<MonitorFishMissionActionDataInput>>()
                 logger.info("Fetched ${missionActions.size} mission actions.")
 
