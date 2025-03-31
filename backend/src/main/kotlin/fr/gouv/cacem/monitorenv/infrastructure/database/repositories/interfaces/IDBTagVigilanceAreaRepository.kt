@@ -4,4 +4,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaMo
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaPk
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface IDBTagVigilanceAreaRepository : JpaRepository<TagVigilanceAreaModel, TagVigilanceAreaPk>
+interface IDBTagVigilanceAreaRepository : JpaRepository<TagVigilanceAreaModel, TagVigilanceAreaPk> {
+    fun deleteAllByVigilanceAreaId(vigilanceAreaId: Int)
+}

@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures
 
+import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
@@ -23,6 +24,7 @@ class VigilanceAreaFixture {
             createdBy: String = "ABC",
             isDraft: Boolean = true,
             themes: List<String> = listOf("AMP"),
+            tags: List<TagEntity> = listOf(aTag(id = 1, name = "AMP")),
             startDate: ZonedDateTime? = ZonedDateTime.parse("2024-01-15T00:00:00Z"),
             endDate: ZonedDateTime? = ZonedDateTime.parse("2024-01-15T23:59:59Z"),
             frequency: FrequencyEnum? = FrequencyEnum.ALL_WEEKS,
@@ -59,7 +61,7 @@ class VigilanceAreaFixture {
                 createdAt = null,
                 updatedAt = null,
                 isAtAllTimes = isAtAllTimes,
-                tags = listOf(aTag(id = 1)),
+                tags = tags,
             )
 
         fun aVigilanceAreaEntityWithImagesAndLink(): VigilanceAreaEntity =
