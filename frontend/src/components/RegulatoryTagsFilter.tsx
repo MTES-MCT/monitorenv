@@ -1,25 +1,26 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetTagsQuery } from '@api/tagsAPI'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
-import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
+import { setFilteredRegulatoryTags } from '@features/layersSelector/search/slice'
 import { OptionValue } from '@features/Reportings/Filters/style'
+import { getTagsAsOptions } from '@features/Tags/useCases/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckPicker, CustomSearch } from '@mtes-mct/monitor-ui'
-import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { useMemo } from 'react'
 
-export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties }) {
+export function RegulatoryTagsFilter({ style }: { style?: React.CSSProperties }) {
   const dispatch = useAppDispatch()
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
-  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers ?? []), [regulatoryLayers])
+  const { data: tags } = useGetTagsQuery()
 
-  const regulatoryThemesCustomSearch = useMemo(() => new CustomSearch(regulatoryThemes, ['label']), [regulatoryThemes])
+  const tagsOptions = getTagsAsOptions(Object.values(tags ?? []))
+
+  const regulatoryTagsCustomSearch = useMemo(() => new CustomSearch(tagsOptions, ['label']), [tagsOptions])
 
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
@@ -28,12 +29,12 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
 
   const debouncedSearchLayers = useSearchLayers()
 
-  const handleSetFilteredRegulatoryThemes = filteredThemes => {
-    dispatch(setFilteredRegulatoryThemes(filteredThemes))
+  const handleSetFilteredRegulatoryTags = (filteredTags: string[]) => {
+    dispatch(setFilteredRegulatoryTags(filteredTags))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
-      regulatoryThemes: filteredThemes,
+      regulatoryTags: filteredTags,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -43,22 +44,22 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
 
   return (
     <CheckPicker
-      key={String(regulatoryThemes.length)}
-      customSearch={regulatoryThemesCustomSearch}
+      key={String(tagsOptions.length)}
+      customSearch={regulatoryTagsCustomSearch}
       isLabelHidden
       isTransparent
       label="Thématique réglementaire"
-      name="regulatoryThemes"
-      onChange={handleSetFilteredRegulatoryThemes}
-      options={regulatoryThemes || []}
+      name="regulatoryTags"
+      onChange={handleSetFilteredRegulatoryTags}
+      options={tagsOptions}
       placeholder="Thématique réglementaire"
       renderValue={() =>
-        filteredRegulatoryThemes && (
-          <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
+        filteredRegulatoryTags && (
+          <OptionValue>{`Thématique réglementaire (${filteredRegulatoryTags.length})`}</OptionValue>
         )
       }
       style={style}
-      value={filteredRegulatoryThemes}
+      value={filteredRegulatoryTags}
     />
   )
 }

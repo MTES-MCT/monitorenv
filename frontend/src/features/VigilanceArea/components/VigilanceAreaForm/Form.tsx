@@ -1,8 +1,9 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetTagsQuery } from '@api/tagsAPI'
 import { Tooltip } from '@components/Tooltip'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { ZonePicker } from '@features/commonComponents/ZonePicker'
+import { getTagsAsOptions } from '@features/Tags/useCases/getTagsAsOptions'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -21,10 +22,8 @@ import {
   FormikTextInput,
   getOptionsFromLabelledEnum,
   THEME,
-  type DateAsStringRange,
-  type Option
+  type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
-import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
 import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
@@ -53,13 +52,10 @@ export function Form() {
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: tags } = useGetTagsQuery()
 
-  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers ?? []), [regulatoryLayers])
-  const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemes as Array<Option>, ['label']),
-    [regulatoryThemes]
-  )
+  const tagsOptions = getTagsAsOptions(Object.values(tags ?? []))
+  const regulatoryTagsCustomSearch = useMemo(() => new CustomSearch(tagsOptions, ['label']), [tagsOptions])
 
   const publish = () => {
     validateForm({ ...values, isDraft: false }).then(errors => {
@@ -182,12 +178,12 @@ export function Form() {
         </DateWrapper>
         <Frequency />
         <FormikMultiSelect
-          customSearch={regulatoryThemesCustomSearch}
+          customSearch={regulatoryTagsCustomSearch}
           isErrorMessageHidden
           isRequired
           label="Thématiques"
           name="themes"
-          options={regulatoryThemes || []}
+          options={tagsOptions || []}
           placeholder="Sélectionner un/des thématique(s)"
         />
         <FormikMultiRadio
