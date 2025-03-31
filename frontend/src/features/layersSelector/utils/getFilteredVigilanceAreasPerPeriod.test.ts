@@ -91,7 +91,7 @@ describe('filterVigilanceAreas', () => {
     isDraft: false,
     name: 'Year',
     seaFront: 'MED',
-    startDatePeriod: `${customDayjs().add(3, 'days').format('YYYY-MM-DD')} 00:00:00.00000`,
+    startDatePeriod: `${customDayjs().subtract(3, 'days').format('YYYY-MM-DD')} 00:00:00.00000`,
     updatedAt: undefined
   }
   const allYear = {
@@ -134,12 +134,12 @@ describe('filterVigilanceAreas', () => {
 
   it('filters areas for today', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT)
-    expect(result).toEqual([today, quarter, allYear, infinite])
+    expect(result).toEqual([today, quarter, year, allYear, infinite])
   })
 
   it('filters areas within current quarter', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER)
-    expect(result).toEqual([todayMin2Days, today, quarter, /* year, */ allYear, infinite])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
   })
 
   it('filters areas within current year', () => {
