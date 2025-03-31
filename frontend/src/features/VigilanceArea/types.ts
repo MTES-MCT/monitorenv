@@ -1,5 +1,6 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import type { ImageApi, Link } from '@components/Form/types'
+import type { TagAPI } from 'domain/entities/tags'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace VigilanceArea {
@@ -26,6 +27,7 @@ export namespace VigilanceArea {
     seaFront: string | undefined
     source?: string
     startDatePeriod?: string
+    tags?: TagAPI[]
     themes?: string[]
     updatedAt?: string
     visibility?: Visibility
@@ -54,6 +56,7 @@ export namespace VigilanceArea {
     seaFront: string | undefined
     source?: string
     startDatePeriod?: string
+    tags?: TagAPI[]
     themes?: string[]
     updatedAt?: string
     visibility?: Visibility
