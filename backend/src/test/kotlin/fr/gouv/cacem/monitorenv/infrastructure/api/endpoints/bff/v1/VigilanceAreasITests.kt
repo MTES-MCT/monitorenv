@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
@@ -8,17 +9,21 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aSubTag
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetTrigrams
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.SubTagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
-import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -70,7 +75,6 @@ class VigilanceAreasITests {
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
             MultiPolygon
-    private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     private val vigilanceArea1 =
         VigilanceAreaEntity(
@@ -111,6 +115,24 @@ class VigilanceAreasITests {
             createdAt = ZonedDateTime.parse(createdAt),
             updatedAt = ZonedDateTime.parse(updatedAt),
             isAtAllTimes = false,
+            tags =
+                listOf(
+                    aTag(
+                        id = 1,
+                        name = "tag1",
+                        startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                        endedAt = null,
+                        subTags =
+                            listOf(
+                                aSubTag(
+                                    id = 1,
+                                    name = "subTag1",
+                                    startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                                    endedAt = null,
+                                ),
+                            ),
+                    ),
+                ),
         )
 
     @Test
@@ -141,6 +163,7 @@ class VigilanceAreasITests {
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
                 isAtAllTimes = true,
+                tags = listOf(),
             )
         given(getAllVigilanceAreas.execute()).willReturn(listOf(vigilanceArea1, vigilanceArea2))
         // When
@@ -266,8 +289,26 @@ class VigilanceAreasITests {
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
                 isAtAllTimes = false,
+                tags =
+                    listOf(
+                        TagInput(
+                            id = 1,
+                            name = "tag1",
+                            startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                            endedAt = null,
+                            subTags =
+                                listOf(
+                                    SubTagInput(
+                                        id = 1,
+                                        name = "subTag1",
+                                        startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                                        endedAt = null,
+                                    ),
+                                ),
+                        ),
+                    ),
             )
-        given(createOrUpdateVigilanceArea.execute(vigilanceArea1)).willReturn(vigilanceArea1)
+        given(createOrUpdateVigilanceArea.execute(any())).willReturn(vigilanceArea1)
 
         // When
         mockMvc
@@ -306,6 +347,14 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.createdAt", equalTo(createdAt)))
             .andExpect(jsonPath("$.updatedAt", equalTo(updatedAt)))
             .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$.tags[0].id", equalTo(1)))
+            .andExpect(jsonPath("$.tags[0].name", equalTo("tag1")))
+            .andExpect(jsonPath("$.tags[0].startedAt", equalTo("2024-01-01T00:00:00Z")))
+            .andExpect(jsonPath("$.tags[0].endedAt", nullValue()))
+            .andExpect(jsonPath("$.tags[0].subTags[0].id", equalTo(1)))
+            .andExpect(jsonPath("$.tags[0].subTags[0].name", equalTo("subTag1")))
+            .andExpect(jsonPath("$.tags[0].subTags[0].startedAt", equalTo("2024-01-01T00:00:00Z")))
+            .andExpect(jsonPath("$.tags[0].subTags[0].endedAt", nullValue()))
     }
 
     @Test
@@ -335,11 +384,13 @@ class VigilanceAreasITests {
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
                 isAtAllTimes = false,
+                tags = listOf(),
             )
 
         val updatedVigilanceArea =
             vigilanceArea1.copy(
                 images = emptyList(),
+                tags = listOf(),
             )
 
         given(createOrUpdateVigilanceArea.execute(updatedVigilanceArea)).willReturn(updatedVigilanceArea)
@@ -372,6 +423,8 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.createdAt", equalTo(createdAt)))
             .andExpect(jsonPath("$.updatedAt", equalTo(updatedAt)))
             .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$.images").isEmpty())
+            .andExpect(jsonPath("$.tags").isEmpty())
     }
 
     @Test

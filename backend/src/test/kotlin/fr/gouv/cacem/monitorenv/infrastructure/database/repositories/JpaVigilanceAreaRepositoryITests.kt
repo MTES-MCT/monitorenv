@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -65,6 +66,11 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(vigilanceArea?.name).isEqualTo("Zone de vigilance 1")
         assertThat(vigilanceArea?.themes).isEqualTo(listOf("Dragage", "Extraction granulats"))
         assertThat(vigilanceArea?.visibility).isEqualTo(VisibilityEnum.PUBLIC)
+        assertThat(vigilanceArea?.tags).hasSize(2)
+        assertThat(vigilanceArea?.tags[0]?.id).isEqualTo(6)
+        assertThat(vigilanceArea?.tags[0]?.name).isEqualTo("Extraction granulats")
+        assertThat(vigilanceArea?.tags[1]?.id).isEqualTo(7)
+        assertThat(vigilanceArea?.tags[1]?.name).isEqualTo("Dragage")
     }
 
     @Test
@@ -102,6 +108,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                 createdAt = null,
                 updatedAt = null,
                 isAtAllTimes = false,
+                tags = listOf(aTag(id = 5)),
             )
 
         // When
@@ -128,6 +135,9 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(savedVigilanceArea.createdAt).isNotNull()
         assertThat(savedVigilanceArea.updatedAt).isNull()
         assertThat(savedVigilanceArea.isAtAllTimes).isFalse()
+        assertThat(savedVigilanceArea.tags).hasSize(1)
+        assertThat(savedVigilanceArea.tags[0].name).isEqualTo("Mouillage")
+        assertThat(savedVigilanceArea.tags[0].id).isEqualTo(5)
     }
 
     @Test
