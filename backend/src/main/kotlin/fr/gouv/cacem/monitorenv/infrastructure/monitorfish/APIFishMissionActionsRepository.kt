@@ -29,7 +29,9 @@ class APIFishMissionActionsRepository(
                     apiClient
                         .httpClient
                         .get(missionActionsUrl) {
-                            header("x-api-key", monitorfishProperties.xApiKey)
+                            headers {
+                                append("x-api-key", monitorfishProperties.xApiKey)
+                            }
                         }.body<List<MonitorFishMissionActionDataInput>>()
                 logger.info("Fetched ${missionActions.size} mission actions.")
 
