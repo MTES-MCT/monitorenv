@@ -32,6 +32,6 @@ data class TagRegulatoryAreaModel(
 
 @Embeddable
 data class TagRegulatoryAreaPk(
-    val tagId: Int?,
+    val tagId: Int,
     val regulatoryAreaId: Int,
 ) : Serializable
