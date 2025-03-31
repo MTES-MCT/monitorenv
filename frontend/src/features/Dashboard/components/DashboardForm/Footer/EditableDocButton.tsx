@@ -1,16 +1,31 @@
 import { dashboardsAPI } from '@api/dashboardsAPI'
+import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
+import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Button } from '@mtes-mct/monitor-ui'
 
 export function EditableDocButton({ dashboard }) {
   const dispatch = useAppDispatch()
 
   const { getImages } = useExportImages()
+  const regulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, dashboard.regulatoryAreaIds))
 
+  const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => ({
+    color: getRegulatoryEnvColorWithAlpha(regulatoryArea.thematique, regulatoryArea.entityName),
+    entityName: regulatoryArea.entityName,
+    id: regulatoryArea.id,
+    layerName: regulatoryArea.layerName
+  }))
+
+  // console.log('regulatoryAreas', formattedRegulatoryAreas)
   const exportBrief = async () => {
     const images = await getImages()
-    const { data } = await dispatch(dashboardsAPI.endpoints.exportBrief.initiate({ dashboard, images }))
+
+    const { data } = await dispatch(
+      dashboardsAPI.endpoints.exportBrief.initiate({ dashboard, images, regulatoryAreas: formattedRegulatoryAreas })
+    )
 
     if (data) {
       try {
