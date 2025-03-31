@@ -33,7 +33,7 @@ export const DraftSchema: Yup.Schema<
     source: Yup.string().optional(),
     startDatePeriod: Yup.string().optional(),
     // TODO(26/03/2025): Replace themes by tags when migration is ready
-    tags: Yup.array().optional().ensure(),
+    tags: Yup.array().ensure().optional(),
     themes: Yup.array().optional(),
     visibility: Yup.mixed<VigilanceArea.Visibility>().optional()
   })
@@ -106,7 +106,7 @@ export const PublishedSchema: Yup.Schema<
       then: schema => schema.nullable().required('Requis')
     }),
     // TODO(26/03/2025): Replace themes by tags when migration is ready
-    tags: Yup.array().optional().ensure(),
+    tags: Yup.array().ensure().defined().min(1),
     themes: Yup.array().ensure().defined().min(1),
     visibility: Yup.mixed<VigilanceArea.Visibility>().oneOf(Object.values(VigilanceArea.Visibility)).required()
   })
