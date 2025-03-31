@@ -34,6 +34,8 @@ export const DraftSchema: Yup.Schema<
     startDatePeriod: Yup.string().optional(),
     // TODO(26/03/2025): Replace themes by tags when migration is ready
     tags: Yup.array().ensure().optional(),
+    // TODO(26/03/2025): Replace themes by tags when migration is ready
+    tags: Yup.array().optional().ensure(),
     themes: Yup.array().optional(),
     visibility: Yup.mixed<VigilanceArea.Visibility>().optional()
   })
