@@ -1,11 +1,11 @@
--- INSERTING DEFAULT TAGS FROM ACTUAL REGULATIONS
+-- INSERTING DEFAULT TAGS FROM CURRENT REGULATIONS
 INSERT INTO tags (name, ended_at)
 SELECT DISTINCT trim(tag), '2030-12-31 00:00:00'::timestamp
 FROM (SELECT unnest(string_to_array(thematique, ', ')) AS tag
       FROM regulations_cacem) t
 WHERE trim(tag) NOT IN (SELECT name FROM tags);
 
--- INSERTING TAGS <-> REGULATIONS FROM ACTUAL REGULATIONS
+-- INSERTING TAGS <-> REGULATIONS FROM CURRENT REGULATIONS
 INSERT INTO tags_regulatory_area (tags_id, regulatory_area_id)
 SELECT t.id, r.id
 FROM regulations_cacem r
@@ -22,3 +22,9 @@ VALUES (1, 'subtagPN1', '2024-01-01'::timestamp),
 INSERT INTO tags_regulatory_area (tags_id, regulatory_area_id)
 VALUES (10, 16),
        (9, 17);
+
+-- INSERTING TAGS <-> VIGILANCES AREAS FROM CURRENT VIGILANCES AREAS
+INSERT INTO tags_vigilance_area (tags_id, vigilance_areas_id)
+SELECT t.id, va.id
+FROM vigilance_areas va
+         INNER JOIN tags t ON t.name = ANY (va.themes);
