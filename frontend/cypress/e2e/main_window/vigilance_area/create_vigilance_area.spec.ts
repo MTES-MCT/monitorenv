@@ -95,6 +95,8 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.frequency).equal(VigilanceArea.Frequency.ALL_WEEKS)
       expect(createdVigilanceArea.endingCondition).equal(VigilanceArea.EndingCondition.NEVER)
       expect(createdVigilanceArea.themes).to.deep.eq(['AMP'])
+      expect(createdVigilanceArea.tags[0].id).equal(2)
+      expect(createdVigilanceArea.tags[0].name).equal('AMP')
       expect(createdVigilanceArea.visibility).equal(VigilanceArea.Visibility.PUBLIC)
       expect(createdVigilanceArea.comments).equal('Ceci est un commentaire')
       expect(createdVigilanceArea.createdBy).equal('ABC')

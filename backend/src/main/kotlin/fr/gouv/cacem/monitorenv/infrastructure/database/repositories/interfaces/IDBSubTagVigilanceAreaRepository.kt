@@ -4,4 +4,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.SubTagVigilanceAre
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.SubTagVigilanceAreaPk
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface IDBSubTagVigilanceAreaRepository : JpaRepository<SubTagVigilanceAreaModel, SubTagVigilanceAreaPk>
+interface IDBSubTagVigilanceAreaRepository : JpaRepository<SubTagVigilanceAreaModel, SubTagVigilanceAreaPk> {
+    fun deleteAllByVigilanceAreaId(vigilanceAreaId: Int)
+}

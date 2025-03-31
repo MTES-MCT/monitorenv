@@ -92,7 +92,9 @@ export function VigilanceAreas({
                       <Text>Thématique</Text>
                     </View>
                     <View style={areaStyle.details}>
-                      <Text>{vigilanceArea.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}</Text>
+                      <Text>
+                        {vigilanceArea.tags ? vigilanceArea?.tags.map(({ name }) => name).join(', ') : EMPTY_VALUE}
+                      </Text>
                     </View>
                   </View>
                   <View>

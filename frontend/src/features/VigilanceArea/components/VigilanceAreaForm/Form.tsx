@@ -27,7 +27,7 @@ import {
 import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { AddAMPs } from './AddAMPs'
@@ -36,6 +36,8 @@ import { Footer } from './Footer'
 import { Frequency } from './Frequency'
 import { Links } from './Links'
 import { PhotoUploader } from './PhotoUploader'
+
+import type { TagAPI } from 'domain/entities/tags'
 
 export function Form() {
   const dispatch = useAppDispatch()
@@ -64,6 +66,15 @@ export function Form() {
       }
     })
   }
+
+  useEffect(() => {
+    const tagsToUpdate: TagAPI[] = []
+    values.themes?.forEach(theme => {
+      const tagToUpdate = Object.values(tags ?? []).find(tag => theme === tag.name)
+      tagsToUpdate.push(tagToUpdate)
+    })
+    setFieldValue('tags', tagsToUpdate)
+  }, [setFieldValue, values.themes, tags])
 
   const cancel = () => {
     if (dirty) {
@@ -178,6 +189,7 @@ export function Form() {
         </DateWrapper>
         <Frequency />
         <FormikMultiSelect
+          key={tagsOptions.length}
           customSearch={regulatoryTagsCustomSearch}
           isErrorMessageHidden
           isRequired
