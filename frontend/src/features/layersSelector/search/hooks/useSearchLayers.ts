@@ -146,13 +146,14 @@ export function useSearchLayers() {
                   { $path: ['layerName'], $val: searchedText },
                   { $path: ['entityName'], $val: searchedText },
                   { $path: ['refReg'], $val: searchedText },
-                  { $path: ['type'], $val: searchedText }
+                  { $path: ['type'], $val: searchedText },
+                  { $path: ['tags.name'], $val: searchedText }
                 ]
               }
             : undefined
 
           const filterWithTags = shouldSearchThroughRegulatoryTags
-            ? { $or: regulatoryTags.map(theme => ({ $path: ['themes.name'], $val: theme })) }
+            ? { $or: regulatoryTags.map(theme => ({ $path: ['tags.name'], $val: theme })) }
             : undefined
 
           const filterExpression = [filterWithTextExpression, filterWithTags].filter(f => !!f) as Expression[]
@@ -183,7 +184,7 @@ export function useSearchLayers() {
                 $or: [
                   { $path: ['name'], $val: searchedText },
                   { $path: ['comments'], $val: searchedText },
-                  { $path: ['themes'], $val: searchedText }
+                  { $path: ['tags.name'], $val: searchedText }
                 ]
               }
             : undefined
