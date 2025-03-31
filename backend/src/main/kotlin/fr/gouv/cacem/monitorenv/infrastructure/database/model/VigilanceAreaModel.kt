@@ -8,6 +8,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.SubTagVigilanceAreaModel.Companion.fromSubTagEntity
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel.Companion.fromTagEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -100,36 +102,67 @@ data class VigilanceAreaModel(
     val visibility: VisibilityEnum? = null,
     @Column(name = "created_at") var createdAt: ZonedDateTime?,
     @Column(name = "updated_at") var updatedAt: ZonedDateTime?,
+    @OneToMany(
+        mappedBy = "vigilanceArea",
+        fetch = FetchType.LAZY,
+    )
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    var tags: List<TagVigilanceAreaModel>,
+    @OneToMany(
+        mappedBy = "vigilanceArea",
+        fetch = FetchType.LAZY,
+    )
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    var subTags: List<SubTagVigilanceAreaModel>,
 ) {
     companion object {
-        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel =
-            VigilanceAreaModel(
-                id = vigilanceArea.id,
-                comments = vigilanceArea.comments,
-                computedEndDate = vigilanceArea.computedEndDate?.toInstant(),
-                createdBy = vigilanceArea.createdBy,
-                endingCondition = vigilanceArea.endingCondition,
-                endingOccurrenceDate = vigilanceArea.endingOccurrenceDate?.toInstant(),
-                endingOccurrencesNumber = vigilanceArea.endingOccurrencesNumber,
-                frequency = vigilanceArea.frequency,
-                endDatePeriod = vigilanceArea.endDatePeriod?.toInstant(),
-                geom = vigilanceArea.geom,
-                isArchived = vigilanceArea.isArchived,
-                isAtAllTimes = vigilanceArea.isAtAllTimes,
-                isDeleted = vigilanceArea.isDeleted,
-                isDraft = vigilanceArea.isDraft,
-                links = vigilanceArea.links,
-                linkedAMPs = vigilanceArea.linkedAMPs,
-                linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,
-                name = vigilanceArea.name,
-                seaFront = vigilanceArea.seaFront,
-                source = vigilanceArea.source,
-                startDatePeriod = vigilanceArea.startDatePeriod?.toInstant(),
-                themes = vigilanceArea.themes,
-                visibility = vigilanceArea.visibility,
-                createdAt = vigilanceArea.createdAt,
-                updatedAt = vigilanceArea.updatedAt,
-            )
+        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel {
+            val vigilanceAreaModel =
+                VigilanceAreaModel(
+                    id = vigilanceArea.id,
+                    comments = vigilanceArea.comments,
+                    computedEndDate = vigilanceArea.computedEndDate?.toInstant(),
+                    createdBy = vigilanceArea.createdBy,
+                    endingCondition = vigilanceArea.endingCondition,
+                    endingOccurrenceDate = vigilanceArea.endingOccurrenceDate?.toInstant(),
+                    endingOccurrencesNumber = vigilanceArea.endingOccurrencesNumber,
+                    frequency = vigilanceArea.frequency,
+                    endDatePeriod = vigilanceArea.endDatePeriod?.toInstant(),
+                    geom = vigilanceArea.geom,
+                    isArchived = vigilanceArea.isArchived,
+                    isAtAllTimes = vigilanceArea.isAtAllTimes,
+                    isDeleted = vigilanceArea.isDeleted,
+                    isDraft = vigilanceArea.isDraft,
+                    links = vigilanceArea.links,
+                    linkedAMPs = vigilanceArea.linkedAMPs,
+                    linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,
+                    name = vigilanceArea.name,
+                    seaFront = vigilanceArea.seaFront,
+                    source = vigilanceArea.source,
+                    startDatePeriod = vigilanceArea.startDatePeriod?.toInstant(),
+                    themes = vigilanceArea.themes,
+                    visibility = vigilanceArea.visibility,
+                    createdAt = vigilanceArea.createdAt,
+                    updatedAt = vigilanceArea.updatedAt,
+                    tags = listOf(),
+                    subTags = listOf(),
+                )
+            vigilanceAreaModel.tags = vigilanceArea.tags.map { fromTagEntity(it, vigilanceAreaModel) }
+            vigilanceAreaModel.subTags =
+                vigilanceArea.tags.flatMap { tag ->
+                    tag.subTags.map { subTag ->
+                        fromSubTagEntity(
+                            subTag,
+                            vigilanceAreaModel,
+                            tag,
+                        )
+                    }
+                }
+
+            return vigilanceAreaModel
+        }
     }
 
     fun toVigilanceAreaEntity(): VigilanceAreaEntity =
@@ -160,6 +193,14 @@ data class VigilanceAreaModel(
             visibility = visibility,
             createdAt = createdAt,
             updatedAt = updatedAt,
+            tags =
+                this.tags.map {
+                    it.toTagEntity(
+                        subTags
+                            .filter { subTags -> subTags.subTag.tag === it.tag }
+                            .map { subTag -> subTag.toSubTagEntity() },
+                    )
+                },
         )
 
     @PrePersist

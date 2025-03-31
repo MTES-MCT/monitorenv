@@ -1,6 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -30,6 +35,7 @@ data class VigilanceAreaDataInput(
     val visibility: VisibilityEnum? = null,
     val createdAt: ZonedDateTime? = null,
     val updatedAt: ZonedDateTime? = null,
+    val tags: List<TagInput>,
 ) {
     fun toVigilanceAreaEntity(): VigilanceAreaEntity =
         VigilanceAreaEntity(
@@ -59,5 +65,6 @@ data class VigilanceAreaDataInput(
             visibility = this.visibility,
             createdAt = this.createdAt,
             updatedAt = this.updatedAt,
+            tags = tags.map { it.toTagEntity() },
         )
 }
