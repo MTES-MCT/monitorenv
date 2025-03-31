@@ -539,8 +539,8 @@ export const getFilteredVigilanceAreas = createSelector(
       let filteredVigilanceAreasByThemes = vigilanceAreas
 
       if (regulatoryTagsFilter && regulatoryTagsFilter.length > 0) {
-        filteredVigilanceAreasByThemes = vigilanceAreas?.filter(({ themes }) =>
-          themes?.some(theme => regulatoryTagsFilter?.includes(theme))
+        filteredVigilanceAreasByThemes = vigilanceAreas?.filter(({ tags }) =>
+          tags?.some(tag => regulatoryTagsFilter?.includes(tag.name))
         )
       }
 

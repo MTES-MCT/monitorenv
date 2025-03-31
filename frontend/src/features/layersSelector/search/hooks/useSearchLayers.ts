@@ -146,7 +146,8 @@ export function useSearchLayers() {
                   { $path: ['layerName'], $val: searchedText },
                   { $path: ['entityName'], $val: searchedText },
                   { $path: ['refReg'], $val: searchedText },
-                  { $path: ['type'], $val: searchedText }
+                  { $path: ['type'], $val: searchedText },
+                  { $path: ['tags.name'], $val: searchedText }
                 ]
               }
             : undefined
@@ -183,7 +184,7 @@ export function useSearchLayers() {
                 $or: [
                   { $path: ['name'], $val: searchedText },
                   { $path: ['comments'], $val: searchedText },
-                  { $path: ['themes'], $val: searchedText }
+                  { $path: ['tags.name'], $val: searchedText }
                 ]
               }
             : undefined
