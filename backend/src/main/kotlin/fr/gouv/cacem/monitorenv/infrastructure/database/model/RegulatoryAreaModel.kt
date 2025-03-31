@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -40,7 +39,6 @@ data class RegulatoryAreaModel(
     @OneToMany(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL],
     )
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
