@@ -128,6 +128,12 @@ export namespace Dashboard {
   export type BriefExport = {
     dashboard: Dashboard
     images: ExportImageType[] | undefined
+    regulatoryAreas: {
+      color: string
+      entityName: string
+      id: number
+      layerName: string
+    }[]
   }
 
   export type BriefFileExport = {
