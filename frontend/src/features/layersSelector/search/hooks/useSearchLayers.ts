@@ -55,7 +55,7 @@ export function useSearchLayers() {
       {
         ignoreLocation: true,
         includeScore: false,
-        keys: ['name', 'comments', 'themes'],
+        keys: ['name', 'comments', 'themes', 'tags.name'],
         minMatchCharLength: 2,
         threshold: 0.2
       }

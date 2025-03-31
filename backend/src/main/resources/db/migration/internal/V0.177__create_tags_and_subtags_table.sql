@@ -16,3 +16,12 @@ CREATE TABLE tags_regulatory_area
 );
 CREATE INDEX idx_fk_tags_regulatory_area_tags_id ON tags_regulatory_area (tags_id);
 CREATE INDEX idx_fk_tags_regulatory_area_regulations_cacem_id ON tags_regulatory_area (regulatory_area_id);
+
+CREATE TABLE tags_vigilance_area
+(
+    tags_id            INT REFERENCES tags (id),
+    vigilance_areas_id INT REFERENCES vigilance_areas (id),
+    primary key (tags_id, vigilance_areas_id)
+);
+CREATE INDEX idx_fk_tags_vigilance_area_tags_id ON tags_vigilance_area (tags_id);
+CREATE INDEX idx_fk_tags_vigilance_area_vigilance_areas_id ON tags_vigilance_area (vigilance_areas_id);

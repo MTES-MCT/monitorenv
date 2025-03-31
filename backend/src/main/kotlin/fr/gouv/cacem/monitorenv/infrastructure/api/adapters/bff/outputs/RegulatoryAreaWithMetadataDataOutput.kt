@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
 import org.locationtech.jts.geom.MultiPolygon
 
 data class RegulatoryAreaWithMetadataDataOutput(
