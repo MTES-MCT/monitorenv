@@ -1,12 +1,12 @@
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
-export function isVigilanceAreaPartOfTheme(
+export function isVigilanceAreaPartOfTag(
   vigilanceArea: VigilanceArea.VigilanceArea,
-  themes: string[] | undefined
+  tags: string[] | undefined
 ): boolean {
-  if (!themes || themes.length === 0) {
+  if (!tags || tags.length === 0) {
     return true
   }
 
-  return !!vigilanceArea.themes && vigilanceArea.themes.some(theme => themes.includes(theme))
+  return !!vigilanceArea.tags && vigilanceArea.tags.map(({ name }) => name).some(tag => tags.includes(tag))
 }
