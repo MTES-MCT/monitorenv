@@ -5,6 +5,7 @@ import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/admi
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Button } from '@mtes-mct/monitor-ui'
+import { getTitle } from 'domain/entities/layers/utils'
 
 export function EditableDocButton({ dashboard }) {
   const dispatch = useAppDispatch()
@@ -14,17 +15,41 @@ export function EditableDocButton({ dashboard }) {
 
   const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => ({
     color: getRegulatoryEnvColorWithAlpha(regulatoryArea.thematique, regulatoryArea.entityName),
-    entityName: regulatoryArea.entityName,
+    entityName: getTitle(regulatoryArea.entityName),
+    facade: regulatoryArea.facade,
     id: regulatoryArea.id,
-    layerName: regulatoryArea.layerName
+    layerName: getTitle(regulatoryArea.layerName),
+    refReg: regulatoryArea.refReg,
+    thematique: regulatoryArea.thematique,
+    type: regulatoryArea.type,
+    url: regulatoryArea.url
   }))
 
   // console.log('regulatoryAreas', formattedRegulatoryAreas)
   const exportBrief = async () => {
     const images = await getImages()
 
+    const regulatoryAreasWithImages = formattedRegulatoryAreas.map(regulatoryArea => {
+      const image = images?.find(
+        img =>
+          String(img.featureId)?.includes('DASHBOARD_REGULATORY_AREAS') &&
+          String(img.featureId).split(':')[1] === String(regulatoryArea.id)
+      )
+
+      return {
+        ...regulatoryArea,
+        image
+      }
+    })
+
+    const wholeImage = images?.find(img => String(img.featureId)?.includes('WHOLE_DASHBOARD'))
+
     const { data } = await dispatch(
-      dashboardsAPI.endpoints.exportBrief.initiate({ dashboard, images, regulatoryAreas: formattedRegulatoryAreas })
+      dashboardsAPI.endpoints.exportBrief.initiate({
+        dashboard,
+        image: wholeImage,
+        regulatoryAreas: regulatoryAreasWithImages
+      })
     )
 
     if (data) {

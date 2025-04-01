@@ -7,13 +7,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefRegulator
 
 class BriefInput(
     val dashboard: DashboardEntity,
-    val images: List<BriefImageEntity>? = listOf(),
+    val image: BriefImageEntity? = null,
     val regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>? = listOf(),
 ) {
     fun toBriefEntity(): BriefEntity =
         BriefEntity(
             dashboard = dashboard,
-            images = images,
+            image = image,
             regulatoryAreas = regulatoryAreas,
         )
 }
