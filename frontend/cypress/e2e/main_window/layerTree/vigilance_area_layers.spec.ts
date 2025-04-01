@@ -85,11 +85,11 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-results-list-button').contains('0 résultat')
   })
   it('Result list should be displayed by default but not checked and total should be visible', () => {
-    cy.getDataCy('vigilance-area-results-list-button').contains('4 résultats')
+    cy.getDataCy('vigilance-area-results-list-button').contains('5 résultats')
 
     cy.get('#isVigilanceAreaSearchResultsVisible').should('not.be.checked')
     cy.getDataCy('vigilance-area-results-list-button').click()
-    cy.getDataCy('vigilance-area-result-list').children().should('have.length', 4)
+    cy.getDataCy('vigilance-area-result-list').children().should('have.length', 5)
     cy.get('#isVigilanceAreaSearchResultsVisible').should('be.checked')
   })
 })
