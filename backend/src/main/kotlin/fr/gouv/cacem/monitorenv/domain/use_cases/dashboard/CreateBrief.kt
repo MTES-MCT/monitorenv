@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.utils.Base64Converter
 import fr.gouv.cacem.monitorenv.utils.OfficeConverter
 import org.apache.poi.util.Units
 import org.apache.poi.xwpf.usermodel.*
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth
 import org.slf4j.LoggerFactory
@@ -21,6 +22,7 @@ import java.math.BigInteger
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.io.path.Path
+
 
 @UseCase
 class CreateBrief(
@@ -100,21 +102,22 @@ class CreateBrief(
                 "\${totalRegulatoryAreasText}" to (
                     totalRegulatoryAreasText
                         ?: "Aucune zone règlementaire"
-                ),
+                    ),
                 "\${totalRegulatoryAreas}" to (
                     totalRegulatoryAreas
                         ?: "0"
-                ),
+                    ),
                 "\${totalAMPsText}" to (totalAmpsText ?: "Aucune aire marine protégée"),
                 "\${totalAMPs}" to (totalAmps ?: "0"),
                 "\${totalVigilanceAreasText}" to (
                     totalVigilanceAreasText
                         ?: "Aucune zone de vigilance"
-                ),
+                    ),
                 "\${totalVigilanceAreas}" to (
                     totalVigilanceAreas
                         ?: "0"
-                ),
+                    ),
+
                 "\${totalReportingsText}" to (totalReportingsText ?: "Aucun signalement"),
                 "\${totalReportings}" to (totalReportings ?: "0"),
                 "\${totalZones}" to (totalZones.toString()),
@@ -129,23 +132,34 @@ class CreateBrief(
                 ?: throw IllegalArgumentException("Template file not found: $docTemplatePath")
         val document = XWPFDocument(inputStream)
 
-        val paragraphs = document.paragraphs.toList() // Create a copy of the paragraphs list
-
+        var paragraphs = document.paragraphs.toList()
         for (paragraph in paragraphs) {
             replacePlaceholdersInParagraph(paragraph, placeholders)
         }
 
-        // Replace placeholders in tables
-        replacePlaceholdersInTables(document, placeholders)
-
-        val imageData = brief.images?.get(0)?.let { cleanBase64String(it.image) }
-        val tempImageFile = File("temp_image.png")
-        if (imageData != null) {
-            tempImageFile.writeBytes(imageData)
+        paragraphs = document.paragraphs.toList()
+        for (paragraph in paragraphs) {
+            if (paragraph.text.contains("\${regulatoryAreasTable}")) {
+                createRegulatoryTable(paragraph, regulatoryAreas ?: emptyList())
+            }
         }
 
+        // Replace placeholders in tables
+        for (table in document.tables) {
+            replacePlaceholdersInTables(document, placeholders)
+        }
+
+
+        // AJout de l'image principale
+        paragraphs = document.paragraphs.toList()
         for (paragraph in paragraphs) {
             if (paragraph.text.contains("\${globalMap}")) {
+                val imageData = brief.image?.let { cleanBase64String(it.image) }
+                val tempImageFile = File("temp_image.png")
+                if (imageData != null) {
+                    tempImageFile.writeBytes(imageData)
+                }
+
                 val run: XWPFRun = paragraph.createRun()
                 val inputStreamImg = tempImageFile.inputStream()
 
@@ -165,12 +179,88 @@ class CreateBrief(
             }
         }
 
-        replacePlaceholderWithTable(
-            document,
-            "\${regulatoryAreasTable}",
-            regulatoryAreas ?: emptyList(),
-            ::createRegulatoryTable,
-        )
+
+        // Recherche de la variable dans le document
+        paragraphs = document.paragraphs
+        for (paragraph in paragraphs) {
+            if (paragraph.text.contains("\${regulatoryAreasDetails}")) {
+                // Supprimer le texte du placeholder
+                paragraph.runs.forEach { it.setText("", 0) }
+                val document = paragraph.document as XWPFDocument
+
+
+                // Boucle sur les éléments regulatoryAreas
+                for (regulatoryArea in (brief.regulatoryAreas ?: emptyList())) {
+                    val titleParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
+                    // Ajouter le titre
+                    titleParagraph.alignment = ParagraphAlignment.LEFT
+                    val titleRun = titleParagraph.createRun()
+                    titleRun.isBold = true
+                    titleRun.fontSize = 12
+                    titleRun.setText(regulatoryArea.layerName)
+                    titleRun.addBreak()
+
+
+                    // Ajouter l'image
+                    val imageData = brief.image?.let { cleanBase64String(it.image) }
+                    val imageParagraph = document.insertNewParagraph(titleParagraph.ctp.newCursor())
+                    if (imageData != null) {
+                        val tempImageFile = File("temp_image.png")
+                        tempImageFile.writeBytes(imageData)
+                        
+                        val run: XWPFRun = imageParagraph.createRun()
+                        val inputStreamImg = tempImageFile.inputStream()
+
+                        run.addPicture(
+                            inputStreamImg,
+                            XWPFDocument.PICTURE_TYPE_PNG,
+                            "image.png",
+                            Units.pixelToEMU(675), // Largeur
+                            Units.pixelToEMU(450), // Hauteur
+                        )
+                        inputStreamImg.close()
+                        tempImageFile.delete()
+                    }
+
+
+                    // Create a new table directly at the placeholder position
+                    val tableParagraph = document.insertNewParagraph(imageParagraph.ctp.newCursor())
+                    val table = tableParagraph.document.insertNewTbl(tableParagraph.ctp.newCursor())
+                    setTableBorders(table)
+                    table.setWidth("100%")
+
+                    // Ajouter les lignes
+                    val rows = listOf(
+                        listOf("Entité", regulatoryArea.entityName),
+                        listOf("Ensemble reg", regulatoryArea.refReg ?: ""),
+                        listOf("Thématique", regulatoryArea.thematique ?: ""),
+                        listOf("Facade", regulatoryArea.facade ?: ""),
+                        listOf(
+                            "Résumé reg.sur Légicem",
+                            regulatoryArea.url,
+                        ),
+                    )
+                    for (rowData in rows) {
+                        val row = table.createRow()
+                        val labelCell = row.getCell(0) ?: row.createCell()
+                        labelCell.setText(rowData[0])
+                        labelCell.setWidth("30%")
+                        styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
+                        val valueCell = row.getCell(1) ?: row.createCell()
+                        valueCell.setText(rowData[1])
+                        valueCell.setWidth("70%")
+                        styleCell(labelCell, bold = false, fontSize = 9, alignment = ParagraphAlignment.LEFT)
+                    }
+                }
+
+                // Remove the placeholder paragraph
+                val position = document.getPosOfParagraph(paragraph)
+                document.removeBodyElement(position)
+                break
+            }
+        }
+
+        setFontForAllParagraphs(document, "Arial")
 
         // Save the updated document to a new file
         FileOutputStream(docTmpDOCXPath).use { outputStream ->
@@ -192,6 +282,15 @@ class CreateBrief(
         )
     }
 
+    private fun setFontForAllParagraphs(document: XWPFDocument, fontFamily: String) {
+        for (paragraph in document.paragraphs) {
+            val runs = paragraph.runs
+            for (run in runs) {
+                run.fontFamily = fontFamily
+            }
+        }
+    }
+
     private fun cleanBase64String(base64String: String): ByteArray {
         val cleanedBase64 = base64String.substringAfter("base64,") // Supprime le préfixe
         return Base64.getDecoder().decode(cleanedBase64)
@@ -201,55 +300,19 @@ class CreateBrief(
         paragraph: XWPFParagraph,
         placeholders: Map<String, String?>,
     ) {
-        val runs = paragraph.runs
-        if (runs.isEmpty()) return
-
-        // Reconstruire tout le texte avec ses runs
-        val runTextMap = runs.map { it.text() ?: "" }
-        val fullText = runTextMap.joinToString("")
-
-        // Vérifier s'il y a des placeholders à remplacer
-        var modifiedText = fullText
-        var hasChanges = false
-
-        for ((placeholder, value) in placeholders) {
-            if (modifiedText.contains(placeholder)) {
-                modifiedText = modifiedText.replace(placeholder, value ?: "")
-                hasChanges = true
+        // Loop through the runs (pieces of text) in the paragraph
+        for (run in paragraph.runs) {
+            var text = run.text() // Get the text in the run
+            if (!text.isNullOrEmpty()) {
+                // Replace each placeholder with the corresponding value
+                for ((placeholder, value) in placeholders) {
+                    if (text.contains(placeholder)) {
+                        text = text.replace(placeholder, value ?: "")
+                    }
+                }
+                // Set the updated text back to the run
+                run.setText(text, 0)
             }
-        }
-
-        // Si aucun changement, on ne modifie rien
-        if (!hasChanges) return
-
-        // Supprimer le texte de chaque run existant
-        for (run in runs) {
-            run.setText("", 0)
-        }
-
-        // Réécrire le texte en conservant les styles
-        var currentIndex = 0
-        for (run in runs) {
-            val originalText = runTextMap[runs.indexOf(run)]
-            val length = originalText.length
-
-            if (currentIndex >= modifiedText.length) break
-
-            val newTextPart = modifiedText.substring(currentIndex, minOf(currentIndex + length, modifiedText.length))
-            run.setText(newTextPart, 0)
-            currentIndex += newTextPart.length
-        }
-
-        // Si du texte reste à écrire, on crée un nouveau run avec le dernier style
-        if (currentIndex < modifiedText.length) {
-            val lastRun = runs.last()
-            val newRun = paragraph.createRun()
-            newRun.setText(modifiedText.substring(currentIndex))
-            newRun.isBold = lastRun.isBold
-            newRun.isItalic = lastRun.isItalic
-            newRun.underline = lastRun.underline
-            newRun.fontSize = lastRun.fontSize
-            newRun.fontFamily = lastRun.fontFamily
         }
     }
 
@@ -268,13 +331,14 @@ class CreateBrief(
         }
     }
 
-    fun createRegulatoryTable(
-        document: XWPFDocument,
+    private fun createRegulatoryTable(
+        paragraph: XWPFParagraph,
         regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>,
     ) {
         if (regulatoryAreas.isEmpty()) return
-        val table = document.createTable()
-
+        val document = paragraph.document as XWPFDocument
+        // Create a new table directly at the placeholder position
+        val table = document.insertNewTbl(paragraph.ctp.newCursor())
         val totalRegulatoryAreas = regulatoryAreas.size
 
         // Définition des en-têtes
@@ -323,9 +387,13 @@ class CreateBrief(
                 mergeVerticalCells(table, firstRowIndex, 0, areas.size)
             }
         }
+
+        // Remove the placeholder paragraph
+        val position = document.getPosOfParagraph(paragraph)
+        document.removeBodyElement(position)
     }
 
-    fun mergeCellsHorizontally(
+    private fun mergeCellsHorizontally(
         table: XWPFTable,
         row: Int,
         fromCol: Int,
@@ -358,7 +426,7 @@ class CreateBrief(
     }
 
     // Fusionner les cellules verticalement
-    fun mergeVerticalCells(
+    private fun mergeVerticalCells(
         table: XWPFTable,
         startRow: Int,
         colIndex: Int,
@@ -382,7 +450,7 @@ class CreateBrief(
         }
     }
 
-    fun rgbaStringToHex(rgba: String): String? {
+    private fun rgbaStringToHex(rgba: String): String? {
         val regex = """rgba\((\d+),\s*(\d+),\s*(\d+),\s*[\d.]+\)""".toRegex()
         val matchResult = regex.find(rgba) ?: return null
 
@@ -392,7 +460,7 @@ class CreateBrief(
     }
 
     // Appliquer une couleur à une cellule
-    fun setCellColor(
+    private fun setCellColor(
         cell: XWPFTableCell,
         hexColor: String,
     ) {
@@ -402,7 +470,7 @@ class CreateBrief(
     }
 
     // ✅ Fonction pour définir la largeur d'une cellule
-    fun setCellWidth(
+    private fun setCellWidth(
         cell: XWPFTableCell,
         width: Int,
     ) {
@@ -412,20 +480,62 @@ class CreateBrief(
         cellWidth.type = STTblWidth.DXA
     }
 
-    private fun <T> replacePlaceholderWithTable(
-        document: XWPFDocument,
-        placeholder: String,
-        data: List<T>?, // Liste nullable
-        tableGenerator: (XWPFDocument, List<T>) -> Unit,
-    ) {
-        if (data.isNullOrEmpty()) return // Ne rien faire si la liste est vide ou null
+    fun setTableBorders(table: XWPFTable) {
+        val borderType = STBorder.SINGLE
+        val borderSize = BigInteger.valueOf(4) // Border width in 1/8th points (4 = 0.5 points)
+        val borderColor = "D4E5F4" // Blue color in hex
 
-        for (paragraph in document.paragraphs) {
-            if (paragraph.text.contains(placeholder)) {
-                paragraph.runs.forEach { it.setText("", 0) }
-                tableGenerator(document, data) // On appelle la fonction de génération avec la liste non-nullable
-                break
-            }
-        }
+        val tableBorders = table.ctTbl.tblPr.tblBorders
+
+        tableBorders.top.setVal(borderType)
+        tableBorders.top.setSz(borderSize)
+        tableBorders.top.setColor(borderColor)
+
+        tableBorders.bottom.setVal(borderType)
+        tableBorders.bottom.setSz(borderSize)
+        tableBorders.bottom.setColor(borderColor)
+
+        tableBorders.left.setVal(borderType)
+        tableBorders.left.setSz(borderSize)
+        tableBorders.left.setColor(borderColor)
+
+        tableBorders.right.setVal(borderType)
+        tableBorders.right.setSz(borderSize)
+        tableBorders.right.setColor(borderColor)
+
+        tableBorders.insideH.setVal(borderType)
+        tableBorders.insideH.setSz(borderSize)
+        tableBorders.insideH.setColor(borderColor)
+
+        tableBorders.insideV.setVal(borderType)
+        tableBorders.insideV.setSz(borderSize)
+        tableBorders.insideV.setColor(borderColor)
     }
+
+
+    // Style an individual table cell
+    private fun styleCell(cell: XWPFTableCell, bold: Boolean, fontSize: Int, alignment: ParagraphAlignment) {
+        // Ensure the cell has at least one paragraph
+        val paragraph = if (cell.paragraphs.isEmpty()) {
+            cell.addParagraph()
+        } else {
+            cell.paragraphs[0]
+        }
+
+        // Create a new run for the text inside the paragraph
+        val run = if (paragraph.runs.isEmpty()) {
+            paragraph.createRun()
+        } else {
+            paragraph.runs[0]  // Get the existing run if it exists
+        }
+
+        // Set the text styling (bold, font size)
+        run.isBold = bold
+        run.fontSize = fontSize
+
+        // Align the paragraph
+        paragraph.alignment = alignment
+    }
+
+
 }
