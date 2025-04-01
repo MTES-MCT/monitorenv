@@ -5,15 +5,15 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "3.4.3"
-    id("io.spring.dependency-management") version "1.1.4"
+    id("org.springframework.boot") version "3.4.4"
+    id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
-    kotlin("jvm") version "2.1.10"
-    kotlin("plugin.spring") version "2.1.10"
-    kotlin("plugin.allopen") version "2.1.10"
-    kotlin("plugin.noarg") version "2.1.10"
-    kotlin("plugin.jpa") version "2.1.10"
-    kotlin("plugin.serialization") version "2.1.10"
+    kotlin("jvm") version "2.1.20"
+    kotlin("plugin.spring") version "2.1.20"
+    kotlin("plugin.allopen") version "2.1.20"
+    kotlin("plugin.noarg") version "2.1.20"
+    kotlin("plugin.jpa") version "2.1.20"
+    kotlin("plugin.serialization") version "2.1.20"
 }
 
 repositories {
@@ -54,13 +54,13 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.1.1"
-val testcontainersVersion = "1.20.5"
-val sentryVersion = "8.3.0"
-val flywayVersion = "11.3.4"
+val ktorVersion = "3.1.2"
+val testcontainersVersion = "1.20.6"
+val sentryVersion = "8.6.0"
+val flywayVersion = "11.5.0"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.4.3"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.4.4"))
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -77,14 +77,14 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.hibernate.orm:hibernate-spatial:6.6.9.Final")
+    implementation("org.hibernate.orm:hibernate-spatial:6.6.12.Final")
     implementation("org.hibernate.validator:hibernate-validator:8.0.2.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.9.2")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.9.9")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.3")
@@ -104,7 +104,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
 
     // API Documentation
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
 
     // Devtools
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
