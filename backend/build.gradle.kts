@@ -88,7 +88,7 @@ dependencies {
 
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.3")
-    implementation("org.n52.jackson:jackson-datatype-jts:1.2.10")
+    implementation("org.n52.jackson:jackson-datatype-jts:2.0.0")
 
     // HTTP Clients (Ktor)
     implementation("io.ktor:ktor-client-core:$ktorVersion")
