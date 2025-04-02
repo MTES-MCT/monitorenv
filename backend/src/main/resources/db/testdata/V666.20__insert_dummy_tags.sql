@@ -12,13 +12,13 @@ FROM regulations_cacem r
          INNER JOIN tags t ON t.name = ANY (string_to_array(r.thematique, ', '));
 
 -- INSERTING RANDOM SUBTAGS
-INSERT INTO sub_tags (tags_id, name, ended_at)
-VALUES (1, 'subtag1', '2024-01-01'::timestamp),
-       (1, 'subtag2', null),
-       (5, 'subtag1', '2030-01-01'::timestamp),
-       (5, 'subtag2', null);
+INSERT INTO tags (parent_id, name, ended_at)
+VALUES (1, 'subtagPN1', '2024-01-01'::timestamp),
+       (1, 'subtagPN2', null),
+       (5, 'subtagMouillage1', '2030-01-01'::timestamp),
+       (5, 'subtagMouillage2', null);
 
 -- INSERTING SUBTAGS <-> REGULATIONS FROM RANDOM REGULATIONS
-INSERT INTO sub_tags_regulatory_area (sub_tags_id, regulatory_area_id)
-VALUES (3, 16),
-       (2, 17);
+INSERT INTO tags_regulatory_area (tags_id, regulatory_area_id)
+VALUES (10, 16),
+       (9, 17);

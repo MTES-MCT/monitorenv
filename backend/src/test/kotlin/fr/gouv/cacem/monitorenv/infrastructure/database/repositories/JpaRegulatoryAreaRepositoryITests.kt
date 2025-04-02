@@ -2,7 +2,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagModel.Companion.fromTagEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaPk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -47,7 +49,6 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 observation = "",
                 type = null,
                 tags = listOf(),
-                subTags = listOf(),
                 date = "2020-07-01",
                 dureeValidite = "15 ans",
                 dateFin = "2035-07-01",
@@ -59,11 +60,19 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 aTag(name = "PN"),
             )
         searchedRegulatoryArea.tags =
-            themes.map { TagRegulatoryAreaModel.fromTagEntity(it, regulatoryArea = searchedRegulatoryArea) }
+            themes.map {
+                TagRegulatoryAreaModel(
+                    id = TagRegulatoryAreaPk(tagId = it.id, regulatoryAreaId = 17),
+                    tag = fromTagEntity(it, null),
+                    regulatoryArea = searchedRegulatoryArea,
+                )
+            }
 
         // When
         val requestedRegulatoryArea = jpaRegulatoryAreasRepository.findById(17)
+
         // Then
+        require(requestedRegulatoryArea !== null)
         assertThat(requestedRegulatoryArea.id).isEqualTo(searchedRegulatoryArea.id)
         assertThat(requestedRegulatoryArea.geom).isEqualTo(searchedRegulatoryArea.geom)
         assertThat(requestedRegulatoryArea.entityName).isEqualTo(searchedRegulatoryArea.entityName)
@@ -77,7 +86,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea.observation).isEqualTo(searchedRegulatoryArea.observation)
         assertThat(requestedRegulatoryArea.tags).hasSameSizeAs(searchedRegulatoryArea.tags)
         assertThat(requestedRegulatoryArea.tags[0].name).isEqualTo("PN")
-        assertThat(requestedRegulatoryArea.tags[0].subTags[0].name).isEqualTo("subtag2")
+        assertThat(requestedRegulatoryArea.tags[0].subTags[0].name).isEqualTo("subtagPN2")
         assertThat(requestedRegulatoryArea.tags[1].name).isEqualTo("Mouillage")
         assertThat(requestedRegulatoryArea.tags[1].subTags).isEmpty()
         assertThat(requestedRegulatoryArea.date).isEqualTo(searchedRegulatoryArea.date)

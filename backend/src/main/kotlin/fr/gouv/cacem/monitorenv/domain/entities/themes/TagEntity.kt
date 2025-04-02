@@ -7,5 +7,5 @@ class TagEntity(
     val name: String,
     val startedAt: ZonedDateTime,
     val endedAt: ZonedDateTime?,
-    val subTags: List<SubTagEntity>,
+    val subTags: List<TagEntity>,
 )

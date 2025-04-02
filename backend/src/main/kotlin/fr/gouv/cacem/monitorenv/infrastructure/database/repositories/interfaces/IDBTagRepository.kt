@@ -9,7 +9,7 @@ interface IDBTagRepository : JpaRepository<TagModel, Int> {
     @Query(
         """SELECT DISTINCT tag FROM TagModel tag 
             LEFT JOIN FETCH tag.subTags subTag
-        WHERE tag.startedAt <= :time AND (tag.endedAt IS NULL OR tag.endedAt > :time)
+        WHERE tag.parent IS NULL AND tag.startedAt <= :time AND (tag.endedAt IS NULL OR tag.endedAt > :time)
         AND (subTag IS NULL OR (subTag.startedAt <= :time AND (subTag.endedAt IS NULL OR subTag.endedAt > :time)))
             """,
     )
@@ -20,11 +20,11 @@ interface IDBTagRepository : JpaRepository<TagModel, Int> {
             LEFT JOIN FETCH tag.subTags subTag
             INNER JOIN TagRegulatoryAreaModel tr 
                 ON tr.tag.id = tag.id AND tr.regulatoryArea.id IN (:regulatoryAreaIds)
-            LEFT JOIN SubTagRegulatoryAreaModel str 
-                ON str.subTags.id = subTag.id AND str.regulatoryArea.id IN (:regulatoryAreaIds)
-        WHERE tag.startedAt <= :time AND (tag.endedAt IS NULL OR tag.endedAt > :time)
-        AND (subTag IS NULL OR (subTag.startedAt <= :time AND (subTag.endedAt IS NULL OR subTag.endedAt > :time)))
-        AND (subTag IS NULL OR str.id IS NOT NULL)
+            LEFT JOIN TagRegulatoryAreaModel str 
+                ON str.tag.id = subTag.id AND str.regulatoryArea.id IN (:regulatoryAreaIds)
+        WHERE tag.parent IS NULL AND tag.startedAt <= :time AND (tag.endedAt IS NULL OR tag.endedAt > :time)
+        AND (subTag.id IS NULL OR (subTag.startedAt <= :time AND (subTag.endedAt IS NULL OR subTag.endedAt > :time)))
+        AND (subTag.id IS NULL OR str.id IS NOT NULL)
             """,
     )
     fun findAllWithinByRegulatoryAreaIds(

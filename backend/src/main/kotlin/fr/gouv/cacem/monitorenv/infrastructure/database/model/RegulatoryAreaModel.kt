@@ -45,18 +45,10 @@ data class RegulatoryAreaModel(
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     var tags: List<TagRegulatoryAreaModel>,
-    @OneToMany(
-        mappedBy = "regulatoryArea",
-        fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL],
-    )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
-    var subTags: List<SubTagRegulatoryAreaModel>,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
-    fun toRegulatoryArea() =
+    fun toRegulatoryArea(filteredTags: List<TagModel>?) =
         RegulatoryAreaEntity(
             id = id,
             date = date,
@@ -72,15 +64,11 @@ data class RegulatoryAreaModel(
             refReg = refReg,
             source = source,
             temporalite = temporalite,
-            tags =
-                this.tags.map {
-                    it.toTagEntity(
-                        subTags
-                            .filter { subTags -> subTags.subTags.tag === it.tag }
-                            .map { subTag -> subTag.toSubTagEntity() },
-                    )
-                },
+            tags = filteredTags?.map { it.toTagEntity() } ?: this.tags.map { it.toTagEntity() },
             type = type,
             url = url,
         )
+
+    override fun toString(): String =
+        "RegulatoryAreaModel(id=$id, date=$date, dateFin=$dateFin, dureeValidite=$dureeValidite, editeur=$editeur, edition=$edition, entityName=$entityName, facade=$facade, geom=$geom, layerName=$layerName, observation=$observation, refReg=$refReg, source=$source, temporalite=$temporalite, type=$type, url=$url)"
 }
