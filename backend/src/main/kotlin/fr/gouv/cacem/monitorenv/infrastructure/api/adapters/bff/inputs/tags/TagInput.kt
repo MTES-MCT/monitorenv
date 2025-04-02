@@ -8,7 +8,7 @@ data class TagInput(
     val name: String,
     val startedAt: ZonedDateTime,
     val endedAt: ZonedDateTime?,
-    val subTags: List<SubTagInput>,
+    val subTags: List<TagInput>,
 ) {
     fun toTagEntity(): TagEntity =
         TagEntity(
@@ -16,6 +16,6 @@ data class TagInput(
             name = name,
             startedAt = startedAt,
             endedAt = endedAt,
-            subTags = subTags.map { it.toSubTagEntity() },
+            subTags = subTags.map { it.toTagEntity() },
         )
 }

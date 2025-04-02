@@ -8,8 +8,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.SubTagVigilanceAreaModel.Companion.fromSubTagEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel.Companion.fromTagEntity
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel.Companion.toTagEntities
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -109,13 +109,6 @@ data class VigilanceAreaModel(
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     var tags: List<TagVigilanceAreaModel>,
-    @OneToMany(
-        mappedBy = "vigilanceArea",
-        fetch = FetchType.LAZY,
-    )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
-    var subTags: List<SubTagVigilanceAreaModel>,
 ) {
     companion object {
         fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel {
@@ -147,19 +140,8 @@ data class VigilanceAreaModel(
                     createdAt = vigilanceArea.createdAt,
                     updatedAt = vigilanceArea.updatedAt,
                     tags = listOf(),
-                    subTags = listOf(),
                 )
             vigilanceAreaModel.tags = vigilanceArea.tags.map { fromTagEntity(it, vigilanceAreaModel) }
-            vigilanceAreaModel.subTags =
-                vigilanceArea.tags.flatMap { tag ->
-                    tag.subTags.map { subTag ->
-                        fromSubTagEntity(
-                            subTag,
-                            vigilanceAreaModel,
-                            tag,
-                        )
-                    }
-                }
 
             return vigilanceAreaModel
         }
@@ -193,14 +175,7 @@ data class VigilanceAreaModel(
             visibility = visibility,
             createdAt = createdAt,
             updatedAt = updatedAt,
-            tags =
-                this.tags.map {
-                    it.toTagEntity(
-                        subTags
-                            .filter { subTags -> subTags.subTag.tag === it.tag }
-                            .map { subTag -> subTag.toSubTagEntity() },
-                    )
-                },
+            tags = toTagEntities(tags),
         )
 
     @PrePersist

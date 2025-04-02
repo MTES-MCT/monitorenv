@@ -27,7 +27,17 @@ data class TagRegulatoryAreaModel(
     @JsonBackReference
     val regulatoryArea: RegulatoryAreaModel,
 ) {
-    fun toTagEntity(): TagEntity = tag.toTagEntity()
+    companion object {
+        fun toTagEntities(tags: List<TagRegulatoryAreaModel>): List<TagEntity> {
+            val parents = tags.map { it.tag }.filter { it.parent === null }
+
+            return parents.map { parent ->
+                val subTags = tags.filter { it.tag.parent?.id == parent.id }.map { it.tag }
+                parent.subTags = subTags
+                return@map parent.toTagEntity()
+            }
+        }
+    }
 }
 
 @Embeddable
