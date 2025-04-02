@@ -9,14 +9,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aSubTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetTrigrams
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.SubTagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
@@ -124,7 +122,7 @@ class VigilanceAreasITests {
                         endedAt = null,
                         subTags =
                             listOf(
-                                aSubTag(
+                                aTag(
                                     id = 1,
                                     name = "subTag1",
                                     startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
@@ -298,11 +296,12 @@ class VigilanceAreasITests {
                             endedAt = null,
                             subTags =
                                 listOf(
-                                    SubTagInput(
+                                    TagInput(
                                         id = 1,
                                         name = "subTag1",
                                         startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
                                         endedAt = null,
+                                        subTags = listOf(),
                                     ),
                                 ),
                         ),
