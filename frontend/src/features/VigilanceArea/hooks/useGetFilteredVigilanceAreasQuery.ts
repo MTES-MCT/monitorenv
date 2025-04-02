@@ -8,7 +8,7 @@ import { TWO_MINUTES } from '../../../constants'
 import { isVigilanceAreaPartOfCreatedBy } from '../useCases/filters/isVigilanceAreaPartOfCreatedBy'
 import { isVigilanceAreaPartOfSeaFront } from '../useCases/filters/isVigilanceAreaPartOfSeaFront'
 import { isVigilanceAreaPartOfStatus } from '../useCases/filters/isVigilanceAreaPartOfStatus'
-import { isVigilanceAreaPartOfTheme } from '../useCases/filters/isVigilanceAreaPartOfTheme'
+import { isVigilanceAreaPartOfTag } from '../useCases/filters/isVigilanceAreaPartOfTheme'
 
 import type { VigilanceArea } from '../types'
 
@@ -35,7 +35,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
         isVigilanceAreaPartOfCreatedBy(vigilanceArea, createdBy) &&
         isVigilanceAreaPartOfSeaFront(vigilanceArea, seaFronts) &&
         isVigilanceAreaPartOfStatus(vigilanceArea, status) &&
-        isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryTags)
+        isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags)
     )
 
     const vigilanceAreasByPeriod = getFilterVigilanceAreasPerPeriod(
