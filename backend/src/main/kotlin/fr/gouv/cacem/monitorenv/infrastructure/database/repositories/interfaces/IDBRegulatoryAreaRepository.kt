@@ -16,4 +16,17 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
 
     fun findAllByOrderByLayerName(): List<RegulatoryAreaModel>
+
+//    @Query(
+//        value = """
+//        SELECT DISTINCT r FROM RegulatoryAreaModel r
+//            JOIN r.tags tagReg
+//            JOIN tagReg.tag tag
+//            LEFT JOIN tag.subTags subTag
+//        WHERE r.id = :id AND
+// subTag.id IN (SELECT subTagReg.tag.id FROM TagRegulatoryAreaModel subTagReg
+//                WHERE subTagReg.regulatoryArea.id = :id)
+//    """
+//    )
+//    override fun findById(id: Int): Optional<RegulatoryAreaModel>
 }

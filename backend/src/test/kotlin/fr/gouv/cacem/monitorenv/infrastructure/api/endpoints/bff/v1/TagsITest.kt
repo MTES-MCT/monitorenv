@@ -5,7 +5,6 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.GetTags
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.GetTagsByRegulatoryAreas
-import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aSubTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -49,9 +48,9 @@ class TagsITest {
                     name = "tag1",
                     startedAt = ZonedDateTime.parse("2025-01-01T12:00:00Z"),
                     endedAt = ZonedDateTime.parse("2025-12-31T12:00:00Z"),
-                    subThemes =
+                    subTags =
                         listOf(
-                            aSubTag(
+                            aTag(
                                 id = 2,
                                 name = "subTag1",
                                 startedAt = ZonedDateTime.parse("2024-01-01T12:00:00Z"),
@@ -87,9 +86,9 @@ class TagsITest {
                     name = "tag1",
                     startedAt = ZonedDateTime.parse("2025-01-01T12:00:00Z"),
                     endedAt = ZonedDateTime.parse("2025-12-31T12:00:00Z"),
-                    subThemes =
+                    subTags =
                         listOf(
-                            aSubTag(
+                            aTag(
                                 id = 2,
                                 name = "subTag1",
                                 startedAt = ZonedDateTime.parse("2024-01-01T12:00:00Z"),
