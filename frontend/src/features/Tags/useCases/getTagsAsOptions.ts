@@ -1,14 +1,14 @@
 import type { TagAPI } from 'domain/entities/tags'
 
 export const getTagsAsOptions = (
-  themes: TagAPI[]
+  tags: TagAPI[]
 ): { children: { label: string; value: string }[]; label: string; value: string }[] =>
-  themes
-    .map(theme => ({
-      children: theme.subTags
-        .map(subTheme => ({ label: subTheme.name, value: subTheme.name }))
+  tags
+    .map(tag => ({
+      children: tag.subTags
+        .map(({ name }) => ({ label: name, value: name }))
         .sort((a, b) => a.label.localeCompare(b.label)),
-      label: theme.name,
-      value: theme.name
+      label: tag.name,
+      value: tag.name
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
