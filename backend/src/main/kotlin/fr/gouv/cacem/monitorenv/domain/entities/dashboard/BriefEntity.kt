@@ -5,4 +5,5 @@ data class BriefEntity(
     val regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>? = listOf(),
     val image: BriefImageEntity? = null,
     val amps: List<EditableBriefAmpEntity>? = listOf(),
+    val vigilanceAreas: List<EditableBriefVigilanceAreaEntity>? = listOf(),
 )

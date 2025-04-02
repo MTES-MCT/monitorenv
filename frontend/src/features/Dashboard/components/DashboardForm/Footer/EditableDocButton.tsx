@@ -1,9 +1,12 @@
 import { getAmpsByIds } from '@api/ampsAPI'
 import { dashboardsAPI } from '@api/dashboardsAPI'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
+import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
 import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
+import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Button } from '@mtes-mct/monitor-ui'
@@ -27,7 +30,6 @@ export function EditableDocButton({ dashboard }) {
   }))
 
   const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
-
   const formattedAmps = amps.map(amp => ({
     color: getAMPColorWithAlpha(amp.type, amp.name),
     designation: amp.designation,
@@ -37,6 +39,22 @@ export function EditableDocButton({ dashboard }) {
     type: amp.type,
     url: amp.urlLegicem
   }))
+
+  const vigilanceAreas = useAppSelector(state => getVigilanceAreasByIds(state, dashboard.vigilanceAreaIds))
+  const formattedVigilanceAreas = vigilanceAreas.map(vigilanceArea => ({
+    color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
+    comments: vigilanceArea.comments,
+    endDatePeriod: vigilanceArea.endDatePeriod,
+    endingOccurenceDate: endingOccurenceText(vigilanceArea.endingCondition, vigilanceArea.computedEndDate),
+    frequency: frequencyText(vigilanceArea.frequency),
+    id: vigilanceArea.id,
+    links: vigilanceArea.links,
+    name: vigilanceArea.name,
+    startDatePeriod: vigilanceArea.startDatePeriod,
+    themes: vigilanceArea.themes,
+    visibility: vigilanceArea.visibility
+  }))
+
   // console.log('regulatoryAreas', formattedRegulatoryAreas)
   const exportBrief = async () => {
     const images = await getImages()
@@ -66,6 +84,19 @@ export function EditableDocButton({ dashboard }) {
       }
     })
 
+    const vigilanceAreasWithImages = formattedVigilanceAreas.map(vigilanceArea => {
+      const image = images?.find(
+        img =>
+          String(img.featureId)?.includes('DASHBOARD_VIGILANCE_AREAS') &&
+          String(img.featureId).split(':')[1] === String(vigilanceArea.id)
+      )
+
+      return {
+        ...vigilanceArea,
+        image
+      }
+    })
+
     const wholeImage = images?.find(img => String(img.featureId)?.includes('WHOLE_DASHBOARD'))
 
     const { data } = await dispatch(
@@ -73,7 +104,8 @@ export function EditableDocButton({ dashboard }) {
         amps: ampsWithImages,
         dashboard,
         image: wholeImage,
-        regulatoryAreas: regulatoryAreasWithImages
+        regulatoryAreas: regulatoryAreasWithImages,
+        vigilanceAreas: vigilanceAreasWithImages
       })
     )
 
