@@ -105,7 +105,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
       return 'Chargement du brief'
     }
 
-    return 'Générer un brief'
+    return 'Télécharger le brief'
   }
 
   return (
