@@ -126,6 +126,16 @@ export namespace Dashboard {
   }
 
   export type BriefExport = {
+    amps: {
+      color: string
+      designation: string
+      id: number
+      image?: ExportImageType
+      name: string
+      refReg?: string
+      type?: string
+      url?: string
+    }[]
     dashboard: Dashboard
     image?: ExportImageType
     regulatoryAreas: {
