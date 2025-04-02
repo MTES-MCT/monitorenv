@@ -1,5 +1,5 @@
 import { ControlInfractionsTags } from '@features/Mission/components/ControlInfractionsTags'
-import { Accent, getLocalizedDayjs, Icon, IconButton, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Button, getLocalizedDayjs, Icon, IconButton, pluralize, Size, THEME } from '@mtes-mct/monitor-ui'
 import { TargetTypeEnum, TargetTypeLabels } from 'domain/entities/targetType'
 import styled from 'styled-components'
 
@@ -12,7 +12,8 @@ export function ControlCard({
   controlThemes,
   infractions,
   isSelected = false,
-  onClose
+  onClose,
+  onConsultMission
 }: {
   actionNumberOfControls: number
   actionStartDateTimeUtc: string
@@ -21,6 +22,7 @@ export function ControlCard({
   infractions: Infraction[]
   isSelected?: boolean
   onClose?: () => void
+  onConsultMission?: () => void
 }) {
   const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
   const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
@@ -61,6 +63,11 @@ export function ControlCard({
         <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
       )}
       <StyledGrayText>{actionStartDateTimeUtc ? actionDate : 'Date à renseigner'}</StyledGrayText>
+      {isSelected && (
+        <ConsultButton Icon={Icon.Display} isFullWidth={false} onClick={onConsultMission} size={Size.SMALL}>
+          Consulter
+        </ConsultButton>
+      )}
     </StyledControlCardHeader>
   )
 }
@@ -113,4 +120,7 @@ const Bullet = styled.div<{ $color: string }>`
 
 const StyledGrayText = styled.p`
   color: ${p => p.theme.color.slateGray};
+`
+const ConsultButton = styled(Button)`
+  align-self: start;
 `
