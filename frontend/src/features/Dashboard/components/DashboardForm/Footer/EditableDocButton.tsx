@@ -1,6 +1,8 @@
+import { getAmpsByIds } from '@api/ampsAPI'
 import { dashboardsAPI } from '@api/dashboardsAPI'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
+import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -12,7 +14,6 @@ export function EditableDocButton({ dashboard }) {
 
   const { getImages } = useExportImages()
   const regulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, dashboard.regulatoryAreaIds))
-
   const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => ({
     color: getRegulatoryEnvColorWithAlpha(regulatoryArea.thematique, regulatoryArea.entityName),
     entityName: getTitle(regulatoryArea.entityName),
@@ -25,6 +26,17 @@ export function EditableDocButton({ dashboard }) {
     url: regulatoryArea.url
   }))
 
+  const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
+
+  const formattedAmps = amps.map(amp => ({
+    color: getAMPColorWithAlpha(amp.type, amp.name),
+    designation: amp.designation,
+    id: amp.id,
+    name: getTitle(amp.name),
+    refReg: amp.refReg,
+    type: amp.type,
+    url: amp.urlLegicem
+  }))
   // console.log('regulatoryAreas', formattedRegulatoryAreas)
   const exportBrief = async () => {
     const images = await getImages()
@@ -42,10 +54,23 @@ export function EditableDocButton({ dashboard }) {
       }
     })
 
+    const ampsWithImages = formattedAmps.map(amp => {
+      const image = images?.find(
+        img =>
+          String(img.featureId)?.includes('DASHBOARD_AMP') && String(img.featureId).split(':')[1] === String(amp.id)
+      )
+
+      return {
+        ...amp,
+        image
+      }
+    })
+
     const wholeImage = images?.find(img => String(img.featureId)?.includes('WHOLE_DASHBOARD'))
 
     const { data } = await dispatch(
       dashboardsAPI.endpoints.exportBrief.initiate({
+        amps: ampsWithImages,
         dashboard,
         image: wholeImage,
         regulatoryAreas: regulatoryAreasWithImages
