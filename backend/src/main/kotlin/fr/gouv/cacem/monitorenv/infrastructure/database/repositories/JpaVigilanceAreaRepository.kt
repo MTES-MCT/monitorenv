@@ -2,11 +2,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.SubTagVigilanceAreaPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaImageModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSubTagVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaRepository
 import org.locationtech.jts.geom.Geometry
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional
 class JpaVigilanceAreaRepository(
     private val dbVigilanceAreaRepository: IDBVigilanceAreaRepository,
     private val dbTagVigilanceAreaRepository: IDBTagVigilanceAreaRepository,
-    private val dbSubTagVigilanceAreaRepository: IDBSubTagVigilanceAreaRepository,
 ) : IVigilanceAreaRepository {
     @Transactional
     override fun findById(id: Int): VigilanceAreaEntity? =
@@ -49,19 +46,8 @@ class JpaVigilanceAreaRepository(
         vigilanceAreaModel.images.addAll(vigilanceAreaImagesModel ?: emptyList())
 
         saveTags(vigilanceAreaModel)
-        saveSubTags(vigilanceAreaModel)
 
         return dbVigilanceAreaRepository.saveAndFlush(vigilanceAreaModel).toVigilanceAreaEntity()
-    }
-
-    private fun saveSubTags(vigilanceAreaModel: VigilanceAreaModel) {
-        vigilanceAreaModel.id?.let {
-            dbSubTagVigilanceAreaRepository.deleteAllByVigilanceAreaId(it)
-        }
-        vigilanceAreaModel.subTags.forEach { vigilanceAreaSubTag ->
-            vigilanceAreaSubTag.id = SubTagVigilanceAreaPk(vigilanceAreaSubTag.subTag.id, vigilanceAreaModel.id)
-        }
-        dbSubTagVigilanceAreaRepository.saveAllAndFlush(vigilanceAreaModel.subTags)
     }
 
     private fun saveTags(vigilanceAreaModel: VigilanceAreaModel) {
