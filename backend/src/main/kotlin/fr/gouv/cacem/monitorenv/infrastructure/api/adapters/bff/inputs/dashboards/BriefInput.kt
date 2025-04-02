@@ -7,6 +7,7 @@ class BriefInput(
     val image: BriefImageEntity? = null,
     val regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>? = listOf(),
     val amps: List<EditableBriefAmpEntity>? = listOf(),
+    val vigilanceAreas: List<EditableBriefVigilanceAreaEntity>? = listOf(),
 ) {
     fun toBriefEntity(): BriefEntity =
         BriefEntity(
@@ -14,5 +15,6 @@ class BriefInput(
             image = image,
             regulatoryAreas = regulatoryAreas,
             amps = amps,
+            vigilanceAreas = vigilanceAreas,
         )
 }

@@ -125,7 +125,7 @@ export namespace Dashboard {
     [Layer.DASHBOARD_AMP]: 'DASHBOARD_AMP'
   }
 
-  export type BriefExport = {
+  export type EditableBriefExport = {
     amps: {
       color: string
       designation: string
@@ -149,6 +149,20 @@ export namespace Dashboard {
       thematique: string
       type: string
       url: string
+    }[]
+    vigilanceAreas: {
+      color: string
+      comments?: string
+      endDatePeriod?: string
+      endingOccurenceDate: string
+      frequency: string
+      id: number
+      image?: ExportImageType
+      links?: Link[]
+      name: string
+      startDatePeriod?: string
+      themes?: string[]
+      visibility?: string
     }[]
   }
 

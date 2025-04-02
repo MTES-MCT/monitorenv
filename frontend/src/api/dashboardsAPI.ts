@@ -22,7 +22,7 @@ export const dashboardsAPI = monitorenvPrivateApi.injectEndpoints({
       }),
       transformErrorResponse: response => new FrontendApiError(DELETE_DASHBOARD_ERROR_MESSAGE, response)
     }),
-    exportBrief: build.mutation<Dashboard.BriefFileExport, Dashboard.BriefExport>({
+    exportBrief: build.mutation<Dashboard.BriefFileExport, Dashboard.EditableBriefExport>({
       query: brief => ({
         body: brief,
         method: 'POST',
