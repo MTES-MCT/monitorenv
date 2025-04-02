@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import fr.gouv.cacem.monitorenv.domain.entities.themes.SubTagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
@@ -29,8 +28,6 @@ data class TagVigilanceAreaModel(
     @JsonBackReference
     val vigilanceArea: VigilanceAreaModel,
 ) {
-    fun toTagEntity(subTags: List<SubTagEntity>): TagEntity = tag.toTagEntity(subTags)
-
     companion object {
         fun fromTagEntity(
             tag: TagEntity,
@@ -38,9 +35,19 @@ data class TagVigilanceAreaModel(
         ): TagVigilanceAreaModel =
             TagVigilanceAreaModel(
                 id = TagVigilanceAreaPk(tag.id, vigilanceAreaModel.id),
-                tag = TagModel.fromTagEntity(tag),
+                tag = TagModel.fromTagEntity(tag, null),
                 vigilanceArea = vigilanceAreaModel,
             )
+
+        fun toTagEntities(tags: List<TagVigilanceAreaModel>): List<TagEntity> {
+            val parents = tags.map { it.tag }.filter { it.parent === null }
+
+            return parents.map { parent ->
+                val subTags = tags.filter { it.tag.parent?.id == parent.id }.map { it.tag }
+                parent.subTags = subTags
+                return@map parent.toTagEntity()
+            }
+        }
     }
 }
 
