@@ -47,7 +47,7 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
     `
     const mailtoLink = `mailto:${formattedControlUnitMails}?subject=${encodeURIComponent(
       subject
-    )}&body=${encodeURIComponent(body)}&file=${dashboard.name}.pdf`
+    )}&body=${encodeURIComponent(body)}`
 
     return mailtoLink
   }
@@ -61,7 +61,13 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
   }
 
   return (
-    <MailButton $disabled={isLoadingBrief || loadingImages} href={mailContent()} onClick={handleDownload}>
+    <MailButton
+      $disabled={isLoadingBrief || loadingImages}
+      href={mailContent()}
+      onClick={handleDownload}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
       {isLoadingBrief || loadingImages ? <Icon.Reset /> : <Icon.Send />}
       <span>Partager le brief</span>
     </MailButton>
