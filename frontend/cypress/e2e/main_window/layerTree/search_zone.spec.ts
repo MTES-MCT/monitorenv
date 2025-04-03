@@ -20,7 +20,7 @@ context('LayerTree > Search zone', () => {
     cy.getDataCy('amp-results-list-button').contains('7 résultats')
     cy.get('#isAmpSearchResultsVisible').should('be.checked')
 
-    cy.getDataCy('vigilance-area-results-list-button').contains('3 résultats')
+    cy.getDataCy('vigilance-area-results-list-button').contains('2 résultats')
     cy.get('#isVigilanceAreaSearchResultsVisible').should('be.checked')
 
     // reset search by zone
@@ -33,7 +33,7 @@ context('LayerTree > Search zone', () => {
     cy.getDataCy('amp-results-list-button').contains('20 résultats')
     cy.get('#isAmpSearchResultsVisible').should('not.be.checked')
 
-    cy.getDataCy('vigilance-area-results-list-button').contains('5 résultats')
+    cy.getDataCy('vigilance-area-results-list-button').contains('4 résultats')
     cy.get('#isVigilanceAreaSearchResultsVisible').should('not.be.checked')
   })
 })
