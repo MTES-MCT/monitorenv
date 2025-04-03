@@ -6,7 +6,7 @@ import { getDashboardById } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { extractFeatures } from '@features/Dashboard/utils'
 import { CENTERED_ON_FRANCE } from '@features/map/BaseMap'
-import { measurementStyle, measurementStyleWithCenter } from '@features/map/layers/styles/measurement.style'
+import { measurementStyle } from '@features/map/layers/styles/measurement.style'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -227,7 +227,7 @@ export function useExportImages() {
     const features = extractFeatures(activeDashboard, regulatoryLayers, ampLayers, vigilanceAreas)
     const dashboardFeature = dashboard?.dashboard.geom ? getFeature(dashboard.dashboard.geom) : undefined
     if (dashboardFeature) {
-      dashboardFeature.setStyle([measurementStyle, measurementStyleWithCenter])
+      dashboardFeature.setStyle([measurementStyle])
     }
 
     const generateImages = async () => {
