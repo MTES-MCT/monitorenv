@@ -1,6 +1,7 @@
 import { getControlUnitsByIds } from '@api/controlUnitsAPI'
+import { useGenerateBrief } from '@features/Dashboard/hooks/useGenerateBrief'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Button, Icon } from '@mtes-mct/monitor-ui'
+import { Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import type { Dashboard } from '@features/Dashboard/types'
@@ -16,6 +17,8 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
     )
     .flat()
     .join(', ')
+
+  const { downloadPdf, generateBrief, isLoadingBrief, loadingImages } = useGenerateBrief(dashboard)
 
   const mailContent = () => {
     const subject = `Briefing CACEM n°${dashboard.id} - ${formattedControlUnitNames}`
@@ -49,21 +52,30 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
     return mailtoLink
   }
 
+  const handleDownload = async () => {
+    if (loadingImages || isLoadingBrief) {
+      return
+    }
+    const brief = await generateBrief()
+    downloadPdf(brief)
+  }
+
   return (
-    <MailButton href={mailContent()}>
-      <Icon.Send />
+    <MailButton $disabled={isLoadingBrief || loadingImages} href={mailContent()} onClick={handleDownload}>
+      {isLoadingBrief || loadingImages ? <Icon.Reset /> : <Icon.Send />}
       <span>Partager le brief</span>
     </MailButton>
   )
 }
 
-const MailButton = styled.a`
+const MailButton = styled.a<{ $disabled: boolean }>`
   align-items: center;
   background-color: ${p => p.theme.color.charcoal};
   border: 1px solid ${p => p.theme.color.charcoal};
   color: ${p => p.theme.color.gainsboro};
   display: flex;
   padding: 6px 12px;
+  text-decoration: none;
   > span {
     &:first-child {
       margin-right: 5px;
@@ -79,30 +91,30 @@ const MailButton = styled.a`
   }
 
   &:active,
-  &._active {
-    background-color: ${p => p.theme.color.blueGray};
-    border: 1px solid ${p => p.theme.color.blueGray};
+  &._active,
+  &:focus,
+  &._focus {
+    background-color: ${p => p.theme.color.blueYonder};
+    border: 1px solid ${p => p.theme.color.blueYonder};
     color: ${p => p.theme.color.white};
+    text-decoration: none;
   }
 
-  &:disabled,
-  &._disabled {
-    background-color: ${p => p.theme.color.lightGray};
-    border: 1px solid ${p => p.theme.color.lightGray};
-    color: ${p => p.theme.color.cultured};
-  }
-`
-
-export const StyledLinkButton = styled(Button)<{ disabled: boolean }>`
   ${p =>
-    p.disabled &&
+    p.$disabled &&
     `@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-> .Element-IconBox > svg {
-  animation: spin 2s linear infinite;
-  transform-origin: center;
-}`}
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    background-color: ${p.theme.color.lightGray};
+    border: 1px solid ${p.theme.color.lightGray};
+    color: ${p.theme.color.cultured};
+    pointer-events: none;
+    text-decoration: none;
+
+    > .Element-IconBox > svg {
+    animation: spin 2s linear infinite;
+    transform-origin: center;
+    }`}
 `
