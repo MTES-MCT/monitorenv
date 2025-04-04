@@ -82,7 +82,7 @@ class CreateOrUpdateControlUnitContactUTests {
         // Then
         assertThat(result).isEqualTo(repositoryOutputMock)
 
-        BDDMockito.verify(controlUnitRepository).findById(repositoryOutputMock.controlUnitId)
+        BDDMockito.verify(controlUnitRepository).findFullControlUnitById(repositoryOutputMock.controlUnitId)
         BDDMockito.verify(controlUnitContactRepository).save(newControlUnitContact)
         assertThat(log.out).contains("Attempt to CREATE or UPDATE control unit contact ${newControlUnitContact.id}")
         assertThat(log.out).contains("Control unit contact ${result.id} created or updated")
@@ -260,7 +260,7 @@ class CreateOrUpdateControlUnitContactUTests {
         // Then
         assertThat(result).isEqualTo(updatedControlUnitContact)
 
-        BDDMockito.verify(controlUnitRepository).findById(updatedControlUnitContact.controlUnitId)
+        BDDMockito.verify(controlUnitRepository).findFullControlUnitById(updatedControlUnitContact.controlUnitId)
         BDDMockito.verify(controlUnitContactRepository).save(secondRepositoryExpectedInput)
         BDDMockito.verify(controlUnitContactRepository).save(thirdRepositoryExpectedInput)
         BDDMockito.verify(controlUnitContactRepository).save(updatedControlUnitContact)
@@ -333,7 +333,7 @@ class CreateOrUpdateControlUnitContactUTests {
             .willReturn(updatedControlUnitContact)
         // Then
         assertThat(result).isEqualTo(newControlUnitContact.copy(id = 2))
-        BDDMockito.verify(controlUnitRepository).findById(newControlUnitContact.controlUnitId)
+        BDDMockito.verify(controlUnitRepository).findFullControlUnitById(newControlUnitContact.controlUnitId)
         BDDMockito.verify(controlUnitContactRepository).save(updatedControlUnitContact)
     }
 
