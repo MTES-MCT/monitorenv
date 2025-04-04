@@ -126,46 +126,51 @@ export namespace Dashboard {
   }
 
   export type EditableBriefExport = {
-    amps: {
-      color: string
-      designation: string
-      id: number
-      image?: ExportImageType
-      name: string
-      refReg?: string
-      type?: string
-      url?: string
-    }[]
+    amps: AmpForEditableBrief[]
     dashboard: Dashboard
     image?: ExportImageType
-    regulatoryAreas: {
-      color: string
-      entityName: string
-      facade: string
-      id: number
-      image?: ExportImageType
-      layerName: string
-      refReg: string
-      thematique: string
-      type: string
-      url: string
-    }[]
-    vigilanceAreas: {
-      color: string
-      comments?: string
-      endDatePeriod?: string
-      endingOccurenceDate: string
-      frequency: string
-      id: number
-      image?: ExportImageType
-      linkedAMPs?: string
-      linkedRegulatoryAreas?: string
-      links?: Link[]
-      name: string
-      startDatePeriod?: string
-      themes?: string
-      visibility?: string
-    }[]
+    regulatoryAreas: RegulatoryAreaForEditableBrief[]
+    vigilanceAreas: VigilanceAreaForEditableBrief[]
+  }
+
+  type VigilanceAreaForEditableBrief = {
+    color: string
+    comments?: string
+    endDatePeriod?: string
+    endingOccurenceDate: string
+    frequency: string
+    id: number
+    image?: ExportImageType
+    linkedAMPs?: string
+    linkedRegulatoryAreas?: string
+    links?: Link[]
+    name: string
+    startDatePeriod?: string
+    themes?: string
+    visibility?: string
+  }
+
+  type AmpForEditableBrief = {
+    color: string
+    designation: string
+    id: number
+    image?: ExportImageType
+    name: string
+    refReg?: string
+    type?: string
+    url?: string
+  }
+  type RegulatoryAreaForEditableBrief = {
+    color: string
+    entityName: string
+    facade: string
+    id: number
+    image?: ExportImageType
+    layerName: string
+    refReg: string
+    thematique: string
+    type: string
+    url: string
   }
 
   export type BriefFileExport = {

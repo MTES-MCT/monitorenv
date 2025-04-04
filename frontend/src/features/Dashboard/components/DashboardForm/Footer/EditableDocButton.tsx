@@ -5,12 +5,13 @@ import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
 import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Button } from '@mtes-mct/monitor-ui'
+import { Button, Level } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useMemo } from 'react'
 
@@ -133,31 +134,33 @@ export function EditableDocButton({ dashboard }) {
     if (data) {
       try {
         const content = data?.fileContent
-        // Decode base64 string
         const decodedContent = atob(content)
 
-        // Convert the decoded content to a Uint8Array
         const uint8Array = new Uint8Array(decodedContent.length)
         for (let i = 0; i < decodedContent.length; i += 1) {
           uint8Array[i] = decodedContent.charCodeAt(i)
         }
 
-        // Create a Blob from the Uint8Array
         const blob = new Blob([uint8Array], { type: 'application/vnd.oasis.opendocument.text' })
 
-        // Create a temporary link element
         const link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)
         link.download = data.fileName
 
-        // Append the link to the document body and trigger a click event
         document.body.appendChild(link)
         link.click()
 
-        // Remove the link element from the document body
         document.body.removeChild(link)
       } catch (error) {
-        // console.log('handleDownload error: ', error)
+        dispatch(
+          addSideWindowBanner({
+            children: 'Une erreur est survenue lors de la génération du fichier. Veuillez réessayer.',
+            isClosable: true,
+            isFixed: true,
+            level: Level.ERROR,
+            withAutomaticClosing: true
+          })
+        )
       }
     }
   }
