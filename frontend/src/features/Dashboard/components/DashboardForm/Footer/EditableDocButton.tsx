@@ -6,16 +6,30 @@ import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Button } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
+import { useMemo } from 'react'
 
 export function EditableDocButton({ dashboard }) {
   const dispatch = useAppDispatch()
 
   const { getImages } = useExportImages()
+  const vigilanceAreas = useAppSelector(state => getVigilanceAreasByIds(state, dashboard.vigilanceAreaIds))
+  const [allLinkedAMPIds, allLinkedRegulatoryAreaIds] = useMemo(
+    () => [
+      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
+      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
+    ],
+    [vigilanceAreas]
+  )
+  const allLinkedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, allLinkedRegulatoryAreaIds))
+
+  const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
+
   const regulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, dashboard.regulatoryAreaIds))
   const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => ({
     color: getRegulatoryEnvColorWithAlpha(regulatoryArea.thematique, regulatoryArea.entityName),
@@ -40,7 +54,6 @@ export function EditableDocButton({ dashboard }) {
     url: amp.urlLegicem
   }))
 
-  const vigilanceAreas = useAppSelector(state => getVigilanceAreasByIds(state, dashboard.vigilanceAreaIds))
   const formattedVigilanceAreas = vigilanceAreas.map(vigilanceArea => ({
     color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
     comments: vigilanceArea.comments,
@@ -48,11 +61,13 @@ export function EditableDocButton({ dashboard }) {
     endingOccurenceDate: endingOccurenceText(vigilanceArea.endingCondition, vigilanceArea.computedEndDate),
     frequency: frequencyText(vigilanceArea.frequency),
     id: vigilanceArea.id,
+    linkedAMPs: vigilanceArea.linkedAMPs,
+    linkedRegulatoryAreas: vigilanceArea.linkedRegulatoryAreas,
     links: vigilanceArea.links,
     name: vigilanceArea.name,
     startDatePeriod: vigilanceArea.startDatePeriod,
-    themes: vigilanceArea.themes,
-    visibility: vigilanceArea.visibility
+    themes: vigilanceArea.themes?.join(', '),
+    visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
   }))
 
   // console.log('regulatoryAreas', formattedRegulatoryAreas)
@@ -84,7 +99,11 @@ export function EditableDocButton({ dashboard }) {
       }
     })
 
-    const vigilanceAreasWithImages = formattedVigilanceAreas.map(vigilanceArea => {
+    const vigilanceAreasWithImagesAndLinkedLayers = formattedVigilanceAreas.map(vigilanceArea => {
+      const filteredAmps = allLinkedAMPs.filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
+      const filteredRegulatoryAreas = allLinkedRegulatoryAreas.filter(regulatoryArea =>
+        vigilanceArea.linkedRegulatoryAreas?.includes(regulatoryArea.id)
+      )
       const image = images?.find(
         img =>
           String(img.featureId)?.includes('DASHBOARD_VIGILANCE_AREAS') &&
@@ -93,7 +112,9 @@ export function EditableDocButton({ dashboard }) {
 
       return {
         ...vigilanceArea,
-        image
+        image,
+        linkedAMPs: filteredAmps.map(amp => amp.name).join(', '),
+        linkedRegulatoryAreas: filteredRegulatoryAreas.map(regulatoryArea => regulatoryArea.entityName).join(', ')
       }
     })
 
@@ -105,7 +126,7 @@ export function EditableDocButton({ dashboard }) {
         dashboard,
         image: wholeImage,
         regulatoryAreas: regulatoryAreasWithImages,
-        vigilanceAreas: vigilanceAreasWithImages
+        vigilanceAreas: vigilanceAreasWithImagesAndLinkedLayers
       })
     )
 

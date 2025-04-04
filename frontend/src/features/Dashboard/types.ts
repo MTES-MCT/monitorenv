@@ -158,10 +158,12 @@ export namespace Dashboard {
       frequency: string
       id: number
       image?: ExportImageType
+      linkedAMPs?: string
+      linkedRegulatoryAreas?: string
       links?: Link[]
       name: string
       startDatePeriod?: string
-      themes?: string[]
+      themes?: string
       visibility?: string
     }[]
   }
