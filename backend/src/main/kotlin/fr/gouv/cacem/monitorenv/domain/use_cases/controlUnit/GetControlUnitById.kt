@@ -14,6 +14,6 @@ class GetControlUnitById(
     fun execute(controlUnitId: Int): FullControlUnitDTO {
         logger.info("GET control unit $controlUnitId")
 
-        return controlUnitRepository.findById(controlUnitId)
+        return controlUnitRepository.findFullControlUnitById(controlUnitId)
     }
 }
