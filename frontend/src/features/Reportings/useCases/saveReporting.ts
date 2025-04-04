@@ -75,8 +75,8 @@ export const saveReporting =
         if (response.error.data?.code === ApiErrorCode.UNVALID_PROPERTY) {
           throw Error('Une propriété est invalide')
         }
+        throw Error('Erreur à la création ou à la modification du signalement')
       }
-      throw Error('Erreur à la création ou à la modification du signalement')
     } catch (error) {
       dispatch(setToast({ containerId: reportingContext, message: error }))
     }

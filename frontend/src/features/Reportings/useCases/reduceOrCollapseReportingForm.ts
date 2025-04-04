@@ -14,6 +14,6 @@ export const reduceOrCollapseReportingForm = (reportingContext: ReportingContext
   )
 
   if (reportingContext === ReportingContext.MAP) {
-    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(newVisibility === VisibilityState.VISIBLE))
   }
 }

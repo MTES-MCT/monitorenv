@@ -16,7 +16,6 @@ import styled from 'styled-components'
 
 import { InteractionListener, InteractionType, OLGeometryType } from '../../../domain/entities/map/constants'
 import { setGeometry, setInteractionType } from '../../../domain/shared_slices/Draw'
-import { VisibilityState } from '../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
@@ -58,7 +57,6 @@ export function DrawModal() {
 
   const listener = useAppSelector(state => state.draw.listener)
 
-  const global = useAppSelector(state => state.global)
   const coordinatesFormat = useAppSelector(state => state.map?.coordinatesFormat)
   const sideWindow = useAppSelector(state => state.sideWindow)
 
@@ -112,16 +110,6 @@ export function DrawModal() {
       dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
     }
   }, [listener, dispatch, previousMissionId, routeParams])
-
-  // Close DrawModal when closing reporting form
-  useEffect(() => {
-    if (
-      global.visibility.reportingFormVisibility.visibility === VisibilityState.NONE &&
-      listener === InteractionListener.REPORTING_ZONE
-    ) {
-      dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
-    }
-  }, [dispatch, global.visibility.reportingFormVisibility, listener, sideWindow.status])
 
   const handleSelectInteraction = nextInteraction => () => {
     dispatch(setInteractionType(nextInteraction))
