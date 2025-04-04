@@ -125,11 +125,13 @@ export namespace Dashboard {
     [Layer.DASHBOARD_AMP]: 'DASHBOARD_AMP'
   }
 
+  // Editable Brief
   export type EditableBriefExport = {
     amps: AmpForEditableBrief[]
     dashboard: Dashboard
     image?: ExportImageType
     regulatoryAreas: RegulatoryAreaForEditableBrief[]
+    reportings: ExportImageType[]
     vigilanceAreas: VigilanceAreaForEditableBrief[]
   }
 
@@ -160,6 +162,7 @@ export namespace Dashboard {
     type?: string
     url?: string
   }
+
   type RegulatoryAreaForEditableBrief = {
     color: string
     entityName: string

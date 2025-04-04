@@ -150,15 +150,8 @@ class CreateBrief(
 
         paragraphs = document.paragraphs.toList()
         for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${ampsTable}")) {
-                createAmpsTable(paragraph, amps ?: emptyList())
-                break
-            }
-        }
-        paragraphs = document.paragraphs.toList()
-        for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${vigilanceAreasTable}")) {
-                createVigilanceAreasTable(paragraph, vigilanceAreas ?: emptyList())
+            if (paragraph.text.contains("\${ampsAndVigilanceAreasTables}")) {
+                createSideBySideTables(paragraph, vigilanceAreas ?: emptyList(), amps ?: emptyList())
                 break
             }
         }
@@ -169,7 +162,7 @@ class CreateBrief(
         }
 
         // Add global map
-        paragraphs = document.paragraphs.toList()
+        paragraphs = document.paragraphs
         for (paragraph in paragraphs) {
             if (paragraph.text.contains("\${globalMap}")) {
                 createImageFromBase64(
@@ -256,6 +249,39 @@ class CreateBrief(
         )
     }
 
+    private fun createSideBySideTables(
+        paragraph: XWPFParagraph,
+        vigilanceAreas: List<EditableBriefVigilanceAreaEntity>,
+        amps: List<EditableBriefAmpEntity>,
+    ) {
+        if (vigilanceAreas.isEmpty() && amps.isEmpty()) return
+        val document = paragraph.document as XWPFDocument
+        val parentTable = document.insertNewTbl(paragraph.ctp.newCursor())
+        parentTable.setWidth("100%")
+        setTableBorders(parentTable, "FFFFFF")
+
+        val row = parentTable.createRow()
+        val vigilanceCell = row.getCell(0) ?: row.createCell()
+        val ampsCell = row.getCell(1) ?: row.createCell()
+
+        setCellWidth(vigilanceCell, 4500)
+        setCellWidth(ampsCell, 4500)
+
+        vigilanceCell.addParagraph().apply {
+            createVigilanceAreasTable(this, vigilanceAreas)
+        }
+
+        ampsCell.addParagraph().apply {
+            createAmpsTable(this, amps)
+        }
+
+        deleteFirstEmptyLineInTable(parentTable)
+
+        // Delete paragraph with placeholder
+        val position = document.getPosOfParagraph(paragraph)
+        document.removeBodyElement(position)
+    }
+
     private fun createRegulatoryTable(
         paragraph: XWPFParagraph,
         regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>,
@@ -267,7 +293,6 @@ class CreateBrief(
 
         val totalRegulatoryAreas = regulatoryAreas.size
 
-        // Définition des en-têtes
         val headerRow = table.getRow(0) ?: table.createRow()
         val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
         headerCell.setText("Zones règlementaires - $totalRegulatoryAreas sélectionnée(s)")
@@ -275,7 +300,7 @@ class CreateBrief(
         mergeCellsHorizontally(table, 0, 0, 2)
         setCellColor(headerCell, "8CC3C0")
 
-        // Grouper par `layerName`
+        // Grouped by `layerName`
         val groupedByLayer = regulatoryAreas.groupBy { it.layerName }
 
         for ((layerName, areas) in groupedByLayer) {
@@ -285,24 +310,24 @@ class CreateBrief(
             for ((index, area) in areas.withIndex()) {
                 val row = table.createRow()
 
+                val nameCell = row.getCell(0)
                 if (index == 0) {
-                    val nameCell = row.getCell(0)
                     nameCell.setText(layerName)
                     styleCell(nameCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
-                    setCellWidth(nameCell, 3350)
-                    layerCellCreated[firstRowIndex] = row.getCell(0) // Stocke la cellule pour fusion
+                    layerCellCreated[firstRowIndex] = row.getCell(0)
                 } else {
                     row.getCell(0).setText("")
                 }
+                setCellWidth(nameCell, 3000)
 
                 val colorCell = row.getCell(1)
                 rgbaStringToHex(area.color)?.let { setCellColor(colorCell, it) }
-                setCellWidth(colorCell, 300)
+                setCellWidth(colorCell, 250)
                 styleCell(colorCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
 
                 val entityCell = row.getCell(2) ?: row.createCell()
                 entityCell.setText(area.entityName)
-                setCellWidth(entityCell, 6350)
+                setCellWidth(entityCell, 6750)
                 styleCell(entityCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
             }
 
@@ -311,8 +336,6 @@ class CreateBrief(
             }
             setTableBorders(table, "D4E5F4")
         }
-        val run = paragraph.createRun()
-        run.addBreak()
 
         // Remove the placeholder paragraph
         val position = document.getPosOfParagraph(paragraph)
@@ -323,7 +346,6 @@ class CreateBrief(
         paragraph: XWPFParagraph,
         regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>,
     ) {
-        // Supprimer le texte du placeholder
         paragraph.runs.forEach { it.setText("", 0) }
         val document = paragraph.document as XWPFDocument
 
@@ -376,16 +398,7 @@ class CreateBrief(
                 styleCell(valueCell, bold = false, fontSize = 9, alignment = ParagraphAlignment.LEFT)
             }
 
-            // Vérifie si la première ligne est vide et supprime-la si nécessaire
-            if (table.numberOfRows > 0 &&
-                table
-                    .getRow(0)
-                    .getCell(0)
-                    .text
-                    .isEmpty()
-            ) {
-                table.removeRow(0)
-            }
+            deleteFirstEmptyLineInTable(table)
         }
 
         // Remove the placeholder paragraph
@@ -399,13 +412,12 @@ class CreateBrief(
     ) {
         if (amps.isEmpty()) return
         val document = paragraph.document as XWPFDocument
-        // Create a new table directly at the placeholder position
+
         val table = document.insertNewTbl(paragraph.ctp.newCursor())
         table.setWidth("100%")
         setTableBorders(table, "D4E5F4")
         val totalAmps = amps.size
 
-        // Définition des en-têtes
         val headerRow = table.getRow(0) ?: table.createRow()
         val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
         headerCell.setText("Aires Marines Protégées - $totalAmps sélectionnée(s)")
@@ -416,12 +428,12 @@ class CreateBrief(
             val row = table.createRow()
             val colorCell = row.getCell(0) ?: row.createCell()
             rgbaStringToHex(amp.color)?.let { setCellColor(colorCell, it) }
-            setCellWidth(colorCell, 400)
+            setCellWidth(colorCell, 250)
             styleCell(colorCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
 
             val nameCell = row.getCell(1) ?: row.createCell()
             nameCell.setText("${amp.name} / ${amp.type}")
-            setCellWidth(nameCell, 4600)
+            setCellWidth(nameCell, 4750)
             styleCell(nameCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
         }
 
@@ -437,11 +449,9 @@ class CreateBrief(
         paragraph: XWPFParagraph,
         amps: List<EditableBriefAmpEntity>,
     ) {
-        // Supprimer le texte du placeholder
         paragraph.runs.forEach { it.setText("", 0) }
         val document = paragraph.document as XWPFDocument
 
-        // Boucle sur les éléments regulatoryAreas
         for (amp in (amps)) {
             val ampParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
             createLayerTitle(amp.name, ampParagraph, document)
@@ -483,17 +493,7 @@ class CreateBrief(
                 setCellWidth(valueCell, 7500)
                 styleCell(valueCell, bold = false, fontSize = 9, alignment = ParagraphAlignment.LEFT)
             }
-
-            // Vérifie si la première ligne est vide et supprime-la si nécessaire
-            if (table.numberOfRows > 0 &&
-                table
-                    .getRow(0)
-                    .getCell(0)
-                    .text
-                    .isEmpty()
-            ) {
-                table.removeRow(0)
-            }
+            deleteFirstEmptyLineInTable(table)
         }
 
         // Remove the placeholder paragraph
@@ -507,13 +507,12 @@ class CreateBrief(
     ) {
         if (vigilanceAreas.isEmpty()) return
         val document = paragraph.document as XWPFDocument
-        // Create a new table directly at the placeholder position
+
         val table = document.insertNewTbl(paragraph.ctp.newCursor())
         table.setWidth("100%")
         setTableBorders(table, "D4E5F4")
         val totalVigilanceAreas = vigilanceAreas.size
 
-        // Définition des en-têtes
         val headerRow = table.getRow(0) ?: table.createRow()
         val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
         headerCell.setText("Zones de vigilance - $totalVigilanceAreas sélectionnée(s)")
@@ -524,12 +523,12 @@ class CreateBrief(
             val row = table.createRow()
             val colorCell = row.getCell(0) ?: row.createCell()
             rgbaStringToHex(vigilanceArea.color)?.let { setCellColor(colorCell, it) }
-            setCellWidth(colorCell, 400)
+            setCellWidth(colorCell, 250)
             styleCell(colorCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
 
             val nameCell = row.getCell(1) ?: row.createCell()
             nameCell.setText(vigilanceArea.name)
-            setCellWidth(nameCell, 4600)
+            setCellWidth(nameCell, 4750)
             styleCell(nameCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
         }
 
@@ -618,22 +617,24 @@ class CreateBrief(
                 setCellWidth(valueCell, 7500)
                 styleCell(valueCell, bold = false, fontSize = 9, alignment = ParagraphAlignment.LEFT)
             }
-
-            // Vérifie si la première ligne est vide et supprime-la si nécessaire
-            if (table.numberOfRows > 0 &&
-                table
-                    .getRow(0)
-                    .getCell(0)
-                    .text
-                    .isEmpty()
-            ) {
-                table.removeRow(0)
-            }
+            deleteFirstEmptyLineInTable(table)
         }
 
         // Remove the placeholder paragraph
         val position = document.getPosOfParagraph(paragraph)
         document.removeBodyElement(position)
+    }
+
+    private fun deleteFirstEmptyLineInTable(table: XWPFTable) {
+        if (table.numberOfRows > 0 &&
+            table
+                .getRow(0)
+                .getCell(0)
+                .text
+                .isEmpty()
+        ) {
+            table.removeRow(0)
+        }
     }
 
     private fun createLayerTitle(
@@ -783,6 +784,10 @@ class CreateBrief(
                 for ((placeholder, value) in placeholders) {
                     if (text.contains(placeholder)) {
                         text = text.replace(placeholder, value ?: "")
+                        if (value != null && (value.contains("Aucune") || value.contains("Aucun"))) {
+                            run.isItalic = true
+                            run.isBold = false
+                        }
                     }
                 }
                 // Set the updated text back to the run
@@ -802,6 +807,7 @@ class CreateBrief(
                         if (paragraph.text.contains("\${briefName}") || paragraph.text.contains("\${editedAt}")) {
                             styleCell(cell, bold = false, fontSize = 9, alignment = ParagraphAlignment.RIGHT)
                         }
+
                         replacePlaceholdersInParagraph(paragraph, placeholders)
                     }
                 }
@@ -815,16 +821,16 @@ class CreateBrief(
         fromCol: Int,
         toCol: Int,
     ) {
-        val tableRow = table.getRow(row) ?: return // Vérifier que la ligne existe
+        val tableRow = table.getRow(row) ?: return
 
-        // 🔹 S'assurer que toutes les cellules existent
+        // Create cells if they don't exist
         for (i in fromCol..toCol) {
             if (tableRow.getCell(i) == null) {
                 tableRow.createCell()
             }
         }
 
-        // 🔹 Appliquer la fusion
+        // Merge the cells
         val firstCell = tableRow.getCell(fromCol)
         firstCell
             .getCTTc()
@@ -851,7 +857,7 @@ class CreateBrief(
             val row = table.getRow(startRow + i)
             val cell = row.getCell(colIndex)
 
-            if (cell != null) { // Vérification stricte
+            if (cell != null) {
                 val tcPr = cell.ctTc.addNewTcPr()
                 val vMerge = tcPr.addNewVMerge()
 
@@ -859,7 +865,7 @@ class CreateBrief(
                     vMerge.`val` = STMerge.RESTART
                 } else {
                     vMerge.`val` = STMerge.CONTINUE
-                    cell.setText("") // ✅ Supprimer le texte des cellules fusionnées
+                    cell.setText("")
                 }
             }
         }
@@ -947,16 +953,14 @@ class CreateBrief(
             if (paragraph.runs.isEmpty()) {
                 paragraph.createRun()
             } else {
-                paragraph.runs[0] // Get the existing run if it exists
+                paragraph.runs[0]
             }
 
-        // Set the text styling (bold, font size, font family)
         run.isBold = bold
         run.fontSize = fontSize
         run.fontFamily = "Arial"
         run.color = color
 
-        // Align the paragraph
         paragraph.alignment = alignment
     }
 
