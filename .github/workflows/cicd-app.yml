@@ -334,7 +334,7 @@ jobs:
           docker rm monitorenv-temp
 
       - name: Generate and upload source maps to Sentry
-        uses: getsentry/action-release@v2
+        uses: getsentry/action-release@v3
         with:
           environment: ${{ needs.version.outputs.ENV_PROFILE }}
           version: ${{ env.VERSION }}
