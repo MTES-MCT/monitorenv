@@ -71,7 +71,6 @@ export function EditableDocButton({ dashboard }) {
     visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
   }))
 
-  // console.log('regulatoryAreas', formattedRegulatoryAreas)
   const exportBrief = async () => {
     const images = await getImages()
 
@@ -99,6 +98,7 @@ export function EditableDocButton({ dashboard }) {
         image
       }
     })
+    const reportingsWithImages = images?.filter(img => String(img.featureId)?.includes('DASHBOARD_REPORTINGS'))
 
     const vigilanceAreasWithImagesAndLinkedLayers = formattedVigilanceAreas.map(vigilanceArea => {
       const filteredAmps = allLinkedAMPs.filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
@@ -127,6 +127,7 @@ export function EditableDocButton({ dashboard }) {
         dashboard,
         image: wholeImage,
         regulatoryAreas: regulatoryAreasWithImages,
+        reportings: reportingsWithImages ?? [],
         vigilanceAreas: vigilanceAreasWithImagesAndLinkedLayers
       })
     )
