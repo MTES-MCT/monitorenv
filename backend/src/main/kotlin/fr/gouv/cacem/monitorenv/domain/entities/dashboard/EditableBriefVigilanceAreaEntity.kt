@@ -11,9 +11,11 @@ data class EditableBriefVigilanceAreaEntity(
     val frequency: String,
     val id: Int,
     val image: BriefImageEntity,
+    val linkedAMPs: String? = null,
+    val linkedRegulatoryAreas: String? = null,
     val links: List<LinkEntity>? = null,
     val name: String,
     val startDatePeriod: ZonedDateTime? = null,
-    val themes: List<String>? = null,
+    val themes: String? = null,
     val visibility: String? = null,
 )
