@@ -60,7 +60,7 @@ class EnvActionsControlPlanSubThemeModel(
 
 @Embeddable
 data class EnvActionsSubThemePk(
-    @Column(name = "env_action_id") val envActionId: UUID,
+    @Column(name = "env_action_id") val envActionId: UUID?,
     @Column(name = "subtheme_id") val subthemeId: Int,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {

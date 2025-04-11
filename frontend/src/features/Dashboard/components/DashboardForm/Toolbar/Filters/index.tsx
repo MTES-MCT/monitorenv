@@ -65,7 +65,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
 
       return
     }
-    const allRegulatoryAreasIds = regulatoryTagsAsOptions.map(regulatory => regulatory.value)
+    const allRegulatoryAreasIds = regulatoryTagsAsOptions.map(regulatory => `${regulatory.value}`)
 
     dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: allRegulatoryAreasIds }, id }))
   }

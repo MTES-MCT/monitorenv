@@ -60,7 +60,7 @@ class EnvActionsControlPlanTagModel(
 
 @Embeddable
 data class EnvActionsTagPk(
-    @Column(name = "env_action_id") val envActionId: UUID,
+    @Column(name = "env_action_id") val envActionId: UUID?,
     @Column(name = "tag_id") val tagId: Int,
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
