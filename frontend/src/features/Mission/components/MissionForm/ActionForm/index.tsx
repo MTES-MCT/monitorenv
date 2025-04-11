@@ -59,6 +59,7 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
       case ActionTypeEnum.CONTROL:
         return (
           <FormWrapper>
+            {actionIdField.value}
             <ControlForm
               key={actionIdField.value}
               currentActionId={currentActionId}
