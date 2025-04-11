@@ -1,13 +1,13 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { type EntityState } from '@reduxjs/toolkit'
 
-import { monitorenvPrivateApi } from './api'
+import { monitorenvPublicApi } from './api'
 
 import type { ThemeAPI } from 'domain/entities/themes'
 
 const GET_THEMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les thèmes."
 
-export const themeAPI = monitorenvPrivateApi.injectEndpoints({
+export const themeAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
     getThemes: builder.query<EntityState<ThemeAPI, number>, void>({
       query: () => `/v1/themes`,

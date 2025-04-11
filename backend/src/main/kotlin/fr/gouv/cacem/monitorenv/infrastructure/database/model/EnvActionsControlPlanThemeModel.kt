@@ -58,7 +58,7 @@ class EnvActionsControlPlanThemeModel(
 @Embeddable
 data class EnvActionsThemePk(
     @Column(name = "env_action_id")
-    val envActionId: UUID,
+    val envActionId: UUID?,
     @Column(name = "theme_id")
     val themeId: Int,
 ) : Serializable {

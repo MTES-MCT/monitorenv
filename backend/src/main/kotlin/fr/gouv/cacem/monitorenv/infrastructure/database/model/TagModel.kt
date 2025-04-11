@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -49,7 +49,7 @@ data class TagModel(
     companion object {
         fun fromTagEntity(
             tagEntity: TagEntity,
-            parent: TagModel?,
+            parent: TagModel? = null,
         ): TagModel {
             val tagModel =
                 TagModel(

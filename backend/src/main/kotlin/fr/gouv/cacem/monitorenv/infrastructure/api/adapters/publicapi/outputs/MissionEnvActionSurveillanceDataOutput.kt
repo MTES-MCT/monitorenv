@@ -3,12 +3,16 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.tags.TagOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.tags.TagOutput.Companion.fromTagEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.themes.ThemeOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.themes.ThemeOutput.Companion.fromThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
 
 data class MissionEnvActionSurveillanceDataOutput(
-    override val id: UUID,
+    override val id: UUID?,
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
     override val actionType: ActionTypeEnum = ActionTypeEnum.SURVEILLANCE,
@@ -21,6 +25,8 @@ data class MissionEnvActionSurveillanceDataOutput(
     override val observationsByUnit: String? = null,
     val observations: String? = null,
     val openBy: String? = null,
+    val tags: List<TagOutput>,
+    val themes: List<ThemeOutput>,
 ) : MissionEnvActionDataOutput(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
@@ -46,6 +52,8 @@ data class MissionEnvActionSurveillanceDataOutput(
                 observationsByUnit = envActionSurveillanceEntity.observationsByUnit,
                 observations = envActionSurveillanceEntity.observations,
                 openBy = envActionSurveillanceEntity.openBy,
+                tags = envActionSurveillanceEntity.tags.map { fromTagEntity(it) },
+                themes = envActionSurveillanceEntity.themes.map { fromThemeEntity(it) },
             )
     }
 }

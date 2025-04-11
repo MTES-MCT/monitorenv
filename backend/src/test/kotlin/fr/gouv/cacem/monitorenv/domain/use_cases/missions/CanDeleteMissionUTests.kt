@@ -6,7 +6,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
@@ -17,8 +16,6 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixtur
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.locationtech.jts.geom.MultiPolygon
-import org.locationtech.jts.io.WKTReader
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
@@ -217,16 +214,6 @@ class CanDeleteMissionUTests {
     fun `execute Should return a list when have Fish actions and RapportNav actions and request come from Env`() {
         val missionId = 53
 
-        val wktReader = WKTReader()
-
-        val multipolygonString =
-            "MULTIPOLYGON(((-2.7335 47.6078, -2.7335 47.8452, -3.6297 47.8452, -3.6297 47.6078, -2.7335 47.6078)))"
-        val polygon = wktReader.read(multipolygonString) as MultiPolygon
-        val envActionControl =
-            EnvActionControlEntity(
-                id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
-                geom = polygon,
-            )
         given(missionRepository.findById(missionId))
             .willReturn(aMissionEntity())
 

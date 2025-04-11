@@ -17,26 +17,26 @@ import java.time.ZonedDateTime
 
 @ExtendWith(OutputCaptureExtension::class)
 class GetTagsUTest {
-    private val themesRepository: ITagRepository = mock()
-    private val getTags = GetTags(themesRepository)
+    private val tagRepository: ITagRepository = mock()
+    private val getTags = GetTags(tagRepository)
 
     @Test
-    fun `execute should return a list of themes`(log: CapturedOutput) {
+    fun `execute should return a list of tags`(log: CapturedOutput) {
         // Given
-        val expectedThemes = listOf(aTag())
-        given(themesRepository.findAllWithin(any())).willReturn(expectedThemes)
+        val expectedTags = listOf(aTag())
+        given(tagRepository.findAllWithin(any())).willReturn(expectedTags)
 
         // When
-        val themes = getTags.execute()
+        val tags = getTags.execute()
 
         // Then
-        assertThat(themes).containsAll(expectedThemes)
-        verify(themesRepository).findAllWithin(
+        assertThat(tags).containsAll(expectedTags)
+        verify(tagRepository).findAllWithin(
             argThat { time ->
                 Duration.between(time, ZonedDateTime.now()).abs() <= Duration.ofSeconds(1)
             },
         )
         assertThat(log.out).contains("Attempt to GET all tags")
-        assertThat(log.out).contains("Found ${themes.size} tags")
+        assertThat(log.out).contains("Found ${tags.size} tags")
     }
 }

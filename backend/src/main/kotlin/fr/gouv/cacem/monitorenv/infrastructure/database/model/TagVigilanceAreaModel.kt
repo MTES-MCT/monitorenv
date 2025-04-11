@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
@@ -14,7 +14,7 @@ import jakarta.persistence.Table
 import java.io.Serializable
 
 @Entity
-@Table(name = "tags_vigilance_area")
+@Table(name = "tags_vigilance_areas")
 data class TagVigilanceAreaModel(
     @EmbeddedId
     var id: TagVigilanceAreaPk,
@@ -35,7 +35,7 @@ data class TagVigilanceAreaModel(
         ): TagVigilanceAreaModel =
             TagVigilanceAreaModel(
                 id = TagVigilanceAreaPk(tag.id, vigilanceAreaModel.id),
-                tag = TagModel.fromTagEntity(tag, null),
+                tag = TagModel.fromTagEntity(tag),
                 vigilanceArea = vigilanceAreaModel,
             )
 

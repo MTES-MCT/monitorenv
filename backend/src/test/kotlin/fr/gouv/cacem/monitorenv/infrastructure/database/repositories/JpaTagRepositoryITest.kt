@@ -44,7 +44,7 @@ class JpaTagRepositoryITest : AbstractDBTests() {
         val expectedTagSize = 0
 
         // When
-        val tags = jpaTagRepository.findAllWithin(ZonedDateTime.parse("2099-12-31T00:00:00+00:00"))
+        val tags = jpaTagRepository.findAllWithin(ZonedDateTime.parse("2100-01-01T00:00:00Z"))
 
         // Then
         assertEquals(expectedTagSize, tags.size)
