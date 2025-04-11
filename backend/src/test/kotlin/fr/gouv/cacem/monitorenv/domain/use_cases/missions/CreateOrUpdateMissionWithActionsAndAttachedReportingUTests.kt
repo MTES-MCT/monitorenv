@@ -1,6 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -24,7 +28,7 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
@@ -131,6 +135,8 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
             EnvActionControlEntity(
                 id = UUID.fromString("33310163-4e22-4d3d-b585-dac4431eb4b5"),
                 geom = polygon,
+                tags = listOf(),
+                themes = listOf(),
             )
 
         val missionToCreate =
@@ -204,14 +210,14 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         verify(reportingRepository, times(1))
             .detachDanglingEnvActions(
                 missionId = 100,
-                envActionIds = listOf(envActionControl.id),
+                envActionIds = listOf(envActionControl.id).mapNotNull { it },
             )
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
         verify(
             reportingRepository,
             times(1),
         ).attachEnvActionsToReportings(
-            envActionAttachedToReportingIds.first,
+            envActionAttachedToReportingIds.first!!,
             envActionAttachedToReportingIds.second,
         )
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)

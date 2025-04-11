@@ -2,16 +2,22 @@ package fr.gouv.cacem.monitorenv.domain.mappers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteProperties
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlProperties
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceProperties
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.EntityConversionException
 import org.locationtech.jts.geom.Geometry
 import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @Component
 object EnvActionMapper {
@@ -33,10 +39,11 @@ object EnvActionMapper {
         isComplianceWithWaterRegulationsControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
         isSeafarersControl: Boolean?,
-        missionId: Int?,
         observationsByUnit: String?,
         openBy: String?,
         value: String?,
+        tags: List<TagEntity>,
+        themes: List<ThemeEntity>,
     ): EnvActionEntity =
         try {
             if (!value.isNullOrEmpty() && value != JSONB_NULL_STRING) {
@@ -56,9 +63,10 @@ object EnvActionMapper {
                                 department = department,
                                 facade = facade,
                                 geom = geom,
-                                missionId = missionId,
                                 observationsByUnit = observationsByUnit,
                                 openBy = openBy,
+                                tags = tags,
+                                themes = themes,
                             )
 
                     ActionTypeEnum.CONTROL ->
@@ -82,9 +90,10 @@ object EnvActionMapper {
                                 isSafetyEquipmentAndStandardsComplianceControl =
                                 isSafetyEquipmentAndStandardsComplianceControl,
                                 isSeafarersControl = isSeafarersControl,
-                                missionId = missionId,
                                 observationsByUnit = observationsByUnit,
                                 openBy = openBy,
+                                tags = tags,
+                                themes = themes,
                             )
 
                     ActionTypeEnum.NOTE ->
@@ -96,7 +105,6 @@ object EnvActionMapper {
                                 id = id,
                                 actionStartDateTimeUtc = actionStartDateTimeUtc,
                                 completion = completion,
-                                missionId = missionId,
                                 observationsByUnit = observationsByUnit,
                             )
                 }

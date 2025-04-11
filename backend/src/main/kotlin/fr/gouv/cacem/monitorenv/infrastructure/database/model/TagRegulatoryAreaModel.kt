@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
-import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
@@ -13,7 +13,7 @@ import jakarta.persistence.Table
 import java.io.Serializable
 
 @Entity
-@Table(name = "tags_regulatory_area")
+@Table(name = "tags_regulatory_areas")
 data class TagRegulatoryAreaModel(
     @EmbeddedId
     val id: TagRegulatoryAreaPk,
@@ -22,7 +22,7 @@ data class TagRegulatoryAreaModel(
     @MapsId("tagId")
     val tag: TagModel,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regulatory_area_id")
+    @JoinColumn(name = "regulatory_areas_id")
     @MapsId("regulatoryAreaId")
     @JsonBackReference
     val regulatoryArea: RegulatoryAreaModel,

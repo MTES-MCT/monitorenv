@@ -7,12 +7,16 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionEnvActionControlPlanDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput.Companion.fromTagEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput.Companion.fromThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class EnvActionControlDataOutput(
-    override val id: UUID,
+    override val id: UUID?,
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     val actionNumberOfControls: Int? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
@@ -33,6 +37,8 @@ data class EnvActionControlDataOutput(
     val openBy: String? = null,
     val reportingIds: List<Int>,
     val vehicleType: VehicleTypeEnum? = null,
+    val tags: List<TagOutput>,
+    val themes: List<ThemeOutput>,
 ) : EnvActionDataOutput(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
@@ -83,6 +89,8 @@ data class EnvActionControlDataOutput(
             openBy = envActionControlEntity.openBy,
             vehicleType = envActionControlEntity.vehicleType,
             reportingIds = reportingIds,
+            tags = envActionControlEntity.tags.map { fromTagEntity(it) },
+            themes = envActionControlEntity.themes.map { fromThemeEntity(it) },
         )
     }
 }

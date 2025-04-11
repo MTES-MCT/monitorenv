@@ -11,10 +11,27 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagEnvActionModel.Companion.fromTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagEnvActionModel.Companion.toTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeEnvActionModel.Companion.fromThemeEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeEnvActionModel.Companion.toThemeEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -27,7 +44,7 @@ import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
-import java.util.*
+import java.util.UUID
 
 @JsonIdentityInfo(
     generator = ObjectIdGenerators.PropertyGenerator::class,
@@ -106,6 +123,24 @@ class EnvActionModel(
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("orderIndex")
     val controlPlanTags: MutableSet<EnvActionsControlPlanTagModel>? = LinkedHashSet(),
+    @OneToMany(
+        mappedBy = "envAction",
+        fetch = FetchType.LAZY,
+        orphanRemoval = true,
+        cascade = [CascadeType.ALL],
+    )
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    var themes: Set<ThemeEnvActionModel>,
+    @OneToMany(
+        mappedBy = "envAction",
+        fetch = FetchType.LAZY,
+        orphanRemoval = true,
+        cascade = [CascadeType.ALL],
+    )
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    var tags: Set<TagEnvActionModel>,
 ) {
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
         val controlPlans =
@@ -146,10 +181,11 @@ class EnvActionModel(
             isSafetyEquipmentAndStandardsComplianceControl =
             isSafetyEquipmentAndStandardsComplianceControl,
             isSeafarersControl = isSeafarersControl,
-            missionId = mission.id,
             observationsByUnit = observationsByUnit,
             openBy = openBy,
             value = value,
+            tags = toTagEntities(tags.toList()),
+            themes = toThemeEntities(themes.toList()),
         )
     }
 
@@ -183,7 +219,22 @@ class EnvActionModel(
                     mission = mission,
                     geom = action.geom,
                     value = EnvActionMapper.envActionEntityToJSON(mapper, action),
+                    themes = setOf(),
+                    tags = setOf(),
                 )
+            when (action) {
+                is EnvActionControlEntity -> {
+                    envActionModel.themes = fromThemeEntities(action.themes, envActionModel)
+                    envActionModel.tags = fromTagEntities(action.tags, envActionModel)
+                }
+
+                is EnvActionSurveillanceEntity -> {
+                    envActionModel.themes = fromThemeEntities(action.themes, envActionModel)
+                    envActionModel.tags = fromTagEntities(action.tags, envActionModel)
+                }
+
+                else -> Unit
+            }
             action.controlPlans?.forEach {
                 if (it.themeId == null) return@forEach
                 controlPlanThemesReferenceModelMap[it.themeId]?.let { controlPlanTheme ->

@@ -83,6 +83,8 @@ class CreateOrUpdateMissionUTests {
                     geom = point,
                     facade = "La Face Ade",
                     department = "Quequ'part",
+                    tags = listOf(),
+                    themes = listOf(),
                 ),
                 EnvActionSurveillanceEntity(
                     id =
@@ -93,6 +95,8 @@ class CreateOrUpdateMissionUTests {
                     facade = "La Face Ade",
                     department = "Quequ'part",
                     awareness = null,
+                    tags = listOf(),
+                    themes = listOf(),
                 ),
                 EnvActionNoteEntity(
                     id =
