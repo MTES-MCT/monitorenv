@@ -18,28 +18,28 @@ import java.time.ZonedDateTime
 
 @ExtendWith(OutputCaptureExtension::class)
 class GetTagsByRegulatoryAreasUTest {
-    private val themesRepository: ITagRepository = mock()
-    private val getTagsByRegulatoryAreas = GetTagsByRegulatoryAreas(themesRepository)
+    private val tagRepository: ITagRepository = mock()
+    private val getTagsByRegulatoryAreas = GetTagsByRegulatoryAreas(tagRepository)
 
     @Test
-    fun `execute should return a list of themes`(log: CapturedOutput) {
+    fun `execute should return a list of tags`(log: CapturedOutput) {
         // Given
         val regulationIds = listOf(1, 2, 3)
-        val expectedThemes = listOf(aTag())
-        given(themesRepository.findAllWithinByRegulatoryAreaIds(anyList(), any())).willReturn(expectedThemes)
+        val expectedTags = listOf(aTag())
+        given(tagRepository.findAllWithinByRegulatoryAreaIds(anyList(), any())).willReturn(expectedTags)
 
         // When
-        val themes = getTagsByRegulatoryAreas.execute(regulationIds)
+        val tags = getTagsByRegulatoryAreas.execute(regulationIds)
 
         // Then
-        assertThat(themes).containsAll(expectedThemes)
-        verify(themesRepository).findAllWithinByRegulatoryAreaIds(
+        assertThat(tags).containsAll(expectedTags)
+        verify(tagRepository).findAllWithinByRegulatoryAreaIds(
             argThat { ids -> ids === regulationIds },
             argThat { time ->
                 Duration.between(time, ZonedDateTime.now()).abs() <= Duration.ofSeconds(1)
             },
         )
         assertThat(log.out).contains("Attempt to GET all tags from regulations $regulationIds")
-        assertThat(log.out).contains("Found ${themes.size} tags")
+        assertThat(log.out).contains("Found ${tags.size} tags")
     }
 }

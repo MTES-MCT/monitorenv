@@ -5,7 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishM
 import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
-import java.util.*
+import java.util.UUID
 
 data class MissionDetailsDTO(
     val mission: MissionEntity,
@@ -18,4 +18,4 @@ data class MissionDetailsDTO(
     val hasRapportNavActions: RapportNavMissionActionEntity? = null,
 )
 
-typealias EnvActionAttachedToReportingIds = Pair<UUID, List<Int>>
+typealias EnvActionAttachedToReportingIds = Pair<UUID?, List<Int>>

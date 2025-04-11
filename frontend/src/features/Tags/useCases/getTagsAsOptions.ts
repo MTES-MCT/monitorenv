@@ -1,11 +1,10 @@
+import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui__root'
 import type { TagAPI } from 'domain/entities/tags'
 
-export const getTagsAsOptions = (
-  tags: TagAPI[]
-): { children: { label: string; value: string }[]; label: string; value: string }[] =>
+export const getTagsAsOptions = (tags: TagAPI[], childrenKey: string = 'subTags'): CheckTreePickerOption[] =>
   tags
     .map(tag => ({
-      children: tag.subTags
+      [childrenKey]: tag.subTags
         .map(({ name }) => ({ label: name, value: name }))
         .sort((a, b) => a.label.localeCompare(b.label)),
       label: tag.name,

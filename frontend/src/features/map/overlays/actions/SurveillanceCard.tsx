@@ -1,14 +1,12 @@
-import { getLocalizedDayjs, customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+import { customDayjs as dayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { dateDifferenceInHours } from '../../../../utils/dateDifferenceInHours'
-import { extractThemesAsText } from '../../../../utils/extractThemesAsText'
 
 export function SurveillanceCard({ feature }) {
   const listener = useAppSelector(state => state.draw.listener)
-  const { actionEndDateTimeUtc, actionStartDateTimeUtc, controlPlans } = feature.getProperties()
+  const { actionEndDateTimeUtc, actionStartDateTimeUtc, themes } = feature.getProperties()
 
   const duration = dateDifferenceInHours(actionStartDateTimeUtc, actionEndDateTimeUtc)
 
@@ -18,8 +16,6 @@ export function SurveillanceCard({ feature }) {
 
   const simpleDate = startDate?.isValid() && startDate?.format('DD MMMM YYYY')
 
-  const { themes } = useGetControlPlans()
-
   if (listener) {
     return null
   }
@@ -27,7 +23,7 @@ export function SurveillanceCard({ feature }) {
   return (
     <StyledSurveillanceCard>
       <div>
-        <StyledThemes>{extractThemesAsText(controlPlans, themes)}</StyledThemes>
+        <StyledThemes>{themes?.map(theme => theme.name).join(' - ')}</StyledThemes>
         <StyledDuration>{duration > 0 ? `1 surveillance (${duration}h)` : '1 surveillance'}</StyledDuration>
       </div>
 

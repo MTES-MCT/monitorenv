@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 

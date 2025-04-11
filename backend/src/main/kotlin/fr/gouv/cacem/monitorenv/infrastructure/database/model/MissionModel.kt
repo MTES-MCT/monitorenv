@@ -84,6 +84,8 @@ import java.time.ZoneOffset.UTC
                             subgraph = "subgraph.linkedControlPlanTags",
                         ),
                         NamedAttributeNode("attachedReporting"),
+                        NamedAttributeNode("themes"),
+                        NamedAttributeNode("tags"),
                     ],
             ),
             NamedSubgraph(
@@ -203,7 +205,6 @@ class MissionModel(
     @Column(name = "created_at_utc", updatable = false) var createdAtUtc: Instant?,
     @OneToMany(
         mappedBy = "mission",
-        cascade = [CascadeType.ALL],
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
@@ -376,14 +377,7 @@ class MissionModel(
         )
 
     companion object {
-        fun fromMissionEntity(
-            mission: MissionEntity,
-            controlUnitResourceModelMap: Map<Int, ControlUnitResourceModel>,
-            controlPlanThemesReferenceModelMap: Map<Int, ControlPlanThemeModel>,
-            controlPlanSubThemesReferenceModelMap: Map<Int, ControlPlanSubThemeModel>,
-            controlPlanTagsReferenceModelMap: Map<Int, ControlPlanTagModel>,
-            mapper: ObjectMapper,
-        ): MissionModel {
+        fun fromMissionEntity(mission: MissionEntity): MissionModel {
             val missionModel =
                 MissionModel(
                     id = mission.id,
@@ -405,44 +399,6 @@ class MissionModel(
                     createdAtUtc = mission.createdAtUtc?.toInstant(),
                     updatedAtUtc = mission.updatedAtUtc?.toInstant(),
                 )
-
-            mission.envActions?.map {
-                missionModel.envActions?.add(
-                    EnvActionModel.fromEnvActionEntity(
-                        action = it,
-                        mission = missionModel,
-                        controlPlanThemesReferenceModelMap =
-                        controlPlanThemesReferenceModelMap,
-                        controlPlanSubThemesReferenceModelMap =
-                        controlPlanSubThemesReferenceModelMap,
-                        controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
-                        mapper = mapper,
-                    ),
-                )
-            }
-
-            mission.controlUnits.map { controlUnit ->
-                val missionControlUnitModel =
-                    MissionControlUnitModel.fromLegacyControlUnit(
-                        controlUnit,
-                        missionModel,
-                    )
-                missionModel.controlUnits?.add(missionControlUnitModel)
-
-                val missionControlUnitResourceModels =
-                    controlUnit.resources.map { controlUnitResource ->
-                        val controlUnitResourceModel =
-                            requireNotNull(
-                                controlUnitResourceModelMap[controlUnitResource.id],
-                            )
-
-                        MissionControlResourceModel(
-                            resource = controlUnitResourceModel,
-                            mission = missionModel,
-                        )
-                    }
-                missionModel.controlResources?.addAll(missionControlUnitResourceModels)
-            }
 
             return missionModel
         }

@@ -11,6 +11,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanSubThem
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanTagModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
@@ -22,6 +23,7 @@ import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.geom.GeometryFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.ZoneId
@@ -37,12 +39,14 @@ class JpaEnvActionRepository(
     private val idbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val objectMapper: ObjectMapper,
 ) : IEnvActionRepository {
+    @Transactional
     override fun findById(id: UUID): EnvActionEntity? =
         idbEnvActionRepository.findByIdOrNull(id)?.toActionEntity(objectMapper)
 
+    @Transactional
     override fun save(envAction: EnvActionEntity): EnvActionEntity {
-        envAction.missionId?.let { missionId ->
-            val mission = idbMissionRepository.getReferenceById(missionId)
+        var mission: MissionModel? = idbMissionRepository.findByEnvActionId(envAction.id)
+        mission?.let {
             val controlPlanThemesReferenceModelMap: MutableMap<Int, ControlPlanThemeModel> =
                 mutableMapOf()
             val controlPlanTagsReferenceModelMap: MutableMap<Int, ControlPlanTagModel> =
@@ -118,6 +122,7 @@ class JpaEnvActionRepository(
                                     }.toTypedArray()
                             geomFactory.createMultiPointFromCoords(coordinates)
                         }
+
                         else -> null
                     }
 
