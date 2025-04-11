@@ -1,3 +1,6 @@
+import { useGetThemesQuery } from '@api/themesAPI'
+import { getThemesAsOptions, parseOptionToTheme } from '@features/Themes/useCases/getThemesAsOptions'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
 import { useField } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -10,6 +13,7 @@ import { useGetControlPlansByYear } from '../../../../../../hooks/useGetControlP
 import { sortControlPlans } from '../../../../../../utils/sortControlPlans'
 
 import type { ControlPlansData } from '../../../../../../domain/entities/controlPlan'
+import type { ThemeAPI } from 'domain/entities/themes'
 
 const GENERAL_SURVEILLANCE = 'Surveillance générale'
 
@@ -31,6 +35,7 @@ export function ActionTheme({
 }: ActionThemeProps) {
   const [actionControlPlansField] = useField<Array<ControlPlansData>>(`envActions[${actionIndex}].controlPlans`)
   const [currentThemeField] = useField<number>(`envActions[${actionIndex}].controlPlans[${themeIndex}].themeId`)
+  const [currentTheme, , helpers] = useField<ThemeAPI[]>(`envActions[${actionIndex}].themes`)
 
   const { isError, isLoading, subThemesByYear, tagsByYearAsOptions, themesByYearAsOptions } = useGetControlPlansByYear({
     selectedTheme: currentThemeField?.value,
@@ -50,8 +55,28 @@ export function ActionTheme({
       .sort(sortControlPlans)
   }, [actionType, themesByYearAsOptions, actionControlPlansField.value])
 
+  const { data } = useGetThemesQuery()
+
+  const themesOptions = useMemo(() => getThemesAsOptions(Object.values(data ?? [])), [data])
+
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">
+      <CheckTreePicker
+        childrenKey="subThemes"
+        isLight
+        isMultiSelect={false}
+        label="Thématiques et sous-thématiques de contrôle"
+        name={`envActions[${actionIndex}].themes`}
+        onChange={option => {
+          if (option) {
+            helpers.setValue(parseOptionToTheme(option))
+          } else {
+            helpers.setValue([])
+          }
+        }}
+        options={themesOptions}
+        value={getThemesAsOptions(currentTheme.value)}
+      />
       <ThemeSelector
         actionIndex={actionIndex}
         isError={isError}

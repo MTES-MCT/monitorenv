@@ -34,6 +34,8 @@ export const getNewEnvActionControlSchema = (
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
         .required(HIDDEN_ERROR)
+      // tags: Yup.array().ensure().optional(),
+      // themes: Yup.array().ensure().optional()
     })
     .required()
 
@@ -65,6 +67,8 @@ export const getCompletionEnvActionControlSchema = (
         .max(3, 'Maximum 3 lettres pour le trigramme')
         .nullable()
         .required(HIDDEN_ERROR),
+      // tags: Yup.array().ensure().required().min(1),
+      // themes: Yup.array().ensure().required().min(1),
       vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {
         // TODO(22/11/2024): fix actionTargetType which is an array and not a string
         if (actionTargetType.includes(TargetTypeEnum.COMPANY) || actionTargetType.includes(TargetTypeEnum.INDIVIDUAL)) {

@@ -18,6 +18,7 @@ export function ThemeSelector({ label, name }) {
     setFieldValue('themeId', theme)
     setFieldValue('subThemeIds', [])
 
+    // TODO(02/04/2025): Be careful here
     if (theme !== INDIVIDUAL_ANCHORING_THEME_ID) {
       setFieldValue('withVHFAnswer', undefined)
     }
@@ -31,6 +32,7 @@ export function ThemeSelector({ label, name }) {
   }, [year])
 
   const isVesselInformationRequested = useMemo(() => {
+    // TODO(02/04/2025): Be careful here
     if (values.themeId !== INDIVIDUAL_ANCHORING_THEME_ID || values.vehicleType !== VehicleTypeEnum.VESSEL) {
       return false
     }

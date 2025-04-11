@@ -1,7 +1,6 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.tags
 
-import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.SubTagOutput.Companion.fromSubTagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import java.time.ZonedDateTime
 
 data class TagOutput(
@@ -9,7 +8,7 @@ data class TagOutput(
     val name: String,
     val startedAt: ZonedDateTime,
     val endedAt: ZonedDateTime?,
-    val subTags: List<SubTagOutput>,
+    val subTags: List<TagOutput>,
 ) {
     companion object {
         fun fromTagEntity(tagEntity: TagEntity): TagOutput =
@@ -18,7 +17,7 @@ data class TagOutput(
                 name = tagEntity.name,
                 startedAt = tagEntity.startedAt,
                 endedAt = tagEntity.endedAt,
-                subTags = tagEntity.subTags.map { fromSubTagEntity(it) },
+                subTags = tagEntity.subTags.map { fromTagEntity(it) },
             )
     }
 }

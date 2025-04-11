@@ -41,7 +41,7 @@ class TagsITest {
     @Test
     fun `Should get all tags`() {
         // Given
-        val themes =
+        val tags =
             listOf(
                 aTag(
                     id = 1,
@@ -59,7 +59,7 @@ class TagsITest {
                         ),
                 ),
             )
-        given(getTags.execute()).willReturn(themes)
+        given(getTags.execute()).willReturn(tags)
         // When
         mockMvc
             .perform(get("/bff/v1/tags"))
@@ -79,7 +79,7 @@ class TagsITest {
     fun `Should get all tags by regulatory area ids`() {
         // Given
         val ids = listOf(1, 2)
-        val themes =
+        val tags =
             listOf(
                 aTag(
                     id = 1,
@@ -97,7 +97,7 @@ class TagsITest {
                         ),
                 ),
             )
-        given(getTagsByRegulatoryAreas.execute(ids)).willReturn(themes)
+        given(getTagsByRegulatoryAreas.execute(ids)).willReturn(tags)
         // When
         mockMvc
             .perform(

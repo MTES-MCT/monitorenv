@@ -35,6 +35,8 @@ class EnvActionDataInputUTests {
                 openBy = "ABC",
                 awareness = null,
                 reportingIds = Optional.of(listOf(1)),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         val entity = input.toEnvActionEntity()
@@ -58,6 +60,8 @@ class EnvActionDataInputUTests {
                 openBy = "ABC",
                 awareness = null,
                 reportingIds = Optional.of(listOf()),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         val entity = input.toEnvActionEntity()
@@ -76,6 +80,8 @@ class EnvActionDataInputUTests {
                 observations = "Observations",
                 awareness = null,
                 reportingIds = Optional.empty(),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         val entity = input.toEnvActionEntity()
@@ -94,6 +100,8 @@ class EnvActionDataInputUTests {
                 observations = "Observations",
                 awareness = null,
                 reportingIds = Optional.of(listOf(1, 2, 3)),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         Assertions.assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
@@ -115,6 +123,8 @@ class EnvActionDataInputUTests {
                 openBy = "ABC",
                 awareness = null,
                 reportingIds = Optional.empty(),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         Assertions.assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
@@ -140,6 +150,8 @@ class EnvActionDataInputUTests {
                 openBy = "ABC",
                 awareness = null,
                 reportingIds = Optional.empty(),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         Assertions.assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }
@@ -165,6 +177,8 @@ class EnvActionDataInputUTests {
                 openBy = "ABC",
                 awareness = null,
                 reportingIds = Optional.of(listOf(1, 2)),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         Assertions.assertThrows(IllegalArgumentException::class.java) { input.toEnvActionEntity() }

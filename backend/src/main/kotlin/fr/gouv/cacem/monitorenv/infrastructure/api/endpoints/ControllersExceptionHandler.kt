@@ -61,7 +61,7 @@ class ControllersExceptionHandler(
         return BackendRequestErrorDataOutput(
             code = BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
             data = null,
-            message = "Error: Invalid value in field '$field'",
+            message = "Error: Invalid value in field '$field', $errorMessage",
         )
     }
 

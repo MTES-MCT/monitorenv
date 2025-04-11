@@ -1,10 +1,10 @@
 import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetLegacyControlUnitsQuery } from '@api/legacyControlUnitsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
+import { getThemesAsOptionsCheckPicker } from '@features/Themes/useCases/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import {
   customDayjs,
   getOptionsFromIdAndName,
@@ -42,27 +42,15 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const dispatch = useAppDispatch()
-  const { selectedAdministrationNames, selectedControlUnitIds, startedAfter, startedBefore } = useAppSelector(
+  const { selectedAdministrationNames, selectedControlUnitIds, startedAfter } = useAppSelector(
     state => state.missionFilters
   )
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const startedAfterYear = customDayjs(startedAfter).get('year')
-  const { themesAsOptions } = useGetControlPlans()
-  const { themesByYearAsOptions } = useGetControlPlansByYear({ year: startedAfterYear })
-
-  const themesAsOptionsPerPeriod = useMemo(() => {
-    const startedBeforeYear = customDayjs(startedBefore).get('year')
-
-    if (startedAfterYear === startedBeforeYear) {
-      return themesByYearAsOptions
-    }
-
-    // TODO deal with 2-year periods
-    return themesAsOptions
-  }, [startedAfterYear, startedBefore, themesAsOptions, themesByYearAsOptions])
+  const { data } = useGetThemesQuery()
+  const themesAsOption = getThemesAsOptionsCheckPicker(Object.values(data ?? []))
 
   const activeAdministrations = useMemo(
     () =>
@@ -95,7 +83,7 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     dates: dateRangeOptions,
     seaFronts: seaFrontsAsOptions,
     status: missionStatusesAsOptions,
-    themes: themesAsOptionsPerPeriod,
+    themes: themesAsOption,
     types: missionTypesAsOptions
   }
 

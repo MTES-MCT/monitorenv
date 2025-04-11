@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures
 
-import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity

@@ -73,6 +73,8 @@ export const actionFactory = ({
         infractions: [],
         observations: '',
         reportingIds: [],
+        tags: [],
+        themes: [],
         ...actionToDuplicate,
         id: uuidv4()
       } as NewEnvActionControl
@@ -100,6 +102,8 @@ export const actionFactory = ({
         durationMatchesMission: true,
         observations: '',
         reportingIds: [],
+        tags: [],
+        themes: [],
         ...actionToDuplicate,
         id: uuidv4()
       } as EnvActionSurveillance

@@ -6,12 +6,16 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.tags.TagOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.tags.TagOutput.Companion.fromTagEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.themes.ThemeOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.themes.ThemeOutput.Companion.fromThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class MissionEnvActionControlDataOutput(
-    override val id: UUID,
+    override val id: UUID?,
     val actionEndDateTimeUtc: ZonedDateTime? = null,
     val actionNumberOfControls: Int? = null,
     override val actionStartDateTimeUtc: ZonedDateTime? = null,
@@ -32,6 +36,8 @@ data class MissionEnvActionControlDataOutput(
     val observations: String? = null,
     val openBy: String? = null,
     val vehicleType: VehicleTypeEnum? = null,
+    val tags: List<TagOutput>,
+    val themes: List<ThemeOutput>,
 ) : MissionEnvActionDataOutput(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
@@ -67,6 +73,8 @@ data class MissionEnvActionControlDataOutput(
                 observations = envActionControlEntity.observations,
                 openBy = envActionControlEntity.openBy,
                 vehicleType = envActionControlEntity.vehicleType,
+                tags = envActionControlEntity.tags.map { fromTagEntity(it) },
+                themes = envActionControlEntity.themes.map { fromThemeEntity(it) },
             )
     }
 }
