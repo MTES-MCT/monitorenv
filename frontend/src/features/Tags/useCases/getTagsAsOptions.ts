@@ -1,14 +1,13 @@
+import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui__root'
 import type { TagAPI } from 'domain/entities/tags'
 
-export const getTagsAsOptions = (
-  themes: TagAPI[]
-): { children: { label: string; value: string }[]; label: string; value: string }[] =>
-  themes
-    .map(theme => ({
-      children: theme.subTags
-        .map(subTheme => ({ label: subTheme.name, value: subTheme.name }))
+export const getTagsAsOptions = (tags: TagAPI[], childrenKey: string = 'subTags'): CheckTreePickerOption[] =>
+  tags
+    .map(tag => ({
+      [childrenKey]: tag.subTags
+        .map(({ name }) => ({ label: name, value: name }))
         .sort((a, b) => a.label.localeCompare(b.label)),
-      label: theme.name,
-      value: theme.name
+      label: tag.name,
+      value: tag.name
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
