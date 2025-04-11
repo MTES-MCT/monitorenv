@@ -32,7 +32,9 @@ export const getNewEnvActionSurveillanceSchema = (
       openBy: Yup.string()
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
-        .required(HIDDEN_ERROR)
+        .required(HIDDEN_ERROR),
+      tags: Yup.array().ensure().optional(),
+      themes: Yup.array().ensure().optional()
     })
     .required()
 
@@ -61,6 +63,8 @@ export const getCompletionEnvActionSurveillanceSchema = (
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
         .nullable()
-        .required(HIDDEN_ERROR)
+        .required(HIDDEN_ERROR),
+      tags: Yup.array().ensure().optional(),
+      themes: Yup.array().ensure().optional()
     })
     .required()

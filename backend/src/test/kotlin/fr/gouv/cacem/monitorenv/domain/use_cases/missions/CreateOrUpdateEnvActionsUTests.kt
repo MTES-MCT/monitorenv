@@ -1,6 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -24,7 +28,7 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
@@ -63,6 +67,8 @@ class CreateOrPatchEnvActionsUTests {
                             "33310163-4e22-4d3d-b585-dac4431eb4b5",
                         ),
                     geom = point,
+                    tags = listOf(),
+                    themes = listOf(),
                 ),
                 EnvActionSurveillanceEntity(
                     id =
@@ -71,6 +77,8 @@ class CreateOrPatchEnvActionsUTests {
                         ),
                     geom = polygon,
                     awareness = null,
+                    tags = listOf(),
+                    themes = listOf(),
                 ),
                 EnvActionNoteEntity(
                     id =
@@ -92,6 +100,8 @@ class CreateOrPatchEnvActionsUTests {
                     geom = point,
                     facade = "La Face Ade",
                     department = "Quequ'part",
+                    tags = listOf(),
+                    themes = listOf(),
                 ),
                 EnvActionSurveillanceEntity(
                     id =
@@ -102,6 +112,8 @@ class CreateOrPatchEnvActionsUTests {
                     facade = "La Face Ade",
                     department = "Quequ'part",
                     awareness = null,
+                    tags = listOf(),
+                    themes = listOf(),
                 ),
                 EnvActionNoteEntity(
                     id =

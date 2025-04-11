@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags
 
-import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import java.time.ZonedDateTime
 
 data class TagInput(

@@ -1,8 +1,8 @@
 import { useGetMissionsQuery } from '@api/missionsAPI'
 import { isMissionPartOfSelectedAdministrationNames } from '@features/Mission/useCases/filters/isMissionPartOfSelectedAdministrationNames'
 import { isMissionPartOfSelectedCompletionStatus } from '@features/Mission/useCases/filters/isMissionPartOfSelectedCompletionStatus'
-import { isMissionPartOfSelectedControlPlans } from '@features/Mission/useCases/filters/isMissionPartOfSelectedControlPlans'
 import { isMissionPartOfSelectedControlUnitIds } from '@features/Mission/useCases/filters/isMissionPartOfSelectedControlUnitIds'
+import { isMissionPartOfSelectedThemes } from '@features/Mission/useCases/filters/isMissionPartOfSelectedTheme'
 import { isMissionPartOfSelectedWithEnvActions } from '@features/Mission/useCases/filters/isMissionPartOfSelectedWithEnvActions'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { customDayjs } from '@mtes-mct/monitor-ui'
@@ -10,6 +10,7 @@ import { DateRangeEnum } from 'domain/entities/dateRange'
 import { useMemo } from 'react'
 
 import { TWO_MINUTES } from '../../../constants'
+import { isMissionPartOfSelectedControlPlans } from '../useCases/filters/isMissionPartOfSelectedControlPlans'
 
 export const useGetFilteredMissionsQuery = () => {
   const {
@@ -94,6 +95,7 @@ export const useGetFilteredMissionsQuery = () => {
         isMissionPartOfSelectedAdministrationNames(mission, selectedAdministrationNames) &&
         isMissionPartOfSelectedControlUnitIds(mission, selectedControlUnitIds) &&
         isMissionPartOfSelectedControlPlans(mission, selectedThemes) &&
+        isMissionPartOfSelectedThemes(mission, selectedThemes) &&
         isMissionPartOfSelectedCompletionStatus(mission, selectedCompletionStatus) &&
         isMissionPartOfSelectedWithEnvActions(mission, selectedWithEnvActions)
     )

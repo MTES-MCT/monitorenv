@@ -1,6 +1,4 @@
 import { ControlCard } from '@features/commonComponents/ControlCard'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { extractThemesAsText } from '@utils/extractThemesAsText'
 
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -8,14 +6,12 @@ import type { Feature } from 'ol'
 
 export function MissionControlCard({ feature }: { feature: Feature }) {
   const listener = useAppSelector(state => state.draw.listener)
-  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, controlPlans, infractions } =
+  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, infractions, themes } =
     feature.getProperties()
 
-  const { isLoading, themes } = useGetControlPlans()
+  const controlThemes = themes.map(theme => theme.name).join(' - ')
 
-  const controlThemes = extractThemesAsText(controlPlans, themes) ?? ''
-
-  if (listener || isLoading) {
+  if (listener) {
     return null
   }
 

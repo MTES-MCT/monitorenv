@@ -1,9 +1,9 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { CustomPeriodContainer } from '@components/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { FrontendError } from '@libs/FrontendError'
 import {
   Checkbox,
@@ -23,6 +23,7 @@ import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { MissionOptionsListType } from '..'
+import type { ThemeAPI } from 'domain/entities/themes'
 
 type MapMissionFiltersProps = {
   onUpdateAdministrationFilter: (value: any) => void
@@ -54,7 +55,8 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
     const { administrations, completion, controlUnits, dates, status, themes, types } = optionsList
 
     const controlUnitsData = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-    const { themesAsOptions } = useGetControlPlans()
+    const { data } = useGetThemesQuery()
+    const themesAPI: ThemeAPI[] = Object.values(data ?? [])
 
     const controlUnitCustomSearch = useMemo(
       () => new CustomSearch(controlUnits ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -269,7 +271,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={theme}
                 onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}
               >
-                {`${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`}
+                {`${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
               </SingleTag>
             ))}
         </StyledBloc>

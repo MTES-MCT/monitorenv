@@ -4,9 +4,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class EnvActionControlProperties(
     val actionNumberOfControls: Int? = null,
@@ -29,9 +31,10 @@ data class EnvActionControlProperties(
         isComplianceWithWaterRegulationsControl: Boolean?,
         isSafetyEquipmentAndStandardsComplianceControl: Boolean?,
         isSeafarersControl: Boolean?,
-        missionId: Int?,
         observationsByUnit: String?,
         openBy: String?,
+        tags: List<TagEntity>,
+        themes: List<ThemeEntity>,
     ) = EnvActionControlEntity(
         id = id,
         actionEndDateTimeUtc = actionEndDateTimeUtc,
@@ -51,11 +54,12 @@ data class EnvActionControlProperties(
         isSafetyEquipmentAndStandardsComplianceControl =
         isSafetyEquipmentAndStandardsComplianceControl,
         isSeafarersControl = isSeafarersControl,
-        missionId = missionId,
         observations = observations,
         observationsByUnit = observationsByUnit,
         openBy = openBy,
         vehicleType = vehicleType,
+        tags = tags,
+        themes = themes,
     )
 
     companion object {

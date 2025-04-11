@@ -20,8 +20,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.*
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithActionsAndAttachedReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
@@ -41,12 +45,15 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -188,7 +195,6 @@ class MissionsITests {
     @Test
     fun `Should get all missions`() {
         // Given
-
         val controlEnvAction =
             EnvActionControlEntity(
                 id = UUID.fromString("d0f5f3a0-0b1a-4b0e-9b0a-0b0b0b0b0b0b"),
@@ -217,6 +223,8 @@ class MissionsITests {
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VEHICLE_LAND,
                 infractions = TestUtils.getControlInfraction(),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         val expectedFirstMission =
@@ -439,6 +447,8 @@ class MissionsITests {
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VEHICLE_LAND,
                 infractions = TestUtils.getControlInfraction(),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         val expectedFirstMission =
@@ -697,6 +707,8 @@ class MissionsITests {
                 awareness = null,
                 actionNumberOfControls = 4,
                 reportingIds = Optional.of(listOf(1)),
+                tags = listOf(),
+                themes = listOf(),
             )
 
         val requestBody =
@@ -713,8 +725,7 @@ class MissionsITests {
         val envActionsAttachedToReportingIds =
             listOf(
                 Pair(UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"), listOf(1)),
-            ) as
-                List<EnvActionAttachedToReportingIds>
+            )
         given(
             createOrUpdateMissionWithActionsAndAttachedReporting.execute(
                 mission = requestBody.toMissionEntity(),
