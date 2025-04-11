@@ -36,6 +36,8 @@ class CreateOrUpdateMissionDataInputUTests {
                 openBy = "DEF",
                 reportingIds = Optional.of(listOf(1)),
                 awareness = null,
+                tags = listOf(),
+                themes = listOf(),
             )
         val envActionSurveillance =
             EnvActionDataInput(
@@ -51,6 +53,8 @@ class CreateOrUpdateMissionDataInputUTests {
                 openBy = "ABC",
                 reportingIds = Optional.of(listOf(2, 3)),
                 awareness = null,
+                tags = listOf(),
+                themes = listOf(),
             )
         val envActionNote =
             EnvActionDataInput(
@@ -61,6 +65,8 @@ class CreateOrUpdateMissionDataInputUTests {
                 observations = "Observations",
                 reportingIds = Optional.of(listOf()),
                 awareness = null,
+                tags = listOf(),
+                themes = listOf(),
             )
         val missionDataInput =
             CreateOrUpdateMissionDataInput(

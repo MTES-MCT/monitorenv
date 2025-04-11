@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import java.time.ZonedDateTime
 
 interface ITagRepository {

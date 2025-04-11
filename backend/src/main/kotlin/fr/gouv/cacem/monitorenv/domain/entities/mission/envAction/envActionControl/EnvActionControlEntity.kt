@@ -7,6 +7,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -27,7 +29,6 @@ data class EnvActionControlEntity(
     override val isComplianceWithWaterRegulationsControl: Boolean? = null,
     override val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     override val isSeafarersControl: Boolean? = null,
-    override val missionId: Int? = null,
     @Patchable
     override var observationsByUnit: String? = null,
     override val openBy: String? = null,
@@ -36,9 +37,10 @@ data class EnvActionControlEntity(
     val infractions: List<InfractionEntity>? = listOf(),
     val observations: String? = null,
     val vehicleType: VehicleTypeEnum? = null,
+    val tags: List<TagEntity>,
+    var themes: List<ThemeEntity>,
 ) : EnvActionEntity(
         id = id,
         actionType = ActionTypeEnum.CONTROL,
-        missionId = missionId,
         observationsByUnit = observationsByUnit,
     )

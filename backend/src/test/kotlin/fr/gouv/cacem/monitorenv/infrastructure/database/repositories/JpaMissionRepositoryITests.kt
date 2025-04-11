@@ -14,9 +14,15 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.SeizureTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.BeforeEach
@@ -28,11 +34,10 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 @Import(DataSourceProxyBeanPostProcessor::class)
@@ -540,6 +545,24 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val noteObservationsByUnit =
             "Une unité aurait vu quelque chose quelque part à un certain moment."
 
+        val tags =
+            listOf(
+                aTag(
+                    id = 1,
+                    name = "PN",
+                    startedAt = ZonedDateTime.parse("2023-01-01T00:00Z"),
+                    endedAt = ZonedDateTime.parse("2030-12-31T00:00Z"),
+                ),
+            )
+        val themes =
+            listOf(
+                aTheme(
+                    id = 2,
+                    name = "AMP sans réglementation particulière",
+                    startedAt = ZonedDateTime.parse("2023-01-01T00:00Z"),
+                    endedAt = ZonedDateTime.parse("2099-12-31T23:59:59Z"),
+                ),
+            )
         val newMission =
             MissionEntity(
                 missionTypes = listOf(MissionTypeEnum.SEA),
@@ -573,6 +596,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             isSafetyEquipmentAndStandardsComplianceControl =
                             true,
                             isSeafarersControl = true,
+                            tags = tags,
+                            themes = themes,
                         ),
                         EnvActionSurveillanceEntity(
                             id =
@@ -584,6 +609,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             department = "Department 2",
                             awareness = null,
                             geom = polygon,
+                            tags = tags,
+                            themes = themes,
                         ),
                         EnvActionNoteEntity(
                             id =
@@ -687,15 +714,27 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 ?.get(1)
                 ?.department,
         ).isEqualTo("Department 2")
-        assertThat(
-            (newMissionCreated.mission.envActions?.get(2) as EnvActionNoteEntity)
-                .observations,
-        ).isEqualTo(
+        assertThat((newMissionCreated.mission.envActions?.get(2) as EnvActionNoteEntity).observations).isEqualTo(
             noteObservations,
         )
         assertThat(newMissionCreated.mission.observationsByUnit).isEqualTo(noteObservationsByUnit)
+        newMissionCreated.mission.envActions.forEach { action ->
+            when (action) {
+                is EnvActionControlEntity -> {
+                    assertThat(action.themes).usingRecursiveComparison().isEqualTo(themes)
+                    assertThat(action.tags).usingRecursiveComparison().isEqualTo(tags)
+                }
 
-        assertThat(jpaMissionRepository.findById(newMissionCreated.mission.id!!)).isEqualTo(newMissionCreated.mission)
+                is EnvActionSurveillanceEntity -> {
+                    assertThat(action.themes).usingRecursiveComparison().isEqualTo(themes)
+                    assertThat(action.tags).usingRecursiveComparison().isEqualTo(tags)
+                }
+            }
+        }
+
+        assertThat(jpaMissionRepository.findById(newMissionCreated.mission.id!!))
+            .usingRecursiveComparison()
+            .isEqualTo(newMissionCreated.mission)
     }
 
     @Test
@@ -954,7 +993,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val throwable = catchThrowable { jpaMissionRepository.save(newMission) }
 
         // Then
-        assertThat(throwable).isInstanceOf(InvalidDataAccessApiUsageException::class.java)
+        assertThat(throwable).isInstanceOf(DataIntegrityViolationException::class.java)
     }
 
     @Test
@@ -995,6 +1034,24 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save Should update mission`() {
         val id = 10
         // Given
+        val tags =
+            listOf(
+                aTag(
+                    id = 1,
+                    name = "PN",
+                    startedAt = ZonedDateTime.parse("2023-01-01T00:00Z"),
+                    endedAt = ZonedDateTime.parse("2030-12-31T00:00Z"),
+                ),
+            )
+        val themes =
+            listOf(
+                aTheme(
+                    id = 2,
+                    name = "AMP sans réglementation particulière",
+                    startedAt = ZonedDateTime.parse("2023-01-01T00:00Z"),
+                    endedAt = ZonedDateTime.parse("2099-12-31T23:59:59Z"),
+                ),
+            )
         val infraction =
             InfractionEntity(
                 id = "a4d8cd64-ee6e-4dba-ae5d-f6a41395b52a",
@@ -1022,7 +1079,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 infractions = listOf(infraction),
-                missionId = id,
+                tags = tags,
+                themes = themes,
             )
         val surveillanceAction =
             EnvActionSurveillanceEntity(
@@ -1030,13 +1088,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 observations = "This is a surveillance action",
                 awareness = null,
-                missionId = id,
+                tags = tags,
+                themes = themes,
             )
         val noteAction =
             EnvActionNoteEntity(
                 id = UUID.fromString("10cca413-f7e2-4a68-9c14-eea08bde0c29"),
                 observations = "This is a note",
-                missionId = id,
             )
 
         // list is sorted by id
@@ -1092,15 +1150,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // When
         jpaMissionRepository.save(missionToUpdate)
         val updatedMission = jpaMissionRepository.findFullMissionById(id)
-        assertThat(
-            updatedMission?.copy(
-                mission =
-                    updatedMission.mission.copy(
-                        createdAtUtc = null,
-                        updatedAtUtc = null,
-                    ),
-            ),
-        ).isEqualTo(expectedUpdatedMission)
+        assertThat(updatedMission)
+            .usingRecursiveComparison()
+            .ignoringFields("mission.envActions.id", "mission.createdAtUtc", "mission.updatedAtUtc")
+            .isEqualTo(expectedUpdatedMission)
     }
 
     @Test
@@ -1108,6 +1161,24 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save Should update mission with associated envActions`() {
         val id = 10
         // Given
+        val tags =
+            listOf(
+                aTag(
+                    id = 1,
+                    name = "PN",
+                    startedAt = ZonedDateTime.parse("2023-01-01T00:00Z"),
+                    endedAt = ZonedDateTime.parse("2030-12-31T00:00Z"),
+                ),
+            )
+        val themes =
+            listOf(
+                aTheme(
+                    id = 2,
+                    name = "AMP sans réglementation particulière",
+                    startedAt = ZonedDateTime.parse("2023-01-01T00:00Z"),
+                    endedAt = ZonedDateTime.parse("2099-12-31T23:59:59Z"),
+                ),
+            )
         val envAction =
             EnvActionControlEntity(
                 id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
@@ -1119,10 +1190,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             themeId = 2,
                         ),
                     ),
-                missionId = id,
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 actionNumberOfControls = 4,
+                tags = tags,
+                themes = themes,
             )
         val missionToUpdate =
             MissionEntity(
@@ -1170,20 +1242,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // When
         jpaMissionRepository.save(missionToUpdate)
         val updatedMission = jpaMissionRepository.findFullMissionById(id)
-        assertThat(
-            updatedMission?.copy(
-                mission =
-                    updatedMission.mission.copy(
-                        createdAtUtc = null,
-                        updatedAtUtc = null,
-                    ),
-            ),
-        ).isEqualTo(expectedUpdatedMission)
+        assertThat(updatedMission)
+            .usingRecursiveComparison()
+            .ignoringFields("mission.id", "mission.envActions.id", "mission.createdAtUtc", "mission.updatedAtUtc")
+            .isEqualTo(expectedUpdatedMission)
     }
 
     @Test
     @Transactional
-    fun `save Should update subThemes of envActions`() {
+    fun `save Should update control plans of envActions`() {
         val mission = jpaMissionRepository.findById(34)
         val envAction =
             mission?.envActions?.find {
@@ -1237,5 +1304,62 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(updatedControlPlan?.get(0)?.subThemeIds?.get(0)).isEqualTo(57)
         assertThat(updatedControlPlan?.get(1)?.tagIds?.size).isEqualTo(3)
         assertThat(updatedControlPlan?.get(1)?.tagIds?.get(0)).isEqualTo(1)
+    }
+
+    @Test
+    @Transactional
+    fun `save Should update themes of envActions`() {
+        val mission = jpaMissionRepository.findById(34)!!
+        val envAction =
+            mission.envActions?.find {
+                it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
+            }!!
+        when (envAction) {
+            is EnvActionControlEntity -> {
+                assertThat(envAction.themes.size).isEqualTo(1)
+                assertThat(envAction.themes[0].subThemes.size).isEqualTo(1)
+            }
+
+            is EnvActionSurveillanceEntity -> {
+                assertThat(envAction.themes.size).isEqualTo(1)
+                assertThat(envAction.themes[0].subThemes.size).isEqualTo(1)
+            }
+        }
+        val nextThemes =
+            listOf(
+                aTheme(id = 1, subThemes = listOf(aTheme(id = 170), aTheme(id = 146))),
+                aTheme(id = 14, subThemes = listOf(aTheme(id = 359), aTheme(id = 360), aTheme(id = 366))),
+                aTheme(id = 10),
+            )
+        val nextMission =
+            mission.copy(
+                envActions =
+                    mission.envActions.map {
+                        if (it.id ==
+                            UUID.fromString(
+                                "b8007c8a-5135-4bc3-816f-c69c7b75d807",
+                            ) &&
+                            it is EnvActionControlEntity
+                        ) {
+                            it.copy(themes = nextThemes)
+                        } else {
+                            it
+                        }
+                    },
+            )
+        val updatedMission = jpaMissionRepository.save(nextMission)
+        val updatedEnvAction =
+            updatedMission.mission.envActions
+                ?.find { it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807") } as EnvActionControlEntity
+        assertThat(updatedEnvAction.themes.size).isEqualTo(3)
+        updatedEnvAction.themes.find { it.id == 10 }.let {
+            assertThat(it?.subThemes).hasSize(0)
+        }
+        updatedEnvAction.themes.find { it.id == 1 }.let {
+            assertThat(it?.subThemes).hasSize(2)
+        }
+        updatedEnvAction.themes.find { it.id == 14 }.let {
+            assertThat(it?.subThemes).hasSize(3)
+        }
     }
 }

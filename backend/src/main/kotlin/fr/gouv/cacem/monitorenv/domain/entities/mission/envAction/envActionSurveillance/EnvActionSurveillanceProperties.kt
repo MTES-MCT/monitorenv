@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurv
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -19,10 +21,11 @@ data class EnvActionSurveillanceProperties(
         controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
-        missionId: Int?,
         geom: Geometry?,
         observationsByUnit: String?,
         openBy: String?,
+        themes: List<ThemeEntity>,
+        tags: List<TagEntity>,
     ) = EnvActionSurveillanceEntity(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
@@ -34,10 +37,11 @@ data class EnvActionSurveillanceProperties(
         department = department,
         facade = facade,
         geom = geom,
-        missionId = missionId,
         observations = observations,
         observationsByUnit = observationsByUnit,
         openBy = openBy,
+        themes = themes,
+        tags = tags,
     )
 
     companion object {

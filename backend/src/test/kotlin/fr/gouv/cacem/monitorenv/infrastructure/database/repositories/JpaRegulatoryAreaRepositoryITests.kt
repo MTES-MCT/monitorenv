@@ -63,7 +63,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
             themes.map {
                 TagRegulatoryAreaModel(
                     id = TagRegulatoryAreaPk(tagId = it.id, regulatoryAreaId = 17),
-                    tag = fromTagEntity(it, null),
+                    tag = fromTagEntity(it),
                     regulatoryArea = searchedRegulatoryArea,
                 )
             }
