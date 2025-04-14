@@ -15,6 +15,7 @@ import { RegulatoryAreas } from '../RegulatoryAreas'
 import { VigilanceAreas } from '../VigilanceAreas'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
+import { BackgroundMap } from '../BackgroundMap'
 
 import type { DashboardFilters } from '../slice'
 
@@ -32,9 +33,16 @@ export function FirstColumn({
 }: FirstColumnProps) {
   const [isMount, setIsMount] = useState<boolean>(false)
   const columnRef = useRef<HTMLDivElement>(null)
+  const backgroundMapRef = useRef<HTMLDivElement>(null)
   const regulatoryAreaRef = useRef<HTMLDivElement>(null)
   const ampRef = useRef<HTMLDivElement>(null)
   const vigilanceAreaRef = useRef<HTMLDivElement>(null)
+
+  const [backgroundMapBookmark, setBackgroundMapBookmark] = useState<BookmarkType>({
+    ref: backgroundMapRef,
+    title: 'Fonds de carte',
+    visible: false
+  })
 
   const [regBookmark, setRegBookmark] = useState<BookmarkType>({
     ref: regulatoryAreaRef,
@@ -49,10 +57,10 @@ export function FirstColumn({
     title: 'Zones de vigilance',
     visible: false
   })
-  const topBookmarks = [regBookmark, ampBookmark, vigilanceBookmark].filter(
+  const topBookmarks = [backgroundMapBookmark, regBookmark, ampBookmark, vigilanceBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'top'
   )
-  const bottomBookmarks = [regBookmark, ampBookmark, vigilanceBookmark].filter(
+  const bottomBookmarks = [backgroundMapBookmark, regBookmark, ampBookmark, vigilanceBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'bottom'
   )
 
@@ -65,6 +73,7 @@ export function FirstColumn({
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
 
   useObserverAccordion(columnRef, [
+    { ref: backgroundMapRef, setState: setBackgroundMapBookmark },
     { ref: regulatoryAreaRef, setState: setRegBookmark },
     { ref: ampRef, setState: setAmpBookmark },
     { ref: vigilanceAreaRef, setState: setVigilanceBookmark }
@@ -85,6 +94,11 @@ export function FirstColumn({
       {isMount && (
         <BaseColumn ref={columnRef} className={className}>
           <Bookmark bottomBookmarks={bottomBookmarks} columnWidth={columnWidth} topBookmarks={topBookmarks} />
+          <BackgroundMap
+            ref={backgroundMapRef}
+            isExpanded={expandedAccordion === Dashboard.Block.BACKGROUND_MAP}
+            setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.BACKGROUND_MAP)}
+          />
           <RegulatoryAreas
             ref={regulatoryAreaRef}
             columnWidth={columnWidth ?? 0}
