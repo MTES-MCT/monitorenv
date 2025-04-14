@@ -323,20 +323,6 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   }
 }
 
-export enum BaseLayer {
-  LIGHT = 'LIGHT',
-  OSM = 'OSM',
-  SATELLITE = 'SATELLITE',
-  SHOM = 'SHOM'
-}
-
-export const BaseLayerLabel: Record<BaseLayer, string> = {
-  [BaseLayer.LIGHT]: 'Fond de carte clair',
-  [BaseLayer.OSM]: 'Open Street Map',
-  [BaseLayer.SATELLITE]: 'Satellite',
-  [BaseLayer.SHOM]: 'Carte marine (SHOM)'
-}
-
 // Priority of selectable items is determined by the order of the layers in this array
 // The first layer in the array has the highest priority
 // Different hoverable arrays are used depending on the zoom level

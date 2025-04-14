@@ -1,8 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import { BaseLayer, type RegulatoryOrAMPOrViglanceAreaLayerType } from '../entities/layers/constants'
+import { type RegulatoryOrAMPOrViglanceAreaLayerType } from '../entities/layers/constants'
 import { CoordinatesFormat, DistanceUnit } from '../entities/map/constants'
 
 import type { Coordinate } from 'ol/coordinate'
@@ -27,7 +28,7 @@ type MapSliceStateType = {
   fitToExtent?: Extent
   isAreaSelected: boolean
   isolatedLayer: IsolatedLayerType | undefined
-  selectedBaseLayer: string
+  selectedBaseLayer: BaseLayer
   zoomToCenter?: Coordinate
 }
 const initialState: MapSliceStateType = {

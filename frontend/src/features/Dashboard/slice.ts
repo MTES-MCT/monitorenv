@@ -2,6 +2,7 @@ import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { isGeometryValid } from '@utils/geometryValidation'
+import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 import { InteractionType } from 'domain/entities/map/constants'
 import { type Reporting } from 'domain/entities/reporting'
 
@@ -13,6 +14,7 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
   ampIdsToDisplay: [],
+  backgroundMap: BaseLayer.OSM,
   dashboard: {
     ampIds: [],
     controlUnitIds: [],
@@ -45,6 +47,7 @@ type OpenPanel = {
 
 export type DashboardType = {
   ampIdsToDisplay: number[]
+  backgroundMap: BaseLayer
   dashboard: Dashboard.Dashboard
   defaultName: string | undefined
   displayGeometry: boolean
@@ -274,6 +277,17 @@ export const dashboardSlice = createSlice({
     },
     setActiveDashboardId(state, action: PayloadAction<string | undefined>) {
       state.activeDashboardId = action.payload
+    },
+    setBackgroundMap(state, action: PayloadAction<BaseLayer>) {
+      const id = state.activeDashboardId
+
+      if (!id) {
+        return
+      }
+
+      if (state.dashboards[id]) {
+        state.dashboards[id].backgroundMap = action.payload
+      }
     },
     setComments(state, action: PayloadAction<{ comments: string | undefined; key: string }>) {
       const id = action.payload.key
