@@ -49,11 +49,14 @@ FROM public.env_actions_control_plan_tags eacpt
          INNER JOIN themes t ON t.control_plan_tags_id = cpt.id;
 
 INSERT INTO themes_reportings (reportings_id, themes_id)
+SELECT DISTINCT reporting.id, reporting.control_plan_theme_id
+FROM public.reportings reporting;
+
+INSERT INTO themes_reportings (reportings_id, themes_id)
 SELECT DISTINCT rcpst.reporting_id, t.id
 FROM public.reportings_control_plan_sub_themes rcpst
          INNER JOIN control_plan_sub_themes cpst ON rcpst.subtheme_id = cpst.id
          INNER JOIN themes t ON t.control_plan_sub_themes_id = cpst.id;
-
 
 ALTER TABLE themes
     DROP COLUMN control_plan_themes_id,

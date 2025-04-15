@@ -103,24 +103,6 @@ context('Reportings', () => {
     })
   })
 
-  it('Should filter reportings by sub-themes', () => {
-    cy.wait(200)
-    cy.log('Sub-themes should be filtered')
-    cy.fill('Sous-thématiques', ['Surveillance générale'])
-    cy.getDataCy('reportings-filter-tags')
-      .find('.Component-SingleTag > span')
-      .contains('Sous-thème Surveillance générale')
-
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
-      cy.wrap(row).should('contain', 'Surveillance générale')
-    })
-  })
-
   it('Should filter reportings by sea-fronts', () => {
     cy.fill('Façade', [SeaFrontLabel.NAMO])
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Façade NAMO')

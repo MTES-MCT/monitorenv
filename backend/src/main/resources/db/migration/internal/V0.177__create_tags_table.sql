@@ -14,8 +14,6 @@ CREATE TABLE tags_regulatory_areas
     regulatory_areas_id INT REFERENCES regulations_cacem (id),
     primary key (tags_id, regulatory_areas_id)
 );
-CREATE INDEX idx_fk_tags_regulatory_areas_tags_id ON tags_regulatory_areas (tags_id);
-CREATE INDEX idx_fk_tags_regulatory_areas_regulations_cacem_id ON tags_regulatory_areas (regulatory_areas_id);
 
 CREATE TABLE tags_vigilance_areas
 (
@@ -23,8 +21,6 @@ CREATE TABLE tags_vigilance_areas
     vigilance_areas_id INT REFERENCES vigilance_areas (id),
     primary key (tags_id, vigilance_areas_id)
 );
-CREATE INDEX idx_fk_tags_vigilance_areas_tags_id ON tags_vigilance_areas (tags_id);
-CREATE INDEX idx_fk_tags_vigilance_areas_vigilance_areas_id ON tags_vigilance_areas (vigilance_areas_id);
 
 CREATE TABLE tags_env_actions
 (
@@ -32,5 +28,10 @@ CREATE TABLE tags_env_actions
     env_actions_id UUID REFERENCES env_actions (id),
     primary key (tags_id, env_actions_id)
 );
-CREATE INDEX idx_fk_tags_env_actions_tags_id ON tags_env_actions (tags_id);
-CREATE INDEX idx_fk_tags_env_actions_env_actions_id ON tags_env_actions (env_actions_id);
+
+CREATE TABLE tags_reportings
+(
+    tags_id       INT REFERENCES tags (id),
+    reportings_id INT REFERENCES reportings (id),
+    primary key (tags_id, reportings_id)
+);

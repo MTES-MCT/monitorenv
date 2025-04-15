@@ -29,20 +29,45 @@ data class ThemeReportingModel(
     val reporting: ReportingModel,
 ) {
     companion object {
-        fun toThemeEntities(themes: List<ThemeRegulatoryAreaModel>): List<ThemeEntity> {
+        fun toThemeEntities(themes: List<ThemeReportingModel>): List<ThemeEntity> {
             val parents = themes.map { it.theme }.filter { it.parent === null }
 
             return parents.map { parent ->
-                val subTags = themes.filter { it.theme.parent?.id == parent.id }.map { it.theme }
-                parent.subThemes = subTags
+                val subThemes = themes.filter { it.theme.parent?.id == parent.id }.map { it.theme }
+                parent.subThemes = subThemes
                 return@map parent.toThemeEntity()
             }
         }
+
+        fun fromThemeEntity(
+            theme: ThemeEntity,
+            reporting: ReportingModel,
+        ): ThemeReportingModel =
+            ThemeReportingModel(
+                id = ThemeReportingPk(theme.id, reporting.id),
+                theme = ThemeModel.fromThemeEntity(theme),
+                reporting = reporting,
+            )
+
+        fun fromThemeEntity(
+            theme: ThemeEntity?,
+            reporting: ReportingModel,
+        ): MutableSet<ThemeReportingModel> =
+            if (theme == null) {
+                mutableSetOf()
+            } else {
+                listOf(
+                    fromThemeEntity(
+                        theme,
+                        reporting,
+                    ),
+                ).plus(theme.subThemes.map { subTag -> fromThemeEntity(subTag, reporting) }).toMutableSet()
+            }
     }
 }
 
 @Embeddable
 data class ThemeReportingPk(
     val themeId: Int,
-    val reportingId: Int,
+    val reportingId: Int?,
 ) : Serializable

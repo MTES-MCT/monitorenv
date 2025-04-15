@@ -6,7 +6,7 @@ import java.time.ZonedDateTime
 data class TagOutput(
     val id: Int,
     val name: String,
-    val startedAt: ZonedDateTime,
+    val startedAt: ZonedDateTime?,
     val endedAt: ZonedDateTime?,
     val subTags: List<TagOutput>,
 ) {

@@ -15,7 +15,6 @@ import { ReportingTargetTypeLabels } from '../../../../../../domain/entities/tar
 import { vehicleTypeLabels } from '../../../../../../domain/entities/vehicleType'
 import { useAppDispatch } from '../../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../../hooks/useAppSelector'
-import { useGetControlPlans } from '../../../../../../hooks/useGetControlPlans'
 import { getFormattedReportingId } from '../../../../../Reportings/utils'
 import { attachReportingToMissionSliceActions } from '../../AttachReporting/slice'
 import { FormTitle } from '../../style'
@@ -30,8 +29,6 @@ export function ReportingForm({
   setCurrentActionId: (actionId: string | undefined) => void
 }) {
   const dispatch = useAppDispatch()
-  const { subThemes, themes } = useGetControlPlans()
-
   const { setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const reporting = values?.attachedReportings?.[reportingActionIndex]
@@ -45,8 +42,7 @@ export function ReportingForm({
     return null
   }
 
-  const subThemesAsString =
-    reporting.subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ') ?? EMPTY_VALUE
+  const subThemesAsString = reporting.theme.subThemes.map(subTheme => subTheme.name).join(', ') ?? EMPTY_VALUE
 
   const sourceTypeText = (sourceType: ReportingSourceEnum) => {
     if (sourceType === ReportingSourceEnum.SEMAPHORE) {
@@ -152,12 +148,7 @@ export function ReportingForm({
             readOnly
             value={reporting.reportType}
           />
-          <TextInput
-            label="Thématique du signalement"
-            name="themeId"
-            plaintext
-            value={reporting.themeId ? String(themes[reporting.themeId]?.theme) : EMPTY_VALUE}
-          />
+          <TextInput label="Thématique du signalement" name="themeId" plaintext value={reporting.theme.name} />
           <TextInput label="Sous-thématique du signalement" name="subThemeIds" plaintext value={subThemesAsString} />
           <Validity reporting={reporting} />
           <TextInput

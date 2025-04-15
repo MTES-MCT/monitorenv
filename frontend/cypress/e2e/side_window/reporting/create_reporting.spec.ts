@@ -50,6 +50,7 @@ context('Reportings', () => {
     const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
     cy.fill('Date et heure (UTC)', asDatePickerDateTime)
     cy.wait(250)
+    cy.fill('Thématiques et sous-thématiques', ['Carénage sauvage'])
     cy.fill('Thématique du signalement', 'Rejet')
     cy.fill('Sous-thématique du signalement', ['Carénage sauvage'])
 
@@ -77,6 +78,11 @@ context('Reportings', () => {
         subThemeIds: [186],
         targetDetails: [],
         targetType: 'COMPANY',
+        theme: {
+          id: 102,
+          name: 'Rejet',
+          subThemes: [{ id: 299, name: 'Carénage sauvage' }]
+        },
         themeId: 102,
         validityTime: 24
       })

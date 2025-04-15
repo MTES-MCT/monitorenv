@@ -27,6 +27,7 @@ export function getReportingInitialValues(reporting: AtLeast<Reporting, 'id'> | 
     geom: undefined,
     isInfractionProven: true,
     reportingSources: [createNewReportingSource()],
+    tags: [],
     validityTime: 24,
     ...reporting
   }

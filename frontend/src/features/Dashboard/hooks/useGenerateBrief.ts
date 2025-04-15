@@ -7,15 +7,12 @@ import { useImageConverter } from '@components/Form/Images/hook/useImageConverte
 import { renderPDF } from '@features/Dashboard/components/Pdf/renderPdf'
 import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { useMemo, useState } from 'react'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
 export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const [isLoadingBrief, setIsLoadingBrief] = useState(false)
-
-  const { subThemes, themes } = useGetControlPlans()
 
   const controlUnits = useAppSelector(state => getControlUnitsByIds(state, dashboard.controlUnitIds))
   const regulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, dashboard.regulatoryAreaIds))
@@ -54,8 +51,6 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       name: dashboard.name,
       regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),
-      subThemes,
-      themes,
       updatedAt: dashboard.updatedAt,
       vigilanceAreas
     } as Dashboard.Brief

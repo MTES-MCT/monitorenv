@@ -7,6 +7,8 @@ import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFor
 context('Reporting', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
+    cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
+    cy.intercept('GET', '/api/v1/stations').as('getStations')
 
     cy.viewport(1580, 1024)
 
@@ -15,7 +17,8 @@ context('Reporting', () => {
         Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
       }
     })
-    cy.wait(500)
+
+    cy.wait(['@getReportings', '@getStations'])
   })
 
   it('A reporting can be created', () => {
@@ -23,7 +26,6 @@ context('Reporting', () => {
     cy.clickButton('Chercher des signalements')
     cy.clickButton('Ajouter un signalement')
     cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
-    cy.wait(1000)
 
     // When
     cy.get('div').contains('Signalement non créé')
@@ -46,6 +48,7 @@ context('Reporting', () => {
 
     cy.get('.rs-radio').find('label').contains('Observation').click()
 
+    cy.fill('Thématiques et sous-thématiques', ['Remise en état après occupation du DPM'])
     cy.fill('Thématique du signalement', 'Culture marine')
     cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
 
@@ -91,6 +94,11 @@ context('Reporting', () => {
         reportType: 'OBSERVATION',
         targetDetails: [],
         targetType: 'COMPANY',
+        theme: {
+          id: 107,
+          name: 'Culture marine',
+          subThemes: [{ id: 346, name: 'Remise en état après occupation du DPM' }]
+        },
         validityTime: 24
       })
     })
@@ -116,6 +124,7 @@ context('Reporting', () => {
 
     cy.get('.rs-radio').find('label').contains('Infraction (susp.)').click()
 
+    cy.fill('Thématiques et sous-thématiques', ['Remise en état après occupation du DPM'])
     cy.fill('Thématique du signalement', 'Culture marine')
     cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
 
@@ -155,10 +164,9 @@ context('Reporting', () => {
 
   it('A mission can be detached from a reporting', () => {
     // Given
+    cy.wait(1000)
     cy.intercept('PUT', '/bff/v1/reportings/*').as('updateReporting')
-    cy.wait(1000)
     cy.get('#root').click(350, 690, { timeout: 10000 })
-    cy.wait(1000)
     cy.clickButton('Éditer le signalement')
 
     // When
@@ -197,7 +205,6 @@ context('Reporting', () => {
     cy.clickButton('Chercher des signalements')
     cy.clickButton('Ajouter un signalement')
     cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
-    cy.wait(1000)
 
     // When
     cy.fill('Nom du Sémaphore', 'Sémaphore de Dieppe')
@@ -211,6 +218,7 @@ context('Reporting', () => {
 
     cy.get('.rs-radio').find('label').contains('Infraction').click()
 
+    cy.fill('Thématiques et sous-thématiques', ['Remise en état après occupation du DPM'])
     cy.fill('Thématique du signalement', 'Culture marine')
     cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
 
@@ -246,6 +254,8 @@ context('Reporting', () => {
     cy.get('#root').click(450, 690, { timeout: 10000 })
     cy.clickButton('Valider le point')
     cy.fill('Type de signalement', 'Observation')
+
+    cy.fill('Thématiques et sous-thématiques', ['Mouillage réglementé par AMP'])
     cy.fill('Thématique du signalement', 'Mouillage individuel')
     cy.fill('Sous-thématique du signalement', ['Mouillage réglementé par AMP'])
 
@@ -258,14 +268,17 @@ context('Reporting', () => {
 
     cy.wait('@createReporting').then(({ request, response }) => {
       expect(request.body.themeId).equal(100)
+      expect(request.body.theme.id).equal(100)
       expect(request.body.withVHFAnswer).equal(true)
 
       expect(response && response.statusCode).equal(201)
       expect(response?.body.themeId).equal(100)
+      expect(response?.body.theme.id).equal(100)
       expect(response?.body.withVHFAnswer).equal(true)
     })
 
     // we update reporting theme and clean `withVHFAnswer` field
+    cy.fill('Thématiques et sous-thématiques', ["Prospection d'un bien culturel maritime"])
     cy.fill('Thématique du signalement', 'Bien culturel maritime')
     cy.fill('Sous-thématique du signalement', ["Prospection d'un bien culturel maritime"])
 
@@ -364,7 +377,9 @@ context('Reporting', () => {
       cy.intercept('PUT', `/bff/v1/reportings/${reporting.id}`).as('updateReporting')
 
       // update theme to "Mouillage Individuel"
+      cy.fill('Thématiques et sous-thématiques', ['Mouillage réglementé par AMP'])
       cy.fill('Thématique du signalement', 'Mouillage individuel')
+      cy.fill('Thématiques et sous-thématiques', ['Mouillage réglementé par AMP'])
 
       // Fill in the vessel informations
       cy.fill('Type de cible', 'Véhicule')

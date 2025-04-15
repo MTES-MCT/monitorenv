@@ -6,7 +6,6 @@ import { TableContainer } from '@components/Table/style'
 import { TableWithSelectableRowsHeader } from '@components/Table/TableWithSelectableRows/Header'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
@@ -36,16 +35,15 @@ export function ReportingsTable({
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -35 : 0
 
   const openReportings = useAppSelector(state => state.reporting.reportings)
-  const { themes } = useGetControlPlans()
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'createdAt' }])
 
   const columns = useMemo(
     () =>
       isLoading
-        ? Columns(themes, legacyFirefoxOffset, false).map(column => ({ ...column, cell: StyledSkeletonRow }))
-        : Columns(themes, legacyFirefoxOffset, isFetching),
-    [isLoading, isFetching, legacyFirefoxOffset, themes]
+        ? Columns(legacyFirefoxOffset, false).map(column => ({ ...column, cell: StyledSkeletonRow }))
+        : Columns(legacyFirefoxOffset, isFetching),
+    [isLoading, isFetching, legacyFirefoxOffset]
   )
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : reportings), [isLoading, reportings])
