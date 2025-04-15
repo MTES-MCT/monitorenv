@@ -7,7 +7,6 @@ import { useGetReportingsQuery } from '../../../api/reportingsAPI'
 import { TWO_MINUTES } from '../../../constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { sourceFilterFunction } from '../useCases/filters/sourceFilterFunction'
-import { subThemesFilterFunction } from '../useCases/filters/subThemesFilterFunction'
 import { themeFilterFunction } from '../useCases/filters/themeFilterFunction'
 
 export const useGetFilteredReportingsQuery = (skip = false) => {
@@ -22,7 +21,6 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
     startedAfter,
     startedBefore,
     statusFilter,
-    subThemesFilter,
     targetTypeFilter,
     themeFilter,
     typeFilter
@@ -101,10 +99,9 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
         !!reporting &&
         // FRONT filters
         themeFilterFunction(reporting, themeFilter) &&
-        subThemesFilterFunction(reporting, subThemesFilter) &&
         sourceFilterFunction(reporting, sourceFilter)
     )
-  }, [data, themeFilter, subThemesFilter, sourceFilter])
+  }, [data, themeFilter, sourceFilter])
 
   return { isError, isFetching, isLoading, reportings }
 }

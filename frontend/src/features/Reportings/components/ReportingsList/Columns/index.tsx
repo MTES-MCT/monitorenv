@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
 import { CellActionStatus } from '../Cells/CellActionStatus'
-import { CellActionThemes } from '../Cells/CellActionThemes'
+import { CellActionTheme } from '../Cells/CellActionThemes'
 import { CellAttachedtoMission } from '../Cells/CellAttachedToMission'
 import { CellStatus } from '../Cells/CellStatus'
 import { CellTarget } from '../Cells/CellTarget'
@@ -16,7 +16,7 @@ import { getReportType } from '../Cells/getReportType'
 
 import type { Row } from '@tanstack/react-table'
 
-export const Columns = (themes, legacyFirefoxOffset: number = 0, isFetching: boolean = false) => [
+export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = false) => [
   {
     accessorFn: row => row.reportingId,
     cell: ({ row }) => (
@@ -106,22 +106,12 @@ export const Columns = (themes, legacyFirefoxOffset: number = 0, isFetching: boo
   },
   {
     accessorFn: row => row.theme,
-    cell: ({ row }) =>
-      isFetching ? (
-        <StyledSkeletonRow />
-      ) : (
-        <CellActionThemes subThemeIds={row.original.subThemeIds} themeId={row.original.themeId} />
-      ),
+    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CellActionTheme theme={row.original.theme} />),
     enableSorting: true,
     header: () => 'Thématique',
-    id: 'themeId',
+    id: 'theme',
     size: 265 + legacyFirefoxOffset,
-    sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
-      const themeA: string = themes[rowA.original[columnId]]?.theme ?? ''
-      const themeB: string = themes[rowB.original[columnId]]?.theme ?? ''
-
-      return themeA?.localeCompare(themeB)
-    }
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => rowA.original.theme?.name?.localeCompare(rowB.original.theme?.name)
   },
   {
     accessorFn: row => row.seaFront,
