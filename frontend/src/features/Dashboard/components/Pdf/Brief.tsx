@@ -54,7 +54,7 @@ export function Brief({ author, brief, description, title }: BriefProps) {
         <Page style={layoutStyle.page}>
           <Headings name={brief.name} />
           <View style={layoutStyle.section}>
-            <Reportings reportings={brief.reportings} subThemes={brief.subThemes} themes={brief.themes} />
+            <Reportings reportings={brief.reportings} />
           </View>
         </Page>
       )}

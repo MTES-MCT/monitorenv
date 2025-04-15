@@ -3,7 +3,6 @@ import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGet
 import { addReporting } from '@features/Reportings/useCases/addReporting'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
@@ -14,7 +13,6 @@ export function ReportingsList() {
   const dispatch = useAppDispatch()
 
   const { isError, isFetching, isLoading, reportings } = useGetFilteredReportingsQuery()
-  const { isLoading: isControlPlansLoading } = useGetControlPlans()
 
   const createReporting = () => {
     dispatch(addReporting(ReportingContext.SIDE_WINDOW))
@@ -28,7 +26,7 @@ export function ReportingsList() {
           Ajouter un nouveau signalement
         </StyledButton>
       </StyledHeader>
-      {isControlPlansLoading ? <div>Chargement</div> : <ReportingsFilters />}
+      <ReportingsFilters />
 
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>

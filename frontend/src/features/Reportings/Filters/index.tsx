@@ -1,5 +1,6 @@
-import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
-import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum, type Option } from '@mtes-mct/monitor-ui'
+import { useGetThemesQuery } from '@api/themesAPI'
+import { getThemesAsOptions } from '@features/Themes/useCases/getThemesAsOptions'
+import { type DateAsStringRange, getOptionsFromLabelledEnum, type Option } from '@mtes-mct/monitor-ui'
 import _, { reduce } from 'lodash'
 import { type MutableRefObject, useMemo, useRef } from 'react'
 
@@ -20,7 +21,9 @@ import { SeaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingTargetTypeLabels } from '../../../domain/entities/targetType'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { useGetControlPlans } from '../../../hooks/useGetControlPlans'
+
+import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui__root'
+import type { ThemeAPI } from 'domain/entities/themes'
 
 export enum ReportingFilterContext {
   MAP = 'MAP',
@@ -33,42 +36,21 @@ export type ReportingsOptionsListType = {
   sourceOptions: Option<SourceFilterProps>[]
   sourceTypeOptions: Option<string>[]
   statusOptions: Option<string>[]
-  subThemesOptions: Option<number>[]
   targetTypeOtions: Option<string>[]
-  themesOptions: Option<number>[]
+  themesOptions: CheckTreePickerOption[]
   typeOptions: Option<string>[]
 }
 
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
-  const { sourceTypeFilter, startedAfter, startedBefore, subThemesFilter } = useAppSelector(
-    state => state.reportingFilters
-  )
+  const { sourceTypeFilter } = useAppSelector(state => state.reportingFilters)
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const startedAfterYear = useMemo(() => customDayjs(startedAfter).get('year'), [startedAfter])
-  const startedBeforeYear = useMemo(() => customDayjs(startedBefore).get('year'), [startedBefore])
-  const { subThemes, subThemesAsOptions, themesAsOptions } = useGetControlPlans()
-  const { subThemesByYearAsOptions, themesByYearAsOptions } = useGetControlPlansByYear({ year: startedAfterYear })
-  const themesAsOptionsPerPeriod = useMemo(() => {
-    if (startedAfterYear === startedBeforeYear) {
-      return themesByYearAsOptions
-    }
+  const { data: theme } = useGetThemesQuery()
 
-    // TODO deal with 2-year periods
-    return themesAsOptions
-  }, [startedAfterYear, startedBeforeYear, themesAsOptions, themesByYearAsOptions])
-
-  const subThemesAsOptionsPerPeriod = useMemo(() => {
-    if (startedAfterYear === startedBeforeYear) {
-      return subThemesByYearAsOptions
-    }
-
-    // TODO deal with 2-year periods
-    return subThemesAsOptions
-  }, [startedAfterYear, startedBeforeYear, subThemesAsOptions, subThemesByYearAsOptions])
+  const themesOptions = useMemo(() => getThemesAsOptions(Object.values(theme ?? [])), [theme])
 
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
@@ -139,9 +121,8 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
-    subThemesOptions: subThemesAsOptionsPerPeriod,
     targetTypeOtions,
-    themesOptions: themesAsOptionsPerPeriod,
+    themesOptions,
     typeOptions
   }
 
@@ -155,16 +136,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     dispatch(
       reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
     )
-
-    // if we change the year, we reset the theme and subtheme filters
-    const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : undefined
-    const currentYear = customDayjs().get('year')
-    if (actuelFilterYear && currentYear !== actuelFilterYear) {
-      dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.THEME_FILTER, value: undefined }))
-      dispatch(
-        reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SUB_THEMES_FILTER, value: undefined })
-      )
-    }
   }
 
   const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {
@@ -180,16 +151,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
         value: date && date[1] ? date[1] : undefined
       })
     )
-
-    // if we change the year, we reset the theme and subtheme filters
-    const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : customDayjs().get('year')
-    const newFilterYear = date && date[0] ? customDayjs(date[0]).get('year') : undefined
-    if (newFilterYear && newFilterYear !== actuelFilterYear) {
-      dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.THEME_FILTER, value: undefined }))
-      dispatch(
-        reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SUB_THEMES_FILTER, value: undefined })
-      )
-    }
   }
 
   const updateSimpleFilter = (value, filter) => {
@@ -214,25 +175,10 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: undefined }))
   }
 
-  const updateThemeFilter = (themesIds: number[] | undefined) => {
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.THEME_FILTER, value: themesIds }))
-
-    if (themesIds) {
-      const availableSubThemes = Object.values(subThemes)
-        .filter(subTheme => themesIds.includes(subTheme.themeId))
-        .map(subTheme => subTheme.id)
-      dispatch(
-        reportingsFiltersActions.updateFilters({
-          key: ReportingsFiltersEnum.SUB_THEMES_FILTER,
-          value: subThemesFilter?.filter(subThemeId => availableSubThemes.includes(subThemeId))
-        })
-      )
-    } else {
-      dispatch(
-        reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SUB_THEMES_FILTER, value: undefined })
-      )
-    }
+  const updateThemeFilter = (themes: ThemeAPI[] | undefined) => {
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.THEME_FILTER, value: themes }))
   }
+
   const resetFilters = () => {
     dispatch(reportingsFiltersActions.resetReportingsFilters())
   }
@@ -258,6 +204,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       updatePeriodFilter={updatePeriodFilter}
       updateSimpleFilter={updateSimpleFilter}
       updateSourceTypeFilter={updateSourceTypeFilter}
+      updateThemeFilter={updateThemeFilter}
     />
   )
 }

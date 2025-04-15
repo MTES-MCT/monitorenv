@@ -11,9 +11,19 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetail
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel.Companion.fromTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel.Companion.fromThemeEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.AbstractReportingModel.Companion.fromReportingEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagReportingRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeReportingRepository
 import org.apache.commons.lang3.StringUtils
 import org.locationtech.jts.geom.Geometry
 import org.springframework.dao.DataIntegrityViolationException
@@ -24,7 +34,7 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 @Repository
 class JpaReportingRepository(
@@ -32,6 +42,8 @@ class JpaReportingRepository(
     private val dbMissionRepository: IDBMissionRepository,
     private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
     private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
+    private val dbTagRepository: IDBTagReportingRepository,
+    private val dbThemeRepository: IDBThemeReportingRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
@@ -198,6 +210,8 @@ class JpaReportingRepository(
                         controlPlanThemeReference = controlPlanThemeReference,
                     )
             }
+            reportingModel.themes = fromThemeEntity(reporting.theme, reportingModel)
+            reportingModel.tags = fromTagEntities(reporting.tags, reportingModel)
 
             val reportingsSourceModels =
                 reporting.reportingSources.map {

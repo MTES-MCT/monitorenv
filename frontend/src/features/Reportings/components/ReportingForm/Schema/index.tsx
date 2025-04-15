@@ -9,6 +9,7 @@ import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { isEmpty } from 'lodash'
 import * as Yup from 'yup'
 
+import type { ThemeAPI } from 'domain/entities/themes'
 import type { VesselTypeEnum } from 'domain/entities/vesselType'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -82,6 +83,7 @@ export const ReportingSchema: Yup.Schema<
       .ensure()
       .required()
       .min(1, 'Veuillez définir les sous-thématiques du signalement'),
+    tags: Yup.array().ensure().optional(),
     targetDetails: Yup.array<TargetDetails>()
       .of(
         Yup.object().shape({
@@ -96,6 +98,7 @@ export const ReportingSchema: Yup.Schema<
       )
       .optional(),
     targetType: Yup.string<ReportingTargetTypeEnum>().optional(),
+    theme: Yup.mixed<ThemeAPI>().required('Veuillez définir la thématique du signalement'),
     themeId: Yup.number().required('Veuillez définir la thématique du signalement'),
     validityTime: Yup.number()
       .required('Veuillez définir la durée de validité du signalement')

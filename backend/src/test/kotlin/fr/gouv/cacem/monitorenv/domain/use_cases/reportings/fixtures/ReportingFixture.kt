@@ -1,14 +1,18 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 class ReportingFixture {
     companion object {
@@ -55,6 +59,8 @@ class ReportingFixture {
                 missionId = missionId,
                 attachedToMissionAtUtc = attachedToMissionAtUtc,
                 attachedEnvActionId = attachedEnvActionId,
+                tags = emptyList(),
+                theme = null,
             )
         }
 

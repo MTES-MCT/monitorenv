@@ -1,5 +1,5 @@
 import { useGetThemesQuery } from '@api/themesAPI'
-import { getThemesAsOptions, parseOptionToTheme } from '@features/Themes/useCases/getThemesAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/useCases/getThemesAsOptions'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
 import { useField } from 'formik'
 import { useMemo } from 'react'
@@ -69,7 +69,7 @@ export function ActionTheme({
         name={`envActions[${actionIndex}].themes`}
         onChange={option => {
           if (option) {
-            helpers.setValue(parseOptionToTheme(option))
+            helpers.setValue(parseOptionsToThemes(option))
           } else {
             helpers.setValue([])
           }
