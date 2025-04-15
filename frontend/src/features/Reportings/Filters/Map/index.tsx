@@ -1,5 +1,14 @@
 import { CustomPeriodContainer } from '@components/style'
-import { CheckPicker, DateRangePicker, Checkbox, SingleTag, type DateAsStringRange } from '@mtes-mct/monitor-ui'
+import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/useCases/getThemesAsOptions'
+import {
+  Checkbox,
+  CheckPicker,
+  DateRangePicker,
+  SingleTag,
+  type DateAsStringRange,
+  type OptionValueType
+} from '@mtes-mct/monitor-ui'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
@@ -12,24 +21,25 @@ import {
 import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
 
 import type { ReportingsOptionsListType } from '..'
+import type { ThemeAPI } from 'domain/entities/themes'
 
 type MapReportingsFiltersProps = {
   optionsList: ReportingsOptionsListType
   updateCheckboxFilter: (
-    isChecked: boolean,
+    isChecked: boolean | undefined,
     value: string,
     filter: ReportingsFiltersEnum,
     filterValues: string[]
   ) => void
   updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
-  updatePeriodFilter: (value: DateRangeEnum) => void
-  updateSimpleFilter: (value: string, filter: ReportingsFiltersEnum) => void
+  updatePeriodFilter: (value: OptionValueType | undefined) => void
+  updateSimpleFilter: (value: OptionValueType | undefined, filter: ReportingsFiltersEnum) => void
   updateSourceTypeFilter: (value: string[]) => void
+  updateThemeFilter: (value: ThemeAPI[]) => void
 }
 
 export function MapReportingsFiltersWithRef(
@@ -39,8 +49,9 @@ export function MapReportingsFiltersWithRef(
     updateDateRangeFilter,
     updatePeriodFilter,
     updateSimpleFilter,
-    updateSourceTypeFilter
-  },
+    updateSourceTypeFilter,
+    updateThemeFilter
+  }: MapReportingsFiltersProps,
   ref
 ) {
   const dispatch = useAppDispatch()
@@ -52,21 +63,12 @@ export function MapReportingsFiltersWithRef(
     startedAfter,
     startedBefore,
     statusFilter,
-    subThemesFilter,
     targetTypeFilter,
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
-  const { subThemes, themes } = useGetControlPlans()
-  const {
-    dateRangeOptions,
-    sourceTypeOptions,
-    statusOptions,
-    subThemesOptions,
-    targetTypeOtions,
-    themesOptions,
-    typeOptions
-  } = optionsList
+  const { dateRangeOptions, sourceTypeOptions, statusOptions, targetTypeOtions, themesOptions, typeOptions } =
+    optionsList
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
@@ -209,57 +211,30 @@ export function MapReportingsFiltersWithRef(
         )}
       </StyledBloc>
       <StyledBloc>
-        <CheckPicker
+        <CheckTreePicker
           key={`theme${themesOptions.length}${JSON.stringify(themeFilter)}`}
+          // customSearch={themeCustomSearch}
+          data-cy="reporting-theme-filter"
           isLabelHidden
           isTransparent
           label="Thématiques"
+          menuStyle={{ maxWidth: '200%' }}
           name="themes"
-          onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
+          onChange={value => updateThemeFilter(parseOptionsToThemes(value ?? []))}
           options={themesOptions}
           placeholder="Thématiques"
-          renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
-          searchable
-          value={themeFilter}
+          value={getThemesAsOptions(themeFilter ?? [])}
         />
 
         {themeFilter && themeFilter.length > 0 && (
           <StyledTagsContainer>
-            {themeFilter.map(themeId => (
+            {themeFilter.map(theme => (
               <SingleTag
-                key={themeId}
-                onDelete={() => onDeleteTag(themeId, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
-                title={themes[themeId]?.theme}
+                key={theme.id}
+                onDelete={() => onDeleteTag(theme, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
+                title={theme.name}
               >
-                {String(themes[themeId]?.theme)}
-              </SingleTag>
-            ))}
-          </StyledTagsContainer>
-        )}
-
-        <CheckPicker
-          key={`subtheme${subThemesOptions.length}${JSON.stringify(subThemesFilter)}`}
-          isLabelHidden
-          isTransparent
-          label="Sous-thématiques"
-          name="subThemes"
-          onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
-          options={subThemesOptions}
-          placeholder="Sous-thématiques"
-          renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
-          searchable
-          value={subThemesFilter}
-        />
-
-        {subThemesFilter && subThemesFilter.length > 0 && (
-          <StyledTagsContainer>
-            {subThemesFilter.map(subThemeId => (
-              <SingleTag
-                key={subThemeId}
-                onDelete={() => onDeleteTag(subThemeId, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
-                title={subThemes[subThemeId]?.subTheme}
-              >
-                {String(subThemes[subThemeId]?.subTheme)}
+                {theme.name}
               </SingleTag>
             ))}
           </StyledTagsContainer>

@@ -58,6 +58,8 @@ object TestUtils {
                     isDeleted = false,
                     openBy = "CDA",
                     isInfractionProven = true,
+                    tags = emptyList(),
+                    theme = null,
                 ),
             reportingSources =
                 listOf(
@@ -124,6 +126,8 @@ object TestUtils {
                         ),
                     detachedFromMissionAtUtc = null,
                     isInfractionProven = true,
+                    tags = emptyList(),
+                    theme = null,
                 ),
             reportingSources =
                 listOf(

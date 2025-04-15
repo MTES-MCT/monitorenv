@@ -12,7 +12,6 @@ import { Fragment } from 'react/jsx-runtime'
 
 import { areaStyle, layoutStyle } from '../style'
 
-import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 import type { Coordinate } from 'ol/coordinate'
 
 const styles = StyleSheet.create({
@@ -151,15 +150,7 @@ const reportingStatusFlag = (reporting: Reporting) => {
   }
 }
 
-export function Reportings({
-  reportings,
-  subThemes,
-  themes
-}: {
-  reportings: Reporting[]
-  subThemes: ControlPlansSubThemeCollection
-  themes: ControlPlansThemeCollection
-}) {
+export function Reportings({ reportings }: { reportings: Reporting[] }) {
   return (
     <>
       <View style={layoutStyle.header2}>
@@ -221,12 +212,10 @@ export function Reportings({
             {reporting.createdAt && (
               <Text style={styles.reportingDate}>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Text>
             )}
-            {!!reporting.themeId && (
-              <View style={(layoutStyle.row, { flexWrap: 'wrap' })}>
-                <Text style={{ fontWeight: 'bold' }}>{themes[reporting.themeId]?.theme} /</Text>
-                <Text>{reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')}</Text>
-              </View>
-            )}
+            <View style={(layoutStyle.row, { flexWrap: 'wrap' })}>
+              <Text style={{ fontWeight: 'bold' }}>{reporting.theme.name} /</Text>
+              <Text>{reporting.theme.subThemes.map(subTheme => subTheme.name).join(', ')}</Text>
+            </View>
             <View style={[layoutStyle.row, { rowGap: 2 }]}>
               <View style={styles.description}>
                 <Text>Localisation</Text>
