@@ -11,7 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurve
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlInfractionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionEnvActionControlPlanDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.ThemeInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.Optional
@@ -28,8 +28,8 @@ data class EnvActionDataInput(
     val completedBy: String? = null,
     val completion: ActionCompletionEnum? = null,
     val controlPlans: List<MissionEnvActionControlPlanDataInput>? = null,
-    val tags: List<TagInput>?,
-    val themes: List<ThemeInput>?,
+    val tags: List<TagInput> = emptyList(),
+    val themes: List<ThemeInput> = emptyList(),
     val department: String? = null,
     val facade: String? = null,
     val geom: Geometry? = null,
@@ -66,7 +66,7 @@ data class EnvActionDataInput(
         }
     }
 
-    fun toEnvActionEntity(missionId: Int? = null): EnvActionEntity {
+    fun toEnvActionEntity(): EnvActionEntity {
         this.validate()
 
         when (this.actionType) {
@@ -94,8 +94,8 @@ data class EnvActionDataInput(
                     observations = this.observations,
                     openBy = this.openBy,
                     vehicleType = this.vehicleType,
-                    tags = tags?.map { it.toTagEntity() } ?: emptyList(),
-                    themes = themes?.map { it.toThemeEntity() } ?: emptyList(),
+                    tags = tags.map { it.toTagEntity() },
+                    themes = themes.map { it.toThemeEntity() },
                 )
 
             ActionTypeEnum.SURVEILLANCE ->
@@ -113,8 +113,8 @@ data class EnvActionDataInput(
                     observations = this.observations,
                     openBy = this.openBy,
                     awareness = awareness?.toAwarenessEntity(),
-                    tags = tags?.map { it.toTagEntity() } ?: emptyList(),
-                    themes = themes?.map { it.toThemeEntity() } ?: emptyList(),
+                    tags = tags.map { it.toTagEntity() },
+                    themes = themes.map { it.toThemeEntity() },
                 )
 
             ActionTypeEnum.NOTE ->

@@ -82,7 +82,7 @@ export function ThemeSelector({ label, name }) {
 
 const Msg = styled.div``
 
-const MessageTitle = styled.header`
+export const MessageTitle = styled.header`
   font-weight: 500;
 `
-const MessageText = styled.p``
+export const MessageText = styled.p``
