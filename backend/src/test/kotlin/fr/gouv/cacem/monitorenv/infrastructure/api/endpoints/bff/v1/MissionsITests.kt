@@ -528,6 +528,8 @@ class MissionsITests {
                                     isDeleted = false,
                                     openBy = "OpenBy",
                                     isInfractionProven = true,
+                                    tags = emptyList(),
+                                    theme = null,
                                 ),
                             reportingSources = listOf(),
                         ),

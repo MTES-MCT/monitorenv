@@ -7,6 +7,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput.Companion.fromReportingSourceDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput.Companion.fromTagEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput.Companion.fromThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -40,6 +44,8 @@ data class ReportingDataOutput(
     val updatedAtUtc: ZonedDateTime? = null,
     val withVHFAnswer: Boolean? = null,
     val isInfractionProven: Boolean,
+    val theme: ThemeOutput?,
+    val tags: List<TagOutput>,
 ) {
     companion object {
         fun fromReportingDTO(dto: ReportingDetailsDTO): ReportingDataOutput {
@@ -80,6 +86,8 @@ data class ReportingDataOutput(
                 updatedAtUtc = dto.reporting.updatedAtUtc,
                 withVHFAnswer = dto.reporting.withVHFAnswer,
                 isInfractionProven = dto.reporting.isInfractionProven,
+                tags = dto.reporting.tags.map { fromTagEntity(it) },
+                theme = dto.reporting.theme?.let { fromThemeEntity(it) },
             )
         }
     }
