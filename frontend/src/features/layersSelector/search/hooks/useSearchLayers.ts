@@ -79,7 +79,7 @@ export function useSearchLayers() {
       vigilanceAreaSpecificPeriodFilter: string[] | undefined
     }) => {
       const shouldSearchByText = searchedText?.length > 2
-      const shouldSeachTroughAMPTypes = ampTypes?.length > 0
+      const shouldSearchThroughAMPTypes = ampTypes?.length > 0
       const shouldSearchThroughRegulatoryTags = regulatoryTags?.length > 0
 
       let vigilanceAreasPerPeriod = [] as Array<VigilanceArea.VigilanceArea>
@@ -97,10 +97,10 @@ export function useSearchLayers() {
           .map(({ id }) => id) as number[]
       }
 
-      if (shouldSearchByText || shouldSeachTroughAMPTypes || shouldSearchByExtent) {
+      if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldSearchByExtent) {
         let searchedAMPS
         let itemSchema
-        if (shouldSearchByText || shouldSeachTroughAMPTypes) {
+        if (shouldSearchByText || shouldSearchThroughAMPTypes) {
           const filterWithTextExpression = shouldSearchByText
             ? {
                 $or: [
@@ -110,7 +110,7 @@ export function useSearchLayers() {
                 $val: searchedText
               }
             : undefined
-          const filterWithType = shouldSeachTroughAMPTypes
+          const filterWithType = shouldSearchThroughAMPTypes
             ? { $or: ampTypes.map(type => ({ $path: 'type', $val: type })) }
             : undefined
 
@@ -152,7 +152,7 @@ export function useSearchLayers() {
             : undefined
 
           const filterWithTags = shouldSearchThroughRegulatoryTags
-            ? { $or: regulatoryTags.map(theme => ({ $path: ['themes.name'], $val: theme })) }
+            ? { $or: regulatoryTags.map(theme => ({ $path: ['tags.name'], $val: theme })) }
             : undefined
 
           const filterExpression = [filterWithTextExpression, filterWithTags].filter(f => !!f) as Expression[]
@@ -189,7 +189,7 @@ export function useSearchLayers() {
             : undefined
 
           const filterWithTheme = shouldSearchThroughRegulatoryTags
-            ? { $or: regulatoryTags.map(theme => ({ $path: ['tags.name'], $val: theme })) }
+            ? { $or: regulatoryTags.map(theme => ({ $path: ['themes'], $val: theme })) }
             : undefined
 
           const filterExpression = [filterVigilanceAreaWithTextExpression, filterWithTheme].filter(
