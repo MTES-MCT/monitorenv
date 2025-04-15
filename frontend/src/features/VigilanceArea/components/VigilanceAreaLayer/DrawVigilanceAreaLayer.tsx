@@ -28,8 +28,7 @@ function UnmemoizedDrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       dispatch(addFeatureToDrawedFeature(event.feature))
     },
     onModifyEnd: (geom: GeoJSON.Geometry | Geometry) =>
-      dispatch(vigilanceAreaActions.setGeometry(geom as GeoJSON.Geometry)),
-    withConversionToGeoJSONGeometryObject: false
+      dispatch(vigilanceAreaActions.setGeometry(geom as GeoJSON.Geometry))
   })
 
   return null
