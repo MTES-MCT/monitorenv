@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEnt
 import org.locationtech.jts.geom.Geometry
 
 interface IRegulatoryAreaRepository {
-    fun findById(id: Int): RegulatoryAreaEntity
+    fun findById(id: Int): RegulatoryAreaEntity?
 
     fun findAll(): List<RegulatoryAreaEntity>
 

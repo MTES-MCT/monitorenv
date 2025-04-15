@@ -21,16 +21,16 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
 
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
-  const setFilteredRegulatoryThemes = (value: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryThemes: value }, id }))
+  const setFilteredRegulatoryTags = (value: string[] | undefined) => {
+    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: value }, id }))
   }
 
   const setFilteredAmpTypes = (value: string[] | undefined) => {
     dispatch(dashboardFiltersActions.setFilters({ filters: { amps: value }, id }))
   }
 
-  const deleteRegulatoryTheme = (regulatoryThemeToDelete: string) => {
-    setFilteredRegulatoryThemes(filters?.regulatoryThemes?.filter(theme => theme !== regulatoryThemeToDelete))
+  const deleteRegulatoryTag = (regulatoryTagToDelete: string) => {
+    setFilteredRegulatoryTags(filters?.regulatoryTags?.filter(theme => theme !== regulatoryTagToDelete))
   }
 
   const deleteAmpType = (ampTypeToDelete: string) => {
@@ -46,7 +46,7 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
   }
 
   const hasFilters = !!(
-    (filters?.regulatoryThemes && filters?.regulatoryThemes.length > 0) ||
+    (filters?.regulatoryTags && filters?.regulatoryTags.length > 0) ||
     (filters?.amps && filters?.amps.length > 0) ||
     filters?.vigilanceAreaPeriod
   )
@@ -70,8 +70,8 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
           />
         </CustomPeriodContainer>
       )}
-      {filters?.regulatoryThemes?.map(theme => (
-        <SingleTag key={theme} onDelete={() => deleteRegulatoryTheme(theme)} title={theme}>
+      {filters?.regulatoryTags?.map(theme => (
+        <SingleTag key={theme} onDelete={() => deleteRegulatoryTag(theme)} title={theme}>
           {theme}
         </SingleTag>
       ))}

@@ -128,7 +128,10 @@ export function AreaTable({
                     style={[
                       styles.layerLegend,
                       {
-                        backgroundColor: getRegulatoryEnvColorWithAlpha(layer.thematique, layer.entityName)
+                        backgroundColor: getRegulatoryEnvColorWithAlpha(
+                          layer.tags.map(({ name }) => name).join(', '),
+                          layer.entityName
+                        )
                       }
                     ]}
                   />
