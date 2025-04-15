@@ -1,4 +1,3 @@
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   ActionTypeEnum,
   type EnvAction,
@@ -8,58 +7,43 @@ import {
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
+import type { ThemeAPI } from 'domain/entities/themes'
 
-const getAllThemesAndSubThemesAsString = (
-  envActions: EnvAction[],
-  subThemes: ControlPlansSubThemeCollection,
-  themes: ControlPlansThemeCollection
-) => {
-  const uniqueThemesAndSubthemes = envActions
+const getThemesCell = (envActions: EnvAction[]) => {
+  const groupedThemes = envActions
     .filter(
       (a): a is EnvActionControl | EnvActionSurveillance =>
         a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
     )
-    .reduce((acc, { controlPlans }) => {
-      if (controlPlans) {
-        controlPlans.forEach(controlPlan => {
-          const controlPlanTheme = controlPlan.themeId ? themes[controlPlan.themeId]?.theme : undefined
-          if (controlPlanTheme && !acc[controlPlanTheme]) {
-            acc[controlPlanTheme] = []
-          }
-          if (controlPlan.subThemeIds) {
-            controlPlan.subThemeIds.forEach(subThemeId => {
-              const controlPlanSubTheme = subThemes[subThemeId]?.subTheme
-              if (controlPlanTheme && controlPlanSubTheme && !acc[controlPlanTheme].includes(controlPlanSubTheme)) {
-                acc[controlPlanTheme].push(controlPlanSubTheme)
-              }
-            })
-          }
-        })
-      }
+    .reduce<{ [key: number]: ThemeAPI }>((acc, envAction) => {
+      envAction.themes?.forEach(theme => {
+        if (!acc[theme.id]) {
+          acc[theme.id] = { ...theme, subThemes: [] }
+        }
+        acc[theme.id]?.subThemes.push(...theme.subThemes)
+      })
 
       return acc
     }, {})
 
-  const getThemeAndSubThemesString = ([theme, subThemesAsString]) => ({
+  const toThemeCell = (theme: ThemeAPI) => ({
     component: (
       <>
-        {theme} <SubThemesContainer>({subThemesAsString?.join(', ')})</SubThemesContainer>
+        <>
+          {theme.name}{' '}
+          <SubThemesContainer>({theme.subThemes.map(subTheme => subTheme.name)?.join(', ')})</SubThemesContainer>
+        </>
       </>
     ),
-    title: `${theme} (${subThemesAsString?.join(', ')})`
+    title: `${theme.name} (${theme.subThemes.map(subTheme => subTheme.name).join(', ')})`
   })
 
-  return Object.entries(uniqueThemesAndSubthemes).map(getThemeAndSubThemesString)
+  return Object.values(groupedThemes).flatMap(theme => toThemeCell(theme))
 }
 
 export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
-  const { subThemes, themes } = useGetControlPlans()
-  const cellContent = useMemo(
-    () => getAllThemesAndSubThemesAsString(envActions, subThemes, themes),
-    [envActions, subThemes, themes]
-  )
-  const cellTitle = useMemo(() => cellContent?.map(content => content.title).join(' - '), [cellContent])
+  const cellContent = useMemo(() => getThemesCell(envActions), [envActions])
+  const cellTitle = useMemo(() => cellContent.map(content => content.title).join(' - '), [cellContent])
 
   return cellContent?.length > 0
     ? cellContent.map(({ component, title }, index) => (

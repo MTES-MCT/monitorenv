@@ -359,6 +359,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         <StyledThemeContainer>
           <ThemeSelector label="Thématique du signalement" name="themeId" />
           <SubThemesSelector label="Sous-thématique du signalement" name="subThemeIds" />
+          {/* TODO(02/04/2025): Be careful here */}
           {values.themeId === INDIVIDUAL_ANCHORING_THEME_ID && (
             <FormikMultiRadio
               isInline

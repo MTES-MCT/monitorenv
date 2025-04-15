@@ -1,14 +1,16 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { FrontendError } from '@libs/FrontendError'
 import { SingleTag } from '@mtes-mct/monitor-ui'
 import { FrontCompletionStatusLabel, missionStatusLabels, missionTypeEnum } from 'domain/entities/missions'
 import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'domain/shared_slices/MissionFilters'
 import { useMemo } from 'react'
 import styled from 'styled-components'
+
+import type { ThemeAPI } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
@@ -24,7 +26,9 @@ export function FilterTags() {
   } = useAppSelector(state => state.missionFilters)
 
   const controlUnits = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { themesAsOptions } = useGetControlPlans()
+
+  const { data } = useGetThemesQuery()
+  const themesAPI: ThemeAPI[] = Object.values(data ?? [])
 
   const onDeleteTag = <K extends MissionFiltersEnum>(
     valueToDelete: number | string,
@@ -117,7 +121,7 @@ export function FilterTags() {
         selectedThemes?.length > 0 &&
         selectedThemes.map(theme => (
           <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
-            {String(`Thème ${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`)}
+            {String(`Thème ${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`)}
           </SingleTag>
         ))}
       {selectedStatuses &&
