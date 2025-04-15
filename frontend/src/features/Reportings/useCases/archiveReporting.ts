@@ -1,3 +1,4 @@
+import { mainWindowActions } from '@features/MainWindow/slice'
 import { reportingActions } from '@features/Reportings/slice'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
@@ -36,6 +37,9 @@ export const archiveReporting =
               type: 'success'
             })
           )
+          if (context === ReportingContext.MAP) {
+            dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
+          }
 
           dispatch(
             setReportingFormVisibility({
