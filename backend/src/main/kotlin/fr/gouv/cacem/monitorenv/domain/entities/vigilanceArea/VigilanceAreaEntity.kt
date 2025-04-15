@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea
 
+import fr.gouv.cacem.monitorenv.domain.entities.themes.TagEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -27,6 +28,7 @@ data class VigilanceAreaEntity(
     val source: String? = null,
     val startDatePeriod: ZonedDateTime? = null,
     val themes: List<String>? = null,
+    val tags: List<TagEntity>,
     val visibility: VisibilityEnum? = null,
     val createdAt: ZonedDateTime?,
     val updatedAt: ZonedDateTime?,

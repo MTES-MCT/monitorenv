@@ -9,26 +9,37 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import java.io.Serializable
 
 @Entity
-@Table(name = "tags_regulatory_area")
-data class TagRegulatoryAreaModel(
+@Table(name = "tags_vigilance_area")
+data class TagVigilanceAreaModel(
     @EmbeddedId
-    val id: TagRegulatoryAreaPk,
-    @ManyToOne(fetch = FetchType.LAZY)
+    var id: TagVigilanceAreaPk,
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tags_id")
     @MapsId("tagId")
     val tag: TagModel,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regulatory_area_id")
-    @MapsId("regulatoryAreaId")
+    @JoinColumn(name = "vigilance_areas_id")
+    @MapsId("vigilanceAreaId")
     @JsonBackReference
-    val regulatoryArea: RegulatoryAreaModel,
+    val vigilanceArea: VigilanceAreaModel,
 ) {
     companion object {
-        fun toTagEntities(tags: List<TagRegulatoryAreaModel>): List<TagEntity> {
+        fun fromTagEntity(
+            tag: TagEntity,
+            vigilanceAreaModel: VigilanceAreaModel,
+        ): TagVigilanceAreaModel =
+            TagVigilanceAreaModel(
+                id = TagVigilanceAreaPk(tag.id, vigilanceAreaModel.id),
+                tag = TagModel.fromTagEntity(tag, null),
+                vigilanceArea = vigilanceAreaModel,
+            )
+
+        fun toTagEntities(tags: List<TagVigilanceAreaModel>): List<TagEntity> {
             val parents = tags.map { it.tag }.filter { it.parent === null }
 
             return parents.map { parent ->
@@ -41,7 +52,7 @@ data class TagRegulatoryAreaModel(
 }
 
 @Embeddable
-data class TagRegulatoryAreaPk(
+data class TagVigilanceAreaPk(
     val tagId: Int,
-    val regulatoryAreaId: Int,
+    val vigilanceAreaId: Int?,
 ) : Serializable

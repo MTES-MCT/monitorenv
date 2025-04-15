@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
-import jakarta.persistence.CascadeType
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaModel.Companion.toTagEntities
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -40,7 +40,6 @@ data class RegulatoryAreaModel(
     @OneToMany(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL],
     )
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
@@ -48,7 +47,7 @@ data class RegulatoryAreaModel(
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
-    fun toRegulatoryArea(filteredTags: List<TagModel>?) =
+    fun toRegulatoryArea() =
         RegulatoryAreaEntity(
             id = id,
             date = date,
@@ -64,7 +63,7 @@ data class RegulatoryAreaModel(
             refReg = refReg,
             source = source,
             temporalite = temporalite,
-            tags = filteredTags?.map { it.toTagEntity() } ?: this.tags.map { it.toTagEntity() },
+            tags = toTagEntities(tags),
             type = type,
             url = url,
         )
