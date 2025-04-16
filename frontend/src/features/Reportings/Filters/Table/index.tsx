@@ -4,6 +4,7 @@ import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/useCa
 import {
   Checkbox,
   CheckPicker,
+  CheckTreePicker,
   CustomSearch,
   DateRangePicker,
   useNewWindow,
@@ -11,7 +12,6 @@ import {
   type Option,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
-import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'

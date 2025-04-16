@@ -489,10 +489,10 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(reportingDTO.reporting.isArchived).isEqualTo(false)
         assertThat(reportingDTO.reporting.openBy).isEqualTo("CDA")
         assertThat(reportingDTO.reporting.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
-        assertThat(reportingDTO.reporting.theme?.id).isEqualTo(theme.id)
-        assertThat(reportingDTO.reporting.theme?.name).isEqualTo(theme.name)
-        assertThat(reportingDTO.reporting.theme?.subThemes).hasSize(theme.subThemes.size)
-        reportingDTO.reporting.theme?.subThemes?.find { it.id == theme.subThemes[0].id }.let {
+        assertThat(reportingDTO.reporting.theme.id).isEqualTo(theme.id)
+        assertThat(reportingDTO.reporting.theme.name).isEqualTo(theme.name)
+        assertThat(reportingDTO.reporting.theme.subThemes).hasSize(theme.subThemes.size)
+        reportingDTO.reporting.theme.subThemes.find { it.id == theme.subThemes[0].id }.let {
             assertThat(it?.id).isEqualTo(160)
             assertThat(it?.name).isEqualTo("Contrôle dans une AMP sans réglementation particulière")
         }
@@ -558,10 +558,10 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(savedReportingDTO.reporting.id).isEqualTo(1)
         assertThat(savedReportingDTO.reporting.reportingSources[0].sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
         assertThat(savedReportingDTO.reporting.reportingSources[0].semaphoreId).isEqualTo(23)
-        assertThat(savedReportingDTO.reporting.theme?.id).isEqualTo(theme.id)
-        assertThat(savedReportingDTO.reporting.theme?.name).isEqualTo(theme.name)
-        assertThat(savedReportingDTO.reporting.theme?.subThemes).hasSize(theme.subThemes.size)
-        savedReportingDTO.reporting.theme?.subThemes?.find { it.id == theme.subThemes[0].id }.let {
+        assertThat(savedReportingDTO.reporting.theme.id).isEqualTo(theme.id)
+        assertThat(savedReportingDTO.reporting.theme.name).isEqualTo(theme.name)
+        assertThat(savedReportingDTO.reporting.theme.subThemes).hasSize(theme.subThemes.size)
+        savedReportingDTO.reporting.theme.subThemes.find { it.id == theme.subThemes[0].id }.let {
             assertThat(it?.id).isEqualTo(160)
             assertThat(it?.name).isEqualTo("Contrôle dans une AMP sans réglementation particulière")
         }

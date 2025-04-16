@@ -43,6 +43,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
                 entityName={regulatoryMetadata.entityName}
                 facade={regulatoryMetadata.facade}
                 tags={regulatoryMetadata.tags}
+                themes={regulatoryMetadata.themes}
                 type={regulatoryMetadata.type}
               />
               <RegulatorySummary regulatoryReference={regulatoryMetadata.refReg} url={regulatoryMetadata.url} />

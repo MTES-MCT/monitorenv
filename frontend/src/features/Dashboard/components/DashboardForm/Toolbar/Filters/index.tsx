@@ -1,17 +1,19 @@
 import { useGetTagsByRegulatoryAreasQuery } from '@api/tagsAPI'
 import { type DashboardType } from '@features/Dashboard/slice'
-import { getTagsAsOptions } from '@features/Tags/useCases/getTagsAsOptions'
+import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/useCases/getTagsAsOptions'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
   Checkbox,
   CheckPicker,
+  CheckTreePicker,
   CustomSearch,
   getOptionsFromLabelledEnum,
   Icon,
   Select,
   THEME,
+  type CheckTreePickerOption,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
@@ -35,18 +37,19 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   const allRegulatoryAreaIds = extractedArea?.regulatoryAreas.flatMap(reg => reg.id) ?? []
   const { data: regulatoryTags } = useGetTagsByRegulatoryAreasQuery(allRegulatoryAreaIds)
   const regulatoryTagsAsOptions = getTagsAsOptions(Object.values(regulatoryTags ?? []))
-  const regulatoryTagsCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryTagsAsOptions, ['label']),
-    [regulatoryTagsAsOptions]
-  )
+  // const regulatoryTagsCustomSearch = useMemo(
+  //   () => new CustomSearch(regulatoryTagsAsOptions, ['label']),
+  //   [regulatoryTagsAsOptions]
+  // )
 
   const ampsAsOptions = useMemo(() => getAmpsAsOptions(extractedArea?.amps ?? []), [extractedArea?.amps])
   const ampCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions, ['label']), [ampsAsOptions])
 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
-  const setFilteredRegulatoryTags = (value: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: value }, id }))
+  const setFilteredRegulatoryTags = (value: CheckTreePickerOption[] | undefined) => {
+    const nextTag = value ? parseOptionsToTags(value) : undefined
+    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: nextTag }, id }))
   }
 
   const areAllRegulatoryChecked = useMemo(
@@ -65,9 +68,9 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
 
       return
     }
-    const allRegulatoryAreasIds = regulatoryTagsAsOptions.map(regulatory => `${regulatory.value}`)
+    const allRegulatoryAreas = parseOptionsToTags(regulatoryTagsAsOptions)
 
-    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: allRegulatoryAreasIds }, id }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: allRegulatoryAreas }, id }))
   }
   const renderExtraFooter = () => (
     <SelectAllRegulatoryAreasContainer>
@@ -100,8 +103,8 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   return (
     <FiltersContainer>
       <div>
-        <CheckPicker
-          customSearch={regulatoryTagsAsOptions.length > 10 ? regulatoryTagsCustomSearch : undefined}
+        <CheckTreePicker
+          // customSearch={regulatoryTagsAsOptions.length > 10 ? regulatoryTagsCustomSearch : undefined}
           isLabelHidden
           isTransparent
           label="Thématique réglementaire"
@@ -116,7 +119,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
             )
           }
           style={{ width: '310px' }}
-          value={filters?.regulatoryTags}
+          value={getTagsAsOptions(filters?.regulatoryTags ?? [])}
         />
         <Select
           isLabelHidden

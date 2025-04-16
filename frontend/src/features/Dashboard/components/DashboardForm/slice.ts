@@ -7,6 +7,7 @@ import storage from 'redux-persist/lib/storage'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit, DateAsStringRange } from '@mtes-mct/monitor-ui'
+import type { TagAPI } from 'domain/entities/tags'
 
 const persistConfig = {
   key: 'dashboardFilters_V2',
@@ -30,7 +31,7 @@ export type ControlUnitFilters = {
 export type DashboardFilters = {
   amps?: string[]
   previewSelection?: boolean
-  regulatoryTags?: string[]
+  regulatoryTags?: TagAPI[]
   specificPeriod?: DateAsStringRange | undefined
   vigilanceAreaPeriod?: VigilanceArea.VigilanceAreaFilterPeriod | undefined
 }

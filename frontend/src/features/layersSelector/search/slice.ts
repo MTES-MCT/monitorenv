@@ -2,11 +2,14 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
+import type { TagAPI } from 'domain/entities/tags'
+import type { ThemeAPI } from 'domain/entities/themes'
 
 type LayerSearchState = {
   ampsSearchResult: number[] | undefined
   filteredAmpTypes: string[]
-  filteredRegulatoryTags: string[]
+  filteredRegulatoryTags: TagAPI[]
+  filteredRegulatoryThemes: ThemeAPI[]
   filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
   globalSearchText: string
   isAmpSearchResultsVisible: boolean
@@ -22,6 +25,7 @@ const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
   filteredAmpTypes: [],
   filteredRegulatoryTags: [],
+  filteredRegulatoryThemes: [],
   filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
   globalSearchText: '',
   isAmpSearchResultsVisible: false,
@@ -79,8 +83,12 @@ const layerSearchSlice = createSlice({
       state.filteredAmpTypes = action.payload
     },
 
-    setFilteredRegulatoryTags(state, action: PayloadAction<string[]>) {
+    setFilteredRegulatoryTags(state, action: PayloadAction<TagAPI[]>) {
       state.filteredRegulatoryTags = action.payload
+    },
+
+    setFilteredRegulatoryThemes(state, action: PayloadAction<ThemeAPI[]>) {
+      state.filteredRegulatoryThemes = action.payload
     },
 
     setFilteredVigilanceAreaPeriod(state, action: PayloadAction<VigilanceArea.VigilanceAreaFilterPeriod | undefined>) {
@@ -130,6 +138,7 @@ export const {
   setAMPsSearchResult,
   setFilteredAmpTypes,
   setFilteredRegulatoryTags,
+  setFilteredRegulatoryThemes,
   setFilteredVigilanceAreaPeriod,
   setGlobalSearchText,
   setIsAmpSearchResultsVisible,

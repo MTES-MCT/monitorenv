@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
@@ -25,10 +26,22 @@ data class ThemeRegulatoryAreaModel(
     @MapsId("regulatoryAreaId")
     @JsonBackReference
     val regulatoryArea: RegulatoryAreaModel,
-)
+) {
+    companion object {
+        fun toThemeEntities(themes: List<ThemeRegulatoryAreaModel>): List<ThemeEntity> {
+            val parents = themes.map { it.theme }.filter { it.parent === null }
 
-@Embeddable
-data class ThemeRegulatoryAreaPk(
-    val themeId: Int,
-    val regulatoryAreaId: Int,
-) : Serializable
+            return parents.map { parent ->
+                val subThemes = themes.filter { it.theme.parent?.id == parent.id }.map { it.theme }
+                parent.subThemes = subThemes
+                return@map parent.toThemeEntity()
+            }
+        }
+    }
+
+    @Embeddable
+    data class ThemeRegulatoryAreaPk(
+        val themeId: Int,
+        val regulatoryAreaId: Int,
+    ) : Serializable
+}

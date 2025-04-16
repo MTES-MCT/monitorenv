@@ -38,7 +38,7 @@ data class CreateOrUpdateReportingDataInput(
     val withVHFAnswer: Boolean? = null,
     val isInfractionProven: Boolean,
     val tags: List<TagInput> = listOf(),
-    val theme: ThemeInput?,
+    val theme: ThemeInput,
 ) {
     fun toReportingEntity(): ReportingEntity =
         ReportingEntity(
@@ -69,6 +69,6 @@ data class CreateOrUpdateReportingDataInput(
             withVHFAnswer = this.withVHFAnswer,
             isInfractionProven = this.isInfractionProven,
             tags = this.tags.map { it.toTagEntity() },
-            theme = theme?.toThemeEntity(),
+            theme = theme.toThemeEntity(),
         )
 }

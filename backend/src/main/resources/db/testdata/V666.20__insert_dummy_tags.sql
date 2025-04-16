@@ -21,6 +21,7 @@ VALUES (1, 'subtagPN1', '2023-01-01 00:00:00'::timestamp, '2024-01-01'::timestam
 -- INSERTING SUBTAGS <-> REGULATIONS FROM RANDOM REGULATIONS
 INSERT INTO tags_regulatory_areas (tags_id, regulatory_areas_id)
 VALUES (10, 16),
+       (5, 16),
        (9, 17);
 
 -- INSERTING TAGS <-> VIGILANCES AREAS FROM CURRENT VIGILANCES AREAS

@@ -29,6 +29,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import org.hamcrest.Matchers.equalTo
@@ -529,7 +530,7 @@ class MissionsITests {
                                     openBy = "OpenBy",
                                     isInfractionProven = true,
                                     tags = emptyList(),
-                                    theme = null,
+                                    theme = aTheme(),
                                 ),
                             reportingSources = listOf(),
                         ),

@@ -36,7 +36,7 @@ data class ReportingEntity(
     val withVHFAnswer: Boolean? = null,
     val isInfractionProven: Boolean,
     val tags: List<TagEntity>,
-    var theme: ThemeEntity?,
+    var theme: ThemeEntity,
 ) {
     fun validate() {
         reportingSources.forEach { it.validate() }
