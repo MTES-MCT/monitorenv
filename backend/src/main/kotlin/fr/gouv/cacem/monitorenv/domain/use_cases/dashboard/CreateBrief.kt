@@ -7,24 +7,24 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.*
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.utils.Base64Converter
 import fr.gouv.cacem.monitorenv.utils.OfficeConverter
+import fr.gouv.cacem.monitorenv.utils.WordUtils
 import org.apache.poi.util.Units
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy
 import org.apache.poi.xwpf.usermodel.*
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.InputStream
 import java.math.BigInteger
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.imageio.ImageIO
-import kotlin.io.path.Path
 
 @UseCase
 class CreateBrief(
@@ -40,213 +40,159 @@ class CreateBrief(
     fun execute(brief: BriefEntity): BriefFileEntity {
         logger.info("Attempt to CREATE BRIEF dashboard")
 
-        val controlUnits =
-            brief.dashboard.controlUnitIds.map {
-                controlUnitRepository.findById(it)
-            }
+        val dashboard = brief.dashboard
+        val controlUnits = dashboard.controlUnitIds.map { controlUnitRepository.findById(it) }
         val controlUnitsName = controlUnits.joinToString(", ") { it.name }
-        val comments = brief.dashboard.comments
-        val editedAt = brief.dashboard.updatedAt ?: brief.dashboard.createdAt
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
-        val formattedDate = editedAt?.format(formatter)
 
-        val regulatoryAreas = brief.regulatoryAreas
-        val name = brief.dashboard.name
-        val totalRegulatoryAreas =
-            if (brief.dashboard.regulatoryAreaIds.isNotEmpty()) {
-                brief.dashboard.regulatoryAreaIds.size
-                    .toString()
-            } else {
-                null
-            }
-        val totalRegulatoryAreasText =
-            if (brief.dashboard.regulatoryAreaIds.isNotEmpty()) "${brief.dashboard.regulatoryAreaIds.size} zones règlementaires" else null
+        val placeholders = buildPlaceholders(brief, controlUnitsName)
+        val document = XWPFDocument(loadTemplateInputStream())
 
-        val amps = brief.amps
-        val totalAmps =
-            if (brief.dashboard.ampIds.isNotEmpty()) {
-                brief.dashboard.ampIds.size
-                    .toString()
-            } else {
-                null
-            }
-        val totalAmpsText =
-            if (brief.dashboard.ampIds.isNotEmpty()) "${brief.dashboard.ampIds.size} aires marines protégées" else null
-
-        val vigilanceAreas = brief.vigilanceAreas
-        val totalVigilanceAreas =
-            if (brief.dashboard.vigilanceAreaIds.isNotEmpty()) {
-                brief.dashboard.vigilanceAreaIds.size
-                    .toString()
-            } else {
-                null
-            }
-        val totalVigilanceAreasText =
-            if (brief.dashboard.vigilanceAreaIds.isNotEmpty()) "${brief.dashboard.vigilanceAreaIds.size} zones de vigilance" else null
-
-        val totalReportings =
-            if (brief.dashboard.reportingIds.isNotEmpty()) {
-                brief.dashboard.reportingIds.size
-                    .toString()
-            } else {
-                null
-            }
-        val totalReportingsText =
-            if (brief.dashboard.reportingIds.isNotEmpty()) "${brief.dashboard.reportingIds.size} signalements" else null
-
-        val totalZones =
-            brief.dashboard.regulatoryAreaIds.size + brief.dashboard.ampIds.size + brief.dashboard.vigilanceAreaIds.size
-
-        val placeholders: Map<String, String?> =
-            mapOf(
-                "\${editedAt}" to (formattedDate),
-                "\${briefName}" to (name),
-                "\${comments}" to (comments ?: "Pas de commentaire"),
-                "\${controlUnits}" to (controlUnitsName),
-                "\${totalRegulatoryAreasText}" to (
-                    totalRegulatoryAreasText
-                        ?: "Aucune zone règlementaire"
-                ),
-                "\${totalRegulatoryAreas}" to (
-                    totalRegulatoryAreas
-                        ?: "0"
-                ),
-                "\${totalAmpsText}" to (totalAmpsText ?: "Aucune aire marine protégée"),
-                "\${totalAmps}" to (totalAmps ?: "0"),
-                "\${totalVigilanceAreasText}" to (
-                    totalVigilanceAreasText
-                        ?: "Aucune zone de vigilance"
-                ),
-                "\${totalVigilanceAreas}" to (
-                    totalVigilanceAreas
-                        ?: "0"
-                ),
-                "\${totalReportingsText}" to (totalReportingsText ?: "Aucun signalement"),
-                "\${totalReportings}" to (totalReportings ?: "0"),
-                "\${totalZones}" to (totalZones.toString()),
-                "\${legicemId}" to (legicemProperties.id),
-                "\${legicemPassword}" to (legicemProperties.password),
-                "\${monitorExtId}" to (monitorExtProperties.id),
-                "\${monitorExtPassword}" to (monitorExtProperties.password),
-            )
-
-        val inputStream =
-            javaClass.getResourceAsStream(docTemplatePath)
-                ?: throw IllegalArgumentException("Template file not found: $docTemplatePath")
-        val document = XWPFDocument(inputStream)
-
-        var paragraphs = document.paragraphs.toList()
-        for (paragraph in paragraphs) {
-            replacePlaceholdersInParagraph(paragraph, placeholders)
-        }
-
-        paragraphs = document.paragraphs.toList()
-        for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${regulatoryAreasTable}")) {
-                createRegulatoryTable(paragraph, regulatoryAreas ?: emptyList())
-                break
-            }
-        }
-
-        paragraphs = document.paragraphs.toList()
-        for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${ampsAndVigilanceAreasTables}")) {
-                createSideBySideTables(paragraph, vigilanceAreas ?: emptyList(), amps ?: emptyList())
-                break
-            }
-        }
-
-        // Replace placeholders in tables
-        for (table in document.tables) {
-            replacePlaceholdersInTables(document, placeholders)
-        }
-
-        // Add global map
-        paragraphs = document.paragraphs
-        for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${globalMap}")) {
-                createImageFromBase64(
-                    name = "global_map",
-                    image = brief.image?.image ?: "",
-                    paragraph = paragraph,
-                )
-                // Supprimer le texte du placeholder
-                paragraph.runs.forEach { it.setText("", 0) }
-                break
-            }
-        }
-
-        paragraphs = document.paragraphs
-        for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${regulatoryAreasDetails}")) {
-                createRegulatoryAreasDetails(paragraph, regulatoryAreas ?: emptyList())
-                break
-            }
-        }
-
-        paragraphs = document.paragraphs
-        for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${ampsDetails}")) {
-                createAmpsDetails(paragraph, amps ?: emptyList())
-                break
-            }
-        }
-
-        paragraphs = document.paragraphs
-        for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${vigilanceAreasDetails}")) {
-                createVigilanceAreasDetails(paragraph, vigilanceAreas ?: emptyList())
-                break
-            }
-        }
-
-        paragraphs = document.paragraphs
-        for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${links}")) {
-                paragraph.runs.forEach { it.setText("", 0) }
-                brief.dashboard.links?.forEach { link ->
-                    addHyperlink(null, link.linkUrl, link.linkText, document, paragraph)
-                    val paragraphRun = paragraph.createRun()
-                    paragraphRun.addBreak()
-                }
-                break
-            }
-        }
-
-        paragraphs = document.paragraphs
-        for (paragraph in paragraphs) {
-            if (paragraph.text.contains("\${images}")) {
-                paragraph.runs.forEach { it.setText("", 0) }
-                brief.dashboard.images.forEach { image ->
-                    createImageFromByteArray(image, document)
-                    val paragraphRun = paragraph.createRun()
-                    paragraphRun.addBreak()
-                }
-                break
-            }
-        }
+        applyParagraphReplacements(document, placeholders)
+        applyCustomTableInsertions(document, brief)
+        applyImageInsertions(document, brief)
+        applyDetailSections(document, brief)
+        applyLinks(document, brief.dashboard.links)
+        applyDashboardImages(document, brief.dashboard.images)
 
         addPageNumbersFooter(document)
-        setFontForAllParagraphs(document, "Arial")
+        setFontForAllParagraphs(document)
 
-        // Save the updated document to a new file
-        FileOutputStream(docTmpDOCXPath).use { outputStream ->
-            document.write(outputStream)
-        }
+        saveDocument(document)
 
-        // Close resources
-        document.close()
-        inputStream.close()
-
-        println("Template filled successfully and saved as $docTmpDOCXPath")
-
-        val odtFile = OfficeConverter().convert(Path(docTmpDOCXPath).toString(), Path(docTmpODTPath).toString())
+        val odtFile = OfficeConverter().convert(docTmpDOCXPath, docTmpODTPath)
         val base64Content = Base64Converter().convertToBase64(odtFile)
 
         return BriefFileEntity(
             fileName = "Brief-${brief.dashboard.name}.odt",
             fileContent = base64Content,
         )
+    }
+
+    private fun buildPlaceholders(
+        brief: BriefEntity,
+        controlUnitsName: String,
+    ): Map<String, String?> {
+        val dashboard = brief.dashboard
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
+        val formattedDate = (dashboard.updatedAt ?: dashboard.createdAt)?.format(formatter)
+
+        fun buildCountText(
+            label: String,
+            count: Int,
+        ) = if (count > 0) "$count $label" else "Aucun ${label.lowercase()}"
+
+        val regulatoryCount = dashboard.regulatoryAreaIds.size
+        val ampCount = dashboard.ampIds.size
+        val vigilanceCount = dashboard.vigilanceAreaIds.size
+        val reportingCount = dashboard.reportingIds.size
+        val totalZones = regulatoryCount + ampCount + vigilanceCount
+
+        return mapOf(
+            "\${editedAt}" to formattedDate,
+            "\${briefName}" to dashboard.name,
+            "\${comments}" to (dashboard.comments ?: "Pas de commentaire"),
+            "\${controlUnits}" to controlUnitsName,
+            "\${totalRegulatoryAreasText}" to buildCountText("zones règlementaires", regulatoryCount),
+            "\${totalRegulatoryAreas}" to regulatoryCount.toString(),
+            "\${totalAmpsText}" to buildCountText("aires marines protégées", ampCount),
+            "\${totalAmps}" to ampCount.toString(),
+            "\${totalVigilanceAreasText}" to buildCountText("zones de vigilance", vigilanceCount),
+            "\${totalVigilanceAreas}" to vigilanceCount.toString(),
+            "\${totalReportingsText}" to buildCountText("signalements", reportingCount),
+            "\${totalReportings}" to reportingCount.toString(),
+            "\${totalZones}" to totalZones.toString(),
+            "\${legicemId}" to legicemProperties.id,
+            "\${legicemPassword}" to legicemProperties.password,
+            "\${monitorExtId}" to monitorExtProperties.id,
+            "\${monitorExtPassword}" to monitorExtProperties.password,
+        )
+    }
+
+    private fun loadTemplateInputStream(): InputStream =
+        javaClass.getResourceAsStream(docTemplatePath)
+            ?: throw IllegalArgumentException("Template file not found: $docTemplatePath")
+
+    private fun applyParagraphReplacements(
+        document: XWPFDocument,
+        placeholders: Map<String, String?>,
+    ) {
+        document.paragraphs.forEach { paragraph ->
+            replacePlaceholdersInParagraph(paragraph, placeholders)
+        }
+        document.tables.forEach { _ ->
+            replacePlaceholdersInTables(document, placeholders)
+        }
+    }
+
+    private fun applyCustomTableInsertions(
+        document: XWPFDocument,
+        brief: BriefEntity,
+    ) {
+        document.paragraphs.firstOrNull { it.text.contains("\${regulatoryAreasTable}") }?.let {
+            createRegulatoryTable(it, brief.regulatoryAreas ?: emptyList())
+        }
+
+        document.paragraphs.firstOrNull { it.text.contains("\${ampsAndVigilanceAreasTables}") }?.let {
+            createSideBySideTables(it, brief.vigilanceAreas ?: emptyList(), brief.amps ?: emptyList())
+        }
+    }
+
+    private fun applyImageInsertions(
+        document: XWPFDocument,
+        brief: BriefEntity,
+    ) {
+        document.paragraphs.firstOrNull { it.text.contains("\${globalMap}") }?.let { paragraph ->
+            createImageFromBase64("global_map", brief.image?.image ?: "", paragraph)
+            paragraph.runs.forEach { it.setText("", 0) }
+        }
+    }
+
+    private fun applyDetailSections(
+        document: XWPFDocument,
+        brief: BriefEntity,
+    ) {
+        document.paragraphs.firstOrNull { it.text.contains("\${regulatoryAreasDetails}") }?.let { paragraph ->
+            createDetailsSection(paragraph, brief.regulatoryAreas ?: emptyList())
+        }
+
+        document.paragraphs.firstOrNull { it.text.contains("\${ampsDetails}") }?.let { paragraph ->
+            createDetailsSection(paragraph, brief.amps ?: emptyList())
+        }
+
+        document.paragraphs.firstOrNull { it.text.contains("\${vigilanceAreasDetails}") }?.let { paragraph ->
+            createDetailsSection(paragraph, brief.vigilanceAreas ?: emptyList())
+        }
+    }
+
+    private fun applyLinks(
+        document: XWPFDocument,
+        links: List<LinkEntity>?,
+    ) {
+        document.paragraphs.firstOrNull { it.text.contains("\${links}") }?.let { paragraph ->
+            paragraph.runs.forEach { it.setText("", 0) }
+            links?.forEach { link ->
+                WordUtils.addHyperlink(null, link.linkUrl, link.linkText, document, paragraph)
+                paragraph.createRun().addBreak()
+            }
+        }
+    }
+
+    private fun applyDashboardImages(
+        document: XWPFDocument,
+        images: List<ImageEntity>,
+    ) {
+        document.paragraphs.firstOrNull { it.text.contains("\${images}") }?.let { paragraph ->
+            paragraph.runs.forEach { it.setText("", 0) }
+            images.forEach { image ->
+                createImageFromByteArray(image, document)
+                paragraph.createRun().addBreak()
+            }
+        }
+    }
+
+    private fun saveDocument(document: XWPFDocument) {
+        FileOutputStream(docTmpDOCXPath).use { document.write(it) }
+        document.close()
     }
 
     private fun createSideBySideTables(
@@ -278,6 +224,93 @@ class CreateBrief(
         deleteFirstEmptyLineInTable(parentTable)
 
         // Delete paragraph with placeholder
+        val position = document.getPosOfParagraph(paragraph)
+        document.removeBodyElement(position)
+    }
+
+    private fun <T> createSimpleTable(
+        paragraph: XWPFParagraph,
+        data: List<T>,
+        title: String,
+        headerColor: String,
+        headerTextColor: String? = null,
+        cellBuilder: (XWPFTableRow, T) -> Unit,
+    ) {
+        if (data.isEmpty()) return
+
+        val document = paragraph.document as XWPFDocument
+        val table = document.insertNewTbl(paragraph.ctp.newCursor())
+        table.setWidth("100%")
+        setTableBorders(table, "D4E5F4")
+
+        val headerRow = table.getRow(0) ?: table.createRow()
+        val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
+        headerCell.setText("$title - ${data.size} sélectionnée(s)")
+        styleCell(headerCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = headerTextColor)
+        setCellColor(headerCell, headerColor)
+
+        for (item in data) {
+            val row = table.createRow()
+            cellBuilder(row, item)
+        }
+
+        val run = paragraph.createRun()
+        run.addBreak()
+
+        val position = document.getPosOfParagraph(paragraph)
+        document.removeBodyElement(position)
+    }
+
+    private fun <T : DetailRenderable> createDetailsSection(
+        paragraph: XWPFParagraph,
+        items: List<T>,
+    ) {
+        if (items.isEmpty()) return
+        paragraph.runs.forEach { it.setText("", 0) }
+        val document = paragraph.document as XWPFDocument
+
+        for (item in items) {
+            val itemParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
+            createLayerTitle(item.title, itemParagraph, document)
+
+            val newParagraph = document.insertNewParagraph(itemParagraph.ctp.newCursor())
+            val imageParagraph = document.insertNewParagraph(newParagraph.ctp.newCursor())
+
+            createImageFromBase64(
+                name = item.title,
+                image = item.image.image,
+                paragraph = imageParagraph,
+            )
+
+            val tableParagraph = document.insertNewParagraph(newParagraph.ctp.newCursor())
+            val table = document.insertNewTbl(tableParagraph.ctp.newCursor())
+            setTableBorders(table, "D4E5F4")
+            table.setWidth("100%")
+
+            val rows = item.buildDetailsRows(document)
+
+            for ((index, rowData) in rows.withIndex()) {
+                val row = table.createRow()
+
+                val labelCell = row.getCell(0) ?: row.createCell()
+                labelCell.setText(rowData[0])
+                setCellWidth(labelCell, 2500)
+                styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
+
+                val valueCell = row.getCell(1) ?: row.createCell()
+                valueCell.setText(rowData[1])
+                item.customizeValueCell(index, valueCell, document)
+
+                setCellWidth(valueCell, 7500)
+                styleCell(valueCell, bold = false, fontSize = 9, alignment = ParagraphAlignment.LEFT)
+            }
+
+            deleteFirstEmptyLineInTable(table)
+
+            // Add page break
+            tableParagraph.createRun().addBreak(BreakType.PAGE)
+        }
+
         val position = document.getPosOfParagraph(paragraph)
         document.removeBodyElement(position)
     }
@@ -342,90 +375,16 @@ class CreateBrief(
         document.removeBodyElement(position)
     }
 
-    private fun createRegulatoryAreasDetails(
-        paragraph: XWPFParagraph,
-        regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>,
-    ) {
-        paragraph.runs.forEach { it.setText("", 0) }
-        val document = paragraph.document as XWPFDocument
-
-        // Boucle sur les éléments regulatoryAreas
-        for (regulatoryArea in (regulatoryAreas)) {
-            val regulatoryAreaParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
-
-            createLayerTitle(regulatoryArea.layerName, regulatoryAreaParagraph, document)
-
-            val newParagraph = document.insertNewParagraph(regulatoryAreaParagraph.ctp.newCursor())
-            val imageParagraph = document.insertNewParagraph(newParagraph.ctp.newCursor())
-
-            createImageFromBase64(
-                name = regulatoryArea.layerName,
-                image = regulatoryArea.image.image,
-                paragraph = imageParagraph,
-            )
-
-            val tableParagraph = document.insertNewParagraph(newParagraph.ctp.newCursor())
-            val table = document.insertNewTbl(tableParagraph.ctp.newCursor())
-            setTableBorders(table, "D4E5F4")
-            table.setWidth("100%")
-
-            val rows =
-                listOf(
-                    listOf("Entité", regulatoryArea.entityName),
-                    listOf("Ensemble reg", regulatoryArea.refReg ?: ""),
-                    listOf("Thématique", regulatoryArea.thematique ?: ""),
-                    listOf("Facade", regulatoryArea.facade ?: ""),
-                    listOf(
-                        "Résumé reg.sur Légicem",
-                        regulatoryArea.refReg ?: "",
-                    ),
-                )
-
-            for ((index, rowData) in rows.withIndex()) {
-                val row = table.createRow()
-                val labelCell = row.getCell(0) ?: row.createCell()
-                labelCell.setText(rowData[0])
-                setCellWidth(labelCell, 2500)
-                styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
-
-                val valueCell = row.getCell(1) ?: row.createCell()
-                if (index == 4) {
-                    addHyperlink(valueCell, regulatoryArea.url ?: "", regulatoryArea.refReg, document)
-                } else {
-                    valueCell.setText(rowData[1])
-                }
-                setCellWidth(valueCell, 7500)
-                styleCell(valueCell, bold = false, fontSize = 9, alignment = ParagraphAlignment.LEFT)
-            }
-
-            deleteFirstEmptyLineInTable(table)
-        }
-
-        // Remove the placeholder paragraph
-        val position = document.getPosOfParagraph(paragraph)
-        document.removeBodyElement(position)
-    }
-
     private fun createAmpsTable(
         paragraph: XWPFParagraph,
         amps: List<EditableBriefAmpEntity>,
     ) {
-        if (amps.isEmpty()) return
-        val document = paragraph.document as XWPFDocument
-
-        val table = document.insertNewTbl(paragraph.ctp.newCursor())
-        table.setWidth("100%")
-        setTableBorders(table, "D4E5F4")
-        val totalAmps = amps.size
-
-        val headerRow = table.getRow(0) ?: table.createRow()
-        val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
-        headerCell.setText("Aires Marines Protégées - $totalAmps sélectionnée(s)")
-        styleCell(headerCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT)
-        setCellColor(headerCell, "D6DF64")
-
-        for (amp in amps) {
-            val row = table.createRow()
+        createSimpleTable(
+            paragraph,
+            amps,
+            title = "Aires Marines Protégées",
+            headerColor = "D6DF64",
+        ) { row, amp ->
             val colorCell = row.getCell(0) ?: row.createCell()
             rgbaStringToHex(amp.color)?.let { setCellColor(colorCell, it) }
             setCellWidth(colorCell, 250)
@@ -436,193 +395,29 @@ class CreateBrief(
             setCellWidth(nameCell, 4750)
             styleCell(nameCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
         }
-
-        val run = paragraph.createRun()
-        run.addBreak()
-
-        // Remove the placeholder paragraph
-        val position = document.getPosOfParagraph(paragraph)
-        document.removeBodyElement(position)
-    }
-
-    private fun createAmpsDetails(
-        paragraph: XWPFParagraph,
-        amps: List<EditableBriefAmpEntity>,
-    ) {
-        paragraph.runs.forEach { it.setText("", 0) }
-        val document = paragraph.document as XWPFDocument
-
-        for (amp in (amps)) {
-            val ampParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
-            createLayerTitle(amp.name, ampParagraph, document)
-
-            val newParagraph = document.insertNewParagraph(ampParagraph.ctp.newCursor())
-            val imageParagraph = document.insertNewParagraph(newParagraph.ctp.newCursor())
-            createImageFromBase64(
-                name = amp.name,
-                image = amp.image.image,
-                paragraph = imageParagraph,
-            )
-
-            val tableParagraph = document.insertNewParagraph(newParagraph.ctp.newCursor())
-            val table = document.insertNewTbl(tableParagraph.ctp.newCursor())
-            setTableBorders(table, "D4E5F4")
-            table.setWidth("100%")
-
-            val rows =
-                listOf(
-                    listOf("Nature d'AMP", amp.designation),
-                    listOf(
-                        "Résumé reg.sur Légicem",
-                        amp.urlLegicem ?: "",
-                    ),
-                )
-
-            for ((index, rowData) in rows.withIndex()) {
-                val row = table.createRow()
-                val labelCell = row.getCell(0) ?: row.createCell()
-                labelCell.setText(rowData[0])
-                setCellWidth(labelCell, 2500)
-                styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
-                val valueCell = row.getCell(1) ?: row.createCell()
-                if (index == 1) {
-                    addHyperlink(valueCell, amp.urlLegicem ?: "", amp.refReg, document)
-                } else {
-                    valueCell.setText(rowData[1])
-                }
-                setCellWidth(valueCell, 7500)
-                styleCell(valueCell, bold = false, fontSize = 9, alignment = ParagraphAlignment.LEFT)
-            }
-            deleteFirstEmptyLineInTable(table)
-        }
-
-        // Remove the placeholder paragraph
-        val position = document.getPosOfParagraph(paragraph)
-        document.removeBodyElement(position)
     }
 
     private fun createVigilanceAreasTable(
         paragraph: XWPFParagraph,
         vigilanceAreas: List<EditableBriefVigilanceAreaEntity>,
     ) {
-        if (vigilanceAreas.isEmpty()) return
-        val document = paragraph.document as XWPFDocument
-
-        val table = document.insertNewTbl(paragraph.ctp.newCursor())
-        table.setWidth("100%")
-        setTableBorders(table, "D4E5F4")
-        val totalVigilanceAreas = vigilanceAreas.size
-
-        val headerRow = table.getRow(0) ?: table.createRow()
-        val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
-        headerCell.setText("Zones de vigilance - $totalVigilanceAreas sélectionnée(s)")
-        styleCell(headerCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = "FFFFFF")
-        setCellColor(headerCell, "C58F7E")
-
-        for (vigilanceArea in vigilanceAreas) {
-            val row = table.createRow()
+        createSimpleTable(
+            paragraph,
+            vigilanceAreas,
+            title = "Zones de vigilance",
+            headerColor = "C58F7E",
+            headerTextColor = "FFFFFF",
+        ) { row, area ->
             val colorCell = row.getCell(0) ?: row.createCell()
-            rgbaStringToHex(vigilanceArea.color)?.let { setCellColor(colorCell, it) }
+            rgbaStringToHex(area.color)?.let { setCellColor(colorCell, it) }
             setCellWidth(colorCell, 250)
             styleCell(colorCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
 
             val nameCell = row.getCell(1) ?: row.createCell()
-            nameCell.setText(vigilanceArea.name)
+            nameCell.setText(area.name)
             setCellWidth(nameCell, 4750)
             styleCell(nameCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
         }
-
-        // Remove the placeholder paragraph
-        val position = document.getPosOfParagraph(paragraph)
-        document.removeBodyElement(position)
-    }
-
-    private fun createVigilanceAreasDetails(
-        paragraph: XWPFParagraph,
-        vigilanceAreas: List<EditableBriefVigilanceAreaEntity>,
-    ) {
-        paragraph.runs.forEach { it.setText("", 0) }
-        val document = paragraph.document as XWPFDocument
-
-        for (vigilanceArea in (vigilanceAreas)) {
-            val vigilanceAreaParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
-            createLayerTitle(vigilanceArea.name, vigilanceAreaParagraph, document)
-
-            val newParagraph = document.insertNewParagraph(vigilanceAreaParagraph.ctp.newCursor())
-            val imageParagraph = document.insertNewParagraph(newParagraph.ctp.newCursor())
-            createImageFromBase64(
-                name = vigilanceArea.name,
-                image = vigilanceArea.image.image,
-                paragraph = imageParagraph,
-            )
-
-            val tableParagraph = document.insertNewParagraph(newParagraph.ctp.newCursor())
-            val table = document.insertNewTbl(tableParagraph.ctp.newCursor())
-            setTableBorders(table, "D4E5F4")
-            table.setWidth("100%")
-
-            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
-            val periodDate = "Du ${vigilanceArea.startDatePeriod?.format(formatter)} au ${
-                vigilanceArea.endDatePeriod?.format(formatter)
-            }"
-
-            val rows =
-                listOf(
-                    listOf("Période", periodDate),
-                    listOf("Thématique", vigilanceArea.themes),
-                    listOf(
-                        "Visibilité",
-                        vigilanceArea.visibility ?: "",
-                    ),
-                    listOf("Commentaires", vigilanceArea.comments ?: ""),
-                    listOf("Réglementations en lien", vigilanceArea.linkedRegulatoryAreas),
-                    listOf("Amps en lien", vigilanceArea.linkedAMPs),
-                    listOf("Liens utiles", ""),
-                )
-
-            for ((index, rowData) in rows.withIndex()) {
-                val row = table.createRow()
-                val labelCell = row.getCell(0) ?: row.createCell()
-                labelCell.setText(rowData[0])
-                setCellWidth(labelCell, 2500)
-                styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
-
-                val valueCell = row.getCell(1) ?: row.createCell()
-                when (index) {
-                    0 -> {
-                        val paragraphs = valueCell.paragraphs.toList()
-                        paragraphs.forEach { _ -> valueCell.removeParagraph(0) }
-
-                        val cellRun = valueCell.addParagraph().createRun()
-                        cellRun.fontFamily = "Arial"
-                        cellRun.fontSize = 10
-                        cellRun.setText(periodDate)
-                        cellRun.addBreak()
-                        cellRun.setText(vigilanceArea.frequency)
-                        cellRun.addBreak()
-                        cellRun.setText(vigilanceArea.endingOccurenceDate)
-                    }
-
-                    6 -> {
-                        vigilanceArea.links?.map {
-                            // valueCell.paragraphs.forEach { valueCell.removeParagraph(0) }
-                            addHyperlink(valueCell, it.linkUrl, it.linkText, document)
-                        }
-                    }
-
-                    else -> {
-                        valueCell.setText(rowData[1])
-                    }
-                }
-                setCellWidth(valueCell, 7500)
-                styleCell(valueCell, bold = false, fontSize = 9, alignment = ParagraphAlignment.LEFT)
-            }
-            deleteFirstEmptyLineInTable(table)
-        }
-
-        // Remove the placeholder paragraph
-        val position = document.getPosOfParagraph(paragraph)
-        document.removeBodyElement(position)
     }
 
     private fun deleteFirstEmptyLineInTable(table: XWPFTable) {
@@ -695,8 +490,6 @@ class CreateBrief(
             val image: BufferedImage = ImageIO.read(tempFile)
             val width = image.width
             val height = image.height
-
-            // Déterminer le type d'image Apache POI
             val imageType =
                 when (imageEntity.mimeType.lowercase()) {
                     "image/png" -> XWPFDocument.PICTURE_TYPE_PNG
@@ -724,16 +517,11 @@ class CreateBrief(
     private fun addPageNumbersFooter(document: XWPFDocument) {
         val footerPolicy = XWPFHeaderFooterPolicy(document)
         val footer: XWPFFooter = footerPolicy.createFooter(XWPFHeaderFooterPolicy.DEFAULT)
-        // Création d'un paragraphe pour le pied de page
+
         val paragraph = footer.createParagraph()
         paragraph.alignment = ParagraphAlignment.RIGHT
 
-        // Set transparent background
-        val paragraphProperties = paragraph.ctp.addNewPPr()
-        val shading = paragraphProperties.addNewShd()
-        shading.fill = "auto"
-
-        // Création du champ { PAGE }
+        // Create field { PAGE }
         val pageField = paragraph.ctp.addNewFldSimple()
         pageField.instr = "PAGE"
         val pageRun = pageField.addNewR()
@@ -741,12 +529,12 @@ class CreateBrief(
         val pageRunProperties = pageRun.addNewRPr()
         pageRunProperties.addNewRFonts().ascii = "Arial"
 
-        // Ajout du texte " / "
+        // Add text " / "
         val run = paragraph.createRun()
         run.setText(" / ")
         run.fontFamily = "Arial"
 
-        // Création du champ { NUMPAGES }
+        // Create field { NUMPAGES }
         val numPagesField = paragraph.ctp.addNewFldSimple()
         numPagesField.instr = "NUMPAGES"
         val numPagesRun = numPagesField.addNewR()
@@ -755,20 +543,17 @@ class CreateBrief(
         numPagesRunProperties.addNewRFonts().ascii = "Arial"
     }
 
-    private fun setFontForAllParagraphs(
-        document: XWPFDocument,
-        fontFamily: String,
-    ) {
+    private fun setFontForAllParagraphs(document: XWPFDocument) {
         for (paragraph in document.paragraphs) {
             val runs = paragraph.runs
             for (run in runs) {
-                run.fontFamily = fontFamily
+                run.fontFamily = "Arial"
             }
         }
     }
 
     private fun cleanBase64String(base64String: String): ByteArray {
-        val cleanedBase64 = base64String.substringAfter("base64,") // Supprime le préfixe
+        val cleanedBase64 = base64String.substringAfter("base64,")
         return Base64.getDecoder().decode(cleanedBase64)
     }
 
@@ -938,7 +723,7 @@ class CreateBrief(
         bold: Boolean,
         fontSize: Int,
         alignment: ParagraphAlignment,
-        color: String? = "000000", // Black color in hex,
+        color: String? = "000000",
     ) {
         // Ensure the cell has at least one paragraph
         val paragraph =
@@ -962,36 +747,5 @@ class CreateBrief(
         run.color = color
 
         paragraph.alignment = alignment
-    }
-
-    private fun addHyperlink(
-        cell: XWPFTableCell? = null,
-        url: String,
-        text: String? = "Lien",
-        document: XWPFDocument,
-        paragraph: XWPFParagraph? = null,
-    ) {
-        val linkParagraph =
-            if (cell != null) {
-                cell.addParagraph()
-            } else {
-                paragraph
-            } ?: document.createParagraph()
-
-        val relationshipId = document.packagePart.addExternalRelationship(url, XWPFRelation.HYPERLINK.relation).id
-        val cthyperlink = linkParagraph.ctp.addNewHyperlink()
-        cthyperlink.id = relationshipId
-
-        // Create a run directly in hyperlink
-        val run = cthyperlink.addNewR()
-        val rPr = run.addNewRPr()
-
-        val color = rPr.addNewColor()
-        color.`val` = "0000FF"
-        val underline = rPr.addNewU()
-        underline.`val` = STUnderline.SINGLE
-        rPr.addNewRFonts().ascii = "Arial"
-        rPr.addNewSz().`val` = BigInteger.valueOf(18)
-        run.addNewT().stringValue = text
     }
 }
