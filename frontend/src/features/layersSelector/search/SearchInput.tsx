@@ -6,6 +6,7 @@ export function SearchInput({
   displayRegFilters,
   filteredAmpTypes,
   filteredRegulatoryTags,
+  filteredRegulatoryThemes,
   filteredVigilanceAreaPeriod,
   globalSearchText,
   placeholder,
@@ -16,7 +17,10 @@ export function SearchInput({
     filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
 
   const numberOfFilters =
-    (filteredRegulatoryTags?.length || 0) + (filteredAmpTypes?.length || 0) + (!defaultVigilanceAreaPeriod ? 1 : 0)
+    (filteredRegulatoryTags.length || 0) +
+    (filteredRegulatoryThemes.length || 0) +
+    (filteredAmpTypes?.length || 0) +
+    (!defaultVigilanceAreaPeriod ? 1 : 0)
 
   return (
     <SearchHeader>

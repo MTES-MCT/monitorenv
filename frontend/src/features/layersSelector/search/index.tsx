@@ -15,12 +15,16 @@ import {
   resetFilters,
   setFilteredAmpTypes,
   setFilteredRegulatoryTags,
+  setFilteredRegulatoryThemes,
   setGlobalSearchText,
   setVigilanceAreaSpecificPeriodFilter
 } from './slice'
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+
+import type { TagAPI } from 'domain/entities/tags'
+import type { ThemeAPI } from 'domain/entities/themes'
 
 export function LayerSearch() {
   const dispatch = useAppDispatch()
@@ -35,6 +39,7 @@ export function LayerSearch() {
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
@@ -51,6 +56,7 @@ export function LayerSearch() {
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
       regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: filteredRegulatoryThemes,
       searchedText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -64,6 +70,7 @@ export function LayerSearch() {
       ampTypes: filteredTypes,
       extent: searchExtent,
       regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -71,12 +78,27 @@ export function LayerSearch() {
     })
   }
 
-  const handleSetFilteredRegulatoryTags = (filteredTags: string[]) => {
+  const handleSetFilteredRegulatoryTags = (filteredTags: TagAPI[]) => {
     dispatch(setFilteredRegulatoryTags(filteredTags))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
       regulatoryTags: filteredTags,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
+    })
+  }
+
+  const handleSetFilteredRegulatoryThemes = (filteredThemes: ThemeAPI[]) => {
+    dispatch(setFilteredRegulatoryThemes(filteredThemes))
+    debouncedSearchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: filteredThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -90,6 +112,7 @@ export function LayerSearch() {
       ampTypes: [],
       extent: searchExtent,
       regulatoryTags: [],
+      regulatoryThemes: [],
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
@@ -103,6 +126,7 @@ export function LayerSearch() {
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
       regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -129,6 +153,7 @@ export function LayerSearch() {
           displayRegFilters={displayRegFilters}
           filteredAmpTypes={filteredAmpTypes}
           filteredRegulatoryTags={filteredRegulatoryTags}
+          filteredRegulatoryThemes={filteredRegulatoryThemes}
           filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
           globalSearchText={globalSearchText}
           placeholder="Rechercher une zone"
@@ -140,10 +165,12 @@ export function LayerSearch() {
             ampTypes={ampTypes}
             filteredAmpTypes={filteredAmpTypes}
             filteredRegulatoryTags={filteredRegulatoryTags}
+            filteredRegulatoryThemes={filteredRegulatoryThemes}
             filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
             handleResetFilters={handleResetFilters}
             setFilteredAmpTypes={handleSetFilteredAmpTypes}
             setFilteredRegulatoryTags={handleSetFilteredRegulatoryTags}
+            setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
             updateDateRangeFilter={updateDateRangeFilter}
           />
         )}

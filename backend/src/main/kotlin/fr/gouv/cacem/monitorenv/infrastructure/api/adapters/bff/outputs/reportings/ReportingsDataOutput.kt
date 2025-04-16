@@ -77,7 +77,7 @@ data class ReportingsDataOutput(
                 withVHFAnswer = dto.reporting.withVHFAnswer,
                 isInfractionProven = dto.reporting.isInfractionProven,
                 tags = dto.reporting.tags.map { fromTagEntity(it) },
-                theme = dto.reporting.theme?.let { fromThemeEntity(it) },
+                theme = dto.reporting.theme.let { fromThemeEntity(it) },
             )
         }
     }

@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { dashboardFiltersActions } from '../../slice'
 
 import type { DashboardType } from '@features/Dashboard/slice'
+import type { TagAPI } from 'domain/entities/tags'
 
 type FiltersTagsProps = {
   dashboard: DashboardType
@@ -21,7 +22,7 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
 
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
-  const setFilteredRegulatoryTags = (value: string[] | undefined) => {
+  const setFilteredRegulatoryTags = (value: TagAPI[] | undefined) => {
     dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: value }, id }))
   }
 
@@ -29,8 +30,8 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
     dispatch(dashboardFiltersActions.setFilters({ filters: { amps: value }, id }))
   }
 
-  const deleteRegulatoryTag = (regulatoryTagToDelete: string) => {
-    setFilteredRegulatoryTags(filters?.regulatoryTags?.filter(theme => theme !== regulatoryTagToDelete))
+  const deleteRegulatoryTag = (regulatoryTagToDelete: TagAPI) => {
+    setFilteredRegulatoryTags(filters?.regulatoryTags?.filter(theme => theme.id !== regulatoryTagToDelete.id))
   }
 
   const deleteAmpType = (ampTypeToDelete: string) => {
@@ -70,9 +71,9 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
           />
         </CustomPeriodContainer>
       )}
-      {filters?.regulatoryTags?.map(theme => (
-        <SingleTag key={theme} onDelete={() => deleteRegulatoryTag(theme)} title={theme}>
-          {theme}
+      {filters?.regulatoryTags?.map(tag => (
+        <SingleTag key={tag.id} onDelete={() => deleteRegulatoryTag(tag)} title={tag.name}>
+          {tag.name}
         </SingleTag>
       ))}
 

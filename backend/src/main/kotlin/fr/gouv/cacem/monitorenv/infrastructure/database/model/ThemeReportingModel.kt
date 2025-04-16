@@ -42,27 +42,22 @@ data class ThemeReportingModel(
         fun fromThemeEntity(
             theme: ThemeEntity,
             reporting: ReportingModel,
-        ): ThemeReportingModel =
-            ThemeReportingModel(
-                id = ThemeReportingPk(theme.id, reporting.id),
-                theme = ThemeModel.fromThemeEntity(theme),
-                reporting = reporting,
-            )
-
-        fun fromThemeEntity(
-            theme: ThemeEntity?,
-            reporting: ReportingModel,
         ): MutableSet<ThemeReportingModel> =
-            if (theme == null) {
-                mutableSetOf()
-            } else {
-                listOf(
-                    fromThemeEntity(
-                        theme,
-                        reporting,
-                    ),
-                ).plus(theme.subThemes.map { subTag -> fromThemeEntity(subTag, reporting) }).toMutableSet()
-            }
+            listOf(
+                ThemeReportingModel(
+                    id = ThemeReportingPk(theme.id, reporting.id),
+                    theme = ThemeModel.fromThemeEntity(theme),
+                    reporting = reporting,
+                ),
+            ).plus(
+                theme.subThemes.map { subTheme ->
+                    ThemeReportingModel(
+                        id = ThemeReportingPk(subTheme.id, reporting.id),
+                        theme = ThemeModel.fromThemeEntity(subTheme),
+                        reporting = reporting,
+                    )
+                },
+            ).toMutableSet()
     }
 }
 
