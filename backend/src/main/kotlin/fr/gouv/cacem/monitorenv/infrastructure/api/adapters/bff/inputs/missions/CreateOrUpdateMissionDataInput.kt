@@ -38,7 +38,7 @@ data class CreateOrUpdateMissionDataInput(
             completedBy = this.completedBy,
             controlUnits = this.controlUnits,
             endDateTimeUtc = this.endDateTimeUtc,
-            envActions = this.envActions?.map { it.toEnvActionEntity(id) },
+            envActions = this.envActions?.map { it.toEnvActionEntity() },
             facade = this.facade,
             geom = this.geom,
             hasMissionOrder = hasMissionOrder,

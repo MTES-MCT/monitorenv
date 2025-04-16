@@ -6,9 +6,9 @@ import java.time.ZonedDateTime
 data class TagInput(
     val id: Int,
     val name: String,
-    val startedAt: ZonedDateTime,
+    val startedAt: ZonedDateTime?,
     val endedAt: ZonedDateTime?,
-    val subTags: List<TagInput>,
+    val subTags: List<TagInput> = listOf(),
 ) {
     fun toTagEntity(): TagEntity =
         TagEntity(

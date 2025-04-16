@@ -9,6 +9,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel
 import jakarta.persistence.Entity
 import jakarta.persistence.NamedAttributeNode
 import jakarta.persistence.NamedEntityGraph
@@ -158,6 +160,8 @@ open class ReportingModelJpa(
     override val isInfractionProven: Boolean,
     @Formula("created_at + INTERVAL '1 hour' * validity_time")
     open val validityEndTime: Instant? = null,
+    override var tags: MutableSet<TagReportingModel>,
+    override var themes: MutableSet<ThemeReportingModel>,
 ) : AbstractReportingModel(
         id = id,
         reportingId = reportingId,
@@ -186,4 +190,6 @@ open class ReportingModelJpa(
         updatedAtUtc = updatedAtUtc,
         withVHFAnswer = withVHFAnswer,
         isInfractionProven = isInfractionProven,
+        tags = tags,
+        themes = themes,
     )

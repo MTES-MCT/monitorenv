@@ -7,15 +7,14 @@ import { useMemo } from 'react'
 import {
   ActionTypeEnum,
   type Mission,
-  type NewMission,
-  type NewInfraction
+  type NewInfraction,
+  type NewMission
 } from '../../../../../../../domain/entities/missions'
 import {
   ControlStatusEnum,
   ReportingTypeEnum,
   type ReportingForTimeline
 } from '../../../../../../../domain/entities/reporting'
-import { useGetControlPlans } from '../../../../../../../hooks/useGetControlPlans'
 import { getDateAsLocalizedStringCompact } from '../../../../../../../utils/getDateAsLocalizedString'
 import { StatusActionTag } from '../../../../../../Reportings/components/StatusActionTag'
 import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '../../../../../../Reportings/utils'
@@ -29,7 +28,6 @@ export function ReportingCard({
   action: ReportingForTimeline
   setCurrentActionId: (actionId: string) => void
 }) {
-  const { themes } = useGetControlPlans()
   const { setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const targetText = useMemo(() => {
@@ -99,15 +97,10 @@ export function ReportingCard({
         action.geom.type === 'MultiPoint' && {
           geom: action.geom
         }),
-      ...(action.themeId && {
-        controlPlans: [
-          {
-            subThemeIds: action.subThemeIds ?? [],
-            tagIds: [],
-            themeId: action.themeId
-          }
-        ]
+      ...(action.theme && {
+        themes: [action.theme]
       }),
+      tags: action.tags,
       ...(newInfractions.length > 0 && {
         infractions: [...newInfractions]
       })
@@ -147,10 +140,10 @@ export function ReportingCard({
           <Accented>{targetText}</Accented>
           <ReportingDate>{getDateAsLocalizedStringCompact(action.createdAt)}</ReportingDate>
         </SummaryContentFirstPart>
-        {action.themeId && (
+        {action.theme && (
           <>
-            <Accented>{themes[action.themeId]?.theme}</Accented>
-            {!!action.themeId && ' -'}{' '}
+            <Accented>{action.theme.name}</Accented>
+            {!!action.theme && ' -'}{' '}
           </>
         )}
         {action.description ?? 'Aucune description'}

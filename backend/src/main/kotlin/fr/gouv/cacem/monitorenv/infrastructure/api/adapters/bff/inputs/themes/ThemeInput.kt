@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs
+package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes
 
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import java.time.ZonedDateTime

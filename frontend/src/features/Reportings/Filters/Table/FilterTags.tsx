@@ -6,14 +6,15 @@ import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetControlPlans } from '../../../../hooks/useGetControlPlans'
 import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 
+import type { ThemeAPI } from 'domain/entities/themes'
+
 export function FilterTags() {
-  const { subThemes, themes } = useGetControlPlans()
   const dispatch = useAppDispatch()
-  const { hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, targetTypeFilter, themeFilter } =
-    useAppSelector(state => state.reportingFilters)
+  const { hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, targetTypeFilter, themeFilter } = useAppSelector(
+    state => state.reportingFilters
+  )
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
@@ -24,22 +25,39 @@ export function FilterTags() {
       })
     )
   }
+  const onDeleteTheme = (valueToDelete: number | undefined, reportingFilter: ThemeAPI[]) => {
+    const updatedFilter: ThemeAPI[] = reportingFilter
+      .map(theme => {
+        // Delete theme if we remove last subtheme tag
+        if (theme.subThemes.length === 1) {
+          return undefined
+        }
 
-  const hasTagFilters = useMemo(() => {
-    if (
+        return {
+          ...theme,
+          subThemes: theme.subThemes.filter(subTheme => subTheme.id !== valueToDelete)
+        }
+      })
+      .filter(theme => theme?.id !== valueToDelete)
+      .filter(theme => theme !== undefined)
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: ReportingsFiltersEnum.THEME_FILTER,
+        value: updatedFilter
+      })
+    )
+  }
+
+  const hasTagFilters = useMemo(
+    () =>
       hasFilters &&
       ((seaFrontFilter && seaFrontFilter?.length > 0) ||
         (sourceFilter && sourceFilter?.length > 0) ||
         (sourceTypeFilter && sourceTypeFilter?.length > 0) ||
-        (subThemesFilter && subThemesFilter?.length > 0) ||
         (targetTypeFilter && targetTypeFilter?.length > 0) ||
-        (themeFilter && themeFilter?.length > 0))
-    ) {
-      return true
-    }
-
-    return false
-  }, [hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, subThemesFilter, targetTypeFilter, themeFilter])
+        (themeFilter && themeFilter?.length > 0)),
+    [hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, targetTypeFilter, themeFilter]
+  )
 
   if (!hasTagFilters) {
     return null
@@ -79,24 +97,20 @@ export function FilterTags() {
         ))}
       {themeFilter &&
         themeFilter.length > 0 &&
-        themeFilter.map(themeId => (
-          <SingleTag
-            key={themeId}
-            onDelete={() => onDeleteTag(themeId, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
-          >
-            {String(`Thème ${themes[themeId]?.theme}`)}
+        themeFilter.map(theme => (
+          <SingleTag key={theme.id} onDelete={() => onDeleteTheme(theme.id, themeFilter)}>
+            {String(`Thème ${theme.name}`)}
           </SingleTag>
         ))}
-      {subThemesFilter &&
-        subThemesFilter?.length > 0 &&
-        subThemesFilter.map(subThemeId => (
-          <SingleTag
-            key={subThemeId}
-            onDelete={() => onDeleteTag(subThemeId, ReportingsFiltersEnum.SUB_THEMES_FILTER, subThemesFilter)}
-          >
-            {String(`Sous-thème ${subThemes[subThemeId]?.subTheme}`)}
-          </SingleTag>
-        ))}
+      {themeFilter &&
+        themeFilter.length > 0 &&
+        themeFilter
+          .flatMap(theme => theme.subThemes)
+          .map(subTheme => (
+            <SingleTag key={subTheme.id} onDelete={() => onDeleteTheme(subTheme.id, themeFilter)}>
+              {String(`Sous-thème ${subTheme.name}`)}
+            </SingleTag>
+          ))}
       {seaFrontFilter &&
         seaFrontFilter.length > 0 &&
         seaFrontFilter.map(seaFront => (
