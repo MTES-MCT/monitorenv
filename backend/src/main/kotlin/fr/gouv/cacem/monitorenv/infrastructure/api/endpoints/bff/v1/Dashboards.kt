@@ -71,15 +71,7 @@ class Dashboards(
         @RequestBody briefInput: BriefInput,
     ): BriefFileEntity {
         try {
-            val file = createBrief.execute(briefInput.toBriefEntity())
-            if (file != null) {
-                return BriefFileEntity(
-                    fileName = "brief-${briefInput.dashboard.id}.odt",
-                    fileContent = file.fileContent,
-                )
-            } else {
-                throw RuntimeException("Error")
-            }
+            return createBrief.execute(briefInput.toBriefEntity())
         } catch (e: Exception) {
             throw Exception(e)
         }

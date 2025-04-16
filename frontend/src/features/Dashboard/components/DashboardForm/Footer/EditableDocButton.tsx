@@ -1,22 +1,36 @@
 import { getAmpsByIds } from '@api/ampsAPI'
 import { dashboardsAPI } from '@api/dashboardsAPI'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
+import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
 import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { getFormattedReportingId } from '@features/Reportings/utils'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Button, Level } from '@mtes-mct/monitor-ui'
+import { useGetControlPlans } from '@hooks/useGetControlPlans'
+import { Button, CoordinatesFormat, getLocalizedDayjs, Level } from '@mtes-mct/monitor-ui'
+import { formatCoordinates } from '@utils/coordinates'
+import { formatDateLabel } from '@utils/getDateAsLocalizedString'
+import dayjs from 'dayjs'
 import { getTitle } from 'domain/entities/layers/utils'
+import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
+import { vehicleTypeLabels } from 'domain/entities/vehicleType'
+import { vesselTypeLabel } from 'domain/entities/vesselType'
+import { omit } from 'lodash'
 import { useMemo } from 'react'
+
+import type { Coordinate } from 'ol/coordinate'
 
 export function EditableDocButton({ dashboard }) {
   const dispatch = useAppDispatch()
+
+  const { subThemes, themes } = useGetControlPlans()
 
   const { getImages } = useExportImages()
   const vigilanceAreas = useAppSelector(state => getVigilanceAreasByIds(state, dashboard.vigilanceAreaIds))
@@ -70,6 +84,45 @@ export function EditableDocButton({ dashboard }) {
     themes: vigilanceArea.themes?.join(', '),
     visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
   }))
+  const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
+  const formattedReportings = dashboard.reportingIds
+    ? Object.values(reportings?.entities ?? []).map(reporting => {
+        const formattedGeom = formatCoordinates(
+          reporting?.geom?.coordinates[0] as Coordinate,
+          CoordinatesFormat.DEGREES_MINUTES_SECONDS
+        )
+          .replace(/\u2032/g, "'") // Replace prime by quote
+          .replace(/\u2033/g, '"')
+
+        const targetDetails = reporting.targetDetails.map(target => ({
+          ...target,
+          externalReferenceNumber: target.externalReferenceNumber ?? '-',
+          imo: target.imo ?? '-',
+          mmsi: target.mmsi ?? '-',
+          operatorName: target.operatorName ?? '-',
+          size: target.size ? `${target.size} m` : '-',
+          vesselType: target.vesselType ? vesselTypeLabel[target.vesselType] : '-'
+        }))
+
+        const dayJsDate = getLocalizedDayjs(reporting.createdAt ?? dayjs().toISOString())
+        const createdAt = `${formatDateLabel(dayJsDate.format('DD MMM YY'))}, ${dayJsDate.format(
+          'HH'
+        )}h${dayJsDate.format('mm')} (UTC)`
+
+        return {
+          ...omit(reporting, ['attachedMission']),
+          createdAt,
+          geom: formattedGeom,
+          reportingId: getFormattedReportingId(reporting.reportingId),
+          reportingSources: reporting.reportingSources?.map(source => source.displayedSource).join(', '),
+          subThemeIds: reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', '),
+          targetDetails,
+          targetType: reporting.targetType ? ReportingTargetTypeLabels[reporting.targetType] : '-',
+          themeId: themes[reporting.themeId]?.theme,
+          vehicleType: reporting.vehicleType ? vehicleTypeLabels[reporting.vehicleType].label : '-'
+        }
+      })
+    : []
 
   const exportBrief = async () => {
     const images = await getImages()
@@ -98,7 +151,6 @@ export function EditableDocButton({ dashboard }) {
         image
       }
     })
-    const reportingsWithImages = images?.filter(img => String(img.featureId)?.includes('DASHBOARD_REPORTINGS'))
 
     const vigilanceAreasWithImagesAndLinkedLayers = formattedVigilanceAreas.map(vigilanceArea => {
       const filteredAmps = allLinkedAMPs.filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
@@ -127,7 +179,7 @@ export function EditableDocButton({ dashboard }) {
         dashboard,
         image: wholeImage,
         regulatoryAreas: regulatoryAreasWithImages,
-        reportings: reportingsWithImages ?? [],
+        reportings: formattedReportings ?? [],
         vigilanceAreas: vigilanceAreasWithImagesAndLinkedLayers
       })
     )

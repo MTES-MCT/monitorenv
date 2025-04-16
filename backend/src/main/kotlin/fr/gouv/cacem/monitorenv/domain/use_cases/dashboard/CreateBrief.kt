@@ -8,6 +8,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.utils.Base64Converter
 import fr.gouv.cacem.monitorenv.utils.OfficeConverter
 import fr.gouv.cacem.monitorenv.utils.WordUtils
+import org.apache.batik.transcoder.TranscoderInput
+import org.apache.batik.transcoder.TranscoderOutput
+import org.apache.batik.transcoder.image.PNGTranscoder
 import org.apache.poi.util.Units
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy
 import org.apache.poi.xwpf.usermodel.*
@@ -17,10 +20,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import java.awt.image.BufferedImage
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStream
+import java.io.*
 import java.math.BigInteger
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -161,6 +161,10 @@ class CreateBrief(
 
         document.paragraphs.firstOrNull { it.text.contains("\${vigilanceAreasDetails}") }?.let { paragraph ->
             createDetailsSection(paragraph, brief.vigilanceAreas ?: emptyList())
+        }
+
+        document.paragraphs.firstOrNull { it.text.contains("\${reportingsDetails}") }?.let { paragraph ->
+            createReportingsDetails(paragraph, brief.reportings ?: emptyList())
         }
     }
 
@@ -417,6 +421,207 @@ class CreateBrief(
             nameCell.setText(area.name)
             setCellWidth(nameCell, 4750)
             styleCell(nameCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
+        }
+    }
+
+    private fun createReportingsDetails(
+        paragraph: XWPFParagraph,
+        reportings: List<EditableBriefReportingEntity>,
+    ) {
+        if (reportings.isEmpty()) return
+
+        paragraph.runs.forEach { it.setText("", 0) }
+        val document = paragraph.document as XWPFDocument
+
+        for (reporting in reportings) {
+            println("reporting for table details: $reporting")
+
+            val tableParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
+            val table = document.insertNewTbl(tableParagraph.ctp.newCursor())
+            table.setWidth("100%")
+            setTableBorders(table, "CCCFD6", false)
+
+            // TODO : handle svg color depending on reporting status
+            val svg =
+                """
+                <svg xmlns="http://www.w3.org/2000/svg" height="8.4" viewBox="0 0 20 20" width="8.4">
+                    <rect fill="none" height="20" width="20" />
+                    <path d="M-143,6.6-155,1V19h2V11.453Z" fill="#E5E5EB" transform="translate(160)" />
+                </svg>
+                """.trimIndent()
+            val imageBytes = convertSvgStringToPngBytes(svg, width = 30f, height = 30f)
+
+            val rowTitle = table.getRow(0)
+            rowTitle.height = 300
+            rowTitle.setHeightRule(TableRowHeightRule.EXACT)
+            val cellTitle = rowTitle.getCell(0)
+            cellTitle.removeParagraph(0) // pour réinitialiser
+
+            val paragraphTitle = cellTitle.addParagraph()
+            val runWithImage = paragraphTitle.createRun()
+
+            // 2. Ajout de l’image dans le run
+            val imageStream = ByteArrayInputStream(imageBytes)
+            val pictureType = Document.PICTURE_TYPE_PNG
+            val imageFileName = "icon.png"
+
+            runWithImage.addPicture(imageStream, pictureType, imageFileName, Units.toEMU(12.0), Units.toEMU(12.0))
+
+// 3. Ajout du texte à côté de l’image
+            runWithImage.addTab() // pour espacer
+            runWithImage.setText(" ${reporting.reportingId}")
+            runWithImage.fontSize = 9
+            runWithImage.color = "707785"
+            runWithImage.isBold = true
+
+            setCellColor(cellTitle, "E5E5EB")
+
+            addLabeledRowTriple(
+                table,
+                label1 = "Thématique",
+                value1 = "${reporting.themeId} / ${reporting.subThemeIds}",
+                label2 = "Localisation",
+                value2 = reporting.geom,
+                label3 = "Source",
+                value3 = reporting.reportingSources,
+            )
+
+            reporting.targetDetails?.forEach { target ->
+                addTargetDetailRows(table, target, reporting)
+            }
+        }
+
+        val run = paragraph.createRun()
+        run.addBreak()
+
+        val position = document.getPosOfParagraph(paragraph)
+        document.removeBodyElement(position)
+    }
+
+    fun convertSvgStringToPngBytes(
+        svgContent: String,
+        width: Float? = null,
+        height: Float? = null,
+    ): ByteArray {
+        val transcoder = PNGTranscoder()
+
+        width?.let { transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, it) }
+        height?.let { transcoder.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, it) }
+
+        val inputStream = ByteArrayInputStream(svgContent.toByteArray(Charsets.UTF_8))
+        val outputStream = ByteArrayOutputStream()
+
+        val input = TranscoderInput(inputStream)
+        val output = TranscoderOutput(outputStream)
+
+        transcoder.transcode(input, output)
+
+        inputStream.close()
+        outputStream.flush()
+        return outputStream.toByteArray()
+    }
+
+    fun addTargetDetailRows(
+        table: XWPFTable,
+        target: EditableBriefTargetDetailsEntity,
+        reporting: EditableBriefReportingEntity,
+    ) {
+        val rows =
+            listOf(
+                listOf(
+                    "Type de cible",
+                    reporting.targetType ?: "",
+                    "Nom du navire",
+                    target.vesselName ?: "",
+                    "Immatriculation",
+                    target.externalReferenceNumber ?: "",
+                ),
+                listOf(
+                    "Type de véhicule",
+                    reporting.vehicleType ?: "",
+                    "MMSI",
+                    target.mmsi ?: "",
+                    "Taille",
+                    target.size ?: "",
+                ),
+                listOf(
+                    "IMO",
+                    target.imo ?: "",
+                    "Nom du capitaine",
+                    target.operatorName ?: "",
+                    "Type de navire",
+                    target.vesselType ?: "",
+                ),
+            )
+
+        for (rowData in rows) {
+            val row = table.createRow()
+            row.height = 300
+            row.setHeightRule(TableRowHeightRule.EXACT)
+            while (row.tableCells.size < 6) {
+                row.addNewTableCell()
+            }
+
+            for (i in 0 until 3) {
+                val labelCell = row.getCell(i * 2)
+                labelCell.setText(rowData[i * 2])
+                setCellWidth(labelCell, 1300)
+                styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = "707785")
+
+                val valueCell = row.getCell(i * 2 + 1)
+                valueCell.setText(rowData[i * 2 + 1])
+                setCellWidth(valueCell, 1830)
+                styleCell(valueCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT)
+            }
+        }
+    }
+
+    fun addLabeledRowTriple(
+        table: XWPFTable,
+        label1: String,
+        value1: String,
+        label2: String,
+        value2: String,
+        label3: String,
+        value3: String,
+    ) {
+        val row = table.createRow()
+        row.height = 300
+        row.setHeightRule(TableRowHeightRule.EXACT)
+
+        while (row.tableCells.size < 6) {
+            row.addNewTableCell()
+        }
+
+        val labels = listOf(label1, label2, label3)
+        val values = listOf(value1, value2, value3)
+
+        for (i in 0 until 3) {
+            val labelCell = row.getCell(i * 2)
+            labelCell.setText(labels[i])
+            setCellWidth(labelCell, 1200)
+            styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = "707785")
+            val labelCellCT = labelCell.ctTc
+            val labelTcPr = labelCellCT.tcPr ?: labelCellCT.addNewTcPr()
+            val labelBorders = labelTcPr.tcBorders ?: labelTcPr.addNewTcBorders()
+
+            labelBorders.bottom = labelBorders.addNewBottom()
+            labelBorders.bottom.`val` = STBorder.SINGLE
+            labelBorders.bottom.sz = BigInteger.valueOf(4)
+            labelBorders.bottom.color = "CCCFD6"
+
+            val valueCell = row.getCell(i * 2 + 1)
+            valueCell.setText(values[i])
+            setCellWidth(valueCell, 2660)
+            styleCell(valueCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT)
+            val valueCellCT = valueCell.ctTc
+            val valueTcPr = valueCellCT.tcPr ?: valueCellCT.addNewTcPr()
+            val valueBorders = valueTcPr.tcBorders ?: valueTcPr.addNewTcBorders()
+
+            valueBorders.bottom = valueBorders.addNewBottom()
+            valueBorders.bottom.`val` = STBorder.SINGLE
+            valueBorders.bottom.sz = BigInteger.valueOf(4)
+            valueBorders.bottom.color = "CCCFD6"
         }
     }
 
@@ -687,35 +892,54 @@ class CreateBrief(
     fun setTableBorders(
         table: XWPFTable,
         borderColor: String? = "000000",
+        withInsideBorder: Boolean = true,
     ) {
         val borderType = STBorder.SINGLE
         val borderSize = BigInteger.valueOf(4) // Border width in 1/8th points (4 = 0.5 points)
 
-        val tableBorders = table.ctTbl.tblPr.tblBorders
+        val tblPr = table.ctTbl.tblPr ?: table.ctTbl.addNewTblPr()
+        val tableBorders = tblPr.tblBorders ?: tblPr.addNewTblBorders()
 
-        tableBorders.top.setVal(borderType)
-        tableBorders.top.sz = borderSize
-        tableBorders.top.color = borderColor
+        tableBorders.addNewTop().apply {
+            `val` = borderType
+            sz = borderSize
+            color = borderColor
+        }
 
-        tableBorders.bottom.setVal(borderType)
-        tableBorders.bottom.sz = borderSize
-        tableBorders.bottom.color = borderColor
+        tableBorders.addNewBottom().apply {
+            `val` = borderType
+            sz = borderSize
+            color = borderColor
+        }
 
-        tableBorders.left.setVal(borderType)
-        tableBorders.left.sz = borderSize
-        tableBorders.left.color = borderColor
+        tableBorders.addNewLeft().apply {
+            `val` = borderType
+            sz = borderSize
+            color = borderColor
+        }
 
-        tableBorders.right.setVal(borderType)
-        tableBorders.right.sz = borderSize
-        tableBorders.right.color = borderColor
+        tableBorders.addNewRight().apply {
+            `val` = borderType
+            sz = borderSize
+            color = borderColor
+        }
 
-        tableBorders.insideH.setVal(borderType)
-        tableBorders.insideH.sz = borderSize
-        tableBorders.insideH.color = borderColor
+        if (withInsideBorder) {
+            tableBorders.addNewInsideH().apply {
+                `val` = borderType
+                sz = borderSize
+                color = borderColor
+            }
 
-        tableBorders.insideV.setVal(borderType)
-        tableBorders.insideV.sz = borderSize
-        tableBorders.insideV.color = borderColor
+            tableBorders.addNewInsideV().apply {
+                `val` = borderType
+                sz = borderSize
+                color = borderColor
+            }
+        } else {
+            tableBorders.unsetInsideH()
+            tableBorders.unsetInsideV()
+        }
     }
 
     private fun styleCell(

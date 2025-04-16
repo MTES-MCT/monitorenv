@@ -112,6 +112,10 @@ dependencies {
     implementation("org.apache.poi:poi:5.3.0")
     implementation("org.apache.poi:poi-ooxml:5.3.0")
 
+    // SVG
+    implementation("org.apache.xmlgraphics:batik-transcoder:1.17")
+    implementation("org.apache.xmlgraphics:batik-codec:1.17")
+
     // Devtools
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
 

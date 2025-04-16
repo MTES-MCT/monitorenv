@@ -5,6 +5,6 @@ data class BriefEntity(
     val dashboard: DashboardEntity,
     val image: BriefImageEntity? = null,
     val regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>? = listOf(),
-    val reportings: List<ImageEntity>? = listOf(),
+    val reportings: List<EditableBriefReportingEntity>? = listOf(),
     val vigilanceAreas: List<EditableBriefVigilanceAreaEntity>? = listOf(),
 )

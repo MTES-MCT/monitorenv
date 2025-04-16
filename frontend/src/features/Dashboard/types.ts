@@ -131,8 +131,47 @@ export namespace Dashboard {
     dashboard: Dashboard
     image?: ExportImageType
     regulatoryAreas: RegulatoryAreaForEditableBrief[]
-    reportings: ExportImageType[]
+    reportings: ReportingForEditableBrief[]
     vigilanceAreas: VigilanceAreaForEditableBrief[]
+  }
+
+  export type TargetDetailsForEditableBrief = {
+    externalReferenceNumber?: string
+    imo?: string
+    mmsi?: string
+    operatorName?: string
+    size?: string
+    vesselName?: string
+    vesselType?: string
+  }
+
+  type ReportingForEditableBrief = {
+    actionTaken: string | undefined
+    attachedEnvActionId: string
+    attachedToMissionAtUtc: string | undefined
+    controlStatus: string
+    createdAt: string | undefined
+    description: string | undefined
+    detachedFromMissionAtUtc: string | undefined
+    geom: string
+    hasNoUnitAvailable: boolean | undefined
+    id: number | string
+    isArchived: boolean
+    isControlRequired: boolean | undefined
+    isInfractionProven: boolean
+    missionId: number | undefined
+    openBy: string
+    reportType: string
+    reportingId: string
+    reportingSources: string
+    subThemeIds: string
+    targetDetails: TargetDetailsForEditableBrief[]
+    targetType: string
+    themeId: string | undefined
+    updatedAtUtc: string | undefined
+    validityTime: number
+    vehicleType: string | undefined
+    withVHFAnswer: boolean | undefined
   }
 
   type VigilanceAreaForEditableBrief = {
