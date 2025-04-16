@@ -1,6 +1,6 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/useCases/getThemesAsOptions'
-import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'

@@ -44,7 +44,7 @@ data class ReportingDataOutput(
     val updatedAtUtc: ZonedDateTime? = null,
     val withVHFAnswer: Boolean? = null,
     val isInfractionProven: Boolean,
-    val theme: ThemeOutput?,
+    val theme: ThemeOutput,
     val tags: List<TagOutput>,
 ) {
     companion object {
@@ -87,7 +87,7 @@ data class ReportingDataOutput(
                 withVHFAnswer = dto.reporting.withVHFAnswer,
                 isInfractionProven = dto.reporting.isInfractionProven,
                 tags = dto.reporting.tags.map { fromTagEntity(it) },
-                theme = dto.reporting.theme?.let { fromThemeEntity(it) },
+                theme = fromThemeEntity(dto.reporting.theme),
             )
         }
     }

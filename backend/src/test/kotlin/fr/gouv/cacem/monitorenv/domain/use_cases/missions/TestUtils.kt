@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -59,7 +60,7 @@ object TestUtils {
                     openBy = "CDA",
                     isInfractionProven = true,
                     tags = emptyList(),
-                    theme = null,
+                    theme = aTheme(),
                 ),
             reportingSources =
                 listOf(
@@ -127,7 +128,7 @@ object TestUtils {
                     detachedFromMissionAtUtc = null,
                     isInfractionProven = true,
                     tags = emptyList(),
-                    theme = null,
+                    theme = aTheme(),
                 ),
             reportingSources =
                 listOf(

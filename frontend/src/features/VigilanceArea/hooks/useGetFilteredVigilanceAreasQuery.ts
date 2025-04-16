@@ -8,7 +8,7 @@ import { TWO_MINUTES } from '../../../constants'
 import { isVigilanceAreaPartOfCreatedBy } from '../useCases/filters/isVigilanceAreaPartOfCreatedBy'
 import { isVigilanceAreaPartOfSeaFront } from '../useCases/filters/isVigilanceAreaPartOfSeaFront'
 import { isVigilanceAreaPartOfStatus } from '../useCases/filters/isVigilanceAreaPartOfStatus'
-import { isVigilanceAreaPartOfTag } from '../useCases/filters/isVigilanceAreaPartOfTheme'
+import { isVigilanceAreaPartOfTag } from '../useCases/filters/isVigilanceAreaPartOfTag'
 
 import type { VigilanceArea } from '../types'
 
