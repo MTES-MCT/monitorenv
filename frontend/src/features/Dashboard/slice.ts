@@ -11,6 +11,7 @@ import { filterReportings } from './useCases/filters/filterReportings'
 
 import type { DashboardFilters } from './components/DashboardForm/slice'
 import type { ImageApi, Link } from '@components/Form/types'
+import type { TagAPI } from 'domain/entities/tags'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
@@ -503,7 +504,7 @@ export const getFilteredRegulatoryAreas = createSelector(
   [
     (state: DashboardState) => state.dashboards,
     (state: DashboardState) => state.activeDashboardId,
-    (_, regulatoryTagsFilter: string[] | undefined) => regulatoryTagsFilter
+    (_, regulatoryTagsFilter: TagAPI[] | undefined) => regulatoryTagsFilter
   ],
   (dashboards, activeDashboardId, regulatoryTagsFilter) => {
     if (!activeDashboardId) {
@@ -517,7 +518,9 @@ export const getFilteredRegulatoryAreas = createSelector(
         return regulatoryAreas
       }
 
-      return regulatoryAreas?.filter(({ tags }) => tags.some(({ name }) => regulatoryTagsFilter?.includes(name)))
+      return regulatoryAreas?.filter(({ tags }) =>
+        tags.some(({ id }) => regulatoryTagsFilter?.some(tagFilter => tagFilter.id === id))
+      )
     }
 
     return undefined
@@ -570,7 +573,7 @@ export const getFilteredVigilanceAreas = createSelector(
 
       if (regulatoryTagsFilter && regulatoryTagsFilter.length > 0) {
         filteredVigilanceAreasByThemes = vigilanceAreas?.filter(({ tags }) =>
-          tags?.some(tag => regulatoryTagsFilter?.includes(tag.name))
+          tags?.some(tag => regulatoryTagsFilter?.some(tagFilter => tagFilter.id === tag.id))
         )
       }
 

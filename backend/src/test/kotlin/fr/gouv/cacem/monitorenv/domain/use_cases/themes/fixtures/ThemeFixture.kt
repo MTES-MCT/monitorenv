@@ -8,8 +8,8 @@ class ThemeFixture {
     companion object {
         fun aTheme(
             id: Int = Random.nextInt(),
-            name: String = "tag",
-            startedAt: ZonedDateTime = ZonedDateTime.now(),
+            name: String = "theme",
+            startedAt: ZonedDateTime? = ZonedDateTime.now(),
             endedAt: ZonedDateTime? = null,
             subThemes: List<ThemeEntity> = listOf(),
         ): ThemeEntity =

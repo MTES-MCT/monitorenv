@@ -1,3 +1,4 @@
+import { filterSubThemes } from '@features/Themes/useCases/getThemesAsOptions'
 import { SingleTag } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -25,19 +26,9 @@ export function FilterTags() {
       })
     )
   }
-  const onDeleteTheme = (valueToDelete: number | undefined, reportingFilter: ThemeAPI[]) => {
+  const onDeleteTheme = (valueToDelete: number, reportingFilter: ThemeAPI[]) => {
     const updatedFilter: ThemeAPI[] = reportingFilter
-      .map(theme => {
-        // Delete theme if we remove last subtheme tag
-        if (theme.subThemes.length === 1) {
-          return undefined
-        }
-
-        return {
-          ...theme,
-          subThemes: theme.subThemes.filter(subTheme => subTheme.id !== valueToDelete)
-        }
-      })
+      .map(theme => filterSubThemes(theme, valueToDelete))
       .filter(theme => theme?.id !== valueToDelete)
       .filter(theme => theme !== undefined)
     dispatch(

@@ -1,6 +1,11 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { getThemesAsOptions } from '@features/Themes/useCases/getThemesAsOptions'
-import { type DateAsStringRange, getOptionsFromLabelledEnum, type Option } from '@mtes-mct/monitor-ui'
+import {
+  type CheckTreePickerOption,
+  type DateAsStringRange,
+  getOptionsFromLabelledEnum,
+  type Option
+} from '@mtes-mct/monitor-ui'
 import _, { reduce } from 'lodash'
 import { type MutableRefObject, useMemo, useRef } from 'react'
 
@@ -22,7 +27,6 @@ import { ReportingTargetTypeLabels } from '../../../domain/entities/targetType'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
-import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui__root'
 import type { ThemeAPI } from 'domain/entities/themes'
 
 export enum ReportingFilterContext {

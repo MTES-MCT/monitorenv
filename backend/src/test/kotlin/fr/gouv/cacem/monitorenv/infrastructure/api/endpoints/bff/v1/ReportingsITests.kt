@@ -28,6 +28,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Compan
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ReportingSourceDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.SSEReporting
 import org.assertj.core.api.Assertions
@@ -192,7 +193,7 @@ class ReportingsITests {
                     ),
                 isInfractionProven = true,
                 tags = emptyList(),
-                theme = null,
+                theme = ThemeInput(id = 1, name = "theme", startedAt = null, endedAt = null),
             )
 
         given(createOrUpdateReporting.execute(any())).willReturn(reporting)
@@ -372,7 +373,7 @@ class ReportingsITests {
                         openBy = "CDA",
                         isInfractionProven = true,
                         tags = emptyList(),
-                        theme = null,
+                        theme = aTheme(),
                     ),
                 reportingSources = listOf(),
             )
@@ -439,7 +440,7 @@ class ReportingsITests {
                             ),
                         isInfractionProven = true,
                         tags = emptyList(),
-                        theme = null,
+                        theme = aTheme(id = 1),
                     ),
                 reportingSources =
                     listOf(
@@ -478,7 +479,7 @@ class ReportingsITests {
                         ),
                     isInfractionProven = true,
                     tags = emptyList(),
-                    theme = null,
+                    theme = ThemeInput(id = 1, name = "theme", startedAt = null, endedAt = null),
                 ),
             )
 
@@ -516,7 +517,8 @@ class ReportingsITests {
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
             .andExpect(jsonPath("$.tags").isEmpty())
-            .andExpect(jsonPath("$.theme").value(null))
+            .andExpect(jsonPath("$.theme.id").value(1))
+            .andExpect(jsonPath("$.theme.name").value("theme"))
     }
 
     @Test
@@ -621,7 +623,7 @@ class ReportingsITests {
                                 ),
                             isInfractionProven = true,
                             tags = emptyList(),
-                            theme = null,
+                            theme = aTheme(id = 1, startedAt = null),
                         ),
                     reportingSources =
                         listOf(
@@ -700,7 +702,13 @@ class ReportingsITests {
                   "updatedAtUtc": "2022-01-15T14:50:09Z",
                   "withVHFAnswer": null,
                   "isInfractionProven": true,
-                  "theme":null,
+                  "theme": {
+                    "id": 1,
+                    "name":"theme",
+                    "startedAt": null,
+                    "endedAt": null,
+                    "subThemes":[]
+                   },
                   "tags":[]
                     }""",
             )
