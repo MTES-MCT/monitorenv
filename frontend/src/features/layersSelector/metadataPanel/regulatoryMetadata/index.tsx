@@ -53,6 +53,7 @@ export function RegulatoryMetadata() {
               entityName={regulatoryMetadata.entityName}
               facade={regulatoryMetadata.facade}
               tags={regulatoryMetadata.tags}
+              themes={regulatoryMetadata.themes}
               type={regulatoryMetadata.type}
             />
             <RegulatorySummary

@@ -36,6 +36,7 @@ export function SearchOnExtentExtraButtons({
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const filteredVigilanceAreaSpecificPeriod = useAppSelector(
@@ -63,6 +64,7 @@ export function SearchOnExtentExtraButtons({
         ampTypes: filteredAmpTypes,
         extent: currentMapExtentTracker,
         regulatoryTags: filteredRegulatoryTags,
+        regulatoryThemes: filteredRegulatoryThemes,
         searchedText: globalSearchText,
         shouldSearchByExtent: shouldFilterSearchOnMapExtent,
         vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -99,6 +101,7 @@ export function SearchOnExtentExtraButtons({
       ampTypes: filteredAmpTypes,
       extent: currentMapExtentTracker,
       regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: !shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,

@@ -22,6 +22,7 @@ export function PeriodFilter({ style }: { style?: React.CSSProperties }) {
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
 
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
@@ -46,6 +47,7 @@ export function PeriodFilter({ style }: { style?: React.CSSProperties }) {
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
       regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: nextVigilanceAreaPeriod,

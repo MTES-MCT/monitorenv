@@ -6,6 +6,8 @@ import styled from 'styled-components'
 
 import { vigilanceAreaFiltersActions } from './slice'
 
+import type { TagAPI } from 'domain/entities/tags'
+
 export function FilterTags() {
   const dispatch = useAppDispatch()
   const { createdBy, seaFronts } = useAppSelector(state => state.vigilanceAreaFilters)
@@ -21,8 +23,8 @@ export function FilterTags() {
     )
   }
 
-  const deleteRegulatoryTag = (regulatoryTagToDelete: string) => {
-    dispatch(setFilteredRegulatoryTags(filteredRegulatoryTags.filter(theme => theme !== regulatoryTagToDelete)))
+  const deleteRegulatoryTag = (regulatoryTagToDelete: TagAPI) => {
+    dispatch(setFilteredRegulatoryTags(filteredRegulatoryTags.filter(tag => tag.id !== regulatoryTagToDelete.id)))
   }
 
   const hasFilters = createdBy?.length > 0 || seaFronts?.length > 0 || filteredRegulatoryTags?.length > 0
@@ -43,9 +45,9 @@ export function FilterTags() {
           {String(`Façade ${seaFront}`)}
         </SingleTag>
       ))}
-      {filteredRegulatoryTags?.map(theme => (
-        <SingleTag key={theme} onDelete={() => deleteRegulatoryTag(theme)}>
-          {theme}
+      {filteredRegulatoryTags?.map(tag => (
+        <SingleTag key={tag.id} onDelete={() => deleteRegulatoryTag(tag)}>
+          {tag.name}
         </SingleTag>
       ))}
     </StyledContainer>

@@ -184,7 +184,7 @@ abstract class AbstractReportingModel(
             withVHFAnswer = withVHFAnswer,
             isInfractionProven = isInfractionProven,
             tags = toTagEntities(tags.toList()),
-            theme = toThemeEntities(themes.toList()).getOrNull(0),
+            theme = toThemeEntities(themes.toList()).first(),
         )
 
     fun toReportingListDTO(objectMapper: ObjectMapper): ReportingListDTO {

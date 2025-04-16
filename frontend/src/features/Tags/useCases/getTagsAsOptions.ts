@@ -1,18 +1,24 @@
-import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui__root'
+import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui'
 import type { TagAPI } from 'domain/entities/tags'
 
 export const getTagsAsOptions = (tags: TagAPI[], childrenKey: string = 'subTags'): CheckTreePickerOption[] =>
   tags
-    .map(tag => ({
-      [childrenKey]:
+    .map(tag => {
+      const subTags =
         tag.subTags.length === 0
           ? undefined
-          : tag.subTags
-              .map(({ id, name }) => ({ label: name, value: id }))
-              .sort((a, b) => a.label.localeCompare(b.label)),
-      label: tag.name,
-      value: tag.id
-    }))
+          : {
+              [childrenKey]: tag.subTags
+                .map(({ id, name }) => ({ label: name, value: id }))
+                .sort((a, b) => a.label.localeCompare(b.label))
+            }
+
+      return {
+        ...subTags,
+        label: tag.name,
+        value: tag.id
+      }
+    })
     .sort((a, b) => a.label.localeCompare(b.label))
 
 export const getTagsAsOptionsLegacy = (tags: TagAPI[], childrenKey: string = 'subTags'): CheckTreePickerOption[] =>
@@ -38,3 +44,14 @@ export const parseOptionsToTags = (options: CheckTreePickerOption[], childrenKey
       name: child.label
     }))
   }))
+
+export const filterSubTags = (tag: TagAPI, toDeleteId: number): TagAPI | undefined => {
+  if (tag.subTags.length === 1) {
+    return undefined
+  }
+
+  return {
+    ...tag,
+    subTags: tag.subTags.filter(subTag => subTag.id !== toDeleteId)
+  }
+}
