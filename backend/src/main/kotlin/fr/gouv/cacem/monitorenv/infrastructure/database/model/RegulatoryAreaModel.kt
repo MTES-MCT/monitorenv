@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaModel.Companion.toTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaModel.Companion.toThemeEntities
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -44,6 +45,13 @@ data class RegulatoryAreaModel(
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     var tags: List<TagRegulatoryAreaModel>,
+    @OneToMany(
+        mappedBy = "regulatoryArea",
+        fetch = FetchType.LAZY,
+    )
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    var themes: List<ThemeRegulatoryAreaModel>,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
@@ -64,6 +72,7 @@ data class RegulatoryAreaModel(
             source = source,
             temporalite = temporalite,
             tags = toTagEntities(tags),
+            themes = toThemeEntities(themes),
             type = type,
             url = url,
         )

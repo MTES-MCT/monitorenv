@@ -76,7 +76,7 @@ export function RegulatoryAreas({
                       <Text>Thématique</Text>
                     </View>
                     <View style={areaStyle.details}>
-                      <Text>{regulatoryArea.tags.map(({ name }) => name).join(', ') || '-'}</Text>
+                      <Text>{regulatoryArea.themes.map(({ name }) => name).join(', ') || '-'}</Text>
                     </View>
                   </View>
                   <View style={layoutStyle.row}>
