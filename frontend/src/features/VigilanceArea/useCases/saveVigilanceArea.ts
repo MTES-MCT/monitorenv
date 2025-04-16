@@ -62,6 +62,8 @@ export const saveVigilanceArea =
         }
       } else if ('data' in response.error && response.error.data?.code === ApiErrorCode.UNVALID_PROPERTY) {
         throw Error('Une propriété est invalide')
+      } else if (response.error) {
+        throw Error('Une erreur est survenue lors de la création/sauvegarde de la zone de vigilance.')
       }
     } catch (error) {
       dispatch(

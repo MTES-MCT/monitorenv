@@ -8,5 +8,5 @@ export function isVigilanceAreaPartOfTag(
     return true
   }
 
-  return !!vigilanceArea.tags && vigilanceArea.tags.map(({ name }) => name).some(tag => tags.includes(tag))
+  return !!vigilanceArea.tags && vigilanceArea.tags?.map(({ name }) => name).some(tag => tags.includes(tag))
 }
