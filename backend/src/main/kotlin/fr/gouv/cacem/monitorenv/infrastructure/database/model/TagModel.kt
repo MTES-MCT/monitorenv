@@ -78,7 +78,6 @@ data class TagModel(
         if (startedAt != other.startedAt) return false
         if (endedAt != other.endedAt) return false
         if (parent != other.parent) return false
-        if (subTags != other.subTags) return false
 
         return true
     }
@@ -88,8 +87,6 @@ data class TagModel(
         result = 31 * result + name.hashCode()
         result = 31 * result + (startedAt?.hashCode() ?: 0)
         result = 31 * result + (endedAt?.hashCode() ?: 0)
-        result = 31 * result + (parent?.hashCode() ?: 0)
-        result = 31 * result + subTags.hashCode()
         return result
     }
 }
