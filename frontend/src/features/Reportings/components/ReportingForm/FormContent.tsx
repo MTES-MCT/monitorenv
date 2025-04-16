@@ -27,6 +27,7 @@ import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/useCa
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
+  CheckTreePicker,
   customDayjs,
   FormikEffect,
   FormikMultiRadio,
@@ -34,17 +35,17 @@ import {
   getOptionsFromLabelledEnum,
   Label,
   Message,
-  Toggle
+  Toggle,
+  type CheckTreePickerOption
 } from '@mtes-mct/monitor-ui'
-import { CheckTreePicker, type CheckTreePickerOption } from '@mtes-mct/monitor-ui__root'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import {
-  type Reporting,
   INDIVIDUAL_ANCHORING_THEME_ID,
   InfractionProvenLabels,
   ReportingTypeEnum,
-  ReportingTypeLabels
+  ReportingTypeLabels,
+  type Reporting
 } from 'domain/entities/reporting'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import {
@@ -70,7 +71,7 @@ import { Footer } from './FormComponents/Footer'
 import { Position } from './FormComponents/Position'
 import { Source } from './FormComponents/Source'
 import { Target } from './FormComponents/Target'
-import { MessageTitle, MessageText, ThemeSelector } from './FormComponents/ThemeSelector'
+import { MessageText, MessageTitle, ThemeSelector } from './FormComponents/ThemeSelector'
 import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelector'
 import { Validity } from './FormComponents/Validity'
 import { FormikSyncReportingFields } from './FormikSyncReportingFields'

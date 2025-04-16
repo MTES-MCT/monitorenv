@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
@@ -60,7 +61,7 @@ class ReportingFixture {
                 attachedToMissionAtUtc = attachedToMissionAtUtc,
                 attachedEnvActionId = attachedEnvActionId,
                 tags = emptyList(),
-                theme = null,
+                theme = aTheme(),
             )
         }
 
