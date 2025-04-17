@@ -838,7 +838,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val mission = jpaMissionRepository.findById(25)
         val newControlUnitResource = jpaControlUnitResourceRepository.findById(10)
         val newControlUnit =
-            jpaControlUnitRepository.findById(
+            jpaControlUnitRepository.findFullControlUnitById(
                 requireNotNull(newControlUnitResource.controlUnit.id),
             )
 
