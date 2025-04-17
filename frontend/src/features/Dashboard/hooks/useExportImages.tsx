@@ -11,55 +11,74 @@ import { getReportingZoneFeature } from '@features/Reportings/components/Reporti
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
+import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 import { Feature, View } from 'ol'
 import { createEmpty, extend, type Extent } from 'ol/extent'
 import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
-import { ImageTile } from 'ol/source'
+import { OSM, TileWMS, XYZ } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
-import { createXYZ } from 'ol/tilegrid'
 import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react'
 
 import { getDashboardStyle } from '../components/Layers/style'
 
-import type { ImageLike } from 'ol/DataTile'
 import type { Geometry } from 'ol/geom'
 
 const resolution = { height: '480px', width: '720px' }
 
-function loadImage(src: string) {
-  return new Promise<ImageLike>((resolve, reject) => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.addEventListener('load', () => resolve(img))
-    img.addEventListener('error', () => reject(new Error('load failed')))
-    img.src = src
-  })
+const getBaseSource = (backgroundMap: BaseLayer | undefined) => {
+  switch (backgroundMap) {
+    case BaseLayer.OSM:
+      return new OSM({
+        attributions:
+          '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+        crossOrigin: 'anonymous'
+      })
+
+    case BaseLayer.SATELLITE:
+      return new XYZ({
+        crossOrigin: 'anonymous',
+        maxZoom: 19,
+        url: `https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg90?access_token=${
+          import.meta.env.FRONTEND_MAPBOX_KEY
+        }`
+      })
+
+    case BaseLayer.SHOM:
+      return new TileWMS({
+        crossOrigin: 'anonymous',
+        params: { LAYERS: 'RASTER_MARINE_3857_WMSR', TILED: true },
+        serverType: 'geoserver',
+        // Countries have transparency, so do not fade tiles:
+        transition: 0,
+        url: `https://services.data.shom.fr/${import.meta.env.FRONTEND_SHOM_KEY}/wms/r`
+      })
+    case BaseLayer.LIGHT:
+    default:
+      return new XYZ({
+        crossOrigin: 'anonymous',
+        maxZoom: 19,
+        urls: ['a', 'b', 'c', 'd'].map(
+          subdomain => `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`
+        )
+      })
+  }
 }
 
 const initialMap = new OpenLayerMap({
   layers: [
     new TileLayer({
-      source: new ImageTile({
-        async loader(z, x, y) {
-          const subdomains = ['a', 'b', 'c', 'd']
-          const subdomain = subdomains[Math.abs(x + y) % subdomains.length]
-          const url = `https://${subdomain}.basemaps.cartocdn.com/light_all/${z}/${x}/${y}.png`
-          const image = await loadImage(url)
-
-          return image
-        },
-        tileGrid: createXYZ({
-          maxZoom: 19,
-          minZoom: 3,
-          tileSize: 256
-        })
+      source: new XYZ({
+        crossOrigin: 'anonymous',
+        maxZoom: 19,
+        urls: ['a', 'b', 'c', 'd'].map(
+          subdomain => `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`
+        )
       })
     })
   ],
-
   view: new View({
     center: transform(CENTERED_ON_FRANCE, WSG84_PROJECTION, OPENLAYERS_PROJECTION),
     minZoom: 3,
@@ -88,6 +107,7 @@ export function useExportImages() {
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
   const activeDashboard = dashboard?.dashboard
+  const backgroundMap = dashboard?.backgroundMap
 
   const layersVectorSourceRef = useRef(new VectorSource())
   const layersVectorLayerRef = useRef(
@@ -150,6 +170,15 @@ export function useExportImages() {
       hiddenDiv.remove()
     }
   }, [])
+
+  useEffect(() => {
+    const switchBackground = () => {
+      if (mapRef.current?.getAllLayers()[0]) {
+        mapRef.current?.getAllLayers()[0]?.setSource(getBaseSource(backgroundMap))
+      }
+    }
+    switchBackground()
+  }, [backgroundMap])
 
   const exportImages = useCallback(
     async (features: Feature[], dashboardFeature?: Feature) => {

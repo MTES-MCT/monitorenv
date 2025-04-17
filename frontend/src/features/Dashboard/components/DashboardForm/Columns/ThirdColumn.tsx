@@ -57,10 +57,10 @@ export function ThirdColumn({
     title: 'Pièces jointes',
     visible: false
   })
-  const topBookmarks = [controlUnitBookmark, commentsBookmark, weatherBookmark, attachmentsBookmark].filter(
+  const topBookmarks = [controlUnitBookmark, commentsBookmark, attachmentsBookmark, weatherBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'top'
   )
-  const bottomBookmarks = [controlUnitBookmark, commentsBookmark, weatherBookmark, attachmentsBookmark].filter(
+  const bottomBookmarks = [controlUnitBookmark, commentsBookmark, attachmentsBookmark, weatherBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'bottom'
   )
 

@@ -48,6 +48,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
         case Dashboard.Block.REGULATORY_AREAS:
         case Dashboard.Block.AMP:
         case Dashboard.Block.VIGILANCE_AREAS:
+        case Dashboard.Block.BACKGROUND_MAP:
           setExpandedAccordionFirstColumn(expandedAccordionFirstColumn === type ? undefined : type)
           dispatch(dashboardActions.setDashboardPanel())
           dispatch(dashboardActions.removeAllPreviewedItems())

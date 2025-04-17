@@ -1,7 +1,7 @@
 import { MultiRadio, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { BaseLayerLabel } from 'domain/entities/layers/BaseLayer'
 import styled from 'styled-components'
 
-import { BaseLayerLabel } from '../../../domain/entities/layers/constants'
 import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
