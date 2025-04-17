@@ -13,5 +13,5 @@ interface DetailRenderable {
         rowIndex: Int,
         cell: XWPFTableCell,
         document: XWPFDocument,
-    ) {}
+    )
 }

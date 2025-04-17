@@ -230,6 +230,8 @@ export function EditableDocButton({ dashboard }) {
 
         document.body.removeChild(link)
       } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error generating file:', error)
         dispatch(
           addSideWindowBanner({
             children: 'Une erreur est survenue lors de la génération du fichier. Veuillez réessayer.',
