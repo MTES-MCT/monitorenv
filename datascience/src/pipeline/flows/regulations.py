@@ -76,7 +76,7 @@ def update_regulations(new_regulations: pd.DataFrame):
                 """CREATE TEMP TABLE tmp_regulations_cacem(
                 id serial,
                 geom public.geometry(MultiPolygon,4326),
-                entity_name character varying,
+                ent_name character varying,
                 url character varying,
                 layer_name character varying,
                 facade character varying,
@@ -84,12 +84,12 @@ def update_regulations(new_regulations: pd.DataFrame):
                 edition character varying,
                 editeur character varying,
                 source character varying,
-                observation character varying,
+                obs character varying,
                 thematique character varying,
                 date character varying,
-                duree_validite character varying,
+                validite character varying,
                 date_fin character varying,
-                temporalite character varying,
+                tempo character varying,
                 type character varying,
                 row_hash text)
                 ON COMMIT DROP;"""
@@ -99,7 +99,7 @@ def update_regulations(new_regulations: pd.DataFrame):
         columns_to_load = [
             "id",
             "geom",
-            "entity_name",
+            "ent_name",
             "url",
             "layer_name",
             "facade",
@@ -107,11 +107,11 @@ def update_regulations(new_regulations: pd.DataFrame):
             "edition",
             "editeur",
             "source",
-            "observation",
+            "obs",
             "thematique",
             "date",
-            "duree_validite",
-            "temporalite",
+            "validite",
+            "tempo",
             "type",
             "row_hash"
         ]
@@ -131,7 +131,7 @@ def update_regulations(new_regulations: pd.DataFrame):
             text(
                 """UPDATE regulations_cacem reg
                 SET geom = tmp.geom,
-                entity_name = tmp.entity_name,
+                entity_name = tmp.ent_name,
                 url = tmp.url,
                 layer_name = tmp.layer_name,
                 facade = tmp.facade,
@@ -139,11 +139,11 @@ def update_regulations(new_regulations: pd.DataFrame):
                 edition = tmp.edition,
                 editeur = tmp.editeur,
                 source = tmp.source,
-                observation = tmp.observation,
+                observation = tmp.obs,
                 thematique = tmp.thematique,
                 date = tmp.date,
-                duree_validite = tmp.duree_validite,
-                temporalite = tmp.temporalite,
+                duree_validite = tmp.validite,
+                temporalite = tmp.tempo,
                 type = tmp.type,
                 row_hash = tmp.row_hash
                 FROM tmp_regulations_cacem tmp
@@ -161,8 +161,34 @@ def load_new_regulations(new_regulations: pd.DataFrame):
     Args:
         new_amp (pd.DataFrame): output of ``extract_new_regulations`` task.
     """
+
+    # Source -> destination column mapping
+    column_mapping = {
+        "geom" : "geom",
+        "ent_name": "entity_name",
+        "url": "url",
+        "layer_name": "layer_name",
+        "facade": "facade",
+        "ref_reg": "ref_reg",
+        "edition": "edition",
+        "editeur": "editeur",
+        "source": "source",
+        "thematique": "thematique",
+        "date": "date",
+        "date_fin": "date_fin",
+        "type": "type",
+        "row_hash": "row_hash",
+        "id": "id",
+        "obs": "observation",
+        "validite": "duree_validite",
+        "tempo": "temporalite",
+    }
+
+     # renamed les colonnes
+    new_regulations_renamed = new_regulations.rename(columns=column_mapping)
+
     load(
-        new_regulations,
+        new_regulations_renamed,
         table_name="regulations_cacem",
         schema="public",
         db_name="monitorenv_remote",
