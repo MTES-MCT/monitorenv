@@ -1,4 +1,5 @@
 import { useGenerateBrief } from '@features/Dashboard/hooks/useGenerateBrief'
+import { useTracking } from '@hooks/useTracking'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -9,11 +10,17 @@ type GeneratePdfButtonProps = {
 }
 
 export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
+  const { trackEvent } = useTracking()
   const { downloadPdf, generateBrief, isLoadingBrief, loadingImages } = useGenerateBrief(dashboard)
 
   const handleDownload = async () => {
     const brief = await generateBrief()
     downloadPdf(brief)
+    trackEvent({
+      action: 'Téléchargement du brief',
+      category: 'TABLEAU DE BORD &  BRIEF',
+      name: 'Téléchargement du brief'
+    })
   }
 
   const getLoadingText = () => {
