@@ -1,12 +1,15 @@
 import { getControlUnitsByIds } from '@api/controlUnitsAPI'
 import { useGenerateBrief } from '@features/Dashboard/hooks/useGenerateBrief'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useTracking } from '@hooks/useTracking'
 import { Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
 export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard }) {
+  const { trackEvent } = useTracking()
+
   const controlUnits = useAppSelector(state => getControlUnitsByIds(state, dashboard.controlUnitIds))
   const formattedControlUnitNames = controlUnits.map(controlUnit => controlUnit.name).join(', ')
   const formattedControlUnitMails = controlUnits
@@ -58,6 +61,11 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
     }
     const brief = await generateBrief()
     downloadPdf(brief)
+    trackEvent({
+      action: 'Partage du brief',
+      category: 'TABLEAU DE BORD &  BRIEF',
+      name: 'Partage par mail et téléchargement du brief'
+    })
   }
 
   return (
