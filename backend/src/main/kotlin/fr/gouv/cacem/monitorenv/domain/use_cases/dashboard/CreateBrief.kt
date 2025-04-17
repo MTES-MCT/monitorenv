@@ -52,7 +52,7 @@ class CreateBrief(
 
         applyParagraphReplacements(document, placeholders)
         applyCustomTableInsertions(document, brief)
-        applyImageInsertions(document, brief)
+        applyGlobalMapInsertion(document, brief)
         applyDetailSections(document, brief)
         applyLinks(document, brief.dashboard.links)
         applyDashboardImages(document, brief.dashboard.images)
@@ -112,7 +112,7 @@ class CreateBrief(
         )
     }
 
-    private fun applyImageInsertions(
+    private fun applyGlobalMapInsertion(
         document: XWPFDocument,
         brief: BriefEntity,
     ) {
@@ -198,8 +198,12 @@ class CreateBrief(
         paragraph: XWPFParagraph,
         regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>,
     ) {
-        if (regulatoryAreas.isEmpty()) return
         val document = paragraph.document as XWPFDocument
+        if (regulatoryAreas.isEmpty()) {
+            cleanParagraphPlaceholder(document, paragraph)
+            return
+        }
+
         val table = document.insertNewTbl(paragraph.ctp.newCursor())
         table.setWidth("100%")
 
@@ -249,7 +253,6 @@ class CreateBrief(
             setTableBorders(table, "D4E5F4")
         }
 
-        // Remove the placeholder paragraph
         val position = document.getPosOfParagraph(paragraph)
         document.removeBodyElement(position)
     }
@@ -303,10 +306,13 @@ class CreateBrief(
         paragraph: XWPFParagraph,
         reportings: List<EditableBriefReportingEntity>,
     ) {
-        if (reportings.isEmpty()) return
+        val document = paragraph.document as XWPFDocument
+        if (reportings.isEmpty()) {
+            cleanParagraphPlaceholder(document, paragraph)
+            return
+        }
 
         paragraph.runs.forEach { it.setText("", 0) }
-        val document = paragraph.document as XWPFDocument
 
         for (reporting in reportings) {
             println("reporting for table details: $reporting")
@@ -336,7 +342,7 @@ class CreateBrief(
                     </svg>
                     """.trimIndent()
             }
-            val imageBytes = convertSvgStringToPngBytes(svg, width = 30f, height = 30f)
+            val imageBytes = convertSvgStringToPngBytes(svg)
 
             val rowTitle = table.getRow(0)
             rowTitle.height = 300
@@ -372,11 +378,10 @@ class CreateBrief(
             }
         }
 
-        val run = paragraph.createRun()
-        run.addBreak()
+        cleanParagraphPlaceholder(document, paragraph)
 
-        val position = document.getPosOfParagraph(paragraph)
-        document.removeBodyElement(position)
+        val pageBreakParagraph = document.createParagraph()
+        pageBreakParagraph.createRun().addBreak(BreakType.PAGE)
     }
 
     private fun createSideBySideTables(
@@ -384,41 +389,55 @@ class CreateBrief(
         vigilanceAreas: List<EditableBriefVigilanceAreaEntity>,
         amps: List<EditableBriefAmpEntity>,
     ) {
-        if (vigilanceAreas.isEmpty() && amps.isEmpty()) return
         val document = paragraph.document as XWPFDocument
+        if (vigilanceAreas.isEmpty() && amps.isEmpty()) {
+            cleanParagraphPlaceholder(document, paragraph)
+            return
+        }
+
         val parentTable = document.insertNewTbl(paragraph.ctp.newCursor())
-        parentTable.setWidth("100%")
+        parentTable.setWidth(10000)
+        parentTable.widthType = TableWidthType.DXA
         setTableBorders(parentTable, "FFFFFF")
 
         val row = parentTable.createRow()
-        val vigilanceCell = row.getCell(0) ?: row.createCell()
-        val ampsCell = row.getCell(1) ?: row.createCell()
+        val cell1 = row.getCell(0) ?: row.createCell()
+        val cell2 = row.getCell(1) ?: row.createCell()
 
-        setCellWidth(vigilanceCell, 4500)
-        setCellWidth(ampsCell, 4500)
-
-        vigilanceCell.addParagraph().apply {
-            createVigilanceAreasTable(this, vigilanceAreas)
+        row.apply {
+            height = 300
+            setHeightRule(TableRowHeightRule.AUTO)
         }
 
-        ampsCell.addParagraph().apply {
-            createAmpsTable(this, amps)
+        setCellWidth(cell1, 5000)
+        setCellWidth(cell2, 5000)
+
+        if (vigilanceAreas.isNotEmpty()) {
+            cell1.removeParagraph(0)
+            createVigilanceAreasTable(cell1.addParagraph(), vigilanceAreas)
+        }
+        if (amps.isNotEmpty()) {
+            cell2.removeParagraph(0)
+            createAmpsTable(cell2.addParagraph(), amps)
         }
 
         deleteFirstEmptyLineInTable(parentTable)
 
-        // Delete paragraph with placeholder
-        val position = document.getPosOfParagraph(paragraph)
-        document.removeBodyElement(position)
+        cleanParagraphPlaceholder(document, paragraph)
+
+        val pageBreakParagraph = document.createParagraph()
+        pageBreakParagraph.createRun().addBreak(BreakType.PAGE)
     }
 
     private fun <T : DetailRenderable> createDetailsSection(
         paragraph: XWPFParagraph,
         items: List<T>,
     ) {
-        if (items.isEmpty()) return
-        paragraph.runs.forEach { it.setText("", 0) }
         val document = paragraph.document as XWPFDocument
+        if (items.isEmpty()) {
+            cleanParagraphPlaceholder(document, paragraph)
+            return
+        }
 
         for (item in items) {
             val itemParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
@@ -461,12 +480,13 @@ class CreateBrief(
             // Add page break
             tableParagraph.createRun().addBreak(BreakType.PAGE)
         }
+        cleanParagraphPlaceholder(document, paragraph)
 
-        val position = document.getPosOfParagraph(paragraph)
-        document.removeBodyElement(position)
+        val pageBreakParagraph = document.createParagraph()
+        pageBreakParagraph.createRun().addBreak(BreakType.PAGE)
     }
 
-    fun addTargetDetailRows(
+    private fun addTargetDetailRows(
         table: XWPFTable,
         target: EditableBriefTargetDetailsEntity,
         reporting: EditableBriefReportingEntity,
@@ -588,7 +608,7 @@ class CreateBrief(
             else -> "Autre véhicule"
         }
 
-    fun addReportingGeneralInformations(
+    private fun addReportingGeneralInformations(
         table: XWPFTable,
         reporting: EditableBriefReportingEntity,
     ) {
@@ -782,7 +802,7 @@ class CreateBrief(
         cellWidth.type = STTblWidth.DXA
     }
 
-    fun setTableBorders(
+    private fun setTableBorders(
         table: XWPFTable,
         borderColor: String? = "000000",
         withInsideBorder: Boolean = true,
@@ -953,14 +973,21 @@ class CreateBrief(
         headerTextColor: String? = null,
         cellBuilder: (XWPFTableRow, T) -> Unit,
     ) {
-        if (data.isEmpty()) return
-
         val document = paragraph.document as XWPFDocument
+        if (data.isEmpty()) {
+            cleanParagraphPlaceholder(document, paragraph)
+            return
+        }
+
         val table = document.insertNewTbl(paragraph.ctp.newCursor())
         table.setWidth("100%")
         setTableBorders(table, "D4E5F4")
 
         val headerRow = table.getRow(0) ?: table.createRow()
+        headerRow.apply {
+            height = 300
+            setHeightRule(TableRowHeightRule.AUTO)
+        }
         val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
         headerCell.setText("$title - ${data.size} sélectionnée(s)")
         styleCell(headerCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = headerTextColor)
@@ -973,20 +1000,23 @@ class CreateBrief(
 
         val run = paragraph.createRun()
         run.addBreak()
+    }
 
+    private fun cleanParagraphPlaceholder(
+        document: XWPFDocument,
+        paragraph: XWPFParagraph,
+    ) {
         val position = document.getPosOfParagraph(paragraph)
         document.removeBodyElement(position)
     }
 
-    fun convertSvgStringToPngBytes(
-        svgContent: String,
-        width: Float? = null,
-        height: Float? = null,
-    ): ByteArray {
+    private fun convertSvgStringToPngBytes(svgContent: String): ByteArray {
         val transcoder = PNGTranscoder()
+        val width = 30f
+        val height = 30f
 
-        width?.let { transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, it) }
-        height?.let { transcoder.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, it) }
+        width.let { transcoder.addTranscodingHint(PNGTranscoder.KEY_WIDTH, it) }
+        height.let { transcoder.addTranscodingHint(PNGTranscoder.KEY_HEIGHT, it) }
 
         val inputStream = ByteArrayInputStream(svgContent.toByteArray(Charsets.UTF_8))
         val outputStream = ByteArrayOutputStream()
