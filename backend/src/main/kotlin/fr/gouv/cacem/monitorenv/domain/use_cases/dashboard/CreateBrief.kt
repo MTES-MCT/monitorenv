@@ -3,7 +3,9 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.dashboard
 import fr.gouv.cacem.monitorenv.config.LegicemProperties
 import fr.gouv.cacem.monitorenv.config.MonitorExtProperties
 import fr.gouv.cacem.monitorenv.config.UseCase
+import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.*
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.utils.Base64Converter
 import fr.gouv.cacem.monitorenv.utils.OfficeConverter
@@ -441,49 +443,55 @@ class CreateBrief(
             table.setWidth("100%")
             setTableBorders(table, "CCCFD6", false)
 
-            // TODO : handle svg color depending on reporting status
-            val svg =
+            var svg =
                 """
                 <svg xmlns="http://www.w3.org/2000/svg" height="8.4" viewBox="0 0 20 20" width="8.4">
                     <rect fill="none" height="20" width="20" />
-                    <path d="M-143,6.6-155,1V19h2V11.453Z" fill="#E5E5EB" transform="translate(160)" />
+                    <path d="M-143,6.6-155,1V19h2V11.453Z" fill="${reporting.iconColor}" transform="translate(160)" />
                 </svg>
                 """.trimIndent()
+
+            if (reporting.isArchived) {
+                svg =
+                    """
+                     <svg xmlns="http://www.w3.org/2000/svg" height="8.4" viewBox="0 0 26 26" width="8.4">
+                      <g transform="translate(61 -19)">
+                        <path d="M-38.9,27.58-54.5,20.3V43.7h2.6V33.889Z" fill="#fff" stroke="${reporting.iconColor}" stroke-width="1.5" />
+                        <path d="M-61,19h26V45H-61Z" fill="none" />
+                        <rect fill="none" height="26" transform="translate(-61 19)" width="26" />
+                      </g>
+                    </svg>
+                    """.trimIndent()
+            }
             val imageBytes = convertSvgStringToPngBytes(svg, width = 30f, height = 30f)
 
             val rowTitle = table.getRow(0)
             rowTitle.height = 300
             rowTitle.setHeightRule(TableRowHeightRule.EXACT)
             val cellTitle = rowTitle.getCell(0)
-            cellTitle.removeParagraph(0) // pour réinitialiser
+            cellTitle.removeParagraph(0)
 
             val paragraphTitle = cellTitle.addParagraph()
             val runWithImage = paragraphTitle.createRun()
 
-            // 2. Ajout de l’image dans le run
             val imageStream = ByteArrayInputStream(imageBytes)
             val pictureType = Document.PICTURE_TYPE_PNG
             val imageFileName = "icon.png"
 
             runWithImage.addPicture(imageStream, pictureType, imageFileName, Units.toEMU(12.0), Units.toEMU(12.0))
 
-// 3. Ajout du texte à côté de l’image
-            runWithImage.addTab() // pour espacer
-            runWithImage.setText(" ${reporting.reportingId}")
+            runWithImage.setText("   ${reporting.reportingId}")
             runWithImage.fontSize = 9
             runWithImage.color = "707785"
             runWithImage.isBold = true
+            runWithImage.fontFamily = "Arial"
 
             setCellColor(cellTitle, "E5E5EB")
+            cellTitle.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER)
 
-            addLabeledRowTriple(
+            addReportingGeneralInformations(
                 table,
-                label1 = "Thématique",
-                value1 = "${reporting.themeId} / ${reporting.subThemeIds}",
-                label2 = "Localisation",
-                value2 = reporting.geom,
-                label3 = "Source",
-                value3 = reporting.reportingSources,
+                reporting,
             )
 
             reporting.targetDetails?.forEach { target ->
@@ -526,75 +534,137 @@ class CreateBrief(
         target: EditableBriefTargetDetailsEntity,
         reporting: EditableBriefReportingEntity,
     ) {
-        val rows =
-            listOf(
-                listOf(
-                    "Type de cible",
-                    reporting.targetType ?: "",
-                    "Nom du navire",
-                    target.vesselName ?: "",
-                    "Immatriculation",
-                    target.externalReferenceNumber ?: "",
-                ),
-                listOf(
-                    "Type de véhicule",
-                    reporting.vehicleType ?: "",
-                    "MMSI",
-                    target.mmsi ?: "",
-                    "Taille",
-                    target.size ?: "",
-                ),
-                listOf(
-                    "IMO",
-                    target.imo ?: "",
-                    "Nom du capitaine",
-                    target.operatorName ?: "",
-                    "Type de navire",
-                    target.vesselType ?: "",
-                ),
-            )
+        val rows: List<List<String>> =
+            when (reporting.targetType) {
+                TargetTypeEnum.INDIVIDUAL ->
+                    listOf(
+                        listOf(
+                            "Type de cible",
+                            "Personne physique",
+                            "Identité de la personne",
+                            target.operatorName ?: "",
+                            "",
+                            "",
+                        ),
+                    )
 
-        for (rowData in rows) {
+                TargetTypeEnum.COMPANY ->
+                    listOf(
+                        listOf(
+                            "Type de cible",
+                            "Personne morale",
+                            "Nom de la personne morale",
+                            target.operatorName ?: "",
+                            "Identité de la personne contrôlée",
+                            target.vesselName ?: "",
+                        ),
+                    )
+
+                TargetTypeEnum.OTHER ->
+                    listOf(
+                        listOf("Type de cible", "Autre", "", "", "", ""),
+                    )
+
+                else -> {
+                    if (reporting.vehicleType != VehicleTypeEnum.VESSEL) {
+                        listOf(
+                            listOf(
+                                "Type de cible",
+                                "Véhicule",
+                                "Immatriculation",
+                                target.externalReferenceNumber ?: "",
+                                "Identité de la personne contrôlée",
+                                target.operatorName ?: "",
+                            ),
+                            listOf(
+                                "Type de véhicule",
+                                translateVehicleType(reporting.vehicleType),
+                                "",
+                                "",
+                                "",
+                                "",
+                            ),
+                        )
+                    } else {
+                        listOf(
+                            listOf(
+                                "Type de cible",
+                                "Véhicule",
+                                "Nom du navire",
+                                target.vesselName ?: "",
+                                "Immatriculation",
+                                target.externalReferenceNumber ?: "",
+                            ),
+                            listOf(
+                                "Type de véhicule",
+                                "Navire",
+                                "MMSI",
+                                target.mmsi ?: "",
+                                "Taille",
+                                target.size ?: "",
+                            ),
+                            listOf(
+                                "IMO",
+                                target.imo ?: "",
+                                "Nom du capitaine",
+                                target.operatorName ?: "",
+                                "Type de navire",
+                                target.vesselType ?: "",
+                            ),
+                        )
+                    }
+                }
+            }
+
+        rows.forEach { rowData ->
             val row = table.createRow()
             row.height = 300
-            row.setHeightRule(TableRowHeightRule.EXACT)
-            while (row.tableCells.size < 6) {
+            row.setHeightRule(TableRowHeightRule.AUTO)
+
+            while (row.tableCells.size < rowData.size) {
                 row.addNewTableCell()
             }
 
-            for (i in 0 until 3) {
-                val labelCell = row.getCell(i * 2)
-                labelCell.setText(rowData[i * 2])
-                setCellWidth(labelCell, 1300)
+            rowData.chunked(2).forEachIndexed { index, pair ->
+                val label = pair.getOrElse(0) { "" }
+                val value = pair.getOrElse(1) { "" }
+
+                val labelCell = row.getCell(index * 2)
+                labelCell.setText(label)
+                setCellWidth(labelCell, 1500)
                 styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = "707785")
 
-                val valueCell = row.getCell(i * 2 + 1)
-                valueCell.setText(rowData[i * 2 + 1])
+                val valueCell = row.getCell(index * 2 + 1)
+                valueCell.setText(value)
                 setCellWidth(valueCell, 1830)
                 styleCell(valueCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT)
             }
         }
     }
 
-    fun addLabeledRowTriple(
+    private fun translateVehicleType(vehicleType: VehicleTypeEnum?): String =
+        when (vehicleType) {
+            VehicleTypeEnum.VEHICLE_AIR -> "Véhicule aérien"
+            VehicleTypeEnum.VEHICLE_LAND -> "Véhicule terrestre"
+            VehicleTypeEnum.VESSEL -> "Navire"
+            else -> "Autre véhicule"
+        }
+
+    fun addReportingGeneralInformations(
         table: XWPFTable,
-        label1: String,
-        value1: String,
-        label2: String,
-        value2: String,
-        label3: String,
-        value3: String,
+        reporting: EditableBriefReportingEntity,
     ) {
         val row = table.createRow()
         row.height = 300
-        row.setHeightRule(TableRowHeightRule.EXACT)
+        row.setHeightRule(TableRowHeightRule.AUTO)
 
         while (row.tableCells.size < 6) {
             row.addNewTableCell()
         }
 
-        val labels = listOf(label1, label2, label3)
-        val values = listOf(value1, value2, value3)
+        val labels = listOf("Thématique", "Localisation", "Source")
+        val values =
+            listOf("${reporting.theme} / ${reporting.subThemes}", reporting.localization, reporting.reportingSources)
 
         for (i in 0 until 3) {
             val labelCell = row.getCell(i * 2)
@@ -949,6 +1019,7 @@ class CreateBrief(
         alignment: ParagraphAlignment,
         color: String? = "000000",
     ) {
+        cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER)
         // Ensure the cell has at least one paragraph
         val paragraph =
             if (cell.paragraphs.isEmpty()) {

@@ -14,15 +14,13 @@ import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/util
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { Button, CoordinatesFormat, getLocalizedDayjs, Level } from '@mtes-mct/monitor-ui'
+import { Button, CoordinatesFormat, getLocalizedDayjs, Level, THEME } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
 import { formatDateLabel } from '@utils/getDateAsLocalizedString'
 import dayjs from 'dayjs'
 import { getTitle } from 'domain/entities/layers/utils'
-import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
-import { vehicleTypeLabels } from 'domain/entities/vehicleType'
+import { ReportingStatusEnum } from 'domain/entities/reporting'
 import { vesselTypeLabel } from 'domain/entities/vesselType'
-import { omit } from 'lodash'
 import { useMemo } from 'react'
 
 import type { Coordinate } from 'ol/coordinate'
@@ -84,14 +82,36 @@ export function EditableDocButton({ dashboard }) {
     themes: vigilanceArea.themes?.join(', '),
     visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
   }))
+
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
+
+  const getReportingIconColors = reporting => {
+    let stroke
+
+    switch (reporting.reportType) {
+      case ReportingStatusEnum.INFRACTION_SUSPICION:
+        stroke = THEME.color.maximumRed
+        break
+      case ReportingStatusEnum.OBSERVATION:
+        stroke = THEME.color.blueGray
+        break
+      default:
+        stroke = THEME.color.slateGray
+    }
+
+    if (reporting.attachedMission) {
+      stroke = THEME.color.mediumSeaGreen
+    }
+
+    return stroke
+  }
   const formattedReportings = dashboard.reportingIds
     ? Object.values(reportings?.entities ?? []).map(reporting => {
-        const formattedGeom = formatCoordinates(
+        const localization = formatCoordinates(
           reporting?.geom?.coordinates[0] as Coordinate,
           CoordinatesFormat.DEGREES_MINUTES_SECONDS
         )
-          .replace(/\u2032/g, "'") // Replace prime by quote
+          .replace(/\u2032/g, "'")
           .replace(/\u2033/g, '"')
 
         const targetDetails = reporting.targetDetails.map(target => ({
@@ -109,17 +129,22 @@ export function EditableDocButton({ dashboard }) {
           'HH'
         )}h${dayJsDate.format('mm')} (UTC)`
 
+        const iconColor = getReportingIconColors(reporting)
+
         return {
-          ...omit(reporting, ['attachedMission']),
           createdAt,
-          geom: formattedGeom,
+          iconColor,
+          id: reporting.id,
+          isArchived: reporting.isArchived,
+          localization,
           reportingId: getFormattedReportingId(reporting.reportingId),
           reportingSources: reporting.reportingSources?.map(source => source.displayedSource).join(', '),
-          subThemeIds: reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', '),
+          reportType: reporting.reportType,
+          subThemes: reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', '),
           targetDetails,
-          targetType: reporting.targetType ? ReportingTargetTypeLabels[reporting.targetType] : '-',
-          themeId: themes[reporting.themeId]?.theme,
-          vehicleType: reporting.vehicleType ? vehicleTypeLabels[reporting.vehicleType].label : '-'
+          targetType: reporting.targetType,
+          theme: themes[reporting.themeId]?.theme,
+          vehicleType: reporting.vehicleType
         }
       })
     : []

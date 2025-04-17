@@ -10,6 +10,7 @@ import type { Link, ImageApi, ImageFront } from '@components/Form/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
 import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
+import type { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace Dashboard {
@@ -146,32 +147,19 @@ export namespace Dashboard {
   }
 
   type ReportingForEditableBrief = {
-    actionTaken: string | undefined
-    attachedEnvActionId: string
-    attachedToMissionAtUtc: string | undefined
-    controlStatus: string
     createdAt: string | undefined
-    description: string | undefined
-    detachedFromMissionAtUtc: string | undefined
-    geom: string
-    hasNoUnitAvailable: boolean | undefined
+    iconColor: string
     id: number | string
     isArchived: boolean
-    isControlRequired: boolean | undefined
-    isInfractionProven: boolean
-    missionId: number | undefined
-    openBy: string
+    localization: string
     reportType: string
     reportingId: string
     reportingSources: string
-    subThemeIds: string
+    subThemes: string
     targetDetails: TargetDetailsForEditableBrief[]
-    targetType: string
-    themeId: string | undefined
-    updatedAtUtc: string | undefined
-    validityTime: number
+    targetType: ReportingTargetTypeEnum
+    theme: string | undefined
     vehicleType: string | undefined
-    withVHFAnswer: boolean | undefined
   }
 
   type VigilanceAreaForEditableBrief = {
