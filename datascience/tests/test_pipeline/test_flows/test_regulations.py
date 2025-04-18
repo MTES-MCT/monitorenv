@@ -94,7 +94,7 @@ def old_regulations() -> pd.DataFrame:
     )
 
 
-def test_load_new_regulations(old_regulations):
+def test_load_new_regulations(reset_test_data, old_regulations):
     load_new_regulations.run(old_regulations)
     loaded_regulations = read_query(
         "monitorenv_remote", 
@@ -109,7 +109,7 @@ def test_load_new_regulations(old_regulations):
     pd.testing.assert_frame_equal(loaded_regulations, old_regulations)
 
 
-def test_update_new_regulations(new_regulations, old_regulations):
+def test_update_new_regulations(reset_test_data, new_regulations, old_regulations):
     load(
         old_regulations,
         table_name="regulations_cacem",
