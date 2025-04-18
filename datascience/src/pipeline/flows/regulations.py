@@ -161,6 +161,7 @@ def load_new_regulations(new_regulations: pd.DataFrame):
     Args:
         new_amp (pd.DataFrame): output of ``extract_new_regulations`` task.
     """
+
     load(
         new_regulations,
         table_name="regulations_cacem",

@@ -4,8 +4,7 @@ import pytest
 
 
 from src.pipeline.flows.regulations import load_new_regulations, update_regulations
-from src.pipeline.generic_tasks import delete_rows, load
-from src.pipeline.shared_tasks.update_queries import merge_hashes, select_ids_to_delete, select_ids_to_insert, select_ids_to_update
+from src.pipeline.generic_tasks import load
 from src.read_query import read_query
 
 import pandas as pd
