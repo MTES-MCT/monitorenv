@@ -177,7 +177,6 @@ def load_new_regulations(new_regulations: pd.DataFrame):
         "date": "date",
         "date_fin": "date_fin",
         "type": "type",
-        "row_hash": "row_hash",
         "id": "id",
         "obs": "observation",
         "validite": "duree_validite",
