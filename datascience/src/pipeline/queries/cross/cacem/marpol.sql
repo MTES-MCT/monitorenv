@@ -4,4 +4,4 @@ SELECT
   zone,
   zone_neca,
   zone_seca
-  FROM prod.marpol
+FROM prod.marpol
