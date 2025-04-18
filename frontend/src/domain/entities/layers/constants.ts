@@ -42,6 +42,7 @@ export enum MonitorEnvLayers {
   FAO = 'FAO',
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
+  LOCALIZED_AREAS_GULF_OF_LION_MARINE_PARK = 'LOCALIZED_AREAS_GULF_OF_LION_MARINE_PARK',
   LOCALIZED_AREAS_MARINE_CULTURES_85 = 'LOCALIZED_AREAS_MARINE_CULTURES_85',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
   MARPOL = 'MARPOL',
@@ -162,6 +163,12 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   [MonitorEnvLayers.LOCALIZED_AREAS_MARINE_CULTURES_85]: {
     code: 'marine_cultures_85',
     name: 'Cultures Marines 85',
+    type: LayerType.ADMINISTRATIVE,
+    zoneFieldKey: 'name'
+  },
+  [MonitorEnvLayers.LOCALIZED_AREAS_GULF_OF_LION_MARINE_PARK]: {
+    code: 'gulf_of_lion_marine_park',
+    name: 'Parc naturel marin du Golfe du Lion',
     type: LayerType.ADMINISTRATIVE,
     zoneFieldKey: 'name'
   },

@@ -89,6 +89,24 @@ export const getAdministrativeLayersStyle = (code: String) => {
             }`
           })
         })
+    case Layers.LOCALIZED_AREAS_GULF_OF_LION_MARINE_PARK.code:
+      return feature =>
+        new Style({
+          stroke: new Stroke({
+            color: darkPeriwinkle,
+            width: 1
+          }),
+          text: new Text({
+            fill: new Fill({ color: THEME.color.gunMetal }),
+            font: '12px Marianne',
+            stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
+            text: `${
+              feature.get(Layers.LOCALIZED_AREAS_GULF_OF_LION_MARINE_PARK.zoneFieldKey)
+                ? feature.get(Layers.LOCALIZED_AREAS_GULF_OF_LION_MARINE_PARK.zoneFieldKey)
+                : ''
+            }`
+          })
+        })
     case Layers.THREE_HUNDRED_METERS.code:
     case Layers.THREE_MILES.code:
     case Layers.SIX_MILES.code:
