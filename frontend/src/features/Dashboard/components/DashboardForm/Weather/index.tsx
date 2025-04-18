@@ -26,17 +26,36 @@ export const Weather = forwardRef<HTMLDivElement, WeatherProps>(({ geom }, ref) 
       return undefined
     }
 
-    return `${centerLatLon[1]?.toFixed(3)}/${centerLatLon[0]?.toFixed(3)}`
+    return {
+      latitude: centerLatLon[1]?.toFixed(3),
+      longitude: centerLatLon[0]?.toFixed(3)
+    }
   }, [geom])
 
   return (
     <WeatherBlock>
-      <WeatherTitle ref={ref}>Météo</WeatherTitle>
+      <WeatherTitle ref={ref}>
+        <span>Météo</span>
+        {coordinates && (
+          <StyledLink
+            href={`https://www.windy.com/${coordinates.latitude}/${coordinates.longitude}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            <Icon.ExternalLink size={16} />
+          </StyledLink>
+        )}
+      </WeatherTitle>
       {coordinates ? (
-        <StyledLink href={`https://www.windy.com/${coordinates}`} rel="noreferrer" target="_blank">
-          {`https://www.windy.com/${coordinates}`}
-          <Icon.ExternalLink size={16} />
-        </StyledLink>
+        <WindyContainer>
+          <iframe
+            allowFullScreen
+            height="100%"
+            src={`https://embed.windy.com/embed2.html?lat=${coordinates.latitude}&lon=${coordinates.longitude}&zoom=7`}
+            title="windy weather"
+            width="100%"
+          />
+        </WindyContainer>
       ) : (
         <CoordinatesError>Nous n&apos;avons pas pu calculer l&apos;emplacement </CoordinatesError>
       )}
@@ -45,22 +64,27 @@ export const Weather = forwardRef<HTMLDivElement, WeatherProps>(({ geom }, ref) 
 })
 
 const WeatherBlock = styled.div`
-  align-items: center;
   box-shadow: 0px 3px 6px #70778540;
   display: flex;
+  flex-direction: column;
   gap: 24px;
   padding: 21px 24px;
 `
 const WeatherTitle = styled.h2`
+  display: flex;
   font-size: 16px;
   font-weight: 500;
+  gap: 16px;
 `
 const CoordinatesError = styled.div`
   color: ${p => p.theme.color.slateGray};
   font-size: 11px;
   font-style: italic;
 `
-
+const WindyContainer = styled.div`
+  width: 100%;
+  height: 300px;
+`
 const StyledLink = styled.a`
   align-items: center;
   color: #295edb;
