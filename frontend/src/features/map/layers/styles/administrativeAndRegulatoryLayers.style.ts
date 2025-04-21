@@ -71,6 +71,24 @@ export const getAdministrativeLayersStyle = (code: String) => {
             text: `${feature.get(Layers.MARPOL.subZoneFieldKey) ? feature.get(Layers.MARPOL.subZoneFieldKey) : ''}`
           })
         })
+    case Layers.LOCALIZED_AREAS_MARINE_CULTURES_33.code:
+      return feature =>
+        new Style({
+          stroke: new Stroke({
+            color: darkPeriwinkle,
+            width: 1
+          }),
+          text: new Text({
+            fill: new Fill({ color: THEME.color.gunMetal }),
+            font: '12px Marianne',
+            stroke: new Stroke({ color: getColorWithAlpha(THEME.color.white, 0.9), width: 2 }),
+            text: `${
+              feature.get(Layers.LOCALIZED_AREAS_MARINE_CULTURES_33.zoneFieldKey)
+                ? feature.get(Layers.LOCALIZED_AREAS_MARINE_CULTURES_33.zoneFieldKey)
+                : ''
+            }`
+          })
+        })
     case Layers.LOCALIZED_AREAS_MARINE_CULTURES_85.code:
       return feature =>
         new Style({

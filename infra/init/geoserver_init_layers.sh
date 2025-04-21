@@ -360,6 +360,19 @@ EOF
 curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
 {
   "featureType": {
+    "name": "marine_cultures_33",
+    "nativeName": "marine_cultures_33",
+    "title": "marine_cultures_33",
+    "nativeCRS": "EPSG:4326",
+    "srs": "EPSG:4326",
+    "enabled": true,
+  }
+}
+EOF
+
+curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
+{
+  "featureType": {
     "name": "gulf_of_lion_marine_park",
     "nativeName": "gulf_of_lion_marine_park",
     "title": "gulf_of_lion_marine_park",
