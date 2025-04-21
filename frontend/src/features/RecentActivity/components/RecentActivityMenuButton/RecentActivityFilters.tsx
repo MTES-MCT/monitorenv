@@ -1,8 +1,6 @@
-import { useGetAdministrationsQuery } from '@api/administrationsAPI'
-import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
-import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { CustomPeriodContainer } from '@components/style'
 import { DrawedPolygonWithCenterButton } from '@components/ZonePicker/DrawedPolygonWithCenterButton'
+import { useGetFiltersOptions } from '@features/Dashboard/hooks/useGetFiltersOptions'
 import {
   recentActivityActions,
   RecentActivityFiltersEnum,
@@ -13,15 +11,12 @@ import { resetDrawingZone } from '@features/RecentActivity/useCases/resetDrawing
 import { OptionValue } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Accent,
   Button,
   CheckPicker,
   CustomSearch,
   DateRangePicker,
-  getOptionsFromIdAndName,
-  getOptionsFromLabelledEnum,
   Icon,
   IconButton,
   Label,
@@ -29,7 +24,6 @@ import {
   SingleTag,
   type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
-import { isNotArchived } from '@utils/isNotArchived'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -39,39 +33,10 @@ import type { Coordinate } from 'ol/coordinate'
 export function RecentActivityFilters() {
   const dispatch = useAppDispatch()
   const filters = useAppSelector(state => state.recentActivity.filters)
-
-  const { data: administrations, isLoading: isLoadingAdministrations } = useGetAdministrationsQuery(
-    undefined,
-    RTK_DEFAULT_QUERY_OPTIONS
-  )
-  const { data: controlUnits, isLoading: isLoadingControlUnits } = useGetControlUnitsQuery(
-    undefined,
-    RTK_DEFAULT_QUERY_OPTIONS
-  )
-  const { isLoading: isLoadingThemes, themesAsOptions } = useGetControlPlans()
-
-  const administrationsOptions = useMemo(
-    () =>
-      (administrations ?? []).filter(isNotArchived).map(admin => ({
-        label: admin.name,
-        value: admin.id
-      })),
-    [administrations]
-  )
-
-  const controlUnitsAsOptions = useMemo(() => {
-    const activeControlUnits = (controlUnits ?? []).filter(isNotArchived)
-    const selectableControlUnits = activeControlUnits?.filter(
-      activeControlUnit =>
-        filters.administrationIds?.length === 0 ||
-        !filters.administrationIds ||
-        filters.administrationIds?.includes(activeControlUnit.administrationId)
-    )
-
-    return getOptionsFromIdAndName(selectableControlUnits) ?? []
-  }, [controlUnits, filters.administrationIds])
-
-  const dateRangeOptions = getOptionsFromLabelledEnum(RecentActivity.RecentActivityDateRangeLabels)
+  const filtersOptions = useGetFiltersOptions({ filters })
+  const { administrationsOptions, controlUnitsAsOptions, dateRangeOptions, isLoading, themesAsOptions } =
+    filtersOptions.options
+  const { administrations, controlUnits } = filtersOptions
 
   const controlUnitCustomSearch = useMemo(
     () => new CustomSearch(controlUnitsAsOptions ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -116,13 +81,12 @@ export function RecentActivityFilters() {
     }
 
     const nextSelectedValues = filters[filterKey].filter(selectedValue => selectedValue !== valueToDelete)
+
     dispatch(
-      dispatch(
-        recentActivityActions.updateFilters({
-          key: filterKey,
-          value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues
-        })
-      )
+      recentActivityActions.updateFilters({
+        key: filterKey,
+        value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues
+      })
     )
   }
 
@@ -167,7 +131,7 @@ export function RecentActivityFilters() {
     dispatch(recentActivityActions.setGeometry(newGeom))
   }
 
-  if (isLoadingThemes || isLoadingAdministrations || isLoadingControlUnits) {
+  if (isLoading) {
     return null
   }
 

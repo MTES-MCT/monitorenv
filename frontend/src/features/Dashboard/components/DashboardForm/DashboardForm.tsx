@@ -54,6 +54,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
           dispatch(dashboardActions.removeAllPreviewedItems())
           break
         case Dashboard.Block.TERRITORIAL_PRESSURE:
+        case Dashboard.Block.RECENT_ACTIVITY:
         case Dashboard.Block.REPORTINGS:
           setExpandedAccordionSecondColumn(expandedAccordionSecondColumn === type ? undefined : type)
           break
