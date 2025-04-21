@@ -29,8 +29,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.menus.displayLayersSidebar)
-  // eslint-disable-next-line no-console
-  console.log('displayLayersSidebar', displayLayersSidebar)
+
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const secondVigilanceAreaPanelOpen = !!(
