@@ -49,6 +49,49 @@ def load_gulf_of_lion_marine_park(gulf_of_lion_marine_park: gpd.GeoDataFrame):
     )
 
 
+@task(checkpoint=False)
+def extract_cerbere_banyuls_national_reserve() -> gpd.GeoDataFrame:
+    return extract(
+        db_name="cacem_local",
+        query_filepath="cross/cacem/cerbere_banyuls_national_reserve.sql",
+        backend="geopandas",
+        geom_col="geom",
+        crs=4326,
+    )
+
+@task(checkpoint=False)
+def load_cerbere_banyuls_national_reserve(cerbere_banyuls_national_reserve: gpd.GeoDataFrame):
+    load(
+        cerbere_banyuls_national_reserve,
+        table_name="cerbere_banyuls_national_reserve",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
+@task(checkpoint=False)
+def extract_moeze_oleron_national_reserve() -> gpd.GeoDataFrame:
+    return extract(
+        db_name="cacem_local",
+        query_filepath="cross/cacem/moeze_oleron_national_reserve.sql",
+        backend="geopandas",
+        geom_col="geom",
+        crs=4326,
+    )
+
+@task(checkpoint=False)
+def load_moeze_oleron_national_reserve(moeze_oleron_national_reserve: gpd.GeoDataFrame):
+    load(
+        moeze_oleron_national_reserve,
+        table_name="moeze_oleron_national_reserve",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
+
 with Flow("Localized Areas") as flow:
       
       marine_cultures_85 = extract_marine_cultures_85()
@@ -56,5 +99,11 @@ with Flow("Localized Areas") as flow:
 
       gulf_of_lion_marine_park = extract_gulf_of_lion_marine_park()
       load_gulf_of_lion_marine_park(gulf_of_lion_marine_park)
+
+      cerbere_banyuls_national_reserve = extract_cerbere_banyuls_national_reserve()
+      load_cerbere_banyuls_national_reserve(cerbere_banyuls_national_reserve)
+
+      moeze_oleron_national_reserve = extract_moeze_oleron_national_reserve()
+      load_moeze_oleron_national_reserve(moeze_oleron_national_reserve)
 
 flow.file_name = Path(__file__).name
