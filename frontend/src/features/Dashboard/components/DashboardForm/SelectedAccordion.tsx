@@ -4,11 +4,11 @@ import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 type SelectedAccordionProps = {
-  children: React.ReactNode
+  children?: React.ReactNode
   className?: string
   isExpanded: boolean
   isReadOnly?: boolean
-  setExpandedAccordion: () => void
+  setExpandedAccordion?: () => void
   title: string
 }
 
@@ -23,8 +23,10 @@ export function SelectedAccordion({
   const dispatch = useAppDispatch()
 
   const onClickAccordion = () => {
-    dispatch(dashboardActions.setDashboardPanel())
-    setExpandedAccordion()
+    if (setExpandedAccordion) {
+      dispatch(dashboardActions.setDashboardPanel())
+      setExpandedAccordion()
+    }
   }
 
   return (

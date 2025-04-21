@@ -1,3 +1,4 @@
+import { RecentActivity } from '@features/RecentActivity/types'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { ReportingTypeEnum, StatusFilterEnum } from 'domain/entities/reporting'
@@ -18,6 +19,15 @@ export type ReportingFilters = {
   period?: DateAsStringRange
   status: StatusFilterEnum[]
   type?: string
+}
+
+export type RecentActivityFilters = {
+  administrationIds?: number[]
+  controlUnitIds?: number[]
+  periodFilter: string
+  startedAfter?: string
+  startedBefore?: string
+  themeIds?: number[]
 }
 
 export type ControlUnitFilters = {
@@ -46,6 +56,7 @@ export type DashboardsListFilters = {
 export type DashboardFiltersType = {
   controlUnitFilters: ControlUnitFilters
   filters: DashboardFilters
+  recentActivityFilters: RecentActivityFilters
   reportingFilters: ReportingFilters
 }
 
@@ -77,6 +88,9 @@ export const dashboardFiltersSlice = createSlice({
       state.dashboards[id] = {
         controlUnitFilters: {},
         filters: {},
+        recentActivityFilters: {
+          periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS
+        },
         reportingFilters: {
           dateRange: DateRangeEnum.MONTH,
           status: [StatusFilterEnum.IN_PROGRESS],
@@ -126,9 +140,13 @@ export const dashboardFiltersSlice = createSlice({
       state.dashboards[id] = filters ?? {
         controlUnitFilters: {},
         filters: {},
+        recentActivityFilters: {
+          periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS
+        },
         reportingFilters: {
           dateRange: DateRangeEnum.MONTH,
-          status: [StatusFilterEnum.IN_PROGRESS]
+          status: [StatusFilterEnum.IN_PROGRESS],
+          type: ReportingTypeEnum.INFRACTION_SUSPICION
         }
       }
     },
@@ -143,6 +161,19 @@ export const dashboardFiltersSlice = createSlice({
     },
     setListFilters(state, action: PayloadAction<Partial<DashboardsListFilters>>) {
       state.filters = { ...state.filters, ...action.payload }
+    },
+    setRecentActivityFilters(
+      state,
+      action: PayloadAction<{ filters: Partial<RecentActivityFilters>; id: string | undefined }>
+    ) {
+      const { filters, id } = action.payload
+      if (!id) {
+        return
+      }
+      if (state.dashboards[id]) {
+        const { recentActivityFilters } = state.dashboards[id]
+        state.dashboards[id].recentActivityFilters = { ...recentActivityFilters, ...filters }
+      }
     },
     setReportingFilters(state, action: PayloadAction<{ filters: Partial<ReportingFilters>; id: string | undefined }>) {
       const { filters, id } = action.payload
@@ -174,6 +205,17 @@ export const getReportingFilters = createSelector(
     }
 
     return dashboards?.[dashboardId]?.reportingFilters
+  }
+)
+
+export const getRecentActivityFilters = createSelector(
+  [(state: DashboardFiltersState) => state.dashboards, (_, dashboardId: string | undefined) => dashboardId],
+  (dashboards, dashboardId) => {
+    if (!dashboardId) {
+      return undefined
+    }
+
+    return dashboards?.[dashboardId]?.recentActivityFilters
   }
 )
 

@@ -10,6 +10,7 @@ import { getReportingFilters } from '../slice'
 import { TerritorialPressure } from '../TerritorialPressure'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
+import { DashboardRecentActivity } from '../DashboardRecentActivity'
 
 type SecondColumnProps = {
   dashboardForm: [string, DashboardType]
@@ -27,11 +28,18 @@ export function SecondColumn({
 
   const columnRef = useRef<HTMLDivElement>(null)
   const territorialPressureRef = useRef<HTMLDivElement>(null)
+  const recentActivityRef = useRef<HTMLDivElement>(null)
   const reportingRef = useRef<HTMLDivElement>(null)
 
   const [territorialPressionBookmark, setTerritorialPressionBookmark] = useState<BookmarkType>({
     ref: territorialPressureRef,
     title: 'Pression territoriale',
+    visible: false
+  })
+
+  const [recentActivityBookmark, setRecentActivityBookmark] = useState<BookmarkType>({
+    ref: recentActivityRef,
+    title: 'Activité récente',
     visible: false
   })
 
@@ -43,20 +51,24 @@ export function SecondColumn({
 
   const topBookmarks = useMemo(
     () =>
-      [territorialPressionBookmark, reportingBookmark].filter(
+      [territorialPressionBookmark, recentActivityBookmark, reportingBookmark].filter(
         bookmark => bookmark.visible && bookmark.orientation === 'top'
       ),
-    [reportingBookmark, territorialPressionBookmark]
+    [reportingBookmark, recentActivityBookmark, territorialPressionBookmark]
   )
   const bottomBookmarks = useMemo(
-    () => [territorialPressionBookmark].filter(bookmark => bookmark.visible && bookmark.orientation === 'bottom'),
-    [territorialPressionBookmark]
+    () =>
+      [territorialPressionBookmark, recentActivityBookmark].filter(
+        bookmark => bookmark.visible && bookmark.orientation === 'bottom'
+      ),
+    [territorialPressionBookmark, recentActivityBookmark]
   )
 
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
 
   useObserverAccordion(columnRef, [
     { ref: territorialPressureRef, setState: setTerritorialPressionBookmark },
+    { ref: recentActivityRef, setState: setRecentActivityBookmark },
     { ref: reportingRef, setState: setReportingBookmark }
   ])
 
@@ -80,6 +92,11 @@ export function SecondColumn({
             ref={territorialPressureRef}
             isExpanded={expandedAccordion === Dashboard.Block.TERRITORIAL_PRESSURE}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.TERRITORIAL_PRESSURE)}
+          />
+          <DashboardRecentActivity
+            ref={recentActivityRef}
+            isExpanded={expandedAccordion === Dashboard.Block.RECENT_ACTIVITY}
+            setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.RECENT_ACTIVITY)}
           />
 
           <Reportings
