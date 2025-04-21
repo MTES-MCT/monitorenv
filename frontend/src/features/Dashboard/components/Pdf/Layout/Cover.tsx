@@ -96,6 +96,11 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 <Text>Zones</Text>
               </View>
               <View style={styles.details}>
+                {brief.vigilanceAreas.length > 0 ? (
+                  <Text style={{ fontWeight: 'bold' }}>{brief.vigilanceAreas.length} zones de vigilance</Text>
+                ) : (
+                  <Text style={{ fontStyle: 'italic' }}>Aucune zone de vigilance</Text>
+                )}
                 {brief.regulatoryAreas.length > 0 ? (
                   <Text style={{ fontWeight: 'bold' }}>{brief.regulatoryAreas.length} zones réglementaires</Text>
                 ) : (
@@ -105,11 +110,6 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                   <Text style={{ fontWeight: 'bold' }}>{brief.amps.length} aires marines protégées</Text>
                 ) : (
                   <Text style={{ fontStyle: 'italic' }}>Aucune aire marine protégée</Text>
-                )}
-                {brief.vigilanceAreas.length > 0 ? (
-                  <Text style={{ fontWeight: 'bold' }}>{brief.vigilanceAreas.length} zones de vigilance</Text>
-                ) : (
-                  <Text style={{ fontStyle: 'italic' }}>Aucune zone de vigilance</Text>
                 )}
               </View>
             </View>

@@ -46,6 +46,19 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           </View>
         </Page>
       )}
+      {brief.vigilanceAreas.length > 0 && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <VigilanceAreas
+              images={brief.images ?? []}
+              linkedAMPs={brief.allLinkedAMPs}
+              linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}
+              vigilanceAreas={brief.vigilanceAreas}
+            />
+          </View>
+        </Page>
+      )}
       {brief.regulatoryAreas.length > 0 && (
         <Page style={layoutStyle.page}>
           <Headings name={brief.name} />
@@ -59,19 +72,6 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           <Headings name={brief.name} />
           <View style={layoutStyle.section}>
             <Amps amps={brief.amps} images={brief.images ?? []} />
-          </View>
-        </Page>
-      )}
-      {brief.vigilanceAreas.length > 0 && (
-        <Page style={layoutStyle.page}>
-          <Headings name={brief.name} />
-          <View style={layoutStyle.section}>
-            <VigilanceAreas
-              images={brief.images ?? []}
-              linkedAMPs={brief.allLinkedAMPs}
-              linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}
-              vigilanceAreas={brief.vigilanceAreas}
-            />
           </View>
         </Page>
       )}
