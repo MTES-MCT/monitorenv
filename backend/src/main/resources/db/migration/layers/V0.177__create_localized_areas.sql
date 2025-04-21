@@ -7,6 +7,16 @@ CREATE TABLE public.marine_cultures_85
 
 CREATE INDEX sidx_marine_cultures_85_geom ON public.marine_cultures_85 USING gist (geom);
 
+CREATE TABLE public.marine_cultures_33
+(
+    id        SERIAL PRIMARY KEY,
+    geom      geometry(MultiPolygon,4326),
+    "name"    character varying
+);
+
+CREATE INDEX sidx_marine_cultures_33_geom ON public.marine_cultures_33 USING gist (geom);
+
+
 CREATE TABLE public.gulf_of_lion_marine_park
 (
     id        SERIAL PRIMARY KEY,
