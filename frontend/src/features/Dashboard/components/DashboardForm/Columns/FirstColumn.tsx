@@ -57,10 +57,10 @@ export function FirstColumn({
     title: 'Zones de vigilance',
     visible: false
   })
-  const topBookmarks = [backgroundMapBookmark, regBookmark, ampBookmark, vigilanceBookmark].filter(
+  const topBookmarks = [backgroundMapBookmark, vigilanceBookmark, regBookmark, ampBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'top'
   )
-  const bottomBookmarks = [backgroundMapBookmark, regBookmark, ampBookmark, vigilanceBookmark].filter(
+  const bottomBookmarks = [backgroundMapBookmark, vigilanceBookmark, regBookmark, ampBookmark].filter(
     bookmark => bookmark.visible && bookmark.orientation === 'bottom'
   )
 
@@ -74,9 +74,9 @@ export function FirstColumn({
 
   useObserverAccordion(columnRef, [
     { ref: backgroundMapRef, setState: setBackgroundMapBookmark },
+    { ref: vigilanceAreaRef, setState: setVigilanceBookmark },
     { ref: regulatoryAreaRef, setState: setRegBookmark },
-    { ref: ampRef, setState: setAmpBookmark },
-    { ref: vigilanceAreaRef, setState: setVigilanceBookmark }
+    { ref: ampRef, setState: setAmpBookmark }
   ])
 
   useEffect(() => {
@@ -99,6 +99,15 @@ export function FirstColumn({
             isExpanded={expandedAccordion === Dashboard.Block.BACKGROUND_MAP}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.BACKGROUND_MAP)}
           />
+          <VigilanceAreas
+            ref={vigilanceAreaRef}
+            columnWidth={columnWidth ?? 0}
+            isExpanded={expandedAccordion === Dashboard.Block.VIGILANCE_AREAS}
+            isSelectedAccordionOpen={isSelectedAccordionOpen}
+            selectedVigilanceAreaIds={dashboard.dashboard.vigilanceAreaIds}
+            setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.VIGILANCE_AREAS)}
+            vigilanceAreas={filteredVigilanceAreas ?? []}
+          />
           <RegulatoryAreas
             ref={regulatoryAreaRef}
             columnWidth={columnWidth ?? 0}
@@ -117,15 +126,6 @@ export function FirstColumn({
             isSelectedAccordionOpen={isSelectedAccordionOpen}
             selectedAmpIds={dashboard.dashboard.ampIds}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.AMP)}
-          />
-          <VigilanceAreas
-            ref={vigilanceAreaRef}
-            columnWidth={columnWidth ?? 0}
-            isExpanded={expandedAccordion === Dashboard.Block.VIGILANCE_AREAS}
-            isSelectedAccordionOpen={isSelectedAccordionOpen}
-            selectedVigilanceAreaIds={dashboard.dashboard.vigilanceAreaIds}
-            setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.VIGILANCE_AREAS)}
-            vigilanceAreas={filteredVigilanceAreas ?? []}
           />
         </BaseColumn>
       )}
