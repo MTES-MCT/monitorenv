@@ -28,3 +28,11 @@ CREATE TABLE themes_reportings
     reportings_id INT REFERENCES reportings (id),
     primary key (themes_id, reportings_id)
 );
+
+CREATE TABLE themes_vigilance_areas
+(
+    themes_id          INT REFERENCES themes (id),
+    vigilance_areas_id INT REFERENCES vigilance_areas (id),
+    primary key (themes_id, vigilance_areas_id)
+);
+

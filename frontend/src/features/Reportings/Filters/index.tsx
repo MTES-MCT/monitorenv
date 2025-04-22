@@ -1,5 +1,5 @@
 import { useGetThemesQuery } from '@api/themesAPI'
-import { getThemesAsOptions } from '@features/Themes/useCases/getThemesAsOptions'
+import { getThemesAsOptions } from '@features/Themes/utils/getThemesAsOptions'
 import {
   type CheckTreePickerOption,
   type DateAsStringRange,

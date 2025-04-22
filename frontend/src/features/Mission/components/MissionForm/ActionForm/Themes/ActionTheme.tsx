@@ -1,5 +1,5 @@
 import { useGetThemesQuery } from '@api/themesAPI'
-import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/useCases/getThemesAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useMemo } from 'react'

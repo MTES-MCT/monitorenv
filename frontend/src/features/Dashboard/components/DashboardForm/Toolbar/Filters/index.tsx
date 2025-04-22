@@ -1,6 +1,6 @@
 import { useGetTagsByRegulatoryAreasQuery } from '@api/tagsAPI'
 import { type DashboardType } from '@features/Dashboard/slice'
-import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/useCases/getTagsAsOptions'
+import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'

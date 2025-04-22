@@ -53,6 +53,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 dureeValidite = "15 ans",
                 dateFin = "2035-07-01",
                 temporalite = "temporaire",
+                themes = listOf(),
             )
         val themes =
             listOf(

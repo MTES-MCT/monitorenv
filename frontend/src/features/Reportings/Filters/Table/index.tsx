@@ -1,6 +1,6 @@
 import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
-import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/useCases/getThemesAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import {
   Checkbox,
   CheckPicker,
