@@ -1,7 +1,9 @@
 import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetLegacyControlUnitsQuery } from '@api/legacyControlUnitsAPI'
+import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
+import { getTagsAsOptions } from '@features/Tags/utils/getTagsAsOptions'
 import { getThemesAsOptionsCheckPicker } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -9,6 +11,7 @@ import {
   customDayjs,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
+  type CheckTreePickerOption,
   type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
@@ -34,6 +37,7 @@ export type MissionOptionsListType = {
   dates: Option<DateRangeEnum>[]
   seaFronts: Option<string>[]
   status: Option<string>[]
+  tags: CheckTreePickerOption[]
   themes: Option<number>[]
   types: Option<string>[]
 }
@@ -50,7 +54,10 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const { data } = useGetThemesQuery()
-  const themesAsOption = getThemesAsOptionsCheckPicker(Object.values(data ?? []))
+  const themesAsOptions = getThemesAsOptionsCheckPicker(Object.values(data ?? []))
+
+  const { data: tags } = useGetTagsQuery()
+  const tagsAsOptions = getTagsAsOptions(Object.values(tags ?? []))
 
   const activeAdministrations = useMemo(
     () =>
@@ -83,7 +90,8 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     dates: dateRangeOptions,
     seaFronts: seaFrontsAsOptions,
     status: missionStatusesAsOptions,
-    themes: themesAsOption,
+    tags: tagsAsOptions,
+    themes: themesAsOptions,
     types: missionTypesAsOptions
   }
 
