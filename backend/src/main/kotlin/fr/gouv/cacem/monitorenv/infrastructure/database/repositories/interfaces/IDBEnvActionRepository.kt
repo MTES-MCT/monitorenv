@@ -69,8 +69,6 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
         startedBefore: Instant,
     ): List<Array<Any>>
 
-    fun deleteAllByMissionId(missionId: Int)
-
     @Modifying
     @Query(
         value = """
