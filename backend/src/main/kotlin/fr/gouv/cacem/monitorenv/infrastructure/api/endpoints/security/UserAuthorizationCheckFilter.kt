@@ -6,9 +6,8 @@ import fr.gouv.cacem.monitorenv.config.ProtectedPathsAPIProperties
 import fr.gouv.cacem.monitorenv.domain.use_cases.authorization.GetIsAuthorizedUser
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.security.input.UserInfo
 import io.ktor.client.call.*
-import io.ktor.client.request.get
+import io.ktor.client.request.*
 import io.ktor.http.HttpHeaders.Authorization
-import io.ktor.http.headers
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
