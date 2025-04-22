@@ -1,10 +1,13 @@
+import { useGetTagsQuery } from '@api/tagsAPI'
 import { CustomPeriodContainer, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { MissionSearch } from '@features/Mission/MissionsSearch'
+import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
   Checkbox,
   CheckPicker,
+  CheckTreePicker,
   CustomSearch,
   DateRangePicker,
   Select,
@@ -51,6 +54,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
       selectedPeriod,
       selectedSeaFronts,
       selectedStatuses,
+      selectedTags,
       selectedThemes,
       selectedWithEnvActions,
       startedAfter,
@@ -65,6 +69,10 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
     )
 
     const themeCustomSearch = useMemo(() => new CustomSearch(themes ?? [], ['label']), [themes])
+
+    const { data } = useGetTagsQuery()
+
+    const tagsOptions = useMemo(() => getTagsAsOptions(Object.values(data ?? [])), [data])
 
     return (
       <>
@@ -169,6 +177,23 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               renderValue={() => selectedThemes && <OptionValue>{`Thème (${selectedThemes.length})`}</OptionValue>}
               style={tagPickerStyle}
               value={selectedThemes}
+            />
+            <CheckTreePicker
+              childrenKey="subTags"
+              isLabelHidden
+              isTransparent
+              label="Tags et sous-tags"
+              name="regulatoryTags"
+              onChange={value =>
+                onUpdateSimpleFilter(value ? parseOptionsToTags(value) : undefined, MissionFiltersEnum.TAGS_FILTER)
+              }
+              options={tagsOptions}
+              placeholder="Tags et sous-tags"
+              renderedChildrenValue="Sous-tags."
+              renderedValue="Tags"
+              style={tagPickerStyle}
+              value={selectedTags ? getTagsAsOptions(selectedTags) : undefined}
+              // customSearch={regulatoryTagsCustomSearch}
             />
             <CheckPicker
               data-cy="select-statuses-filter"

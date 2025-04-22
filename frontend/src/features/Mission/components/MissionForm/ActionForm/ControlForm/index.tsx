@@ -1,7 +1,7 @@
 import { actionFactory } from '@features/Mission/Missions.helpers'
+import { displayThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Accent,
   Button,
@@ -15,7 +15,6 @@ import {
   Size,
   THEME,
   Toggle,
-  customDayjs,
   getOptionsFromLabelledEnum,
   pluralize,
   useNewWindow,
@@ -29,7 +28,6 @@ import styled from 'styled-components'
 import { InfractionsForm } from './InfractionsForm'
 import { MultiPointPicker } from './MultiPointPicker'
 import { OtherControlTypesForm } from './OtherControlTypesForm'
-import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../../../domain/entities/controlPlan'
 import {
   ActionTypeEnum,
   CompletionStatus,
@@ -48,7 +46,7 @@ import { Separator } from '../../style'
 import { MissingFieldsText } from '../MissingFieldsText'
 import {
   ActionFormBody,
-  ActionThemes,
+  ActionThemes as StyledActionThemes,
   ActionTitle,
   Header,
   HeaderButtons,
@@ -56,7 +54,8 @@ import {
   StyledDeleteIconButton,
   TitleWithIcon
 } from '../style'
-import { ActionTheme } from '../Themes/ActionTheme'
+import { ActionTags } from '../Tags/ActionTags'
+import { ActionThemes } from '../Themes/ActionThemes'
 
 import type { Reporting } from 'domain/entities/reporting'
 
@@ -72,19 +71,24 @@ export function ControlForm({
   const {
     errors,
     setFieldValue,
-    values: { attachedReportings, endDateTimeUtc, envActions = [], startDateTimeUtc }
+    values: {
+      attachedReportings,
+      endDateTimeUtc,
+      envActions = []
+      // startDateTimeUtc
+    }
   } = useFormikContext<Mission<EnvActionControl>>()
 
   const { actionsMissingFields } = useMissionAndActionsCompletion()
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === currentActionId)
   const currentAction = envActions?.[envActionIndex]
-  const actionDate =
-    envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
-  const actualYearForThemes = customDayjs(actionDate).year()
-  const themeIds = useMemo(() => currentAction?.controlPlans?.map(controlPlan => controlPlan.themeId), [currentAction])
-  const { themes } = useGetControlPlans()
-  const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
+  // const actionDate =
+  //   envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
+  // const actualYearForThemes = customDayjs(actionDate).year()
+  // const themeIds = useMemo(() => currentAction?.controlPlans?.map(controlPlan => controlPlan.themeId), [currentAction])
+  // const { themes } = useGetControlPlans()
+  // const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
@@ -181,10 +185,10 @@ export function ControlForm({
   }
 
   const updateControlDate = (date: string | undefined) => {
-    const newControlDateYear = date ? customDayjs(date).year() : undefined
-    if (newControlDateYear && actualYearForThemes !== newControlDateYear) {
-      setFieldValue(`envActions[${envActionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
-    }
+    // const newControlDateYear = date ? customDayjs(date).year() : undefined
+    // if (newControlDateYear && actualYearForThemes !== newControlDateYear) {
+    //   setFieldValue(`envActions[${envActionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
+    // }
 
     setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
   }
@@ -342,7 +346,7 @@ export function ControlForm({
         <TitleWithIcon>
           <Icon.ControlUnit color={THEME.color.gunMetal} />
           <ActionTitle>{pluralize('Contrôle', actionNumberOfControls ?? 0)}</ActionTitle>
-          <ActionThemes>{themesAsText}</ActionThemes>
+          <StyledActionThemes>{displayThemes(currentAction?.themes)}</StyledActionThemes>
         </TitleWithIcon>
         <HeaderButtons>
           <Button
@@ -393,14 +397,8 @@ export function ControlForm({
           )}
         </div>
 
-        <ActionTheme
-          actionIndex={envActionIndex}
-          actionType={ActionTypeEnum.CONTROL}
-          labelSubTheme="Sous-thématiques de contrôle"
-          labelTheme="Thématique de contrôle"
-          themeIndex={0}
-          themesYear={actualYearForThemes}
-        />
+        <ActionThemes actionIndex={envActionIndex} actionType={ActionTypeEnum.CONTROL} />
+        <ActionTags actionIndex={envActionIndex} />
 
         <div>
           <DatePicker

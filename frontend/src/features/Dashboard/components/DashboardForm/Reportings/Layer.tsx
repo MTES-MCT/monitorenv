@@ -132,7 +132,7 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
           </Title>
           <div>
             <Theme>
-              {reporting.theme.name} / {displaySubThemes(reporting.theme.subThemes)} -{' '}
+              {reporting.theme.name} / {displaySubThemes([reporting.theme])} -{' '}
             </Theme>
             <Description>{reporting.description}</Description>
           </div>
