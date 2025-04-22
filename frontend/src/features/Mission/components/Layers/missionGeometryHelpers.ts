@@ -54,7 +54,6 @@ const getActionControlProperties = ({
   actionStartDateTimeUtc,
   actionTargetType,
   actionType,
-  controlPlans,
   infractions,
   tags,
   themes
@@ -63,7 +62,6 @@ const getActionControlProperties = ({
   actionStartDateTimeUtc,
   actionTargetType,
   actionType,
-  controlPlans,
   infractions,
   tags,
   themes
@@ -73,14 +71,12 @@ const getActionSurveillanceProperties = ({
   actionEndDateTimeUtc,
   actionStartDateTimeUtc,
   actionType,
-  controlPlans,
   tags,
   themes
 }: EnvActionSurveillance) => ({
   actionEndDateTimeUtc,
   actionStartDateTimeUtc,
   actionType,
-  controlPlans,
   tags,
   themes
 })

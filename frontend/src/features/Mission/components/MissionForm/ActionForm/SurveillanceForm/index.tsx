@@ -1,11 +1,10 @@
+import { useGetThemesQuery } from '@api/themesAPI'
 import { actionFactory } from '@features/Mission/Missions.helpers'
+import { displayThemes, getThemesAsOptions } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import {
   Accent,
   Button,
-  customDayjs,
   DatePicker,
   FieldError,
   FormikCheckbox,
@@ -27,7 +26,6 @@ import styled from 'styled-components'
 
 import { Awareness } from './Awareness'
 import { SurveillanceZonePicker } from './SurveillanceZonePicker'
-import { CONTROL_PLAN_INIT, type ControlPlansData } from '../../../../../../domain/entities/controlPlan'
 import {
   ActionTypeEnum,
   CompletionStatus,
@@ -44,7 +42,7 @@ import { Separator } from '../../style'
 import { MissingFieldsText } from '../MissingFieldsText'
 import {
   ActionFormBody,
-  ActionThemes,
+  ActionThemes as StyledActionThemes,
   ActionTitle,
   Header,
   HeaderButtons,
@@ -52,7 +50,8 @@ import {
   StyledDeleteIconButton,
   TitleWithIcon
 } from '../style'
-import { SurveillanceThemes } from '../Themes/SurveillanceThemes'
+import { ActionTags } from '../Tags/ActionTags'
+import { ActionThemes } from '../Themes/ActionThemes'
 
 export function SurveillanceForm({ currentActionId, remove }) {
   const { newWindowContainerRef } = useNewWindow()
@@ -62,7 +61,12 @@ export function SurveillanceForm({ currentActionId, remove }) {
   const {
     errors,
     setFieldValue,
-    values: { attachedReportings, endDateTimeUtc, envActions, startDateTimeUtc }
+    values: {
+      attachedReportings,
+      endDateTimeUtc,
+      envActions
+      // startDateTimeUtc
+    }
   } = useFormikContext<Mission<EnvActionSurveillance>>()
 
   const { actionsMissingFields } = useMissionAndActionsCompletion()
@@ -73,12 +77,12 @@ export function SurveillanceForm({ currentActionId, remove }) {
 
   const currentAction = envActions[envActionIndex]
 
-  const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
-  const actualYearForThemes = customDayjs(actionDate).year()
+  // const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
+  // const actualYearForThemes = customDayjs(actionDate).year()
 
-  const themeIds = useMemo(() => currentAction?.controlPlans?.map(controlPlan => controlPlan.themeId), [currentAction])
-  const { themes } = useGetControlPlans()
-  const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
+  // const themeIds = useMemo(() => currentAction?.controlPlans?.map(controlPlan => controlPlan.themeId), [currentAction])
+  // const { themes } = useGetControlPlans()
+  // const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
 
   const { reportingIds = [] } = currentAction ?? {}
   const actionErrors = useMemo(
@@ -94,14 +98,17 @@ export function SurveillanceForm({ currentActionId, remove }) {
 
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length >= 1)
 
-  const { themesByYearAsOptions } = useGetControlPlansByYear({
-    year: actualYearForThemes
-  })
+  // const { themesByYearAsOptions } = useGetControlPlansByYear({
+  //   year: actualYearForThemes
+  // })
 
-  const [controlPlans] = useField<ControlPlansData[]>(`envActions[${envActionIndex}].controlPlans`)
+  // const [controlPlans] = useField<ControlPlansData[]>(`envActions[${envActionIndex}].controlPlans`)
+  const { data } = useGetThemesQuery()
 
-  const awarenessOptions = themesByYearAsOptions.filter(({ value }) =>
-    controlPlans.value.map(({ themeId }) => themeId).includes(value)
+  const themesOptions = useMemo(() => getThemesAsOptions(Object.values(data ?? [])), [data])
+
+  const awarenessOptions = themesOptions.filter(({ value }) =>
+    currentAction?.themes?.map(({ id }) => id).includes(+value)
   )
 
   const reportingAsOptions = useMemo(
@@ -178,12 +185,12 @@ export function SurveillanceForm({ currentActionId, remove }) {
   }, [currentAction, setFieldValue, envActions, dispatch])
 
   const updateStartDateTime = (date: string | undefined) => {
-    const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
-    if (newSurveillanceDateYear && actualYearForThemes !== newSurveillanceDateYear) {
-      currentAction?.controlPlans?.forEach((_, index) => {
-        setFieldValue(`envActions[${envActionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
-      })
-    }
+    // const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
+    // if (newSurveillanceDateYear && actualYearForThemes !== newSurveillanceDateYear) {
+    //   currentAction?.controlPlans?.forEach((_, index) => {
+    //     setFieldValue(`envActions[${envActionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
+    //   })
+    // }
 
     setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
   }
@@ -210,7 +217,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
           <Icon.Observation color={THEME.color.gunMetal} />
 
           <ActionTitle>Surveillance</ActionTitle>
-          <ActionThemes>{themeIds && themeIds?.length > 1 ? themesAsText?.join(', ') : themesAsText}</ActionThemes>
+          <StyledActionThemes>{displayThemes(currentAction?.themes)}</StyledActionThemes>
         </TitleWithIcon>
         <HeaderButtons>
           <Button
@@ -259,7 +266,8 @@ export function SurveillanceForm({ currentActionId, remove }) {
             />
           )}
         </div>
-        <SurveillanceThemes envActionIndex={envActionIndex} themesYear={actualYearForThemes} />
+        <ActionThemes actionIndex={envActionIndex} actionType={ActionTypeEnum.SURVEILLANCE} />
+        <ActionTags actionIndex={envActionIndex} />
         <FlexSelectorWrapper>
           <Label $isRequired>Début et fin de surveillance (UTC)</Label>
           <StyledDatePickerContainer>

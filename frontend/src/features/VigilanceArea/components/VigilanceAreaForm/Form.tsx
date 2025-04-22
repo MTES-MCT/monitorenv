@@ -205,7 +205,6 @@ export function Form() {
         <CheckTreePicker
           childrenKey="subThemes"
           error={formErrors.themes}
-          isMultiSelect={false}
           isRequired
           label="Thématiques et sous-thématiques"
           name="theme"

@@ -10,7 +10,7 @@ import { DateRangeEnum } from 'domain/entities/dateRange'
 import { useMemo } from 'react'
 
 import { TWO_MINUTES } from '../../../constants'
-import { isMissionPartOfSelectedControlPlans } from '../useCases/filters/isMissionPartOfSelectedControlPlans'
+import { isMissionPartOfSelectedTags } from '../useCases/filters/isMissionPartOfSelectedTags'
 
 export const useGetFilteredMissionsQuery = () => {
   const {
@@ -22,6 +22,7 @@ export const useGetFilteredMissionsQuery = () => {
     selectedPeriod,
     selectedSeaFronts,
     selectedStatuses,
+    selectedTags,
     selectedThemes,
     selectedWithEnvActions,
     startedAfter,
@@ -85,7 +86,8 @@ export const useGetFilteredMissionsQuery = () => {
     if (
       selectedAdministrationNames?.length === 0 &&
       selectedControlUnitIds?.length === 0 &&
-      selectedThemes?.length === 0
+      selectedThemes?.length === 0 &&
+      selectedTags?.length === 0
     ) {
       return missions
     }
@@ -94,8 +96,8 @@ export const useGetFilteredMissionsQuery = () => {
       mission =>
         isMissionPartOfSelectedAdministrationNames(mission, selectedAdministrationNames) &&
         isMissionPartOfSelectedControlUnitIds(mission, selectedControlUnitIds) &&
-        isMissionPartOfSelectedControlPlans(mission, selectedThemes) &&
         isMissionPartOfSelectedThemes(mission, selectedThemes) &&
+        isMissionPartOfSelectedTags(mission, selectedTags) &&
         isMissionPartOfSelectedCompletionStatus(mission, selectedCompletionStatus) &&
         isMissionPartOfSelectedWithEnvActions(mission, selectedWithEnvActions)
     )
@@ -104,6 +106,7 @@ export const useGetFilteredMissionsQuery = () => {
     selectedAdministrationNames,
     selectedControlUnitIds,
     selectedThemes,
+    selectedTags,
     selectedCompletionStatus,
     selectedWithEnvActions
   ])

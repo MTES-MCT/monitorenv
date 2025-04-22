@@ -1,6 +1,5 @@
 import { CompletionStatusTag } from '@features/Mission/components/CompletionStatusTag'
 import {
-  customDayjs,
   DatePicker,
   FieldError,
   FormikCheckbox,
@@ -8,32 +7,30 @@ import {
   FormikMultiCheckbox,
   FormikTextInput,
   FormikTextarea,
+  Message,
   MultiRadio,
-  useNewWindow,
-  Message
+  useNewWindow
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { HIDDEN_ERROR } from './constants'
-import { ControlUnitsForm } from './ControlUnitsForm'
-import { MissionZonePicker } from './MissionZonePicker'
-import { FormTitle, Separator } from './style'
-import { CONTROL_PLAN_INIT, UNIQ_CONTROL_PLAN_INDEX } from '../../../../domain/entities/controlPlan'
 import {
+  FrontCompletionStatus,
   type Mission,
   MissionSourceEnum,
   getMissionStatus,
   hasMissionOrderLabels,
-  missionTypeEnum,
-  ActionTypeEnum,
-  FrontCompletionStatus
+  missionTypeEnum
 } from '../../../../domain/entities/missions'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../../../utils/routes'
-import { isMissionNew, getMissionTitle, getNewMissionTitle } from '../../utils'
+import { getMissionTitle, getNewMissionTitle, isMissionNew } from '../../utils'
 import { MissionStatusTag } from '../MissionStatusTag'
+import { HIDDEN_ERROR } from './constants'
+import { ControlUnitsForm } from './ControlUnitsForm'
+import { MissionZonePicker } from './MissionZonePicker'
+import { FormTitle, Separator } from './style'
 
 export function GeneralInformationsForm({
   missionCompletion = undefined
@@ -60,24 +57,24 @@ export function GeneralInformationsForm({
   const missionIsFromMonitorFish =
     values.missionSource === MissionSourceEnum.MONITORFISH || values.missionSource === MissionSourceEnum.POSEIDON_CNSP
 
-  const actualYearForThemes = useMemo(() => customDayjs(values?.startDateTimeUtc).year(), [values?.startDateTimeUtc])
+  // const actualYearForThemes = useMemo(() => customDayjs(values?.startDateTimeUtc).year(), [values?.startDateTimeUtc])
 
   const updateMissionDateTime = (date: string | undefined) => {
-    if (actualYearForThemes && actualYearForThemes !== customDayjs(date).year()) {
-      values?.envActions?.forEach((action, actionIndex) => {
-        if (action.actionType === ActionTypeEnum.CONTROL && !action.actionStartDateTimeUtc) {
-          setFieldValue(`envActions[${actionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
-        }
-        if (
-          action.actionType === ActionTypeEnum.SURVEILLANCE &&
-          (!action.actionStartDateTimeUtc || (action.actionStartDateTimeUtc && action.durationMatchesMission))
-        ) {
-          action?.controlPlans?.forEach((_, index) => {
-            setFieldValue(`envActions[${actionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
-          })
-        }
-      })
-    }
+    // if (actualYearForThemes && actualYearForThemes !== customDayjs(date).year()) {
+    //   values?.envActions?.forEach((action, actionIndex) => {
+    //     if (action.actionType === ActionTypeEnum.CONTROL && !action.actionStartDateTimeUtc) {
+    //       setFieldValue(`envActions[${actionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
+    //     }
+    //     if (
+    //       action.actionType === ActionTypeEnum.SURVEILLANCE &&
+    //       (!action.actionStartDateTimeUtc || (action.actionStartDateTimeUtc && action.durationMatchesMission))
+    //     ) {
+    //       action?.controlPlans?.forEach((_, index) => {
+    //         setFieldValue(`envActions[${actionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
+    //       })
+    //     }
+    //   })
+    // }
     setFieldValue('startDateTimeUtc', date)
   }
 

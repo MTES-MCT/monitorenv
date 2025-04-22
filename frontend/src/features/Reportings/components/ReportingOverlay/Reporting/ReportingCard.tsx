@@ -88,8 +88,6 @@ export function ReportingCard({
   const endOfValidity = getLocalizedDayjs(createdAt).add(validityTime || 0, 'hour')
   const timeLeft = getTimeLeft(endOfValidity)
 
-  // const subThemesFormatted = subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ')
-
   const targetName = useMemo(() => {
     if (targetDetails.length > 1) {
       if (vehicleType) {
@@ -180,7 +178,7 @@ export function ReportingCard({
       <div>
         <StyledThemeContainer>
           {theme && <StyledBoldText>{theme.name}</StyledBoldText>}
-          {theme?.subThemes && <StyledMediumText>&nbsp;/&nbsp;{displaySubThemes(theme.subThemes)}</StyledMediumText>}
+          {theme?.subThemes && <StyledMediumText>&nbsp;/&nbsp;{displaySubThemes([theme])}</StyledMediumText>}
         </StyledThemeContainer>
         {description && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>

@@ -43,7 +43,7 @@ export function ReportingForm({
     return null
   }
 
-  const subThemesAsString = displaySubThemes(reporting.theme.subThemes) ?? EMPTY_VALUE
+  const subThemesAsString = displaySubThemes([reporting.theme]) ?? EMPTY_VALUE
 
   const sourceTypeText = (sourceType: ReportingSourceEnum) => {
     if (sourceType === ReportingSourceEnum.SEMAPHORE) {

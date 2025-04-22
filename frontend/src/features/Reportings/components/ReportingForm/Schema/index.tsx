@@ -78,11 +78,6 @@ export const ReportingSchema: Yup.Schema<
     reportType: Yup.mixed<ReportingTypeEnum>()
       .oneOf(Object.values(ReportingTypeEnum))
       .required('Veuillez définir le type de signalement'),
-    subThemeIds: Yup.array()
-      .of(Yup.number().required())
-      .ensure()
-      .required()
-      .min(1, 'Veuillez définir les sous-thématiques du signalement'),
     tags: Yup.array().ensure().optional(),
     targetDetails: Yup.array<TargetDetails>()
       .of(
@@ -99,7 +94,6 @@ export const ReportingSchema: Yup.Schema<
       .optional(),
     targetType: Yup.string<ReportingTargetTypeEnum>().optional(),
     theme: Yup.mixed<ThemeAPI>().required('Veuillez définir la thématique du signalement'),
-    themeId: Yup.number().required('Veuillez définir la thématique du signalement'),
     validityTime: Yup.number()
       .required('Veuillez définir la durée de validité du signalement')
       .min(1, 'Veuillez définir une durée de validité supérieure à 0'),

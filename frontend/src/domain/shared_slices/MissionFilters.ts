@@ -6,6 +6,8 @@ import storage from 'redux-persist/lib/storage'
 
 import { DateRangeEnum, DAY_OPTION } from '../entities/dateRange'
 
+import type { TagAPI } from 'domain/entities/tags'
+
 export const TODAY = customDayjs().utc().startOf('day').toISOString()
 
 export enum MissionFiltersEnum {
@@ -17,6 +19,7 @@ export enum MissionFiltersEnum {
   STARTED_AFTER_FILTER = 'startedAfter',
   STARTED_BEFORE_FILTER = 'startedBefore',
   STATUS_FILTER = 'selectedStatuses',
+  TAGS_FILTER = 'selectedTags',
   THEME_FILTER = 'selectedThemes',
   TYPE_FILTER = 'selectedMissionTypes',
   UNIT_FILTER = 'selectedControlUnitIds',
@@ -33,6 +36,7 @@ type MissionFilterValues = {
   selectedPeriod: DateRangeEnum
   selectedSeaFronts: string[] | undefined
   selectedStatuses: string[] | undefined
+  selectedTags: TagAPI[] | undefined
   selectedThemes: number[] | undefined
   selectedWithEnvActions: boolean
   startedAfter?: string
@@ -55,6 +59,7 @@ const INITIAL_STATE: MissionFiltersState = {
   selectedPeriod: DAY_OPTION.value,
   selectedSeaFronts: undefined,
   selectedStatuses: undefined,
+  selectedTags: undefined,
   selectedThemes: undefined,
   selectedWithEnvActions: false,
   startedAfter: TODAY,

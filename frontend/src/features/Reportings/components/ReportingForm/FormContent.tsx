@@ -71,8 +71,6 @@ import { Footer } from './FormComponents/Footer'
 import { Position } from './FormComponents/Position'
 import { Source } from './FormComponents/Source'
 import { Target } from './FormComponents/Target'
-import { MessageText, MessageTitle, ThemeSelector } from './FormComponents/ThemeSelector'
-import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelector'
 import { Validity } from './FormComponents/Validity'
 import { FormikSyncReportingFields } from './FormikSyncReportingFields'
 import { Header } from './Header'
@@ -442,8 +440,6 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
               </MessageText>
             </Message>
           )}
-          <ThemeSelector label="Thématique du signalement" name="themeId" />
-          <SubThemesSelector label="Sous-thématique du signalement" name="subThemeIds" />
           {/* TODO(02/04/2025): Be careful here */}
           {values.theme?.id === INDIVIDUAL_ANCHORING_THEME_ID && (
             <FormikMultiRadio
@@ -510,3 +506,8 @@ const SourceWrapper = styled.div`
   flex-direction: column;
   gap: 16px;
 `
+
+export const MessageTitle = styled.header`
+  font-weight: 500;
+`
+export const MessageText = styled.p``

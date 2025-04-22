@@ -31,11 +31,11 @@ const getThemesCell = (envActions: EnvAction[]) => {
     component: (
       <>
         <>
-          {theme.name} <SubThemesContainer>({displaySubThemes(theme.subThemes)})</SubThemesContainer>
+          {theme.name} <SubThemesContainer>({displaySubThemes([theme])})</SubThemesContainer>
         </>
       </>
     ),
-    title: `${theme.name} (${displaySubThemes(theme.subThemes)})`
+    title: `${theme.name} (${theme.subThemes.map(subTheme => subTheme.name).join(', ')})`
   })
 
   return Object.values(groupedThemes).flatMap(theme => toThemeCell(theme))
