@@ -1,6 +1,7 @@
 import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { CustomPeriodContainer } from '@components/style'
 import { DrawedPolygonWithCenterButton } from '@components/ZonePicker/DrawedPolygonWithCenterButton'
 import {
@@ -11,9 +12,9 @@ import {
 import { RecentActivity } from '@features/RecentActivity/types'
 import { resetDrawingZone } from '@features/RecentActivity/useCases/resetDrawingZone'
 import { OptionValue } from '@features/Reportings/Filters/style'
+import { getThemesAsOptions } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import {
   Accent,
   Button,
@@ -48,7 +49,9 @@ export function RecentActivityFilters() {
     undefined,
     RTK_DEFAULT_QUERY_OPTIONS
   )
-  const { isLoading: isLoadingThemes, themesAsOptions } = useGetControlPlans()
+  const { data, isLoading: isLoadingThemes } = useGetThemesQuery()
+
+  const themesAsOptions = useMemo(() => getThemesAsOptions(Object.values(data ?? [])), [data])
 
   const administrationsOptions = useMemo(
     () =>
