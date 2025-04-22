@@ -1,7 +1,7 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
-import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/useCases/getThemesAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckTreePicker, type CheckTreePickerOption } from '@mtes-mct/monitor-ui'

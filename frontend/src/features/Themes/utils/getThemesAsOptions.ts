@@ -44,3 +44,8 @@ export const filterSubThemes = (theme: ThemeAPI, toDeleteId: number): ThemeAPI |
     subThemes: theme.subThemes.filter(subTheme => subTheme.id !== toDeleteId)
   }
 }
+
+export const displayThemes = (themes?: ThemeAPI[]) => themes?.map(({ name }) => name).join(', ')
+
+export const displaySubThemes = (themes?: ThemeAPI[]) =>
+  themes?.flatMap(({ subThemes }) => subThemes.map(({ name }) => name)).join(', ')
