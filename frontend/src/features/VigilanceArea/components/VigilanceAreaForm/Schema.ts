@@ -32,9 +32,8 @@ export const DraftSchema: Yup.Schema<
     name: Yup.string().required(),
     source: Yup.string().optional(),
     startDatePeriod: Yup.string().optional(),
-    // TODO(26/03/2025): Replace themes by tags when migration is ready
     tags: Yup.array().ensure().optional(),
-    themes: Yup.array().optional(),
+    themes: Yup.array().ensure().optional(),
     visibility: Yup.mixed<VigilanceArea.Visibility>().optional()
   })
   .required()
@@ -105,7 +104,6 @@ export const PublishedSchema: Yup.Schema<
       otherwise: schema => schema.nullable(),
       then: schema => schema.nullable().required('Requis')
     }),
-    // TODO(26/03/2025): Replace themes by tags when migration is ready
     tags: Yup.array().ensure().defined().min(1),
     themes: Yup.array().ensure().defined().min(1),
     visibility: Yup.mixed<VigilanceArea.Visibility>().oneOf(Object.values(VigilanceArea.Visibility)).required()

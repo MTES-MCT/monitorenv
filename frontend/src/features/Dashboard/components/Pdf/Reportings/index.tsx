@@ -1,4 +1,5 @@
 import { getFormattedReportingId } from '@features/Reportings/utils'
+import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { G, Path, Rect, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
 import { formatCoordinates } from '@utils/coordinates'
@@ -214,7 +215,7 @@ export function Reportings({ reportings }: { reportings: Reporting[] }) {
             )}
             <View style={(layoutStyle.row, { flexWrap: 'wrap' })}>
               <Text style={{ fontWeight: 'bold' }}>{reporting.theme.name} /</Text>
-              <Text>{reporting.theme.subThemes.map(subTheme => subTheme.name).join(', ')}</Text>
+              <Text>{displaySubThemes(reporting.theme.subThemes)}</Text>
             </View>
             <View style={[layoutStyle.row, { rowGap: 2 }]}>
               <View style={styles.description}>

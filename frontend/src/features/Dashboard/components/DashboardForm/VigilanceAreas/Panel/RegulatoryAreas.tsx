@@ -2,6 +2,7 @@ import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
+import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
 import { PanelInlineItemLabel, PanelSubPart } from '@features/VigilanceArea/components/VigilanceAreaForm/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -86,7 +87,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
                 <LayerLegend
                   layerType={MonitorEnvLayers.REGULATORY_ENV}
                   legendKey={regulatoryArea?.entityName ?? 'aucun'}
-                  type={regulatoryArea?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
+                  type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
                 />
                 <span title={regulatoryArea?.entityName}>{regulatoryArea?.entityName}</span>
               </Name>

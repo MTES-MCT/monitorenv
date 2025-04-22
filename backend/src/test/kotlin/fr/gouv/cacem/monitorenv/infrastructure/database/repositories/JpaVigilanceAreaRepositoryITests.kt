@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -64,7 +65,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(vigilanceArea?.links?.get(0)?.linkUrl).isEqualTo("www.google.fr")
         assertThat(vigilanceArea?.source).isEqualTo("Unité BSN Ste Maxime")
         assertThat(vigilanceArea?.name).isEqualTo("Zone de vigilance 1")
-        assertThat(vigilanceArea?.themes).isEqualTo(listOf("Dragage", "Extraction granulats"))
+        assertThat(vigilanceArea?.themes).isEmpty()
         assertThat(vigilanceArea?.visibility).isEqualTo(VisibilityEnum.PUBLIC)
         assertThat(vigilanceArea?.tags).hasSize(2)
         assertThat(vigilanceArea?.tags[0]?.id).isEqualTo(6)
@@ -103,12 +104,12 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                 links = null,
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
-                themes = null,
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = null,
                 updatedAt = null,
                 isAtAllTimes = false,
                 tags = listOf(aTag(id = 5)),
+                themes = listOf(ThemeFixture.aTheme(id = 9)),
             )
 
         // When
@@ -130,7 +131,6 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(savedVigilanceArea.name).isEqualTo("Nouvelle zone de vigilance")
         assertThat(savedVigilanceArea.startDatePeriod)
             .isEqualTo(ZonedDateTime.parse("2024-08-18T00:00:00Z"))
-        assertThat(savedVigilanceArea.themes).isNull()
         assertThat(savedVigilanceArea.visibility).isEqualTo(VisibilityEnum.PRIVATE)
         assertThat(savedVigilanceArea.createdAt).isNotNull()
         assertThat(savedVigilanceArea.updatedAt).isNull()
@@ -138,6 +138,9 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(savedVigilanceArea.tags).hasSize(1)
         assertThat(savedVigilanceArea.tags[0].name).isEqualTo("Mouillage")
         assertThat(savedVigilanceArea.tags[0].id).isEqualTo(5)
+        assertThat(savedVigilanceArea.themes).hasSize(1)
+        assertThat(savedVigilanceArea.themes[0].name).isEqualTo("Pêche à pied")
+        assertThat(savedVigilanceArea.themes[0].id).isEqualTo(9)
     }
 
     @Test
@@ -168,7 +171,9 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(savedVigilanceArea.links).isNull()
         assertThat(savedVigilanceArea.source).isNull()
         assertThat(savedVigilanceArea.name).isEqualTo("Zone de vigilance mise à jour")
-        assertThat(savedVigilanceArea.themes).isEqualTo(listOf("AMP", "PN"))
+        assertThat(savedVigilanceArea.tags[0].id).isEqualTo(1)
+        assertThat(savedVigilanceArea.tags[1].id).isEqualTo(2)
+        assertThat(savedVigilanceArea.themes).isEmpty()
         assertThat(savedVigilanceArea.visibility).isEqualTo(VisibilityEnum.PRIVATE)
         assertThat(savedVigilanceArea.updatedAt).isNotNull()
     }

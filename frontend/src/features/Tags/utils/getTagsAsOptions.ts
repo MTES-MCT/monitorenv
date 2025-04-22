@@ -55,3 +55,8 @@ export const filterSubTags = (tag: TagAPI, toDeleteId: number): TagAPI | undefin
     subTags: tag.subTags.filter(subTag => subTag.id !== toDeleteId)
   }
 }
+
+export const displayTags = (tags?: TagAPI[]) => tags?.map(({ name }) => name).join(', ')
+
+export const displaySubTags = (tags?: TagAPI[]) =>
+  tags?.flatMap(({ subTags }) => subTags.map(({ name }) => name)).join(', ')

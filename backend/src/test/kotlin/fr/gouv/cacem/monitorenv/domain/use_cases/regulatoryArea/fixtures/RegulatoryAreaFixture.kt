@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEnt
 
 class RegulatoryAreaFixture {
     companion object {
-        fun aRegulatoryArea(id: Int = 1): RegulatoryAreaEntity = RegulatoryAreaEntity(id = id, tags = listOf())
+        fun aRegulatoryArea(id: Int = 1): RegulatoryAreaEntity =
+            RegulatoryAreaEntity(id = id, tags = listOf(), themes = listOf())
     }
 }

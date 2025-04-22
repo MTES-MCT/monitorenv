@@ -2,6 +2,7 @@ import { useGetRegulatoryLayerByIdQuery } from '@api/regulatoryLayersAPI'
 import { Identification } from '@features/layersSelector/metadataPanel/regulatoryMetadata/Identification'
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
+import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
@@ -31,7 +32,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
               <LayerLegend
                 layerType={MonitorEnvLayers.REGULATORY_ENV}
                 legendKey={regulatoryMetadata.entityName}
-                type={regulatoryMetadata.tags.map(({ name }) => name).join(', ')}
+                type={displayTags(regulatoryMetadata.tags)}
               />
               <RegulatoryZoneName title={getTitle(regulatoryMetadata.layerName)}>
                 {getTitle(regulatoryMetadata.layerName)}

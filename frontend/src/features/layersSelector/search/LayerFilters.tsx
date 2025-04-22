@@ -1,8 +1,8 @@
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
-import { filterSubTags } from '@features/Tags/useCases/getTagsAsOptions'
-import { filterSubThemes } from '@features/Themes/useCases/getThemesAsOptions'
+import { filterSubTags } from '@features/Tags/utils/getTagsAsOptions'
+import { filterSubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -213,7 +213,8 @@ export function LayerFilters({
           ))}
         </TagWrapper>
       )}
-      {(filteredRegulatoryTags?.length > 0 ||
+      {(filteredRegulatoryTags.length > 0 ||
+        filteredRegulatoryThemes.length > 0 ||
         filteredAmpTypes?.length > 0 ||
         filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS) && (
         <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>

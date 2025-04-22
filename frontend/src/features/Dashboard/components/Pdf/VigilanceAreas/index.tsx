@@ -1,4 +1,5 @@
 import { Dashboard } from '@features/Dashboard/types'
+import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -98,9 +99,7 @@ export function VigilanceAreas({
                       <Text>Thématique</Text>
                     </View>
                     <View style={areaStyle.details}>
-                      <Text>
-                        {vigilanceArea.tags ? vigilanceArea?.tags.map(({ name }) => name).join(', ') : EMPTY_VALUE}
-                      </Text>
+                      <Text>{vigilanceArea.tags ? displayTags(vigilanceArea.tags) : EMPTY_VALUE}</Text>
                     </View>
                   </View>
                   <View style={[layoutStyle.row]}>

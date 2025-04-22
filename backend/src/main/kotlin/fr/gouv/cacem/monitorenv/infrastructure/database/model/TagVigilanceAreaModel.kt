@@ -39,6 +39,20 @@ data class TagVigilanceAreaModel(
                 vigilanceArea = vigilanceAreaModel,
             )
 
+        fun fromTagEntities(
+            tags: List<TagEntity>,
+            vigilanceAreaModel: VigilanceAreaModel,
+        ): List<TagVigilanceAreaModel> =
+            tags
+                .map { theme -> fromTagEntity(theme, vigilanceAreaModel) }
+                .plus(
+                    tags.flatMap { theme ->
+                        theme.subTags.map { subTag ->
+                            fromTagEntity(subTag, vigilanceAreaModel)
+                        }
+                    },
+                )
+
         fun toTagEntities(tags: List<TagVigilanceAreaModel>): List<TagEntity> {
             val parents = tags.map { it.tag }.filter { it.parent === null }
 
