@@ -215,7 +215,7 @@ export function Reportings({ reportings }: { reportings: Reporting[] }) {
             )}
             <View style={(layoutStyle.row, { flexWrap: 'wrap' })}>
               <Text style={{ fontWeight: 'bold' }}>{reporting.theme.name} /</Text>
-              <Text>{displaySubThemes(reporting.theme.subThemes)}</Text>
+              <Text>{displaySubThemes([reporting.theme])}</Text>
             </View>
             <View style={[layoutStyle.row, { rowGap: 2 }]}>
               <View style={styles.description}>

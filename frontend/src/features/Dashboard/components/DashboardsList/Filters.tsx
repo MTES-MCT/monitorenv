@@ -4,7 +4,7 @@ import { useGetTagsQuery } from '@api/tagsAPI'
 import { TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { StyledSelect } from '@features/Reportings/Filters/style'
-import { getTagsAsOptions } from '@features/Tags/utils/getTagsAsOptions'
+import { getTagsAsOptionsLegacy } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -65,7 +65,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
 
   const { data: tags } = useGetTagsQuery()
 
-  const regulatoryTagsAsOptions = getTagsAsOptions(Object.values(tags ?? []))
+  const regulatoryTagsAsOptions = getTagsAsOptionsLegacy(Object.values(tags ?? []))
 
   const regulatoryTagsCustomSearch = useMemo(
     () => new CustomSearch(regulatoryTagsAsOptions, ['label']),
