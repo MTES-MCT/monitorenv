@@ -3,12 +3,12 @@ import { useField, useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-import type { Option } from '@mtes-mct/monitor-ui'
-import type { ControlPlansData } from 'domain/entities/controlPlan'
+import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui'
 import type { EnvActionSurveillance, Mission } from 'domain/entities/missions'
+import type { ThemeAPI } from 'domain/entities/themes'
 
 type AwarenessProps = {
-  awarenessOptions: Option<number>[]
+  awarenessOptions: CheckTreePickerOption[]
   formPath: string
 }
 export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
@@ -16,13 +16,13 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
 
   const [{ value: isRisingAwareness }] = useField(`${formPath}.awareness.isRisingAwareness`)
 
-  const [controlPlans] = useField<ControlPlansData[]>(`${formPath}.controlPlans`)
+  const [themes] = useField<ThemeAPI[]>(`${formPath}.themes`)
 
   useEffect(() => {
-    if (controlPlans.value.length === 1 && isRisingAwareness) {
-      setFieldValue(`${formPath}.awareness.themeId`, controlPlans.value[0]?.themeId)
+    if (themes.value.length === 1 && isRisingAwareness) {
+      setFieldValue(`${formPath}.awareness.themeId`, themes.value[0]?.id)
     }
-  }, [controlPlans.value, formPath, isRisingAwareness, setFieldValue])
+  }, [themes.value, formPath, isRisingAwareness, setFieldValue])
 
   const updateIsRisingAwareness = (isChecked: boolean | undefined) => {
     if (isChecked) {

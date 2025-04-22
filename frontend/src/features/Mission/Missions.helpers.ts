@@ -62,14 +62,6 @@ export const actionFactory = ({
         actionTargetType: undefined,
         actionType: ActionTypeEnum.CONTROL,
         completion: CompletionStatus.TO_COMPLETE,
-        controlPlans: [
-          {
-            subThemeIds: [],
-            tagIds: [],
-            themeId: undefined
-          }
-        ],
-
         infractions: [],
         observations: '',
         reportingIds: [],
@@ -91,14 +83,6 @@ export const actionFactory = ({
       return {
         actionType: ActionTypeEnum.SURVEILLANCE,
         completion: CompletionStatus.TO_COMPLETE,
-        controlPlans: [
-          {
-            subThemeIds: [],
-            tagIds: [],
-            themeId: undefined
-          }
-        ],
-
         durationMatchesMission: true,
         observations: '',
         reportingIds: [],

@@ -1,11 +1,9 @@
 import * as Yup from 'yup'
 
-import { ClosedControlPlansSchema, NewControlPlansSchema } from './ControlPlans'
 import { type Awareness, type EnvActionSurveillance } from '../../../../../domain/entities/missions'
 import { HIDDEN_ERROR } from '../constants'
 import { actionEndDateValidation, actionStartDateValidation } from './ActionDates'
 
-import type { ControlPlansData } from 'domain/entities/controlPlan'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const getNewEnvActionSurveillanceSchema = (
@@ -24,7 +22,6 @@ export const getNewEnvActionSurveillanceSchema = (
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
         .optional(),
-      controlPlans: Yup.array<ControlPlansData>().of(NewControlPlansSchema).optional(),
       durationMatchesMission: Yup.boolean().optional(),
       geom: Yup.mixed<GeoJSON.MultiPolygon>().required('Veuillez définir une zone de surveillance'),
       id: Yup.string().required(),
@@ -54,7 +51,6 @@ export const getCompletionEnvActionSurveillanceSchema = (
         .min(3, 'Minimum 3 lettres pour le trigramme')
         .max(3, 'Maximum 3 lettres pour le trigramme')
         .optional(),
-      controlPlans: Yup.array().ensure().of(ClosedControlPlansSchema).ensure().required().min(1),
       durationMatchesMission: Yup.boolean().optional(),
       geom: Yup.mixed<GeoJSON.MultiPolygon>().required('Veuillez définir une zone de surveillance'),
       id: Yup.string().required(),
@@ -65,6 +61,6 @@ export const getCompletionEnvActionSurveillanceSchema = (
         .nullable()
         .required(HIDDEN_ERROR),
       tags: Yup.array().ensure().optional(),
-      themes: Yup.array().ensure().optional()
+      themes: Yup.array().ensure().required().min(1)
     })
     .required()

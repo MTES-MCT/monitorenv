@@ -49,3 +49,14 @@ export const displayThemes = (themes?: ThemeAPI[]) => themes?.map(({ name }) => 
 
 export const displaySubThemes = (themes?: ThemeAPI[]) =>
   themes?.flatMap(({ subThemes }) => subThemes.map(({ name }) => name)).join(', ')
+
+export const sortThemes = (a: CheckTreePickerOption, b: CheckTreePickerOption) => {
+  if (a.label.startsWith('Autre')) {
+    return 1
+  }
+  if (b.label.startsWith('Autre')) {
+    return -1
+  }
+
+  return a?.label.localeCompare(b?.label)
+}
