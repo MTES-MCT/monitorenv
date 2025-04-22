@@ -4,6 +4,7 @@ import {
   openRegulatoryMetadataPanel
 } from '@features/layersSelector/metadataPanel/slice'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
+import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -120,7 +121,7 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={regulatoryArea?.entityName ?? 'aucun'}
-          type={regulatoryArea?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
+          type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
         />
         <span title={regulatoryArea?.entityName}>{regulatoryArea?.entityName}</span>
       </RegulatoryAreaName>
