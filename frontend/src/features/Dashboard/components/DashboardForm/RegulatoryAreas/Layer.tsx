@@ -2,6 +2,7 @@ import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
+import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME, WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
@@ -83,7 +84,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
         legendKey={layer?.entityName ?? 'aucun'}
-        type={layer?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
+        type={displayTags(layer?.tags) ?? 'aucun'}
       />
       <LayerSelector.Name
         $withLargeWidth

@@ -1,3 +1,4 @@
+import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import {
   ActionTypeEnum,
   type EnvAction,
@@ -30,12 +31,11 @@ const getThemesCell = (envActions: EnvAction[]) => {
     component: (
       <>
         <>
-          {theme.name}{' '}
-          <SubThemesContainer>({theme.subThemes.map(subTheme => subTheme.name)?.join(', ')})</SubThemesContainer>
+          {theme.name} <SubThemesContainer>({displaySubThemes(theme.subThemes)})</SubThemesContainer>
         </>
       </>
     ),
-    title: `${theme.name} (${theme.subThemes.map(subTheme => subTheme.name).join(', ')})`
+    title: `${theme.name} (${displaySubThemes(theme.subThemes)})`
   })
 
   return Object.values(groupedThemes).flatMap(theme => toThemeCell(theme))

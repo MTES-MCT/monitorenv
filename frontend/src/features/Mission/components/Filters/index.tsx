@@ -2,7 +2,7 @@ import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetLegacyControlUnitsQuery } from '@api/legacyControlUnitsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import { getThemesAsOptionsCheckPicker } from '@features/Themes/useCases/getThemesAsOptions'
+import { getThemesAsOptionsCheckPicker } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {

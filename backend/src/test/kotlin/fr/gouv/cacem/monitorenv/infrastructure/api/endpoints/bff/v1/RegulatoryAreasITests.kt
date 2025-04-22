@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEnt
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -67,6 +68,7 @@ class RegulatoryAreasITests {
                 source = "",
                 observation = "",
                 tags = listOf(aTag(name = "Mouillage")),
+                themes = listOf(aTheme(name = "AMP")),
                 date = "2020-07-01",
                 dureeValidite = "15 ans",
                 dateFin = "2035-07-01",
@@ -87,6 +89,7 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$[0].tags[0].name", equalTo("Mouillage")))
             .andExpect(jsonPath("$[0].type", equalTo(regulatoryArea.type)))
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
+            .andExpect(jsonPath("$[0].themes[0].name", equalTo("AMP")))
     }
 
     @Test
@@ -106,6 +109,7 @@ class RegulatoryAreasITests {
                 source = "",
                 observation = "",
                 tags = listOf(aTag(name = "Mouillage")),
+                themes = listOf(aTheme(id = 1, name = "AMP")),
                 date = "2020-07-01",
                 dureeValidite = "15 ans",
                 dateFin = "2035-07-01",
@@ -126,6 +130,7 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$.layerName", equalTo(regulatoryArea.layerName)))
             .andExpect(jsonPath("$.refReg", equalTo(regulatoryArea.refReg)))
             .andExpect(jsonPath("$.tags[0].name", equalTo("Mouillage")))
+            .andExpect(jsonPath("$.themes[0].name", equalTo("AMP")))
             .andExpect(jsonPath("$.type", equalTo(regulatoryArea.type)))
             .andExpect(jsonPath("$.url", equalTo(regulatoryArea.url)))
     }
