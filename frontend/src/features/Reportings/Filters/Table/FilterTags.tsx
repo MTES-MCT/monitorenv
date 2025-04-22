@@ -1,4 +1,4 @@
-import { filterSubThemes } from '@features/Themes/useCases/getThemesAsOptions'
+import { filterSubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { SingleTag } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'

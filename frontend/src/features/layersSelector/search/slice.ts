@@ -44,6 +44,7 @@ const layerSearchSlice = createSlice({
   reducers: {
     resetFilters(state) {
       state.filteredRegulatoryTags = []
+      state.filteredRegulatoryThemes = []
       state.isRegulatorySearchResultsVisible = false
       state.filteredAmpTypes = []
       state.isAmpSearchResultsVisible = false
@@ -55,6 +56,7 @@ const layerSearchSlice = createSlice({
       state.regulatoryLayersSearchResult = undefined
       state.isRegulatorySearchResultsVisible = false
       state.filteredRegulatoryTags = []
+      state.filteredRegulatoryThemes = []
       state.ampsSearchResult = undefined
       state.isAmpSearchResultsVisible = false
       state.filteredAmpTypes = []

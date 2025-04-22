@@ -1,3 +1,4 @@
+import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { Accent, Button, getOptionsFromLabelledEnum, Icon, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
@@ -42,7 +43,7 @@ export function ReportingForm({
     return null
   }
 
-  const subThemesAsString = reporting.theme.subThemes.map(subTheme => subTheme.name).join(', ') ?? EMPTY_VALUE
+  const subThemesAsString = displaySubThemes(reporting.theme.subThemes) ?? EMPTY_VALUE
 
   const sourceTypeText = (sourceType: ReportingSourceEnum) => {
     if (sourceType === ReportingSourceEnum.SEMAPHORE) {

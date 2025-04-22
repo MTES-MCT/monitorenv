@@ -2,6 +2,7 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { StatusActionTag } from '@features/Reportings/components/StatusActionTag'
 import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
+import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton, THEME, useClickOutsideEffect, useNewWindow } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
@@ -131,7 +132,7 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
           </Title>
           <div>
             <Theme>
-              {reporting.theme.name} / {reporting.theme.subThemes.map(subTheme => subTheme.name).join(', ')} -{' '}
+              {reporting.theme.name} / {displaySubThemes(reporting.theme.subThemes)} -{' '}
             </Theme>
             <Description>{reporting.description}</Description>
           </div>
