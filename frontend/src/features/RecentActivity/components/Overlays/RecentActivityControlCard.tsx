@@ -1,9 +1,9 @@
+import { useGetThemesQuery } from '@api/themesAPI'
 import { ControlCard } from '@features/commonComponents/ControlCard'
 import { missionFormsActions } from '@features/Mission/components/MissionForm/slice'
 import { editMissionInLocalStore } from '@features/Mission/useCases/editMissionInLocalStore'
 import { updateSelectedControlId } from '@features/RecentActivity/useCases/updateSelectedControlId'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 
 import type { Feature } from 'ol'
@@ -16,7 +16,10 @@ export function RecentActivityControlCard({
   isSelected?: boolean
 }) {
   const dispatch = useAppDispatch()
-  const { themes } = useGetControlPlans()
+
+
+
+  const { data: themes } = useGetThemesQuery()
 
   if (!control) {
     return null
@@ -24,8 +27,10 @@ export function RecentActivityControlCard({
 
   const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, id, infractions, missionId, themeIds } =
     control.getProperties()
-
-  const controlThemes = themeIds?.map(themeId => themes[themeId]?.theme).join(',')
+  const controlThemes: string = Object.values(themes ?? [])
+    .filter(theme => themeIds.includes(theme.id))
+    .map(({ name }) => name)
+    .join(', ')
 
   const closeControl = () => {
     if (isSelected) {

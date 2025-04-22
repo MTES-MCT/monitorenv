@@ -20,13 +20,15 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
                 env_action.geom,
                 env_action.facade,
                 env_action.department,
-                COALESCE(ARRAY_AGG(DISTINCT themes.theme_id), '{}') AS themes_ids,
-                COALESCE(ARRAY_AGG(DISTINCT sub_themes.subtheme_id), '{}') AS sub_themes_ids,
+                COALESCE(ARRAY_AGG(DISTINCT themes_env_action.themes_id), '{}') AS themes_ids,
+                COALESCE(ARRAY_AGG(DISTINCT subThemes_env_action.themes_id), '{}') AS sub_themes_ids,
                 COALESCE(ARRAY_AGG(DISTINCT control_units.id), '{}') AS control_units_ids,
                 COALESCE(ARRAY_AGG(DISTINCT control_units.administration_id), '{}') AS administration_ids
             FROM env_actions env_action
-            LEFT JOIN env_actions_control_plan_themes themes ON themes.env_action_id = env_action.id
-            LEFT JOIN env_actions_control_plan_sub_themes sub_themes ON sub_themes.env_action_id = env_action.id
+            LEFT JOIN themes_env_actions themes_env_action ON themes_env_action.env_actions_id = env_action.id
+                INNER JOIN themes ON themes_env_action.themes_id = themes.id AND themes.parent_id IS NULL
+            LEFT JOIN themes_env_actions subThemes_env_action ON subThemes_env_action.env_actions_id = env_action.id
+                INNER JOIN themes subThemes ON subThemes_env_action.themes_id = subThemes.id AND subThemes.parent_id IS NOT NULL
             LEFT JOIN missions_control_units ON env_action.mission_id = missions_control_units.mission_id
             LEFT JOIN control_units ON missions_control_units.control_unit_id = control_units.id
             WHERE env_action.action_type = 'CONTROL'
@@ -44,13 +46,14 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
             )
             AND (
                 (:themeIds) IS NULL
-                OR themes.theme_id IN (:themeIds)
+                OR themes_env_action.themes_id IN (:themeIds)
+                OR subThemes_env_action.themes_id IN (:themeIds)
             )
             AND (
                 CAST(:geometry AS geometry) IS NULL
                 OR ST_INTERSECTS(ST_SETSRID(CAST(env_action.geom AS geometry), 4326), ST_SETSRID(CAST(:geometry AS geometry), 4326))
             )
-            GROUP BY env_action.id
+            GROUP BY env_action.id, env_action.action_start_datetime_utc
             ORDER BY env_action.action_start_datetime_utc DESC;
         """,
         nativeQuery = true,
@@ -63,8 +66,6 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
         startedAfter: Instant,
         startedBefore: Instant,
     ): List<Array<Any>>
-
-    fun deleteAllByMissionId(missionId: Int)
 
     @Modifying
     @Query(
