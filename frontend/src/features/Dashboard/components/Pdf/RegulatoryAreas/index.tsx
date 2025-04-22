@@ -1,6 +1,8 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { Text, View } from '@react-pdf/renderer'
+import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
+import { displayThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 
 import { AreaImage } from '../Layout/AreaImage'
@@ -39,7 +41,7 @@ export function RegulatoryAreas({
                       areaStyle.layerLegend,
                       {
                         backgroundColor: getRegulatoryEnvColorWithAlpha(
-                          regulatoryArea.tags.map(({ name }) => name).join(', '),
+                          displayTags(regulatoryArea.tags),
                           regulatoryArea.entityName
                         )
                       }
@@ -69,7 +71,7 @@ export function RegulatoryAreas({
                       <Text>Thématique</Text>
                     </View>
                     <View style={areaStyle.details}>
-                      <Text>{regulatoryArea.themes.map(({ name }) => name).join(', ') || '-'}</Text>
+                      <Text>{displayThemes(regulatoryArea.themes) || '-'}</Text>
                     </View>
                   </View>
                   <View>

@@ -4,7 +4,7 @@ import { useGetTagsQuery } from '@api/tagsAPI'
 import { TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { StyledSelect } from '@features/Reportings/Filters/style'
-import { getTagsAsOptions } from '@features/Tags/useCases/getTagsAsOptions'
+import { getTagsAsOptions } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {

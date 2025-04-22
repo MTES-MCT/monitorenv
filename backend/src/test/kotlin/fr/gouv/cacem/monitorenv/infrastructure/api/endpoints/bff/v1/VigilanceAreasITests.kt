@@ -108,7 +108,7 @@ class VigilanceAreasITests {
             seaFront = "MED",
             source = "Source de la zone de vigilance",
             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
-            themes = null,
+            themes = listOf(),
             visibility = VisibilityEnum.PRIVATE,
             createdAt = ZonedDateTime.parse(createdAt),
             updatedAt = ZonedDateTime.parse(updatedAt),
@@ -156,7 +156,7 @@ class VigilanceAreasITests {
                 seaFront = "MED",
                 source = "Un particulier",
                 startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
-                themes = null,
+                themes = listOf(),
                 visibility = VisibilityEnum.PUBLIC,
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
@@ -185,7 +185,7 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$[0].source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
-            .andExpect(jsonPath("$[0].themes").doesNotExist())
+            .andExpect(jsonPath("$[0].themes").isEmpty())
             .andExpect(jsonPath("$[0].visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
             .andExpect(jsonPath("$[1].id", equalTo(2)))
@@ -203,7 +203,7 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$[1].source", equalTo("Un particulier")))
             .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
-            .andExpect(jsonPath("$[1].themes").doesNotExist())
+            .andExpect(jsonPath("$[1].themes").isEmpty())
             .andExpect(jsonPath("$[1].visibility", equalTo("PUBLIC")))
             .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
     }
@@ -232,7 +232,7 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
-            .andExpect(jsonPath("$.themes").doesNotExist())
+            .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$.images[0].name", equalTo("image1.jpg")))
             .andExpect(jsonPath("$.images[0].mimeType", equalTo("image/jpeg")))
@@ -282,7 +282,7 @@ class VigilanceAreasITests {
                 seaFront = "MED",
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
-                themes = null,
+                themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
@@ -333,7 +333,7 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
-            .andExpect(jsonPath("$.themes").doesNotExist())
+            .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$.images[0].name", equalTo("image1.jpg")))
             .andExpect(jsonPath("$.images[0].mimeType", equalTo("image/jpeg")))
@@ -378,7 +378,7 @@ class VigilanceAreasITests {
                 seaFront = "MED",
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
-                themes = null,
+                themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
@@ -417,7 +417,7 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
-            .andExpect(jsonPath("$.themes").doesNotExist())
+            .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$.createdAt", equalTo(createdAt)))
             .andExpect(jsonPath("$.updatedAt", equalTo(updatedAt)))

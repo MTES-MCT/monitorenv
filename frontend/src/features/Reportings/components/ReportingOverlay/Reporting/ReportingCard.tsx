@@ -5,6 +5,7 @@ import {
   getTargetName,
   getTimeLeft
 } from '@features/Reportings/utils'
+import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { ControlStatusEnum, ReportingTypeEnum, ReportingTypeLabels } from 'domain/entities/reporting'
@@ -179,11 +180,7 @@ export function ReportingCard({
       <div>
         <StyledThemeContainer>
           {theme && <StyledBoldText>{theme.name}</StyledBoldText>}
-          {theme?.subThemes && (
-            <StyledMediumText>
-              &nbsp;/&nbsp;{theme?.subThemes.map(subTheme => subTheme.name).join(', ')}
-            </StyledMediumText>
-          )}
+          {theme?.subThemes && <StyledMediumText>&nbsp;/&nbsp;{displaySubThemes(theme.subThemes)}</StyledMediumText>}
         </StyledThemeContainer>
         {description && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>
