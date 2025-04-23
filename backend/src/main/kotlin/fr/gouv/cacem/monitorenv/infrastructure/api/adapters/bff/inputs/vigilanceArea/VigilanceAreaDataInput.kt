@@ -32,11 +32,11 @@ data class VigilanceAreaDataInput(
     val seaFront: String?,
     val source: String? = null,
     val startDatePeriod: ZonedDateTime? = null,
-    val themes: List<ThemeInput>,
+    val themes: List<ThemeInput> = listOf(),
     val visibility: VisibilityEnum? = null,
     val createdAt: ZonedDateTime? = null,
     val updatedAt: ZonedDateTime? = null,
-    val tags: List<TagInput>,
+    val tags: List<TagInput> = listOf(),
 ) {
     fun toVigilanceAreaEntity(): VigilanceAreaEntity =
         VigilanceAreaEntity(

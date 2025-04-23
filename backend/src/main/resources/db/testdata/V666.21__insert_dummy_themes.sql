@@ -58,6 +58,10 @@ FROM public.reportings_control_plan_sub_themes rcpst
          INNER JOIN control_plan_sub_themes cpst ON rcpst.subtheme_id = cpst.id
          INNER JOIN themes t ON t.control_plan_sub_themes_id = cpst.id;
 
+INSERT INTO themes_vigilance_areas (vigilance_areas_id, themes_id)
+VALUES (2, 108),
+       (2, 341);
+
 ALTER TABLE themes
     DROP COLUMN control_plan_themes_id,
     DROP COLUMN control_plan_sub_themes_id,
