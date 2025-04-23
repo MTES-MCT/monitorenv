@@ -1,5 +1,6 @@
 import { CustomPeriodContainer } from '@components/style'
-import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
+import { filterSubTags, getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
+import { filterSubThemes, getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import {
   Checkbox,
   CheckPicker,
@@ -25,6 +26,7 @@ import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
 
 import type { ReportingsOptionsListType } from '..'
+import type { TagAPI } from 'domain/entities/tags'
 import type { ThemeAPI } from 'domain/entities/themes'
 
 type MapReportingsFiltersProps = {
@@ -37,9 +39,8 @@ type MapReportingsFiltersProps = {
   ) => void
   updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
   updatePeriodFilter: (value: OptionValueType | undefined) => void
-  updateSimpleFilter: (value: OptionValueType | undefined, filter: ReportingsFiltersEnum) => void
+  updateSimpleFilter: (value: any | undefined, filter: ReportingsFiltersEnum) => void
   updateSourceTypeFilter: (value: string[]) => void
-  updateThemeFilter: (value: ThemeAPI[]) => void
 }
 
 export function MapReportingsFiltersWithRef(
@@ -49,8 +50,7 @@ export function MapReportingsFiltersWithRef(
     updateDateRangeFilter,
     updatePeriodFilter,
     updateSimpleFilter,
-    updateSourceTypeFilter,
-    updateThemeFilter
+    updateSourceTypeFilter
   }: MapReportingsFiltersProps,
   ref
 ) {
@@ -63,16 +63,45 @@ export function MapReportingsFiltersWithRef(
     startedAfter,
     startedBefore,
     statusFilter,
+    tagFilter,
     targetTypeFilter,
     themeFilter,
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
-  const { dateRangeOptions, sourceTypeOptions, statusOptions, targetTypeOtions, themesOptions, typeOptions } =
-    optionsList
+  const {
+    dateRangeOptions,
+    sourceTypeOptions,
+    statusOptions,
+    tagsOptions,
+    targetTypeOtions,
+    themesOptions,
+    typeOptions
+  } = optionsList
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
     dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
+  }
+  const onDeleteTagTag = (valueToDelete: TagAPI, filter: TagAPI[]) => {
+    const updatedFilter: TagAPI[] = filter
+      .map(tag => filterSubTags(tag, valueToDelete))
+      .filter(tag => tag !== undefined)
+      .filter(tag => tag.id !== valueToDelete.id)
+    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.TAG_FILTER, value: updatedFilter }))
+  }
+
+  const onDeleteThemeTag = (valueToDelete: ThemeAPI, filter: ThemeAPI[]) => {
+    const updatedFilter: ThemeAPI[] = filter
+      .map(theme => filterSubThemes(theme, valueToDelete))
+      .filter(theme => theme !== undefined)
+      .filter(theme => theme.id !== valueToDelete.id)
+
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: ReportingsFiltersEnum.THEME_FILTER,
+        value: updatedFilter
+      })
+    )
   }
 
   return (
@@ -213,14 +242,16 @@ export function MapReportingsFiltersWithRef(
       <StyledBloc>
         <CheckTreePicker
           key={`theme${themesOptions.length}${JSON.stringify(themeFilter)}`}
-          // customSearch={themeCustomSearch}
+          childrenKey="subThemes"
           data-cy="reporting-theme-filter"
           isLabelHidden
           isTransparent
           label="Thématiques"
           menuStyle={{ maxWidth: '200%' }}
           name="themes"
-          onChange={value => updateThemeFilter(parseOptionsToThemes(value ?? []))}
+          onChange={value =>
+            updateSimpleFilter(value ? parseOptionsToThemes(value) : undefined, ReportingsFiltersEnum.THEME_FILTER)
+          }
           options={themesOptions}
           placeholder="Thématiques"
           value={getThemesAsOptions(themeFilter ?? [])}
@@ -229,13 +260,49 @@ export function MapReportingsFiltersWithRef(
         {themeFilter && themeFilter.length > 0 && (
           <StyledTagsContainer>
             {themeFilter.map(theme => (
-              <SingleTag
-                key={theme.id}
-                onDelete={() => onDeleteTag(theme, ReportingsFiltersEnum.THEME_FILTER, themeFilter)}
-                title={theme.name}
-              >
-                {theme.name}
-              </SingleTag>
+              <>
+                <SingleTag key={theme.id} onDelete={() => onDeleteThemeTag(theme, themeFilter)}>
+                  {String(`Thème ${theme.name}`)}
+                </SingleTag>
+                {theme.subThemes.map(subTheme => (
+                  <SingleTag key={subTheme.id} onDelete={() => onDeleteThemeTag(subTheme, themeFilter)}>
+                    {String(`Sous-thème ${subTheme.name}`)}
+                  </SingleTag>
+                ))}
+              </>
+            ))}
+          </StyledTagsContainer>
+        )}
+        <CheckTreePicker
+          childrenKey="subTags"
+          isLabelHidden
+          isTransparent
+          label="Tags et sous-tags"
+          name="regulatoryTags"
+          onChange={value =>
+            updateSimpleFilter(value ? parseOptionsToTags(value) : undefined, ReportingsFiltersEnum.TAG_FILTER)
+          }
+          options={tagsOptions}
+          placeholder="Tags et sous-tags"
+          renderedChildrenValue="Sous-tags."
+          renderedValue="Tags"
+          value={getTagsAsOptions(tagFilter ?? [])}
+          // customSearch={regulatoryTagsCustomSearch}
+        />
+
+        {tagFilter && tagFilter.length > 0 && (
+          <StyledTagsContainer>
+            {tagFilter.map(tag => (
+              <>
+                <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, tagFilter)}>
+                  {String(`Tag ${tag.name}`)}
+                </SingleTag>
+                {tag.subTags.map(subTag => (
+                  <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, tagFilter)}>
+                    {String(`Sous-tag ${subTag.name}`)}
+                  </SingleTag>
+                ))}
+              </>
             ))}
           </StyledTagsContainer>
         )}

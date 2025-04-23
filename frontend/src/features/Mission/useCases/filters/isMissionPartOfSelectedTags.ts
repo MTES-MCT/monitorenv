@@ -20,7 +20,10 @@ export function isMissionPartOfSelectedTags(mission: Mission, selectedTags: TagA
       (a): a is EnvActionControl | EnvActionSurveillance =>
         a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
     )
-    .flatMap(action => action.tags ?? [])
+    .flatMap(action => action.tags)
+    .filter(tag => tag !== undefined)
 
-  return missionTags.some(theme => selectedTags.some(selectedTag => selectedTag.id === theme.id))
+  const allTags = [...missionTags, ...missionTags.flatMap(({ subTags }) => subTags)]
+
+  return allTags.some(tag => selectedTags.some(selectedTag => selectedTag.id === tag.id))
 }

@@ -12,36 +12,15 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel.Companion.toTagEntities
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel.Companion.toThemeEntities
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
+import jakarta.persistence.*
 import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.MappedSuperclass
-import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.Generated
-import org.hibernate.annotations.JdbcType
-import org.hibernate.annotations.Type
-import org.hibernate.annotations.UpdateTimestamp
+import org.hibernate.annotations.*
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import org.hibernate.generator.EventType
 import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
@@ -97,18 +76,6 @@ abstract class AbstractReportingModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     open val reportType: ReportingTypeEnum? = null,
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "control_plan_theme_id", nullable = true)
-    open val controlPlanTheme: ControlPlanThemeModel? = null,
-    @OneToMany(
-        fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true,
-        mappedBy = "reporting",
-    )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @OrderBy("orderIndex")
-    open val controlPlanSubThemes: MutableSet<ReportingsControlPlanSubThemeModel>? = LinkedHashSet(),
     @Column(name = "action_taken") open val actionTaken: String? = null,
     @Column(name = "is_control_required") open val isControlRequired: Boolean? = null,
     @Column(name = "has_no_unit_available") open val hasNoUnitAvailable: Boolean? = null,
@@ -166,8 +133,6 @@ abstract class AbstractReportingModel(
             seaFront = seaFront,
             description = description,
             reportType = reportType,
-            themeId = controlPlanTheme?.id,
-            subThemeIds = controlPlanSubThemes?.map { it.id.subthemeId },
             actionTaken = actionTaken,
             isControlRequired = isControlRequired,
             hasNoUnitAvailable = hasNoUnitAvailable,
@@ -244,7 +209,6 @@ abstract class AbstractReportingModel(
             reporting: ReportingEntity,
             missionReference: MissionModel?,
             envActionReference: EnvActionModel?,
-            controlPlanThemeReference: ControlPlanThemeModel?,
         ): ReportingModel {
             val reportingModel =
                 ReportingModel(
@@ -257,7 +221,6 @@ abstract class AbstractReportingModel(
                     seaFront = reporting.seaFront,
                     description = reporting.description,
                     reportType = reporting.reportType,
-                    controlPlanTheme = controlPlanThemeReference,
                     actionTaken = reporting.actionTaken,
                     isControlRequired = reporting.isControlRequired,
                     hasNoUnitAvailable = reporting.hasNoUnitAvailable,

@@ -1,18 +1,14 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 object TestUtils {
     fun getReportingDTO(id: Int): ReportingDetailsDTO {
@@ -45,8 +41,6 @@ object TestUtils {
                     seaFront = "Facade 1",
                     description = "description",
                     reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    themeId = 12,
-                    subThemeIds = listOf(82),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
@@ -107,8 +101,6 @@ object TestUtils {
                     seaFront = "Facade 1",
                     description = "description",
                     reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    themeId = 12,
-                    subThemeIds = listOf(82),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
