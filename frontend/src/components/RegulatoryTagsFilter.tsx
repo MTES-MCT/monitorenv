@@ -50,7 +50,7 @@ export function RegulatoryTagsFilter({ style }: { style?: React.CSSProperties })
       childrenKey="subTags"
       isLabelHidden
       isTransparent
-      label="Tags et sous-tags"
+      label="Filtre tags et sous-tags"
       name="regulatoryTags"
       onChange={handleSetFilteredRegulatoryTags}
       options={tagsOptions}

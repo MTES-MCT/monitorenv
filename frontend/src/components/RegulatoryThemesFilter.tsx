@@ -50,7 +50,7 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
       childrenKey="subThemes"
       isLabelHidden
       isTransparent
-      label="Thématiques et sous-thématiques"
+      label="Filtre thématiques et sous-thématiques"
       name="regulatoryThemes"
       onChange={handleSetFilteredRegulatoryThemes}
       options={themesOptions}
