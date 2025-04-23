@@ -9,6 +9,7 @@ import { isVigilanceAreaPartOfCreatedBy } from '../useCases/filters/isVigilanceA
 import { isVigilanceAreaPartOfSeaFront } from '../useCases/filters/isVigilanceAreaPartOfSeaFront'
 import { isVigilanceAreaPartOfStatus } from '../useCases/filters/isVigilanceAreaPartOfStatus'
 import { isVigilanceAreaPartOfTag } from '../useCases/filters/isVigilanceAreaPartOfTag'
+import { isVigilanceAreaPartOfTheme } from '../useCases/filters/isVigilanceAreaPartOfTheme'
 
 import type { VigilanceArea } from '../types'
 
@@ -17,6 +18,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
 
   const { data, isError, isFetching, isLoading } = useGetVigilanceAreasQuery(undefined, {
     pollingInterval: TWO_MINUTES,
@@ -35,7 +37,8 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
         isVigilanceAreaPartOfCreatedBy(vigilanceArea, createdBy) &&
         isVigilanceAreaPartOfSeaFront(vigilanceArea, seaFronts) &&
         isVigilanceAreaPartOfStatus(vigilanceArea, status) &&
-        isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags)
+        isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
+        isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes)
     )
 
     const vigilanceAreasByPeriod = getFilterVigilanceAreasPerPeriod(
@@ -81,7 +84,8 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
     createdBy,
     seaFronts,
     status,
-    filteredRegulatoryTags
+    filteredRegulatoryTags,
+    filteredRegulatoryThemes
   ])
 
   return { isError, isFetching, isLoading, vigilanceAreas: filteredVigilanceAreas }

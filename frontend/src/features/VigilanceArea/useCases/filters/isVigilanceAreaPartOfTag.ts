@@ -6,5 +6,9 @@ export function isVigilanceAreaPartOfTag(vigilanceArea: VigilanceArea.VigilanceA
     return true
   }
 
-  return !!vigilanceArea.tags && vigilanceArea.tags?.some(tag => tagsFilter.some(tagFilter => tagFilter.id === tag.id))
+  const allTags = vigilanceArea.tags
+    ? [...vigilanceArea.tags, ...vigilanceArea.tags.flatMap(({ subTags }) => subTags)]
+    : []
+
+  return tagsFilter.some(tagFilter => allTags.some(tag => tag.id === tagFilter.id))
 }

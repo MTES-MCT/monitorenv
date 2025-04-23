@@ -105,7 +105,7 @@ export const PublishedSchema: Yup.Schema<
       then: schema => schema.nullable().required('Requis')
     }),
     tags: Yup.array().ensure().defined().min(1),
-    themes: Yup.array().ensure().defined().min(1),
+    themes: Yup.array().ensure().optional(),
     visibility: Yup.mixed<VigilanceArea.Visibility>().oneOf(Object.values(VigilanceArea.Visibility)).required()
   })
   .required()
