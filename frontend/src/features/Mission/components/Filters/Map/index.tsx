@@ -2,12 +2,14 @@ import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
 import { CustomPeriodContainer } from '@components/style'
+import { filterSubTags, getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { FrontendError } from '@libs/FrontendError'
 import {
   Checkbox,
   CheckPicker,
+  CheckTreePicker,
   CustomSearch,
   DateRangePicker,
   Select,
@@ -23,6 +25,7 @@ import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { MissionOptionsListType } from '..'
+import type { TagAPI } from 'domain/entities/tags'
 import type { ThemeAPI } from 'domain/entities/themes'
 
 type MapMissionFiltersProps = {
@@ -47,12 +50,13 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
       selectedMissionTypes,
       selectedPeriod,
       selectedStatuses,
+      selectedTags,
       selectedThemes,
       startedAfter,
       startedBefore
     } = useAppSelector(state => state.missionFilters)
 
-    const { administrations, completion, controlUnits, dates, status, themes, types } = optionsList
+    const { administrations, completion, controlUnits, dates, status, tags, themes, types } = optionsList
 
     const controlUnitsData = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
     const { data } = useGetThemesQuery()
@@ -79,7 +83,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
     }
 
     const onDeleteTag = <K extends MissionFiltersEnum>(
-      valueToDelete: number | string,
+      valueToDelete: number | string | TagAPI,
       filterKey: K,
       selectedValues: MissionFiltersState[K]
     ) => {
@@ -92,6 +96,19 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
         | number[]
       dispatch(
         updateFilters({ key: filterKey, value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues })
+      )
+    }
+
+    const onDeleteTagTag = (valueToDelete: TagAPI, tagFilter: TagAPI[]) => {
+      const updatedFilter: TagAPI[] = tagFilter
+        .map(tag => filterSubTags(tag, valueToDelete))
+        .filter(theme => theme !== undefined)
+        .filter(theme => theme.id !== valueToDelete.id)
+      dispatch(
+        updateFilters({
+          key: MissionFiltersEnum.TAGS_FILTER,
+          value: updatedFilter.length === 0 ? undefined : updatedFilter
+        })
       )
     }
 
@@ -271,8 +288,38 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={theme}
                 onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}
               >
-                {`${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
+                {`Thème ${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
               </SingleTag>
+            ))}
+          <CheckTreePicker
+            childrenKey="subTags"
+            isLabelHidden
+            isTransparent
+            label="Tags et sous-tags"
+            name="tags"
+            onChange={value =>
+              onUpdateSimpleFilter(value ? parseOptionsToTags(value) : undefined, MissionFiltersEnum.TAGS_FILTER)
+            }
+            options={tags}
+            placeholder="Tags et sous-tags"
+            renderedChildrenValue="Sous-tags."
+            renderedValue="Tags"
+            value={selectedTags ? getTagsAsOptions(selectedTags) : undefined}
+            // customSearch={regulatoryTagsCustomSearch}
+          />
+          {selectedTags &&
+            selectedTags?.length > 0 &&
+            selectedTags.map(tag => (
+              <>
+                <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
+                  {`Tag ${tag.name}`}
+                </SingleTag>
+                {tag.subTags.map(subTag => (
+                  <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
+                    {`Sous-tag ${subTag.name}`}
+                  </SingleTag>
+                ))}
+              </>
             ))}
         </StyledBloc>
       </FilterWrapper>

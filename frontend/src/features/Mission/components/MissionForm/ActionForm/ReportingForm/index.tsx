@@ -1,3 +1,4 @@
+import { displaySubTags } from '@features/Tags/utils/getTagsAsOptions'
 import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { Accent, Button, getOptionsFromLabelledEnum, Icon, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
@@ -42,8 +43,6 @@ export function ReportingForm({
   if (!reporting) {
     return null
   }
-
-  const subThemesAsString = displaySubThemes([reporting.theme]) ?? EMPTY_VALUE
 
   const sourceTypeText = (sourceType: ReportingSourceEnum) => {
     if (sourceType === ReportingSourceEnum.SEMAPHORE) {
@@ -149,8 +148,20 @@ export function ReportingForm({
             readOnly
             value={reporting.reportType}
           />
-          <TextInput label="Thématique du signalement" name="themeId" plaintext value={reporting.theme.name} />
-          <TextInput label="Sous-thématique du signalement" name="subThemeIds" plaintext value={subThemesAsString} />
+          <TextInput label="Thématique du signalement" name="theme" plaintext value={reporting.theme.name} />
+          <TextInput
+            label="Sous-thématique du signalement"
+            name="subTheme"
+            plaintext
+            value={displaySubThemes([reporting.theme]) ?? EMPTY_VALUE}
+          />
+          <TextInput label="Tag du signalement" name="tag" plaintext value={reporting.theme.name} />
+          <TextInput
+            label="Sous-tag du signalement"
+            name="subTag"
+            plaintext
+            value={displaySubTags(reporting.tags) ?? EMPTY_VALUE}
+          />
           <Validity reporting={reporting} />
           <TextInput
             label="Actions effectuées"

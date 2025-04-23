@@ -18,7 +18,10 @@ export function isMissionPartOfSelectedThemes(mission: Mission, selectedThemes: 
       (a): a is EnvActionControl | EnvActionSurveillance =>
         a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
     )
-    .flatMap(action => (action.themes ?? []).map(theme => theme.id))
+    .flatMap(action => action.themes)
+    .filter(theme => theme !== undefined)
 
-  return missionThemes.some(theme => selectedThemes.includes(theme))
+  const allThemes = [...missionThemes, ...missionThemes.flatMap(({ subThemes }) => subThemes)]
+
+  return allThemes.some(theme => selectedThemes.includes(theme.id))
 }
