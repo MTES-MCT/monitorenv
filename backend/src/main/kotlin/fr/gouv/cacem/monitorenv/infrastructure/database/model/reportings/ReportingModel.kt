@@ -4,11 +4,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel
 import jakarta.persistence.Entity
@@ -34,8 +32,6 @@ class ReportingModel(
     override val seaFront: String? = null,
     override val description: String? = null,
     override val reportType: ReportingTypeEnum? = null,
-    override val controlPlanTheme: ControlPlanThemeModel? = null,
-    override val controlPlanSubThemes: MutableSet<ReportingsControlPlanSubThemeModel>? = LinkedHashSet(),
     override val actionTaken: String? = null,
     override val isControlRequired: Boolean? = null,
     override val hasNoUnitAvailable: Boolean? = null,
@@ -64,8 +60,6 @@ class ReportingModel(
         seaFront = seaFront,
         description = description,
         reportType = reportType,
-        controlPlanTheme = controlPlanTheme,
-        controlPlanSubThemes = controlPlanSubThemes,
         actionTaken = actionTaken,
         isControlRequired = isControlRequired,
         hasNoUnitAvailable = hasNoUnitAvailable,

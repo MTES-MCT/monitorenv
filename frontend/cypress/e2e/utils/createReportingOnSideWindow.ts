@@ -32,8 +32,10 @@ export function createReportingOnSideWindow() {
   dispatch(setGeometry(geometry))
 
   cy.get('.rs-radio').find('label').contains('Infraction (susp.)').click()
-  cy.fill('Thématique du signalement', 'Culture marine')
-  cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
+
+  cy.fill('Thématiques et sous-thématiques', ['Remise en état après occupation du DPM'])
+  cy.fill('Tags et sous-tags', ['Mixte'])
+
   cy.wait(250)
   cy.fill('Saisi par', 'XYZ')
 

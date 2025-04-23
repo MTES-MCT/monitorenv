@@ -18,8 +18,6 @@ data class ReportingEntity(
     val seaFront: String? = null,
     val description: String? = null,
     val reportType: ReportingTypeEnum? = null,
-    val themeId: Int? = null,
-    val subThemeIds: List<Int>? = emptyList(),
     val actionTaken: String? = null,
     val isControlRequired: Boolean? = null,
     val hasNoUnitAvailable: Boolean? = null,

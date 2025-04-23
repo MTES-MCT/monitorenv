@@ -1,4 +1,3 @@
-import { useGetTagsQuery } from '@api/tagsAPI'
 import { CustomPeriodContainer, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { MissionSearch } from '@features/Mission/MissionsSearch'
@@ -61,7 +60,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
       startedBefore
     } = useAppSelector(state => state.missionFilters)
 
-    const { administrations, completion, controlUnits, dates, seaFronts, status, themes, types } = optionsList
+    const { administrations, completion, controlUnits, dates, seaFronts, status, tags, themes, types } = optionsList
 
     const controlUnitCustomSearch = useMemo(
       () => new CustomSearch(controlUnits ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -69,10 +68,6 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
     )
 
     const themeCustomSearch = useMemo(() => new CustomSearch(themes ?? [], ['label']), [themes])
-
-    const { data } = useGetTagsQuery()
-
-    const tagsOptions = useMemo(() => getTagsAsOptions(Object.values(data ?? [])), [data])
 
     return (
       <>
@@ -187,7 +182,7 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               onChange={value =>
                 onUpdateSimpleFilter(value ? parseOptionsToTags(value) : undefined, MissionFiltersEnum.TAGS_FILTER)
               }
-              options={tagsOptions}
+              options={tags}
               placeholder="Tags et sous-tags"
               renderedChildrenValue="Sous-tags."
               renderedValue="Tags"
@@ -272,7 +267,7 @@ const FilterWrapperLine = styled.div`
   gap: 10px;
 `
 
-const tagPickerStyle = { width: 200 }
+export const tagPickerStyle = { width: 200 }
 
 const StyledSelect = styled(Select<DateRangeEnum>)`
   .rs-picker-toggle-caret,

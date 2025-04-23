@@ -14,24 +14,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttached
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import jakarta.persistence.Basic
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.NamedAttributeNode
-import jakarta.persistence.NamedEntityGraph
-import jakarta.persistence.NamedSubgraph
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OrderBy
-import jakarta.persistence.PrePersist
-import jakarta.persistence.PreUpdate
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -92,11 +75,8 @@ import java.time.ZoneOffset.UTC
                 name = "subgraph.attachedReportings",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "controlPlanSubThemes",
-                            subgraph =
-                                "subgraph.linkedControlPlanSubThemes",
-                        ),
+                        NamedAttributeNode("themes"),
+                        NamedAttributeNode("tags"),
                     ],
             ),
             NamedSubgraph(

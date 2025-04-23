@@ -1,5 +1,6 @@
 import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
+import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
 import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import {
   Checkbox,
@@ -24,7 +25,6 @@ import { OptionValue, Separator, StyledSelect, StyledStatusFilter, StyledTagsCon
 import { FilterTags } from './FilterTags'
 
 import type { ReportingsOptionsListType } from '..'
-import type { ThemeAPI } from 'domain/entities/themes'
 
 type TableReportingsFiltersProps = {
   optionsList: ReportingsOptionsListType
@@ -37,9 +37,8 @@ type TableReportingsFiltersProps = {
   ) => void
   updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
   updatePeriodFilter: (value: OptionValueType | undefined) => void
-  updateSimpleFilter: (value: OptionValueType | undefined, filter: ReportingsFiltersEnum) => void
+  updateSimpleFilter: (value: any, filter: ReportingsFiltersEnum) => void
   updateSourceTypeFilter: (value: string[] | undefined) => void
-  updateThemeFilter: (value: ThemeAPI[] | undefined) => void
 }
 
 export function TableReportingsFiltersWithRef(
@@ -50,8 +49,7 @@ export function TableReportingsFiltersWithRef(
     updateDateRangeFilter,
     updatePeriodFilter,
     updateSimpleFilter,
-    updateSourceTypeFilter,
-    updateThemeFilter
+    updateSourceTypeFilter
   }: TableReportingsFiltersProps,
   ref
 ) {
@@ -67,6 +65,7 @@ export function TableReportingsFiltersWithRef(
     startedAfter,
     startedBefore,
     statusFilter = [],
+    tagFilter = [],
     targetTypeFilter = [],
     themeFilter = [],
     typeFilter = undefined
@@ -77,6 +76,7 @@ export function TableReportingsFiltersWithRef(
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
+    tagsOptions: tagOptions,
     targetTypeOtions,
     themesOptions,
     typeOptions
@@ -213,19 +213,36 @@ export function TableReportingsFiltersWithRef(
             value={targetTypeFilter}
           />
           <CheckTreePicker
-            key={`theme${themesOptions.length}${JSON.stringify(themeFilter)}`}
             childrenKey="subThemes"
             data-cy="reporting-theme-filter"
             isLabelHidden
             isTransparent
-            label="Thématiques"
-            menuStyle={{ maxWidth: '200%' }}
+            label="Filtre thématiques et sous-thématiques"
             name="themes"
-            onChange={value => updateThemeFilter(parseOptionsToThemes(value ?? []))}
+            onChange={value =>
+              updateSimpleFilter(value ? parseOptionsToThemes(value) : undefined, ReportingsFiltersEnum.THEME_FILTER)
+            }
             options={themesOptions}
-            placeholder="Thématiques"
+            placeholder="Thématiques et sous-thématiques"
             style={{ width: 310 }}
             value={getThemesAsOptions(themeFilter)}
+          />
+          <CheckTreePicker
+            childrenKey="subTags"
+            data-cy="reporting-tag-filter"
+            isLabelHidden
+            isTransparent
+            label="Filtre tags et sous-tags"
+            name="regulatoryTags"
+            onChange={value =>
+              updateSimpleFilter(value ? parseOptionsToTags(value) : undefined, ReportingsFiltersEnum.TAG_FILTER)
+            }
+            options={tagOptions}
+            placeholder="Tags et sous-tags"
+            renderedChildrenValue="Sous-tags."
+            renderedValue="Tags"
+            style={{ width: 310 }}
+            value={getTagsAsOptions(tagFilter)}
           />
 
           <CheckPicker
@@ -289,5 +306,6 @@ const StyledFiltersFirstLine = styled.div`
 const StyledFiltersSecondLine = styled.div`
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 `
-const tagPickerStyle = { width: 200 }
+const tagPickerStyle = { width: 180 }

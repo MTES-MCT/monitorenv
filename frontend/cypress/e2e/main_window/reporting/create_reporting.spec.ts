@@ -49,8 +49,7 @@ context('Reporting', () => {
     cy.get('.rs-radio').find('label').contains('Observation').click()
 
     cy.fill('Thématiques et sous-thématiques', ['Remise en état après occupation du DPM'])
-    cy.fill('Thématique du signalement', 'Culture marine')
-    cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
+    cy.fill('Tags et sous-tags', ['Mixte'])
 
     const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
     cy.fill('Date et heure (UTC)', asDatePickerDateTime)
@@ -125,8 +124,7 @@ context('Reporting', () => {
     cy.get('.rs-radio').find('label').contains('Infraction (susp.)').click()
 
     cy.fill('Thématiques et sous-thématiques', ['Remise en état après occupation du DPM'])
-    cy.fill('Thématique du signalement', 'Culture marine')
-    cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
+    cy.fill('Tags et sous-tags', ['Mixte'])
 
     cy.fill('Saisi par', 'XYZ')
     cy.wait(500)
@@ -219,8 +217,7 @@ context('Reporting', () => {
     cy.get('.rs-radio').find('label').contains('Infraction').click()
 
     cy.fill('Thématiques et sous-thématiques', ['Remise en état après occupation du DPM'])
-    cy.fill('Thématique du signalement', 'Culture marine')
-    cy.fill('Sous-thématique du signalement', ['Remise en état après occupation du DPM'])
+    cy.fill('Tags et sous-tags', ['Mixte'])
 
     cy.wait(500)
     cy.clickButton('Lier à une mission existante')
@@ -256,8 +253,7 @@ context('Reporting', () => {
     cy.fill('Type de signalement', 'Observation')
 
     cy.fill('Thématiques et sous-thématiques', ['Mouillage réglementé par AMP'])
-    cy.fill('Thématique du signalement', 'Mouillage individuel')
-    cy.fill('Sous-thématique du signalement', ['Mouillage réglementé par AMP'])
+    cy.fill('Tags et sous-tags', ['Mixte'])
 
     cy.get('.Element-Legend').contains('Réponse à la VHF').should('be.visible')
     cy.fill('Réponse à la VHF', 'Oui')
@@ -267,40 +263,23 @@ context('Reporting', () => {
     cy.wait(500)
 
     cy.wait('@createReporting').then(({ request, response }) => {
-      expect(request.body.themeId).equal(100)
       expect(request.body.theme.id).equal(100)
       expect(request.body.withVHFAnswer).equal(true)
 
       expect(response && response.statusCode).equal(201)
-      expect(response?.body.themeId).equal(100)
       expect(response?.body.theme.id).equal(100)
       expect(response?.body.withVHFAnswer).equal(true)
     })
 
     // we update reporting theme and clean `withVHFAnswer` field
     cy.fill('Thématiques et sous-thématiques', ["Prospection d'un bien culturel maritime"])
-    cy.fill('Thématique du signalement', 'Bien culturel maritime')
-    cy.fill('Sous-thématique du signalement', ["Prospection d'un bien culturel maritime"])
 
-    cy.waitForLastRequest(
-      '@updateReporting',
-      {
-        body: {
-          openBy: 'XYZ',
-          reportType: 'OBSERVATION',
-          targetDetails: [],
-          themeId: 104,
-          validityTime: 24
-        }
-      },
-      5,
-      0,
-      response => {
-        expect(response && response.statusCode).equal(200)
-        expect(response?.body.themeId).equal(104)
-        expect(response?.body.withVHFAnswer).equal(null)
-      }
-    )
+    cy.wait('@updateReporting').then(({ response }) => {
+      expect(response && response.statusCode).equal(200)
+      expect(response?.body.theme.id).equal(104)
+      expect(response?.body.theme.subThemes[0].id).equal(337)
+      expect(response?.body.withVHFAnswer).equal(null)
+    })
 
     // delete reporting
     cy.clickButton('Supprimer le signalement')
@@ -378,8 +357,7 @@ context('Reporting', () => {
 
       // update theme to "Mouillage Individuel"
       cy.fill('Thématiques et sous-thématiques', ['Mouillage réglementé par AMP'])
-      cy.fill('Thématique du signalement', 'Mouillage individuel')
-      cy.fill('Thématiques et sous-thématiques', ['Mouillage réglementé par AMP'])
+      cy.fill('Tags et sous-tags', ['Mixte'])
 
       // Fill in the vessel informations
       cy.fill('Type de cible', 'Véhicule')

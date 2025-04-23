@@ -1,4 +1,6 @@
+import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
+import { getTagsAsOptions } from '@features/Tags/utils/getTagsAsOptions'
 import { getThemesAsOptions } from '@features/Themes/utils/getThemesAsOptions'
 import {
   type CheckTreePickerOption,
@@ -27,8 +29,6 @@ import { ReportingTargetTypeLabels } from '../../../domain/entities/targetType'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
-import type { ThemeAPI } from 'domain/entities/themes'
-
 export enum ReportingFilterContext {
   MAP = 'MAP',
   TABLE = 'TABLE'
@@ -40,6 +40,7 @@ export type ReportingsOptionsListType = {
   sourceOptions: Option<SourceFilterProps>[]
   sourceTypeOptions: Option<string>[]
   statusOptions: Option<string>[]
+  tagsOptions: CheckTreePickerOption[]
   targetTypeOtions: Option<string>[]
   themesOptions: CheckTreePickerOption[]
   typeOptions: Option<string>[]
@@ -55,6 +56,10 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const { data: theme } = useGetThemesQuery()
 
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(theme ?? [])), [theme])
+
+  const { data: tags } = useGetTagsQuery()
+
+  const tagsOptions = useMemo(() => getTagsAsOptions(Object.values(tags ?? [])), [tags])
 
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
@@ -125,6 +130,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
+    tagsOptions,
     targetTypeOtions,
     themesOptions,
     typeOptions
@@ -157,7 +163,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     )
   }
 
-  const updateSimpleFilter = (value, filter) => {
+  const updateSimpleFilter = (value: any, filter: ReportingsFiltersEnum) => {
     dispatch(reportingsFiltersActions.updateFilters({ key: filter, value }))
   }
 
@@ -179,10 +185,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: undefined }))
   }
 
-  const updateThemeFilter = (themes: ThemeAPI[] | undefined) => {
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.THEME_FILTER, value: themes }))
-  }
-
   const resetFilters = () => {
     dispatch(reportingsFiltersActions.resetReportingsFilters())
   }
@@ -197,7 +199,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       updatePeriodFilter={updatePeriodFilter}
       updateSimpleFilter={updateSimpleFilter}
       updateSourceTypeFilter={updateSourceTypeFilter}
-      updateThemeFilter={updateThemeFilter}
     />
   ) : (
     <MapReportingsFilters
@@ -208,7 +209,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       updatePeriodFilter={updatePeriodFilter}
       updateSimpleFilter={updateSimpleFilter}
       updateSourceTypeFilter={updateSourceTypeFilter}
-      updateThemeFilter={updateThemeFilter}
     />
   )
 }

@@ -6,6 +6,7 @@ import { isEqual, omit } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import type { TagAPI } from 'domain/entities/tags'
 import type { ThemeAPI } from 'domain/entities/themes'
 
 export const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
@@ -26,6 +27,7 @@ export enum ReportingsFiltersEnum {
   STARTED_AFTER_FILTER = 'startedAfter',
   STARTED_BEFORE_FILTER = 'startedBefore',
   STATUS_FILTER = 'statusFilter',
+  TAG_FILTER = 'tagFilter',
   TARGET_TYPE_FILTER = 'targetTypeFilter',
   THEME_FILTER = 'themeFilter',
   TYPE_FILTER = 'typeFilter'
@@ -44,6 +46,7 @@ type ReportingsFiltersSliceType = {
   startedAfter: string
   startedBefore?: string
   statusFilter: string[]
+  tagFilter: TagAPI[] | undefined
   targetTypeFilter?: string[] | undefined
   themeFilter: ThemeAPI[] | undefined
   typeFilter?: string | undefined
@@ -62,6 +65,7 @@ const initialState: ReportingsFiltersSliceType = {
   startedAfter: LAST_30_DAYS,
   startedBefore: undefined,
   statusFilter: [StatusFilterEnum.IN_PROGRESS],
+  tagFilter: [],
   targetTypeFilter: undefined,
   themeFilter: [],
   typeFilter: undefined

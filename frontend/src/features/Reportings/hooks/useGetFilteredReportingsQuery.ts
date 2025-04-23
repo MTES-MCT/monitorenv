@@ -6,8 +6,9 @@ import { useMemo } from 'react'
 import { useGetReportingsQuery } from '../../../api/reportingsAPI'
 import { TWO_MINUTES } from '../../../constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { sourceFilterFunction } from '../useCases/filters/sourceFilterFunction'
-import { themeFilterFunction } from '../useCases/filters/themeFilterFunction'
+import { isReportingPartOfSource } from '../useCases/filters/isReportingPartOfSource'
+import { isReportingPartOfTag } from '../useCases/filters/isReportingPartOfTag'
+import { isReportingPartOfTheme } from '../useCases/filters/isReportingPartOfTheme'
 
 export const useGetFilteredReportingsQuery = (skip = false) => {
   const {
@@ -21,6 +22,7 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
     startedAfter,
     startedBefore,
     statusFilter,
+    tagFilter,
     targetTypeFilter,
     themeFilter,
     typeFilter
@@ -98,10 +100,11 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
       reporting =>
         !!reporting &&
         // FRONT filters
-        themeFilterFunction(reporting, themeFilter) &&
-        sourceFilterFunction(reporting, sourceFilter)
+        isReportingPartOfTheme(reporting, themeFilter) &&
+        isReportingPartOfTag(reporting, tagFilter) &&
+        isReportingPartOfSource(reporting, sourceFilter)
     )
-  }, [data, themeFilter, sourceFilter])
+  }, [data, themeFilter, sourceFilter, tagFilter])
 
   return { isError, isFetching, isLoading, reportings }
 }

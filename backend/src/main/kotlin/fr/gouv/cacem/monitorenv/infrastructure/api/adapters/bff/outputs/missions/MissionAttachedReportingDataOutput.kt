@@ -13,7 +13,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.T
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput.Companion.fromThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class MissionAttachedReportingDataOutput(
     val id: Int,
@@ -56,8 +56,6 @@ data class MissionAttachedReportingDataOutput(
                 seaFront = dto.reporting.seaFront,
                 description = dto.reporting.description,
                 reportType = dto.reporting.reportType,
-                themeId = dto.reporting.themeId,
-                subThemeIds = dto.reporting.subThemeIds,
                 actionTaken = dto.reporting.actionTaken,
                 isControlRequired = dto.reporting.isControlRequired,
                 hasNoUnitAvailable = dto.reporting.hasNoUnitAvailable,
