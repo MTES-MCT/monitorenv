@@ -31,7 +31,7 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
   }, [actionType, data])
 
   return (
-    <ActionThemeWrapper>
+    <ActionThemeWrapper data-cy="envaction-theme-element">
       <CheckTreePicker
         childrenKey="subThemes"
         isLight

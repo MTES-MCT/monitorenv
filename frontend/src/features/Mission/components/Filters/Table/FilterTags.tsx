@@ -1,6 +1,7 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
+import { filterSubTags } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { FrontendError } from '@libs/FrontendError'
@@ -10,6 +11,7 @@ import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'dom
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import type { TagAPI } from 'domain/entities/tags'
 import type { ThemeAPI } from 'domain/entities/themes'
 
 export function FilterTags() {
@@ -22,6 +24,7 @@ export function FilterTags() {
     selectedMissionTypes,
     selectedSeaFronts,
     selectedStatuses,
+    selectedTags,
     selectedThemes
   } = useAppSelector(state => state.missionFilters)
 
@@ -31,7 +34,7 @@ export function FilterTags() {
   const themesAPI: ThemeAPI[] = Object.values(data ?? [])
 
   const onDeleteTag = <K extends MissionFiltersEnum>(
-    valueToDelete: number | string,
+    valueToDelete: number | string | TagAPI,
     filterKey: K,
     selectedValues: MissionFiltersState[K]
   ) => {
@@ -45,8 +48,21 @@ export function FilterTags() {
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues }))
   }
 
-  const hasTagFilters = useMemo(() => {
-    if (
+  const onDeleteTagTag = (valueToDelete: TagAPI, tagFilter: TagAPI[]) => {
+    const updatedFilter: TagAPI[] = tagFilter
+      .map(tag => filterSubTags(tag, valueToDelete))
+      .filter(tag => tag !== undefined)
+      .filter(tag => tag.id !== valueToDelete.id)
+    dispatch(
+      updateFilters({
+        key: MissionFiltersEnum.TAGS_FILTER,
+        value: updatedFilter.length === 0 ? undefined : updatedFilter
+      })
+    )
+  }
+
+  const hasTagFilters = useMemo(
+    () =>
       hasFilters &&
       ((selectedAdministrationNames && selectedAdministrationNames?.length > 0) ||
         (selectedCompletionStatus && selectedCompletionStatus?.length > 0) ||
@@ -54,22 +70,20 @@ export function FilterTags() {
         (selectedMissionTypes && selectedMissionTypes?.length > 0) ||
         (selectedSeaFronts && selectedSeaFronts?.length > 0) ||
         (selectedStatuses && selectedStatuses?.length > 0) ||
-        (selectedThemes && selectedThemes?.length > 0))
-    ) {
-      return true
-    }
-
-    return false
-  }, [
-    hasFilters,
-    selectedAdministrationNames,
-    selectedCompletionStatus,
-    selectedControlUnitIds,
-    selectedMissionTypes,
-    selectedSeaFronts,
-    selectedStatuses,
-    selectedThemes
-  ])
+        (selectedTags && selectedTags?.length > 0) ||
+        (selectedThemes && selectedThemes?.length > 0)),
+    [
+      hasFilters,
+      selectedAdministrationNames,
+      selectedCompletionStatus,
+      selectedControlUnitIds,
+      selectedMissionTypes,
+      selectedSeaFronts,
+      selectedStatuses,
+      selectedThemes,
+      selectedTags
+    ]
+  )
 
   if (!hasTagFilters) {
     return null
@@ -123,6 +137,20 @@ export function FilterTags() {
           <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
             {String(`Thème ${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`)}
           </SingleTag>
+        ))}
+      {selectedTags &&
+        selectedTags?.length > 0 &&
+        selectedTags.map(tag => (
+          <>
+            <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
+              {`Tag ${tag.name}`}
+            </SingleTag>
+            {tag.subTags.map(subTag => (
+              <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
+                {`Sous-tag ${subTag.name}`}
+              </SingleTag>
+            ))}
+          </>
         ))}
       {selectedStatuses &&
         selectedStatuses?.length > 0 &&

@@ -115,8 +115,6 @@ class ReportingsITests {
                         seaFront = "Facade 1",
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
                         actionTaken = "actions effectuées blabla",
                         isControlRequired = true,
                         hasNoUnitAvailable = true,
@@ -175,8 +173,6 @@ class ReportingsITests {
                 geom = polygon,
                 description = "description",
                 reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                themeId = 12,
-                subThemeIds = listOf(64, 82),
                 actionTaken = "actions effectuées blabla",
                 isControlRequired = true,
                 hasNoUnitAvailable = true,
@@ -219,9 +215,6 @@ class ReportingsITests {
             .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
-            .andExpect(jsonPath("$.themeId").value(12))
-            .andExpect(jsonPath("$.subThemeIds[0]").value(64))
-            .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             ).andExpect(jsonPath("$.isControlRequired").value(true))
@@ -259,8 +252,6 @@ class ReportingsITests {
                         seaFront = "Facade 1",
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
                         actionTaken = "actions effectuées blabla",
                         isControlRequired = true,
                         hasNoUnitAvailable = true,
@@ -320,9 +311,6 @@ class ReportingsITests {
             .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
-            .andExpect(jsonPath("$.themeId").value(12))
-            .andExpect(jsonPath("$.subThemeIds[0]").value(64))
-            .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             ).andExpect(jsonPath("$.isControlRequired").value(true))
@@ -358,8 +346,6 @@ class ReportingsITests {
                         seaFront = "Facade 1",
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
                         actionTaken = "actions effectuées blabla",
                         isControlRequired = true,
                         hasNoUnitAvailable = true,
@@ -421,8 +407,6 @@ class ReportingsITests {
                         seaFront = "Facade 1",
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
                         actionTaken = "actions effectuées blabla",
                         isControlRequired = true,
                         hasNoUnitAvailable = true,
@@ -439,7 +423,7 @@ class ReportingsITests {
                                 "2022-01-15T14:50:09Z",
                             ),
                         isInfractionProven = true,
-                        tags = emptyList(),
+                        tags = listOf(aTag(id = 2)),
                         theme = aTheme(id = 1),
                     ),
                 reportingSources =
@@ -461,8 +445,6 @@ class ReportingsITests {
                     geom = polygon,
                     description = "description",
                     reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    themeId = 12,
-                    subThemeIds = listOf(64, 82),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
@@ -504,9 +486,6 @@ class ReportingsITests {
             .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
-            .andExpect(jsonPath("$.themeId").value(12))
-            .andExpect(jsonPath("$.subThemeIds[0]").value(64))
-            .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             ).andExpect(jsonPath("$.isControlRequired").value(true))
@@ -516,7 +495,7 @@ class ReportingsITests {
             .andExpect(jsonPath("$.isArchived").value(false))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
-            .andExpect(jsonPath("$.tags").isEmpty())
+            .andExpect(jsonPath("$.tags[0].id").value(2))
             .andExpect(jsonPath("$.theme.id").value(1))
             .andExpect(jsonPath("$.theme.name").value("theme"))
     }
@@ -605,8 +584,6 @@ class ReportingsITests {
                             geom = polygon,
                             description = "description",
                             reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                            themeId = 12,
-                            subThemeIds = listOf(64, 82),
                             isControlRequired = true,
                             hasNoUnitAvailable = true,
                             createdAt =
@@ -684,8 +661,6 @@ class ReportingsITests {
                   "seaFront": null,
                   "description": "description",
                   "reportType": "INFRACTION_SUSPICION",
-                  "themeId": 12,
-                  "subThemeIds": [64, 82],
                   "actionTaken": null,
                   "isControlRequired": true,
                   "hasNoUnitAvailable": true,

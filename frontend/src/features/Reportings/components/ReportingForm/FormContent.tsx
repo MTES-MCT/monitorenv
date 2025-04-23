@@ -428,6 +428,8 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
             name="tags"
             onChange={handleOnChangeTags}
             options={tagOptions}
+            renderedChildrenValue="Sous-tag."
+            renderedValue="Tags"
             value={getTagsAsOptions(values.tags ?? [])}
           />
 

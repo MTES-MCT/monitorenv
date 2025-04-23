@@ -45,14 +45,14 @@ export const parseOptionsToTags = (options: CheckTreePickerOption[], childrenKey
     }))
   }))
 
-export const filterSubTags = (tag: TagAPI, toDeleteId: number): TagAPI | undefined => {
+export const filterSubTags = (tag: TagAPI, tagToFilter: TagAPI): TagAPI | undefined => {
   if (tag.subTags.length === 1) {
     return undefined
   }
 
   return {
     ...tag,
-    subTags: tag.subTags.filter(subTag => subTag.id !== toDeleteId)
+    subTags: tag.subTags.filter(subTag => subTag.id !== tagToFilter.id)
   }
 }
 

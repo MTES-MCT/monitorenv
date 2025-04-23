@@ -515,8 +515,6 @@ class MissionsITests {
                                     reportType =
                                         ReportingTypeEnum
                                             .INFRACTION_SUSPICION,
-                                    themeId = 12,
-                                    subThemeIds = listOf(82),
                                     actionTaken = "ActionTaken",
                                     isControlRequired = true,
                                     hasNoUnitAvailable = true,

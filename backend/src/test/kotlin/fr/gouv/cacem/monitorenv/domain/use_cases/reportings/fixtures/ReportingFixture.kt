@@ -1,11 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
@@ -13,7 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Co
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 class ReportingFixture {
     companion object {
@@ -27,8 +23,6 @@ class ReportingFixture {
             openBy: String = "CDA",
             targetType: TargetTypeEnum? = TargetTypeEnum.VEHICLE,
             description: String? = "description",
-            themeId: Int? = 1,
-            subThemeIds: List<Int>? = listOf(10, 11),
         ): ReportingEntity {
             val wktReader = WKTReader()
 
@@ -45,8 +39,6 @@ class ReportingFixture {
                 seaFront = "Facade 1",
                 description = description,
                 reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                themeId = themeId,
-                subThemeIds = subThemeIds,
                 actionTaken = "actions effectuées ",
                 isControlRequired = true,
                 hasNoUnitAvailable = true,

@@ -30,12 +30,6 @@ class ReportingValidator : Validator<ReportingEntity> {
                 "La validité du signalement doit être supérieur à 0",
             )
         }
-        if (reporting.subThemeIds?.isEmpty() == true) {
-            throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "Un sous-thème est obligatoire",
-            )
-        }
         if (reporting.targetType === TargetTypeEnum.OTHER && reporting.description === null) {
             throw BackendUsageException(
                 BackendUsageErrorCode.UNVALID_PROPERTY,
