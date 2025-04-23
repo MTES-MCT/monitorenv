@@ -27,15 +27,7 @@ export const saveMission =
     } = getState()
     const selectedMissions = getState().missionForms.missions
 
-    const sortedActions = [...values.envActions]
-      // .map(envAction => {
-      //   if (envAction.id.includes('new-')) {
-      //     return { ...envAction, id: undefined }
-      //   }
-
-      //   return envAction
-      // })
-      .sort((a, b) => a.id - b.id)
+    const sortedActions = [...values.envActions].sort((a, b) => a.id - b.id)
     const valuesToSave = omit({ ...values, envActions: sortedActions }, [
       'attachedReportings',
       'detachedReportings',

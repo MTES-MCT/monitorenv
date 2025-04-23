@@ -24,22 +24,22 @@ class GetThemesByRegulatoryAreasUTest {
     @Test
     fun `execute should return a list of themes`(log: CapturedOutput) {
         // Given
-        val regulationIds = listOf(1, 2, 3)
+        val regulatoryAreaIds = listOf(1, 2, 3)
         val expectedThemes = listOf(aTheme())
         given(themeRepository.findAllWithinByRegulatoryAreaIds(anyList(), any())).willReturn(expectedThemes)
 
         // When
-        val themes = getThemesByRegulatoryAreas.execute(regulationIds)
+        val themes = getThemesByRegulatoryAreas.execute(regulatoryAreaIds)
 
         // Then
         assertThat(themes).containsAll(expectedThemes)
         verify(themeRepository).findAllWithinByRegulatoryAreaIds(
-            argThat { ids -> ids === regulationIds },
+            argThat { ids -> ids === regulatoryAreaIds },
             argThat { time ->
                 Duration.between(time, ZonedDateTime.now()).abs() <= Duration.ofSeconds(1)
             },
         )
-        assertThat(log.out).contains("Attempt to GET all themes from regulations $regulationIds")
+        assertThat(log.out).contains("Attempt to GET all themes from regulatory areas $regulatoryAreaIds")
         assertThat(log.out).contains("Found ${themes.size} themes")
     }
 }

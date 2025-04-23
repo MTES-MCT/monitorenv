@@ -4,7 +4,6 @@ import {
   openRegulatoryMetadataPanel
 } from '@features/layersSelector/metadataPanel/slice'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
-import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'

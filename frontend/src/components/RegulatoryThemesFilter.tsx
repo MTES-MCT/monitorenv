@@ -1,10 +1,10 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
-import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckTreePicker, type CheckTreePickerOption } from '@mtes-mct/monitor-ui'
+import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 
 export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties }) {
