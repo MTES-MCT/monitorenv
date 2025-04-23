@@ -11,9 +11,9 @@ class GetThemesByRegulatoryAreas(
 ) {
     private val logger = LoggerFactory.getLogger(GetThemesByRegulatoryAreas::class.java)
 
-    fun execute(regulationsIds: List<Int>): List<ThemeEntity> {
-        logger.info("Attempt to GET all themes from regulatory areas $regulationsIds")
-        val tags = themeRepository.findAllWithinByRegulatoryAreaIds(regulationsIds)
+    fun execute(regulatoryAreaIds: List<Int>): List<ThemeEntity> {
+        logger.info("Attempt to GET all themes from regulatory areas $regulatoryAreaIds")
+        val tags = themeRepository.findAllWithinByRegulatoryAreaIds(regulatoryAreaIds)
         logger.info("Found ${tags.size} themes")
 
         return tags
