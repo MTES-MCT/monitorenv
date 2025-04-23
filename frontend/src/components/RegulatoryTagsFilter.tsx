@@ -1,10 +1,10 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import { setFilteredRegulatoryTags } from '@features/layersSelector/search/slice'
-import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckTreePicker, type CheckTreePickerOption } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { useMemo } from 'react'
 
 export function RegulatoryTagsFilter({ style }: { style?: React.CSSProperties }) {

@@ -3,8 +3,6 @@ import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetLegacyControlUnitsQuery } from '@api/legacyControlUnitsAPI'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import { getTagsAsOptions } from '@features/Tags/utils/getTagsAsOptions'
-import { getThemesAsOptionsCheckPicker } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -15,6 +13,8 @@ import {
   type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptions } from '@utils/getTagsAsOptions'
+import { getThemesAsOptionsCheckPicker } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { dateRangeOptions, type DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, MissionStatusLabel, MissionTypeLabel } from 'domain/entities/missions'

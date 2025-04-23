@@ -1,7 +1,10 @@
 import type { CheckTreePickerOption, Option } from '@mtes-mct/monitor-ui'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
-export const getThemesAsOptions = (themes: ThemeAPI[], childrenKey: string = 'subThemes'): CheckTreePickerOption[] =>
+export const getThemesAsOptions = (
+  themes: ThemeFromAPI[],
+  childrenKey: string = 'subThemes'
+): CheckTreePickerOption[] =>
   themes
     .map(theme => {
       const subThemes =
@@ -21,10 +24,13 @@ export const getThemesAsOptions = (themes: ThemeAPI[], childrenKey: string = 'su
     })
     .sort((a, b) => a.label.localeCompare(b.label))
 
-export const getThemesAsOptionsCheckPicker = (themes: ThemeAPI[]): Option<number>[] =>
+export const getThemesAsOptionsCheckPicker = (themes: ThemeFromAPI[]): Option<number>[] =>
   themes.map(theme => ({ label: theme.name, value: theme.id })).sort((a, b) => a.label.localeCompare(b.label))
 
-export const parseOptionsToThemes = (options: CheckTreePickerOption[], childrenKey: string = 'subThemes'): ThemeAPI[] =>
+export const parseOptionsToThemes = (
+  options: CheckTreePickerOption[],
+  childrenKey: string = 'subThemes'
+): ThemeFromAPI[] =>
   options.map(option => ({
     id: +option.value,
     name: option.label,
@@ -34,7 +40,7 @@ export const parseOptionsToThemes = (options: CheckTreePickerOption[], childrenK
     }))
   }))
 
-export const filterSubThemes = (theme: ThemeAPI, themeToFilter: ThemeAPI): ThemeAPI | undefined => {
+export const filterSubThemes = (theme: ThemeFromAPI, themeToFilter: ThemeFromAPI): ThemeFromAPI | undefined => {
   if (theme.subThemes.length === 1) {
     return undefined
   }
@@ -45,9 +51,9 @@ export const filterSubThemes = (theme: ThemeAPI, themeToFilter: ThemeAPI): Theme
   }
 }
 
-export const displayThemes = (themes?: ThemeAPI[]) => themes?.map(({ name }) => name).join(', ')
+export const displayThemes = (themes?: ThemeFromAPI[]) => themes?.map(({ name }) => name).join(', ')
 
-export const displaySubThemes = (themes?: ThemeAPI[]) =>
+export const displaySubThemes = (themes?: ThemeFromAPI[]) =>
   themes?.flatMap(({ subThemes }) => subThemes.map(({ name }) => name)).join(', ')
 
 export const sortThemes = (a: CheckTreePickerOption, b: CheckTreePickerOption) => {

@@ -222,19 +222,15 @@ class EnvActionModel(
                     themes = setOf(),
                     tags = setOf(),
                 )
-            when (action) {
-                is EnvActionControlEntity -> {
-                    envActionModel.themes = fromThemeEntities(action.themes, envActionModel)
-                    envActionModel.tags = fromTagEntities(action.tags, envActionModel)
-                }
-
-                is EnvActionSurveillanceEntity -> {
-                    envActionModel.themes = fromThemeEntities(action.themes, envActionModel)
-                    envActionModel.tags = fromTagEntities(action.tags, envActionModel)
-                }
-
-                else -> Unit
+            if (action is EnvActionControlEntity) {
+                envActionModel.themes = fromThemeEntities(action.themes, envActionModel)
+                envActionModel.tags = fromTagEntities(action.tags, envActionModel)
             }
+            if (action is EnvActionSurveillanceEntity) {
+                envActionModel.themes = fromThemeEntities(action.themes, envActionModel)
+                envActionModel.tags = fromTagEntities(action.tags, envActionModel)
+            }
+
             action.controlPlans?.forEach {
                 if (it.themeId == null) return@forEach
                 controlPlanThemesReferenceModelMap[it.themeId]?.let { controlPlanTheme ->

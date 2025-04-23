@@ -3,9 +3,9 @@ import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
 import type { LegacyControlUnit, LegacyControlUnitForm } from './legacyControlUnit'
 import type { DetachedReportingForTimeline, Reporting, ReportingForTimeline } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
-import type { TagAPI } from './tags'
+import type { TagFromAPI } from './tags'
 import type { TargetTypeEnum } from './targetType'
-import type { ThemeAPI } from './themes'
+import type { ThemeFromAPI } from './themes'
 import type { VesselTypeEnum } from './vesselType'
 import type { FishMissionAction } from '@features/Mission/fishActions.types'
 import type { RapportNavMissionAction } from '@features/Mission/rapportNavActions.types'
@@ -287,8 +287,8 @@ export type NewEnvActionControl = EnvActionCommonProperties & {
   observations?: string
   openBy: string
   reportingIds: number[]
-  tags?: TagAPI[]
-  themes?: ThemeAPI[]
+  tags?: TagFromAPI[]
+  themes?: ThemeFromAPI[]
   vehicleType?: string
 }
 export type EnvActionControl = NewEnvActionControl & {
@@ -306,8 +306,8 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
   observations?: string
   openBy: string
   reportingIds: number[]
-  tags?: TagAPI[]
-  themes?: ThemeAPI[]
+  tags?: TagFromAPI[]
+  themes?: ThemeFromAPI[]
 }
 
 export type Awareness = {

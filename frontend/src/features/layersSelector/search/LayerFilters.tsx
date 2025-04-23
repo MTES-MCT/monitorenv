@@ -1,8 +1,6 @@
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
-import { filterSubTags } from '@features/Tags/utils/getTagsAsOptions'
-import { filterSubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -22,24 +20,26 @@ import {
   DateRangePicker,
   SingleTag
 } from '@mtes-mct/monitor-ui'
+import { filterSubTags } from '@utils/getTagsAsOptions'
+import { filterSubThemes } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from './slice'
 
-import type { TagAPI } from 'domain/entities/tags'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type LayerFiltersProps = {
   ampTypes: Option<string>[]
   filteredAmpTypes: string[]
-  filteredRegulatoryTags: TagAPI[]
-  filteredRegulatoryThemes: ThemeAPI[]
+  filteredRegulatoryTags: TagFromAPI[]
+  filteredRegulatoryThemes: ThemeFromAPI[]
   filteredVigilanceAreaPeriod: string | undefined
   handleResetFilters: () => void
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
-  setFilteredRegulatoryTags: (filteredRegulatoryTags: TagAPI[]) => void
-  setFilteredRegulatoryThemes: (filteredRegulatoryThemes: ThemeAPI[]) => void
+  setFilteredRegulatoryTags: (filteredRegulatoryTags: TagFromAPI[]) => void
+  setFilteredRegulatoryThemes: (filteredRegulatoryThemes: ThemeFromAPI[]) => void
   updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
 }
 export function LayerFilters({
@@ -73,11 +73,11 @@ export function LayerFilters({
     setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete))
   }
 
-  const handleDeleteRegulatoryTag = (regulatoryTagToDelete: TagAPI) => () => {
+  const handleDeleteRegulatoryTag = (regulatoryTagToDelete: TagFromAPI) => () => {
     if (filteredRegulatoryTags.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
-    const updatedFilter: TagAPI[] = filteredRegulatoryTags
+    const updatedFilter: TagFromAPI[] = filteredRegulatoryTags
       .map(tag => filterSubTags(tag, regulatoryTagToDelete))
       .filter(tag => tag !== undefined)
       .filter(tag => tag.id !== regulatoryTagToDelete.id)
@@ -85,11 +85,11 @@ export function LayerFilters({
     setFilteredRegulatoryTags(updatedFilter)
   }
 
-  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: ThemeAPI) => () => {
+  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: ThemeFromAPI) => () => {
     if (filteredRegulatoryThemes.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
-    const updatedFilter: ThemeAPI[] = filteredRegulatoryThemes
+    const updatedFilter: ThemeFromAPI[] = filteredRegulatoryThemes
       .map(theme => filterSubThemes(theme, regulatoryThemeToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== regulatoryThemeToDelete.id)

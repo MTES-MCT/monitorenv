@@ -23,8 +23,8 @@ import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
-import type { TagAPI } from 'domain/entities/tags'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function LayerSearch() {
   const dispatch = useAppDispatch()
@@ -78,7 +78,7 @@ export function LayerSearch() {
     })
   }
 
-  const handleSetFilteredRegulatoryTags = (filteredTags: TagAPI[]) => {
+  const handleSetFilteredRegulatoryTags = (filteredTags: TagFromAPI[]) => {
     dispatch(setFilteredRegulatoryTags(filteredTags))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
@@ -92,7 +92,7 @@ export function LayerSearch() {
     })
   }
 
-  const handleSetFilteredRegulatoryThemes = (filteredThemes: ThemeAPI[]) => {
+  const handleSetFilteredRegulatoryThemes = (filteredThemes: ThemeFromAPI[]) => {
     dispatch(setFilteredRegulatoryThemes(filteredThemes))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,

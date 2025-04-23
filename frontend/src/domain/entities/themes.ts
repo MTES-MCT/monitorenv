@@ -1,5 +1,5 @@
-export type ThemeAPI = {
+export type ThemeFromAPI = {
   id: number
   name: string
-  subThemes: ThemeAPI[]
+  subThemes: ThemeFromAPI[]
 }

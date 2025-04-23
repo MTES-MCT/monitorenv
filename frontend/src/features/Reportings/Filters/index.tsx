@@ -1,13 +1,13 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import { getTagsAsOptions } from '@features/Tags/utils/getTagsAsOptions'
-import { getThemesAsOptions } from '@features/Themes/utils/getThemesAsOptions'
 import {
   type CheckTreePickerOption,
   type DateAsStringRange,
   getOptionsFromLabelledEnum,
   type Option
 } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptions } from '@utils/getTagsAsOptions'
+import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import _, { reduce } from 'lodash'
 import { type MutableRefObject, useMemo, useRef } from 'react'
 

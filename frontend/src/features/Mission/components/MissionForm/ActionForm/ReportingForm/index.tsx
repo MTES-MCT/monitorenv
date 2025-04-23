@@ -1,6 +1,6 @@
-import { displaySubTags } from '@features/Tags/utils/getTagsAsOptions'
-import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { Accent, Button, getOptionsFromLabelledEnum, Icon, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
+import { displaySubTags } from '@utils/getTagsAsOptions'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 

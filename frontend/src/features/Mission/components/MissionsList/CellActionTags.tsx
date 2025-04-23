@@ -1,4 +1,4 @@
-import { displaySubTags } from '@features/Tags/utils/getTagsAsOptions'
+import { displaySubTags } from '@utils/getTagsAsOptions'
 import {
   ActionTypeEnum,
   type EnvAction,
@@ -8,7 +8,7 @@ import {
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import type { TagAPI } from 'domain/entities/tags'
+import type { TagFromAPI } from 'domain/entities/tags'
 
 const getTagsCell = (envActions: EnvAction[]) => {
   const groupedTags = envActions
@@ -16,7 +16,7 @@ const getTagsCell = (envActions: EnvAction[]) => {
       (a): a is EnvActionControl | EnvActionSurveillance =>
         a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
     )
-    .reduce<{ [key: number]: TagAPI }>((acc, envAction) => {
+    .reduce<{ [key: number]: TagFromAPI }>((acc, envAction) => {
       envAction.tags?.forEach(tag => {
         if (!acc[tag.id]) {
           acc[tag.id] = { ...tag, subTags: [] }
@@ -27,7 +27,7 @@ const getTagsCell = (envActions: EnvAction[]) => {
       return acc
     }, {})
 
-  const toTagCell = (tag: TagAPI) => ({
+  const toTagCell = (tag: TagFromAPI) => ({
     component: (
       <>
         <>

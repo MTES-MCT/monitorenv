@@ -4,8 +4,6 @@ import { Tooltip } from '@components/Tooltip'
 import { ZonePicker } from '@components/ZonePicker'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
-import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
-import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -25,6 +23,8 @@ import {
   THEME,
   type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'

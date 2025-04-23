@@ -1,6 +1,5 @@
-import { useGetTagsByRegulatoryAreasQuery } from '@api/tagsAPI'
+import { useGetTagsByRegulatoryAreaIdsQuery } from '@api/tagsAPI'
 import { type DashboardType } from '@features/Dashboard/slice'
-import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -17,6 +16,7 @@ import {
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -35,7 +35,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
   const allRegulatoryAreaIds = extractedArea?.regulatoryAreas.flatMap(reg => reg.id) ?? []
-  const { data: regulatoryTags } = useGetTagsByRegulatoryAreasQuery(allRegulatoryAreaIds)
+  const { data: regulatoryTags } = useGetTagsByRegulatoryAreaIdsQuery(allRegulatoryAreaIds)
   const regulatoryTagsAsOptions = getTagsAsOptions(Object.values(regulatoryTags ?? []))
   // const regulatoryTagsCustomSearch = useMemo(
   //   () => new CustomSearch(regulatoryTagsAsOptions, ['label']),

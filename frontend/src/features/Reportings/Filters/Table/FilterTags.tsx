@@ -1,6 +1,6 @@
-import { filterSubTags } from '@features/Tags/utils/getTagsAsOptions'
-import { filterSubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { SingleTag } from '@mtes-mct/monitor-ui'
+import { filterSubTags } from '@utils/getTagsAsOptions'
+import { filterSubThemes } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -10,8 +10,8 @@ import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 
-import type { TagAPI } from 'domain/entities/tags'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
@@ -27,8 +27,8 @@ export function FilterTags() {
       })
     )
   }
-  const onDeleteThemeTag = (valueToDelete: ThemeAPI, filter: ThemeAPI[]) => {
-    const updatedFilter: ThemeAPI[] = filter
+  const onDeleteThemeTag = (valueToDelete: ThemeFromAPI, filter: ThemeFromAPI[]) => {
+    const updatedFilter: ThemeFromAPI[] = filter
       .map(theme => filterSubThemes(theme, valueToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== valueToDelete.id)
@@ -41,8 +41,8 @@ export function FilterTags() {
     )
   }
 
-  const onDeleteTagTag = (valueToDelete: TagAPI, filter: TagAPI[]) => {
-    const updatedFilter: TagAPI[] = filter
+  const onDeleteTagTag = (valueToDelete: TagFromAPI, filter: TagFromAPI[]) => {
+    const updatedFilter: TagFromAPI[] = filter
       .map(tag => filterSubTags(tag, valueToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== valueToDelete.id)

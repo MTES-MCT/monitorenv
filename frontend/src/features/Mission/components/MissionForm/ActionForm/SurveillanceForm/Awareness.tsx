@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui'
 import type { EnvActionSurveillance, Mission } from 'domain/entities/missions'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type AwarenessProps = {
   awarenessOptions: CheckTreePickerOption[]
@@ -16,7 +16,7 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
 
   const [{ value: isRisingAwareness }] = useField(`${formPath}.awareness.isRisingAwareness`)
 
-  const [themes] = useField<ThemeAPI[]>(`${formPath}.themes`)
+  const [themes] = useField<ThemeFromAPI[]>(`${formPath}.themes`)
 
   useEffect(() => {
     if (themes.value.length === 1 && isRisingAwareness) {
