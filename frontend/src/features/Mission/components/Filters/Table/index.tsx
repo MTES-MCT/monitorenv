@@ -1,7 +1,6 @@
 import { CustomPeriodContainer, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { MissionSearch } from '@features/Mission/MissionsSearch'
-import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
   Checkbox,
@@ -13,6 +12,7 @@ import {
   useNewWindow,
   type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { MissionFiltersEnum } from 'domain/shared_slices/MissionFilters'
 import { forwardRef, useMemo } from 'react'

@@ -1,9 +1,9 @@
-import { displaySubTags, displayTags } from '@features/Tags/utils/getTagsAsOptions'
-import { displaySubThemes, displayThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import { displaySubTags, displayTags } from '@utils/getTagsAsOptions'
+import { displaySubThemes, displayThemes } from '@utils/getThemesAsOptions'
 import styled from 'styled-components'
 
 import {

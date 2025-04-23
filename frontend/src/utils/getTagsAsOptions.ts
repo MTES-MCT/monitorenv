@@ -1,7 +1,7 @@
 import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui'
-import type { TagAPI } from 'domain/entities/tags'
+import type { TagFromAPI } from 'domain/entities/tags'
 
-export const getTagsAsOptions = (tags: TagAPI[], childrenKey: string = 'subTags'): CheckTreePickerOption[] =>
+export const getTagsAsOptions = (tags: TagFromAPI[], childrenKey: string = 'subTags'): CheckTreePickerOption[] =>
   tags
     .map(tag => {
       const subTags =
@@ -21,7 +21,7 @@ export const getTagsAsOptions = (tags: TagAPI[], childrenKey: string = 'subTags'
     })
     .sort((a, b) => a.label.localeCompare(b.label))
 
-export const getTagsAsOptionsLegacy = (tags: TagAPI[], childrenKey: string = 'subTags'): CheckTreePickerOption[] =>
+export const getTagsAsOptionsLegacy = (tags: TagFromAPI[], childrenKey: string = 'subTags'): CheckTreePickerOption[] =>
   tags
     .map(tag => ({
       [childrenKey]:
@@ -35,7 +35,7 @@ export const getTagsAsOptionsLegacy = (tags: TagAPI[], childrenKey: string = 'su
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
-export const parseOptionsToTags = (options: CheckTreePickerOption[], childrenKey: string = 'subTags'): TagAPI[] =>
+export const parseOptionsToTags = (options: CheckTreePickerOption[], childrenKey: string = 'subTags'): TagFromAPI[] =>
   options.map(option => ({
     id: +option.value,
     name: option.label,
@@ -45,7 +45,7 @@ export const parseOptionsToTags = (options: CheckTreePickerOption[], childrenKey
     }))
   }))
 
-export const filterSubTags = (tag: TagAPI, tagToFilter: TagAPI): TagAPI | undefined => {
+export const filterSubTags = (tag: TagFromAPI, tagToFilter: TagFromAPI): TagFromAPI | undefined => {
   if (tag.subTags.length === 1) {
     return undefined
   }
@@ -56,7 +56,7 @@ export const filterSubTags = (tag: TagAPI, tagToFilter: TagAPI): TagAPI | undefi
   }
 }
 
-export const displayTags = (tags?: TagAPI[]) => tags?.map(({ name }) => name).join(', ')
+export const displayTags = (tags?: TagFromAPI[]) => tags?.map(({ name }) => name).join(', ')
 
-export const displaySubTags = (tags?: TagAPI[]) =>
+export const displaySubTags = (tags?: TagFromAPI[]) =>
   tags?.flatMap(({ subTags }) => subTags.map(({ name }) => name)).join(', ')

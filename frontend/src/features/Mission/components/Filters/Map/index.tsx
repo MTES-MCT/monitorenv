@@ -2,7 +2,6 @@ import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
 import { CustomPeriodContainer } from '@components/style'
-import { filterSubTags, getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { FrontendError } from '@libs/FrontendError'
@@ -18,6 +17,7 @@ import {
   type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
+import { filterSubTags, getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, missionTypeEnum } from 'domain/entities/missions'
 import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'domain/shared_slices/MissionFilters'
@@ -25,8 +25,8 @@ import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { MissionOptionsListType } from '..'
-import type { TagAPI } from 'domain/entities/tags'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type MapMissionFiltersProps = {
   onUpdateAdministrationFilter: (value: any) => void
@@ -60,7 +60,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
 
     const controlUnitsData = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
     const { data } = useGetThemesQuery()
-    const themesAPI: ThemeAPI[] = Object.values(data ?? [])
+    const themesAPI: ThemeFromAPI[] = Object.values(data ?? [])
 
     const controlUnitCustomSearch = useMemo(
       () => new CustomSearch(controlUnits ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -83,7 +83,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
     }
 
     const onDeleteTag = <K extends MissionFiltersEnum>(
-      valueToDelete: number | string | TagAPI,
+      valueToDelete: number | string | TagFromAPI,
       filterKey: K,
       selectedValues: MissionFiltersState[K]
     ) => {
@@ -99,8 +99,8 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
       )
     }
 
-    const onDeleteTagTag = (valueToDelete: TagAPI, tagFilter: TagAPI[]) => {
-      const updatedFilter: TagAPI[] = tagFilter
+    const onDeleteTagTag = (valueToDelete: TagFromAPI, tagFilter: TagFromAPI[]) => {
+      const updatedFilter: TagFromAPI[] = tagFilter
         .map(tag => filterSubTags(tag, valueToDelete))
         .filter(theme => theme !== undefined)
         .filter(theme => theme.id !== valueToDelete.id)
