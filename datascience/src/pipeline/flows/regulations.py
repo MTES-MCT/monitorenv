@@ -171,6 +171,42 @@ def load_new_regulations(new_regulations: pd.DataFrame):
         how="append",
     )
 
+@task(checkpoint=False)
+def extract_themes_regulatory_areas() -> pd.DataFrame:
+    return extract(
+        db_name="cacem_local",
+        query_filepath="cross/cacem/themes_regulatory_areas.sql",
+    )
+
+@task(checkpoint=False)
+def load_themes_regulatory_areas(marpol: pd.DataFrame):
+    load(
+        marpol,
+        table_name="themes_regulatory_areas",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
+@task(checkpoint=False)
+def extract_tags_regulatory_areas() -> pd.DataFrame:
+    return extract(
+        db_name="cacem_local",
+        query_filepath="cross/cacem/tags_regulatory_areas.sql",
+    )
+
+@task(checkpoint=False)
+def load_tags_regulatory_areas(marpol: pd.DataFrame):
+    load(
+        marpol,
+        table_name="tags_regulatory_areas",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
 
 with Flow("Regulations") as flow:
     local_hashes = extract_local_hashes()
@@ -195,5 +231,10 @@ with Flow("Regulations") as flow:
         new_regulations = extract_new_regulations(ids_to_insert)
         load_new_regulations(new_regulations)
 
+    themes_regulatory_areas = extract_themes_regulatory_areas()
+    load_themes_regulatory_areas(themes_regulatory_areas)
+
+    tags_regulatory_areas = extract_tags_regulatory_areas()
+    load_tags_regulatory_areas(tags_regulatory_areas)
 
 flow.file_name = Path(__file__).name

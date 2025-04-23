@@ -3,8 +3,9 @@ import prefect
 import pytest
 
 
-from src.pipeline.flows.regulations import load_new_regulations, update_regulations
-from src.pipeline.generic_tasks import load
+from src.pipeline.flows.regulations import load_new_regulations, update_regulations,load_themes_regulatory_areas, extract_tags_regulatory_areas, load_tags_regulatory_areas, extract_themes_regulatory_areas
+from src.pipeline.generic_tasks import delete_rows, load
+from src.pipeline.shared_tasks.update_queries import merge_hashes, select_ids_to_delete, select_ids_to_insert, select_ids_to_update
 from src.read_query import read_query
 
 import pandas as pd
@@ -130,3 +131,34 @@ def test_update_new_regulations(reset_test_data, new_regulations, old_regulation
             ORDER BY id"""
     )
     pd.testing.assert_frame_equal(updated_regulations, new_regulations)
+
+
+def test_load_themes_regulatory_areas(create_cacem_tables):
+  themes_regulatory_areas = extract_themes_regulatory_areas.run()
+  assert themes_regulatory_areas.shape[0] == 2
+
+  load_themes_regulatory_areas.run(themes_regulatory_areas)
+  imported_themes_regulatory_areas = read_query(
+        "monitorenv_remote", 
+        """SELECT themes_id, regulatory_areas_id
+            FROM themes_regulatory_areas 
+            ORDER BY id"""
+    )
+  
+  pd.testing.assert_frame_equal(themes_regulatory_areas, imported_themes_regulatory_areas)
+
+def test_load_tags_regulatory_areas(create_cacem_tables):
+  tags_regulatory_areas = extract_tags_regulatory_areas.run()
+  assert tags_regulatory_areas.shape[0] == 2
+
+  load_tags_regulatory_areas.run(tags_regulatory_areas)
+  imported_tags_regulatory_areas = read_query(
+        "monitorenv_remote", 
+        """SELECT tags_id, regulatory_areas_id
+            FROM tags_regulatory_areas 
+            ORDER BY id"""
+    )
+  
+  pd.testing.assert_frame_equal(tags_regulatory_areas, imported_tags_regulatory_areas)
+
+ 

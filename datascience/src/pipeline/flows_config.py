@@ -75,6 +75,7 @@ refresh_materialized_view.flow.schedule = Schedule(
         ),
     ]
 )
+themes_and_tags.flow.schedule = CronSchedule("2,12,22,32,42,52 * * * *")
 
 regulations.flow.schedule = CronSchedule("6,16,26,36,46,56 * * * *")
 
