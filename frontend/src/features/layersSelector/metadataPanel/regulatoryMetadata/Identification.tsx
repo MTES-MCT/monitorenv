@@ -1,7 +1,7 @@
 import { Body, Field, Fields, Key, NoValue, Value, Zone } from '../MetadataPanel.style'
 
-import type { TagAPI } from 'domain/entities/tags'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function Identification({
   entityName,
@@ -12,8 +12,8 @@ export function Identification({
 }: {
   entityName: string
   facade: string
-  tags: TagAPI[]
-  themes: ThemeAPI[]
+  tags: TagFromAPI[]
+  themes: ThemeFromAPI[]
   type: string
 }) {
   return (

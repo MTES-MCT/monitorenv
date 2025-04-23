@@ -1,7 +1,5 @@
 import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
-import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
-import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import {
   Checkbox,
   CheckPicker,
@@ -13,6 +11,8 @@ import {
   type Option,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'

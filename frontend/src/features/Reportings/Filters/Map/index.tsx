@@ -1,6 +1,4 @@
 import { CustomPeriodContainer } from '@components/style'
-import { filterSubTags, getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
-import { filterSubThemes, getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import {
   Checkbox,
   CheckPicker,
@@ -10,6 +8,8 @@ import {
   type DateAsStringRange,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
+import { filterSubTags, getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { filterSubThemes, getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
@@ -26,8 +26,8 @@ import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
 
 import type { ReportingsOptionsListType } from '..'
-import type { TagAPI } from 'domain/entities/tags'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type MapReportingsFiltersProps = {
   optionsList: ReportingsOptionsListType
@@ -82,16 +82,16 @@ export function MapReportingsFiltersWithRef(
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
     dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
   }
-  const onDeleteTagTag = (valueToDelete: TagAPI, filter: TagAPI[]) => {
-    const updatedFilter: TagAPI[] = filter
+  const onDeleteTagTag = (valueToDelete: TagFromAPI, filter: TagFromAPI[]) => {
+    const updatedFilter: TagFromAPI[] = filter
       .map(tag => filterSubTags(tag, valueToDelete))
       .filter(tag => tag !== undefined)
       .filter(tag => tag.id !== valueToDelete.id)
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.TAG_FILTER, value: updatedFilter }))
   }
 
-  const onDeleteThemeTag = (valueToDelete: ThemeAPI, filter: ThemeAPI[]) => {
-    const updatedFilter: ThemeAPI[] = filter
+  const onDeleteThemeTag = (valueToDelete: ThemeFromAPI, filter: ThemeFromAPI[]) => {
+    const updatedFilter: ThemeFromAPI[] = filter
       .map(theme => filterSubThemes(theme, valueToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== valueToDelete.id)

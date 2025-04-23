@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { dashboardFiltersActions } from '../../slice'
 
 import type { DashboardType } from '@features/Dashboard/slice'
-import type { TagAPI } from 'domain/entities/tags'
+import type { TagFromAPI } from 'domain/entities/tags'
 
 type FiltersTagsProps = {
   dashboard: DashboardType
@@ -22,7 +22,7 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
 
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
-  const setFilteredRegulatoryTags = (value: TagAPI[] | undefined) => {
+  const setFilteredRegulatoryTags = (value: TagFromAPI[] | undefined) => {
     dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: value }, id }))
   }
 
@@ -30,7 +30,7 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
     dispatch(dashboardFiltersActions.setFilters({ filters: { amps: value }, id }))
   }
 
-  const deleteRegulatoryTag = (regulatoryTagToDelete: TagAPI) => {
+  const deleteRegulatoryTag = (regulatoryTagToDelete: TagFromAPI) => {
     setFilteredRegulatoryTags(filters?.regulatoryTags?.filter(theme => theme.id !== regulatoryTagToDelete.id))
   }
 

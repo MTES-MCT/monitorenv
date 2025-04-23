@@ -1,8 +1,8 @@
-import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
 
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
-export function CellActionTheme({ theme }: { theme: ThemeAPI }) {
+export function CellActionTheme({ theme }: { theme: ThemeFromAPI }) {
   const content = [theme.name, displaySubThemes([theme])].join(': ')
 
   return content !== '' ? (

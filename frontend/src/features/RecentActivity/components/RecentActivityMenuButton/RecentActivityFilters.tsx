@@ -12,7 +12,6 @@ import {
 import { RecentActivity } from '@features/RecentActivity/types'
 import { resetDrawingZone } from '@features/RecentActivity/useCases/resetDrawingZone'
 import { OptionValue } from '@features/Reportings/Filters/style'
-import { getThemesAsOptions } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -30,6 +29,7 @@ import {
   SingleTag,
   type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
+import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useMemo } from 'react'

@@ -1,5 +1,5 @@
 import { Dashboard } from '@features/Dashboard/types'
-import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
+import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'

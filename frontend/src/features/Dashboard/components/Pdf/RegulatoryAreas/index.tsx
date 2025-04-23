@@ -1,9 +1,9 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
-import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
-import { displayThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, Link, Text, View } from '@react-pdf/renderer'
+import { displayTags } from '@utils/getTagsAsOptions'
+import { displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 
 import { areaStyle, layoutStyle } from '../style'

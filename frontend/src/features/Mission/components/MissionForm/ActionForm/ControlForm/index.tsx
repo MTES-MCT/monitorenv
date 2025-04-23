@@ -1,5 +1,4 @@
 import { actionFactory } from '@features/Mission/Missions.helpers'
-import { displayThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -20,6 +19,7 @@ import {
   useNewWindow,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
+import { displayThemes } from '@utils/getThemesAsOptions'
 import { FieldArray, useFormikContext, type FormikErrors } from 'formik'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'

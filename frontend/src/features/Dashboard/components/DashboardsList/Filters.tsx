@@ -4,7 +4,6 @@ import { useGetTagsQuery } from '@api/tagsAPI'
 import { TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { StyledSelect } from '@features/Reportings/Filters/style'
-import { getTagsAsOptionsLegacy } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -16,6 +15,7 @@ import {
   type DateAsStringRange,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptionsLegacy } from '@utils/getTagsAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { getTitle } from 'domain/entities/layers/utils'
