@@ -22,8 +22,6 @@ import { deleteReporting } from '@features/Reportings/useCases/deleteReporting'
 import { reduceOrCollapseReportingForm } from '@features/Reportings/useCases/reduceOrCollapseReportingForm'
 import { saveReporting } from '@features/Reportings/useCases/saveReporting'
 import { createNewReportingSource, isNewReporting } from '@features/Reportings/utils'
-import { getTagsAsOptions, parseOptionsToTags } from '@features/Tags/utils/getTagsAsOptions'
-import { getThemesAsOptions, parseOptionsToThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -39,6 +37,8 @@ import {
   type CheckTreePickerOption
 } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import {
   INDIVIDUAL_ANCHORING_THEME_ID,

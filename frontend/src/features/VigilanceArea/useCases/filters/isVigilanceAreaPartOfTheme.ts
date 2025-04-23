@@ -1,9 +1,9 @@
 import type { VigilanceArea } from '@features/VigilanceArea/types'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function isVigilanceAreaPartOfTheme(
   vigilanceArea: VigilanceArea.VigilanceArea,
-  themesFilter: ThemeAPI[]
+  themesFilter: ThemeFromAPI[]
 ): boolean {
   if (!themesFilter || themesFilter.length === 0) {
     return true

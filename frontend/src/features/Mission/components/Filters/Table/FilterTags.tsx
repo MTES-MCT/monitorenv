@@ -1,18 +1,18 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import { filterSubTags } from '@features/Tags/utils/getTagsAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { FrontendError } from '@libs/FrontendError'
 import { SingleTag } from '@mtes-mct/monitor-ui'
+import { filterSubTags } from '@utils/getTagsAsOptions'
 import { FrontCompletionStatusLabel, missionStatusLabels, missionTypeEnum } from 'domain/entities/missions'
 import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'domain/shared_slices/MissionFilters'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import type { TagAPI } from 'domain/entities/tags'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
@@ -31,10 +31,10 @@ export function FilterTags() {
   const controlUnits = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const { data } = useGetThemesQuery()
-  const themesAPI: ThemeAPI[] = Object.values(data ?? [])
+  const themesAPI: ThemeFromAPI[] = Object.values(data ?? [])
 
   const onDeleteTag = <K extends MissionFiltersEnum>(
-    valueToDelete: number | string | TagAPI,
+    valueToDelete: number | string | TagFromAPI,
     filterKey: K,
     selectedValues: MissionFiltersState[K]
   ) => {
@@ -48,8 +48,8 @@ export function FilterTags() {
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues }))
   }
 
-  const onDeleteTagTag = (valueToDelete: TagAPI, tagFilter: TagAPI[]) => {
-    const updatedFilter: TagAPI[] = tagFilter
+  const onDeleteTagTag = (valueToDelete: TagFromAPI, tagFilter: TagFromAPI[]) => {
+    const updatedFilter: TagFromAPI[] = tagFilter
       .map(tag => filterSubTags(tag, valueToDelete))
       .filter(tag => tag !== undefined)
       .filter(tag => tag.id !== valueToDelete.id)

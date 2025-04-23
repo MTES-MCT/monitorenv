@@ -12,7 +12,7 @@ class GetTagsByRegulatoryAreas(
     private val logger = LoggerFactory.getLogger(GetTagsByRegulatoryAreas::class.java)
 
     fun execute(regulationsIds: List<Int>): List<TagEntity> {
-        logger.info("Attempt to GET all tags from regulations $regulationsIds")
+        logger.info("Attempt to GET all tags from regulatory areas $regulationsIds")
         val tags = tagRepository.findAllWithinByRegulatoryAreaIds(regulationsIds)
         logger.info("Found ${tags.size} tags")
 

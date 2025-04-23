@@ -1,15 +1,15 @@
 import { setFilteredRegulatoryTags, setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
-import { filterSubTags } from '@features/Tags/utils/getTagsAsOptions'
-import { filterSubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
+import { filterSubTags } from '@utils/getTagsAsOptions'
+import { filterSubThemes } from '@utils/getThemesAsOptions'
 import styled from 'styled-components'
 
 import { vigilanceAreaFiltersActions } from './slice'
 
-import type { TagAPI } from 'domain/entities/tags'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
@@ -26,8 +26,8 @@ export function FilterTags() {
     )
   }
 
-  const onDeleteTagTag = (valueToDelete: TagAPI, tagFilter: TagAPI[]) => {
-    const updatedFilter: TagAPI[] = tagFilter
+  const onDeleteTagTag = (valueToDelete: TagFromAPI, tagFilter: TagFromAPI[]) => {
+    const updatedFilter: TagFromAPI[] = tagFilter
       .map(tag => filterSubTags(tag, valueToDelete))
       .filter(tag => tag !== undefined)
       .filter(tag => tag.id !== valueToDelete.id)
@@ -35,8 +35,8 @@ export function FilterTags() {
     dispatch(setFilteredRegulatoryTags(updatedFilter))
   }
 
-  const onDeleteThemeTag = (valueToDelete: ThemeAPI, themeFilter: ThemeAPI[]) => {
-    const updatedFilter: ThemeAPI[] = themeFilter
+  const onDeleteThemeTag = (valueToDelete: ThemeFromAPI, themeFilter: ThemeFromAPI[]) => {
+    const updatedFilter: ThemeFromAPI[] = themeFilter
       .map(theme => filterSubThemes(theme, valueToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== valueToDelete.id)
