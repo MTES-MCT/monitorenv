@@ -34,14 +34,14 @@ export const parseOptionsToThemes = (options: CheckTreePickerOption[], childrenK
     }))
   }))
 
-export const filterSubThemes = (theme: ThemeAPI, toDeleteId: number): ThemeAPI | undefined => {
+export const filterSubThemes = (theme: ThemeAPI, themeToFilter: ThemeAPI): ThemeAPI | undefined => {
   if (theme.subThemes.length === 1) {
     return undefined
   }
 
   return {
     ...theme,
-    subThemes: theme.subThemes.filter(subTheme => subTheme.id !== toDeleteId)
+    subThemes: theme.subThemes.filter(subTheme => subTheme.id !== themeToFilter.id)
   }
 }
 
