@@ -5,9 +5,9 @@ import {
   getTargetName,
   getTimeLeft
 } from '@features/Reportings/utils'
-import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { ControlStatusEnum, ReportingTypeEnum, ReportingTypeLabels } from 'domain/entities/reporting'
 import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
 import { vehicleTypeLabels } from 'domain/entities/vehicleType'

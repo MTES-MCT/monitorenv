@@ -6,8 +6,8 @@ import { isEqual, omit } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import type { TagAPI } from 'domain/entities/tags'
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
 
@@ -46,9 +46,9 @@ type ReportingsFiltersSliceType = {
   startedAfter: string
   startedBefore?: string
   statusFilter: string[]
-  tagFilter: TagAPI[] | undefined
+  tagFilter: TagFromAPI[] | undefined
   targetTypeFilter?: string[] | undefined
-  themeFilter: ThemeAPI[] | undefined
+  themeFilter: ThemeFromAPI[] | undefined
   typeFilter?: string | undefined
 }
 

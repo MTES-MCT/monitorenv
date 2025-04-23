@@ -1,11 +1,11 @@
 import { Dashboard } from '@features/Dashboard/types'
-import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
 import { Image, Link, Text, View } from '@react-pdf/renderer'
+import { displayTags } from '@utils/getTagsAsOptions'
 
 import { areaStyle, layoutStyle } from '../style'
 import { getImage } from '../utils'

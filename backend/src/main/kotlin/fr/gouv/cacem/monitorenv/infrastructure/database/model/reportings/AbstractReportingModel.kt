@@ -12,15 +12,34 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel.Companion.toTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel.Companion.toThemeEntities
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.*
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.MappedSuperclass
+import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import org.hibernate.Hibernate
-import org.hibernate.annotations.*
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.Generated
+import org.hibernate.annotations.JdbcType
+import org.hibernate.annotations.Type
+import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import org.hibernate.generator.EventType
 import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
@@ -209,38 +228,34 @@ abstract class AbstractReportingModel(
             reporting: ReportingEntity,
             missionReference: MissionModel?,
             envActionReference: EnvActionModel?,
-        ): ReportingModel {
-            val reportingModel =
-                ReportingModel(
-                    id = reporting.id,
-                    reportingId = reporting.reportingId,
-                    targetType = reporting.targetType,
-                    vehicleType = reporting.vehicleType,
-                    targetDetails = reporting.targetDetails,
-                    geom = reporting.geom,
-                    seaFront = reporting.seaFront,
-                    description = reporting.description,
-                    reportType = reporting.reportType,
-                    actionTaken = reporting.actionTaken,
-                    isControlRequired = reporting.isControlRequired,
-                    hasNoUnitAvailable = reporting.hasNoUnitAvailable,
-                    createdAt = reporting.createdAt.toInstant(),
-                    validityTime = reporting.validityTime,
-                    isArchived = reporting.isArchived,
-                    isDeleted = reporting.isDeleted,
-                    openBy = reporting.openBy,
-                    mission = missionReference,
-                    attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
-                    detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
-                    attachedEnvAction = envActionReference,
-                    updatedAtUtc = reporting.updatedAtUtc?.toInstant(),
-                    withVHFAnswer = reporting.withVHFAnswer,
-                    isInfractionProven = reporting.isInfractionProven,
-                    tags = mutableSetOf(),
-                    themes = mutableSetOf(),
-                )
-
-            return reportingModel
-        }
+        ): ReportingModel =
+            ReportingModel(
+                id = reporting.id,
+                reportingId = reporting.reportingId,
+                targetType = reporting.targetType,
+                vehicleType = reporting.vehicleType,
+                targetDetails = reporting.targetDetails,
+                geom = reporting.geom,
+                seaFront = reporting.seaFront,
+                description = reporting.description,
+                reportType = reporting.reportType,
+                actionTaken = reporting.actionTaken,
+                isControlRequired = reporting.isControlRequired,
+                hasNoUnitAvailable = reporting.hasNoUnitAvailable,
+                createdAt = reporting.createdAt.toInstant(),
+                validityTime = reporting.validityTime,
+                isArchived = reporting.isArchived,
+                isDeleted = reporting.isDeleted,
+                openBy = reporting.openBy,
+                mission = missionReference,
+                attachedToMissionAtUtc = reporting.attachedToMissionAtUtc?.toInstant(),
+                detachedFromMissionAtUtc = reporting.detachedFromMissionAtUtc?.toInstant(),
+                attachedEnvAction = envActionReference,
+                updatedAtUtc = reporting.updatedAtUtc?.toInstant(),
+                withVHFAnswer = reporting.withVHFAnswer,
+                isInfractionProven = reporting.isInfractionProven,
+                tags = mutableSetOf(),
+                themes = mutableSetOf(),
+            )
     }
 }

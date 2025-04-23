@@ -24,22 +24,22 @@ class GetTagsByRegulatoryAreasUTest {
     @Test
     fun `execute should return a list of tags`(log: CapturedOutput) {
         // Given
-        val regulationIds = listOf(1, 2, 3)
+        val regulatoryAreaIds = listOf(1, 2, 3)
         val expectedTags = listOf(aTag())
         given(tagRepository.findAllWithinByRegulatoryAreaIds(anyList(), any())).willReturn(expectedTags)
 
         // When
-        val tags = getTagsByRegulatoryAreas.execute(regulationIds)
+        val tags = getTagsByRegulatoryAreas.execute(regulatoryAreaIds)
 
         // Then
         assertThat(tags).containsAll(expectedTags)
         verify(tagRepository).findAllWithinByRegulatoryAreaIds(
-            argThat { ids -> ids === regulationIds },
+            argThat { ids -> ids === regulatoryAreaIds },
             argThat { time ->
                 Duration.between(time, ZonedDateTime.now()).abs() <= Duration.ofSeconds(1)
             },
         )
-        assertThat(log.out).contains("Attempt to GET all tags from regulations $regulationIds")
+        assertThat(log.out).contains("Attempt to GET all tags from regulatory areas $regulatoryAreaIds")
         assertThat(log.out).contains("Found ${tags.size} tags")
     }
 }

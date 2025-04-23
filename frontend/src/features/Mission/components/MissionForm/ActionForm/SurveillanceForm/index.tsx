@@ -1,6 +1,5 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { actionFactory } from '@features/Mission/Missions.helpers'
-import { displayThemes, getThemesAsOptions } from '@features/Themes/utils/getThemesAsOptions'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import {
   Accent,
@@ -20,6 +19,7 @@ import {
   useNewWindow,
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
+import { displayThemes, getThemesAsOptions } from '@utils/getThemesAsOptions'
 import { useField, useFormikContext, type FormikErrors } from 'formik'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'

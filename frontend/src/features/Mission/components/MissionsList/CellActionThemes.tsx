@@ -1,4 +1,4 @@
-import { displaySubThemes } from '@features/Themes/utils/getThemesAsOptions'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
 import {
   ActionTypeEnum,
   type EnvAction,
@@ -8,7 +8,7 @@ import {
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import type { ThemeAPI } from 'domain/entities/themes'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 const getThemesCell = (envActions: EnvAction[]) => {
   const groupedThemes = envActions
@@ -16,7 +16,7 @@ const getThemesCell = (envActions: EnvAction[]) => {
       (a): a is EnvActionControl | EnvActionSurveillance =>
         a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
     )
-    .reduce<{ [key: number]: ThemeAPI }>((acc, envAction) => {
+    .reduce<{ [key: number]: ThemeFromAPI }>((acc, envAction) => {
       envAction.themes?.forEach(theme => {
         if (!acc[theme.id]) {
           acc[theme.id] = { ...theme, subThemes: [] }
@@ -27,7 +27,7 @@ const getThemesCell = (envActions: EnvAction[]) => {
       return acc
     }, {})
 
-  const toThemeCell = (theme: ThemeAPI) => ({
+  const toThemeCell = (theme: ThemeFromAPI) => ({
     component: (
       <>
         <>

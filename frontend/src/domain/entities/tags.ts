@@ -1,5 +1,5 @@
-export type TagAPI = {
+export type TagFromAPI = {
   id: number
   name: string
-  subTags: TagAPI[]
+  subTags: TagFromAPI[]
 }
