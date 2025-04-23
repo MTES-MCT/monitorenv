@@ -34,8 +34,6 @@ context('Reportings', () => {
     cy.fill('Nom, société ...', 'Reporting dupliqué')
 
     cy.fill('Thématiques et sous-thématiques', ['Implantation'])
-    cy.fill('Thématique du signalement', 'Culture marine')
-    cy.fill('Sous-thématique du signalement', ['Implantation'])
 
     cy.fill('Saisi par', 'CDA')
 

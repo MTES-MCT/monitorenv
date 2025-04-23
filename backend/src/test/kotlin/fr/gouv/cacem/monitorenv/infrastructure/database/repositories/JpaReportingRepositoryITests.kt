@@ -3,11 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
@@ -22,7 +18,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
 import java.time.Year
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @Import(DataSourceProxyBeanPostProcessor::class)
 class JpaReportingRepositoryITests : AbstractDBTests() {
@@ -444,8 +440,6 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 seaFront = "NAMO",
                 description = "Test reporting",
                 reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                themeId = 12,
-                subThemeIds = listOf(82),
                 actionTaken = "Aucune",
                 isControlRequired = false,
                 hasNoUnitAvailable = false,
@@ -478,8 +472,6 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(reportingDTO.reporting.description).isEqualTo("Test reporting")
         assertThat(reportingDTO.reporting.reportType)
             .isEqualTo(ReportingTypeEnum.INFRACTION_SUSPICION)
-        assertThat(reportingDTO.reporting.themeId).isEqualTo(12)
-        assertThat(reportingDTO.reporting.subThemeIds).isEqualTo(listOf(82))
         assertThat(reportingDTO.reporting.actionTaken).isEqualTo("Aucune")
         assertThat(reportingDTO.reporting.isControlRequired).isEqualTo(false)
         assertThat(reportingDTO.reporting.hasNoUnitAvailable).isEqualTo(false)
