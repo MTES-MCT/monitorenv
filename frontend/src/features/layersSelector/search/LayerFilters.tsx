@@ -78,9 +78,9 @@ export function LayerFilters({
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
     const updatedFilter: TagAPI[] = filteredRegulatoryTags
-      .map(tag => filterSubTags(tag, regulatoryTagToDelete.id))
-      .filter(tag => tag?.id !== regulatoryTagToDelete.id)
+      .map(tag => filterSubTags(tag, regulatoryTagToDelete))
       .filter(tag => tag !== undefined)
+      .filter(tag => tag.id !== regulatoryTagToDelete.id)
 
     setFilteredRegulatoryTags(updatedFilter)
   }
@@ -90,9 +90,9 @@ export function LayerFilters({
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
     const updatedFilter: ThemeAPI[] = filteredRegulatoryThemes
-      .map(theme => filterSubThemes(theme, regulatoryThemeToDelete.id))
-      .filter(theme => theme?.id !== regulatoryThemeToDelete.id)
+      .map(theme => filterSubThemes(theme, regulatoryThemeToDelete))
       .filter(theme => theme !== undefined)
+      .filter(theme => theme.id !== regulatoryThemeToDelete.id)
 
     setFilteredRegulatoryThemes(updatedFilter)
   }

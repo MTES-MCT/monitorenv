@@ -205,7 +205,7 @@ export function Form() {
         <CheckTreePicker
           childrenKey="subThemes"
           error={formErrors.themes}
-          isRequired
+          isErrorMessageHidden
           label="Thématiques et sous-thématiques"
           name="theme"
           onChange={handleOnChangeThemes}
@@ -215,6 +215,7 @@ export function Form() {
         <CheckTreePicker
           childrenKey="subTags"
           error={formErrors.tags}
+          isRequired
           label="Tags et sous-tags"
           name="tags"
           onChange={handleOnChangeTags}
