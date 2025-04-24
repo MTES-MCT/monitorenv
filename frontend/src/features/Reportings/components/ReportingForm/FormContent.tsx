@@ -119,7 +119,9 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     [values.updatedAtUtc]
   )
 
-  const { data: themes } = useGetThemesQuery()
+  const reportingDate = values.createdAt ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
+
+  const { data: themes } = useGetThemesQuery([reportingDate, reportingDate])
 
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(themes ?? [])), [themes])
 
@@ -413,6 +415,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           <CheckTreePicker
             childrenKey="subThemes"
             error={errors.theme}
+            isErrorMessageHidden
             isMultiSelect={false}
             isRequired
             label="Thématiques et sous-thématiques"
