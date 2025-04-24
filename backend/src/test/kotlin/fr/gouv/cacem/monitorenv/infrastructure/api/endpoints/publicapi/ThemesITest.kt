@@ -42,6 +42,8 @@ class ThemesITest {
     @Test
     fun `Should get all themes`() {
         // Given
+        val startedAt = ZonedDateTime.now()
+        val endedAt = ZonedDateTime.now()
         val themes =
             listOf(
                 aTheme(
@@ -60,10 +62,12 @@ class ThemesITest {
                         ),
                 ),
             )
-        given(getThemes.execute()).willReturn(themes)
+        given(getThemes.execute(startedAt, endedAt)).willReturn(themes)
         // When
         mockMvc
-            .perform(get("/api/v1/themes"))
+            .perform(
+                get("/api/v1/themes").param("startedAt", startedAt.toString()).param("endedAt", endedAt.toString()),
+            )
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(1)))

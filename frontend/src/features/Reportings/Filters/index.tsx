@@ -2,6 +2,7 @@ import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
 import {
   type CheckTreePickerOption,
+  customDayjs,
   type DateAsStringRange,
   getOptionsFromLabelledEnum,
   type Option
@@ -48,12 +49,17 @@ export type ReportingsOptionsListType = {
 
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
-  const { sourceTypeFilter } = useAppSelector(state => state.reportingFilters)
+  const { sourceTypeFilter, startedAfter, startedBefore } = useAppSelector(state => state.reportingFilters)
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const { data: theme } = useGetThemesQuery()
+  const dateRange: [string, string] = [
+    startedAfter,
+    startedBefore ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
+  ]
+
+  const { data: theme } = useGetThemesQuery(dateRange)
 
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(theme ?? [])), [theme])
 
