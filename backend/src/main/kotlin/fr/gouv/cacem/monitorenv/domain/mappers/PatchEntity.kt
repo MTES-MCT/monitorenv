@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.mappers
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.Patchable
-import java.util.Optional
+import java.util.*
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
@@ -26,7 +26,6 @@ class PatchEntity<T : Any, S : Any> {
     ) {
         val sourceProperties = source::class.memberProperties
         val targetProperties = target::class.memberProperties
-
         for (sourceProp in sourceProperties) {
             val targetProp =
                 targetProperties.filter { it.hasAnnotation<Patchable>() }.find { it.name == sourceProp.name }
