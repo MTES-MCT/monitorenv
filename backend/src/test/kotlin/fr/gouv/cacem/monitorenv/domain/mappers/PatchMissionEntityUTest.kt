@@ -1,7 +1,11 @@
 package fr.gouv.cacem.monitorenv.domain.mappers
 
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aLegacyControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,6 +22,8 @@ class PatchMissionEntityUTest {
         val missionEntity = MissionFixture.aMissionEntity()
         val patchableMissionEntity =
             PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
                 observationsByUnit = Optional.of(observationsByUnit),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
@@ -37,6 +43,8 @@ class PatchMissionEntityUTest {
         val missionEntity = MissionFixture.aMissionEntity()
         val patchableMissionEntity =
             PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
@@ -57,6 +65,8 @@ class PatchMissionEntityUTest {
         val missionEntity = MissionFixture.aMissionEntity(observationsByUnit = observationsByUnit)
         val patchableMissionEntity =
             PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
                 observationsByUnit = null,
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
@@ -78,6 +88,8 @@ class PatchMissionEntityUTest {
         val missionEntity = MissionFixture.aMissionEntity()
         val patchableMissionEntity =
             PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = Optional.of(endDateTimeUtc),
@@ -104,6 +116,8 @@ class PatchMissionEntityUTest {
             )
         val patchableMissionEntity =
             PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
@@ -124,6 +138,8 @@ class PatchMissionEntityUTest {
         val missionEntity = MissionFixture.aMissionEntity()
         val patchableMissionEntity =
             PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
@@ -144,6 +160,8 @@ class PatchMissionEntityUTest {
         val missionEntity = MissionFixture.aMissionEntity(isUnderJdp = true)
         val patchableMissionEntity =
             PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
@@ -167,6 +185,8 @@ class PatchMissionEntityUTest {
             )
         val patchableMissionEntity =
             PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
@@ -178,5 +198,108 @@ class PatchMissionEntityUTest {
 
         // Then
         assertThat(missionEntity.isUnderJdp).isEqualTo(isUnderJdp)
+    }
+
+    @Test
+    fun `execute() should return mission with missionTypes modified if its present`() {
+        // Given
+        val missionTypes = listOf(MissionTypeEnum.AIR, MissionTypeEnum.SEA)
+        val missionEntity = MissionFixture.aMissionEntity()
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = missionTypes,
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = null,
+                endDateTimeUtc = null,
+                isUnderJdp = null
+            )
+
+        // When
+        patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(missionEntity.missionTypes).isEqualTo(missionTypes)
+    }
+
+    @Test
+    fun `execute() should return the original missionTypes if given as null`() {
+        // Given
+        val missionEntity = MissionFixture.aMissionEntity()
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = null,
+                endDateTimeUtc = Optional.empty(),
+                isUnderJdp = null
+            )
+
+        // When
+        patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(missionEntity.missionTypes).isEqualTo(listOf(MissionTypeEnum.LAND))
+    }
+
+    @Test
+    fun `execute() should return mission with controlUnits modified if its present`() {
+        // Given
+        val missionEntity = MissionFixture.aMissionEntity()
+        val controlUnit =
+            listOf(
+                LegacyControlUnitEntity(
+                    id = 2,
+                    administration = "Gendarmerie Nationale",
+                    isArchived = false,
+                    name = "BN Toulon",
+                    resources =
+                        listOf(
+                            LegacyControlUnitResourceEntity(
+                                id = 1,
+                                controlUnitId = 2,
+                                name = "Vedette",
+                            ),
+                        ),
+                    contact = null,
+                ),
+            )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                controlUnits = controlUnit,
+                missionTypes = null,
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = null,
+                endDateTimeUtc = null,
+                isUnderJdp = null
+            )
+
+        // When
+        patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(missionEntity.controlUnits).isEqualTo(controlUnit)
+    }
+
+    @Test
+    fun `execute() should return the original controlUnit if given as null`() {
+        // Given
+        val missionEntity = MissionFixture.aMissionEntity()
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = null,
+                endDateTimeUtc = Optional.empty(),
+                isUnderJdp = null
+            )
+
+        // When
+        patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(missionEntity.controlUnits).isEqualTo(listOf(aLegacyControlUnit()))
     }
 }

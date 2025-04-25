@@ -1,11 +1,15 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
@@ -50,6 +54,9 @@ class MissionsITest {
     @MockitoBean
     private val getMissionAndSourceAction: GetMissionAndSourceAction = mock()
 
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
+
     @Test
     fun `Should delete mission with api v2`() {
         mockMvc.perform(delete("/api/v2/missions/20?source=MONITORFISH")).andExpect(status().isOk)
@@ -65,16 +72,42 @@ class MissionsITest {
         val observationsByUnit = "patchedObservations"
         val startDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2024-04-11T07:00:00Z")
         val endDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2024-04-22T07:00:00Z")
+        val missionTypes = listOf(MissionTypeEnum.AIR)
+        val controlUnit =
+            listOf(
+                LegacyControlUnitEntity(
+                    id = 2,
+                    administration = "Gendarmerie Nationale",
+                    isArchived = false,
+                    name = "BN Toulon",
+                    resources =
+                        listOf(
+                            LegacyControlUnitResourceEntity(
+                                id = 1,
+                                controlUnitId = 2,
+                                name = "Vedette",
+                            ),
+                        ),
+                    contact = null,
+                ),
+            )
         val isUnderJdp = false
 
         val partialMissionAsJson =
             """
-            { "observationsByUnit": "$observationsByUnit", "startDateTimeUtc": "$startDateTimeUtc", "endDateTimeUtc": "$endDateTimeUtc", "isUnderJdp": "$isUnderJdp" }
+            { "observationsByUnit": "$observationsByUnit", "startDateTimeUtc": "$startDateTimeUtc", "endDateTimeUtc": "$endDateTimeUtc", "controlUnits": ${
+                objectMapper.writeValueAsString(
+                    controlUnit,
+                )
+            }, "missionTypes": ${objectMapper.writeValueAsString(missionTypes)},
+             "isUnderJdp": "$isUnderJdp"}
             """.trimIndent()
 
         val patchedMission =
             aMissionEntity(
                 id = id,
+                controlUnits = controlUnit,
+                missionTypes = missionTypes,
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = endDateTimeUtc,
                 observationsByUnit = observationsByUnit,
@@ -82,6 +115,8 @@ class MissionsITest {
             )
         val patchableMissionEntity =
             PatchableMissionEntity(
+                controlUnits = controlUnit,
+                missionTypes = missionTypes,
                 observationsByUnit = Optional.of(observationsByUnit),
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = Optional.of(endDateTimeUtc),
@@ -105,6 +140,16 @@ class MissionsITest {
                 jsonPath(
                     "$.observationsByUnit",
                     equalTo(patchedMission.observationsByUnit),
+                ),
+            ).andExpect(
+                jsonPath(
+                    "$.controlUnits[0].id",
+                    equalTo(patchedMission.controlUnits[0].id),
+                ),
+            ).andExpect(
+                jsonPath(
+                    "$.controlUnits[0].resources[0].id",
+                    equalTo(patchedMission.controlUnits[0].resources[0].id),
                 ),
             )
             .andExpect(
