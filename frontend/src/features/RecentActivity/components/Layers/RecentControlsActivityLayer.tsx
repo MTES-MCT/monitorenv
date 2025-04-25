@@ -1,4 +1,6 @@
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
+import { getRecentActivityFilters } from '@features/Dashboard/components/DashboardForm/slice'
+import { dashboardActions, getActiveDashboardId } from '@features/Dashboard/slice'
 import { MAX_CONTROLS, MIN_CONTROLS } from '@features/RecentActivity/constants'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -38,10 +40,13 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const hasMapInteraction = useHasMapInteraction()
-  const isLayerVisible = displayRecentActivityLayer && !hasMapInteraction
+
   const filters = useAppSelector(state => state.recentActivity.filters)
   const drawedGeometry = useAppSelector(state => state.recentActivity.drawedGeometry)
   const selectedControlId = useAppSelector(state => state.recentActivity.layersAndOverlays.selectedControlId)
+
+  const activeDashboardId = useAppSelector(state => getActiveDashboardId(state.dashboard))
+  const dashboardFilters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, activeDashboardId))
 
   const overlayCoordinates = useAppSelector(state =>
     getOverlayCoordinates(state.global, `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${selectedControlId}`)
@@ -49,19 +54,28 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
 
   const [getRecentControlsActivity, { data: recentControlsActivity }] = useGetRecentControlsActivityMutation()
 
+  const isLayerVisible = (displayRecentActivityLayer || !!activeDashboardId) && !hasMapInteraction
+  const filtersToUse = useMemo(() => {
+    if (activeDashboardId) {
+      return dashboardFilters
+    }
+
+    return filters
+  }, [activeDashboardId, filters, dashboardFilters])
+
   useEffect(() => {
-    let startAfterFilter = filters.startedAfter
-    let startBeforeFilter = filters.startedBefore
+    let startAfterFilter = filtersToUse?.startedAfter
+    let startBeforeFilter = filtersToUse?.startedBefore
 
     if (
-      filters.periodFilter === RecentActivity.RecentActivityDateRangeEnum.CUSTOM &&
-      !filters.startedAfter &&
-      !filters.startedBefore
+      filtersToUse?.periodFilter === RecentActivity.RecentActivityDateRangeEnum.CUSTOM &&
+      !filtersToUse?.startedAfter &&
+      !filtersToUse?.startedBefore
     ) {
       return
     }
 
-    switch (filters.periodFilter) {
+    switch (filtersToUse?.periodFilter) {
       case RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS:
         startAfterFilter = customDayjs().utc().subtract(7, 'day').startOf('day').toISOString()
         startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
@@ -85,14 +99,14 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
     }
 
     getRecentControlsActivity({
-      administrationIds: filters.administrationIds,
-      controlUnitIds: filters.controlUnitIds,
-      geometry: filters.geometry,
+      administrationIds: filtersToUse?.administrationIds,
+      controlUnitIds: filtersToUse?.controlUnitIds,
+      geometry: filtersToUse && 'geometry' in filtersToUse ? filtersToUse.geometry : undefined,
       startedAfter: startAfterFilter,
       startedBefore: startBeforeFilter,
-      themeIds: filters.themeIds
+      themeIds: filtersToUse?.themeIds
     })
-  }, [filters, getRecentControlsActivity])
+  }, [filtersToUse, getRecentControlsActivity])
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
@@ -114,6 +128,14 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
       vectorSourceRef.current.clear(true)
 
       if (recentControlsActivity) {
+        if (activeDashboardId) {
+          dispatch(
+            dashboardActions.setTotalOfControls({
+              key: activeDashboardId,
+              totalOfControls: recentControlsActivity.length
+            })
+          )
+        }
         const features = recentControlsActivity.flatMap(control => {
           if (control.actionNumberOfControls === 0 || !control.actionNumberOfControls) {
             return []
@@ -151,7 +173,7 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
         vectorSourceRef.current.addFeature(feature)
       }
     }
-  }, [map, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry])
+  }, [map, dispatch, controlUnitsWithInfraction.length, recentControlsActivity, drawedGeometry, activeDashboardId])
 
   useEffect(() => {
     const feature = vectorSourceRef.current.getFeatureById(
