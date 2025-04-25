@@ -66,6 +66,10 @@ export function Map({ isSuperUser }) {
   const isRecentActivityEnabled = import.meta.env.FRONTEND_RECENT_ACTIVITY_ENABLED === 'true'
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
+  const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+
+  const displayRecentActivityLegend =
+    (isRecentActivityEnabled && displayRecentActivityLayer && !isRecentActivityDialogVisible) || !!activeDashboardId
 
   if (!isSuperUser) {
     return (
@@ -259,9 +263,7 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       {isRecentActivityEnabled ? <RecentActvityOverlay /> : null}
       {/* @ts-ignore */}
-      {isRecentActivityEnabled && displayRecentActivityLayer && !isRecentActivityDialogVisible ? (
-        <RecentActivityLegend location="OUTSIDE" />
-      ) : null}
+      {displayRecentActivityLegend ? <RecentActivityLegend location="OUTSIDE" /> : null}
     </BaseMap>
   )
 }

@@ -24,6 +24,7 @@ export type ReportingFilters = {
 export type RecentActivityFilters = {
   administrationIds?: number[]
   controlUnitIds?: number[]
+  mapFocus: boolean
   periodFilter: string
   startedAfter?: string
   startedBefore?: string
@@ -89,6 +90,7 @@ export const dashboardFiltersSlice = createSlice({
         controlUnitFilters: {},
         filters: {},
         recentActivityFilters: {
+          mapFocus: false,
           periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS
         },
         reportingFilters: {
@@ -141,6 +143,7 @@ export const dashboardFiltersSlice = createSlice({
         controlUnitFilters: {},
         filters: {},
         recentActivityFilters: {
+          mapFocus: false,
           periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS
         },
         reportingFilters: {

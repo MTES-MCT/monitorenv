@@ -64,7 +64,7 @@ const StyledTooltip = styled.p<{ $left: number; $top: number }>`
   top: ${p => p.$top}px;
   max-width: 310px;
   pointer-events: none;
-  z-index: 2;
+  z-index: 5;
 `
 
 const Wrapper = styled.div`
