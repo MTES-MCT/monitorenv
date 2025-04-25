@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 type AccordionProps = {
   children: ReactNode
+  className?: string
   isExpanded: boolean
   name?: string
   setExpandedAccordion: () => void
@@ -11,9 +12,17 @@ type AccordionProps = {
   titleRef?: ForwardedRef<HTMLDivElement>
 }
 
-export function Accordion({ children, isExpanded, name, setExpandedAccordion, title, titleRef }: AccordionProps) {
+export function Accordion({
+  children,
+  className,
+  isExpanded,
+  name,
+  setExpandedAccordion,
+  title,
+  titleRef
+}: AccordionProps) {
   return (
-    <AccordionContainer>
+    <AccordionContainer className={className}>
       <AccordionHeader
         ref={titleRef}
         aria-controls={`${title}-accordion`}

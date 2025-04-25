@@ -123,7 +123,7 @@ export function Filters() {
           </StyledCustomPeriodContainer>
         )}
       </DateFilterContainer>
-      <ControlUnitsAndAdministrationsContainer>
+      <FilterLine>
         <ControlUnitsAndAdministrationsFilters>
           <CheckPicker
             isLabelHidden
@@ -163,52 +163,58 @@ export function Filters() {
             value={recentActivityFilters.controlUnitIds}
           />
         </ControlUnitsAndAdministrationsFilters>
-        {recentActivityFilters.administrationIds &&
-          recentActivityFilters.administrationIds?.length > 0 &&
-          recentActivityFilters.administrationIds.map(adminId => (
-            <SingleTag
-              key={adminId}
-              onDelete={() => onDeleteTag(adminId, RecentActivityFiltersEnum.ADMINISTRATION_IDS)}
-            >
-              {`Admin. ${administrations?.find(admin => admin.id === adminId)?.name}`}
-            </SingleTag>
-          ))}
-        {recentActivityFilters.controlUnitIds &&
-          recentActivityFilters.controlUnitIds?.length > 0 &&
-          recentActivityFilters.controlUnitIds.map(controlUnitId => (
-            <SingleTag
-              key={controlUnitId}
-              onDelete={() => onDeleteTag(controlUnitId, RecentActivityFiltersEnum.CONTROL_UNIT_IDS)}
-            >
-              {`Admin. ${controlUnits?.find(controlunit => controlunit.id === controlUnitId)?.name}`}
-            </SingleTag>
-          ))}
-      </ControlUnitsAndAdministrationsContainer>
-      <CheckPicker
-        key={themesAsOptions?.length}
-        customSearch={themeCustomSearch}
-        isLabelHidden
-        isTransparent
-        label="Thématique"
-        name="theme"
-        onChange={value => setFilters(value, RecentActivityFiltersEnum.THEME_IDS)}
-        options={themesAsOptions}
-        placeholder="Thématique"
-        renderValue={() =>
-          recentActivityFilters.themeIds && (
-            <OptionValue>{`Type (${recentActivityFilters.themeIds.length})`}</OptionValue>
-          )
-        }
-        searchable
-        value={recentActivityFilters.themeIds}
-      />
-      {recentActivityFilters.themeIds &&
-        recentActivityFilters.themeIds?.length > 0 &&
-        recentActivityFilters.themeIds.map(themeId => (
-          <SingleTag key={themeId} onDelete={() => onDeleteTag(themeId, RecentActivityFiltersEnum.THEME_IDS)}>
-            {`Theme ${themesAsOptions?.find(theme => theme.value === themeId)?.label}`}
-          </SingleTag>
-        ))}
+        <Tagscontainer>
+          {recentActivityFilters.administrationIds &&
+            recentActivityFilters.administrationIds?.length > 0 &&
+            recentActivityFilters.administrationIds.map(adminId => (
+              <SingleTag
+                key={adminId}
+                onDelete={() => onDeleteTag(adminId, RecentActivityFiltersEnum.ADMINISTRATION_IDS)}
+              >
+                {`Admin. ${administrations?.find(admin => admin.id === adminId)?.name}`}
+              </SingleTag>
+            ))}
+          {recentActivityFilters.controlUnitIds &&
+            recentActivityFilters.controlUnitIds?.length > 0 &&
+            recentActivityFilters.controlUnitIds.map(controlUnitId => (
+              <SingleTag
+                key={controlUnitId}
+                onDelete={() => onDeleteTag(controlUnitId, RecentActivityFiltersEnum.CONTROL_UNIT_IDS)}
+              >
+                {`Unité. ${controlUnits?.find(controlunit => controlunit.id === controlUnitId)?.name}`}
+              </SingleTag>
+            ))}
+        </Tagscontainer>
+      </FilterLine>
+      <FilterLine>
+        <CheckPicker
+          key={themesAsOptions?.length}
+          customSearch={themeCustomSearch}
+          isLabelHidden
+          isTransparent
+          label="Thématique"
+          name="theme"
+          onChange={value => setFilters(value, RecentActivityFiltersEnum.THEME_IDS)}
+          options={themesAsOptions}
+          placeholder="Thématique"
+          renderValue={() =>
+            recentActivityFilters.themeIds && (
+              <OptionValue>{`Thème (${recentActivityFilters.themeIds.length})`}</OptionValue>
+            )
+          }
+          searchable
+          value={recentActivityFilters.themeIds}
+        />
+        <Tagscontainer>
+          {recentActivityFilters.themeIds &&
+            recentActivityFilters.themeIds?.length > 0 &&
+            recentActivityFilters.themeIds.map(themeId => (
+              <SingleTag key={themeId} onDelete={() => onDeleteTag(themeId, RecentActivityFiltersEnum.THEME_IDS)}>
+                {`Theme ${themesAsOptions?.find(theme => theme.value === themeId)?.label}`}
+              </SingleTag>
+            ))}
+        </Tagscontainer>
+      </FilterLine>
     </FiltersContainer>
   )
 }
@@ -230,7 +236,7 @@ const DateFilterContainer = styled.div`
   gap: 8px;
 `
 
-const ControlUnitsAndAdministrationsContainer = styled.div`
+const FilterLine = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -240,4 +246,9 @@ const ControlUnitsAndAdministrationsFilters = styled.div`
   display: flex;
   gap: 8px;
   width: 100%;
+`
+const Tagscontainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 `
