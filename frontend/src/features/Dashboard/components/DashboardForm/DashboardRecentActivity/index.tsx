@@ -20,6 +20,10 @@ export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivity
   ({ isExpanded, setExpandedAccordion }, ref) => {
     const dispatch = useAppDispatch()
     const activeDashboardId = useAppSelector(state => getActiveDashboardId(state.dashboard))
+    const totalOfControls =
+      useAppSelector(state =>
+        activeDashboardId ? state.dashboard.dashboards[activeDashboardId]?.totalOfControls : 0
+      ) ?? 0
 
     const recentActivityFilters = useAppSelector(state =>
       getRecentActivityFilters(state.dashboardFilters, activeDashboardId)
@@ -33,9 +37,6 @@ export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivity
         })
       )
     }
-
-    // TODO: Replace with actual data fetching logic
-    const totalControls = [1, 2, 3, 4, 5]
 
     const titleWithTooltip = (
       <TitleContainer>
@@ -76,7 +77,7 @@ export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivity
         <SelectedAccordion
           isExpanded={false}
           isReadOnly
-          title={`${totalControls?.length ?? 0} ${pluralize('contrôle', totalControls?.length ?? 0)} `}
+          title={`${totalOfControls} ${pluralize('contrôle', totalOfControls)} `}
         />
       </div>
     )

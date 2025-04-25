@@ -35,6 +35,7 @@ export const initialDashboard: DashboardType = {
   openPanel: undefined,
   regulatoryIdsToDisplay: [],
   reportingToDisplay: undefined,
+  totalOfControls: 0,
   unsavedDashboard: undefined
 }
 
@@ -57,6 +58,7 @@ export type DashboardType = {
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingToDisplay: Reporting | undefined
+  totalOfControls: number
   unsavedDashboard: Dashboard.Dashboard | undefined
 }
 
@@ -389,6 +391,15 @@ export const dashboardSlice = createSlice({
       if (state.dashboards[id]) {
         state.dashboards[id].reportingToDisplay = action.payload
       }
+    },
+    setTotalOfControls(state, action: PayloadAction<{ key: string; totalOfControls: number }>) {
+      const id = action.payload.key
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      state.dashboards[id].totalOfControls = action.payload.totalOfControls
     },
     setUnsavedDashboard(state, action: PayloadAction<Dashboard.Dashboard | undefined>) {
       const id = state.activeDashboardId
