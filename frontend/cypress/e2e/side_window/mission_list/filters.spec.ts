@@ -211,7 +211,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.wait('@getMissionsByPeriod')
 
     cy.getDataCy('mission-theme-filter').click()
-    cy.get('#theme-listbox > div').should('have.length', 18)
+    cy.get('#theme-listbox > div').should('have.length', 19)
 
     cy.wait(200)
 
