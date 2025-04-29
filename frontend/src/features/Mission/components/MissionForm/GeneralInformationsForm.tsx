@@ -9,6 +9,7 @@ import {
   FormikTextarea,
   Message,
   MultiRadio,
+  customDayjs,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext } from 'formik'
@@ -16,6 +17,7 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import {
+  ActionTypeEnum,
   FrontCompletionStatus,
   type Mission,
   MissionSourceEnum,
@@ -57,24 +59,20 @@ export function GeneralInformationsForm({
   const missionIsFromMonitorFish =
     values.missionSource === MissionSourceEnum.MONITORFISH || values.missionSource === MissionSourceEnum.POSEIDON_CNSP
 
-  // const actualYearForThemes = useMemo(() => customDayjs(values?.startDateTimeUtc).year(), [values?.startDateTimeUtc])
+  const actualYearForThemes = useMemo(() => customDayjs(values?.startDateTimeUtc).year(), [values?.startDateTimeUtc])
 
   const updateMissionDateTime = (date: string | undefined) => {
-    // if (actualYearForThemes && actualYearForThemes !== customDayjs(date).year()) {
-    //   values?.envActions?.forEach((action, actionIndex) => {
-    //     if (action.actionType === ActionTypeEnum.CONTROL && !action.actionStartDateTimeUtc) {
-    //       setFieldValue(`envActions[${actionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
-    //     }
-    //     if (
-    //       action.actionType === ActionTypeEnum.SURVEILLANCE &&
-    //       (!action.actionStartDateTimeUtc || (action.actionStartDateTimeUtc && action.durationMatchesMission))
-    //     ) {
-    //       action?.controlPlans?.forEach((_, index) => {
-    //         setFieldValue(`envActions[${actionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
-    //       })
-    //     }
-    //   })
-    // }
+    if (actualYearForThemes && actualYearForThemes !== customDayjs(date).year()) {
+      values?.envActions?.forEach((action, actionIndex) => {
+        if (
+          (action.actionType === ActionTypeEnum.CONTROL && !action.actionStartDateTimeUtc) ||
+          (action.actionType === ActionTypeEnum.SURVEILLANCE &&
+            (!action.actionStartDateTimeUtc || (action.actionStartDateTimeUtc && action.durationMatchesMission)))
+        ) {
+          setFieldValue(`envActions[${actionIndex}].themes`, undefined)
+        }
+      })
+    }
     setFieldValue('startDateTimeUtc', date)
   }
 
