@@ -4,6 +4,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import {
   Accent,
   Button,
+  customDayjs,
   DatePicker,
   FieldError,
   FormikCheckbox,
@@ -73,7 +74,6 @@ export function SurveillanceForm({ currentActionId, remove }) {
   const currentAction = envActions[envActionIndex]
 
   const startDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
-  const endDate = envActions[envActionIndex]?.actionEndDateTimeUtc ?? endDateTimeUtc ?? new Date().toISOString()
 
   const { reportingIds = [] } = currentAction ?? {}
   const actionErrors = useMemo(
@@ -89,7 +89,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
 
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length >= 1)
 
-  const { data } = useGetThemesQuery([startDate, endDate])
+  const { data } = useGetThemesQuery([startDate, startDate])
 
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(data ?? [])), [data])
 
@@ -170,13 +170,13 @@ export function SurveillanceForm({ currentActionId, remove }) {
     dispatch(missionFormsActions.setActiveActionId(duplicatedAction.id))
   }, [currentAction, setFieldValue, envActions, dispatch])
 
+  const actualYearForThemes = customDayjs(startDate).year()
+
   const updateStartDateTime = (date: string | undefined) => {
-    // const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
-    // if (newSurveillanceDateYear && actualYearForThemes !== newSurveillanceDateYear) {
-    //   currentAction?.controlPlans?.forEach((_, index) => {
-    //     setFieldValue(`envActions[${envActionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
-    //   })
-    // }
+    const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
+    if (newSurveillanceDateYear && actualYearForThemes !== newSurveillanceDateYear) {
+      setFieldValue(`envActions[${envActionIndex}].themes`, undefined)
+    }
 
     setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
   }
