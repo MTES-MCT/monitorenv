@@ -76,7 +76,7 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
     const clickedFeatures = getClickedFeatures({
       isRegulatoryOrAmp: false,
       mapClickEvent,
-      typesList: [Layers.RECENT_CONTROLS_ACTIVITY.code]
+      typesList: [Layers.RECENT_CONTROLS_ACTIVITY.code, Layers.DASHBOARD_RECENT_ACTIVITY.code]
     })
     const numberOfClickedFeatures = clickedFeatures?.length ?? 0
 
@@ -97,7 +97,7 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
       const items = mapClickEvent?.featureList?.reduce((acc, recentActivityFeature) => {
         const type = String(recentActivityFeature.id).split(':')[0]
 
-        if (type === Layers.RECENT_CONTROLS_ACTIVITY.code) {
+        if (type === Layers.RECENT_CONTROLS_ACTIVITY.code || type === Layers.DASHBOARD_RECENT_ACTIVITY.code) {
           const { properties } = recentActivityFeature
 
           acc.push({

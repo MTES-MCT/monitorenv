@@ -26,17 +26,19 @@ export enum RecentActivityFiltersEnum {
   THEME_IDS = 'themeIds'
 }
 
+export type RecentActivityFilters = {
+  [RecentActivityFiltersEnum.ADMINISTRATION_IDS]?: number[]
+  [RecentActivityFiltersEnum.CONTROL_UNIT_IDS]?: number[]
+  [RecentActivityFiltersEnum.GEOMETRY]?: GeoJSON.MultiPolygon
+  [RecentActivityFiltersEnum.PERIOD_FILTER]: string
+  [RecentActivityFiltersEnum.STARTED_AFTER]?: string
+  [RecentActivityFiltersEnum.STARTED_BEFORE]?: string
+  [RecentActivityFiltersEnum.THEME_IDS]?: number[]
+}
+
 export type RecentActivityState = {
   drawedGeometry: GeoJSON.MultiPolygon | undefined
-  filters: {
-    administrationIds?: number[]
-    controlUnitIds?: number[]
-    geometry?: GeoJSON.MultiPolygon
-    periodFilter: string
-    startedAfter?: string
-    startedBefore?: string
-    themeIds?: number[]
-  }
+  filters: RecentActivityFilters
   initialGeometry: GeoJSON.MultiPolygon | undefined
   interactionType: InteractionType
   isDrawing: boolean

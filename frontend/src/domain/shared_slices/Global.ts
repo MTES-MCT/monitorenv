@@ -27,7 +27,7 @@ type Toast = {
   type?: string
 }
 
-type OverlayCoordinates = {
+export type OverlayCoordinates = {
   coordinates?: Extent
   name: string
 }

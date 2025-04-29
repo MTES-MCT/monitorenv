@@ -28,7 +28,7 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
   const hoveredItems = currentFeatureListOver?.reduce((acc, recentActivityFeature) => {
     const type = String(recentActivityFeature.id).split(':')[0]
 
-    if (type === Layers.RECENT_CONTROLS_ACTIVITY.code) {
+    if (type === Layers.RECENT_CONTROLS_ACTIVITY.code || type === Layers.DASHBOARD_RECENT_ACTIVITY.code) {
       const { properties } = recentActivityFeature
 
       if (!properties) {
@@ -54,6 +54,11 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
     Layers.RECENT_CONTROLS_ACTIVITY.code,
     `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${selectedControlId}`
   )
+  const dashboardSelectedFeature = findMapFeatureById(
+    map,
+    Layers.DASHBOARD_RECENT_ACTIVITY.code,
+    `${Layers.DASHBOARD_RECENT_ACTIVITY.code}:${selectedControlId}`
+  )
 
   const hoveredFeature =
     hoveredItems && hoveredItems.length === 1 && hoveredItems[0]
@@ -61,6 +66,14 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
           map,
           Layers.RECENT_CONTROLS_ACTIVITY.code,
           `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${hoveredItems?.[0].properties.id}`
+        )
+      : undefined
+  const dashboardHoveredFeature =
+    hoveredItems && hoveredItems.length === 1 && hoveredItems[0]
+      ? findMapFeatureById(
+          map,
+          Layers.DASHBOARD_RECENT_ACTIVITY.code,
+          `${Layers.DASHBOARD_RECENT_ACTIVITY.code}:${hoveredItems?.[0].properties.id}`
         )
       : undefined
 
@@ -79,31 +92,37 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
       {/* To display recent control after click */}
       <OverlayPositionOnCentroid
         appClassName="overlay-recent-control-activity-selected"
-        feature={selectedControlId ? selectedFeature : undefined}
+        feature={selectedControlId ? selectedFeature ?? dashboardSelectedFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
         zIndex={5000}
       >
-        {selectedControlId && selectedFeature && <RecentActivityControlCard control={selectedFeature} isSelected />}
+        {!!(selectedControlId && (selectedFeature || dashboardSelectedFeature)) && (
+          <RecentActivityControlCard control={selectedFeature ?? dashboardSelectedFeature} isSelected />
+        )}
       </OverlayPositionOnCentroid>
 
       {/* If only one recent controls hovered */}
       <OverlayPositionOnCentroid
         appClassName="overlay-recent-control-activity-hovered"
-        feature={hoveredFeature}
+        feature={hoveredFeature ?? dashboardHoveredFeature}
         map={map}
         mapClickEvent={mapClickEvent}
         zIndex={5000}
       >
-        {isHoveredOverlayVisible && hoveredFeature && !isHoveredFeatureSameAsSelected && (
-          <RecentActivityControlCard control={hoveredFeature} />
+        {isHoveredOverlayVisible && (hoveredFeature || dashboardHoveredFeature) && !isHoveredFeatureSameAsSelected && (
+          <RecentActivityControlCard control={hoveredFeature ?? dashboardHoveredFeature} />
         )}
       </OverlayPositionOnCentroid>
 
       {/* To display list of recent controls on hover */}
       {createPortal(
         isHoveredOverlayVisible && hoveredItems.length > 1 && !isControlsListClicked && (
-          <HoveredOverlay items={hoveredItems} pixel={pixel} singleFeature={hoveredFeature} />
+          <HoveredOverlay
+            items={hoveredItems}
+            pixel={pixel}
+            singleFeature={hoveredFeature ?? dashboardHoveredFeature}
+          />
         ),
         document.body
       )}

@@ -6,6 +6,7 @@ import { set } from 'lodash'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import type { RecentActivityFiltersEnum } from '@features/RecentActivity/slice'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit, DateAsStringRange } from '@mtes-mct/monitor-ui'
 
@@ -22,13 +23,13 @@ export type ReportingFilters = {
 }
 
 export type RecentActivityFilters = {
-  administrationIds?: number[]
-  controlUnitIds?: number[]
+  [RecentActivityFiltersEnum.ADMINISTRATION_IDS]?: number[]
+  [RecentActivityFiltersEnum.CONTROL_UNIT_IDS]?: number[]
+  [RecentActivityFiltersEnum.PERIOD_FILTER]: string
+  [RecentActivityFiltersEnum.STARTED_AFTER]?: string
+  [RecentActivityFiltersEnum.STARTED_BEFORE]?: string
+  [RecentActivityFiltersEnum.THEME_IDS]?: number[]
   mapFocus: boolean
-  periodFilter: string
-  startedAfter?: string
-  startedBefore?: string
-  themeIds?: number[]
 }
 
 export type ControlUnitFilters = {

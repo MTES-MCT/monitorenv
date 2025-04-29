@@ -65,10 +65,11 @@ export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivity
               onChange={updateMapFocus}
             />
             <>
-              <span>Focus cartographique</span>
+              <span>Focus cartographique sur l&apos;activité récente du brief</span>
               <Tooltip isSideWindow>
                 Le focus cartographie permet de ne montrer que la zone du brief et l&apos;activité récente. Il cache
-                tous les autres éléments (zones réglementaires, de vigilance, signalements, etc.)
+                tous les autres éléments épinglés (zones réglementaires, de vigilance, signalements, etc.) et les autres
+                éléments potentiellement affichés sur la carte (signalements, missions, unités, nuage de point, etc.)
               </Tooltip>
             </>
           </StyledToggle>
