@@ -3,7 +3,9 @@ import { getTimeLeft } from '@features/Reportings/utils'
 import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
 
 import type { ActionSource, ActionTypeEnum, Mission } from './missions'
+import type { TagFromAPI } from './tags'
 import type { ReportingTargetTypeEnum } from './targetType'
+import type { ThemeFromAPI } from './themes'
 import type { VesselTypeEnum } from './vesselType'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -28,8 +30,10 @@ export type Reporting = {
   reportingId: number | undefined
   reportingSources: ReportingSource[]
   subThemeIds: number[]
+  tags: TagFromAPI[]
   targetDetails: TargetDetails[]
   targetType: ReportingTargetTypeEnum
+  theme: ThemeFromAPI
   themeId: number
   updatedAtUtc: string | undefined
   validityTime: number

@@ -28,10 +28,16 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
     cy.getDataCy('vigilance-area-row').should('have.length.to.be.greaterThan', 0)
   })
 
-  it('Should filter vigilance areas by themes filter', () => {
-    cy.fill('Thématique réglementaire', ['Dragage'])
+  it('Should filter vigilance areas by tags filter', () => {
+    cy.fill('Filtre tags et sous-tags', ['Dragage'])
     cy.getDataCy('vigilance-areas-filter-tags').find('.Component-SingleTag > span').contains('Dragage')
     verifyVigilanceAreaRows('Dragage')
+  })
+
+  it('Should filter vigilance areas by themes filter', () => {
+    cy.fill('Filtre thématiques et sous-thématiques', ['Parc national'])
+    cy.getDataCy('vigilance-areas-filter-tags').find('.Component-SingleTag > span').contains('Parc national')
+    verifyVigilanceAreaRows('Parc national')
   })
 
   it('Should filter vigilance areas by createdBy filter', () => {

@@ -11,15 +11,24 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.*
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.ArchiveReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.CreateOrUpdateReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReporting
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingsByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ReportingSourceDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.SSEReporting
 import org.assertj.core.api.Assertions
@@ -37,7 +46,10 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -89,6 +101,8 @@ class ReportingsITests {
                 .read(
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
+        val tags = listOf(aTag())
+        val theme = aTheme()
         val reporting =
             ReportingDetailsDTO(
                 reporting =
@@ -101,8 +115,6 @@ class ReportingsITests {
                         seaFront = "Facade 1",
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
                         actionTaken = "actions effectuées blabla",
                         isControlRequired = true,
                         hasNoUnitAvailable = true,
@@ -120,6 +132,8 @@ class ReportingsITests {
                             ),
                         withVHFAnswer = null,
                         isInfractionProven = true,
+                        tags = tags,
+                        theme = theme,
                     ),
                 reportingSources =
                     listOf(
@@ -159,8 +173,6 @@ class ReportingsITests {
                 geom = polygon,
                 description = "description",
                 reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                themeId = 12,
-                subThemeIds = listOf(64, 82),
                 actionTaken = "actions effectuées blabla",
                 isControlRequired = true,
                 hasNoUnitAvailable = true,
@@ -176,6 +188,8 @@ class ReportingsITests {
                         "2022-01-15T14:50:09Z",
                     ),
                 isInfractionProven = true,
+                tags = emptyList(),
+                theme = ThemeInput(id = 1, name = "theme", startedAt = null, endedAt = null),
             )
 
         given(createOrUpdateReporting.execute(any())).willReturn(reporting)
@@ -201,9 +215,6 @@ class ReportingsITests {
             .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
-            .andExpect(jsonPath("$.themeId").value(12))
-            .andExpect(jsonPath("$.subThemeIds[0]").value(64))
-            .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             ).andExpect(jsonPath("$.isControlRequired").value(true))
@@ -212,6 +223,11 @@ class ReportingsITests {
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
             .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
+            .andExpect(jsonPath("$.theme.id").value(theme.id))
+            .andExpect(jsonPath("$.theme.name").value(theme.name))
+            .andExpect(jsonPath("$.tags.size()").value(tags.size))
+            .andExpect(jsonPath("$.tags[0].id").value(tags[0].id))
+            .andExpect(jsonPath("$.tags[0].name").value(tags[0].name))
     }
 
     @Test
@@ -222,6 +238,8 @@ class ReportingsITests {
                 .read(
                     "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
                 )
+        val tags = listOf(aTag())
+        val theme = aTheme()
         val reporting =
             ReportingDetailsDTO(
                 reporting =
@@ -234,8 +252,6 @@ class ReportingsITests {
                         seaFront = "Facade 1",
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
                         actionTaken = "actions effectuées blabla",
                         isControlRequired = true,
                         hasNoUnitAvailable = true,
@@ -252,6 +268,8 @@ class ReportingsITests {
                                 "2022-01-15T14:50:09Z",
                             ),
                         isInfractionProven = true,
+                        tags = tags,
+                        theme = theme,
                     ),
                 reportingSources =
                     listOf(
@@ -293,9 +311,6 @@ class ReportingsITests {
             .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
-            .andExpect(jsonPath("$.themeId").value(12))
-            .andExpect(jsonPath("$.subThemeIds[0]").value(64))
-            .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             ).andExpect(jsonPath("$.isControlRequired").value(true))
@@ -304,6 +319,11 @@ class ReportingsITests {
             .andExpect(jsonPath("$.validityTime").value(10))
             .andExpect(jsonPath("$.isArchived").value(false))
             .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
+            .andExpect(jsonPath("$.theme.id").value(theme.id))
+            .andExpect(jsonPath("$.theme.name").value(theme.name))
+            .andExpect(jsonPath("$.tags.size()").value(tags.size))
+            .andExpect(jsonPath("$.tags[0].id").value(tags[0].id))
+            .andExpect(jsonPath("$.tags[0].name").value(tags[0].name))
     }
 
     @Test
@@ -326,8 +346,6 @@ class ReportingsITests {
                         seaFront = "Facade 1",
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
                         actionTaken = "actions effectuées blabla",
                         isControlRequired = true,
                         hasNoUnitAvailable = true,
@@ -340,6 +358,8 @@ class ReportingsITests {
                         isDeleted = false,
                         openBy = "CDA",
                         isInfractionProven = true,
+                        tags = emptyList(),
+                        theme = aTheme(),
                     ),
                 reportingSources = listOf(),
             )
@@ -387,8 +407,6 @@ class ReportingsITests {
                         seaFront = "Facade 1",
                         description = "description",
                         reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                        themeId = 12,
-                        subThemeIds = listOf(64, 82),
                         actionTaken = "actions effectuées blabla",
                         isControlRequired = true,
                         hasNoUnitAvailable = true,
@@ -405,6 +423,8 @@ class ReportingsITests {
                                 "2022-01-15T14:50:09Z",
                             ),
                         isInfractionProven = true,
+                        tags = listOf(aTag(id = 2)),
+                        theme = aTheme(id = 1),
                     ),
                 reportingSources =
                     listOf(
@@ -425,8 +445,6 @@ class ReportingsITests {
                     geom = polygon,
                     description = "description",
                     reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                    themeId = 12,
-                    subThemeIds = listOf(64, 82),
                     actionTaken = "actions effectuées blabla",
                     isControlRequired = true,
                     hasNoUnitAvailable = true,
@@ -442,6 +460,8 @@ class ReportingsITests {
                             "2022-01-15T14:50:09Z",
                         ),
                     isInfractionProven = true,
+                    tags = emptyList(),
+                    theme = ThemeInput(id = 1, name = "theme", startedAt = null, endedAt = null),
                 ),
             )
 
@@ -466,9 +486,6 @@ class ReportingsITests {
             .andExpect(jsonPath("$.seaFront").value("Facade 1"))
             .andExpect(jsonPath("$.description").value("description"))
             .andExpect(jsonPath("$.reportType").value("INFRACTION_SUSPICION"))
-            .andExpect(jsonPath("$.themeId").value(12))
-            .andExpect(jsonPath("$.subThemeIds[0]").value(64))
-            .andExpect(jsonPath("$.subThemeIds[1]").value(82))
             .andExpect(
                 jsonPath("$.actionTaken").value("actions effectuées blabla"),
             ).andExpect(jsonPath("$.isControlRequired").value(true))
@@ -478,6 +495,9 @@ class ReportingsITests {
             .andExpect(jsonPath("$.isArchived").value(false))
             .andExpect(jsonPath("$.createdAt").value("2022-01-15T04:50:09Z"))
             .andExpect(jsonPath("$.updatedAtUtc").value("2022-01-15T14:50:09Z"))
+            .andExpect(jsonPath("$.tags[0].id").value(2))
+            .andExpect(jsonPath("$.theme.id").value(1))
+            .andExpect(jsonPath("$.theme.name").value("theme"))
     }
 
     @Test
@@ -564,8 +584,6 @@ class ReportingsITests {
                             geom = polygon,
                             description = "description",
                             reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
-                            themeId = 12,
-                            subThemeIds = listOf(64, 82),
                             isControlRequired = true,
                             hasNoUnitAvailable = true,
                             createdAt =
@@ -581,6 +599,8 @@ class ReportingsITests {
                                     "2022-01-15T14:50:09Z",
                                 ),
                             isInfractionProven = true,
+                            tags = emptyList(),
+                            theme = aTheme(id = 1, startedAt = null),
                         ),
                     reportingSources =
                         listOf(
@@ -641,8 +661,6 @@ class ReportingsITests {
                   "seaFront": null,
                   "description": "description",
                   "reportType": "INFRACTION_SUSPICION",
-                  "themeId": 12,
-                  "subThemeIds": [64, 82],
                   "actionTaken": null,
                   "isControlRequired": true,
                   "hasNoUnitAvailable": true,
@@ -658,7 +676,15 @@ class ReportingsITests {
                   "controlStatus": "CONTROL_TO_BE_DONE",
                   "updatedAtUtc": "2022-01-15T14:50:09Z",
                   "withVHFAnswer": null,
-                  "isInfractionProven": true
+                  "isInfractionProven": true,
+                  "theme": {
+                    "id": 1,
+                    "name":"theme",
+                    "startedAt": null,
+                    "endedAt": null,
+                    "subThemes":[]
+                   },
+                  "tags":[]
                     }""",
             )
     }

@@ -6,8 +6,8 @@ import {
   getTimeLeft
 } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { ControlStatusEnum, ReportingTypeEnum, ReportingTypeLabels } from 'domain/entities/reporting'
 import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
 import { vehicleTypeLabels } from 'domain/entities/vehicleType'
@@ -63,7 +63,6 @@ export function ReportingCard({
   selected = false,
   updateMargins
 }: ReportingCardProps) {
-  const { isLoading, subThemes, themes } = useGetControlPlans()
   const dispatch = useAppDispatch()
 
   const ref = useRef<HTMLDivElement>(null)
@@ -78,10 +77,9 @@ export function ReportingCard({
     missionId,
     reportingId,
     reportType,
-    subThemeIds,
     targetDetails,
     targetType,
-    themeId,
+    theme,
     validityTime,
     vehicleType
   } = feature.getProperties()
@@ -89,8 +87,6 @@ export function ReportingCard({
   const creationDate = getLocalizedDayjs(createdAt).format('DD MMM YYYY à HH:mm')
   const endOfValidity = getLocalizedDayjs(createdAt).add(validityTime || 0, 'hour')
   const timeLeft = getTimeLeft(endOfValidity)
-
-  const subThemesFormatted = subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ')
 
   const targetName = useMemo(() => {
     if (targetDetails.length > 1) {
@@ -140,7 +136,7 @@ export function ReportingCard({
     }
   }, [feature, updateMargins])
 
-  if (!isCardVisible || isLoading) {
+  if (!isCardVisible) {
     return null
   }
 
@@ -181,8 +177,8 @@ export function ReportingCard({
       </StyledHeader>
       <div>
         <StyledThemeContainer>
-          {themeId && themes[themeId] && <StyledBoldText>{themes[themeId]?.theme}</StyledBoldText>}
-          {subThemeIds?.length > 0 && <StyledMediumText>&nbsp;/&nbsp;{subThemesFormatted}</StyledMediumText>}
+          {theme && <StyledBoldText>{theme.name}</StyledBoldText>}
+          {theme?.subThemes && <StyledMediumText>&nbsp;/&nbsp;{displaySubThemes([theme])}</StyledMediumText>}
         </StyledThemeContainer>
         {description && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>

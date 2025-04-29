@@ -5,6 +5,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
 import { Image, Link, Text, View } from '@react-pdf/renderer'
+import { displayTags } from '@utils/getTagsAsOptions'
 
 import { areaStyle, layoutStyle } from '../style'
 import { getImage } from '../utils'
@@ -98,7 +99,7 @@ export function VigilanceAreas({
                       <Text>Thématique</Text>
                     </View>
                     <View style={areaStyle.details}>
-                      <Text>{vigilanceArea.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}</Text>
+                      <Text>{vigilanceArea.tags ? displayTags(vigilanceArea.tags) : EMPTY_VALUE}</Text>
                     </View>
                   </View>
                   <View style={[layoutStyle.row]}>

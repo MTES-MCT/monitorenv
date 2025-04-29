@@ -5,9 +5,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class CreateOrUpdateReportingDataInput(
     val id: Int? = null,
@@ -19,8 +21,6 @@ data class CreateOrUpdateReportingDataInput(
     val geom: Geometry,
     val description: String? = null,
     val reportType: ReportingTypeEnum,
-    val themeId: Int,
-    val subThemeIds: List<Int>,
     val actionTaken: String? = null,
     val isControlRequired: Boolean? = null,
     val hasNoUnitAvailable: Boolean? = null,
@@ -35,6 +35,8 @@ data class CreateOrUpdateReportingDataInput(
     val updatedAtUtc: ZonedDateTime? = null,
     val withVHFAnswer: Boolean? = null,
     val isInfractionProven: Boolean,
+    val tags: List<TagInput> = listOf(),
+    val theme: ThemeInput,
 ) {
     fun toReportingEntity(): ReportingEntity =
         ReportingEntity(
@@ -47,8 +49,6 @@ data class CreateOrUpdateReportingDataInput(
             geom = this.geom,
             description = this.description,
             reportType = this.reportType,
-            themeId = this.themeId,
-            subThemeIds = this.subThemeIds,
             actionTaken = this.actionTaken,
             isControlRequired = this.isControlRequired,
             hasNoUnitAvailable = this.hasNoUnitAvailable,
@@ -64,5 +64,7 @@ data class CreateOrUpdateReportingDataInput(
             updatedAtUtc = this.updatedAtUtc,
             withVHFAnswer = this.withVHFAnswer,
             isInfractionProven = this.isInfractionProven,
+            tags = this.tags.map { it.toTagEntity() },
+            theme = theme.toThemeEntity(),
         )
 }

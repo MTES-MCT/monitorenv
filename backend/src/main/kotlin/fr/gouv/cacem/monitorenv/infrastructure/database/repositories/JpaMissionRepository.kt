@@ -8,12 +8,20 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlResourceModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlUnitModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlResourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagEnvActionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeEnvActionRepository
 import org.apache.commons.lang3.StringUtils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -28,6 +36,11 @@ class JpaMissionRepository(
     private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
     private val dbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
+    private val dbMissionControlUnitRepository: IDBMissionControlUnitRepository,
+    private val dbMissionControlResourceRepository: IDBMissionControlResourceRepository,
+    private val dbThemeEnvActionRepository: IDBThemeEnvActionRepository,
+    private val dbTagEnvActionRepository: IDBTagEnvActionRepository,
+    private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
 ) : IMissionRepository {
@@ -168,6 +181,25 @@ class JpaMissionRepository(
 
     @Transactional
     override fun save(mission: MissionEntity): MissionDetailsDTO {
+        val missionModel = MissionModel.fromMissionEntity(mission = mission)
+        val savedMission = dbMissionRepository.save(missionModel)
+
+        val savedControlUnits = saveControlUnits(mission, missionModel)
+        savedMission.controlUnits?.addAll(savedControlUnits)
+
+        val savedControlResources = saveControlResources(mission, missionModel)
+        savedMission.controlResources?.addAll(savedControlResources)
+
+        val savedEnvActions = saveEnvActions(mission, missionModel)
+        savedEnvActions?.let { savedMission.envActions?.addAll(it) }
+
+        return savedMission.toMissionDTO(mapper)
+    }
+
+    private fun saveControlResources(
+        mission: MissionEntity,
+        missionModel: MissionModel,
+    ): List<MissionControlResourceModel> {
         // Extract all control units resources unique control unit resource IDs
         val uniqueControlUnitResourceIds =
             mission.controlUnits
@@ -180,6 +212,43 @@ class JpaMissionRepository(
         val controlUnitResourceModelMap =
             controlUnitResourceModels.associateBy { requireNotNull(it.id) }
 
+        val controlResources =
+            mission.controlUnits.flatMap { controlUnit ->
+                controlUnit.resources.map { controlUnitResource ->
+                    val controlUnitResourceModel =
+                        requireNotNull(
+                            controlUnitResourceModelMap[controlUnitResource.id],
+                        )
+
+                    MissionControlResourceModel(
+                        resource = controlUnitResourceModel,
+                        mission = missionModel,
+                    )
+                }
+            }
+
+        return dbMissionControlResourceRepository.saveAll(controlResources)
+    }
+
+    private fun saveControlUnits(
+        mission: MissionEntity,
+        missionModel: MissionModel,
+    ): List<MissionControlUnitModel> {
+        val controlUnits =
+            mission.controlUnits.map { controlUnit ->
+                MissionControlUnitModel.fromLegacyControlUnit(
+                    controlUnit,
+                    missionModel,
+                )
+            }
+
+        return dbMissionControlUnitRepository.saveAll(controlUnits)
+    }
+
+    private fun saveEnvActions(
+        mission: MissionEntity,
+        missionModel: MissionModel,
+    ): List<EnvActionModel>? {
         val controlPlanThemes = ArrayList<Int>()
         val controlPlanSubThemes = ArrayList<Int>()
         val controlPlanTags = ArrayList<Int>()
@@ -210,16 +279,22 @@ class JpaMissionRepository(
                 dbControlPlanTagRepository.getReferenceById(id)
             }
 
-        val missionModel =
-            MissionModel.fromMissionEntity(
-                mission = mission,
-                controlUnitResourceModelMap = controlUnitResourceModelMap,
-                controlPlanThemesReferenceModelMap = controlPlanThemesReferenceModelMap,
-                controlPlanSubThemesReferenceModelMap =
-                controlPlanSubThemesReferenceModelMap,
-                controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
-                mapper = mapper,
-            )
-        return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)
+        val envActions =
+            mission.envActions?.map {
+                EnvActionModel.fromEnvActionEntity(
+                    action = it,
+                    mission = missionModel,
+                    controlPlanThemesReferenceModelMap =
+                    controlPlanThemesReferenceModelMap,
+                    controlPlanSubThemesReferenceModelMap =
+                    controlPlanSubThemesReferenceModelMap,
+                    controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
+                    mapper = mapper,
+                )
+            }
+
+        val savedEnvActions = envActions?.let { dbEnvActionRepository.saveAll(it) }
+
+        return savedEnvActions
     }
 }

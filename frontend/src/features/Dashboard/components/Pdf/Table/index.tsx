@@ -3,6 +3,7 @@ import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/admi
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { displayTags } from '@utils/getTagsAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { groupBy } from 'lodash'
 
@@ -128,7 +129,7 @@ export function AreaTable({
                     style={[
                       styles.layerLegend,
                       {
-                        backgroundColor: getRegulatoryEnvColorWithAlpha(layer.thematique, layer.entityName)
+                        backgroundColor: getRegulatoryEnvColorWithAlpha(displayTags(layer.tags), layer.entityName)
                       }
                     ]}
                   />

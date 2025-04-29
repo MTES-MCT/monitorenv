@@ -8,6 +8,7 @@ import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
+import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import {
   addRegulatoryZonesToMyLayers,
@@ -120,7 +121,7 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={regulatoryArea?.entityName ?? 'aucun'}
-          type={regulatoryArea?.thematique ?? 'aucun'}
+          type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
         />
         <span title={regulatoryArea?.entityName}>{regulatoryArea?.entityName}</span>
       </RegulatoryAreaName>

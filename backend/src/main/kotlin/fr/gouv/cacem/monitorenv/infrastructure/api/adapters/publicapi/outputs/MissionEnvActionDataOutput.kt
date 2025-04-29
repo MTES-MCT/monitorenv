@@ -9,26 +9,26 @@ import java.time.ZonedDateTime
 import java.util.UUID
 
 abstract class MissionEnvActionDataOutput(
-    open val id: UUID,
+    open val id: UUID?,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
     open val actionType: ActionTypeEnum,
     open val observationsByUnit: String? = null,
 ) {
     companion object {
         fun fromEnvActionEntity(envActionEntity: EnvActionEntity): MissionEnvActionDataOutput =
-            when (envActionEntity.actionType) {
-                ActionTypeEnum.CONTROL ->
+            when (envActionEntity) {
+                is EnvActionControlEntity ->
                     MissionEnvActionControlDataOutput.fromEnvActionControlEntity(
-                        envActionControlEntity = envActionEntity as EnvActionControlEntity,
+                        envActionControlEntity = envActionEntity,
                     )
 
-                ActionTypeEnum.SURVEILLANCE ->
+                is EnvActionSurveillanceEntity ->
                     MissionEnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
                         envActionSurveillanceEntity =
-                            envActionEntity as EnvActionSurveillanceEntity,
+                        envActionEntity,
                     )
 
-                ActionTypeEnum.NOTE ->
+                else ->
                     MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(
                         envActionEntity as EnvActionNoteEntity,
                     )

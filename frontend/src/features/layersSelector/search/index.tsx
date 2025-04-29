@@ -14,6 +14,7 @@ import { SearchOnExtentExtraButtons } from './SearchOnExtentExtraButtons'
 import {
   resetFilters,
   setFilteredAmpTypes,
+  setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
   setGlobalSearchText,
   setVigilanceAreaSpecificPeriodFilter
@@ -21,6 +22,9 @@ import {
 import { useGetAMPsQuery } from '../../../api/ampsAPI'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function LayerSearch() {
   const dispatch = useAppDispatch()
@@ -34,6 +38,7 @@ export function LayerSearch() {
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
@@ -46,9 +51,11 @@ export function LayerSearch() {
 
   const handleSearchInputChange = searchedText => {
     dispatch(setGlobalSearchText(searchedText))
+
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
+      regulatoryTags: filteredRegulatoryTags,
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
@@ -62,6 +69,7 @@ export function LayerSearch() {
     debouncedSearchLayers({
       ampTypes: filteredTypes,
       extent: searchExtent,
+      regulatoryTags: filteredRegulatoryTags,
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
@@ -70,11 +78,26 @@ export function LayerSearch() {
     })
   }
 
-  const handleSetFilteredRegulatoryThemes = filteredThemes => {
+  const handleSetFilteredRegulatoryTags = (filteredTags: TagFromAPI[]) => {
+    dispatch(setFilteredRegulatoryTags(filteredTags))
+    debouncedSearchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryTags: filteredTags,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
+    })
+  }
+
+  const handleSetFilteredRegulatoryThemes = (filteredThemes: ThemeFromAPI[]) => {
     dispatch(setFilteredRegulatoryThemes(filteredThemes))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
+      regulatoryTags: filteredRegulatoryTags,
       regulatoryThemes: filteredThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
@@ -88,6 +111,7 @@ export function LayerSearch() {
     debouncedSearchLayers({
       ampTypes: [],
       extent: searchExtent,
+      regulatoryTags: [],
       regulatoryThemes: [],
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
@@ -101,6 +125,7 @@ export function LayerSearch() {
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
+      regulatoryTags: filteredRegulatoryTags,
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
@@ -127,6 +152,7 @@ export function LayerSearch() {
         <SearchInput
           displayRegFilters={displayRegFilters}
           filteredAmpTypes={filteredAmpTypes}
+          filteredRegulatoryTags={filteredRegulatoryTags}
           filteredRegulatoryThemes={filteredRegulatoryThemes}
           filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
           globalSearchText={globalSearchText}
@@ -138,10 +164,12 @@ export function LayerSearch() {
           <LayerFilters
             ampTypes={ampTypes}
             filteredAmpTypes={filteredAmpTypes}
+            filteredRegulatoryTags={filteredRegulatoryTags}
             filteredRegulatoryThemes={filteredRegulatoryThemes}
             filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
             handleResetFilters={handleResetFilters}
             setFilteredAmpTypes={handleSetFilteredAmpTypes}
+            setFilteredRegulatoryTags={handleSetFilteredRegulatoryTags}
             setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
             updateDateRangeFilter={updateDateRangeFilter}
           />

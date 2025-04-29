@@ -1,26 +1,13 @@
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { useMemo } from 'react'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
 
-export function CellActionThemes({ subThemeIds, themeId }: { subThemeIds: number[]; themeId: number }) {
-  const { subThemes, themes } = useGetControlPlans()
-  const cellContent = useMemo(() => {
-    if (!themeId) {
-      return ''
-    }
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
-    const themeAsString = themes[themeId]?.theme ?? ''
+export function CellActionTheme({ theme }: { theme: ThemeFromAPI }) {
+  const content = [theme.name, displaySubThemes([theme])].join(': ')
 
-    if (subThemeIds.length === 0) {
-      return themeAsString
-    }
-    const subThemesAsString = subThemeIds.map(subThemeId => subThemes[subThemeId]?.subTheme)
-
-    return `${themeAsString}: ${subThemesAsString.join(', ')}`
-  }, [themeId, subThemeIds, subThemes, themes])
-
-  return cellContent !== '' ? (
-    <span data-cy="cell-theme" title={cellContent}>
-      {cellContent}
+  return content !== '' ? (
+    <span data-cy="cell-theme" title={content}>
+      {content}
     </span>
   ) : null
 }

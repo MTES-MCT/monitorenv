@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEnt
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
 import org.locationtech.jts.geom.Geometry
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -11,12 +12,15 @@ class JpaRegulatoryAreaRepository(
     private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository,
 ) : IRegulatoryAreaRepository {
     override fun findAll(): List<RegulatoryAreaEntity> =
-        dbRegulatoryAreaRepository.findAllByOrderByLayerName().map {
-            it.toRegulatoryArea()
-        }
+        dbRegulatoryAreaRepository.findAllByOrderByLayerName().map { it.toRegulatoryArea() }
 
-    override fun findById(id: Int): RegulatoryAreaEntity =
-        dbRegulatoryAreaRepository.findById(id).get().toRegulatoryArea()
+    override fun findById(id: Int): RegulatoryAreaEntity? {
+        val regulatoryArea = dbRegulatoryAreaRepository.findByIdOrNull(id)
+        regulatoryArea?.let {
+            return it.toRegulatoryArea()
+        }
+        return null
+    }
 
     override fun count(): Long = dbRegulatoryAreaRepository.count()
 

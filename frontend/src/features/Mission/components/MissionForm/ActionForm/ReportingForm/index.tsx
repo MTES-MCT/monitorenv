@@ -1,4 +1,6 @@
 import { Accent, Button, getOptionsFromLabelledEnum, Icon, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
+import { displaySubTags } from '@utils/getTagsAsOptions'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
@@ -15,7 +17,6 @@ import { ReportingTargetTypeLabels } from '../../../../../../domain/entities/tar
 import { vehicleTypeLabels } from '../../../../../../domain/entities/vehicleType'
 import { useAppDispatch } from '../../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../../hooks/useAppSelector'
-import { useGetControlPlans } from '../../../../../../hooks/useGetControlPlans'
 import { getFormattedReportingId } from '../../../../../Reportings/utils'
 import { attachReportingToMissionSliceActions } from '../../AttachReporting/slice'
 import { FormTitle } from '../../style'
@@ -30,8 +31,6 @@ export function ReportingForm({
   setCurrentActionId: (actionId: string | undefined) => void
 }) {
   const dispatch = useAppDispatch()
-  const { subThemes, themes } = useGetControlPlans()
-
   const { setFieldValue, values } = useFormikContext<Partial<Mission | NewMission>>()
 
   const reporting = values?.attachedReportings?.[reportingActionIndex]
@@ -44,9 +43,6 @@ export function ReportingForm({
   if (!reporting) {
     return null
   }
-
-  const subThemesAsString =
-    reporting.subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ') ?? EMPTY_VALUE
 
   const sourceTypeText = (sourceType: ReportingSourceEnum) => {
     if (sourceType === ReportingSourceEnum.SEMAPHORE) {
@@ -152,13 +148,20 @@ export function ReportingForm({
             readOnly
             value={reporting.reportType}
           />
+          <TextInput label="Thématique du signalement" name="theme" plaintext value={reporting.theme.name} />
           <TextInput
-            label="Thématique du signalement"
-            name="themeId"
+            label="Sous-thématique du signalement"
+            name="subTheme"
             plaintext
-            value={reporting.themeId ? String(themes[reporting.themeId]?.theme) : EMPTY_VALUE}
+            value={displaySubThemes([reporting.theme]) ?? EMPTY_VALUE}
           />
-          <TextInput label="Sous-thématique du signalement" name="subThemeIds" plaintext value={subThemesAsString} />
+          <TextInput label="Tag du signalement" name="tag" plaintext value={reporting.theme.name} />
+          <TextInput
+            label="Sous-tag du signalement"
+            name="subTag"
+            plaintext
+            value={displaySubTags(reporting.tags) ?? EMPTY_VALUE}
+          />
           <Validity reporting={reporting} />
           <TextInput
             label="Actions effectuées"

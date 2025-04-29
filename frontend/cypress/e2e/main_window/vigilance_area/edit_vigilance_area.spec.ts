@@ -59,7 +59,7 @@ describe('Edit Vigilance Area', () => {
     cy.clickButton('Ajouter une réglementation en lien')
     cy.getDataCy('my-amp-layers-zones').should('not.exist')
     cy.clickButton('Filtrer par type de zones')
-    cy.fill('Thématique réglementaire', ['AMP', 'Dragage', 'Mixte'])
+    cy.fill('Filtre tags et sous-tags', ['AMP', 'Dragage', 'Mixte'])
     cy.get('#root').click(1030, 490)
 
     cy.clickButton("Ajouter la zone réglementaire Partie marine (plus basses eaux) RNN d'Iroise")

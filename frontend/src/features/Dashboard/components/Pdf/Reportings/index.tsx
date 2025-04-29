@@ -3,6 +3,7 @@ import { THEME } from '@mtes-mct/monitor-ui'
 import { G, Path, Rect, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
 import { formatCoordinates } from '@utils/coordinates'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { CoordinatesFormat } from 'domain/entities/map/constants'
 import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
 import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
@@ -12,7 +13,6 @@ import { Fragment } from 'react/jsx-runtime'
 
 import { areaStyle, layoutStyle } from '../style'
 
-import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 import type { Coordinate } from 'ol/coordinate'
 
 const styles = StyleSheet.create({
@@ -151,15 +151,7 @@ const reportingStatusFlag = (reporting: Reporting) => {
   }
 }
 
-export function Reportings({
-  reportings,
-  subThemes,
-  themes
-}: {
-  reportings: Reporting[]
-  subThemes: ControlPlansSubThemeCollection
-  themes: ControlPlansThemeCollection
-}) {
+export function Reportings({ reportings }: { reportings: Reporting[] }) {
   return (
     <>
       <View style={layoutStyle.header2}>
@@ -221,12 +213,10 @@ export function Reportings({
             {reporting.createdAt && (
               <Text style={styles.reportingDate}>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Text>
             )}
-            {!!reporting.themeId && (
-              <View style={(layoutStyle.row, { flexWrap: 'wrap' })}>
-                <Text style={{ fontWeight: 'bold' }}>{themes[reporting.themeId]?.theme} /</Text>
-                <Text>{reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')}</Text>
-              </View>
-            )}
+            <View style={(layoutStyle.row, { flexWrap: 'wrap' })}>
+              <Text style={{ fontWeight: 'bold' }}>{reporting.theme.name} /</Text>
+              <Text>{displaySubThemes([reporting.theme])}</Text>
+            </View>
             <View style={[layoutStyle.row, { rowGap: 2 }]}>
               <View style={styles.description}>
                 <Text>Localisation</Text>

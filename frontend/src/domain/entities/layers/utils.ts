@@ -1,4 +1,5 @@
 import { Dashboard } from '@features/Dashboard/types'
+import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
@@ -39,7 +40,7 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
     case MonitorEnvLayers.VIGILANCE_AREA:
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
     case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
-      return (layer as VigilanceArea.VigilanceAreaProperties)?.themes?.join(', ')
+      return (layer as VigilanceArea.VigilanceAreaProperties)?.tags?.map(tag => tag.name).join(', ')
 
     default:
       return (layer as RegulatoryLayerCompactProperties).entityName
@@ -78,6 +79,6 @@ export const getLegendType = (layer: GenericLayerType, layerType: RegulatoryOrAM
       return (layer as VigilanceArea.VigilanceAreaProperties).name
 
     default:
-      return (layer as RegulatoryLayerCompactProperties).thematique
+      return displayTags((layer as RegulatoryLayerCompactProperties).tags)
   }
 }

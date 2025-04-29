@@ -2,6 +2,8 @@ import { Dashboard } from '@features/Dashboard/types'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, Link, Text, View } from '@react-pdf/renderer'
+import { displayTags } from '@utils/getTagsAsOptions'
+import { displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 
 import { areaStyle, layoutStyle } from '../style'
@@ -46,7 +48,7 @@ export function RegulatoryAreas({
                       areaStyle.layerLegend,
                       {
                         backgroundColor: getRegulatoryEnvColorWithAlpha(
-                          regulatoryArea.thematique,
+                          displayTags(regulatoryArea.tags),
                           regulatoryArea.entityName
                         )
                       }
@@ -76,7 +78,7 @@ export function RegulatoryAreas({
                       <Text>Thématique</Text>
                     </View>
                     <View style={areaStyle.details}>
-                      <Text>{regulatoryArea.thematique || '-'}</Text>
+                      <Text>{displayThemes(regulatoryArea.themes) || '-'}</Text>
                     </View>
                   </View>
                   <View style={layoutStyle.row}>

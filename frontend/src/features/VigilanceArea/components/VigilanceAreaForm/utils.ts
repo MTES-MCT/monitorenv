@@ -22,6 +22,7 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     seaFront: undefined,
     source: undefined,
     startDatePeriod: undefined,
+    tags: [],
     themes: [],
     visibility: VigilanceArea.Visibility.PRIVATE
   }

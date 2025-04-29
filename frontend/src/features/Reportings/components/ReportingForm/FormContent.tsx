@@ -1,3 +1,5 @@
+import { useGetTagsQuery } from '@api/tagsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { Italic } from '@components/style'
 import { AutoSaveTag } from '@features/commonComponents/AutoSaveTag'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
@@ -23,23 +25,29 @@ import { createNewReportingSource, isNewReporting } from '@features/Reportings/u
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
+  CheckTreePicker,
   customDayjs,
   FormikEffect,
   FormikMultiRadio,
   FormikTextarea,
   getOptionsFromLabelledEnum,
   Label,
-  Toggle
+  Message,
+  Toggle,
+  type CheckTreePickerOption
 } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { useReportingEventContext } from 'context/reporting/useReportingEventContext'
 import {
-  type Reporting,
   INDIVIDUAL_ANCHORING_THEME_ID,
   InfractionProvenLabels,
   ReportingTypeEnum,
-  ReportingTypeLabels
+  ReportingTypeLabels,
+  type Reporting
 } from 'domain/entities/reporting'
+import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import {
   hideAllDialogs,
   ReportingContext,
@@ -63,8 +71,6 @@ import { Footer } from './FormComponents/Footer'
 import { Position } from './FormComponents/Position'
 import { Source } from './FormComponents/Source'
 import { Target } from './FormComponents/Target'
-import { ThemeSelector } from './FormComponents/ThemeSelector'
-import { SubThemesSelector } from './FormComponents/ThemeSelector/SubThemesSelector'
 import { Validity } from './FormComponents/Validity'
 import { FormikSyncReportingFields } from './FormikSyncReportingFields'
 import { Header } from './Header'
@@ -112,6 +118,14 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     () => values.updatedAtUtc && getDateAsLocalizedStringVeryCompact(values.updatedAtUtc),
     [values.updatedAtUtc]
   )
+
+  const { data: themes } = useGetThemesQuery()
+
+  const themesOptions = useMemo(() => getThemesAsOptions(Object.values(themes ?? [])), [themes])
+
+  const { data: tags } = useGetTagsQuery()
+
+  const tagOptions = useMemo(() => getTagsAsOptions(Object.values(tags ?? [])), [tags])
 
   const { getReportingEventById } = useReportingEventContext()
   const reportingEvent = getReportingEventById(activeReportingId)
@@ -286,6 +300,45 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     setScrollTop(e.currentTarget.scrollTop)
   }
 
+  const handleOnChangeTheme = (option: CheckTreePickerOption[] | undefined) => {
+    if (option) {
+      const nextTheme = parseOptionsToThemes(option)[0]
+      setFieldValue('theme', nextTheme)
+      if (nextTheme?.id !== INDIVIDUAL_ANCHORING_THEME_ID) {
+        setFieldValue('withVHFAnswer', undefined)
+      }
+    } else {
+      setFieldValue('theme', undefined)
+    }
+  }
+
+  const handleOnChangeTags = (option: CheckTreePickerOption[] | undefined) => {
+    if (option) {
+      const nextTags = parseOptionsToTags(option)
+      setFieldValue('tags', nextTags)
+    } else {
+      setFieldValue('tags', [])
+    }
+  }
+
+  const isVesselInformationRequested = useMemo(() => {
+    // TODO(02/04/2025): Be careful here
+
+    if (values.theme?.id !== INDIVIDUAL_ANCHORING_THEME_ID || values.vehicleType !== VehicleTypeEnum.VESSEL) {
+      return false
+    }
+
+    return (
+      (values.targetDetails ?? []).filter(
+        target =>
+          !target.vesselName ||
+          !target.vesselType ||
+          !target.size ||
+          !(target.mmsi ?? target.imo ?? target.externalReferenceNumber)
+      ).length > 0
+    )
+  }, [values.theme?.id, values.targetDetails, values.vehicleType])
+
   if (!selectedReporting || isEmpty(values)) {
     return null
   }
@@ -357,9 +410,40 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           />
         </div>
         <StyledThemeContainer>
-          <ThemeSelector label="Thématique du signalement" name="themeId" />
-          <SubThemesSelector label="Sous-thématique du signalement" name="subThemeIds" />
-          {values.themeId === INDIVIDUAL_ANCHORING_THEME_ID && (
+          <CheckTreePicker
+            childrenKey="subThemes"
+            error={errors.theme}
+            isMultiSelect={false}
+            isRequired
+            label="Thématiques et sous-thématiques"
+            name="theme"
+            onChange={handleOnChangeTheme}
+            options={themesOptions}
+            value={getThemesAsOptions(values.theme ? [values.theme] : [])}
+          />
+          <CheckTreePicker
+            childrenKey="subTags"
+            error={errors.tags}
+            label="Tags et sous-tags"
+            name="tags"
+            onChange={handleOnChangeTags}
+            options={tagOptions}
+            renderedChildrenValue="Sous-tag."
+            renderedValue="Tags"
+            value={getTagsAsOptions(values.tags ?? [])}
+          />
+
+          {isVesselInformationRequested && (
+            <Message data-cy="reporting-target-info-message">
+              <MessageTitle>Informations du navire</MessageTitle>
+              <MessageText>
+                N’oubliez pas d’identifier le navire (id, nom, taille, type) afin de permettre un bon traitement du
+                signalement
+              </MessageText>
+            </Message>
+          )}
+          {/* TODO(02/04/2025): Be careful here */}
+          {values.theme?.id === INDIVIDUAL_ANCHORING_THEME_ID && (
             <FormikMultiRadio
               isInline
               label="Réponse à la VHF"
@@ -424,3 +508,8 @@ const SourceWrapper = styled.div`
   flex-direction: column;
   gap: 16px;
 `
+
+export const MessageTitle = styled.header`
+  font-weight: 500;
+`
+export const MessageText = styled.p``

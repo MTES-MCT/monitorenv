@@ -1,14 +1,18 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { FrontendError } from '@libs/FrontendError'
 import { SingleTag } from '@mtes-mct/monitor-ui'
+import { filterSubTags } from '@utils/getTagsAsOptions'
 import { FrontCompletionStatusLabel, missionStatusLabels, missionTypeEnum } from 'domain/entities/missions'
 import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'domain/shared_slices/MissionFilters'
 import { useMemo } from 'react'
 import styled from 'styled-components'
+
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
@@ -20,14 +24,17 @@ export function FilterTags() {
     selectedMissionTypes,
     selectedSeaFronts,
     selectedStatuses,
+    selectedTags,
     selectedThemes
   } = useAppSelector(state => state.missionFilters)
 
   const controlUnits = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { themesAsOptions } = useGetControlPlans()
+
+  const { data } = useGetThemesQuery()
+  const themesAPI: ThemeFromAPI[] = Object.values(data ?? [])
 
   const onDeleteTag = <K extends MissionFiltersEnum>(
-    valueToDelete: number | string,
+    valueToDelete: number | string | TagFromAPI,
     filterKey: K,
     selectedValues: MissionFiltersState[K]
   ) => {
@@ -41,8 +48,21 @@ export function FilterTags() {
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues }))
   }
 
-  const hasTagFilters = useMemo(() => {
-    if (
+  const onDeleteTagTag = (valueToDelete: TagFromAPI, tagFilter: TagFromAPI[]) => {
+    const updatedFilter: TagFromAPI[] = tagFilter
+      .map(tag => filterSubTags(tag, valueToDelete))
+      .filter(tag => tag !== undefined)
+      .filter(tag => tag.id !== valueToDelete.id)
+    dispatch(
+      updateFilters({
+        key: MissionFiltersEnum.TAGS_FILTER,
+        value: updatedFilter.length === 0 ? undefined : updatedFilter
+      })
+    )
+  }
+
+  const hasTagFilters = useMemo(
+    () =>
       hasFilters &&
       ((selectedAdministrationNames && selectedAdministrationNames?.length > 0) ||
         (selectedCompletionStatus && selectedCompletionStatus?.length > 0) ||
@@ -50,22 +70,20 @@ export function FilterTags() {
         (selectedMissionTypes && selectedMissionTypes?.length > 0) ||
         (selectedSeaFronts && selectedSeaFronts?.length > 0) ||
         (selectedStatuses && selectedStatuses?.length > 0) ||
-        (selectedThemes && selectedThemes?.length > 0))
-    ) {
-      return true
-    }
-
-    return false
-  }, [
-    hasFilters,
-    selectedAdministrationNames,
-    selectedCompletionStatus,
-    selectedControlUnitIds,
-    selectedMissionTypes,
-    selectedSeaFronts,
-    selectedStatuses,
-    selectedThemes
-  ])
+        (selectedTags && selectedTags?.length > 0) ||
+        (selectedThemes && selectedThemes?.length > 0)),
+    [
+      hasFilters,
+      selectedAdministrationNames,
+      selectedCompletionStatus,
+      selectedControlUnitIds,
+      selectedMissionTypes,
+      selectedSeaFronts,
+      selectedStatuses,
+      selectedThemes,
+      selectedTags
+    ]
+  )
 
   if (!hasTagFilters) {
     return null
@@ -117,8 +135,22 @@ export function FilterTags() {
         selectedThemes?.length > 0 &&
         selectedThemes.map(theme => (
           <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
-            {String(`Thème ${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`)}
+            {String(`Thème ${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`)}
           </SingleTag>
+        ))}
+      {selectedTags &&
+        selectedTags?.length > 0 &&
+        selectedTags.map(tag => (
+          <>
+            <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
+              {`Tag ${tag.name}`}
+            </SingleTag>
+            {tag.subTags.map(subTag => (
+              <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
+                {`Sous-tag ${subTag.name}`}
+              </SingleTag>
+            ))}
+          </>
         ))}
       {selectedStatuses &&
         selectedStatuses?.length > 0 &&

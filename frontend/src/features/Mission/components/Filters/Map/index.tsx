@@ -1,13 +1,14 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { CustomPeriodContainer } from '@components/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { FrontendError } from '@libs/FrontendError'
 import {
   Checkbox,
   CheckPicker,
+  CheckTreePicker,
   CustomSearch,
   DateRangePicker,
   Select,
@@ -16,6 +17,7 @@ import {
   type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
+import { filterSubTags, getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, missionTypeEnum } from 'domain/entities/missions'
 import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'domain/shared_slices/MissionFilters'
@@ -23,6 +25,8 @@ import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { MissionOptionsListType } from '..'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type MapMissionFiltersProps = {
   onUpdateAdministrationFilter: (value: any) => void
@@ -46,15 +50,17 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
       selectedMissionTypes,
       selectedPeriod,
       selectedStatuses,
+      selectedTags,
       selectedThemes,
       startedAfter,
       startedBefore
     } = useAppSelector(state => state.missionFilters)
 
-    const { administrations, completion, controlUnits, dates, status, themes, types } = optionsList
+    const { administrations, completion, controlUnits, dates, status, tags, themes, types } = optionsList
 
     const controlUnitsData = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-    const { themesAsOptions } = useGetControlPlans()
+    const { data } = useGetThemesQuery()
+    const themesAPI: ThemeFromAPI[] = Object.values(data ?? [])
 
     const controlUnitCustomSearch = useMemo(
       () => new CustomSearch(controlUnits ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -77,7 +83,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
     }
 
     const onDeleteTag = <K extends MissionFiltersEnum>(
-      valueToDelete: number | string,
+      valueToDelete: number | string | TagFromAPI,
       filterKey: K,
       selectedValues: MissionFiltersState[K]
     ) => {
@@ -90,6 +96,19 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
         | number[]
       dispatch(
         updateFilters({ key: filterKey, value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues })
+      )
+    }
+
+    const onDeleteTagTag = (valueToDelete: TagFromAPI, tagFilter: TagFromAPI[]) => {
+      const updatedFilter: TagFromAPI[] = tagFilter
+        .map(tag => filterSubTags(tag, valueToDelete))
+        .filter(theme => theme !== undefined)
+        .filter(theme => theme.id !== valueToDelete.id)
+      dispatch(
+        updateFilters({
+          key: MissionFiltersEnum.TAGS_FILTER,
+          value: updatedFilter.length === 0 ? undefined : updatedFilter
+        })
       )
     }
 
@@ -269,8 +288,38 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={theme}
                 onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}
               >
-                {`${themesAsOptions.find(t => t.value === theme)?.label ?? theme}`}
+                {`Thème ${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
               </SingleTag>
+            ))}
+          <CheckTreePicker
+            childrenKey="subTags"
+            isLabelHidden
+            isTransparent
+            label="Tags et sous-tags"
+            name="tags"
+            onChange={value =>
+              onUpdateSimpleFilter(value ? parseOptionsToTags(value) : undefined, MissionFiltersEnum.TAGS_FILTER)
+            }
+            options={tags}
+            placeholder="Tags et sous-tags"
+            renderedChildrenValue="Sous-tags."
+            renderedValue="Tags"
+            value={selectedTags ? getTagsAsOptions(selectedTags) : undefined}
+            // customSearch={regulatoryTagsCustomSearch}
+          />
+          {selectedTags &&
+            selectedTags?.length > 0 &&
+            selectedTags.map(tag => (
+              <>
+                <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
+                  {`Tag ${tag.name}`}
+                </SingleTag>
+                {tag.subTags.map(subTag => (
+                  <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
+                    {`Sous-tag ${subTag.name}`}
+                  </SingleTag>
+                ))}
+              </>
             ))}
         </StyledBloc>
       </FilterWrapper>

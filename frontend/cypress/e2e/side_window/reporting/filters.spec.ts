@@ -90,7 +90,7 @@ context('Reportings', () => {
 
   it('Should filter reportings by themes', () => {
     cy.wait(200)
-    cy.fill('Thématiques', ['Arrêté à visa environnemental'])
+    cy.fill('Filtre thématiques et sous-thématiques', ['Arrêté à visa environnemental'])
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Arrêté à visa environnemental')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
@@ -103,13 +103,10 @@ context('Reportings', () => {
     })
   })
 
-  it('Should filter reportings by sub-themes', () => {
+  it('Should filter reportings by tags', () => {
     cy.wait(200)
-    cy.log('Sub-themes should be filtered')
-    cy.fill('Sous-thématiques', ['Surveillance générale'])
-    cy.getDataCy('reportings-filter-tags')
-      .find('.Component-SingleTag > span')
-      .contains('Sous-thème Surveillance générale')
+    cy.fill('Filtre tags et sous-tags', ['AMP'])
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('AMP')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index, list) => {
@@ -117,7 +114,7 @@ context('Reportings', () => {
         return
       }
 
-      cy.wrap(row).should('contain', 'Surveillance générale')
+      cy.wrap(row).should('contain', 'AMP')
     })
   })
 
@@ -191,7 +188,7 @@ context('Reportings', () => {
     cy.fill('Rechercher une cible', undefined)
   })
 
-  it('Should themes and subThemes filters depends on date filter', () => {
+  it('Should tag filters depends on date filter', () => {
     cy.fill('Période', 'Période spécifique')
 
     // for year 2024
@@ -203,10 +200,7 @@ context('Reportings', () => {
     cy.wait('@getReportings')
 
     cy.getDataCy('reporting-theme-filter').click()
-    cy.get('#themes-listbox > div').should('have.length', 18)
-
-    cy.getDataCy('reporting-sub-theme-filter').click()
-    cy.get('#subThemes-listbox > div').should('have.length', 78)
+    cy.get('.rs-check-tree-root > div').should('have.length', 18)
 
     cy.wait(200)
 
@@ -219,9 +213,6 @@ context('Reportings', () => {
     cy.wait('@getReportings')
 
     cy.getDataCy('reporting-theme-filter').click()
-    cy.get('#themes-listbox > div').should('have.length', 34)
-
-    cy.getDataCy('reporting-sub-theme-filter').click()
-    cy.get('#subThemes-listbox > div').should('have.length', 239)
+    cy.get('.rs-check-tree-root > div').should('have.length', 34)
   })
 })

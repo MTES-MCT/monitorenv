@@ -3,10 +3,10 @@ import { Dashboard } from '@features/Dashboard/types'
 import { StatusActionTag } from '@features/Reportings/components/StatusActionTag'
 import { getFormattedReportingId, getTargetDetailsSubText, getTargetName } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { Accent, Icon, IconButton, THEME, useClickOutsideEffect, useNewWindow } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
 import { getFeature } from '@utils/getFeature'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import ArchivedFlag from 'features/Reportings/icons/archived_reporting.svg?react'
@@ -24,8 +24,6 @@ type ReportingLayerProps = {
 
 export function Layer({ isPinned = false, isSelected = false, reporting }: ReportingLayerProps) {
   const dispatch = useAppDispatch()
-
-  const { subThemes, themes } = useGetControlPlans()
 
   const ref = useRef<HTMLDivElement>(null)
   const { newWindowContainerRef } = useNewWindow()
@@ -133,12 +131,9 @@ export function Layer({ isPinned = false, isSelected = false, reporting }: Repor
             {reporting.createdAt && <Date>{getDateAsLocalizedStringCompact(reporting.createdAt, true)}</Date>}
           </Title>
           <div>
-            {reporting.themeId && (
-              <Theme>
-                {themes[reporting.themeId]?.theme} /{' '}
-                {reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', ')} -{' '}
-              </Theme>
-            )}
+            <Theme>
+              {reporting.theme.name} / {displaySubThemes([reporting.theme])} -{' '}
+            </Theme>
             <Description>{reporting.description}</Description>
           </div>
           <StatusActionTag controlStatus={reporting.controlStatus} />

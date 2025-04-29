@@ -6,6 +6,7 @@ import { PanelInlineItemLabel, PanelSubPart } from '@features/VigilanceArea/comp
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { Projection, transformExtent } from 'ol/proj'
@@ -86,7 +87,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
                 <LayerLegend
                   layerType={MonitorEnvLayers.REGULATORY_ENV}
                   legendKey={regulatoryArea?.entityName ?? 'aucun'}
-                  type={regulatoryArea?.thematique ?? 'aucun'}
+                  type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
                 />
                 <span title={regulatoryArea?.entityName}>{regulatoryArea?.entityName}</span>
               </Name>

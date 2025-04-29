@@ -5,6 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -21,15 +23,15 @@ data class EnvActionSurveillanceEntity(
     override val geom: Geometry? = null,
     override val facade: String? = null,
     override val department: String? = null,
-    override val missionId: Int? = null,
     @Patchable
     override var observationsByUnit: String? = null,
     override val openBy: String? = null,
     val awareness: AwarenessEntity?,
     val observations: String? = null,
+    val tags: List<TagEntity>,
+    var themes: List<ThemeEntity>,
 ) : EnvActionEntity(
         id = id,
         actionType = ActionTypeEnum.SURVEILLANCE,
-        missionId = missionId,
         observationsByUnit = observationsByUnit,
     )

@@ -1,24 +1,25 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
-import { OptionValue } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CheckPicker, CustomSearch } from '@mtes-mct/monitor-ui'
-import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
+import { CheckTreePicker, type CheckTreePickerOption } from '@mtes-mct/monitor-ui'
+import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 
 export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties }) {
   const dispatch = useAppDispatch()
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
-  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers ?? []), [regulatoryLayers])
+  const { data: themes } = useGetThemesQuery()
 
-  const regulatoryThemesCustomSearch = useMemo(() => new CustomSearch(regulatoryThemes, ['label']), [regulatoryThemes])
+  const themesOptions = useMemo(() => getThemesAsOptions(Object.values(themes ?? [])), [themes])
+
+  // const regulatoryTagsCustomSearch = useMemo(() => new CustomSearch(tagsOptions, ['label']), [tagsOptions])
 
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
@@ -28,12 +29,15 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
 
   const debouncedSearchLayers = useSearchLayers()
 
-  const handleSetFilteredRegulatoryThemes = filteredThemes => {
-    dispatch(setFilteredRegulatoryThemes(filteredThemes))
+  const handleSetFilteredRegulatoryThemes = (options: CheckTreePickerOption[] | undefined) => {
+    const nextThemes = options ? parseOptionsToThemes(options) : []
+
+    dispatch(setFilteredRegulatoryThemes(nextThemes))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
-      regulatoryThemes: filteredThemes,
+      regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: nextThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
@@ -42,23 +46,20 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
   }
 
   return (
-    <CheckPicker
-      key={String(regulatoryThemes.length)}
-      customSearch={regulatoryThemesCustomSearch}
+    <CheckTreePicker
+      childrenKey="subThemes"
       isLabelHidden
       isTransparent
-      label="Thématique réglementaire"
+      label="Filtre thématiques et sous-thématiques"
       name="regulatoryThemes"
       onChange={handleSetFilteredRegulatoryThemes}
-      options={regulatoryThemes || []}
-      placeholder="Thématique réglementaire"
-      renderValue={() =>
-        filteredRegulatoryThemes && (
-          <OptionValue>{`Thématique réglementaire (${filteredRegulatoryThemes.length})`}</OptionValue>
-        )
-      }
+      options={themesOptions}
+      placeholder="Thématiques et sous-thématiques"
+      renderedChildrenValue="Sous-thém."
+      renderedValue="Thématiques"
       style={style}
-      value={filteredRegulatoryThemes}
+      value={getThemesAsOptions(filteredRegulatoryThemes)}
+      // customSearch={regulatoryTagsCustomSearch}
     />
   )
 }

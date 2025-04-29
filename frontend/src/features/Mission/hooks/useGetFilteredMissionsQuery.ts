@@ -1,8 +1,8 @@
 import { useGetMissionsQuery } from '@api/missionsAPI'
 import { isMissionPartOfSelectedAdministrationNames } from '@features/Mission/useCases/filters/isMissionPartOfSelectedAdministrationNames'
 import { isMissionPartOfSelectedCompletionStatus } from '@features/Mission/useCases/filters/isMissionPartOfSelectedCompletionStatus'
-import { isMissionPartOfSelectedControlPlans } from '@features/Mission/useCases/filters/isMissionPartOfSelectedControlPlans'
 import { isMissionPartOfSelectedControlUnitIds } from '@features/Mission/useCases/filters/isMissionPartOfSelectedControlUnitIds'
+import { isMissionPartOfSelectedThemes } from '@features/Mission/useCases/filters/isMissionPartOfSelectedTheme'
 import { isMissionPartOfSelectedWithEnvActions } from '@features/Mission/useCases/filters/isMissionPartOfSelectedWithEnvActions'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { customDayjs } from '@mtes-mct/monitor-ui'
@@ -10,6 +10,7 @@ import { DateRangeEnum } from 'domain/entities/dateRange'
 import { useMemo } from 'react'
 
 import { TWO_MINUTES } from '../../../constants'
+import { isMissionPartOfSelectedTags } from '../useCases/filters/isMissionPartOfSelectedTags'
 
 export const useGetFilteredMissionsQuery = () => {
   const {
@@ -21,6 +22,7 @@ export const useGetFilteredMissionsQuery = () => {
     selectedPeriod,
     selectedSeaFronts,
     selectedStatuses,
+    selectedTags,
     selectedThemes,
     selectedWithEnvActions,
     startedAfter,
@@ -84,7 +86,8 @@ export const useGetFilteredMissionsQuery = () => {
     if (
       selectedAdministrationNames?.length === 0 &&
       selectedControlUnitIds?.length === 0 &&
-      selectedThemes?.length === 0
+      selectedThemes?.length === 0 &&
+      selectedTags?.length === 0
     ) {
       return missions
     }
@@ -93,7 +96,8 @@ export const useGetFilteredMissionsQuery = () => {
       mission =>
         isMissionPartOfSelectedAdministrationNames(mission, selectedAdministrationNames) &&
         isMissionPartOfSelectedControlUnitIds(mission, selectedControlUnitIds) &&
-        isMissionPartOfSelectedControlPlans(mission, selectedThemes) &&
+        isMissionPartOfSelectedThemes(mission, selectedThemes) &&
+        isMissionPartOfSelectedTags(mission, selectedTags) &&
         isMissionPartOfSelectedCompletionStatus(mission, selectedCompletionStatus) &&
         isMissionPartOfSelectedWithEnvActions(mission, selectedWithEnvActions)
     )
@@ -102,6 +106,7 @@ export const useGetFilteredMissionsQuery = () => {
     selectedAdministrationNames,
     selectedControlUnitIds,
     selectedThemes,
+    selectedTags,
     selectedCompletionStatus,
     selectedWithEnvActions
   ])

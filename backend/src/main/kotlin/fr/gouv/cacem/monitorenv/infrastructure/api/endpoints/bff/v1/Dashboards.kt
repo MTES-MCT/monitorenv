@@ -60,9 +60,9 @@ class Dashboards(
     ): DashboardDataOutput = fromDashboardEntity(saveDashboard.execute(dashboardDataInput.toDashboardEntity()))
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "create or update the given dashboard")
+    @Operation(summary = "delete the given dashboard")
     fun delete(
-        @PathParam("Mission Id")
+        @PathParam("Dashboard Id")
         @PathVariable(name = "id")
         id: UUID,
     ) {
