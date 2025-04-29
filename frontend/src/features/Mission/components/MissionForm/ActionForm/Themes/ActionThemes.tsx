@@ -23,17 +23,13 @@ type ActionThemeProps = {
 export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
   const {
     setFieldValue,
-    values: { endDateTimeUtc, envActions, startDateTimeUtc }
+    values: { envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionSurveillance | EnvActionControl>>()
   const [, error] = useField<ThemeFromAPI[]>(`envActions[${actionIndex}].themes`)
 
   const startDate = envActions[actionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
-  const endDate =
-    actionType === ActionTypeEnum.SURVEILLANCE
-      ? envActions[actionIndex]?.actionEndDateTimeUtc ?? endDateTimeUtc ?? new Date().toISOString()
-      : startDate
 
-  const { data } = useGetThemesQuery([startDate, endDate])
+  const { data } = useGetThemesQuery([startDate, startDate])
 
   const themesOptions = useMemo(() => {
     if (actionType === ActionTypeEnum.CONTROL) {
@@ -60,7 +56,7 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
           if (option) {
             setFieldValue(`envActions[${actionIndex}].themes`, parseOptionsToThemes(option))
           } else {
-            setFieldValue(`envActions[${actionIndex}].themes`, [])
+            setFieldValue(`envActions[${actionIndex}].themes`, undefined)
           }
         }}
         options={themesOptions}

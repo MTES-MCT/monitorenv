@@ -12,7 +12,7 @@ context('LayerTree > Regulatory Layers', () => {
 
     cy.clickButton('Arbre des couches')
   })
-  it('A regulation Should be searched, added to My Zones and showed on the map with the Zone button', () => {
+  it('A regulatory area Should be searched, added to My Zones and showed on the map with the Zone button', () => {
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
     cy.getDataCy('regulatory-result-list-button').contains('13 résultats')
 
