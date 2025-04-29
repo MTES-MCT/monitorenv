@@ -27,12 +27,14 @@ export const surveillanceGeometry: GeoJSON.Geometry = {
 context('Side Window > Mission Form > Mission actions', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
+    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     cy.visit(`/side_window`, {
       onBeforeLoad: () => {
         Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
         Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
       }
     })
+    cy.wait('@getMissions')
   })
 
   it('An infraction Should be duplicated', () => {
@@ -122,7 +124,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.fill('La surveillance a donné lieu à des actions de prévention', true)
 
-    cy.getDataCy('surveillance-awareness-select').click({ force: true }).within
+    cy.getDataCy('surveillance-awareness-select').click({ force: true })
 
     cy.getDataCy('surveillance-awareness-fields').within(() => {
       cy.get('div[role="option"]').then(options => {
@@ -162,7 +164,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.get('input[name="isControlAttachedToReporting"]').should('be.not.checked')
     cy.clickButton('Supprimer le contrôle')
 
-    // Attach reprting to surveillance
+    // Attach reporting to surveillance
     cy.wait(250)
     cy.getDataCy('action-card').eq(0).click()
     cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
@@ -232,6 +234,8 @@ context('Side Window > Mission Form > Mission actions', () => {
       // clean
       cy.wait(250)
       cy.clickButton('Fermer')
+      cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+      cy.wait('@getMissions')
       cy.getDataCy(`edit-mission-${id}`).click({ force: true })
       cy.clickButton('Supprimer la mission')
       cy.clickButton('Confirmer la suppression')
@@ -285,8 +289,6 @@ context('Side Window > Mission Form > Mission actions', () => {
 
   it('Should create surveillance and control actions with valid themes and subthemes depending on mission year', () => {
     // Given
-    cy.wait(400)
-
     cy.clickButton('Ajouter une nouvelle mission')
 
     // When
@@ -309,7 +311,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     // select sub-theme and tags
     cy.fill('Thématiques et sous-thématiques de contrôle', ['Autre (Épave)'])
     cy.fill('Tags et sous-tags', ['Mixte'])
-    cy.wait(250)
+    cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
+    cy.getDataCy('surveillance-completed-by').type('ABC', { force: true })
 
     // All fields are filled
     cy.getDataCy('action-all-fields-are-filled-text').should('exist')
@@ -317,9 +320,9 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     // Add a control
     cy.clickButton('Ajouter')
+    cy.wait(500)
     cy.clickButton('Ajouter des contrôles')
-    cy.wait(250)
-    cy.getDataCy('action-missing-fields-text').contains('7 champs nécessaires aux statistiques à compléter')
+    cy.getDataCy('action-missing-fields-text').contains('6 champs nécessaires aux statistiques à compléter')
     cy.clickButton('Ajouter un point de contrôle')
     cy.wait(200)
 
@@ -349,21 +352,20 @@ context('Side Window > Mission Form > Mission actions', () => {
       const themes = control.themes[0]
       expect(themes.id).equal(112)
       expect(themes.subThemes.length).equal(1)
-      expect(themes.subThemes[0]?.id).equal(231)
+      expect(themes.subThemes[0]?.id).equal(332)
       const tags = control.tags[0]
       expect(tags.id).equal(4)
-      expect(tags.subThemes.length).equal(0)
+      expect(tags.subTags.length).equal(0)
 
       // surveillance
       const surveillance: EnvActionSurveillance = envActions.find(a => a.actionType === 'SURVEILLANCE')
       const surveillanceThemes = surveillance.themes?.[0]
       expect(surveillanceThemes?.id).equal(105)
-      expect(surveillanceThemes?.subThemes?.length).equal(2)
-      expect(surveillanceThemes?.subThemes[0]?.id).equal(206)
-      expect(surveillanceThemes?.subThemes[1]?.id).equal(209)
+      expect(surveillanceThemes?.subThemes?.length).equal(1)
+      expect(surveillanceThemes?.subThemes[0]?.id).equal(286)
       const surveillanceTags = control.tags[0]
       expect(surveillanceTags.id).equal(4)
-      expect(surveillanceTags.subThemes.length).equal(0)
+      expect(surveillanceTags.subTags.length).equal(0)
 
       const id = response && response.body.id
       // update mission date to 2023
@@ -376,12 +378,12 @@ context('Side Window > Mission Form > Mission actions', () => {
       // check if themes in control has been reset
       cy.wait(250)
       cy.getDataCy('action-card').eq(0).click()
-      cy.getDataCy('action-missing-fields-text').contains('6 champs nécessaires aux statistiques à compléter')
+      cy.getDataCy('action-missing-fields-text').contains('5 champs nécessaires aux statistiques à compléter')
 
       // check if themes in surveillance has been reset
       cy.wait(250)
       cy.getDataCy('action-card').eq(1).click()
-      cy.getDataCy('action-missing-fields-text').contains('2 champs nécessaires aux statistiques à compléter')
+      cy.getDataCy('action-missing-fields-text').contains('1 champ nécessaire aux statistiques à compléter')
 
       // delete created mission
       cy.clickButton('Supprimer la mission')
@@ -456,7 +458,8 @@ context('Side Window > Mission Form > Mission actions', () => {
 
   it("Should display warning toast if fish api doesn't respond", () => {
     cy.fill('Période', 'Un mois')
-    cy.wait(500)
+    cy.wait('@getMissions')
+    cy.get('.Table-SimpleTable').scrollIntoView({ offset: { left: 0, top: 800 } })
     cy.getDataCy('edit-mission-27')
       .scrollIntoView({ offset: { left: 300, top: -100 } })
       .click({ force: true })

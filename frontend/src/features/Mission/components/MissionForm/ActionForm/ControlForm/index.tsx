@@ -14,6 +14,7 @@ import {
   Size,
   THEME,
   Toggle,
+  customDayjs,
   getOptionsFromLabelledEnum,
   pluralize,
   useNewWindow,
@@ -71,7 +72,7 @@ export function ControlForm({
   const {
     errors,
     setFieldValue,
-    values: { attachedReportings, endDateTimeUtc, envActions = [] }
+    values: { attachedReportings, endDateTimeUtc, envActions = [], startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionControl>>()
 
   const { actionsMissingFields } = useMissionAndActionsCompletion()
@@ -173,8 +174,15 @@ export function ControlForm({
     }
   }
 
+  const actionDate =
+    envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
+  const actualYearForThemes = customDayjs(actionDate).year()
+
   const updateControlDate = (date: string | undefined) => {
-    // setFieldValue(`envActions[${envActionIndex}].themes`, undefined)
+    const newControlDateYear = date ? customDayjs(date).year() : undefined
+    if (newControlDateYear && actualYearForThemes !== newControlDateYear) {
+      setFieldValue(`envActions[${envActionIndex}].themes`, undefined)
+    }
     setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
   }
 
