@@ -1,7 +1,7 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions, parseOptionsToThemes, sortThemes } from '@utils/getThemesAsOptions'
-import { useFormikContext } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -11,6 +11,8 @@ import {
   type EnvActionSurveillance,
   type Mission
 } from '../../../../../../domain/entities/missions'
+
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export const GENERAL_SURVEILLANCE = 'Surveillance générale'
 
@@ -23,6 +25,8 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
     setFieldValue,
     values: { endDateTimeUtc, envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionSurveillance | EnvActionControl>>()
+  const [, error] = useField<ThemeFromAPI[]>(`envActions[${actionIndex}].themes`)
+
   const startDate = envActions[actionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
   const endDate =
     actionType === ActionTypeEnum.SURVEILLANCE
@@ -45,8 +49,11 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
     <ActionThemeWrapper data-cy="envaction-theme-element">
       <CheckTreePicker
         childrenKey="subThemes"
+        error={error.error}
+        isErrorMessageHidden
         isLight
         isMultiSelect={actionType === ActionTypeEnum.SURVEILLANCE}
+        isRequired
         label="Thématiques et sous-thématiques de contrôle"
         name={`envActions[${actionIndex}].themes`}
         onChange={option => {
