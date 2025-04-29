@@ -9,6 +9,7 @@ import {
   Checkbox,
   CheckPicker,
   CheckTreePicker,
+  customDayjs,
   CustomSearch,
   DateRangePicker,
   Select,
@@ -59,7 +60,12 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
     const { administrations, completion, controlUnits, dates, status, tags, themes, types } = optionsList
 
     const controlUnitsData = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-    const { data } = useGetThemesQuery()
+
+    const dateRange: [string, string] = [
+      startedAfter ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
+      startedBefore ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
+    ]
+    const { data } = useGetThemesQuery(dateRange)
     const themesAPI: ThemeFromAPI[] = Object.values(data ?? [])
 
     const controlUnitCustomSearch = useMemo(
