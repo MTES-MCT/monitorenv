@@ -31,6 +31,7 @@ export enum MonitorEnvLayers {
   DASHBOARD = 'DASHBOARD',
   DASHBOARDS = 'DASHBOARDS',
   DASHBOARD_PREVIEW = 'DASHBOARD_PREVIEW',
+  DASHBOARD_RECENT_ACTIVITY = 'DASHBOARD_RECENT_ACTIVITY',
   DEPARTMENTS = 'DEPARTMENTS',
   DRAW = 'DRAW',
   DRAW_DASHBOARD = 'DRAW_DASHBOARD',
@@ -305,6 +306,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.DASHBOARDS,
     zIndex: 1500
   },
+  [MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY]: {
+    code: MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY,
+    zIndex: 1300
+  },
   [MonitorEnvLayers.AREA_ICON]: {
     code: MonitorEnvLayers.AREA_ICON,
     zIndex: 1500
@@ -347,6 +352,7 @@ export const SelectableLayers0To7 = [
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY],
   [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 
@@ -370,6 +376,7 @@ export const SelectableLayers7To26 = [
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY],
   [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 
@@ -392,6 +399,7 @@ export const HoverableLayers0To7 = [
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY],
   [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 
@@ -416,6 +424,7 @@ export const HoverableLayers7To26 = [
   [MonitorEnvLayers.DASHBOARD],
   [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW],
+  [MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY],
   [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
 ]
 

@@ -5,7 +5,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import styled, { css } from 'styled-components'
 
-import { calculateDotSize } from './Layers/RecentControlsActivityLayer'
+import { calculateDotSize } from '../utils'
 
 export type LegendLocation = 'OUTSIDE' | 'INSIDE'
 

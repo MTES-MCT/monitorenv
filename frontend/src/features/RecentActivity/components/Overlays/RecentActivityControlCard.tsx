@@ -8,13 +8,23 @@ import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 
 import type { Feature } from 'ol'
 
-export function RecentActivityControlCard({ control, isSelected = false }: { control: Feature; isSelected?: boolean }) {
+export function RecentActivityControlCard({
+  control,
+  isSelected = false
+}: {
+  control?: Feature
+  isSelected?: boolean
+}) {
   const dispatch = useAppDispatch()
+  const { themes } = useGetControlPlans()
+
+  if (!control) {
+    return null
+  }
 
   const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, id, infractions, missionId, themeIds } =
     control.getProperties()
 
-  const { themes } = useGetControlPlans()
   const controlThemes = themeIds?.map(themeId => themes[themeId]?.theme).join(',')
 
   const closeControl = () => {

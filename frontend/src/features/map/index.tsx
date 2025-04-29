@@ -1,4 +1,5 @@
 import { ActiveDashboardLayer } from '@features/Dashboard/components/Layers/ActiveDashboardLayer'
+import { DashboardRecentActivityLayer } from '@features/Dashboard/components/Layers/DashboardRecentActivityLayer'
 import { DashboardsLayer } from '@features/Dashboard/components/Layers/DashboardsLayer'
 import { DrawDashboardLayer } from '@features/Dashboard/components/Layers/DrawDashboardLayer'
 import { DashboardPreviewLayer } from '@features/Dashboard/components/Layers/PreviewDashboardLayer'
@@ -252,6 +253,8 @@ export function Map({ isSuperUser }) {
       <DashboardsLayer />
       {/* @ts-ignore */}
       <SelectedDashboardLayer />
+      {/* @ts-ignore */}
+      <DashboardRecentActivityLayer />
 
       {/* RECENT ACTIVITY */}
       {/* @ts-ignore */}
