@@ -54,7 +54,7 @@ export const extractFeatures = (
 ) => {
   const allFeatures: Feature[] = []
 
-  // Récupération des zones réglementaires
+  // RegulatoryAreas Features
   if (dashboard?.regulatoryAreaIds) {
     dashboard.regulatoryAreaIds.forEach(layerId => {
       const layer = regulatoryLayers?.entities[layerId]
@@ -88,7 +88,7 @@ export const extractFeatures = (
     })
   }
 
-  // Zones de vigilance
+  // Vigilance Areas features
   if (dashboard?.vigilanceAreaIds) {
     dashboard.vigilanceAreaIds.forEach(layerId => {
       const layer = vigilanceAreas?.entities[layerId]

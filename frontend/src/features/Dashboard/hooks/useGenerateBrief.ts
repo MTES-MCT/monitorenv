@@ -1,14 +1,19 @@
 import { getAmpsByIds } from '@api/ampsAPI'
 import { getControlUnitsByIds } from '@api/controlUnitsAPI'
+import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
 import { useImageConverter } from '@components/Form/Images/hook/useImageConverter'
 import { renderPDF } from '@features/Dashboard/components/Pdf/renderPdf'
 import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
+import { RecentActivity } from '@features/RecentActivity/types'
+import { getDatesFromFilters } from '@features/RecentActivity/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { useMemo, useState } from 'react'
+
+import { getRecentActivityFilters } from '../components/DashboardForm/slice'
 
 import type { Dashboard } from '@features/Dashboard/types'
 
@@ -17,6 +22,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
 
   const { subThemes, themes } = useGetControlPlans()
 
+  const recentActivityFilters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, dashboard.id))
   const controlUnits = useAppSelector(state => getControlUnitsByIds(state, dashboard.controlUnitIds))
   const regulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, dashboard.regulatoryAreaIds))
   const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
@@ -34,11 +40,33 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const allLinkedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, allLinkedRegulatoryAreaIds))
   const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
 
+  const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+  const filters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, activeDashboardId))
+  const [getRecentControlsActivity] = useGetRecentControlsActivityMutation()
+
   const { getImages, loading: loadingImages } = useExportImages()
   const attachementImages = useImageConverter(dashboard.images)
 
   const generateBrief = async () => {
-    const images = await getImages()
+    const startAfterFilter = filters?.startedAfter
+    const startBeforeFilter = filters?.startedBefore
+
+    const { startAfter, startBefore } = getDatesFromFilters({
+      periodFilter: filters?.periodFilter as RecentActivity.RecentActivityDateRangeEnum,
+      startAfterFilter,
+      startBeforeFilter
+    })
+
+    const recentActivity = await getRecentControlsActivity({
+      administrationIds: filters?.administrationIds,
+      controlUnitIds: filters?.controlUnitIds,
+      geometry: undefined,
+      startedAfter: startAfter,
+      startedBefore: startBefore,
+      themeIds: filters?.themeIds
+    }).unwrap()
+
+    const images = await getImages(recentActivity, dashboard.controlUnitIds)
 
     return {
       allLinkedAMPs,
@@ -52,6 +80,8 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       controlUnits,
       images,
       name: dashboard.name,
+      recentActivity,
+      recentActivityFilters,
       regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),
       subThemes,

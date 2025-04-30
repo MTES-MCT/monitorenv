@@ -91,7 +91,6 @@ export const layoutStyle = StyleSheet.create({
   regular: {
     fontWeight: 'normal'
   },
-
   row: {
     flexDirection: 'row'
   },

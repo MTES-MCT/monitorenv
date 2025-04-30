@@ -4,6 +4,7 @@ import { Amps } from './Amps'
 import { Attachments } from './Attachments'
 import { Cover } from './Layout/Cover'
 import { Headings } from './Layout/Headings'
+import { RecentActivity } from './RecentActivity'
 import { RegulatoryAreas } from './RegulatoryAreas'
 import { Reportings } from './Reportings'
 import { layoutStyle, registerFonts } from './style'
@@ -38,6 +39,16 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           />
         </View>
       </Page>
+      {brief.recentActivity && (
+        <RecentActivity
+          briefName={brief.name}
+          controlUnits={brief.controlUnits}
+          images={brief.images}
+          recentActivity={brief.recentActivity}
+          recentActivityFilters={brief.recentActivityFilters}
+          themes={brief.themes}
+        />
+      )}
       {brief.reportings.length > 0 && (
         <Page style={layoutStyle.page}>
           <Headings name={brief.name} />
