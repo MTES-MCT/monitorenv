@@ -4,10 +4,12 @@ import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
-import { Image, Link, Text, View } from '@react-pdf/renderer'
+import { Link, Text, View } from '@react-pdf/renderer'
 
+import { ExternalLink } from '../icons/ExternalLink'
+import { AreaImage } from '../Layout/AreaImage'
 import { areaStyle, layoutStyle } from '../style'
-import { getImage } from '../utils'
+import { getImage, getMinimap } from '../utils'
 
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
@@ -55,19 +57,11 @@ export function VigilanceAreas({
           )
 
           const image = getImage(images, Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
+          const minimap = getMinimap(images, Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
 
           return (
             <View key={vigilanceArea.id} style={areaStyle.wrapper} wrap={false}>
-              {image && (
-                <Image
-                  src={image}
-                  style={{
-                    height: 350,
-                    objectFit: 'cover',
-                    width: '100%'
-                  }}
-                />
-              )}
+              <AreaImage image={image} minimap={minimap} />
               <View style={areaStyle.card}>
                 <View style={areaStyle.header}>
                   <View
@@ -80,8 +74,8 @@ export function VigilanceAreas({
                   />
                   <Text> {vigilanceArea.name}</Text>
                 </View>
-                <View style={areaStyle.content}>
-                  <View style={[layoutStyle.row]}>
+                <View style={[areaStyle.content, { rowGap: 3 }]}>
+                  <View>
                     <View style={areaStyle.description}>
                       <Text>Période</Text>
                     </View>
@@ -93,7 +87,7 @@ export function VigilanceAreas({
                       <Text>{endingOccurenceText(vigilanceArea?.endingCondition, vigilanceArea?.computedEndDate)}</Text>
                     </View>
                   </View>
-                  <View style={[layoutStyle.row]}>
+                  <View>
                     <View style={areaStyle.description}>
                       <Text>Thématique</Text>
                     </View>
@@ -101,7 +95,7 @@ export function VigilanceAreas({
                       <Text>{vigilanceArea.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}</Text>
                     </View>
                   </View>
-                  <View style={[layoutStyle.row]}>
+                  <View>
                     <View style={areaStyle.description}>
                       <Text>Visibilité</Text>
                     </View>
@@ -150,7 +144,10 @@ export function VigilanceAreas({
                       <Text style={[areaStyle.description, { width: 'auto' }]}>Liens utiles</Text>
                       {vigilanceArea.links.map(link => (
                         <Link key={link.linkUrl} href={link.linkUrl} style={layoutStyle.link}>
-                          <Text>{link.linkText}</Text>
+                          <View style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}>
+                            <Text>{link.linkText} </Text>
+                            <ExternalLink color={layoutStyle.link.color} size={8} />
+                          </View>
                         </Link>
                       ))}
                     </View>

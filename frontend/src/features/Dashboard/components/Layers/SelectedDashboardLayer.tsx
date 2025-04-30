@@ -79,7 +79,7 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
       const feats: Feature[] = []
       const feat = new Feature({ geometry })
 
-      feat.setStyle([measurementStyle, measurementStyleWithCenter, overlayStroke])
+      feat.setStyle([measurementStyle(), measurementStyleWithCenter, overlayStroke])
       feat.setId(`${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`)
       feats.push(feat)
       selectedDashboardOnMap.reportings.forEach(reporting => {

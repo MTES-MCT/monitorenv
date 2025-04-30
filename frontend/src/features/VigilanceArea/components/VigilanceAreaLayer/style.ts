@@ -4,16 +4,25 @@ import { Fill, Stroke, Style } from 'ol/style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 
-const getStyle = (color: string, isSelected: boolean | undefined, isFilled: boolean = true) =>
-  new Style({
+const getStyle = (color: string, isSelected: boolean | undefined, asMinimap: boolean, isFilled: boolean = true) => {
+  const strokeColor = () => {
+    if (asMinimap) {
+      return getColorWithAlpha(THEME.color.charcoal, 1)
+    }
+
+    return isSelected ? getColorWithAlpha('#FF4433', 1) : getColorWithAlpha(THEME.color.rufous, 1)
+  }
+
+  return new Style({
     fill: new Fill({
       color: isFilled ? getColorWithAlpha(color, 0.5) : 'transparent'
     }),
     stroke: new Stroke({
-      color: isSelected ? getColorWithAlpha('#FF4433', 1) : getColorWithAlpha(THEME.color.rufous, 1),
-      width: isSelected ? 3 : 1
+      color: strokeColor(),
+      width: isSelected || asMinimap ? 3 : 1
     })
   })
+}
 
 export const getVigilanceAreaColorWithAlpha = (
   name: string | null = '',
@@ -32,5 +41,5 @@ export const getVigilanceAreaLayerStyle = feature => {
 
   const colorWithAlpha = getVigilanceAreaColorWithAlpha(feature.get('name'), feature.get('comments'), isArchived)
 
-  return getStyle(colorWithAlpha, feature.get('isSelected'), feature.get('isFilled'))
+  return getStyle(colorWithAlpha, feature.get('isSelected'), feature.get('asMinimap'), feature.get('isFilled'))
 }

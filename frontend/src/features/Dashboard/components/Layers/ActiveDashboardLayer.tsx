@@ -176,7 +176,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
           return
         }
         dashboardAreaFeature.setId(`${Layers.DASHBOARDS.code}:${activeDashboardId}`)
-        dashboardAreaFeature?.setStyle([measurementStyle, measurementStyleWithCenter, dashboardIcon()])
+        dashboardAreaFeature?.setStyle([measurementStyle(), measurementStyleWithCenter, dashboardIcon()])
 
         layersVectorSourceRef.current.addFeature(dashboardAreaFeature)
       }

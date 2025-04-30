@@ -13,18 +13,19 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 import { Feature, View } from 'ol'
-import { createEmpty, extend, type Extent } from 'ol/extent'
+import { buffer, createEmpty, extend, getHeight, getWidth, type Extent } from 'ol/extent'
+import { type Geometry } from 'ol/geom'
+import { fromExtent } from 'ol/geom/Polygon'
 import TileLayer from 'ol/layer/Tile'
 import VectorLayer from 'ol/layer/Vector'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
 import { OSM, TileWMS, XYZ } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
+import { Stroke, Style } from 'ol/style'
 import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react'
 
 import { getDashboardStyle } from '../components/Layers/style'
-
-import type { Geometry } from 'ol/geom'
 
 const resolution = { height: '480px', width: '720px' }
 
@@ -189,15 +190,15 @@ export function useExportImages() {
       if (!mapRef.current || !mapCanvas || !mapContext || !dashboardFeature) {
         return allImages
       }
+
       // eslint-disable-next-line no-restricted-syntax
       for (const feature of features) {
         mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
         layersVectorSourceRef.current.clear()
         layersVectorSourceRef.current.addFeature(feature)
-        layersVectorSourceRef.current.addFeature(dashboardFeature)
 
         // eslint-disable-next-line no-await-in-loop
-        await zoomToFeatures([dashboardFeature, feature])
+        await zoomToFeatures([feature])
 
         mapRef.current
           .getViewport()
@@ -211,10 +212,60 @@ export function useExportImages() {
           })
       }
 
+      const minimapFeatures = features.map(feature => {
+        const minimapFeature = new Feature(feature.getGeometry())
+        minimapFeature.setId(feature.getId())
+        minimapFeature.setProperties({ ...feature.getProperties(), asMinimap: true })
+
+        return minimapFeature
+      })
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const minimapFeature of minimapFeatures) {
+        mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
+
+        layersVectorSourceRef.current.clear()
+        layersVectorSourceRef.current.addFeature(minimapFeature)
+        layersVectorSourceRef.current.addFeature(dashboardFeature)
+        const featureGeom = minimapFeature.getGeometry()?.getExtent()
+        if (featureGeom) {
+          const width = getWidth(featureGeom)
+          const height = getHeight(featureGeom)
+          const marginRatio = 0.1
+          const margin = Math.max(width, height) * marginRatio
+          const extendWithMargin = buffer(featureGeom, margin)
+          const square = new Feature(fromExtent(extendWithMargin))
+          square.setStyle(
+            new Style({
+              stroke: new Stroke({
+                color: 'red',
+                width: 2
+              })
+            })
+          )
+          layersVectorSourceRef.current.addFeature(square)
+        }
+
+        // eslint-disable-next-line no-await-in-loop
+        await zoomToFeatures([dashboardFeature, minimapFeature])
+
+        mapRef.current
+          .getViewport()
+          .querySelectorAll('canvas')
+          .forEach(canvas => {
+            mapContext.drawImage(canvas, 0, 0)
+            allImages.push({
+              featureId: `MINIMAP:${minimapFeature.getId()}`,
+              image: mapCanvas.toDataURL('image/png')
+            })
+          })
+      }
+
       extractReportingFeatures(features)
 
       layersVectorSourceRef.current.clear(true)
 
+      dashboardFeature.setStyle([measurementStyle()])
       layersVectorSourceRef.current.addFeatures([...features, dashboardFeature])
 
       await zoomToFeatures([dashboardFeature])
@@ -256,7 +307,7 @@ export function useExportImages() {
     const features = extractFeatures(activeDashboard, regulatoryLayers, ampLayers, vigilanceAreas)
     const dashboardFeature = dashboard?.dashboard.geom ? getFeature(dashboard.dashboard.geom) : undefined
     if (dashboardFeature) {
-      dashboardFeature.setStyle([measurementStyle])
+      dashboardFeature.setStyle([measurementStyle({ filled: true })])
     }
 
     const generateImages = async () => {

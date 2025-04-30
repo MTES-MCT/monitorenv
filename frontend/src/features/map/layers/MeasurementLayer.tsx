@@ -96,7 +96,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
         className: Layers.MEASUREMENT.code,
         renderBuffer: 7,
         source: GetVectorSource(),
-        style: [measurementStyle, measurementStyleWithCenter],
+        style: [measurementStyle(), measurementStyleWithCenter],
         zIndex: Layers.MEASUREMENT.zIndex
       })
       map.getLayers().push(vectorLayer)
@@ -183,7 +183,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
       const draw = new Draw({
         source: GetVectorSource(),
         stopClick: true,
-        style: [measurementStyle, measurementStyleWithCenter],
+        style: [measurementStyle(), measurementStyleWithCenter],
         type: measurementTypeToAdd
       })
       let listener
@@ -271,7 +271,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
           WSG84_PROJECTION,
           OPENLAYERS_PROJECTION
         ),
-        style: [measurementStyle, measurementStyleWithCenter]
+        style: [measurementStyle(), measurementStyleWithCenter]
       })
 
       dispatch(saveMeasurement(circleFeature, circleMeasurementToAdd?.circleRadiusToAdd))
