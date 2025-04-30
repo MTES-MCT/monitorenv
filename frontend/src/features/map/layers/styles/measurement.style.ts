@@ -25,10 +25,16 @@ export const measurementStyleWithCenter = new Style({
   })
 })
 
-export const measurementStyle = new Style({
-  stroke: new Stroke({
-    color: THEME.color.slateGray,
-    lineDash: [4, 4],
-    width: 2
+export const measurementStyle = ({ filled = false } = {}) =>
+  new Style({
+    fill: filled
+      ? new Fill({
+          color: '#70707033'
+        })
+      : undefined,
+    stroke: new Stroke({
+      color: THEME.color.slateGray,
+      lineDash: [4, 4],
+      width: 2
+    })
   })
-})

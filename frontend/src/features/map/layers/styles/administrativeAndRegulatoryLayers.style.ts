@@ -188,19 +188,28 @@ export const getAdministrativeLayersStyle = (code: String) => {
 export const getRegulatoryLayerStyle = feature => {
   const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'), feature.get('entityName'))
 
-  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('isFilled'))
+  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('isFilled'), feature.get('asMinimap'))
 }
 
-const getStyle = (color, metadataIsShowed, isLayerFilled) =>
-  new Style({
+const getStyle = (color: string, metadataIsShowed: boolean, isLayerFilled: boolean, asMinimap: boolean) => {
+  const strokeColor = () => {
+    if (asMinimap) {
+      return getColorWithAlpha(THEME.color.charcoal, 1)
+    }
+
+    return metadataIsShowed ? getColorWithAlpha('#85FBFD', 0.7) : getColorWithAlpha(THEME.color.charcoal, 0.7)
+  }
+
+  return new Style({
     fill: new Fill({
       color: isLayerFilled ? color : 'transparent'
     }),
     stroke: new Stroke({
-      color: metadataIsShowed ? getColorWithAlpha('#85FBFD', 0.7) : getColorWithAlpha(THEME.color.charcoal, 0.7),
-      width: metadataIsShowed ? 3 : 1
+      color: strokeColor(),
+      width: metadataIsShowed || asMinimap ? 3 : 1
     })
   })
+}
 
 export const getRegulatoryEnvColorWithAlpha = (
   type: string | null = '',

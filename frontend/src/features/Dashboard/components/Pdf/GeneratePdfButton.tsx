@@ -18,7 +18,7 @@ export function GeneratePdfButton({ dashboard }: GeneratePdfButtonProps) {
     downloadPdf(brief)
     trackEvent({
       action: 'Téléchargement du brief',
-      category: 'TABLEAU DE BORD &  BRIEF',
+      category: 'TABLEAU DE BORD & BRIEF',
       name: 'Téléchargement du brief'
     })
   }

@@ -117,19 +117,17 @@ export const areaStyle = StyleSheet.create({
     left: 10,
     position: 'absolute',
     top: 10,
-    width: '30%'
+    width: '25%'
   },
   content: {
     backgroundColor: THEME.color.white,
     padding: 5.5
   },
   description: {
-    color: THEME.color.slateGray,
-    width: '30%'
+    color: THEME.color.slateGray
   },
   details: {
-    color: THEME.color.gunMetal,
-    width: '70%'
+    color: THEME.color.gunMetal
   },
   header: {
     alignItems: 'center',
@@ -144,6 +142,15 @@ export const areaStyle = StyleSheet.create({
     height: 8,
     marginRight: 2,
     width: 8
+  },
+  minimap: {
+    borderColor: THEME.color.white,
+    borderStyle: 'solid',
+    borderWidth: 2.5,
+    bottom: 7.4,
+    position: 'absolute',
+    right: 7.4,
+    width: 93
   },
   wrapper: {
     display: 'flex',
