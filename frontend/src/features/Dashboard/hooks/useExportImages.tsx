@@ -7,6 +7,8 @@ import { Dashboard } from '@features/Dashboard/types'
 import { extractFeatures } from '@features/Dashboard/utils'
 import { CENTERED_ON_FRANCE } from '@features/map/BaseMap'
 import { measurementStyle } from '@features/map/layers/styles/measurement.style'
+import { recentControlActivityStyle } from '@features/RecentActivity/components/Layers/style'
+import { getRecentActivityFeatures } from '@features/RecentActivity/utils'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -182,7 +184,12 @@ export function useExportImages() {
   }, [backgroundMap])
 
   const exportImages = useCallback(
-    async (features: Feature[], dashboardFeature?: Feature) => {
+    async (
+      features: Feature[],
+      recentActivityFeatures: Feature[],
+      controlUnitIds: number[],
+      dashboardFeature?: Feature
+    ) => {
       const allImages: ExportImageType[] = []
       const mapCanvas = mapRef.current?.getViewport().querySelector('canvas')
       const mapContext = mapCanvas?.getContext('2d')
@@ -191,10 +198,48 @@ export function useExportImages() {
         return allImages
       }
 
+      layersVectorSourceRef.current.clear()
+      layersVectorSourceRef.current.addFeatures([...recentActivityFeatures, dashboardFeature])
+      await zoomToFeatures([dashboardFeature])
+      mapRef.current
+        ?.getTargetElement()
+        .querySelectorAll('canvas')
+        .forEach(canvas => {
+          mapContext?.drawImage(canvas, 0, 0)
+        })
+      allImages.push({
+        featureId: Dashboard.featuresCode.DASHBOARD_ALL_RECENT_ACTIVITY,
+        image: mapCanvas.toDataURL('image/png')
+      })
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const controlUnitId of controlUnitIds) {
+        const recentActivityFeaturesByControlUnit = recentActivityFeatures.filter(feature =>
+          feature.get('controlUnitIds').some(id => id === controlUnitId)
+        )
+        mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
+        layersVectorSourceRef.current.clear(true)
+        layersVectorSourceRef.current.addFeatures([...recentActivityFeaturesByControlUnit, dashboardFeature])
+
+        // eslint-disable-next-line no-await-in-loop
+        await zoomToFeatures([dashboardFeature])
+
+        mapRef.current
+          .getViewport()
+          .querySelectorAll('canvas')
+          .forEach(canvas => {
+            mapContext.drawImage(canvas, 0, 0)
+            allImages.push({
+              featureId: `${Dashboard.featuresCode.DASHBOARD_RECENT_ACTIVITY_BY_UNIT}:${controlUnitId}`,
+              image: mapCanvas.toDataURL('image/png')
+            })
+          })
+      }
+
       // eslint-disable-next-line no-restricted-syntax
       for (const feature of features) {
         mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
-        layersVectorSourceRef.current.clear()
+        layersVectorSourceRef.current.clear(true)
         layersVectorSourceRef.current.addFeature(feature)
 
         // eslint-disable-next-line no-await-in-loop
@@ -267,9 +312,7 @@ export function useExportImages() {
 
       dashboardFeature.setStyle([measurementStyle()])
       layersVectorSourceRef.current.addFeatures([...features, dashboardFeature])
-
       await zoomToFeatures([dashboardFeature])
-
       mapRef.current
         ?.getTargetElement()
         .querySelectorAll('canvas')
@@ -299,7 +342,7 @@ export function useExportImages() {
     }
   }, [])
 
-  const getImages = () => {
+  const getImages = (recentActivity, controlUnitIds) => {
     if (!mapRef.current) {
       return undefined
     }
@@ -310,9 +353,20 @@ export function useExportImages() {
       dashboardFeature.setStyle([measurementStyle({ filled: true })])
     }
 
+    let recentActivityFeatures: Feature[]
+    if (recentActivity) {
+      recentActivityFeatures = getRecentActivityFeatures(
+        recentActivity,
+        Dashboard.featuresCode.DASHBOARD_ALL_RECENT_ACTIVITY
+      )
+      recentActivityFeatures.forEach(feature => {
+        feature.setStyle(recentControlActivityStyle)
+      })
+    }
+
     const generateImages = async () => {
       setLoading(true)
-      const allImages = await exportImages(features, dashboardFeature)
+      const allImages = await exportImages(features, recentActivityFeatures, controlUnitIds, dashboardFeature)
       setLoading(false)
 
       return allImages

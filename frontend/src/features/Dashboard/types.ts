@@ -1,5 +1,7 @@
+import { RecentActivity } from '@features/RecentActivity/types'
 import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 
+import type { RecentActivityFilters } from './components/DashboardForm/slice'
 import type { ExportImageType } from './hooks/useExportImages'
 import type { AMP, AMPFromAPI } from '../../domain/entities/AMPs'
 import type {
@@ -60,6 +62,8 @@ export namespace Dashboard {
     controlUnits: ControlUnit.ControlUnit[]
     images: ExportImageType[] | undefined
     name: string
+    recentActivity: RecentActivity.RecentControlsActivity[]
+    recentActivityFilters: RecentActivityFilters
     regulatoryAreas: RegulatoryLayerWithMetadata[]
     reportings: Reporting[]
     subThemes: ControlPlansSubThemeCollection
@@ -117,7 +121,9 @@ export namespace Dashboard {
   }
 
   export enum Layer {
+    DASHBOARD_ALL_RECENT_ACTIVITY = 'DASHBOARD_ALL_RECENT_ACTIVITY',
     DASHBOARD_AMP = 'DASHBOARD_AMP',
+    DASHBOARD_RECENT_ACTIVITY_BY_UNIT = 'DASHBOARD_RECENT_ACTIVITY_BY_UNIT',
     DASHBOARD_REGULATORY_AREAS = 'DASHBOARD_REGULATORY_AREAS',
     DASHBOARD_REPORTINGS = 'DASHBOARD_REPORTINGS',
     DASHBOARD_VIGILANCE_AREAS = 'DASHBOARD_VIGILANCE_AREAS'
@@ -127,7 +133,9 @@ export namespace Dashboard {
     [Layer.DASHBOARD_REGULATORY_AREAS]: 'DASHBOARD_REGULATORY_AREAS',
     [Layer.DASHBOARD_REPORTINGS]: 'DASHBOARD_REPORTINGS',
     [Layer.DASHBOARD_VIGILANCE_AREAS]: 'DASHBOARD_VIGILANCE_AREAS',
-    [Layer.DASHBOARD_AMP]: 'DASHBOARD_AMP'
+    [Layer.DASHBOARD_AMP]: 'DASHBOARD_AMP',
+    [Layer.DASHBOARD_ALL_RECENT_ACTIVITY]: 'DASHBOARD_ALL_RECENT_ACTIVITY',
+    [Layer.DASHBOARD_RECENT_ACTIVITY_BY_UNIT]: 'DASHBOARD_RECENT_ACTIVITY_BY_UNIT'
   }
 
   export const BackgroundMapLabel: Record<BaseLayer, string> = {

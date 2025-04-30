@@ -1,6 +1,5 @@
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
 import { RecentActivity } from '@features/RecentActivity/types'
-import { customDayjs } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
@@ -9,9 +8,8 @@ import OpenLayerMap from 'ol/Map'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'
 
-import { getRecentControlActivityGeometry } from '../components/Layers/recentControlActivityGeometryHelper'
 import { recentControlActivityStyle } from '../components/Layers/style'
-import { calculateDotSize } from '../utils'
+import { getDatesFromFilters, getRecentActivityFeatures } from '../utils'
 
 import type { RecentActivityFilters } from '../slice'
 import type { OverlayCoordinates } from 'domain/shared_slices/Global'
@@ -44,8 +42,8 @@ export function useRecentActivitylayer({
     if (!filters) {
       return
     }
-    let startAfterFilter = filters.startedAfter
-    let startBeforeFilter = filters.startedBefore
+    const startAfterFilter = filters.startedAfter
+    const startBeforeFilter = filters.startedBefore
 
     if (
       filters.periodFilter === RecentActivity.RecentActivityDateRangeEnum.CUSTOM &&
@@ -55,35 +53,18 @@ export function useRecentActivitylayer({
       return
     }
 
-    switch (filters?.periodFilter) {
-      case RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS:
-        startAfterFilter = customDayjs().utc().subtract(7, 'day').startOf('day').toISOString()
-        startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
-        break
-      case RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS:
-        startAfterFilter = customDayjs().utc().subtract(30, 'day').startOf('day').toISOString()
-        startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
-        break
-      case RecentActivity.RecentActivityDateRangeEnum.THREE_LAST_MONTHS:
-        startAfterFilter = customDayjs().utc().subtract(3, 'month').startOf('day').toISOString()
-        startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
-        break
-      case RecentActivity.RecentActivityDateRangeEnum.CURRENT_YEAR:
-        startAfterFilter = customDayjs().utc().startOf('year').toISOString()
-        startBeforeFilter = customDayjs().utc().endOf('day').toISOString()
-        break
-      case RecentActivity.RecentActivityDateRangeEnum.CUSTOM:
-        break
-      default:
-        break
-    }
+    const { startAfter, startBefore } = getDatesFromFilters({
+      periodFilter: filters.periodFilter as RecentActivity.RecentActivityDateRangeEnum,
+      startAfterFilter,
+      startBeforeFilter
+    })
 
     getRecentControlsActivity({
       administrationIds: filters?.administrationIds,
       controlUnitIds: filters?.controlUnitIds,
       geometry: filters && 'geometry' in filters ? filters.geometry : undefined,
-      startedAfter: startAfterFilter,
-      startedBefore: startBeforeFilter,
+      startedAfter: startAfter,
+      startedBefore: startBefore,
       themeIds: filters?.themeIds
     })
   }, [filters, getRecentControlsActivity])
@@ -108,30 +89,7 @@ export function useRecentActivitylayer({
       vectorSourceRef.current.clear(true)
 
       if (recentControlsActivity && isLayerVisible) {
-        const features = recentControlsActivity.flatMap(control => {
-          if (control.actionNumberOfControls === 0 || !control.actionNumberOfControls) {
-            return []
-          }
-          // total number of controls in action
-          const totalControls = control.actionNumberOfControls
-
-          // total number of persons controlled in all infractions
-          const totalControlsInInfractions = control.infractions.reduce(
-            (acc, infraction) => acc + infraction.nbTarget,
-            0
-          )
-
-          const ratioInfractionsInControls = (totalControlsInInfractions / totalControls) * 100
-
-          const iconSize = calculateDotSize(totalControls)
-
-          return getRecentControlActivityGeometry({
-            control,
-            iconSize,
-            layerName,
-            ratioInfractionsInControls
-          })
-        })
+        const features = getRecentActivityFeatures(recentControlsActivity, layerName)
         vectorSourceRef.current.addFeatures(features)
       }
 
