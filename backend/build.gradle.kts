@@ -5,7 +5,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "3.4.4"
+    id("org.springframework.boot") version "3.4.5"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     kotlin("jvm") version "2.1.20"
@@ -55,12 +55,12 @@ tasks.withType<KotlinCompile> {
 }
 
 val ktorVersion = "3.1.2"
-val testcontainersVersion = "1.20.6"
-val sentryVersion = "8.6.0"
-val flywayVersion = "11.5.0"
+val testcontainersVersion = "1.21.0"
+val sentryVersion = "8.11.1"
+val flywayVersion = "11.8.0"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.4.4"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.4.5"))
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -77,17 +77,17 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.hibernate.orm:hibernate-spatial:6.6.12.Final")
+    implementation("org.hibernate.orm:hibernate-spatial:6.6.13.Final")
     implementation("org.hibernate.validator:hibernate-validator:8.0.2.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.9.9")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.9.10")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.0")
     implementation("org.n52.jackson:jackson-datatype-jts:2.0.0")
 
     // HTTP Clients (Ktor)
@@ -121,7 +121,7 @@ dependencies {
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     testImplementation("net.ttddyy:datasource-proxy:1.10.1")
-    testImplementation("io.mockk:mockk:1.13.17")
+    testImplementation("io.mockk:mockk:1.14.2")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
