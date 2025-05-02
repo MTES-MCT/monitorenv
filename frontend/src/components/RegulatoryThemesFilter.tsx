@@ -7,6 +7,8 @@ import { CheckTreePicker, type CheckTreePickerOption } from '@mtes-mct/monitor-u
 import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 
+import type { ThemeOption } from '../domain/entities/themes.ts'
+
 export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties }) {
   const dispatch = useAppDispatch()
 
@@ -29,9 +31,7 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
 
   const debouncedSearchLayers = useSearchLayers()
 
-  const handleSetFilteredRegulatoryThemes = (options: CheckTreePickerOption[] | undefined) => {
-    const nextThemes = options ? parseOptionsToThemes(options) : []
-
+  const handleSetFilteredRegulatoryThemes = (nextThemes: ThemeOption[] | undefined) => {
     dispatch(setFilteredRegulatoryThemes(nextThemes))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
