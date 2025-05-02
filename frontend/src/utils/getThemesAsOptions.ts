@@ -1,28 +1,26 @@
-import type { CheckTreePickerOption, Option } from '@mtes-mct/monitor-ui'
-import type { ThemeFromAPI } from 'domain/entities/themes'
+import type { CheckTreePickerOption, Option } from '@mtes-mct/monitor-ui__root'
+import type { ThemeFromAPI, ThemeOption } from 'domain/entities/themes'
 
-export const getThemesAsOptions = (
-  themes: ThemeFromAPI[],
-  childrenKey: string = 'subThemes'
-): CheckTreePickerOption[] =>
+export const getThemesAsOptions = (themes: ThemeFromAPI[], childrenKey: string = 'subThemes'): ThemeOption[] =>
   themes
     .map(theme => {
       const subThemes =
         theme.subThemes.length === 0
           ? undefined
           : {
-              [childrenKey]: theme.subThemes
-                .map(({ id, name }) => ({ label: name, value: id }))
-                .sort((a, b) => a.label.localeCompare(b.label))
+              [childrenKey]:
+                theme.subThemes.length === 0
+                  ? undefined
+                  : theme.subThemes.map(({ id, name }) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name))
             }
 
       return {
         ...subThemes,
-        label: theme.name,
-        value: theme.id
+        id: theme.id,
+        name: theme.name
       }
     })
-    .sort((a, b) => a.label.localeCompare(b.label))
+    .sort((a, b) => a.name.localeCompare(b.name))
 
 export const getThemesAsOptionsCheckPicker = (themes: ThemeFromAPI[]): Option<number>[] =>
   themes.map(theme => ({ label: theme.name, value: theme.id })).sort((a, b) => a.label.localeCompare(b.label))
@@ -56,13 +54,13 @@ export const displayThemes = (themes?: ThemeFromAPI[]) => themes?.map(({ name })
 export const displaySubThemes = (themes?: ThemeFromAPI[]) =>
   themes?.flatMap(({ subThemes }) => subThemes.map(({ name }) => name)).join(', ')
 
-export const sortThemes = (a: CheckTreePickerOption, b: CheckTreePickerOption) => {
-  if (a.label.startsWith('Autre')) {
+export const sortThemes = (a: ThemeOption, b: ThemeOption) => {
+  if (a.name.startsWith('Autre')) {
     return 1
   }
-  if (b.label.startsWith('Autre')) {
+  if (b.name.startsWith('Autre')) {
     return -1
   }
 
-  return a?.label.localeCompare(b?.label)
+  return a?.name.localeCompare(b?.name)
 }

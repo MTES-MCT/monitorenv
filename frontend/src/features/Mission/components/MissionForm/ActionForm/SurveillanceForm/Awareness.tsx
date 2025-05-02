@@ -1,14 +1,13 @@
-import { Checkbox, FormikNumberInput, FormikSelect, Label } from '@mtes-mct/monitor-ui'
+import { Checkbox, FormikNumberInput, FormikSelect, Label, type Option } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui'
 import type { EnvActionSurveillance, Mission } from 'domain/entities/missions'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type AwarenessProps = {
-  awarenessOptions: CheckTreePickerOption[]
+  awarenessOptions: Option<number>[]
   formPath: string
 }
 export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
