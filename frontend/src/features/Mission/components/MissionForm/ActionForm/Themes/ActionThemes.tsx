@@ -1,6 +1,6 @@
 import { useGetThemesQuery } from '@api/themesAPI'
-import { CheckTreePicker } from '@mtes-mct/monitor-ui'
-import { getThemesAsOptions, parseOptionsToThemes, sortThemes } from '@utils/getThemesAsOptions'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
+import { getThemesAsOptions, sortThemes } from '@utils/getThemesAsOptions'
 import { useField, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -34,7 +34,7 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
   const themesOptions = useMemo(() => {
     if (actionType === ActionTypeEnum.CONTROL) {
       return getThemesAsOptions(Object.values(data ?? []))
-        .filter(theme => theme.label !== GENERAL_SURVEILLANCE)
+        .filter(theme => theme.name !== GENERAL_SURVEILLANCE)
         .sort(sortThemes)
     }
 
@@ -51,16 +51,18 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
         isMultiSelect={actionType === ActionTypeEnum.SURVEILLANCE}
         isRequired
         label="Thématiques et sous-thématiques de contrôle"
+        labelKey="name"
         name={`envActions[${actionIndex}].themes`}
         onChange={option => {
           if (option) {
-            setFieldValue(`envActions[${actionIndex}].themes`, parseOptionsToThemes(option))
+            setFieldValue(`envActions[${actionIndex}].themes`, option)
           } else {
             setFieldValue(`envActions[${actionIndex}].themes`, undefined)
           }
         }}
         options={themesOptions}
-        value={getThemesAsOptions(envActions[actionIndex]?.themes ?? [])}
+        value={envActions[actionIndex]?.themes}
+        valueKey="id"
       />
     </ActionThemeWrapper>
   )
