@@ -5,9 +5,9 @@ import {
   type Mission
 } from '../../../../domain/entities/missions'
 
-import type { TagFromAPI } from 'domain/entities/tags'
+import type { TagOption } from 'domain/entities/tags'
 
-export function isMissionPartOfSelectedTags(mission: Mission, selectedTags: TagFromAPI[] | undefined) {
+export function isMissionPartOfSelectedTags(mission: Mission, selectedTags: TagOption[] | undefined) {
   if (!selectedTags || selectedTags.length === 0) {
     return true
   }

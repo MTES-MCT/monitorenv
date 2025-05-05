@@ -10,18 +10,19 @@ import {
   CustomSearch,
   getOptionsFromLabelledEnum,
   Icon,
+  type OptionValueType,
   Select,
-  THEME,
-  type CheckTreePickerOption,
-  type OptionValueType
-} from '@mtes-mct/monitor-ui'
+  THEME
+} from '@mtes-mct/monitor-ui__root'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
-import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { dashboardFiltersActions } from '../../slice'
 import { SelectedPinButton } from '../../ToggleSelectAll/style'
+
+import type { TagOption } from '../../../../../../domain/entities/tags'
 
 type FiltersProps = {
   dashboard: DashboardType
@@ -47,8 +48,7 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
-  const setFilteredRegulatoryTags = (value: CheckTreePickerOption[] | undefined) => {
-    const nextTag = value ? parseOptionsToTags(value) : undefined
+  const setFilteredRegulatoryTags = (nextTag: TagOption[] | undefined) => {
     dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: nextTag }, id }))
   }
 
@@ -68,9 +68,8 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
 
       return
     }
-    const allRegulatoryAreas = parseOptionsToTags(regulatoryTagsAsOptions)
 
-    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: allRegulatoryAreas }, id }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: regulatoryTagsAsOptions }, id }))
   }
   const renderExtraFooter = () => (
     <SelectAllRegulatoryAreasContainer>
@@ -108,18 +107,16 @@ export function DashboardFilters({ dashboard }: FiltersProps) {
           isLabelHidden
           isTransparent
           label="Thématique réglementaire"
+          labelKey="name"
           name="regulatoryTags"
           onChange={setFilteredRegulatoryTags}
           options={regulatoryTagsAsOptions}
           placeholder="Thématique réglementaire"
           renderExtraFooter={renderExtraFooter}
-          renderValue={() =>
-            filters?.regulatoryTags && (
-              <OptionValue>{`Thématique réglementaire (${filters?.regulatoryTags.length})`}</OptionValue>
-            )
-          }
+          shouldShowLabels={false}
           style={{ width: '310px' }}
-          value={getTagsAsOptions(filters?.regulatoryTags ?? [])}
+          value={filters?.regulatoryTags}
+          valueKey="id"
         />
         <Select
           isLabelHidden

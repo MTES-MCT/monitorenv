@@ -1,4 +1,4 @@
-import type { CheckTreePickerOption, Option } from '@mtes-mct/monitor-ui__root'
+import type { Option } from '@mtes-mct/monitor-ui__root'
 import type { ThemeFromAPI, ThemeOption } from 'domain/entities/themes'
 
 export const getThemesAsOptions = (themes: ThemeFromAPI[], childrenKey: string = 'subThemes'): ThemeOption[] =>
@@ -26,26 +26,28 @@ export const getThemesAsOptionsCheckPicker = (themes: ThemeFromAPI[]): Option<nu
   themes.map(theme => ({ label: theme.name, value: theme.id })).sort((a, b) => a.label.localeCompare(b.label))
 
 export const parseOptionsToThemes = (
-  options: CheckTreePickerOption[],
-  childrenKey: string = 'subThemes'
-): ThemeFromAPI[] =>
-  options.map(option => ({
-    id: +option.value,
-    name: option.label,
-    subThemes: (option[childrenKey] ?? []).map((child: CheckTreePickerOption) => ({
-      id: child.value,
-      name: child.label
+  options: ThemeOption[] | undefined,
+  childrenKey = 'subThemes',
+  valueKey = 'id',
+  labelKey = 'name'
+): ThemeFromAPI[] | undefined =>
+  options?.map(option => ({
+    id: option[valueKey],
+    name: option[labelKey],
+    subThemes: (option[childrenKey] ?? []).map((child: ThemeOption) => ({
+      id: child[valueKey],
+      name: child[labelKey]
     }))
   }))
 
-export const filterSubThemes = (theme: ThemeFromAPI, themeToFilter: ThemeFromAPI): ThemeFromAPI | undefined => {
-  if (theme.subThemes.length === 1) {
+export const filterSubThemes = (theme: ThemeOption, themeToFilter: ThemeOption): ThemeOption | undefined => {
+  if (theme.subThemes?.length === 1) {
     return undefined
   }
 
   return {
     ...theme,
-    subThemes: theme.subThemes.filter(subTheme => subTheme.id !== themeToFilter.id)
+    subThemes: theme.subThemes?.filter(subTheme => subTheme.id !== themeToFilter.id)
   }
 }
 

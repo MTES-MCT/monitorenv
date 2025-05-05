@@ -1,5 +1,5 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
-import { CheckTreePicker } from '@mtes-mct/monitor-ui'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
 import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { useField } from 'formik'
 import { useMemo } from 'react'
@@ -23,18 +23,16 @@ export function ActionTags({ actionIndex }: ActionTagsProps) {
         childrenKey="subTags"
         isLight
         label="Tags et sous-tags"
+        labelKey="name"
         name={`envActions[${actionIndex}].tags`}
         onChange={option => {
-          if (option) {
-            helpers.setValue(parseOptionsToTags(option))
-          } else {
-            helpers.setValue([])
-          }
+          helpers.setValue(parseOptionsToTags(option) ?? [])
         }}
         options={tagsOptions}
         renderedChildrenValue="Sous-tags."
         renderedValue="Tags"
         value={getTagsAsOptions(currentTags.value)}
+        valueKey="id"
       />
     </Wrapper>
   )

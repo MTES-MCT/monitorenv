@@ -1,4 +1,7 @@
+import { useGetAMPsQuery } from '@api/ampsAPI'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
@@ -19,12 +22,9 @@ import {
   setGlobalSearchText,
   setVigilanceAreaSpecificPeriodFilter
 } from './slice'
-import { useGetAMPsQuery } from '../../../api/ampsAPI'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
 
-import type { TagFromAPI } from 'domain/entities/tags'
-import type { ThemeFromAPI } from 'domain/entities/themes'
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 
 export function LayerSearch() {
   const dispatch = useAppDispatch()
@@ -78,7 +78,7 @@ export function LayerSearch() {
     })
   }
 
-  const handleSetFilteredRegulatoryTags = (filteredTags: TagFromAPI[]) => {
+  const handleSetFilteredRegulatoryTags = (filteredTags: TagOption[]) => {
     dispatch(setFilteredRegulatoryTags(filteredTags))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
@@ -92,7 +92,7 @@ export function LayerSearch() {
     })
   }
 
-  const handleSetFilteredRegulatoryThemes = (filteredThemes: ThemeFromAPI[]) => {
+  const handleSetFilteredRegulatoryThemes = (filteredThemes: ThemeOption[]) => {
     dispatch(setFilteredRegulatoryThemes(filteredThemes))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
