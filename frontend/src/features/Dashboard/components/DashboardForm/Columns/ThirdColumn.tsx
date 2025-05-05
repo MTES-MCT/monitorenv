@@ -110,7 +110,12 @@ export function ThirdColumn({
             links={dashboard.dashboard.links}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.ATTACHMENTS)}
           />
-          <Weather ref={weatherRef} geom={dashboard.dashboard.geom} />
+          <Weather
+            ref={weatherRef}
+            geom={dashboard.dashboard.geom}
+            isExpanded={expandedAccordion === Dashboard.Block.WEATHER}
+            setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.WEATHER)}
+          />
         </BaseColumn>
       )}
     </>
