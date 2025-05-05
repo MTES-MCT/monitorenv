@@ -8,8 +8,8 @@ import styled from 'styled-components'
 
 import { vigilanceAreaFiltersActions } from './slice'
 
-import type { TagFromAPI } from 'domain/entities/tags'
-import type { ThemeFromAPI } from 'domain/entities/themes'
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
@@ -26,8 +26,8 @@ export function FilterTags() {
     )
   }
 
-  const onDeleteTagTag = (valueToDelete: TagFromAPI, tagFilter: TagFromAPI[]) => {
-    const updatedFilter: TagFromAPI[] = tagFilter
+  const onDeleteTagTag = (valueToDelete: TagOption, tagFilter: TagOption[]) => {
+    const updatedFilter: TagOption[] = tagFilter
       .map(tag => filterSubTags(tag, valueToDelete))
       .filter(tag => tag !== undefined)
       .filter(tag => tag.id !== valueToDelete.id)
@@ -35,8 +35,8 @@ export function FilterTags() {
     dispatch(setFilteredRegulatoryTags(updatedFilter))
   }
 
-  const onDeleteThemeTag = (valueToDelete: ThemeFromAPI, themeFilter: ThemeFromAPI[]) => {
-    const updatedFilter: ThemeFromAPI[] = themeFilter
+  const onDeleteThemeTag = (valueToDelete: ThemeOption, themeFilter: ThemeOption[]) => {
+    const updatedFilter: ThemeOption[] = themeFilter
       .map(theme => filterSubThemes(theme, valueToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== valueToDelete.id)
@@ -76,7 +76,7 @@ export function FilterTags() {
           >
             {`Thème ${theme.name}`}
           </SingleTag>
-          {theme.subThemes.map(subTheme => (
+          {theme.subThemes?.map(subTheme => (
             <SingleTag
               key={subTheme.id}
               accent={Accent.SECONDARY}
@@ -98,7 +98,7 @@ export function FilterTags() {
           >
             {`Tag ${tag.name}`}
           </SingleTag>
-          {tag.subTags.map(subTag => (
+          {tag.subTags?.map(subTag => (
             <SingleTag
               key={subTag.id}
               accent={Accent.SECONDARY}

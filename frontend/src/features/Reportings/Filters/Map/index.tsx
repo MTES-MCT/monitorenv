@@ -3,13 +3,13 @@ import {
   Checkbox,
   CheckPicker,
   CheckTreePicker,
-  DateRangePicker,
-  SingleTag,
   type DateAsStringRange,
-  type OptionValueType
-} from '@mtes-mct/monitor-ui'
-import { filterSubTags, getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
-import { filterSubThemes, getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
+  DateRangePicker,
+  type OptionValueType,
+  SingleTag
+} from '@mtes-mct/monitor-ui__root'
+import { filterSubTags } from '@utils/getTagsAsOptions'
+import { filterSubThemes } from '@utils/getThemesAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
@@ -26,8 +26,8 @@ import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
 
 import type { ReportingsOptionsListType } from '..'
-import type { TagFromAPI } from 'domain/entities/tags'
-import type { ThemeFromAPI } from 'domain/entities/themes'
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 
 type MapReportingsFiltersProps = {
   optionsList: ReportingsOptionsListType
@@ -82,16 +82,16 @@ export function MapReportingsFiltersWithRef(
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
     dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
   }
-  const onDeleteTagTag = (valueToDelete: TagFromAPI, filter: TagFromAPI[]) => {
-    const updatedFilter: TagFromAPI[] = filter
+  const onDeleteTagTag = (valueToDelete: TagOption, filter: TagOption[]) => {
+    const updatedFilter: TagOption[] = filter
       .map(tag => filterSubTags(tag, valueToDelete))
       .filter(tag => tag !== undefined)
       .filter(tag => tag.id !== valueToDelete.id)
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.TAG_FILTER, value: updatedFilter }))
   }
 
-  const onDeleteThemeTag = (valueToDelete: ThemeFromAPI, filter: ThemeFromAPI[]) => {
-    const updatedFilter: ThemeFromAPI[] = filter
+  const onDeleteThemeTag = (valueToDelete: ThemeOption, filter: ThemeOption[]) => {
+    const updatedFilter: ThemeOption[] = filter
       .map(theme => filterSubThemes(theme, valueToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== valueToDelete.id)
@@ -247,14 +247,15 @@ export function MapReportingsFiltersWithRef(
           isLabelHidden
           isTransparent
           label="Thématiques"
+          labelKey="name"
           menuStyle={{ maxWidth: '200%' }}
           name="themes"
-          onChange={value =>
-            updateSimpleFilter(value ? parseOptionsToThemes(value) : undefined, ReportingsFiltersEnum.THEME_FILTER)
-          }
+          onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
           options={themesOptions}
           placeholder="Thématiques"
-          value={getThemesAsOptions(themeFilter ?? [])}
+          shouldShowLabels={false}
+          value={themeFilter}
+          valueKey="id"
         />
 
         {themeFilter && themeFilter.length > 0 && (
@@ -264,7 +265,7 @@ export function MapReportingsFiltersWithRef(
                 <SingleTag key={theme.id} onDelete={() => onDeleteThemeTag(theme, themeFilter)}>
                   {String(`Thème ${theme.name}`)}
                 </SingleTag>
-                {theme.subThemes.map(subTheme => (
+                {theme.subThemes?.map(subTheme => (
                   <SingleTag key={subTheme.id} onDelete={() => onDeleteThemeTag(subTheme, themeFilter)}>
                     {String(`Sous-thème ${subTheme.name}`)}
                   </SingleTag>
@@ -278,15 +279,15 @@ export function MapReportingsFiltersWithRef(
           isLabelHidden
           isTransparent
           label="Tags et sous-tags"
+          labelKey="name"
           name="regulatoryTags"
-          onChange={value =>
-            updateSimpleFilter(value ? parseOptionsToTags(value) : undefined, ReportingsFiltersEnum.TAG_FILTER)
-          }
+          onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TAG_FILTER)}
           options={tagsOptions}
           placeholder="Tags et sous-tags"
           renderedChildrenValue="Sous-tags."
           renderedValue="Tags"
-          value={getTagsAsOptions(tagFilter ?? [])}
+          value={tagFilter}
+          valueKey="id"
           // customSearch={regulatoryTagsCustomSearch}
         />
 
@@ -297,7 +298,7 @@ export function MapReportingsFiltersWithRef(
                 <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, tagFilter)}>
                   {String(`Tag ${tag.name}`)}
                 </SingleTag>
-                {tag.subTags.map(subTag => (
+                {tag.subTags?.map(subTag => (
                   <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, tagFilter)}>
                     {String(`Sous-tag ${subTag.name}`)}
                   </SingleTag>

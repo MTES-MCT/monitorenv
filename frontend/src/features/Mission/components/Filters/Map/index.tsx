@@ -11,22 +11,22 @@ import {
   CheckTreePicker,
   customDayjs,
   CustomSearch,
+  type DateAsStringRange,
   DateRangePicker,
+  type Option,
   Select,
   SingleTag,
-  useNewWindow,
-  type DateAsStringRange,
-  type Option
-} from '@mtes-mct/monitor-ui'
-import { filterSubTags, getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+  useNewWindow
+} from '@mtes-mct/monitor-ui__root'
+import { filterSubTags } from '@utils/getTagsAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, missionTypeEnum } from 'domain/entities/missions'
-import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'domain/shared_slices/MissionFilters'
+import { MissionFiltersEnum, type MissionFiltersState, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { MissionOptionsListType } from '..'
-import type { TagFromAPI } from 'domain/entities/tags'
+import type { TagFromAPI, TagOption } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type MapMissionFiltersProps = {
@@ -105,8 +105,8 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
       )
     }
 
-    const onDeleteTagTag = (valueToDelete: TagFromAPI, tagFilter: TagFromAPI[]) => {
-      const updatedFilter: TagFromAPI[] = tagFilter
+    const onDeleteTagTag = (valueToDelete: TagOption, tagFilter: TagOption[]) => {
+      const updatedFilter = tagFilter
         .map(tag => filterSubTags(tag, valueToDelete))
         .filter(theme => theme !== undefined)
         .filter(theme => theme.id !== valueToDelete.id)
@@ -302,16 +302,16 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             isLabelHidden
             isTransparent
             label="Tags et sous-tags"
+            labelKey="name"
             name="tags"
-            onChange={value =>
-              onUpdateSimpleFilter(value ? parseOptionsToTags(value) : undefined, MissionFiltersEnum.TAGS_FILTER)
-            }
+            onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.TAGS_FILTER)}
             options={tags}
             placeholder="Tags et sous-tags"
             renderedChildrenValue="Sous-tags."
             renderedValue="Tags"
-            value={selectedTags ? getTagsAsOptions(selectedTags) : undefined}
-            // customSearch={regulatoryTagsCustomSearch}
+            shouldShowLabels={false}
+            value={selectedTags}
+            valueKey="id"
           />
           {selectedTags &&
             selectedTags?.length > 0 &&
@@ -320,7 +320,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
                   {`Tag ${tag.name}`}
                 </SingleTag>
-                {tag.subTags.map(subTag => (
+                {tag.subTags?.map(subTag => (
                   <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
                     {`Sous-tag ${subTag.name}`}
                   </SingleTag>

@@ -16,14 +16,14 @@ import { filterByTags, filterByThemes, filterTagsByText, filterThemesByText } fr
 
 import type { AMP } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
-import type { TagFromAPI } from 'domain/entities/tags'
-import type { ThemeFromAPI } from 'domain/entities/themes'
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 
 export type SearchProps = {
   ampTypes: string[]
   extent: number[] | undefined
-  regulatoryTags: TagFromAPI[]
-  regulatoryThemes: ThemeFromAPI[]
+  regulatoryTags: TagOption[]
+  regulatoryThemes: ThemeOption[]
   searchedText: string
   shouldSearchByExtent: boolean
   vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined
