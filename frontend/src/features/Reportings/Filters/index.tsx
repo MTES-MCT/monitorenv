@@ -1,12 +1,11 @@
+import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants.ts'
+import { useGetControlUnitsQuery } from '@api/controlUnitsAPI.ts'
+import { useGetSemaphoresQuery } from '@api/semaphoresAPI.ts'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import {
-  type CheckTreePickerOption,
-  customDayjs,
-  type DateAsStringRange,
-  getOptionsFromLabelledEnum,
-  type Option
-} from '@mtes-mct/monitor-ui'
+import { useAppDispatch } from '@hooks/useAppDispatch.ts'
+import { useAppSelector } from '@hooks/useAppSelector.ts'
+import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum, type Option } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import _, { reduce } from 'lodash'
@@ -15,9 +14,6 @@ import { type MutableRefObject, useMemo, useRef } from 'react'
 import { MapReportingsFilters } from './Map'
 import { reportingsFiltersActions, ReportingsFiltersEnum, type SourceFilterProps } from './slice'
 import { TableReportingsFilters } from './Table'
-import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../api/constants'
-import { useGetControlUnitsQuery } from '../../../api/controlUnitsAPI'
-import { useGetSemaphoresQuery } from '../../../api/semaphoresAPI'
 import { ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
 import {
   ReportingSourceEnum,
@@ -27,8 +23,9 @@ import {
 } from '../../../domain/entities/reporting'
 import { SeaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingTargetTypeLabels } from '../../../domain/entities/targetType'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
+
+import type { TagOption } from '../../../domain/entities/tags'
+import type { ThemeOption } from '../../../domain/entities/themes'
 
 export enum ReportingFilterContext {
   MAP = 'MAP',
@@ -41,9 +38,9 @@ export type ReportingsOptionsListType = {
   sourceOptions: Option<SourceFilterProps>[]
   sourceTypeOptions: Option<string>[]
   statusOptions: Option<string>[]
-  tagsOptions: CheckTreePickerOption[]
+  tagsOptions: TagOption[]
   targetTypeOtions: Option<string>[]
-  themesOptions: CheckTreePickerOption[]
+  themesOptions: ThemeOption[]
   typeOptions: Option<string>[]
 }
 

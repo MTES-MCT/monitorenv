@@ -3,9 +3,11 @@ import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearch
 import { setFilteredRegulatoryTags } from '@features/layersSelector/search/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CheckTreePicker, type CheckTreePickerOption } from '@mtes-mct/monitor-ui'
-import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
+import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { useMemo } from 'react'
+
+import type { TagOption } from '../domain/entities/tags'
 
 export function RegulatoryTagsFilter({ style }: { style?: React.CSSProperties }) {
   const dispatch = useAppDispatch()
@@ -29,9 +31,7 @@ export function RegulatoryTagsFilter({ style }: { style?: React.CSSProperties })
 
   const debouncedSearchLayers = useSearchLayers()
 
-  const handleSetFilteredRegulatoryTags = (options: CheckTreePickerOption[] | undefined) => {
-    const nextTags = options ? parseOptionsToTags(options) : []
-
+  const handleSetFilteredRegulatoryTags = (nextTags: TagOption[] | undefined = []) => {
     dispatch(setFilteredRegulatoryTags(nextTags))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
@@ -51,14 +51,17 @@ export function RegulatoryTagsFilter({ style }: { style?: React.CSSProperties })
       isLabelHidden
       isTransparent
       label="Filtre tags et sous-tags"
+      labelKey="name"
       name="regulatoryTags"
       onChange={handleSetFilteredRegulatoryTags}
       options={tagsOptions}
       placeholder="Tags et sous-tags"
       renderedChildrenValue="Sous-tags."
       renderedValue="Tags"
+      shouldShowLabels={false}
       style={style}
-      value={getTagsAsOptions(filteredRegulatoryTags)}
+      value={filteredRegulatoryTags}
+      valueKey="id"
       // customSearch={regulatoryTagsCustomSearch}
     />
   )
