@@ -14,15 +14,15 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CheckTreePicker,
+  type DateAsStringRange,
   DateRangePicker,
   FormikCheckbox,
   FormikMultiRadio,
   FormikTextarea,
   FormikTextInput,
   getOptionsFromLabelledEnum,
-  THEME,
-  type DateAsStringRange
-} from '@mtes-mct/monitor-ui'
+  THEME
+} from '@mtes-mct/monitor-ui__root'
 import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { InteractionListener } from 'domain/entities/map/constants'
@@ -37,8 +37,6 @@ import { Footer } from './Footer'
 import { Frequency } from './Frequency'
 import { Links } from './Links'
 import { PhotoUploader } from './PhotoUploader'
-
-import type { TreeOption as CheckTreePickerOption } from '@mtes-mct/monitor-ui/fields/CheckTreePicker/types'
 
 export function Form() {
   const dispatch = useAppDispatch()
@@ -135,24 +133,6 @@ export function Form() {
     setFieldValue('endDatePeriod', period ? period[1] : undefined)
   }
 
-  const handleOnChangeThemes = (option: CheckTreePickerOption[] | undefined) => {
-    if (option) {
-      const nextTheme = parseOptionsToThemes(option)
-      setFieldValue('themes', nextTheme)
-    } else {
-      setFieldValue('themes', undefined)
-    }
-  }
-
-  const handleOnChangeTags = (option: CheckTreePickerOption[] | undefined) => {
-    if (option) {
-      const nextTags = parseOptionsToTags(option)
-      setFieldValue('tags', nextTags)
-    } else {
-      setFieldValue('tags', [])
-    }
-  }
-
   return (
     <FormContainer>
       <CancelEditDialog
@@ -207,22 +187,30 @@ export function Form() {
           error={formErrors.themes}
           isErrorMessageHidden
           label="Thématiques et sous-thématiques"
+          labelKey="name"
           name="theme"
-          onChange={handleOnChangeThemes}
+          onChange={nextTheme => {
+            setFieldValue('themes', parseOptionsToThemes(nextTheme))
+          }}
           options={themesOptions}
           value={getThemesAsOptions(values.themes ?? [])}
+          valueKey="id"
         />
         <CheckTreePicker
           childrenKey="subTags"
           error={formErrors.tags}
           isRequired
           label="Tags et sous-tags"
+          labelKey="name"
           name="tags"
-          onChange={handleOnChangeTags}
+          onChange={nextTags => {
+            setFieldValue('tags', parseOptionsToTags(nextTags))
+          }}
           options={tagsOptions}
           renderedChildrenValue="Sous-tags."
           renderedValue="Tags"
           value={getTagsAsOptions(values.tags ?? [])}
+          valueKey="id"
         />
         <FormikMultiRadio
           isErrorMessageHidden

@@ -1,24 +1,22 @@
 import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
+import { useAppSelector } from '@hooks/useAppSelector.ts'
 import {
   Checkbox,
   CheckPicker,
   CheckTreePicker,
   CustomSearch,
-  DateRangePicker,
-  useNewWindow,
   type DateAsStringRange,
+  DateRangePicker,
   type Option,
-  type OptionValueType
-} from '@mtes-mct/monitor-ui'
-import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
-import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
+  type OptionValueType,
+  useNewWindow
+} from '@mtes-mct/monitor-ui__root'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../../../domain/entities/reporting'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReportingSearch } from '../ReportingSearch'
 import { ReportingsFiltersEnum, type SourceFilterProps } from '../slice'
 import { OptionValue, Separator, StyledSelect, StyledStatusFilter, StyledTagsContainer } from '../style'
@@ -76,7 +74,7 @@ export function TableReportingsFiltersWithRef(
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
-    tagsOptions: tagOptions,
+    tagsOptions,
     targetTypeOtions,
     themesOptions,
     typeOptions
@@ -218,14 +216,14 @@ export function TableReportingsFiltersWithRef(
             isLabelHidden
             isTransparent
             label="Filtre thématiques et sous-thématiques"
+            labelKey="name"
             name="themes"
-            onChange={value =>
-              updateSimpleFilter(value ? parseOptionsToThemes(value) : undefined, ReportingsFiltersEnum.THEME_FILTER)
-            }
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
             options={themesOptions}
             placeholder="Thématiques et sous-thématiques"
             style={{ width: 310 }}
-            value={getThemesAsOptions(themeFilter)}
+            value={themeFilter}
+            valueKey="id"
           />
           <CheckTreePicker
             childrenKey="subTags"
@@ -233,16 +231,17 @@ export function TableReportingsFiltersWithRef(
             isLabelHidden
             isTransparent
             label="Filtre tags et sous-tags"
+            labelKey="name"
             name="regulatoryTags"
-            onChange={value =>
-              updateSimpleFilter(value ? parseOptionsToTags(value) : undefined, ReportingsFiltersEnum.TAG_FILTER)
-            }
-            options={tagOptions}
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TAG_FILTER)}
+            options={tagsOptions}
             placeholder="Tags et sous-tags"
             renderedChildrenValue="Sous-tags."
             renderedValue="Tags"
+            shouldShowLabels={false}
             style={{ width: 310 }}
-            value={getTagsAsOptions(tagFilter)}
+            value={tagFilter}
+            valueKey="id"
           />
 
           <CheckPicker

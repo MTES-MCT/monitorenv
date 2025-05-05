@@ -1,3 +1,5 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { SingleTag } from '@mtes-mct/monitor-ui'
 import { filterSubTags } from '@utils/getTagsAsOptions'
 import { filterSubThemes } from '@utils/getThemesAsOptions'
@@ -6,12 +8,10 @@ import styled from 'styled-components'
 
 import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
-import { useAppDispatch } from '../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 
-import type { TagFromAPI } from 'domain/entities/tags'
-import type { ThemeFromAPI } from 'domain/entities/themes'
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
@@ -27,8 +27,8 @@ export function FilterTags() {
       })
     )
   }
-  const onDeleteThemeTag = (valueToDelete: ThemeFromAPI, filter: ThemeFromAPI[]) => {
-    const updatedFilter: ThemeFromAPI[] = filter
+  const onDeleteThemeTag = (valueToDelete: ThemeOption, filter: ThemeOption[]) => {
+    const updatedFilter: ThemeOption[] = filter
       .map(theme => filterSubThemes(theme, valueToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== valueToDelete.id)
@@ -41,8 +41,8 @@ export function FilterTags() {
     )
   }
 
-  const onDeleteTagTag = (valueToDelete: TagFromAPI, filter: TagFromAPI[]) => {
-    const updatedFilter: TagFromAPI[] = filter
+  const onDeleteTagTag = (valueToDelete: TagOption, filter: TagOption[]) => {
+    const updatedFilter: TagOption[] = filter
       .map(tag => filterSubTags(tag, valueToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== valueToDelete.id)
@@ -109,7 +109,7 @@ export function FilterTags() {
             <SingleTag key={theme.id} onDelete={() => onDeleteThemeTag(theme, themeFilter)}>
               {String(`Thème ${theme.name}`)}
             </SingleTag>
-            {theme.subThemes.map(subTheme => (
+            {theme.subThemes?.map(subTheme => (
               <SingleTag key={subTheme.id} onDelete={() => onDeleteThemeTag(subTheme, themeFilter)}>
                 {String(`Sous-thème ${subTheme.name}`)}
               </SingleTag>
@@ -123,7 +123,7 @@ export function FilterTags() {
             <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, tagFilter)}>
               {String(`Tag ${tag.name}`)}
             </SingleTag>
-            {tag.subTags.map(subTag => (
+            {tag.subTags?.map(subTag => (
               <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, tagFilter)}>
                 {String(`Sous-tag ${subTag.name}`)}
               </SingleTag>
