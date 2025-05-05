@@ -118,6 +118,7 @@ def update_regulations(new_regulations: pd.DataFrame):
 
         logger.info("Loading to temporary table")
 
+
         new_regulations[columns_to_load].to_sql(
             "tmp_regulations_cacem",
             connection,
@@ -125,6 +126,7 @@ def update_regulations(new_regulations: pd.DataFrame):
             index=False,
             method=psql_insert_copy,
         )
+         
 
         logger.info(f"Updating regulations_cacem from temporary table {len(new_regulations)}")
         connection.execute(
@@ -147,7 +149,7 @@ def update_regulations(new_regulations: pd.DataFrame):
                 type = tmp.type,
                 row_hash = tmp.row_hash
                 FROM tmp_regulations_cacem tmp
-                where reg.id = tmp.id;
+                WHERE reg.id = tmp.id;
                 """
             )
         )
@@ -179,9 +181,9 @@ def extract_themes_regulatory_areas() -> pd.DataFrame:
     )
 
 @task(checkpoint=False)
-def load_themes_regulatory_areas(marpol: pd.DataFrame):
+def load_themes_regulatory_areas(themes_regulatory_areas: pd.DataFrame):
     load(
-        marpol,
+        themes_regulatory_areas,
         table_name="themes_regulatory_areas",
         schema="public",
         db_name="monitorenv_remote",
@@ -197,9 +199,9 @@ def extract_tags_regulatory_areas() -> pd.DataFrame:
     )
 
 @task(checkpoint=False)
-def load_tags_regulatory_areas(marpol: pd.DataFrame):
+def load_tags_regulatory_areas(tags_regulatory_areas: pd.DataFrame):
     load(
-        marpol,
+        tags_regulatory_areas,
         table_name="tags_regulatory_areas",
         schema="public",
         db_name="monitorenv_remote",

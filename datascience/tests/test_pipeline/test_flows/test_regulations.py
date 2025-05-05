@@ -4,6 +4,7 @@ import pytest
 
 
 from src.pipeline.flows.regulations import load_new_regulations, update_regulations,load_themes_regulatory_areas, extract_tags_regulatory_areas, load_tags_regulatory_areas, extract_themes_regulatory_areas
+from src.pipeline.flows.themes_and_tags import load_new_tags, load_new_themes
 from src.pipeline.generic_tasks import delete_rows, load
 from src.pipeline.shared_tasks.update_queries import merge_hashes, select_ids_to_delete, select_ids_to_insert, select_ids_to_update
 from src.read_query import read_query
@@ -11,7 +12,32 @@ from src.read_query import read_query
 import pandas as pd
 import pytest
 
-def generate_regulations_data(ids, geom, entity_names, layer_names, facades, ref_regs, urls, row_hashes, editions, editeurs, sources, observations, thematiques, dates, duree_validites, temporalites, types):
+from tests.test_pipeline.test_flows.test_themes_and_tags import generate_tags_data, generate_themes_data
+
+""" Thèmes """
+@pytest.fixture
+def new_themes() -> pd.DataFrame:
+    return generate_themes_data(
+        ids=[1, 2, 3, 4],
+        names=["Thème 1_new", "Thème 2", "Thème 3", "Thème 4"],
+        parents_id=[1, 1, 2, 3],
+        started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-19 00:00:00", "2025-10-18 00:00:00"],
+        ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-28 23:59:59"],
+        row_hashes=["cacem_row_hash_1", "cacem_row_hash_2", "cacem_row_hash_3", "cacem_row_hash_4"],
+    )
+
+@pytest.fixture
+def new_tags() -> pd.DataFrame:
+    return generate_tags_data(
+        ids=[1, 2, 3, 4],
+        names=["Tag 1", "Tag 2_new", "Tag 3", "Tag 4"],
+        parents_id=[1, 1, 2, 2],
+        started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-19 00:00:00", "2025-10-18 00:00:00"],
+        ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-28 23:59:59"],
+        row_hashes=["cacem_row_hash_1", "cacem_row_hash_2", "cacem_row_hash_3", "cacem_row_hash_4"],
+    )
+
+def generate_regulatory_area_data(ids, geom, entity_names, layer_names, facades, ref_regs, urls, row_hashes, editions, editeurs, sources, observations, thematiques, dates, duree_validites, temporalites, types):
     return pd.DataFrame({
         "id": ids,
         "geom": geom,
@@ -32,9 +58,21 @@ def generate_regulations_data(ids, geom, entity_names, layer_names, facades, ref
         "type": types
     })
 
+def generate_themes_regulatory_area_data(themes_id, regulatory_areas_id):
+    return pd.DataFrame({
+        "themes_id": themes_id,
+        "regulatory_areas_id": regulatory_areas_id,
+    })
+
+def generate_tags_regulatory_area_data(tags_id, regulatory_areas_id):
+    return pd.DataFrame({
+        "tags_id": tags_id,
+        "regulatory_areas_id": regulatory_areas_id,
+    })
+
 @pytest.fixture
-def new_regulations() -> pd.DataFrame:
-    return generate_regulations_data(
+def new_regulatory_areas() -> pd.DataFrame:
+    return generate_regulatory_area_data(
         ids=[1, 2, 3, 4],
         geom=[
             "0106000020E610000001000000010300000001000000040000001EA36CE84A6F04C028FCC"
@@ -68,8 +106,8 @@ def new_regulations() -> pd.DataFrame:
     )
 
 @pytest.fixture
-def old_regulations() -> pd.DataFrame:
-    return generate_regulations_data(
+def old_regulatory_areas() -> pd.DataFrame:
+    return generate_regulatory_area_data(
         ids=[1, 2, 3, 4],
         geom=[
             None,
@@ -94,9 +132,22 @@ def old_regulations() -> pd.DataFrame:
         types=["Arrêté préfectoral", "Décret", "Arrêté inter-préfectoral", None]
     )
 
+@pytest.fixture
+def themes_regulatory_areas() -> pd.DataFrame:
+    return generate_themes_regulatory_area_data(
+        themes_id=[1, 1, 2, 2],
+        regulatory_areas_id=[1, 2, 3, 4]
+    )
 
-def test_load_new_regulations(reset_test_data, old_regulations):
-    load_new_regulations.run(old_regulations)
+@pytest.fixture
+def tags_regulatory_areas() -> pd.DataFrame:
+    return generate_tags_regulatory_area_data(
+        tags_id=[1, 1, 2, 2],
+        regulatory_areas_id=[1, 2, 3, 4]
+    )
+
+def test_load_new_regulations(reset_test_data, old_regulatory_areas: pd.DataFrame):
+    load_new_regulations.run(old_regulatory_areas)
     loaded_regulations = read_query(
         "monitorenv_remote", 
         """SELECT 
@@ -107,19 +158,19 @@ def test_load_new_regulations(reset_test_data, old_regulations):
             FROM public.regulations_cacem
             ORDER BY id"""
     )
-    pd.testing.assert_frame_equal(loaded_regulations, old_regulations)
+    pd.testing.assert_frame_equal(loaded_regulations, old_regulatory_areas)
 
 
-def test_update_new_regulations(reset_test_data, new_regulations, old_regulations):
+def test_update_new_regulations(reset_test_data, new_regulatory_areas: pd.DataFrame, old_regulatory_areas: pd.DataFrame):
     load(
-        old_regulations,
+        old_regulatory_areas,
         table_name="regulations_cacem",
         schema="public",
         db_name="monitorenv_remote",
         logger=prefect.context.get("logger"),
         how="append",
     )
-    update_regulations.run(new_regulations)
+    update_regulations.run(new_regulatory_areas)
     updated_regulations = read_query(
         "monitorenv_remote", 
         """SELECT 
@@ -130,35 +181,32 @@ def test_update_new_regulations(reset_test_data, new_regulations, old_regulation
             FROM public.regulations_cacem
             ORDER BY id"""
     )
-    pd.testing.assert_frame_equal(updated_regulations, new_regulations)
+    pd.testing.assert_frame_equal(updated_regulations, new_regulatory_areas)
 
 
-def test_load_themes_regulatory_areas(create_cacem_tables):
-  themes_regulatory_areas = extract_themes_regulatory_areas.run()
-  assert themes_regulatory_areas.shape[0] == 2
-
+def test_load_themes_regulatory_areas(reset_test_data, create_cacem_tables,new_regulatory_areas: pd.DataFrame, new_themes: pd.DataFrame,themes_regulatory_areas: pd.DataFrame):
+  load_new_regulations.run(new_regulatory_areas)
+  load_new_themes.run(new_themes)
   load_themes_regulatory_areas.run(themes_regulatory_areas)
   imported_themes_regulatory_areas = read_query(
         "monitorenv_remote", 
         """SELECT themes_id, regulatory_areas_id
-            FROM themes_regulatory_areas 
-            ORDER BY id"""
+            FROM themes_regulatory_areas
+            ORDER BY themes_id"""
     )
   
   pd.testing.assert_frame_equal(themes_regulatory_areas, imported_themes_regulatory_areas)
 
-def test_load_tags_regulatory_areas(create_cacem_tables):
-  tags_regulatory_areas = extract_tags_regulatory_areas.run()
-  assert tags_regulatory_areas.shape[0] == 2
 
+def test_load_tags_regulatory_areas(reset_test_data, create_cacem_tables,new_regulatory_areas: pd.DataFrame, new_tags: pd.DataFrame, tags_regulatory_areas: pd.DataFrame):
+  load_new_regulations.run(new_regulatory_areas)
+  load_new_tags.run(new_tags)
   load_tags_regulatory_areas.run(tags_regulatory_areas)
   imported_tags_regulatory_areas = read_query(
         "monitorenv_remote", 
         """SELECT tags_id, regulatory_areas_id
-            FROM tags_regulatory_areas 
-            ORDER BY id"""
+            FROM tags_regulatory_areas
+            ORDER BY tags_id"""
     )
   
   pd.testing.assert_frame_equal(tags_regulatory_areas, imported_tags_regulatory_areas)
-
- 
