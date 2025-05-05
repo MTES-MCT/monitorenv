@@ -12,12 +12,12 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import {
-  type DateAsStringRange,
-  type Option,
   Accent,
   CheckPicker,
   CustomSearch,
+  type DateAsStringRange,
   DateRangePicker,
+  type Option,
   SingleTag
 } from '@mtes-mct/monitor-ui'
 import { filterSubTags } from '@utils/getTagsAsOptions'
@@ -231,6 +231,7 @@ const FiltersWrapper = styled.ul`
   gap: 8px;
   padding: 16px;
   text-align: left;
+  margin-bottom: 0;
 `
 const TagWrapper = styled.div`
   margin-top: 8px;
@@ -243,7 +244,7 @@ const ResetFilters = styled.div`
   color: ${p => p.theme.color.slateGray};
   cursor: pointer;
   display: flex;
-  padding: 0px;
+  padding: 0;
   text-decoration: underline;
 `
 
