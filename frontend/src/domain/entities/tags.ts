@@ -3,3 +3,9 @@ export type TagFromAPI = {
   name: string
   subTags: TagFromAPI[]
 }
+
+export type TagOption = {
+  id: number
+  name: string
+  subTags?: TagOption[]
+}

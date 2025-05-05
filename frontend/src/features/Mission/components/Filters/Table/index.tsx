@@ -7,12 +7,11 @@ import {
   CheckPicker,
   CheckTreePicker,
   CustomSearch,
+  type DateAsStringRange,
   DateRangePicker,
   Select,
-  useNewWindow,
-  type DateAsStringRange
-} from '@mtes-mct/monitor-ui'
-import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+  useNewWindow
+} from '@mtes-mct/monitor-ui__root'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { MissionFiltersEnum } from 'domain/shared_slices/MissionFilters'
 import { forwardRef, useMemo } from 'react'
@@ -178,17 +177,17 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               isLabelHidden
               isTransparent
               label="Tags et sous-tags"
+              labelKey="name"
               name="regulatoryTags"
-              onChange={value =>
-                onUpdateSimpleFilter(value ? parseOptionsToTags(value) : undefined, MissionFiltersEnum.TAGS_FILTER)
-              }
+              onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.TAGS_FILTER)}
               options={tags}
               placeholder="Tags et sous-tags"
               renderedChildrenValue="Sous-tags."
               renderedValue="Tags"
+              shouldShowLabels={false}
               style={tagPickerStyle}
-              value={selectedTags ? getTagsAsOptions(selectedTags) : undefined}
-              // customSearch={regulatoryTagsCustomSearch}
+              value={selectedTags}
+              valueKey="id"
             />
             <CheckPicker
               data-cy="select-statuses-filter"
