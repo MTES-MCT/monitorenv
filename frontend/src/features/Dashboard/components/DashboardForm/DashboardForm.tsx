@@ -59,6 +59,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
         case Dashboard.Block.CONTROL_UNITS:
         case Dashboard.Block.COMMENTS:
         case Dashboard.Block.ATTACHMENTS:
+        case Dashboard.Block.WEATHER:
           setExpandedAccordionThirdColumn(expandedAccordionThirdColumn === type ? undefined : type)
           break
         default:

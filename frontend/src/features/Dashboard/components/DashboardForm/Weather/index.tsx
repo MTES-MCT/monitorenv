@@ -5,13 +5,17 @@ import { transform } from 'ol/proj'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { Accordion, Title, TitleContainer } from '../Accordion'
+
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 type WeatherProps = {
   geom: GeoJSON.Geometry | undefined
+  isExpanded: boolean
+  setExpandedAccordion: () => void
 }
 
-export const Weather = forwardRef<HTMLDivElement, WeatherProps>(({ geom }, ref) => {
+export const Weather = forwardRef<HTMLDivElement, WeatherProps>(({ geom, isExpanded, setExpandedAccordion }, ref) => {
   const coordinates = useMemo(() => {
     if (!geom) {
       return ''
@@ -33,25 +37,35 @@ export const Weather = forwardRef<HTMLDivElement, WeatherProps>(({ geom }, ref) 
   }, [geom])
 
   return (
-    <WeatherBlock>
-      <WeatherTitle ref={ref}>
-        <span>Météo</span>
-        {coordinates && (
-          <StyledLink
-            href={`https://www.windy.com/${coordinates.latitude}/${coordinates.longitude}`}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <Icon.ExternalLink size={16} />
-          </StyledLink>
-        )}
-      </WeatherTitle>
+    <Accordion
+      isExpanded={isExpanded}
+      setExpandedAccordion={setExpandedAccordion}
+      title={
+        <TitleContainer>
+          <Title>Météo</Title>
+          {coordinates && (
+            <StyledLink
+              href={`https://www.windy.com/${coordinates.latitude}/${coordinates.longitude}`}
+              onClick={e => e.stopPropagation()}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <Icon.ExternalLink size={16} />
+            </StyledLink>
+          )}
+        </TitleContainer>
+      }
+      titleRef={ref}
+    >
       {coordinates ? (
         <WindyContainer>
           <iframe
             allowFullScreen
             height="100%"
             src={`https://embed.windy.com/embed2.html?lat=${coordinates.latitude}&lon=${coordinates.longitude}&zoom=7`}
+            style={{
+              border: 'none'
+            }}
             title="windy weather"
             width="100%"
           />
@@ -59,23 +73,10 @@ export const Weather = forwardRef<HTMLDivElement, WeatherProps>(({ geom }, ref) 
       ) : (
         <CoordinatesError>Nous n&apos;avons pas pu calculer l&apos;emplacement </CoordinatesError>
       )}
-    </WeatherBlock>
+    </Accordion>
   )
 })
 
-const WeatherBlock = styled.div`
-  box-shadow: 0px 3px 6px #70778540;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 21px 24px;
-`
-const WeatherTitle = styled.h2`
-  display: flex;
-  font-size: 16px;
-  font-weight: 500;
-  gap: 16px;
-`
 const CoordinatesError = styled.div`
   color: ${p => p.theme.color.slateGray};
   font-size: 11px;
@@ -84,6 +85,7 @@ const CoordinatesError = styled.div`
 const WindyContainer = styled.div`
   width: 100%;
   height: 300px;
+  padding: 16px;
 `
 const StyledLink = styled.a`
   align-items: center;
