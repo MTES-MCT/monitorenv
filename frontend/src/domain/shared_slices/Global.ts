@@ -111,19 +111,15 @@ const initialLayers = {
   displayMissionSelectedLayer: true,
   displayMissionsLayer: true,
   displayMissionToAttachLayer: true,
-
   displayRecentActivityLayer: false,
-
   displayReportingEditingLayer: true,
   displayReportingSelectedLayer: true,
   displayReportingsLayer: true,
   displayReportingsOverlay: true,
   displayReportingToAttachLayer: true,
-
   displaySemaphoresLayer: true,
   displayStationLayer: false,
   displayVigilanceAreaLayer: true,
-
   isLayersSidebarVisible: true
 }
 

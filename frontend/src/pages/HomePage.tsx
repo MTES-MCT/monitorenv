@@ -1,4 +1,5 @@
 import { Menu } from '@components/Menu'
+import { MapFocusForDashboardBanner } from '@features/Dashboard/components/MapFocusForDashboardBanner'
 import { BannerStack } from '@features/MainWindow/components/BannerStack'
 import { AttachMissionToReportingModal } from '@features/Reportings/components/ReportingForm/AttachMission/AttachMissionToReportingModal'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
@@ -39,9 +40,12 @@ export function HomePage() {
 
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
   const reportings = useAppSelector(state => state.reporting.reportings)
+
   const dashboards = useAppSelector(state => state.dashboard.dashboards)
 
   const reportingEvent = useListenReportingEventUpdates(isSuperUser)
+
+  const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
 
   const hasAtLeastOneMissionFormDirty = useMemo(
     () => Object.values(selectedMissions).some(mission => mission.isFormDirty),
@@ -88,6 +92,7 @@ export function HomePage() {
   return (
     <>
       {/* TODO Move this wrapper to `@features/MainWindow/components/MainWindowLayout.tsx`. */}
+      {dashboardMapFocus && <MapFocusForDashboardBanner />}
       <Wrapper>
         <Healthcheck />
         <BannerStack />

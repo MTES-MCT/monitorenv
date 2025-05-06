@@ -18,7 +18,6 @@ import { useCallback, useEffect, useRef } from 'react'
 
 import { dashboardIcon, getDashboardStyle } from './style'
 import { Dashboard } from '../../types'
-import { getRecentActivityFilters } from '../DashboardForm/slice'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -31,10 +30,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   const displayGeometry = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.displayGeometry : false
   )
-
-  const recentActivityFilters = useAppSelector(state =>
-    getRecentActivityFilters(state.dashboardFilters, activeDashboardId)
-  )
+  const mapFocus = useAppSelector(state => state.dashboard.mapFocus)
 
   const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportingIds ?? [], {
@@ -75,7 +71,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
     if (map) {
       layersVectorSourceRef.current.clear(true)
 
-      if (activeDashboard && !recentActivityFilters?.mapFocus) {
+      if (activeDashboard && !mapFocus) {
         // Regulatory Areas
         if (regulatoryLayers?.entities) {
           let regulatoryLayersIds = activeDashboard.regulatoryAreaIds
@@ -199,7 +195,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
     openPanel?.type,
     regulatoryLayers,
     vigilanceAreas?.entities,
-    recentActivityFilters?.mapFocus,
+    mapFocus,
     reportings,
     dashboard?.dashboard.geom,
     drawBorder,

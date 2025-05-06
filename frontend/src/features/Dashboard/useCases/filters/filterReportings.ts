@@ -13,7 +13,7 @@ export function filterReportings(
 ) {
   let shouldBeFiltered = false
   const createdAt = customDayjs(reporting.createdAt).utc()
-  switch (filters.dateRange) {
+  switch (filters?.dateRange) {
     case DateRangeEnum.DAY: {
       const now = customDayjs().utc()
       const lastTwentyFourHours = now.subtract(24, 'hour')
