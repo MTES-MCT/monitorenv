@@ -17,7 +17,7 @@ import {
   Select,
   SingleTag,
   useNewWindow
-} from '@mtes-mct/monitor-ui__root'
+} from '@mtes-mct/monitor-ui'
 import { filterSubTags } from '@utils/getTagsAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, missionTypeEnum } from 'domain/entities/missions'

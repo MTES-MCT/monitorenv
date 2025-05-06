@@ -3,7 +3,7 @@ import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearch
 import { setFilteredRegulatoryTags } from '@features/layersSelector/search/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { useMemo } from 'react'
 
