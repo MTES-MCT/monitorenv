@@ -2,6 +2,7 @@ import { dashboardsAPI } from '@api/dashboardsAPI'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { customDayjs, Level } from '@mtes-mct/monitor-ui'
+import { InteractionType } from 'domain/entities/map/constants'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { generatePath } from 'react-router'
 
@@ -43,6 +44,10 @@ export const createDashboard =
         dispatch(dashboardFiltersActions.createDashboardFilters({ id: newId }))
         dispatch(dashboardActions.createDashboard({ dashboard, defaultName: newDashboardName, extractedArea }))
         dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: newId })))
+        dispatch(dashboardActions.setGeometry(undefined))
+        dispatch(dashboardActions.setInitialGeometry(undefined))
+        dispatch(dashboardActions.setInteractionType(InteractionType.CIRCLE))
+        dispatch(dashboardActions.setIsDrawing(false))
       }
 
       if (error) {
