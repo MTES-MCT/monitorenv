@@ -28,7 +28,7 @@ import { StyleSheetManager } from 'styled-components'
 
 import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
-import { ReportingContext } from '../../domain/shared_slices/Global'
+import { ReportingContext, restorePreviousDisplayedItems } from '../../domain/shared_slices/Global'
 import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES } from '../Mission/components/MissionForm/constants'
 import { useListenMissionEventUpdates } from '../Mission/components/MissionForm/hooks/useListenMissionEventUpdates'
 import { missionFormsActions } from '../Mission/components/MissionForm/slice'
@@ -87,6 +87,7 @@ export function SideWindow() {
     if (!isCurrentPathDashboard) {
       dispatch(dashboardActions.setActiveDashboardId(undefined))
       dispatch(dashboardActions.setMapFocus(false))
+      dispatch(restorePreviousDisplayedItems())
     }
   }, [currentPath, dispatch])
 

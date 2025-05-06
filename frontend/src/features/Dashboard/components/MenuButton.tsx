@@ -1,12 +1,11 @@
 import { DialogButton, DialogSeparator, StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
-import { reduceReportingFormOnMap } from '@features/Reportings/useCases/reduceReportingFormOnMap'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
-import { globalActions, setDisplayedItems } from 'domain/shared_slices/Global'
+import { setDisplayedItems } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
 import { DrawDashboard } from './DrawDashboard'
@@ -15,7 +14,9 @@ import { closeDrawDashboard } from '../useCases/closeDrawDashboard'
 import { resetDrawing } from '../useCases/resetDrawing'
 import { Filters } from './DashboardsList/Filters'
 
-export function DashboardMenuButton() {
+import type { MenuButtonProps } from '@components/Menu'
+
+export function DashboardMenuButton({ onClickMenuButton, onVisibiltyChange }: MenuButtonProps) {
   const dispatch = useAppDispatch()
   const isDashboardDialogVisible = useAppSelector(state => state.global.visibility.isDashboardDialogVisible)
   const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
@@ -24,14 +25,12 @@ export function DashboardMenuButton() {
 
   const toggleDashboardDialog = e => {
     e.preventDefault()
-
-    dispatch(globalActions.hideAllDialogs())
+    onClickMenuButton()
     dispatch(
       setDisplayedItems({
         visibility: { isDashboardDialogVisible: !isDashboardDialogVisible }
       })
     )
-    dispatch(reduceReportingFormOnMap())
 
     if (isDashboardDialogVisible) {
       dispatch(dashboardActions.setIsDrawing(false))
@@ -54,7 +53,7 @@ export function DashboardMenuButton() {
   }
 
   const handleDashboardsVisibility = () => {
-    dispatch(globalActions.setDisplayedItems({ layers: { displayDashboardLayer: !displayDashboardLayer } }))
+    onVisibiltyChange('displayDashboardLayer')
   }
 
   return (

@@ -1,12 +1,12 @@
 import { Tooltip } from '@components/Tooltip'
 import { dashboardActions, getActiveDashboardId } from '@features/Dashboard/slice'
-import { hideLayers } from '@features/VigilanceArea/useCases/hideLayers'
+import { hideLayersAndSidebar } from '@features/Dashboard/useCases/hideLayersAndSidebar'
+import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, pluralize, THEME, Toggle } from '@mtes-mct/monitor-ui'
-import { restorePreviousDisplayedItems } from 'domain/shared_slices/Global'
-import { omit } from 'lodash'
-import { forwardRef, useEffect } from 'react'
+import { setToInitialState } from 'domain/shared_slices/Global'
+import { forwardRef } from 'react'
 import styled from 'styled-components'
 
 import { Accordion, Title } from '../Accordion'
@@ -21,7 +21,6 @@ type RecentActivityProps = {
 export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivityProps>(
   ({ isExpanded, setExpandedAccordion }, ref) => {
     const dispatch = useAppDispatch()
-    const layers = useAppSelector(state => state.global.layers)
 
     const activeDashboardId = useAppSelector(state => getActiveDashboardId(state.dashboard))
     const totalOfControls =
@@ -34,18 +33,12 @@ export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivity
     const updateMapFocus = (checked: boolean) => {
       dispatch(dashboardActions.setMapFocus(checked))
       if (checked) {
-        dispatch(hideLayers())
+        dispatch(hideLayersAndSidebar())
+        dispatch(closeMetadataPanel())
       } else {
-        dispatch(restorePreviousDisplayedItems())
+        dispatch(setToInitialState())
       }
     }
-
-    useEffect(() => {
-      const isOneLayerVisible = Object.values(omit(layers, ['displayReportingsOverlay'])).some(layer => !!layer)
-      if (mapFocus && isOneLayerVisible) {
-        dispatch(dashboardActions.setMapFocus(false))
-      }
-    }, [dispatch, layers, mapFocus])
 
     const titleWithTooltip = (
       <TitleContainer>

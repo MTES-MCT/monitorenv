@@ -143,12 +143,10 @@ const initialState: GlobalStateType = {
   layers: initialLayers,
   menus: initialMenuState,
   overlayCoordinates: [],
-
   previousDisplayedItems: {
     layers: initialLayers,
     visibility: initialVisibility
   },
-
   visibility: initialVisibility
 }
 
@@ -159,7 +157,6 @@ const globalSlice = createSlice({
     closeOpenedOverlay(state) {
       state.openedOverlayId = 'NONE'
     },
-
     hideAllDialogs(state) {
       state.visibility.isAccountDialogVisible = false
       state.visibility.isControlUnitDialogVisible = false
@@ -188,6 +185,7 @@ const globalSlice = createSlice({
         reportingFormVisibility: state.visibility.reportingFormVisibility
       }
     },
+
     setDisplayedItems(
       state,
       action: PayloadAction<{
@@ -202,7 +200,6 @@ const globalSlice = createSlice({
       state.menus = { ...state.menus, ...(action.payload.menus ?? {}) }
       state.visibility = { ...state.visibility, ...(action.payload.visibility ?? {}) }
     },
-
     /**
      * Set warning to show on application header
      * @param {Object} state
@@ -218,6 +215,7 @@ const globalSlice = createSlice({
     setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
       state.visibility.isMapToolVisible = action.payload
     },
+
     setOpenedOverlay(state, action: PayloadAction<string>) {
       const featureId = action.payload
       state.openedOverlayId = featureId
@@ -231,13 +229,16 @@ const globalSlice = createSlice({
         state.overlayCoordinates[index] = action.payload
       }
     },
-
     setReportingFormVisibility(state, action) {
       state.visibility.reportingFormVisibility = action.payload
     },
 
     setToast(state, action: PayloadAction<Toast>) {
       state.toast = action.payload
+    },
+
+    setToInitialState() {
+      return { ...initialState }
     }
   }
 })
@@ -254,7 +255,8 @@ export const {
   setOpenedOverlay,
   setOverlayCoordinates,
   setReportingFormVisibility,
-  setToast
+  setToast,
+  setToInitialState
 } = globalSlice.actions
 
 export const globalActions = globalSlice.actions

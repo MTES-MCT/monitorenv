@@ -1,20 +1,30 @@
 import { Account } from '@features/Account/components/Account'
 import { ControlUnitListButton } from '@features/ControlUnit/components/ControlUnitListButton'
 import { DashboardMenuButton } from '@features/Dashboard/components/MenuButton'
+import { dashboardActions } from '@features/Dashboard/slice'
 import { InterestPointMapButton } from '@features/InterestPoint/components/InterestPointMapButton'
 import { MeasurementMapButton } from '@features/map/tools/measurements/MeasurementMapButton'
 import { MissionsMenu } from '@features/Mission/components/MissionsButton'
 import { RecentActivityMenuButton } from '@features/RecentActivity/components/RecentActivityMenuButton'
 import { ReportingsButton } from '@features/Reportings/components/ReportingsButton'
+import { reduceReportingFormOnMap } from '@features/Reportings/useCases/reduceReportingFormOnMap'
 import { SearchSemaphoreButton } from '@features/Semaphore/components/SearchSemaphoreButton'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { globalActions } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
 type MenuProps = {
   isSuperUser: boolean
 }
 
+export type MenuButtonProps = {
+  onClickMenuButton: () => void
+  onVisibiltyChange: (layer: string) => void
+}
+
 export function Menu({ isSuperUser }: MenuProps) {
+  const dispatch = useAppDispatch()
   const displaySearchSemaphoreButton = useAppSelector(state => state.global.menus.displaySearchSemaphoreButton)
   const displayInterestPoint = useAppSelector(state => state.global.menus.displayInterestPoint)
   const displayMeasurement = useAppSelector(state => state.global.menus.displayMeasurement)
@@ -29,6 +39,19 @@ export function Menu({ isSuperUser }: MenuProps) {
   const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
+  const layersVisibility = useAppSelector(state => state.global.layers)
+
+  const onClickMenuButton = () => {
+    dispatch(globalActions.hideAllDialogs())
+    dispatch(reduceReportingFormOnMap())
+  }
+
+  const onVisibiltyChange = layer => {
+    if (dashboardMapFocus) {
+      dispatch(dashboardActions.setMapFocus(false))
+    }
+    dispatch(globalActions.setDisplayedItems({ layers: { [layer]: !layersVisibility[layer] } }))
+  }
 
   return (
     <ButtonsWrapper
@@ -38,32 +61,32 @@ export function Menu({ isSuperUser }: MenuProps) {
     >
       {displayMissionMenuButton && isSuperUser && (
         <li>
-          <MissionsMenu />
+          <MissionsMenu onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
         </li>
       )}
       {displayReportingsButton && isSuperUser && (
         <li>
-          <ReportingsButton />
+          <ReportingsButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
         </li>
       )}
       {displaySearchSemaphoreButton && (
         <li>
-          <SearchSemaphoreButton />
+          <SearchSemaphoreButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
         </li>
       )}
       {isRightMenuControlUnitListButtonVisible && isSuperUser && (
         <li>
-          <ControlUnitListButton />
+          <ControlUnitListButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
         </li>
       )}
       {displayRecentActivityMenuButton && isSuperUser && (
         <li>
-          <RecentActivityMenuButton />
+          <RecentActivityMenuButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
         </li>
       )}
       {displayDashboard && isSuperUser && (
         <li>
-          <DashboardMenuButton />
+          <DashboardMenuButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
         </li>
       )}
       <ToolWrapper>

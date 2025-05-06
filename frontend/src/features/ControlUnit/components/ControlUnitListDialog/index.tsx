@@ -4,11 +4,10 @@ import { StyledMapMenuDialogContainer } from '@components/style'
 import { getFilteredControlUnits } from '@features/ControlUnit/useCases/getFilteredControlUnits'
 import { missionFormsActions } from '@features/Mission/components/MissionForm/slice'
 import { Accent, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { FilterBar } from './FilterBar'
 import { Item } from './Item'
-import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { stationActions } from '../../../Station/slice'
@@ -17,8 +16,9 @@ import type { Promisable } from 'type-fest'
 
 type ControlUnitListDialogProps = {
   onClose: () => Promisable<void>
+  onVisibiltyChange: (layerName: string) => void
 }
-export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
+export function ControlUnitListDialog({ onClose, onVisibiltyChange }: ControlUnitListDialogProps) {
   const dispatch = useAppDispatch()
   const displayBaseLayer = useAppSelector(store => store.global.layers.displayStationLayer)
   const mapControlUnitListDialog = useAppSelector(store => store.mapControlUnitListDialog)
@@ -38,16 +38,13 @@ export function ControlUnitListDialog({ onClose }: ControlUnitListDialogProps) {
     return results
   }, [mapControlUnitListDialog.filtersState, controlUnits])
 
-  const toggleBaseLayer = useCallback(() => {
+  const toggleBaseLayer = () => {
     dispatch(stationActions.hightlightFeatureIds([]))
     dispatch(stationActions.selectFeatureId(undefined))
-    dispatch(
-      globalActions.setDisplayedItems({
-        layers: { displayStationLayer: !displayBaseLayer }
-      })
-    )
+    onVisibiltyChange('displayStationLayer')
+
     dispatch(missionFormsActions.setMissionCenteredControlUnitId())
-  }, [dispatch, displayBaseLayer])
+  }
 
   return (
     <StyledMapMenuDialogContainer style={{ height: 480 }}>

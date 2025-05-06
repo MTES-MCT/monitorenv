@@ -1,19 +1,20 @@
 import { DialogButton, StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { addMission } from '@features/Mission/useCases/addMission'
-import { reduceReportingFormOnMap } from '@features/Reportings/useCases/reduceReportingFormOnMap'
 import { SideWindowStatus, sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { isMissionOrMissionsPage } from '@utils/routes'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
-import { globalActions, setDisplayedItems } from 'domain/shared_slices/Global'
+import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { useMemo } from 'react'
 
 import { MissionFilterContext, MissionFilters } from '../Filters'
 
-export function MissionsMenu() {
+import type { MenuButtonProps } from '@components/Menu'
+
+export function MissionsMenu({ onClickMenuButton, onVisibiltyChange }: MenuButtonProps) {
   const dispatch = useAppDispatch()
 
   const isSearchMissionsVisible = useAppSelector(state => state.global.visibility.isSearchMissionsVisible)
@@ -30,18 +31,17 @@ export function MissionsMenu() {
   }
 
   const toggleMissionsLayer = () => {
-    dispatch(setDisplayedItems({ layers: { displayMissionsLayer: !displayMissionsLayer } }))
+    onVisibiltyChange('displayMissionsLayer')
   }
 
   const toggleMissionsMenu = e => {
     e.preventDefault()
-    dispatch(globalActions.hideAllDialogs())
+    onClickMenuButton()
     dispatch(
       setDisplayedItems({
         visibility: { isSearchMissionsVisible: !isSearchMissionsVisible }
       })
     )
-    dispatch(reduceReportingFormOnMap())
   }
   const handleAddNewMission = () => {
     dispatch(addMission())
