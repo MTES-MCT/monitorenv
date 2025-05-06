@@ -33,11 +33,13 @@ class PatchMissionUTest {
         val today = ZonedDateTime.now()
         val tomorrow = ZonedDateTime.now().plusDays(1)
         val patchedObservationsByUnit = "patched observations"
+        val patchedIsUnderJdp = false
         val patchableMission =
             PatchableMissionEntity(
                 observationsByUnit = Optional.of(patchedObservationsByUnit),
                 startDateTimeUtc = today,
                 endDateTimeUtc = Optional.of(tomorrow),
+                isUnderJdp = patchedIsUnderJdp,
             )
         val missionFromDatabase = aMissionEntity(id = id)
         val missionPatched =
@@ -46,6 +48,7 @@ class PatchMissionUTest {
                 observationsByUnit = patchedObservationsByUnit,
                 startDateTimeUtc = today,
                 endDateTimeUtc = tomorrow,
+                isUnderJdp = patchedIsUnderJdp,
             )
 
         given(missionRepository.findById(id)).willReturn(missionFromDatabase)
@@ -58,6 +61,7 @@ class PatchMissionUTest {
         assertThat(savedMission.mission.observationsByUnit).isEqualTo(missionPatched.observationsByUnit)
         assertThat(savedMission.mission.startDateTimeUtc).isEqualTo(missionPatched.startDateTimeUtc)
         assertThat(savedMission.mission.endDateTimeUtc).isEqualTo(missionPatched.endDateTimeUtc)
+        assertThat(savedMission.mission.isUnderJdp).isEqualTo(missionPatched.isUnderJdp)
         verify(missionRepository).save(missionPatched)
         assertThat(log.out).contains("Attempt to PATCH mission $id")
         assertThat(log.out).contains("Mission $id patched")
@@ -72,6 +76,7 @@ class PatchMissionUTest {
                 observationsByUnit = null,
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
+                isUnderJdp = null,
             )
 
         given(missionRepository.findById(id)).willReturn(null)

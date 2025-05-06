@@ -21,6 +21,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.of(observationsByUnit),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
+                isUnderJdp = false,
             )
 
         // When
@@ -39,6 +40,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
+                isUnderJdp = false,
             )
 
         // When
@@ -58,6 +60,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = null,
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
+                isUnderJdp = false
             )
 
         // When
@@ -78,6 +81,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = Optional.of(endDateTimeUtc),
+                isUnderJdp = false,
             )
 
         // When
@@ -103,6 +107,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
+                isUnderJdp = false,
             )
 
         // When
@@ -122,6 +127,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
+                isUnderJdp = false,
             )
 
         // When
@@ -129,5 +135,48 @@ class PatchMissionEntityUTest {
 
         // Then
         assertThat(missionEntity.endDateTimeUtc).isNull()
+    }
+
+
+    @Test
+    fun `execute() should return mission with with isUnderJdp turned false`() {
+        // Given
+        val missionEntity = MissionFixture.aMissionEntity(isUnderJdp = true)
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = null,
+                endDateTimeUtc = Optional.empty(),
+                isUnderJdp = false,
+            )
+
+        // When
+        patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(missionEntity.isUnderJdp).isEqualTo(false)
+    }
+
+    @Test
+    fun `execute() should return the original isUnderJdp if given as null`() {
+        // Given
+        val isUnderJdp = true
+        val missionEntity =
+            MissionFixture.aMissionEntity(
+                isUnderJdp = isUnderJdp
+            )
+        val patchableMissionEntity =
+            PatchableMissionEntity(
+                observationsByUnit = Optional.empty(),
+                startDateTimeUtc = null,
+                endDateTimeUtc = null,
+                isUnderJdp = null,
+            )
+
+        // When
+        patchEntity.execute(missionEntity, patchableMissionEntity)
+
+        // Then
+        assertThat(missionEntity.isUnderJdp).isEqualTo(isUnderJdp)
     }
 }

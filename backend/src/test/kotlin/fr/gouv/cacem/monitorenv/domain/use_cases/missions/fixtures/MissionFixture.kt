@@ -22,6 +22,7 @@ class MissionFixture {
             openBy: String? = null,
             completedBy: String? = null,
             envActions: List<EnvActionEntity> = emptyList(),
+            isUnderJdp: Boolean = false,
         ): MissionEntity =
             MissionEntity(
                 id = id,
@@ -37,7 +38,7 @@ class MissionFixture {
                 isDeleted = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
-                isUnderJdp = false,
+                isUnderJdp = isUnderJdp,
                 isGeometryComputedFromControls = false,
                 updatedAtUtc = null,
                 createdAtUtc = null,
