@@ -77,6 +77,7 @@ type DashboardState = {
   interactionType: InteractionType
   isDrawing: boolean
   isGeometryValid: boolean
+  mapFocus: boolean
   selectedDashboardOnMap: Dashboard.PopulatedDashboard | undefined
 }
 
@@ -91,6 +92,7 @@ const INITIAL_STATE: DashboardState = {
   interactionType: InteractionType.CIRCLE,
   isDrawing: false,
   isGeometryValid: false,
+  mapFocus: false,
   selectedDashboardOnMap: undefined
 }
 export const dashboardSlice = createSlice({
@@ -368,6 +370,9 @@ export const dashboardSlice = createSlice({
       }
 
       state.dashboards[id].dashboard.links = action.payload
+    },
+    setMapFocus(state, action: PayloadAction<boolean>) {
+      state.mapFocus = action.payload
     },
     setName(state, action: PayloadAction<{ key: string; name: string }>) {
       const id = action.payload.key

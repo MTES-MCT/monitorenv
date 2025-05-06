@@ -29,7 +29,6 @@ export type RecentActivityFilters = {
   [RecentActivityFiltersEnum.STARTED_AFTER]?: string
   [RecentActivityFiltersEnum.STARTED_BEFORE]?: string
   [RecentActivityFiltersEnum.THEME_IDS]?: number[]
-  mapFocus: boolean
 }
 
 export type ControlUnitFilters = {
@@ -91,7 +90,6 @@ export const dashboardFiltersSlice = createSlice({
         controlUnitFilters: {},
         filters: {},
         recentActivityFilters: {
-          mapFocus: false,
           periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS
         },
         reportingFilters: {
@@ -144,7 +142,6 @@ export const dashboardFiltersSlice = createSlice({
         controlUnitFilters: {},
         filters: {},
         recentActivityFilters: {
-          mapFocus: false,
           periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS
         },
         reportingFilters: {

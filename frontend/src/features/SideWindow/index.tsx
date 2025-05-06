@@ -86,6 +86,7 @@ export function SideWindow() {
     const isCurrentPathDashboard = isDashboardPage(currentPath)
     if (!isCurrentPathDashboard) {
       dispatch(dashboardActions.setActiveDashboardId(undefined))
+      dispatch(dashboardActions.setMapFocus(false))
     }
   }, [currentPath, dispatch])
 

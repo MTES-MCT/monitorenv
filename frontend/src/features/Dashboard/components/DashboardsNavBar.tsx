@@ -51,6 +51,7 @@ export function DashboardsNavBar() {
       const routeParams = getDashboardPageRoute(path)
       const id = routeParams?.params.id
       dispatch(dashboardActions.setActiveDashboardId(id))
+      dispatch(dashboardActions.setMapFocus(false))
     }
   }
 

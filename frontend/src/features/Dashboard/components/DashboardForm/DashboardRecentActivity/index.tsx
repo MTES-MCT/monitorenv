@@ -1,15 +1,17 @@
 import { Tooltip } from '@components/Tooltip'
-import { getActiveDashboardId } from '@features/Dashboard/slice'
+import { dashboardActions, getActiveDashboardId } from '@features/Dashboard/slice'
+import { hideLayers } from '@features/VigilanceArea/useCases/hideLayers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { pluralize, Toggle } from '@mtes-mct/monitor-ui'
-import { forwardRef } from 'react'
+import { Icon, pluralize, THEME, Toggle } from '@mtes-mct/monitor-ui'
+import { restorePreviousDisplayedItems } from 'domain/shared_slices/Global'
+import { omit } from 'lodash'
+import { forwardRef, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { Accordion, Title } from '../Accordion'
 import { Filters } from './Filters'
 import { SelectedAccordion } from '../SelectedAccordion'
-import { dashboardFiltersActions, getRecentActivityFilters } from '../slice'
 
 type RecentActivityProps = {
   isExpanded: boolean
@@ -19,27 +21,35 @@ type RecentActivityProps = {
 export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivityProps>(
   ({ isExpanded, setExpandedAccordion }, ref) => {
     const dispatch = useAppDispatch()
+    const layers = useAppSelector(state => state.global.layers)
+
     const activeDashboardId = useAppSelector(state => getActiveDashboardId(state.dashboard))
     const totalOfControls =
       useAppSelector(state =>
         activeDashboardId ? state.dashboard.dashboards[activeDashboardId]?.totalOfControls : 0
       ) ?? 0
 
-    const recentActivityFilters = useAppSelector(state =>
-      getRecentActivityFilters(state.dashboardFilters, activeDashboardId)
-    )
+    const mapFocus = useAppSelector(state => state.dashboard.mapFocus)
 
     const updateMapFocus = (checked: boolean) => {
-      dispatch(
-        dashboardFiltersActions.setRecentActivityFilters({
-          filters: { mapFocus: checked },
-          id: activeDashboardId
-        })
-      )
+      dispatch(dashboardActions.setMapFocus(checked))
+      if (checked) {
+        dispatch(hideLayers())
+      } else {
+        dispatch(restorePreviousDisplayedItems())
+      }
     }
+
+    useEffect(() => {
+      const isOneLayerVisible = Object.values(omit(layers, ['displayReportingsOverlay'])).some(layer => !!layer)
+      if (mapFocus && isOneLayerVisible) {
+        dispatch(dashboardActions.setMapFocus(false))
+      }
+    }, [dispatch, layers, mapFocus])
 
     const titleWithTooltip = (
       <TitleContainer>
+        {mapFocus && <Icon.AttentionFilled color={THEME.color.blueGray} />}
         <Title>Activité récente</Title>
         <Tooltip isSideWindow>
           Affiche la pression territoriale de la zone du brief pour la période, les unités et thématiques sélectionnées
@@ -58,7 +68,7 @@ export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivity
         >
           <StyledToggle>
             <Toggle
-              checked={recentActivityFilters?.mapFocus ?? false}
+              checked={mapFocus ?? false}
               isLabelHidden
               label="Focus cartographique"
               name="mapFocus"
@@ -73,6 +83,12 @@ export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivity
               </Tooltip>
             </>
           </StyledToggle>
+          {mapFocus && (
+            <MapFocusInfo>
+              <Icon.AttentionFilled color={THEME.color.blueGray} />
+              <span>La carte n&apos;est filtrée que sur l&apos;activité récente du brief</span>
+            </MapFocusInfo>
+          )}
           <Filters />
         </StyledAccordion>
         <SelectedAccordion
@@ -99,5 +115,16 @@ export const StyledToggle = styled.div`
 const StyledAccordion = styled(Accordion)<{ isExpanded: boolean }>`
   > div > div {
     overflow: ${p => (p.isExpanded ? 'inherit' : 'hidden')};
+  }
+`
+const MapFocusInfo = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 8px;
+  padding: 8px 24px 0px 24px;
+  > span {
+    color: ${p => p.theme.color.blueGray};
   }
 `

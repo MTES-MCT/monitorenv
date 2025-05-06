@@ -64,13 +64,12 @@ import { ActionOverlay } from './overlays/actions'
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
 export function Map({ isSuperUser }) {
-  const isRecentActivityEnabled = import.meta.env.FRONTEND_RECENT_ACTIVITY_ENABLED === 'true'
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
   const displayRecentActivityLegend =
-    (isRecentActivityEnabled && displayRecentActivityLayer && !isRecentActivityDialogVisible) || !!activeDashboardId
+    (displayRecentActivityLayer || !!activeDashboardId) && !isRecentActivityDialogVisible
 
   if (!isSuperUser) {
     return (
@@ -258,13 +257,13 @@ export function Map({ isSuperUser }) {
 
       {/* RECENT ACTIVITY */}
       {/* @ts-ignore */}
-      {isRecentActivityEnabled ? <RecentControlsActivityLayer /> : null}
+      <RecentControlsActivityLayer />
       {/* @ts-ignore */}
-      {isRecentActivityEnabled ? <DrawRecentActivityLayer /> : null}
+      <DrawRecentActivityLayer />
       {/* @ts-ignore */}
-      {isRecentActivityEnabled ? <RecentActivityLayerEvents /> : null}
+      <RecentActivityLayerEvents />
       {/* @ts-ignore */}
-      {isRecentActivityEnabled ? <RecentActvityOverlay /> : null}
+      <RecentActvityOverlay />
       {/* @ts-ignore */}
       {displayRecentActivityLegend ? <RecentActivityLegend location="OUTSIDE" /> : null}
     </BaseMap>

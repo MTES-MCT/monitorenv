@@ -22,7 +22,8 @@ export const hideLayers =
           displayReportingToAttachLayer: false,
           displaySemaphoresLayer: false,
           displayStationLayer: false,
-          displayVigilanceAreaLayer: false
+          displayVigilanceAreaLayer: false,
+          isLayersSidebarVisible: false
         }
       })
     )
