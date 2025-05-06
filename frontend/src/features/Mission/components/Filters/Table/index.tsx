@@ -11,7 +11,7 @@ import {
   DateRangePicker,
   Select,
   useNewWindow
-} from '@mtes-mct/monitor-ui__root'
+} from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { MissionFiltersEnum } from 'domain/shared_slices/MissionFilters'
 import { forwardRef, useMemo } from 'react'

@@ -7,7 +7,7 @@ import {
   DateRangePicker,
   type OptionValueType,
   SingleTag
-} from '@mtes-mct/monitor-ui__root'
+} from '@mtes-mct/monitor-ui'
 import { filterSubTags } from '@utils/getTagsAsOptions'
 import { filterSubThemes } from '@utils/getThemesAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
@@ -286,9 +286,9 @@ export function MapReportingsFiltersWithRef(
           placeholder="Tags et sous-tags"
           renderedChildrenValue="Sous-tags."
           renderedValue="Tags"
+          shouldShowLabels={false}
           value={tagFilter}
           valueKey="id"
-          // customSearch={regulatoryTagsCustomSearch}
         />
 
         {tagFilter && tagFilter.length > 0 && (

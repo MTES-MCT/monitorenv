@@ -13,7 +13,7 @@ import {
   type OptionValueType,
   Select,
   THEME
-} from '@mtes-mct/monitor-ui__root'
+} from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { useMemo } from 'react'
