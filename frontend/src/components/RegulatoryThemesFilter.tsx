@@ -3,7 +3,7 @@ import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearch
 import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 

@@ -22,7 +22,7 @@ import {
   FormikTextInput,
   getOptionsFromLabelledEnum,
   THEME
-} from '@mtes-mct/monitor-ui__root'
+} from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { InteractionListener } from 'domain/entities/map/constants'
