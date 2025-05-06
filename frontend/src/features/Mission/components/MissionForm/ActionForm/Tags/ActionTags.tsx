@@ -1,5 +1,5 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
-import { CheckTreePicker } from '@mtes-mct/monitor-ui__root'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { useField } from 'formik'
 import { useMemo } from 'react'
