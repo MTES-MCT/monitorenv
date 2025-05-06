@@ -1,0 +1,2 @@
+DELETE FROM themes;
+DELETE FROM tags;
