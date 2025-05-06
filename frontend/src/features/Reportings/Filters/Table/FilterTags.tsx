@@ -36,7 +36,7 @@ export function FilterTags() {
     dispatch(
       reportingsFiltersActions.updateFilters({
         key: ReportingsFiltersEnum.THEME_FILTER,
-        value: updatedFilter
+        value: updatedFilter.length === 0 ? undefined : updatedFilter
       })
     )
   }
@@ -49,7 +49,7 @@ export function FilterTags() {
     dispatch(
       reportingsFiltersActions.updateFilters({
         key: ReportingsFiltersEnum.TAG_FILTER,
-        value: updatedFilter
+        value: updatedFilter.length === 0 ? undefined : updatedFilter
       })
     )
   }

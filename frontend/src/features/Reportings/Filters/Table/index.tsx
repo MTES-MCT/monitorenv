@@ -11,7 +11,7 @@ import {
   type Option,
   type OptionValueType,
   useNewWindow
-} from '@mtes-mct/monitor-ui__root'
+} from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
@@ -221,6 +221,7 @@ export function TableReportingsFiltersWithRef(
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
             options={themesOptions}
             placeholder="Thématiques et sous-thématiques"
+            shouldShowLabels={false}
             style={{ width: 310 }}
             value={themeFilter}
             valueKey="id"
