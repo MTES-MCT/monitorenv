@@ -27,6 +27,8 @@ export function SearchOnExtentExtraButtons({
   debouncedSearchLayers
 }: SearchOnExtentExtraButtonsProps) {
   const dispatch = useAppDispatch()
+  const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
+
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.menus.displayLayersSidebar)
   const currentMapExtentTracker = useAppSelector(state => state.map.currentMapExtentTracker)
@@ -111,6 +113,7 @@ export function SearchOnExtentExtraButtons({
       />
       <ExtraButtonsWrapper
         $allowResetResults={allowResetResults}
+        $dashboardMapFocus={dashboardMapFocus}
         $isVisible={isVisible}
         $shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
       >
@@ -153,12 +156,13 @@ const ResetSearch = styled(Button)<{ $allowResetResults: boolean }>`
 
 const ExtraButtonsWrapper = styled.div<{
   $allowResetResults: boolean
+  $dashboardMapFocus?: boolean
   $isVisible: boolean
   $shouldReloadSearchOnExtent: boolean
 }>`
   display: ${p => (p.$isVisible ? 'flex' : 'none')};
   position: fixed;
-  top: 15px;
+  top: ${p => (p.$dashboardMapFocus ? '65px' : '15px')};
   left: ${p => {
     if (p.$shouldReloadSearchOnExtent || p.$allowResetResults) {
       return `calc(

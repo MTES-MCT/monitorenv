@@ -51,6 +51,12 @@
   width: 25px;
   height: 53px;
 }
+.ol-control.zoom.dashboard-map-focus {
+  bottom: 88px;
+  left: 0.5em;
+  width: 25px;
+  height: 53px;
+}
 
 .ol-control.zoom > button {
   width: 25px;

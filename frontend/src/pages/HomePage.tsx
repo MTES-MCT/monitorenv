@@ -93,7 +93,7 @@ export function HomePage() {
     <>
       {/* TODO Move this wrapper to `@features/MainWindow/components/MainWindowLayout.tsx`. */}
       {dashboardMapFocus && <MapFocusForDashboardBanner />}
-      <Wrapper>
+      <Wrapper $dashboardMapFocus={dashboardMapFocus}>
         <Healthcheck />
         <BannerStack />
 
@@ -118,10 +118,10 @@ export function HomePage() {
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $dashboardMapFocus: boolean }>`
   font-size: 13px;
-  height: 100% - 50px;
-  width: 100%;
   overflow-y: hidden;
   overflow-x: hidden;
+  margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
+  width: 100%;
 `

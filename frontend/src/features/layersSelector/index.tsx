@@ -26,6 +26,8 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
+  const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
+
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.menus.displayLayersSidebar)
@@ -56,7 +58,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   }
 
   return (
-    <Container>
+    <Container $dashboardMapFocus={dashboardMapFocus}>
       <SidebarLayersIcon
         $isVisible={displayLayersSidebar}
         accent={Accent.PRIMARY}
@@ -133,9 +135,9 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   )
 }
 
-const Container = styled.div`
+const Container = styled.div<{ $dashboardMapFocus: boolean }>`
   position: absolute;
-  top: 10px;
+  top: ${p => (p.$dashboardMapFocus ? '58px' : '10px')};
   left: 10px;
 `
 
