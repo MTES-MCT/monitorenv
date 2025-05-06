@@ -12,6 +12,7 @@ import { useMemo } from 'react'
 
 import { getFilterVigilanceAreasPerPeriod } from '../../utils/getFilteredVigilanceAreasPerPeriod'
 import { setAMPsSearchResult, setRegulatoryLayersSearchResult, setVigilanceAreasSearchResult } from '../slice'
+import { filterByTags, filterByThemes, filterTagsByText, filterThemesByText } from './utils'
 
 import type { AMP } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
@@ -158,38 +159,15 @@ export function useSearchLayers() {
                   { $path: ['entityName'], $val: searchedText },
                   { $path: ['refReg'], $val: searchedText },
                   { $path: ['type'], $val: searchedText },
-                  { $path: ['tags.name'], $val: searchedText },
-                  { $path: ['tags.subTags.name'], $val: searchedText },
-                  { $path: ['themes.name'], $val: searchedText },
-                  { $path: ['themes.subThemes.name'], $val: searchedText }
+                  ...filterThemesByText(searchedText),
+                  ...filterTagsByText(searchedText)
                 ]
               }
             : undefined
 
-          const filterWithTags = shouldSearchThroughRegulatoryTags
-            ? {
-                $or: [
-                  ...regulatoryTags.map(tag => ({ $path: ['tags.name'], $val: tag.name })),
-                  ...regulatoryTags.flatMap(tag =>
-                    tag.subTags.map(subTag => ({ $path: ['tags.subTags.name'], $val: subTag.name }))
-                  )
-                ]
-              }
-            : undefined
+          const filterWithTags = shouldSearchThroughRegulatoryTags ? filterByTags(regulatoryTags) : undefined
 
-          const filterWithThemes = shouldSearchThroughRegulatoryThemes
-            ? {
-                $or: [
-                  ...regulatoryThemes.map(theme => ({ $path: ['themes.name'], $val: theme.name })),
-                  ...regulatoryThemes.flatMap(theme =>
-                    theme.subThemes.map(subTheme => ({
-                      $path: ['themes.subThemes.name'],
-                      $val: subTheme.name
-                    }))
-                  )
-                ]
-              }
-            : undefined
+          const filterWithThemes = shouldSearchThroughRegulatoryThemes ? filterByThemes(regulatoryThemes) : undefined
 
           const filterExpression = [filterWithTextExpression, filterWithTags, filterWithThemes].filter(
             f => !!f
@@ -221,35 +199,15 @@ export function useSearchLayers() {
                 $or: [
                   { $path: ['name'], $val: searchedText },
                   { $path: ['comments'], $val: searchedText },
-                  { $path: ['tags.name'], $val: searchedText },
-                  { $path: ['tags.subTags.name'], $val: searchedText },
-                  { $path: ['themes.name'], $val: searchedText },
-                  { $path: ['themes.subThemes.name'], $val: searchedText }
+                  ...filterThemesByText(searchedText),
+                  ...filterTagsByText(searchedText)
                 ]
               }
             : undefined
 
-          const filterWithTags = shouldSearchThroughRegulatoryTags
-            ? {
-                $or: [
-                  ...regulatoryTags.map(tag => ({ $path: ['tags.name'], $val: tag.name })),
-                  ...regulatoryTags.flatMap(tag =>
-                    tag.subTags.map(subTag => ({ $path: ['tags.subTags.name'], $val: subTag.name }))
-                  )
-                ]
-              }
-            : undefined
+          const filterWithTags = shouldSearchThroughRegulatoryTags ? filterByTags(regulatoryTags) : undefined
 
-          const filterWithThemes = shouldSearchThroughRegulatoryThemes
-            ? {
-                $or: [
-                  ...regulatoryThemes.map(theme => ({ $path: ['themes.name'], $val: theme.name })),
-                  ...regulatoryThemes.flatMap(theme =>
-                    theme.subThemes.map(subTheme => ({ $path: ['themes.subThemes.name'], $val: subTheme.name }))
-                  )
-                ]
-              }
-            : undefined
+          const filterWithThemes = shouldSearchThroughRegulatoryThemes ? filterByThemes(regulatoryThemes) : undefined
 
           const filterExpression = [filterVigilanceAreaWithTextExpression, filterWithTags, filterWithThemes].filter(
             f => !!f

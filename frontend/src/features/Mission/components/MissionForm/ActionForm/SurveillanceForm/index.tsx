@@ -4,6 +4,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import {
   Accent,
   Button,
+  customDayjs,
   DatePicker,
   FieldError,
   FormikCheckbox,
@@ -61,12 +62,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
   const {
     errors,
     setFieldValue,
-    values: {
-      attachedReportings,
-      endDateTimeUtc,
-      envActions
-      // startDateTimeUtc
-    }
+    values: { attachedReportings, endDateTimeUtc, envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionSurveillance>>()
 
   const { actionsMissingFields } = useMissionAndActionsCompletion()
@@ -77,12 +73,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
 
   const currentAction = envActions[envActionIndex]
 
-  // const actionDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
-  // const actualYearForThemes = customDayjs(actionDate).year()
-
-  // const themeIds = useMemo(() => currentAction?.controlPlans?.map(controlPlan => controlPlan.themeId), [currentAction])
-  // const { themes } = useGetControlPlans()
-  // const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
+  const startDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
 
   const { reportingIds = [] } = currentAction ?? {}
   const actionErrors = useMemo(
@@ -98,12 +89,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
 
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length >= 1)
 
-  // const { themesByYearAsOptions } = useGetControlPlansByYear({
-  //   year: actualYearForThemes
-  // })
-
-  // const [controlPlans] = useField<ControlPlansData[]>(`envActions[${envActionIndex}].controlPlans`)
-  const { data } = useGetThemesQuery()
+  const { data } = useGetThemesQuery([startDate, startDate])
 
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(data ?? [])), [data])
 
@@ -184,13 +170,13 @@ export function SurveillanceForm({ currentActionId, remove }) {
     dispatch(missionFormsActions.setActiveActionId(duplicatedAction.id))
   }, [currentAction, setFieldValue, envActions, dispatch])
 
+  const actualYearForThemes = customDayjs(startDate).year()
+
   const updateStartDateTime = (date: string | undefined) => {
-    // const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
-    // if (newSurveillanceDateYear && actualYearForThemes !== newSurveillanceDateYear) {
-    //   currentAction?.controlPlans?.forEach((_, index) => {
-    //     setFieldValue(`envActions[${envActionIndex}].controlPlans[${index}]`, CONTROL_PLAN_INIT)
-    //   })
-    // }
+    const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
+    if (newSurveillanceDateYear && actualYearForThemes !== newSurveillanceDateYear) {
+      setFieldValue(`envActions[${envActionIndex}].themes`, undefined)
+    }
 
     setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
   }

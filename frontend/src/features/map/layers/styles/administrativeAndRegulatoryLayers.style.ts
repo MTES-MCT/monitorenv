@@ -1,4 +1,5 @@
 import { THEME } from '@mtes-mct/monitor-ui'
+import { displayTags } from '@utils/getTagsAsOptions'
 import { getCenter } from 'ol/extent'
 import { Point } from 'ol/geom'
 import { Style } from 'ol/style'
@@ -186,7 +187,7 @@ export const getAdministrativeLayersStyle = (code: String) => {
 }
 
 export const getRegulatoryLayerStyle = feature => {
-  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('thematique'), feature.get('entityName'))
+  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(displayTags(feature.get('tags')), feature.get('entityName'))
 
   return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('isFilled'))
 }

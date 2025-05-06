@@ -1,11 +1,16 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions, parseOptionsToThemes, sortThemes } from '@utils/getThemesAsOptions'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { ActionTypeEnum } from '../../../../../../domain/entities/missions'
+import {
+  ActionTypeEnum,
+  type EnvActionControl,
+  type EnvActionSurveillance,
+  type Mission
+} from '../../../../../../domain/entities/missions'
 
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
@@ -16,9 +21,15 @@ type ActionThemeProps = {
   actionType: ActionTypeEnum
 }
 export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
-  const [currentTheme, , helpers] = useField<ThemeFromAPI[]>(`envActions[${actionIndex}].themes`)
+  const {
+    setFieldValue,
+    values: { envActions, startDateTimeUtc }
+  } = useFormikContext<Mission<EnvActionSurveillance | EnvActionControl>>()
+  const [, error] = useField<ThemeFromAPI[]>(`envActions[${actionIndex}].themes`)
 
-  const { data } = useGetThemesQuery()
+  const startDate = envActions[actionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
+
+  const { data } = useGetThemesQuery([startDate, startDate])
 
   const themesOptions = useMemo(() => {
     if (actionType === ActionTypeEnum.CONTROL) {
@@ -34,19 +45,22 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
     <ActionThemeWrapper data-cy="envaction-theme-element">
       <CheckTreePicker
         childrenKey="subThemes"
+        error={error.error}
+        isErrorMessageHidden
         isLight
         isMultiSelect={actionType === ActionTypeEnum.SURVEILLANCE}
+        isRequired
         label="Thématiques et sous-thématiques de contrôle"
         name={`envActions[${actionIndex}].themes`}
         onChange={option => {
           if (option) {
-            helpers.setValue(parseOptionsToThemes(option))
+            setFieldValue(`envActions[${actionIndex}].themes`, parseOptionsToThemes(option))
           } else {
-            helpers.setValue([])
+            setFieldValue(`envActions[${actionIndex}].themes`, undefined)
           }
         }}
         options={themesOptions}
-        value={getThemesAsOptions(currentTheme.value)}
+        value={getThemesAsOptions(envActions[actionIndex]?.themes ?? [])}
       />
     </ActionThemeWrapper>
   )

@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/api/v1/themes")
@@ -20,7 +22,10 @@ class Themes(
 ) {
     @GetMapping("")
     @Operation(summary = "Get all current themes with subThemes")
-    fun getAll(): List<ThemeOutput> = getThemes.execute().map { ThemeOutput.fromThemeEntity(it) }
+    fun getAll(
+        @RequestParam(required = false) startedAt: ZonedDateTime = ZonedDateTime.now(),
+        @RequestParam(required = false) endedAt: ZonedDateTime = ZonedDateTime.now(),
+    ): List<ThemeOutput> = getThemes.execute(startedAt, endedAt).map { ThemeOutput.fromThemeEntity(it) }
 
     @PostMapping("/regulatoryAreas")
     @Operation(summary = "Get all current themes with subthemes from regulatory area ids")

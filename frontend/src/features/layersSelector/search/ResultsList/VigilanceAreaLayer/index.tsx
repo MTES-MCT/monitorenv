@@ -76,7 +76,7 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
       <LayerLegend
         isDisabled={layer?.isArchived}
         layerType={MonitorEnvLayers.VIGILANCE_AREA}
-        legendKey={layer?.comments ?? 'aucun'}
+        legendKey={layer?.comments}
         type={layer?.name ?? 'aucun'}
       />
       <LayerSelector.Name onClick={fitToVigilanceAreaLayer} title={layer?.name}>

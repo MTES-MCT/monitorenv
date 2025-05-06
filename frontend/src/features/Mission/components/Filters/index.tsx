@@ -46,14 +46,19 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const dispatch = useAppDispatch()
-  const { selectedAdministrationNames, selectedControlUnitIds, startedAfter } = useAppSelector(
+  const { selectedAdministrationNames, selectedControlUnitIds, startedAfter, startedBefore } = useAppSelector(
     state => state.missionFilters
   )
+
+  const dateRange: [string, string] = [
+    startedAfter ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
+    startedBefore ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
+  ]
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const { data } = useGetThemesQuery()
+  const { data } = useGetThemesQuery(dateRange)
   const themesAsOptions = getThemesAsOptionsCheckPicker(Object.values(data ?? []))
 
   const { data: tags } = useGetTagsQuery()

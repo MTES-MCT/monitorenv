@@ -14,6 +14,7 @@ import {
   Size,
   THEME,
   Toggle,
+  customDayjs,
   getOptionsFromLabelledEnum,
   pluralize,
   useNewWindow,
@@ -71,24 +72,13 @@ export function ControlForm({
   const {
     errors,
     setFieldValue,
-    values: {
-      attachedReportings,
-      endDateTimeUtc,
-      envActions = []
-      // startDateTimeUtc
-    }
+    values: { attachedReportings, endDateTimeUtc, envActions = [], startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionControl>>()
 
   const { actionsMissingFields } = useMissionAndActionsCompletion()
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === currentActionId)
   const currentAction = envActions?.[envActionIndex]
-  // const actionDate =
-  //   envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
-  // const actualYearForThemes = customDayjs(actionDate).year()
-  // const themeIds = useMemo(() => currentAction?.controlPlans?.map(controlPlan => controlPlan.themeId), [currentAction])
-  // const { themes } = useGetControlPlans()
-  // const themesAsText = useMemo(() => themeIds?.map(themeId => themeId && themes[themeId]?.theme), [themes, themeIds])
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
@@ -184,12 +174,15 @@ export function ControlForm({
     }
   }
 
-  const updateControlDate = (date: string | undefined) => {
-    // const newControlDateYear = date ? customDayjs(date).year() : undefined
-    // if (newControlDateYear && actualYearForThemes !== newControlDateYear) {
-    //   setFieldValue(`envActions[${envActionIndex}].controlPlans[${UNIQ_CONTROL_PLAN_INDEX}]`, CONTROL_PLAN_INIT)
-    // }
+  const actionDate =
+    envActions[envActionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
+  const actualYearForThemes = customDayjs(actionDate).year()
 
+  const updateControlDate = (date: string | undefined) => {
+    const newControlDateYear = date ? customDayjs(date).year() : undefined
+    if (newControlDateYear && actualYearForThemes !== newControlDateYear) {
+      setFieldValue(`envActions[${envActionIndex}].themes`, undefined)
+    }
     setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
   }
 

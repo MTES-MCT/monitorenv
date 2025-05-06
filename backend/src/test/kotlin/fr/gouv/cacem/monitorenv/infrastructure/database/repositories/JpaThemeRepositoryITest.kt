@@ -22,17 +22,18 @@ class JpaThemeRepositoryITest : AbstractDBTests() {
     fun `findAllWithin should return all themes with subThemes within validity range time`() {
         // Given
         val expectedThemesSize = 19
-        val time = ZonedDateTime.parse("2024-01-01T00:00:00Z")
+        val startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z")
+        val endedAt = ZonedDateTime.parse("2024-12-31T23:59:59Z")
 
         // When
-        val themes = jpaThemeRepository.findAllWithin(time)
+        val themes = jpaThemeRepository.findAllWithin(startedAt = startedAt, endedAt = endedAt)
 
         // Then
         assertEquals(expectedThemesSize, themes.size)
         themes.forEach { theme ->
-            assertThat(theme.endedAt == null || theme.endedAt.isAfter(time)).isTrue()
+            assertThat(theme.endedAt == null || theme.endedAt.isAfter(startedAt)).isTrue()
             theme.subThemes.forEach { subTheme ->
-                assertThat(subTheme.endedAt == null || subTheme.endedAt.isAfter(time)).isTrue()
+                assertThat(subTheme.endedAt == null || subTheme.endedAt.isAfter(startedAt)).isTrue()
             }
         }
     }
@@ -43,7 +44,11 @@ class JpaThemeRepositoryITest : AbstractDBTests() {
         val expectedThemesSize = 0
 
         // When
-        val themes = jpaThemeRepository.findAllWithin(ZonedDateTime.parse("2100-01-01T00:00:00Z"))
+        val themes =
+            jpaThemeRepository.findAllWithin(
+                ZonedDateTime.parse("2100-01-01T00:00:00Z"),
+                ZonedDateTime.parse("2101-01-01T00:00:00Z"),
+            )
 
         // Then
         assertEquals(expectedThemesSize, themes.size)

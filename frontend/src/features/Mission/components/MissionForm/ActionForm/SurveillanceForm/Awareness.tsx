@@ -16,10 +16,10 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
 
   const [{ value: isRisingAwareness }] = useField(`${formPath}.awareness.isRisingAwareness`)
 
-  const [themes] = useField<ThemeFromAPI[]>(`${formPath}.themes`)
+  const [themes] = useField<ThemeFromAPI[] | undefined>(`${formPath}.themes`)
 
   useEffect(() => {
-    if (themes.value.length === 1 && isRisingAwareness) {
+    if (themes.value && themes.value.length === 1 && isRisingAwareness) {
       setFieldValue(`${formPath}.awareness.themeId`, themes.value[0]?.id)
     }
   }, [themes.value, formPath, isRisingAwareness, setFieldValue])

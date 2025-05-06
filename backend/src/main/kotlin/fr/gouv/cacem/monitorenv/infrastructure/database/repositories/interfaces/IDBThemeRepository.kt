@@ -9,11 +9,14 @@ interface IDBThemeRepository : JpaRepository<ThemeModel, Int> {
     @Query(
         """SELECT DISTINCT theme FROM ThemeModel theme 
             LEFT JOIN FETCH theme.subThemes subThemes
-        WHERE theme.parent IS NULL AND theme.startedAt <= :time AND (theme.endedAt IS NULL OR theme.endedAt > :time)
-        AND (subThemes IS NULL OR (subThemes.startedAt <= :time AND (subThemes.endedAt IS NULL OR subThemes.endedAt > :time)))
+        WHERE theme.parent IS NULL AND theme.startedAt <= :endedAt AND (theme.endedAt IS NULL OR theme.endedAt > :startedAt)
+        AND (subThemes IS NULL OR (subThemes.startedAt <= :endedAt AND (subThemes.endedAt IS NULL OR subThemes.endedAt > :startedAt)))
             """,
     )
-    fun findAllWithin(time: ZonedDateTime): List<ThemeModel>
+    fun findAllWithin(
+        startedAt: ZonedDateTime,
+        endedAt: ZonedDateTime,
+    ): List<ThemeModel>
 
     @Query(
         """SELECT DISTINCT theme FROM ThemeModel theme 

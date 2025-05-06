@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IThemeRepository
 import org.slf4j.LoggerFactory
+import java.time.ZonedDateTime
 
 @UseCase
 class GetThemes(
@@ -11,9 +12,12 @@ class GetThemes(
 ) {
     private val logger = LoggerFactory.getLogger(GetThemes::class.java)
 
-    fun execute(): List<ThemeEntity> {
+    fun execute(
+        startedAt: ZonedDateTime,
+        endedAt: ZonedDateTime,
+    ): List<ThemeEntity> {
         logger.info("Attempt to GET all themes")
-        val themes = themeRepository.findAllWithin()
+        val themes = themeRepository.findAllWithin(startedAt, endedAt)
         logger.info("Found ${themes.size} themes")
 
         return themes

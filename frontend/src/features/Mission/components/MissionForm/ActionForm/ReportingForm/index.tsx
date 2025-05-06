@@ -1,5 +1,5 @@
 import { Accent, Button, getOptionsFromLabelledEnum, Icon, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
-import { displaySubTags } from '@utils/getTagsAsOptions'
+import { displaySubTags, displayTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
@@ -155,7 +155,7 @@ export function ReportingForm({
             plaintext
             value={displaySubThemes([reporting.theme]) ?? EMPTY_VALUE}
           />
-          <TextInput label="Tag du signalement" name="tag" plaintext value={reporting.theme.name} />
+          <TextInput label="Tags du signalement" name="tags" plaintext value={displayTags(reporting.tags)} />
           <TextInput
             label="Sous-tag du signalement"
             name="subTag"
