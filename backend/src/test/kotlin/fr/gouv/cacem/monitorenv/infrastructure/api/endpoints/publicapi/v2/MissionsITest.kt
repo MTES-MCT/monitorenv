@@ -65,10 +65,11 @@ class MissionsITest {
         val observationsByUnit = "patchedObservations"
         val startDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2024-04-11T07:00:00Z")
         val endDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2024-04-22T07:00:00Z")
+        val isUnderJdp = false
 
         val partialMissionAsJson =
             """
-            { "observationsByUnit": "$observationsByUnit", "startDateTimeUtc": "$startDateTimeUtc", "endDateTimeUtc": "$endDateTimeUtc" }
+            { "observationsByUnit": "$observationsByUnit", "startDateTimeUtc": "$startDateTimeUtc", "endDateTimeUtc": "$endDateTimeUtc", "isUnderJdp": "$isUnderJdp" }
             """.trimIndent()
 
         val patchedMission =
@@ -77,12 +78,14 @@ class MissionsITest {
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = endDateTimeUtc,
                 observationsByUnit = observationsByUnit,
+                isUnderJdp = isUnderJdp,
             )
         val patchableMissionEntity =
             PatchableMissionEntity(
                 observationsByUnit = Optional.of(observationsByUnit),
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = Optional.of(endDateTimeUtc),
+                isUnderJdp = isUnderJdp,
             )
 
         given(patchMission.execute(id, patchableMissionEntity))
@@ -102,6 +105,12 @@ class MissionsITest {
                 jsonPath(
                     "$.observationsByUnit",
                     equalTo(patchedMission.observationsByUnit),
+                ),
+            )
+            .andExpect(
+                jsonPath(
+                    "$.isUnderJdp",
+                    equalTo(patchedMission.isUnderJdp),
                 ),
             )
     }

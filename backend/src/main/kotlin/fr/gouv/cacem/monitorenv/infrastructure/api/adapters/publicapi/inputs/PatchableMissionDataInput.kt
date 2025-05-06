@@ -8,11 +8,13 @@ data class PatchableMissionDataInput(
     val observationsByUnit: Optional<String>?,
     val startDateTimeUtc: ZonedDateTime?,
     val endDateTimeUtc: Optional<ZonedDateTime>?,
+    val isUnderJdp: Boolean?,
 ) {
     fun toPatchableMissionEntity(): PatchableMissionEntity =
         PatchableMissionEntity(
             observationsByUnit = observationsByUnit,
             startDateTimeUtc = startDateTimeUtc,
             endDateTimeUtc = endDateTimeUtc,
+            isUnderJdp = isUnderJdp,
         )
 }
