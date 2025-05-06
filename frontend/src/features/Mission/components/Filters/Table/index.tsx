@@ -12,7 +12,6 @@ import {
   Select,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
-import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { MissionFiltersEnum } from 'domain/shared_slices/MissionFilters'
 import { forwardRef, useMemo } from 'react'
