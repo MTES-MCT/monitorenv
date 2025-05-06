@@ -9,7 +9,7 @@ import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { ReportingContext, setDisplayedItems } from 'domain/shared_slices/Global'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 
-export function SearchReportings() {
+export function SearchReportings({ onVisibiltyChange }: { onVisibiltyChange: (layerName: string) => void }) {
   const dispatch = useAppDispatch()
   const displayReportingsLayer = useAppSelector(state => state.global.layers.displayReportingsLayer)
 
@@ -18,7 +18,7 @@ export function SearchReportings() {
   }
 
   const setReportingsVisibilityOnMap = () => {
-    dispatch(setDisplayedItems({ layers: { displayReportingsLayer: !displayReportingsLayer } }))
+    onVisibiltyChange('displayReportingsLayer')
   }
 
   const createReporting = () => {

@@ -1,3 +1,4 @@
+import { dashboardActions } from '@features/Dashboard/slice'
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -21,7 +22,7 @@ import { LayerSearch } from './search'
 import { useGetAMPsQuery } from '../../api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../domain/entities/layers/constants'
-import { setDisplayedItems } from '../../domain/shared_slices/Global'
+import { restorePreviousDisplayedItems, setDisplayedItems } from '../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
@@ -53,8 +54,13 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
     if (isLayersSidebarVisible) {
       dispatch(closeMetadataPanel())
     }
-    dispatch(setDisplayedItems({ visibility: { isLayersSidebarVisible: !isLayersSidebarVisible } }))
+
     dispatch(layerSidebarActions.toggleRegFilters(true))
+    if (dashboardMapFocus) {
+      dispatch(dashboardActions.setMapFocus(false))
+      dispatch(restorePreviousDisplayedItems())
+    }
+    dispatch(setDisplayedItems({ visibility: { isLayersSidebarVisible: !isLayersSidebarVisible } }))
   }
 
   return (

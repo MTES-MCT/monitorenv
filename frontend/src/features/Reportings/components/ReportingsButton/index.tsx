@@ -1,5 +1,4 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
-import { reduceReportingFormOnMap } from '@features/Reportings/useCases/reduceReportingFormOnMap'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
@@ -7,19 +6,20 @@ import { globalActions } from 'domain/shared_slices/Global'
 
 import { SearchReportings } from './SearchReportings'
 
-export function ReportingsButton() {
+import type { MenuButtonProps } from '@components/Menu'
+
+export function ReportingsButton({ onClickMenuButton, onVisibiltyChange }: MenuButtonProps) {
   const dispatch = useAppDispatch()
   const isSearchReportingsVisible = useAppSelector(state => state.global.visibility.isSearchReportingsVisible)
 
   const toggleSearchReportings = () => {
-    dispatch(globalActions.hideAllDialogs())
-    dispatch(reduceReportingFormOnMap())
+    onClickMenuButton()
     dispatch(globalActions.setDisplayedItems({ visibility: { isSearchReportingsVisible: !isSearchReportingsVisible } }))
   }
 
   return (
     <>
-      {isSearchReportingsVisible && <SearchReportings />}
+      {isSearchReportingsVisible && <SearchReportings onVisibiltyChange={onVisibiltyChange} />}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchReportingsVisible ? '_active' : undefined}
         data-cy="reportings-button"

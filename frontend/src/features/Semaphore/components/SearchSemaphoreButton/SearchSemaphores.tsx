@@ -13,7 +13,7 @@ import styled from 'styled-components'
 
 import type { Semaphore } from 'domain/entities/semaphore'
 
-export function SearchSemaphores() {
+export function SearchSemaphores({ onVisibiltyChange }: { onVisibiltyChange: (layerName: string) => void }) {
   const dispatch = useAppDispatch()
 
   const displaySemaphoresLayer = useAppSelector(state => state.global.layers.displaySemaphoresLayer)
@@ -39,12 +39,9 @@ export function SearchSemaphores() {
   )
 
   const setSemaphoreVisibilityOnMap = () => {
-    dispatch(
-      setDisplayedItems({
-        layers: { displaySemaphoresLayer: !displaySemaphoresLayer }
-      })
-    )
+    onVisibiltyChange('displaySemaphoresLayer')
   }
+
   const closeSearchSemaphore = () => {
     dispatch(setDisplayedItems({ visibility: { isSearchSemaphoreVisible: false } }))
   }

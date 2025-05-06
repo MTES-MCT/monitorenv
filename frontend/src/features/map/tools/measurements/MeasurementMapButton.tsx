@@ -1,3 +1,4 @@
+import { dashboardActions } from '@features/Dashboard/slice'
 import { useClickOutside } from '@hooks/useClickOutside'
 import { Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
@@ -46,10 +47,10 @@ export function MeasurementMapButton() {
   }, [dispatch, isOpen, isMeasurementToolOpen, measurementTypeToAdd])
 
   const makeMeasurement = nextMeasurementTypeToAdd => {
-    dispatch(globalActions.hideAllDialogs())
     dispatch(setMeasurementTypeToAdd(nextMeasurementTypeToAdd))
     dispatch(globalActions.setIsMapToolVisible(MapToolType.MEASUREMENT))
     dispatch(closeAllOverlays())
+    dispatch(dashboardActions.setMapFocus(false))
   }
 
   const measurementIcon = useMemo(() => {

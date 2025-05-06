@@ -1,4 +1,5 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { dashboardActions } from '@features/Dashboard/slice'
 import { EditInterestPoint } from '@features/InterestPoint/components/EditInterestPoint'
 import {
   cancelEditingInterestPoint,
@@ -43,7 +44,7 @@ export function InterestPointMapButton() {
 
   useEscapeKey({ onEscape: cancel })
 
-  const toggleInterestPointMenu = useCallback(() => {
+  const toggleInterestPointMenu = () => {
     if (!isOpen) {
       dispatch(globalActions.hideAllDialogs())
       dispatch(reduceReportingFormOnMap())
@@ -52,7 +53,8 @@ export function InterestPointMapButton() {
     } else {
       close()
     }
-  }, [close, dispatch, isOpen])
+    dispatch(dashboardActions.setMapFocus(false))
+  }
 
   return (
     <>

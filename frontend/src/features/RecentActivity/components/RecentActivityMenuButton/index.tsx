@@ -1,7 +1,6 @@
 import { StyledMapMenuDialogContainer, StyledMapMenuDialogTitle } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { recentActivityActions } from '@features/RecentActivity/slice'
-import { reduceReportingFormOnMap } from '@features/Reportings/useCases/reduceReportingFormOnMap'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
@@ -12,7 +11,9 @@ import { DrawZone } from './DrawZone'
 import { RecentActivityFilters } from './RecentActivityFilters'
 import { RecentActivityLegend } from '../RecentActivityLegend'
 
-export function RecentActivityMenuButton() {
+import type { MenuButtonProps } from '@components/Menu'
+
+export function RecentActivityMenuButton({ onClickMenuButton, onVisibiltyChange }: MenuButtonProps) {
   const dispatch = useAppDispatch()
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
@@ -20,13 +21,10 @@ export function RecentActivityMenuButton() {
 
   const toggleRecentActivityDialog = e => {
     e.preventDefault()
-
+    onClickMenuButton()
     if (isRecentActivityDialogVisible && !displayRecentActivityLayer) {
       dispatch(recentActivityActions.setIsLegenOpen(false))
     }
-
-    dispatch(globalActions.hideAllDialogs())
-    dispatch(reduceReportingFormOnMap())
     dispatch(
       globalActions.setDisplayedItems({ visibility: { isRecentActivityDialogVisible: !isRecentActivityDialogVisible } })
     )
@@ -37,7 +35,7 @@ export function RecentActivityMenuButton() {
   }
 
   const handleRecentActivityVisibility = () => {
-    dispatch(globalActions.setDisplayedItems({ layers: { displayRecentActivityLayer: !displayRecentActivityLayer } }))
+    onVisibiltyChange('displayRecentActivityLayer')
     dispatch(recentActivityActions.resetControlListOverlay())
   }
 
