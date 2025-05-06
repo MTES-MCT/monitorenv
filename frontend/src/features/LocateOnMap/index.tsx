@@ -11,8 +11,10 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LocateOnMap() {
   const dispatch = useAppDispatch()
+  const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
   const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
+
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
   const results = useGooglePlacesAPI(searchedLocation)
 
@@ -27,7 +29,11 @@ export function LocateOnMap() {
   }
 
   return (
-    <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
+    <Wrapper
+      $dashboardMapFocus={dashboardMapFocus}
+      $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen}
+      $isRightMenuOpened={isRightMenuOpened}
+    >
       <StyledSearch
         data-cy="location-search-input"
         isLabelHidden
@@ -47,10 +53,12 @@ export function LocateOnMap() {
 }
 
 const Wrapper = styled.div<{
+  $dashboardMapFocus: boolean
   $hasFullHeightRightDialogOpen: boolean
   $isRightMenuOpened: boolean
 }>`
   display: flex;
+  margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
   position: absolute;
   right: ${p =>
     // eslint-disable-next-line no-nested-ternary

@@ -28,9 +28,14 @@ export function Menu({ isSuperUser }: MenuProps) {
   )
   const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
+  const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
 
   return (
-    <ButtonsWrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
+    <ButtonsWrapper
+      $dashboardMapFocus={dashboardMapFocus}
+      $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen}
+      $isRightMenuOpened={isRightMenuOpened}
+    >
       {displayMissionMenuButton && isSuperUser && (
         <li>
           <MissionsMenu />
@@ -81,17 +86,19 @@ export function Menu({ isSuperUser }: MenuProps) {
 }
 
 const ButtonsWrapper = styled.menu<{
+  $dashboardMapFocus: boolean
   $hasFullHeightRightDialogOpen: boolean
   $isRightMenuOpened: boolean
 }>`
-  position: absolute;
   display: flex;
   flex-direction: column;
-  row-gap: 8px;
-  top: 82px;
-  right: ${p => (!p.$hasFullHeightRightDialogOpen || p.$isRightMenuOpened ? 10 : 0)}px;
-  transition: right 0.3s ease-out;
   list-style: none;
+  margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
+  position: absolute;
+  row-gap: 8px;
+  right: ${p => (!p.$hasFullHeightRightDialogOpen || p.$isRightMenuOpened ? 10 : 0)}px;
+  top: 82px;
+  transition: right 0.3s ease-out;
 `
 
 const ToolWrapper = styled.li`
