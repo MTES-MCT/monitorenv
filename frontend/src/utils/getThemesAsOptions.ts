@@ -1,4 +1,4 @@
-import type { Option } from '@mtes-mct/monitor-ui__root'
+import type { Option } from '@mtes-mct/monitor-ui'
 import type { ThemeFromAPI, ThemeOption } from 'domain/entities/themes'
 
 export const getThemesAsOptions = (themes: ThemeFromAPI[], childrenKey: string = 'subThemes'): ThemeOption[] =>

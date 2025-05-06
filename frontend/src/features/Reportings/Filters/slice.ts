@@ -43,7 +43,7 @@ type ReportingsFiltersSliceType = {
   searchQueryFilter: string | undefined
   sourceFilter: SourceFilterProps[] | undefined
   sourceTypeFilter: string[] | undefined
-  startedAfter: string
+  startedAfter: string | undefined
   startedBefore?: string
   statusFilter: string[]
   tagFilter: TagOption[] | undefined
@@ -65,9 +65,9 @@ const initialState: ReportingsFiltersSliceType = {
   startedAfter: LAST_30_DAYS,
   startedBefore: undefined,
   statusFilter: [StatusFilterEnum.IN_PROGRESS],
-  tagFilter: [],
+  tagFilter: undefined,
   targetTypeFilter: undefined,
-  themeFilter: [],
+  themeFilter: undefined,
   typeFilter: undefined
 }
 

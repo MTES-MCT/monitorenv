@@ -34,7 +34,7 @@ import {
   Label,
   Message,
   Toggle
-} from '@mtes-mct/monitor-ui__root'
+} from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'

@@ -52,7 +52,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const dateRange: [string, string] = [
-    startedAfter,
+    startedAfter ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
     startedBefore ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
   ]
 
