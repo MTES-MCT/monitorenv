@@ -4,24 +4,24 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import {
   Accent,
   Button,
+  customDayjs,
   DatePicker,
   FieldError,
   FormikNumberInput,
-  FormikTextInput,
   FormikTextarea,
+  FormikTextInput,
+  getOptionsFromLabelledEnum,
   Icon,
   MultiRadio,
+  type OptionValueType,
+  pluralize,
   Size,
   THEME,
   Toggle,
-  customDayjs,
-  getOptionsFromLabelledEnum,
-  pluralize,
-  useNewWindow,
-  type OptionValueType
+  useNewWindow
 } from '@mtes-mct/monitor-ui'
 import { displayThemes } from '@utils/getThemesAsOptions'
-import { FieldArray, useFormikContext, type FormikErrors } from 'formik'
+import { FieldArray, type FormikErrors, useFormikContext } from 'formik'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -295,9 +295,7 @@ export function ControlForm({
     // prefill infractions with the reporting details
     updateInfractions(reporting)
 
-    setFieldValue(`envActions[${envActionIndex}].controlPlans`, [
-      { subThemeIds: reporting?.subThemeIds, tagIds: [], themeId: reporting?.themeId }
-    ])
+    setFieldValue(`envActions[${envActionIndex}].themes`, [reporting.theme])
 
     const updatedVehicleType =
       reporting.targetType === ReportingTargetTypeEnum.VEHICLE ? reporting.vehicleType : undefined
