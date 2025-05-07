@@ -123,7 +123,7 @@ export function useExportImages() {
     })
   )
 
-  const zoomToFeatures = async (features: Feature[]) =>
+  const zoomToFeatures = async (features: Feature[], padding?: [number, number, number, number]) =>
     new Promise<void>(resolve => {
       const inMemoryMap = mapRef.current
       const extent = combineExtent(features)
@@ -134,7 +134,7 @@ export function useExportImages() {
       const view = inMemoryMap.getView()
 
       view.fit(extent, {
-        padding: [30, 30, 30, 200]
+        padding: padding ?? [30, 30, 30, 200]
       })
       inMemoryMap.once('rendercomplete', () => {
         resolve()
@@ -199,8 +199,9 @@ export function useExportImages() {
       }
 
       layersVectorSourceRef.current.clear()
+      dashboardFeature.setStyle([measurementStyle()])
       layersVectorSourceRef.current.addFeatures([...recentActivityFeatures, dashboardFeature])
-      await zoomToFeatures([dashboardFeature])
+      await zoomToFeatures([dashboardFeature], [30, 200, 30, 30])
       mapRef.current
         ?.getTargetElement()
         .querySelectorAll('canvas')
@@ -219,10 +220,11 @@ export function useExportImages() {
         )
         mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
         layersVectorSourceRef.current.clear(true)
+        dashboardFeature.setStyle([measurementStyle()])
         layersVectorSourceRef.current.addFeatures([...recentActivityFeaturesByControlUnit, dashboardFeature])
 
         // eslint-disable-next-line no-await-in-loop
-        await zoomToFeatures([dashboardFeature])
+        await zoomToFeatures([dashboardFeature], [30, 200, 30, 30])
 
         mapRef.current
           .getViewport()

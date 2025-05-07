@@ -2,6 +2,7 @@ import { pluralize, type ControlUnit } from '@mtes-mct/monitor-ui'
 import { Image, Text, View } from '@react-pdf/renderer'
 
 import { layoutStyle } from '../style'
+import { Legend } from './Legend'
 import { recentActivityStyles } from './style'
 
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
@@ -32,6 +33,7 @@ export function ControlUnitDetailsView({
               width: 270
             }}
           />
+          <Legend />
         </View>
       )}
       <Text style={recentActivityStyles.subTitle}>Pression de contrôles - {controlUnit.name}</Text>

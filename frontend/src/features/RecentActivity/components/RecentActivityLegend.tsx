@@ -9,7 +9,7 @@ import { calculateDotSize } from '../utils'
 
 export type LegendLocation = 'OUTSIDE' | 'INSIDE'
 
-const LEGEND_COLORS = [
+export const LEGEND_COLORS = [
   {
     color: CONTROLS_COLORS[0],
     label: '0-5%'
@@ -40,7 +40,7 @@ const LEGEND_COLORS = [
   }
 ]
 
-const MEDIUM_DOT_SIZE = 50
+export const MEDIUM_DOT_SIZE = 50
 export function RecentActivityLegend({ location }: { location: LegendLocation }) {
   const dispatch = useAppDispatch()
   const isLegendOpen = useAppSelector(state => state.recentActivity.isLegendOpen)
