@@ -90,7 +90,7 @@ export const dashboardFiltersSlice = createSlice({
         controlUnitFilters: {},
         filters: {},
         recentActivityFilters: {
-          periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS
+          periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
         },
         reportingFilters: {
           dateRange: DateRangeEnum.MONTH,
@@ -142,7 +142,7 @@ export const dashboardFiltersSlice = createSlice({
         controlUnitFilters: {},
         filters: {},
         recentActivityFilters: {
-          periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS
+          periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
         },
         reportingFilters: {
           dateRange: DateRangeEnum.MONTH,

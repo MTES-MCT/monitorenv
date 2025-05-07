@@ -157,7 +157,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     // no button if there is no area
     cy.get('h2').contains('Zones AMP').parent().get('Tout sélectionner').should('not.exist')
     cy.get('h2').contains('Zones de vigilance').parent().clickButton('Tout désélectionner', { withoutScroll: true })
-    cy.get('h2').contains('Signalements').parent().clickButton('Tout sélectionner', { withoutScroll: true })
+    cy.get('h2').contains('Signalements').parent().clickButton('Tout désélectionner', { withoutScroll: true })
 
     cy.clickButton('Prévisualiser la sélection', { withoutScroll: true })
     cy.wait(250)
