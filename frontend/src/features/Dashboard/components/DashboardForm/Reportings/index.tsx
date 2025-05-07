@@ -49,6 +49,7 @@ export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
       <div>
         <Accordion
           isExpanded={isExpanded}
+          name="reportings"
           setExpandedAccordion={setExpandedAccordion}
           title={
             <TitleContainer>
