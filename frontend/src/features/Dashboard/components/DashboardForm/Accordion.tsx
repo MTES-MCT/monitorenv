@@ -33,8 +33,10 @@ export function Accordion({
         <StyledIconButton
           $isExpanded={isExpanded}
           accent={Accent.TERTIARY}
+          data-cy={`accordion-${name ?? title}-toggle`}
           Icon={Icon.Chevron}
           onClick={setExpandedAccordion}
+          title={isExpanded ? 'Replier le contenu' : 'Déplier le contenu'}
         />
       </AccordionHeader>
       <HeaderSeparator />
