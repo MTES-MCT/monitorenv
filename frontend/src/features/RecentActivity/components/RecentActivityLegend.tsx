@@ -104,7 +104,7 @@ export function RecentActivityLegend({ location }: { location: LegendLocation })
 }
 
 const LegendContainer = styled.div<{ $isOpen: boolean; $location: LegendLocation }>`
-  position: absolute;
+  position: fixed;
   right: 370px;
   width: ${p => (p.$isOpen ? '164px;' : 'auto')};
   z-index: 1;

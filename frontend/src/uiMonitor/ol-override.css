@@ -22,7 +22,7 @@
 
 .ol-scale-line {
   border-radius: 0px;
-  position: absolute;
+  position: fixed;
   bottom: 9px;
   left: 282px;
   display: inline-block;
@@ -50,12 +50,7 @@
   left: 0.5em;
   width: 25px;
   height: 53px;
-}
-.ol-control.zoom.dashboard-map-focus {
-  bottom: 88px;
-  left: 0.5em;
-  width: 25px;
-  height: 53px;
+  position: fixed;
 }
 
 .ol-control.zoom > button {

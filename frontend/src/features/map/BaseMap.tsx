@@ -15,13 +15,13 @@ import View from 'ol/View'
 import {
   Children,
   cloneElement,
+  type MutableRefObject,
+  type ReactElement,
   useCallback,
   useEffect,
   useMemo,
   useRef,
-  useState,
-  type MutableRefObject,
-  type ReactElement
+  useState
 } from 'react'
 import styled from 'styled-components'
 
@@ -70,7 +70,6 @@ const initialMap = new OpenLayerMap({
 
 export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
   const dispatch = useAppDispatch()
-  const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
 
   const [mapClickEvent, setMapClickEvent] = useState<MapClickEvent>({
     coordinates: undefined,
@@ -180,19 +179,19 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    if (dashboardMapFocus) {
-      const controlElement = document.querySelector('.zoom') as HTMLElement
-      if (controlElement) {
-        controlElement.className = `${controlElement.className} dashboard-map-focus`
-      }
-    } else {
-      const controlElement = document.querySelector('.zoom') as HTMLElement
-      if (controlElement) {
-        controlElement.className = controlElement.className.replace(' dashboard-map-focus', '')
-      }
-    }
-  }, [dashboardMapFocus])
+  // useEffect(() => {
+  //   if (dashboardMapFocus) {
+  //     const controlElement = document.querySelector('.zoom') as HTMLElement
+  //     if (controlElement) {
+  //       controlElement.className = `${controlElement.className} dashboard-map-focus`
+  //     }
+  //   } else {
+  //     const controlElement = document.querySelector('.zoom') as HTMLElement
+  //     if (controlElement) {
+  //       controlElement.className = controlElement.className.replace(' dashboard-map-focus', '')
+  //     }
+  //   }
+  // }, [dashboardMapFocus])
 
   const updateDistanceUnit = (value: DistanceUnit | undefined) => {
     if (!value) {
@@ -276,7 +275,6 @@ const DistanceUnitsTypeSelection = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   bottom: 40px;
   left: 283px;
-  display: inline-block;
   margin: 1px;
   color: ${p => p.theme.color.slateGray};
   display: flex;

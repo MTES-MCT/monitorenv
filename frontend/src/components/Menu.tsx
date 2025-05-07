@@ -116,7 +116,7 @@ const ButtonsWrapper = styled.menu<{
   display: flex;
   flex-direction: column;
   list-style: none;
-  margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
+  // margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
   position: absolute;
   row-gap: 8px;
   right: ${p => (!p.$hasFullHeightRightDialogOpen || p.$isRightMenuOpened ? 10 : 0)}px;

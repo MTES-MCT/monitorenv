@@ -122,6 +122,7 @@ const Wrapper = styled.div<{ $dashboardMapFocus: boolean }>`
   font-size: 13px;
   overflow-y: hidden;
   overflow-x: hidden;
-  margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
+  // margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
   width: 100%;
+  position: relative;
 `

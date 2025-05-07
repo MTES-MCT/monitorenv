@@ -1,4 +1,4 @@
-import { MultiRadio, getCoordinates, getOptionsFromLabelledEnum, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { getCoordinates, getOptionsFromLabelledEnum, MultiRadio, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
@@ -119,7 +119,7 @@ const Header = styled.header`
 `
 
 const CoordinatesTypeSelection = styled.span<{ $isOpen: boolean }>`
-  position: absolute;
+  position: fixed;
   bottom: 40px;
   left: 40px;
   display: inline-block;
@@ -136,7 +136,7 @@ const CoordinatesTypeSelection = styled.span<{ $isOpen: boolean }>`
 `
 
 const Coordinates = styled.span`
-  position: absolute;
+  position: fixed;
   bottom: 9px;
   left: 40px;
   display: inline-block;

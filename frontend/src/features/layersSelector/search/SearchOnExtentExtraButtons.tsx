@@ -162,7 +162,7 @@ const ExtraButtonsWrapper = styled.div<{
 }>`
   display: ${p => (p.$isVisible ? 'flex' : 'none')};
   position: fixed;
-  top: ${p => (p.$dashboardMapFocus ? '65px' : '15px')};
+  // top: ${p => (p.$dashboardMapFocus ? '65px' : '15px')};
   left: ${p => {
     if (p.$shouldReloadSearchOnExtent || p.$allowResetResults) {
       return `calc(

@@ -25,6 +25,7 @@ const Wrapper = styled.div`
   left: 0.5em;
   max-width: calc(100% - 1.3em);
   background: none;
+  position: fixed;
 `
 
 const Button = styled.button`
