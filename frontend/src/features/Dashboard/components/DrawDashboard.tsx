@@ -24,7 +24,8 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
     if (geometry) {
       dispatch(createDashboard(geometry))
     }
-    dispatch(dashboardActions.setInitialGeometry(undefined))
+    dispatch(resetDrawing())
+    dispatch(dashboardActions.setIsDrawing(false))
     dispatch(restorePreviousDisplayedItems())
   }
 
