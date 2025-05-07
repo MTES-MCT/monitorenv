@@ -22,14 +22,14 @@ export function ControlUnitDetailsView({
   const hasThemesAndControlActions = Object.keys(themesAndControlActions).length > 0
 
   return (
-    <View style={{ flexDirection: 'column', width: '45%' }}>
+    <View style={{ flexDirection: 'column', width: '50%' }}>
       {image && (
         <View>
           <Image
             src={image.image}
             style={{
-              height: 350,
-              width: '100%'
+              height: 178,
+              width: 270
             }}
           />
         </View>
