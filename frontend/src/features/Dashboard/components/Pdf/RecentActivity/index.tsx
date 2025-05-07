@@ -76,7 +76,7 @@ export function RecentActivity({
   return (
     <>
       {controlUnits.map(controlUnit => (
-        <Page style={layoutStyle.page}>
+        <Page key={controlUnit.id} style={layoutStyle.page}>
           <Headings name={briefName} />
           <View style={layoutStyle.section}>
             <View key={controlUnit.id} break wrap={false}>
