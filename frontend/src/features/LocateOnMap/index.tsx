@@ -1,4 +1,4 @@
-import { Accent, Icon, IconButton, Search, Size, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Search, Size, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getColorWithAlpha } from '@utils/utils'
 import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
@@ -58,7 +58,7 @@ const Wrapper = styled.div<{
   $isRightMenuOpened: boolean
 }>`
   display: flex;
-  margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
+  // margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
   position: absolute;
   right: ${p =>
     // eslint-disable-next-line no-nested-ternary
