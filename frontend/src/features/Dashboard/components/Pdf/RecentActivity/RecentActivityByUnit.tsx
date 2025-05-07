@@ -95,7 +95,7 @@ export function RecentActivityByUnit({
           contrôlée.
         </Text>
       </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+      <View style={{ flexDirection: 'row', gap: 10 }}>
         <GlobalView
           controlUnits={controlUnits}
           gobalImage={allRecentActivityImage}

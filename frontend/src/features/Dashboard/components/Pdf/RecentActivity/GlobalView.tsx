@@ -20,14 +20,14 @@ export function GlobalView({
   totalTarget: number
 }) {
   return (
-    <View style={{ flexDirection: 'column', width: '45%' }}>
+    <View style={{ flexDirection: 'column', width: '50%' }}>
       {gobalImage && (
         <View>
           <Image
             src={gobalImage.image}
             style={{
-              height: 350,
-              width: '100%'
+              height: 178,
+              width: 270
             }}
           />
         </View>
