@@ -1,3 +1,4 @@
+import { resetDrawing } from '@features/Dashboard/useCases/resetDrawing'
 import {
   type Coordinates,
   CoordinatesInput,
@@ -135,7 +136,7 @@ export function DrawModal() {
   }
 
   const handleDelete = () => {
-    dispatch(eraseDrawedGeometries(initialFeatureNumberRef.current))
+    dispatch(resetDrawing())
     dispatch(setGeometry(undefined))
   }
 

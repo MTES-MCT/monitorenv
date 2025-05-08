@@ -7,4 +7,5 @@ import type { HomeAppThunk } from '@store/index'
 export const resetDrawing = (): HomeAppThunk => dispatch => {
   dispatch(dashboardActions.setInteractionType(InteractionType.CIRCLE))
   dispatch(dashboardActions.setGeometry({ coordinates: [], type: 'MultiPolygon' }))
+  dispatch(dashboardActions.setInitialGeometry(undefined))
 }
