@@ -2,7 +2,10 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
@@ -33,8 +36,28 @@ class PatchMissionUTest {
         val today = ZonedDateTime.now()
         val tomorrow = ZonedDateTime.now().plusDays(1)
         val patchedObservationsByUnit = "patched observations"
+        val controlUnit =
+            listOf(
+                LegacyControlUnitEntity(
+                    id = 2,
+                    administration = "Gendarmerie Nationale",
+                    isArchived = false,
+                    name = "BN Toulon",
+                    resources =
+                        listOf(
+                            LegacyControlUnitResourceEntity(
+                                id = 1,
+                                controlUnitId = 2,
+                                name = "Vedette",
+                            ),
+                        ),
+                    contact = null,
+                ),
+            )
         val patchableMission =
             PatchableMissionEntity(
+                controlUnits = controlUnit,
+                missionTypes = listOf(MissionTypeEnum.SEA),
                 observationsByUnit = Optional.of(patchedObservationsByUnit),
                 startDateTimeUtc = today,
                 endDateTimeUtc = Optional.of(tomorrow),
@@ -43,9 +66,11 @@ class PatchMissionUTest {
         val missionPatched =
             aMissionEntity(
                 id = id,
+                controlUnits = controlUnit,
                 observationsByUnit = patchedObservationsByUnit,
                 startDateTimeUtc = today,
                 endDateTimeUtc = tomorrow,
+                missionTypes = listOf(MissionTypeEnum.SEA),
             )
 
         given(missionRepository.findById(id)).willReturn(missionFromDatabase)
@@ -58,6 +83,8 @@ class PatchMissionUTest {
         assertThat(savedMission.mission.observationsByUnit).isEqualTo(missionPatched.observationsByUnit)
         assertThat(savedMission.mission.startDateTimeUtc).isEqualTo(missionPatched.startDateTimeUtc)
         assertThat(savedMission.mission.endDateTimeUtc).isEqualTo(missionPatched.endDateTimeUtc)
+        assertThat(savedMission.mission.controlUnits).isEqualTo(missionPatched.controlUnits)
+        assertThat(savedMission.mission.missionTypes).isEqualTo(missionPatched.missionTypes)
         verify(missionRepository).save(missionPatched)
         assertThat(log.out).contains("Attempt to PATCH mission $id")
         assertThat(log.out).contains("Mission $id patched")
@@ -69,6 +96,8 @@ class PatchMissionUTest {
         val id = Random.nextInt()
         val patchableMission =
             PatchableMissionEntity(
+                controlUnits = null,
+                missionTypes = null,
                 observationsByUnit = null,
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
