@@ -8,7 +8,7 @@ import type { CellContext, ColumnDef } from '@tanstack/react-table'
 import type { Promisable } from 'type-fest'
 
 export function getStationTableColumns(
-  askForDeletionConfirmation: (cellContext: CellContext<Station.Station, unknown>) => Promisable<void>
+  askForDeletionConfirmation: (cellContext: CellContext<Station.Station, any>) => Promisable<void>
 ): Array<ColumnDef<Station.Station>> {
   const deleteColumn: ColumnDef<Station.Station> = {
     accessorFn: row => row,

@@ -1,6 +1,6 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { missionTypeEnum, type Mission, type NewMission } from 'domain/entities/missions'
-import { sum } from 'lodash'
+import { sum } from 'lodash-es'
 
 import {
   ActionTypeEnum,

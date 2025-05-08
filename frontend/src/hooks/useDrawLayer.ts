@@ -9,7 +9,7 @@ import {
 import { getFeature } from '@utils/getFeature'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
 import { Layers } from 'domain/entities/layers/constants'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { GeoJSON } from 'ol/format'
 import { Draw, Modify } from 'ol/interaction'
 import VectorLayer from 'ol/layer/Vector'

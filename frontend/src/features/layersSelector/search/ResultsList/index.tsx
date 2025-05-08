@@ -8,7 +8,7 @@ import {
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
-import { groupBy } from 'lodash'
+import { groupBy } from 'lodash-es'
 import styled from 'styled-components'
 
 import { AMPLayerGroup } from './AMPLayerGroup'
