@@ -198,46 +198,6 @@ export function useExportImages() {
         return allImages
       }
 
-      layersVectorSourceRef.current.clear()
-      dashboardFeature.setStyle([measurementStyle()])
-      layersVectorSourceRef.current.addFeatures([...recentActivityFeatures, dashboardFeature])
-      await zoomToFeatures([dashboardFeature], [30, 200, 30, 30])
-      mapRef.current
-        ?.getTargetElement()
-        .querySelectorAll('canvas')
-        .forEach(canvas => {
-          mapContext?.drawImage(canvas, 0, 0)
-        })
-      allImages.push({
-        featureId: Dashboard.featuresCode.DASHBOARD_ALL_RECENT_ACTIVITY,
-        image: mapCanvas.toDataURL('image/png')
-      })
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const controlUnitId of controlUnitIds) {
-        const recentActivityFeaturesByControlUnit = recentActivityFeatures.filter(feature =>
-          feature.get('controlUnitIds').some(id => id === controlUnitId)
-        )
-        mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
-        layersVectorSourceRef.current.clear(true)
-        dashboardFeature.setStyle([measurementStyle()])
-        layersVectorSourceRef.current.addFeatures([...recentActivityFeaturesByControlUnit, dashboardFeature])
-
-        // eslint-disable-next-line no-await-in-loop
-        await zoomToFeatures([dashboardFeature], [30, 200, 30, 30])
-
-        mapRef.current
-          .getViewport()
-          .querySelectorAll('canvas')
-          .forEach(canvas => {
-            mapContext.drawImage(canvas, 0, 0)
-            allImages.push({
-              featureId: `${Dashboard.featuresCode.DASHBOARD_RECENT_ACTIVITY_BY_UNIT}:${controlUnitId}`,
-              image: mapCanvas.toDataURL('image/png')
-            })
-          })
-      }
-
       // eslint-disable-next-line no-restricted-syntax
       for (const feature of features) {
         mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
@@ -325,6 +285,47 @@ export function useExportImages() {
         featureId: 'WHOLE_DASHBOARD',
         image: mapCanvas.toDataURL('image/png')
       })
+
+      mapRef.current?.getAllLayers()[0]?.setSource(getBaseSource(BaseLayer.LIGHT))
+      layersVectorSourceRef.current.clear()
+      dashboardFeature.setStyle([measurementStyle()])
+      layersVectorSourceRef.current.addFeatures([...recentActivityFeatures, dashboardFeature])
+      await zoomToFeatures([dashboardFeature], [30, 200, 30, 30])
+      mapRef.current
+        ?.getTargetElement()
+        .querySelectorAll('canvas')
+        .forEach(canvas => {
+          mapContext?.drawImage(canvas, 0, 0)
+        })
+      allImages.push({
+        featureId: Dashboard.featuresCode.DASHBOARD_ALL_RECENT_ACTIVITY,
+        image: mapCanvas.toDataURL('image/png')
+      })
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const controlUnitId of controlUnitIds) {
+        const recentActivityFeaturesByControlUnit = recentActivityFeatures.filter(feature =>
+          feature.get('controlUnitIds').some(id => id === controlUnitId)
+        )
+        mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
+        layersVectorSourceRef.current.clear(true)
+        dashboardFeature.setStyle([measurementStyle()])
+        layersVectorSourceRef.current.addFeatures([...recentActivityFeaturesByControlUnit, dashboardFeature])
+
+        // eslint-disable-next-line no-await-in-loop
+        await zoomToFeatures([dashboardFeature], [30, 200, 30, 30])
+
+        mapRef.current
+          .getViewport()
+          .querySelectorAll('canvas')
+          .forEach(canvas => {
+            mapContext.drawImage(canvas, 0, 0)
+            allImages.push({
+              featureId: `${Dashboard.featuresCode.DASHBOARD_RECENT_ACTIVITY_BY_UNIT}:${controlUnitId}`,
+              image: mapCanvas.toDataURL('image/png')
+            })
+          })
+      }
 
       return allImages
     },

@@ -16,6 +16,7 @@ import { useMemo, useState } from 'react'
 import { getRecentActivityFilters } from '../components/DashboardForm/slice'
 
 import type { Dashboard } from '@features/Dashboard/types'
+import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const [isLoadingBrief, setIsLoadingBrief] = useState(false)
@@ -60,7 +61,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     const recentActivity = await getRecentControlsActivity({
       administrationIds: filters?.administrationIds,
       controlUnitIds: filters?.controlUnitIds,
-      geometry: undefined,
+      geometry: dashboard.geom as GeoJSON.MultiPolygon,
       startedAfter: startAfter,
       startedBefore: startBefore,
       themeIds: filters?.themeIds

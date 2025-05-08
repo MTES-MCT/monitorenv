@@ -1,4 +1,4 @@
-import { dashboardActions, getActiveDashboardId } from '@features/Dashboard/slice'
+import { dashboardActions, getActiveDashboardId, getDashboardById } from '@features/Dashboard/slice'
 import { useRecentActivitylayer } from '@features/RecentActivity/hooks/useRecentActivityLayer'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import { getRecentActivityFilters } from '../DashboardForm/slice'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
+import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export function DashboardRecentActivityLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
@@ -19,6 +20,7 @@ export function DashboardRecentActivityLayer({ map }: BaseMapChildrenProps) {
   const totalOfControls =
     useAppSelector(state => (activeDashboardId ? state.dashboard.dashboards[activeDashboardId]?.totalOfControls : 0)) ??
     0
+  const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
 
   const filters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, activeDashboardId))
 
@@ -30,6 +32,7 @@ export function DashboardRecentActivityLayer({ map }: BaseMapChildrenProps) {
 
   const { controls } = useRecentActivitylayer({
     filters,
+    geometry: dashboard?.dashboard.geom as GeoJSON.MultiPolygon,
     isLayerVisible,
     layerName: Layers.DASHBOARD_RECENT_ACTIVITY.code,
     map,
