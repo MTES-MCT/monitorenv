@@ -20,6 +20,7 @@ import type { Geometry } from 'ol/geom'
 type UseRecentActivityLayerProps = {
   drawedGeometry?: GeoJSON.MultiPolygon
   filters: RecentActivityFilters | undefined
+  geometry?: GeoJSON.MultiPolygon
   isLayerVisible: boolean
   layerName: string
   map: OpenLayerMap
@@ -30,6 +31,7 @@ type UseRecentActivityLayerProps = {
 export function useRecentActivitylayer({
   drawedGeometry,
   filters,
+  geometry,
   isLayerVisible,
   layerName,
   map,
@@ -62,12 +64,12 @@ export function useRecentActivitylayer({
     getRecentControlsActivity({
       administrationIds: filters?.administrationIds,
       controlUnitIds: filters?.controlUnitIds,
-      geometry: filters && 'geometry' in filters ? filters.geometry : undefined,
+      geometry: geometry ?? filters?.geometry,
       startedAfter: startAfter,
       startedBefore: startBefore,
       themeIds: filters?.themeIds
     })
-  }, [filters, getRecentControlsActivity])
+  }, [filters, geometry, getRecentControlsActivity])
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(

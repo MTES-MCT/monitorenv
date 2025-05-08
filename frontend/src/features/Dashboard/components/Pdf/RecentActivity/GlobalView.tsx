@@ -9,23 +9,23 @@ import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 
 export function GlobalView({
   controlUnits,
-  gobalImage,
+  globalImage,
   themesAndControlActions,
   totalControlActions,
   totalTarget
 }: {
   controlUnits: ControlUnit.ControlUnit[]
-  gobalImage: ExportImageType | undefined
+  globalImage: ExportImageType | undefined
   themesAndControlActions: Record<string, number>
   totalControlActions: number
   totalTarget: number
 }) {
   return (
     <View style={{ flexDirection: 'column', width: '50%' }}>
-      {gobalImage && (
+      {globalImage && (
         <View>
           <Image
-            src={gobalImage.image}
+            src={globalImage.image}
             style={{
               height: 178,
               width: 270

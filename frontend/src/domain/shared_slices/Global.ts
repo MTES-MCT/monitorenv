@@ -177,6 +177,10 @@ const globalSlice = createSlice({
       state.toast = undefined
     },
 
+    resetState() {
+      return { ...initialState }
+    },
+
     restorePreviousDisplayedItems(state) {
       state.layers = state.previousDisplayedItems.layers
       state.menus = initialMenuState
@@ -200,6 +204,7 @@ const globalSlice = createSlice({
       state.menus = { ...state.menus, ...(action.payload.menus ?? {}) }
       state.visibility = { ...state.visibility, ...(action.payload.visibility ?? {}) }
     },
+
     /**
      * Set warning to show on application header
      * @param {Object} state
@@ -215,7 +220,6 @@ const globalSlice = createSlice({
     setIsMapToolVisible(state, action: PayloadAction<MapToolType | undefined>) {
       state.visibility.isMapToolVisible = action.payload
     },
-
     setOpenedOverlay(state, action: PayloadAction<string>) {
       const featureId = action.payload
       state.openedOverlayId = featureId
@@ -229,16 +233,13 @@ const globalSlice = createSlice({
         state.overlayCoordinates[index] = action.payload
       }
     },
+
     setReportingFormVisibility(state, action) {
       state.visibility.reportingFormVisibility = action.payload
     },
 
     setToast(state, action: PayloadAction<Toast>) {
       state.toast = action.payload
-    },
-
-    setToInitialState() {
-      return { ...initialState }
     }
   }
 })
@@ -248,6 +249,7 @@ export const {
   hideAllDialogs,
   removeOverlayStroke,
   removeToast,
+  resetState,
   restorePreviousDisplayedItems,
   setDisplayedItems,
   setHealthcheckTextWarning,
@@ -255,8 +257,7 @@ export const {
   setOpenedOverlay,
   setOverlayCoordinates,
   setReportingFormVisibility,
-  setToast,
-  setToInitialState
+  setToast
 } = globalSlice.actions
 
 export const globalActions = globalSlice.actions

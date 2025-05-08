@@ -98,7 +98,7 @@ export function RecentActivityByUnit({
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <GlobalView
           controlUnits={controlUnits}
-          gobalImage={allRecentActivityImage}
+          globalImage={allRecentActivityImage}
           themesAndControlActions={themesAndControlActions}
           totalControlActions={recentActivity.length}
           totalTarget={totalTarget}
