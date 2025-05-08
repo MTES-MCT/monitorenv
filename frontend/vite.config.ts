@@ -34,14 +34,15 @@ export default defineConfig(
       react(),
       viteTsconfigPaths(),
       svgr(),
-      visualizer({
-        emitFile: true,
-        filename: 'bundle_size.html'
-      }) as PluginOption,
       importMetaEnv.vite({
         env: './.env',
         example: './.env.frontend.example'
-      })
+      }),
+      visualizer({
+        emitFile: true,
+        filename: 'bundle_size.html',
+        open: true
+      }) as PluginOption
     ],
 
     server: {
