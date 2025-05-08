@@ -54,11 +54,7 @@ export function Menu({ isSuperUser }: MenuProps) {
   }
 
   return (
-    <ButtonsWrapper
-      $dashboardMapFocus={dashboardMapFocus}
-      $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen}
-      $isRightMenuOpened={isRightMenuOpened}
-    >
+    <ButtonsWrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
       {displayMissionMenuButton && isSuperUser && (
         <li>
           <MissionsMenu onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
@@ -109,14 +105,12 @@ export function Menu({ isSuperUser }: MenuProps) {
 }
 
 const ButtonsWrapper = styled.menu<{
-  $dashboardMapFocus: boolean
   $hasFullHeightRightDialogOpen: boolean
   $isRightMenuOpened: boolean
 }>`
   display: flex;
   flex-direction: column;
   list-style: none;
-  // margin-top: ${props => (props.$dashboardMapFocus ? '50px' : '0px')};
   position: absolute;
   row-gap: 8px;
   right: ${p => (!p.$hasFullHeightRightDialogOpen || p.$isRightMenuOpened ? 10 : 0)}px;
