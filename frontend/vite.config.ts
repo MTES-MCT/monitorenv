@@ -13,10 +13,10 @@ export default defineConfig(
 
   {
     build: {
-      minify: true,
+      //  minify: true,
       outDir: './build',
-      sourcemap: true,
-      rollupOptions: {
+      sourcemap: true
+      /* rollupOptions: {
         treeshake: true,
         input: {
           index: './index.html'
@@ -27,7 +27,7 @@ export default defineConfig(
           }
         }
       },
-      target: 'esnext'
+      target: 'esnext' */
     },
 
     plugins: [
