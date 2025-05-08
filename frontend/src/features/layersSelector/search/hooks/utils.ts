@@ -1,22 +1,22 @@
-import type { TagFromAPI } from 'domain/entities/tags'
-import type { ThemeFromAPI } from 'domain/entities/themes'
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 
-export function filterByThemes(themes: ThemeFromAPI[]) {
+export function filterByThemes(themes: ThemeOption[]) {
   return {
     $or: [
       ...themes.map(theme => ({ $path: ['themes.name'], $val: theme.name })),
       ...themes.flatMap(theme =>
-        theme.subThemes.map(subTheme => ({ $path: ['themes.subThemes.name'], $val: subTheme.name }))
+        (theme.subThemes ?? []).map(subTheme => ({ $path: ['themes.subThemes.name'], $val: subTheme.name }))
       )
     ]
   }
 }
 
-export function filterByTags(tags: TagFromAPI[]) {
+export function filterByTags(tags: TagOption[]) {
   return {
     $or: [
       ...tags.map(tag => ({ $path: ['tags.name'], $val: tag.name })),
-      ...tags.flatMap(tag => tag.subTags.map(subTag => ({ $path: ['tags.subTags.name'], $val: subTag.name })))
+      ...tags.flatMap(tag => (tag.subTags ?? []).map(subTag => ({ $path: ['tags.subTags.name'], $val: subTag.name })))
     ]
   }
 }

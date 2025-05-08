@@ -27,19 +27,19 @@ import styled from 'styled-components'
 
 import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from './slice'
 
-import type { TagFromAPI } from 'domain/entities/tags'
-import type { ThemeFromAPI } from 'domain/entities/themes'
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 
 type LayerFiltersProps = {
   ampTypes: Option<string>[]
   filteredAmpTypes: string[]
-  filteredRegulatoryTags: TagFromAPI[]
-  filteredRegulatoryThemes: ThemeFromAPI[]
+  filteredRegulatoryTags: TagOption[]
+  filteredRegulatoryThemes: ThemeOption[]
   filteredVigilanceAreaPeriod: string | undefined
   handleResetFilters: () => void
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
-  setFilteredRegulatoryTags: (filteredRegulatoryTags: TagFromAPI[]) => void
-  setFilteredRegulatoryThemes: (filteredRegulatoryThemes: ThemeFromAPI[]) => void
+  setFilteredRegulatoryTags: (filteredRegulatoryTags: TagOption[]) => void
+  setFilteredRegulatoryThemes: (filteredRegulatoryThemes: ThemeOption[]) => void
   updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
 }
 export function LayerFilters({
@@ -73,11 +73,11 @@ export function LayerFilters({
     setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete))
   }
 
-  const handleDeleteRegulatoryTag = (regulatoryTagToDelete: TagFromAPI) => () => {
+  const handleDeleteRegulatoryTag = (regulatoryTagToDelete: TagOption) => () => {
     if (filteredRegulatoryTags.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
-    const updatedFilter: TagFromAPI[] = filteredRegulatoryTags
+    const updatedFilter: TagOption[] = filteredRegulatoryTags
       .map(tag => filterSubTags(tag, regulatoryTagToDelete))
       .filter(tag => tag !== undefined)
       .filter(tag => tag.id !== regulatoryTagToDelete.id)
@@ -85,11 +85,11 @@ export function LayerFilters({
     setFilteredRegulatoryTags(updatedFilter)
   }
 
-  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: ThemeFromAPI) => () => {
+  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: TagOption) => () => {
     if (filteredRegulatoryThemes.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
-    const updatedFilter: ThemeFromAPI[] = filteredRegulatoryThemes
+    const updatedFilter: TagOption[] = filteredRegulatoryThemes
       .map(theme => filterSubThemes(theme, regulatoryThemeToDelete))
       .filter(theme => theme !== undefined)
       .filter(theme => theme.id !== regulatoryThemeToDelete.id)
@@ -171,7 +171,7 @@ export function LayerFilters({
               >
                 {theme.name}
               </SingleTag>
-              {theme.subThemes.map(subTheme => (
+              {theme.subThemes?.map(subTheme => (
                 <SingleTag
                   key={subTheme.id}
                   accent={Accent.SECONDARY}
@@ -193,7 +193,7 @@ export function LayerFilters({
               >
                 {tag.name}
               </SingleTag>
-              {tag.subTags.map(subTag => (
+              {tag.subTags?.map(subTag => (
                 <SingleTag
                   key={subTag.id}
                   accent={Accent.SECONDARY}

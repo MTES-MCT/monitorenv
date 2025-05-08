@@ -7,11 +7,11 @@ import { FrontendError } from '@libs/FrontendError'
 import { customDayjs, SingleTag } from '@mtes-mct/monitor-ui'
 import { filterSubTags } from '@utils/getTagsAsOptions'
 import { FrontCompletionStatusLabel, missionStatusLabels, missionTypeEnum } from 'domain/entities/missions'
-import { MissionFiltersEnum, updateFilters, type MissionFiltersState } from 'domain/shared_slices/MissionFilters'
+import { MissionFiltersEnum, type MissionFiltersState, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import type { TagFromAPI } from 'domain/entities/tags'
+import type { TagOption } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function FilterTags() {
@@ -40,7 +40,7 @@ export function FilterTags() {
   const themesAPI: ThemeFromAPI[] = Object.values(data ?? [])
 
   const onDeleteTag = <K extends MissionFiltersEnum>(
-    valueToDelete: number | string | TagFromAPI,
+    valueToDelete: number | string | TagOption,
     filterKey: K,
     selectedValues: MissionFiltersState[K]
   ) => {
@@ -54,8 +54,8 @@ export function FilterTags() {
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues }))
   }
 
-  const onDeleteTagTag = (valueToDelete: TagFromAPI, tagFilter: TagFromAPI[]) => {
-    const updatedFilter: TagFromAPI[] = tagFilter
+  const onDeleteTagTag = (valueToDelete: TagOption, tagFilter: TagOption[]) => {
+    const updatedFilter: TagOption[] = tagFilter
       .map(tag => filterSubTags(tag, valueToDelete))
       .filter(tag => tag !== undefined)
       .filter(tag => tag.id !== valueToDelete.id)
@@ -151,7 +151,7 @@ export function FilterTags() {
             <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
               {`Tag ${tag.name}`}
             </SingleTag>
-            {tag.subTags.map(subTag => (
+            {tag.subTags?.map(subTag => (
               <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
                 {`Sous-tag ${subTag.name}`}
               </SingleTag>

@@ -1,10 +1,7 @@
 import type { VigilanceArea } from '@features/VigilanceArea/types'
-import type { TagFromAPI } from 'domain/entities/tags'
+import type { TagOption } from 'domain/entities/tags'
 
-export function isVigilanceAreaPartOfTag(
-  vigilanceArea: VigilanceArea.VigilanceArea,
-  tagsFilter: TagFromAPI[]
-): boolean {
+export function isVigilanceAreaPartOfTag(vigilanceArea: VigilanceArea.VigilanceArea, tagsFilter: TagOption[]): boolean {
   if (!tagsFilter || tagsFilter.length === 0) {
     return true
   }

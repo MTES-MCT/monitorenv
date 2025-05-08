@@ -7,23 +7,24 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
   customDayjs,
+  type DateAsStringRange,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
-  type CheckTreePickerOption,
-  type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { getThemesAsOptionsCheckPicker } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
-import { dateRangeOptions, type DateRangeEnum } from 'domain/entities/dateRange'
+import { type DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, MissionStatusLabel, MissionTypeLabel } from 'domain/entities/missions'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
-import { useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useMemo, useRef } from 'react'
 
 import { MapMissionFilters } from './Map'
 import { TableMissionFilters } from './Table'
+
+import type { TagOption } from '../../../../domain/entities/tags'
 
 export enum MissionFilterContext {
   MAP = 'MAP',
@@ -37,7 +38,7 @@ export type MissionOptionsListType = {
   dates: Option<DateRangeEnum>[]
   seaFronts: Option<string>[]
   status: Option<string>[]
-  tags: CheckTreePickerOption[]
+  tags: TagOption[]
   themes: Option<number>[]
   types: Option<string>[]
 }

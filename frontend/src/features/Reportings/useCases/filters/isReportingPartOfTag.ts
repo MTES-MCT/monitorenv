@@ -1,7 +1,7 @@
 import type { Reporting } from 'domain/entities/reporting'
-import type { TagFromAPI } from 'domain/entities/tags'
+import type { TagOption } from 'domain/entities/tags'
 
-export function isReportingPartOfTag(reporting: Reporting, tagsFilter: TagFromAPI[] | undefined) {
+export function isReportingPartOfTag(reporting: Reporting, tagsFilter: TagOption[] | undefined) {
   if (!tagsFilter || tagsFilter.length === 0) {
     return true
   }

@@ -34,7 +34,7 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
   const themesOptions = useMemo(() => {
     if (actionType === ActionTypeEnum.CONTROL) {
       return getThemesAsOptions(Object.values(data ?? []))
-        .filter(theme => theme.label !== GENERAL_SURVEILLANCE)
+        .filter(theme => theme.name !== GENERAL_SURVEILLANCE)
         .sort(sortThemes)
     }
 
@@ -51,16 +51,14 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
         isMultiSelect={actionType === ActionTypeEnum.SURVEILLANCE}
         isRequired
         label="Thématiques et sous-thématiques de contrôle"
+        labelKey="name"
         name={`envActions[${actionIndex}].themes`}
         onChange={option => {
-          if (option) {
-            setFieldValue(`envActions[${actionIndex}].themes`, parseOptionsToThemes(option))
-          } else {
-            setFieldValue(`envActions[${actionIndex}].themes`, undefined)
-          }
+          setFieldValue(`envActions[${actionIndex}].themes`, parseOptionsToThemes(option))
         }}
         options={themesOptions}
-        value={getThemesAsOptions(envActions[actionIndex]?.themes ?? [])}
+        value={envActions[actionIndex]?.themes}
+        valueKey="id"
       />
     </ActionThemeWrapper>
   )

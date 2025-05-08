@@ -19,6 +19,7 @@ import {
   Button,
   CheckPicker,
   CustomSearch,
+  type DateAsStringRange,
   DateRangePicker,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
@@ -26,8 +27,7 @@ import {
   IconButton,
   Label,
   Select,
-  SingleTag,
-  type DateAsStringRange
+  SingleTag
 } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
@@ -282,7 +282,7 @@ export function RecentActivityFilters() {
           filters.themeIds?.length > 0 &&
           filters.themeIds.map(themeId => (
             <SingleTag key={themeId} onDelete={() => onDeleteTag(themeId, RecentActivityFiltersEnum.THEME_IDS)}>
-              {`Theme ${themesAsOptions?.find(theme => theme.value === themeId)?.label}`}
+              {`Theme ${themesAsOptions?.find(theme => theme.id === themeId)?.name}`}
             </SingleTag>
           ))}
       </StyledBloc>

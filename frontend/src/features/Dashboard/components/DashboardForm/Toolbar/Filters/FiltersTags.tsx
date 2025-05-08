@@ -3,13 +3,13 @@ import { ReinitializeFiltersButton } from '@features/commonComponents/Reinitiali
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { DateRangePicker, SingleTag, type DateAsStringRange } from '@mtes-mct/monitor-ui'
+import { type DateAsStringRange, DateRangePicker, SingleTag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { dashboardFiltersActions } from '../../slice'
 
 import type { DashboardType } from '@features/Dashboard/slice'
-import type { TagFromAPI } from 'domain/entities/tags'
+import type { TagOption } from 'domain/entities/tags'
 
 type FiltersTagsProps = {
   dashboard: DashboardType
@@ -22,7 +22,7 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
 
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
-  const setFilteredRegulatoryTags = (value: TagFromAPI[] | undefined) => {
+  const setFilteredRegulatoryTags = (value: TagOption[] | undefined) => {
     dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: value }, id }))
   }
 
@@ -30,7 +30,7 @@ export function FiltersTags({ dashboard }: FiltersTagsProps) {
     dispatch(dashboardFiltersActions.setFilters({ filters: { amps: value }, id }))
   }
 
-  const deleteRegulatoryTag = (regulatoryTagToDelete: TagFromAPI) => {
+  const deleteRegulatoryTag = (regulatoryTagToDelete: TagOption) => {
     setFilteredRegulatoryTags(filters?.regulatoryTags?.filter(theme => theme.id !== regulatoryTagToDelete.id))
   }
 
