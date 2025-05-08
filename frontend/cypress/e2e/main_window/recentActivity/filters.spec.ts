@@ -18,10 +18,10 @@ function setDateRangeWithControlsFilter(): {
 
 context('Recent Activity -> Filters', () => {
   beforeEach(() => {
-    cy.visit('/#@57126.60,5961745.35,6.50')
     cy.intercept('GET', '/api/v1/control_plans').as('getControlPlans')
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('POST', `/bff/v1/recent-activity/controls`).as('postRecentActivityControls')
+    cy.visit('/#@57126.60,5961745.35,6.50')
 
     cy.clickButton("Voir l'activité récente")
     cy.wait('@getControlPlans')
