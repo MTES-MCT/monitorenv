@@ -10,13 +10,13 @@ const endDate = getFutureDate(31, 'day')
 
 describe('Create Vigilance Area', () => {
   beforeEach(() => {
-    cy.viewport(1580, 1024)
-    cy.visit('/')
-
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
     cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
+
+    cy.viewport(1580, 1024)
+    cy.visit('/')
 
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
 
