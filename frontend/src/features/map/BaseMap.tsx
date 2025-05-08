@@ -179,20 +179,6 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // useEffect(() => {
-  //   if (dashboardMapFocus) {
-  //     const controlElement = document.querySelector('.zoom') as HTMLElement
-  //     if (controlElement) {
-  //       controlElement.className = `${controlElement.className} dashboard-map-focus`
-  //     }
-  //   } else {
-  //     const controlElement = document.querySelector('.zoom') as HTMLElement
-  //     if (controlElement) {
-  //       controlElement.className = controlElement.className.replace(' dashboard-map-focus', '')
-  //     }
-  //   }
-  // }, [dashboardMapFocus])
-
   const updateDistanceUnit = (value: DistanceUnit | undefined) => {
     if (!value) {
       return

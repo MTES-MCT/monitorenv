@@ -64,7 +64,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   }
 
   return (
-    <Container $dashboardMapFocus={false}>
+    <Container>
       <SidebarLayersIcon
         $isVisible={displayLayersSidebar}
         accent={Accent.PRIMARY}
@@ -141,9 +141,9 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
   )
 }
 
-const Container = styled.div<{ $dashboardMapFocus: boolean }>`
+const Container = styled.div`
   position: absolute;
-  top: ${p => (p.$dashboardMapFocus ? '58px' : '10px')};
+  top: 10px;
   left: 10px;
 `
 

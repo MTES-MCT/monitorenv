@@ -33,8 +33,8 @@ export const style = StyleSheet.create({
   },
   circle3: {
     height: 2.5,
-    left: 2.8 /* 2.5 */,
-    top: 8.3 /* 8 */,
+    left: 2.8,
+    top: 8.3,
     width: 2.5
   },
   circleNumbers: {
