@@ -63,6 +63,7 @@ export namespace Dashboard {
     images: ExportImageType[] | undefined
     name: string
     recentActivity: RecentActivity.RecentControlsActivity[]
+    recentActivityControlUnits: ControlUnit.ControlUnit[]
     recentActivityFilters: RecentActivityFilters
     regulatoryAreas: RegulatoryLayerWithMetadata[]
     reportings: Reporting[]

@@ -17,6 +17,7 @@ type RecentActivityProps = {
   controlUnits: ControlUnit.ControlUnit[]
   images: ExportImageType[] | undefined
   recentActivity: RecentActivityType.RecentControlsActivity[]
+  recentActivityControlUnits: ControlUnit.ControlUnit[]
   recentActivityFilters: RecentActivityFilters
   themes: ControlPlansThemeCollection
 }
@@ -25,6 +26,7 @@ export function RecentActivity({
   controlUnits,
   images,
   recentActivity,
+  recentActivityControlUnits,
   recentActivityFilters,
   themes
 }: RecentActivityProps) {
@@ -87,6 +89,7 @@ export function RecentActivity({
                 filters={recentActivityFilters}
                 images={images}
                 recentActivity={recentActivity}
+                recentActivityControlUnits={recentActivityControlUnits}
                 themes={themes}
                 themesAndControlActions={themesAndControlActions}
                 totalTarget={totalTarget}

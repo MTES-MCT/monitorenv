@@ -8,6 +8,7 @@ import { extractFeatures } from '@features/Dashboard/utils'
 import { CENTERED_ON_FRANCE } from '@features/map/BaseMap'
 import { measurementStyle } from '@features/map/layers/styles/measurement.style'
 import { recentControlActivityStyle } from '@features/RecentActivity/components/Layers/style'
+import { RecentActivity } from '@features/RecentActivity/types'
 import { getRecentActivityFeatures } from '@features/RecentActivity/utils'
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -15,7 +16,7 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 import { Feature, View } from 'ol'
-import { buffer, createEmpty, extend, getHeight, getWidth, type Extent } from 'ol/extent'
+import { buffer, createEmpty, extend, type Extent, getHeight, getWidth } from 'ol/extent'
 import { type Geometry } from 'ol/geom'
 import { fromExtent } from 'ol/geom/Polygon'
 import TileLayer from 'ol/layer/Tile'
@@ -25,7 +26,7 @@ import { transform } from 'ol/proj'
 import { OSM, TileWMS, XYZ } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
 import { Stroke, Style } from 'ol/style'
-import { useCallback, useEffect, useRef, useState, type MutableRefObject } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
 
 import { getDashboardStyle } from '../components/Layers/style'
 
@@ -345,7 +346,7 @@ export function useExportImages() {
     }
   }, [])
 
-  const getImages = (recentActivity, controlUnitIds) => {
+  const getImages = (recentActivity: RecentActivity.RecentControlsActivity[], controlUnitIds: number[]) => {
     if (!mapRef.current) {
       return undefined
     }
