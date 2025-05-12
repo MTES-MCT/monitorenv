@@ -58,10 +58,7 @@ export function RecentActivity({
     () =>
       recentActivity.reduce((acc, control) => {
         control.themeIds.forEach(themeId => {
-          const theme = themes[themeId]?.theme
-          if (!theme) {
-            return acc
-          }
+          const theme = themes[themeId]?.theme ?? 'Thématique non renseignée'
           if (!acc[theme]) {
             acc[theme] = 0
           }
