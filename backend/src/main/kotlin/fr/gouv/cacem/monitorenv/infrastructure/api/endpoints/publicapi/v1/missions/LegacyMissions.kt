@@ -36,13 +36,13 @@ import java.time.ZonedDateTime
 @Tag(description = "API Missions", name = "Public.Missions")
 class LegacyMissions(
     private val createOrUpdateMission: CreateOrUpdateMission,
-    private val getMissions: GetMissions,
     private val getMissionWithRapportNavActions: GetMissionWithRapportNavActions,
     private val bypassActionCheckAndDeleteMission: BypassActionCheckAndDeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val getMissionsByIds: GetMissionsByIds,
     private val sseMission: SSEMission,
     private val canDeleteMission: CanDeleteMission,
+    private val getMissions: GetMissions,
 ) {
     @GetMapping("")
     @Operation(summary = "Get missions")
@@ -91,6 +91,7 @@ class LegacyMissions(
                 pageNumber = pageNumber,
                 pageSize = pageSize,
                 searchQuery = searchQuery,
+                withLegacyControlPlans = true,
             )
         return missions.map { MissionDataOutput.fromMissionEntity(it) }
     }
@@ -177,7 +178,7 @@ class LegacyMissions(
             .map { LegacyControlUnitAndMissionSourcesDataOutput.fromLegacyControlUnitAndMissionSources(it) }
 
     /**
-     * This method create the connexion to the frontend (with EventSource)
+     * This method creates the connexion to the frontend (with EventSource)
      */
     @GetMapping(value = ["/sse"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun createMissionSSE(): SseEmitter = sseMission.registerListener()

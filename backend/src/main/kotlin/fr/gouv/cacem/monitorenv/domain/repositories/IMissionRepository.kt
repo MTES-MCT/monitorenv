@@ -49,4 +49,6 @@ interface IMissionRepository {
     fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionEntity>
 
     fun save(mission: MissionEntity): MissionDetailsDTO
+
+    fun addLegacyControlPlans(mission: MissionEntity)
 }

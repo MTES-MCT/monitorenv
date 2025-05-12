@@ -1362,4 +1362,92 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             assertThat(it?.subThemes).hasSize(3)
         }
     }
+
+    @Test
+    fun `addLegacyControlPlans should add controlPlans to envAction`() {
+        // Given
+        val mission = jpaMissionRepository.findById(34)
+        val envAction =
+            mission?.envActions?.find {
+                it.id == UUID.fromString("c52c6f20-e495-4b29-b3df-d7edfb67fdd7")
+            } as EnvActionSurveillanceEntity
+        // When
+        jpaMissionRepository.addLegacyControlPlans(mission)
+
+        // Then
+        assertThat(envAction.controlPlans).containsExactlyInAnyOrder(
+            EnvActionControlPlanEntity(
+                themeId = 100,
+                subThemeIds = listOf(178, 180),
+                tagIds = listOf(),
+            ),
+            EnvActionControlPlanEntity(
+                themeId = 103,
+                subThemeIds = listOf(195, 196),
+                tagIds = listOf(11),
+            ),
+        )
+        val expectedThemes =
+            listOf(
+                aTheme(
+                    id = 100,
+                    subThemes =
+                        listOf(
+                            aTheme(
+                                id = 327, // subThemeId = 180
+                            ),
+                            aTheme(
+                                id = 329, // subThemeId = 178
+                            ),
+                        ),
+                ),
+                aTheme(
+                    id = 103,
+                    subThemes =
+                        listOf(
+                            aTheme(
+                                id = 279, // subThemeId = 196
+                            ),
+                            aTheme(
+                                id = 312, // subThemeId = 195
+                            ),
+                            aTheme(
+                                id = 355, // tagId = 11
+                            ),
+                        ),
+                ),
+            )
+
+        expectedThemes.forEach { expectedTheme ->
+            assertThat(envAction.themes).anySatisfy { actualTheme ->
+                assertThat(actualTheme)
+                    .usingRecursiveComparison()
+                    .ignoringCollectionOrder()
+                    .ignoringFields(
+                        "name",
+                        "startedAt",
+                        "endedAt",
+                        "subThemes.name",
+                        "subThemes.startedAt",
+                        "subThemes.endedAt",
+                    ).isEqualTo(expectedTheme)
+            }
+        }
+    }
+
+    @Test
+    fun `addLegacyControlPlans should not add controlPlans to envAction when it got no themes`() {
+        // Given
+        val mission = jpaMissionRepository.findById(53)
+        val envAction =
+            mission?.envActions?.find {
+                it.id == UUID.fromString("2cdcd429-19ab-45ed-a892-7c695bd256e2")
+            } as EnvActionSurveillanceEntity
+        // When
+        jpaMissionRepository.addLegacyControlPlans(mission)
+
+        // Then
+        assertThat(envAction.controlPlans).isEmpty()
+        assertThat(envAction.themes).isEmpty()
+    }
 }
