@@ -5,7 +5,7 @@ import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, pluralize, THEME, Toggle } from '@mtes-mct/monitor-ui'
-import { resetState } from 'domain/shared_slices/Global'
+import { restorePreviousDisplayedItems } from 'domain/shared_slices/Global'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 
@@ -36,7 +36,7 @@ export const DashboardRecentActivity = forwardRef<HTMLDivElement, RecentActivity
         dispatch(hideLayersAndSidebar())
         dispatch(closeMetadataPanel())
       } else {
-        dispatch(resetState())
+        dispatch(restorePreviousDisplayedItems())
       }
     }
 
