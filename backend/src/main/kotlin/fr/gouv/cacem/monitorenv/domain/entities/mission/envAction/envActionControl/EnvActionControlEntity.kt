@@ -21,7 +21,7 @@ data class EnvActionControlEntity(
     override var actionStartDateTimeUtc: ZonedDateTime? = null,
     override val completedBy: String? = null,
     override val completion: ActionCompletionEnum? = null,
-    override val controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
+    override var controlPlans: List<EnvActionControlPlanEntity>? = listOf(),
     override val department: String? = null,
     override val facade: String? = null,
     override val geom: Geometry? = null,

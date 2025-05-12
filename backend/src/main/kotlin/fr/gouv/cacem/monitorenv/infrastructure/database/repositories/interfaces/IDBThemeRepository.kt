@@ -34,4 +34,14 @@ interface IDBThemeRepository : JpaRepository<ThemeModel, Int> {
         regulatoryAreaIds: List<Int>,
         time: ZonedDateTime,
     ): List<ThemeModel>
+
+    @Query(
+        value = """SELECT COALESCE(ARRAY_AGG(DISTINCT control_plan_themes_id) FILTER (WHERE control_plan_themes_id IS NOT NULL), '{}') as themes_ids,
+            COALESCE(ARRAY_AGG(DISTINCT control_plan_sub_themes_id) FILTER (WHERE control_plan_sub_themes_id IS NOT NULL), '{}') as sub_themes_ids,
+            COALESCE(ARRAY_AGG(DISTINCT control_plan_tags_id) FILTER (WHERE control_plan_tags_id IS NOT NULL), '{}') as tags_ids
+                FROM themes WHERE id IN (:ids) 
+                """,
+        nativeQuery = true,
+    )
+    fun findAllControlPlanThemeIdsByIds(ids: List<Int>): Array<Any>
 }

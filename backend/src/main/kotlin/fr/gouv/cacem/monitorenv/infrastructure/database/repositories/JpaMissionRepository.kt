@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
@@ -20,8 +21,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagEnvActionRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeEnvActionRepository
 import org.apache.commons.lang3.StringUtils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -38,10 +37,9 @@ class JpaMissionRepository(
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbMissionControlUnitRepository: IDBMissionControlUnitRepository,
     private val dbMissionControlResourceRepository: IDBMissionControlResourceRepository,
-    private val dbThemeEnvActionRepository: IDBThemeEnvActionRepository,
-    private val dbTagEnvActionRepository: IDBTagEnvActionRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbMissionRepository: IDBMissionRepository,
+    private val dbThemeRepository: JpaThemeRepository,
     private val mapper: ObjectMapper,
 ) : IMissionRepository {
     override fun count(): Long = dbMissionRepository.count()
@@ -151,22 +149,22 @@ class JpaMissionRepository(
             normalizeField(it)
                 .contains(normalizeField(searchQuery), ignoreCase = true)
         } == true ||
-            mission.envActions?.any { action ->
-                (action as? EnvActionControlEntity)?.infractions?.any { infraction ->
-                    listOf(
-                        infraction.imo,
-                        infraction.mmsi,
-                        infraction.registrationNumber,
-                        infraction.vesselName,
-                        infraction.companyName,
-                        infraction.controlledPersonIdentity,
-                    ).any { field ->
-                        !field.isNullOrBlank() &&
-                            normalizeField(field)
-                                .contains(normalizeField(searchQuery), ignoreCase = true)
-                    }
+                mission.envActions?.any { action ->
+                    (action as? EnvActionControlEntity)?.infractions?.any { infraction ->
+                        listOf(
+                            infraction.imo,
+                            infraction.mmsi,
+                            infraction.registrationNumber,
+                            infraction.vesselName,
+                            infraction.companyName,
+                            infraction.controlledPersonIdentity,
+                        ).any { field ->
+                            !field.isNullOrBlank() &&
+                                    normalizeField(field)
+                                        .contains(normalizeField(searchQuery), ignoreCase = true)
+                        }
+                    } ?: false
                 } ?: false
-            } ?: false
     }
 
     private fun normalizeField(input: String): String = StringUtils.stripAccents(input.replace(" ", ""))
@@ -285,9 +283,9 @@ class JpaMissionRepository(
                     action = it,
                     mission = missionModel,
                     controlPlanThemesReferenceModelMap =
-                    controlPlanThemesReferenceModelMap,
+                        controlPlanThemesReferenceModelMap,
                     controlPlanSubThemesReferenceModelMap =
-                    controlPlanSubThemesReferenceModelMap,
+                        controlPlanSubThemesReferenceModelMap,
                     controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
                     mapper = mapper,
                 )
@@ -296,5 +294,30 @@ class JpaMissionRepository(
         val savedEnvActions = envActions?.let { dbEnvActionRepository.saveAll(it) }
 
         return savedEnvActions
+    }
+
+    override fun addLegacyControlPlans(mission: MissionEntity) {
+        mission.envActions?.forEach { envAction ->
+            if (envAction is EnvActionControlEntity) {
+                val controlPlans =
+                    envAction.themes.map { theme ->
+                        val themeAndSubThemesIds = listOf(theme.id).plus(theme.subThemes.map { it.id })
+                        return@map dbThemeRepository.findEnvActionControlPlanByIds(
+                            themeAndSubThemesIds,
+                        )
+                    }
+                envAction.controlPlans = controlPlans
+            }
+            if (envAction is EnvActionSurveillanceEntity) {
+                val controlPlans =
+                    envAction.themes.map { theme ->
+                        val themeAndSubThemesIds = listOf(theme.id).plus(theme.subThemes.map { it.id })
+                        return@map dbThemeRepository.findEnvActionControlPlanByIds(
+                            themeAndSubThemesIds,
+                        )
+                    }
+                envAction.controlPlans = controlPlans
+            }
+        }
     }
 }

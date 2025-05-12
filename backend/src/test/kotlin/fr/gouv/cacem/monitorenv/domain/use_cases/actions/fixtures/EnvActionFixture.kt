@@ -76,6 +76,7 @@ class EnvActionFixture {
             controlPlans: List<EnvActionControlPlanEntity>? =
                 listOf(EnvActionControlPlanEntity(subThemeIds = listOf(1))),
             geom: Geometry? = polygon,
+            themes: List<ThemeEntity> = listOf(),
         ): EnvActionControlEntity =
             EnvActionControlEntity(
                 id = UUID.randomUUID(),
@@ -88,7 +89,7 @@ class EnvActionFixture {
                 controlPlans = controlPlans,
                 geom = geom,
                 tags = listOf(),
-                themes = listOf(),
+                themes = themes,
             )
 
         fun anEnvActionSurveillance(

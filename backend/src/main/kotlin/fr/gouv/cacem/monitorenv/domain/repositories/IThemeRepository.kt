@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import java.time.ZonedDateTime
 
@@ -10,4 +11,6 @@ interface IThemeRepository {
         regulatoryAreaIds: List<Int>,
         time: ZonedDateTime = ZonedDateTime.now(),
     ): List<ThemeEntity>
+
+    fun findEnvActionControlPlanByIds(ids: List<Int>): EnvActionControlPlanEntity
 }
