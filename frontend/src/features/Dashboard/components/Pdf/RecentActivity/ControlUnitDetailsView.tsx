@@ -1,4 +1,4 @@
-import { pluralize, type ControlUnit } from '@mtes-mct/monitor-ui'
+import { type ControlUnit, pluralize } from '@mtes-mct/monitor-ui'
 import { Image, Text, View } from '@react-pdf/renderer'
 
 import { layoutStyle } from '../style'
@@ -38,7 +38,8 @@ export function ControlUnitDetailsView({
       )}
       <Text style={recentActivityStyles.subTitle}>Pression de contrôles - {controlUnit.name}</Text>
       <Text style={layoutStyle.definition}>
-        {totalControlActions} actions de contrôles et {totalTargetByUnit} cibles contrôlées
+        {totalControlActions} {pluralize('action', totalControlActions)} de contrôle et {totalTargetByUnit}{' '}
+        {pluralize('cible', totalTargetByUnit)} {pluralize('contrôlée', totalTargetByUnit)}
       </Text>
 
       {hasThemesAndControlActions && (

@@ -20,6 +20,7 @@ export function RecentActivityByUnit({
   filters,
   images,
   recentActivity,
+  recentActivityControlUnits,
   themes,
   themesAndControlActions,
   totalTarget
@@ -35,6 +36,7 @@ export function RecentActivityByUnit({
   filters: RecentActivityFilters
   images: ExportImageType[] | undefined
   recentActivity: RecentActivityType.RecentControlsActivity[]
+  recentActivityControlUnits: ControlUnit.ControlUnit[]
   themes: ControlPlansThemeCollection
   themesAndControlActions: Record<string, number>
   totalTarget: number
@@ -97,7 +99,7 @@ export function RecentActivityByUnit({
       </View>
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <GlobalView
-          controlUnits={controlUnits}
+          controlUnits={recentActivityControlUnits}
           globalImage={allRecentActivityImage}
           themesAndControlActions={themesAndControlActions}
           totalControlActions={recentActivity.length}

@@ -1,4 +1,4 @@
-import { pluralize, type ControlUnit } from '@mtes-mct/monitor-ui'
+import { type ControlUnit, pluralize } from '@mtes-mct/monitor-ui'
 import { Image, Text, View } from '@react-pdf/renderer'
 
 import { layoutStyle } from '../style'
@@ -37,7 +37,8 @@ export function GlobalView({
 
       <Text style={recentActivityStyles.subTitle}>Pression de contrôles - toutes unités confondues</Text>
       <Text style={layoutStyle.definition}>
-        {totalControlActions} actions de contrôles et {totalTarget} cibles contrôlées
+        {totalControlActions} {pluralize('action', totalControlActions)} de contrôle et {totalTarget}{' '}
+        {pluralize('cible', totalTarget)} {pluralize('contrôlée', totalTarget)}
       </Text>
 
       <View style={recentActivityStyles.tableHeader}>

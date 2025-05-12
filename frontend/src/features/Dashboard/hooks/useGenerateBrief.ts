@@ -1,5 +1,6 @@
 import { getAmpsByIds } from '@api/ampsAPI'
-import { getControlUnitsByIds } from '@api/controlUnitsAPI'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
+import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
@@ -11,6 +12,7 @@ import { RecentActivity } from '@features/RecentActivity/types'
 import { getDatesFromFilters } from '@features/RecentActivity/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetControlPlans } from '@hooks/useGetControlPlans'
+import { uniq } from 'lodash'
 import { useMemo, useState } from 'react'
 
 import { getRecentActivityFilters } from '../components/DashboardForm/slice'
@@ -24,7 +26,8 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const { subThemes, themes } = useGetControlPlans()
 
   const recentActivityFilters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, dashboard.id))
-  const controlUnits = useAppSelector(state => getControlUnitsByIds(state, dashboard.controlUnitIds))
+  const { data: allControlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const controlUnits = allControlUnits?.filter(controlUnit => dashboard.controlUnitIds.includes(controlUnit.id))
   const regulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, dashboard.regulatoryAreaIds))
   const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
@@ -66,7 +69,10 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       startedBefore: startBefore,
       themeIds: filters?.themeIds
     }).unwrap()
-
+    const allRecentActivityControlUnitIds = uniq(recentActivity.flatMap(({ controlUnitIds }) => controlUnitIds))
+    const recentActivityControlUnits = allControlUnits?.filter(controlUnit =>
+      allRecentActivityControlUnitIds.includes(controlUnit.id)
+    )
     const images = await getImages(recentActivity, dashboard.controlUnitIds)
 
     return {
@@ -82,6 +88,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       images,
       name: dashboard.name,
       recentActivity,
+      recentActivityControlUnits,
       recentActivityFilters,
       regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),

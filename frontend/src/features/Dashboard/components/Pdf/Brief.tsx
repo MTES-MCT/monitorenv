@@ -45,6 +45,7 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           controlUnits={brief.controlUnits}
           images={brief.images}
           recentActivity={brief.recentActivity}
+          recentActivityControlUnits={brief.recentActivityControlUnits}
           recentActivityFilters={brief.recentActivityFilters}
           themes={brief.themes}
         />

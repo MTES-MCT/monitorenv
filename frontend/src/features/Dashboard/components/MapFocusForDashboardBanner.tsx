@@ -1,6 +1,6 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { LinkButton } from '@mtes-mct/monitor-ui'
-import { resetState } from 'domain/shared_slices/Global'
+import { restorePreviousDisplayedItems } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
 import { dashboardActions } from '../slice'
@@ -9,7 +9,7 @@ export function MapFocusForDashboardBanner() {
   const dispatch = useAppDispatch()
   const disableDashboardMapFocus = () => {
     dispatch(dashboardActions.setMapFocus(false))
-    dispatch(resetState())
+    dispatch(restorePreviousDisplayedItems())
   }
 
   return (
