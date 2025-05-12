@@ -104,7 +104,7 @@ class EnvActionModel(
     )
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("orderIndex")
-    val controlPlanThemes: MutableSet<EnvActionsControlPlanThemeModel>? = LinkedHashSet(),
+    var controlPlanThemes: MutableSet<EnvActionsControlPlanThemeModel>? = LinkedHashSet(),
     @OneToMany(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
@@ -113,7 +113,7 @@ class EnvActionModel(
     )
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("orderIndex")
-    val controlPlanSubThemes: MutableSet<EnvActionsControlPlanSubThemeModel>? = LinkedHashSet(),
+    var controlPlanSubThemes: MutableSet<EnvActionsControlPlanSubThemeModel>? = LinkedHashSet(),
     @OneToMany(
         fetch = FetchType.EAGER,
         cascade = [CascadeType.ALL],
@@ -122,7 +122,7 @@ class EnvActionModel(
     )
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("orderIndex")
-    val controlPlanTags: MutableSet<EnvActionsControlPlanTagModel>? = LinkedHashSet(),
+    var controlPlanTags: MutableSet<EnvActionsControlPlanTagModel>? = LinkedHashSet(),
     @OneToMany(
         mappedBy = "envAction",
         fetch = FetchType.LAZY,

@@ -13,6 +13,10 @@ class GetMissionsByIds(
 
     fun execute(ids: List<Int>): List<MissionEntity> {
         logger.info("GET missions $ids")
-        return missionRepository.findByIds(ids)
+        val missions = missionRepository.findByIds(ids)
+        missions.forEach { mission ->
+            missionRepository.addLegacyControlPlans(mission)
+        }
+        return missions
     }
 }

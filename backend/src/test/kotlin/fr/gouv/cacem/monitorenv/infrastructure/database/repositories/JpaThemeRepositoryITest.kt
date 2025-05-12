@@ -54,6 +54,34 @@ class JpaThemeRepositoryITest : AbstractDBTests() {
         assertEquals(expectedThemesSize, themes.size)
     }
 
+    @Test
+    fun `findEnvActionControlPlanByIds should return legacy control plan from themes ids`() {
+        // Given
+        val themesIds = listOf(1, 147, 318, 357)
+
+        // When
+        val controlPlans = jpaThemeRepository.findEnvActionControlPlanByIds(themesIds)
+
+        // Then
+        assertThat(controlPlans.themeId).isEqualTo(1)
+        assertThat(controlPlans.subThemeIds).containsExactlyInAnyOrder(34, 233)
+        assertThat(controlPlans.tagIds).containsExactlyInAnyOrder(10)
+    }
+
+    @Test
+    fun `findEnvActionControlPlanByIds should return empty legacy control plan from empty themeIds`() {
+        // Given
+        val themesIds = listOf<Int>()
+
+        // When
+        val controlPlans = jpaThemeRepository.findEnvActionControlPlanByIds(themesIds)
+
+        // Then
+        assertThat(controlPlans.themeId).isNull()
+        assertThat(controlPlans.subThemeIds).isEmpty()
+        assertThat(controlPlans.tagIds).isEmpty()
+    }
+
     // TODO : Ajouter des données de test
 //    @Transactional
 //    @Test
