@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRepository
@@ -25,4 +26,17 @@ class JpaThemeRepository(
         dbThemeRepository.findAllWithinByRegulatoryAreaIds(regulatoryAreaIds, time).map {
             it.toThemeEntity()
         }
+
+    override fun findEnvActionControlPlanByIds(ids: List<Int>): EnvActionControlPlanEntity {
+        val result = dbThemeRepository.findAllControlPlanThemeIdsByIds(ids)
+        val controlPlans = result[0] as? Array<Any>
+        val themeIds = (controlPlans?.get(0) ?: emptyList<Int>()) as? Array<Int>
+        val themeId = if (themeIds?.isNotEmpty() == true) themeIds.first() else null
+
+        return EnvActionControlPlanEntity(
+            themeId = themeId,
+            subThemeIds = ((controlPlans?.get(1) ?: emptyList<Int>()) as? Array<Int>)?.asList(),
+            tagIds = ((controlPlans?.get(2) ?: emptyList<Int>()) as? Array<Int>)?.asList(),
+        )
+    }
 }
