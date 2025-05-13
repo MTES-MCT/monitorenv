@@ -4,4 +4,4 @@ SELECT
     parent_id,
     started_at,
     ended_at
-FROM prod.themes
+FROM public.themes

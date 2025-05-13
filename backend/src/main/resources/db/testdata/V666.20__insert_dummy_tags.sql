@@ -29,10 +29,3 @@ INSERT INTO tags_vigilance_areas (tags_id, vigilance_areas_id)
 SELECT t.id, va.id
 FROM vigilance_areas va
          INNER JOIN tags t ON t.name = ANY (va.themes);
-
-UPDATE public.tags SET row_hash = md5(
-      COALESCE("name"::VARCHAR, '') ||
-      COALESCE(parent_id::INT, 0) ||
-      COALESCE(started_at::TIMESTAMP, NOW()) ||
-      COALESCE(ended_at::TIMESTAMP, NOW())
-);

@@ -5,10 +5,8 @@ from prefect import Flow, case, task
 from sqlalchemy import text
 from src.db_config import create_engine
 from src.pipeline.generic_tasks import delete_rows, extract, load
-from src.pipeline.processing import prepare_df_for_loading
 from src.pipeline.shared_tasks.update_queries import delete_required, insert_required, merge_hashes, select_ids_to_delete, select_ids_to_insert, select_ids_to_update, update_required
 from src.pipeline.utils import psql_insert_copy
-from src.read_query import read_query
 
 
 @task(checkpoint=False)

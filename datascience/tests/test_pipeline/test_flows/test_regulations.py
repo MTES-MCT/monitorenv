@@ -3,10 +3,9 @@ import prefect
 import pytest
 
 
-from src.pipeline.flows.regulations import load_new_regulations, update_regulations,load_themes_regulatory_areas, extract_tags_regulatory_areas, load_tags_regulatory_areas, extract_themes_regulatory_areas
+from src.pipeline.flows.regulations import load_new_regulations, update_regulations,load_themes_regulatory_areas, load_tags_regulatory_areas
 from src.pipeline.flows.themes_and_tags import load_new_tags, load_new_themes
-from src.pipeline.generic_tasks import delete_rows, load
-from src.pipeline.shared_tasks.update_queries import merge_hashes, select_ids_to_delete, select_ids_to_insert, select_ids_to_update
+from src.pipeline.generic_tasks import load
 from src.read_query import read_query
 
 import pandas as pd
@@ -23,7 +22,6 @@ def new_themes() -> pd.DataFrame:
         parents_id=[1, 1, 2, 3],
         started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-19 00:00:00", "2025-10-18 00:00:00"],
         ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-28 23:59:59"],
-        row_hashes=["cacem_row_hash_1", "cacem_row_hash_2", "cacem_row_hash_3", "cacem_row_hash_4"],
     )
 
 @pytest.fixture
@@ -34,7 +32,6 @@ def new_tags() -> pd.DataFrame:
         parents_id=[1, 1, 2, 2],
         started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-19 00:00:00", "2025-10-18 00:00:00"],
         ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-28 23:59:59"],
-        row_hashes=["cacem_row_hash_1", "cacem_row_hash_2", "cacem_row_hash_3", "cacem_row_hash_4"],
     )
 
 def generate_regulatory_area_data(ids, geom, entity_names, layer_names, facades, ref_regs, urls, row_hashes, editions, editeurs, sources, observations, thematiques, dates, duree_validites, temporalites, types):

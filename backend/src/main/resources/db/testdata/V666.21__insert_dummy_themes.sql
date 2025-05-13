@@ -67,10 +67,3 @@ ALTER TABLE themes
     DROP COLUMN control_plan_sub_themes_id,
     DROP COLUMN control_plan_tags_id,
     DROP COLUMN reportings_control_plan_sub_themes_id;
-
-UPDATE public.themes SET row_hash = md5(
-      COALESCE("name"::VARCHAR, '') ||
-      COALESCE(parent_id::INT, 0) ||
-      COALESCE(started_at::TIMESTAMP, NOW()) ||
-      COALESCE(ended_at::TIMESTAMP, NOW())
-);
