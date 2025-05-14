@@ -29,7 +29,7 @@ export const measurementStyle = ({ filled = false } = {}) =>
   new Style({
     fill: filled
       ? new Fill({
-          color: '#70707033'
+          color: 'rgba(112, 112, 112, 0.1)'
         })
       : undefined,
     stroke: new Stroke({

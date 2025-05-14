@@ -247,7 +247,7 @@ export function useExportImages() {
             new Style({
               stroke: new Stroke({
                 color: 'red',
-                width: 2
+                width: 4
               })
             })
           )
