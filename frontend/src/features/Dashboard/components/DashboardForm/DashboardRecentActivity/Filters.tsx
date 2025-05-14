@@ -9,10 +9,10 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CheckPicker,
   CustomSearch,
+  type DateAsStringRange,
   DateRangePicker,
   Select,
-  SingleTag,
-  type DateAsStringRange
+  SingleTag
 } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -28,7 +28,7 @@ export function Filters() {
   )
 
   const filtersOptions = useGetFiltersOptions({ filters: {} })
-  const { administrationsOptions, controlUnitsAsOptions, dateRangeOptions, isLoading, themesAsOptions } =
+  const { administrationsOptions, controlUnitsAsOptions, dateRangeOptions, isLoading, themesOptions } =
     filtersOptions.options
   const { administrations, controlUnits } = filtersOptions
 
@@ -37,7 +37,7 @@ export function Filters() {
     [controlUnitsAsOptions]
   )
 
-  const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions ?? [], ['label']), [themesAsOptions])
+  const themeCustomSearch = useMemo(() => new CustomSearch(themesOptions ?? [], ['label']), [themesOptions])
 
   const updatePeriodFilter = period => {
     dispatch(
@@ -188,14 +188,14 @@ export function Filters() {
       </FilterLine>
       <FilterLine>
         <CheckPicker
-          key={themesAsOptions?.length}
+          key={themesOptions?.length}
           customSearch={themeCustomSearch}
           isLabelHidden
           isTransparent
           label="Thématique"
           name="theme"
           onChange={value => setFilters(value, RecentActivityFiltersEnum.THEME_IDS)}
-          options={themesAsOptions}
+          options={themesOptions}
           placeholder="Thématique"
           renderValue={() =>
             recentActivityFilters.themeIds && (
@@ -210,7 +210,7 @@ export function Filters() {
             recentActivityFilters.themeIds?.length > 0 &&
             recentActivityFilters.themeIds.map(themeId => (
               <SingleTag key={themeId} onDelete={() => onDeleteTag(themeId, RecentActivityFiltersEnum.THEME_IDS)}>
-                {`Theme ${themesAsOptions?.find(theme => theme.value === themeId)?.label}`}
+                {`Theme ${themesOptions?.find(theme => theme.value === themeId)?.label}`}
               </SingleTag>
             ))}
         </Tagscontainer>

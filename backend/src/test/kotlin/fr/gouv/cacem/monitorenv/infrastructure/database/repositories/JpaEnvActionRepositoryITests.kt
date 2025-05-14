@@ -170,7 +170,11 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             )
         // Then
         assertThat(recentControlsActivity.size).isEqualTo(1)
-        recentControlsActivity.forEach { control -> assertThat(control.themesIds).contains(112) }
+        recentControlsActivity.forEach { control ->
+
+            assertThat(control.themesIds).containsExactly(112)
+            assertThat(control.subThemesIds).containsExactlyInAnyOrder(318, 333)
+        }
     }
 
     @Test
