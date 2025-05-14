@@ -25,9 +25,9 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
                 COALESCE(ARRAY_AGG(DISTINCT control_units.administration_id), '{}') AS administration_ids
             FROM env_actions env_action
             LEFT JOIN themes_env_actions themes_env_action ON themes_env_action.env_actions_id = env_action.id
-                LEFT JOIN themes ON themes_env_action.themes_id = themes.id AND themes.parent_id IS NULL
+                LEFT JOIN themes ON themes_env_action.themes_id = themes.id
             LEFT JOIN themes_env_actions subThemes_env_action ON subThemes_env_action.env_actions_id = env_action.id
-                LEFT JOIN themes subThemes ON subThemes_env_action.themes_id = subThemes.id AND subThemes.parent_id IS NOT NULL
+                LEFT JOIN themes subThemes ON subThemes_env_action.themes_id = subThemes.id
             LEFT JOIN missions_control_units ON env_action.mission_id = missions_control_units.mission_id
             LEFT JOIN control_units ON missions_control_units.control_unit_id = control_units.id
             WHERE env_action.action_type = 'CONTROL'
@@ -48,6 +48,8 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
                 OR themes_env_action.themes_id IN (:themeIds)
                 OR subThemes_env_action.themes_id IN (:themeIds)
             )
+            AND (subThemes_env_action.themes_id IS NULL OR subThemes.parent_id IS NOT NULL)
+            AND (themes_env_action.themes_id IS NULL OR themes.parent_id IS NULL)
             AND (
                 CAST(:geometry AS geometry) IS NULL
                 OR ST_INTERSECTS(ST_SETSRID(CAST(env_action.geom AS geometry), 4326), ST_SETSRID(CAST(:geometry AS geometry), 4326))

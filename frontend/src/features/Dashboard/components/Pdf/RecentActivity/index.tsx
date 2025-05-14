@@ -8,9 +8,9 @@ import { RecentActivitySummary } from './RecentActivitySummary'
 import { Headings } from '../Layout/Headings'
 import { layoutStyle } from '../style'
 
+import type { ThemeFromAPI } from '../../../../../domain/entities/themes'
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { RecentActivityFilters } from '@features/RecentActivity/slice'
-import type { ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 
 type RecentActivityProps = {
   briefName: string
@@ -19,7 +19,7 @@ type RecentActivityProps = {
   recentActivityControlUnits: ControlUnit.ControlUnit[]
   recentActivityFilters: RecentActivityFilters
   selectedControlUnits: ControlUnit.ControlUnit[]
-  themes: ControlPlansThemeCollection
+  themes: ThemeFromAPI[]
 }
 export function RecentActivity({
   briefName,
@@ -58,7 +58,7 @@ export function RecentActivity({
     () =>
       recentActivity.reduce((acc, control) => {
         control.themeIds.forEach(themeId => {
-          const theme = themes[themeId]?.theme ?? 'Thématique non renseignée'
+          const theme = themes.find(({ id }) => id === themeId)?.name ?? 'Thématique non renseignée'
           if (!acc[theme]) {
             acc[theme] = 0
           }

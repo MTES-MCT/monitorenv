@@ -16,13 +16,13 @@ import {
   Button,
   CheckPicker,
   CustomSearch,
+  type DateAsStringRange,
   DateRangePicker,
   Icon,
   IconButton,
   Label,
   Select,
-  SingleTag,
-  type DateAsStringRange
+  SingleTag
 } from '@mtes-mct/monitor-ui'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useMemo } from 'react'
@@ -34,7 +34,7 @@ export function RecentActivityFilters() {
   const dispatch = useAppDispatch()
   const filters = useAppSelector(state => state.recentActivity.filters)
   const filtersOptions = useGetFiltersOptions({ filters })
-  const { administrationsOptions, controlUnitsAsOptions, dateRangeOptions, isLoading, themesAsOptions } =
+  const { administrationsOptions, controlUnitsAsOptions, dateRangeOptions, isLoading, themesOptions } =
     filtersOptions.options
   const { administrations, controlUnits } = filtersOptions
 
@@ -43,7 +43,7 @@ export function RecentActivityFilters() {
     [controlUnitsAsOptions]
   )
 
-  const themeCustomSearch = useMemo(() => new CustomSearch(themesAsOptions ?? [], ['label']), [themesAsOptions])
+  const themeCustomSearch = useMemo(() => new CustomSearch(themesOptions ?? [], ['label']), [themesOptions])
 
   const updatePeriodFilter = period => {
     dispatch(recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.PERIOD_FILTER, value: period }))
@@ -226,14 +226,14 @@ export function RecentActivityFilters() {
       </StyledBloc>
       <StyledBloc>
         <CheckPicker
-          key={themesAsOptions?.length}
+          key={themesOptions?.length}
           customSearch={themeCustomSearch}
           isLabelHidden
           isTransparent
           label="Thématique"
           name="theme"
           onChange={value => setFilters(value, RecentActivityFiltersEnum.THEME_IDS)}
-          options={themesAsOptions}
+          options={themesOptions}
           placeholder="Thématique"
           renderValue={() => filters.themeIds && <OptionValue>{`Type (${filters.themeIds.length})`}</OptionValue>}
           searchable
@@ -243,7 +243,7 @@ export function RecentActivityFilters() {
           filters.themeIds?.length > 0 &&
           filters.themeIds.map(themeId => (
             <SingleTag key={themeId} onDelete={() => onDeleteTag(themeId, RecentActivityFiltersEnum.THEME_IDS)}>
-              {`Theme ${themesAsOptions?.find(theme => theme.value === themeId)?.label}`}
+              {`Thème ${themesOptions?.find(theme => theme.value === themeId)?.label}`}
             </SingleTag>
           ))}
       </StyledBloc>

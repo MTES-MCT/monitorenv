@@ -10,6 +10,7 @@ import type {
   RegulatoryLayerWithMetadata
 } from '../../domain/entities/regulatory'
 import type { Reporting } from '../../domain/entities/reporting'
+import type { ThemeFromAPI } from '../../domain/entities/themes'
 import type { ImageApi, ImageFront, Link } from '@components/Form/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
@@ -66,8 +67,7 @@ export namespace Dashboard {
     regulatoryAreas: RegulatoryLayerWithMetadata[]
     reportings: Reporting[]
     selectedControlUnits: ControlUnit.ControlUnit[]
-    subThemes: ControlPlansSubThemeCollection
-    themes: ControlPlansThemeCollection
+    themes: ThemeFromAPI[]
     updatedAt?: string
     vigilanceAreas: VigilanceArea.VigilanceArea[]
   }
