@@ -1,9 +1,10 @@
 import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { RecentActivity } from '@features/RecentActivity/types'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { getOptionsFromIdAndName, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { getThemesAsOptionsCheckPicker } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { useMemo } from 'react'
 
@@ -16,7 +17,10 @@ export const useGetFiltersOptions = ({ filters }) => {
     undefined,
     RTK_DEFAULT_QUERY_OPTIONS
   )
-  const { isLoading: isLoadingThemes, themesAsOptions } = useGetControlPlans()
+
+  const { data: themes, isLoading: isLoadingThemes } = useGetThemesQuery()
+
+  const themesOptions = useMemo(() => getThemesAsOptionsCheckPicker(Object.values(themes ?? [])), [themes])
 
   const administrationsOptions = useMemo(
     () =>
@@ -49,7 +53,7 @@ export const useGetFiltersOptions = ({ filters }) => {
       controlUnitsAsOptions,
       dateRangeOptions,
       isLoading: isLoadingAdministrations || isLoadingControlUnits || isLoadingThemes,
-      themesAsOptions
+      themesOptions
     }
   }
 }
