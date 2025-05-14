@@ -12,6 +12,7 @@ import {
   getOptionsFromLabelledEnum,
   type Option
 } from '@mtes-mct/monitor-ui'
+import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { getThemesAsOptionsCheckPicker } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
@@ -47,14 +48,17 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const dispatch = useAppDispatch()
-  const { selectedAdministrationNames, selectedControlUnitIds, startedAfter, startedBefore } = useAppSelector(
-    state => state.missionFilters
-  )
+  const { selectedAdministrationNames, selectedControlUnitIds, selectedPeriod, startedAfter, startedBefore } =
+    useAppSelector(state => state.missionFilters)
 
-  const dateRange: [string, string] = [
-    startedAfter ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
-    startedBefore ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
-  ]
+  const dateRange: [string, string] = useMemo(() => {
+    const { startedAfterDate, startedBeforeDate } = getDatesFromFilters(startedAfter, startedBefore, selectedPeriod)
+
+    return [
+      startedAfterDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
+      startedBeforeDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
+    ]
+  }, [selectedPeriod, startedAfter, startedBefore])
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)

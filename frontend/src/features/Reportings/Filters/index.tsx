@@ -6,6 +6,7 @@ import { useGetThemesQuery } from '@api/themesAPI'
 import { useAppDispatch } from '@hooks/useAppDispatch.ts'
 import { useAppSelector } from '@hooks/useAppSelector.ts'
 import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum, type Option } from '@mtes-mct/monitor-ui'
+import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import _, { reduce } from 'lodash'
@@ -46,15 +47,21 @@ export type ReportingsOptionsListType = {
 
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
-  const { sourceTypeFilter, startedAfter, startedBefore } = useAppSelector(state => state.reportingFilters)
+  const { periodFilter, sourceTypeFilter, startedAfter, startedBefore } = useAppSelector(
+    state => state.reportingFilters
+  )
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const dateRange: [string, string] = [
-    startedAfter ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
-    startedBefore ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
-  ]
+  const dateRange: [string, string] = useMemo(() => {
+    const { startedAfterDate, startedBeforeDate } = getDatesFromFilters(startedAfter, startedBefore, periodFilter)
+
+    return [
+      startedAfterDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
+      startedBeforeDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
+    ]
+  }, [periodFilter, startedAfter, startedBefore])
 
   const { data: theme } = useGetThemesQuery(dateRange)
 
