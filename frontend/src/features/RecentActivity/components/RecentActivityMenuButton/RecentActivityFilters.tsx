@@ -18,6 +18,7 @@ import {
   Accent,
   Button,
   CheckPicker,
+  customDayjs,
   CustomSearch,
   type DateAsStringRange,
   DateRangePicker,
@@ -29,7 +30,8 @@ import {
   Select,
   SingleTag
 } from '@mtes-mct/monitor-ui'
-import { getThemesAsOptions } from '@utils/getThemesAsOptions'
+import { getDatesFromFilters } from '@utils/getDatesFromFilters'
+import { getThemesAsOptionsCheckPicker } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useMemo } from 'react'
@@ -49,9 +51,23 @@ export function RecentActivityFilters() {
     undefined,
     RTK_DEFAULT_QUERY_OPTIONS
   )
-  const { data, isLoading: isLoadingThemes } = useGetThemesQuery()
 
-  const themesAsOptions = useMemo(() => getThemesAsOptions(Object.values(data ?? [])), [data])
+  const dateRange: [string, string] = useMemo(() => {
+    const { startedAfterDate, startedBeforeDate } = getDatesFromFilters(
+      filters.startedAfter,
+      filters.startedBefore,
+      filters.periodFilter
+    )
+
+    return [
+      startedAfterDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
+      startedBeforeDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
+    ]
+  }, [filters.startedAfter, filters.startedBefore, filters.periodFilter])
+
+  const { data, isLoading: isLoadingThemes } = useGetThemesQuery(dateRange)
+
+  const themesAsOptions = useMemo(() => getThemesAsOptionsCheckPicker(Object.values(data ?? [])), [data])
 
   const administrationsOptions = useMemo(
     () =>
@@ -282,7 +298,7 @@ export function RecentActivityFilters() {
           filters.themeIds?.length > 0 &&
           filters.themeIds.map(themeId => (
             <SingleTag key={themeId} onDelete={() => onDeleteTag(themeId, RecentActivityFiltersEnum.THEME_IDS)}>
-              {`Theme ${themesAsOptions?.find(theme => theme.id === themeId)?.name}`}
+              {`Thème ${themesAsOptions?.find(theme => theme.value === themeId)?.label}`}
             </SingleTag>
           ))}
       </StyledBloc>
@@ -323,14 +339,6 @@ const FilterWrapper = styled.div`
   gap: 32px;
   flex-direction: column;
   padding: 12px 4px;
-`
-
-export const StyledStatusFilter = styled.div`
-  align-items: end;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 8px;
 `
 
 const StyledCustomPeriodContainer = styled(CustomPeriodContainer)`
