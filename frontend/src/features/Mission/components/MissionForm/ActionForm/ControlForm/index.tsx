@@ -22,7 +22,7 @@ import {
   type OptionValueType
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext, type FormikErrors } from 'formik'
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 

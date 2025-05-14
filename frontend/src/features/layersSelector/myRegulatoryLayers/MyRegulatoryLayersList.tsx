@@ -1,4 +1,4 @@
-import { groupBy, isEmpty } from 'lodash'
+import { groupBy, isEmpty } from 'lodash-es'
 import { useState } from 'react'
 
 import { RegulatoryLayerGroup } from './MyRegulatoryLayerGroup'

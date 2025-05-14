@@ -4,7 +4,7 @@ import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/componen
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { getTitle } from 'domain/entities/layers/utils'
-import { groupBy } from 'lodash'
+import { groupBy } from 'lodash-es'
 
 import { layoutStyle } from '../style'
 

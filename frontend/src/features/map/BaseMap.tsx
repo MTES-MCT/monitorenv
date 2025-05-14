@@ -5,7 +5,7 @@ import {
   type MapClickEvent,
   type SerializedFeature
 } from 'domain/types/map'
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 import { defaults as defaultControls, ScaleLine } from 'ol/control'
 import Zoom from 'ol/control/Zoom'
 import { platformModifierKeyOnly } from 'ol/events/condition'

@@ -8,7 +8,7 @@ import { Accent, Icon, THEME, customDayjs, getLocalizedDayjs } from '@mtes-mct/m
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from 'domain/entities/reporting'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useEffect, useState } from 'react'
 
 type ReportingFooterProps = {
