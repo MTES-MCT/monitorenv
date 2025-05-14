@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
@@ -20,11 +21,13 @@ class JpaControlUnitRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbDepartmentAreaRepository: IDBDepartmentAreaRepository,
 ) : IControlUnitRepository {
+    @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun archiveById(controlUnitId: Int) {
         dbControlUnitRepository.archiveById(controlUnitId)
     }
 
+    @CacheEvict(value = ["control_units"], allEntries = true)
     override fun deleteById(controlUnitId: Int) {
         dbControlUnitRepository.deleteById(controlUnitId)
     }
@@ -37,6 +40,7 @@ class JpaControlUnitRepository(
     override fun findById(controlUnitId: Int): FullControlUnitDTO =
         dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
 
+    @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity =
         try {
