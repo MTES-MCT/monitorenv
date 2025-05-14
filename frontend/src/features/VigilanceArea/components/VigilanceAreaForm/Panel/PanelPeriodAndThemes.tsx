@@ -2,6 +2,8 @@ import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import { displaySubTags, displayTags } from '@utils/getTagsAsOptions'
+import { displaySubThemes, displayThemes } from '@utils/getThemesAsOptions'
 import styled from 'styled-components'
 
 import {
@@ -51,9 +53,31 @@ export function PanelPeriodAndThemes({ vigilanceArea }: { vigilanceArea: Vigilan
           </PanelDateItem>
         </PanelInlineItem>
         <PanelInlineItem>
-          <PanelInlineItemLabel $isInline>Thématique</PanelInlineItemLabel>
-          <PanelInlineItemValue $maxLine={2} title={vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : ''}>
-            {vigilanceArea?.themes ? vigilanceArea?.themes.join(', ') : EMPTY_VALUE}
+          <PanelInlineItemLabel $isInline>Thématiques</PanelInlineItemLabel>
+          <PanelInlineItemValue $maxLine={2} title={displayThemes(vigilanceArea?.themes) ?? ''}>
+            {vigilanceArea?.themes && vigilanceArea?.themes.length > 0
+              ? displayThemes(vigilanceArea?.themes)
+              : EMPTY_VALUE}
+          </PanelInlineItemValue>
+        </PanelInlineItem>
+        <PanelInlineItem>
+          <PanelInlineItemLabel $isInline>Sous-thématiques</PanelInlineItemLabel>
+          <PanelInlineItemValue $maxLine={2} title={displaySubThemes(vigilanceArea?.themes) ?? ''}>
+            {vigilanceArea?.themes && vigilanceArea?.themes.length > 0
+              ? displaySubThemes(vigilanceArea?.themes)
+              : EMPTY_VALUE}
+          </PanelInlineItemValue>
+        </PanelInlineItem>
+        <PanelInlineItem>
+          <PanelInlineItemLabel $isInline>Tags</PanelInlineItemLabel>
+          <PanelInlineItemValue $maxLine={2} title={displayTags(vigilanceArea?.tags) ?? ''}>
+            {vigilanceArea?.tags && vigilanceArea?.tags.length > 0 ? displayTags(vigilanceArea?.tags) : EMPTY_VALUE}
+          </PanelInlineItemValue>
+        </PanelInlineItem>
+        <PanelInlineItem>
+          <PanelInlineItemLabel $isInline>Sous-tags</PanelInlineItemLabel>
+          <PanelInlineItemValue $maxLine={2} title={displaySubTags(vigilanceArea?.tags) ?? ''}>
+            {vigilanceArea?.tags && vigilanceArea?.tags.length > 0 ? displaySubTags(vigilanceArea?.tags) : EMPTY_VALUE}
           </PanelInlineItemValue>
         </PanelInlineItem>
         <PanelInlineItem>

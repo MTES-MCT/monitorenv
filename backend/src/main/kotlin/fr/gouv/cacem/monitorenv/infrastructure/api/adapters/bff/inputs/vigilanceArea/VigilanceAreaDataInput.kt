@@ -1,6 +1,12 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -26,10 +32,11 @@ data class VigilanceAreaDataInput(
     val seaFront: String?,
     val source: String? = null,
     val startDatePeriod: ZonedDateTime? = null,
-    val themes: List<String>? = null,
+    val themes: List<ThemeInput> = listOf(),
     val visibility: VisibilityEnum? = null,
     val createdAt: ZonedDateTime? = null,
     val updatedAt: ZonedDateTime? = null,
+    val tags: List<TagInput> = listOf(),
 ) {
     fun toVigilanceAreaEntity(): VigilanceAreaEntity =
         VigilanceAreaEntity(
@@ -55,9 +62,10 @@ data class VigilanceAreaDataInput(
             seaFront = this.seaFront,
             source = this.source,
             startDatePeriod = this.startDatePeriod,
-            themes = this.themes,
+            themes = this.themes.map { it.toThemeEntity() },
             visibility = this.visibility,
             createdAt = this.createdAt,
             updatedAt = this.updatedAt,
+            tags = tags.map { it.toTagEntity() },
         )
 }

@@ -13,6 +13,7 @@ export function SpecificPeriodFilter() {
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
 
@@ -25,6 +26,7 @@ export function SpecificPeriodFilter() {
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
+      regulatoryTags: filteredRegulatoryTags,
       regulatoryThemes: filteredRegulatoryThemes,
       searchedText: globalSearchText,
       shouldSearchByExtent: shouldFilterSearchOnMapExtent,

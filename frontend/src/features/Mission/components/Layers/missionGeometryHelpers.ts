@@ -49,30 +49,37 @@ export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, la
   return feature
 }
 
-const getActionControlProperties = (action: EnvActionControl | NewEnvActionControl) => {
-  const { actionNumberOfControls, actionStartDateTimeUtc, actionTargetType, actionType, controlPlans, infractions } =
-    action
+const getActionControlProperties = ({
+  actionNumberOfControls,
+  actionStartDateTimeUtc,
+  actionTargetType,
+  actionType,
+  infractions,
+  tags,
+  themes
+}: EnvActionControl | NewEnvActionControl) => ({
+  actionNumberOfControls,
+  actionStartDateTimeUtc,
+  actionTargetType,
+  actionType,
+  infractions,
+  tags,
+  themes
+})
 
-  return {
-    actionNumberOfControls,
-    actionStartDateTimeUtc,
-    actionTargetType,
-    actionType,
-    controlPlans,
-    infractions
-  }
-}
-
-const getActionSurveillanceProperties = (action: EnvActionSurveillance) => {
-  const { actionEndDateTimeUtc, actionStartDateTimeUtc, actionType, controlPlans } = action
-
-  return {
-    actionEndDateTimeUtc,
-    actionStartDateTimeUtc,
-    actionType,
-    controlPlans
-  }
-}
+const getActionSurveillanceProperties = ({
+  actionEndDateTimeUtc,
+  actionStartDateTimeUtc,
+  actionType,
+  tags,
+  themes
+}: EnvActionSurveillance) => ({
+  actionEndDateTimeUtc,
+  actionStartDateTimeUtc,
+  actionType,
+  tags,
+  themes
+})
 
 const getActionProperties = (action: ControlOrSurveillance) => {
   switch (action.actionType) {

@@ -1,24 +1,28 @@
 import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import {
-  CheckPicker,
-  DateRangePicker,
   Checkbox,
+  CheckPicker,
+  CheckTreePicker,
   CustomSearch,
-  type Option,
+  DateRangePicker,
   useNewWindow,
-  type DateAsStringRange
+  type DateAsStringRange,
+  type Option,
+  type OptionValueType
 } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { FilterTags } from './FilterTags'
 import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../../../domain/entities/reporting'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ReportingSearch } from '../ReportingSearch'
 import { ReportingsFiltersEnum, type SourceFilterProps } from '../slice'
 import { OptionValue, Separator, StyledSelect, StyledStatusFilter, StyledTagsContainer } from '../style'
+import { FilterTags } from './FilterTags'
 
 import type { ReportingsOptionsListType } from '..'
 
@@ -26,16 +30,15 @@ type TableReportingsFiltersProps = {
   optionsList: ReportingsOptionsListType
   resetFilters: () => void
   updateCheckboxFilter: (
-    isChecked: boolean,
+    isChecked: boolean | undefined,
     value: string,
     filter: ReportingsFiltersEnum,
     filterValues: string[]
   ) => void
   updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
-  updatePeriodFilter: (value: DateRangeEnum) => void
-  updateSimpleFilter: (value: string, filter: ReportingsFiltersEnum) => void
-  updateSourceTypeFilter: (value: string[]) => void
-  updateThemeFilter: (value: number[]) => void
+  updatePeriodFilter: (value: OptionValueType | undefined) => void
+  updateSimpleFilter: (value: any, filter: ReportingsFiltersEnum) => void
+  updateSourceTypeFilter: (value: string[] | undefined) => void
 }
 
 export function TableReportingsFiltersWithRef(
@@ -46,9 +49,8 @@ export function TableReportingsFiltersWithRef(
     updateDateRangeFilter,
     updatePeriodFilter,
     updateSimpleFilter,
-    updateSourceTypeFilter,
-    updateThemeFilter
-  },
+    updateSourceTypeFilter
+  }: TableReportingsFiltersProps,
   ref
 ) {
   const { newWindowContainerRef } = useNewWindow()
@@ -63,7 +65,7 @@ export function TableReportingsFiltersWithRef(
     startedAfter,
     startedBefore,
     statusFilter = [],
-    subThemesFilter = [],
+    tagFilter = [],
     targetTypeFilter = [],
     themeFilter = [],
     typeFilter = undefined
@@ -74,7 +76,7 @@ export function TableReportingsFiltersWithRef(
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
-    subThemesOptions,
+    tagsOptions: tagOptions,
     targetTypeOtions,
     themesOptions,
     typeOptions
@@ -87,23 +89,6 @@ export function TableReportingsFiltersWithRef(
         withCacheInvalidation: true
       }),
     [sourceOptions]
-  )
-  const themeCustomSearch = useMemo(
-    () =>
-      new CustomSearch<Option<number>>(themesOptions, ['label'], {
-        cacheKey: 'REPORTINGS_LIST',
-        withCacheInvalidation: true
-      }),
-    [themesOptions]
-  )
-
-  const subThemeCustomSearch = useMemo(
-    () =>
-      new CustomSearch<Option<number>>(subThemesOptions, ['label'], {
-        cacheKey: 'REPORTINGS_LIST',
-        withCacheInvalidation: true
-      }),
-    [subThemesOptions]
   )
 
   const isCustomPeriodVisible = periodFilter === DateRangeEnum.CUSTOM
@@ -227,41 +212,39 @@ export function TableReportingsFiltersWithRef(
             style={tagPickerStyle}
             value={targetTypeFilter}
           />
-          <CheckPicker
-            key={`theme${themesOptions.length}${JSON.stringify(themeFilter)}`}
-            customSearch={themeCustomSearch}
+          <CheckTreePicker
+            childrenKey="subThemes"
             data-cy="reporting-theme-filter"
             isLabelHidden
             isTransparent
-            label="Thématiques"
-            menuStyle={{ maxWidth: '200%' }}
+            label="Filtre thématiques et sous-thématiques"
             name="themes"
-            onChange={value => updateThemeFilter(value)}
+            onChange={value =>
+              updateSimpleFilter(value ? parseOptionsToThemes(value) : undefined, ReportingsFiltersEnum.THEME_FILTER)
+            }
             options={themesOptions}
-            placeholder="Thématiques"
-            popupWidth={286}
-            renderValue={() => themeFilter && <OptionValue>{`Thème (${themeFilter.length})`}</OptionValue>}
+            placeholder="Thématiques et sous-thématiques"
             style={{ width: 310 }}
-            value={themeFilter}
+            value={getThemesAsOptions(themeFilter)}
           />
-          <CheckPicker
-            key={`subtheme${subThemesOptions.length}${JSON.stringify(subThemesFilter)}`}
-            customSearch={subThemeCustomSearch}
-            data-cy="reporting-sub-theme-filter"
+          <CheckTreePicker
+            childrenKey="subTags"
+            data-cy="reporting-tag-filter"
             isLabelHidden
             isTransparent
-            label="Sous-thématiques"
-            menuStyle={{ maxWidth: '200%' }}
-            name="subThemes"
-            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SUB_THEMES_FILTER)}
-            options={subThemesOptions}
-            placeholder="Sous-thématiques"
-            popupWidth={286}
-            renderValue={() => subThemesFilter && <OptionValue>{`Sous-thème (${subThemesFilter.length})`}</OptionValue>}
-            searchable
+            label="Filtre tags et sous-tags"
+            name="regulatoryTags"
+            onChange={value =>
+              updateSimpleFilter(value ? parseOptionsToTags(value) : undefined, ReportingsFiltersEnum.TAG_FILTER)
+            }
+            options={tagOptions}
+            placeholder="Tags et sous-tags"
+            renderedChildrenValue="Sous-tags."
+            renderedValue="Tags"
             style={{ width: 310 }}
-            value={subThemesFilter}
+            value={getTagsAsOptions(tagFilter)}
           />
+
           <CheckPicker
             isLabelHidden
             isTransparent
@@ -323,5 +306,6 @@ const StyledFiltersFirstLine = styled.div`
 const StyledFiltersSecondLine = styled.div`
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 `
-const tagPickerStyle = { width: 200 }
+const tagPickerStyle = { width: 180 }

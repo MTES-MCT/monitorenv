@@ -20,8 +20,8 @@ export function createReporting() {
 
   cy.get('.rs-radio').find('label').contains('Observation').click()
   cy.wait(250)
-  cy.fill('Thématique du signalement', 'Rejet')
-  cy.fill('Sous-thématique du signalement', ['Carénage sauvage'])
+  cy.fill('Thématiques et sous-thématiques', ['Carénage sauvage'])
+  cy.fill('Tags et sous-tags', ['Mixte'])
 
   cy.fill('Saisi par', 'XYZ')
 

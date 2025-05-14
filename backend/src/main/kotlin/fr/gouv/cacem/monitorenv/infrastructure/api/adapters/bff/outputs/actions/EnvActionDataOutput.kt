@@ -10,7 +10,7 @@ import java.time.ZonedDateTime
 import java.util.UUID
 
 abstract class EnvActionDataOutput(
-    open val id: UUID,
+    open val id: UUID?,
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
     open val actionType: ActionTypeEnum,
 ) {

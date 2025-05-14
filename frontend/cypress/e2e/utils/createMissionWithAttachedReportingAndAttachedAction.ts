@@ -41,8 +41,8 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
 
   dispatch(setGeometry(geometry))
 
-  cy.fill('Thématique du signalement', 'Rejet')
-  cy.fill('Sous-thématique du signalement', ['Carénage sauvage'])
+  cy.fill('Thématiques et sous-thématiques', ['Carénage sauvage'])
+  cy.fill('Tags et sous-tags', ['Mixte'])
 
   cy.get('.rs-radio').find('label').contains('Infraction').click()
   cy.fill('Saisi par', 'XYZ')

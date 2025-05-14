@@ -2,11 +2,14 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type LayerSearchState = {
   ampsSearchResult: number[] | undefined
   filteredAmpTypes: string[]
-  filteredRegulatoryThemes: string[]
+  filteredRegulatoryTags: TagFromAPI[]
+  filteredRegulatoryThemes: ThemeFromAPI[]
   filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
   globalSearchText: string
   isAmpSearchResultsVisible: boolean
@@ -21,6 +24,7 @@ type LayerSearchState = {
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
   filteredAmpTypes: [],
+  filteredRegulatoryTags: [],
   filteredRegulatoryThemes: [],
   filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
   globalSearchText: '',
@@ -39,6 +43,7 @@ const layerSearchSlice = createSlice({
   name: 'layerSearch',
   reducers: {
     resetFilters(state) {
+      state.filteredRegulatoryTags = []
       state.filteredRegulatoryThemes = []
       state.isRegulatorySearchResultsVisible = false
       state.filteredAmpTypes = []
@@ -50,6 +55,7 @@ const layerSearchSlice = createSlice({
     resetSearch(state) {
       state.regulatoryLayersSearchResult = undefined
       state.isRegulatorySearchResultsVisible = false
+      state.filteredRegulatoryTags = []
       state.filteredRegulatoryThemes = []
       state.ampsSearchResult = undefined
       state.isAmpSearchResultsVisible = false
@@ -79,7 +85,11 @@ const layerSearchSlice = createSlice({
       state.filteredAmpTypes = action.payload
     },
 
-    setFilteredRegulatoryThemes(state, action: PayloadAction<string[]>) {
+    setFilteredRegulatoryTags(state, action: PayloadAction<TagFromAPI[]>) {
+      state.filteredRegulatoryTags = action.payload
+    },
+
+    setFilteredRegulatoryThemes(state, action: PayloadAction<ThemeFromAPI[]>) {
       state.filteredRegulatoryThemes = action.payload
     },
 
@@ -129,6 +139,7 @@ export const {
   resetSearchExtent,
   setAMPsSearchResult,
   setFilteredAmpTypes,
+  setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
   setFilteredVigilanceAreaPeriod,
   setGlobalSearchText,

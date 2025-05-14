@@ -1,11 +1,15 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures
 
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
@@ -21,7 +25,8 @@ class VigilanceAreaFixture {
         fun aVigilanceAreaEntity(
             createdBy: String = "ABC",
             isDraft: Boolean = true,
-            themes: List<String> = listOf("AMP"),
+            themes: List<ThemeEntity> = listOf(aTheme(id = 1, name = "AMP")),
+            tags: List<TagEntity> = listOf(aTag(id = 1, name = "AMP")),
             startDate: ZonedDateTime? = ZonedDateTime.parse("2024-01-15T00:00:00Z"),
             endDate: ZonedDateTime? = ZonedDateTime.parse("2024-01-15T23:59:59Z"),
             frequency: FrequencyEnum? = FrequencyEnum.ALL_WEEKS,
@@ -58,6 +63,7 @@ class VigilanceAreaFixture {
                 createdAt = null,
                 updatedAt = null,
                 isAtAllTimes = isAtAllTimes,
+                tags = tags,
             )
 
         fun aVigilanceAreaEntityWithImagesAndLink(): VigilanceAreaEntity =
@@ -106,11 +112,12 @@ class VigilanceAreaFixture {
                 name = "Basic Area",
                 source = "Internal",
                 startDatePeriod = ZonedDateTime.parse("2024-01-15T00:00:00Z"),
-                themes = listOf("AMP"),
+                themes = listOf(aTheme(id = 1, name = "AMP")),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = null,
                 updatedAt = null,
                 isAtAllTimes = false,
+                tags = listOf(aTag(name = "AMP")),
             )
 
         fun anArchivedVigilanceAreaEntity(): VigilanceAreaEntity =
@@ -135,11 +142,12 @@ class VigilanceAreaFixture {
                 name = "Basic Area",
                 source = "Internal",
                 startDatePeriod = ZonedDateTime.parse("2024-01-15T00:00:00Z"),
-                themes = listOf("AMP"),
+                themes = listOf(aTheme(id = 1, name = "AMP")),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
                 updatedAt = ZonedDateTime.parse("2024-01-01T12:00:00Z"),
                 isAtAllTimes = false,
+                tags = listOf(aTag(name = "AMP")),
             )
     }
 }

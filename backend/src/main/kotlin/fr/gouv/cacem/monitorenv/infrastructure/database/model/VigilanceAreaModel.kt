@@ -8,6 +8,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel.Companion.fromTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel.Companion.toTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeVigilanceAreaModel.Companion.fromThemeEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeVigilanceAreaModel.Companion.toThemeEntities
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -93,43 +97,63 @@ data class VigilanceAreaModel(
     @Column(name = "start_date_period") val startDatePeriod: Instant? = null,
     @Column(name = "sea_front") val seaFront: String? = null,
     @Column(name = "source") val source: String? = null,
-    @Column(name = "themes") val themes: List<String>? = null,
     @Column(name = "visibility", columnDefinition = "vigilance_area_visibility")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val visibility: VisibilityEnum? = null,
     @Column(name = "created_at") var createdAt: ZonedDateTime?,
     @Column(name = "updated_at") var updatedAt: ZonedDateTime?,
+    @OneToMany(
+        mappedBy = "vigilanceArea",
+        fetch = FetchType.LAZY,
+    )
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    var tags: List<TagVigilanceAreaModel>,
+    @OneToMany(
+        mappedBy = "vigilanceArea",
+        fetch = FetchType.LAZY,
+    )
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
+    var themes: List<ThemeVigilanceAreaModel>,
 ) {
     companion object {
-        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel =
-            VigilanceAreaModel(
-                id = vigilanceArea.id,
-                comments = vigilanceArea.comments,
-                computedEndDate = vigilanceArea.computedEndDate?.toInstant(),
-                createdBy = vigilanceArea.createdBy,
-                endingCondition = vigilanceArea.endingCondition,
-                endingOccurrenceDate = vigilanceArea.endingOccurrenceDate?.toInstant(),
-                endingOccurrencesNumber = vigilanceArea.endingOccurrencesNumber,
-                frequency = vigilanceArea.frequency,
-                endDatePeriod = vigilanceArea.endDatePeriod?.toInstant(),
-                geom = vigilanceArea.geom,
-                isArchived = vigilanceArea.isArchived,
-                isAtAllTimes = vigilanceArea.isAtAllTimes,
-                isDeleted = vigilanceArea.isDeleted,
-                isDraft = vigilanceArea.isDraft,
-                links = vigilanceArea.links,
-                linkedAMPs = vigilanceArea.linkedAMPs,
-                linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,
-                name = vigilanceArea.name,
-                seaFront = vigilanceArea.seaFront,
-                source = vigilanceArea.source,
-                startDatePeriod = vigilanceArea.startDatePeriod?.toInstant(),
-                themes = vigilanceArea.themes,
-                visibility = vigilanceArea.visibility,
-                createdAt = vigilanceArea.createdAt,
-                updatedAt = vigilanceArea.updatedAt,
-            )
+        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel {
+            val vigilanceAreaModel =
+                VigilanceAreaModel(
+                    id = vigilanceArea.id,
+                    comments = vigilanceArea.comments,
+                    computedEndDate = vigilanceArea.computedEndDate?.toInstant(),
+                    createdBy = vigilanceArea.createdBy,
+                    endingCondition = vigilanceArea.endingCondition,
+                    endingOccurrenceDate = vigilanceArea.endingOccurrenceDate?.toInstant(),
+                    endingOccurrencesNumber = vigilanceArea.endingOccurrencesNumber,
+                    frequency = vigilanceArea.frequency,
+                    endDatePeriod = vigilanceArea.endDatePeriod?.toInstant(),
+                    geom = vigilanceArea.geom,
+                    isArchived = vigilanceArea.isArchived,
+                    isAtAllTimes = vigilanceArea.isAtAllTimes,
+                    isDeleted = vigilanceArea.isDeleted,
+                    isDraft = vigilanceArea.isDraft,
+                    links = vigilanceArea.links,
+                    linkedAMPs = vigilanceArea.linkedAMPs,
+                    linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,
+                    name = vigilanceArea.name,
+                    seaFront = vigilanceArea.seaFront,
+                    source = vigilanceArea.source,
+                    startDatePeriod = vigilanceArea.startDatePeriod?.toInstant(),
+                    themes = listOf(),
+                    visibility = vigilanceArea.visibility,
+                    createdAt = vigilanceArea.createdAt,
+                    updatedAt = vigilanceArea.updatedAt,
+                    tags = listOf(),
+                )
+            vigilanceAreaModel.tags = fromTagEntities(vigilanceArea.tags, vigilanceAreaModel)
+            vigilanceAreaModel.themes = fromThemeEntities(vigilanceArea.themes, vigilanceAreaModel)
+
+            return vigilanceAreaModel
+        }
     }
 
     fun toVigilanceAreaEntity(): VigilanceAreaEntity =
@@ -156,10 +180,11 @@ data class VigilanceAreaModel(
             seaFront = seaFront,
             source = source,
             startDatePeriod = startDatePeriod?.atZone(UTC),
-            themes = themes,
+            themes = toThemeEntities(themes),
             visibility = visibility,
             createdAt = createdAt,
             updatedAt = updatedAt,
+            tags = toTagEntities(tags),
         )
 
     @PrePersist

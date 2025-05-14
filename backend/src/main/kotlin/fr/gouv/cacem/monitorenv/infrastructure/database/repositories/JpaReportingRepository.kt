@@ -10,7 +10,8 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingsControlPlanSubThemeModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel.Companion.fromTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel.Companion.fromThemeEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.AbstractReportingModel.Companion.fromReportingEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
@@ -159,18 +160,6 @@ class JpaReportingRepository(
                 } else {
                     null
                 }
-            val controlPlanThemeReference =
-                if (reporting.themeId != null) {
-                    dbControlPlanThemeRepository.getReferenceById(
-                        reporting.themeId,
-                    )
-                } else {
-                    null
-                }
-            val controlPlanSubThemesReferenceList =
-                reporting.subThemeIds?.map {
-                    dbControlPlanSubThemeRepository.getReferenceById(it)
-                }
 
             // To save controlPlanSubThemes we must ensure that reportingId is set
             // to simplify the understandability of the code, we do the same steps for creation and
@@ -186,7 +175,6 @@ class JpaReportingRepository(
                             reporting = reporting,
                             missionReference = missionReference,
                             envActionReference = envActionReference,
-                            controlPlanThemeReference = controlPlanThemeReference,
                         ),
                     )
             } else {
@@ -195,9 +183,10 @@ class JpaReportingRepository(
                         reporting = reporting,
                         missionReference = missionReference,
                         envActionReference = envActionReference,
-                        controlPlanThemeReference = controlPlanThemeReference,
                     )
             }
+            reportingModel.themes = fromThemeEntity(reporting.theme, reportingModel)
+            reportingModel.tags = fromTagEntities(reporting.tags, reportingModel)
 
             val reportingsSourceModels =
                 reporting.reportingSources.map {
@@ -222,14 +211,7 @@ class JpaReportingRepository(
                 }
             reportingModel.reportingSources.addAll(reportingsSourceModels)
 
-            // set controlPlanSubThemes and save again (and flush)
-            controlPlanSubThemesReferenceList?.forEach {
-                reportingModel.controlPlanSubThemes?.add(
-                    ReportingsControlPlanSubThemeModel.fromModels(reportingModel, it),
-                )
-            }
-
-            dbReportingRepository.saveAndFlush(reportingModel).toReportingDetailsDTO(mapper)
+            return dbReportingRepository.saveAndFlush(reportingModel).toReportingDetailsDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
             throw NotFoundException(
                 "Invalid reference to semaphore, control unit or mission: not found in referential",

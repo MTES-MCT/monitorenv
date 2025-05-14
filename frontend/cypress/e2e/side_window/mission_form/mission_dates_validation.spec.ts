@@ -59,11 +59,8 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter une surveillance')
     cy.clickButton('Ajouter une zone de surveillance')
     dispatch(setGeometry(surveillanceGeometry))
-    cy.getDataCy('envaction-theme-selector').click()
-    cy.getDataCy('envaction-theme-element').contains('Espèce protégée').click()
-    cy.getDataCy('envaction-subtheme-selector').click({ force: true })
-    cy.getDataCy('envaction-theme-element').contains('Destruction').click({ force: true })
-    cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
+
+    cy.fill('Thématiques et sous-thématiques de contrôle', ['Destruction', 'Espèce protégée'])
 
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.wait(250)
@@ -119,13 +116,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
 
-    cy.getDataCy('envaction-theme-selector').click({ force: true })
-    cy.getDataCy('envaction-theme-element').contains('Mouillage individuel').click()
-    cy.getDataCy('envaction-subtheme-selector').click({ force: true })
-    cy.getDataCy('envaction-theme-element').contains('Autre').click({ force: true })
-    cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
-    cy.getDataCy('envaction-theme-element').contains('Drone').click({ force: true })
-    cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
+    cy.fill('Thématiques et sous-thématiques de contrôle', ['Mouillage individuel', 'Autre', 'Drone'])
 
     cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
 
@@ -286,12 +277,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
     cy.wait(250)
 
-    cy.getDataCy('envaction-theme-selector').click({ force: true })
-    cy.getDataCy('envaction-theme-element').contains('Espèce protégée').click()
-    cy.getDataCy('envaction-subtheme-selector').click({ force: true })
-    cy.getDataCy('envaction-theme-element').contains('Détention').click({ force: true })
-    cy.getDataCy('envaction-theme-element').click('topLeft')
-    cy.getDataCy('envaction-subtheme-selector').click('topLeft', { force: true })
+    cy.fill('Thématiques et sous-thématiques de contrôle', ['Espèce protégée', 'Détention'])
 
     cy.getDataCy('control-form-number-controls').type('{backspace}2')
     cy.fill('Type de cible', 'Personne morale')

@@ -7,9 +7,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput.Companion.fromReportingSourceDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput.Companion.fromTagEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput.Companion.fromThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class MissionAttachedReportingDataOutput(
     val id: Int,
@@ -35,6 +39,8 @@ data class MissionAttachedReportingDataOutput(
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
     val missionId: Int? = null,
+    val theme: ThemeOutput,
+    val tags: List<TagOutput>,
 ) {
     companion object {
         fun fromReportingDTO(dto: ReportingDetailsDTO): MissionAttachedReportingDataOutput {
@@ -50,8 +56,6 @@ data class MissionAttachedReportingDataOutput(
                 seaFront = dto.reporting.seaFront,
                 description = dto.reporting.description,
                 reportType = dto.reporting.reportType,
-                themeId = dto.reporting.themeId,
-                subThemeIds = dto.reporting.subThemeIds,
                 actionTaken = dto.reporting.actionTaken,
                 isControlRequired = dto.reporting.isControlRequired,
                 hasNoUnitAvailable = dto.reporting.hasNoUnitAvailable,
@@ -63,6 +67,8 @@ data class MissionAttachedReportingDataOutput(
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
                 missionId = dto.reporting.missionId,
+                tags = dto.reporting.tags.map { fromTagEntity(it) },
+                theme = fromThemeEntity(dto.reporting.theme),
             )
         }
     }

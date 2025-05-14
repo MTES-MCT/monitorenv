@@ -1,4 +1,5 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetTagsQuery } from '@api/tagsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { Tooltip } from '@components/Tooltip'
 import { ZonePicker } from '@components/ZonePicker'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
@@ -12,19 +13,18 @@ import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanc
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
-  CustomSearch,
+  CheckTreePicker,
   DateRangePicker,
   FormikCheckbox,
   FormikMultiRadio,
-  FormikMultiSelect,
   FormikTextarea,
   FormikTextInput,
   getOptionsFromLabelledEnum,
   THEME,
-  type DateAsStringRange,
-  type Option
+  type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
-import { getRegulatoryThemesAsOptions } from '@utils/getRegulatoryThemesAsOptions'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
@@ -37,6 +37,8 @@ import { Footer } from './Footer'
 import { Frequency } from './Frequency'
 import { Links } from './Links'
 import { PhotoUploader } from './PhotoUploader'
+
+import type { TreeOption as CheckTreePickerOption } from '@mtes-mct/monitor-ui/fields/CheckTreePicker/types'
 
 export function Form() {
   const dispatch = useAppDispatch()
@@ -53,13 +55,14 @@ export function Form() {
 
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: tags } = useGetTagsQuery()
 
-  const regulatoryThemes = useMemo(() => getRegulatoryThemesAsOptions(regulatoryLayers ?? []), [regulatoryLayers])
-  const regulatoryThemesCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryThemes as Array<Option>, ['label']),
-    [regulatoryThemes]
-  )
+  const tagsOptions = useMemo(() => getTagsAsOptions(Object.values(tags ?? [])), [tags])
+
+  const { data: themes } = useGetThemesQuery()
+
+  const themesOptions = useMemo(() => getThemesAsOptions(Object.values(themes ?? [])), [themes])
+  // const regulatoryTagsCustomSearch = useMemo(() => new CustomSearch(tagsOptions, ['label']), [tagsOptions])
 
   const publish = () => {
     validateForm({ ...values, isDraft: false }).then(errors => {
@@ -132,6 +135,24 @@ export function Form() {
     setFieldValue('endDatePeriod', period ? period[1] : undefined)
   }
 
+  const handleOnChangeThemes = (option: CheckTreePickerOption[] | undefined) => {
+    if (option) {
+      const nextTheme = parseOptionsToThemes(option)
+      setFieldValue('themes', nextTheme)
+    } else {
+      setFieldValue('themes', undefined)
+    }
+  }
+
+  const handleOnChangeTags = (option: CheckTreePickerOption[] | undefined) => {
+    if (option) {
+      const nextTags = parseOptionsToTags(option)
+      setFieldValue('tags', nextTags)
+    } else {
+      setFieldValue('tags', [])
+    }
+  }
+
   return (
     <FormContainer>
       <CancelEditDialog
@@ -181,14 +202,27 @@ export function Form() {
           <FormikCheckbox label="En tout temps" name="isAtAllTimes" />
         </DateWrapper>
         <Frequency />
-        <FormikMultiSelect
-          customSearch={regulatoryThemesCustomSearch}
+        <CheckTreePicker
+          childrenKey="subThemes"
+          error={formErrors.themes}
           isErrorMessageHidden
+          label="Thématiques et sous-thématiques"
+          name="theme"
+          onChange={handleOnChangeThemes}
+          options={themesOptions}
+          value={getThemesAsOptions(values.themes ?? [])}
+        />
+        <CheckTreePicker
+          childrenKey="subTags"
+          error={formErrors.tags}
           isRequired
-          label="Thématiques"
-          name="themes"
-          options={regulatoryThemes || []}
-          placeholder="Sélectionner un/des thématique(s)"
+          label="Tags et sous-tags"
+          name="tags"
+          onChange={handleOnChangeTags}
+          options={tagsOptions}
+          renderedChildrenValue="Sous-tags."
+          renderedValue="Tags"
+          value={getTagsAsOptions(values.tags ?? [])}
         />
         <FormikMultiRadio
           isErrorMessageHidden

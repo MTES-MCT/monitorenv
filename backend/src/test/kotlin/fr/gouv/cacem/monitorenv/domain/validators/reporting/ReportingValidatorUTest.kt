@@ -96,17 +96,6 @@ class ReportingValidatorUTest {
     }
 
     @Test
-    fun `validate should throw an exception if subthemeIds is empty`() {
-        val reporting = aReporting(subThemeIds = listOf())
-
-        val assertThrows =
-            assertThrows(BackendUsageException::class.java) {
-                reportingValidator.validate(reporting)
-            }
-        assertThat(assertThrows.message).isEqualTo("Un sous-thème est obligatoire")
-    }
-
-    @Test
     fun `validate should throw an exception if targetType is OTHER without description`() {
         val reporting = aReporting(targetType = TargetTypeEnum.OTHER, description = null)
 

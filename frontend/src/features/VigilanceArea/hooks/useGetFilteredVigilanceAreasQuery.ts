@@ -8,6 +8,7 @@ import { TWO_MINUTES } from '../../../constants'
 import { isVigilanceAreaPartOfCreatedBy } from '../useCases/filters/isVigilanceAreaPartOfCreatedBy'
 import { isVigilanceAreaPartOfSeaFront } from '../useCases/filters/isVigilanceAreaPartOfSeaFront'
 import { isVigilanceAreaPartOfStatus } from '../useCases/filters/isVigilanceAreaPartOfStatus'
+import { isVigilanceAreaPartOfTag } from '../useCases/filters/isVigilanceAreaPartOfTag'
 import { isVigilanceAreaPartOfTheme } from '../useCases/filters/isVigilanceAreaPartOfTheme'
 
 import type { VigilanceArea } from '../types'
@@ -16,6 +17,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
   const { createdBy, seaFronts, searchQuery, status } = useAppSelector(state => state.vigilanceAreaFilters)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
 
   const { data, isError, isFetching, isLoading } = useGetVigilanceAreasQuery(undefined, {
@@ -35,6 +37,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
         isVigilanceAreaPartOfCreatedBy(vigilanceArea, createdBy) &&
         isVigilanceAreaPartOfSeaFront(vigilanceArea, seaFronts) &&
         isVigilanceAreaPartOfStatus(vigilanceArea, status) &&
+        isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
         isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes)
     )
 
@@ -81,6 +84,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
     createdBy,
     seaFronts,
     status,
+    filteredRegulatoryTags,
     filteredRegulatoryThemes
   ])
 

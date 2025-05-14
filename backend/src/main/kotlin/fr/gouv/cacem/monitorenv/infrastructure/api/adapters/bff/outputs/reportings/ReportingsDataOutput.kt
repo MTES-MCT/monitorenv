@@ -7,6 +7,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput.Companion.fromReportingSourceDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput.Companion.fromTagEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput.Companion.fromThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.*
@@ -39,6 +43,8 @@ data class ReportingsDataOutput(
     val controlStatus: ControlStatusEnum? = null,
     val withVHFAnswer: Boolean? = null,
     val isInfractionProven: Boolean,
+    val theme: ThemeOutput?,
+    val tags: List<TagOutput>,
 ) {
     companion object {
         fun fromReportingDTO(dto: ReportingListDTO): ReportingsDataOutput {
@@ -54,8 +60,6 @@ data class ReportingsDataOutput(
                 seaFront = dto.reporting.seaFront,
                 description = dto.reporting.description,
                 reportType = dto.reporting.reportType,
-                themeId = dto.reporting.themeId,
-                subThemeIds = dto.reporting.subThemeIds,
                 actionTaken = dto.reporting.actionTaken,
                 isControlRequired = dto.reporting.isControlRequired,
                 hasNoUnitAvailable = dto.reporting.hasNoUnitAvailable,
@@ -70,6 +74,8 @@ data class ReportingsDataOutput(
                 controlStatus = dto.controlStatus,
                 withVHFAnswer = dto.reporting.withVHFAnswer,
                 isInfractionProven = dto.reporting.isInfractionProven,
+                tags = dto.reporting.tags.map { fromTagEntity(it) },
+                theme = dto.reporting.theme.let { fromThemeEntity(it) },
             )
         }
     }

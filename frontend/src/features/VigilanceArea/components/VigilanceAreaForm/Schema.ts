@@ -32,7 +32,8 @@ export const DraftSchema: Yup.Schema<
     name: Yup.string().required(),
     source: Yup.string().optional(),
     startDatePeriod: Yup.string().optional(),
-    themes: Yup.array().optional(),
+    tags: Yup.array().ensure().optional(),
+    themes: Yup.array().ensure().optional(),
     visibility: Yup.mixed<VigilanceArea.Visibility>().optional()
   })
   .required()
@@ -103,7 +104,8 @@ export const PublishedSchema: Yup.Schema<
       otherwise: schema => schema.nullable(),
       then: schema => schema.nullable().required('Requis')
     }),
-    themes: Yup.array().ensure().defined().min(1),
+    tags: Yup.array().ensure().defined().min(1),
+    themes: Yup.array().ensure().optional(),
     visibility: Yup.mixed<VigilanceArea.Visibility>().oneOf(Object.values(VigilanceArea.Visibility)).required()
   })
   .required()

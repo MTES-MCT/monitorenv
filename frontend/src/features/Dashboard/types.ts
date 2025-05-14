@@ -10,10 +10,10 @@ import type {
   RegulatoryLayerWithMetadata
 } from '../../domain/entities/regulatory'
 import type { Reporting } from '../../domain/entities/reporting'
+import type { ThemeFromAPI } from '../../domain/entities/themes'
 import type { ImageApi, ImageFront, Link } from '@components/Form/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
-import type { ControlPlansSubThemeCollection, ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace Dashboard {
@@ -67,8 +67,7 @@ export namespace Dashboard {
     recentActivityFilters: RecentActivityFilters
     regulatoryAreas: RegulatoryLayerWithMetadata[]
     reportings: Reporting[]
-    subThemes: ControlPlansSubThemeCollection
-    themes: ControlPlansThemeCollection
+    themes: ThemeFromAPI[]
     updatedAt?: string
     vigilanceAreas: VigilanceArea.VigilanceArea[]
   }

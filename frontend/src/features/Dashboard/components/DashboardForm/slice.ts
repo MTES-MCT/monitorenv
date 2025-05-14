@@ -9,9 +9,10 @@ import storage from 'redux-persist/lib/storage'
 import type { RecentActivityFiltersEnum } from '@features/RecentActivity/slice'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit, DateAsStringRange } from '@mtes-mct/monitor-ui'
+import type { TagFromAPI } from 'domain/entities/tags'
 
 const persistConfig = {
-  key: 'dashboardFilters',
+  key: 'dashboardFilters_V2',
   storage
 }
 
@@ -41,14 +42,14 @@ export type ControlUnitFilters = {
 export type DashboardFilters = {
   amps?: string[]
   previewSelection?: boolean
-  regulatoryThemes?: string[]
+  regulatoryTags?: TagFromAPI[]
   specificPeriod?: DateAsStringRange | undefined
   vigilanceAreaPeriod?: VigilanceArea.VigilanceAreaFilterPeriod | undefined
 }
 
 export type DashboardsListFilters = {
   controlUnits: number[]
-  regulatoryThemes: string[]
+  regulatoryTags: string[]
   seaFronts: string[]
   specificPeriod?: DateAsStringRange
   updatedAt: DateRangeEnum
@@ -70,7 +71,7 @@ type DashboardFiltersState = {
 
 export const INITIAL_LIST_FILTERS_STATE: DashboardsListFilters = {
   controlUnits: [],
-  regulatoryThemes: [],
+  regulatoryTags: [],
   seaFronts: [],
   specificPeriod: undefined,
   updatedAt: DateRangeEnum.MONTH

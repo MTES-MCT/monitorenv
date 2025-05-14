@@ -12,7 +12,7 @@ export function RegulatoryAreasThemesCell({ themeIds }: { themeIds: number[] }) 
   }
 
   const uniqueThemes = uniq(
-    themeIds.map(themeId => regulatoryAreas.entities[themeId]?.thematique.split(', ')).flatMap(theme => theme)
+    themeIds.flatMap(themeId => regulatoryAreas.entities[themeId]?.tags.map(theme => theme.name))
   )
 
   const regulatoryAreasThemes = uniqueThemes.filter(Boolean).join(', ')

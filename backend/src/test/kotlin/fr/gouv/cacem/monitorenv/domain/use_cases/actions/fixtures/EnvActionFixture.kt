@@ -16,6 +16,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.SeizureTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.monitorfish.MonitorFishMissionActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.io.WKTReader
@@ -37,8 +39,9 @@ class EnvActionFixture {
             startTime: ZonedDateTime? = null,
             endTime: ZonedDateTime? = null,
             observationsByUnit: String? = null,
-            missionId: Int? = 1,
             controlPlans: List<EnvActionControlPlanEntity>? = null,
+            tags: List<TagEntity> = listOf(),
+            themes: List<ThemeEntity> = listOf(),
         ): EnvActionEntity =
             EnvActionMapper.getEnvActionEntityFromJSON(
                 mapper,
@@ -58,8 +61,9 @@ class EnvActionFixture {
                 isSeafarersControl = false,
                 observationsByUnit = observationsByUnit,
                 openBy = "Jane Doe",
-                missionId = missionId,
                 value = "{}",
+                tags = tags,
+                themes = themes,
             )
 
         fun anEnvActionControl(
@@ -83,6 +87,8 @@ class EnvActionFixture {
                 vehicleType = vehicleTypeEnum,
                 controlPlans = controlPlans,
                 geom = geom,
+                tags = listOf(),
+                themes = listOf(),
             )
 
         fun anEnvActionSurveillance(
@@ -101,6 +107,8 @@ class EnvActionFixture {
                 awareness = null,
                 controlPlans = controlPlans,
                 geom = geom,
+                tags = listOf(),
+                themes = listOf(),
             )
 
         fun anInfraction(

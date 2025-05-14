@@ -5,12 +5,14 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import {
   Checkbox,
   CheckPicker,
+  CheckTreePicker,
   CustomSearch,
   DateRangePicker,
   Select,
   useNewWindow,
   type DateAsStringRange
 } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { MissionFiltersEnum } from 'domain/shared_slices/MissionFilters'
 import { forwardRef, useMemo } from 'react'
@@ -51,13 +53,14 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
       selectedPeriod,
       selectedSeaFronts,
       selectedStatuses,
+      selectedTags,
       selectedThemes,
       selectedWithEnvActions,
       startedAfter,
       startedBefore
     } = useAppSelector(state => state.missionFilters)
 
-    const { administrations, completion, controlUnits, dates, seaFronts, status, themes, types } = optionsList
+    const { administrations, completion, controlUnits, dates, seaFronts, status, tags, themes, types } = optionsList
 
     const controlUnitCustomSearch = useMemo(
       () => new CustomSearch(controlUnits ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -170,6 +173,23 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               style={tagPickerStyle}
               value={selectedThemes}
             />
+            <CheckTreePicker
+              childrenKey="subTags"
+              isLabelHidden
+              isTransparent
+              label="Tags et sous-tags"
+              name="regulatoryTags"
+              onChange={value =>
+                onUpdateSimpleFilter(value ? parseOptionsToTags(value) : undefined, MissionFiltersEnum.TAGS_FILTER)
+              }
+              options={tags}
+              placeholder="Tags et sous-tags"
+              renderedChildrenValue="Sous-tags."
+              renderedValue="Tags"
+              style={tagPickerStyle}
+              value={selectedTags ? getTagsAsOptions(selectedTags) : undefined}
+              // customSearch={regulatoryTagsCustomSearch}
+            />
             <CheckPicker
               data-cy="select-statuses-filter"
               isLabelHidden
@@ -247,7 +267,7 @@ const FilterWrapperLine = styled.div`
   gap: 10px;
 `
 
-const tagPickerStyle = { width: 200 }
+export const tagPickerStyle = { width: 200 }
 
 const StyledSelect = styled(Select<DateRangeEnum>)`
   .rs-picker-toggle-caret,

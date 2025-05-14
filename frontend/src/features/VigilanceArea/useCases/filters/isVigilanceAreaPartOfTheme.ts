@@ -1,12 +1,17 @@
 import type { VigilanceArea } from '@features/VigilanceArea/types'
+import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function isVigilanceAreaPartOfTheme(
   vigilanceArea: VigilanceArea.VigilanceArea,
-  themes: string[] | undefined
+  themesFilter: ThemeFromAPI[]
 ): boolean {
-  if (!themes || themes.length === 0) {
+  if (!themesFilter || themesFilter.length === 0) {
     return true
   }
 
-  return !!vigilanceArea.themes && vigilanceArea.themes.some(theme => themes.includes(theme))
+  const allThemes = vigilanceArea.themes
+    ? [...vigilanceArea.themes, ...vigilanceArea.themes.flatMap(({ subThemes }) => subThemes)]
+    : []
+
+  return themesFilter.some(themeFilter => allThemes.some(theme => theme.id === themeFilter.id))
 }

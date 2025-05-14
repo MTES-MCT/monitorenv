@@ -4,6 +4,7 @@ import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME, WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { displayTags } from '@utils/getTagsAsOptions'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef } from 'react'
@@ -83,7 +84,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
       <LayerLegend
         layerType={MonitorEnvLayers.REGULATORY_ENV}
         legendKey={layer?.entityName ?? 'aucun'}
-        type={layer?.thematique ?? 'aucun'}
+        type={displayTags(layer?.tags) ?? 'aucun'}
       />
       <LayerSelector.Name
         $withLargeWidth

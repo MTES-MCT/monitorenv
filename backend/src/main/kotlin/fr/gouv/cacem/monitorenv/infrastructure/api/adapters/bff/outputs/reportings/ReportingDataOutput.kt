@@ -7,9 +7,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput.Companion.fromReportingSourceDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput.Companion.fromTagEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput.Companion.fromThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 data class ReportingDataOutput(
     val id: Int,
@@ -22,8 +26,6 @@ data class ReportingDataOutput(
     val seaFront: String? = null,
     val description: String? = null,
     val reportType: ReportingTypeEnum? = null,
-    val themeId: Int? = null,
-    val subThemeIds: List<Int>? = emptyList(),
     val actionTaken: String? = null,
     val isControlRequired: Boolean? = null,
     val hasNoUnitAvailable: Boolean? = null,
@@ -40,6 +42,8 @@ data class ReportingDataOutput(
     val updatedAtUtc: ZonedDateTime? = null,
     val withVHFAnswer: Boolean? = null,
     val isInfractionProven: Boolean,
+    val theme: ThemeOutput,
+    val tags: List<TagOutput>,
 ) {
     companion object {
         fun fromReportingDTO(dto: ReportingDetailsDTO): ReportingDataOutput {
@@ -55,8 +59,6 @@ data class ReportingDataOutput(
                 seaFront = dto.reporting.seaFront,
                 description = dto.reporting.description,
                 reportType = dto.reporting.reportType,
-                themeId = dto.reporting.themeId,
-                subThemeIds = dto.reporting.subThemeIds,
                 actionTaken = dto.reporting.actionTaken,
                 isControlRequired = dto.reporting.isControlRequired,
                 hasNoUnitAvailable = dto.reporting.hasNoUnitAvailable,
@@ -80,6 +82,8 @@ data class ReportingDataOutput(
                 updatedAtUtc = dto.reporting.updatedAtUtc,
                 withVHFAnswer = dto.reporting.withVHFAnswer,
                 isInfractionProven = dto.reporting.isInfractionProven,
+                tags = dto.reporting.tags.map { fromTagEntity(it) },
+                theme = fromThemeEntity(dto.reporting.theme),
             )
         }
     }

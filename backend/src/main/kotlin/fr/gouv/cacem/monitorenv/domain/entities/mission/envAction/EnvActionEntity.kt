@@ -35,7 +35,6 @@ abstract class EnvActionEntity(
     open val isComplianceWithWaterRegulationsControl: Boolean? = null,
     open val isSafetyEquipmentAndStandardsComplianceControl: Boolean? = null,
     open val isSeafarersControl: Boolean? = null,
-    open val missionId: Int? = null,
     open val openBy: String? = null,
     open var observationsByUnit: String? = null,
 )

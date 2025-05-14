@@ -42,16 +42,16 @@ context('Reportings', () => {
     // select themes and sub-themes for a specific year
     cy.fill('Date et heure (UTC)', [2023, 5, 26, 23, 35])
     // select sub-theme and prefill theme
-    cy.fill('Sous-thématique du signalement', ['Atteinte aux biens culturels'])
-    cy.getDataCy('reporting-theme-selector').contains('Atteintes aux biens culturels maritimes')
+    cy.fill('Thématiques et sous-thématiques', ['Atteinte aux biens culturels'])
+    cy.fill('Tags et sous-tags', ['Mixte'])
+
     cy.get('.rs-radio').find('label').contains('Observation').click()
 
     // change date year
     const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
     cy.fill('Date et heure (UTC)', asDatePickerDateTime)
     cy.wait(250)
-    cy.fill('Thématique du signalement', 'Rejet')
-    cy.fill('Sous-thématique du signalement', ['Carénage sauvage'])
+    cy.fill('Thématiques et sous-thématiques', ['Carénage sauvage'])
 
     cy.fill('Saisi par', 'XYZ')
 
@@ -74,10 +74,14 @@ context('Reportings', () => {
           }
         ],
         reportType: 'OBSERVATION',
-        subThemeIds: [186],
+        tags: [{ id: 4, name: 'Mixte', subTags: [] }],
         targetDetails: [],
         targetType: 'COMPANY',
-        themeId: 102,
+        theme: {
+          id: 102,
+          name: 'Rejet',
+          subThemes: [{ id: 299, name: 'Carénage sauvage' }]
+        },
         validityTime: 24
       })
     })

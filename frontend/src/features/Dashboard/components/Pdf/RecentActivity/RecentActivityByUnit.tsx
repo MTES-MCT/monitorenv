@@ -10,8 +10,8 @@ import { ControlUnitDetailsView } from './ControlUnitDetailsView'
 import { GlobalView } from './GlobalView'
 import { recentActivityStyles } from './style'
 
+import type { ThemeFromAPI } from '../../../../../domain/entities/themes'
 import type { RecentActivityFilters } from '@features/RecentActivity/slice'
-import type { ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 
 export function RecentActivityByUnit({
   controlUnit,
@@ -37,7 +37,7 @@ export function RecentActivityByUnit({
   images: ExportImageType[] | undefined
   recentActivity: RecentActivityType.RecentControlsActivity[]
   recentActivityControlUnits: ControlUnit.ControlUnit[]
-  themes: ControlPlansThemeCollection
+  themes: ThemeFromAPI[]
   themesAndControlActions: Record<string, number>
   totalTarget: number
 }) {
@@ -61,7 +61,7 @@ export function RecentActivityByUnit({
     () =>
       filteredControls.reduce((acc, control) => {
         control.themeIds.forEach(themeId => {
-          const theme = themes[themeId]?.theme ?? 'Thématique non renseignée'
+          const theme = themes.find(({ id }) => id === themeId)?.name ?? 'Thématique non renseignée'
           if (!acc[theme]) {
             acc[theme] = 0
           }

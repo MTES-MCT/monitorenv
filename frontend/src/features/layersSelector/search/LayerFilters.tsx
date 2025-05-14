@@ -1,3 +1,4 @@
+import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
@@ -19,28 +20,37 @@ import {
   DateRangePicker,
   SingleTag
 } from '@mtes-mct/monitor-ui'
+import { filterSubTags } from '@utils/getTagsAsOptions'
+import { filterSubThemes } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from './slice'
 
+import type { TagFromAPI } from 'domain/entities/tags'
+import type { ThemeFromAPI } from 'domain/entities/themes'
+
 type LayerFiltersProps = {
   ampTypes: Option<string>[]
   filteredAmpTypes: string[]
-  filteredRegulatoryThemes: string[]
+  filteredRegulatoryTags: TagFromAPI[]
+  filteredRegulatoryThemes: ThemeFromAPI[]
   filteredVigilanceAreaPeriod: string | undefined
   handleResetFilters: () => void
   setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
-  setFilteredRegulatoryThemes: (filteredRegulatoryThemes: string[]) => void
+  setFilteredRegulatoryTags: (filteredRegulatoryTags: TagFromAPI[]) => void
+  setFilteredRegulatoryThemes: (filteredRegulatoryThemes: ThemeFromAPI[]) => void
   updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
 }
 export function LayerFilters({
   ampTypes,
   filteredAmpTypes,
+  filteredRegulatoryTags,
   filteredRegulatoryThemes,
   filteredVigilanceAreaPeriod,
   handleResetFilters,
   setFilteredAmpTypes,
+  setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
   updateDateRangeFilter
 }: LayerFiltersProps) {
@@ -63,11 +73,28 @@ export function LayerFilters({
     setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete))
   }
 
-  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: string) => () => {
+  const handleDeleteRegulatoryTag = (regulatoryTagToDelete: TagFromAPI) => () => {
+    if (filteredRegulatoryTags.length === 1) {
+      dispatch(setIsRegulatorySearchResultsVisible(false))
+    }
+    const updatedFilter: TagFromAPI[] = filteredRegulatoryTags
+      .map(tag => filterSubTags(tag, regulatoryTagToDelete))
+      .filter(tag => tag !== undefined)
+      .filter(tag => tag.id !== regulatoryTagToDelete.id)
+
+    setFilteredRegulatoryTags(updatedFilter)
+  }
+
+  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: ThemeFromAPI) => () => {
     if (filteredRegulatoryThemes.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
-    setFilteredRegulatoryThemes(filteredRegulatoryThemes.filter(theme => theme !== regulatoryThemeToDelete))
+    const updatedFilter: ThemeFromAPI[] = filteredRegulatoryThemes
+      .map(theme => filterSubThemes(theme, regulatoryThemeToDelete))
+      .filter(theme => theme !== undefined)
+      .filter(theme => theme.id !== regulatoryThemeToDelete.id)
+
+    setFilteredRegulatoryThemes(updatedFilter)
   }
 
   const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
@@ -75,14 +102,21 @@ export function LayerFilters({
   return (
     <FiltersWrapper>
       {!isLinkingAmpToVigilanceArea && (
-        <SelectContainer>
-          <RegulatoryThemesFilter style={{ flex: 1 }} />
-          <Tooltip>
-            Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
-          </Tooltip>
-        </SelectContainer>
+        <>
+          <SelectContainer>
+            <RegulatoryThemesFilter style={{ flex: 1 }} />
+            <Tooltip>
+              Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
+            </Tooltip>
+          </SelectContainer>
+          <SelectContainer>
+            <RegulatoryTagsFilter style={{ flex: 1 }} />
+            <Tooltip>
+              Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
+            </Tooltip>
+          </SelectContainer>
+        </>
       )}
-
       {!isLinkingRegulatoryToVigilanceArea && (
         <SelectContainer>
           <StyledCheckPicker
@@ -104,7 +138,6 @@ export function LayerFilters({
           <Tooltip>Ce champ est utilisé comme critère de recherche uniquement pour les AMP.</Tooltip>
         </SelectContainer>
       )}
-
       {isSuperUser && !isLinkingZonesToVigilanceArea && (
         <SelectContainer>
           <PeriodFilter style={{ flex: 1 }} />
@@ -126,17 +159,51 @@ export function LayerFilters({
         />
       )}
 
-      {(filteredRegulatoryThemes?.length > 0 || filteredAmpTypes?.length > 0) && (
+      {(filteredRegulatoryTags.length > 0 || filteredAmpTypes?.length > 0 || filteredRegulatoryThemes.length > 0) && (
         <TagWrapper>
           {filteredRegulatoryThemes?.map(theme => (
-            <SingleTag
-              key={theme}
-              accent={Accent.SECONDARY}
-              onDelete={handleDeleteRegulatoryTheme(theme)}
-              title={theme}
-            >
-              {theme}
-            </SingleTag>
+            <>
+              <SingleTag
+                key={theme.id}
+                accent={Accent.SECONDARY}
+                onDelete={handleDeleteRegulatoryTheme(theme)}
+                title={theme.name}
+              >
+                {theme.name}
+              </SingleTag>
+              {theme.subThemes.map(subTheme => (
+                <SingleTag
+                  key={subTheme.id}
+                  accent={Accent.SECONDARY}
+                  onDelete={handleDeleteRegulatoryTheme(subTheme)}
+                  title={subTheme.name}
+                >
+                  {subTheme.name}
+                </SingleTag>
+              ))}
+            </>
+          ))}
+          {filteredRegulatoryTags?.map(tag => (
+            <>
+              <SingleTag
+                key={tag.id}
+                accent={Accent.SECONDARY}
+                onDelete={handleDeleteRegulatoryTag(tag)}
+                title={tag.name}
+              >
+                {tag.name}
+              </SingleTag>
+              {tag.subTags.map(subTag => (
+                <SingleTag
+                  key={subTag.id}
+                  accent={Accent.SECONDARY}
+                  onDelete={handleDeleteRegulatoryTag(subTag)}
+                  title={subTag.name}
+                >
+                  {subTag.name}
+                </SingleTag>
+              ))}
+            </>
           ))}
 
           {filteredAmpTypes?.map(type => (
@@ -146,7 +213,8 @@ export function LayerFilters({
           ))}
         </TagWrapper>
       )}
-      {(filteredRegulatoryThemes?.length > 0 ||
+      {(filteredRegulatoryTags.length > 0 ||
+        filteredRegulatoryThemes.length > 0 ||
         filteredAmpTypes?.length > 0 ||
         filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS) && (
         <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>
@@ -155,7 +223,7 @@ export function LayerFilters({
   )
 }
 
-const FiltersWrapper = styled.div`
+const FiltersWrapper = styled.ul`
   background-color: ${p => p.theme.color.white};
   border-top: 2px solid ${p => p.theme.color.lightGray};
   display: flex;
@@ -189,7 +257,7 @@ const StyledCheckPicker = styled(CheckPicker)`
   flex: 1;
 `
 
-const SelectContainer = styled.div`
+const SelectContainer = styled.li`
   align-items: end;
   display: flex;
   gap: 8px;

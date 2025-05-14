@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import java.time.Instant
+import java.util.UUID
 
 @DynamicUpdate
 interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
@@ -119,4 +120,10 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         "SELECT mission FROM MissionModel mission JOIN mission.controlResources missionControlUnitResources WHERE missionControlUnitResources.resource.id = :controlUnitResourceId",
     )
     fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionModel>
+
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
+    @Query(
+        "SELECT mission FROM MissionModel mission JOIN mission.envActions envActions WHERE envActions.id = :envActionId",
+    )
+    fun findByEnvActionId(envActionId: UUID): MissionModel?
 }

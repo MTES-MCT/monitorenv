@@ -1,17 +1,20 @@
 import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetLegacyControlUnitsQuery } from '@api/legacyControlUnitsAPI'
+import { useGetTagsQuery } from '@api/tagsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
-import { useGetControlPlansByYear } from '@hooks/useGetControlPlansByYear'
 import {
   customDayjs,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
+  type CheckTreePickerOption,
   type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
+import { getTagsAsOptions } from '@utils/getTagsAsOptions'
+import { getThemesAsOptionsCheckPicker } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { dateRangeOptions, type DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, MissionStatusLabel, MissionTypeLabel } from 'domain/entities/missions'
@@ -34,6 +37,7 @@ export type MissionOptionsListType = {
   dates: Option<DateRangeEnum>[]
   seaFronts: Option<string>[]
   status: Option<string>[]
+  tags: CheckTreePickerOption[]
   themes: Option<number>[]
   types: Option<string>[]
 }
@@ -42,27 +46,18 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const dispatch = useAppDispatch()
-  const { selectedAdministrationNames, selectedControlUnitIds, startedAfter, startedBefore } = useAppSelector(
+  const { selectedAdministrationNames, selectedControlUnitIds, startedAfter } = useAppSelector(
     state => state.missionFilters
   )
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const startedAfterYear = customDayjs(startedAfter).get('year')
-  const { themesAsOptions } = useGetControlPlans()
-  const { themesByYearAsOptions } = useGetControlPlansByYear({ year: startedAfterYear })
+  const { data } = useGetThemesQuery()
+  const themesAsOptions = getThemesAsOptionsCheckPicker(Object.values(data ?? []))
 
-  const themesAsOptionsPerPeriod = useMemo(() => {
-    const startedBeforeYear = customDayjs(startedBefore).get('year')
-
-    if (startedAfterYear === startedBeforeYear) {
-      return themesByYearAsOptions
-    }
-
-    // TODO deal with 2-year periods
-    return themesAsOptions
-  }, [startedAfterYear, startedBefore, themesAsOptions, themesByYearAsOptions])
+  const { data: tags } = useGetTagsQuery()
+  const tagsAsOptions = getTagsAsOptions(Object.values(tags ?? []))
 
   const activeAdministrations = useMemo(
     () =>
@@ -95,7 +90,8 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     dates: dateRangeOptions,
     seaFronts: seaFrontsAsOptions,
     status: missionStatusesAsOptions,
-    themes: themesAsOptionsPerPeriod,
+    tags: tagsAsOptions,
+    themes: themesAsOptions,
     types: missionTypesAsOptions
   }
 

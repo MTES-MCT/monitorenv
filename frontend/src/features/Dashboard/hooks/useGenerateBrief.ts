@@ -4,6 +4,7 @@ import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
+import { useGetThemesQuery } from '@api/themesAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
 import { useImageConverter } from '@components/Form/Images/hook/useImageConverter'
 import { renderPDF } from '@features/Dashboard/components/Pdf/renderPdf'
@@ -11,7 +12,6 @@ import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { getDatesFromFilters } from '@features/RecentActivity/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { uniq } from 'lodash'
 import { useMemo, useState } from 'react'
 
@@ -23,7 +23,7 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const [isLoadingBrief, setIsLoadingBrief] = useState(false)
 
-  const { subThemes, themes } = useGetControlPlans()
+  const { data: themes } = useGetThemesQuery()
 
   const recentActivityFilters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, dashboard.id))
   const { data: allControlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
@@ -92,8 +92,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       recentActivityFilters,
       regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),
-      subThemes,
-      themes,
+      themes: Object.values(themes ?? []),
       updatedAt: dashboard.updatedAt,
       vigilanceAreas
     } as Dashboard.Brief

@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.entities.reporting
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
+import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -16,8 +18,6 @@ data class ReportingEntity(
     val seaFront: String? = null,
     val description: String? = null,
     val reportType: ReportingTypeEnum? = null,
-    val themeId: Int? = null,
-    val subThemeIds: List<Int>? = emptyList(),
     val actionTaken: String? = null,
     val isControlRequired: Boolean? = null,
     val hasNoUnitAvailable: Boolean? = null,
@@ -33,6 +33,8 @@ data class ReportingEntity(
     val updatedAtUtc: ZonedDateTime? = null,
     val withVHFAnswer: Boolean? = null,
     val isInfractionProven: Boolean,
+    val tags: List<TagEntity>,
+    var theme: ThemeEntity,
 ) {
     fun validate() {
         reportingSources.forEach { it.validate() }

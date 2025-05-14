@@ -65,8 +65,10 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
         }
 
         reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.id)
-        envActionsAttachedToReportingIds.forEach {
-            reportingRepository.attachEnvActionsToReportings(it.first, it.second)
+        envActionsAttachedToReportingIds.forEach { envActionsAttachedToReportingId ->
+            envActionsAttachedToReportingId.first?.let {
+                reportingRepository.attachEnvActionsToReportings(it, envActionsAttachedToReportingId.second)
+            }
         }
 
         logger.info(
@@ -84,6 +86,6 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private fun getListOfEnvActionIds(
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?,
     ): List<UUID> =
-        envActionsAttachedToReportingIds?.filter { it.second.isNotEmpty() }?.map { it.first }
+        envActionsAttachedToReportingIds?.filter { it.second.isNotEmpty() }?.mapNotNull { it.first }
             ?: emptyList()
 }

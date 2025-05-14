@@ -1,6 +1,5 @@
 import { updateSelectedControlId } from '@features/RecentActivity/useCases/updateSelectedControlId'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { TargetTypeLabels } from 'domain/entities/targetType'
 import styled from 'styled-components'
@@ -21,7 +20,6 @@ export function OverlayContent({
   singleFeature?: Feature
 }) {
   const dispatch = useAppDispatch()
-  const { themes } = useGetControlPlans()
 
   const selectControl = id => {
     if (!isSelected) {
@@ -38,12 +36,12 @@ export function OverlayContent({
     <Wrapper>
       {items.map(item => {
         const { actionNumberOfControls, actionTargetType, id, infractions, themeIds } = item.properties
-        const controlThemes = themeIds?.map(themeId => themes[themeId]?.theme).join(',')
 
         return (
           <ItemContainer key={id} onClick={() => selectControl(id)}>
             {themeIds?.length > 0 ? (
-              <StyledThemes title={controlThemes}>{controlThemes} </StyledThemes>
+              // FIXME
+              <StyledThemes title={`${themeIds}`}>{themeIds} </StyledThemes>
             ) : (
               <StyledGrayText>Thématique à renseigner</StyledGrayText>
             )}

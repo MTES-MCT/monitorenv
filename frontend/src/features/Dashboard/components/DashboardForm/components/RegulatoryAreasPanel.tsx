@@ -3,6 +3,7 @@ import { Identification } from '@features/layersSelector/metadataPanel/regulator
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
 import { forwardRef } from 'react'
@@ -30,22 +31,23 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
             <Header>
               <LayerLegend
                 layerType={MonitorEnvLayers.REGULATORY_ENV}
-                legendKey={regulatoryMetadata?.entityName}
-                type={regulatoryMetadata?.thematique}
+                legendKey={regulatoryMetadata.entityName}
+                type={displayTags(regulatoryMetadata.tags)}
               />
-              <RegulatoryZoneName title={getTitle(regulatoryMetadata?.layerName)}>
-                {getTitle(regulatoryMetadata?.layerName)}
+              <RegulatoryZoneName title={getTitle(regulatoryMetadata.layerName)}>
+                {getTitle(regulatoryMetadata.layerName)}
               </RegulatoryZoneName>
               <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onClose} />
             </Header>
             <Content>
               <Identification
-                entityName={regulatoryMetadata?.entityName}
-                facade={regulatoryMetadata?.facade}
-                thematique={regulatoryMetadata?.thematique}
-                type={regulatoryMetadata?.type}
+                entityName={regulatoryMetadata.entityName}
+                facade={regulatoryMetadata.facade}
+                tags={regulatoryMetadata.tags}
+                themes={regulatoryMetadata.themes}
+                type={regulatoryMetadata.type}
               />
-              <RegulatorySummary regulatoryReference={regulatoryMetadata?.refReg} url={regulatoryMetadata?.url} />
+              <RegulatorySummary regulatoryReference={regulatoryMetadata.refReg} url={regulatoryMetadata.url} />
             </Content>
           </>
         ) : (

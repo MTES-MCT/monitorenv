@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
@@ -8,17 +9,19 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetTrigrams
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
-import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
@@ -70,7 +73,6 @@ class VigilanceAreasITests {
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
             MultiPolygon
-    private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     private val vigilanceArea1 =
         VigilanceAreaEntity(
@@ -106,11 +108,29 @@ class VigilanceAreasITests {
             seaFront = "MED",
             source = "Source de la zone de vigilance",
             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
-            themes = null,
+            themes = listOf(),
             visibility = VisibilityEnum.PRIVATE,
             createdAt = ZonedDateTime.parse(createdAt),
             updatedAt = ZonedDateTime.parse(updatedAt),
             isAtAllTimes = false,
+            tags =
+                listOf(
+                    aTag(
+                        id = 1,
+                        name = "tag1",
+                        startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                        endedAt = null,
+                        subTags =
+                            listOf(
+                                aTag(
+                                    id = 1,
+                                    name = "subTag1",
+                                    startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                                    endedAt = null,
+                                ),
+                            ),
+                    ),
+                ),
         )
 
     @Test
@@ -136,11 +156,12 @@ class VigilanceAreasITests {
                 seaFront = "MED",
                 source = "Un particulier",
                 startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
-                themes = null,
+                themes = listOf(),
                 visibility = VisibilityEnum.PUBLIC,
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
                 isAtAllTimes = true,
+                tags = listOf(),
             )
         given(getAllVigilanceAreas.execute()).willReturn(listOf(vigilanceArea1, vigilanceArea2))
         // When
@@ -164,7 +185,7 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$[0].source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
-            .andExpect(jsonPath("$[0].themes").doesNotExist())
+            .andExpect(jsonPath("$[0].themes").isEmpty())
             .andExpect(jsonPath("$[0].visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
             .andExpect(jsonPath("$[1].id", equalTo(2)))
@@ -182,7 +203,7 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$[1].source", equalTo("Un particulier")))
             .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
-            .andExpect(jsonPath("$[1].themes").doesNotExist())
+            .andExpect(jsonPath("$[1].themes").isEmpty())
             .andExpect(jsonPath("$[1].visibility", equalTo("PUBLIC")))
             .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
     }
@@ -211,7 +232,7 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
-            .andExpect(jsonPath("$.themes").doesNotExist())
+            .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$.images[0].name", equalTo("image1.jpg")))
             .andExpect(jsonPath("$.images[0].mimeType", equalTo("image/jpeg")))
@@ -261,13 +282,32 @@ class VigilanceAreasITests {
                 seaFront = "MED",
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
-                themes = null,
+                themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
                 isAtAllTimes = false,
+                tags =
+                    listOf(
+                        TagInput(
+                            id = 1,
+                            name = "tag1",
+                            startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                            endedAt = null,
+                            subTags =
+                                listOf(
+                                    TagInput(
+                                        id = 1,
+                                        name = "subTag1",
+                                        startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                                        endedAt = null,
+                                        subTags = listOf(),
+                                    ),
+                                ),
+                        ),
+                    ),
             )
-        given(createOrUpdateVigilanceArea.execute(vigilanceArea1)).willReturn(vigilanceArea1)
+        given(createOrUpdateVigilanceArea.execute(any())).willReturn(vigilanceArea1)
 
         // When
         mockMvc
@@ -293,7 +333,7 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
-            .andExpect(jsonPath("$.themes").doesNotExist())
+            .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$.images[0].name", equalTo("image1.jpg")))
             .andExpect(jsonPath("$.images[0].mimeType", equalTo("image/jpeg")))
@@ -306,6 +346,14 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.createdAt", equalTo(createdAt)))
             .andExpect(jsonPath("$.updatedAt", equalTo(updatedAt)))
             .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$.tags[0].id", equalTo(1)))
+            .andExpect(jsonPath("$.tags[0].name", equalTo("tag1")))
+            .andExpect(jsonPath("$.tags[0].startedAt", equalTo("2024-01-01T00:00:00Z")))
+            .andExpect(jsonPath("$.tags[0].endedAt", nullValue()))
+            .andExpect(jsonPath("$.tags[0].subTags[0].id", equalTo(1)))
+            .andExpect(jsonPath("$.tags[0].subTags[0].name", equalTo("subTag1")))
+            .andExpect(jsonPath("$.tags[0].subTags[0].startedAt", equalTo("2024-01-01T00:00:00Z")))
+            .andExpect(jsonPath("$.tags[0].subTags[0].endedAt", nullValue()))
     }
 
     @Test
@@ -330,16 +378,18 @@ class VigilanceAreasITests {
                 seaFront = "MED",
                 source = "Source de la zone de vigilance",
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
-                themes = null,
+                themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
                 isAtAllTimes = false,
+                tags = listOf(),
             )
 
         val updatedVigilanceArea =
             vigilanceArea1.copy(
                 images = emptyList(),
+                tags = listOf(),
             )
 
         given(createOrUpdateVigilanceArea.execute(updatedVigilanceArea)).willReturn(updatedVigilanceArea)
@@ -367,11 +417,13 @@ class VigilanceAreasITests {
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
-            .andExpect(jsonPath("$.themes").doesNotExist())
+            .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$.createdAt", equalTo(createdAt)))
             .andExpect(jsonPath("$.updatedAt", equalTo(updatedAt)))
             .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$.images").isEmpty())
+            .andExpect(jsonPath("$.tags").isEmpty())
     }
 
     @Test
