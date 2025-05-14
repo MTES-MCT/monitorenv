@@ -17,17 +17,20 @@ class CaffeineConfiguration(
     private val oidcProperties: OIDCProperties,
 ) {
     val userAuthorization = "user_authorization"
+    val controlUnits = "control_units"
 
     @Bean
     fun cacheManager(ticker: Ticker): CacheManager? {
         val cacheInMinutes = oidcProperties.cacheInMinutes
 
         val userAuthorizationCache = buildMinutesCache(userAuthorization, ticker, cacheInMinutes)
+        val controlUnitsCache = buildMinutesCache(controlUnits, ticker, cacheInMinutes)
 
         val manager = SimpleCacheManager()
         manager.setCaches(
             listOf(
                 userAuthorizationCache,
+                controlUnitsCache,
             ),
         )
 

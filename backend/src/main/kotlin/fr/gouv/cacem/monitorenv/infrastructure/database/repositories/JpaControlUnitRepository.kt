@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -28,6 +29,7 @@ class JpaControlUnitRepository(
         dbControlUnitRepository.deleteById(controlUnitId)
     }
 
+    @Cacheable(value = ["control_units"])
     @Transactional
     override fun findAll(): List<FullControlUnitDTO> = dbControlUnitRepository.findAll().map { it.toFullControlUnit() }
 
