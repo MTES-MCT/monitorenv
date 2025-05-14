@@ -133,7 +133,9 @@ context('Side Window > Mission List > Filter Bar', () => {
 
     cy.fill('Type de mission', ['Mer'])
 
-    cy.wait('@getMissionsByType')
+    // We can't wait because cy.fill ends after the request
+    // cy.wait('@getMissionsByType')
+
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
       if (index === 0) {
@@ -150,6 +152,9 @@ context('Side Window > Mission List > Filter Bar', () => {
 
     cy.fill('Façade', ['MED'])
 
+    // We can't wait because cy.fill ends after the request
+    // cy.wait('@getMissionsBySeaFront')
+
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
       if (index === 0) {
@@ -158,7 +163,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'MED')
     })
-    cy.wait('@getMissionsBySeaFront')
   })
 
   it('Should filter missions by status', () => {
@@ -169,6 +173,9 @@ context('Side Window > Mission List > Filter Bar', () => {
 
     cy.fill('Statut de mission', ['En cours'])
 
+    // We can't wait because cy.fill ends after the request
+    // cy.wait('@getMissionsByStatus')
+
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {
       if (index === 0) {
@@ -177,11 +184,9 @@ context('Side Window > Mission List > Filter Bar', () => {
 
       cy.wrap(row).should('contain', 'En cours')
     })
-    cy.wait('@getMissionsByStatus')
   })
 
   it('Should filter missions by themes', () => {
-    cy.wait(200)
     cy.fill('Thématique', ['Mouillage individuel'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
@@ -207,7 +212,6 @@ context('Side Window > Mission List > Filter Bar', () => {
 
     // for year 2024
     cy.fill('Période spécifique', [expectedStartDate.asDatePickerDate, expectedEndDate.asDatePickerDate])
-    cy.wait(500)
     cy.wait('@getMissionsByPeriod')
 
     cy.getDataCy('mission-theme-filter').click()
@@ -225,7 +229,6 @@ context('Side Window > Mission List > Filter Bar', () => {
     ).as('getMissionsBySecondPeriod')
 
     cy.fill('Période spécifique', [secondExpectedStartDate.asDatePickerDate, secondExpectedEndDate.asDatePickerDate])
-    cy.wait(500)
     cy.wait('@getMissionsBySecondPeriod')
 
     cy.getDataCy('mission-theme-filter').click()
