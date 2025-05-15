@@ -1,10 +1,3 @@
-ALTER TABLE themes
-    ADD COLUMN control_plan_themes_id                INT,
-    ADD COLUMN control_plan_sub_themes_id            INT,
-    ADD COLUMN control_plan_tags_id                  INT,
-    ADD COLUMN reportings_control_plan_sub_themes_id INT;
-
-
 INSERT INTO themes (id, name, started_at, ended_at, control_plan_themes_id)
 SELECT DISTINCT id, theme, '2023-01-01 00:00:00'::timestamp, '2099-12-31 23:59:59'::timestamp, id
 FROM control_plan_themes;
@@ -61,9 +54,3 @@ FROM public.reportings_control_plan_sub_themes rcpst
 INSERT INTO themes_vigilance_areas (vigilance_areas_id, themes_id)
 VALUES (2, 108),
        (2, 341);
-
--- ALTER TABLE themes
---     DROP COLUMN control_plan_themes_id,
---     DROP COLUMN control_plan_sub_themes_id,
---     DROP COLUMN control_plan_tags_id,
---     DROP COLUMN reportings_control_plan_sub_themes_id;
