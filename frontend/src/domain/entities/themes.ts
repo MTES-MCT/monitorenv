@@ -3,3 +3,9 @@ export type ThemeFromAPI = {
   name: string
   subThemes: ThemeFromAPI[]
 }
+
+export type ThemeOption = {
+  id: number
+  name: string
+  subThemes?: ThemeOption[]
+}

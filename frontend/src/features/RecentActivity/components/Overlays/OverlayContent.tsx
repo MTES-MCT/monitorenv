@@ -1,6 +1,8 @@
+import { useGetThemesQuery } from '@api/themesAPI'
 import { updateSelectedControlId } from '@features/RecentActivity/useCases/updateSelectedControlId'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { displayThemes } from '@utils/getThemesAsOptions'
 import { TargetTypeLabels } from 'domain/entities/targetType'
 import styled from 'styled-components'
 
@@ -20,6 +22,7 @@ export function OverlayContent({
   singleFeature?: Feature
 }) {
   const dispatch = useAppDispatch()
+  const { data } = useGetThemesQuery()
 
   const selectControl = id => {
     if (!isSelected) {
@@ -32,6 +35,12 @@ export function OverlayContent({
     return <RecentActivityControlCard control={singleFeature} />
   }
 
+  const getThemes = (themeId: number[]) => {
+    const themes = Object.values(data ?? [])
+
+    return displayThemes(themes.filter(theme => themeId.includes(theme.id)))
+  }
+
   return (
     <Wrapper>
       {items.map(item => {
@@ -40,8 +49,7 @@ export function OverlayContent({
         return (
           <ItemContainer key={id} onClick={() => selectControl(id)}>
             {themeIds?.length > 0 ? (
-              // FIXME
-              <StyledThemes title={`${themeIds}`}>{themeIds} </StyledThemes>
+              <StyledThemes title={getThemes(themeIds)}>{getThemes(themeIds)} </StyledThemes>
             ) : (
               <StyledGrayText>Thématique à renseigner</StyledGrayText>
             )}

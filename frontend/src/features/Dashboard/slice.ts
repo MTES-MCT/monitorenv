@@ -11,7 +11,7 @@ import { filterReportings } from './useCases/filters/filterReportings'
 
 import type { DashboardFilters } from './components/DashboardForm/slice'
 import type { ImageApi, Link } from '@components/Form/types'
-import type { TagFromAPI } from 'domain/entities/tags'
+import type { TagOption } from 'domain/entities/tags'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
@@ -504,7 +504,7 @@ export const getFilteredRegulatoryAreas = createSelector(
   [
     (state: DashboardState) => state.dashboards,
     (state: DashboardState) => state.activeDashboardId,
-    (_, regulatoryTagsFilter: TagFromAPI[] | undefined) => regulatoryTagsFilter
+    (_, regulatoryTagsFilter: TagOption[] | undefined) => regulatoryTagsFilter
   ],
   (dashboards, activeDashboardId, regulatoryTagsFilter) => {
     if (!activeDashboardId) {
@@ -594,7 +594,7 @@ export const getFilteredVigilanceAreas = createSelector(
 export const getDashboards = (state: DashboardState) => state.dashboards
 export const getActiveDashboardId = (state: DashboardState) => state.activeDashboardId
 
-// The extra variables are accessible like so..
+// The extra variables are accessible like so.
 // We create a selector that ignores the state variable
 // Returning just the passed id
 const getId = (_: DashboardState, id: string | undefined) => id

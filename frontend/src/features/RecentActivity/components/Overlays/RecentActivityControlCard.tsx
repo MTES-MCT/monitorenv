@@ -17,8 +17,6 @@ export function RecentActivityControlCard({
 }) {
   const dispatch = useAppDispatch()
 
-
-
   const { data: themes } = useGetThemesQuery()
 
   if (!control) {

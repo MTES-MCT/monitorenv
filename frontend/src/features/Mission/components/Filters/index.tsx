@@ -7,23 +7,25 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
   customDayjs,
+  type DateAsStringRange,
   getOptionsFromIdAndName,
   getOptionsFromLabelledEnum,
-  type CheckTreePickerOption,
-  type DateAsStringRange,
   type Option
 } from '@mtes-mct/monitor-ui'
+import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { getThemesAsOptionsCheckPicker } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
-import { dateRangeOptions, type DateRangeEnum } from 'domain/entities/dateRange'
+import { type DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, MissionStatusLabel, MissionTypeLabel } from 'domain/entities/missions'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
-import { useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useMemo, useRef } from 'react'
 
 import { MapMissionFilters } from './Map'
 import { TableMissionFilters } from './Table'
+
+import type { TagOption } from '../../../../domain/entities/tags'
 
 export enum MissionFilterContext {
   MAP = 'MAP',
@@ -37,7 +39,7 @@ export type MissionOptionsListType = {
   dates: Option<DateRangeEnum>[]
   seaFronts: Option<string>[]
   status: Option<string>[]
-  tags: CheckTreePickerOption[]
+  tags: TagOption[]
   themes: Option<number>[]
   types: Option<string>[]
 }
@@ -46,14 +48,22 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
 
   const dispatch = useAppDispatch()
-  const { selectedAdministrationNames, selectedControlUnitIds, startedAfter } = useAppSelector(
-    state => state.missionFilters
-  )
+  const { selectedAdministrationNames, selectedControlUnitIds, selectedPeriod, startedAfter, startedBefore } =
+    useAppSelector(state => state.missionFilters)
+
+  const dateRange: [string, string] = useMemo(() => {
+    const { startedAfterDate, startedBeforeDate } = getDatesFromFilters(startedAfter, startedBefore, selectedPeriod)
+
+    return [
+      startedAfterDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
+      startedBeforeDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
+    ]
+  }, [selectedPeriod, startedAfter, startedBefore])
 
   const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
-  const { data } = useGetThemesQuery()
+  const { data } = useGetThemesQuery(dateRange)
   const themesAsOptions = getThemesAsOptionsCheckPicker(Object.values(data ?? []))
 
   const { data: tags } = useGetTagsQuery()

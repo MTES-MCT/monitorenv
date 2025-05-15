@@ -1,6 +1,6 @@
 import { getTimeLeft } from '@features/Reportings/utils'
-import { FormikDatePicker, FormikNumberInput, customDayjs, getLocalizedDayjs, useNewWindow } from '@mtes-mct/monitor-ui'
-import { ReportingStatusEnum, type Reporting, getReportingStatus } from 'domain/entities/reporting'
+import { customDayjs, DatePicker, FormikNumberInput, getLocalizedDayjs, useNewWindow } from '@mtes-mct/monitor-ui'
+import { getReportingStatus, type Reporting, ReportingStatusEnum } from 'domain/entities/reporting'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 import { useMemo } from 'react'
@@ -14,7 +14,7 @@ type ValidityProps = {
 export function Validity({ mustIncreaseValidity, reportingContext }: ValidityProps) {
   const { newWindowContainerRef } = useNewWindow()
 
-  const { values } = useFormikContext<Reporting>()
+  const { setFieldValue, values } = useFormikContext<Reporting>()
 
   const reportingStatus = getReportingStatus(values)
   const createdAt = values.createdAt ?? customDayjs().toISOString()
@@ -34,11 +34,21 @@ export function Validity({ mustIncreaseValidity, reportingContext }: ValidityPro
     [reportingStatus, mustIncreaseValidity, timeLeft]
   )
 
+  const actualYearForThemes = useMemo(() => customDayjs(values.createdAt).year(), [values.createdAt])
+
+  const handleCreatedAtChange = (nextValue: string | undefined) => {
+    setFieldValue('createdAt', nextValue)
+    if (actualYearForThemes && actualYearForThemes !== customDayjs(nextValue).year()) {
+      setFieldValue('theme', undefined)
+    }
+  }
+
   return (
     <StyledValidityContainer>
       <div>
-        <FormikDatePicker
+        <DatePicker
           baseContainer={reportingContext === ReportingContext.SIDE_WINDOW ? newWindowContainerRef.current : undefined}
+          defaultValue={createdAt}
           isCompact
           isErrorMessageHidden
           isHistorical
@@ -46,6 +56,7 @@ export function Validity({ mustIncreaseValidity, reportingContext }: ValidityPro
           isStringDate
           label="Date et heure (UTC)"
           name="createdAt"
+          onChange={handleCreatedAtChange}
           withTime
         />
         <StyledFormikNumberInput isErrorMessageHidden isRequired label="Validité (h)" min={1} name="validityTime" />

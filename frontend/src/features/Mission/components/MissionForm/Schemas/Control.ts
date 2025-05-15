@@ -64,7 +64,6 @@ export const getCompletionEnvActionControlSchema = (
         .max(3, 'Maximum 3 lettres pour le trigramme')
         .nullable()
         .required(HIDDEN_ERROR),
-
       tags: Yup.array().ensure().optional(),
       themes: Yup.array().ensure().required().min(1),
       vehicleType: Yup.string().when('actionTargetType', (actionTargetType, schema) => {

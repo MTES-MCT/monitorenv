@@ -21,7 +21,7 @@ import type { Reporting } from '../../../domain/entities/reporting'
 export const createMissionFromReporting = (values: Reporting | Partial<Reporting>) => async (dispatch, getState) => {
   const {
     reportingFormVisibility: { context: reportingContext }
-  } = getState().global
+  } = getState().global.visibility
 
   const valuesToSave = omit(values, ['attachedMission'])
   const newOrNextReportingData = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave

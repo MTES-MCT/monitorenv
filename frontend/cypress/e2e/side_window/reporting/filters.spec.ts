@@ -200,7 +200,13 @@ context('Reportings', () => {
     cy.wait('@getReportings')
 
     cy.getDataCy('reporting-theme-filter').click()
-    cy.get('.rs-check-tree-root > div').should('have.length', 18)
+    // Themes
+    cy.get('.rs-check-tree-root > .rs-check-tree-node-children').should('have.length', 19)
+    // Subthemes
+    cy.get('.rs-check-tree-root > .rs-check-tree-node-children > .rs-check-tree-group > .rs-check-tree-node').should(
+      'have.length',
+      95
+    )
 
     cy.wait(200)
 
@@ -213,6 +219,12 @@ context('Reportings', () => {
     cy.wait('@getReportings')
 
     cy.getDataCy('reporting-theme-filter').click()
-    cy.get('.rs-check-tree-root > div').should('have.length', 34)
+    // Themes
+    cy.get('.rs-check-tree-root > .rs-check-tree-node-children').should('have.length', 34)
+    // Subthemes
+    cy.get('.rs-check-tree-root > .rs-check-tree-node-children > .rs-check-tree-group > .rs-check-tree-node').should(
+      'have.length',
+      178
+    )
   })
 })

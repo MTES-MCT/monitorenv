@@ -33,8 +33,7 @@ import {
   getOptionsFromLabelledEnum,
   Label,
   Message,
-  Toggle,
-  type CheckTreePickerOption
+  Toggle
 } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
@@ -43,9 +42,9 @@ import { useReportingEventContext } from 'context/reporting/useReportingEventCon
 import {
   INDIVIDUAL_ANCHORING_THEME_ID,
   InfractionProvenLabels,
+  type Reporting,
   ReportingTypeEnum,
-  ReportingTypeLabels,
-  type Reporting
+  ReportingTypeLabels
 } from 'domain/entities/reporting'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import {
@@ -76,6 +75,7 @@ import { FormikSyncReportingFields } from './FormikSyncReportingFields'
 import { Header } from './Header'
 import { isReportingAutoSaveEnabled, shouldSaveReporting } from './utils'
 
+import type { ThemeOption } from '../../../../domain/entities/themes'
 import type { AtLeast } from '../../../../types'
 
 const WITH_VHF_ANSWER_OPTIONS = [
@@ -119,7 +119,9 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     [values.updatedAtUtc]
   )
 
-  const { data: themes } = useGetThemesQuery()
+  const reportingDate = values.createdAt ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`
+
+  const { data: themes } = useGetThemesQuery([reportingDate, reportingDate])
 
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(themes ?? [])), [themes])
 
@@ -135,11 +137,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
       return false
     }
 
-    if (selectedReporting?.isArchived) {
-      return false
-    }
-
-    return true
+    return !selectedReporting?.isArchived
   }, [selectedReporting])
 
   useEffect(() => {
@@ -300,30 +298,15 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     setScrollTop(e.currentTarget.scrollTop)
   }
 
-  const handleOnChangeTheme = (option: CheckTreePickerOption[] | undefined) => {
-    if (option) {
-      const nextTheme = parseOptionsToThemes(option)[0]
-      setFieldValue('theme', nextTheme)
-      if (nextTheme?.id !== INDIVIDUAL_ANCHORING_THEME_ID) {
-        setFieldValue('withVHFAnswer', undefined)
-      }
-    } else {
-      setFieldValue('theme', undefined)
-    }
-  }
-
-  const handleOnChangeTags = (option: CheckTreePickerOption[] | undefined) => {
-    if (option) {
-      const nextTags = parseOptionsToTags(option)
-      setFieldValue('tags', nextTags)
-    } else {
-      setFieldValue('tags', [])
+  const handleOnChangeTheme = (nextThemes: ThemeOption[] | undefined) => {
+    const nextTheme = (parseOptionsToThemes(nextThemes) ?? [])[0]
+    setFieldValue('theme', nextTheme)
+    if (nextTheme?.id !== INDIVIDUAL_ANCHORING_THEME_ID) {
+      setFieldValue('withVHFAnswer', undefined)
     }
   }
 
   const isVesselInformationRequested = useMemo(() => {
-    // TODO(02/04/2025): Be careful here
-
     if (values.theme?.id !== INDIVIDUAL_ANCHORING_THEME_ID || values.vehicleType !== VehicleTypeEnum.VESSEL) {
       return false
     }
@@ -413,24 +396,31 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           <CheckTreePicker
             childrenKey="subThemes"
             error={errors.theme}
+            isErrorMessageHidden
             isMultiSelect={false}
             isRequired
             label="Thématiques et sous-thématiques"
+            labelKey="name"
             name="theme"
             onChange={handleOnChangeTheme}
             options={themesOptions}
-            value={getThemesAsOptions(values.theme ? [values.theme] : [])}
+            value={values.theme ? [values.theme] : undefined}
+            valueKey="id"
           />
           <CheckTreePicker
             childrenKey="subTags"
             error={errors.tags}
             label="Tags et sous-tags"
+            labelKey="name"
             name="tags"
-            onChange={handleOnChangeTags}
+            onChange={nextTags => {
+              setFieldValue('tags', parseOptionsToTags(nextTags))
+            }}
             options={tagOptions}
             renderedChildrenValue="Sous-tag."
             renderedValue="Tags"
-            value={getTagsAsOptions(values.tags ?? [])}
+            value={values.tags}
+            valueKey="id"
           />
 
           {isVesselInformationRequested && (

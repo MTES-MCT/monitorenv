@@ -40,7 +40,7 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
     case MonitorEnvLayers.VIGILANCE_AREA:
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
     case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
-      return (layer as VigilanceArea.VigilanceAreaProperties)?.tags?.map(tag => tag.name).join(', ')
+      return displayTags((layer as VigilanceArea.VigilanceAreaProperties)?.tags)
 
     default:
       return (layer as RegulatoryLayerCompactProperties).entityName

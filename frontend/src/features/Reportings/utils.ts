@@ -2,9 +2,9 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 import _ from 'lodash'
 
 import {
-  ReportingSourceEnum,
   type Reporting,
   type ReportingSource,
+  ReportingSourceEnum,
   type TargetDetails
 } from '../../domain/entities/reporting'
 import { ReportingTargetTypeEnum, ReportingTargetTypeLabels } from '../../domain/entities/targetType'

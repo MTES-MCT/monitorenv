@@ -76,7 +76,7 @@ export function MyVigilanceAreaLayerZone({
       <LayerLegend
         isDisabled={layer?.isArchived}
         layerType={MonitorEnvLayers.VIGILANCE_AREA}
-        legendKey={layer?.comments ?? 'aucun nom'}
+        legendKey={layer?.comments}
         type={layer?.name ?? 'aucun nom'}
       />
       <LayerSelector.Name

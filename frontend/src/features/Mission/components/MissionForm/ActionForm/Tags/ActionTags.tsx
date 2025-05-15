@@ -22,19 +22,17 @@ export function ActionTags({ actionIndex }: ActionTagsProps) {
       <CheckTreePicker
         childrenKey="subTags"
         isLight
-        label="Tags"
+        label="Tags et sous-tags"
+        labelKey="name"
         name={`envActions[${actionIndex}].tags`}
         onChange={option => {
-          if (option) {
-            helpers.setValue(parseOptionsToTags(option))
-          } else {
-            helpers.setValue([])
-          }
+          helpers.setValue(parseOptionsToTags(option) ?? [])
         }}
         options={tagsOptions}
         renderedChildrenValue="Sous-tags."
         renderedValue="Tags"
         value={getTagsAsOptions(currentTags.value)}
+        valueKey="id"
       />
     </Wrapper>
   )

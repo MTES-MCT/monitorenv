@@ -30,9 +30,7 @@ const getTagsCell = (envActions: EnvAction[]) => {
   const toTagCell = (tag: TagFromAPI) => ({
     component: (
       <>
-        <>
-          {tag.name} <SubTagsContainer>({displaySubTags([tag])})</SubTagsContainer>
-        </>
+        {tag.name} <SubTagsContainer>({displaySubTags([tag])})</SubTagsContainer>
       </>
     ),
     title: `${tag.name} (${displaySubTags(tag.subTags)})`

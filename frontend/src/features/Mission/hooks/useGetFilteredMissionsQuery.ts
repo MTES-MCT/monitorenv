@@ -5,7 +5,7 @@ import { isMissionPartOfSelectedControlUnitIds } from '@features/Mission/useCase
 import { isMissionPartOfSelectedThemes } from '@features/Mission/useCases/filters/isMissionPartOfSelectedTheme'
 import { isMissionPartOfSelectedWithEnvActions } from '@features/Mission/useCases/filters/isMissionPartOfSelectedWithEnvActions'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { customDayjs } from '@mtes-mct/monitor-ui'
+import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { useMemo } from 'react'
 
@@ -29,34 +29,10 @@ export const useGetFilteredMissionsQuery = () => {
     startedBefore
   } = useAppSelector(state => state.missionFilters)
 
-  const datesForApi = useMemo(() => {
-    let startedAfterDate = startedAfter ?? undefined
-    const startedBeforeDate = startedBefore ?? undefined
-
-    switch (selectedPeriod) {
-      case DateRangeEnum.DAY:
-        startedAfterDate = customDayjs().utc().startOf('day').toISOString()
-        break
-
-      case DateRangeEnum.WEEK:
-        startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(7, 'day').toISOString()
-        break
-
-      case DateRangeEnum.MONTH:
-        startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(30, 'day').toISOString()
-        break
-
-      case DateRangeEnum.YEAR:
-        startedAfterDate = customDayjs().utc().startOf('year').toISOString()
-        break
-
-      case DateRangeEnum.CUSTOM:
-      default:
-        break
-    }
-
-    return { startedAfterDate, startedBeforeDate }
-  }, [startedAfter, startedBefore, selectedPeriod])
+  const datesForApi = useMemo(
+    () => getDatesFromFilters(startedAfter, startedBefore, selectedPeriod),
+    [startedAfter, startedBefore, selectedPeriod]
+  )
 
   const hasCustomPeriodWithoutDates = selectedPeriod === DateRangeEnum.CUSTOM && (!startedAfter || !startedBefore)
 

@@ -1,14 +1,13 @@
-import { Checkbox, FormikNumberInput, FormikSelect, Label } from '@mtes-mct/monitor-ui'
+import { Checkbox, FormikNumberInput, FormikSelect, Label, type Option } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui'
 import type { EnvActionSurveillance, Mission } from 'domain/entities/missions'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type AwarenessProps = {
-  awarenessOptions: CheckTreePickerOption[]
+  awarenessOptions: Option<number>[]
   formPath: string
 }
 export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
@@ -16,10 +15,10 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
 
   const [{ value: isRisingAwareness }] = useField(`${formPath}.awareness.isRisingAwareness`)
 
-  const [themes] = useField<ThemeFromAPI[]>(`${formPath}.themes`)
+  const [themes] = useField<ThemeFromAPI[] | undefined>(`${formPath}.themes`)
 
   useEffect(() => {
-    if (themes.value.length === 1 && isRisingAwareness) {
+    if (themes.value && themes.value.length === 1 && isRisingAwareness) {
       setFieldValue(`${formPath}.awareness.themeId`, themes.value[0]?.id)
     }
   }, [themes.value, formPath, isRisingAwareness, setFieldValue])

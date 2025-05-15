@@ -12,8 +12,10 @@ class JpaThemeRepository(
     private val dbThemeRepository: IDBThemeRepository,
 ) : IThemeRepository {
     @Transactional
-    override fun findAllWithin(time: ZonedDateTime): List<ThemeEntity> =
-        dbThemeRepository.findAllWithin(time).map { it.toThemeEntity() }
+    override fun findAllWithin(
+        startedAt: ZonedDateTime,
+        endedAt: ZonedDateTime,
+    ): List<ThemeEntity> = dbThemeRepository.findAllWithin(startedAt, endedAt).map { it.toThemeEntity() }
 
     @Transactional
     override fun findAllWithinByRegulatoryAreaIds(
