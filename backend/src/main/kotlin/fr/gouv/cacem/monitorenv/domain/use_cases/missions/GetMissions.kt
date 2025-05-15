@@ -27,6 +27,7 @@ class GetMissions(
         startedAfterDateTime: ZonedDateTime? = null,
         startedBeforeDateTime: ZonedDateTime? = null,
         searchQuery: String? = null,
+        withLegacyControlPlans: Boolean? = false,
     ): List<MissionEntity> {
         logger.info("Attempt to GET all missions")
 
@@ -50,6 +51,12 @@ class GetMissions(
                 startedBefore = startedBeforeDateTime?.toInstant(),
                 searchQuery = searchQuery,
             )
+
+        if (withLegacyControlPlans == true) {
+            missions.forEach { mission ->
+                missionRepository.addLegacyControlPlans(mission)
+            }
+        }
 
         logger.info("Found ${missions.size} missions")
 
