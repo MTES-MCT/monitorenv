@@ -3,11 +3,11 @@ import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearch
 import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CheckTreePicker, type CheckTreePickerOption } from '@mtes-mct/monitor-ui'
-import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
+import { CheckTreePicker } from '@mtes-mct/monitor-ui'
+import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 
-import type { ThemeOption } from '../domain/entities/themes.ts'
+import type { ThemeOption } from '../domain/entities/themes'
 
 export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties }) {
   const dispatch = useAppDispatch()
@@ -31,7 +31,7 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
 
   const debouncedSearchLayers = useSearchLayers()
 
-  const handleSetFilteredRegulatoryThemes = (nextThemes: ThemeOption[] | undefined) => {
+  const handleSetFilteredRegulatoryThemes = (nextThemes: ThemeOption[] | undefined = []) => {
     dispatch(setFilteredRegulatoryThemes(nextThemes))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
@@ -50,15 +50,18 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
       childrenKey="subThemes"
       isLabelHidden
       isTransparent
-      label="Thématiques et sous-thématiques"
+      label="Filtre thématiques et sous-thématiques"
+      labelKey="name"
       name="regulatoryThemes"
       onChange={handleSetFilteredRegulatoryThemes}
       options={themesOptions}
       placeholder="Thématiques et sous-thématiques"
       renderedChildrenValue="Sous-thém."
       renderedValue="Thématiques"
+      shouldShowLabels={false}
       style={style}
-      value={getThemesAsOptions(filteredRegulatoryThemes)}
+      value={filteredRegulatoryThemes}
+      valueKey="id"
       // customSearch={regulatoryTagsCustomSearch}
     />
   )

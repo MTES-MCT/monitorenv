@@ -149,22 +149,22 @@ class JpaMissionRepository(
             normalizeField(it)
                 .contains(normalizeField(searchQuery), ignoreCase = true)
         } == true ||
-                mission.envActions?.any { action ->
-                    (action as? EnvActionControlEntity)?.infractions?.any { infraction ->
-                        listOf(
-                            infraction.imo,
-                            infraction.mmsi,
-                            infraction.registrationNumber,
-                            infraction.vesselName,
-                            infraction.companyName,
-                            infraction.controlledPersonIdentity,
-                        ).any { field ->
-                            !field.isNullOrBlank() &&
-                                    normalizeField(field)
-                                        .contains(normalizeField(searchQuery), ignoreCase = true)
-                        }
-                    } ?: false
+            mission.envActions?.any { action ->
+                (action as? EnvActionControlEntity)?.infractions?.any { infraction ->
+                    listOf(
+                        infraction.imo,
+                        infraction.mmsi,
+                        infraction.registrationNumber,
+                        infraction.vesselName,
+                        infraction.companyName,
+                        infraction.controlledPersonIdentity,
+                    ).any { field ->
+                        !field.isNullOrBlank() &&
+                            normalizeField(field)
+                                .contains(normalizeField(searchQuery), ignoreCase = true)
+                    }
                 } ?: false
+            } ?: false
     }
 
     private fun normalizeField(input: String): String = StringUtils.stripAccents(input.replace(" ", ""))
@@ -283,9 +283,9 @@ class JpaMissionRepository(
                     action = it,
                     mission = missionModel,
                     controlPlanThemesReferenceModelMap =
-                        controlPlanThemesReferenceModelMap,
+                    controlPlanThemesReferenceModelMap,
                     controlPlanSubThemesReferenceModelMap =
-                        controlPlanSubThemesReferenceModelMap,
+                    controlPlanSubThemesReferenceModelMap,
                     controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
                     mapper = mapper,
                 )
