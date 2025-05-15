@@ -32,6 +32,7 @@ from src.pipeline.flows import (
     regulations,
     remove_broken_missions_resources_links,
     semaphores,
+    themes_and_tags,
     three_hundred_meters_areas,
     update_departments_and_facades,
 )
@@ -74,6 +75,7 @@ refresh_materialized_view.flow.schedule = Schedule(
         ),
     ]
 )
+themes_and_tags.flow.schedule = CronSchedule("2,12,22,32,42,52 * * * *")
 
 regulations.flow.schedule = CronSchedule("6,16,26,36,46,56 * * * *")
 
@@ -98,6 +100,7 @@ flows_to_register = [
     regulations.flow,
     remove_broken_missions_resources_links.flow,
     semaphores.flow,
+    themes_and_tags.flow,
     three_hundred_meters_areas.flow,
     update_departments_and_facades.flow,
 ]

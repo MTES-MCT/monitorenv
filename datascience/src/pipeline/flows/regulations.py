@@ -5,10 +5,8 @@ from prefect import Flow, case, task
 from sqlalchemy import text
 from src.db_config import create_engine
 from src.pipeline.generic_tasks import delete_rows, extract, load
-from src.pipeline.processing import prepare_df_for_loading
 from src.pipeline.shared_tasks.update_queries import delete_required, insert_required, merge_hashes, select_ids_to_delete, select_ids_to_insert, select_ids_to_update, update_required
 from src.pipeline.utils import psql_insert_copy
-from src.read_query import read_query
 
 
 @task(checkpoint=False)
@@ -118,6 +116,7 @@ def update_regulations(new_regulations: pd.DataFrame):
 
         logger.info("Loading to temporary table")
 
+
         new_regulations[columns_to_load].to_sql(
             "tmp_regulations_cacem",
             connection,
@@ -125,6 +124,7 @@ def update_regulations(new_regulations: pd.DataFrame):
             index=False,
             method=psql_insert_copy,
         )
+         
 
         logger.info(f"Updating regulations_cacem from temporary table {len(new_regulations)}")
         connection.execute(
@@ -147,7 +147,7 @@ def update_regulations(new_regulations: pd.DataFrame):
                 type = tmp.type,
                 row_hash = tmp.row_hash
                 FROM tmp_regulations_cacem tmp
-                where reg.id = tmp.id;
+                WHERE reg.id = tmp.id;
                 """
             )
         )
@@ -169,6 +169,42 @@ def load_new_regulations(new_regulations: pd.DataFrame):
         db_name="monitorenv_remote",
         logger=prefect.context.get("logger"),
         how="append",
+    )
+
+@task(checkpoint=False)
+def extract_themes_regulatory_areas() -> pd.DataFrame:
+    return extract(
+        db_name="cacem_local",
+        query_filepath="cross/cacem/themes_regulatory_areas.sql",
+    )
+
+@task(checkpoint=False)
+def load_themes_regulatory_areas(themes_regulatory_areas: pd.DataFrame):
+    load(
+        themes_regulatory_areas,
+        table_name="themes_regulatory_areas",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
+    )
+
+@task(checkpoint=False)
+def extract_tags_regulatory_areas() -> pd.DataFrame:
+    return extract(
+        db_name="cacem_local",
+        query_filepath="cross/cacem/tags_regulatory_areas.sql",
+    )
+
+@task(checkpoint=False)
+def load_tags_regulatory_areas(tags_regulatory_areas: pd.DataFrame):
+    load(
+        tags_regulatory_areas,
+        table_name="tags_regulatory_areas",
+        schema="public",
+        db_name="monitorenv_remote",
+        logger=prefect.context.get("logger"),
+        how="replace",
     )
 
 
@@ -195,5 +231,10 @@ with Flow("Regulations") as flow:
         new_regulations = extract_new_regulations(ids_to_insert)
         load_new_regulations(new_regulations)
 
+    themes_regulatory_areas = extract_themes_regulatory_areas()
+    load_themes_regulatory_areas(themes_regulatory_areas)
+
+    tags_regulatory_areas = extract_tags_regulatory_areas()
+    load_tags_regulatory_areas(tags_regulatory_areas)
 
 flow.file_name = Path(__file__).name
