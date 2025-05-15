@@ -1,5 +1,4 @@
 import { Dashboard } from '@features/Dashboard/types'
-import { displayTags } from '@features/Tags/utils/getTagsAsOptions'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
