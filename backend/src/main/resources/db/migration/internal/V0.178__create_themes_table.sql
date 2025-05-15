@@ -1,10 +1,14 @@
 CREATE TABLE themes
 (
-    id         SERIAL PRIMARY KEY,
-    name       VARCHAR(255)                             NOT NULL,
-    parent_id  INT REFERENCES themes (id),
-    started_at TIMESTAMP DEFAULT timezone('UTC', NOW()) NOT NULL,
-    ended_at   TIMESTAMP                                NULL
+    id                                    SERIAL PRIMARY KEY,
+    name                                  VARCHAR(255)                             NOT NULL,
+    parent_id                             INT REFERENCES themes (id),
+    started_at                            TIMESTAMP DEFAULT timezone('UTC', NOW()) NOT NULL,
+    ended_at                              TIMESTAMP                                NULL,
+    control_plan_themes_id                INT,
+    control_plan_sub_themes_id            INT,
+    control_plan_tags_id                  INT,
+    reportings_control_plan_sub_themes_id INT
 );
 CREATE INDEX idx_fk_themes_parent_id ON themes (parent_id);
 
