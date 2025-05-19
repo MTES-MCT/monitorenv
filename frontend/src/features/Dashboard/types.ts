@@ -59,7 +59,6 @@ export namespace Dashboard {
       links: Link[]
     }
     comments?: string
-    controlUnits: ControlUnit.ControlUnit[]
     images: ExportImageType[] | undefined
     name: string
     recentActivity: RecentActivity.RecentControlsActivity[]
@@ -67,6 +66,7 @@ export namespace Dashboard {
     recentActivityFilters: RecentActivityFilters
     regulatoryAreas: RegulatoryLayerWithMetadata[]
     reportings: Reporting[]
+    selectedControlUnits: ControlUnit.ControlUnit[]
     subThemes: ControlPlansSubThemeCollection
     themes: ControlPlansThemeCollection
     updatedAt?: string

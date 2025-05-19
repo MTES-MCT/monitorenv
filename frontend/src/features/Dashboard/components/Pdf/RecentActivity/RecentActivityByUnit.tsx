@@ -15,18 +15,17 @@ import type { ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 
 export function RecentActivityByUnit({
   controlUnit,
-  controlUnits,
   dates,
   filters,
   images,
   recentActivity,
   recentActivityControlUnits,
+  selectedControlUnits,
   themes,
   themesAndControlActions,
   totalTarget
 }: {
-  controlUnit: ControlUnit.ControlUnit
-  controlUnits: ControlUnit.ControlUnit[]
+  controlUnit?: ControlUnit.ControlUnit
   dates:
     | {
         startAfter: string | undefined
@@ -37,6 +36,7 @@ export function RecentActivityByUnit({
   images: ExportImageType[] | undefined
   recentActivity: RecentActivityType.RecentControlsActivity[]
   recentActivityControlUnits: ControlUnit.ControlUnit[]
+  selectedControlUnits: ControlUnit.ControlUnit[]
   themes: ControlPlansThemeCollection
   themesAndControlActions: Record<string, number>
   totalTarget: number
@@ -46,10 +46,10 @@ export function RecentActivityByUnit({
   )
 
   const controlUnitImage = images?.find(
-    img => img.featureId === `${Dashboard.featuresCode.DASHBOARD_RECENT_ACTIVITY_BY_UNIT}:${controlUnit.id}`
+    img => img.featureId === `${Dashboard.featuresCode.DASHBOARD_RECENT_ACTIVITY_BY_UNIT}:${controlUnit?.id}`
   )
 
-  const filteredControls = recentActivity?.filter(control => control.controlUnitIds.some(id => id === controlUnit.id))
+  const filteredControls = recentActivity?.filter(control => control.controlUnitIds.some(id => id === controlUnit?.id))
 
   const controlUnitTotalTarget = filteredControls.reduce((acc, control) => {
     const { actionNumberOfControls } = control
@@ -79,7 +79,7 @@ export function RecentActivityByUnit({
     <>
       <View style={recentActivityStyles.rowContainer}>
         <Text style={recentActivityStyles.header}>Activité récente</Text>
-        {controlUnits.length > 1 && <Text style={recentActivityStyles.header}> - {controlUnit.name}</Text>}
+        {selectedControlUnits.length > 1 && <Text style={recentActivityStyles.header}> - {controlUnit?.name}</Text>}
       </View>
       {dates && (
         <Text style={[recentActivityStyles.period, { marginTop: 10 }]}>
@@ -102,13 +102,15 @@ export function RecentActivityByUnit({
           totalControlActions={recentActivity.length}
           totalTarget={totalTarget}
         />
-        <ControlUnitDetailsView
-          controlUnit={controlUnit}
-          image={controlUnitImage}
-          themesAndControlActions={controlUnitThemesAndControlActions}
-          totalControlActions={filteredControls.length}
-          totalTargetByUnit={controlUnitTotalTarget}
-        />
+        {controlUnit && (
+          <ControlUnitDetailsView
+            controlUnit={controlUnit}
+            image={controlUnitImage}
+            themesAndControlActions={controlUnitThemesAndControlActions}
+            totalControlActions={filteredControls.length}
+            totalTargetByUnit={controlUnitTotalTarget}
+          />
+        )}
       </View>
     </>
   )

@@ -81,12 +81,12 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 <Text>Unité(s)</Text>
               </View>
               <View style={styles.details}>
-                {brief.controlUnits.map(({ administration, id, name }) => (
+                {brief.selectedControlUnits.map(({ administration, id, name }) => (
                   <Text key={id} style={{ fontWeight: 'bold' }}>
                     {name} - {administration.name}
                   </Text>
                 ))}
-                {brief.controlUnits.length === 0 && (
+                {brief.selectedControlUnits.length === 0 && (
                   <Text style={{ fontStyle: 'italic' }}>Aucune unité sélectionnée</Text>
                 )}
               </View>

@@ -42,11 +42,11 @@ export function Brief({ author, brief, description, title }: BriefProps) {
       {brief.recentActivity && (
         <RecentActivity
           briefName={brief.name}
-          controlUnits={brief.controlUnits}
           images={brief.images}
           recentActivity={brief.recentActivity}
           recentActivityControlUnits={brief.recentActivityControlUnits}
           recentActivityFilters={brief.recentActivityFilters}
+          selectedControlUnits={brief.selectedControlUnits}
           themes={brief.themes}
         />
       )}

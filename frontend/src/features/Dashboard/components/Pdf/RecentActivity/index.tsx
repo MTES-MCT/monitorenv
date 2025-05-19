@@ -14,20 +14,20 @@ import type { ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 
 type RecentActivityProps = {
   briefName: string
-  controlUnits: ControlUnit.ControlUnit[]
   images: ExportImageType[] | undefined
   recentActivity: RecentActivityType.RecentControlsActivity[]
   recentActivityControlUnits: ControlUnit.ControlUnit[]
   recentActivityFilters: RecentActivityFilters
+  selectedControlUnits: ControlUnit.ControlUnit[]
   themes: ControlPlansThemeCollection
 }
 export function RecentActivity({
   briefName,
-  controlUnits,
   images,
   recentActivity,
   recentActivityControlUnits,
   recentActivityFilters,
+  selectedControlUnits,
   themes
 }: RecentActivityProps) {
   const dates = useMemo(() => {
@@ -74,19 +74,40 @@ export function RecentActivity({
 
   return (
     <>
-      {controlUnits.map(controlUnit => (
-        <Page key={controlUnit.id} style={layoutStyle.page}>
+      {selectedControlUnits && selectedControlUnits.length > 0 ? (
+        selectedControlUnits.map(controlUnit => (
+          <Page key={controlUnit.id} style={layoutStyle.page}>
+            <Headings name={briefName} />
+            <View style={layoutStyle.section}>
+              <View break wrap={false}>
+                <RecentActivityByUnit
+                  controlUnit={controlUnit}
+                  dates={dates}
+                  filters={recentActivityFilters}
+                  images={images}
+                  recentActivity={recentActivity}
+                  recentActivityControlUnits={recentActivityControlUnits}
+                  selectedControlUnits={selectedControlUnits}
+                  themes={themes}
+                  themesAndControlActions={themesAndControlActions}
+                  totalTarget={totalTarget}
+                />
+              </View>
+            </View>
+          </Page>
+        ))
+      ) : (
+        <Page style={layoutStyle.page}>
           <Headings name={briefName} />
           <View style={layoutStyle.section}>
-            <View key={controlUnit.id} break wrap={false}>
+            <View break wrap={false}>
               <RecentActivityByUnit
-                controlUnit={controlUnit}
-                controlUnits={controlUnits}
                 dates={dates}
                 filters={recentActivityFilters}
                 images={images}
                 recentActivity={recentActivity}
                 recentActivityControlUnits={recentActivityControlUnits}
+                selectedControlUnits={selectedControlUnits}
                 themes={themes}
                 themesAndControlActions={themesAndControlActions}
                 totalTarget={totalTarget}
@@ -94,7 +115,7 @@ export function RecentActivity({
             </View>
           </View>
         </Page>
-      ))}
+      )}
     </>
   )
 }
