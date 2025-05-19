@@ -27,7 +27,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
 
   const recentActivityFilters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, dashboard.id))
   const { data: allControlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const controlUnits = allControlUnits?.filter(controlUnit => dashboard.controlUnitIds.includes(controlUnit.id))
+  const selectedControlUnits = allControlUnits?.filter(controlUnit => dashboard.controlUnitIds.includes(controlUnit.id))
   const regulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, dashboard.regulatoryAreaIds))
   const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
@@ -69,8 +69,9 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       startedBefore: startBefore,
       themeIds: filters?.themeIds
     }).unwrap()
+
     const allRecentActivityControlUnitIds = uniq(recentActivity.flatMap(({ controlUnitIds }) => controlUnitIds))
-    const recentActivityControlUnits = allControlUnits?.filter(controlUnit =>
+    const filteredRecentActivityControlUnits = allControlUnits?.filter(controlUnit =>
       allRecentActivityControlUnitIds.includes(controlUnit.id)
     )
     const images = await getImages(recentActivity, dashboard.controlUnitIds)
@@ -84,14 +85,14 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
         links: dashboard.links
       },
       comments: dashboard.comments,
-      controlUnits,
       images,
       name: dashboard.name,
       recentActivity,
-      recentActivityControlUnits,
+      recentActivityControlUnits: filteredRecentActivityControlUnits,
       recentActivityFilters,
       regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),
+      selectedControlUnits,
       subThemes,
       themes,
       updatedAt: dashboard.updatedAt,
