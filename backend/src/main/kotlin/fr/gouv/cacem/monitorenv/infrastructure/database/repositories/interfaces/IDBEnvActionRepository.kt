@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import java.time.Instant
 import java.util.UUID
@@ -68,20 +67,4 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
         startedAfter: Instant,
         startedBefore: Instant,
     ): List<Array<Any>>
-
-    fun deleteAllByMissionId(missionId: Int)
-
-    @Modifying
-    @Query(
-        value = """
-        DELETE FROM env_actions WHERE mission_id=:missionId AND id NOT IN (:ids)
-    """,
-        nativeQuery = true,
-    )
-    fun deleteAllByIdNotInAndMissionId(
-        ids: List<UUID>,
-        missionId: Int,
-    )
-
-    fun findAllByMissionId(missionId: Int): List<EnvActionModel>
 }
