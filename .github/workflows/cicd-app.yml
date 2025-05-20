@@ -17,7 +17,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-  
+
 jobs:
   version:
     name: Set application version and env profile
@@ -86,7 +86,7 @@ jobs:
       - name: Unit test
         run: make test-back
     timeout-minutes: 30
-  
+
   unit_test_frontend:
     name: Run frontend unit tests
     needs: version
@@ -127,7 +127,7 @@ jobs:
           verbose: true
           working-directory: ./frontend
     timeout-minutes: 30
-  
+
   build:
     name: Build and package
     needs: version
@@ -184,7 +184,7 @@ jobs:
         with:
           image: monitorenv-app:${{ env.VERSION }}
     timeout-minutes: 30
-  
+
   e2e_test:
     name: Run E2E tests
     needs: [ version, build ]
@@ -217,6 +217,10 @@ jobs:
         uses: ishworkh/container-image-artifact-download@v2.0.0
         with:
           image: monitorenv-app:${{ env.VERSION }}
+
+      - name: echo docker-compose version
+        run: |
+          docker compose version
 
       - name: Run docker images
         run: |
