@@ -328,9 +328,11 @@ export function useExportImages() {
           })
       }
 
+      mapRef.current?.getAllLayers()[0]?.setSource(getBaseSource(backgroundMap))
+
       return allImages
     },
-    [extractReportingFeatures]
+    [extractReportingFeatures, backgroundMap]
   )
 
   useEffect(() => {
