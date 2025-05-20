@@ -5,7 +5,7 @@ import pathlib
 import shutil
 import sys
 from io import StringIO
-from typing import Sequence
+from typing import Sequence, Union
 
 import geoalchemy2
 import sqlalchemy
@@ -156,3 +156,10 @@ def move(
             raise ValueError(
                 f"if_exists must be 'raise' or 'replace', got {if_exists}"
             )
+
+def remove_file(fp: Union[str, pathlib.Path], ignore_errors: bool = True):
+    try:
+        os.remove(fp)
+    except Exception:
+        if not ignore_errors:
+            raise
