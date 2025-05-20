@@ -35,6 +35,7 @@ from src.pipeline.flows import (
     themes_and_tags,
     three_hundred_meters_areas,
     update_departments_and_facades,
+    regulatory_areas_open_data
 )
 
 ################################ Define flow schedules ################################
@@ -81,6 +82,9 @@ regulations.flow.schedule = CronSchedule("6,16,26,36,46,56 * * * *")
 
 semaphores.flow.schedule = CronSchedule("3 5,15 * * *")
 
+regulatory_areas_open_data.flow.schedule = CronSchedule("0 1 * * *")
+
+
 ###################### List flows to register with prefect server #####################
 flows_to_register = [
     admin_areas.flow,
@@ -103,6 +107,7 @@ flows_to_register = [
     themes_and_tags.flow,
     three_hundred_meters_areas.flow,
     update_departments_and_facades.flow,
+    regulatory_areas_open_data.flow
 ]
 
 ################################ Define flows' executor ###############################
