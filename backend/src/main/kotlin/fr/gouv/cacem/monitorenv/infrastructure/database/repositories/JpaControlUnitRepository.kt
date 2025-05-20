@@ -40,11 +40,11 @@ class JpaControlUnitRepository(
     override fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO =
         dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
 
-    @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun findById(controlUnitId: Int): ControlUnitEntity =
         dbControlUnitRepository.findById(controlUnitId).get().toControlUnit()
 
+    @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity =
         try {
@@ -53,7 +53,6 @@ class JpaControlUnitRepository(
                 controlUnit.departmentAreaInseeCode?.let { dbDepartmentAreaRepository.findByInseeCode(it) }
             val controlUnitModel =
                 ControlUnitModel.fromControlUnit(controlUnit, administrationModel, departmentAreaModel)
-
             dbControlUnitRepository.save(controlUnitModel).toControlUnit()
         } catch (e: InvalidDataAccessApiUsageException) {
             throw NotFoundException(
