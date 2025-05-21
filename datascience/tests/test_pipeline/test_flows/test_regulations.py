@@ -208,6 +208,6 @@ def test_load_tags_regulatory_areas(reset_test_data, create_cacem_tables,new_reg
   
   pd.testing.assert_frame_equal(tags_regulatory_areas, imported_tags_regulatory_areas)
 
-def test_flow_regulations(create_cacem_tables):
+def test_flow_regulations(create_cacem_tables, reset_test_data):
     state = flow.run()
     assert state.is_successful()

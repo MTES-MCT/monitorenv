@@ -7,7 +7,7 @@ from src.db_config import create_engine
 from src.pipeline.generic_tasks import delete_rows, extract, load
 from src.pipeline.shared_tasks.update_queries import delete_required, insert_required, merge_hashes, select_ids_to_delete, select_ids_to_insert, select_ids_to_update, update_required
 from src.pipeline.utils import psql_insert_copy
-
+from prefect.tasks.control_flow import merge
 
 @task(checkpoint=False)
 def extract_local_hashes() -> pd.DataFrame:
@@ -217,24 +217,33 @@ with Flow("Regulations") as flow:
     ids_to_delete = select_ids_to_delete(outer_hashes)
     cond_delete = delete_required(ids_to_delete)
     with case(cond_delete, True):
-        delete(ids_to_delete)
+        deleted_when_true = delete(ids_to_delete)
+    with case(cond_delete, False):
+        deleted_when_false = True
+    deleted = merge(deleted_when_true, deleted_when_false)
 
     ids_to_update = select_ids_to_update(inner_merged)
     cond_update = update_required(ids_to_update)
     with case(cond_update, True):
         new_regulations = extract_new_regulations(ids_to_update)
-        update_regulations(new_regulations)
-    
+        updated_when_true = update_regulations(new_regulations)
+    with case(cond_update, False):
+        updated_when_false = True
+    updated = merge(updated_when_true, updated_when_false)
+
     ids_to_insert = select_ids_to_insert(outer_hashes)
     cond_insert = insert_required(ids_to_insert)
     with case(cond_insert, True):
         new_regulations = extract_new_regulations(ids_to_insert)
-        load_new_regulations(new_regulations)
+        inserted_when_true = load_new_regulations(new_regulations)
+    with case(cond_insert, False):
+        inserted_when_false = True
+    inserted = merge(inserted_when_true, inserted_when_false)
 
-    themes_regulatory_areas = extract_themes_regulatory_areas()
+    themes_regulatory_areas = extract_themes_regulatory_areas(upstream_tasks=[updated, inserted, deleted])
     load_themes_regulatory_areas(themes_regulatory_areas)
 
-    tags_regulatory_areas = extract_tags_regulatory_areas()
+    tags_regulatory_areas = extract_tags_regulatory_areas(upstream_tasks=[updated, inserted, deleted])
     load_tags_regulatory_areas(tags_regulatory_areas)
 
 flow.file_name = Path(__file__).name
