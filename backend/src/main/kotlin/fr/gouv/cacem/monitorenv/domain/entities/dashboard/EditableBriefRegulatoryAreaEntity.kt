@@ -18,6 +18,10 @@ data class EditableBriefRegulatoryAreaEntity(
 ) : DetailRenderable {
     override val title = layerName
 
+    companion object {
+        const val LINK_ROW_INDEX = 4
+    }
+
     override fun buildDetailsRows(document: XWPFDocument): List<List<String>> =
         listOf(
             listOf("Entité", entityName),
@@ -32,7 +36,7 @@ data class EditableBriefRegulatoryAreaEntity(
         cell: XWPFTableCell,
         document: XWPFDocument,
     ) {
-        if (rowIndex == 4) {
+        if (rowIndex == LINK_ROW_INDEX) {
             while (cell.paragraphs.size > 0) {
                 cell.removeParagraph(0)
             }
