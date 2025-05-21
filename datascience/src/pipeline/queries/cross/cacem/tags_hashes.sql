@@ -11,5 +11,4 @@ SELECT
         COALESCE(ended_at::TIMESTAMP, NOW()) ||
 
   ) AS cacem_row_hash
-FROM prod.themes
-WHERE id IN :ids
+FROM prod.tags

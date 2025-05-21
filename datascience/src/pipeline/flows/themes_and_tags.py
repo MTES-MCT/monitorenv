@@ -17,10 +17,10 @@ def extract_local_themes() -> pd.DataFrame:
     Extract themes from cacem
 
     Returns:
-        pd.DataFrame: GeoDataFrame of themes
+        pd.DataFrame: GeoDataFrame of themes + row_hash
     """
     return extract(
-        db_name="cacem_local", query_filepath="cross/cacem/themes.sql"
+        db_name="cacem_local", query_filepath="cross/cacem/themes_hashes.sql"
     )
 
 
@@ -30,11 +30,11 @@ def extract_remote_themes() -> pd.DataFrame:
     Extract themes from monitorenv
 
     Returns:
-        pd.DataFrame: GeoDataFrame of themes
+        pd.DataFrame: GeoDataFrame of themes id + row_hash
     """
     return extract(
         db_name="monitorenv_remote",
-        query_filepath="monitorenv/themes.sql",
+        query_filepath="monitorenv/themes_hashes.sql",
     )
 
 @task(checkpoint=False)
@@ -128,10 +128,10 @@ def extract_local_tags() -> pd.DataFrame:
     Extract tags from cacem
 
     Returns:
-        pd.DataFrame: GeoDataFrame of tags
+        pd.DataFrame: GeoDataFrame of tags + row_hash
     """
     return extract(
-        db_name="cacem_local", query_filepath="cross/cacem/tags.sql"
+        db_name="cacem_local", query_filepath="cross/cacem/tags_hashes.sql"
     )
 
 
@@ -145,7 +145,7 @@ def extract_remote_tags() -> pd.DataFrame:
     """
     return extract(
         db_name="monitorenv_remote",
-        query_filepath="monitorenv/tags.sql",
+        query_filepath="monitorenv/tags_hashes.sql",
     )
 
 @task(checkpoint=False)
