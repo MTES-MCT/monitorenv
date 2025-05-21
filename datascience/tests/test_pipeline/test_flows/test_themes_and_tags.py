@@ -3,7 +3,7 @@ import prefect
 import pytest
 
 
-from src.pipeline.flows.themes_and_tags import load_new_themes, update_themes, load_new_tags, update_tags
+from src.pipeline.flows.themes_and_tags import load_new_themes, update_themes, load_new_tags, update_tags, flow
 from src.pipeline.generic_tasks import load
 from src.read_query import read_query
 
@@ -136,3 +136,7 @@ def test_update_new_tags(reset_test_data, new_tags, old_tags):
             ORDER BY id"""
     )
     pd.testing.assert_frame_equal(updated_tags, new_tags)
+
+def test_flow_themes_and_tags(create_cacem_tables):
+    state = flow.run()
+    assert state.is_successful()

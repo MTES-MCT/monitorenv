@@ -3,7 +3,7 @@ import prefect
 import pytest
 
 
-from src.pipeline.flows.regulations import load_new_regulations, update_regulations,load_themes_regulatory_areas, load_tags_regulatory_areas
+from src.pipeline.flows.regulations import load_new_regulations, update_regulations,load_themes_regulatory_areas, load_tags_regulatory_areas, flow
 from src.pipeline.flows.themes_and_tags import load_new_tags, load_new_themes
 from src.pipeline.generic_tasks import load
 from src.read_query import read_query
@@ -207,3 +207,7 @@ def test_load_tags_regulatory_areas(reset_test_data, create_cacem_tables,new_reg
     )
   
   pd.testing.assert_frame_equal(tags_regulatory_areas, imported_tags_regulatory_areas)
+
+def test_flow_regulations(create_cacem_tables):
+    state = flow.run()
+    assert state.is_successful()
