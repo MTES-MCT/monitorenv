@@ -12,4 +12,3 @@ SELECT
 
   ) AS cacem_row_hash
 FROM prod.themes
-WHERE id IN :ids
