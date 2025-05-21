@@ -8,7 +8,7 @@ import { SearchReportings } from './SearchReportings'
 
 import type { MenuButtonProps } from '@components/Menu'
 
-export function ReportingsButton({ onClickMenuButton, onVisibiltyChange }: MenuButtonProps) {
+export function ReportingsButton({ isSuperUser, onClickMenuButton, onVisibiltyChange }: MenuButtonProps) {
   const dispatch = useAppDispatch()
   const isSearchReportingsVisible = useAppSelector(state => state.global.visibility.isSearchReportingsVisible)
 
@@ -19,7 +19,9 @@ export function ReportingsButton({ onClickMenuButton, onVisibiltyChange }: MenuB
 
   return (
     <>
-      {isSearchReportingsVisible && <SearchReportings onVisibiltyChange={onVisibiltyChange} />}
+      {isSearchReportingsVisible && (
+        <SearchReportings isSuperUser={isSuperUser} onVisibiltyChange={onVisibiltyChange} />
+      )}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchReportingsVisible ? '_active' : undefined}
         data-cy="reportings-button"

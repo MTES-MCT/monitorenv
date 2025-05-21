@@ -12,7 +12,11 @@ import { editingReportingStyleFn } from './style'
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 
-export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+type EditingReportingLayerProps = BaseMapChildrenProps & {
+  isSuperUser: boolean
+}
+
+export function EditingReportingLayer({ currentFeatureOver, isSuperUser, map }: EditingReportingLayerProps) {
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
@@ -62,7 +66,7 @@ export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildr
     new VectorLayer({
       renderBuffer: 7,
       source: editingReportingVectorSourceRef.current,
-      style: feature => editingReportingStyleFn(feature),
+      style: feature => editingReportingStyleFn(feature, { withLinkedMissions: isSuperUser }),
       zIndex: Layers.REPORTING_SELECTED.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

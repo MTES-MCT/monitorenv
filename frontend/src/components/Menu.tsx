@@ -19,6 +19,7 @@ type MenuProps = {
 }
 
 export type MenuButtonProps = {
+  isSuperUser?: boolean
   onClickMenuButton: () => void
   onVisibiltyChange: (layer: string) => void
 }
@@ -60,9 +61,13 @@ export function Menu({ isSuperUser }: MenuProps) {
           <MissionsMenu onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
         </li>
       )}
-      {displayReportingsButton && isSuperUser && (
+      {displayReportingsButton && (
         <li>
-          <ReportingsButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
+          <ReportingsButton
+            isSuperUser={isSuperUser}
+            onClickMenuButton={onClickMenuButton}
+            onVisibiltyChange={onVisibiltyChange}
+          />
         </li>
       )}
       {displaySearchSemaphoreButton && (
