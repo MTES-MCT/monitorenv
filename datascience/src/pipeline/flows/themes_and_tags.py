@@ -118,6 +118,7 @@ def load_new_themes(new_themes: pd.DataFrame):
         db_name="monitorenv_remote",
         logger=prefect.context.get("logger"),
         how="append",
+        nullable_integer_columns=["parent_id"]
     )
 
 
@@ -229,6 +230,7 @@ def load_new_tags(new_tags: pd.DataFrame):
         db_name="monitorenv_remote",
         logger=prefect.context.get("logger"),
         how="append",
+        nullable_integer_columns=["parent_id"]
     )
 
 
