@@ -1,6 +1,7 @@
 import { FormContainer, SideWindowBackground } from '@features/Reportings/style'
 import { getReportingInitialValues, isNewReporting } from '@features/Reportings/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
@@ -9,12 +10,18 @@ import styled from 'styled-components'
 
 import { FormContent } from './FormContent'
 import { ReportingSchema } from './Schema'
+import { ReportingReadOnly } from '../ReportingReadOnly'
+
+import type { Reporting } from 'domain/entities/reporting'
 
 type ReportingFormProps = {
   context: ReportingContext
   totalReportings: number
 }
 export function ReportingFormWithContext({ context, totalReportings }: ReportingFormProps) {
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+
+  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const reportingFormVisibility = useAppSelector(state => state.global.visibility.reportingFormVisibility)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
@@ -63,7 +70,14 @@ export function ReportingFormWithContext({ context, totalReportings }: Reporting
               validationSchema={ReportingSchema}
             >
               <StyledForm>
-                <FormContent reducedReportingsOnContext={totalReportings} selectedReporting={selectedReporting} />
+                {isSuperUser ? (
+                  <FormContent reducedReportingsOnContext={totalReportings} selectedReporting={selectedReporting} />
+                ) : (
+                  <ReportingReadOnly
+                    reducedReportingsOnContext={totalReportings}
+                    reporting={selectedReporting as Reporting}
+                  />
+                )}
               </StyledForm>
             </Formik>
           )}

@@ -1,8 +1,7 @@
 import { getTimeLeft } from '@features/Reportings/utils'
 import { TextInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { ReportingStatusEnum, getReportingStatus, type Reporting } from 'domain/entities/reporting'
 import styled from 'styled-components'
-
-import { ReportingStatusEnum, getReportingStatus, type Reporting } from '../../../../../../domain/entities/reporting'
 
 export function Validity({ reporting }: { reporting: Reporting }) {
   const reportingStatus = getReportingStatus(reporting)

@@ -23,6 +23,7 @@ type ReportingCardProps = {
   feature: any
   isCardVisible?: boolean
   isOnlyHoverable?: boolean
+  isSuperUser?: boolean
   onClose: () => void
   selected?: boolean
   updateMargins: (margin: number) => void
@@ -59,6 +60,7 @@ export function ReportingCard({
   feature,
   isCardVisible = true,
   isOnlyHoverable = false,
+  isSuperUser = true,
   onClose,
   selected = false,
   updateMargins
@@ -180,7 +182,7 @@ export function ReportingCard({
           {theme && <StyledBoldText>{theme.name}</StyledBoldText>}
           {theme?.subThemes && <StyledMediumText>&nbsp;/&nbsp;{displaySubThemes([theme])}</StyledMediumText>}
         </StyledThemeContainer>
-        {description && <StyledDescription title={description}>{description}</StyledDescription>}
+        {description && isSuperUser && <StyledDescription title={description}>{description}</StyledDescription>}
       </div>
       <StatusTag
         controlStatus={controlStatus}
@@ -189,7 +191,7 @@ export function ReportingCard({
       />
       {!isOnlyHoverable && (
         <StyledButton data-cy="map-edit-reporting" Icon={Icon.Edit} onClick={editReporting} size={Size.SMALL}>
-          Éditer le signalement
+          {isSuperUser ? 'Éditer le signalement' : 'Consulter le signalement'}
         </StyledButton>
       )}
     </Wrapper>

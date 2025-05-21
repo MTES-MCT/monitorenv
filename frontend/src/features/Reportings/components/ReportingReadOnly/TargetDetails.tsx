@@ -1,9 +1,8 @@
+import { StyledVesselForm } from '@features/Reportings/style'
 import { Label, NumberInput, TextInput } from '@mtes-mct/monitor-ui'
+import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
+import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import styled from 'styled-components'
-
-import { ReportingTargetTypeEnum } from '../../../../../../domain/entities/targetType'
-import { VehicleTypeEnum } from '../../../../../../domain/entities/vehicleType'
-import { StyledVesselForm } from '../../../../../Reportings/style'
 
 const EMPTY_VALUE = '--'
 
