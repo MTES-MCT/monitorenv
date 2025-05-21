@@ -26,6 +26,11 @@ data class EditableBriefVigilanceAreaEntity(
 ) : DetailRenderable {
     override val title = name
 
+    companion object {
+        const val DATE_ROW_INDEX = 0
+        const val LINK_ROW_INDEX = 6
+    }
+
     override fun buildDetailsRows(document: XWPFDocument): List<List<String>> {
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
         val periodDate = "Du ${startDatePeriod?.format(formatter)} au ${endDatePeriod?.format(formatter)}"
@@ -47,7 +52,7 @@ data class EditableBriefVigilanceAreaEntity(
         document: XWPFDocument,
     ) {
         when (rowIndex) {
-            0 -> {
+            DATE_ROW_INDEX -> {
                 val paragraphs = cell.paragraphs.toList()
                 paragraphs.forEach { _ -> cell.removeParagraph(0) }
 
@@ -61,7 +66,7 @@ data class EditableBriefVigilanceAreaEntity(
                 cellRun.setText(endingOccurenceDate)
             }
 
-            6 -> {
+            LINK_ROW_INDEX -> {
                 links?.forEach {
                     WordUtils.addHyperlink(cell, it.linkUrl, it.linkText, document)
                 }
