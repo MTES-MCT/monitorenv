@@ -118,6 +118,18 @@ export function Map({ isSuperUser }) {
         <SemaphoresLayer />
         {/* @ts-ignore */}
         <SemaphoreOverlay isSuperUser={false} />
+
+        {/* REPORTING */}
+        {/* @ts-ignore */}
+        <EditingReportingLayer isSuperUser={false} />
+        {/* @ts-ignore */}
+        <SelectedReportingLayer />
+        {/* @ts-ignore */}
+        <HoveredReportingLayer />
+        {/* @ts-ignore */}
+        <ReportingsLayer />
+        {/* @ts-ignore */}
+        <ReportingOverlay isSuperUser={false} />
       </BaseMap>
     )
   }
@@ -201,7 +213,7 @@ export function Map({ isSuperUser }) {
 
       {/* REPORTING */}
       {/* @ts-ignore */}
-      <EditingReportingLayer />
+      <EditingReportingLayer isSuperUser />
       {/* @ts-ignore */}
       <SelectedReportingLayer />
       {/* @ts-ignore */}
@@ -209,7 +221,7 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       <ReportingsLayer />
       {/* @ts-ignore */}
-      <ReportingOverlay />
+      <ReportingOverlay isSuperUser />
       {/* @ts-ignore */}
       <MissionToAttachLayer />
       {/* @ts-ignore */}

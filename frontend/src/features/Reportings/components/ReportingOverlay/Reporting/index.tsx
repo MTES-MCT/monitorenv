@@ -22,7 +22,11 @@ const OPTIONS = {
     yTop: -55
   }
 }
-export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
+type ReportingOverlayProps = BaseMapChildrenProps & {
+  isSuperUser: boolean
+}
+
+export function ReportingOverlay({ currentFeatureOver, isSuperUser, map, mapClickEvent }: ReportingOverlayProps) {
   const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
@@ -89,6 +93,7 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         <ReportingCard
           feature={feature}
           isCardVisible={isCardVisible}
+          isSuperUser={isSuperUser}
           onClose={close}
           selected
           updateMargins={updateSelectedMargins}
@@ -105,6 +110,7 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         <ReportingCard
           feature={hoveredFeature}
           isCardVisible={isCardVisible}
+          isSuperUser={isSuperUser}
           onClose={close}
           updateMargins={updateHoveredMargins}
         />

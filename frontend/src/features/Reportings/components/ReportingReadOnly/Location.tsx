@@ -1,11 +1,10 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, IconButton, Label, TextInput } from '@mtes-mct/monitor-ui'
+import { OLGeometryType } from 'domain/entities/map/constants'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import styled from 'styled-components'
-
-import { OLGeometryType } from '../../../../../../domain/entities/map/constants'
-import { useAppDispatch } from '../../../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../../../hooks/useAppSelector'
-import { formatCoordinates } from '../../../../../../utils/coordinates'
+import { formatCoordinates } from 'utils/coordinates'
 
 import type { Coordinate } from 'ol/coordinate'
 
