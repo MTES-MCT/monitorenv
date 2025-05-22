@@ -1,4 +1,5 @@
 import { dashboardsAPI } from '@api/dashboardsAPI'
+import { NearbyUnitDateRangeEnum } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
@@ -22,6 +23,9 @@ export const editDashboard =
     const formattedDashboardFilters = {
       controlUnitFilters: dashboardFilters?.controlUnitFilters ?? {},
       filters: dashboardFilters?.filters ?? {},
+      nearbyUnitFilters: dashboardFilters?.nearbyUnitFilters ?? {
+        periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS
+      },
       recentActivityFilters: dashboardFilters?.recentActivityFilters ?? {
         periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
       },

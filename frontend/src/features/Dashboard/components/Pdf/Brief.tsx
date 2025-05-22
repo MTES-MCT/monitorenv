@@ -1,3 +1,4 @@
+import { NearbyUnits } from '@features/Dashboard/components/Pdf/NearbyUnits'
 import { Document, Page, View } from '@react-pdf/renderer'
 
 import { Amps } from './Amps'
@@ -49,6 +50,14 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           selectedControlUnits={brief.selectedControlUnits}
           themes={brief.themes}
         />
+      )}
+      {brief.nearbyUnits.length > 0 && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <NearbyUnits nearbyUnits={brief.nearbyUnits} />
+          </View>
+        </Page>
       )}
       {brief.reportings.length > 0 && (
         <Page style={layoutStyle.page}>

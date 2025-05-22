@@ -2,7 +2,7 @@ import { type ControlUnit } from '@mtes-mct/monitor-ui'
 
 import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { ApiErrorCode } from './types'
-import { MissionSourceEnum, type Mission, type MissionData } from '../domain/entities/missions'
+import { type Mission, type MissionData, MissionSourceEnum } from '../domain/entities/missions'
 import { FrontendApiError } from '../libs/FrontendApiError'
 
 const CAN_DELETE_MISSION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette mission est supprimable."
@@ -72,6 +72,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       invalidatesTags: (_, __, { attachedReportingIds = [] }) => [
         { id: 'LIST', type: 'Missions' },
         { id: 'LIST', type: 'Reportings' },
+        { id: 'LIST', type: 'NearbyUnits' },
         ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
       ],
       query: mission => ({
@@ -83,7 +84,8 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
     deleteMission: builder.mutation({
       invalidatesTags: [
         { id: 'LIST', type: 'Missions' },
-        { id: 'LIST', type: 'Reportings' }
+        { id: 'LIST', type: 'Reportings' },
+        { id: 'LIST', type: 'NearbyUnits' }
       ],
       query: ({ id }) => ({
         method: 'DELETE',
@@ -126,6 +128,7 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
         { id, type: 'Missions' },
         { id: 'LIST', type: 'Missions' },
         { id: 'LIST', type: 'Reportings' },
+        { id: 'LIST', type: 'NearbyUnits' },
         ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const })),
         ...detachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
       ],

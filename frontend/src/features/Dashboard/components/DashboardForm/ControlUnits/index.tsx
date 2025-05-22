@@ -46,9 +46,7 @@ export const ControlUnits = forwardRef<HTMLDivElement, ControlUnitsProps>(
         return []
       }
 
-      const results = getFilteredControlUnits('DASHBOARD_CONTROL_UNIT_LIST', filters, controlUnits)
-
-      return results
+      return getFilteredControlUnits('DASHBOARD_CONTROL_UNIT_LIST', filters, controlUnits)
     }, [filters, controlUnits])
 
     const { data: administrations } = useGetAdministrationsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
@@ -105,7 +103,7 @@ export const ControlUnits = forwardRef<HTMLDivElement, ControlUnitsProps>(
       withCacheInvalidation: true
     })
 
-    const hasChildren = !!(controlUnitResults && controlUnitResults?.length > 5)
+    const hasChildren = controlUnitResults && controlUnitResults?.length > 5
 
     return (
       <div>
@@ -210,7 +208,7 @@ const SelectFilters = styled.div<{ $hasChildren: boolean; $isExpanded: boolean }
   justify-content: space-between;
   width: 100%;
   visibility: hidden;
-  max-height: 0px;
+  max-height: 0;
   transition: 0.3s max-height ease-out, 0.3s visibility;
 
   ${p =>
@@ -221,12 +219,12 @@ const SelectFilters = styled.div<{ $hasChildren: boolean; $isExpanded: boolean }
     }}
   ${({ $hasChildren }) => !$hasChildren && 'position: absolute;  margin-top: 41px; width: 27%;'}
 `
-const ResultList = styled.ul<{ $hasResults: boolean }>`
+export const ResultList = styled.ul<{ $hasResults: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 8px;
   list-style-type: none;
-  padding: 0px;
+  padding: 0;
   width: 100%;
   ${({ $hasResults }) => !$hasResults && 'margin-top: 37px;'}
 `

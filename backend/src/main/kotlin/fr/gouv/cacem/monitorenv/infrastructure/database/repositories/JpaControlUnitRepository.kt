@@ -1,25 +1,32 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.NearbyUnit
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDepartmentAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
+import org.locationtech.jts.geom.Geometry
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.ZonedDateTime
 
 @Repository
 class JpaControlUnitRepository(
     private val dbAdministrationRepository: IDBAdministrationRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbDepartmentAreaRepository: IDBDepartmentAreaRepository,
+    private val dbMissionRepository: IDBMissionRepository,
+    private val mapper: ObjectMapper,
 ) : IControlUnitRepository {
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
@@ -60,4 +67,25 @@ class JpaControlUnitRepository(
                 e,
             )
         }
+
+    @Transactional
+    override fun findNearbyUnits(
+        geometry: Geometry,
+        from: ZonedDateTime?,
+        to: ZonedDateTime?,
+    ): List<NearbyUnit> {
+        val missions =
+            dbMissionRepository
+                .findAllByGeometryAndDateRange(
+                    geometry,
+                    from?.toInstant(),
+                    to?.toInstant(),
+                ).map {
+                    it.toMissionEntity(mapper)
+                }
+        return missions
+            .flatMap { mission -> mission.controlUnits.map { controlUnit -> controlUnit to mission } }
+            .groupBy({ it.first }, { it.second })
+            .map { (controlUnit, missions) -> NearbyUnit(controlUnit = controlUnit, missions = missions) }
+    }
 }

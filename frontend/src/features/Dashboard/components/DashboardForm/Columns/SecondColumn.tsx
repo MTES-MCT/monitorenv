@@ -1,5 +1,6 @@
+import { NearbyUnits } from '@features/Dashboard/components/DashboardForm/NearbyUnits'
 import { useObserverAccordion } from '@features/Dashboard/hooks/useObserverAccordion'
-import { getFilteredReportings, type DashboardType } from '@features/Dashboard/slice'
+import { type DashboardType, getFilteredReportings } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -30,6 +31,7 @@ export function SecondColumn({
   const territorialPressureRef = useRef<HTMLDivElement>(null)
   const recentActivityRef = useRef<HTMLDivElement>(null)
   const reportingRef = useRef<HTMLDivElement>(null)
+  const nearbyUnitRef = useRef<HTMLDivElement>(null)
 
   const [territorialPressionBookmark, setTerritorialPressionBookmark] = useState<BookmarkType>({
     ref: territorialPressureRef,
@@ -49,19 +51,25 @@ export function SecondColumn({
     visible: false
   })
 
+  const [nearbyUnitBookmark, setNearbyUnitBookmark] = useState<BookmarkType>({
+    ref: nearbyUnitRef,
+    title: 'Unités proches',
+    visible: false
+  })
+
   const topBookmarks = useMemo(
     () =>
-      [territorialPressionBookmark, recentActivityBookmark, reportingBookmark].filter(
+      [territorialPressionBookmark, recentActivityBookmark, reportingBookmark, nearbyUnitBookmark].filter(
         bookmark => bookmark.visible && bookmark.orientation === 'top'
       ),
-    [reportingBookmark, recentActivityBookmark, territorialPressionBookmark]
+    [reportingBookmark, recentActivityBookmark, territorialPressionBookmark, nearbyUnitBookmark]
   )
   const bottomBookmarks = useMemo(
     () =>
-      [territorialPressionBookmark, recentActivityBookmark].filter(
+      [territorialPressionBookmark, recentActivityBookmark, reportingBookmark, nearbyUnitBookmark].filter(
         bookmark => bookmark.visible && bookmark.orientation === 'bottom'
       ),
-    [territorialPressionBookmark, recentActivityBookmark]
+    [territorialPressionBookmark, recentActivityBookmark, reportingBookmark, nearbyUnitBookmark]
   )
 
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
@@ -69,7 +77,8 @@ export function SecondColumn({
   useObserverAccordion(columnRef, [
     { ref: territorialPressureRef, setState: setTerritorialPressionBookmark },
     { ref: recentActivityRef, setState: setRecentActivityBookmark },
-    { ref: reportingRef, setState: setReportingBookmark }
+    { ref: reportingRef, setState: setReportingBookmark },
+    { ref: nearbyUnitRef, setState: setNearbyUnitBookmark }
   ])
 
   useEffect(() => {
@@ -87,7 +96,6 @@ export function SecondColumn({
       {isMount && (
         <BaseColumn ref={columnRef} className={className}>
           <Bookmark bottomBookmarks={bottomBookmarks} columnWidth={columnWidth} topBookmarks={topBookmarks} />
-
           <TerritorialPressure
             ref={territorialPressureRef}
             isExpanded={expandedAccordion === Dashboard.Block.TERRITORIAL_PRESSURE}
@@ -98,7 +106,6 @@ export function SecondColumn({
             isExpanded={expandedAccordion === Dashboard.Block.RECENT_ACTIVITY}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.RECENT_ACTIVITY)}
           />
-
           <Reportings
             ref={reportingRef}
             isExpanded={expandedAccordion === Dashboard.Block.REPORTINGS}
@@ -107,6 +114,15 @@ export function SecondColumn({
             selectedReportingIds={dashboard.dashboard.reportingIds}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.REPORTINGS)}
           />
+          {dashboard.dashboard.geom && (
+            <NearbyUnits
+              ref={nearbyUnitRef}
+              geometry={dashboard.dashboard.geom}
+              isExpanded={expandedAccordion === Dashboard.Block.NEARBY_UNITS}
+              isSelectedAccordionOpen={isSelectedAccordionOpen}
+              setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.NEARBY_UNITS)}
+            />
+          )}
         </BaseColumn>
       )}
     </>

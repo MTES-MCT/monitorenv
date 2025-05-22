@@ -11,6 +11,7 @@ import { filterReportings } from './useCases/filters/filterReportings'
 
 import type { DashboardFilters } from './components/DashboardForm/slice'
 import type { ImageApi, Link } from '@components/Form/types'
+import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import type { TagOption } from 'domain/entities/tags'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -37,6 +38,7 @@ export const initialDashboard: DashboardType = {
   openPanel: undefined,
   regulatoryIdsToDisplay: [],
   reportingToDisplay: undefined,
+  selectedNearbyUnits: [],
   totalOfControls: 0,
   unsavedDashboard: undefined
 }
@@ -60,6 +62,7 @@ export type DashboardType = {
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingToDisplay: Reporting | undefined
+  selectedNearbyUnits: NearbyUnit[]
   totalOfControls: number
   unsavedDashboard: Dashboard.Dashboard | undefined
 }
@@ -149,6 +152,16 @@ export const dashboardSlice = createSlice({
           default:
         }
       }
+    },
+    addNearbyUnitsToSelection(state, action: PayloadAction<NearbyUnit[]>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      const selectedNearbyUnits = state.dashboards[id]?.selectedNearbyUnits
+      state.dashboards[id].selectedNearbyUnits = [...selectedNearbyUnits, ...action.payload]
     },
     addRegulatoryIdToDisplay(state, action: PayloadAction<number>) {
       const id = state.activeDashboardId
@@ -257,6 +270,20 @@ export const dashboardSlice = createSlice({
           case Dashboard.Block.TERRITORIAL_PRESSURE:
           default:
         }
+      }
+    },
+    removeNearbyUnitsFromSelection(state, action: PayloadAction<NearbyUnit[]>) {
+      const id = state.activeDashboardId
+      const nearbyUnitIdsToRemove = action.payload.map(nearbyUnit => nearbyUnit.controlUnit.id)
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+      const selectedNearbyUnits = state.dashboards[id]?.selectedNearbyUnits
+      if (selectedNearbyUnits) {
+        state.dashboards[id].selectedNearbyUnits = selectedNearbyUnits.filter(
+          selectedNearbyUnit => !nearbyUnitIdsToRemove.includes(selectedNearbyUnit.controlUnit.id)
+        )
       }
     },
     removeRegulatoryIdToDisplay(state, action: PayloadAction<number>) {

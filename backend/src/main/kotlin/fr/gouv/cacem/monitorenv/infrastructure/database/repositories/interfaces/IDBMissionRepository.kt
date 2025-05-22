@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import org.hibernate.annotations.DynamicUpdate
+import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
@@ -120,6 +121,26 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         "SELECT mission FROM MissionModel mission JOIN mission.controlResources missionControlUnitResources WHERE missionControlUnitResources.resource.id = :controlUnitResourceId",
     )
     fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionModel>
+
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
+    @Query(
+        """
+        SELECT mission
+        FROM MissionModel mission
+        JOIN FETCH mission.envActions envAction
+        WHERE mission.isDeleted = false
+            AND envAction.actionStartDateTime IS NOT NULL
+            AND envAction.geom IS NOT NULL
+            AND ST_INTERSECTS(ST_SETSRID(envAction.geom, 4326), ST_SETSRID(:geometry, 4326))
+            AND (mission.startDateTimeUtc BETWEEN CAST(CAST(:from AS text) AS timestamp) AND CAST(CAST(:to AS text) AS timestamp)
+                OR mission.endDateTimeUtc BETWEEN CAST(CAST(:from AS text) AS timestamp) AND CAST(CAST(:to AS text) AS timestamp))
+        """,
+    )
+    fun findAllByGeometryAndDateRange(
+        geometry: Geometry,
+        from: Instant?,
+        to: Instant?,
+    ): List<MissionModel>
 
     @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
