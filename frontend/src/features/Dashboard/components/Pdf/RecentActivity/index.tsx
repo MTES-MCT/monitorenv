@@ -4,7 +4,7 @@ import { ControlUnit, customDayjs } from '@mtes-mct/monitor-ui'
 import { Page, View } from '@react-pdf/renderer'
 import { useMemo } from 'react'
 
-import { RecentActivityByUnit } from './RecentActivityByUnit'
+import { RecentActivitySummary } from './RecentActivitySummary'
 import { Headings } from '../Layout/Headings'
 import { layoutStyle } from '../style'
 
@@ -80,7 +80,7 @@ export function RecentActivity({
             <Headings name={briefName} />
             <View style={layoutStyle.section}>
               <View break wrap={false}>
-                <RecentActivityByUnit
+                <RecentActivitySummary
                   controlUnit={controlUnit}
                   dates={dates}
                   filters={recentActivityFilters}
@@ -101,7 +101,7 @@ export function RecentActivity({
           <Headings name={briefName} />
           <View style={layoutStyle.section}>
             <View break wrap={false}>
-              <RecentActivityByUnit
+              <RecentActivitySummary
                 dates={dates}
                 filters={recentActivityFilters}
                 images={images}

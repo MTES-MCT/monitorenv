@@ -13,7 +13,7 @@ import { recentActivityStyles } from './style'
 import type { RecentActivityFilters } from '@features/RecentActivity/slice'
 import type { ControlPlansThemeCollection } from 'domain/entities/controlPlan'
 
-export function RecentActivityByUnit({
+export function RecentActivitySummary({
   controlUnit,
   dates,
   filters,
