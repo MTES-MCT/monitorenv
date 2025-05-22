@@ -5,9 +5,7 @@ import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
-import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ExtractedAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
-import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.DashboardDataInput
@@ -343,5 +341,40 @@ class DashboardsITests {
             .andExpect(status().isOk)
 
         verify(deleteDashboard).execute(id)
+    }
+
+    @Test
+    fun `create brief response should be OK`() {
+        // Given
+        val id = UUID.randomUUID()
+        val dashboard =
+            aDashboard(
+                id = id,
+                inseeCode = "44",
+                amps = listOf(1),
+                controlUnits = listOf(10000),
+                reportings = listOf(1, 2, 3),
+                regulatoryAreas = listOf(523),
+                vigilanceAreas = listOf(1),
+                name = "Test Dashboard",
+            )
+        val brief = BriefEntity(dashboard = dashboard)
+        given(createBrief.execute(brief)).willReturn(
+            BriefFileEntity(
+                fileName = "Brief-Test Dashboard.odt",
+                fileContent = "base64Content",
+            ),
+        )
+
+        // When
+        mockMvc
+            .perform(
+                post("/bff/v1/dashboards/export-brief")
+                    .content(objectMapper.writeValueAsString(brief))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.fileName", equalTo("Brief-Test Dashboard.odt")))
     }
 }
