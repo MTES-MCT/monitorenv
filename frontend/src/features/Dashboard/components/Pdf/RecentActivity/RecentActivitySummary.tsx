@@ -36,8 +36,8 @@ export function RecentActivitySummary({
   images: ExportImageType[] | undefined
   recentActivity: RecentActivityType.RecentControlsActivity[]
   recentActivityControlUnits: ControlUnit.ControlUnit[]
-  themes: ThemeFromAPI[]
   selectedControlUnits: ControlUnit.ControlUnit[]
+  themes: ThemeFromAPI[]
   themesAndControlActions: Record<string, number>
   totalTarget: number
 }) {

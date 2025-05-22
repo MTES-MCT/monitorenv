@@ -98,8 +98,8 @@ import java.time.ZoneOffset.UTC
                 name = "subgraph.attachedReportings",
                 attributeNodes =
                     [
-                        NamedAttributeNode("themes"),
-                        NamedAttributeNode("tags"),
+                        NamedAttributeNode("themes", subgraph = "subgraph.themesReportings"),
+                        NamedAttributeNode("tags", subgraph = "subgraph.tagsReportings"),
                     ],
             ),
             NamedSubgraph(
@@ -107,7 +107,8 @@ import java.time.ZoneOffset.UTC
                 attributeNodes =
                     [
                         NamedAttributeNode("envAction"),
-                        NamedAttributeNode("theme"),
+                        NamedAttributeNode("theme", subgraph = "subgraph.themes"),
+
                     ],
             ),
             NamedSubgraph(
@@ -115,7 +116,24 @@ import java.time.ZoneOffset.UTC
                 attributeNodes =
                     [
                         NamedAttributeNode("envAction"),
-                        NamedAttributeNode("tag"),
+                        NamedAttributeNode("tag", subgraph = "subgraph.tags"),
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.themesReportings",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("reporting"),
+                        NamedAttributeNode("theme", subgraph = "subgraph.themes"),
+
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.tagsReportings",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("reporting"),
+                        NamedAttributeNode("tag", subgraph = "subgraph.tags"),
                     ],
             ),
             NamedSubgraph(
@@ -184,6 +202,20 @@ import java.time.ZoneOffset.UTC
                 attributeNodes =
                     [
                         NamedAttributeNode("station"),
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.themes",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("parent"),
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.tags",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("parent"),
                     ],
             ),
         ],
