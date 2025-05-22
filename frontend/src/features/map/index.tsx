@@ -130,6 +130,14 @@ export function Map({ isSuperUser }) {
         <ReportingsLayer />
         {/* @ts-ignore */}
         <ReportingOverlay isSuperUser={false} />
+
+        {/* VIGILANCE AREA */}
+        {/* @ts-ignore */}
+        <VigilanceAreasLayer />
+        {/* @ts-ignore */}
+        <PreviewVigilanceAreasLayer />
+        {/* @ts-ignore */}
+        <SelectedVigilanceAreaLayer />
       </BaseMap>
     )
   }

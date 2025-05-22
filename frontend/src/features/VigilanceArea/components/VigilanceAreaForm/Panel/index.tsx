@@ -28,7 +28,13 @@ import {
   PanelSubPart
 } from '../style'
 
-export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: VigilanceArea.VigilanceArea | undefined }) {
+export function VigilanceAreaPanel({
+  isSuperUser,
+  vigilanceArea
+}: {
+  isSuperUser: boolean
+  vigilanceArea: VigilanceArea.VigilanceArea | undefined
+}) {
   const dispatch = useAppDispatch()
 
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
@@ -121,21 +127,23 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
         )}
 
         {vigilanceArea?.links && vigilanceArea?.links.length > 0 && <PanelLinks links={vigilanceArea.links} />}
-        <PanelSource createdBy={vigilanceArea?.createdBy} source={vigilanceArea?.source} />
+        {isSuperUser && <PanelSource createdBy={vigilanceArea?.createdBy} source={vigilanceArea?.source} />}
       </PanelBody>
-      <FooterContainer>
-        <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={onDelete} size={Size.SMALL}>
-          Supprimer
-        </DeleteButton>
-        <FooterRightButtons>
-          <Button accent={Accent.SECONDARY} onClick={edit} size={Size.SMALL}>
-            Editer
-          </Button>
-          <Button disabled={!isFormValidForPublish || !vigilanceArea?.isDraft} onClick={publish} size={Size.SMALL}>
-            {vigilanceArea?.isDraft ? 'Publier' : 'Publiée'}
-          </Button>
-        </FooterRightButtons>
-      </FooterContainer>
+      {isSuperUser && (
+        <FooterContainer>
+          <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={onDelete} size={Size.SMALL}>
+            Supprimer
+          </DeleteButton>
+          <FooterRightButtons>
+            <Button accent={Accent.SECONDARY} onClick={edit} size={Size.SMALL}>
+              Editer
+            </Button>
+            <Button disabled={!isFormValidForPublish || !vigilanceArea?.isDraft} onClick={publish} size={Size.SMALL}>
+              {vigilanceArea?.isDraft ? 'Publier' : 'Publiée'}
+            </Button>
+          </FooterRightButtons>
+        </FooterContainer>
+      )}
     </PanelContainer>
   )
 }
