@@ -88,7 +88,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
           {!isLinkingAmpToVigilanceArea && <RegulatoryLayers />}
           {!isLinkingZonesToVigilanceArea && (
             <>
-              {isSuperUser && <MyVigilanceAreas />}
+              <MyVigilanceAreas isSuperUser={isSuperUser} />
               <AdministrativeLayers />
               <BaseLayerList />
             </>
@@ -102,30 +102,30 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
         >
           {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
           {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
-          {isSuperUser && secondVigilanceAreaPanelOpen && (
+          {secondVigilanceAreaPanelOpen && (
             <VigilanceAreaForm
               key={selectedVigilanceAreaId}
               isOpen={secondVigilanceAreaPanelOpen}
               isReadOnly
+              isSuperUser={isSuperUser}
               vigilanceAreaId={selectedVigilanceAreaId}
             />
           )}
         </MetadataPanelShifter>
 
-        {isSuperUser && (
-          <VigilanceAreaPanelShifter
-            $isLayersSidebarVisible={isLayersSidebarVisible}
-            $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
-          >
-            {mainVigilanceAreaFormOpen && (
-              <VigilanceAreaForm
-                key={editingVigilanceAreaId}
-                isOpen={mainVigilanceAreaFormOpen}
-                vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
-              />
-            )}
-          </VigilanceAreaPanelShifter>
-        )}
+        <VigilanceAreaPanelShifter
+          $isLayersSidebarVisible={isLayersSidebarVisible}
+          $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
+        >
+          {mainVigilanceAreaFormOpen && (
+            <VigilanceAreaForm
+              key={editingVigilanceAreaId}
+              isOpen={mainVigilanceAreaFormOpen}
+              isSuperUser={isSuperUser}
+              vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
+            />
+          )}
+        </VigilanceAreaPanelShifter>
       </Sidebar>
       {(regulatoryAreas.isLoading || amps.isLoading) && (
         <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>

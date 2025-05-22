@@ -25,9 +25,15 @@ import { getVigilanceAreaInitialValues } from './utils'
 type VigilanceAreaFormProps = {
   isOpen: boolean
   isReadOnly?: boolean
+  isSuperUser: boolean
   vigilanceAreaId: number
 }
-export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId }: VigilanceAreaFormProps) {
+export function VigilanceAreaForm({
+  isOpen,
+  isReadOnly = false,
+  isSuperUser,
+  vigilanceAreaId
+}: VigilanceAreaFormProps) {
   const dispatch = useAppDispatch()
 
   const formTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
@@ -121,7 +127,7 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
 
       <Formik enableReinitialize initialValues={initialValues} onSubmit={noop} validationSchema={VigilanceAreaSchema}>
         <>
-          {isPanelOpen && <VigilanceAreaPanel vigilanceArea={vigilanceArea} />}
+          {isPanelOpen && <VigilanceAreaPanel isSuperUser={isSuperUser} vigilanceArea={vigilanceArea} />}
           {isFormOpen && (
             <>
               {formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <Form />}
