@@ -1,11 +1,15 @@
 from datetime import datetime
+from io import BytesIO
 from pathlib import Path
 from typing import Union
 from unittest.mock import MagicMock, patch
 
+import pandas as pd
 from prefect import task
+import requests
 
 from src.pipeline.generic_tasks import extract
+from src.pipeline.shared_tasks.datagouv import update_resource
 
 
 def mock_extract_side_effect(
@@ -56,3 +60,27 @@ def mock_datetime_utcnow(utcnow: datetime):
 @task(checkpoint=False)
 def mock_check_flow_not_running():
     return True
+
+
+@task(checkpoint=False)
+def mock_update_resource(
+    dataset_id: str,
+    resource_id: str,
+    resource_title: str,
+    resource: BytesIO,
+    mock_update: bool,
+) -> pd.DataFrame:
+    def return_200(url, **kwargs):
+        r = requests.Response()
+        r.status_code = 200
+        r.url = url
+        return r
+
+    with patch("src.pipeline.shared_tasks.datagouv.requests.post", return_200):
+        return update_resource.run(
+            dataset_id=dataset_id,
+            resource_id=resource_id,
+            resource_title=resource_title,
+            resource=resource,
+            mock_update=mock_update,
+        )
