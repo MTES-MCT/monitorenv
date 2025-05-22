@@ -12,7 +12,7 @@ import styled from 'styled-components'
 import { MyVigilanceAreaLayerZone } from './MyVigilanceAreaLayerZone'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
-export function MyVigilanceAreas() {
+export function MyVigilanceAreas({ isSuperUser }: { isSuperUser: boolean }) {
   const dispatch = useAppDispatch()
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
 
@@ -68,7 +68,7 @@ export function MyVigilanceAreas() {
           </LayerSelector.LayerList>
         )}
 
-        {myVigilanceAreasIsOpen && draftVigilanceAreas.length > 0 && (
+        {myVigilanceAreasIsOpen && draftVigilanceAreas.length > 0 && isSuperUser && (
           <>
             <DraftVigilanceAreaTitle>Zones non publiées</DraftVigilanceAreaTitle>
             <LayerSelector.LayerList
@@ -87,7 +87,7 @@ export function MyVigilanceAreas() {
           </>
         )}
 
-        {myVigilanceAreasIsOpen && (
+        {myVigilanceAreasIsOpen && isSuperUser && (
           <ButtonContainer>
             <Button Icon={Icon.Plus} isFullWidth onClick={createVigilanceArea} title="Créer une zone de vigilance">
               Créer une zone de vigilance

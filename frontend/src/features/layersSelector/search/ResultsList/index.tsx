@@ -5,7 +5,6 @@ import {
   getIsLinkingRegulatoryToVigilanceArea,
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { groupBy } from 'lodash'
@@ -30,9 +29,6 @@ type ResultListProps = {
 
 export function ResultList({ searchedText }: ResultListProps) {
   const dispatch = useAppDispatch()
-
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser
 
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
@@ -77,7 +73,7 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery(!isSuperUser)
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
   const vigilanceAreasResults =
     !vigilanceAreaSearchResult && areMyVigilanceAreasOpen ? vigilanceAreas?.ids : vigilanceAreaSearchResult ?? []
@@ -190,7 +186,7 @@ export function ResultList({ searchedText }: ResultListProps) {
         </>
       )}
 
-      {isSuperUser && !isLinkingZonesToVigilanceArea && (
+      {!isLinkingZonesToVigilanceArea && (
         <>
           <Header>
             <StyledCheckbox

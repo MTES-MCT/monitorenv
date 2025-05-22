@@ -1,19 +1,22 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { CustomSearch } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 
 import { TWO_MINUTES } from '../../../constants'
+import { VigilanceArea } from '../types'
 import { isVigilanceAreaPartOfCreatedBy } from '../useCases/filters/isVigilanceAreaPartOfCreatedBy'
 import { isVigilanceAreaPartOfSeaFront } from '../useCases/filters/isVigilanceAreaPartOfSeaFront'
 import { isVigilanceAreaPartOfStatus } from '../useCases/filters/isVigilanceAreaPartOfStatus'
 import { isVigilanceAreaPartOfTag } from '../useCases/filters/isVigilanceAreaPartOfTag'
 import { isVigilanceAreaPartOfTheme } from '../useCases/filters/isVigilanceAreaPartOfTheme'
 
-import type { VigilanceArea } from '../types'
-
 export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+
   const { createdBy, seaFronts, searchQuery, status } = useAppSelector(state => state.vigilanceAreaFilters)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
@@ -65,6 +68,12 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
       vigilanceAreasBySearchQuery = customSearch.find(searchQuery)
     }
 
+    if (!isSuperUser) {
+      vigilanceAreasBySearchQuery = vigilanceAreasBySearchQuery.filter(
+        vigilanceArea => !vigilanceArea.isDraft && vigilanceArea.visibility === VigilanceArea.Visibility.PUBLIC
+      )
+    }
+
     const sortedVigilanceAreas = [...vigilanceAreasBySearchQuery].sort((a, b) => a?.name?.localeCompare(b?.name))
     const vigilanceAreasEntities = sortedVigilanceAreas.reduce((acc, vigilanceArea) => {
       acc[vigilanceArea.id] = vigilanceArea
@@ -85,6 +94,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
     seaFronts,
     status,
     filteredRegulatoryTags,
+    isSuperUser,
     filteredRegulatoryThemes
   ])
 
