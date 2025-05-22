@@ -15,6 +15,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.apache.commons.lang3.StringUtils
+import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -222,4 +223,9 @@ class JpaMissionRepository(
             )
         return dbMissionRepository.saveAndFlush(missionModel).toMissionDTO(mapper)
     }
+
+    override fun findAllByGeometry(geometry: Geometry): List<MissionEntity> =
+        dbMissionRepository.findAllByGeometry(geometry).map {
+            it.toMissionEntity(mapper)
+        }
 }

@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import org.hibernate.annotations.DynamicUpdate
+import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
@@ -119,4 +120,16 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         "SELECT mission FROM MissionModel mission JOIN mission.controlResources missionControlUnitResources WHERE missionControlUnitResources.resource.id = :controlUnitResourceId",
     )
     fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionModel>
+
+    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
+    @Query(
+        """
+        SELECT mission
+        FROM MissionModel mission
+        INNER JOIN mission.envActions envAction
+        WHERE mission.isDeleted = false 
+        AND ST_INTERSECTS(ST_SETSRID(envAction.geom, 4326), ST_BUFFER(ST_SETSRID(:geometry, 4326), 0))
+        """,
+    )
+    fun findAllByGeometry(geometry: Geometry): List<MissionModel>
 }

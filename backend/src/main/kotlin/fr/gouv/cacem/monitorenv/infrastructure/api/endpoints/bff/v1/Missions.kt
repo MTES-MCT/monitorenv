@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
@@ -9,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionsInArea
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionDataOutput
@@ -17,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
+import org.locationtech.jts.io.WKTReader
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -41,6 +44,7 @@ class Missions(
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val canDeleteMission: CanDeleteMission,
+    private val getMissionsInArea: GetMissionsInArea,
 ) {
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
@@ -174,5 +178,15 @@ class Missions(
         val returnCode = if (fishActionsApiResponds) HttpStatus.OK else HttpStatus.PARTIAL_CONTENT
 
         return ResponseEntity.status(returnCode).body(MissionDataOutput.fromMissionDTO(mission))
+    }
+
+    @GetMapping("/find")
+    @Operation(summary = "Extract all missions that intercept the given geometry")
+    fun extract(
+        @RequestParam(name = "geometry") pGeometry: String,
+    ): List<MissionEntity> {
+        val wktReader = WKTReader()
+        val geometry = wktReader.read(pGeometry)
+        return getMissionsInArea.execute(area = geometry)
     }
 }
