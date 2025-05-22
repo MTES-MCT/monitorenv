@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { isEmpty, throttle } from 'lodash-es'
 import { useEffect, useState, useMemo, useRef, type MutableRefObject } from 'react'
 
 const NOMINATIM_API_URL = 'https://nominatim.openstreetmap.org/search'
@@ -39,7 +39,7 @@ export const useNominatimAPI = (search, { limit = 10 } = {}) => {
   const abortControlerRef = useRef() as MutableRefObject<AbortController>
 
   const throttledSearch = useMemo(() => {
-    const throttled = _.throttle(
+    const throttled = throttle(
       query => {
         if (abortControlerRef.current) {
           abortControlerRef.current.abort()
@@ -63,7 +63,7 @@ export const useNominatimAPI = (search, { limit = 10 } = {}) => {
 
           return fetch(queryURL, { signal: abortControlerRef.current.signal })
             .then(r => r.json())
-            .then(data => setResults(_.isEmpty(data) ? [{ display_name: 'Pas de résultats' }] : data))
+            .then(data => setResults(isEmpty(data) ? [{ display_name: 'Pas de résultats' }] : data))
         }
 
         return setResults([])

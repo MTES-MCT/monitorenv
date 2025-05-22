@@ -1,5 +1,5 @@
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { find, flatten } from 'lodash'
+import { find, flatten } from 'lodash-es'
 import GeoJSON from 'ol/format/GeoJSON'
 import VectorImageLayer from 'ol/layer/VectorImage'
 import { bbox as bboxStrategy } from 'ol/loadingstrategy'
