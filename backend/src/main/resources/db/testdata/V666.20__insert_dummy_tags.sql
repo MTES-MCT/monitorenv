@@ -23,9 +23,3 @@ INSERT INTO tags_regulatory_areas (tags_id, regulatory_areas_id)
 VALUES (10, 16),
        (5, 16),
        (9, 17);
-
--- INSERTING TAGS <-> VIGILANCES AREAS FROM CURRENT VIGILANCES AREAS
-INSERT INTO tags_vigilance_areas (tags_id, vigilance_areas_id)
-SELECT t.id, va.id
-FROM vigilance_areas va
-         INNER JOIN tags t ON t.name = ANY (va.themes);
