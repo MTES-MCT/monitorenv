@@ -69,9 +69,9 @@ data class EnvActionDataInput(
     fun toEnvActionEntity(): EnvActionEntity {
         this.validate()
 
-        when (this.actionType) {
+        return when (this.actionType) {
             ActionTypeEnum.CONTROL ->
-                return EnvActionControlEntity(
+                EnvActionControlEntity(
                     id = this.id,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
                     actionNumberOfControls = this.actionNumberOfControls,
@@ -99,7 +99,7 @@ data class EnvActionDataInput(
                 )
 
             ActionTypeEnum.SURVEILLANCE ->
-                return EnvActionSurveillanceEntity(
+                EnvActionSurveillanceEntity(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
@@ -118,7 +118,7 @@ data class EnvActionDataInput(
                 )
 
             ActionTypeEnum.NOTE ->
-                return EnvActionNoteEntity(
+                EnvActionNoteEntity(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     observations = this.observations,

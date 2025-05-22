@@ -1,5 +1,5 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { Accent, IconButton, Icon, Size, TextInput } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, TextInput } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export function SearchInput({
@@ -17,9 +17,9 @@ export function SearchInput({
     filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
 
   const numberOfFilters =
-    (filteredRegulatoryTags.length || 0) +
-    (filteredRegulatoryThemes.length || 0) +
-    (filteredAmpTypes?.length || 0) +
+    filteredRegulatoryTags.length +
+    filteredRegulatoryThemes.length +
+    (filteredAmpTypes?.length ?? 0) +
     (!defaultVigilanceAreaPeriod ? 1 : 0)
 
   return (
