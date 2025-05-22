@@ -211,7 +211,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
-                isUnderJdp = null
+                isUnderJdp = null,
             )
 
         // When
@@ -232,7 +232,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
-                isUnderJdp = null
+                isUnderJdp = null,
             )
 
         // When
@@ -271,7 +271,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = null,
-                isUnderJdp = null
+                isUnderJdp = null,
             )
 
         // When
@@ -292,7 +292,7 @@ class PatchMissionEntityUTest {
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
                 endDateTimeUtc = Optional.empty(),
-                isUnderJdp = null
+                isUnderJdp = null,
             )
 
         // When

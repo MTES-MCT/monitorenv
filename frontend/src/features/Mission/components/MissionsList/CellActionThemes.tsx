@@ -30,9 +30,7 @@ const getThemesCell = (envActions: EnvAction[]) => {
   const toThemeCell = (theme: ThemeFromAPI) => ({
     component: (
       <>
-        <>
-          {theme.name} <SubThemesContainer>({displaySubThemes([theme])})</SubThemesContainer>
-        </>
+        {theme.name} <SubThemesContainer>({displaySubThemes([theme])})</SubThemesContainer>
       </>
     ),
     title: `${theme.name} (${theme.subThemes.map(subTheme => subTheme.name).join(', ')})`

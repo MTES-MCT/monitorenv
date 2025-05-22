@@ -432,7 +432,6 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
               </MessageText>
             </Message>
           )}
-          {/* TODO(02/04/2025): Be careful here */}
           {values.theme?.id === INDIVIDUAL_ANCHORING_THEME_ID && (
             <FormikMultiRadio
               isInline

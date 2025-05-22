@@ -153,8 +153,7 @@ class MissionsITests {
                     "$.controlUnits[0].resources[0].id",
                     equalTo(patchedMission.controlUnits[0].resources[0].id),
                 ),
-            )
-            .andExpect(
+            ).andExpect(
                 jsonPath(
                     "$.isUnderJdp",
                     equalTo(patchedMission.isUnderJdp),
