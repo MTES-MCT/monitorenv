@@ -29,15 +29,13 @@ import java.time.Instant
     attributeNodes =
         [
             NamedAttributeNode("reportingSources", subgraph = "subgraph.reportingSources"),
-            NamedAttributeNode(
-                "mission",
-                subgraph = "subgraph.mission",
-            ),
+            NamedAttributeNode("mission", subgraph = "subgraph.mission"),
             NamedAttributeNode(
                 "attachedEnvAction",
+                subgraph = "subgraph.envActions",
             ),
-            NamedAttributeNode("themes"),
-            NamedAttributeNode("tags"),
+            NamedAttributeNode("themes", subgraph = "subgraph.themesReportings"),
+            NamedAttributeNode("tags", subgraph = "subgraph.tagsReportings"),
         ],
     subgraphs =
         [
@@ -45,80 +43,79 @@ import java.time.Instant
                 name = "subgraph.reportingSources",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "controlUnit",
-                        ),
-                        NamedAttributeNode(
-                            "semaphore",
-                        ),
+                        NamedAttributeNode("controlUnit"),
+                        NamedAttributeNode("semaphore"),
                     ],
             ),
             NamedSubgraph(
                 name = "subgraph.mission",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "envActions",
-                            subgraph = "subgraph.envActions",
-                        ),
-                        NamedAttributeNode(
-                            "controlUnits",
-                        ),
-                        NamedAttributeNode(
-                            "controlResources",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.controlPlanSubThemes",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "controlPlanSubTheme",
-                        ),
+                        NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
+                        NamedAttributeNode("controlUnits"),
+                        NamedAttributeNode("controlResources"),
                     ],
             ),
             NamedSubgraph(
                 name = "subgraph.envActions",
                 attributeNodes =
                     [
-                        NamedAttributeNode("controlPlanThemes"),
                         NamedAttributeNode(
-                            "controlPlanSubThemes",
-                            subgraph =
-                                "subgraph.linkedControlPlanSubThemes",
+                            "themes",
+                            subgraph = "subgraph.themesEnvAction",
                         ),
                         NamedAttributeNode(
-                            "controlPlanTags",
-                            subgraph = "subgraph.linkedControlPlanTags",
-                        ),
-                        NamedAttributeNode("attachedReporting"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.linkedControlPlanSubThemes",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "controlPlanSubTheme",
+                            "tags",
+                            subgraph = "subgraph.tagsEnvAction",
                         ),
                     ],
             ),
             NamedSubgraph(
-                name = "subgraph.linkedControlPlanTags",
+                name = "subgraph.themesReportings",
                 attributeNodes =
                     [
-                        NamedAttributeNode(
-                            "controlPlanTag",
-                            subgraph = "subgraph.controlPlanTags",
-                        ),
+                        NamedAttributeNode("reporting"),
+                        NamedAttributeNode("theme", subgraph = "subgraph.themes"),
+
                     ],
             ),
             NamedSubgraph(
-                name = "subgraph.controlPlanTags",
+                name = "subgraph.tagsReportings",
                 attributeNodes =
                     [
-                        NamedAttributeNode("controlPlanTheme"),
+                        NamedAttributeNode("reporting"),
+                        NamedAttributeNode("tag", subgraph = "subgraph.tags"),
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.themesEnvAction",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("envAction"),
+                        NamedAttributeNode("theme", subgraph = "subgraph.themes"),
+
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.tagsEnvAction",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("envAction"),
+                        NamedAttributeNode("tag", subgraph = "subgraph.tags"),
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.themes",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("parent"),
+                    ],
+            ),
+            NamedSubgraph(
+                name = "subgraph.tags",
+                attributeNodes =
+                    [
+                        NamedAttributeNode("parent"),
                     ],
             ),
         ],
