@@ -257,7 +257,6 @@ class MissionModel(
     @OneToMany(
         mappedBy = "mission",
         orphanRemoval = true,
-        fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)

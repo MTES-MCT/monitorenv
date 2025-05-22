@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
+import org.locationtech.jts.geom.Geometry
 import java.time.Instant
 
 interface IMissionRepository {
@@ -51,4 +52,6 @@ interface IMissionRepository {
     fun save(mission: MissionEntity): MissionDetailsDTO
 
     fun addLegacyControlPlans(mission: MissionEntity)
+
+    fun findAllByGeometry(geometry: Geometry): List<MissionEntity>
 }
