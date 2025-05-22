@@ -191,7 +191,9 @@ export const getControlInfractionsTags = (actionNumberOfControls: number, infrac
     ?.filter(inf => inf.administrativeResponse === 'REGULARIZATION')
     .reduce((acc, infraction) => acc + infraction.nbTarget, 0)
 
-  const seizures = infractions?.filter(inf => inf.seizure === InfractionSeizureEnum.YES)
+  const seizures = infractions
+    ?.filter(inf => inf.seizure === InfractionSeizureEnum.YES)
+    .reduce((acc, infraction) => acc + infraction.nbTarget, 0)
 
   return {
     infractionsWithoutReport,
