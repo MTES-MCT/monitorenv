@@ -15,6 +15,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlUnit
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.apache.commons.lang3.StringUtils
+import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -313,4 +314,9 @@ class JpaMissionRepository(
             }
         }
     }
+
+    override fun findAllByGeometry(geometry: Geometry): List<MissionEntity> =
+        dbMissionRepository.findAllByGeometry(geometry).map {
+            it.toMissionEntity(mapper)
+        }
 }
