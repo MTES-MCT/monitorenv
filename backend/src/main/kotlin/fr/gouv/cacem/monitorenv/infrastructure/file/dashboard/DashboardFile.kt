@@ -61,10 +61,12 @@ class DashboardFile(
 
         val tempFile = saveDocument(document)
 
-        val odtFile = OfficeConverter().convert(editableBriefProperties.tmpDocxPath, editableBriefProperties.tmpOdtPath)
+        val odtFile =
+            OfficeConverter().convert(editableBriefProperties.tmpDocxPath, editableBriefProperties.tmpOdtPath)
         val base64Content = Base64Converter().convertToBase64(odtFile)
 
         tempFile.delete()
+        println("base64Content $base64Content")
         return BriefFileEntity(
             fileName = "Brief-${brief.dashboard.name}.odt",
             fileContent = base64Content,

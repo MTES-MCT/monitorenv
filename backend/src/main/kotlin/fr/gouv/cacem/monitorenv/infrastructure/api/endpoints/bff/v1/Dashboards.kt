@@ -69,11 +69,5 @@ class Dashboards(
     @Operation(summary = "Export Brief in editable format")
     fun createBrief(
         @RequestBody briefInput: BriefInput,
-    ): BriefFileEntity {
-        try {
-            return createBrief.execute(briefInput.toBriefEntity())
-        } catch (e: Exception) {
-            throw Exception(e)
-        }
-    }
+    ): BriefFileEntity = createBrief.execute(briefInput.toBriefEntity())
 }

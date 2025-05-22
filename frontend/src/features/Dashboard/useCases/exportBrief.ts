@@ -28,8 +28,36 @@ import type { Coordinate } from 'ol/coordinate'
 export const exportBrief =
   ({ dashboard, getImages, recentActivityFilters, subThemes, themes }): any =>
   async (dispatch, getState) => {
+    /* RECENT ACTIVITY */
+    const startAfterFilter = recentActivityFilters?.startedAfter
+    const startBeforeFilter = recentActivityFilters?.startedBefore
+
+    const { startAfter, startBefore } = getDatesFromFilters({
+      periodFilter: recentActivityFilters?.periodFilter as RecentActivity.RecentActivityDateRangeEnum,
+      startAfterFilter,
+      startBeforeFilter
+    })
+    const { data: recentActivity } = await dispatch(
+      recentActivityAPI.endpoints.getRecentControlsActivity.initiate({
+        administrationIds: recentActivityFilters?.administrationIds,
+        controlUnitIds: recentActivityFilters?.controlUnitIds,
+        geometry: dashboard.geom as GeoJSON.MultiPolygon,
+        startedAfter: startAfter,
+        startedBefore: startBefore,
+        themeIds: recentActivityFilters?.themeIds
+      })
+    )
+
+    const images = await getImages(recentActivity ?? [], dashboard.controlUnitIds)
+
+    const wholeImage = images?.find(img => String(img.featureId)?.includes('WHOLE_DASHBOARD'))
+
     /* VIGILANCE AREAS */
     const vigilanceAreas = getVigilanceAreasByIds(getState(), dashboard.vigilanceAreaIds)
+    const [allLinkedAMPIds, allLinkedRegulatoryAreaIds] = [
+      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
+      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
+    ]
     const formattedVigilanceAreas = vigilanceAreas.map(vigilanceArea => ({
       color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
       comments: vigilanceArea.comments,
@@ -64,12 +92,6 @@ export const exportBrief =
         linkedRegulatoryAreas: filteredRegulatoryAreas.map(regulatoryArea => regulatoryArea.entityName).join(', ')
       }
     })
-
-    const [allLinkedAMPIds, allLinkedRegulatoryAreaIds] = [
-      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
-      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
-    ]
-
     /* REGULATORY AREAS */
     const allLinkedRegulatoryAreas = getRegulatoryAreasByIds(getState(), allLinkedRegulatoryAreaIds)
     const regulatoryAreas = getRegulatoryAreasByIds(getState(), dashboard.regulatoryAreaIds)
@@ -190,29 +212,6 @@ export const exportBrief =
           }
         })
       : []
-
-    /* RECENT ACTIVITY */
-    const startAfterFilter = recentActivityFilters?.startedAfter
-    const startBeforeFilter = recentActivityFilters?.startedBefore
-
-    const { startAfter, startBefore } = getDatesFromFilters({
-      periodFilter: recentActivityFilters?.periodFilter as RecentActivity.RecentActivityDateRangeEnum,
-      startAfterFilter,
-      startBeforeFilter
-    })
-    const { data: recentActivity } = await dispatch(
-      recentActivityAPI.endpoints.getRecentControlsActivity.initiate({
-        administrationIds: recentActivityFilters?.administrationIds,
-        controlUnitIds: recentActivityFilters?.controlUnitIds,
-        geometry: dashboard.geom as GeoJSON.MultiPolygon,
-        startedAfter: startAfter,
-        startedBefore: startBefore,
-        themeIds: recentActivityFilters?.themeIds
-      })
-    )
-    const images = await getImages(recentActivity ?? [], dashboard.controlUnitIds)
-
-    const wholeImage = images?.find(img => String(img.featureId)?.includes('WHOLE_DASHBOARD'))
 
     const { data, error } = await dispatch(
       dashboardsAPI.endpoints.exportBrief.initiate({
