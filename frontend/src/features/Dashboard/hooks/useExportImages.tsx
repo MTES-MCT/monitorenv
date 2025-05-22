@@ -184,6 +184,22 @@ export function useExportImages() {
     switchBackground()
   }, [backgroundMap])
 
+  function compressCanvas(canvas: HTMLCanvasElement): Promise<string> {
+    return new Promise(resolve => {
+      canvas.toBlob(
+        async blob => {
+          const arrayBuffer = await blob?.arrayBuffer()
+          if (!arrayBuffer) {
+            return
+          }
+          const base64 = btoa(new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''))
+          resolve(`data:image/jpeg;base64,${base64}`)
+        },
+        'image/jpeg',
+        0.8
+      )
+    })
+  }
   const exportImages = useCallback(
     async (
       features: Feature[],
@@ -193,6 +209,7 @@ export function useExportImages() {
     ) => {
       const allImages: ExportImageType[] = []
       const mapCanvas = mapRef.current?.getViewport().querySelector('canvas')
+
       const mapContext = mapCanvas?.getContext('2d')
 
       if (!mapRef.current || !mapCanvas || !mapContext || !dashboardFeature) {
@@ -211,11 +228,11 @@ export function useExportImages() {
         mapRef.current
           .getViewport()
           .querySelectorAll('canvas')
-          .forEach(canvas => {
+          .forEach(async canvas => {
             mapContext.drawImage(canvas, 0, 0)
             allImages.push({
               featureId: feature.getId(),
-              image: mapCanvas.toDataURL('image/png')
+              image: await compressCanvas(mapCanvas)
             })
           })
       }
@@ -260,11 +277,11 @@ export function useExportImages() {
         mapRef.current
           .getViewport()
           .querySelectorAll('canvas')
-          .forEach(canvas => {
+          .forEach(async canvas => {
             mapContext.drawImage(canvas, 0, 0)
             allImages.push({
               featureId: `MINIMAP:${minimapFeature.getId()}`,
-              image: mapCanvas.toDataURL('image/png')
+              image: await compressCanvas(mapCanvas)
             })
           })
       }
@@ -284,7 +301,7 @@ export function useExportImages() {
         })
       allImages.push({
         featureId: 'WHOLE_DASHBOARD',
-        image: mapCanvas.toDataURL('image/png')
+        image: await compressCanvas(mapCanvas)
       })
 
       mapRef.current?.getAllLayers()[0]?.setSource(getBaseSource(BaseLayer.LIGHT))
@@ -300,7 +317,7 @@ export function useExportImages() {
         })
       allImages.push({
         featureId: Dashboard.featuresCode.DASHBOARD_ALL_RECENT_ACTIVITY,
-        image: mapCanvas.toDataURL('image/png')
+        image: await compressCanvas(mapCanvas)
       })
 
       // eslint-disable-next-line no-restricted-syntax
@@ -319,11 +336,11 @@ export function useExportImages() {
         mapRef.current
           .getViewport()
           .querySelectorAll('canvas')
-          .forEach(canvas => {
+          .forEach(async canvas => {
             mapContext.drawImage(canvas, 0, 0)
             allImages.push({
               featureId: `${Dashboard.featuresCode.DASHBOARD_RECENT_ACTIVITY_BY_UNIT}:${controlUnitId}`,
-              image: mapCanvas.toDataURL('image/png')
+              image: await compressCanvas(mapCanvas)
             })
           })
       }
