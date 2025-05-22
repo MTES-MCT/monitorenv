@@ -2,7 +2,7 @@ import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.styl
 import styled from 'styled-components'
 
 export const SelectedLayerList = styled.ul`
-  margin: 0px 4px;
+  margin: 0 4px;
   padding: 0;
   max-height: 100%;
   color: ${p => p.theme.color.slateGray};
@@ -10,7 +10,7 @@ export const SelectedLayerList = styled.ul`
 
 export const ResultNumber = styled.small`
   font-size: 13px;
-  font-weight: regular;
+  font-weight: normal;
   color: ${p => p.theme.color.slateGray};
 `
 

@@ -28,7 +28,9 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
       .should('exist')
     cy.getDataCy('dashboard-vigilance-area-zone-check-8').click({ force: true })
 
-    cy.get('h2').contains('Unités').click()
+    cy.get('h2')
+      .contains(/^Unités$/)
+      .click()
     cy.wait(250)
     cy.getDataCy('dashboard-control-unit-selected-10023').click()
 
@@ -84,7 +86,9 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.wait(250)
     cy.getDataCy('dashboard-vigilance-area-zone-check-8').click({ force: true })
 
-    cy.get('h2').contains('Unités').click()
+    cy.get('h2')
+      .contains(/^Unités$/)
+      .click()
     cy.wait(250)
     cy.getDataCy('dashboard-control-unit-selected-10023').click()
 
@@ -122,6 +126,17 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.wait(250)
     cy.getDataCy('dashboard-vigilance-areas-list').children().should('have.length', 0)
 
+    cy.getDataCy('accordion-nearbyUnits-toggle').click()
+    cy.fill('Période des unités proches', 'Période spécifique')
+
+    const { asDatePickerDate: from } = getUtcDateInMultipleFormats('2025/01/01')
+    const { asDatePickerDate: to } = getUtcDateInMultipleFormats('2030/01/01')
+
+    cy.intercept('GET', `/bff/v1/control_units/nearby?*`).as('getNearbyUnits')
+    cy.fill('Période spécifique des unités proches', [from, to])
+    cy.wait('@getNearbyUnits')
+    cy.clickButton("Sélectionner l'unité DREAL Pays-de-La-Loire")
+
     cy.clickButton('Prévisualiser la sélection')
 
     // Selected regulatoryAreas should be visible
@@ -143,6 +158,11 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
 
     // Selected controlUnits should be visible
     cy.getDataCy('dashboard-control-unit-accordion-10002').contains('DML 2A - DDTM').should('be.visible')
+
+    // Selected nearby units
+    cy.getDataCy('dashboard-selected-nearby-unit-10018')
+      .contains('DREAL Pays-de-La-Loire DREAL / DEAL')
+      .should('be.visible')
   })
 
   it('Should select/deselect all in each bloc', () => {
@@ -161,7 +181,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     // no button if there is no area
     cy.get('h2').contains('Zones AMP').parent().get('Tout sélectionner').should('not.exist')
     cy.get('h2').contains('Zones de vigilance').parent().clickButton('Tout désélectionner', { withoutScroll: true })
-    cy.getDataCy('accordion-reportings-toggle').click()
+    cy.getDataCy('accordion-reportings-toggle').click({ force: true })
     cy.fill('Type de signalement', undefined)
     cy.get('h2').contains('Signalements').parent().clickButton('Tout sélectionner', { withoutScroll: true })
 

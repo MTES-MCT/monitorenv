@@ -56,6 +56,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
         case Dashboard.Block.TERRITORIAL_PRESSURE:
         case Dashboard.Block.RECENT_ACTIVITY:
         case Dashboard.Block.REPORTINGS:
+        case Dashboard.Block.NEARBY_UNITS:
           setExpandedAccordionSecondColumn(expandedAccordionSecondColumn === type ? undefined : type)
           break
         case Dashboard.Block.CONTROL_UNITS:

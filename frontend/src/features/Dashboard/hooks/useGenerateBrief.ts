@@ -46,6 +46,9 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const filters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, activeDashboardId))
+  const selectedNearbyUnits = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.selectedNearbyUnits : []
+  )
   const [getRecentControlsActivity] = useGetRecentControlsActivityMutation()
 
   const { getImages, loading: loadingImages } = useExportImages()
@@ -87,6 +90,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       comments: dashboard.comments,
       images,
       name: dashboard.name,
+      nearbyUnits: selectedNearbyUnits,
       recentActivity,
       recentActivityControlUnits: filteredRecentActivityControlUnits,
       recentActivityFilters,

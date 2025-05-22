@@ -160,4 +160,5 @@ const StyledPanel = styled(RegulatoryPanel)<{ $marginLeft: number }>`
     `calc(
     ${p.$marginLeft}px + 25px + 4px
   )`}; // 25px is the padding, 4px is the margin
+  z-index: 10;
 `
