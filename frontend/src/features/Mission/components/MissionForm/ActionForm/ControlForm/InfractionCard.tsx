@@ -153,7 +153,7 @@ export function InfractionCard({
           <Info accent={Accent.PRIMARY}>
             {natinf?.length ?? '0'} NATINF {natinf?.length && `: ${natinf?.join(', ')}`}
           </Info>
-          {seizure === InfractionSeizureEnum.YES && <Info accent={Accent.PRIMARY}>1 APPR./SAISIE</Info>}
+          {seizure === InfractionSeizureEnum.YES && <Info accent={Accent.PRIMARY}>APPR./SAISIE</Info>}
         </SummaryDetails>
       </Summary>
       <ButtonsWrapper>

@@ -15,7 +15,7 @@ export function ControlInfractionsTags({ actionNumberOfControls, infractions }) 
   } = getControlInfractionsTags(actionNumberOfControls, infractions)
 
   return (
-    <TagGroup>
+    <TagGroup data-cy="mission-timeline-infractions-tags">
       {ras > 0 && <Tag accent={Accent.PRIMARY}>{ras} RAS</Tag>}
       {infractionsWithReport > 0 && <Tag accent={Accent.PRIMARY}>{infractionsWithReport} PV</Tag>}
       {infractionsWithoutReport > 0 && <Tag accent={Accent.PRIMARY}>{infractionsWithoutReport} INF SANS PV</Tag>}
@@ -25,7 +25,7 @@ export function ControlInfractionsTags({ actionNumberOfControls, infractions }) 
       {med > 0 && <Tag accent={Accent.PRIMARY}>{med} MED</Tag>}
       {sanctionAdmin > 0 && <Tag accent={Accent.PRIMARY}>{sanctionAdmin} SANCT. ADMIN</Tag>}
       {regulAdmin > 0 && <Tag accent={Accent.PRIMARY}>{regulAdmin} RÉGUL. ADMIN</Tag>}
-      {seizures.length > 0 && <Tag accent={Accent.PRIMARY}>{seizures.length} APPR./SAISIE</Tag>}
+      {seizures > 0 && <Tag accent={Accent.PRIMARY}>{seizures} APPR./SAISIE</Tag>}
     </TagGroup>
   )
 }

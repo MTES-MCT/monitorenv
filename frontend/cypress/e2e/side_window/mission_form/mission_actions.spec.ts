@@ -654,10 +654,39 @@ context('Side Window > Mission Form > Mission actions', () => {
       // Fill mandatory fields
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Mise en demeure', 'Oui')
+      cy.fill('Appréhension/saisie', 'Oui')
       cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
       cy.fill('Réponse administrative', 'Régularisation')
       cy.fill('Nb de cibles avec cette infraction', 2)
       cy.clickButton("Valider l'infraction")
+
+      cy.getDataCy('mission-timeline-infractions-tags')
+        .children('.Element-Tag')
+        .each(($el, index) => {
+          cy.wrap($el)
+            .invoke('text')
+            .then(text => {
+              switch (index) {
+                case 0:
+                  expect(text).to.equal('8 RAS')
+                  break
+                case 1:
+                  expect(text).to.equal('2 PV')
+                  break
+                case 2:
+                  expect(text).to.equal('2 MED')
+                  break
+                case 3:
+                  expect(text).to.equal('2 RÉGUL. ADMIN')
+                  break
+                case 4:
+                  expect(text).to.equal('2 APPR./SAISIE')
+                  break
+                default:
+                  break
+              }
+            })
+        })
 
       // cases without identification
       cy.getDataCy('infraction-0-identification').contains('2 personnes morales')
