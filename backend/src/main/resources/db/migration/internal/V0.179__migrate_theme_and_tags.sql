@@ -25,7 +25,8 @@ FROM public.env_actions_control_plan_tags eacpt
 
 INSERT INTO themes_reportings (reportings_id, themes_id)
 SELECT DISTINCT reporting.id, reporting.control_plan_theme_id
-FROM public.reportings reporting;
+FROM public.reportings reporting
+WHERE reporting.control_plan_theme_id IS NOT NULL;
 
 INSERT INTO themes_reportings (reportings_id, themes_id)
 SELECT DISTINCT rcpst.reporting_id, t.id
