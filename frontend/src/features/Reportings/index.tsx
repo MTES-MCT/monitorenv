@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { chain } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -24,7 +24,7 @@ export function Reportings({ context }: { context: ReportingContext }) {
   const dispatch = useAppDispatch()
   const reportingsTabs = useMemo(
     () =>
-      _.chain(Object.entries(reportings))
+      chain(Object.entries(reportings))
         .filter(
           ([key, reporting]: [string, ReportingType]) =>
             reporting.context === context && String(activeReportingId) !== key

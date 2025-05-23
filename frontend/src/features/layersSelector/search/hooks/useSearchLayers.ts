@@ -36,7 +36,7 @@ export function useSearchLayers() {
 
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery(undefined, { skip: !isSuperUser })
+  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery()
 
   const debouncedSearchLayers = useMemo(() => {
     const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
@@ -95,7 +95,7 @@ export function useSearchLayers() {
       if (vigilanceAreaPeriodFilter) {
         vigilanceAreasPerPeriod = getFilterVigilanceAreasPerPeriod(
           vigilanceAreaLayers?.entities ? Object.values(vigilanceAreaLayers.entities) : [],
-          vigilanceAreaPeriodFilter,
+          isSuperUser ? vigilanceAreaPeriodFilter : VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT,
           vigilanceAreaSpecificPeriodFilter
         )
 
@@ -245,7 +245,7 @@ export function useSearchLayers() {
       dispatch(closeMetadataPanel())
       debounce(searchFunction, 300, { trailing: true })(args)
     }
-  }, [dispatch, regulatoryLayers, amps, vigilanceAreaLayers])
+  }, [dispatch, regulatoryLayers, amps, vigilanceAreaLayers, isSuperUser])
 
   return debouncedSearchLayers
 }

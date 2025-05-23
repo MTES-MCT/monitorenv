@@ -45,6 +45,7 @@ export function SearchReportings({ onVisibiltyChange }: { onVisibiltyChange: (la
       <MapMenuDialog.Body>
         <ReportingsFilters context={ReportingFilterContext.MAP} />
       </MapMenuDialog.Body>
+
       <MapMenuDialog.Footer>
         <Button data-cy="add-reporting" Icon={Icon.Plus} isFullWidth onClick={createReporting}>
           Ajouter un signalement

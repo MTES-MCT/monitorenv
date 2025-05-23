@@ -18,7 +18,7 @@ import { attachMissionToReportingSliceActions } from './slice'
 
 import type { Reporting } from 'domain/entities/reporting'
 
-export function AttachMission() {
+export function AttachMission({ isReadOnly = false }: { isReadOnly?: boolean }) {
   const { setFieldValue, validateForm, values } = useFormikContext<Reporting>()
   const dispatch = useAppDispatch()
   const missionId = useAppSelector(state => state.attachMissionToReporting.missionId)
@@ -76,6 +76,23 @@ export function AttachMission() {
 
   const isButtonDisabled = !values.isControlRequired || values.isArchived
 
+  if (isReadOnly) {
+    return values.missionId ? (
+      <div>
+        <AttachedMissionText>
+          <Icon.Link />
+          <span>Signalement lié à une mission</span>
+        </AttachedMissionText>
+
+        <AttachedMissionCard
+          attachedMission={values.attachedMission}
+          controlStatus={values?.controlStatus}
+          isReadOnly={isReadOnly}
+        />
+      </div>
+    ) : null
+  }
+
   return !values.missionId || (values.missionId && values.detachedFromMissionAtUtc) ? (
     <ButtonsContainer>
       <Button
@@ -106,7 +123,11 @@ export function AttachMission() {
         <span>Signalement lié à une mission</span>
       </AttachedMissionText>
 
-      <AttachedMissionCard attachedMission={values.attachedMission} controlStatus={values?.controlStatus} />
+      <AttachedMissionCard
+        attachedMission={values.attachedMission}
+        controlStatus={values?.controlStatus}
+        isReadOnly={isReadOnly}
+      />
 
       <UnattachButtonContainer>
         <Button

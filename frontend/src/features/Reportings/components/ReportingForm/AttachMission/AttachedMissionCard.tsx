@@ -13,10 +13,12 @@ import type { ControlStatusEnum } from 'domain/entities/reporting'
 
 export function AttachedMissionCard({
   attachedMission,
-  controlStatus
+  controlStatus,
+  isReadOnly = false
 }: {
   attachedMission: Mission | undefined
   controlStatus: ControlStatusEnum
+  isReadOnly?: boolean
 }) {
   const dispatch = useAppDispatch()
   if (!attachedMission) {
@@ -41,11 +43,14 @@ export function AttachedMissionCard({
     : `du ${formattedStartDate} au ${formattedEndDate}`
 
   const goToMission = () => {
+    if (isReadOnly) {
+      return
+    }
     dispatch(editMissionInLocalStore(attachedMission?.id, 'sideWindow'))
   }
 
   return (
-    <Wrapper data-cy="attach-mission-to-reporting-overlay" onClick={goToMission}>
+    <Wrapper $isReadOnly={isReadOnly} data-cy="attach-mission-to-reporting-overlay" onClick={goToMission}>
       <Header>
         <Title>
           {controlUnits && controlUnits?.length === 1 && (
@@ -89,14 +94,14 @@ export function AttachedMissionCard({
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $isReadOnly: boolean }>`
   padding: 10px;
   box-shadow: 0px 3px 6px #70778529;
   background-color: ${p => p.theme.color.cultured};
   display: flex;
   flex-direction: column;
   gap: 12px;
-  cursor: pointer;
+  cursor: ${p => (p.$isReadOnly ? 'default' : 'pointer')};
 `
 
 const Header = styled.div`
