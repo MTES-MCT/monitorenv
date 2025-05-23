@@ -74,8 +74,10 @@ export function ReportingFormWithContext({ context, totalReportings }: Reporting
                   <FormContent reducedReportingsOnContext={totalReportings} selectedReporting={selectedReporting} />
                 ) : (
                   <ReportingReadOnly
+                    isSuperUser={isSuperUser}
                     reducedReportingsOnContext={totalReportings}
                     reporting={selectedReporting as Reporting}
+                    withMissionCard
                   />
                 )}
               </StyledForm>
