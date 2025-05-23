@@ -39,14 +39,14 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
       vigilanceArea =>
         isVigilanceAreaPartOfCreatedBy(vigilanceArea, createdBy) &&
         isVigilanceAreaPartOfSeaFront(vigilanceArea, seaFronts) &&
-        isVigilanceAreaPartOfStatus(vigilanceArea, status) &&
+        isVigilanceAreaPartOfStatus(vigilanceArea, isSuperUser ? status : [VigilanceArea.Status.PUBLISHED]) &&
         isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
         isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes)
     )
 
     const vigilanceAreasByPeriod = getFilterVigilanceAreasPerPeriod(
       tempVigilanceAreas,
-      filteredVigilanceAreaPeriod,
+      isSuperUser ? filteredVigilanceAreaPeriod : VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT,
       vigilanceAreaSpecificPeriodFilter
     )
 
@@ -63,18 +63,18 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
       }
     )
 
-    let vigilanceAreasBySearchQuery = vigilanceAreasByPeriod
-    if (searchQuery && searchQuery.trim().length > 0) {
-      vigilanceAreasBySearchQuery = customSearch.find(searchQuery)
-    }
-
+    let vigilanceAreasFilteredByUserType = vigilanceAreasByPeriod
     if (!isSuperUser) {
-      vigilanceAreasBySearchQuery = vigilanceAreasBySearchQuery.filter(
+      vigilanceAreasFilteredByUserType = tempVigilanceAreas.filter(
         vigilanceArea => !vigilanceArea.isDraft && vigilanceArea.visibility === VigilanceArea.Visibility.PUBLIC
       )
     }
 
-    const sortedVigilanceAreas = [...vigilanceAreasBySearchQuery].sort((a, b) => a?.name?.localeCompare(b?.name))
+    if (searchQuery && searchQuery.trim().length > 0) {
+      vigilanceAreasFilteredByUserType = customSearch.find(searchQuery)
+    }
+
+    const sortedVigilanceAreas = [...vigilanceAreasFilteredByUserType].sort((a, b) => a?.name?.localeCompare(b?.name))
     const vigilanceAreasEntities = sortedVigilanceAreas.reduce((acc, vigilanceArea) => {
       acc[vigilanceArea.id] = vigilanceArea
 
@@ -83,7 +83,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
 
     return {
       entities: vigilanceAreasEntities,
-      ids: vigilanceAreasBySearchQuery.map(vigilanceArea => vigilanceArea.id)
+      ids: vigilanceAreasFilteredByUserType.map(vigilanceArea => vigilanceArea.id)
     }
   }, [
     data?.entities,
