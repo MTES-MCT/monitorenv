@@ -6,6 +6,7 @@ import {
   getTimeLeft
 } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useTracking } from '@hooks/useTracking'
 import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { ControlStatusEnum, ReportingTypeEnum, ReportingTypeLabels } from 'domain/entities/reporting'
@@ -66,6 +67,7 @@ export function ReportingCard({
   updateMargins
 }: ReportingCardProps) {
   const dispatch = useAppDispatch()
+  const { trackEvent } = useTracking()
 
   const ref = useRef<HTMLDivElement>(null)
 
@@ -125,6 +127,14 @@ export function ReportingCard({
   const editReporting = () => {
     dispatch(editReportingInLocalStore(id, ReportingContext.MAP))
     dispatch(closeAllOverlays())
+
+    if (!isSuperUser) {
+      trackEvent({
+        action: 'Consultation Signalement',
+        category: 'SIGNALEMENT',
+        name: 'Consultation Signalement'
+      })
+    }
   }
 
   const closeReportingCard = useCallback(() => {
