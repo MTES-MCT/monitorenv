@@ -11,13 +11,17 @@ import pandas as pd
 import pytest
 
 """ Thèmes """
-def generate_themes_data(ids, names, parents_id, started_at, ended_at):
+def generate_themes_data(ids, names, parents_id, started_at, ended_at, control_plan_themes_id, control_plan_sub_themes_id, control_plan_tags_id, reportings_control_plan_sub_themes_id):
     return pd.DataFrame({
         "id": ids,
         "name": names,
         "parent_id": parents_id,
         "started_at": pd.to_datetime(started_at),
         "ended_at": pd.to_datetime(ended_at),
+        "control_plan_themes_id": control_plan_themes_id,
+        "control_plan_sub_themes_id": control_plan_sub_themes_id,
+        "control_plan_tags_id": control_plan_tags_id,
+        "reportings_control_plan_sub_themes_id": reportings_control_plan_sub_themes_id
     })
 
 @pytest.fixture
@@ -28,6 +32,10 @@ def new_themes() -> pd.DataFrame:
         parents_id=[1, 1, 2, 3],
         started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-19 00:00:00", "2025-10-18 00:00:00"],
         ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-28 23:59:59"],
+        control_plan_themes_id= [3, 4, 5, 6],
+        control_plan_sub_themes_id=[7, 8, 9, 10],
+        control_plan_tags_id=[11, 12, 13, 14],
+        reportings_control_plan_sub_themes_id=[15, 16, 17, 18],
     )
 
 @pytest.fixture
@@ -38,6 +46,10 @@ def old_themes() -> pd.DataFrame:
         parents_id=[1, 2, 2, 4],
         started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-17 00:00:00", "2025-10-18 00:00:00"],
         ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-18 23:59:59"],
+        control_plan_themes_id= [3, 4, 5, 6],
+        control_plan_sub_themes_id=[7, 8, 9, 10],
+        control_plan_tags_id=[11, 12, 13, 14],
+        reportings_control_plan_sub_themes_id=[15, 16, 17, 18],
     )
 
 
@@ -46,7 +58,7 @@ def test_load_new_themes(reset_test_data, old_themes):
     loaded_themes = read_query(
         "monitorenv_remote", 
         """SELECT 
-            id, name, parent_id, started_at, ended_at
+            id, name, parent_id, started_at, ended_at, control_plan_themes_id, control_plan_sub_themes_id, control_plan_tags_id, reportings_control_plan_sub_themes_id
             FROM public.themes
             ORDER BY id"""
     )
@@ -67,7 +79,7 @@ def test_update_new_themes(reset_test_data, new_themes, old_themes):
     updated_themes = read_query(
         "monitorenv_remote", 
         """SELECT 
-            id, name, parent_id, started_at, ended_at
+            id, name, parent_id, started_at, ended_at, control_plan_themes_id, control_plan_sub_themes_id, control_plan_tags_id, reportings_control_plan_sub_themes_id
             FROM public.themes
             ORDER BY id"""
     )
