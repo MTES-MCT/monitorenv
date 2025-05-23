@@ -15,18 +15,29 @@ import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/util
 import { CoordinatesFormat, getLocalizedDayjs, THEME, customDayjs, Level } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
 import { formatDateLabel } from '@utils/getDateAsLocalizedString'
+import { displayTags } from '@utils/getTagsAsOptions'
+import { displaySubThemes, displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { ReportingStatusEnum, type Reporting } from 'domain/entities/reporting'
 import { vesselTypeLabel } from 'domain/entities/vesselType'
 
 import { Dashboard } from '../types'
 
+import type { RecentActivityFilters } from '@features/RecentActivity/slice'
 import type { RecentActivity } from '@features/RecentActivity/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Coordinate } from 'ol/coordinate'
 
+type ExportBriefProps = {
+  dashboard: Dashboard.Dashboard
+  getImages: (
+    recentActivity: RecentActivity.RecentControlsActivity[],
+    controlUnitIds: number[]
+  ) => Promise<any[]> | undefined
+  recentActivityFilters: RecentActivityFilters | undefined
+}
 export const exportBrief =
-  ({ dashboard, getImages, recentActivityFilters, subThemes, themes }): any =>
+  ({ dashboard, getImages, recentActivityFilters }: ExportBriefProps): any =>
   async (dispatch, getState) => {
     /* RECENT ACTIVITY */
     const startAfterFilter = recentActivityFilters?.startedAfter
@@ -58,6 +69,8 @@ export const exportBrief =
       Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
       Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
     ]
+    const allLinkedAMPs = getAmpsByIds(getState(), allLinkedAMPIds)
+    const allLinkedRegulatoryAreas = getRegulatoryAreasByIds(getState(), allLinkedRegulatoryAreaIds)
     const formattedVigilanceAreas = vigilanceAreas.map(vigilanceArea => ({
       color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
       comments: vigilanceArea.comments,
@@ -70,7 +83,7 @@ export const exportBrief =
       links: vigilanceArea.links,
       name: vigilanceArea.name,
       startDatePeriod: vigilanceArea.startDatePeriod,
-      themes: vigilanceArea.themes?.join(', '),
+      themes: displayThemes(vigilanceArea.themes),
       visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
     }))
 
@@ -93,16 +106,15 @@ export const exportBrief =
       }
     })
     /* REGULATORY AREAS */
-    const allLinkedRegulatoryAreas = getRegulatoryAreasByIds(getState(), allLinkedRegulatoryAreaIds)
     const regulatoryAreas = getRegulatoryAreasByIds(getState(), dashboard.regulatoryAreaIds)
     const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => ({
-      color: getRegulatoryEnvColorWithAlpha(regulatoryArea.thematique, regulatoryArea.entityName),
+      color: getRegulatoryEnvColorWithAlpha(displayTags(regulatoryArea.tags), regulatoryArea.entityName),
       entityName: getTitle(regulatoryArea.entityName),
       facade: regulatoryArea.facade,
       id: regulatoryArea.id,
       layerName: getTitle(regulatoryArea.layerName),
       refReg: regulatoryArea.refReg,
-      thematique: regulatoryArea.thematique,
+      themes: displayThemes(regulatoryArea.themes),
       type: regulatoryArea.type,
       url: regulatoryArea.url
     }))
@@ -120,7 +132,6 @@ export const exportBrief =
     })
 
     /* AMP */
-    const allLinkedAMPs = getAmpsByIds(getState(), allLinkedAMPIds)
     const amps = getAmpsByIds(getState(), dashboard.ampIds)
     const formattedAmps = amps.map(amp => ({
       color: getAMPColorWithAlpha(amp.type, amp.name),
@@ -204,10 +215,10 @@ export const exportBrief =
             reportingId: getFormattedReportingId(reporting.reportingId),
             reportingSources: reporting.reportingSources?.map(source => source.displayedSource).join(', '),
             reportType: reporting.reportType,
-            subThemes: reporting.subThemeIds?.map(subThemeid => subThemes[subThemeid]?.subTheme).join(', '),
+            subThemes: displaySubThemes([reporting.theme]),
             targetDetails,
             targetType: reporting.targetType,
-            theme: themes[reporting.themeId]?.theme,
+            theme: reporting.theme.name,
             vehicleType: reporting.vehicleType
           }
         })

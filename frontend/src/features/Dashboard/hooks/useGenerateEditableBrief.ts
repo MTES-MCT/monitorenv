@@ -1,6 +1,5 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { useState } from 'react'
 
 import { useExportImages } from './useExportImages'
@@ -12,8 +11,6 @@ export function useGenerateEditableBrief(dashboard: Dashboard.Dashboard) {
   const dispatch = useAppDispatch()
   const [isLoadingBrief, setIsLoadingBrief] = useState(false)
 
-  const { subThemes, themes } = useGetControlPlans()
-
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const recentActivityFilters = useAppSelector(state =>
     getRecentActivityFilters(state.dashboardFilters, activeDashboardId)
@@ -23,7 +20,7 @@ export function useGenerateEditableBrief(dashboard: Dashboard.Dashboard) {
 
   const downloadEditableBrief = async () => {
     setIsLoadingBrief(true)
-    await dispatch(exportBrief({ dashboard, getImages, recentActivityFilters, subThemes, themes }))
+    await dispatch(exportBrief({ dashboard, getImages, recentActivityFilters }))
     setIsLoadingBrief(false)
   }
 
