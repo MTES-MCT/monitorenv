@@ -12,7 +12,7 @@ data class EditableBriefRegulatoryAreaEntity(
     override val image: BriefImageEntity,
     val layerName: String,
     val refReg: String? = null,
-    val thematique: String? = null,
+    val themes: String? = null,
     val type: String? = null,
     val url: String? = null,
 ) : DetailRenderable {
@@ -26,7 +26,7 @@ data class EditableBriefRegulatoryAreaEntity(
         listOf(
             listOf("Entité", entityName),
             listOf("Ensemble reg", type ?: ""),
-            listOf("Thématique", thematique ?: ""),
+            listOf("Thématique", themes ?: ""),
             listOf("Facade", facade ?: ""),
             listOf("Résumé reg.sur Légicem", refReg ?: ""),
         )

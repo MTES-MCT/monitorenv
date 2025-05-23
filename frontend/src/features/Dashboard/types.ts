@@ -175,7 +175,7 @@ export namespace Dashboard {
     reportType: string
     reportingId: string
     reportingSources: string
-    subThemes: string
+    subThemes?: string
     targetDetails: TargetDetailsForEditableBrief[]
     targetType: ReportingTargetTypeEnum
     theme: string | undefined
@@ -218,7 +218,7 @@ export namespace Dashboard {
     image?: ExportImageType
     layerName: string
     refReg: string
-    thematique: string
+    themes?: string
     type: string
     url: string
   }
