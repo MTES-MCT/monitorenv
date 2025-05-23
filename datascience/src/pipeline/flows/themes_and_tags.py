@@ -86,6 +86,18 @@ def update_themes(new_themes: pd.DataFrame):
             "reportings_control_plan_sub_themes_id"
         ]
 
+        int_columns = [
+            "id",
+            "parent_id",
+            "control_plan_themes_id",
+            "control_plan_sub_themes_id",
+            "control_plan_tags_id",
+            "reportings_control_plan_sub_themes_id"
+        ]
+        for col in int_columns:
+            new_themes[col] = new_themes[col].astype("Int64")
+
+
         logger.info("Loading to temporary table")
 
         new_themes[columns_to_load].to_sql(
@@ -94,9 +106,10 @@ def update_themes(new_themes: pd.DataFrame):
             if_exists="append",
             index=False,
             method=psql_insert_copy,
+
         )
 
-        logger.info(f"Updating themes from temporary table {len(new_themes)}")
+        logger.info("Updating themes from temporary table {len(new_themes)}")
         connection.execute(
             text(
                 """UPDATE themes
