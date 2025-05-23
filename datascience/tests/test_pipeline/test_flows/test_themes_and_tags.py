@@ -83,6 +83,9 @@ def test_update_new_themes(reset_test_data, new_themes, old_themes):
             FROM public.themes
             ORDER BY id"""
     )
+    for col in ["id", "parent_id", "control_plan_themes_id", "control_plan_sub_themes_id", "control_plan_tags_id", "reportings_control_plan_sub_themes_id"]:
+        updated_themes[col] = updated_themes[col].astype("Int64")
+
     pd.testing.assert_frame_equal(updated_themes, new_themes)
 
 
