@@ -1,7 +1,9 @@
 import { useGetReportingsQuery } from '@api/reportingsAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
+import { StatusFilterEnum } from 'domain/entities/reporting'
 import { filter } from 'lodash'
 import { useMemo } from 'react'
 
@@ -11,6 +13,9 @@ import { isReportingPartOfTag } from '../useCases/filters/isReportingPartOfTag'
 import { isReportingPartOfTheme } from '../useCases/filters/isReportingPartOfTheme'
 
 export const useGetFilteredReportingsQuery = (skip = false) => {
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+
+  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
   const {
     isAttachedToMissionFilter,
     isUnattachedToMissionFilter,
@@ -57,7 +62,7 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
       sourcesType: sourceTypeFilter,
       startedAfterDateTime: datesForApi.startedAfterDate,
       startedBeforeDateTime: datesForApi.startedBeforeDate,
-      status: statusFilter,
+      status: isSuperUser ? statusFilter : [StatusFilterEnum.IN_PROGRESS],
       targetTypes: targetTypeFilter
     },
     { pollingInterval: TWO_MINUTES, skip: hasCustomPeriodWithoutDates || skip }

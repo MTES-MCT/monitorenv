@@ -1,6 +1,12 @@
-import { useGetControlPlans } from '@hooks/useGetControlPlans'
 import { getOptionsFromLabelledEnum, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
-import { ReportingSourceEnum, ReportingSourceLabels, ReportingTypeLabels } from 'domain/entities/reporting'
+import { displaySubTags, displayTags } from '@utils/getTagsAsOptions'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
+import {
+  ReportingSourceEnum,
+  ReportingSourceLabels,
+  ReportingTypeLabels,
+  type Reporting
+} from 'domain/entities/reporting'
 import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
 import { vehicleTypeLabels } from 'domain/entities/vehicleType'
 import styled from 'styled-components'
@@ -11,13 +17,9 @@ import { Validity } from './Validity'
 
 const EMPTY_VALUE = '--'
 
-export function FormContent({ reporting }) {
-  const { subThemes, themes } = useGetControlPlans()
+export function FormContent({ isSuperUser = true, reporting }: { isSuperUser?: boolean; reporting: Reporting }) {
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
-
-  const subThemesAsString =
-    reporting.subThemeIds?.map(subThemeId => subThemes[subThemeId]?.subTheme).join(', ') ?? EMPTY_VALUE
 
   const sourceTypeText = (sourceType: ReportingSourceEnum) => {
     if (sourceType === ReportingSourceEnum.SEMAPHORE) {
@@ -68,8 +70,15 @@ export function FormContent({ reporting }) {
           />
         </TargetContainer>
 
-        <TargetDetails reporting={reporting} />
+        <TargetDetails isSuperUser={isSuperUser} reporting={reporting} />
         <Location geom={reporting.geom} />
+        <TextInput
+          isLight
+          label="Description du signalement"
+          name="description"
+          plaintext
+          value={reporting.description ?? 'Aucune description'}
+        />
       </FirstPartContainer>
       <div>
         <AdditionnalInformations>COMPLEMENTS D&apos;INFORMATIONS</AdditionnalInformations>
@@ -83,20 +92,34 @@ export function FormContent({ reporting }) {
             readOnly
             value={reporting.reportType}
           />
+          <TextInput label="Thématique du signalement" name="theme" plaintext value={reporting.theme.name} />
           <TextInput
-            label="Thématique du signalement"
-            name="themeId"
+            label="Sous-thématique du signalement"
+            name="subTheme"
             plaintext
-            value={reporting.themeId ? String(themes[reporting.themeId]?.theme) : EMPTY_VALUE}
+            value={displaySubThemes([reporting.theme]) || EMPTY_VALUE}
           />
-          <TextInput label="Sous-thématique du signalement" name="subThemeIds" plaintext value={subThemesAsString} />
+          <TextInput
+            label="Tags du signalement"
+            name="tags"
+            plaintext
+            value={displayTags(reporting.tags) || EMPTY_VALUE}
+          />
+          <TextInput
+            label="Sous-tag du signalement"
+            name="subTag"
+            plaintext
+            value={displaySubTags(reporting.tags) || EMPTY_VALUE}
+          />
           <Validity reporting={reporting} />
-          <TextInput
-            label="Actions effectuées"
-            name="actionTaken"
-            plaintext
-            value={reporting.actionTaken ?? 'Aucune description'}
-          />
+          {isSuperUser && (
+            <TextInput
+              label="Actions effectuées"
+              name="actionTaken"
+              plaintext
+              value={reporting.actionTaken ?? 'Aucune description'}
+            />
+          )}
           <StyledToggle>
             <Toggle
               checked={reporting.isControlRequired ?? false}
@@ -108,7 +131,15 @@ export function FormContent({ reporting }) {
             />
             <span>Le signalement nécessite un contrôle</span>
           </StyledToggle>
-          <TextInput label="Saisi par" maxLength={3} name="openBy" plaintext value={reporting.openBy || EMPTY_VALUE} />
+          {isSuperUser && (
+            <TextInput
+              label="Saisi par"
+              maxLength={3}
+              name="openBy"
+              plaintext
+              value={reporting.openBy || EMPTY_VALUE}
+            />
+          )}
         </AdditionnalInformationsContainer>
       </div>
     </>

@@ -1,12 +1,14 @@
 import { StyledVesselForm } from '@features/Reportings/style'
-import { Label, NumberInput, TextInput } from '@mtes-mct/monitor-ui'
+import { Label, TextInput } from '@mtes-mct/monitor-ui'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import styled from 'styled-components'
 
+import type { Reporting } from 'domain/entities/reporting'
+
 const EMPTY_VALUE = '--'
 
-export function TargetDetails({ reporting }) {
+export function TargetDetails({ isSuperUser, reporting }: { isSuperUser: boolean; reporting: Reporting }) {
   return (
     <>
       {reporting.targetType && reporting.targetType !== ReportingTargetTypeEnum.VEHICLE && (
@@ -20,14 +22,14 @@ export function TargetDetails({ reporting }) {
                   label="Nom de la personne morale"
                   name="operatorName"
                   plaintext
-                  value={reporting.targetDetails.length > 0 ? reporting.targetDetails[0].operatorName : EMPTY_VALUE}
+                  value={reporting.targetDetails.length > 0 ? reporting.targetDetails[0]?.operatorName : EMPTY_VALUE}
                 />
                 <TextInput
                   isLight
                   label="Identité de la personne contrôlée"
                   name="vesselName"
                   plaintext
-                  value={reporting.targetDetails.length > 0 ? reporting.targetDetails[0].vesselName : EMPTY_VALUE}
+                  value={reporting.targetDetails.length > 0 ? reporting.targetDetails[0]?.vesselName : EMPTY_VALUE}
                 />
               </>
             )}
@@ -37,7 +39,7 @@ export function TargetDetails({ reporting }) {
                 label="Identité de la personne"
                 name="operatorName"
                 plaintext
-                value={reporting.targetDetails.length > 0 ? reporting.targetDetails[0].operatorName : EMPTY_VALUE}
+                value={reporting.targetDetails.length > 0 ? reporting?.targetDetails[0]?.operatorName : EMPTY_VALUE}
               />
             )}
           </StyledVesselContainer>
@@ -64,14 +66,14 @@ export function TargetDetails({ reporting }) {
                       label="Immatriculation"
                       name={`targetDetails.${index}.externalReferenceNumber`}
                       plaintext
-                      value={reporting.targetDetails[index].operatorName || EMPTY_VALUE}
+                      value={reporting.targetDetails[index]?.operatorName || EMPTY_VALUE}
                     />
                     <TextInput
                       isLight
                       label="Identité de la personne contrôlée"
                       name={`targetDetails.${index}.operatorName`}
                       plaintext
-                      value={reporting.targetDetails[index].operatorName || EMPTY_VALUE}
+                      value={reporting.targetDetails[index]?.operatorName || EMPTY_VALUE}
                     />
                   </>
                 )}
@@ -83,14 +85,14 @@ export function TargetDetails({ reporting }) {
                         label="MMSI"
                         name={`targetDetails.${index}.mmsi`}
                         plaintext
-                        value={reporting.targetDetails[index].mmsi || EMPTY_VALUE}
+                        value={reporting.targetDetails[index]?.mmsi || EMPTY_VALUE}
                       />
                       <TextInput
                         isLight
                         label="Nom du navire"
                         name={`targetDetails.${index}.vesselName`}
                         plaintext
-                        value={reporting.targetDetails[index].vesselName || EMPTY_VALUE}
+                        value={reporting.targetDetails[index]?.vesselName || EMPTY_VALUE}
                       />
                     </StyledVesselForm>
                     <StyledVesselForm>
@@ -99,14 +101,14 @@ export function TargetDetails({ reporting }) {
                         label="IMO"
                         name={`targetDetails.${index}.imo`}
                         plaintext
-                        value={reporting.targetDetails[index].imo || EMPTY_VALUE}
+                        value={reporting.targetDetails[index]?.imo || EMPTY_VALUE}
                       />
                       <TextInput
                         isLight
                         label="Nom du capitaine"
                         name={`targetDetails.${index}.operatorName`}
                         plaintext
-                        value={reporting.targetDetails[index].operatorName || EMPTY_VALUE}
+                        value={isSuperUser ? reporting.targetDetails[index]?.operatorName || EMPTY_VALUE : EMPTY_VALUE}
                       />
                     </StyledVesselForm>
                     <StyledVesselForm>
@@ -115,19 +117,26 @@ export function TargetDetails({ reporting }) {
                         label="Immatriculation"
                         name={`targetDetails.${index}.externalReferenceNumber`}
                         plaintext
-                        value={reporting.targetDetails[index].externalReferenceNumber || EMPTY_VALUE}
+                        value={reporting.targetDetails[index]?.externalReferenceNumber || EMPTY_VALUE}
                       />
-                      <NumberInput
+                      <TextInput
                         isLight
                         label="Taille"
                         name={`targetDetails.${index}.size`}
                         plaintext
-                        value={reporting.targetDetails[index].size || EMPTY_VALUE}
+                        value={
+                          reporting.targetDetails[index]?.size
+                            ? String(reporting.targetDetails[index]?.size)
+                            : EMPTY_VALUE
+                        }
                       />
                     </StyledVesselForm>
                   </>
                 )}
               </StyledVesselContainer>
+              {!isSuperUser && reporting.targetDetails[index]?.operatorName && (
+                <Text>Le nom du capitaine peut être communiqué par téléphone par le CACEM</Text>
+              )}
             </TargetWrapper>
           ))
         : null}
@@ -161,4 +170,9 @@ const TargetNumber = styled.span`
 const StyledVesselContainer = styled(StyledTargetDetailsContainer)`
   flex-direction: column;
   align-self: stretch;
+`
+
+const Text = styled.span`
+  font-size: 12px;
+  font-style: italic;
 `
