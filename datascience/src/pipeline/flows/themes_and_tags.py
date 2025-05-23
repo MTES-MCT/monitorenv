@@ -65,7 +65,11 @@ def update_themes(new_themes: pd.DataFrame):
                 name varchar,
                 parent_id int,
                 started_at timestamp,
-                ended_at timestamp)
+                ended_at timestamp,
+                control_plan_themes_id int,
+                control_plan_sub_themes_id int,
+                control_plan_tags_id int,
+                reportings_control_plan_sub_themes_id int)
                 ON COMMIT DROP;"""
             )
         )
@@ -76,6 +80,10 @@ def update_themes(new_themes: pd.DataFrame):
             "parent_id",
             "started_at",
             "ended_at",
+            "control_plan_themes_id",
+            "control_plan_sub_themes_id",
+            "control_plan_tags_id",
+            "reportings_control_plan_sub_themes_id"
         ]
 
         logger.info("Loading to temporary table")
@@ -95,7 +103,11 @@ def update_themes(new_themes: pd.DataFrame):
                 SET name = tmp.name,
                 parent_id = tmp.parent_id,
                 started_at = tmp.started_at,
-                ended_at = tmp.ended_at
+                ended_at = tmp.ended_at,
+                control_plan_themes_id = tmp.control_plan_themes_id,
+                control_plan_sub_themes_id = tmp.control_plan_sub_themes_id,
+                control_plan_tags_id = tmp.control_plan_tags_id,
+                reportings_control_plan_sub_themes_id = tmp.reportings_control_plan_sub_themes_id
                 FROM tmp_themes tmp
                 where themes.id = tmp.id;
                 """
@@ -118,7 +130,7 @@ def load_new_themes(new_themes: pd.DataFrame):
         db_name="monitorenv_remote",
         logger=prefect.context.get("logger"),
         how="append",
-        nullable_integer_columns=["parent_id"]
+        nullable_integer_columns=["parent_id", "control_plan_themes_id", "control_plan_sub_themes_id", "control_plan_tags_id", "reportings_control_plan_sub_themes_id"]
     )
 
 
