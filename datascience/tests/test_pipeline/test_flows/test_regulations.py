@@ -22,6 +22,10 @@ def new_themes() -> pd.DataFrame:
         parents_id=[1, 1, 2, 3],
         started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-19 00:00:00", "2025-10-18 00:00:00"],
         ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-28 23:59:59"],
+        control_plan_themes_id= [3, 4, 5, 6],
+        control_plan_sub_themes_id=[7, 8, 9, 10],
+        control_plan_tags_id=[11, 12, 13, 14],
+        reportings_control_plan_sub_themes_id=[15, 16, 17, 18],
     )
 
 @pytest.fixture

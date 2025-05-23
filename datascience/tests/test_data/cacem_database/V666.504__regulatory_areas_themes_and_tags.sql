@@ -26,11 +26,15 @@ CREATE TABLE IF NOT EXISTS prod."REG_ENV_V3"
 /* THEMES */
 DROP TABLE IF EXISTS prod.themes CASCADE;
 CREATE TABLE prod.themes (
-    id           SERIAL PRIMARY KEY,
-    "name"       varchar,
-    parent_id    INT REFERENCES prod.themes (id),
-    started_at   timestamp,
-    ended_at     timestamp
+    id                                    SERIAL PRIMARY KEY,
+    "name"                                varchar,
+    parent_id                             INT REFERENCES prod.themes (id),
+    started_at                            timestamp,
+    ended_at                              timestamp,
+    control_plan_themes_id                INT,
+    control_plan_sub_themes_id            INT,
+    control_plan_tags_id                  INT,
+    reportings_control_plan_sub_themes_id INT
 );
 
 /* REGULATORY_AREAS_THEMES */
