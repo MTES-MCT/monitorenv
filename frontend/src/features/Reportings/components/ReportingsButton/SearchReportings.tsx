@@ -9,13 +9,7 @@ import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { ReportingContext, setDisplayedItems } from 'domain/shared_slices/Global'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 
-export function SearchReportings({
-  isSuperUser = true,
-  onVisibiltyChange
-}: {
-  isSuperUser?: boolean
-  onVisibiltyChange: (layerName: string) => void
-}) {
+export function SearchReportings({ onVisibiltyChange }: { onVisibiltyChange: (layerName: string) => void }) {
   const dispatch = useAppDispatch()
   const displayReportingsLayer = useAppSelector(state => state.global.layers.displayReportingsLayer)
 
@@ -51,16 +45,15 @@ export function SearchReportings({
       <MapMenuDialog.Body>
         <ReportingsFilters context={ReportingFilterContext.MAP} />
       </MapMenuDialog.Body>
-      {isSuperUser && (
-        <MapMenuDialog.Footer>
-          <Button data-cy="add-reporting" Icon={Icon.Plus} isFullWidth onClick={createReporting}>
-            Ajouter un signalement
-          </Button>
-          <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleReportingsWindow}>
-            Voir la vue détaillée des signalements
-          </Button>
-        </MapMenuDialog.Footer>
-      )}
+
+      <MapMenuDialog.Footer>
+        <Button data-cy="add-reporting" Icon={Icon.Plus} isFullWidth onClick={createReporting}>
+          Ajouter un signalement
+        </Button>
+        <Button accent={Accent.SECONDARY} Icon={Icon.Expand} isFullWidth onClick={toggleReportingsWindow}>
+          Voir la vue détaillée des signalements
+        </Button>
+      </MapMenuDialog.Footer>
     </StyledMapMenuDialogContainer>
   )
 }

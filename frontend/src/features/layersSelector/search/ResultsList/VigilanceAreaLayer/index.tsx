@@ -1,4 +1,6 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
+import { useTracking } from '@hooks/useTracking'
 import { Accent, Icon, IconButton, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -21,7 +23,12 @@ type RegulatoryLayerProps = {
 
 export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
+
   const ref = createRef<HTMLSpanElement>()
+
+  const { trackEvent } = useTracking()
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = user?.isSuperUser
 
   const myVigilanceAreaIds = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIds)
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
@@ -44,6 +51,13 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(undefined))
     } else {
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
+      if (!isSuperUser) {
+        trackEvent({
+          action: 'Consultation Zone de Vigilance',
+          category: 'ZONE DE VIGILANCE',
+          name: 'Consultation Zone de Vigilance'
+        })
+      }
     }
   }
 
