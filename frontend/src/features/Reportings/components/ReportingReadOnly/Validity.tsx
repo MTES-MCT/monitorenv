@@ -39,7 +39,9 @@ export function Validity({ reporting }: { reporting: Reporting }) {
       )}
 
       {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft >= 1) || timeLeft >= 1) && (
-        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity}(dans ${Math.round(timeLeft)}h)`}</GrayText>
+        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity} (dans ${Math.round(
+          timeLeft
+        )}h)`}</GrayText>
       )}
     </StyledValidityContainer>
   )

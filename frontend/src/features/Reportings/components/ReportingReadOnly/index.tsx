@@ -6,14 +6,19 @@ import { hideAllDialogs, ReportingContext, VisibilityState } from 'domain/shared
 import styled from 'styled-components'
 
 import { FormContent } from './FormContent'
+import { AttachMission } from '../ReportingForm/AttachMission'
 import { Header } from '../ReportingForm/Header'
 
 export function ReportingReadOnly({
+  isSuperUser = true,
   reducedReportingsOnContext,
-  reporting
+  reporting,
+  withMissionCard = false
 }: {
+  isSuperUser?: boolean
   reducedReportingsOnContext: number
   reporting?: Reporting
+  withMissionCard?: boolean
 }) {
   const dispatch = useAppDispatch()
 
@@ -44,7 +49,8 @@ export function ReportingReadOnly({
         reporting={reporting}
       />
       <Wrapper $totalReducedReportings={reducedReportingsOnContext}>
-        <FormContent reporting={reporting} />
+        <FormContent isSuperUser={isSuperUser} reporting={reporting} />
+        {withMissionCard && <AttachMission isReadOnly />}
       </Wrapper>
     </>
   )
