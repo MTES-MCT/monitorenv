@@ -337,7 +337,7 @@ jobs:
         uses: getsentry/action-release@v3
         with:
           environment: ${{ needs.version.outputs.ENV_PROFILE }}
-          version: ${{ env.VERSION }}
+          release: ${{ env.VERSION }}
           sourcemaps: ./frontend_build
           ignore_missing: true
           ignore_empty: true
@@ -346,6 +346,7 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          SENTRY_LOG_LEVEL: debug
     timeout-minutes: 30
 
   push_to_registry:

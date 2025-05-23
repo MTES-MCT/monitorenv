@@ -1,12 +1,14 @@
+import { useGenerateBrief } from '@features/Dashboard/hooks/useGenerateBrief'
+import { useGenerateEditableBrief } from '@features/Dashboard/hooks/useGenerateEditableBrief'
 import { deleteDashboard } from '@features/Dashboard/useCases/deleteDashboard'
 import { saveDashboard } from '@features/Dashboard/useCases/saveDashboard'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { Accent, Button, Dialog, Icon, TextInput, THEME } from '@mtes-mct/monitor-ui'
+import { useTracking } from '@hooks/useTracking'
+import { Accent, Button, Dialog, Dropdown, Icon, TextInput, THEME } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
 
 import { CreateMailButton } from './CreateMailButton'
-import { GeneratePdfButton } from '../../Pdf/GeneratePdfButton'
 
 import type { DashboardType } from '@features/Dashboard/slice'
 
@@ -16,6 +18,10 @@ type FooterProps = {
 
 export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
   const dispatch = useAppDispatch()
+
+  const { trackEvent } = useTracking()
+  const { downloadPdf, generateBrief, isLoadingBrief, loadingImages } = useGenerateBrief(dashboard.dashboard)
+  const { downloadEditableBrief, isLoadingEditableBrief } = useGenerateEditableBrief(dashboard.dashboard)
 
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -44,6 +50,33 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
   const handleDelete = () => {
     setIsDeleteDialogOpen(true)
   }
+
+  const getLoadingText = () => {
+    if (loadingImages) {
+      return 'Chargement des images'
+    }
+    if (isLoadingBrief || isLoading) {
+      return 'Chargement du brief'
+    }
+
+    return 'Télécharger le brief'
+  }
+
+  const createPdf = async () => {
+    const brief = await generateBrief()
+    downloadPdf(brief)
+    trackEvent({
+      action: 'Téléchargement du brief',
+      category: 'TABLEAU DE BORD & BRIEF',
+      name: 'Téléchargement du brief'
+    })
+  }
+
+  const createEditableDoc = async () => {
+    downloadEditableBrief()
+  }
+
+  const isLoading = isLoadingBrief || isLoadingEditableBrief || loadingImages
 
   return (
     <>
@@ -93,7 +126,16 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
 
         <ButtonsWrapper>
           <CreateMailButton dashboard={dashboard.dashboard} />
-          <GeneratePdfButton dashboard={dashboard.dashboard} />
+          <StyledDropdown
+            disabled={isLoading}
+            Icon={isLoading ? Icon.Reset : Icon.Download}
+            noCaret
+            placement="topStart"
+            title={getLoadingText()}
+          >
+            <StyledDropdownItem onClick={createPdf}>PDF</StyledDropdownItem>
+            <Dropdown.Item onClick={createEditableDoc}>ODT</Dropdown.Item>
+          </StyledDropdown>
           <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={handleSave}>
             Enregistrer le tableau
           </Button>
@@ -106,17 +148,18 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
 const Wrapper = styled.div`
   background-color: ${p => p.theme.color.white};
   box-shadow: 0pc 3px 6px #00000029;
+  display: flex;
+  justify-content: space-between;
   padding: 16px 24px;
-
   position: sticky;
   bottom: 0;
 `
 
 const ButtonsWrapper = styled.div`
-  float: right;
+  align-items: center;
   display: flex;
   gap: 8px;
-  align-items: center;
+  justify-content: end;
 `
 
 const DeleteButton = styled(Button)`
@@ -136,4 +179,25 @@ const StyledDialogMessage = styled.p`
 
 const StyledDialogActions = styled(Dialog.Action)`
   align-items: stretch;
+`
+
+const StyledDropdown = styled(Dropdown)`
+  > .rs-btn {
+    padding: 5px 12px 6px;
+    ${p =>
+      p.disabled &&
+      `@keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  > .Element-IconBox > svg {
+    animation: spin 2s linear infinite;
+    transform-origin: center;
+  }`}
+  }
+`
+
+const StyledDropdownItem = styled(Dropdown.Item)`
+  width: 175px;
 `

@@ -4,8 +4,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-@ConfigurationProperties(prefix = "monitorfish")
-class MonitorfishProperties {
-    var url: String = ""
-    var xApiKey: String = ""
+@ConfigurationProperties(prefix = "monitorenv.ext")
+class MonitorExtProperties {
+    var id: String = ""
+    var password: String = ""
 }
