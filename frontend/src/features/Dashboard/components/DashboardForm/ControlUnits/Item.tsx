@@ -7,7 +7,7 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, THEME, type ControlUnit } from '@mtes-mct/monitor-ui'
+import { Accent, type ControlUnit, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export function Item({ controlUnit }: { controlUnit: ControlUnit.ControlUnit }) {
@@ -54,17 +54,17 @@ const Wrapper = styled.li`
   background-color: ${p => p.theme.color.gainsboro};
   padding: 16px;
 `
-const FirstLine = styled.div`
+export const FirstLine = styled.div`
   color: ${p => p.theme.color.gunMetal};
   display: flex;
   justify-content: space-between;
 `
 
-const ControlUnitName = styled.span`
+export const ControlUnitName = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `
-const ResourcesAndPortsText = styled.span`
+export const ResourcesAndPortsText = styled.span`
   color: ${p => p.theme.color.slateGray};
 `

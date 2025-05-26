@@ -127,9 +127,8 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         """
         SELECT mission
         FROM MissionModel mission
-        INNER JOIN mission.envActions envAction
-        WHERE mission.isDeleted = false 
-        AND ST_INTERSECTS(ST_SETSRID(envAction.geom, 4326), ST_BUFFER(ST_SETSRID(:geometry, 4326), 0))
+        JOIN mission.envActions envAction ON ST_INTERSECTS(ST_SETSRID(envAction.geom, 4326), ST_SETSRID(:geometry, 4326))
+        WHERE mission.isDeleted = false
         """,
     )
     fun findAllByGeometry(geometry: Geometry): List<MissionModel>

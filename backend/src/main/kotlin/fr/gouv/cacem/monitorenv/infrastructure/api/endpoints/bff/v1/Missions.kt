@@ -10,7 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionsInArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetNearbyUnits
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionDataOutput
@@ -44,7 +44,7 @@ class Missions(
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val canDeleteMission: CanDeleteMission,
-    private val getMissionsInArea: GetMissionsInArea,
+    private val getNearbyUnits: GetNearbyUnits,
 ) {
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
@@ -187,6 +187,7 @@ class Missions(
     ): List<MissionEntity> {
         val wktReader = WKTReader()
         val geometry = wktReader.read(pGeometry)
-        return getMissionsInArea.execute(area = geometry)
+//        return getNearbyUnits.execute(area = geometry).map { MissionDataOutput }
+        return listOf()
     }
 }

@@ -37,6 +37,7 @@ export const initialDashboard: DashboardType = {
   openPanel: undefined,
   regulatoryIdsToDisplay: [],
   reportingToDisplay: undefined,
+  selectedNearbyUnitIds: [],
   totalOfControls: 0,
   unsavedDashboard: undefined
 }
@@ -60,6 +61,7 @@ export type DashboardType = {
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingToDisplay: Reporting | undefined
+  selectedNearbyUnitIds: number[]
   totalOfControls: number
   unsavedDashboard: Dashboard.Dashboard | undefined
 }
@@ -143,6 +145,9 @@ export const dashboardSlice = createSlice({
             break
           case Dashboard.Block.REPORTINGS:
             state.dashboards[id].dashboard.reportingIds = [...state.dashboards[id].dashboard.reportingIds, ...itemIds]
+            break
+          case Dashboard.Block.NEARBY_UNITS:
+            state.dashboards[id].selectedNearbyUnitIds = [...state.dashboards[id].selectedNearbyUnitIds, ...itemIds]
             break
           case Dashboard.Block.COMMENTS:
           case Dashboard.Block.TERRITORIAL_PRESSURE:
@@ -245,6 +250,11 @@ export const dashboardSlice = createSlice({
             break
           case Dashboard.Block.VIGILANCE_AREAS:
             state.dashboards[id].dashboard.vigilanceAreaIds = state.dashboards[id].dashboard.vigilanceAreaIds.filter(
+              item => !itemIds.includes(item)
+            )
+            break
+          case Dashboard.Block.NEARBY_UNITS:
+            state.dashboards[id].selectedNearbyUnitIds = state.dashboards[id].selectedNearbyUnitIds.filter(
               item => !itemIds.includes(item)
             )
             break
