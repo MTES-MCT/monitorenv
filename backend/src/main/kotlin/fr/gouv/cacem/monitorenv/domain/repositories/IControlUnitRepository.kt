@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.NearbyUnit
+import org.locationtech.jts.geom.Geometry
 
 interface IControlUnitRepository {
     fun archiveById(controlUnitId: Int)
@@ -13,4 +15,6 @@ interface IControlUnitRepository {
     fun findAll(): List<FullControlUnitDTO>
 
     fun save(controlUnit: ControlUnitEntity): ControlUnitEntity
+
+    fun findNearbyUnits(geometry: Geometry): List<NearbyUnit>
 }

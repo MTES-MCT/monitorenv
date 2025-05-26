@@ -1,5 +1,6 @@
+import { NearbyUnits } from '@features/Dashboard/components/DashboardForm/NearbyUnits'
 import { useObserverAccordion } from '@features/Dashboard/hooks/useObserverAccordion'
-import { getFilteredReportings, type DashboardType } from '@features/Dashboard/slice'
+import { type DashboardType, getFilteredReportings } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -107,6 +108,14 @@ export function SecondColumn({
             selectedReportingIds={dashboard.dashboard.reportingIds}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.REPORTINGS)}
           />
+          {dashboard.dashboard.geom && (
+            <NearbyUnits
+              geometry={dashboard.dashboard.geom}
+              isExpanded={expandedAccordion === Dashboard.Block.NEARBY_UNITS}
+              isSelectedAccordionOpen={isSelectedAccordionOpen}
+              setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.NEARBY_UNITS)}
+            />
+          )}
         </BaseColumn>
       )}
     </>

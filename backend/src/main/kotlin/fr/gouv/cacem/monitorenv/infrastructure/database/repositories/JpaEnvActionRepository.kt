@@ -45,7 +45,7 @@ class JpaEnvActionRepository(
 
     @Transactional
     override fun save(envAction: EnvActionEntity): EnvActionEntity {
-        var mission: MissionModel? = idbMissionRepository.findByEnvActionId(envAction.id)
+        val mission: MissionModel? = idbMissionRepository.findByEnvActionId(envAction.id)
         mission?.let {
             val controlPlanThemesReferenceModelMap: MutableMap<Int, ControlPlanThemeModel> =
                 mutableMapOf()
@@ -74,11 +74,11 @@ class JpaEnvActionRepository(
                         envAction,
                         mission = mission,
                         controlPlanThemesReferenceModelMap =
-                        controlPlanThemesReferenceModelMap,
+                            controlPlanThemesReferenceModelMap,
                         controlPlanTagsReferenceModelMap =
-                        controlPlanTagsReferenceModelMap,
+                            controlPlanTagsReferenceModelMap,
                         controlPlanSubThemesReferenceModelMap =
-                        controlPlanSubThemesReferenceModelMap,
+                            controlPlanSubThemesReferenceModelMap,
                         mapper = objectMapper,
                     ),
                 ).toActionEntity(objectMapper)

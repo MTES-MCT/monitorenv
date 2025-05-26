@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUni
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
@@ -88,7 +89,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
-                                        null,
+                                            null,
                                         isArchived = false,
                                         name =
                                             "Cultures marines – DDTM 40",
@@ -122,7 +123,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
-                                        null,
+                                            null,
                                         isArchived = false,
                                         name =
                                             "Cultures marines – DDTM 40",
@@ -156,7 +157,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
-                                        null,
+                                            null,
                                         isArchived = false,
                                         name =
                                             "Cultures marines – DDTM 40",
@@ -190,7 +191,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
-                                        null,
+                                            null,
                                         isArchived = false,
                                         name =
                                             "Cultures marines – DDTM 40",
@@ -340,7 +341,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
-                                        null,
+                                            null,
                                         isArchived = false,
                                         name =
                                             "Cultures marines – DDTM 40",
@@ -374,7 +375,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
-                                        null,
+                                            null,
                                         isArchived = false,
                                         name =
                                             "Cultures marines – DDTM 40",
@@ -401,7 +402,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
-                                        null,
+                                            null,
                                         isArchived = false,
                                         name =
                                             "Cultures marines – DDTM 40",
@@ -435,7 +436,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
-                                        null,
+                                            null,
                                         isArchived = false,
                                         name =
                                             "Cultures marines – DDTM 40",
@@ -517,5 +518,26 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 .sorted()
 
         assertThat(controlUnitIds).doesNotContain(10177)
+    }
+
+    @Test
+    fun `findNearbyUnits should return controlUnits with envAction whose geom is within area`() {
+        // Given
+        val geom = WKTReader().read(
+            "MULTIPOLYGON (((-0.627871351299246 49.39331585788091, -0.15993305232445923 49.39331585788091, -0.15993305232445923 49.613595287389444, -0.627871351299246 49.613595287389444, -0.627871351299246 49.39331585788091)))"
+        )
+
+        // When
+        val nearbyUnits = jpaControlUnitRepository.findNearbyUnits(geom)
+
+        // Then
+        assertThat(nearbyUnits).hasSize(4)
+        nearbyUnits.forEach { nearbyUnit ->
+            nearbyUnit.missions.forEach { mission ->
+                mission.envActions?.forEach { envAction ->
+                    assertThat(geom.intersects(envAction.geom)).isTrue()
+                }
+            }
+        }
     }
 }

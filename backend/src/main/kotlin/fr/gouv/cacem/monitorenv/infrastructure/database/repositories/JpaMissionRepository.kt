@@ -22,7 +22,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.apache.commons.lang3.StringUtils
-import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -150,22 +149,22 @@ class JpaMissionRepository(
             normalizeField(it)
                 .contains(normalizeField(searchQuery), ignoreCase = true)
         } == true ||
-            mission.envActions?.any { action ->
-                (action as? EnvActionControlEntity)?.infractions?.any { infraction ->
-                    listOf(
-                        infraction.imo,
-                        infraction.mmsi,
-                        infraction.registrationNumber,
-                        infraction.vesselName,
-                        infraction.companyName,
-                        infraction.controlledPersonIdentity,
-                    ).any { field ->
-                        !field.isNullOrBlank() &&
-                            normalizeField(field)
-                                .contains(normalizeField(searchQuery), ignoreCase = true)
-                    }
+                mission.envActions?.any { action ->
+                    (action as? EnvActionControlEntity)?.infractions?.any { infraction ->
+                        listOf(
+                            infraction.imo,
+                            infraction.mmsi,
+                            infraction.registrationNumber,
+                            infraction.vesselName,
+                            infraction.companyName,
+                            infraction.controlledPersonIdentity,
+                        ).any { field ->
+                            !field.isNullOrBlank() &&
+                                    normalizeField(field)
+                                        .contains(normalizeField(searchQuery), ignoreCase = true)
+                        }
+                    } ?: false
                 } ?: false
-            } ?: false
     }
 
     private fun normalizeField(input: String): String = StringUtils.stripAccents(input.replace(" ", ""))
@@ -284,9 +283,9 @@ class JpaMissionRepository(
                     action = it,
                     mission = missionModel,
                     controlPlanThemesReferenceModelMap =
-                    controlPlanThemesReferenceModelMap,
+                        controlPlanThemesReferenceModelMap,
                     controlPlanSubThemesReferenceModelMap =
-                    controlPlanSubThemesReferenceModelMap,
+                        controlPlanSubThemesReferenceModelMap,
                     controlPlanTagsReferenceModelMap = controlPlanTagsReferenceModelMap,
                     mapper = mapper,
                 )
@@ -321,9 +320,4 @@ class JpaMissionRepository(
             }
         }
     }
-
-    override fun findAllByGeometry(geometry: Geometry): List<MissionEntity> =
-        dbMissionRepository.findAllByGeometry(geometry).map {
-            it.toMissionEntity(mapper)
-        }
 }

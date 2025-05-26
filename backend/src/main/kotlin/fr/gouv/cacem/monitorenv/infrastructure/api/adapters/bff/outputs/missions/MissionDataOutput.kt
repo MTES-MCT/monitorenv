@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
@@ -63,43 +64,43 @@ data class MissionDataOutput(
                 updatedAtUtc = dto.mission.updatedAtUtc,
                 envActions =
                     (
-                        dto.mission.envActions?.map {
-                            when (it.actionType) {
-                                ActionTypeEnum.CONTROL ->
-                                    EnvActionControlDataOutput
-                                        .fromEnvActionControlEntity(
-                                            envActionControlEntity =
-                                                it as EnvActionControlEntity,
-                                            reportingIds =
-                                                dto.envActionsAttachedToReportingIds
-                                                    ?.find { action ->
-                                                        action.first ==
-                                                            it.id
-                                                    }?.second
-                                                    ?: listOf(),
-                                        )
+                            dto.mission.envActions?.map {
+                                when (it.actionType) {
+                                    ActionTypeEnum.CONTROL ->
+                                        EnvActionControlDataOutput
+                                            .fromEnvActionControlEntity(
+                                                envActionControlEntity =
+                                                    it as EnvActionControlEntity,
+                                                reportingIds =
+                                                    dto.envActionsAttachedToReportingIds
+                                                        ?.find { action ->
+                                                            action.first ==
+                                                                    it.id
+                                                        }?.second
+                                                        ?: listOf(),
+                                            )
 
-                                ActionTypeEnum.SURVEILLANCE -> {
-                                    EnvActionSurveillanceDataOutput
-                                        .fromEnvActionSurveillanceEntity(
-                                            envActionSurveillanceEntity =
-                                                it as EnvActionSurveillanceEntity,
-                                            reportingIds =
-                                                dto.envActionsAttachedToReportingIds
-                                                    ?.find { action ->
-                                                        action.first == it.id
-                                                    }?.second
-                                                    ?: listOf(),
+                                    ActionTypeEnum.SURVEILLANCE -> {
+                                        EnvActionSurveillanceDataOutput
+                                            .fromEnvActionSurveillanceEntity(
+                                                envActionSurveillanceEntity =
+                                                    it as EnvActionSurveillanceEntity,
+                                                reportingIds =
+                                                    dto.envActionsAttachedToReportingIds
+                                                        ?.find { action ->
+                                                            action.first == it.id
+                                                        }?.second
+                                                        ?: listOf(),
+                                            )
+                                    }
+
+                                    ActionTypeEnum.NOTE ->
+                                        EnvActionNoteDataOutput.fromEnvActionNoteEntity(
+                                            it as EnvActionNoteEntity,
                                         )
                                 }
-
-                                ActionTypeEnum.NOTE ->
-                                    EnvActionNoteDataOutput.fromEnvActionNoteEntity(
-                                        it as EnvActionNoteEntity,
-                                    )
                             }
-                        }
-                    ),
+                            ),
                 fishActions =
                     dto.fishActions?.map {
                         MonitorFishMissionActionDataOutput
@@ -123,6 +124,37 @@ data class MissionDataOutput(
                     dto.hasRapportNavActions?.let {
                         RapportNavMissionActionDataOutput.fromRapportNavMissionActionEntity(it)
                     },
+            )
+        }
+
+        fun fromMissionEntity(mission: MissionEntity): MissionDataOutput {
+            requireNotNull(mission.id) { "a mission must have an id" }
+
+            return MissionDataOutput(
+                id = mission.id,
+                missionTypes = mission.missionTypes,
+                controlUnits = mission.controlUnits,
+                openBy = mission.openBy,
+                completedBy = mission.completedBy,
+                observationsCacem = mission.observationsCacem,
+                observationsCnsp = mission.observationsCnsp,
+                facade = mission.facade,
+                geom = mission.geom,
+                startDateTimeUtc = mission.startDateTimeUtc,
+                endDateTimeUtc = mission.endDateTimeUtc,
+                createdAtUtc = mission.createdAtUtc,
+                updatedAtUtc = mission.updatedAtUtc,
+                envActions =
+                    mission.envActions?.map {
+                        EnvActionDataOutput.fromEnvActionEntity(
+                            envActionEntity = it,
+                            listOf()
+                        )
+                    },
+                missionSource = mission.missionSource,
+                hasMissionOrder = mission.hasMissionOrder,
+                isUnderJdp = mission.isUnderJdp,
+                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
             )
         }
     }
