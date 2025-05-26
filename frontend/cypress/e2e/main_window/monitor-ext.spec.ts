@@ -25,7 +25,8 @@ context('MonitorExt', () => {
     cy.getDataCy('interest-point').should('not.exist')
   })
 
-  it("A user can't see or search vigilance areas", () => {
+  it('A user can consult vigilance areas', () => {
+    cy.intercept('PUT', '/bff/v1/vigilance_areas/1').as('editVigilanceArea')
     cy.wait(200)
     cy.clickButton('Arbre des couches')
     cy.wait(250)
@@ -34,7 +35,16 @@ context('MonitorExt', () => {
     cy.get('[label="Période de vigilance"]').should('not.exist')
 
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
-    cy.getDataCy('vigilance-area-results-list-button').should('not.exist')
-    cy.getDataCy('my-vigilance-areas-layers').should('not.exist')
+    cy.getDataCy('vigilance-area-results-list-button').contains('1 résultat')
+    cy.getDataCy('vigilance-area-results-list-button').click()
+    cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 1')
+    cy.getDataCy('vigilance-area-result-zone').click()
+    cy.getDataCy('vigilance-area-title').should('have.text', 'Zone de vigilance 1')
+  })
+  it('A user can consult reporting', () => {
+    cy.wait(1000).get('#root').click(325, 580).wait(250)
+    cy.clickButton('Consulter le signalement')
+
+    cy.getDataCy('reporting-title').contains('23-00007 - Good Company')
   })
 })

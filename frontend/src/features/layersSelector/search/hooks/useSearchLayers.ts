@@ -95,14 +95,19 @@ export function useSearchLayers() {
       if (vigilanceAreaPeriodFilter) {
         vigilanceAreasPerPeriod = getFilterVigilanceAreasPerPeriod(
           vigilanceAreaLayers?.entities ? Object.values(vigilanceAreaLayers.entities) : [],
-          isSuperUser ? vigilanceAreaPeriodFilter : VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT,
-          vigilanceAreaSpecificPeriodFilter
+          vigilanceAreaPeriodFilter,
+          vigilanceAreaSpecificPeriodFilter,
+          isSuperUser
         )
 
         vigilanceAreaIdsPerPeriod = vigilanceAreasPerPeriod
           .filter(vigilanceArea => !!vigilanceArea.id)
           .map(({ id }) => id) as number[]
       }
+
+      const vigilanceAreaPeriodFilterByUserType = isSuperUser
+        ? vigilanceAreaPeriodFilter
+        : VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT
 
       if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldSearchByExtent) {
         let searchedAMPS
@@ -216,12 +221,12 @@ export function useSearchLayers() {
             $and: filterExpression
           })
 
-          searchedVigilanceArea = vigilanceAreaPeriodFilter
+          searchedVigilanceArea = vigilanceAreaPeriodFilterByUserType
             ? resultSearchVigilanceAreas.filter(({ item }) => item.id && vigilanceAreaIdsPerPeriod.includes(item.id))
             : resultSearchVigilanceAreas
           vigilanceAreaSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
         } else {
-          searchedVigilanceArea = vigilanceAreaPeriodFilter
+          searchedVigilanceArea = vigilanceAreaPeriodFilterByUserType
             ? vigilanceAreasPerPeriod
             : Object.values(vigilanceAreaLayers?.entities ?? {})
           vigilanceAreaSchema = { bboxPath: 'bbox', idPath: 'id' }
