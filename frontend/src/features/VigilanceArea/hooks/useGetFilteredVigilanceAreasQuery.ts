@@ -46,8 +46,9 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
 
     const vigilanceAreasByPeriod = getFilterVigilanceAreasPerPeriod(
       tempVigilanceAreas,
-      isSuperUser ? filteredVigilanceAreaPeriod : VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT,
-      vigilanceAreaSpecificPeriodFilter
+      filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter,
+      isSuperUser
     )
 
     const customSearch = new CustomSearch(

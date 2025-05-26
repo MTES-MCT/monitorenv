@@ -96,10 +96,11 @@ function isMatchForRecurringOccurrence(
 export const getFilterVigilanceAreasPerPeriod = (
   vigilanceAreas: (VigilanceArea.VigilanceAreaLayer | VigilanceArea.VigilanceAreaFromApi)[],
   periodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined,
-  vigilanceAreaSpecificPeriodFilter?: string[]
+  vigilanceAreaSpecificPeriodFilter?: string[],
+  isSuperUser: boolean = true
 ): VigilanceArea.VigilanceAreaLayer[] => {
   const { endDate: endDateFilter, startDate: startDateFilter } = calculatePeriodBounds(
-    periodFilter,
+    isSuperUser ? periodFilter : VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT,
     vigilanceAreaSpecificPeriodFilter
   )
 
@@ -108,6 +109,9 @@ export const getFilterVigilanceAreasPerPeriod = (
   }
 
   return Object.values((vigilanceAreas as Array<VigilanceArea.VigilanceAreaLayer>) ?? []).filter(vigilanceArea => {
+    if (!isSuperUser && (vigilanceArea.isDraft || vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE)) {
+      return false
+    }
     if (vigilanceArea.isAtAllTimes) {
       return true
     }
