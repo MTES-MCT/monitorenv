@@ -194,7 +194,7 @@ export function RecentActivityFilters() {
               key={adminId}
               onDelete={() => onDeleteTag(adminId, RecentActivityFiltersEnum.ADMINISTRATION_IDS)}
             >
-              {`Admin. ${administrations?.find(admin => admin.id === adminId)?.name}`}
+              {`${administrations?.find(admin => admin.id === adminId)?.name}`}
             </SingleTag>
           ))}
         <CheckPicker
@@ -220,7 +220,7 @@ export function RecentActivityFilters() {
               key={controlUnitId}
               onDelete={() => onDeleteTag(controlUnitId, RecentActivityFiltersEnum.CONTROL_UNIT_IDS)}
             >
-              {`Admin. ${controlUnits?.find(controlunit => controlunit.id === controlUnitId)?.name}`}
+              {`${controlUnits?.find(controlunit => controlunit.id === controlUnitId)?.name}`}
             </SingleTag>
           ))}
       </StyledBloc>
@@ -243,7 +243,7 @@ export function RecentActivityFilters() {
           filters.themeIds?.length > 0 &&
           filters.themeIds.map(themeId => (
             <SingleTag key={themeId} onDelete={() => onDeleteTag(themeId, RecentActivityFiltersEnum.THEME_IDS)}>
-              {`Thème ${themesOptions?.find(theme => theme.value === themeId)?.label}`}
+              {`${themesOptions?.find(theme => theme.value === themeId)?.label}`}
             </SingleTag>
           ))}
       </StyledBloc>
@@ -284,14 +284,6 @@ const FilterWrapper = styled.div`
   gap: 32px;
   flex-direction: column;
   padding: 12px 4px;
-`
-
-export const StyledStatusFilter = styled.div`
-  align-items: end;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 8px;
 `
 
 const StyledCustomPeriodContainer = styled(CustomPeriodContainer)`

@@ -189,7 +189,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                   onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, selectedAdministrationNames)
                 }
               >
-                {`Admin. ${admin}`}
+                {admin}
               </SingleTag>
             ))}
 
@@ -216,7 +216,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={unit}
                 onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
               >
-                {`Unité ${controlUnitsData.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`}
+                {`${controlUnitsData.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`}
               </SingleTag>
             ))}
 
@@ -240,7 +240,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={type}
                 onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, selectedMissionTypes)}
               >
-                {`Type ${missionTypeEnum[type].libelle}`}
+                {missionTypeEnum[type].libelle}
               </SingleTag>
             ))}
 
@@ -294,7 +294,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
                 key={theme}
                 onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}
               >
-                {`Thème ${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
+                {`${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
               </SingleTag>
             ))}
           <CheckTreePicker
@@ -318,11 +318,11 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             selectedTags.map(tag => (
               <>
                 <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
-                  {`Tag ${tag.name}`}
+                  {tag.name}
                 </SingleTag>
                 {tag.subTags?.map(subTag => (
                   <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
-                    {`Sous-tag ${subTag.name}`}
+                    {subTag.name}
                   </SingleTag>
                 ))}
               </>

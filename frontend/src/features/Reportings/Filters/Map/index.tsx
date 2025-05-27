@@ -263,11 +263,11 @@ export function MapReportingsFiltersWithRef(
             {themeFilter.map(theme => (
               <>
                 <SingleTag key={theme.id} onDelete={() => onDeleteThemeTag(theme, themeFilter)}>
-                  {String(`Thème ${theme.name}`)}
+                  {theme.name}
                 </SingleTag>
                 {theme.subThemes?.map(subTheme => (
                   <SingleTag key={subTheme.id} onDelete={() => onDeleteThemeTag(subTheme, themeFilter)}>
-                    {String(`Sous-thème ${subTheme.name}`)}
+                    {subTheme.name}
                   </SingleTag>
                 ))}
               </>
@@ -296,11 +296,11 @@ export function MapReportingsFiltersWithRef(
             {tagFilter.map(tag => (
               <>
                 <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, tagFilter)}>
-                  {String(`Tag ${tag.name}`)}
+                  {tag.name}
                 </SingleTag>
                 {tag.subTags?.map(subTag => (
                   <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, tagFilter)}>
-                    {String(`Sous-tag ${subTag.name}`)}
+                    {subTag.name}
                   </SingleTag>
                 ))}
               </>
