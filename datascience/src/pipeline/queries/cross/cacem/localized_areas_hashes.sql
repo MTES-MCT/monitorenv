@@ -1,12 +1,14 @@
 SELECT 
     id,
     "name",
+    group_name,
     geom,
     control_unit_ids,
     amp_ids,
     md5(
         COALESCE(geom::text, '') ||
         COALESCE("name"::text, '') ||
+        COALESCE(group_name::text, '') ||
         COALESCE(control_unit_ids::INT[], 0) ||
         COALESCE(amp_ids::INT[], 0) ||
         

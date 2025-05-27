@@ -1,4 +1,5 @@
 import { dashboardActions } from '@features/Dashboard/slice'
+import { LocalizedAreas } from '@features/LocalizedArea'
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -90,6 +91,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
             <>
               <MyVigilanceAreas isSuperUser={isSuperUser} />
               <AdministrativeLayers />
+              <LocalizedAreas />
               <BaseLayerList />
             </>
           )}

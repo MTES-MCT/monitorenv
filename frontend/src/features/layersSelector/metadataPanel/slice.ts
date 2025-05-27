@@ -18,11 +18,12 @@ type MetadataPanelSliceState = {
     RegulatoryOrAMPOrViglanceAreaLayerType,
     AMPProperties | RegulatoryLayerCompactProperties
   >[]
-  metadataLayerId: number | undefined
+  metadataLayerId: number | string | undefined
   metadataLayerType:
     | MonitorEnvLayers.REGULATORY_ENV
     | MonitorEnvLayers.AMP
     | MonitorEnvLayers.VIGILANCE_AREA
+    | MonitorEnvLayers.LOCALIZED_AREAS
     | undefined
   metadataPanelIsOpen: boolean
 }
@@ -57,6 +58,11 @@ const layersMetadataSlice = createSlice({
       state.layerOverlayIsOpen = true
       state.layerOverlayCoordinates = action.payload
     },
+    openLocalizedAreasMetadataPanel(state, action: { payload: string }) {
+      state.metadataPanelIsOpen = true
+      state.metadataLayerType = MonitorEnvLayers.LOCALIZED_AREAS
+      state.metadataLayerId = action.payload
+    },
     openRegulatoryMetadataPanel(state, action) {
       state.metadataPanelIsOpen = true
       state.metadataLayerType = MonitorEnvLayers.REGULATORY_ENV
@@ -73,6 +79,7 @@ export const {
   closeMetadataPanel,
   openAMPMetadataPanel,
   openLayerOverlay,
+  openLocalizedAreasMetadataPanel,
   openRegulatoryMetadataPanel,
   setLayerOverlayItems
 } = layersMetadataSlice.actions

@@ -7,6 +7,7 @@ import { DashboardReportingOverlay } from '@features/Dashboard/components/Layers
 import { SelectedDashboardLayer } from '@features/Dashboard/components/Layers/SelectedDashboardLayer'
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
+import { LocalizedAreasLayer } from '@features/LocalizedArea/components/Layers'
 import { MissionsLayer } from '@features/Mission/components/Layers'
 import { EditingMissionLayer } from '@features/Mission/components/Layers/EditingMissionLayer'
 import { HoveredMissionLayer } from '@features/Mission/components/Layers/HoveredMissionLayer'
@@ -286,6 +287,10 @@ export function Map({ isSuperUser }) {
       <RecentActvityOverlay />
       {/* @ts-ignore */}
       {displayRecentActivityLegend ? <RecentActivityLegend location="OUTSIDE" /> : null}
+
+      {/* LOCALIZED AREAS */}
+      {/* @ts-ignore */}
+      <LocalizedAreasLayer />
     </BaseMap>
   )
 }
