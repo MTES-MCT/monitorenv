@@ -56,7 +56,7 @@ export const getLocalizedAreasIdsGroupedByName = createSelector(
 
 export const getLocalizedAreaIdsByGroupName = createCachedSelector(
   [getLocalizedAreasIdsGroupedByName, (_, groupName: string) => groupName],
-  (localizedAreasIdsByName, groupName) => localizedAreasIdsByName && localizedAreasIdsByName[groupName]
+  (localizedAreasIdsByName, groupName) => localizedAreasIdsByName?.[groupName]
 )((_, groupName: string) => groupName)
 
 export const getExtentOfLocalizedAreasGroupByGroupName = createCachedSelector(
