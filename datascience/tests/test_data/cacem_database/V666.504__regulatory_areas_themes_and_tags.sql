@@ -10,17 +10,19 @@ CREATE TABLE IF NOT EXISTS prod."REG_ENV_V3"
     layer_name     varchar,
     facade         varchar,
     ref_reg        varchar,
-    edition        varchar,
+    edition        date,
     editeur        varchar,
     source         varchar,
     obs            varchar,
     thematique     varchar,
-    date           varchar,
+    date           date,
     validite       varchar,
-    date_fin       varchar,
+    date_fin       date,
     tempo          varchar,
     type           varchar,
-    row_hash       text
+    resume         text,
+    poly_name      text,
+    plan           text
 );
 
 /* THEMES */
@@ -62,3 +64,6 @@ CREATE TABLE prod.tags_regulatory_areas (
     regulatory_areas_id INT REFERENCES prod."REG_ENV_V3" (id),
     PRIMARY KEY (tags_id, regulatory_areas_id)
 );
+
+insert into prod."REG_ENV_V3" (id, geom, ent_name, url, layer_name, facade, ref_reg, edition, editeur, source, obs, thematique, date, validite, date_fin, tempo, type, resume, poly_name, plan) values (1, 'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))', 'entity_name1', 'url1', 'layer_name1', 'MED', 'ref_reg1', '2025-01-01', 'editrice1', 'source1', 'observation1', 'thematique1', '2010-06-01', '10 ans', '2024-01-01', 'temporaire', 'Décret', 'resume1', 'polyname1', 'plan1');
+insert into prod."REG_ENV_V3" (id, geom, ent_name, url, layer_name, facade, ref_reg, edition, editeur, source, obs, thematique, date, validite, date_fin, tempo, type, resume, poly_name, plan) values (2, 'MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))', 'entity_name2', 'url2', 'layer_name2', 'NAMO', 'ref_reg2', '2025-01-01', 'editeur2', 'source2', 'observation2', 'thematique2', '2005-07-01', '20 ans', '2025-01-01', 'permanent', 'Arrêté préfectoral', 'resume2', 'polyname2', 'plan2');
