@@ -40,11 +40,15 @@ context('MonitorExt', () => {
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 1')
     cy.getDataCy('vigilance-area-result-zone').click()
     cy.getDataCy('vigilance-area-title').should('have.text', 'Zone de vigilance 1')
+
+    cy.getDataCy('vigilance-area-panel-source').should('not.exist')
   })
   it('A user can consult reporting', () => {
     cy.wait(1000).get('#root').click(325, 580).wait(250)
     cy.clickButton('Consulter le signalement')
 
     cy.getDataCy('reporting-title').contains('23-00007 - Good Company')
+    cy.get('.Field-TextInput').find('label').contains('Saisi par').should('not.exist')
+    cy.get('.Field-TextInput').find('label').contains('Actions effectuées').should('not.exist')
   })
 })
