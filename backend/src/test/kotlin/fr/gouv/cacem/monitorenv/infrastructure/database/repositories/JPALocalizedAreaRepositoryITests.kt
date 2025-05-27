@@ -14,6 +14,6 @@ class JPALocalizedAreaRepositoryITests : AbstractDBTests() {
     fun `findAll Should return all localizedAreas`() {
         // When
         val localizedAreas = jpaLocalizedAreaRepository.findAll()
-        assertThat(localizedAreas).hasSize(2)
+        assertThat(localizedAreas).hasSize(3)
     }
 }

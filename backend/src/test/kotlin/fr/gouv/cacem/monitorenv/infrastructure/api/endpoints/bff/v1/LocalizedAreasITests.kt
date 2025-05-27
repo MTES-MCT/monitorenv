@@ -43,6 +43,7 @@ class LocalizedAreasITests {
             LocalizedAreaEntity(
                 id = 17,
                 geom = polygon,
+                groupName = "Secteur 1",
                 name = "Roscanvel",
                 controlUnitIds = listOf(1, 2),
                 ampIds = listOf(3, 4),
@@ -57,6 +58,7 @@ class LocalizedAreasITests {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(localizedArea.id)))
             .andExpect(jsonPath("$[0].name", equalTo(localizedArea.name)))
+            .andExpect(jsonPath("$[0].groupName", equalTo(localizedArea.groupName)))
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
             .andExpect(jsonPath("$[0].controlUnitIds", equalTo(localizedArea.controlUnitIds)))
             .andExpect(jsonPath("$[0].ampIds", equalTo(localizedArea.ampIds)))
