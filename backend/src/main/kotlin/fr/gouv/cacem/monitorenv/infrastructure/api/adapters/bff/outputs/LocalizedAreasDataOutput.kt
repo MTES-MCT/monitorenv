@@ -5,19 +5,21 @@ import org.locationtech.jts.geom.MultiPolygon
 
 data class LocalizedAreasDataOutput(
     val id: Int,
-    val name: String,
-    val geom: MultiPolygon,
-    val controlUnitIds: List<Int>? = emptyList(),
     val ampIds: List<Int>? = emptyList(),
+    val controlUnitIds: List<Int>? = emptyList(),
+    val geom: MultiPolygon,
+    val groupName: String,
+    val name: String,
 ) {
     companion object {
         fun fromLocalizedAreaEntity(localizedArea: LocalizedAreaEntity) =
             LocalizedAreasDataOutput(
                 id = localizedArea.id,
-                name = localizedArea.name,
-                geom = localizedArea.geom,
-                controlUnitIds = localizedArea.controlUnitIds,
                 ampIds = localizedArea.ampIds,
+                controlUnitIds = localizedArea.controlUnitIds,
+                geom = localizedArea.geom,
+                groupName = localizedArea.groupName,
+                name = localizedArea.name,
             )
     }
 }

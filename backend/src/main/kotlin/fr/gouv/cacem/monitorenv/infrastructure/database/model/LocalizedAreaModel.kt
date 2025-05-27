@@ -11,17 +11,19 @@ import org.locationtech.jts.geom.MultiPolygon
 @Table(name = "localized_areas")
 class LocalizedAreaModel(
     @Id @Column(name = "id") val id: Int,
-    @Column(name = "geom") val geom: MultiPolygon,
-    @Column(name = "name") val name: String,
-    @Column(name = "control_unit_ids") val controlUnitIds: List<Int> = emptyList(),
     @Column(name = "amp_ids") val ampIds: List<Int> = emptyList(),
+    @Column(name = "control_unit_ids") val controlUnitIds: List<Int> = emptyList(),
+    @Column(name = "geom") val geom: MultiPolygon,
+    @Column(name = "group_name") val groupName: String,
+    @Column(name = "name") val name: String,
 ) {
     fun toLocalizedArea() =
         LocalizedAreaEntity(
             id = id,
-            geom = geom,
-            name = name,
-            controlUnitIds = controlUnitIds,
             ampIds = ampIds,
+            controlUnitIds = controlUnitIds,
+            geom = geom,
+            groupName = groupName,
+            name = name,
         )
 }

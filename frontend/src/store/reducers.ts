@@ -1,6 +1,7 @@
 import { dashboardFiltersPersistedReducer } from '@features/Dashboard/components/DashboardForm/slice'
 import { dashboardReducer } from '@features/Dashboard/slice'
 import { interestPointSlicePersistedReducer } from '@features/InterestPoint/slice'
+import { localizedAreaSlicePersistedReducer } from '@features/LocalizedArea/slice'
 import { recentActivityPersitedReducer } from '@features/RecentActivity/slice'
 import { attachMissionToReportingSliceReducer } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingFiltersPersistedReducer } from '@features/Reportings/Filters/slice'
@@ -52,6 +53,7 @@ export const homeReducers = {
   interestPoint: interestPointSlicePersistedReducer,
   layerSearch: layerSearchSliceReducer,
   layersMetadata: layersMetadataSliceReducer,
+  localizedArea: localizedAreaSlicePersistedReducer,
   mainWindow: mainWindowReducer,
   map: mapSliceReducer,
   mapControlUnitDialog: controlUnitDialogReducer,
@@ -59,8 +61,8 @@ export const homeReducers = {
   measurement: measurementSlicePersistedReducer,
   mission: missionSliceReducer,
   missionFilters: missionFiltersPersistedReducer,
-  missionForms: missionFormsSliceReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
+  missionForms: missionFormsSliceReducer,
   recentActivity: recentActivityPersitedReducer,
   regulatory: regulatorySlicePersistedReducer,
   reporting: reportingSliceReducer,
