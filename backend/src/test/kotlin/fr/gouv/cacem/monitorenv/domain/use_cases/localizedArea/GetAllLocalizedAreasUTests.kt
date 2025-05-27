@@ -30,7 +30,8 @@ class GetAllLocalizedAreasUTests {
             listOf(
                 LocalizedAreaEntity(
                     id = 1,
-                    name = "Area 1",
+                    name = "Aire 1",
+                    groupName = "Secteur 1",
                     geom = polygon,
                     controlUnitIds = listOf(1, 2),
                     ampIds = listOf(3, 4),
