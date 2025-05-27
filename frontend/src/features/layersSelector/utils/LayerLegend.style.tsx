@@ -1,4 +1,5 @@
 import { Dashboard } from '@features/Dashboard/types'
+import { getLocalizedAreaColorWithAlpha } from '@features/LocalizedArea/utils'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { Size } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
@@ -18,10 +19,10 @@ export function LayerLegend({
   type
 }: {
   isDisabled?: boolean
-  layerType: RegulatoryOrAMPOrViglanceAreaLayerType
-  legendKey?: string | null
+  layerType: RegulatoryOrAMPOrViglanceAreaLayerType | MonitorEnvLayers.LOCALIZED_AREAS
+  legendKey?: string
   size?: Size
-  type?: string | null
+  type?: string
 }) {
   switch (layerType) {
     case MonitorEnvLayers.AMP:
@@ -38,6 +39,8 @@ export function LayerLegend({
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
     case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
       return <Rectangle $size={size} $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey, isDisabled)} />
+    case MonitorEnvLayers.LOCALIZED_AREAS:
+      return <Rectangle $size={size} $vectorLayerColor={getLocalizedAreaColorWithAlpha(type, legendKey)} />
     default:
       return <Rectangle $size={size} />
   }

@@ -75,6 +75,7 @@ def update_localized_areas(new_localized_areas: pd.DataFrame):
                     id               SERIAL PRIMARY KEY,
                     geom             geometry(MultiPolygon,4326),
                     "name"           character varying,
+                    group_name       character varying,
                     control_unit_ids INTEGER[],
                     amp_ids          INTEGER[]
                 ) ON COMMIT DROP;"""
@@ -85,6 +86,7 @@ def update_localized_areas(new_localized_areas: pd.DataFrame):
             "id",
             "geom",
             "name",
+            "group_name",
             "control_unit_ids",
             "amp_ids"
         ]
@@ -109,6 +111,7 @@ def update_localized_areas(new_localized_areas: pd.DataFrame):
             text(
                 """UPDATE localized_areas
                 SET name = tmp.name,
+                group_name = tmp.group_name,
                 geom = tmp.geom,
                 control_unit_ids = tmp.control_unit_ids,
                 amp_ids = tmp.amp_ids

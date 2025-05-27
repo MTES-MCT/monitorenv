@@ -1,9 +1,10 @@
 /* eslint-disable no-bitwise, no-plusplus */
 
+import { localizedAreasColors } from '@features/LocalizedArea/constants'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { asArray, asString } from 'ol/color'
 
-import { Layers } from '../domain/entities/layers/constants'
+import { Layers, LayerType } from '../domain/entities/layers/constants'
 
 const regulatoryColorsBlues = [
   THEME.color.yaleBlue,
@@ -85,6 +86,9 @@ export function stringToColorInGroup(group: string, name: string, layerType?: st
 
   if (layerType === Layers.VIGILANCE_AREA.code) {
     colors = [vigilanceAreaColors]
+  }
+  if (layerType === LayerType.LOCALIZED_AREAS) {
+    colors = [localizedAreasColors]
   }
   const colorSet = stringToArrayItem(group, colors)
 

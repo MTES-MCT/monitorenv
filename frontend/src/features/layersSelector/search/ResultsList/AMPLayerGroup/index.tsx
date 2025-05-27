@@ -31,7 +31,7 @@ export function AMPLayerGroup({
       groupExtent={groupExtent}
       groupName={groupName}
       layerIds={layerIds}
-      layerIdToDisplay={ampMetadataLayerId}
+      layerIdToDisplay={ampMetadataLayerId as number}
       layerType={MonitorEnvLayers.AMP}
       removeLayers={handleRemoveLayers}
       searchedText={searchedText}

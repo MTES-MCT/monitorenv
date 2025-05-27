@@ -18,11 +18,12 @@ def pg_array_to_list(val):
         return sorted(list(val))
     return val
 
-def generate_localized_areas_data(ids, geom, names, control_units_ids, amps_ids):
+def generate_localized_areas_data(ids, geom, names, group_names, control_units_ids, amps_ids):
     return pd.DataFrame({
         "id": ids,
         "geom": geom,
         "name": names,
+        "group_name": group_names,
         "control_unit_ids": control_units_ids,
         "amp_ids": amps_ids
     })
@@ -33,6 +34,7 @@ def new_localized_areas() -> pd.DataFrame:
         ids=[1, 2, 3, 4],
         geom=[None, None, None, None],
         names=["Secteur localisé 1", "Secteur localisé 2", "Secteur localisé 3", "Secteur localisé 4"],
+        group_names=["Groupe 1", "Groupe 1", "Groupe 1", "Groupe 2"],
         control_units_ids=[[1], [1, 2], [2, 3], [4]],
         amps_ids=[[1], [1, 2], [3], [4, 3]],
     )
@@ -43,6 +45,7 @@ def old_localized_areas() -> pd.DataFrame:
         ids=[1, 2, 3, 4],
         geom=[None, None, None, None],
         names=["Secteur localisé 1 old", "Secteur localisé 2", "Secteur localisé 3", "Secteur localisé 4"],
+        group_names=["Groupe 1", "Groupe 1", "Groupe 2", "Groupe 2"],
         control_units_ids=[[1], [1, 2], [3], [4]],
         amps_ids=[[1], [1, 2], [3], [3]],
     )
@@ -81,7 +84,7 @@ def test_update_localized_areas(reset_test_data, new_localized_areas, old_locali
     updated_localized_areas = read_query(
         "monitorenv_remote", 
         """
-        SELECT id, geom, name, control_unit_ids, amp_ids
+        SELECT id, geom, name, group_name, control_unit_ids, amp_ids
         FROM public.localized_areas
         ORDER BY id
         """
