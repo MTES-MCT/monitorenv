@@ -23,6 +23,9 @@ export function PanelPeriodAndThemes({ vigilanceArea }: { vigilanceArea: Vigilan
     ? customDayjs(vigilanceArea?.endDatePeriod).utc().format('DD/MM/YYYY')
     : undefined
 
+  const subThemes = displaySubThemes(vigilanceArea?.themes)
+  const subTags = displaySubTags(vigilanceArea?.tags)
+
   return (
     <>
       <PanelSubPart>
@@ -60,26 +63,29 @@ export function PanelPeriodAndThemes({ vigilanceArea }: { vigilanceArea: Vigilan
               : EMPTY_VALUE}
           </PanelInlineItemValue>
         </PanelInlineItem>
-        <PanelInlineItem>
-          <PanelInlineItemLabel $isInline>Sous-thématiques</PanelInlineItemLabel>
-          <PanelInlineItemValue $maxLine={2} title={displaySubThemes(vigilanceArea?.themes) ?? ''}>
-            {vigilanceArea?.themes && vigilanceArea?.themes.length > 0
-              ? displaySubThemes(vigilanceArea?.themes)
-              : EMPTY_VALUE}
-          </PanelInlineItemValue>
-        </PanelInlineItem>
+        {subThemes && (
+          <PanelInlineItem>
+            <PanelInlineItemLabel $isInline>Sous-thématiques</PanelInlineItemLabel>
+            <PanelInlineItemValue $maxLine={2} title={subThemes}>
+              {subThemes}
+            </PanelInlineItemValue>
+          </PanelInlineItem>
+        )}
         <PanelInlineItem>
           <PanelInlineItemLabel $isInline>Tags</PanelInlineItemLabel>
           <PanelInlineItemValue $maxLine={2} title={displayTags(vigilanceArea?.tags) ?? ''}>
             {vigilanceArea?.tags && vigilanceArea?.tags.length > 0 ? displayTags(vigilanceArea?.tags) : EMPTY_VALUE}
           </PanelInlineItemValue>
         </PanelInlineItem>
-        <PanelInlineItem>
-          <PanelInlineItemLabel $isInline>Sous-tags</PanelInlineItemLabel>
-          <PanelInlineItemValue $maxLine={2} title={displaySubTags(vigilanceArea?.tags) ?? ''}>
-            {vigilanceArea?.tags && vigilanceArea?.tags.length > 0 ? displaySubTags(vigilanceArea?.tags) : EMPTY_VALUE}
-          </PanelInlineItemValue>
-        </PanelInlineItem>
+        {subTags && (
+          <PanelInlineItem>
+            <PanelInlineItemLabel $isInline>Sous-tags</PanelInlineItemLabel>
+            <PanelInlineItemValue $maxLine={2} title={subTags}>
+              {subTags}
+            </PanelInlineItemValue>
+          </PanelInlineItem>
+        )}
+
         <PanelInlineItem>
           <PanelInlineItemLabel $isInline>Visibilité</PanelInlineItemLabel>
           <PanelInlineItemValue>

@@ -1,3 +1,6 @@
+import { displaySubTags } from '@utils/getTagsAsOptions'
+import { displaySubThemes } from '@utils/getThemesAsOptions'
+
 import { Body, Field, Fields, Key, NoValue, Value, Zone } from '../MetadataPanel.style'
 
 import type { TagFromAPI } from 'domain/entities/tags'
@@ -16,6 +19,9 @@ export function Identification({
   themes: ThemeFromAPI[]
   type: string
 }) {
+  const subThemes = displaySubThemes(themes)
+  const subTags = displaySubTags(tags)
+
   return (
     <Zone>
       <Fields>
@@ -34,26 +40,24 @@ export function Identification({
               {themes.map(theme => theme.name).join(', ') || <NoValue>-</NoValue>}
             </Value>
           </Field>
-          <Field>
-            <Key>Sous-thématiques</Key>
-            <Value data-cy="regulatory-layers-metadata-subtheme">
-              {themes.flatMap(theme => theme.subThemes.map(subTheme => subTheme.name)).join(', ') || (
-                <NoValue>-</NoValue>
-              )}
-            </Value>
-          </Field>
+          {subThemes && (
+            <Field>
+              <Key>Sous-thématiques</Key>
+              <Value data-cy="regulatory-layers-metadata-subtheme">{subThemes}</Value>
+            </Field>
+          )}
           <Field>
             <Key>Tags</Key>
             <Value data-cy="regulatory-layers-metadata-tag">
               {tags.map(tag => tag.name).join(', ') || <NoValue>-</NoValue>}
             </Value>
           </Field>
-          <Field>
-            <Key>Sous-tags</Key>
-            <Value data-cy="regulatory-layers-metadata-subtag">
-              {tags.flatMap(tag => tag.subTags.map(subTag => subTag.name)).join(', ') || <NoValue>-</NoValue>}
-            </Value>
-          </Field>
+          {subTags && (
+            <Field>
+              <Key>Sous-tags</Key>
+              <Value data-cy="regulatory-layers-metadata-subtag">{subTags}</Value>
+            </Field>
+          )}
           <Field>
             <Key>Façade</Key>
             <Value data-cy="regulatory-layers-metadata-facade">{facade || <NoValue>-</NoValue>}</Value>
