@@ -407,21 +407,6 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
             value={values.theme ? [values.theme] : undefined}
             valueKey="id"
           />
-          <CheckTreePicker
-            childrenKey="subTags"
-            error={errors.tags}
-            label="Tags et sous-tags"
-            labelKey="name"
-            name="tags"
-            onChange={nextTags => {
-              setFieldValue('tags', parseOptionsToTags(nextTags))
-            }}
-            options={tagOptions}
-            renderedChildrenValue="Sous-tag."
-            renderedValue="Tags"
-            value={values.tags}
-            valueKey="id"
-          />
 
           {isVesselInformationRequested && (
             <Message data-cy="reporting-target-info-message">
@@ -440,6 +425,21 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
               options={WITH_VHF_ANSWER_OPTIONS}
             />
           )}
+          <CheckTreePicker
+            childrenKey="subTags"
+            error={errors.tags}
+            label="Tags et sous-tags"
+            labelKey="name"
+            name="tags"
+            onChange={nextTags => {
+              setFieldValue('tags', parseOptionsToTags(nextTags))
+            }}
+            options={tagOptions}
+            renderedChildrenValue="Sous-tag."
+            renderedValue="Tags"
+            value={values.tags}
+            valueKey="id"
+          />
         </StyledThemeContainer>
 
         <Validity mustIncreaseValidity={mustIncreaseValidity} reportingContext={reportingContext} />
