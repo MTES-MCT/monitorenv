@@ -7,11 +7,11 @@ from prefect.executors import LocalDaskExecutor
 
 from config import (
     IS_INTEGRATION,
-    REGULATIONS_CSV_RESOURCE_ID,
-    REGULATIONS_CSV_RESOURCE_TITLE,
-    REGULATIONS_DATASET_ID,
-    REGULATIONS_GEOPACKAGE_RESOURCE_ID,
-    REGULATIONS_GEOPACKAGE_RESOURCE_TITLE,
+    REGULATORY_AREAS_CSV_RESOURCE_ID,
+    REGULATORY_AREAS_CSV_RESOURCE_TITLE,
+    REGULATORY_AREAS_DATASET_ID,
+    REGULATORY_AREAS_GEOPACKAGE_RESOURCE_ID,
+    REGULATORY_AREAS_GEOPACKAGE_RESOURCE_TITLE,
 )
 from src.pipeline.generic_tasks import extract
 from src.pipeline.shared_tasks.control_flow import check_flow_not_running
@@ -25,10 +25,11 @@ from src.pipeline.shared_tasks.datagouv import (
 @task(checkpoint=False)
 def extract_regulations_open_data() -> gpd.GeoDataFrame:
     return extract(
-        "monitorenv_remote",
-        "monitorenv/regulations_open_data.sql",
+        "cacem_local",
+        "cross/cacem/regulations_open_data.sql",
         backend="geopandas",
         geom_col="geometry",
+        parse_dates=["edition", "date_fin", "date"]
     )
 
 
@@ -37,21 +38,23 @@ def get_regulations_for_csv(regulations: gpd.GeoDataFrame) -> pd.DataFrame:
 
     columns = [
             "id",
-            "entity_name",
+            "ent_name",
             "url",
             "layer_name",
             "facade",
             "ref_reg",
             "edition",
-            "editeur",
             "source",
-            "thematique",
-            "observation",
+            "obs",
             "date",
-            "duree_validite",
-            "temporalite",
+            "date_fin",
+            "validite",
+            "tempo",
             "type",
-            "wkt"
+            "wkt",
+            "resume",
+            "poly_name",
+            "plan"
     ]
 
     return pd.DataFrame(regulations[columns])
@@ -62,21 +65,23 @@ def get_regulations_for_geopackage(regulations: gpd.GeoDataFrame) -> gpd.GeoData
 
     columns = [
             "id",
-            "entity_name",
+            "ent_name",
             "url",
             "layer_name",
             "facade",
             "ref_reg",
             "edition",
-            "editeur",
             "source",
-            "thematique",
-            "observation",
+            "obs",
             "date",
-            "duree_validite",
-            "temporalite",
+            "date_fin",
+            "validite",
+            "tempo",
             "type",
-            "geometry"
+            "resume",
+            "poly_name",
+            "plan",
+            "geometry",
     ]
 
     return regulations[columns].copy(deep=True)
@@ -87,18 +92,18 @@ with Flow("Regulations open data", executor=LocalDaskExecutor()) as flow:
     flow_not_running = check_flow_not_running()
     with case(flow_not_running, True):
 
-        dataset_id = Parameter("dataset_id", default=REGULATIONS_DATASET_ID)
+        dataset_id = Parameter("dataset_id", default=REGULATORY_AREAS_DATASET_ID)
         csv_resource_id = Parameter(
-            "csv_resource_id", default=REGULATIONS_CSV_RESOURCE_ID
+            "csv_resource_id", default=REGULATORY_AREAS_CSV_RESOURCE_ID
         )
         gpkg_resource_id = Parameter(
-            "gpkg_resource_id", default=REGULATIONS_GEOPACKAGE_RESOURCE_ID
+            "gpkg_resource_id", default=REGULATORY_AREAS_GEOPACKAGE_RESOURCE_ID
         )
         csv_resource_title = Parameter(
-            "csv_resource_title", default=REGULATIONS_CSV_RESOURCE_TITLE
+            "csv_resource_title", default=REGULATORY_AREAS_CSV_RESOURCE_TITLE
         )
         gpkg_resource_title = Parameter(
-            "gpkg_resource_title", default=REGULATIONS_GEOPACKAGE_RESOURCE_TITLE
+            "gpkg_resource_title", default=REGULATORY_AREAS_GEOPACKAGE_RESOURCE_TITLE
         )
         is_integration = Parameter("is_integration", default=IS_INTEGRATION)
 

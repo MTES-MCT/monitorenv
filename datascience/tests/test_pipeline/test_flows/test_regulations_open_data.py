@@ -1,7 +1,7 @@
 from io import BytesIO
-import pdb
 
 import geopandas as gpd
+from numpy import datetime64
 import pandas as pd
 import pytest
 
@@ -24,7 +24,7 @@ def regulations_open_data():
                 1,
                 2,
             ],
-            "entity_name": [
+            "ent_name": [
                 "entity_name1",
                 "entity_name2",
             ],
@@ -45,8 +45,8 @@ def regulations_open_data():
                 "ref_reg2",
             ],
             "edition": [
-                "2025-01-01",
-                "2025-01-01",
+                pd.to_datetime("2025-01-01"),
+                pd.to_datetime("2025-01-01"),
             ],
             "editeur": [
                 "editrice1",
@@ -60,19 +60,23 @@ def regulations_open_data():
                 "thematique1",
                 "thematique2"
             ],
-            "observation": [
+            "obs": [
                 "observation1",
                 "observation2",
             ],
             "date": [
-                "2010-06-01",
-                "2005-07-01",
+                pd.to_datetime("2010-06-01"),
+                pd.to_datetime("2005-07-01"),
             ],
-            "duree_validite": [
+            "date_fin": [
+                pd.to_datetime("2024-01-01"),
+                pd.to_datetime("2025-01-01"),
+            ],
+            "validite": [
                 "10 ans",
                 "20 ans",
             ],
-            "temporalite": [
+            "tempo": [
                 "temporaire",
                 "permanent",
             ],
@@ -80,14 +84,26 @@ def regulations_open_data():
                 "Décret",
                 "Arrêté préfectoral",
             ],
+            "wkt": [
+                "MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))",
+                "MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))",
+            ],
+            "resume": [
+                "resume1",
+                "resume2",
+            ],
+            "poly_name": [
+                "polyname1",
+                "polyname2",
+            ],
+            "plan": [
+                "plan1",
+                "plan2",
+            ],
             "geometry": [
                 make_square_multipolygon(0, 0, 10, 10),
                 make_square_multipolygon(120, -20, 15, 10),
             ],
-            "wkt": [
-                "MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))",
-                "MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))",
-            ]
         },
     )
 
@@ -99,7 +115,7 @@ def regulations_for_csv():
                 1,
                 2,
             ],
-            "entity_name": [
+            "ent_name": [
                 "entity_name1",
                 "entity_name2",
             ],
@@ -120,34 +136,30 @@ def regulations_for_csv():
                 "ref_reg2",
             ],
             "edition": [
-                "2025-01-01",
-                "2025-01-01",
-            ],
-            "editeur": [
-                "editrice1",
-                "editeur2",
+                pd.to_datetime("2025-01-01"),
+                pd.to_datetime("2025-01-01"),
             ],
             "source": [
                 "source1",
                 "source2",
             ],
-            "thematique": [
-                "thematique1",
-                "thematique2"
-            ],
-            "observation": [
+            "obs": [
                 "observation1",
                 "observation2",
             ],
             "date": [
-                "2010-06-01",
-                "2005-07-01",
+                pd.to_datetime("2010-06-01"),
+                pd.to_datetime("2005-07-01"),
             ],
-            "duree_validite": [
+            "date_fin": [
+                pd.to_datetime("2024-01-01"),
+                pd.to_datetime("2025-01-01"),
+            ],
+            "validite": [
                 "10 ans",
                 "20 ans",
             ],
-            "temporalite": [
+            "tempo": [
                 "temporaire",
                 "permanent",
             ],
@@ -158,6 +170,18 @@ def regulations_for_csv():
             "wkt": [
                 "MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))",
                 "MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))",
+            ],
+            "resume": [
+                "resume1",
+                "resume2",
+            ],
+            "poly_name": [
+                "polyname1",
+                "polyname2",
+            ],
+            "plan": [
+                "plan1",
+                "plan2",
             ]
         },
     )
@@ -170,7 +194,7 @@ def regulations_for_geopackage():
                 1,
                 2,
             ],
-            "entity_name": [
+            "ent_name": [
                 "entity_name1",
                 "entity_name2",
             ],
@@ -191,40 +215,48 @@ def regulations_for_geopackage():
                 "ref_reg2",
             ],
             "edition": [
-                "2025-01-01",
-                "2025-01-01",
-            ],
-            "editeur": [
-                "editrice1",
-                "editeur2",
+                pd.to_datetime("2025-01-01"),
+                pd.to_datetime("2025-01-01"),
             ],
             "source": [
                 "source1",
                 "source2",
             ],
-            "thematique": [
-                "thematique1",
-                "thematique2"
-            ],
-            "observation": [
+            "obs": [
                 "observation1",
                 "observation2",
             ],
             "date": [
-                "2010-06-01",
-                "2005-07-01",
+                pd.to_datetime("2010-06-01"),
+                pd.to_datetime("2005-07-01"),
             ],
-            "duree_validite": [
+            "date_fin": [
+                pd.to_datetime("2024-01-01"),
+                pd.to_datetime("2025-01-01"),
+            ],
+            "validite": [
                 "10 ans",
                 "20 ans",
             ],
-            "temporalite": [
+            "tempo": [
                 "temporaire",
                 "permanent",
             ],
             "type": [
                 "Décret",
                 "Arrêté préfectoral",
+            ],
+            "resume": [
+                "resume1",
+                "resume2",
+            ],
+            "poly_name": [
+                "polyname1",
+                "polyname2",
+            ],
+            "plan": [
+                "plan1",
+                "plan2",
             ],
             "geometry": [
                 make_square_multipolygon(0, 0, 10, 10),
@@ -233,7 +265,7 @@ def regulations_for_geopackage():
         },
     )
 
-def test_extract_regulations_open_data(reset_test_data, regulations_open_data):
+def test_extract_regulations_open_data(create_cacem_tables, reset_test_data, regulations_open_data):
     regulations = extract_regulations_open_data.run()
     pd.testing.assert_frame_equal(regulations, regulations_open_data)
 
@@ -250,7 +282,7 @@ def test_get_regulations_for_geopackage(
     pd.testing.assert_frame_equal(regulations, regulations_for_geopackage)
 
 
-def test_flow(reset_test_data, regulations_for_csv, regulations_for_geopackage):
+def test_flow(create_cacem_tables, reset_test_data, regulations_for_csv, regulations_for_geopackage):
     while flow.get_tasks("update_resource"):
         flow.replace(flow.get_tasks("update_resource")[0], mock_update_resource)
 
@@ -261,7 +293,8 @@ def test_flow(reset_test_data, regulations_for_csv, regulations_for_geopackage):
     # Check csv file object
     csv_file_object = state.result[flow.get_tasks("get_csv_file_object")[0]].result
     assert isinstance(csv_file_object, BytesIO)
-    df_from_csv_file_object = pd.read_csv(csv_file_object)
+
+    df_from_csv_file_object = pd.read_csv(csv_file_object, parse_dates=["date", "date_fin", "edition"])
     pd.testing.assert_frame_equal(
         df_from_csv_file_object.convert_dtypes(), regulations_for_csv.convert_dtypes()
     )
