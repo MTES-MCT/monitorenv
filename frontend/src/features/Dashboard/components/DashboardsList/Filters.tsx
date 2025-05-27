@@ -9,11 +9,11 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CheckPicker,
   CustomSearch,
+  type DateAsStringRange,
   DateRangePicker,
   getOptionsFromIdAndName,
-  SingleTag,
-  type DateAsStringRange,
-  type OptionValueType
+  type OptionValueType,
+  SingleTag
 } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptionsLegacy } from '@utils/getTagsAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
@@ -24,7 +24,7 @@ import { isArray, isEqual } from 'lodash'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { dashboardFiltersActions, INITIAL_LIST_FILTERS_STATE, type DashboardsListFilters } from '../DashboardForm/slice'
+import { dashboardFiltersActions, type DashboardsListFilters, INITIAL_LIST_FILTERS_STATE } from '../DashboardForm/slice'
 
 type Orientation = 'row' | 'column'
 export function Filters({ orientation = 'row' }: { orientation?: Orientation }) {
@@ -102,7 +102,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     <>
       {seaFronts?.map(seaFront => (
         <SingleTag key={seaFront} onDelete={() => onDeleteTag(seaFront, 'seaFronts', seaFronts)}>
-          {String(`Façade ${seaFront}`)}
+          {String(`${orientation === 'row' ? 'Façade ' : ''} ${seaFront}`)}
         </SingleTag>
       ))}
     </>
@@ -112,7 +112,11 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     <>
       {controlUnits?.map(controlUnit => (
         <SingleTag key={controlUnit} onDelete={() => onDeleteTag(controlUnit, 'controlUnits', controlUnits)}>
-          {String(`Unité ${allControlUnits?.find(control => control.id === controlUnit)?.name}`)}
+          {String(
+            `${orientation === 'row' ? 'Unité ' : ''} ${
+              allControlUnits?.find(control => control.id === controlUnit)?.name
+            }`
+          )}
         </SingleTag>
       ))}
     </>
