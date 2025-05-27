@@ -30,10 +30,8 @@ export function LocalizedAreas() {
   const groupedLocalizedAreas = localizedAreas?.entities
     ? Object.values(localizedAreas.entities).reduce(
         (acc: Record<string, LocalizedArea.LocalizedAreaWithBbox[]>, localizedArea) => {
-          const groupName = localizedArea.groupName || 'Autres zones'
-          if (!acc[groupName]) {
-            acc[groupName] = []
-          }
+          const { groupName } = localizedArea
+          acc[groupName] ??= []
           acc[groupName].push(localizedArea)
 
           return acc

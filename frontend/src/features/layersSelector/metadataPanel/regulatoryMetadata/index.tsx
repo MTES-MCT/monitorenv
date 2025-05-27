@@ -20,9 +20,12 @@ export function RegulatoryMetadata() {
   const dispatch = useAppDispatch()
   const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
-  const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(Number(metadataLayerId) ?? skipToken, {
-    pollingInterval: FOUR_HOURS
-  })
+  const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(
+    metadataLayerId ? Number(metadataLayerId) : skipToken,
+    {
+      pollingInterval: FOUR_HOURS
+    }
+  )
 
   const onCloseIconClicked = useCallback(() => {
     dispatch(closeMetadataPanel())
