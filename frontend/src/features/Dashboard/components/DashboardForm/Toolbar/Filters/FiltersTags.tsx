@@ -8,17 +8,14 @@ import styled from 'styled-components'
 
 import { dashboardFiltersActions } from '../../slice'
 
-import type { DashboardType } from '@features/Dashboard/slice'
 import type { TagOption } from 'domain/entities/tags'
 
 type FiltersTagsProps = {
-  dashboard: DashboardType
+  dashboardKey: string
 }
 
-export function FiltersTags({ dashboard }: FiltersTagsProps) {
+export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
   const dispatch = useAppDispatch()
-
-  const { id } = dashboard.dashboard
 
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 

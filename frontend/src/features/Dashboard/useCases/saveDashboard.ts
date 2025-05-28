@@ -1,4 +1,5 @@
 import { dashboardsAPI } from '@api/dashboardsAPI'
+import { dashboardFiltersActions } from '@features/Dashboard/components/DashboardForm/slice'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { Level } from '@mtes-mct/monitor-ui'
 
@@ -10,8 +11,8 @@ import type { HomeAppThunk } from '@store/index'
 export const SAVE_DASHBOARD_ERROR_MESSAGE = "Nous n'avons pas pu enregistrer le tableau de bord"
 
 export const saveDashboard =
-  (dashboard: Dashboard.Dashboard): HomeAppThunk =>
-  async dispatch => {
+  (key: string, dashboard: Dashboard.Dashboard): HomeAppThunk =>
+  async (dispatch, getState) => {
     const dashboardToSave: Dashboard.DashboardToApi = {
       ...dashboard,
       id: dashboard.createdAt ? dashboard.id : undefined
@@ -19,6 +20,12 @@ export const saveDashboard =
     const { data, error } = await dispatch(dashboardsAPI.endpoints.save.initiate(dashboardToSave))
     if (data) {
       dispatch(dashboardActions.updateDashboard({ dashboard: data }))
+      dispatch(
+        dashboardFiltersActions.setDashboardFilters({
+          filters: getState().dashboardFilters.dashboards[key],
+          id: data.id
+        })
+      )
 
       dispatch(
         addSideWindowBanner({
