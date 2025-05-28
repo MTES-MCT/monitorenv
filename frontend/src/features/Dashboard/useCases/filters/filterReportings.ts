@@ -57,16 +57,16 @@ export function filterReportings(
     }
   }
 
-  if (filters.type) {
+  if (filters?.type) {
     shouldBeFiltered = shouldBeFiltered && reporting.reportType === filters.type
   }
 
   // No filter if both checkbox are checked
-  if (filters.status.length !== 1) {
+  if (filters?.status.length !== 1) {
     return shouldBeFiltered
   }
 
-  switch (filters.status[0]) {
+  switch (filters?.status[0]) {
     case StatusFilterEnum.ARCHIVED:
       shouldBeFiltered = shouldBeFiltered && getReportingStatus({ ...reporting }) === ReportingStatusEnum.ARCHIVED
       break

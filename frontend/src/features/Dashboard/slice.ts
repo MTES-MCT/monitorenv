@@ -281,6 +281,25 @@ export const dashboardSlice = createSlice({
     resetDashboards() {
       return INITIAL_STATE
     },
+    saveDashboard(
+      state,
+      action: PayloadAction<{
+        dashboard: Dashboard.DashboardFromApi
+        unsavedDashboardId: string
+      }>
+    ) {
+      const { dashboard, unsavedDashboardId } = action.payload
+      const dashboardToDelete = state.dashboards[unsavedDashboardId]
+
+      if (dashboardToDelete) {
+        state.dashboards = {
+          ...state.dashboards,
+          [dashboard.id]: { ...dashboardToDelete, dashboard: { ...dashboard }, unsavedDashboard: { ...dashboard } }
+        }
+        state.activeDashboardId = dashboard.id
+        delete state.dashboards[unsavedDashboardId]
+      }
+    },
     setActiveDashboardId(state, action: PayloadAction<string | undefined>) {
       state.activeDashboardId = action.payload
     },
@@ -407,17 +426,6 @@ export const dashboardSlice = createSlice({
       }
 
       state.dashboards[id].totalOfControls = action.payload.totalOfControls
-    },
-    setUnsavedDashboard(state, action: PayloadAction<Dashboard.Dashboard | undefined>) {
-      const id = state.activeDashboardId
-
-      if (!id) {
-        return
-      }
-
-      if (state.dashboards[id]) {
-        state.dashboards[id].unsavedDashboard = action.payload
-      }
     },
     updateArea(
       state,
