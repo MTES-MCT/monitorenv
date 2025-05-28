@@ -55,7 +55,12 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const { data: controlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const dateRange: [string, string] = useMemo(() => {
-    const { startedAfterDate, startedBeforeDate } = getDatesFromFilters(startedAfter, startedBefore, periodFilter)
+    const { startedAfterDate, startedBeforeDate } = getDatesFromFilters({
+      periodFilter,
+      startedAfter,
+      startedBefore,
+      withLast24Hours: true
+    })
 
     return [
       startedAfterDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,

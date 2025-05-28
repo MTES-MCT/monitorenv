@@ -41,7 +41,7 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
   }, [isAttachedToMissionFilter, isUnattachedToMissionFilter])
 
   const datesForApi = useMemo(
-    () => getDatesFromFilters(startedAfter, startedBefore, periodFilter),
+    () => getDatesFromFilters({ periodFilter, startedAfter, startedBefore, withLast24Hours: true }),
     [startedAfter, startedBefore, periodFilter]
   )
 
