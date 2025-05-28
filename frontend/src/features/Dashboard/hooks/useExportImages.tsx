@@ -225,16 +225,17 @@ export function useExportImages() {
         // eslint-disable-next-line no-await-in-loop
         await zoomToFeatures([feature])
 
-        mapRef.current
-          .getViewport()
-          .querySelectorAll('canvas')
-          .forEach(async canvas => {
-            mapContext.drawImage(canvas, 0, 0)
-            allImages.push({
-              featureId: feature.getId(),
-              image: await compressCanvas(mapCanvas)
-            })
+        const canvases = mapRef.current.getViewport().querySelectorAll('canvas')
+        // eslint-disable-next-line no-restricted-syntax
+        for (const canvas of canvases) {
+          mapContext.drawImage(canvas, 0, 0)
+          // eslint-disable-next-line no-await-in-loop
+          const image = await compressCanvas(mapCanvas)
+          allImages.push({
+            featureId: feature.getId(),
+            image
           })
+        }
       }
 
       const minimapFeatures = features.map(feature => {
@@ -274,16 +275,17 @@ export function useExportImages() {
         // eslint-disable-next-line no-await-in-loop
         await zoomToFeatures([dashboardFeature, minimapFeature])
 
-        mapRef.current
-          .getViewport()
-          .querySelectorAll('canvas')
-          .forEach(async canvas => {
-            mapContext.drawImage(canvas, 0, 0)
-            allImages.push({
-              featureId: `MINIMAP:${minimapFeature.getId()}`,
-              image: await compressCanvas(mapCanvas)
-            })
+        const canvases = mapRef.current.getViewport().querySelectorAll('canvas')
+        // eslint-disable-next-line no-restricted-syntax
+        for (const canvas of canvases) {
+          mapContext.drawImage(canvas, 0, 0)
+          // eslint-disable-next-line no-await-in-loop
+          const image = await compressCanvas(mapCanvas)
+          allImages.push({
+            featureId: `MINIMAP:${minimapFeature.getId()}`,
+            image
           })
+        }
       }
 
       extractReportingFeatures(features)
@@ -333,16 +335,17 @@ export function useExportImages() {
         // eslint-disable-next-line no-await-in-loop
         await zoomToFeatures([dashboardFeature], [30, 200, 30, 30])
 
-        mapRef.current
-          .getViewport()
-          .querySelectorAll('canvas')
-          .forEach(async canvas => {
-            mapContext.drawImage(canvas, 0, 0)
-            allImages.push({
-              featureId: `${Dashboard.featuresCode.DASHBOARD_RECENT_ACTIVITY_BY_UNIT}:${controlUnitId}`,
-              image: await compressCanvas(mapCanvas)
-            })
+        const canvases = mapRef.current.getViewport().querySelectorAll('canvas')
+        // eslint-disable-next-line no-restricted-syntax
+        for (const canvas of canvases) {
+          mapContext.drawImage(canvas, 0, 0)
+          // eslint-disable-next-line no-await-in-loop
+          const image = await compressCanvas(mapCanvas)
+          allImages.push({
+            featureId: `${Dashboard.featuresCode.DASHBOARD_RECENT_ACTIVITY_BY_UNIT}:${controlUnitId}`,
+            image
           })
+        }
       }
 
       return allImages
