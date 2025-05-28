@@ -15,7 +15,9 @@ export const closeTab =
     const id = routeParams?.params.id
 
     if (id) {
-      if (getState().dashboard.dashboards[id]?.dashboard !== getState().dashboard.dashboards[id]?.unsavedDashboard) {
+      const dashboard = getState().dashboard.dashboards[id]?.dashboard
+      const unsavedDashboard = getState().dashboard.dashboards[id]?.unsavedDashboard
+      if (dashboard !== unsavedDashboard) {
         dispatch(dashboardActions.setIsCancelModalOpen({ isCancelModalOpen: true, key: id }))
 
         return
