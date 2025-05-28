@@ -13,14 +13,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlResourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlUnitModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlResourceRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlUnitRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.apache.commons.lang3.StringUtils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -182,14 +175,14 @@ class JpaMissionRepository(
         val missionModel = MissionModel.fromMissionEntity(mission = mission)
         val savedMission = dbMissionRepository.save(missionModel)
 
+        val savedEnvActions = saveEnvActions(mission, missionModel)
+        savedEnvActions?.let { savedMission.envActions?.addAll(it) }
+
         val savedControlUnits = saveControlUnits(mission, missionModel)
         savedMission.controlUnits?.addAll(savedControlUnits)
 
         val savedControlResources = saveControlResources(mission, missionModel)
         savedMission.controlResources?.addAll(savedControlResources)
-
-        val savedEnvActions = saveEnvActions(mission, missionModel)
-        savedEnvActions?.let { savedMission.envActions?.addAll(it) }
 
         return savedMission.toMissionDTO(mapper)
     }
