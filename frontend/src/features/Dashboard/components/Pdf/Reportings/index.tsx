@@ -247,7 +247,7 @@ export function Reportings({ reportings }: { reportings: Reporting[] }) {
               </View>
             </View>
             {reporting.targetDetails.map(target => (
-              <Fragment key={target.mmsi}>
+              <Fragment key={target.mmsi ?? target.imo ?? target.vesselName ?? target.externalReferenceNumber}>
                 <View style={[layoutStyle.row, { rowGap: 2 }]}>
                   <View style={styles.description}>
                     <Text>Type de cible</Text>
@@ -278,6 +278,14 @@ export function Reportings({ reportings }: { reportings: Reporting[] }) {
                   </View>
                   <View style={styles.details}>
                     <Text>{target.imo ?? '-'}</Text>
+                  </View>
+                </View>
+                <View style={[layoutStyle.row, { rowGap: 2 }]}>
+                  <View style={styles.description}>
+                    <Text>Nom du navire</Text>
+                  </View>
+                  <View style={styles.details}>
+                    <Text>{target.vesselName ?? '-'}</Text>
                   </View>
                 </View>
                 <View style={[layoutStyle.row, { rowGap: 2 }]}>
