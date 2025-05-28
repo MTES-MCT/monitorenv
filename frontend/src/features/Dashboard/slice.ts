@@ -408,17 +408,6 @@ export const dashboardSlice = createSlice({
 
       state.dashboards[id].totalOfControls = action.payload.totalOfControls
     },
-    setUnsavedDashboard(state, action: PayloadAction<Dashboard.Dashboard | undefined>) {
-      const id = state.activeDashboardId
-
-      if (!id) {
-        return
-      }
-
-      if (state.dashboards[id]) {
-        state.dashboards[id].unsavedDashboard = action.payload
-      }
-    },
     updateArea(
       state,
       action: PayloadAction<{

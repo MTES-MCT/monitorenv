@@ -159,6 +159,19 @@ export const dashboardFiltersSlice = createSlice({
       }
       if (state.dashboards[id]) {
         state.dashboards[id].filters = { ...state.dashboards[id].filters, ...filters }
+      } else {
+        state.dashboards[id] = {
+          controlUnitFilters: {},
+          filters,
+          recentActivityFilters: {
+            periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
+          },
+          reportingFilters: {
+            dateRange: DateRangeEnum.MONTH,
+            status: [StatusFilterEnum.IN_PROGRESS],
+            type: ReportingTypeEnum.INFRACTION_SUSPICION
+          }
+        }
       }
     },
     setListFilters(state, action: PayloadAction<Partial<DashboardsListFilters>>) {
