@@ -52,7 +52,11 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     useAppSelector(state => state.missionFilters)
 
   const dateRange: [string, string] = useMemo(() => {
-    const { startedAfterDate, startedBeforeDate } = getDatesFromFilters(startedAfter, startedBefore, selectedPeriod)
+    const { startedAfterDate, startedBeforeDate } = getDatesFromFilters({
+      periodFilter: selectedPeriod,
+      startedAfter,
+      startedBefore
+    })
 
     return [
       startedAfterDate ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,

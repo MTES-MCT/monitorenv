@@ -30,7 +30,7 @@ export const useGetFilteredMissionsQuery = () => {
   } = useAppSelector(state => state.missionFilters)
 
   const datesForApi = useMemo(
-    () => getDatesFromFilters(startedAfter, startedBefore, selectedPeriod),
+    () => getDatesFromFilters({ periodFilter: selectedPeriod, startedAfter, startedBefore }),
     [startedAfter, startedBefore, selectedPeriod]
   )
 
