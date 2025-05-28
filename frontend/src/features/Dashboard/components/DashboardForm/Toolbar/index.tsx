@@ -29,10 +29,13 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(
               dispatch(editDashboardArea(geometryToSave, key))
             }}
           />
-          <DashboardFilters dashboard={dashboard} />
+          <DashboardFilters
+            dashboard={dashboard}
+            dashboardKey={dashboard.dashboard.createdAt ? dashboard.dashboard.id : key}
+          />
         </FirstLine>
 
-        <FiltersTags dashboard={dashboard} />
+        <FiltersTags dashboardKey={dashboard.dashboard.createdAt ? dashboard.dashboard.id : key} />
       </Wrapper>
     )
   }

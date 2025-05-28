@@ -26,12 +26,12 @@ import type { TagOption } from '../../../../../../domain/entities/tags'
 
 type FiltersProps = {
   dashboard: DashboardType
+  dashboardKey: string
 }
 
-export function DashboardFilters({ dashboard }: FiltersProps) {
+export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) {
   const dispatch = useAppDispatch()
   const { extractedArea } = dashboard
-  const { id } = dashboard.dashboard
 
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 

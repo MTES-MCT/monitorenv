@@ -22,7 +22,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
   const [updatedName, setUpdatedName] = useState<string | undefined>(dashboard.dashboard.name)
 
   const save = () => {
-    dispatch(saveDashboard({ ...dashboard.dashboard, name: updatedName ?? dashboard.dashboard.name }))
+    dispatch(saveDashboard(key, { ...dashboard.dashboard, name: updatedName ?? dashboard.dashboard.name }))
     setIsSaveDialogOpen(false)
   }
 
@@ -31,7 +31,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
     if (hasDefaultName) {
       setIsSaveDialogOpen(true)
     } else {
-      dispatch(saveDashboard({ ...dashboard.dashboard }))
+      dispatch(saveDashboard(key, { ...dashboard.dashboard }))
     }
   }
 
