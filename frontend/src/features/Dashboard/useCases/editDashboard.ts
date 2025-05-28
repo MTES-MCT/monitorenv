@@ -22,10 +22,10 @@ export const editDashboard =
     const formattedDashboardFilters = {
       controlUnitFilters: dashboardFilters?.controlUnitFilters ?? {},
       filters: dashboardFilters?.filters ?? {},
-      recentActivityFilters: {
+      recentActivityFilters: dashboardFilters?.recentActivityFilters ?? {
         periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
       },
-      reportingFilters: {
+      reportingFilters: dashboardFilters?.reportingFilters ?? {
         dateRange: DateRangeEnum.MONTH,
         status: [StatusFilterEnum.IN_PROGRESS],
         type: ReportingTypeEnum.INFRACTION_SUSPICION
