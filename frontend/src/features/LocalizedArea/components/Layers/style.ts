@@ -4,7 +4,7 @@ import { Fill, Stroke, Style, Text } from 'ol/style'
 export const localizedAreaStyle = feature =>
   new Style({
     fill: new Fill({
-      color: getLocalizedAreaColorWithAlpha(feature.get('groupName'), feature.get('name'))
+      color: getLocalizedAreaColorWithAlpha(feature.get('groupName'))
     }),
     stroke: new Stroke({
       color: '#3F6247',

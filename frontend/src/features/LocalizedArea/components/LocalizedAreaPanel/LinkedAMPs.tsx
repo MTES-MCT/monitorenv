@@ -66,7 +66,6 @@ const AMPNameContainer = styled.div`
   color: ${p => p.theme.color.gunMetal};
   align-items: center;
   overflow: hidden;
-  padding-top: 8px;
   text-overflow: ellipsis;
   white-space: nowrap;
 `

@@ -40,7 +40,7 @@ export function LayerLegend({
     case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
       return <Rectangle $size={size} $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey, isDisabled)} />
     case MonitorEnvLayers.LOCALIZED_AREAS:
-      return <Rectangle $size={size} $vectorLayerColor={getLocalizedAreaColorWithAlpha(type, legendKey)} />
+      return <Rectangle $size={size} $vectorLayerColor={getLocalizedAreaColorWithAlpha(type)} />
     default:
       return <Rectangle $size={size} />
   }
