@@ -42,7 +42,7 @@ export function LocalizedAreaPanel({ localizedArea }: { localizedArea?: Localize
       <Header data-cy="regulatory-metadata-header">
         <LayerLegend
           layerType={MonitorEnvLayers.LOCALIZED_AREAS}
-          legendKey={localizedArea.name}
+          legendKey={localizedArea.groupName}
           type={localizedArea.groupName}
         />
         <Name title={getTitle(localizedArea?.groupName)}>{getTitle(localizedArea?.groupName)}</Name>
