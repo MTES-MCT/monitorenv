@@ -5,5 +5,5 @@ export const SubTitle = styled.h3`
   font-size: 13px;
   font-weight: 400;
   line-height: normal;
-  padding: 16px 16px 0px 16px;
+  padding: 16px 16px 8px 16px;
 `
