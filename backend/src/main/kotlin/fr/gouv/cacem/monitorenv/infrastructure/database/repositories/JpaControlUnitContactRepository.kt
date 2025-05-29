@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitContact
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -32,6 +33,7 @@ class JpaControlUnitContactRepository(
     override fun findById(controlUnitContactId: Int): FullControlUnitContactDTO =
         dbControlUnitContactRepository.findById(controlUnitContactId).get().toFullControlUnitContact()
 
+    @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun save(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity =
         try {
