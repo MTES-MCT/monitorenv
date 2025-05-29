@@ -4,7 +4,7 @@ SELECT
     cur.base_id,
     cur.control_unit_id,
     'Piéton (' || b.name || ')' AS name,
-    control_unit_resource_type.PEDESTRIAN AS type
+    'PEDESTRIAN'::control_unit_resource_type AS type
 FROM (
     SELECT DISTINCT base_id, control_unit_id
     FROM control_unit_resources
