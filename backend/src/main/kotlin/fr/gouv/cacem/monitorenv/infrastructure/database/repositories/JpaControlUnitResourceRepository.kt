@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBStationRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -41,6 +42,7 @@ class JpaControlUnitResourceRepository(
     override fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO =
         dbControlUnitResourceRepository.findById(controlUnitResourceId).get().toFullControlUnitResource()
 
+    @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun save(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceEntity =
         try {
