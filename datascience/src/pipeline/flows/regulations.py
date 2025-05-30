@@ -49,7 +49,7 @@ def delete(ids_to_delete: set):
 
 
 @task(checkpoint=False)
-def extract_new_regulations(ids_to_update: set) -> pd.DataFrame:
+def extract_new_regulatory_areas(ids_to_update: set) -> pd.DataFrame:
     return extract(
         "cacem_local",
         "cross/cacem/regulations.sql",
@@ -57,12 +57,12 @@ def extract_new_regulations(ids_to_update: set) -> pd.DataFrame:
     )
 
 @task(checkpoint=False)
-def update_regulations(new_regulations: pd.DataFrame):
+def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
     """Load the output of ``extract_rows_to_update`` task into ``regulations``
     table.
 
     Args:
-        new_regulations (pd.DataFrame): output of ``extract_rows_to_update`` task.
+        new_regulatory_areas (pd.DataFrame): output of ``extract_rows_to_update`` task.
     """
     e = create_engine("monitorenv_remote")
     logger = prefect.context.get("logger")
@@ -117,7 +117,7 @@ def update_regulations(new_regulations: pd.DataFrame):
         logger.info("Loading to temporary table")
 
 
-        new_regulations[columns_to_load].to_sql(
+        new_regulatory_areas[columns_to_load].to_sql(
             "tmp_regulations_cacem",
             connection,
             if_exists="append",
@@ -126,7 +126,7 @@ def update_regulations(new_regulations: pd.DataFrame):
         )
          
 
-        logger.info(f"Updating regulations_cacem from temporary table {len(new_regulations)}")
+        logger.info(f"Updating regulations_cacem from temporary table {len(new_regulatory_areas)}")
         connection.execute(
             text(
                 """UPDATE regulations_cacem reg
@@ -154,7 +154,7 @@ def update_regulations(new_regulations: pd.DataFrame):
 
 
 @task(checkpoint=False)
-def load_new_regulations(new_regulations: pd.DataFrame):
+def load_new_regulations(new_regulatory_areas: pd.DataFrame):
     """Load the output of ``extract_new_regulations`` task into ``regulations_cacem``
     table.
 
@@ -163,7 +163,7 @@ def load_new_regulations(new_regulations: pd.DataFrame):
     """
 
     load(
-        new_regulations,
+        new_regulatory_areas,
         table_name="regulations_cacem",
         schema="public",
         db_name="monitorenv_remote",
@@ -225,8 +225,8 @@ with Flow("Regulations") as flow:
     ids_to_update = select_ids_to_update(inner_merged)
     cond_update = update_required(ids_to_update)
     with case(cond_update, True):
-        new_regulations = extract_new_regulations(ids_to_update)
-        updated_when_true = update_regulations(new_regulations)
+        new_regulations = extract_new_regulatory_areas(ids_to_update)
+        updated_when_true = update_regulatory_areas(new_regulations)
     with case(cond_update, False):
         updated_when_false = True
     updated = merge(updated_when_true, updated_when_false)
@@ -234,7 +234,7 @@ with Flow("Regulations") as flow:
     ids_to_insert = select_ids_to_insert(outer_hashes)
     cond_insert = insert_required(ids_to_insert)
     with case(cond_insert, True):
-        new_regulations = extract_new_regulations(ids_to_insert)
+        new_regulations = extract_new_regulatory_areas(ids_to_insert)
         inserted_when_true = load_new_regulations(new_regulations)
     with case(cond_insert, False):
         inserted_when_false = True

@@ -122,3 +122,14 @@ EMAIL_ALL_UNITS = os.getenv("EMAIL_ALL_UNITS", "False").lower() in (
     "yes",
     "y",
 )
+
+# data.gouv.fr configuration
+DATAGOUV_API_ENDPOINT = "https://www.data.gouv.fr/api/1"
+DATAGOUV_API_KEY = os.getenv("DATAGOUV_API_KEY")
+
+# data.gouv.fr resource ids
+REGULATORY_AREAS_DATASET_ID = "682ae3040ebe621687ec64ad"
+REGULATORY_AREAS_CSV_RESOURCE_ID = "c9fe6865-602f-452c-ab31-e1d25222c158"
+REGULATORY_AREAS_GEOPACKAGE_RESOURCE_ID = "dd48b545-a1d1-4710-9e56-415b895f5336"
+REGULATORY_AREAS_CSV_RESOURCE_TITLE = "regulatory_areas.csv"
+REGULATORY_AREAS_GEOPACKAGE_RESOURCE_TITLE = "regulatory_areas.gpkg"
