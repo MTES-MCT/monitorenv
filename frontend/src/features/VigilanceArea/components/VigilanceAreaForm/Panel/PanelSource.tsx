@@ -7,7 +7,7 @@ import { PanelInlineItem, PanelInlineItemLabel, PanelInlineItemValue, PanelInter
 
 export function PanelSource({ createdBy, source }: { createdBy: string | undefined; source: string | undefined }) {
   return (
-    <PanelSubPart>
+    <PanelSubPart data-cy="vigilance-area-panel-source">
       <Wrapper>
         <PanelInternText>Section interne CACEM</PanelInternText>
         <Tooltip color={THEME.color.maximumRed}>

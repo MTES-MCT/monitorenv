@@ -1,8 +1,7 @@
 import { getTimeLeft } from '@features/Reportings/utils'
 import { TextInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { ReportingStatusEnum, getReportingStatus, type Reporting } from 'domain/entities/reporting'
 import styled from 'styled-components'
-
-import { ReportingStatusEnum, getReportingStatus, type Reporting } from '../../../../../../domain/entities/reporting'
 
 export function Validity({ reporting }: { reporting: Reporting }) {
   const reportingStatus = getReportingStatus(reporting)
@@ -40,7 +39,9 @@ export function Validity({ reporting }: { reporting: Reporting }) {
       )}
 
       {((reportingStatus !== ReportingStatusEnum.ARCHIVED && timeLeft >= 1) || timeLeft >= 1) && (
-        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity}(dans ${Math.round(timeLeft)}h)`}</GrayText>
+        <GrayText>{`Le signalement sera archivé le ${formattedEndOfValidity} (dans ${Math.round(
+          timeLeft
+        )}h)`}</GrayText>
       )}
     </StyledValidityContainer>
   )

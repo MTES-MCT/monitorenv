@@ -36,7 +36,7 @@ export function useSearchLayers() {
 
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery(undefined, { skip: !isSuperUser })
+  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery()
 
   const debouncedSearchLayers = useMemo(() => {
     const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
@@ -96,13 +96,18 @@ export function useSearchLayers() {
         vigilanceAreasPerPeriod = getFilterVigilanceAreasPerPeriod(
           vigilanceAreaLayers?.entities ? Object.values(vigilanceAreaLayers.entities) : [],
           vigilanceAreaPeriodFilter,
-          vigilanceAreaSpecificPeriodFilter
+          vigilanceAreaSpecificPeriodFilter,
+          isSuperUser
         )
 
         vigilanceAreaIdsPerPeriod = vigilanceAreasPerPeriod
           .filter(vigilanceArea => !!vigilanceArea.id)
           .map(({ id }) => id) as number[]
       }
+
+      const vigilanceAreaPeriodFilterByUserType = isSuperUser
+        ? vigilanceAreaPeriodFilter
+        : VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT
 
       if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldSearchByExtent) {
         let searchedAMPS
@@ -216,12 +221,12 @@ export function useSearchLayers() {
             $and: filterExpression
           })
 
-          searchedVigilanceArea = vigilanceAreaPeriodFilter
+          searchedVigilanceArea = vigilanceAreaPeriodFilterByUserType
             ? resultSearchVigilanceAreas.filter(({ item }) => item.id && vigilanceAreaIdsPerPeriod.includes(item.id))
             : resultSearchVigilanceAreas
           vigilanceAreaSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
         } else {
-          searchedVigilanceArea = vigilanceAreaPeriodFilter
+          searchedVigilanceArea = vigilanceAreaPeriodFilterByUserType
             ? vigilanceAreasPerPeriod
             : Object.values(vigilanceAreaLayers?.entities ?? {})
           vigilanceAreaSchema = { bboxPath: 'bbox', idPath: 'id' }
@@ -245,7 +250,7 @@ export function useSearchLayers() {
       dispatch(closeMetadataPanel())
       debounce(searchFunction, 300, { trailing: true })(args)
     }
-  }, [dispatch, regulatoryLayers, amps, vigilanceAreaLayers])
+  }, [dispatch, regulatoryLayers, amps, vigilanceAreaLayers, isSuperUser])
 
   return debouncedSearchLayers
 }

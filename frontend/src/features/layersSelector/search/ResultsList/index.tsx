@@ -1,14 +1,17 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
+import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { groupBy } from 'lodash'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { AMPLayerGroup } from './AMPLayerGroup'
@@ -32,7 +35,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   const dispatch = useAppDispatch()
 
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser
+  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
 
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
@@ -77,16 +80,28 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery(!isSuperUser)
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
-  const vigilanceAreasResults =
+  let vigilanceAreasResults =
     !vigilanceAreaSearchResult && areMyVigilanceAreasOpen ? vigilanceAreas?.ids : vigilanceAreaSearchResult ?? []
-  const sortedVigilanceAreasResultsByName = vigilanceAreasResults
+  let vigilanceAreasByUserType = vigilanceAreasResults
+  let totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
+
+  if (!isSuperUser) {
+    vigilanceAreasResults = vigilanceAreaSearchResult ?? vigilanceAreas?.ids
+    vigilanceAreasByUserType = getFilterVigilanceAreasPerPeriod(
+      vigilanceAreasResults.map(id => vigilanceAreas.entities[id]).filter(vigilanceArea => !!vigilanceArea) ?? [],
+      VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT,
+      undefined,
+      isSuperUser
+    ).map(vigilanceArea => vigilanceArea.id)
+    totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreasByUserType.length
+  }
+
+  const sortedVigilanceAreasResultsByName = vigilanceAreasByUserType
     .map(id => vigilanceAreas.entities[id])
     .filter(vigilanceArea => !!vigilanceArea)
     .sort((vigilanceAreaA, vigilanceAreaB) => (vigilanceAreaA?.name ?? '').localeCompare(vigilanceAreaB?.name ?? ''))
-
-  const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {
@@ -190,7 +205,7 @@ export function ResultList({ searchedText }: ResultListProps) {
         </>
       )}
 
-      {isSuperUser && !isLinkingZonesToVigilanceArea && (
+      {!isLinkingZonesToVigilanceArea && (
         <>
           <Header>
             <StyledCheckbox
