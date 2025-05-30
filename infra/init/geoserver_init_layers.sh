@@ -344,3 +344,68 @@ curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${
 }
 EOF
 
+curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
+{
+  "featureType": {
+    "name": "marine_cultures_85",
+    "nativeName": "marine_cultures_85",
+    "title": "marine_cultures_85",
+    "nativeCRS": "EPSG:4326",
+    "srs": "EPSG:4326",
+    "enabled": true,
+  }
+}
+EOF
+
+curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
+{
+  "featureType": {
+    "name": "marine_cultures_33",
+    "nativeName": "marine_cultures_33",
+    "title": "marine_cultures_33",
+    "nativeCRS": "EPSG:4326",
+    "srs": "EPSG:4326",
+    "enabled": true,
+  }
+}
+EOF
+
+curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
+{
+  "featureType": {
+    "name": "gulf_of_lion_marine_park",
+    "nativeName": "gulf_of_lion_marine_park",
+    "title": "gulf_of_lion_marine_park",
+    "nativeCRS": "EPSG:4326",
+    "srs": "EPSG:4326",
+    "enabled": true,
+  }
+}
+EOF
+
+curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
+{
+  "featureType": {
+    "name": "cerbere_banyuls_national_reserve",
+    "nativeName": "cerbere_banyuls_national_reserve",
+    "title": "cerbere_banyuls_national_reserve",
+    "nativeCRS": "EPSG:4326",
+    "srs": "EPSG:4326",
+    "enabled": true,
+  }
+}
+EOF
+
+curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
+{
+  "featureType": {
+    "name": "moeze_oleron_national_reserve",
+    "nativeName": "moeze_oleron_national_reserve",
+    "title": "moeze_oleron_national_reserve",
+    "nativeCRS": "EPSG:4326",
+    "srs": "EPSG:4326",
+    "enabled": true,
+  }
+}
+EOF
+
