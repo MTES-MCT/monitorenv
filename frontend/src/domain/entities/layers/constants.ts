@@ -4,6 +4,7 @@ export enum LayerType {
   ADMINISTRATIVE = 'ADMINISTRATIVE',
   BASE_LAYER = 'BASE_LAYER',
   FREE_DRAW = 'FREE_DRAW',
+  LOCALIZED_AREAS = 'LOCALIZED_AREAS',
   MEASUREMENT = 'MEASUREMENT',
   REGULATORY = 'REGULATORY'
 }
@@ -42,6 +43,7 @@ export enum MonitorEnvLayers {
   FAO = 'FAO',
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
+  LOCALIZED_AREAS = 'LOCALIZED_AREAS',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
   MARPOL = 'MARPOL',
   MEASUREMENT = 'MEASUREMENT',
@@ -157,6 +159,12 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: '12_miles_areas',
     name: '12 Milles',
     type: LayerType.ADMINISTRATIVE
+  },
+  [MonitorEnvLayers.LOCALIZED_AREAS]: {
+    type: LayerType.LOCALIZED_AREAS,
+    code: MonitorEnvLayers.LOCALIZED_AREAS,
+    name: LayerType.LOCALIZED_AREAS,
+    zIndex: 1000
   },
   [MonitorEnvLayers.TERRITORIAL_SEAS]: {
     code: 'territorial_seas',

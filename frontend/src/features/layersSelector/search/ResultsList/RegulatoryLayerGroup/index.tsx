@@ -39,7 +39,7 @@ export function RegulatoryLayerGroup({
       groupExtent={groupExtent}
       groupName={groupName}
       layerIds={layerIds}
-      layerIdToDisplay={regulatoryMetadataLayerId}
+      layerIdToDisplay={regulatoryMetadataLayerId as number}
       layerType={MonitorEnvLayers.REGULATORY_ENV}
       removeLayers={handleRemoveLayers}
       searchedText={searchedText}

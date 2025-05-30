@@ -7,6 +7,7 @@ type LayerSidebarSliceState = {
   areRegFiltersOpen: boolean
   areRegulatoryResultsOpen: boolean
   baselayerIsOpen: boolean
+  localizedAreasIsOpen: boolean
   myAmpsIsOpen: boolean
   myRegulatoryZonesIsOpen: boolean
   myVigilanceAreasIsOpen: boolean
@@ -19,6 +20,7 @@ const initialState: LayerSidebarSliceState = {
   areRegFiltersOpen: true,
   areRegulatoryResultsOpen: false,
   baselayerIsOpen: false,
+  localizedAreasIsOpen: false,
   myAmpsIsOpen: false,
   myRegulatoryZonesIsOpen: false,
   myVigilanceAreasIsOpen: false
@@ -59,6 +61,13 @@ export const layerSidebarSlice = createSlice({
         ...initialState,
         areRegFiltersOpen: false,
         baselayerIsOpen: !state.baselayerIsOpen
+      }
+    },
+    toggleLocalizedAreas(state) {
+      return {
+        ...initialState,
+        areRegFiltersOpen: false,
+        localizedAreasIsOpen: !state.localizedAreasIsOpen
       }
     },
     toggleMyAmps(state) {
