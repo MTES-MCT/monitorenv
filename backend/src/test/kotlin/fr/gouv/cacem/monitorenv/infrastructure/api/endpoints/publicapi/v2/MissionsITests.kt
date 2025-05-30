@@ -43,21 +43,16 @@ import kotlin.random.Random
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [Missions::class])
-class MissionsITests {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+class MissionsITest {
+    @Autowired private lateinit var mockMvc: MockMvc
 
-    @MockitoBean
-    private val patchMission: PatchMission = mock()
+    @MockitoBean private val patchMission: PatchMission = mock()
 
-    @MockitoBean
-    private val deleteMission: DeleteMission = mock()
+    @MockitoBean private val deleteMission: DeleteMission = mock()
 
-    @MockitoBean
-    private val getMissionAndSourceAction: GetMissionAndSourceAction = mock()
+    @MockitoBean private val getMissionAndSourceAction: GetMissionAndSourceAction = mock()
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    @Autowired private lateinit var objectMapper: ObjectMapper
 
     @Test
     fun `Should delete mission with api v2`() {
