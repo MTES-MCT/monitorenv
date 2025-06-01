@@ -78,7 +78,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.hibernate.orm:hibernate-spatial:6.6.13.Final")
-    implementation("org.hibernate.validator:hibernate-validator:8.0.2.Final")
+    implementation("org.hibernate.validator:hibernate-validator:9.0.0.Final")
     implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.9.10")
 
     // Kotlin
