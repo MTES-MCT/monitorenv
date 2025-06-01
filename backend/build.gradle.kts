@@ -5,15 +5,15 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "3.4.5"
+    id("org.springframework.boot") version "3.5.0"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
-    kotlin("jvm") version "2.1.20"
-    kotlin("plugin.spring") version "2.1.20"
-    kotlin("plugin.allopen") version "2.1.20"
-    kotlin("plugin.noarg") version "2.1.20"
-    kotlin("plugin.jpa") version "2.1.20"
-    kotlin("plugin.serialization") version "2.1.20"
+    id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
+    kotlin("jvm") version "2.1.21"
+    kotlin("plugin.spring") version "2.1.21"
+    kotlin("plugin.allopen") version "2.1.21"
+    kotlin("plugin.noarg") version "2.1.21"
+    kotlin("plugin.jpa") version "2.1.21"
+    kotlin("plugin.serialization") version "2.1.21"
 }
 
 repositories {
@@ -54,13 +54,13 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.1.2"
-val testcontainersVersion = "1.21.0"
-val sentryVersion = "8.11.1"
-val flywayVersion = "11.8.0"
+val ktorVersion = "3.1.3"
+val testcontainersVersion = "1.21.1"
+val sentryVersion = "8.13.2"
+val flywayVersion = "11.8.2"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.4.5"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.0"))
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -104,7 +104,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
 
     // API Documentation
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
 
     // Devtools
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
