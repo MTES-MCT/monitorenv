@@ -163,7 +163,9 @@ def expected_env_actions() -> pd.DataFrame:
             "is_late_update": [True, False, False, False, False],
             "themes": [
                 {
-                    "Culture marine": ["Implantation"],
+                    "Culture marine": [
+                        "Prescriptions réglementaires des concessions d'exploitation de culture marine"
+                    ],
                     "Police des espèces protégées et de leurs habitats (faune et flore)": [
                         "Dérogations concernant les espèces protégées",
                         "Détention d'espèces protégées",

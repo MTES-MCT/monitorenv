@@ -27,9 +27,9 @@ def generate_themes_data(ids, names, parents_id, started_at, ended_at, control_p
 @pytest.fixture
 def new_themes() -> pd.DataFrame:
     return generate_themes_data(
-        ids=[1, 2, 3, 4],
+        ids=[991, 992, 993, 994],
         names=["Thème 1_new", "Thème 2", "Thème 3", "Thème 4"],
-        parents_id=[1, 1, 2, 3],
+        parents_id=[991, 991, 992, 993],
         started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-19 00:00:00", "2025-10-18 00:00:00"],
         ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-28 23:59:59"],
         control_plan_themes_id= [3, 4, 5, 6],
@@ -41,9 +41,9 @@ def new_themes() -> pd.DataFrame:
 @pytest.fixture
 def old_themes() -> pd.DataFrame:
     return generate_themes_data(
-        ids=[1, 2, 3, 4],
+        ids=[991, 992, 993, 994],
         names=["Thème 1", "Thème 2", "Thème 3", "Thème 4"],
-        parents_id=[1, 2, 2, 4],
+        parents_id=[991, 992, 992, 994],
         started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-17 00:00:00", "2025-10-18 00:00:00"],
         ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-18 23:59:59"],
         control_plan_themes_id= [3, 4, 5, 6],
@@ -60,6 +60,7 @@ def test_load_new_themes(reset_test_data, old_themes):
         """SELECT 
             id, name, parent_id, started_at, ended_at, control_plan_themes_id, control_plan_sub_themes_id, control_plan_tags_id, reportings_control_plan_sub_themes_id
             FROM public.themes
+            WHERE id IN (991, 992, 993, 994)
             ORDER BY id"""
     )
 
@@ -81,6 +82,7 @@ def test_update_new_themes(reset_test_data, new_themes, old_themes):
         """SELECT 
             id, name, parent_id, started_at, ended_at, control_plan_themes_id, control_plan_sub_themes_id, control_plan_tags_id, reportings_control_plan_sub_themes_id
             FROM public.themes
+            WHERE id IN (991, 992, 993, 994)
             ORDER BY id"""
     )
     for col in ["id", "parent_id", "control_plan_themes_id", "control_plan_sub_themes_id", "control_plan_tags_id", "reportings_control_plan_sub_themes_id"]:

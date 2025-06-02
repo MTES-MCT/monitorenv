@@ -17,9 +17,9 @@ from tests.test_pipeline.test_flows.test_themes_and_tags import generate_tags_da
 @pytest.fixture
 def new_themes() -> pd.DataFrame:
     return generate_themes_data(
-        ids=[1, 2, 3, 4],
+        ids=[991, 992, 993, 994],
         names=["Thème 1_new", "Thème 2", "Thème 3", "Thème 4"],
-        parents_id=[1, 1, 2, 3],
+        parents_id=[991, 991, 992, 993],
         started_at=["2025-10-15 00:00:00", "2025-10-16 00:00:00", "2025-10-19 00:00:00", "2025-10-18 00:00:00"],
         ended_at=["2026-10-15 23:59:59", "2026-10-16 23:59:59", "2026-10-17 23:59:59", "2026-10-28 23:59:59"],
         control_plan_themes_id= [3, 4, 5, 6],
@@ -136,7 +136,7 @@ def old_regulatory_areas() -> pd.DataFrame:
 @pytest.fixture
 def themes_regulatory_areas() -> pd.DataFrame:
     return generate_themes_regulatory_area_data(
-        themes_id=[1, 1, 2, 2],
+        themes_id=[991, 991, 992, 992],
         regulatory_areas_id=[1, 2, 3, 4]
     )
 
