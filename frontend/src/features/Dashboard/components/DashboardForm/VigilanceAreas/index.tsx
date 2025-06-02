@@ -141,5 +141,4 @@ const StyledPanel = styled(Panel)<{ $marginLeft: number }>`
     `calc(
     ${p.$marginLeft}px + 24px + 4px
   )`}; // 24px is the padding, 64px is the width of the sidebar, 4px is the margin
-  bottom: 0;
 `

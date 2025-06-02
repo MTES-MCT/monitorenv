@@ -22,7 +22,11 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     // Edit the dashboard
     cy.get('h2').contains('Zones de vigilance').click()
     cy.wait(250)
-    cy.getDataCy('dashboard-vigilance-area-zone-check-8').click()
+    cy.getDataCy('dashboard-vigilance-area-zone-tags-and-buttons-8')
+      .find('.Element-Tag')
+      .contains('CACEM')
+      .should('exist')
+    cy.getDataCy('dashboard-vigilance-area-zone-check-8').click({ force: true })
 
     cy.get('h2').contains('Unités').click()
     cy.wait(250)
@@ -78,7 +82,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     // Undo modification
     cy.get('h2').contains('Zones de vigilance').click()
     cy.wait(250)
-    cy.getDataCy('dashboard-vigilance-area-zone-check-8').click()
+    cy.getDataCy('dashboard-vigilance-area-zone-check-8').click({ force: true })
 
     cy.get('h2').contains('Unités').click()
     cy.wait(250)
