@@ -11,16 +11,13 @@ INSERT INTO public.env_actions (
     ('b05d96b8-387f-4599-bff0-cd7dab71dfb8',         20,      'CONTROL', 'TO_COMPLETE', '{"infractions": [{"id": "c52c6f20-e495-4b29-b3df-d7edfb67fdd7", "natinf": ["10038", "10054"], "toProcess": false, "vesselSize": "FROM_24_TO_46m", "vesselType": "COMMERCIAL", "companyName": null, "formalNotice": "PENDING", "observations": "Pas d''observations", "infractionType": "WITH_REPORT", "registrationNumber": "BALTIK", "controlledPersonIdentity": "John Doe"}], "vehicleType": "VESSEL", "actionTargetType": "VEHICLE", "protectedSpecies": [], "actionNumberOfControls": 1, "actionStartDateTimeUtc": null}', '2022-11-17 13:59:51.108',                      NULL,                                                       ST_GeomFromText('MULTIPOINT(-2.52 47.16)', 4326)),
     ('dedbd2c2-10f5-4d75-8fe9-c50db2ae5d0b',         20,      'CONTROL', 'TO_COMPLETE',                                                                                                                                                                                                                                                                                                                                                                                           '{"infractions": [], "vehicleType": "VESSEL", "actionTargetType": "VEHICLE", "protectedSpecies": [], "actionNumberOfControls": 0, "actionStartDateTimeUtc": null}', '2022-11-24 20:31:41.719',                      NULL,                                                                                                   NULL);
 
-INSERT INTO env_actions_control_plan_themes (
-    env_action_id, theme_id) VALUES 
+    INSERT INTO themes_env_actions (
+    env_actions_id, themes_id) VALUES 
     ('dfb9710a-2217-4f98-94dc-283d3b7bbaae', 1),
+    ('b05d96b8-387f-4599-bff0-cd7dab71dfb8', 1),
+    ('b05d96b8-387f-4599-bff0-cd7dab71dfb8', 146),
     ('88713755-3966-4ca4-ae18-10cab6249485', 107),
     ('88713755-3966-4ca4-ae18-10cab6249485', 14),
-    ('b05d96b8-387f-4599-bff0-cd7dab71dfb8', 1);
-
-INSERT INTO env_actions_control_plan_sub_themes (
-    env_action_id, subtheme_id) VALUES 
-    ('88713755-3966-4ca4-ae18-10cab6249485', 143),
-    ('88713755-3966-4ca4-ae18-10cab6249485', 54),
-    ('88713755-3966-4ca4-ae18-10cab6249485', 56),
-    ('b05d96b8-387f-4599-bff0-cd7dab71dfb8', 33);
+    ('88713755-3966-4ca4-ae18-10cab6249485', 238),
+    ('88713755-3966-4ca4-ae18-10cab6249485', 167),
+    ('88713755-3966-4ca4-ae18-10cab6249485', 169);
