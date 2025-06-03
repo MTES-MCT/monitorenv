@@ -35,7 +35,7 @@ context('Dashboard', () => {
         expect(body.regulatoryAreaIds.length).equal(13)
         expect(body.ampIds.length).equal(4)
         expect(body.reportingIds.length).equal(6)
-        expect(body.vigilanceAreaIds.length).equal(2)
+        expect(body.vigilanceAreaIds.length).equal(1)
       })
     })
   })
