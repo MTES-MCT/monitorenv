@@ -60,7 +60,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter une zone de surveillance')
     dispatch(setGeometry(surveillanceGeometry))
 
-    cy.fill('Thématiques et sous-thématiques de contrôle', ['Destruction', 'Espèce protégée'])
+    cy.fill('Thématiques et sous-thématiques de surveillance', ['Destruction', 'Espèce protégée'])
 
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.wait(250)
@@ -116,7 +116,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
 
-    cy.fill('Thématiques et sous-thématiques de contrôle', ['Mouillage individuel', 'Autre', 'Drone'])
+    cy.fill('Thématiques et sous-thématiques de surveillance', ['Mouillage individuel', 'Autre', 'Drone'])
 
     cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
 
