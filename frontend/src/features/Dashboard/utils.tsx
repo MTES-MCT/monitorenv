@@ -40,8 +40,8 @@ export async function populateExtractAreaFromApi(
       extractedAreaFromApi.regulatoryAreaIds.includes(reg.id)
     ),
     reportings: Object.values(reportings?.entities ?? []),
-    vigilanceAreas: Object.values(vigilanceAreas?.entities ?? []).filter(
-      vigilanceArea => extractedAreaFromApi.vigilanceAreaIds.includes(vigilanceArea.id) && !vigilanceArea.isDraft
+    vigilanceAreas: Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
+      extractedAreaFromApi.vigilanceAreaIds.includes(vigilanceArea.id)
     )
   }
 }

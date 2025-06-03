@@ -2,11 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
@@ -68,10 +64,10 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(vigilanceArea?.themes).isEmpty()
         assertThat(vigilanceArea?.visibility).isEqualTo(VisibilityEnum.PUBLIC)
         assertThat(vigilanceArea?.tags).hasSize(2)
-        assertThat(vigilanceArea?.tags[0]?.id).isEqualTo(6)
-        assertThat(vigilanceArea?.tags[0]?.name).isEqualTo("Extraction granulats")
-        assertThat(vigilanceArea?.tags[1]?.id).isEqualTo(7)
-        assertThat(vigilanceArea?.tags[1]?.name).isEqualTo("Dragage")
+        assertThat(vigilanceArea?.tags?.get(0)?.id).isEqualTo(6)
+        assertThat(vigilanceArea?.tags?.get(0)?.name).isEqualTo("Extraction granulats")
+        assertThat(vigilanceArea?.tags?.get(1)?.id).isEqualTo(7)
+        assertThat(vigilanceArea?.tags?.get(1)?.name).isEqualTo("Dragage")
     }
 
     @Test
@@ -232,7 +228,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val vigilanceAreas = jpaVigilanceAreaRepository.findAllIdsByGeometry(polygon)
+        val vigilanceAreas = jpaVigilanceAreaRepository.findAllIdsByGeometryAndIsDraftIsFalse(polygon)
 
         val queryCount = customQueryCountListener?.getQueryCount()
         println("Number of Queries Executed: $queryCount")
