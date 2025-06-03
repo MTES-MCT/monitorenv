@@ -120,7 +120,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
 
-    cy.fill('Thématiques et sous-thématiques de contrôle', ['Réserve naturelle', 'Rejet', 'Épave'])
+    cy.fill('Thématiques et sous-thématiques de surveillance', ['Réserve naturelle', 'Rejet', 'Épave'])
 
     cy.fill('La surveillance a donné lieu à des actions de prévention', true)
 
@@ -309,7 +309,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.getDataCy('action-missing-fields-text').contains('3 champs nécessaires aux statistiques à compléter')
 
     // select sub-theme and tags
-    cy.fill('Thématiques et sous-thématiques de contrôle', ['Autre (Épave)'])
+    cy.fill('Thématiques et sous-thématiques de surveillance', ['Autre (Épave)'])
     cy.fill('Tags et sous-tags', ['Mixte'])
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.getDataCy('surveillance-completed-by').type('ABC', { force: true })
