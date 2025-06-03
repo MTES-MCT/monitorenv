@@ -14,7 +14,7 @@ interface IVigilanceAreaRepository {
 
     fun archiveOutdatedVigilanceAreas(): Int
 
-    fun findAllIdsByGeometry(geometry: Geometry): List<Int>
+    fun findAllIdsByGeometryAndIsDraftIsFalse(geometry: Geometry): List<Int>
 
     fun findAllTrigrams(): List<String>
 }

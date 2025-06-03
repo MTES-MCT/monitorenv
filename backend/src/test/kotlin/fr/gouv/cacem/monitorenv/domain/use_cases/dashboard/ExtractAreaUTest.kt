@@ -2,11 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.dashboard
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.repositories.IAMPRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -46,7 +42,7 @@ class ExtractAreaUTest {
         given(reportingRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
         given(regulatoryAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
         given(ampAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
-        given(vigilanceAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(listOf())
+        given(vigilanceAreaRepository.findAllIdsByGeometryAndIsDraftIsFalse(geometry = polygon)).willReturn(listOf())
 
         // When
         val extractedAreaEntity = extractArea.execute(polygon)
@@ -56,7 +52,7 @@ class ExtractAreaUTest {
         verify(reportingRepository).findAllIdsByGeometry(geometry = polygon)
         verify(regulatoryAreaRepository).findAllIdsByGeometry(geometry = polygon)
         verify(ampAreaRepository).findAllIdsByGeometry(geometry = polygon)
-        verify(vigilanceAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(vigilanceAreaRepository).findAllIdsByGeometryAndIsDraftIsFalse(geometry = polygon)
 
         assertThat(extractedAreaEntity.inseeCode).isNull()
         assertThat(extractedAreaEntity.reportingIds).isEmpty()
@@ -84,7 +80,9 @@ class ExtractAreaUTest {
         val amps = listOf(3)
         given(ampAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(amps)
         val vigilanceAreas = listOf(4)
-        given(vigilanceAreaRepository.findAllIdsByGeometry(geometry = polygon)).willReturn(vigilanceAreas)
+        given(vigilanceAreaRepository.findAllIdsByGeometryAndIsDraftIsFalse(geometry = polygon)).willReturn(
+            vigilanceAreas,
+        )
 
         // When
         val extractedAreaEntity = extractArea.execute(polygon)
@@ -94,7 +92,7 @@ class ExtractAreaUTest {
         verify(reportingRepository).findAllIdsByGeometry(geometry = polygon)
         verify(regulatoryAreaRepository).findAllIdsByGeometry(geometry = polygon)
         verify(ampAreaRepository).findAllIdsByGeometry(geometry = polygon)
-        verify(vigilanceAreaRepository).findAllIdsByGeometry(geometry = polygon)
+        verify(vigilanceAreaRepository).findAllIdsByGeometryAndIsDraftIsFalse(geometry = polygon)
 
         assertThat(extractedAreaEntity.inseeCode).isEqualTo(inseeCode)
         assertThat(extractedAreaEntity.reportingIds).isEqualTo(reportings)
