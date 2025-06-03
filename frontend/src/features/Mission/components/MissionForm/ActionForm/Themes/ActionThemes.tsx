@@ -41,6 +41,11 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
     return getThemesAsOptions(Object.values(data ?? []))
   }, [actionType, data])
 
+  const label =
+    envActions[actionIndex]?.actionType === ActionTypeEnum.CONTROL
+      ? 'Thématiques et sous-thématiques de contrôle'
+      : 'Thématiques et sous-thématiques de surveillance'
+
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">
       <CheckTreePicker
@@ -50,7 +55,7 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
         isLight
         isMultiSelect={actionType === ActionTypeEnum.SURVEILLANCE}
         isRequired
-        label="Thématiques et sous-thématiques de contrôle"
+        label={label}
         labelKey="name"
         name={`envActions[${actionIndex}].themes`}
         onChange={option => {
