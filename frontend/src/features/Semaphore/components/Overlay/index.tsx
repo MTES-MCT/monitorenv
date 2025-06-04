@@ -7,7 +7,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../../map/BaseMap'
+import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
 const SUPER_USER_MARGINS = {
   xLeft: 50,
@@ -25,11 +25,12 @@ const MARGINS = {
   yTop: -70
 }
 
-type SemaphoreOverlayProps = BaseMapChildrenProps & {
-  isSuperUser: boolean
-}
-
-export function SemaphoreOverlay({ currentFeatureOver, isSuperUser, map, mapClickEvent }: SemaphoreOverlayProps) {
+export function SemaphoreOverlay({
+  currentFeatureOver,
+  isSuperUser,
+  map,
+  mapClickEvent
+}: BaseMapChildrenWithSuperUserProps) {
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
 
   const selectedFeature = map

@@ -75,7 +75,7 @@ export function Menu({ isSuperUser }: MenuProps) {
           <ControlUnitListButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
         </li>
       )}
-      {displayRecentActivityMenuButton && isSuperUser && (
+      {displayRecentActivityMenuButton && (
         <li>
           <RecentActivityMenuButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
         </li>

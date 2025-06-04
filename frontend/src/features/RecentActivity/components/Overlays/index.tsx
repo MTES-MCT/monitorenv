@@ -10,13 +10,19 @@ import { HoveredOverlay } from './HoveredOverlay'
 import { RecentActivityControlCard } from './RecentActivityControlCard'
 import { SelectedOverlay } from './SelectedOverlay'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { RecentActivity } from '@features/RecentActivity/types'
 import type { OverlayItem } from 'domain/types/map'
+import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
 export const FEATURE_ID = 'RecentActivityAreaIconFeature'
 
-export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEvent, pixel }: BaseMapChildrenProps) {
+export function RecentActvityOverlay({
+  currentFeatureListOver,
+  isSuperUser,
+  map,
+  mapClickEvent,
+  pixel
+}: BaseMapChildrenWithSuperUserProps) {
   const layerOverlayItems = useShallowEqualSelector(state => state.recentActivity.layersAndOverlays.layerOverlayItems)
   const layerOverlayCoordinates = useShallowEqualSelector(
     state => state.recentActivity.layersAndOverlays.layerOverlayCoordinates
@@ -98,7 +104,11 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
         zIndex={5000}
       >
         {!!(selectedControlId && (selectedFeature || dashboardSelectedFeature)) && (
-          <RecentActivityControlCard control={selectedFeature ?? dashboardSelectedFeature} isSelected />
+          <RecentActivityControlCard
+            control={selectedFeature ?? dashboardSelectedFeature}
+            isSelected
+            isSuperUser={isSuperUser}
+          />
         )}
       </OverlayPositionOnCentroid>
 

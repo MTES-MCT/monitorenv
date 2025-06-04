@@ -12,6 +12,7 @@ export function ControlCard({
   controlThemes,
   infractions,
   isSelected = false,
+  isSuperUser = true,
   onClose,
   onConsultMission
 }: {
@@ -21,6 +22,7 @@ export function ControlCard({
   controlThemes: string
   infractions: Infraction[]
   isSelected?: boolean
+  isSuperUser?: boolean
   onClose?: () => void
   onConsultMission?: () => void
 }) {
@@ -63,7 +65,7 @@ export function ControlCard({
         <ControlInfractionsTags actionNumberOfControls={actionNumberOfControls} infractions={infractions} />
       )}
       <StyledGrayText>{actionStartDateTimeUtc ? actionDate : 'Date à renseigner'}</StyledGrayText>
-      {isSelected && (
+      {isSelected && isSuperUser && (
         <ConsultButton Icon={Icon.Display} isFullWidth={false} onClick={onConsultMission} size={Size.SMALL}>
           Consulter
         </ConsultButton>

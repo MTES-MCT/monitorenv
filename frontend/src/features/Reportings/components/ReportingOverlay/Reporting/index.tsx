@@ -9,8 +9,8 @@ import { useMemo, useState } from 'react'
 
 import { ReportingCard } from './ReportingCard'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
+import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
 const OPTIONS = {
   margins: {
@@ -22,11 +22,13 @@ const OPTIONS = {
     yTop: -55
   }
 }
-type ReportingOverlayProps = BaseMapChildrenProps & {
-  isSuperUser: boolean
-}
 
-export function ReportingOverlay({ currentFeatureOver, isSuperUser, map, mapClickEvent }: ReportingOverlayProps) {
+export function ReportingOverlay({
+  currentFeatureOver,
+  isSuperUser,
+  map,
+  mapClickEvent
+}: BaseMapChildrenWithSuperUserProps) {
   const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
