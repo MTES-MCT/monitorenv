@@ -9,14 +9,10 @@ import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
 import { getEditingReportingZoneFeature } from './reportingsGeometryHelpers'
 import { editingReportingStyleFn } from './style'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
+import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
-type EditingReportingLayerProps = BaseMapChildrenProps & {
-  isSuperUser: boolean
-}
-
-export function EditingReportingLayer({ currentFeatureOver, isSuperUser, map }: EditingReportingLayerProps) {
+export function EditingReportingLayer({ currentFeatureOver, isSuperUser, map }: BaseMapChildrenWithSuperUserProps) {
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 

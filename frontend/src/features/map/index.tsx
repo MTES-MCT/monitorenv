@@ -139,6 +139,22 @@ export function Map({ isSuperUser }) {
         <PreviewVigilanceAreasLayer />
         {/* @ts-ignore */}
         <SelectedVigilanceAreaLayer />
+
+        {/* RECENT ACTIVITY */}
+        {/* @ts-ignore */}
+        <RecentControlsActivityLayer />
+        {/* @ts-ignore */}
+        <DrawRecentActivityLayer />
+        {/* @ts-ignore */}
+        <RecentActivityLayerEvents />
+        {/* @ts-ignore */}
+        <RecentActvityOverlay isSuperUser={false} />
+        {/* @ts-ignore */}
+        {displayRecentActivityLegend ? <RecentActivityLegend location="OUTSIDE" /> : null}
+
+        {/* LOCALIZED AREAS */}
+        {/* @ts-ignore */}
+        <LocalizedAreasLayer />
       </BaseMap>
     )
   }
