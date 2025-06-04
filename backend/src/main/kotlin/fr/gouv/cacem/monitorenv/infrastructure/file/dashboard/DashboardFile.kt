@@ -8,6 +8,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.*
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.file.dashboard.IDashboardFile
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
+import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import fr.gouv.cacem.monitorenv.infrastructure.file.reporting.ReportingFlags
 import fr.gouv.cacem.monitorenv.utils.Base64Converter
 import fr.gouv.cacem.monitorenv.utils.OfficeConverter
@@ -42,6 +44,7 @@ class DashboardFile(
 
     override fun createEditableBrief(brief: BriefEntity): BriefFileEntity {
         val dashboard = brief.dashboard
+        logger.info("Creating editable brief for dashboard: ${dashboard.name}")
         val controlUnits = dashboard.controlUnitIds.map { controlUnitRepository.findById(it) }
         val controlUnitsName =
             if (controlUnits.isNotEmpty()) controlUnits.joinToString(", ") { it.name } else "Aucune unité sélectionnée"
@@ -59,18 +62,27 @@ class DashboardFile(
         addPageNumbersFooter(document)
         setFontForAllParagraphs(document)
 
-        val tempFile = saveDocument(document)
+        try {
+            val tempFile = saveDocument(document)
 
-        val odtFile =
-            OfficeConverter().convert(editableBriefProperties.tmpDocxPath, editableBriefProperties.tmpOdtPath)
-        val base64Content = Base64Converter().convertToBase64(odtFile)
+            val odtFile =
+                OfficeConverter().convert(editableBriefProperties.tmpDocxPath, editableBriefProperties.tmpOdtPath)
+            val base64Content = Base64Converter().convertToBase64(odtFile)
 
-        tempFile.delete()
-        println("base64Content $base64Content")
-        return BriefFileEntity(
-            fileName = "Brief-${brief.dashboard.name}.odt",
-            fileContent = base64Content,
-        )
+            tempFile.delete()
+            println("base64Content $base64Content")
+            return BriefFileEntity(
+                fileName = "Brief-${brief.dashboard.name}.odt",
+                fileContent = base64Content,
+            )
+        } catch (e: Exception) {
+            logger.error("Error creating editable brief for dashboard: ${dashboard.name}", e)
+            throw BackendRequestException(
+                BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
+                ("Failed to create editable brief error: ${e.message}"),
+            )
+        }
+
     }
 
     /******* DATA INSERTION *******/
