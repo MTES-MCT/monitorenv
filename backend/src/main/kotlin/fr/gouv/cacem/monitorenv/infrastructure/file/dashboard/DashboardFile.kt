@@ -919,10 +919,10 @@ class DashboardFile(
         image: String?,
         paragraph: XWPFParagraph,
     ) {
-
-        val sanitizedFileName = name
-            .replace(Regex("[\\\\/:*?\"<>|{}]"), "_")
-            .replace("\\s+".toRegex(), "_")
+        val sanitizedFileName =
+            name
+                .replace(Regex("[\\\\/:*?\"<>|{}]"), "_")
+                .replace("\\s+".toRegex(), "_")
 
         val imageData = image?.let { cleanBase64String(it) }
 
