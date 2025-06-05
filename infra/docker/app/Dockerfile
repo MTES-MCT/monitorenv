@@ -67,6 +67,11 @@ ENV ENV_DB_URL=""
 # Add bash
 RUN apk add --no-cache bash
 
+# Install LibreOffice using apk
+RUN apk update && \
+    apk add --no-cache libreoffice && \
+    rm -rf /var/cache/apk/*
+
 RUN adduser -D monitorenv
 USER monitorenv
 
@@ -82,11 +87,6 @@ ENV JAVA_TOOL_OPTIONS="-Dcom.sun.management.jmxremote.ssl=false \
   -Dcom.sun.management.jmxremote.registry.ssl=false \
   -Dcom.sun.management.jmxremote.host=0.0.0.0 \
   -Djava.rmi.server.hostname=0.0.0.0"
-
-# Install LibreOffice using apk with proxy settings
-RUN apk update && \
-    apk add --no-cache libreoffice && \
-    rm -rf /var/cache/apk/*
 
 # Copy files for the back
 COPY --from=build-back /tmp/build/libs/monitorenv-${VERSION}.jar /home/monitorenv
