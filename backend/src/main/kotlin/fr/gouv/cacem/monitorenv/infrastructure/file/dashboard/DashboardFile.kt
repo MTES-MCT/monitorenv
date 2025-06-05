@@ -45,44 +45,60 @@ class DashboardFile(
     override fun createEditableBrief(brief: BriefEntity): BriefFileEntity {
         val dashboard = brief.dashboard
         logger.info("Creating editable brief for dashboard: ${dashboard.name}")
-        val controlUnits = dashboard.controlUnitIds.map { controlUnitRepository.findById(it) }
-        val controlUnitsName =
-            if (controlUnits.isNotEmpty()) controlUnits.joinToString(", ") { it.name } else "Aucune unité sélectionnée"
-
-        val placeholders = buildPlaceholders(brief, controlUnitsName)
-        val document = XWPFDocument(loadTemplateInputStream())
-
-        applyParagraphReplacements(document, placeholders)
-        applyCustomTableInsertions(document, brief)
-        applyGlobalMapInsertion(document, brief)
-        applyDetailSections(document, brief)
-        applyLinks(document, brief.dashboard.links)
-        applyDashboardImages(document, brief.dashboard.images)
-
-        addPageNumbersFooter(document)
-        setFontForAllParagraphs(document)
-
         try {
-            val tempFile = saveDocument(document)
 
-            val odtFile =
-                OfficeConverter().convert(editableBriefProperties.tmpDocxPath, editableBriefProperties.tmpOdtPath)
-            val base64Content = Base64Converter().convertToBase64(odtFile)
 
-            tempFile.delete()
-            println("base64Content $base64Content")
-            return BriefFileEntity(
-                fileName = "Brief-${brief.dashboard.name}.odt",
-                fileContent = base64Content,
-            )
+            val controlUnits = dashboard.controlUnitIds.map { controlUnitRepository.findById(it) }
+            val controlUnitsName =
+                if (controlUnits.isNotEmpty()) controlUnits.joinToString(", ") { it.name } else "Aucune unité sélectionnée"
+
+            val placeholders = buildPlaceholders(brief, controlUnitsName)
+            val document = XWPFDocument(loadTemplateInputStream())
+            logger.info("Editable brief document: $document")
+            applyParagraphReplacements(document, placeholders)
+            logger.info("applyParagraphReplacements done")
+            applyCustomTableInsertions(document, brief)
+            logger.info("applyCustomTableInsertions done")
+            applyGlobalMapInsertion(document, brief)
+            logger.info("applyGlobalMapInsertion done")
+            applyDetailSections(document, brief)
+            logger.info("applyDetailSections done")
+            applyLinks(document, brief.dashboard.links)
+            logger.info("applyLinks done")
+            applyDashboardImages(document, brief.dashboard.images)
+            logger.info("applyDashboardImages done")
+
+            addPageNumbersFooter(document)
+            setFontForAllParagraphs(document)
+            try {
+                val tempFile = saveDocument(document)
+                logger.info("Editable brief saved to temporary file: $tempFile")
+                val odtFile =
+                    OfficeConverter().convert(editableBriefProperties.tmpDocxPath, editableBriefProperties.tmpOdtPath)
+                logger.info("Editable brief saved to odtFile: $odtFile")
+                val base64Content = Base64Converter().convertToBase64(odtFile)
+                logger.info("Editable brief saved to base64Content: $base64Content")
+                tempFile.delete()
+                logger.info("tempFiler deleted")
+                println("base64Content $base64Content")
+                return BriefFileEntity(
+                    fileName = "Brief-${brief.dashboard.name}.odt",
+                    fileContent = base64Content,
+                )
+            } catch (e: Exception) {
+                logger.error("Error creating editable brief for dashboard: ${dashboard.name}", e)
+                throw BackendRequestException(
+                    BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
+                    ("Failed to create editable brief error: ${e.message}"),
+                )
+            }
         } catch (e: Exception) {
             logger.error("Error creating editable brief for dashboard: ${dashboard.name}", e)
             throw BackendRequestException(
                 BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
-                ("Failed to create editable brief error: ${e.message}"),
+                ("Global Try/catch: ${e.message}"),
             )
         }
-
     }
 
     /******* DATA INSERTION *******/
