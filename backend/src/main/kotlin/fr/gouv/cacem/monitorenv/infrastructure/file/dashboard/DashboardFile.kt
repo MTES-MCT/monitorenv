@@ -46,11 +46,15 @@ class DashboardFile(
         val dashboard = brief.dashboard
         logger.info("Creating editable brief for dashboard: ${dashboard.name}")
         try {
-
-
             val controlUnits = dashboard.controlUnitIds.map { controlUnitRepository.findById(it) }
             val controlUnitsName =
-                if (controlUnits.isNotEmpty()) controlUnits.joinToString(", ") { it.name } else "Aucune unité sélectionnée"
+                if (controlUnits.isNotEmpty()) {
+                    controlUnits.joinToString(
+                        ", ",
+                    ) { it.name }
+                } else {
+                    "Aucune unité sélectionnée"
+                }
 
             val placeholders = buildPlaceholders(brief, controlUnitsName)
             val document = XWPFDocument(loadTemplateInputStream())
@@ -915,9 +919,14 @@ class DashboardFile(
         image: String?,
         paragraph: XWPFParagraph,
     ) {
+
+        val sanitizedFileName = name
+            .replace(Regex("[\\\\/:*?\"<>|{}]"), "_")
+            .replace("\\s+".toRegex(), "_")
+
         val imageData = image?.let { cleanBase64String(it) }
 
-        val tempImageFile = File("temp_image_$name}.png")
+        val tempImageFile = File("temp_image_$sanitizedFileName}.png")
         if (imageData != null) {
             tempImageFile.writeBytes(imageData)
         }
@@ -928,7 +937,7 @@ class DashboardFile(
         run.addPicture(
             inputStreamImg,
             XWPFDocument.PICTURE_TYPE_PNG,
-            "$name.png",
+            "$sanitizedFileName.png",
             Units.pixelToEMU(675), // Largeur
             Units.pixelToEMU(450), // Hauteur
         )
