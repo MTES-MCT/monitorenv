@@ -83,7 +83,7 @@ regulations.flow.schedule = CronSchedule("6,16,26,36,46,56 * * * *")
 
 semaphores.flow.schedule = CronSchedule("3 5,15 * * *")
 
-regulatory_areas_open_data.flow.schedule = CronSchedule("0 1 * * *")
+regulatory_areas_open_data.flow.schedule = CronSchedule("0 20 * * 5")
 
 
 ###################### List flows to register with prefect server #####################
