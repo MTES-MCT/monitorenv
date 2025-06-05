@@ -9,10 +9,18 @@ import type { GeoJSON } from '../domain/types/GeoJSON'
 
 const GET_CONTROL_UNITS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des unités de contrôle."
 
+type GetNearbyUnitsParams = {
+  geometry: GeoJSON.Geometry
+  startedAfter?: string
+  startedBefore?: string
+}
 export const privateControlUnitsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
-    getNearbyUnits: builder.query<NearbyUnit[], GeoJSON.Geometry>({
-      query: geometry => `/v1/control_units/nearby?geometry=${geoJsonToWKT(geometry)}`,
+    getNearbyUnits: builder.query<NearbyUnit[], GetNearbyUnitsParams>({
+      query: ({ geometry, startedAfter, startedBefore }) =>
+        `/v1/control_units/nearby?geometry=${geoJsonToWKT(geometry)}${
+          startedAfter ? `&startedAfter=${encodeURIComponent(startedAfter)}` : ''
+        }${startedBefore ? `&startedBefore=${encodeURIComponent(startedBefore)}` : ''}`,
       transformErrorResponse: response => new FrontendApiError(GET_CONTROL_UNITS_ERROR_MESSAGE, response)
     })
   })

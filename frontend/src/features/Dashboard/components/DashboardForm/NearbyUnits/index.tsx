@@ -1,19 +1,18 @@
 import { useGetNearbyUnitsQuery } from '@api/nearbyUnitsAPI'
+import { Tooltip } from '@components/Tooltip'
 import { ResultList } from '@features/Dashboard/components/DashboardForm/ControlUnits'
 import { Item } from '@features/Dashboard/components/DashboardForm/NearbyUnits/Item'
+import { getDatesFromFilters } from '@features/Dashboard/components/DashboardForm/NearbyUnits/utils'
 import { SelectedAccordion } from '@features/Dashboard/components/DashboardForm/SelectedAccordion'
+import { getNearbyUnitFilters } from '@features/Dashboard/components/DashboardForm/slice'
 import { SelectedLayerList } from '@features/Dashboard/components/DashboardForm/style'
-import { dashboardActions } from '@features/Dashboard/slice'
-import { Dashboard } from '@features/Dashboard/types'
-import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { forwardRef, useEffect, useMemo, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { Accordion, Title, TitleContainer } from '../Accordion'
-import { StyledToggleSelectAll } from '../ToggleSelectAll'
-import { getSelectionState, handleSelection } from '../ToggleSelectAll/utils'
+import { Filters } from './Filters'
 
 import type { GeoJSON } from '../../../../../domain/types/GeoJSON'
 
@@ -25,80 +24,74 @@ type NearbyUnitsProps = {
 }
 export const NearbyUnits = forwardRef<HTMLDivElement, NearbyUnitsProps>(
   ({ geometry, isExpanded, isSelectedAccordionOpen, setExpandedAccordion }, ref) => {
-    const dispatch = useAppDispatch()
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
-    const { data: nearbyUnits } = useGetNearbyUnitsQuery(geometry)
+
     const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
-    const selectedNearbyUnitIds = useAppSelector(state =>
-      activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.selectedNearbyUnitIds : []
+    const selectedNearbyUnits = useAppSelector(state =>
+      activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.selectedNearbyUnits : []
     )
+    const nearbyUnitFilters = useAppSelector(state => getNearbyUnitFilters(state.dashboardFilters, activeDashboardId))
+
+    const { startedAfter, startedBefore } = getDatesFromFilters({
+      periodFilter: nearbyUnitFilters?.periodFilter,
+      startedAfter: nearbyUnitFilters?.startedAfter,
+      startedBefore: nearbyUnitFilters?.startedBefore
+    })
+    const { data: nearbyUnits } = useGetNearbyUnitsQuery({ geometry, startedAfter, startedBefore })
+
     useEffect(() => {
       if (isSelectedAccordionOpen) {
         setExpandedSelectedAccordion(isSelectedAccordionOpen)
       }
     }, [isSelectedAccordionOpen])
 
-    const selectionState = useMemo(
-      () =>
-        getSelectionState(selectedNearbyUnitIds ?? [], nearbyUnits?.map(nearbyUnit => nearbyUnit.controlUnit.id) ?? []),
-      [selectedNearbyUnitIds, nearbyUnits]
-    )
+    const hasChildren = (nearbyUnits?.length ?? 0) > 1
 
     return (
       <div>
-        <Accordion
+        <StyledAccordion
           isExpanded={isExpanded}
           setExpandedAccordion={setExpandedAccordion}
           title={
             <TitleContainer>
               <Title>Unités proches</Title>
-              {(nearbyUnits?.length !== 0 || nearbyUnits.length !== 0) && (
-                <StyledToggleSelectAll
-                  onSelection={() =>
-                    handleSelection({
-                      allIds: nearbyUnits?.map(nearbyUnit => nearbyUnit.controlUnit.id) ?? [],
-                      onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
-                      onSelect: payload => dispatch(dashboardActions.addItems(payload)),
-                      selectedIds: selectedNearbyUnitIds ?? [],
-                      selectionState,
-                      type: Dashboard.Block.NEARBY_UNITS
-                    })
-                  }
-                  selectionState={selectionState}
-                />
-              )}
+              <Tooltip isSideWindow>
+                Les unités présentes dans la liste sont celles qui ont au moins une surveillance ou un contrôle dans la
+                zone du brief. Vous pouvez sélectionner celles de vos choix à l&apos;aide des filtres de période.
+              </Tooltip>
             </TitleContainer>
           }
           titleRef={ref}
         >
           <Wrapper>
+            <StyledFilters
+              $isExpanded={isExpanded}
+              hasChildren={hasChildren}
+              nearbyUnits={nearbyUnits}
+              selectedNearbyUnits={selectedNearbyUnits}
+            />
             <ResultList $hasResults>
               {Object.values(nearbyUnits ?? [])
                 .sort((a, b) => (a.controlUnit.name > b.controlUnit.name ? 1 : -1))
                 .map(nearbyUnit => (
-                  <Item nearbyUnit={nearbyUnit} />
+                  <Item key={nearbyUnit.controlUnit.id} nearbyUnit={nearbyUnit} />
                 ))}
             </ResultList>
           </Wrapper>
-        </Accordion>
+        </StyledAccordion>
         <SelectedAccordion
           isExpanded={isExpandedSelectedAccordion}
-          isReadOnly={selectedNearbyUnitIds?.length === 0}
+          isReadOnly={selectedNearbyUnits?.length === 0}
           setExpandedAccordion={() => setExpandedSelectedAccordion(!isExpandedSelectedAccordion)}
-          title={`${selectedNearbyUnitIds?.length} ${pluralize(
-            'unité',
-            selectedNearbyUnitIds?.length ?? 0
-          )} ${pluralize('proche', selectedNearbyUnitIds?.length ?? 0)} ${pluralize(
-            'sélectionnée',
-            selectedNearbyUnitIds?.length ?? 0
-          )} `}
+          title={`${selectedNearbyUnits?.length} ${pluralize('unité', selectedNearbyUnits?.length ?? 0)} ${pluralize(
+            'proche',
+            selectedNearbyUnits?.length ?? 0
+          )} ${pluralize('sélectionnée', selectedNearbyUnits?.length ?? 0)} `}
         >
           <SelectedLayerList>
-            {nearbyUnits
-              ?.filter(nearbyUnit => selectedNearbyUnitIds?.includes(nearbyUnit.controlUnit.id))
-              ?.map(nearbyUnit => (
-                <Item isSelected nearbyUnit={nearbyUnit} />
-              ))}
+            {selectedNearbyUnits?.map(nearbyUnit => (
+              <Item key={nearbyUnit.controlUnit.id} isSelected nearbyUnit={nearbyUnit} />
+            ))}
           </SelectedLayerList>
         </SelectedAccordion>
       </div>
@@ -112,4 +105,14 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 16px;
   padding: 16px 24px;
+`
+
+const StyledFilters = styled(Filters)<{ $isExpanded: boolean }>`
+  transition-delay: ${({ $isExpanded }) => ($isExpanded ? '0.3s' : '0')};
+`
+
+const StyledAccordion = styled(Accordion)<{ isExpanded: boolean }>`
+  > div > div {
+    overflow: ${p => (p.isExpanded ? 'inherit' : 'hidden')};
+  }
 `

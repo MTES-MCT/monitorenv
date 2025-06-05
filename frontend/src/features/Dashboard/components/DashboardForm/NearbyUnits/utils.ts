@@ -1,3 +1,4 @@
+import { NearbyUnitDateRangeEnum } from '@features/Dashboard/components/DashboardForm/NearbyUnits/Filters'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 
 import type { Dayjs } from 'dayjs'
@@ -10,52 +11,52 @@ export function getDateRange(missions: Mission[]) {
 
   const { end, start } = missions.reduce(
     (missionDateRange: { end: Dayjs | undefined; start: Dayjs | undefined }, mission) => {
-      if (mission.envActions.length === 0) {
-        return missionDateRange
-      }
-      const { endAction, startAction } = mission.envActions.reduce(
-        (actionDateRange, envAction) => {
-          const startDateTimeUtc = envAction.actionStartDateTimeUtc
-            ? customDayjs(envAction.actionStartDateTimeUtc)
-            : undefined
-          const endDateTimeUtc =
-            'actionEndDateTimeUtc' in envAction && envAction.actionEndDateTimeUtc
-              ? customDayjs(envAction.actionEndDateTimeUtc)
-              : undefined
-
-          return {
-            endAction: endDateTimeUtc?.isAfter(actionDateRange.endAction) ? endDateTimeUtc : actionDateRange.endAction,
-            startAction: startDateTimeUtc?.isBefore(actionDateRange.startAction)
-              ? startDateTimeUtc
-              : actionDateRange.startAction
-          }
-        },
-        {
-          endAction:
-            mission.envActions[0] &&
-            'actionEndDateTimeUtc' in mission.envActions[0] &&
-            mission.envActions[0]?.actionEndDateTimeUtc
-              ? customDayjs(mission.envActions[0]?.actionEndDateTimeUtc)
-              : undefined,
-          startAction: mission.envActions[0]?.actionStartDateTimeUtc
-            ? customDayjs(mission.envActions[0]?.actionStartDateTimeUtc)
-            : undefined
-        }
-      )
+      const startMission = customDayjs(mission.startDateTimeUtc)
+      const endMission = customDayjs(mission.endDateTimeUtc)
 
       return {
-        end: !missionDateRange.end || endAction?.isAfter(missionDateRange.end) ? endAction : missionDateRange.end,
-        start:
-          !missionDateRange.start || startAction?.isBefore(missionDateRange.start)
-            ? startAction
-            : missionDateRange.start
+        end: endMission.isAfter(missionDateRange.end) ? endMission : missionDateRange.end,
+        start: startMission.isBefore(missionDateRange.start) ? startMission : missionDateRange.start
       }
     },
     {
-      end: undefined,
-      start: undefined
+      end: missions[0]?.endDateTimeUtc ? customDayjs(missions[0].endDateTimeUtc) : undefined,
+      start: missions[0]?.startDateTimeUtc ? customDayjs(missions[0].startDateTimeUtc) : undefined
     }
   )
 
   return { end: end?.format('DD/MM/YYYY'), start: start?.format('DD/MM/YYYY') }
+}
+
+type GetDatesFromFiltersProps = {
+  periodFilter?: string
+  startedAfter?: string
+  startedBefore?: string
+}
+export function getDatesFromFilters({ periodFilter, startedAfter, startedBefore }: GetDatesFromFiltersProps) {
+  let startedAfterDate = startedAfter ?? undefined
+  const startedBeforeDate = startedBefore ?? undefined
+  switch (periodFilter) {
+    case NearbyUnitDateRangeEnum.TODAY:
+      startedAfterDate = customDayjs().utc().startOf('day').toISOString()
+      break
+
+    case NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS:
+      startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(7, 'day').toISOString()
+      break
+
+    case NearbyUnitDateRangeEnum.FOURTEEN_LAST_DAYS:
+      startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(14, 'day').toISOString()
+      break
+
+    case NearbyUnitDateRangeEnum.SEVEN_NEXT_DAYS:
+      startedAfterDate = customDayjs().utc().startOf('day').utc().add(7, 'day').toISOString()
+      break
+
+    case NearbyUnitDateRangeEnum.CUSTOM:
+    default:
+      break
+  }
+
+  return { startedAfter: startedAfterDate, startedBefore: startedBeforeDate }
 }

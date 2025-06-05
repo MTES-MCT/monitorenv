@@ -96,7 +96,6 @@ export function SecondColumn({
       {isMount && (
         <BaseColumn ref={columnRef} className={className}>
           <Bookmark bottomBookmarks={bottomBookmarks} columnWidth={columnWidth} topBookmarks={topBookmarks} />
-
           <TerritorialPressure
             ref={territorialPressureRef}
             isExpanded={expandedAccordion === Dashboard.Block.TERRITORIAL_PRESSURE}
@@ -107,7 +106,6 @@ export function SecondColumn({
             isExpanded={expandedAccordion === Dashboard.Block.RECENT_ACTIVITY}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.RECENT_ACTIVITY)}
           />
-
           <Reportings
             ref={reportingRef}
             isExpanded={expandedAccordion === Dashboard.Block.REPORTINGS}

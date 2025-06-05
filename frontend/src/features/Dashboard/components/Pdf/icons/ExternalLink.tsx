@@ -1,10 +1,10 @@
 import { Path, Rect, Svg } from '@react-pdf/renderer'
 
-type ExternalLinkProps = {
+type IconProps = {
   color: string
   size: number
 }
-export function ExternalLink({ color, size }: ExternalLinkProps) {
+export function ExternalLink({ color, size }: IconProps) {
   return (
     <Svg height={size} style={{ marginTop: 1 }} viewBox="0 0 20 20" width={size}>
       <Rect fill="none" height={size} width={size} />

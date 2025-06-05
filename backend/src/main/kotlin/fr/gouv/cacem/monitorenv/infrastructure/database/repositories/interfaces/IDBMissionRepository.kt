@@ -129,9 +129,30 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         FROM MissionModel mission
         JOIN mission.envActions envAction ON ST_INTERSECTS(ST_SETSRID(envAction.geom, 4326), ST_SETSRID(:geometry, 4326))
         WHERE mission.isDeleted = false
+                    AND
+             (
+                (mission.startDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
+                    AND (
+                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
+                        OR mission.startDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
+                    )
+                )
+                OR (
+                    mission.endDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
+                    AND (
+                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
+                        OR mission.endDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
+                    )
+                )
+            )
+            AND envAction.actionStartDateTime IS NOT NULL
         """,
     )
-    fun findAllByGeometry(geometry: Geometry): List<MissionModel>
+    fun findAllByGeometryAndDateRange(
+        geometry: Geometry,
+        startedAfter: Instant?,
+        startedBefore: Instant?
+    ): List<MissionModel>
 
     @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(

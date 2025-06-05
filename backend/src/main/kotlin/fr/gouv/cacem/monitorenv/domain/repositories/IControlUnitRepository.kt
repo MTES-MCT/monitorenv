@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.NearbyUnit
 import org.locationtech.jts.geom.Geometry
+import java.time.ZonedDateTime
 
 interface IControlUnitRepository {
     fun archiveById(controlUnitId: Int)
@@ -16,5 +17,9 @@ interface IControlUnitRepository {
 
     fun save(controlUnit: ControlUnitEntity): ControlUnitEntity
 
-    fun findNearbyUnits(geometry: Geometry): List<NearbyUnit>
+    fun findNearbyUnits(
+        geometry: Geometry,
+        startedAfter: ZonedDateTime?,
+        startedBefore: ZonedDateTime?
+    ): List<NearbyUnit>
 }

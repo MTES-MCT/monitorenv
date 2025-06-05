@@ -5,7 +5,6 @@ import {
   ResourcesAndPortsText
 } from '@features/Dashboard/components/DashboardForm/ControlUnits/Item'
 import { dashboardActions } from '@features/Dashboard/slice'
-import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, pluralize, THEME } from '@mtes-mct/monitor-ui'
@@ -19,18 +18,18 @@ export function Item({ isSelected = false, nearbyUnit }: { isSelected?: boolean;
   const dispatch = useAppDispatch()
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
-  const selectedNearbyUnitIds = useAppSelector(state =>
-    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.selectedNearbyUnitIds : []
+  const selectedNearbyUnits = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.selectedNearbyUnits : []
   )
-  const isPinned = selectedNearbyUnitIds?.includes(nearbyUnit.controlUnit.id)
+  const isPinned = selectedNearbyUnits
+    ?.map(selectedNearbyUnit => selectedNearbyUnit.controlUnit.id)
+    ?.includes(nearbyUnit.controlUnit.id)
 
   const selectNearbyUnit = () => {
     if (isPinned) {
-      dispatch(
-        dashboardActions.removeItems({ itemIds: [nearbyUnit.controlUnit.id], type: Dashboard.Block.NEARBY_UNITS })
-      )
+      dispatch(dashboardActions.removeNearbyUnitsFromSelection([nearbyUnit]))
     } else {
-      dispatch(dashboardActions.addItems({ itemIds: [nearbyUnit.controlUnit.id], type: Dashboard.Block.NEARBY_UNITS }))
+      dispatch(dashboardActions.addNearbyUnitsToSelection([nearbyUnit]))
     }
   }
 

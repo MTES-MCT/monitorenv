@@ -1,5 +1,6 @@
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { difference, intersection } from 'lodash'
+import React from 'react'
 
 import type { SelectionState } from '.'
 import type { Dashboard } from '@features/Dashboard/types'
@@ -14,7 +15,7 @@ export function getSelectionState(selectedIds: number[], allIds: number[]) {
     return 'ALL'
   }
 
-  if (selectedIds.some(selectedId => allIds.includes(selectedId))) {
+  if (selectedIds.length > 0 || selectedIds.some(selectedId => allIds.includes(selectedId))) {
     return 'PARTIAL'
   }
 
@@ -31,9 +32,15 @@ type SelectionParams = {
 }
 
 export function handleSelection({ allIds, onRemove, onSelect, selectedIds, selectionState, type }: SelectionParams) {
-  const itemIds = selectionState === 'ALL' ? intersection(allIds, selectedIds) : difference(allIds, selectedIds)
+  const itemIds = () => {
+    if (selectionState === 'ALL') {
+      return allIds.length > 0 ? intersection(allIds, selectedIds) : selectedIds
+    }
 
-  const payload = { itemIds, type }
+    return difference(allIds, selectedIds)
+  }
+
+  const payload = { itemIds: itemIds(), type }
 
   if (selectionState === 'ALL') {
     onRemove(payload)

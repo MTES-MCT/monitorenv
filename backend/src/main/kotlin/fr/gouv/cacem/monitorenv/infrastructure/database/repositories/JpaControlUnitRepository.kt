@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.ZonedDateTime
 
 @Repository
 class JpaControlUnitRepository(
@@ -65,9 +66,17 @@ class JpaControlUnitRepository(
         }
 
     @Transactional
-    override fun findNearbyUnits(geometry: Geometry): List<NearbyUnit> {
+    override fun findNearbyUnits(
+        geometry: Geometry,
+        startedAfter: ZonedDateTime?,
+        startedBefore: ZonedDateTime?
+    ): List<NearbyUnit> {
         val missions =
-            dbMissionRepository.findAllByGeometry(geometry).map {
+            dbMissionRepository.findAllByGeometryAndDateRange(
+                geometry,
+                startedAfter?.toInstant(),
+                startedBefore?.toInstant()
+            ).map {
                 it.toMissionEntity(mapper)
             }
         return missions

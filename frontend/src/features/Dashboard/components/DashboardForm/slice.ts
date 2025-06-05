@@ -1,4 +1,6 @@
+import { NearbyUnitDateRangeEnum } from '@features/Dashboard/components/DashboardForm/NearbyUnits/Filters'
 import { RecentActivity } from '@features/RecentActivity/types'
+import { type ControlUnit, type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { ReportingTypeEnum, StatusFilterEnum } from 'domain/entities/reporting'
@@ -8,7 +10,6 @@ import storage from 'redux-persist/lib/storage'
 
 import type { RecentActivityFiltersEnum } from '@features/RecentActivity/slice'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
-import type { ControlUnit, DateAsStringRange } from '@mtes-mct/monitor-ui'
 import type { TagOption } from 'domain/entities/tags'
 
 const persistConfig = {
@@ -30,6 +31,12 @@ export type RecentActivityFilters = {
   [RecentActivityFiltersEnum.STARTED_AFTER]?: string
   [RecentActivityFiltersEnum.STARTED_BEFORE]?: string
   [RecentActivityFiltersEnum.THEME_IDS]?: number[]
+}
+
+export type NearbyUnitFilters = {
+  periodFilter: string | undefined
+  startedAfter: string | undefined
+  startedBefore: string | undefined
 }
 
 export type ControlUnitFilters = {
@@ -58,6 +65,7 @@ export type DashboardsListFilters = {
 export type DashboardFiltersType = {
   controlUnitFilters: ControlUnitFilters
   filters: DashboardFilters
+  nearbyUnitFilters: NearbyUnitFilters
   recentActivityFilters: RecentActivityFilters
   reportingFilters: ReportingFilters
 }
@@ -90,6 +98,11 @@ export const dashboardFiltersSlice = createSlice({
       state.dashboards[id] = {
         controlUnitFilters: {},
         filters: {},
+        nearbyUnitFilters: {
+          periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS,
+          startedAfter: undefined,
+          startedBefore: undefined
+        },
         recentActivityFilters: {
           periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
         },
@@ -142,6 +155,11 @@ export const dashboardFiltersSlice = createSlice({
       state.dashboards[id] = filters ?? {
         controlUnitFilters: {},
         filters: {},
+        nearbyUnitFilters: {
+          periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS,
+          startedAfter: undefined,
+          startedBefore: undefined
+        },
         recentActivityFilters: {
           periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
         },
@@ -163,6 +181,11 @@ export const dashboardFiltersSlice = createSlice({
         state.dashboards[id] = {
           controlUnitFilters: {},
           filters,
+          nearbyUnitFilters: {
+            periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS,
+            startedAfter: undefined,
+            startedBefore: undefined
+          },
           recentActivityFilters: {
             periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
           },
@@ -176,6 +199,19 @@ export const dashboardFiltersSlice = createSlice({
     },
     setListFilters(state, action: PayloadAction<Partial<DashboardsListFilters>>) {
       state.filters = { ...state.filters, ...action.payload }
+    },
+    setNearbyUnitFilters(
+      state,
+      action: PayloadAction<{ filters: Partial<NearbyUnitFilters>; id: string | undefined }>
+    ) {
+      const { filters, id } = action.payload
+      if (!id) {
+        return
+      }
+      if (state.dashboards[id]) {
+        const { nearbyUnitFilters } = state.dashboards[id]
+        state.dashboards[id].nearbyUnitFilters = { ...nearbyUnitFilters, ...filters }
+      }
     },
     setRecentActivityFilters(
       state,
@@ -231,6 +267,17 @@ export const getRecentActivityFilters = createSelector(
     }
 
     return dashboards?.[dashboardId]?.recentActivityFilters
+  }
+)
+
+export const getNearbyUnitFilters = createSelector(
+  [(state: DashboardFiltersState) => state.dashboards, (_, dashboardId: string | undefined) => dashboardId],
+  (dashboards, dashboardId) => {
+    if (!dashboardId) {
+      return undefined
+    }
+
+    return dashboards?.[dashboardId]?.nearbyUnitFilters
   }
 )
 

@@ -148,4 +148,5 @@ const StyledPanel = styled(AmpPanel)<{ $marginLeft?: number }>`
     `calc(
     ${p.$marginLeft}px + 25px + 4px
   )`}; // 25px is the padding, 64px is the width of the sidebar
+  z-index: 10;
 `

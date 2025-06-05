@@ -10,6 +10,7 @@ import { Dashboard } from './types'
 import { filterReportings } from './useCases/filters/filterReportings'
 
 import type { DashboardFilters } from './components/DashboardForm/slice'
+import type { NearbyUnit } from '@api/nearbyUnitsAPI'
 import type { ImageApi, Link } from '@components/Form/types'
 import type { TagOption } from 'domain/entities/tags'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -37,7 +38,7 @@ export const initialDashboard: DashboardType = {
   openPanel: undefined,
   regulatoryIdsToDisplay: [],
   reportingToDisplay: undefined,
-  selectedNearbyUnitIds: [],
+  selectedNearbyUnits: [],
   totalOfControls: 0,
   unsavedDashboard: undefined
 }
@@ -61,7 +62,7 @@ export type DashboardType = {
   openPanel: OpenPanel | undefined
   regulatoryIdsToDisplay: number[]
   reportingToDisplay: Reporting | undefined
-  selectedNearbyUnitIds: number[]
+  selectedNearbyUnits: NearbyUnit[]
   totalOfControls: number
   unsavedDashboard: Dashboard.Dashboard | undefined
 }
@@ -146,14 +147,21 @@ export const dashboardSlice = createSlice({
           case Dashboard.Block.REPORTINGS:
             state.dashboards[id].dashboard.reportingIds = [...state.dashboards[id].dashboard.reportingIds, ...itemIds]
             break
-          case Dashboard.Block.NEARBY_UNITS:
-            state.dashboards[id].selectedNearbyUnitIds = [...state.dashboards[id].selectedNearbyUnitIds, ...itemIds]
-            break
           case Dashboard.Block.COMMENTS:
           case Dashboard.Block.TERRITORIAL_PRESSURE:
           default:
         }
       }
+    },
+    addNearbyUnitsToSelection(state, action: PayloadAction<NearbyUnit[]>) {
+      const id = state.activeDashboardId
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+
+      const selectedNearbyUnits = state.dashboards[id]?.selectedNearbyUnits
+      state.dashboards[id].selectedNearbyUnits = [...selectedNearbyUnits, ...action.payload]
     },
     addRegulatoryIdToDisplay(state, action: PayloadAction<number>) {
       const id = state.activeDashboardId
@@ -253,11 +261,6 @@ export const dashboardSlice = createSlice({
               item => !itemIds.includes(item)
             )
             break
-          case Dashboard.Block.NEARBY_UNITS:
-            state.dashboards[id].selectedNearbyUnitIds = state.dashboards[id].selectedNearbyUnitIds.filter(
-              item => !itemIds.includes(item)
-            )
-            break
           case Dashboard.Block.REPORTINGS:
             state.dashboards[id].dashboard.reportingIds = state.dashboards[id].dashboard.reportingIds.filter(
               item => !itemIds.includes(item)
@@ -267,6 +270,20 @@ export const dashboardSlice = createSlice({
           case Dashboard.Block.TERRITORIAL_PRESSURE:
           default:
         }
+      }
+    },
+    removeNearbyUnitsFromSelection(state, action: PayloadAction<NearbyUnit[]>) {
+      const id = state.activeDashboardId
+      const nearbyUnitIdsToRemove = action.payload.map(nearbyUnit => nearbyUnit.controlUnit.id)
+
+      if (!id || !state.dashboards[id]) {
+        return
+      }
+      const selectedNearbyUnits = state.dashboards[id]?.selectedNearbyUnits
+      if (selectedNearbyUnits) {
+        state.dashboards[id].selectedNearbyUnits = selectedNearbyUnits.filter(
+          selectedNearbyUnit => !nearbyUnitIdsToRemove.includes(selectedNearbyUnit.controlUnit.id)
+        )
       }
     },
     removeRegulatoryIdToDisplay(state, action: PayloadAction<number>) {

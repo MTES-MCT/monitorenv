@@ -11,6 +11,7 @@ import type {
 } from '../../domain/entities/regulatory'
 import type { Reporting } from '../../domain/entities/reporting'
 import type { ThemeFromAPI } from '../../domain/entities/themes'
+import type { NearbyUnit } from '@api/nearbyUnitsAPI'
 import type { ImageApi, ImageFront, Link } from '@components/Form/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
@@ -61,6 +62,7 @@ export namespace Dashboard {
     comments?: string
     images: ExportImageType[] | undefined
     name: string
+    nearbyUnits: NearbyUnit[]
     recentActivity: RecentActivity.RecentControlsActivity[]
     recentActivityControlUnits: ControlUnit.ControlUnit[]
     recentActivityFilters: RecentActivityFilters
