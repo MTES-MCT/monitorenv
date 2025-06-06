@@ -104,10 +104,24 @@ export const PublishedSchema: Yup.Schema<
       otherwise: schema => schema.nullable(),
       then: schema => schema.nullable().required('Requis')
     }),
-    tags: Yup.array().ensure().defined().min(1),
-    themes: Yup.array().ensure().optional(),
+    tags: Yup.array()
+      .ensure()
+      .test('required-if-no-themes', 'Renseignez au moins un thème ou un tag', (tags, context) => {
+        const { themes } = context.parent
+
+        return (tags && tags.length > 0) || (themes && themes.length > 0)
+      }),
+
+    themes: Yup.array()
+      .ensure()
+      .test('required-if-no-tags', 'Renseignez au moins un thème ou un tag', (themes, context) => {
+        const { tags } = context.parent
+
+        return (themes && themes.length > 0) || (tags && tags.length > 0)
+      }),
     visibility: Yup.mixed<VigilanceArea.Visibility>().oneOf(Object.values(VigilanceArea.Visibility)).required()
   })
+
   .required()
 
 export const VigilanceAreaSchema = Yup.lazy(value => {

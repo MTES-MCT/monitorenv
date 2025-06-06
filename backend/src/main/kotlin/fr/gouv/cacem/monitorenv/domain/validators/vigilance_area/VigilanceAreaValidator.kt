@@ -15,11 +15,11 @@ private const val NB_CHAR_MAX = 3
 class VigilanceAreaValidator : Validator<VigilanceAreaEntity> {
     private val logger = LoggerFactory.getLogger(VigilanceAreaValidator::class.java)
 
-    override fun validate(vigilanceArea: VigilanceAreaEntity) {
-        logger.info("Validating vigilance area: ${vigilanceArea.id}")
+    override fun validate(obj: VigilanceAreaEntity) {
+        logger.info("Validating vigilance area: ${obj.id}")
 
-        if (!vigilanceArea.isDraft) {
-            validatePublishedVigilanceArea(vigilanceArea)
+        if (!obj.isDraft) {
+            validatePublishedVigilanceArea(obj)
         }
     }
 
@@ -42,8 +42,8 @@ class VigilanceAreaValidator : Validator<VigilanceAreaEntity> {
                 "Le trigramme \"créé par\" doit avoir 3 lettres",
             )
         }
-        if (vigilanceArea.tags.isEmpty()) {
-            throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, "Un tag est obligatoire")
+        if (vigilanceArea.tags.isEmpty() || vigilanceArea.themes.isEmpty()) {
+            throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, "Un tag ou un thème est obligatoire")
         }
         if (!vigilanceArea.isAtAllTimes) {
             if (vigilanceArea.startDatePeriod === null) {
