@@ -54,7 +54,7 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
       if (!isSuperUser) {
         trackEvent({
           action: 'Consultation Zone de Vigilance',
-          category: 'ZONE DE VIGILANCE',
+          category: 'MONITOR_EXT',
           name: 'Consultation Zone de Vigilance'
         })
       }

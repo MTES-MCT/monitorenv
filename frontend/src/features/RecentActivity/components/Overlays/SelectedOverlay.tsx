@@ -9,7 +9,13 @@ import { OverlayContent } from './OverlayContent'
 import type { RecentActivity } from '@features/RecentActivity/types'
 import type { OverlayItem } from 'domain/types/map'
 
-export function SelectedOverlay({ items }: { items: OverlayItem<string, RecentActivity.RecentControlsActivity>[] }) {
+export function SelectedOverlay({
+  isSuperUser = true,
+  items
+}: {
+  isSuperUser?: boolean
+  items: OverlayItem<string, RecentActivity.RecentControlsActivity>[]
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const dispatch = useAppDispatch()
 
@@ -28,7 +34,7 @@ export function SelectedOverlay({ items }: { items: OverlayItem<string, RecentAc
         {items.length > 1 && <>{items.length} contrôles superposés sur ce point </>}
         <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={close} size={Size.SMALL} />
       </Header>
-      <OverlayContent isSelected items={items} />
+      <OverlayContent isSelected isSuperUser={isSuperUser} items={items} />
     </Card>
   )
 }
