@@ -182,36 +182,43 @@ export function Form() {
           <FormikCheckbox label="En tout temps" name="isAtAllTimes" />
         </DateWrapper>
         <Frequency />
-        <CheckTreePicker
-          childrenKey="subThemes"
-          error={formErrors.themes}
-          isErrorMessageHidden
-          label="Thématiques et sous-thématiques"
-          labelKey="name"
-          name="theme"
-          onChange={nextTheme => {
-            setFieldValue('themes', parseOptionsToThemes(nextTheme))
-          }}
-          options={themesOptions}
-          value={getThemesAsOptions(values.themes ?? [])}
-          valueKey="id"
-        />
-        <CheckTreePicker
-          childrenKey="subTags"
-          error={formErrors.tags}
-          isRequired
-          label="Tags et sous-tags"
-          labelKey="name"
-          name="tags"
-          onChange={nextTags => {
-            setFieldValue('tags', parseOptionsToTags(nextTags))
-          }}
-          options={tagsOptions}
-          renderedChildrenValue="Sous-tags."
-          renderedValue="Tags"
-          value={getTagsAsOptions(values.tags ?? [])}
-          valueKey="id"
-        />
+        <ThemesAndTags>
+          <CheckTreePicker
+            childrenKey="subThemes"
+            error={formErrors.themes}
+            isErrorMessageHidden
+            isRequired
+            label="Thématiques et sous-thématiques"
+            labelKey="name"
+            name="theme"
+            onChange={nextTheme => {
+              setFieldValue('themes', parseOptionsToThemes(nextTheme))
+            }}
+            options={themesOptions}
+            value={getThemesAsOptions(values.themes ?? [])}
+            valueKey="id"
+          />
+          <CheckTreePicker
+            childrenKey="subTags"
+            error={formErrors.tags}
+            isErrorMessageHidden
+            isRequired
+            label="Tags et sous-tags"
+            labelKey="name"
+            name="tags"
+            onChange={nextTags => {
+              setFieldValue('tags', parseOptionsToTags(nextTags))
+            }}
+            options={tagsOptions}
+            renderedChildrenValue="Sous-tags."
+            renderedValue="Tags"
+            value={getTagsAsOptions(values.tags ?? [])}
+            valueKey="id"
+          />
+          <ThemesAndTagsText $hasError={!!(formErrors.themes || formErrors.tags)}>
+            Sélectionnez au moins une sous-thématiques ou un sous-tag
+          </ThemesAndTagsText>
+        </ThemesAndTags>
         <FormikMultiRadio
           isErrorMessageHidden
           isInline
@@ -297,4 +304,17 @@ const DateWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+`
+
+const ThemesAndTags = styled.div`
+  border-top: 1px solid ${p => p.theme.color.lightGray};
+  border-bottom: 1px solid ${p => p.theme.color.lightGray};
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  padding: 10px 0;
+`
+const ThemesAndTagsText = styled.span<{ $hasError: boolean }>`
+  color: ${p => (p.$hasError ? p.theme.color.maximumRed : p.theme.color.slateGray)};
+  font-style: italic;
 `
