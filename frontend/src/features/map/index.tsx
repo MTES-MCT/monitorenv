@@ -146,7 +146,7 @@ export function Map({ isSuperUser }) {
         {/* @ts-ignore */}
         <DrawRecentActivityLayer />
         {/* @ts-ignore */}
-        <RecentActivityLayerEvents />
+        <RecentActivityLayerEvents isSuperUser={false} />
         {/* @ts-ignore */}
         <RecentActvityOverlay isSuperUser={false} />
         {/* @ts-ignore */}

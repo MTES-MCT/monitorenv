@@ -92,7 +92,9 @@ export function RecentActvityOverlay({
         map={map}
         name={`${Layers.RECENT_ACTIVITY_AREA_ICON}:${FEATURE_ID}`}
       >
-        {isControlsListClicked && layerOverlayItems && <SelectedOverlay items={layerOverlayItems} />}
+        {isControlsListClicked && layerOverlayItems && (
+          <SelectedOverlay isSuperUser={isSuperUser} items={layerOverlayItems} />
+        )}
       </OverlayPositionOnCoordinates>
 
       {/* To display recent control after click */}
