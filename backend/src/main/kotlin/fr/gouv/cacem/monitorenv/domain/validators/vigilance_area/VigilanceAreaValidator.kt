@@ -42,7 +42,7 @@ class VigilanceAreaValidator : Validator<VigilanceAreaEntity> {
                 "Le trigramme \"créé par\" doit avoir 3 lettres",
             )
         }
-        if (vigilanceArea.tags.isEmpty() || vigilanceArea.themes.isEmpty()) {
+        if (vigilanceArea.tags.isEmpty() && vigilanceArea.themes.isEmpty()) {
             throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, "Un tag ou un thème est obligatoire")
         }
         if (!vigilanceArea.isAtAllTimes) {
