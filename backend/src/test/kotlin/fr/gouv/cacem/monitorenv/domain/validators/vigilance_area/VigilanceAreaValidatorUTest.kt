@@ -24,12 +24,12 @@ class VigilanceAreaValidatorUTest {
     }
 
     @Test
-    fun `validate should throw an exception if tags are empty when it is published`() {
-        val vigilanceArea = aVigilanceAreaEntity(tags = listOf(), isDraft = false)
+    fun `validate should throw an exception if tags and themes are empty when it is published`() {
+        val vigilanceArea = aVigilanceAreaEntity(tags = listOf(), themes = listOf(), isDraft = false)
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("Un tag est obligatoire")
+        assertThat(assertThrows.message).isEqualTo("Un tag ou un thème est obligatoire")
     }
 
     @Test
