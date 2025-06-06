@@ -136,9 +136,10 @@ export const PanelInlineItem = styled.div`
 `
 
 export const PanelInlineItemLabel = styled.span<{ $isInline?: boolean }>`
-  width: ${p => (p.$isInline ? '76px' : 'auto')};
   color: ${p => p.theme.color.slateGray};
   margin-bottom: 4px;
+  min-width: 76px;
+  width: ${p => (p.$isInline ? '76px' : 'auto')};
 `
 
 export const PanelInlineItemValue = styled.span<{ $maxLine?: number }>`
