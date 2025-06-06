@@ -1,6 +1,7 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { updateSelectedControlId } from '@features/RecentActivity/useCases/updateSelectedControlId'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useTracking } from '@hooks/useTracking'
 import { pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { displayThemes } from '@utils/getThemesAsOptions'
 import { TargetTypeLabels } from 'domain/entities/targetType'
@@ -14,21 +15,31 @@ import type { Feature } from 'ol'
 
 export function OverlayContent({
   isSelected,
+  isSuperUser = true,
   items,
   singleFeature
 }: {
   isSelected?: boolean
+  isSuperUser?: boolean
   items: OverlayItem<string, RecentActivity.RecentControlsActivity>[]
   singleFeature?: Feature
 }) {
   const dispatch = useAppDispatch()
   const { data } = useGetThemesQuery()
+  const { trackEvent } = useTracking()
 
   const selectControl = id => {
     if (!isSelected) {
       return
     }
     dispatch(updateSelectedControlId(id))
+    if (!isSuperUser) {
+      trackEvent({
+        action: 'Consultation contrôle Récent',
+        category: 'MONITOR_EXT',
+        name: 'Consultation contrôle Récent'
+      })
+    }
   }
 
   if (singleFeature) {

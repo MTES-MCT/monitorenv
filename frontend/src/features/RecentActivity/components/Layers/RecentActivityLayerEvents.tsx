@@ -4,6 +4,7 @@ import { selectFeaturesList } from '@features/RecentActivity/useCases/selectFeat
 import { updateSelectedControlId } from '@features/RecentActivity/useCases/updateSelectedControlId'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useTracking } from '@hooks/useTracking'
 import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { type OverlayItem } from 'domain/types/map'
@@ -16,11 +17,16 @@ import { useEffect, useRef } from 'react'
 
 import { FEATURE_ID } from '../Overlays'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { RecentActivity } from '@features/RecentActivity/types'
+import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
-export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
+export function RecentActivityLayerEvents({
+  isSuperUser = true,
+  map,
+  mapClickEvent
+}: BaseMapChildrenWithSuperUserProps) {
   const dispatch = useAppDispatch()
+  const { trackEvent } = useTracking()
 
   const isControlsListClicked = useAppSelector(state => state.recentActivity.layersAndOverlays.isControlsListClicked)
   const vectorSource = useRef(new VectorSource({}))
@@ -86,6 +92,13 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
 
     if (numberOfClickedFeatures === 1) {
       dispatch(updateSelectedControlId(clickedFeatures?.[0]?.properties.id))
+      if (!isSuperUser) {
+        trackEvent({
+          action: 'Consultation contrôle Récent',
+          category: 'MONITOR_EXT',
+          name: 'Consultation contrôle Récent'
+        })
+      }
 
       return
     }
