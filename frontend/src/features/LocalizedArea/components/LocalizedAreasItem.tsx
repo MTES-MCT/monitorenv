@@ -25,6 +25,7 @@ export function LocalizedAreasItem({
 
   const groupExtent = useAppSelector(state => getExtentOfLocalizedAreasGroupByGroupName(state, groupName))
 
+  // All localized_areas have same data to display
   const firstLocalizedArea = localizedAreas[0]
   const localizedAreaIds = localizedAreas.map(localizedArea => localizedArea.id)
   if (!firstLocalizedArea) {
@@ -51,6 +52,10 @@ export function LocalizedAreasItem({
     }
   }
 
+  const hasAmpIdsOrControlUnitIds =
+    (firstLocalizedArea.ampIds?.length && firstLocalizedArea.ampIds?.length > 0) ||
+    (firstLocalizedArea.controlUnitIds?.length && firstLocalizedArea.controlUnitIds?.length > 0)
+
   return (
     <Row data-cy="localized-areas-layer-toggle" onClick={toggleLayer}>
       <NameContainer>
@@ -62,15 +67,18 @@ export function LocalizedAreasItem({
         <LayerName title={firstLocalizedArea.groupName}>{firstLocalizedArea.groupName}</LayerName>
       </NameContainer>
       <ButtonsContainer>
-        <IconButton
-          accent={Accent.TERTIARY}
-          color={metadataLayerId === groupName ? THEME.color.charcoal : THEME.color.lightGray}
-          Icon={Icon.Summary}
-          iconSize={20}
-          onClick={toggleSummary}
-          size={Size.SMALL}
-          title={metadataLayerId === groupName ? 'Fermer la réglementation' : 'Afficher la réglementation'}
-        />
+        {hasAmpIdsOrControlUnitIds && (
+          <IconButton
+            accent={Accent.TERTIARY}
+            color={metadataLayerId === groupName ? THEME.color.charcoal : THEME.color.lightGray}
+            Icon={Icon.Summary}
+            iconSize={20}
+            onClick={toggleSummary}
+            size={Size.SMALL}
+            title={metadataLayerId === groupName ? 'Fermer la fiche résumé' : 'Afficher la fiche résumé'}
+          />
+        )}
+
         <IconButton
           accent={Accent.TERTIARY}
           color={isLayerVisible ? THEME.color.charcoal : THEME.color.lightGray}
