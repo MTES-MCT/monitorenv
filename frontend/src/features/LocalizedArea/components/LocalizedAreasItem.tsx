@@ -53,8 +53,8 @@ export function LocalizedAreasItem({
   }
 
   const hasAmpIdsOrControlUnitIds =
-    (firstLocalizedArea.ampIds?.length && firstLocalizedArea.ampIds?.length > 0) ||
-    (firstLocalizedArea.controlUnitIds?.length && firstLocalizedArea.controlUnitIds?.length > 0)
+    !!(firstLocalizedArea.ampIds?.length && firstLocalizedArea.ampIds?.length > 0) ||
+    !!(firstLocalizedArea.controlUnitIds?.length && firstLocalizedArea.controlUnitIds?.length > 0)
 
   return (
     <Row data-cy="localized-areas-layer-toggle" onClick={toggleLayer}>
