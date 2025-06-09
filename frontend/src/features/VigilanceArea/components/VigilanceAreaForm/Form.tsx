@@ -216,7 +216,7 @@ export function Form() {
             valueKey="id"
           />
           <ThemesAndTagsText $hasError={!!(formErrors.themes || formErrors.tags)}>
-            Sélectionnez au moins une sous-thématiques ou un sous-tag
+            Sélectionner au moins une thématique/sous-thématique ou un tag/sous-tag
           </ThemesAndTagsText>
         </ThemesAndTags>
         <FormikMultiRadio
