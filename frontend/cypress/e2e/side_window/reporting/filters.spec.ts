@@ -90,16 +90,16 @@ context('Reportings', () => {
 
   it('Should filter reportings by themes', () => {
     cy.wait(200)
-    cy.fill('Filtre thématiques et sous-thématiques', ['Arrêté à visa environnemental'])
-    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Arrêté à visa environnemental')
+    cy.fill('Filtre thématiques et sous-thématiques', ["Réglementation de l'arrêté de protection"])
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Arrêté de protection')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 1)
     cy.get('.Table-SimpleTable tr').each((row, index, list) => {
       if (index === 0 || index === list.length - 1) {
         return
       }
 
-      cy.wrap(row).should('contain', 'Arrêté à visa environnemental')
+      cy.wrap(row).should('contain', "Réglementation de l'arrêté de protection")
     })
   })
 
