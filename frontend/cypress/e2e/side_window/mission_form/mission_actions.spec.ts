@@ -120,7 +120,11 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
 
-    cy.fill('Thématiques et sous-thématiques de surveillance', ['Réserve naturelle', 'Rejet', 'Épave'])
+    cy.fill('Thématiques et sous-thématiques de surveillance', [
+      'Réglementation de la réserve naturelle',
+      "Rejet d'hydrocarbure",
+      "Découverte d'une épave maritime"
+    ])
 
     cy.fill('La surveillance a donné lieu à des actions de prévention', true)
 
