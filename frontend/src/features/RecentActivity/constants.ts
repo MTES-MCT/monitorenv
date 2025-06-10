@@ -1,6 +1,10 @@
 export const MIN_CONTROLS = 1
 export const MAX_CONTROLS = 300
 
+export const RECENT_ACTIVITY_COEFFICIENT = 5
+export const RECENT_ACTIVITY_MIN_PIXEL = 8
+export const RECENT_ACTIVITY_MAX_PIXEL = 30
+
 export const CONTROLS_COLORS = ['#87C20D', '#FAC200', '#E79000', '#CE6000', '#AF2E12', '#810030', '#480135']
 
 export const CONTROL_THRESHOLDS = [

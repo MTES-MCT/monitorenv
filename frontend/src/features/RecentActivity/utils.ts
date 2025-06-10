@@ -1,18 +1,24 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 
 import { getRecentControlActivityGeometry } from './components/Layers/recentControlActivityGeometryHelper'
-import { MAX_CONTROLS, MIN_CONTROLS } from './constants'
+import {
+  MAX_CONTROLS,
+  MIN_CONTROLS,
+  RECENT_ACTIVITY_COEFFICIENT,
+  RECENT_ACTIVITY_MAX_PIXEL,
+  RECENT_ACTIVITY_MIN_PIXEL
+} from './constants'
 import { RecentActivity } from './types'
 
 import type { Feature } from 'ol'
 
 export function calculateDotSize(totalControls: number): number {
-  const minPixel = Number(import.meta.env.FRONTEND_RECENT_ACTIVITY_MIN_PIXEL)
-  const maxPixel = Number(import.meta.env.FRONTEND_RECENT_ACTIVITY_MAX_PIXEL)
-  const coefficient = Number(import.meta.env.FRONTEND_RECENT_ACTIVITY_COEFFICIENT)
+  const minPixel = RECENT_ACTIVITY_MIN_PIXEL
+  const maxPixel = RECENT_ACTIVITY_MAX_PIXEL
+  const coefficient = RECENT_ACTIVITY_COEFFICIENT
 
   return (
-    minPixel +
+    RECENT_ACTIVITY_MIN_PIXEL +
     ((Math.log(totalControls + coefficient) - Math.log(MIN_CONTROLS + coefficient)) /
       (Math.log(MAX_CONTROLS + coefficient) - Math.log(MIN_CONTROLS + coefficient))) *
       (maxPixel - minPixel)
