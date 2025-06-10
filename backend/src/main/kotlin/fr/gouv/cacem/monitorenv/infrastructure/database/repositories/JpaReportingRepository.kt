@@ -31,8 +31,6 @@ import java.util.*
 class JpaReportingRepository(
     private val dbReportingRepository: IDBReportingRepository,
     private val dbMissionRepository: IDBMissionRepository,
-    private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
-    private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
@@ -161,7 +159,7 @@ class JpaReportingRepository(
                     null
                 }
 
-            // To save controlPlanSubThemes we must ensure that reportingId is set
+            // To save thmes and tags we must ensure that reportingId is set
             // to simplify the understandability of the code, we do the same steps for creation and
             // update
             // even if it is not necessary for update
