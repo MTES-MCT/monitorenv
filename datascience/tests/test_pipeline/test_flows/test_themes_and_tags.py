@@ -152,6 +152,8 @@ def test_update_new_tags(reset_test_data, new_tags, old_tags):
             FROM public.tags
             ORDER BY id"""
     )
+    for col in ["id", "parent_id"]:
+        updated_tags[col] = updated_tags[col].astype("Int64")
     pd.testing.assert_frame_equal(updated_tags, new_tags)
 
 def test_flow_themes_and_tags(create_cacem_tables):
