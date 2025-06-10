@@ -66,7 +66,7 @@ export function RecentActivityMenuButton({ onClickMenuButton, onVisibiltyChange 
       )}
       <MenuWithCloseButton.ButtonOnMap
         className={isRecentActivityDialogVisible ? '_active' : undefined}
-        Icon={Icon.MeasureBrokenLine}
+        Icon={Icon.PointsCloud}
         onClick={toggleRecentActivityDialog}
         size={Size.LARGE}
         title="Voir l'activité récente"
