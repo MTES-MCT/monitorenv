@@ -215,6 +215,13 @@ def update_tags(new_tags: pd.DataFrame):
             "ended_at",
         ]
 
+        int_columns = [
+            "id",
+            "parent_id",
+        ]
+        for col in int_columns:
+            new_tags[col] = new_tags[col].astype("Int64")
+
         logger.info("Loading to temporary table")
 
         new_tags[columns_to_load].to_sql(
