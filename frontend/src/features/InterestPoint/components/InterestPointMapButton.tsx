@@ -21,7 +21,6 @@ import { useEscapeKey } from '../../../hooks/useEscapeKey'
 export function InterestPointMapButton() {
   const dispatch = useAppDispatch()
   const isMapToolVisible = useAppSelector(state => state.global.visibility.isMapToolVisible)
-
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.INTEREST_POINT, [isMapToolVisible])
 
   useEffect(() => {
@@ -35,14 +34,10 @@ export function InterestPointMapButton() {
 
   const close = useCallback(() => {
     dispatch(globalActions.setIsMapToolVisible(undefined))
+    dispatch(cancelEditingInterestPoint())
   }, [dispatch])
 
-  const cancel = useCallback(() => {
-    dispatch(cancelEditingInterestPoint())
-    close()
-  }, [dispatch, close])
-
-  useEscapeKey({ onEscape: cancel })
+  useEscapeKey({ onEscape: close })
 
   const toggleInterestPointMenu = () => {
     if (!isOpen) {
@@ -58,7 +53,7 @@ export function InterestPointMapButton() {
 
   return (
     <>
-      {isOpen && <EditInterestPoint cancel={cancel} close={close} />}
+      {isOpen && <EditInterestPoint close={close} />}
 
       <MenuWithCloseButton.ButtonOnMap
         className={isOpen ? '_active' : undefined}
