@@ -54,7 +54,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const { getImages, loading: loadingImages } = useExportImages()
   const attachementImages = useImageConverter(dashboard.images)
 
-  const generateBrief = async () => {
+  const generateBrief = async ({ isLight = false }: { isLight?: boolean }) => {
     const startAfterFilter = filters?.startedAfter
     const startBeforeFilter = filters?.startedBefore
 
@@ -77,7 +77,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     const filteredRecentActivityControlUnits = allControlUnits?.filter(controlUnit =>
       allRecentActivityControlUnitIds.includes(controlUnit.id)
     )
-    const images = await getImages(recentActivity, dashboard.controlUnitIds)
+    const images = await getImages(recentActivity, dashboard.controlUnitIds, isLight)
 
     return {
       allLinkedAMPs,
@@ -103,9 +103,9 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     } as Dashboard.Brief
   }
 
-  const downloadPdf = async (brief: Dashboard.Brief) => {
+  const downloadPdf = async (brief: Dashboard.Brief, isLight: boolean) => {
     setIsLoadingBrief(true)
-    const blob = await renderPDF({ brief })
+    const blob = await renderPDF({ brief, isLight })
     const url = URL.createObjectURL(blob)
 
     const link = document.createElement('a')

@@ -63,8 +63,18 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
   }
 
   const createPdf = async () => {
-    const brief = await generateBrief()
-    downloadPdf(brief)
+    const brief = await generateBrief({ isLight: false })
+    downloadPdf(brief, false)
+    trackEvent({
+      action: 'Téléchargement du brief',
+      category: 'TABLEAU DE BORD & BRIEF',
+      name: 'Téléchargement du brief'
+    })
+  }
+
+  const createLightPdf = async () => {
+    const brief = await generateBrief({ isLight: true })
+    downloadPdf(brief, true)
     trackEvent({
       action: 'Téléchargement du brief',
       category: 'TABLEAU DE BORD & BRIEF',
@@ -134,6 +144,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
             title={getLoadingText()}
           >
             <StyledDropdownItem onClick={createPdf}>PDF</StyledDropdownItem>
+            <StyledDropdownItem onClick={createLightPdf}>PDF allégé</StyledDropdownItem>
             <Dropdown.Item onClick={createEditableDoc}>ODT</Dropdown.Item>
           </StyledDropdown>
           <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={handleSave}>

@@ -205,6 +205,7 @@ export function useExportImages() {
       features: Feature[],
       recentActivityFeatures: Feature[],
       controlUnitIds: number[],
+      isLight: boolean,
       dashboardFeature?: Feature
     ) => {
       const allImages: ExportImageType[] = []
@@ -216,8 +217,17 @@ export function useExportImages() {
         return allImages
       }
 
+      let filtredFeatures = [...features]
+      if (isLight) {
+        filtredFeatures = features.filter(
+          feature =>
+            !feature.getId()?.toString()?.includes(Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS) &&
+            !feature.getId()?.toString()?.includes(Dashboard.featuresCode.DASHBOARD_AMP)
+        )
+      }
+
       // eslint-disable-next-line no-restricted-syntax
-      for (const feature of features) {
+      for (const feature of filtredFeatures) {
         mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height)
         layersVectorSourceRef.current.clear(true)
         layersVectorSourceRef.current.addFeature(feature)
@@ -368,7 +378,7 @@ export function useExportImages() {
     }
   }, [])
 
-  const getImages = (recentActivity: RecentActivity.RecentControlsActivity[], controlUnitIds: number[]) => {
+  const getImages = (recentActivity: RecentActivity.RecentControlsActivity[], controlUnitIds: number[], isLight) => {
     if (!mapRef.current) {
       return undefined
     }
@@ -392,7 +402,7 @@ export function useExportImages() {
 
     const generateImages = async () => {
       setLoading(true)
-      const allImages = await exportImages(features, recentActivityFeatures, controlUnitIds, dashboardFeature)
+      const allImages = await exportImages(features, recentActivityFeatures, controlUnitIds, isLight, dashboardFeature)
       setLoading(false)
 
       return allImages

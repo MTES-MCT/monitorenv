@@ -32,7 +32,8 @@ type ExportBriefProps = {
   dashboard: Dashboard.Dashboard
   getImages: (
     recentActivity: RecentActivity.RecentControlsActivity[],
-    controlUnitIds: number[]
+    controlUnitIds: number[],
+    isLight?: boolean
   ) => Promise<any[]> | undefined
   recentActivityFilters: RecentActivityFilters | undefined
 }
@@ -59,7 +60,7 @@ export const exportBrief =
       })
     )
 
-    const images = await getImages(recentActivity ?? [], dashboard.controlUnitIds)
+    const images = await getImages(recentActivity ?? [], dashboard.controlUnitIds, false)
 
     const wholeImage = images?.find(img => String(img.featureId)?.includes('WHOLE_DASHBOARD'))
 

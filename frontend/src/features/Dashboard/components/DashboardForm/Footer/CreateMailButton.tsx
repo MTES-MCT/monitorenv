@@ -59,8 +59,8 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
     if (loadingImages || isLoadingBrief) {
       return
     }
-    const brief = await generateBrief()
-    downloadPdf(brief)
+    const brief = await generateBrief({ isLight: false })
+    downloadPdf(brief, false)
     trackEvent({
       action: 'Partage du brief',
       category: 'TABLEAU DE BORD &  BRIEF',
