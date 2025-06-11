@@ -1,6 +1,5 @@
 import { useGetLocalizedAreasQuery } from '@api/localizedAreasAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
@@ -40,8 +39,6 @@ const getLocalizedAreaZoneFeature = (localizedArea: LocalizedArea.LocalizedArea)
 
 export function LocalizedAreasLayer({ map }: BaseMapChildrenProps) {
   const { showedLocalizedAreaLayerIds } = useAppSelector(state => state.localizedArea)
-  const hasMapInteraction = useHasMapInteraction()
-  const isLayerVisible = !hasMapInteraction
 
   const { data: localizedAreas } = useGetLocalizedAreasQuery()
 
@@ -84,10 +81,6 @@ export function LocalizedAreasLayer({ map }: BaseMapChildrenProps) {
     }
     localizedAreasVectorSourceRef.current?.addFeatures(filteredLocalizedAreas)
   }, [localizedAreas, showedLocalizedAreaLayerIds])
-
-  useEffect(() => {
-    localizedAreasVectorLayerRef.current?.setVisible(isLayerVisible)
-  }, [isLayerVisible])
 
   return null
 }
