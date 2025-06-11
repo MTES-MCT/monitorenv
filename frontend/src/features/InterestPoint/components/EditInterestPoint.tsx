@@ -1,5 +1,6 @@
 import { StyledMapMenuDialogContainer } from '@components/style'
 import { SetCoordinates } from '@features/coordinates/SetCoordinates'
+import { addReporting } from '@features/Reportings/useCases/addReporting'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -14,10 +15,11 @@ import {
   Textarea,
   getCoordinates
 } from '@mtes-mct/monitor-ui'
-import { setDisplayedItems } from 'domain/shared_slices/Global'
+import { globalActions, ReportingContext, setDisplayedItems } from 'domain/shared_slices/Global'
 import { setFitToExtent } from 'domain/shared_slices/Map'
+import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { boundingExtent } from 'ol/extent'
-import { transformExtent } from 'ol/proj'
+import { toLonLat, transformExtent } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -27,13 +29,13 @@ import { updateCoordinatesAction } from '../useCases/updateCoordinates'
 import { updateNameAction } from '../useCases/updateName'
 import { updateObservationsAction } from '../useCases/updateObservations'
 
+import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Coordinate } from 'ol/coordinate'
 
 type EditInterestPointProps = {
-  cancel: () => void
   close: () => void
 }
-export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
+export function EditInterestPoint({ close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
 
   const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
@@ -53,6 +55,7 @@ export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
 
   // TODO: Modifier monitor-ui pour changer le typage des children de  undefined à ReactNode
   const textButton = `${isEditing ? 'Enregistrer' : 'Créer'} le point`
+  const reportingTextButton = `${isEditing ? 'Convertir en' : 'Créer un'} signalement`
 
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
@@ -117,10 +120,31 @@ export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
     close()
   }
 
+  const createReporting = async () => {
+    const coordinatesForReporting = [currentInterestPoint?.coordinates || []]
+    const x = coordinatesForReporting?.[0]?.[0]
+    const y = coordinatesForReporting?.[0]?.[1]
+    if (!x || !y) {
+      return
+    }
+    const lonLat = toLonLat([x, y])
+
+    await dispatch(
+      addReporting(ReportingContext.MAP, {
+        geom: {
+          coordinates: [lonLat] as GeoJSON.Position[],
+          type: 'MultiPoint'
+        }
+      })
+    )
+    dispatch(closeAllOverlays())
+    dispatch(globalActions.setIsMapToolVisible(undefined))
+  }
+
   return (
     <StyledMapMenuDialogContainer data-cy="save-interest-point">
       <MapMenuDialog.Header>
-        <MapMenuDialog.CloseButton data-cy="interest-point-close" Icon={Icon.Close} onClick={cancel} />
+        <MapMenuDialog.CloseButton data-cy="interest-point-close" Icon={Icon.Close} onClick={close} />
         <MapMenuDialog.Title data-cy="interest-point-title">
           {isEditing ? 'Éditer' : 'Créer'} un point d&apos;intérêt
         </MapMenuDialog.Title>
@@ -161,9 +185,9 @@ export function EditInterestPoint({ cancel, close }: EditInterestPointProps) {
             Supprimer le point
           </Button>
         )}
-
-        <Button accent={Accent.SECONDARY} data-cy="interest-point-cancel" onClick={cancel}>
-          Annuler
+        {isEditing && <Separator />}
+        <Button accent={Accent.SECONDARY} disabled={coordinates.length === 0} onClick={createReporting}>
+          {reportingTextButton}
         </Button>
       </MapMenuDialog.Footer>
     </StyledMapMenuDialogContainer>
@@ -174,4 +198,8 @@ const StyledDialogBody = styled(MapMenuDialog.Body)`
   display: flex;
   flex-direction: column;
   gap: 16px;
+`
+const Separator = styled.div`
+  border-top: 1px solid ${p => p.theme.color.lightGray};
+  margin: 8px 0px;
 `

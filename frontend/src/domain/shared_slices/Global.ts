@@ -186,6 +186,7 @@ const globalSlice = createSlice({
       state.menus = initialMenuState
       state.visibility = {
         ...state.previousDisplayedItems.visibility,
+        isMapToolVisible: false,
         reportingFormVisibility: state.visibility.reportingFormVisibility
       }
     },
