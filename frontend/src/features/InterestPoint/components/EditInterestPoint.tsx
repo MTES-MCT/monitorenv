@@ -55,7 +55,6 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
 
   // TODO: Modifier monitor-ui pour changer le typage des children de  undefined à ReactNode
   const textButton = `${isEditing ? 'Enregistrer' : 'Créer'} le point`
-  const reportingTextButton = `${isEditing ? 'Convertir en' : 'Créer un'} signalement`
 
   /** Coordinates formatted in DD [latitude, longitude] */
   const coordinates: number[] = useMemo(() => {
@@ -187,7 +186,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
         )}
         {isEditing && <Separator />}
         <Button accent={Accent.SECONDARY} disabled={coordinates.length === 0} onClick={createReporting}>
-          {reportingTextButton}
+          Créer un signalement
         </Button>
       </MapMenuDialog.Footer>
     </StyledMapMenuDialogContainer>
