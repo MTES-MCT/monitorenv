@@ -1,4 +1,4 @@
-import { uniq } from 'lodash'
+import { uniqBy } from 'lodash'
 
 import { ActionTypeEnum, InfractionTypeEnum, type Mission } from '../../../../../domain/entities/missions'
 
@@ -49,5 +49,8 @@ export const getAllThemes = (missions: Mission[]) => {
         envAction.actionType === ActionTypeEnum.CONTROL || envAction.actionType === ActionTypeEnum.SURVEILLANCE
     )
 
-  return uniq(controlsAndSurveillances.flatMap(action => action.themes ?? []))
+  return uniqBy(
+    controlsAndSurveillances.flatMap(action => action.themes ?? []),
+    'id'
+  )
 }
