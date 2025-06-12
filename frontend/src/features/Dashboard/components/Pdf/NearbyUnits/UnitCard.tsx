@@ -102,7 +102,7 @@ export function UnitCard({ controlUnit, missions, status }: NearbyUnitsProps) {
       </View>
 
       <View style={[layoutStyle.row, styles.controlUnit.subTitle]}>
-        {missions.length > 1 && <Text> {missions.length} missions • </Text>}
+        {missions.length > 0 && <Text> {missions.length} missions • </Text>}
         <Text>{`Du ${dateRange?.start} au ${dateRange?.end}`}</Text>
       </View>
 
@@ -110,7 +110,7 @@ export function UnitCard({ controlUnit, missions, status }: NearbyUnitsProps) {
       <Text style={styles.controlUnit.themes}>{themes}</Text>
 
       {nbControls > 0 && (
-        <View style={[layoutStyle.row, { gap: 14 }]}>
+        <View style={[layoutStyle.row, { gap: 5 }]}>
           <Text style={styles.controlUnit.nbControls}>
             {nbControls} {pluralize('contrôle', nbControls)}
           </Text>
