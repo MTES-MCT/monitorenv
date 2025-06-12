@@ -13,15 +13,17 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurve
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceProperties
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.EntityConversionException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import org.locationtech.jts.geom.Geometry
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.time.ZonedDateTime
 import java.util.UUID
 
 @Component
 object EnvActionMapper {
-    private const val JSONB_NULL_STRING = "null"
+    private val logger = LoggerFactory.getLogger(EnvActionMapper::class.java)
 
     fun getEnvActionEntityFromJSON(
         mapper: ObjectMapper,
@@ -46,73 +48,71 @@ object EnvActionMapper {
         themes: List<ThemeEntity>,
     ): EnvActionEntity =
         try {
-            if (!value.isNullOrEmpty() && value != JSONB_NULL_STRING) {
-                when (actionType) {
-                    ActionTypeEnum.SURVEILLANCE ->
-                        mapper
-                            .readValue(
-                                value,
-                                EnvActionSurveillanceProperties::class.java,
-                            ).toEnvActionSurveillanceEntity(
-                                id = id,
-                                actionEndDateTimeUtc = actionEndDateTimeUtc,
-                                actionStartDateTimeUtc = actionStartDateTimeUtc,
-                                completedBy = completedBy,
-                                completion = completion,
-                                controlPlans = controlPlans,
-                                department = department,
-                                facade = facade,
-                                geom = geom,
-                                observationsByUnit = observationsByUnit,
-                                openBy = openBy,
-                                tags = tags,
-                                themes = themes,
-                            )
+            when (actionType) {
+                ActionTypeEnum.SURVEILLANCE ->
+                    mapper
+                        .readValue(
+                            value,
+                            EnvActionSurveillanceProperties::class.java,
+                        ).toEnvActionSurveillanceEntity(
+                            id = id,
+                            actionEndDateTimeUtc = actionEndDateTimeUtc,
+                            actionStartDateTimeUtc = actionStartDateTimeUtc,
+                            completedBy = completedBy,
+                            completion = completion,
+                            controlPlans = controlPlans,
+                            department = department,
+                            facade = facade,
+                            geom = geom,
+                            observationsByUnit = observationsByUnit,
+                            openBy = openBy,
+                            tags = tags,
+                            themes = themes,
+                        )
 
-                    ActionTypeEnum.CONTROL ->
-                        mapper
-                            .readValue(
-                                value,
-                                EnvActionControlProperties::class.java,
-                            ).toEnvActionControlEntity(
-                                id = id,
-                                actionEndDateTimeUtc = actionEndDateTimeUtc,
-                                actionStartDateTimeUtc = actionStartDateTimeUtc,
-                                completedBy = completedBy,
-                                completion = completion,
-                                controlPlans = controlPlans,
-                                department = department,
-                                facade = facade,
-                                geom = geom,
-                                isAdministrativeControl = isAdministrativeControl,
-                                isComplianceWithWaterRegulationsControl =
-                                isComplianceWithWaterRegulationsControl,
-                                isSafetyEquipmentAndStandardsComplianceControl =
-                                isSafetyEquipmentAndStandardsComplianceControl,
-                                isSeafarersControl = isSeafarersControl,
-                                observationsByUnit = observationsByUnit,
-                                openBy = openBy,
-                                tags = tags,
-                                themes = themes,
-                            )
+                ActionTypeEnum.CONTROL ->
+                    mapper
+                        .readValue(
+                            value,
+                            EnvActionControlProperties::class.java,
+                        ).toEnvActionControlEntity(
+                            id = id,
+                            actionEndDateTimeUtc = actionEndDateTimeUtc,
+                            actionStartDateTimeUtc = actionStartDateTimeUtc,
+                            completedBy = completedBy,
+                            completion = completion,
+                            controlPlans = controlPlans,
+                            department = department,
+                            facade = facade,
+                            geom = geom,
+                            isAdministrativeControl = isAdministrativeControl,
+                            isComplianceWithWaterRegulationsControl =
+                            isComplianceWithWaterRegulationsControl,
+                            isSafetyEquipmentAndStandardsComplianceControl =
+                            isSafetyEquipmentAndStandardsComplianceControl,
+                            isSeafarersControl = isSeafarersControl,
+                            observationsByUnit = observationsByUnit,
+                            openBy = openBy,
+                            tags = tags,
+                            themes = themes,
+                        )
 
-                    ActionTypeEnum.NOTE ->
-                        mapper
-                            .readValue(
-                                value,
-                                EnvActionNoteProperties::class.java,
-                            ).toEnvActionNoteEntity(
-                                id = id,
-                                actionStartDateTimeUtc = actionStartDateTimeUtc,
-                                completion = completion,
-                                observationsByUnit = observationsByUnit,
-                            )
-                }
-            } else {
-                throw EntityConversionException("No action value found.")
+                ActionTypeEnum.NOTE ->
+                    mapper
+                        .readValue(
+                            value,
+                            EnvActionNoteProperties::class.java,
+                        ).toEnvActionNoteEntity(
+                            id = id,
+                            actionStartDateTimeUtc = actionStartDateTimeUtc,
+                            completion = completion,
+                            observationsByUnit = observationsByUnit,
+                        )
             }
         } catch (e: Exception) {
-            throw EntityConversionException("Error while converting 'action'. $value", e)
+            val errorMessage = "Impossible de mapper l'envaction depuis le JSON"
+            logger.error(errorMessage, e)
+            throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, errorMessage)
         }
 
     fun envActionEntityToJSON(
@@ -143,6 +143,8 @@ object EnvActionMapper {
                     )
             }
         } catch (e: Exception) {
-            throw EntityConversionException("Error while converting action to json $envAction", e)
+            val errorMessage = "Impossible de mapper l'envaction vers du JSON"
+            logger.error(errorMessage, e)
+            throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, errorMessage)
         }
 }
