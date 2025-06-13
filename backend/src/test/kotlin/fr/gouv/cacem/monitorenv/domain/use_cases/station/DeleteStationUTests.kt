@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.station
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IStationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -37,13 +37,14 @@ class DeleteStationUTests {
     }
 
     @Test
-    fun `execute should throw CouldNotDeleteException when canDeleteBase returns false`() {
+    fun `execute should throw BackendUsageException when canDeleteBase returns false`() {
         val stationId = 1
 
         given(canDeleteStation.execute(stationId)).willReturn(false)
 
         assertThatThrownBy {
             DeleteStation(stationRepository, canDeleteStation).execute(stationId)
-        }.isInstanceOf(CouldNotDeleteException::class.java)
+        }.isInstanceOf(BackendUsageException::class.java)
+            .hasMessage("Cannot delete station (ID=1) due to existing relationships.")
     }
 }
