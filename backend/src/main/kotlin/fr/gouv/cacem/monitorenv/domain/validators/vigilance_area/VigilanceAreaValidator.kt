@@ -26,64 +26,67 @@ class VigilanceAreaValidator : Validator<VigilanceAreaEntity> {
     private fun validatePublishedVigilanceArea(vigilanceArea: VigilanceAreaEntity) {
         if (vigilanceArea.geom === null) {
             throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La géométrie est obligatoire",
+                code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                data = "La géométrie est obligatoire",
             )
         }
         if (vigilanceArea.comments === null) {
             throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "Un commentaire est obligatoire",
+                code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                data = "Un commentaire est obligatoire",
             )
         }
         if (vigilanceArea.createdBy !== null && vigilanceArea.createdBy.length != NB_CHAR_MAX) {
             throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "Le trigramme \"créé par\" doit avoir 3 lettres",
+                code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                data = "Le trigramme \"créé par\" doit avoir 3 lettres",
             )
         }
         if (vigilanceArea.tags.isEmpty() && vigilanceArea.themes.isEmpty()) {
-            throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, "Un tag ou un thème est obligatoire")
+            throw BackendUsageException(
+                code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                data = "Un tag ou un thème est obligatoire",
+            )
         }
         if (!vigilanceArea.isAtAllTimes) {
             if (vigilanceArea.startDatePeriod === null) {
                 throw BackendUsageException(
-                    BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "La date de début est obligatoire",
+                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                    data = "La date de début est obligatoire",
                 )
             }
             if (vigilanceArea.endDatePeriod === null) {
                 throw BackendUsageException(
-                    BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "La date de fin est obligatoire",
+                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                    data = "La date de fin est obligatoire",
                 )
             }
             if (vigilanceArea.frequency === null) {
                 throw BackendUsageException(
-                    BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "La fréquence est obligatoire",
+                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                    data = "La fréquence est obligatoire",
                 )
             }
             if (vigilanceArea.frequency !== FrequencyEnum.NONE && vigilanceArea.endingCondition === null) {
                 throw BackendUsageException(
-                    BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "La condition de fin est obligatoire",
+                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                    data = "La condition de fin est obligatoire",
                 )
             }
             if (vigilanceArea.endingCondition === EndingConditionEnum.END_DATE &&
                 vigilanceArea.endingOccurrenceDate === null
             ) {
                 throw BackendUsageException(
-                    BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "La date de fin de l'occurence est obligatoire",
+                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                    data = "La date de fin de l'occurence est obligatoire",
                 )
             }
             if (vigilanceArea.endingCondition === EndingConditionEnum.OCCURENCES_NUMBER &&
                 (vigilanceArea.endingOccurrencesNumber === null || vigilanceArea.endingOccurrencesNumber == 0)
             ) {
                 throw BackendUsageException(
-                    BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "Le nombre d'occurence est obligatoire",
+                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                    data = "Le nombre d'occurence est obligatoire",
                 )
             }
         }

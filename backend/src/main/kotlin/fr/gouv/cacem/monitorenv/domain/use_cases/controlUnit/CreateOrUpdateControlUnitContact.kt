@@ -49,7 +49,6 @@ class CreateOrUpdateControlUnitContact(
 
         otherContactsWithEmailSubscription.forEach {
             val updatedControlUnitContact = it.copy(isEmailSubscriptionContact = false)
-
             controlUnitContactRepository.save(updatedControlUnitContact)
         }
     }
@@ -85,9 +84,11 @@ class CreateOrUpdateControlUnitContact(
             if (it.isNotBlank() &&
                 !(frenchPhoneRegex.matches(it) || internationalPhoneRegex.matches(it))
             ) {
+                val errorMessage = "Invalid phone number"
+                logger.error(errorMessage)
                 throw BackendUsageException(
                     BackendUsageErrorCode.UNVALID_PROPERTY,
-                    "Invalid phone number",
+                    errorMessage,
                     it,
                 )
             }
