@@ -1,11 +1,13 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AdministrationModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
+import org.slf4j.LoggerFactory
 import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -14,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional
 class JpaAdministrationRepository(
     private val dbAdministrationRepository: IDBAdministrationRepository,
 ) : IAdministrationRepository {
+    private val logger = LoggerFactory.getLogger(JpaAdministrationRepository::class.java)
+
     @Transactional
     override fun archiveById(administrationId: Int) {
         dbAdministrationRepository.archiveById(administrationId)
@@ -38,9 +42,9 @@ class JpaAdministrationRepository(
 
             dbAdministrationRepository.save(administrationModel).toAdministration()
         } catch (e: InvalidDataAccessApiUsageException) {
-            throw NotFoundException(
-                "Unable to find (and update) control unit administration with `id` = ${administration.id}.",
-                e,
-            )
+            val errorMessage =
+                "Unable to save control unit administration with `id` = ${administration.id}."
+            logger.error(errorMessage, e)
+            throw BackendUsageException(code = BackendUsageErrorCode.ENTITY_NOT_SAVED, message = errorMessage)
         }
 }
