@@ -16,33 +16,26 @@ export const authorizationAPI = monitorenvPrivateApi.injectEndpoints({
       query: () => '/v1/authorization/current',
       transformErrorResponse: (_, meta: Meta) => {
         const authenticateResponse = meta?.response?.headers.get('WWW-Authenticate')
+        const errorData = {
+          code: ApiErrorCode.AUTHENTICATION_REQUIRED,
+          data: { isSuperUser: false },
+          type: ApiErrorCode.AUTHENTICATION_REQUIRED
+        }
         if (authenticateResponse?.includes('authentication is required')) {
           throw new FrontendApiError(ERROR_AUTHENTICATION_REQUIRED, {
-            data: {
-              code: ApiErrorCode.AUTHENTICATION_REQUIRED,
-              data: { isSuperUser: false },
-              type: ApiErrorCode.AUTHENTICATION_REQUIRED
-            },
+            data: errorData,
             status: 403
           })
         }
         if (authenticateResponse?.includes('expired')) {
           throw new FrontendApiError(ERROR_TOKEN_EXPIRED, {
-            data: {
-              code: ApiErrorCode.AUTHENTICATION_REQUIRED,
-              data: { isSuperUser: false },
-              type: ApiErrorCode.AUTHENTICATION_REQUIRED
-            },
+            data: errorData,
             status: 403
           })
         }
 
         throw new FrontendApiError(ERROR_AUTHENTICATION_FAILED, {
-          data: {
-            code: ApiErrorCode.AUTHENTICATION_REQUIRED,
-            data: { isSuperUser: false },
-            type: ApiErrorCode.AUTHENTICATION_REQUIRED
-          },
+          data: errorData,
           status: 403
         })
       },

@@ -5,7 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
@@ -17,6 +18,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.Reporti
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.apache.commons.lang3.StringUtils
 import org.locationtech.jts.geom.Geometry
+import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -31,13 +33,13 @@ import java.util.*
 class JpaReportingRepository(
     private val dbReportingRepository: IDBReportingRepository,
     private val dbMissionRepository: IDBMissionRepository,
-    private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
-    private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
+    private val logger = LoggerFactory.getLogger(JpaReportingRepository::class.java)
+
     @Transactional
     override fun attachEnvActionsToReportings(
         envActionId: UUID,
@@ -213,12 +215,15 @@ class JpaReportingRepository(
 
             return dbReportingRepository.saveAndFlush(reportingModel).toReportingDetailsDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
-            throw NotFoundException(
-                "Invalid reference to semaphore, control unit or mission: not found in referential",
-                e,
-            )
+            val errorMessage =
+                "Invalid reference to semaphore, control unit or mission: not found in referential"
+            logger.error(errorMessage, e)
+            throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, errorMessage)
         } catch (e: DataIntegrityViolationException) {
-            throw NotFoundException("Invalid combination of mission and/or envAction", e)
+            val errorMessage =
+                "Invalid combination of mission and/or envAction"
+            logger.error(errorMessage, e)
+            throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, errorMessage)
         }
     }
 
