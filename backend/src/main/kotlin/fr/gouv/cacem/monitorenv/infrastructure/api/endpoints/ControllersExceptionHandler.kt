@@ -2,14 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendInternalErrorDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendRequestErrorDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendUsageErrorDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.*
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import io.sentry.Sentry
@@ -125,17 +119,6 @@ class ControllersExceptionHandler(
         }
 
         return MissingParameterApiError("Parameter \"${e.parameterName}\" is missing.")
-    }
-
-    // TODO Migrate to new error handling logic.
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ReportingAlreadyAttachedException::class)
-    fun handleReportingAlreadyAttachedToAMission(e: ReportingAlreadyAttachedException): ApiError {
-        if (sentryConfig.enabled == true) {
-            Sentry.captureException(e)
-        }
-
-        return ApiError(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED.name)
     }
 
     // -------------------------------------------------------------------------

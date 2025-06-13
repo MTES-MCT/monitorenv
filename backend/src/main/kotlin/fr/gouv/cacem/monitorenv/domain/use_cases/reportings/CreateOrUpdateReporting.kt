@@ -2,7 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
@@ -41,9 +42,10 @@ class CreateOrUpdateReporting(
                     existingReporting.reporting.detachedFromMissionAtUtc == null &&
                     existingReporting.reporting.missionId != reporting.missionId
             if (existingReportingIsAttachedToAnotherMission) {
-                throw ReportingAlreadyAttachedException(
-                    "Reporting ${reporting.id} is already attached to a mission",
-                )
+                val errorMessage =
+                    "Reporting ${reporting.id} is already attached to a mission"
+                logger.error(errorMessage)
+                throw BackendUsageException(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED, errorMessage)
             }
         }
         val normalizedGeometry =

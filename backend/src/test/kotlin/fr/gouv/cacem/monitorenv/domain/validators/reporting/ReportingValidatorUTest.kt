@@ -24,7 +24,7 @@ class ReportingValidatorUTest {
             assertThrows(BackendUsageException::class.java) {
                 reportingValidator.validate(reporting)
             }
-        assertThat(assertThrows.message)
+        assertThat(assertThrows.data)
             .isEqualTo("Le trigramme \"ouvert par\" doit avoir 3 lettres")
     }
 
@@ -36,7 +36,7 @@ class ReportingValidatorUTest {
             assertThrows(BackendUsageException::class.java) {
                 reportingValidator.validate(reporting)
             }
-        assertThat(assertThrows.message).isEqualTo("Une source du signalement est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("Une source du signalement est obligatoire")
     }
 
     @Test
@@ -51,7 +51,7 @@ class ReportingValidatorUTest {
             assertThrows(BackendUsageException::class.java) {
                 reportingValidator.validate(reporting)
             }
-        assertThat(assertThrows.message).isEqualTo("La source du signalement est invalide")
+        assertThat(assertThrows.data).isEqualTo("La source du signalement est invalide")
     }
 
     @Test
@@ -66,7 +66,7 @@ class ReportingValidatorUTest {
             assertThrows(BackendUsageException::class.java) {
                 reportingValidator.validate(reporting)
             }
-        assertThat(assertThrows.message).isEqualTo("La source du signalement est invalide")
+        assertThat(assertThrows.data).isEqualTo("La source du signalement est invalide")
     }
 
     @Test
@@ -80,7 +80,7 @@ class ReportingValidatorUTest {
             assertThrows(BackendUsageException::class.java) {
                 reportingValidator.validate(reporting)
             }
-        assertThat(assertThrows.message).isEqualTo("La source du signalement est invalide")
+        assertThat(assertThrows.data).isEqualTo("La source du signalement est invalide")
     }
 
     @Test
@@ -91,7 +91,7 @@ class ReportingValidatorUTest {
             assertThrows(BackendUsageException::class.java) {
                 reportingValidator.validate(reporting)
             }
-        assertThat(assertThrows.message)
+        assertThat(assertThrows.data)
             .isEqualTo("La validité du signalement doit être supérieur à 0")
     }
 
@@ -103,7 +103,7 @@ class ReportingValidatorUTest {
             assertThrows(BackendUsageException::class.java) {
                 reportingValidator.validate(reporting)
             }
-        assertThat(assertThrows.message).isEqualTo("La description de la cible est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("La description de la cible est obligatoire")
     }
 
     @Test

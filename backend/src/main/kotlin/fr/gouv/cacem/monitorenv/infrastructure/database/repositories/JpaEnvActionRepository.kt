@@ -7,16 +7,8 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanSubThemeModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanTagModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlPlanThemeModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
 import org.geolatte.geom.MultiPoint
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
@@ -28,7 +20,7 @@ import java.sql.Timestamp
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @Repository
 class JpaEnvActionRepository(
@@ -84,8 +76,8 @@ class JpaEnvActionRepository(
                 ).toActionEntity(objectMapper)
         }
         throw BackendUsageException(
-            BackendUsageErrorCode.ENTITY_NOT_FOUND,
-            "Trying to save an envAction without mission",
+            code = BackendUsageErrorCode.ENTITY_NOT_FOUND,
+            data = "Trying to save an envAction without mission",
         )
     }
 
