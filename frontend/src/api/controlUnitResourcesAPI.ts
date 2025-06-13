@@ -22,7 +22,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
         url: `/v1/control_unit_resources/${controlUnitResourceId}/archive`
       }),
       transformErrorResponse: response => {
-        if (response.data.type === ApiErrorCode.UNARCHIVED_CHILD) {
+        if (response.data.code === ApiErrorCode.UNARCHIVED_CHILD) {
           return newUserError(ARCHIVE_CONTROL_UNITE_RESOURCE_ERROR_MESSAGE)
         }
 
@@ -54,7 +54,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
         url: `/v1/control_unit_resources/${controlUnitResourceId}`
       }),
       transformErrorResponse: response => {
-        if (response.data.type === ApiErrorCode.CANNOT_DELETE_ENTITY) {
+        if (response.data.code === ApiErrorCode.CANNOT_DELETE_ENTITY) {
           return newUserError(DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE)
         }
 

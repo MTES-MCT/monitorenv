@@ -37,7 +37,7 @@ export const stationsAPI = monitorenvPublicApi.injectEndpoints({
         url: `/v1/stations/${stationId}`
       }),
       transformErrorResponse: response => {
-        if (response.data.type === ApiErrorCode.CANNOT_DELETE_ENTITY) {
+        if (response.data.code === ApiErrorCode.CANNOT_DELETE_ENTITY) {
           return newUserError(DELETE_STATION_ERROR_MESSAGE)
         }
 
