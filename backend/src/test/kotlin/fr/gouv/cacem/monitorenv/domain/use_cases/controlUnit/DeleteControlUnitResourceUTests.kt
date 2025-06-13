@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -41,7 +41,7 @@ class DeleteControlUnitResourceUTests {
     }
 
     @Test
-    fun `execute should throw CouldNotDeleteException when canDeleteControlUnitResource returns false`() {
+    fun `execute should throw BackendUsageException when canDeleteControlUnitResource returns false`() {
         val controlUnitResourceId = 1
 
         given(canDeleteControlUnitResource.execute(controlUnitResourceId)).willReturn(false)
@@ -50,6 +50,7 @@ class DeleteControlUnitResourceUTests {
             DeleteControlUnitResource(canDeleteControlUnitResource, controlUnitResourceRepository).execute(
                 controlUnitResourceId,
             )
-        }.isInstanceOf(CouldNotDeleteException::class.java)
+        }.isInstanceOf(BackendUsageException::class.java)
+            .hasMessage("Cannot delete control unit resource (ID=1) due to existing relationships.")
     }
 }

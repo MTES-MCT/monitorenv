@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
@@ -50,13 +50,14 @@ class DeleteControlUnitUTests {
     }
 
     @Test
-    fun `execute should throw CouldNotDeleteException when canDeleteControlUnit returns false`() {
+    fun `execute should throw BackendUsageException when canDeleteControlUnit returns false`() {
         val controlUnitId = 1
 
         given(canDeleteControlUnit.execute(controlUnitId)).willReturn(false)
 
         assertThatThrownBy {
             deleteControlUnit.execute(controlUnitId)
-        }.isInstanceOf(CouldNotDeleteException::class.java)
+        }.isInstanceOf(BackendUsageException::class.java)
+            .hasMessage("Cannot delete control unit (ID=1) due to existing relationships.")
     }
 }

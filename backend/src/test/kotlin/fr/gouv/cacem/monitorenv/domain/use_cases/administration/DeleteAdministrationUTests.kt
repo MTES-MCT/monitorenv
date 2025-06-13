@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.administration
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -37,13 +37,14 @@ class DeleteAdministrationUTests {
     }
 
     @Test
-    fun `execute should throw CouldNotDeleteException when canDeleteAdministration returns false`() {
+    fun `execute should throw BackendUsageException when canDeleteAdministration returns false`() {
         val administrationId = 1
 
         given(canDeleteAdministration.execute(administrationId)).willReturn(false)
 
         assertThatThrownBy {
             DeleteAdministration(administrationRepository, canDeleteAdministration).execute(administrationId)
-        }.isInstanceOf(CouldNotDeleteException::class.java)
+        }.isInstanceOf(BackendUsageException::class.java)
+            .hasMessage("Cannot delete administration (ID=1) due to existing relationships.")
     }
 }
