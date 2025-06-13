@@ -19,12 +19,28 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
+function roundCoordinates(coordinates) {
+  return coordinates.map(coord => {
+    if (Array.isArray(coord[0])) {
+      return roundCoordinates(coord)
+    }
+
+    return coord.map(num => parseFloat(num.toFixed(8)))
+  })
+}
+
 function computeCircleZone(coordinates) {
   const circleGeometry = new Feature({
     geometry: circular(coordinates, CIRCULAR_ZONE_RADIUS, 64).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
   }).getGeometry()
 
-  return convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon]))
+  const geojson = convertToGeoJSONGeometryObject(new MultiPolygon([circleGeometry as Polygon]))
+
+  if (geojson.type === 'MultiPolygon') {
+    geojson.coordinates = roundCoordinates(geojson.coordinates)
+  }
+
+  return geojson
 }
 
 export const useUpdateMissionZone = (sortedActions: Array<ActionsTypeForTimeLine>) => {
