@@ -16,9 +16,12 @@ class ArchiveAdministration(
     fun execute(administrationId: Int) {
         logger.info("Attempt to ARCHIVE administration $administrationId")
         if (!canArchiveAdministration.execute(administrationId)) {
+            val errorMessage =
+                "Cannot archive administration (ID=$administrationId) due to some of its control units not being archived."
+            logger.error(errorMessage)
             throw BackendUsageException(
                 BackendUsageErrorCode.UNARCHIVED_CHILD,
-                "Cannot archive administration (ID=$administrationId) due to some of its control units not being archived.",
+                errorMessage,
             )
         }
         administrationRepository.archiveById(administrationId)
