@@ -20,20 +20,20 @@ class ReportingValidator : Validator<ReportingEntity> {
 
         if (reporting.openBy?.length != NB_CHAR_MAX == true) {
             throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "Le trigramme \"ouvert par\" doit avoir 3 lettres",
+                code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                data = "Le trigramme \"ouvert par\" doit avoir 3 lettres",
             )
         }
         if (reporting.validityTime == 0) {
             throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La validité du signalement doit être supérieur à 0",
+                code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                data = "La validité du signalement doit être supérieur à 0",
             )
         }
         if (reporting.targetType === TargetTypeEnum.OTHER && reporting.description === null) {
             throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "La description de la cible est obligatoire",
+                code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                data = "La description de la cible est obligatoire",
             )
         }
         validateReportingSources(reporting)
@@ -42,8 +42,8 @@ class ReportingValidator : Validator<ReportingEntity> {
     private fun validateReportingSources(reporting: ReportingEntity) {
         if (reporting.reportingSources.isEmpty()) {
             throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "Une source du signalement est obligatoire",
+                code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                data = "Une source du signalement est obligatoire",
             )
         }
         reporting.reportingSources.forEach { source ->
@@ -52,8 +52,8 @@ class ReportingValidator : Validator<ReportingEntity> {
                 SourceTypeEnum.SEMAPHORE -> {
                     if (source.semaphoreId === null || source.controlUnitId !== null || source.sourceName !== null) {
                         throw BackendUsageException(
-                            BackendUsageErrorCode.UNVALID_PROPERTY,
-                            errorMessage,
+                            code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                            data = errorMessage,
                         )
                     }
                 }
@@ -61,8 +61,8 @@ class ReportingValidator : Validator<ReportingEntity> {
                 SourceTypeEnum.CONTROL_UNIT -> {
                     if (source.semaphoreId !== null || source.controlUnitId === null || source.sourceName !== null) {
                         throw BackendUsageException(
-                            BackendUsageErrorCode.UNVALID_PROPERTY,
-                            errorMessage,
+                            code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                            data = errorMessage,
                         )
                     }
                 }
@@ -70,8 +70,8 @@ class ReportingValidator : Validator<ReportingEntity> {
                 SourceTypeEnum.OTHER -> {
                     if (source.semaphoreId !== null || source.controlUnitId !== null || source.sourceName === null) {
                         throw BackendUsageException(
-                            BackendUsageErrorCode.UNVALID_PROPERTY,
-                            errorMessage,
+                            code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                            data = errorMessage,
                         )
                     }
                 }

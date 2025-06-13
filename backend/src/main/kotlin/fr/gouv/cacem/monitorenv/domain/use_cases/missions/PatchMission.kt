@@ -28,6 +28,8 @@ class PatchMission(
             logger.info("Mission $id patched")
             return patchedMission
         }
-        throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, "Mission $id not found")
+        val errorMessage = "Mission $id not found"
+        logger.error(errorMessage)
+        throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, errorMessage)
     }
 }

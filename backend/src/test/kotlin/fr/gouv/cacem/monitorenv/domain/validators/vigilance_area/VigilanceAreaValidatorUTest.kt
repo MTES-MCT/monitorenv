@@ -20,7 +20,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("Le trigramme \"créé par\" doit avoir 3 lettres")
+        assertThat(assertThrows.data).isEqualTo("Le trigramme \"créé par\" doit avoir 3 lettres")
     }
 
     @Test
@@ -29,7 +29,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("Un tag ou un thème est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("Un tag ou un thème est obligatoire")
     }
 
     @Test
@@ -38,7 +38,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("La date de début est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("La date de début est obligatoire")
     }
 
     @Test
@@ -47,7 +47,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("La date de fin est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("La date de fin est obligatoire")
     }
 
     @Test
@@ -56,7 +56,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("La fréquence est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("La fréquence est obligatoire")
     }
 
     @Test
@@ -70,7 +70,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("La date de fin de l'occurence est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("La date de fin de l'occurence est obligatoire")
     }
 
     @ParameterizedTest
@@ -88,7 +88,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("Le nombre d'occurence est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("Le nombre d'occurence est obligatoire")
     }
 
     @Test
@@ -97,7 +97,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("La géométrie est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("La géométrie est obligatoire")
     }
 
     @Test
@@ -106,7 +106,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("Un commentaire est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("Un commentaire est obligatoire")
     }
 
     @Test
@@ -115,7 +115,7 @@ class VigilanceAreaValidatorUTest {
 
         val assertThrows =
             assertThrows(BackendUsageException::class.java) { vigilanceAreaValidator.validate(vigilanceArea) }
-        assertThat(assertThrows.message).isEqualTo("La fréquence est obligatoire")
+        assertThat(assertThrows.data).isEqualTo("La fréquence est obligatoire")
     }
 
     @Test
