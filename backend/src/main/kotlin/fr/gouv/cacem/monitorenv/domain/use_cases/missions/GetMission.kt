@@ -18,6 +18,8 @@ class GetMission(
         missionRepository.findById(missionId)?.let {
             return it
         }
-        throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, "mission $missionId not found")
+        val errorMessage = "mission $missionId not found"
+        logger.error(errorMessage)
+        throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, errorMessage)
     }
 }
