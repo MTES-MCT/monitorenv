@@ -18,12 +18,13 @@ export type BriefProps = {
   author?: string
   brief: Dashboard.Brief
   description?: string
+  isLight: boolean
   title?: string
 }
 
 registerFonts()
 
-export function Brief({ author, brief, description, title }: BriefProps) {
+export function Brief({ author, brief, description, isLight, title }: BriefProps) {
   return (
     <Document author={author} subject={description} title={title}>
       <Page style={layoutStyle.page}>
@@ -59,6 +60,15 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           </View>
         </Page>
       )}
+      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+      {((brief.attachments.images && brief.attachments.images?.length > 0) || brief.attachments.links.length > 0) && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <Attachments images={brief.attachments.images} links={brief.attachments.links} />
+          </View>
+        </Page>
+      )}
       {brief.reportings.length > 0 && (
         <Page style={layoutStyle.page}>
           <Headings name={brief.name} />
@@ -80,7 +90,7 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           </View>
         </Page>
       )}
-      {brief.regulatoryAreas.length > 0 && (
+      {!isLight && brief.regulatoryAreas.length > 0 && (
         <Page style={layoutStyle.page}>
           <Headings name={brief.name} />
           <View style={layoutStyle.section}>
@@ -88,20 +98,11 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           </View>
         </Page>
       )}
-      {brief.amps.length > 0 && (
+      {!isLight && brief.amps.length > 0 && (
         <Page style={layoutStyle.page}>
           <Headings name={brief.name} />
           <View style={layoutStyle.section}>
             <Amps amps={brief.amps} images={brief.images ?? []} />
-          </View>
-        </Page>
-      )}
-      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-      {((brief.attachments.images && brief.attachments.images?.length > 0) || brief.attachments.links.length > 0) && (
-        <Page style={layoutStyle.page}>
-          <Headings name={brief.name} />
-          <View style={layoutStyle.section}>
-            <Attachments images={brief.attachments.images} links={brief.attachments.links} />
           </View>
         </Page>
       )}

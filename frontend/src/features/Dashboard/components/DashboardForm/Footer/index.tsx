@@ -1,3 +1,4 @@
+import { Tooltip } from '@components/Tooltip'
 import { useGenerateBrief } from '@features/Dashboard/hooks/useGenerateBrief'
 import { useGenerateEditableBrief } from '@features/Dashboard/hooks/useGenerateEditableBrief'
 import { deleteDashboard } from '@features/Dashboard/useCases/deleteDashboard'
@@ -15,7 +16,46 @@ import type { DashboardType } from '@features/Dashboard/slice'
 type FooterProps = {
   dashboardForm: [string, DashboardType]
 }
-
+function LightBriefTooltip() {
+  return (
+    <StyledTooltip className="light-brief-tooltip" isSideWindow>
+      <TooltipList>
+        <TooltipListLine>
+          <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+          <span>Récapitulatif</span>
+        </TooltipListLine>
+        <TooltipListLine>
+          <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+          <span>Activité récente</span>
+        </TooltipListLine>
+        <TooltipListLine>
+          <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+          <span>Unités proches</span>
+        </TooltipListLine>
+        <TooltipListLine>
+          <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+          <span>Pièces jointes et liens</span>
+        </TooltipListLine>
+        <TooltipListLine>
+          <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+          <span>Détails des signalements</span>
+        </TooltipListLine>
+        <TooltipListLine>
+          <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+          <span>Détails des zones de vigilance</span>
+        </TooltipListLine>
+        <TooltipListLine $isDisabled>
+          <Icon.Reject />
+          <span>Détails des zones réglementaires</span>
+        </TooltipListLine>
+        <TooltipListLine $isDisabled>
+          <Icon.Reject />
+          <span>Détails des AMP</span>
+        </TooltipListLine>
+      </TooltipList>
+    </StyledTooltip>
+  )
+}
 export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
   const dispatch = useAppDispatch()
 
@@ -63,8 +103,18 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
   }
 
   const createPdf = async () => {
-    const brief = await generateBrief()
-    downloadPdf(brief)
+    const brief = await generateBrief({ isLight: false })
+    downloadPdf(brief, false)
+    trackEvent({
+      action: 'Téléchargement du brief',
+      category: 'TABLEAU DE BORD & BRIEF',
+      name: 'Téléchargement du brief'
+    })
+  }
+
+  const createLightPdf = async () => {
+    const brief = await generateBrief({ isLight: true })
+    downloadPdf(brief, true)
     trackEvent({
       action: 'Téléchargement du brief',
       category: 'TABLEAU DE BORD & BRIEF',
@@ -133,8 +183,15 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
             placement="topStart"
             title={getLoadingText()}
           >
+            <StyledDropdownItem onClick={createEditableDoc}>ODT</StyledDropdownItem>
             <StyledDropdownItem onClick={createPdf}>PDF</StyledDropdownItem>
-            <Dropdown.Item onClick={createEditableDoc}>ODT</Dropdown.Item>
+            <StyledDropdownItem onClick={createLightPdf}>
+              <div>
+                PDF
+                <TextLight>&nbsp;abrégé</TextLight>
+              </div>
+              <LightBriefTooltip />
+            </StyledDropdownItem>
           </StyledDropdown>
           <Button accent={Accent.SECONDARY} Icon={Icon.Save} onClick={handleSave}>
             Enregistrer le tableau
@@ -199,5 +256,33 @@ const StyledDropdown = styled(Dropdown)`
 `
 
 const StyledDropdownItem = styled(Dropdown.Item)`
+  color: ${p => p.theme.color.gunMetal};
+  justify-content: space-between;
   width: 175px;
+`
+const TextLight = styled.span`
+  color: ${p => p.theme.color.slateGray};
+`
+
+const StyledTooltip = styled(Tooltip)`
+  margin-left: 16px;
+  bottom: 93px;
+  right: 120px;
+  top: auto;
+  left: auto;
+`
+
+const TooltipList = styled.ul`
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+`
+
+const TooltipListLine = styled.li<{ $isDisabled?: boolean }>`
+  align-items: center;
+  color: ${p => (p.$isDisabled ? p.theme.color.slateGray : p.theme.color.gunMetal)};
+  display: flex;
+  font-size: 13px;
+  gap: 8px;
 `
