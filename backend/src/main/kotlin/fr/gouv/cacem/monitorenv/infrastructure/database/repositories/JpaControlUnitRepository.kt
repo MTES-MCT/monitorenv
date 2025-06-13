@@ -2,7 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.NearbyUnit
@@ -13,6 +14,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.locationtech.jts.geom.Geometry
+import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.dao.InvalidDataAccessApiUsageException
@@ -28,6 +30,8 @@ class JpaControlUnitRepository(
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
 ) : IControlUnitRepository {
+    private val logger = LoggerFactory.getLogger(JpaControlUnitRepository::class.java)
+
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun archiveById(controlUnitId: Int) {
@@ -62,10 +66,10 @@ class JpaControlUnitRepository(
                 ControlUnitModel.fromControlUnit(controlUnit, administrationModel, departmentAreaModel)
             dbControlUnitRepository.save(controlUnitModel).toControlUnit()
         } catch (e: InvalidDataAccessApiUsageException) {
-            throw NotFoundException(
-                "Unable to find (and update) control unit with `id` = ${controlUnit.id}.",
-                e,
-            )
+            val errorMessage =
+                "Unable to save control unit with `id` = ${controlUnit.id}."
+            logger.error(errorMessage, e)
+            throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, errorMessage)
         }
 
     @Transactional

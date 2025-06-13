@@ -102,7 +102,7 @@ export const saveMission =
         })
       } else {
         if ('data' in response.error) {
-          if (response.error.data?.type === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
+          if (response.error.data?.code === ApiErrorCode.CHILD_ALREADY_ATTACHED) {
             throw Error('Le signalement est déjà rattaché à une mission')
           }
           if (response.error.data?.code === ApiErrorCode.UNVALID_PROPERTY) {

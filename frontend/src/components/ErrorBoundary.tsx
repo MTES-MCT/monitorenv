@@ -29,7 +29,21 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     const { hasError } = this.state
 
     if (hasError) {
-      return <h1>Something went wrong.</h1>
+      return (
+        <div
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+            flexGrow: 1,
+            height: '100%',
+            justifyContent: 'center',
+            padding: '30px',
+            width: '100%'
+          }}
+        >
+          Une erreur est survenue.
+        </div>
+      )
     }
 
     return children
