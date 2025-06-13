@@ -26,7 +26,6 @@ import { generatePath } from 'react-router'
 import { ToastContainer } from 'react-toastify'
 import { StyleSheetManager } from 'styled-components'
 
-import { ErrorBoundary } from '../../components/ErrorBoundary'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { ReportingContext, restorePreviousDisplayedItems } from '../../domain/shared_slices/Global'
 import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES } from '../Mission/components/MissionForm/constants'
@@ -123,63 +122,58 @@ export function SideWindow() {
 
   return (
     <StyleSheetManager target={wrapperRef.current ?? undefined}>
-      <ErrorBoundary>
-        <Wrapper ref={wrapperRef}>
-          {wrapperRef.current && (
-            <>
-              <NewWindowContext.Provider value={newWindowContextProviderValue}>
-                <SideMenu>
-                  <SideMenu.Button
-                    Icon={Icon.MissionAction}
-                    isActive={isMissionButtonIsActive}
-                    onClick={() => navigate(generatePath(sideWindowPaths.MISSIONS))}
-                    title="Missions et contrôles"
-                  />
-                  <SideMenu.Button
-                    Icon={Icon.Report}
-                    isActive={isReportingsButtonIsActive}
-                    onClick={() => navigate(generatePath(sideWindowPaths.REPORTINGS))}
-                    title="Signalements"
-                  />
-                  <SideMenu.Button
-                    Icon={Icon.VigilanceAreas}
-                    isActive={isVigilanceAreasButtonIsActive}
-                    onClick={() => navigate(generatePath(sideWindowPaths.VIGILANCE_AREAS))}
-                    title="Zones de vigilance"
-                  />
+      <Wrapper ref={wrapperRef}>
+        {wrapperRef.current && (
+          <>
+            <NewWindowContext.Provider value={newWindowContextProviderValue}>
+              <SideMenu>
+                <SideMenu.Button
+                  Icon={Icon.MissionAction}
+                  isActive={isMissionButtonIsActive}
+                  onClick={() => navigate(generatePath(sideWindowPaths.MISSIONS))}
+                  title="Missions et contrôles"
+                />
+                <SideMenu.Button
+                  Icon={Icon.Report}
+                  isActive={isReportingsButtonIsActive}
+                  onClick={() => navigate(generatePath(sideWindowPaths.REPORTINGS))}
+                  title="Signalements"
+                />
+                <SideMenu.Button
+                  Icon={Icon.VigilanceAreas}
+                  isActive={isVigilanceAreasButtonIsActive}
+                  onClick={() => navigate(generatePath(sideWindowPaths.VIGILANCE_AREAS))}
+                  title="Zones de vigilance"
+                />
 
-                  <SideMenu.Button
-                    Icon={Icon.Bullseye}
-                    isActive={isDashboardsButtonIsActive}
-                    onClick={() => navigate(generatePath(sideWindowPaths.DASHBOARDS))}
-                    title="Tableaux de bord"
-                  />
-                </SideMenu>
+                <SideMenu.Button
+                  Icon={Icon.Bullseye}
+                  isActive={isDashboardsButtonIsActive}
+                  onClick={() => navigate(generatePath(sideWindowPaths.DASHBOARDS))}
+                  title="Tableaux de bord"
+                />
+              </SideMenu>
 
-                <StyledRouteContainer>
-                  <BannerStack />
-                  <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
-                  <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
-                  <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
-                  <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
-                  <Route element={<VigilancesAreasList />} path={sideWindowPaths.VIGILANCE_AREAS} />
-                  <Route
-                    element={<DashboardsNavBar />}
-                    path={[sideWindowPaths.DASHBOARDS, sideWindowPaths.DASHBOARD]}
-                  />
-                  <Route element={<DashboardsList />} path={sideWindowPaths.DASHBOARDS} />
-                  <Route element={<DashboardForms />} path={sideWindowPaths.DASHBOARD} />
-                </StyledRouteContainer>
-                {isReportingsButtonIsActive && (
-                  <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
-                )}
-              </NewWindowContext.Provider>
+              <StyledRouteContainer>
+                <BannerStack />
+                <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
+                <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
+                <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />
+                <Route element={<MissionFormWrapper />} path={sideWindowPaths.MISSION} />
+                <Route element={<VigilancesAreasList />} path={sideWindowPaths.VIGILANCE_AREAS} />
+                <Route element={<DashboardsNavBar />} path={[sideWindowPaths.DASHBOARDS, sideWindowPaths.DASHBOARD]} />
+                <Route element={<DashboardsList />} path={sideWindowPaths.DASHBOARDS} />
+                <Route element={<DashboardForms />} path={sideWindowPaths.DASHBOARD} />
+              </StyledRouteContainer>
+              {isReportingsButtonIsActive && (
+                <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
+              )}
+            </NewWindowContext.Provider>
 
-              <ToastContainer containerId="sideWindow" />
-            </>
-          )}
-        </Wrapper>
-      </ErrorBoundary>
+            <ToastContainer containerId="sideWindow" />
+          </>
+        )}
+      </Wrapper>
     </StyleSheetManager>
   )
 }

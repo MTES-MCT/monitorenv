@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
-import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.assertj.core.api.Assertions.assertThat
@@ -573,7 +573,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // When
 
         val exception =
-            assertThrows<NotFoundException> {
+            assertThrows<BackendUsageException> {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         attachedEnvActionId =
@@ -599,7 +599,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // When
 
         val exception =
-            assertThrows<NotFoundException> {
+            assertThrows<BackendUsageException> {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         missionId = 42,
@@ -624,7 +624,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
         val exception =
-            assertThrows<NotFoundException> {
+            assertThrows<BackendUsageException> {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         missionId = 100,
@@ -648,7 +648,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(existingReportingDTO.reporting.detachedFromMissionAtUtc).isNull()
         // When
         val exception =
-            assertThrows<NotFoundException> {
+            assertThrows<BackendUsageException> {
                 jpaReportingRepository.save(
                     existingReportingDTO.reporting.copy(
                         detachedFromMissionAtUtc =
