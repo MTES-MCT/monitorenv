@@ -38,4 +38,7 @@ enum class BackendUsageErrorCode {
 
     /** Thrown when an entity could not be saved. */
     ENTITY_NOT_SAVED,
+
+    /** Thrown when an entity could not be deleted. */
+    CANNOT_DELETE_ENTITY,
 }

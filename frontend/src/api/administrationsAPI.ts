@@ -65,7 +65,7 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
         url: `/v1/administrations/${administrationId}`
       }),
       transformErrorResponse: response => {
-        if (response.data.type === ApiErrorCode.FOREIGN_KEY_CONSTRAINT) {
+        if (response.data.type === ApiErrorCode.CANNOT_DELETE_ENTITY) {
           return newUserError(DELETE_ADMINISTRATION_ERROR_MESSAGE)
         }
 
