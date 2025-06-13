@@ -28,7 +28,7 @@ export function Tooltip({
 
   return (
     <>
-      <Wrapper ref={ref} className={className}>
+      <Wrapper ref={ref}>
         <Icon
           aria-describedby={id}
           color={color}
@@ -43,7 +43,7 @@ export function Tooltip({
 
       {isVisible &&
         createPortal(
-          <StyledTooltip $left={refLeftPosition} $top={refTopPosition} id={id} role="tooltip">
+          <StyledTooltip $left={refLeftPosition} $top={refTopPosition} className={className} id={id} role="tooltip">
             {children}
           </StyledTooltip>,
           isSideWindow ? newWindowContainerRef.current : document.body
