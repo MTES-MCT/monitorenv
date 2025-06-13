@@ -60,6 +60,15 @@ export function Brief({ author, brief, description, isLight, title }: BriefProps
           </View>
         </Page>
       )}
+      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+      {((brief.attachments.images && brief.attachments.images?.length > 0) || brief.attachments.links.length > 0) && (
+        <Page style={layoutStyle.page}>
+          <Headings name={brief.name} />
+          <View style={layoutStyle.section}>
+            <Attachments images={brief.attachments.images} links={brief.attachments.links} />
+          </View>
+        </Page>
+      )}
       {brief.reportings.length > 0 && (
         <Page style={layoutStyle.page}>
           <Headings name={brief.name} />
@@ -94,16 +103,6 @@ export function Brief({ author, brief, description, isLight, title }: BriefProps
           <Headings name={brief.name} />
           <View style={layoutStyle.section}>
             <Amps amps={brief.amps} images={brief.images ?? []} />
-          </View>
-        </Page>
-      )}
-
-      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-      {((brief.attachments.images && brief.attachments.images?.length > 0) || brief.attachments.links.length > 0) && (
-        <Page style={layoutStyle.page}>
-          <Headings name={brief.name} />
-          <View style={layoutStyle.section}>
-            <Attachments images={brief.attachments.images} links={brief.attachments.links} />
           </View>
         </Page>
       )}
