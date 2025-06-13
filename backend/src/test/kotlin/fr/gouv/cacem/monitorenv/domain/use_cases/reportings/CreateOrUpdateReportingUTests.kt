@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
@@ -308,7 +308,7 @@ class CreateOrUpdateReportingUTests {
     }
 
     @Test
-    fun `execute should throw ReportingAlreadyAttachedException when try to attach reporting that has already be attached`() {
+    fun `execute should throw BackendUsageException when try to attach reporting that has already be attached`() {
         val reportingWithNewAttachedMission =
             aReporting(id = 1, missionId = 1, attachedToMissionAtUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"))
 
@@ -323,6 +323,7 @@ class CreateOrUpdateReportingUTests {
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
             ).execute(reportingWithNewAttachedMission)
-        }.isInstanceOf(ReportingAlreadyAttachedException::class.java)
+        }.isInstanceOf(BackendUsageException::class.java)
+            .hasMessage("Reporting 1 is already attached to a mission")
     }
 }

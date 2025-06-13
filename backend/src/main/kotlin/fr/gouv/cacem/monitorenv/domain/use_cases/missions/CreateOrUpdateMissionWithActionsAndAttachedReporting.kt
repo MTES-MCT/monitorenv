@@ -4,14 +4,15 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
 import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionWithEnvActionsValidator
 import org.slf4j.LoggerFactory
-import java.util.UUID
+import java.util.*
 
 @UseCase
 class CreateOrUpdateMissionWithActionsAndAttachedReporting(
@@ -58,9 +59,10 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 reporting.reporting.detachedFromMissionAtUtc == null &&
                 reporting.reporting.missionId != savedMission.id
             ) {
-                throw ReportingAlreadyAttachedException(
-                    "Reporting ${reporting.reporting.id} is already attached to a mission",
-                )
+                val errorMessage =
+                    "Reporting ${reporting.reporting.id} is already attached to a mission"
+                logger.error(errorMessage)
+                throw BackendUsageException(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED, errorMessage)
             }
         }
 

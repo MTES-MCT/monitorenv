@@ -1,15 +1,11 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.*
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.TestUtils.getReportingDTO
@@ -28,7 +24,7 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
@@ -106,7 +102,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     }
 
     @Test
-    fun `execute should throw ReportingAlreadyAttachedException when try to attach reporting that has already be attached`() {
+    fun `execute should throw BackendUsageException when try to attach reporting that has already be attached`() {
         val missionToCreate = aMissionEntity()
         val attachedReportingIds = listOf(5)
         given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
@@ -125,7 +121,8 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 attachedReportingIds = attachedReportingIds,
                 envActionsAttachedToReportingIds = listOf(),
             )
-        }.isInstanceOf(ReportingAlreadyAttachedException::class.java)
+        }.isInstanceOf(BackendUsageException::class.java)
+            .hasMessage("Reporting 5 is already attached to a mission")
     }
 
     @Test
