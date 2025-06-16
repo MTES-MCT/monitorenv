@@ -3,7 +3,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.*
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendInternalErrorDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendRequestErrorDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendUsageErrorDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import io.sentry.Sentry
@@ -43,7 +47,9 @@ class ControllersExceptionHandler(
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BackendUsageException::class)
     fun handleBackendUsageException(e: BackendUsageException): BackendUsageErrorDataOutput {
-        logger.error(e.message)
+        if (sentryConfig.enabled == true) {
+            Sentry.captureException(e)
+        }
         return BackendUsageErrorDataOutput(code = e.code, data = e.data, message = null)
     }
 

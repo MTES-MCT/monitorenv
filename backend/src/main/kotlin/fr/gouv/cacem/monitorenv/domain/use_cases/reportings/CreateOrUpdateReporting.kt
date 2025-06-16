@@ -4,7 +4,9 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.repositories.*
+import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
@@ -36,16 +38,17 @@ class CreateOrUpdateReporting(
                 reporting.detachedFromMissionAtUtc == null
 
         if (reporting.id != null && reportingToSaveIsAttachedToMission) {
-            val existingReporting = reportingRepository.findById(reporting.id)
-            val existingReportingIsAttachedToAnotherMission =
-                existingReporting.reporting.missionId != null &&
-                    existingReporting.reporting.detachedFromMissionAtUtc == null &&
-                    existingReporting.reporting.missionId != reporting.missionId
-            if (existingReportingIsAttachedToAnotherMission) {
-                val errorMessage =
-                    "Reporting ${reporting.id} is already attached to a mission"
-                logger.error(errorMessage)
-                throw BackendUsageException(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED, errorMessage)
+            reportingRepository.findById(reporting.id)?.let { existingReporting ->
+                val existingReportingIsAttachedToAnotherMission =
+                    existingReporting.reporting.missionId != null &&
+                        existingReporting.reporting.detachedFromMissionAtUtc == null &&
+                        existingReporting.reporting.missionId != reporting.missionId
+                if (existingReportingIsAttachedToAnotherMission) {
+                    val errorMessage =
+                        "Reporting ${reporting.id} is already attached to a mission"
+                    logger.error(errorMessage)
+                    throw BackendUsageException(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED, errorMessage)
+                }
             }
         }
         val normalizedGeometry =

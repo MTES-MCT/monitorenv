@@ -875,11 +875,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `save should update existing mission with existing resources`() {
         // Given
         val mission = jpaMissionRepository.findById(25)
-        val newControlUnitResource = jpaControlUnitResourceRepository.findById(10)
+        val newControlUnitResource = jpaControlUnitResourceRepository.findById(10)!!
         val newControlUnit =
             jpaControlUnitRepository.findFullControlUnitById(
                 requireNotNull(newControlUnitResource.controlUnit.id),
-            )
+            )!!
 
         val nextMission =
             mission?.copy(
