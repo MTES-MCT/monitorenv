@@ -5,12 +5,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEn
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
 class CreateOrUpdateControlUnitContact(
-    private val controlUnitRepository: IControlUnitRepository,
+    private val getControlUnitById: GetControlUnitById,
     private val controlUnitContactRepository: IControlUnitContactRepository,
 ) {
     private val logger = LoggerFactory.getLogger(CreateOrUpdateControlUnitContact::class.java)
@@ -41,7 +40,7 @@ class CreateOrUpdateControlUnitContact(
         controlUnitId: Int,
         controlUnitContactId: Int,
     ) {
-        val fullControlUnit = controlUnitRepository.findFullControlUnitById(controlUnitId)
+        val fullControlUnit = getControlUnitById.execute(controlUnitId)
         val otherContactsWithEmailSubscription =
             fullControlUnit.controlUnitContacts
                 // Filter and not find in the spirit of defensive programming

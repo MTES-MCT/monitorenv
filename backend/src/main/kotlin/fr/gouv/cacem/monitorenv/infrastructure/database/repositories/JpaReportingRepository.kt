@@ -15,7 +15,11 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel.
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel.Companion.fromThemeEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.AbstractReportingModel.Companion.fromReportingEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
 import org.apache.commons.lang3.StringUtils
 import org.locationtech.jts.geom.Geometry
 import org.slf4j.LoggerFactory
@@ -23,11 +27,12 @@ import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 @Repository
 class JpaReportingRepository(
@@ -64,9 +69,8 @@ class JpaReportingRepository(
         dbReportingRepository.detachDanglingEnvActions(missionId, envActionIds)
     }
 
-    // FIXME (25/07/2024) : passer par le findByIdOrNull et refacto
-    override fun findById(reportingId: Int): ReportingDetailsDTO =
-        dbReportingRepository.findById(reportingId).get().toReportingDetailsDTO(mapper)
+    override fun findById(reportingId: Int): ReportingDetailsDTO? =
+        dbReportingRepository.findByIdOrNull(reportingId)?.toReportingDetailsDTO(mapper)
 
     @Transactional
     override fun findAllById(reportingId: List<Int>): List<ReportingDetailsDTO> =
@@ -145,7 +149,7 @@ class JpaReportingRepository(
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(reporting: ReportingEntity): ReportingDetailsDTO {
-        return try {
+        try {
             val missionReference =
                 if (reporting.missionId != null) {
                     dbMissionRepository.getReferenceById(

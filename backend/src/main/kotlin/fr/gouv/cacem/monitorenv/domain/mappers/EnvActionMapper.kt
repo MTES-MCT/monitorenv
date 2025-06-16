@@ -110,7 +110,7 @@ object EnvActionMapper {
                         )
             }
         } catch (e: Exception) {
-            val errorMessage = "Impossible de mapper l'envaction depuis le JSON"
+            val errorMessage = "Cannot parse envAction from JSON"
             logger.error(errorMessage, e)
             throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, errorMessage)
         }
@@ -143,7 +143,7 @@ object EnvActionMapper {
                     )
             }
         } catch (e: Exception) {
-            val errorMessage = "Impossible de mapper l'envaction vers du JSON"
+            val errorMessage = "Cannot parse envAction to JSON"
             logger.error(errorMessage, e)
             throw BackendUsageException(BackendUsageErrorCode.UNVALID_PROPERTY, errorMessage)
         }

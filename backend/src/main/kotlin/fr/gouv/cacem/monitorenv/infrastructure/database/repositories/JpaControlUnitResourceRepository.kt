@@ -13,6 +13,7 @@ import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.dao.InvalidDataAccessApiUsageException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -43,13 +44,14 @@ class JpaControlUnitResourceRepository(
             it.toFullControlUnitResource()
         }
 
-    override fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO =
-        dbControlUnitResourceRepository.findById(controlUnitResourceId).get().toFullControlUnitResource()
+    override fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO? =
+        dbControlUnitResourceRepository.findByIdOrNull(controlUnitResourceId)?.toFullControlUnitResource()
 
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun save(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceEntity =
         try {
+            // TODO(16/06/2025): refacto this, it should be findByIdOrNull
             val controlUnitModel =
                 requirePresent(dbControlUnitRepository.findById(controlUnitResource.controlUnitId))
             val stationModel = requirePresent(dbBaseRepository.findById(controlUnitResource.stationId))
@@ -61,6 +63,7 @@ class JpaControlUnitResourceRepository(
                 )
 
             dbControlUnitResourceRepository.save(controlUnitResourceModel).toControlUnitResource()
+            // TODO(16/06/2025): refacto this, use case should catch it if something happens here
         } catch (e: InvalidDataAccessApiUsageException) {
             val errorMessage =
                 "Unable to save control unit resource with `id` = ${controlUnitResource.id}."

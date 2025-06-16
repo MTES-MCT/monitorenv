@@ -3,7 +3,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
@@ -18,7 +22,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
 import java.time.Year
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @Import(DataSourceProxyBeanPostProcessor::class)
 class JpaReportingRepositoryITests : AbstractDBTests() {
@@ -37,16 +41,16 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `archiveReportings should archive multiples reportings`() {
         // Given
-        val firstReportingDTO = jpaReportingRepository.findById(2)
+        val firstReportingDTO = jpaReportingRepository.findById(2)!!
         assertThat(firstReportingDTO.reporting.isArchived).isEqualTo(false)
-        val secondReportingDTO = jpaReportingRepository.findById(3)
+        val secondReportingDTO = jpaReportingRepository.findById(3)!!
         assertThat(secondReportingDTO.reporting.isArchived).isEqualTo(false)
         // When
         jpaReportingRepository.archiveReportings(listOf(2, 3))
         // Then
-        val firstArchivedReportingDTO = jpaReportingRepository.findById(2)
+        val firstArchivedReportingDTO = jpaReportingRepository.findById(2)!!
         assertThat(firstArchivedReportingDTO.reporting.isArchived).isEqualTo(true)
-        val secondArchivedReportingDTO = jpaReportingRepository.findById(3)
+        val secondArchivedReportingDTO = jpaReportingRepository.findById(3)!!
         assertThat(secondArchivedReportingDTO.reporting.isArchived).isEqualTo(true)
     }
 
@@ -54,12 +58,12 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `archive should archive outdated reporting`() {
         // Given
-        val existingReportingDTO = jpaReportingRepository.findById(1)
+        val existingReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(existingReportingDTO.reporting.isArchived).isEqualTo(false)
         // When
         jpaReportingRepository.archiveOutdatedReportings()
         // Then
-        val archivedReportingDTO = jpaReportingRepository.findById(1)
+        val archivedReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(archivedReportingDTO.reporting.isArchived).isEqualTo(true)
     }
 
@@ -67,7 +71,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `attach an existing mission to a reporting`() {
         // Given
-        val existingReportingDTO = jpaReportingRepository.findById(1)
+        val existingReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
 
@@ -79,7 +83,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         )
 
         // Then
-        val attachedReportingDTO = jpaReportingRepository.findById(1)
+        val attachedReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(attachedReportingDTO.reporting.missionId).isEqualTo(38)
         assertThat(attachedReportingDTO.reporting.attachedToMissionAtUtc)
             .isEqualTo(
@@ -92,16 +96,16 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `attachEnvActionsToReportings should attach action to a second reporting`() {
         // Given
         val envActionUUID = UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
-        val alreadyAttachedReporting = jpaReportingRepository.findById(6)
-        val reportingToAttach = jpaReportingRepository.findById(7)
+        val alreadyAttachedReporting = jpaReportingRepository.findById(6)!!
+        val reportingToAttach = jpaReportingRepository.findById(7)!!
         assertThat(alreadyAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
         assertThat(reportingToAttach.reporting.attachedEnvActionId).isNull()
 
         val attachToReportingIds = listOf(6, 7)
         jpaReportingRepository.attachEnvActionsToReportings(envActionUUID, attachToReportingIds)
 
-        val stillAttachedReporting = jpaReportingRepository.findById(6)
-        val newlyAttachedReporting = jpaReportingRepository.findById(7)
+        val stillAttachedReporting = jpaReportingRepository.findById(6)!!
+        val newlyAttachedReporting = jpaReportingRepository.findById(7)!!
 
         assertThat(stillAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
         assertThat(newlyAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
@@ -113,12 +117,12 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // Given
         val envActionUUID = UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
 
-        val alreadyAttachedReporting = jpaReportingRepository.findById(6)
+        val alreadyAttachedReporting = jpaReportingRepository.findById(6)!!
         assertThat(alreadyAttachedReporting.reporting.attachedEnvActionId).isEqualTo(envActionUUID)
 
         jpaReportingRepository.attachEnvActionsToReportings(envActionUUID, listOf())
 
-        val stillAttachedReporting = jpaReportingRepository.findById(6)
+        val stillAttachedReporting = jpaReportingRepository.findById(6)!!
 
         assertThat(stillAttachedReporting.reporting.attachedEnvActionId).isNull()
     }
@@ -127,7 +131,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `attach an existing envAction to a reporting`() {
         // Given
-        val existingReportingDTO = jpaReportingRepository.findById(1)
+        val existingReportingDTO = jpaReportingRepository.findById(1)!!
         val reportingWithMissionDTO =
             jpaReportingRepository.save(
                 existingReportingDTO.reporting.copy(
@@ -148,7 +152,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         )
 
         // Then
-        val attachedReportingDTO = jpaReportingRepository.findById(1)
+        val attachedReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(attachedReportingDTO.reporting.attachedEnvActionId)
             .isEqualTo(
                 UUID.fromString("e2257638-ddef-4611-960c-7675a3254c38"),
@@ -169,7 +173,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
         assertThat(numberOfExistingReportingsAfterSave).isEqualTo(11)
 
-        val deletedReportingDTO = jpaReportingRepository.findById(1)
+        val deletedReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(deletedReportingDTO.reporting.isDeleted).isEqualTo(true)
     }
 
@@ -178,13 +182,13 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `detachDanglingEnvActions should set attached_envaction_id to null if envActionIds is not provided`() {
         // Given
         val envActionId = UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
-        val existingReportingDTO = jpaReportingRepository.findById(6)
+        val existingReportingDTO = jpaReportingRepository.findById(6)!!
         assertThat(existingReportingDTO.reporting.attachedEnvActionId).isEqualTo(envActionId)
         // When
         jpaReportingRepository.detachDanglingEnvActions(missionId = 34, envActionIds = emptyList())
         // Then
-        val detachedReportingDTO = jpaReportingRepository.findById(6)
-        val otherReportingDTO = jpaReportingRepository.findById(7)
+        val detachedReportingDTO = jpaReportingRepository.findById(6)!!
+        val otherReportingDTO = jpaReportingRepository.findById(7)!!
         assertThat(detachedReportingDTO.reporting.missionId).isEqualTo(34)
         assertThat(detachedReportingDTO.reporting.attachedEnvActionId).isNull()
         assertThat(otherReportingDTO.reporting.missionId).isEqualTo(34)
@@ -197,7 +201,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // Given
         val envActionId = UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
         val otherEnvActionId = UUID.fromString("475d2887-5344-46cd-903b-8cb5e42f9a9c")
-        val existingReportingDTO = jpaReportingRepository.findById(6)
+        val existingReportingDTO = jpaReportingRepository.findById(6)!!
         assertThat(existingReportingDTO.reporting.attachedEnvActionId).isEqualTo(envActionId)
         // When
         jpaReportingRepository.detachDanglingEnvActions(
@@ -205,8 +209,8 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             envActionIds = listOf(otherEnvActionId),
         )
         // Then
-        val detachedReportingDTO = jpaReportingRepository.findById(6)
-        val otherReportingDTO = jpaReportingRepository.findById(7)
+        val detachedReportingDTO = jpaReportingRepository.findById(6)!!
+        val otherReportingDTO = jpaReportingRepository.findById(7)!!
         assertThat(detachedReportingDTO.reporting.missionId).isEqualTo(34)
         assertThat(detachedReportingDTO.reporting.attachedEnvActionId).isNull()
         assertThat(otherReportingDTO.reporting.missionId).isEqualTo(34)
@@ -366,7 +370,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findById should return specified reporting`() {
-        val reportingDTO = jpaReportingRepository.findById(2)
+        val reportingDTO = jpaReportingRepository.findById(2)!!
         assertThat(reportingDTO.reporting.id).isEqualTo(2)
         assertThat(reportingDTO.reporting.reportingId).isEqualTo(2300002)
         assertThat(reportingDTO.reporting.reportingSources[0].sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
@@ -455,7 +459,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         jpaReportingRepository.save(newReporting)
 
-        val reportingDTO = jpaReportingRepository.findById(12)
+        val reportingDTO = jpaReportingRepository.findById(12)!!
 
         // Then
         assertThat(reportingDTO.reporting.id).isEqualTo(12)
@@ -500,7 +504,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(numberOfExistingReportings).isEqualTo(11)
 
         // When
-        val existingReportingDTO = jpaReportingRepository.findById(1)
+        val existingReportingDTO = jpaReportingRepository.findById(1)!!
         val tags =
             listOf(
                 aTag(
@@ -567,7 +571,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `an envAction cannot be attached to a reporting without a mission`() {
         // Given
-        val existingReportingDTO = jpaReportingRepository.findById(1)
+        val existingReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(existingReportingDTO.reporting.attachedEnvActionId).isNull()
         assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
@@ -593,7 +597,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `an envAction cannot be attached to a reporting from another mission`() {
         // Given
-        val existingReportingDTO = jpaReportingRepository.findById(1)
+        val existingReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(existingReportingDTO.reporting.attachedEnvActionId).isNull()
         assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
@@ -620,7 +624,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `a reporting cannot be attached to a non existing mission`() {
         // Given
-        val existingReportingDTO = jpaReportingRepository.findById(1)
+        val existingReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(existingReportingDTO.reporting.missionId).isNull()
         // When
         val exception =
@@ -644,7 +648,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `a mission cannot be detached from a reporting if an envAction is still attached`() {
         // Given
-        val existingReportingDTO = jpaReportingRepository.findById(6)
+        val existingReportingDTO = jpaReportingRepository.findById(6)!!
         assertThat(existingReportingDTO.reporting.detachedFromMissionAtUtc).isNull()
         // When
         val exception =
@@ -666,10 +670,10 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `a mission can be attached to one or several reportings`() {
-        val reportingNotAttachedYet = jpaReportingRepository.findById(1)
-        val alreadyAttachedReporting = jpaReportingRepository.findById(6)
-        val secondAlreadyAttachedReporting = jpaReportingRepository.findById(7)
-        val attachedReportingToOtherMission = jpaReportingRepository.findById(8)
+        val reportingNotAttachedYet = jpaReportingRepository.findById(1)!!
+        val alreadyAttachedReporting = jpaReportingRepository.findById(6)!!
+        val secondAlreadyAttachedReporting = jpaReportingRepository.findById(7)!!
+        val attachedReportingToOtherMission = jpaReportingRepository.findById(8)!!
 
         assertThat(reportingNotAttachedYet.reporting.missionId).isNull()
         assertThat(alreadyAttachedReporting.reporting.missionId).isEqualTo(34)
@@ -680,10 +684,10 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             missionId = 34,
         )
 
-        val reportingAttachedToMission = jpaReportingRepository.findById(1)
-        val alreadyAttachedReportingAttachedToMission = jpaReportingRepository.findById(6)
-        val secondAlreadyAttachedReportingDetachedFromMission = jpaReportingRepository.findById(7)
-        val attachedReportingToOtherMissionNotAttachedToMission = jpaReportingRepository.findById(8)
+        val reportingAttachedToMission = jpaReportingRepository.findById(1)!!
+        val alreadyAttachedReportingAttachedToMission = jpaReportingRepository.findById(6)!!
+        val secondAlreadyAttachedReportingDetachedFromMission = jpaReportingRepository.findById(7)!!
+        val attachedReportingToOtherMissionNotAttachedToMission = jpaReportingRepository.findById(8)!!
 
         assertThat(reportingAttachedToMission.reporting.missionId).isEqualTo(34)
         assertThat(reportingAttachedToMission.reporting.attachedToMissionAtUtc).isNotNull()

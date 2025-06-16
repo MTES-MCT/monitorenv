@@ -12,6 +12,7 @@ import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.dao.InvalidDataAccessApiUsageException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -34,18 +35,20 @@ class JpaControlUnitContactRepository(
         }
 
     @Transactional
-    override fun findById(controlUnitContactId: Int): FullControlUnitContactDTO =
-        dbControlUnitContactRepository.findById(controlUnitContactId).get().toFullControlUnitContact()
+    override fun findById(controlUnitContactId: Int): FullControlUnitContactDTO? =
+        dbControlUnitContactRepository.findByIdOrNull(controlUnitContactId)?.toFullControlUnitContact()
 
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun save(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity =
         try {
+            // TODO(16/06/2025): refacto this, it should be findByIdOrNull
             val controlUnitModel = requirePresent(dbControlUnitRepository.findById(controlUnitContact.controlUnitId))
             val controlUnitContactModel =
                 ControlUnitContactModel.fromControlUnitContact(controlUnitContact, controlUnitModel)
 
             dbControlUnitContactRepository.save(controlUnitContactModel).toControlUnitContact()
+            // TODO(16/06/2025): refacto this, use case should catch it if something happens here
         } catch (e: InvalidDataAccessApiUsageException) {
             val errorMessage =
                 "Unable to save control unit contact with `id` = ${controlUnitContact.id}."
