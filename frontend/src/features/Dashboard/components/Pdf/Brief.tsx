@@ -90,21 +90,25 @@ export function Brief({ author, brief, description, isLight, title }: BriefProps
           </View>
         </Page>
       )}
-      {!isLight && brief.regulatoryAreas.length > 0 && (
-        <Page style={layoutStyle.page}>
-          <Headings name={brief.name} />
-          <View style={layoutStyle.section}>
-            <RegulatoryAreas images={brief.images ?? []} regulatoryAreas={brief.regulatoryAreas} />
-          </View>
-        </Page>
-      )}
-      {!isLight && brief.amps.length > 0 && (
-        <Page style={layoutStyle.page}>
-          <Headings name={brief.name} />
-          <View style={layoutStyle.section}>
-            <Amps amps={brief.amps} images={brief.images ?? []} />
-          </View>
-        </Page>
+      {!isLight && (
+        <>
+          {brief.regulatoryAreas.length > 0 && (
+            <Page style={layoutStyle.page}>
+              <Headings name={brief.name} />
+              <View style={layoutStyle.section}>
+                <RegulatoryAreas images={brief.images ?? []} regulatoryAreas={brief.regulatoryAreas} />
+              </View>
+            </Page>
+          )}
+          {brief.amps.length > 0 && (
+            <Page style={layoutStyle.page}>
+              <Headings name={brief.name} />
+              <View style={layoutStyle.section}>
+                <Amps amps={brief.amps} images={brief.images ?? []} />
+              </View>
+            </Page>
+          )}
+        </>
       )}
     </Document>
   )

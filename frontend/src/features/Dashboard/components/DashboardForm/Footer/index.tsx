@@ -18,7 +18,7 @@ type FooterProps = {
 }
 function LightBriefTooltip() {
   return (
-    <StyledTooltip className="light-brief-tooltip" isSideWindow>
+    <StyledTooltip isSideWindow>
       <TooltipList>
         <TooltipListLine>
           <Icon.Confirm color={THEME.color.mediumSeaGreen} />
@@ -103,8 +103,8 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
   }
 
   const createPdf = async () => {
-    const brief = await generateBrief({ isLight: false })
-    downloadPdf(brief, false)
+    const brief = await generateBrief()
+    await downloadPdf(brief)
     trackEvent({
       action: 'Téléchargement du brief',
       category: 'TABLEAU DE BORD & BRIEF',
@@ -114,7 +114,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
 
   const createLightPdf = async () => {
     const brief = await generateBrief({ isLight: true })
-    downloadPdf(brief, true)
+    await downloadPdf(brief, true)
     trackEvent({
       action: 'Téléchargement du brief',
       category: 'TABLEAU DE BORD & BRIEF',
@@ -123,7 +123,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
   }
 
   const createEditableDoc = async () => {
-    downloadEditableBrief()
+    await downloadEditableBrief()
   }
 
   const isLoading = isLoadingBrief || isLoadingEditableBrief || loadingImages
@@ -204,7 +204,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
 
 const Wrapper = styled.div`
   background-color: ${p => p.theme.color.white};
-  box-shadow: 0pc 3px 6px #00000029;
+  box-shadow: 0 3px 6px #00000029;
   display: flex;
   justify-content: space-between;
   padding: 16px 24px;
@@ -225,7 +225,6 @@ const DeleteButton = styled(Button)`
   }
 `
 const StyledTextInput = styled(TextInput)`
-  margin-top: 24px;
   width: 360px;
   margin: 24px auto 0;
 `
