@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.AdministrationMode
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import org.slf4j.LoggerFactory
 import org.springframework.dao.InvalidDataAccessApiUsageException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -32,8 +33,8 @@ class JpaAdministrationRepository(
             it.toFullAdministration()
         }
 
-    override fun findById(administrationId: Int): FullAdministrationDTO =
-        dbAdministrationRepository.findById(administrationId).get().toFullAdministration()
+    override fun findById(administrationId: Int): FullAdministrationDTO? =
+        dbAdministrationRepository.findByIdOrNull(administrationId)?.toFullAdministration()
 
     @Transactional
     override fun save(administration: AdministrationEntity): AdministrationEntity =

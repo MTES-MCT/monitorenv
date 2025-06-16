@@ -10,7 +10,7 @@ interface IStationRepository {
 
     fun findAllById(stationIds: List<Int>): List<FullStationDTO>
 
-    fun findById(stationId: Int): FullStationDTO
+    fun findById(stationId: Int): FullStationDTO?
 
     fun save(station: StationEntity): StationEntity
 }

@@ -8,7 +8,7 @@ interface IControlUnitResourceRepository {
 
     fun deleteById(controlUnitResourceId: Int)
 
-    fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO
+    fun findById(controlUnitResourceId: Int): FullControlUnitResourceDTO?
 
     fun findAll(): List<FullControlUnitResourceDTO>
 

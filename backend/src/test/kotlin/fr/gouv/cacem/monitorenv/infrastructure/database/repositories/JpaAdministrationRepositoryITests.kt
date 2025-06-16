@@ -15,13 +15,13 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `archiveById() should archive an administration by its ID`() {
-        val beforeFullAdministration = jpaAdministrationRepository.findById(2006)
+        val beforeFullAdministration = jpaAdministrationRepository.findById(2006)!!
 
         assertThat(beforeFullAdministration.administration.isArchived).isFalse()
 
         jpaAdministrationRepository.archiveById(2006)
 
-        val afterFullAdministration = jpaAdministrationRepository.findById(2006)
+        val afterFullAdministration = jpaAdministrationRepository.findById(2006)!!
 
         assertThat(afterFullAdministration.administration.isArchived).isTrue()
     }

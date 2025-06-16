@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @UseCase
 class DeleteMission(
@@ -52,20 +52,20 @@ class DeleteMission(
         if (missionToDelete.attachedReportingIds?.isNotEmpty() == true) {
             val envActionIdsToDetach = mutableListOf<UUID>()
             missionToDelete.attachedReportingIds.forEach {
-                val reporting = reportingRepository.findById(it)
+                reportingRepository.findById(it)?.let { reporting ->
+                    // detach action attached to reporting
+                    if (reporting.reporting.attachedEnvActionId != null) {
+                        envActionIdsToDetach.add(reporting.reporting.attachedEnvActionId)
+                    }
 
-                // detach action attached to reporting
-                if (reporting.reporting.attachedEnvActionId != null) {
-                    envActionIdsToDetach.add(reporting.reporting.attachedEnvActionId)
+                    // detach mission to reporting
+                    val detachedReporting =
+                        reporting.reporting.copy(
+                            detachedFromMissionAtUtc = ZonedDateTime.now(),
+                            attachedEnvActionId = null,
+                        )
+                    reportingRepository.save(detachedReporting)
                 }
-
-                // detach mission to reporting
-                val detachedReporting =
-                    reporting.reporting.copy(
-                        detachedFromMissionAtUtc = ZonedDateTime.now(),
-                        attachedEnvActionId = null,
-                    )
-                reportingRepository.save(detachedReporting)
             }
             reportingRepository.detachDanglingEnvActions(
                 missionId,

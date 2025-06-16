@@ -7,7 +7,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -21,13 +20,11 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
-import org.springframework.test.context.junit.jupiter.SpringExtension
 
-@ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateControlUnitContactUTests {
     @Mock
-    private val controlUnitRepository: IControlUnitRepository = mock()
+    private val getControlUnitById: GetControlUnitById = mock()
 
     @Mock
     private val controlUnitContactRepository: IControlUnitContactRepository = mock()
@@ -70,19 +67,19 @@ class CreateOrUpdateControlUnitContactUTests {
         val repositoryOutputMock = newControlUnitContact.copy(id = 1)
         given(controlUnitContactRepository.save(newControlUnitContact))
             .willReturn(repositoryOutputMock)
-        given(controlUnitRepository.findFullControlUnitById(repositoryOutputMock.controlUnitId))
+        given(getControlUnitById.execute(repositoryOutputMock.controlUnitId))
             .willReturn(controlUnitDTO)
         // When
         val result =
             CreateOrUpdateControlUnitContact(
-                controlUnitRepository,
+                getControlUnitById,
                 controlUnitContactRepository,
             ).execute(newControlUnitContact)
 
         // Then
         assertThat(result).isEqualTo(repositoryOutputMock)
 
-        BDDMockito.verify(controlUnitRepository).findFullControlUnitById(repositoryOutputMock.controlUnitId)
+        BDDMockito.verify(getControlUnitById).execute(repositoryOutputMock.controlUnitId)
         BDDMockito.verify(controlUnitContactRepository).save(newControlUnitContact)
         assertThat(log.out).contains("Attempt to CREATE or UPDATE control unit contact ${newControlUnitContact.id}")
         assertThat(log.out).contains("Control unit contact ${result.id} created or updated")
@@ -131,7 +128,7 @@ class CreateOrUpdateControlUnitContactUTests {
                     ),
                 controlUnitResources = listOf(),
             )
-        given(controlUnitRepository.findFullControlUnitById(updatedControlUnitContact.controlUnitId))
+        given(getControlUnitById.execute(updatedControlUnitContact.controlUnitId))
             .willReturn(firstRepositoryOutputMock)
 
         val secondRepositoryInputExpectation =
@@ -147,7 +144,7 @@ class CreateOrUpdateControlUnitContactUTests {
         // When
         val result =
             CreateOrUpdateControlUnitContact(
-                controlUnitRepository,
+                getControlUnitById,
                 controlUnitContactRepository,
             ).execute(updatedControlUnitContact)
 
@@ -230,7 +227,7 @@ class CreateOrUpdateControlUnitContactUTests {
                     ),
                 controlUnitResources = listOf(),
             )
-        given(controlUnitRepository.findFullControlUnitById(updatedControlUnitContact.controlUnitId))
+        given(getControlUnitById.execute(updatedControlUnitContact.controlUnitId))
             .willReturn(firstRepositoryOutputMock)
 
         val secondRepositoryExpectedInput =
@@ -253,14 +250,14 @@ class CreateOrUpdateControlUnitContactUTests {
         // When
         val result =
             CreateOrUpdateControlUnitContact(
-                controlUnitRepository,
+                getControlUnitById,
                 controlUnitContactRepository,
             ).execute(updatedControlUnitContact)
 
         // Then
         assertThat(result).isEqualTo(updatedControlUnitContact)
 
-        BDDMockito.verify(controlUnitRepository).findFullControlUnitById(updatedControlUnitContact.controlUnitId)
+        BDDMockito.verify(getControlUnitById).execute(updatedControlUnitContact.controlUnitId)
         BDDMockito.verify(controlUnitContactRepository).save(secondRepositoryExpectedInput)
         BDDMockito.verify(controlUnitContactRepository).save(thirdRepositoryExpectedInput)
         BDDMockito.verify(controlUnitContactRepository).save(updatedControlUnitContact)
@@ -312,7 +309,7 @@ class CreateOrUpdateControlUnitContactUTests {
                     ),
                 controlUnitResources = listOf(),
             )
-        given(controlUnitRepository.findFullControlUnitById(newControlUnitContact.controlUnitId))
+        given(getControlUnitById.execute(newControlUnitContact.controlUnitId))
             .willReturn(controlUnit)
 
         given(controlUnitContactRepository.save(newControlUnitContact))
@@ -321,7 +318,7 @@ class CreateOrUpdateControlUnitContactUTests {
         // When
         val result =
             CreateOrUpdateControlUnitContact(
-                controlUnitRepository,
+                getControlUnitById,
                 controlUnitContactRepository,
             ).execute(newControlUnitContact)
 
@@ -333,7 +330,7 @@ class CreateOrUpdateControlUnitContactUTests {
             .willReturn(updatedControlUnitContact)
         // Then
         assertThat(result).isEqualTo(newControlUnitContact.copy(id = 2))
-        BDDMockito.verify(controlUnitRepository).findFullControlUnitById(newControlUnitContact.controlUnitId)
+        BDDMockito.verify(getControlUnitById).execute(newControlUnitContact.controlUnitId)
         BDDMockito.verify(controlUnitContactRepository).save(updatedControlUnitContact)
     }
 
@@ -354,7 +351,7 @@ class CreateOrUpdateControlUnitContactUTests {
         val backendUsageException =
             assertThrows<BackendUsageException> {
                 CreateOrUpdateControlUnitContact(
-                    controlUnitRepository,
+                    getControlUnitById,
                     controlUnitContactRepository,
                 ).execute(newControlUnitContact)
             }
@@ -397,7 +394,7 @@ class CreateOrUpdateControlUnitContactUTests {
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
             )
-        given(controlUnitRepository.findFullControlUnitById(newControlUnitContact.controlUnitId))
+        given(getControlUnitById.execute(newControlUnitContact.controlUnitId))
             .willReturn(controlUnitDTO)
 
         val repositoryOutputMock = newControlUnitContact.copy(id = 1)
@@ -406,7 +403,7 @@ class CreateOrUpdateControlUnitContactUTests {
 
         // When & Then
         assertDoesNotThrow {
-            CreateOrUpdateControlUnitContact(controlUnitRepository, controlUnitContactRepository)
+            CreateOrUpdateControlUnitContact(getControlUnitById, controlUnitContactRepository)
                 .execute(newControlUnitContact)
         }
     }
