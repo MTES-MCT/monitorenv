@@ -54,7 +54,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const { getImages, loading: loadingImages } = useExportImages()
   const attachementImages = useImageConverter(dashboard.images)
 
-  const generateBrief = async ({ isLight = false }: { isLight?: boolean }) => {
+  const generateBrief = async ({ isLight = false }: { isLight?: boolean } = {}) => {
     const startAfterFilter = filters?.startedAfter
     const startBeforeFilter = filters?.startedBefore
 
@@ -103,7 +103,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     } as Dashboard.Brief
   }
 
-  const downloadPdf = async (brief: Dashboard.Brief, isLight: boolean) => {
+  const downloadPdf = async (brief: Dashboard.Brief, isLight: boolean = false) => {
     setIsLoadingBrief(true)
     const blob = await renderPDF({ brief, isLight })
     const url = URL.createObjectURL(blob)

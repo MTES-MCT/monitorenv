@@ -217,14 +217,13 @@ export function useExportImages() {
         return allImages
       }
 
-      let filtredFeatures = [...features]
-      if (isLight) {
-        filtredFeatures = features.filter(
-          feature =>
-            !feature.getId()?.toString()?.includes(Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS) &&
-            !feature.getId()?.toString()?.includes(Dashboard.featuresCode.DASHBOARD_AMP)
-        )
-      }
+      const filtredFeatures = isLight
+        ? features.filter(
+            feature =>
+              !feature.getId()?.toString()?.includes(Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS) &&
+              !feature.getId()?.toString()?.includes(Dashboard.featuresCode.DASHBOARD_AMP)
+          )
+        : features
 
       // eslint-disable-next-line no-restricted-syntax
       for (const feature of filtredFeatures) {

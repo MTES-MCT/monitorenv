@@ -28,16 +28,16 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
     const body = `
     Bonjour,
 
-    Vous trouverez en pièce jointe le briefing CACEM de votre mission (référence : ${dashboard.id}). 
-    Cette fonctionnalité est encore en construction : merci de nous faire part de toute suggestion 
-    d'amélioration sur son format ou contenu par mail à l'adresse cacem@mer.gouv.fr ou par téléphone 
+    Vous trouverez en pièce jointe le briefing CACEM de votre mission (référence : ${dashboard.id}).
+    Cette fonctionnalité est encore en construction : merci de nous faire part de toute suggestion
+    d'amélioration sur son format ou contenu par mail à l'adresse cacem@mer.gouv.fr ou par téléphone
     au +33 2 90 74 32 55.
 
-    Nous sommes par ailleurs intéressés par toute remontée de renseignement territorial en matière 
-    d'environnement marin (signalements ou zones de vigilance) dont vous auriez connaissance, afin 
+    Nous sommes par ailleurs intéressés par toute remontée de renseignement territorial en matière
+    d'environnement marin (signalements ou zones de vigilance) dont vous auriez connaissance, afin
     de contribuer à une meilleure pertinence des briefings CACEM à destination des autres unités de contrôle.
 
-    Nous vous précisons que ce document ne se substitue pas aux consignes de votre contrôleur opérationnel 
+    Nous vous précisons que ce document ne se substitue pas aux consignes de votre contrôleur opérationnel
     ou autorité fonctionnelle, et que celui-ci n'a qu'une vocation d'aide à la conduite de votre mission.
 
     Cordialement,
@@ -48,22 +48,19 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
 
     Tel : +33 290743255
     `
-    const mailtoLink = `mailto:${formattedControlUnitMails}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`
 
-    return mailtoLink
+    return `mailto:${formattedControlUnitMails}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
   }
 
   const handleDownload = async () => {
     if (loadingImages || isLoadingBrief) {
       return
     }
-    const brief = await generateBrief({ isLight: false })
-    downloadPdf(brief, false)
+    const brief = await generateBrief()
+    await downloadPdf(brief)
     trackEvent({
       action: 'Partage du brief',
-      category: 'TABLEAU DE BORD &  BRIEF',
+      category: 'TABLEAU DE BORD & BRIEF',
       name: 'Partage par mail et téléchargement du brief'
     })
   }

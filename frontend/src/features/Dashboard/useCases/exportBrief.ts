@@ -12,19 +12,20 @@ import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindow
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
-import { CoordinatesFormat, getLocalizedDayjs, THEME, customDayjs, Level } from '@mtes-mct/monitor-ui'
+import { CoordinatesFormat, customDayjs, getLocalizedDayjs, Level, THEME } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
 import { formatDateLabel } from '@utils/getDateAsLocalizedString'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes, displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
-import { ReportingStatusEnum, type Reporting } from 'domain/entities/reporting'
+import { type Reporting, ReportingTypeEnum } from 'domain/entities/reporting'
 import { vesselTypeLabel } from 'domain/entities/vesselType'
 
 import { Dashboard } from '../types'
 
 import type { RecentActivityFilters } from '@features/RecentActivity/slice'
 import type { RecentActivity } from '@features/RecentActivity/types'
+import type { HomeAppThunk } from '@store/index'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Coordinate } from 'ol/coordinate'
 
@@ -38,7 +39,7 @@ type ExportBriefProps = {
   recentActivityFilters: RecentActivityFilters | undefined
 }
 export const exportBrief =
-  ({ dashboard, getImages, recentActivityFilters }: ExportBriefProps): any =>
+  ({ dashboard, getImages, recentActivityFilters }: ExportBriefProps): HomeAppThunk =>
   async (dispatch, getState) => {
     /* RECENT ACTIVITY */
     const startAfterFilter = recentActivityFilters?.startedAfter
@@ -160,14 +161,14 @@ export const exportBrief =
       reportingsAPI.endpoints.getReportingsByIds.initiate(dashboard.reportingIds)
     )
 
-    const getReportingIconColors = reporting => {
-      let stroke
+    const getReportingIconColors = (reporting: Reporting) => {
+      let stroke: string
 
       switch (reporting.reportType) {
-        case ReportingStatusEnum.INFRACTION_SUSPICION:
+        case ReportingTypeEnum.INFRACTION_SUSPICION:
           stroke = THEME.color.maximumRed
           break
-        case ReportingStatusEnum.OBSERVATION:
+        case ReportingTypeEnum.OBSERVATION:
           stroke = THEME.color.blueGray
           break
         default:
