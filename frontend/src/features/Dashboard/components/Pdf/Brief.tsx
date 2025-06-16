@@ -40,7 +40,7 @@ export function Brief({ author, brief, description, title }: BriefProps) {
           />
         </View>
       </Page>
-      {brief.recentActivity && (
+      {brief.recentActivity.length > 0 && (
         <RecentActivity
           briefName={brief.name}
           images={brief.images}

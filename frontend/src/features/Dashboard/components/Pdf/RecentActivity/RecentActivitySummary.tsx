@@ -89,9 +89,9 @@ export function RecentActivitySummary({
       )}
       <View style={[layoutStyle.definition, { marginBottom: 15, marginTop: 10 }]}>
         <Text>
-          Les cercles représentent les actions de contrôle. Une action de contrôle possèdent potentiellement de nombreux
-          contrôles sur une même coordonnée, sur la même thématique et sous-thématiques et le même type de cible
-          contrôlée.
+          Les cercles représentent les <Text style={layoutStyle.bold}>actions de contrôle</Text>. Une action de contrôle
+          est un ensemble de contrôles réalisés sur plusieurs cibles de même type, à une seule et même localisation, sur
+          une thématique/sous thématique donnée (ex : un contrôle mouillage de 30 navires au même endroit).
         </Text>
       </View>
       <View style={{ flexDirection: 'row', gap: 10 }}>
