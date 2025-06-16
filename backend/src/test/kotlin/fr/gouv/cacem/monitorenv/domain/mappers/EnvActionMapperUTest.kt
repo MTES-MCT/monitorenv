@@ -69,6 +69,7 @@ class EnvActionMapperUTest {
 
         assertThat(envActionEntityFromJSON)
             .usingRecursiveComparison()
+            // value fields
             .ignoringFields("infractions", "actionNumberOfControls", "actionTargetType", "observations", "vehiculeType")
             .isEqualTo(envActionEntity)
     }
@@ -105,7 +106,7 @@ class EnvActionMapperUTest {
                 )
             }
 
-        assertThat(exception.message).isEqualTo("Impossible de mapper l'envaction depuis le JSON")
+        assertThat(exception.message).isEqualTo("Cannot parse envAction from JSON")
     }
 
     @Test
@@ -140,6 +141,6 @@ class EnvActionMapperUTest {
                 )
             }
 
-        assertThat(exception.message).isEqualTo("Impossible de mapper l'envaction depuis le JSON")
+        assertThat(exception.message).isEqualTo("Cannot parse envAction from JSON")
     }
 }

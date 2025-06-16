@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.dao.InvalidDataAccessApiUsageException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
@@ -48,23 +49,25 @@ class JpaControlUnitRepository(
     override fun findAll(): List<FullControlUnitDTO> = dbControlUnitRepository.findAll().map { it.toFullControlUnit() }
 
     @Transactional
-    override fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO =
-        dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
+    override fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO? =
+        dbControlUnitRepository.findByIdOrNull(controlUnitId)?.toFullControlUnit()
 
     @Transactional
-    override fun findById(controlUnitId: Int): ControlUnitEntity =
-        dbControlUnitRepository.findById(controlUnitId).get().toControlUnit()
+    override fun findById(controlUnitId: Int): ControlUnitEntity? =
+        dbControlUnitRepository.findByIdOrNull(controlUnitId)?.toControlUnit()
 
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity =
         try {
+            // TODO(16/06/2025): refacto this, it should be findByIdOrNull
             val administrationModel = requirePresent(dbAdministrationRepository.findById(controlUnit.administrationId))
             val departmentAreaModel =
                 controlUnit.departmentAreaInseeCode?.let { dbDepartmentAreaRepository.findByInseeCode(it) }
             val controlUnitModel =
                 ControlUnitModel.fromControlUnit(controlUnit, administrationModel, departmentAreaModel)
             dbControlUnitRepository.save(controlUnitModel).toControlUnit()
+            // TODO(16/06/2025): refacto this, use case should catch it if something happens here
         } catch (e: InvalidDataAccessApiUsageException) {
             val errorMessage =
                 "Unable to save control unit with `id` = ${controlUnit.id}."

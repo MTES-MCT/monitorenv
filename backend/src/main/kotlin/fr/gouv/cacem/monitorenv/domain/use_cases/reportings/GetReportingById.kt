@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import fr.gouv.cacem.monitorenv.config.UseCase
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import org.slf4j.Logger
@@ -15,6 +17,11 @@ class GetReportingById(
     fun execute(id: Int): ReportingDetailsDTO {
         logger.info("GET reporting $id")
 
-        return reportingRepository.findById(id)
+        reportingRepository.findById(id)?.let {
+            return it
+        }
+        val errorMessage = "reporting $id not found"
+        logger.error(errorMessage)
+        throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, errorMessage)
     }
 }

@@ -22,23 +22,24 @@ class BypassActionCheckAndDeleteMission(
         missionToDelete.attachedReportingIds?.let { attachedReportingIds ->
             if (attachedReportingIds.isNotEmpty()) {
                 missionToDelete.attachedReportingIds.forEach {
-                    val reporting = reportingRepository.findById(it)
+                    reportingRepository.findById(it)?.let { reporting ->
 
-                    // detach action attached to reporting
-                    if (reporting.reporting.attachedEnvActionId != null) {
-                        reportingRepository.detachDanglingEnvActions(
-                            missionId,
-                            listOf(reporting.reporting.attachedEnvActionId),
-                        )
+                        // detach action attached to reporting
+                        if (reporting.reporting.attachedEnvActionId != null) {
+                            reportingRepository.detachDanglingEnvActions(
+                                missionId,
+                                listOf(reporting.reporting.attachedEnvActionId),
+                            )
+                        }
+
+                        // detach mission to reporting
+                        val detachedReporting =
+                            reporting.reporting.copy(
+                                detachedFromMissionAtUtc = ZonedDateTime.now(),
+                                attachedEnvActionId = null,
+                            )
+                        reportingRepository.save(detachedReporting)
                     }
-
-                    // detach mission to reporting
-                    val detachedReporting =
-                        reporting.reporting.copy(
-                            detachedFromMissionAtUtc = ZonedDateTime.now(),
-                            attachedEnvActionId = null,
-                        )
-                    reportingRepository.save(detachedReporting)
                 }
             }
             missionRepository.delete(missionId)
