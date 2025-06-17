@@ -132,7 +132,7 @@ class EnvActionITest {
     }
 
     @Test
-    fun `patch() should return 400 when the use case throw BackendUsageException`() {
+    fun `patch() should return 404 when the use case throw BackendUsageException because the target entity doesnt exist`() {
         // Given
         val unknownId = UUID.randomUUID()
         val partialEnvActionAsJson =
@@ -156,6 +156,6 @@ class EnvActionITest {
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.status().isNotFound())
     }
 }

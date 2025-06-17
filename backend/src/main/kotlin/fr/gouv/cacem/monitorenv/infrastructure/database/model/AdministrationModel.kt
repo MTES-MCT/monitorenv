@@ -3,8 +3,14 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
-import fr.gouv.cacem.monitorenv.utils.requireNotNullList
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
@@ -61,7 +67,7 @@ data class AdministrationModel(
     fun toFullAdministration(): FullAdministrationDTO =
         FullAdministrationDTO(
             administration = toAdministration(),
-            controlUnits = requireNotNullList(controlUnits).map { it.toControlUnit() },
+            controlUnits = controlUnits?.map { it.toControlUnit() } ?: emptyList(),
         )
 
     @Override

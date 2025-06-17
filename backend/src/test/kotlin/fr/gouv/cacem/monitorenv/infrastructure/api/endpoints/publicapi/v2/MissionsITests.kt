@@ -44,15 +44,20 @@ import kotlin.random.Random
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [Missions::class])
 class MissionsITest {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @MockitoBean private val patchMission: PatchMission = mock()
+    @MockitoBean
+    private val patchMission: PatchMission = mock()
 
-    @MockitoBean private val deleteMission: DeleteMission = mock()
+    @MockitoBean
+    private val deleteMission: DeleteMission = mock()
 
-    @MockitoBean private val getMissionAndSourceAction: GetMissionAndSourceAction = mock()
+    @MockitoBean
+    private val getMissionAndSourceAction: GetMissionAndSourceAction = mock()
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     @Test
     fun `Should delete mission with api v2`() {
@@ -197,7 +202,7 @@ class MissionsITest {
     }
 
     @Test
-    fun `patch() should return 400 when the use case throw BackendUsageException`() {
+    fun `patch() should return 404 when the use case throw BackendUsageException because the target entity doesnt exist`() {
         // Given
         val unknownId = Random.nextInt()
         val partialMissionAsJson =
@@ -221,7 +226,7 @@ class MissionsITest {
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotFound())
     }
 
     @Test

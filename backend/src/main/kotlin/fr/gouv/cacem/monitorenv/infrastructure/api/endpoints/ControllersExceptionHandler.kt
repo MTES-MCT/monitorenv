@@ -2,12 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints
 
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.ApiError
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendInternalErrorDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendRequestErrorDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.BackendUsageErrorDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.MissingParameterApiError
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
 import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import io.sentry.Sentry
@@ -17,8 +16,8 @@ import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered.HIGHEST_PRECEDENCE
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
-import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -46,13 +45,32 @@ class ControllersExceptionHandler(
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BackendUsageException::class)
-    fun handleBackendUsageException(e: BackendUsageException): BackendUsageErrorDataOutput {
+    fun handleBackendUsageException(e: BackendUsageException): ResponseEntity<BackendUsageErrorDataOutput> {
+        // Send catched exception without stack to Sentry. Stack is visible in Kibana or any log visualization tool
         if (sentryConfig.enabled == true) {
             Sentry.captureException(e)
         }
-        return BackendUsageErrorDataOutput(code = e.code, data = e.data, message = null)
+        val status =
+            when (e.code) {
+                BackendUsageErrorCode.CHILD_ALREADY_ATTACHED, BackendUsageErrorCode.UNARCHIVED_CHILD, BackendUsageErrorCode.CANNOT_DELETE_ENTITY,
+                BackendUsageErrorCode.UNVALID_PROPERTY, BackendUsageErrorCode.ENTITY_NOT_SAVED,
+                -> HttpStatus.BAD_REQUEST
+
+                BackendUsageErrorCode.ENTITY_NOT_FOUND -> HttpStatus.NOT_FOUND
+                else -> HttpStatus.INTERNAL_SERVER_ERROR
+            }
+
+        val body =
+            BackendUsageErrorDataOutput(
+                code = e.code,
+                data = e.data,
+                message = null,
+            )
+
+        return ResponseEntity(body, status)
     }
 
+    // TODO REVIEW THIS HANDLER (use for patch method)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun handleHttpMessageNotReadable(e: HttpMessageNotReadableException): BackendRequestErrorDataOutput {
@@ -82,49 +100,6 @@ class ControllersExceptionHandler(
         } else {
             "Unknown field"
         }
-    }
-
-    // -------------------------------------------------------------------------
-    // Legacy exceptions
-
-    // TODO Migrate to new error handling logic.
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(e: Exception): ApiError {
-        logger.error(e.message, e)
-
-        if (sentryConfig.enabled == true) {
-            Sentry.captureException(e)
-        }
-
-        return ApiError(IllegalArgumentException(e.message.toString(), e))
-    }
-
-    // TODO Migrate to new error handling logic.
-    // Which cases does this exception cover?
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NoSuchElementException::class)
-    fun handleNoSuchElementException(e: Exception): ApiError {
-        logger.error(e.message, e)
-
-        if (sentryConfig.enabled == true) {
-            Sentry.captureException(e)
-        }
-
-        return ApiError(NoSuchElementException(e.message.toString(), e))
-    }
-
-    // TODO Migrate to new error handling logic.
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MissingServletRequestParameterException::class)
-    fun handleNoParameter(e: MissingServletRequestParameterException): MissingParameterApiError {
-        logger.error(e.message, e)
-
-        if (sentryConfig.enabled == true) {
-            Sentry.captureException(e)
-        }
-
-        return MissingParameterApiError("Parameter \"${e.parameterName}\" is missing.")
     }
 
     // -------------------------------------------------------------------------
