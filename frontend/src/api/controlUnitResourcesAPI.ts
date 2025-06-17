@@ -1,10 +1,10 @@
+import { newUserError } from '@libs/error'
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
 
 import { monitorenvPublicApi } from './api'
 import { ARCHIVE_GENERIC_ERROR_MESSAGE } from './constants'
 import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
-import { newUserError } from '../libs/UserError'
 
 export const ARCHIVE_CONTROL_UNITE_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu archiver ce moyen."
 const CAN_DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si ce moyen est supprimable."
@@ -23,7 +23,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.code === ApiErrorCode.UNARCHIVED_CHILD) {
-          return newUserError(ARCHIVE_CONTROL_UNITE_RESOURCE_ERROR_MESSAGE)
+          return newUserError(ARCHIVE_CONTROL_UNITE_RESOURCE_ERROR_MESSAGE, 'backoffice')
         }
 
         return new FrontendApiError(ARCHIVE_GENERIC_ERROR_MESSAGE, response)
@@ -55,7 +55,7 @@ export const controlUnitResourcesAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.code === ApiErrorCode.CANNOT_DELETE_ENTITY) {
-          return newUserError(DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE)
+          return newUserError(DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE, 'backoffice')
         }
 
         return new FrontendApiError(DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE, response)
