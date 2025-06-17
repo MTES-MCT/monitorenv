@@ -2,11 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitContactModel
 import org.hibernate.annotations.DynamicUpdate
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 
 @DynamicUpdate
-interface IDBControlUnitContactRepository : CrudRepository<ControlUnitContactModel, Int> {
+interface IDBControlUnitContactRepository : JpaRepository<ControlUnitContactModel, Int> {
     @Query(
         value = """
         SELECT *
