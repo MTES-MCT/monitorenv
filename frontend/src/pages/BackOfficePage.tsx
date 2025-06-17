@@ -1,3 +1,4 @@
+import { BannerStack } from '@features/BackOffice/components/BannerStack'
 import { Notifier } from '@mtes-mct/monitor-ui'
 import { Route, Routes } from 'react-router'
 import { ToastContainer } from 'react-toastify'
@@ -18,6 +19,7 @@ export function BackOfficePage() {
       <BackOfficeMenu />
 
       <Body>
+        <BannerStack />
         <Routes>
           <Route element={<AdministrationTable />} path="/" />
 

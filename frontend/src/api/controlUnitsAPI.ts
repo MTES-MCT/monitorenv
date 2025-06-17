@@ -1,10 +1,10 @@
+import { newUserError } from '@libs/error'
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
 import { createSelector } from '@reduxjs/toolkit'
 
 import { monitorenvPublicApi } from './api'
 import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
-import { newUserError } from '../libs/UserError'
 
 const CAN_DELETE_CONTROL_UNIT_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette unité de contrôle est supprimable."
 export const DELETE_CONTROL_UNIT_ERROR_MESSAGE = [
@@ -48,7 +48,7 @@ export const controlUnitsAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.code === ApiErrorCode.CANNOT_DELETE_ENTITY) {
-          return newUserError(DELETE_CONTROL_UNIT_ERROR_MESSAGE)
+          return newUserError(DELETE_CONTROL_UNIT_ERROR_MESSAGE, 'backoffice')
         }
 
         return new FrontendApiError(DELETE_CONTROL_UNIT_ERROR_MESSAGE, response)

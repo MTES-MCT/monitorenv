@@ -14,3 +14,5 @@ export type BannerStackItemProps = Omit<BannerProps, 'children' | 'onAutoClose' 
 export type BaseMapChildrenWithSuperUserProps = BaseMapChildrenProps & {
   isSuperUser: boolean
 }
+
+export type WindowContext = 'map' | 'sideWindow' | 'backoffice'
