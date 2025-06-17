@@ -2,6 +2,7 @@
 
 import 'cypress-mouse-position/commands'
 import 'cypress-plugin-snapshots/commands'
+import 'cypress-axe'
 
 import './commands'
 import './commands/dragTo'

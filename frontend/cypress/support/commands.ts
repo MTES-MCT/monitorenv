@@ -29,3 +29,11 @@ Cypress.Commands.add(
 Cypress.Commands.add('cleanScreenshots', (fromNumber: number): void => {
   cy.exec(`cd cypress/e2e/__image_snapshots__/ && find . | grep -P "[${fromNumber}-7]\\.png" | xargs -i rm {}\n`)
 })
+
+Cypress.Commands.add('injectAxe', () => {
+  cy.readFile('node_modules/axe-core/axe.min.js').then(source =>
+    cy.window({ log: false }).then(window => {
+      window.eval(source)
+    })
+  )
+})
