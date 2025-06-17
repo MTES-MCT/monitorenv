@@ -60,10 +60,9 @@ export function Reportings({ context }: { context: ReportingContext }) {
 
       {reportingsTabs.map((reporting, index) => {
         const reducedReporting = reporting.reporting
-        const isSeparatorVisible = !!(
+        const isSeparatorVisible =
           (index < reportingsTabs.length && activeReportingId && reportingFormVisibility.context === context) ||
           !(index + 1 === reportingsTabs.length && (!activeReportingId || reportingFormVisibility.context !== context))
-        )
 
         return (
           <StyledContainer
