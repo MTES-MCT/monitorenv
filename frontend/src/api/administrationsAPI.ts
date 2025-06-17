@@ -1,4 +1,4 @@
-import { newUserError } from '@libs/UserError'
+import { newUserError } from '@libs/error'
 
 import { monitorenvPublicApi } from './api'
 import { ARCHIVE_GENERIC_ERROR_MESSAGE, DELETE_GENERIC_ERROR_MESSAGE } from './constants'
@@ -30,7 +30,7 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.code === ApiErrorCode.UNARCHIVED_CHILD) {
-          return newUserError(ARCHIVE_ADMINISTRATION_ERROR_MESSAGE)
+          return newUserError(ARCHIVE_ADMINISTRATION_ERROR_MESSAGE, 'backoffice')
         }
 
         return new FrontendApiError(ARCHIVE_GENERIC_ERROR_MESSAGE, response)
@@ -67,7 +67,7 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.code === ApiErrorCode.CANNOT_DELETE_ENTITY) {
-          return newUserError(DELETE_ADMINISTRATION_ERROR_MESSAGE)
+          return newUserError(DELETE_ADMINISTRATION_ERROR_MESSAGE, 'backoffice')
         }
 
         return new FrontendApiError(DELETE_GENERIC_ERROR_MESSAGE, response)
