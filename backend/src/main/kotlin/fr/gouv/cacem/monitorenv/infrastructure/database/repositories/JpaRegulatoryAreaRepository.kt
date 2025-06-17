@@ -14,13 +14,8 @@ class JpaRegulatoryAreaRepository(
     override fun findAll(): List<RegulatoryAreaEntity> =
         dbRegulatoryAreaRepository.findAllByOrderByLayerName().map { it.toRegulatoryArea() }
 
-    override fun findById(id: Int): RegulatoryAreaEntity? {
-        val regulatoryArea = dbRegulatoryAreaRepository.findByIdOrNull(id)
-        regulatoryArea?.let {
-            return it.toRegulatoryArea()
-        }
-        return null
-    }
+    override fun findById(id: Int): RegulatoryAreaEntity? =
+        dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea()
 
     override fun count(): Long = dbRegulatoryAreaRepository.count()
 

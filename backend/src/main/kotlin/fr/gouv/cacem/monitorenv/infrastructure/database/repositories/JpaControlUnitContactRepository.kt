@@ -1,17 +1,13 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitContactModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
-import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
-import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -40,19 +36,11 @@ class JpaControlUnitContactRepository(
 
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
-    override fun save(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity =
-        try {
-            // TODO(16/06/2025): refacto this, it should be findByIdOrNull
-            val controlUnitModel = requirePresent(dbControlUnitRepository.findById(controlUnitContact.controlUnitId))
-            val controlUnitContactModel =
-                ControlUnitContactModel.fromControlUnitContact(controlUnitContact, controlUnitModel)
+    override fun save(controlUnitContact: ControlUnitContactEntity): ControlUnitContactEntity {
+        val controlUnit = dbControlUnitRepository.getReferenceById(controlUnitContact.controlUnitId)
+        val controlUnitContactModel =
+            ControlUnitContactModel.fromControlUnitContact(controlUnitContact, controlUnit)
 
-            dbControlUnitContactRepository.save(controlUnitContactModel).toControlUnitContact()
-            // TODO(16/06/2025): refacto this, use case should catch it if something happens here
-        } catch (e: InvalidDataAccessApiUsageException) {
-            val errorMessage =
-                "Unable to save control unit contact with `id` = ${controlUnitContact.id}."
-            logger.error(errorMessage, e)
-            throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, errorMessage)
-        }
+        return dbControlUnitContactRepository.save(controlUnitContactModel).toControlUnitContact()
+    }
 }
