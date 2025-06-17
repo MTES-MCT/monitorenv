@@ -2,7 +2,7 @@ import { closeReporting } from '@features/Reportings/useCases/closeReporting'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import { ReportingStatusEnum, getReportingStatus, type Reporting } from 'domain/entities/reporting'
+import { getReportingStatus, type Reporting, ReportingStatusEnum } from 'domain/entities/reporting'
 import { ReportingContext } from 'domain/shared_slices/Global'
 
 import { Title } from './FormComponents/Title'
@@ -65,12 +65,14 @@ export function Header({
           data-cy={`reporting-collapse-or-expand-button-${reporting?.id}`}
           Icon={Icon.Chevron}
           onClick={reduceOrCollapseReporting}
+          title="Réduire le formulaire de signalement"
         />
         <IconButton
           accent={Accent.TERTIARY}
           color={THEME.color.white}
           Icon={Icon.Close}
           onClick={() => dispatch(closeReporting(reporting.id, reportingContext))}
+          title="Fermer le formulaire de signalement"
         />
       </ReportingHeaderButtons>
     </ReportingHeader>

@@ -118,7 +118,7 @@ const LayerList = styled.ul<{ $baseLayersLength: number; $maxHeight?: number; $s
   transition: 0.5s all;
 `
 
-const NoLayerSelected = styled.div`
+const NoLayerSelected = styled.li`
   background: ${p => p.theme.color.white};
   color: ${p => p.theme.color.slateGray};
   padding: 16px 8px 16px;
