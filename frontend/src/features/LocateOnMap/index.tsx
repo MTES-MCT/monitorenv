@@ -83,7 +83,12 @@ export function LocateOnMap() {
         size={Size.LARGE}
         value={locateOnMap?.location}
       />
-      <StyledIconButton accent={Accent.PRIMARY} Icon={Icon.Search} size={Size.LARGE} />
+      <StyledIconButton
+        accent={Accent.PRIMARY}
+        Icon={Icon.Search}
+        size={Size.LARGE}
+        title="rechercher un lieu (port, lieu-dit, baie...)"
+      />
     </Wrapper>
   )
 }

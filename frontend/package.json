@@ -93,6 +93,7 @@
     "babel-eslint": "10.1.0",
     "codecov": "3.8.3",
     "cypress": "14.5.3",
+    "cypress-axe": "1.6.0",
     "dotenv": "17.2.3",
     "dotenv-cli": "7.4.4",
     "eslint": "8.57.0",
