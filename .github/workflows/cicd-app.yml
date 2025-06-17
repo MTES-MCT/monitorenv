@@ -78,7 +78,7 @@ jobs:
         with:
           # https://github.com/actions/setup-java/blob/main/README.md#Supported-distributions
           distribution: zulu
-          java-version: 17
+          java-version: 21
 
       - name: Checkout
         uses: actions/checkout@v4
