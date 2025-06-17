@@ -1,14 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AdministrationModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAdministrationRepository
 import org.slf4j.LoggerFactory
-import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -37,15 +34,9 @@ class JpaAdministrationRepository(
         dbAdministrationRepository.findByIdOrNull(administrationId)?.toFullAdministration()
 
     @Transactional
-    override fun save(administration: AdministrationEntity): AdministrationEntity =
-        try {
-            val administrationModel = AdministrationModel.fromAdministration(administration)
+    override fun save(administration: AdministrationEntity): AdministrationEntity {
+        val administrationModel = AdministrationModel.fromAdministration(administration)
 
-            dbAdministrationRepository.save(administrationModel).toAdministration()
-        } catch (e: InvalidDataAccessApiUsageException) {
-            val errorMessage =
-                "Unable to save control unit administration with `id` = ${administration.id}."
-            logger.error(errorMessage, e)
-            throw BackendUsageException(code = BackendUsageErrorCode.ENTITY_NOT_SAVED, message = errorMessage)
-        }
+        return dbAdministrationRepository.save(administrationModel).toAdministration()
+    }
 }

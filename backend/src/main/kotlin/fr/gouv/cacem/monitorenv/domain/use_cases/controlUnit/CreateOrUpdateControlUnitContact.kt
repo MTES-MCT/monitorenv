@@ -48,7 +48,14 @@ class CreateOrUpdateControlUnitContact(
 
         otherContactsWithEmailSubscription.forEach {
             val updatedControlUnitContact = it.copy(isEmailSubscriptionContact = false)
-            controlUnitContactRepository.save(updatedControlUnitContact)
+            try {
+                controlUnitContactRepository.save(updatedControlUnitContact)
+            } catch (e: Exception) {
+                val errorMessage =
+                    "Unable to save control unit contact with `id` = ${updatedControlUnitContact.id}."
+                logger.error(errorMessage, e)
+                throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, errorMessage)
+            }
         }
     }
 

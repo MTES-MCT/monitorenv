@@ -2,8 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.NearbyUnit
@@ -12,12 +10,10 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
-import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.locationtech.jts.geom.Geometry
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.dao.InvalidDataAccessApiUsageException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -58,22 +54,14 @@ class JpaControlUnitRepository(
 
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
-    override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity =
-        try {
-            // TODO(16/06/2025): refacto this, it should be findByIdOrNull
-            val administrationModel = requirePresent(dbAdministrationRepository.findById(controlUnit.administrationId))
-            val departmentAreaModel =
-                controlUnit.departmentAreaInseeCode?.let { dbDepartmentAreaRepository.findByInseeCode(it) }
-            val controlUnitModel =
-                ControlUnitModel.fromControlUnit(controlUnit, administrationModel, departmentAreaModel)
-            dbControlUnitRepository.save(controlUnitModel).toControlUnit()
-            // TODO(16/06/2025): refacto this, use case should catch it if something happens here
-        } catch (e: InvalidDataAccessApiUsageException) {
-            val errorMessage =
-                "Unable to save control unit with `id` = ${controlUnit.id}."
-            logger.error(errorMessage, e)
-            throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, errorMessage)
-        }
+    override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity {
+        val administration = dbAdministrationRepository.getReferenceById(controlUnit.administrationId)
+        val departmentAreaModel =
+            controlUnit.departmentAreaInseeCode?.let { dbDepartmentAreaRepository.findByInseeCode(it) }
+        val controlUnitModel =
+            ControlUnitModel.fromControlUnit(controlUnit, administration, departmentAreaModel)
+        return dbControlUnitRepository.save(controlUnitModel).toControlUnit()
+    }
 
     @Transactional
     override fun findNearbyUnits(
