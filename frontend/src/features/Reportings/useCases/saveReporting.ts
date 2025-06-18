@@ -1,5 +1,6 @@
 import { reportingActions } from '@features/Reportings/slice'
-import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
+import { Level } from '@mtes-mct/monitor-ui'
+import { setReportingFormVisibility, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
@@ -9,7 +10,7 @@ import omit from 'lodash/omit'
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { ApiErrorCode } from '../../../api/types'
 import { mainWindowActions } from '../../MainWindow/slice'
-import { isNewReporting } from '../utils'
+import { displayReportingBanner, isNewReporting } from '../utils'
 
 import type { Reporting } from '../../../domain/entities/reporting'
 import type { HomeAppThunk } from '@store/index'
@@ -78,6 +79,11 @@ export const saveReporting =
         throw Error('Erreur à la création ou à la modification du signalement')
       }
     } catch (error) {
-      dispatch(setToast({ containerId: reportingContext, message: error }))
+      displayReportingBanner({
+        context: reportingContext,
+        dispatch,
+        level: Level.ERROR,
+        message: error instanceof Error ? error.message : String(error)
+      })
     }
   }

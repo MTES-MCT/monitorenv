@@ -4,9 +4,10 @@ import { archiveReporting } from '@features/Reportings/useCases/archiveReporting
 import { deleteReporting } from '@features/Reportings/useCases/deleteReporting'
 import { duplicateReporting } from '@features/Reportings/useCases/duplicateReporting'
 import { editReportingInLocalStore } from '@features/Reportings/useCases/editReportingInLocalStore'
+import { displayReportingBanner } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Dropdown, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Dropdown, Icon, IconButton, Level } from '@mtes-mct/monitor-ui'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -49,8 +50,17 @@ export function ButtonsGroupRow({ id }) {
   const cancelDeleteReporting = () => {
     setIsDeleteModalOpen(false)
   }
-  const confirmDeleteReporting = () => {
-    dispatch(deleteReporting(id))
+  const confirmDeleteReporting = async () => {
+    try {
+      await dispatch(deleteReporting(id))
+    } catch (error) {
+      displayReportingBanner({
+        context: ReportingContext.SIDE_WINDOW,
+        dispatch,
+        level: Level.ERROR,
+        message: error instanceof Error ? error.message : String(error)
+      })
+    }
   }
 
   const cancelArchiveReporting = () => {

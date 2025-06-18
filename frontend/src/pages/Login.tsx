@@ -4,7 +4,6 @@ import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { paths } from 'paths'
 import { useAuth } from 'react-oidc-context'
 import { Navigate } from 'react-router'
-import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 import { LoadingSpinnerWall } from 'ui/LoadingSpinnerWall'
 
@@ -62,7 +61,6 @@ export function Login() {
         <Button onClick={() => auth.signinRedirect()}>Se connecter</Button>
       )}
       {auth.error && <div>Oops... {auth.error?.message}</div>}
-      <ToastContainer />
     </Wrapper>
   )
 }

@@ -1,5 +1,5 @@
+import { newUserError } from '@libs/error'
 import { browserName, browserVersion } from 'react-device-detect'
-import { toast } from 'react-toastify'
 
 // TODO Share that in MUI.
 export function isBrowserSupported(): boolean {
@@ -33,8 +33,8 @@ export function isBrowserSupported(): boolean {
     case 'Safari':
       return browserVersionAsNumber >= 12
 
-    default:
-      toast.error(`Navigateur inconnu: "${browserName} v${browserVersion}"`)
+    default: // Ensure User is imported to avoid unused import error
+      newUserError(`Navigateur inconnu: "${browserName} v${browserVersion}"`, 'map')
 
       return true
   }

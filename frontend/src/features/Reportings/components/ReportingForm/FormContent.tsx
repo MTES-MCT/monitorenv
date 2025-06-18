@@ -21,7 +21,7 @@ import {
 import { deleteReporting } from '@features/Reportings/useCases/deleteReporting'
 import { reduceOrCollapseReportingForm } from '@features/Reportings/useCases/reduceOrCollapseReportingForm'
 import { saveReporting } from '@features/Reportings/useCases/saveReporting'
-import { createNewReportingSource, isNewReporting } from '@features/Reportings/utils'
+import { createNewReportingSource, displayReportingBanner, isNewReporting } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -32,6 +32,7 @@ import {
   FormikTextarea,
   getOptionsFromLabelledEnum,
   Label,
+  Level,
   Message,
   Toggle
 } from '@mtes-mct/monitor-ui'
@@ -227,8 +228,18 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     setIsDeletModalOpen(false)
   }
 
-  const confirmDeleteReporting = () => {
-    dispatch(deleteReporting(values.id))
+  const confirmDeleteReporting = async () => {
+    try {
+      await dispatch(deleteReporting(values.id))
+    } catch (error) {
+      setIsDeletModalOpen(false)
+      displayReportingBanner({
+        context: reportingContext,
+        dispatch,
+        level: Level.ERROR,
+        message: error instanceof Error ? error.message : String(error)
+      })
+    }
   }
 
   const reduceOrCollapseReporting = () => {
