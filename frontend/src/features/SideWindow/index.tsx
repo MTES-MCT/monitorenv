@@ -23,7 +23,6 @@ import {
 import { omit } from 'lodash'
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
 import { generatePath } from 'react-router'
-import { ToastContainer } from 'react-toastify'
 import { StyleSheetManager } from 'styled-components'
 
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
@@ -169,8 +168,6 @@ export function SideWindow() {
                 <Reportings key="reportings-on-side-window" context={ReportingContext.SIDE_WINDOW} />
               )}
             </NewWindowContext.Provider>
-
-            <ToastContainer containerId="sideWindow" />
           </>
         )}
       </Wrapper>

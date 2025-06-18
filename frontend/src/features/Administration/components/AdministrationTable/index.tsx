@@ -1,4 +1,5 @@
-import { DataTable, THEME } from '@mtes-mct/monitor-ui'
+import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -13,7 +14,6 @@ import {
 } from '../../../../api/administrationsAPI'
 import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
-import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -95,9 +95,12 @@ export function AdministrationTable() {
     async (administrationToArchive: Administration.Administration) => {
       await dispatch(administrationsAPI.endpoints.archiveAdministration.initiate(administrationToArchive.id))
       dispatch(
-        globalActions.setToast({
-          message: `Administration "${administrationToArchive.name}" archivée.`,
-          type: 'success'
+        addBackOfficeBanner({
+          children: `Administration "${administrationToArchive.name}" archivée.`,
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
 
@@ -110,9 +113,12 @@ export function AdministrationTable() {
     async (administrationToDelete: Administration.Administration) => {
       await dispatch(administrationsAPI.endpoints.deleteAdministration.initiate(administrationToDelete.id))
       dispatch(
-        globalActions.setToast({
-          message: `Administration "${administrationToDelete.name}" supprimée.`,
-          type: 'success'
+        addBackOfficeBanner({
+          children: `Administration "${administrationToDelete.name}" supprimée.`,
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
 

@@ -10,7 +10,6 @@ import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurren
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router'
-import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
 import { ReportingContext } from '../domain/shared_slices/Global'
@@ -109,8 +108,6 @@ export function HomePage() {
         <Menu isSuperUser={isSuperUser} />
 
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
-
-        <ToastContainer containerId="map" />
       </Wrapper>
 
       <SideWindowLauncher />

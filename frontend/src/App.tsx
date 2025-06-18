@@ -2,7 +2,6 @@ import { AlertUnsupportedBrowser } from '@components/AlertUnsupportedBrowser'
 import { CustomGlobalStyle } from '@components/CustomGlobalStyle'
 import { ErrorBoundary } from '@components/ErrorBoundary'
 import { RequireAuth } from '@components/RequireAuth'
-import { ToastNotification } from '@components/ToastNotification'
 import { SideWindow } from '@features/SideWindow'
 import { useMatomo } from '@hooks/useMatomo'
 import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
@@ -93,7 +92,6 @@ export function App() {
                   </BrowserRouter>
                 </ReportingEventProvider>
               </MissionEventProvider>
-              <ToastNotification />
             </PersistGate>
           </ReduxProvider>
         </ErrorBoundary>

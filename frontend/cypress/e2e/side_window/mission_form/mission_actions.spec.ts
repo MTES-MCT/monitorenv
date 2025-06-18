@@ -460,14 +460,14 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.getDataCy('cnsp-action-text').should('have.length', 5)
   })
 
-  it("Should display warning toast if fish api doesn't respond", () => {
+  it("Should display warning banner if fish api doesn't respond", () => {
     cy.fill('Période', 'Un mois')
     cy.wait('@getMissions')
     cy.get('.Table-SimpleTable').scrollIntoView({ offset: { left: 0, top: 800 } })
     cy.getDataCy('edit-mission-27')
       .scrollIntoView({ offset: { left: 300, top: -100 } })
       .click({ force: true })
-    cy.get('.Toastify__toast-body').contains(
+    cy.getDataCy('side-window-banner-stack').contains(
       "Problème de communication avec MonitorFish ou RapportNav: impossible de récupérer les événements du CNSP ou de l'unité"
     )
   })

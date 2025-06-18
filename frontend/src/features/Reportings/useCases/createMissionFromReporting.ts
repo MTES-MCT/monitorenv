@@ -1,20 +1,16 @@
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { reportingActions } from '@features/Reportings/slice'
+import { Level } from '@mtes-mct/monitor-ui'
 import omit from 'lodash/omit'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import {
-  ReportingContext,
-  setReportingFormVisibility,
-  setToast,
-  VisibilityState
-} from '../../../domain/shared_slices/Global'
+import { ReportingContext, setReportingFormVisibility, VisibilityState } from '../../../domain/shared_slices/Global'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
 } from '../../../domain/use_cases/map/updateMapInteractionListeners'
 import { addMission } from '../../Mission/useCases/addMission'
-import { isNewReporting } from '../utils'
+import { displayReportingBanner, isNewReporting } from '../utils'
 
 import type { Reporting } from '../../../domain/entities/reporting'
 
@@ -44,9 +40,14 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
       await dispatch(reportingActions.deleteSelectedReporting(values.id))
       await dispatch(addMission({ attachedReporting: response.data }))
     } else {
-      throw Error('Erreur à la création ou à la modification du signalement')
+      throw Error('Erreur à la création de la mission depuis le signalement')
     }
   } catch (error) {
-    dispatch(setToast({ containerId: reportingContext, message: error }))
+    displayReportingBanner({
+      context: reportingContext,
+      dispatch,
+      level: Level.ERROR,
+      message: error instanceof Error ? error.message : String(error)
+    })
   }
 }
