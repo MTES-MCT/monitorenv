@@ -4,11 +4,12 @@ import { missionFormsActions } from '@features/Mission/components/MissionForm/sl
 import { isMissionNew } from '@features/Mission/utils'
 import { reportingActions } from '@features/Reportings/slice'
 import { sideWindowActions } from '@features/SideWindow/slice'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
+import { Level } from '@mtes-mct/monitor-ui'
 import omit from 'lodash/omit'
 import { generatePath } from 'react-router'
 
 import { sideWindowPaths } from '../../../domain/entities/sideWindow'
-import { setToast } from '../../../domain/shared_slices/Global'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
@@ -113,7 +114,15 @@ export const saveMission =
         throw Error('Erreur à la création ou à la modification de la mission')
       }
     } catch (error) {
-      dispatch(setToast({ containerId: 'sideWindow', message: error }))
+      dispatch(
+        addSideWindowBanner({
+          children: error instanceof Error ? error.message : String(error),
+          isClosable: true,
+          isFixed: true,
+          level: Level.ERROR,
+          withAutomaticClosing: true
+        })
+      )
     }
   }
 

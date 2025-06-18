@@ -1,6 +1,8 @@
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingActions } from '@features/Reportings/slice'
-import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
+import { Level } from '@mtes-mct/monitor-ui'
+import { setReportingFormVisibility, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { getReportingInitialValues, createIdForNewReporting } from '../utils'
@@ -55,6 +57,14 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
     )
     await reportingRequest.unsubscribe()
   } catch (error) {
-    dispatch(setToast({ containerId: 'sideWindow', message: 'Erreur à la duplication du signalement' }))
+    dispatch(
+      addSideWindowBanner({
+        children: 'Erreur à la duplication du signalement',
+        isClosable: true,
+        isFixed: true,
+        level: Level.ERROR,
+        withAutomaticClosing: true
+      })
+    )
   }
 }

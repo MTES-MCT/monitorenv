@@ -1,6 +1,5 @@
 import { Button } from '@mtes-mct/monitor-ui'
 import { useNavigate } from 'react-router'
-import { ToastContainer } from 'react-toastify'
 import styled from 'styled-components'
 
 export function Register() {
@@ -15,7 +14,6 @@ export function Register() {
       <a href="mailto:monitor@beta.gouv.fr?subject=Création de compte MonitorEnv">monitor@beta.gouv.fr</a> pour accéder
       à MonitorEnv avec Cerbère.
       <Button onClick={goToLoginPage}>Retourner à la page de connexion</Button>
-      <ToastContainer />
     </Wrapper>
   )
 }
