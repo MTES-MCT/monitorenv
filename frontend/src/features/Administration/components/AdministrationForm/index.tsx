@@ -1,4 +1,5 @@
-import { Accent, Button, DataTable, FormikCheckbox, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { Accent, Button, DataTable, FormikCheckbox, FormikTextInput, Level } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
 import { useCallback } from 'react'
@@ -7,7 +8,6 @@ import styled from 'styled-components'
 
 import { ADMINISTRATION_FORM_SCHEMA, CONTROL_UNIT_TABLE_COLUMNS, INITIAL_ADMINISTRATION_FORM_VALUES } from './constants'
 import { administrationsAPI, useGetAdministrationQuery } from '../../../../api/administrationsAPI'
-import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
@@ -44,9 +44,12 @@ export function AdministrationForm() {
       if (isNew) {
         await dispatch(administrationsAPI.endpoints.createAdministration.initiate(administrationData))
         dispatch(
-          globalActions.setToast({
-            message: `Administration "${administrationData.name}" créée.`,
-            type: 'success'
+          addBackOfficeBanner({
+            children: `Administration "${administrationData.name}" créée.`,
+            isClosable: true,
+            isFixed: true,
+            level: Level.SUCCESS,
+            withAutomaticClosing: true
           })
         )
 
@@ -62,9 +65,12 @@ export function AdministrationForm() {
         })
       )
       dispatch(
-        globalActions.setToast({
-          message: `Administration "${administrationData.name}" mise à jour.`,
-          type: 'success'
+        addBackOfficeBanner({
+          children: `Administration "${administrationData.name}" mise à jour.`,
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
 

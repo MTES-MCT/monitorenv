@@ -1,8 +1,9 @@
 import { missionsAPI } from '@api/missionsAPI'
+import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { sideWindowActions } from '@features/SideWindow/slice'
-import { ErrorType } from 'domain/entities/errors'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
+import { Level } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
-import { setToast } from 'domain/shared_slices/Global'
 import { generatePath } from 'react-router'
 
 import { attachReportingToMissionSliceActions } from '../components/MissionForm/AttachReporting/slice'
@@ -30,11 +31,13 @@ export const editMissionInLocalStore =
 
       if (missionResponse.status === 206) {
         dispatch(
-          setToast({
-            containerId: 'sideWindow',
-            message:
+          addSideWindowBanner({
+            children:
               "Problème de communication avec MonitorFish ou RapportNav: impossible de récupérer les événements du CNSP ou de l'unité",
-            type: ErrorType.WARNING
+            isClosable: true,
+            isFixed: true,
+            level: Level.WARNING,
+            withAutomaticClosing: true
           })
         )
       }
@@ -49,7 +52,27 @@ export const editMissionInLocalStore =
 
       await missionRequest.unsubscribe()
     } catch (error) {
-      dispatch(setToast({ containerId: context, message: 'Erreur à la récupération de la mission' }))
+      if (context === 'map') {
+        dispatch(
+          addMainWindowBanner({
+            children: 'Erreur à la récupération de la mission',
+            isClosable: true,
+            isFixed: true,
+            level: Level.ERROR,
+            withAutomaticClosing: true
+          })
+        )
+      } else {
+        dispatch(
+          addSideWindowBanner({
+            children: 'Erreur à la récupération de la mission',
+            isClosable: true,
+            isFixed: true,
+            level: Level.ERROR,
+            withAutomaticClosing: true
+          })
+        )
+      }
     }
   }
 

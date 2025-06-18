@@ -1,3 +1,4 @@
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import {
   Banner,
   FormikEffect,
@@ -5,6 +6,7 @@ import {
   Level,
   THEME,
   customDayjs,
+  isDefined,
   usePrevious,
   type ControlUnit
 } from '@mtes-mct/monitor-ui'
@@ -37,7 +39,6 @@ import {
   type NewMission
 } from '../../../../domain/entities/missions'
 import { sideWindowPaths } from '../../../../domain/entities/sideWindow'
-import { setToast } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { sideWindowActions } from '../../../SideWindow/slice'
@@ -75,6 +76,9 @@ export function MissionForm({
   const attachedReportingIds = useAppSelector(state => state.attachReportingToMission.attachedReportingIds)
   const attachedReportings = useAppSelector(state => state.attachReportingToMission.attachedReportings)
   const selectedMissions = useAppSelector(state => state.missionForms.missions)
+
+  const bannerStack = useAppSelector(state => state.sideWindow.bannerStack)
+  const bannerStackItems = Object.values(bannerStack.entities).filter(isDefined)
 
   const { getMissionEventById } = useMissionEventContext()
   const missionEvent = getMissionEventById(id)
@@ -126,8 +130,21 @@ export function MissionForm({
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
     setOpenModal(undefined)
   }
-  const validateDeleteMission = () => {
-    dispatch(deleteMissionAndGoToMissionsList(id))
+  const validateDeleteMission = async () => {
+    try {
+      await dispatch(deleteMissionAndGoToMissionsList(id))
+    } catch (error) {
+      dispatch(
+        addSideWindowBanner({
+          children: error instanceof Error ? error.message : String(error),
+          isClosable: true,
+          isFixed: true,
+          level: Level.ERROR,
+          withAutomaticClosing: true
+        })
+      )
+      setOpenModal(undefined)
+    }
   }
 
   const deleteMission = async () => {
@@ -145,10 +162,12 @@ export function MissionForm({
       setOpenModal(ModalTypes.ACTIONS)
     } catch (error: any) {
       dispatch(
-        setToast({
-          containerId: 'sideWindow',
-          message: error.message,
-          type: 'error'
+        addSideWindowBanner({
+          children: error.message,
+          isClosable: true,
+          isFixed: true,
+          level: Level.ERROR,
+          withAutomaticClosing: true
         })
       )
     }
@@ -229,7 +248,7 @@ export function MissionForm({
           isCollapsible
           isHiddenByDefault={false}
           level={Level.ERROR}
-          top="0"
+          top={bannerStackItems.length > 0 ? `${bannerStackItems.length * 48}px` : '0'}
           withAutomaticClosing
         >
           <MissionEndedText>

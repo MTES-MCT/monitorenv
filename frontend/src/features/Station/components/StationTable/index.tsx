@@ -1,4 +1,5 @@
-import { DataTable, THEME } from '@mtes-mct/monitor-ui'
+import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -8,7 +9,6 @@ import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { DELETE_STATION_ERROR_MESSAGE, stationsAPI, useGetStationsQuery } from '../../../../api/stationsAPI'
 import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
-import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -62,9 +62,12 @@ export function BaseTable() {
     async (stationToDelete: Station.Station) => {
       await dispatch(stationsAPI.endpoints.deleteStation.initiate(stationToDelete.id))
       dispatch(
-        globalActions.setToast({
-          message: `Base "${stationToDelete.name}" supprimée.`,
-          type: 'success'
+        addBackOfficeBanner({
+          children: `Base "${stationToDelete.name}" supprimée.`,
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
 

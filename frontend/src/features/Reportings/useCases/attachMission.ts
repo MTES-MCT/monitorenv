@@ -1,10 +1,13 @@
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
+import { Level } from '@mtes-mct/monitor-ui'
 
 import { missionsAPI } from '../../../api/missionsAPI'
-import { setToast } from '../../../domain/shared_slices/Global'
+import { displayReportingBanner } from '../utils'
 
 export const attachMission = (id: number) => async (dispatch, getState) => {
   const { missionId } = getState().attachMissionToReporting
+  const { reportings } = getState().reporting
+  const reportingContext = reportings[id]?.context
 
   if (missionId === id) {
     return
@@ -21,6 +24,11 @@ export const attachMission = (id: number) => async (dispatch, getState) => {
 
     await missionRequest.unsubscribe()
   } catch (error) {
-    dispatch(setToast({ containerId: 'sideWindow', message: "Erreur à l'ajout du signalement" }))
+    displayReportingBanner({
+      context: reportingContext,
+      dispatch,
+      level: Level.ERROR,
+      message: 'Erreur lors du rattachement de la mission'
+    })
   }
 }

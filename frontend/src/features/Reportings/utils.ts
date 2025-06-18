@@ -1,4 +1,7 @@
-import { customDayjs } from '@mtes-mct/monitor-ui'
+import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
+import { customDayjs, Level } from '@mtes-mct/monitor-ui'
+import { ReportingContext } from 'domain/shared_slices/Global'
 import _ from 'lodash'
 
 import {
@@ -11,6 +14,7 @@ import { ReportingTargetTypeEnum, ReportingTargetTypeLabels } from '../../domain
 import { VehicleTypeEnum, vehicleTypeLabels } from '../../domain/entities/vehicleType'
 
 import type { AtLeast } from '../../types'
+import type { HomeAppDispatch } from '@store/index'
 import type { Dayjs } from 'dayjs'
 
 export const createNewReportingSource: () => ReportingSource = () => ({
@@ -174,4 +178,40 @@ export function getTargetDetailsSubText({ target, targetType, vehicleType }) {
   }
 
   return target?.vesselName
+}
+
+export function displayReportingBanner({
+  context,
+  dispatch,
+  level,
+  message
+}: {
+  context: ReportingContext
+  dispatch: HomeAppDispatch
+  level: Level
+  message: string
+}) {
+  if (context === ReportingContext.SIDE_WINDOW) {
+    dispatch(
+      addSideWindowBanner({
+        children: message,
+        isClosable: true,
+        isFixed: true,
+        level,
+        withAutomaticClosing: true
+      })
+    )
+
+    return
+  }
+
+  dispatch(
+    addMainWindowBanner({
+      children: message,
+      isClosable: true,
+      isFixed: true,
+      level,
+      withAutomaticClosing: true
+    })
+  )
 }

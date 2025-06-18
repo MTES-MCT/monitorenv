@@ -1,9 +1,11 @@
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingActions } from '@features/Reportings/slice'
-import { setReportingFormVisibility, setToast, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
+import { Level } from '@mtes-mct/monitor-ui'
+import { setReportingFormVisibility, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { mainWindowActions } from '../../MainWindow/slice'
+import { displayReportingBanner } from '../utils'
 
 export const editReportingInLocalStore =
   (reportingId: number, reportingContext: ReportingContext) => async (dispatch, getState) => {
@@ -38,7 +40,12 @@ export const editReportingInLocalStore =
         setReporting(dispatch, reportingId, reportingContext, newReporting)
         await reportingRequest.unsubscribe()
       } catch (error) {
-        dispatch(setToast({ message: 'Erreur à la récupération du signalement' }))
+        displayReportingBanner({
+          context: reportingContext,
+          dispatch,
+          level: Level.ERROR,
+          message: 'Erreur à la récupération du signalement'
+        })
       }
     }
   }

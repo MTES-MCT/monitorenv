@@ -12,7 +12,6 @@ import { App } from './App'
 
 import 'rsuite/dist/rsuite.min.css'
 import 'ol/ol.css'
-import 'react-toastify/dist/ReactToastify.css'
 import './uiMonitor/ol-override.css'
 import '@mtes-mct/monitor-ui/assets/stylesheets/rsuite-override.css'
 

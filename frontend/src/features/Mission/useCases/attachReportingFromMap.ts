@@ -1,6 +1,7 @@
 import { reportingsAPI } from '@api/reportingsAPI'
 import { attachReportingToMissionSliceActions } from '@features/Mission/components/MissionForm/AttachReporting/slice'
-import { setToast } from 'domain/shared_slices/Global'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
+import { Level } from '@mtes-mct/monitor-ui'
 
 export const attachReportingFromMap = (reportingId: number) => async (dispatch, getState) => {
   const { attachedReportings } = getState().attachReportingToMission
@@ -30,6 +31,14 @@ export const attachReportingFromMap = (reportingId: number) => async (dispatch, 
 
     await reportingRequest.unsubscribe()
   } catch (error) {
-    dispatch(setToast({ containerId: 'sideWindow', message: "Erreur à l'ajout du signalement" }))
+    dispatch(
+      addSideWindowBanner({
+        children: "Erreur à l'ajout du signalement",
+        isClosable: true,
+        isFixed: true,
+        level: Level.ERROR,
+        withAutomaticClosing: true
+      })
+    )
   }
 }
