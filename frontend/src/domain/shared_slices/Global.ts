@@ -21,11 +21,6 @@ export type ReportingFormVisibilityProps = {
   context: ReportingContext
   visibility: VisibilityState
 }
-type Toast = {
-  containerId?: string
-  message: any
-  type?: string
-}
 
 export type OverlayCoordinates = {
   coordinates?: Extent
@@ -73,7 +68,6 @@ type GlobalStateType = {
   openedOverlayId?: string
   overlayCoordinates: OverlayCoordinates[]
   previousDisplayedItems: Record<string, any>
-  toast?: Toast
   visibility: {
     isAccountDialogVisible: boolean
     isControlUnitDialogVisible: boolean
@@ -173,10 +167,6 @@ const globalSlice = createSlice({
       state.overlayCoordinates = []
     },
 
-    removeToast(state) {
-      state.toast = undefined
-    },
-
     resetState() {
       return { ...initialState }
     },
@@ -237,10 +227,6 @@ const globalSlice = createSlice({
 
     setReportingFormVisibility(state, action) {
       state.visibility.reportingFormVisibility = action.payload
-    },
-
-    setToast(state, action: PayloadAction<Toast>) {
-      state.toast = action.payload
     }
   }
 })
@@ -249,7 +235,6 @@ export const {
   closeOpenedOverlay,
   hideAllDialogs,
   removeOverlayStroke,
-  removeToast,
   resetState,
   restorePreviousDisplayedItems,
   setDisplayedItems,
@@ -257,8 +242,7 @@ export const {
   setIsMapToolVisible,
   setOpenedOverlay,
   setOverlayCoordinates,
-  setReportingFormVisibility,
-  setToast
+  setReportingFormVisibility
 } = globalSlice.actions
 
 export const globalActions = globalSlice.actions

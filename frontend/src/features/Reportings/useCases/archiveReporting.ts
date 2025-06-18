@@ -1,15 +1,12 @@
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { reportingActions } from '@features/Reportings/slice'
+import { Level } from '@mtes-mct/monitor-ui'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import {
-  ReportingContext,
-  setReportingFormVisibility,
-  setToast,
-  VisibilityState
-} from '../../../domain/shared_slices/Global'
+import { ReportingContext, setReportingFormVisibility, VisibilityState } from '../../../domain/shared_slices/Global'
+import { displayReportingBanner } from '../utils'
 
-import type { HomeAppThunk } from '@store/index'
+import type { HomeAppDispatch, HomeAppThunk } from '@store/index'
 
 export const archiveReporting =
   (
@@ -17,7 +14,7 @@ export const archiveReporting =
     context: ReportingContext = ReportingContext.SIDE_WINDOW,
     closeReporting: boolean = false
   ): HomeAppThunk =>
-  async (dispatch, getState) => {
+  async (dispatch: HomeAppDispatch, getState) => {
     const {
       reporting: { reportings }
     } = getState()
@@ -30,13 +27,13 @@ export const archiveReporting =
       } else {
         if (closeReporting) {
           dispatch(reportingActions.deleteSelectedReporting(id))
-          dispatch(
-            setToast({
-              containerId: context === ReportingContext.MAP ? 'map' : 'sideWindow',
-              message: 'Le signalement a bien été archivé',
-              type: 'success'
-            })
-          )
+          displayReportingBanner({
+            context,
+            dispatch,
+            level: Level.SUCCESS,
+            message: 'Le signalement a bien été archivé'
+          })
+
           if (context === ReportingContext.MAP) {
             dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
           }
@@ -50,14 +47,13 @@ export const archiveReporting =
 
           return
         }
+        displayReportingBanner({
+          context: ReportingContext.SIDE_WINDOW,
+          dispatch,
+          level: Level.SUCCESS,
+          message: 'Le signalement a bien été archivé'
+        })
 
-        dispatch(
-          setToast({
-            containerId: 'sideWindow',
-            message: 'Le signalement a bien été archivé',
-            type: 'success'
-          })
-        )
         if (isReportingExistInLocalStore) {
           const { data: reporting } = await dispatch(reportingsAPI.endpoints.getReporting.initiate(id))
 
@@ -67,6 +63,11 @@ export const archiveReporting =
         }
       }
     } catch (error) {
-      dispatch(setToast({ containerId: 'sideWindow', message: error }))
+      displayReportingBanner({
+        context,
+        dispatch,
+        level: Level.ERROR,
+        message: error instanceof Error ? error.message : String(error)
+      })
     }
   }

@@ -1,7 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.exceptions.CouldNotDeleteException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
@@ -21,9 +22,9 @@ class DeleteControlUnit(
     fun execute(controlUnitId: Int) {
         logger.info("Attempt to DELETE control unit $controlUnitId")
         if (!canDeleteControlUnit.execute(controlUnitId)) {
-            throw CouldNotDeleteException(
-                "Cannot delete control unit  (ID=$controlUnitId) due to existing relationships.",
-            )
+            val errorMessage = "Cannot delete control unit (ID=$controlUnitId) due to existing relationships."
+            logger.error(errorMessage)
+            throw BackendUsageException(BackendUsageErrorCode.CANNOT_DELETE_ENTITY, errorMessage)
         }
 
         val deletedMissions = missionRepository.findByControlUnitId(controlUnitId).filter { it.isDeleted }

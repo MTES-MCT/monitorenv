@@ -3,16 +3,20 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.administration
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAdministrationRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import kotlin.random.Random
 
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
@@ -72,5 +76,25 @@ class CanDeleteAdministrationUTests {
         val result = CanDeleteAdministration(administrationRepository).execute(administrationId)
 
         assertThat(result).isFalse
+    }
+
+    @Test
+    fun `execute should throw a BackendUsageException when administration doesnt exist`() {
+        // Given
+        val administrationId = Random.nextInt()
+
+        given(administrationRepository.findById(administrationId)).willReturn(null)
+
+        // When
+        val backendUsageException =
+            assertThrows<BackendUsageException> {
+                CanDeleteAdministration(administrationRepository).execute(
+                    administrationId,
+                )
+            }
+
+        // Then
+        assertThat(backendUsageException.code).isEqualTo(BackendUsageErrorCode.ENTITY_NOT_FOUND)
+        assertThat(backendUsageException.message).isEqualTo("administration $administrationId not found for deletion")
     }
 }

@@ -1,8 +1,9 @@
+import { newUserError } from '@libs/error'
+
 import { monitorenvPublicApi } from './api'
 import { DELETE_GENERIC_ERROR_MESSAGE } from './constants'
 import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
-import { newUserError } from '../libs/UserError'
 
 import type { Station } from '../domain/entities/station'
 
@@ -37,8 +38,8 @@ export const stationsAPI = monitorenvPublicApi.injectEndpoints({
         url: `/v1/stations/${stationId}`
       }),
       transformErrorResponse: response => {
-        if (response.data.type === ApiErrorCode.FOREIGN_KEY_CONSTRAINT) {
-          return newUserError(DELETE_STATION_ERROR_MESSAGE)
+        if (response.data.code === ApiErrorCode.CANNOT_DELETE_ENTITY) {
+          return newUserError(DELETE_STATION_ERROR_MESSAGE, 'backoffice')
         }
 
         return new FrontendApiError(DELETE_GENERIC_ERROR_MESSAGE, response)

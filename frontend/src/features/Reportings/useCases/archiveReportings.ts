@@ -1,7 +1,8 @@
 import { reportingActions } from '@features/Reportings/slice'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
+import { Level } from '@mtes-mct/monitor-ui'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setToast } from '../../../domain/shared_slices/Global'
 
 export const archiveReportings = (ids: number[], resetSelectionFn: () => void) => async (dispatch, getState) => {
   const { reportings } = getState().reporting
@@ -25,15 +26,26 @@ export const archiveReportings = (ids: number[], resetSelectionFn: () => void) =
         }
       })
       dispatch(
-        setToast({
-          containerId: 'sideWindow',
-          message: 'Les signalements ont bien été archivés',
-          type: 'success'
+        addSideWindowBanner({
+          children: 'Les signalements ont bien été archivés',
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
+
       resetSelectionFn()
     }
   } catch (error) {
-    dispatch(setToast({ containerId: 'sideWindow', message: error }))
+    dispatch(
+      addSideWindowBanner({
+        children: error instanceof Error ? error.message : String(error),
+        isClosable: true,
+        isFixed: true,
+        level: Level.ERROR,
+        withAutomaticClosing: true
+      })
+    )
   }
 }

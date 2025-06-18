@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
-class JpaBaseRepositoryITests : AbstractDBTests() {
+class JpaStationRepositoryITests : AbstractDBTests() {
     @Autowired
-    private lateinit var jpaBaseRepository: JpaStationRepository
+    private lateinit var jpaStationRepository: JpaStationRepository
 
     @Test
     @Transactional
     fun `findAll() should find all bases`() {
-        val foundFullStations = jpaBaseRepository.findAll().sortedBy { requireNotNull(it.station.id) }
+        val foundFullStations = jpaStationRepository.findAll().sortedBy { requireNotNull(it.station.id) }
 
         assertThat(foundFullStations).hasSize(3)
         assertThat(foundFullStations[0]).isEqualTo(
@@ -153,7 +153,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `findById() should find a base by its ID`() {
-        val foundFullStation = jpaBaseRepository.findById(2)
+        val foundFullStation = jpaStationRepository.findById(2)
 
         assertThat(foundFullStation).isEqualTo(
             FullStationDTO(
@@ -224,7 +224,7 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                 name = "Station Name",
             )
 
-        val createdBase = jpaBaseRepository.save(newStation)
+        val createdBase = jpaStationRepository.save(newStation)
 
         assertThat(createdBase).isEqualTo(newStation.copy(id = 4))
 
@@ -239,16 +239,16 @@ class JpaBaseRepositoryITests : AbstractDBTests() {
                 name = "Updated Station Name",
             )
 
-        val updatedStation = jpaBaseRepository.save(nextStation)
+        val updatedStation = jpaStationRepository.save(nextStation)
 
         assertThat(updatedStation).isEqualTo(nextStation)
 
         // ---------------------------------------------------------------------
         // Delete
 
-        jpaBaseRepository.deleteById(4)
+        jpaStationRepository.deleteById(4)
 
-        val stationIds = jpaBaseRepository.findAll().map { requireNotNull(it.station.id) }.sorted()
+        val stationIds = jpaStationRepository.findAll().map { requireNotNull(it.station.id) }.sorted()
 
         assertThat(stationIds).doesNotContain(4)
     }

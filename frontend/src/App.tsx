@@ -1,7 +1,7 @@
 import { AlertUnsupportedBrowser } from '@components/AlertUnsupportedBrowser'
 import { CustomGlobalStyle } from '@components/CustomGlobalStyle'
+import { ErrorBoundary } from '@components/ErrorBoundary'
 import { RequireAuth } from '@components/RequireAuth'
-import { ToastNotification } from '@components/ToastNotification'
 import { SideWindow } from '@features/SideWindow'
 import { useMatomo } from '@hooks/useMatomo'
 import { THEME, ThemeProvider, OnlyFontGlobalStyle } from '@mtes-mct/monitor-ui'
@@ -42,58 +42,59 @@ export function App() {
       <CustomGlobalStyle />
 
       <RsuiteCustomProvider disableRipple locale={FR_FR_LOCALE}>
-        <ReduxProvider store={homeStore}>
-          <PersistGate loading={undefined} persistor={persistor}>
-            <MissionEventProvider>
-              <ReportingEventProvider>
-                <BrowserRouter>
-                  <Routes>
-                    <Route element={<Login />} path={paths.login} />
+        <ErrorBoundary>
+          <ReduxProvider store={homeStore}>
+            <PersistGate loading={undefined} persistor={persistor}>
+              <MissionEventProvider>
+                <ReportingEventProvider>
+                  <BrowserRouter>
+                    <Routes>
+                      <Route element={<Login />} path={paths.login} />
 
-                    <Route element={<Register />} path={paths.register} />
+                      <Route element={<Register />} path={paths.register} />
 
-                    <Route
-                      element={
-                        <RequireAuth redirect requireSuperUser>
-                          <BackOfficePage />
-                        </RequireAuth>
-                      }
-                      path={`${paths.backoffice}/*`}
-                    />
+                      <Route
+                        element={
+                          <RequireAuth redirect requireSuperUser>
+                            <BackOfficePage />
+                          </RequireAuth>
+                        }
+                        path={`${paths.backoffice}/*`}
+                      />
 
-                    <Route
-                      element={
-                        <RequireAuth redirect requireSuperUser>
-                          <SideWindow />
-                        </RequireAuth>
-                      }
-                      path={paths.sidewindow}
-                    />
+                      <Route
+                        element={
+                          <RequireAuth redirect requireSuperUser>
+                            <SideWindow />
+                          </RequireAuth>
+                        }
+                        path={paths.sidewindow}
+                      />
 
-                    <Route
-                      element={
-                        <RequireAuth redirect>
-                          <HomePage />
-                        </RequireAuth>
-                      }
-                      path={paths.ext}
-                    />
+                      <Route
+                        element={
+                          <RequireAuth redirect>
+                            <HomePage />
+                          </RequireAuth>
+                        }
+                        path={paths.ext}
+                      />
 
-                    <Route
-                      element={
-                        <RequireAuth redirect>
-                          <HomePage />
-                        </RequireAuth>
-                      }
-                      path={paths.home}
-                    />
-                  </Routes>
-                </BrowserRouter>
-              </ReportingEventProvider>
-            </MissionEventProvider>
-            <ToastNotification />
-          </PersistGate>
-        </ReduxProvider>
+                      <Route
+                        element={
+                          <RequireAuth redirect>
+                            <HomePage />
+                          </RequireAuth>
+                        }
+                        path={paths.home}
+                      />
+                    </Routes>
+                  </BrowserRouter>
+                </ReportingEventProvider>
+              </MissionEventProvider>
+            </PersistGate>
+          </ReduxProvider>
+        </ErrorBoundary>
       </RsuiteCustomProvider>
     </ThemeProvider>
   )

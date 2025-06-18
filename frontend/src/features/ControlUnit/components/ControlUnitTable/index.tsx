@@ -1,4 +1,5 @@
-import { type ControlUnit, DataTable, THEME } from '@mtes-mct/monitor-ui'
+import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { type ControlUnit, DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -13,7 +14,6 @@ import {
 } from '../../../../api/controlUnitsAPI'
 import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
-import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -81,9 +81,12 @@ export function ControlUnitTable() {
     async (controlUnitToArchive: ControlUnit.ControlUnit) => {
       await dispatch(controlUnitsAPI.endpoints.archiveControlUnit.initiate(controlUnitToArchive.id))
       dispatch(
-        globalActions.setToast({
-          message: `Unité "${controlUnitToArchive.name}" archivée.`,
-          type: 'success'
+        addBackOfficeBanner({
+          children: `Unité "${controlUnitToArchive.name}" archivée.`,
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
 
@@ -96,9 +99,12 @@ export function ControlUnitTable() {
     async (controlUnitToDelete: ControlUnit.ControlUnit) => {
       await dispatch(controlUnitsAPI.endpoints.deleteControlUnit.initiate(controlUnitToDelete.id))
       dispatch(
-        globalActions.setToast({
-          message: `Unité "${controlUnitToDelete.name}" supprimée.`,
-          type: 'success'
+        addBackOfficeBanner({
+          children: `Unité "${controlUnitToDelete.name}" supprimée.`,
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
 

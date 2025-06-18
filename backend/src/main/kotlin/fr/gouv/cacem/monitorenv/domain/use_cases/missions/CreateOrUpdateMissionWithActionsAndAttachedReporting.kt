@@ -4,7 +4,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.ReportingAlreadyAttachedException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
@@ -52,15 +53,17 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
         )
 
         attachedReportingIds.forEach {
-            val reporting = reportingRepository.findById(it)
-            if (reporting.reporting.missionId != null &&
-                reporting.reporting.attachedToMissionAtUtc != null &&
-                reporting.reporting.detachedFromMissionAtUtc == null &&
-                reporting.reporting.missionId != savedMission.id
-            ) {
-                throw ReportingAlreadyAttachedException(
-                    "Reporting ${reporting.reporting.id} is already attached to a mission",
-                )
+            reportingRepository.findById(it)?.let { reporting ->
+                if (reporting.reporting.missionId != null &&
+                    reporting.reporting.attachedToMissionAtUtc != null &&
+                    reporting.reporting.detachedFromMissionAtUtc == null &&
+                    reporting.reporting.missionId != savedMission.id
+                ) {
+                    val errorMessage =
+                        "Reporting ${reporting.reporting.id} is already attached to a mission"
+                    logger.error(errorMessage)
+                    throw BackendUsageException(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED, errorMessage)
+                }
             }
         }
 

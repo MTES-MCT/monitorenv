@@ -2,10 +2,10 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DepartmentAreaModel
 import org.locationtech.jts.geom.Geometry
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 
-interface IDBDepartmentAreaRepository : CrudRepository<DepartmentAreaModel, Int> {
+interface IDBDepartmentAreaRepository : JpaRepository<DepartmentAreaModel, Int> {
     @Query(
         value =
             """

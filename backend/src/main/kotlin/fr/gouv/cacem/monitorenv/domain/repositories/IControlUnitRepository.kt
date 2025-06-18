@@ -11,9 +11,9 @@ interface IControlUnitRepository {
 
     fun deleteById(controlUnitId: Int)
 
-    fun findById(controlUnitId: Int): ControlUnitEntity
+    fun findById(controlUnitId: Int): ControlUnitEntity?
 
-    fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO
+    fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO?
 
     fun findAll(): List<FullControlUnitDTO>
 

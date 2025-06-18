@@ -1,3 +1,4 @@
+import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
 import {
   Accent,
   Button,
@@ -6,7 +7,8 @@ import {
   FormikCheckbox,
   FormikSelect,
   FormikTextInput,
-  getOptionsFromIdAndName
+  getOptionsFromIdAndName,
+  Level
 } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
@@ -25,7 +27,6 @@ import { useGetAdministrationsQuery } from '../../../../api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { controlUnitsAPI, useGetControlUnitQuery } from '../../../../api/controlUnitsAPI'
 import { useGetDepartmentAreasQuery } from '../../../../api/departmentAreasAPI'
-import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { isNotArchived } from '../../../../utils/isNotArchived'
@@ -83,9 +84,12 @@ export function ControlUnitForm() {
       if (isNew) {
         await dispatch(controlUnitsAPI.endpoints.createControlUnit.initiate(controlUnitData))
         dispatch(
-          globalActions.setToast({
-            message: `Unité "${controlUnitData.name}" créée.`,
-            type: 'success'
+          addBackOfficeBanner({
+            children: `Unité "${controlUnitData.name}" créée.`,
+            isClosable: true,
+            isFixed: true,
+            level: Level.SUCCESS,
+            withAutomaticClosing: true
           })
         )
 
@@ -101,9 +105,12 @@ export function ControlUnitForm() {
         })
       )
       dispatch(
-        globalActions.setToast({
-          message: `Unité "${controlUnitData.name}" mise à jour.`,
-          type: 'success'
+        addBackOfficeBanner({
+          children: `Unité "${controlUnitData.name}" mise à jour.`,
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
 

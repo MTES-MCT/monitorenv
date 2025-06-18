@@ -1,6 +1,8 @@
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingActions } from '@features/Reportings/slice'
-import { ReportingContext, setReportingFormVisibility, setToast, VisibilityState } from 'domain/shared_slices/Global'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
+import { Level } from '@mtes-mct/monitor-ui'
+import { ReportingContext, setReportingFormVisibility, VisibilityState } from 'domain/shared_slices/Global'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { mainWindowActions } from '../../MainWindow/slice'
@@ -35,15 +37,26 @@ export const deleteReportings = (ids: number[], resetSelectionFn: () => void) =>
       ids.forEach(id => dispatch(reportingActions.deleteSelectedReporting(id)))
 
       dispatch(
-        setToast({
-          containerId: 'sideWindow',
-          message: 'Les signalements ont bien été supprimés',
-          type: 'success'
+        addSideWindowBanner({
+          children: 'Les signalements ont bien été supprimés',
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
+
       resetSelectionFn()
     }
   } catch (error) {
-    dispatch(setToast({ containerId: 'sideWindow', message: error }))
+    dispatch(
+      addSideWindowBanner({
+        children: error instanceof Error ? error.message : String(error),
+        isClosable: true,
+        isFixed: true,
+        level: Level.ERROR,
+        withAutomaticClosing: true
+      })
+    )
   }
 }
