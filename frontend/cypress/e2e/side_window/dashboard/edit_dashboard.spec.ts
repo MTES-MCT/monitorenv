@@ -24,7 +24,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.wait(250)
     cy.getDataCy('dashboard-vigilance-area-zone-tags-and-buttons-8')
       .find('.Element-Tag')
-      .contains('CACEM')
+      .contains('INTERNE')
       .should('exist')
     cy.getDataCy('dashboard-vigilance-area-zone-check-8').click({ force: true })
 

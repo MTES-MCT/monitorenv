@@ -83,7 +83,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
       <TagAndButtons data-cy={`dashboard-vigilance-area-zone-tags-and-buttons-${vigilanceArea.id}`}>
         {vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE && (
           <StyledTag accent={Accent.PRIMARY} title="Zone de vigilance interne au CACEM">
-            CACEM
+            INTERNE
           </StyledTag>
         )}
 
