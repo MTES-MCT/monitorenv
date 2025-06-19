@@ -80,6 +80,7 @@ export const exportBrief =
       endingOccurenceDate: endingOccurenceText(vigilanceArea.endingCondition, vigilanceArea.computedEndDate),
       frequency: frequencyText(vigilanceArea.frequency),
       id: vigilanceArea.id,
+      isAtAllTimes: vigilanceArea.isAtAllTimes,
       linkedAMPs: vigilanceArea.linkedAMPs,
       linkedRegulatoryAreas: vigilanceArea.linkedRegulatoryAreas,
       links: vigilanceArea.links,
