@@ -15,6 +15,7 @@ data class EditableBriefVigilanceAreaEntity(
     val endingOccurenceDate: String,
     val frequency: String,
     val id: Int,
+    val isAtAllTimes: Boolean,
     override val image: BriefImageEntity,
     val linkedAMPs: String? = null,
     val linkedRegulatoryAreas: String? = null,
@@ -36,7 +37,7 @@ data class EditableBriefVigilanceAreaEntity(
         val periodDate = "Du ${startDatePeriod?.format(formatter)} au ${endDatePeriod?.format(formatter)}"
 
         return listOf(
-            listOf("Période", periodDate),
+            listOf("Période", if (isAtAllTimes) "En tout temps" else periodDate),
             listOf("Thématique", themes ?: ""),
             listOf("Visibilité", visibility ?: ""),
             listOf("Commentaires", comments ?: ""),
