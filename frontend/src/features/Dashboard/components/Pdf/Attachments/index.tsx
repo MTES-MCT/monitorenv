@@ -6,8 +6,7 @@ import type { ImageFront, Link } from '@components/Form/types'
 
 export const style = StyleSheet.create({
   image: {
-    height: 179,
-    objectFit: 'cover'
+    width: '100%'
   },
   imageWrapper: {
     ...layoutStyle.row,
