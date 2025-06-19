@@ -378,9 +378,6 @@ class DashboardFile(
         }
 
         cleanParagraphPlaceholder(document, paragraph)
-
-        val pageBreakParagraph = document.createParagraph()
-        pageBreakParagraph.createRun().addBreak(BreakType.PAGE)
     }
 
     private fun createSideBySideTables(
@@ -438,7 +435,7 @@ class DashboardFile(
             return
         }
 
-        for (item in items) {
+        for ((i, item) in items.withIndex()) {
             val itemParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
             createLayerTitle(item.title, itemParagraph, document)
 
@@ -476,13 +473,12 @@ class DashboardFile(
 
             deleteFirstEmptyLineInTable(table)
 
-            // Add page break
-            tableParagraph.createRun().addBreak(BreakType.PAGE)
+            if (i < items.lastIndex) {
+                tableParagraph.createRun().addBreak(BreakType.PAGE)
+            }
         }
         cleanParagraphPlaceholder(document, paragraph)
 
-        val pageBreakParagraph = document.createParagraph()
-        pageBreakParagraph.createRun().addBreak(BreakType.PAGE)
     }
 
     private fun addTargetDetailRows(
@@ -1011,7 +1007,9 @@ class DashboardFile(
         paragraph: XWPFParagraph,
     ) {
         val position = document.getPosOfParagraph(paragraph)
-        document.removeBodyElement(position)
+        if (position >= 0) {
+            document.removeBodyElement(position)
+        }
     }
 
     private fun convertSvgStringToPngBytes(svgContent: String): ByteArray {
