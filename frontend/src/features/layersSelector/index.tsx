@@ -6,9 +6,8 @@ import {
   getIsLinkingRegulatoryToVigilanceArea,
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
-import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, FulfillingBouncingCircleLoader, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
-import { FulfillingBouncingCircleSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 import { AdministrativeLayers } from './administrative'
@@ -131,7 +130,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
       </Sidebar>
       {(regulatoryAreas.isLoading || amps.isLoading) && (
         <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>
-          <FulfillingBouncingCircleSpinner color={THEME.color.gunMetal} size={30} />
+          <FulfillingBouncingCircleLoader color={THEME.color.gunMetal} size={30} />
           <Message>
             Chargement des zones cartographiques ({regulatoryAreas.isLoading && 'Zones réglementaires'}
             {regulatoryAreas.isLoading && amps.isLoading ? ' et ' : ''}
