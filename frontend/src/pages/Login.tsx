@@ -56,11 +56,7 @@ export function Login() {
 
   return (
     <Wrapper>
-      {auth.isLoading ? (
-        <LoadingSpinnerWall isVesselShowed />
-      ) : (
-        <Button onClick={() => auth.signinRedirect()}>Se connecter</Button>
-      )}
+      {auth.isLoading ? <LoadingSpinnerWall /> : <Button onClick={() => auth.signinRedirect()}>Se connecter</Button>}
       {auth.error && <div>Oops... {auth.error?.message}</div>}
       <ToastContainer />
     </Wrapper>

@@ -1,10 +1,10 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
+import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useCallback } from 'react'
-import { FingerprintSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 import { MonitorEnvLayers } from '../../../../domain/entities/layers/constants'
@@ -59,7 +59,7 @@ export function AmpMetadata() {
           </Content>
         </>
       ) : (
-        <CenteredFingerprintSpinner size={100} />
+        <CenteredFingerprintLoader />
       )}
     </Wrapper>
   )
@@ -105,10 +105,4 @@ const Content = styled.div`
   background: ${p => p.theme.color.white};
   overflow-y: auto;
   max-height: 72vh;
-`
-
-const CenteredFingerprintSpinner = styled(FingerprintSpinner)`
-  position: initial !important;
-  display: block;
-  margin-top: 300px;
 `
