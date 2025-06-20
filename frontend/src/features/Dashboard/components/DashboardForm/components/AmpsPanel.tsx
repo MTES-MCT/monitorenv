@@ -1,4 +1,5 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
+import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import {
   Body,
   Field,
@@ -10,11 +11,10 @@ import {
 } from '@features/layersSelector/metadataPanel/MetadataPanel.style'
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
 import { forwardRef, type ComponentProps } from 'react'
-import { FingerprintSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 export const AmpsPanel = forwardRef<HTMLDivElement, { layerId: number; onClose: () => void } & ComponentProps<'div'>>(
@@ -57,7 +57,7 @@ export const AmpsPanel = forwardRef<HTMLDivElement, { layerId: number; onClose: 
             </Content>
           </>
         ) : (
-          <CenteredFingerprintSpinner size={100} />
+          <CenteredFingerprintLoader color={THEME.color.lightGray} />
         )}
       </Wrapper>
     )
@@ -100,10 +100,4 @@ const Content = styled.div`
   color: ${p => p.theme.color.lightGray};
   overflow-y: auto;
   max-height: 72vh;
-`
-
-const CenteredFingerprintSpinner = styled(FingerprintSpinner)`
-  position: initial !important;
-  display: block;
-  margin-top: 300px;
 `
