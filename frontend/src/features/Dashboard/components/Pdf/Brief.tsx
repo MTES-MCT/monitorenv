@@ -2,7 +2,8 @@ import { NearbyUnits } from '@features/Dashboard/components/Pdf/NearbyUnits'
 import { Document, Page, View } from '@react-pdf/renderer'
 
 import { Amps } from './Amps'
-import { Attachments } from './Attachments'
+import { ImagesAttachments } from './Attachments/ImagesAttachments'
+import { LinksAttachments } from './Attachments/LinksAttachments'
 import { Cover } from './Layout/Cover'
 import { Headings } from './Layout/Headings'
 import { RecentActivity } from './RecentActivity'
@@ -60,14 +61,22 @@ export function Brief({ author, brief, description, isLight, title }: BriefProps
           </View>
         </Page>
       )}
-      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
-      {((brief.attachments.images && brief.attachments.images?.length > 0) || brief.attachments.links.length > 0) && (
+
+      {brief.attachments.links.length > 0 && (
         <Page style={layoutStyle.page}>
           <Headings name={brief.name} />
           <View style={layoutStyle.section}>
-            <Attachments images={brief.attachments.images} links={brief.attachments.links} />
+            <LinksAttachments links={brief.attachments.links} />
           </View>
         </Page>
+      )}
+
+      {brief.attachments.images && brief.attachments.images?.length > 0 && (
+        <ImagesAttachments
+          briefName={brief.name}
+          images={brief.attachments.images}
+          withPageTitle={brief.attachments.links.length === 0}
+        />
       )}
       {brief.reportings.length > 0 && (
         <Page style={layoutStyle.page}>
