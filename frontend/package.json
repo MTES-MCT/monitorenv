@@ -26,7 +26,7 @@
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "dependencies": {
-    "@mtes-mct/monitor-ui": "24.21.2",
+    "@mtes-mct/monitor-ui": "24.22.1",
     "@react-pdf/renderer": "4.3.0",
     "@reduxjs/toolkit": "2.8.2",
     "@sentry/browser": "8.54.0",
@@ -56,7 +56,6 @@
     "react-coordinate-input": "1.0.0-rc.2",
     "react-device-detect": "2.2.3",
     "react-dom": "18.3.1",
-    "react-epic-spinners": "0.5.0",
     "react-highlight-words": "0.21.0",
     "react-imask": "7.6.1",
     "react-markdown": "6.0.1",

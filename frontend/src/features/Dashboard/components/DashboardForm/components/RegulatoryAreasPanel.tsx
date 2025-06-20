@@ -1,13 +1,13 @@
 import { useGetRegulatoryLayerByIdQuery } from '@api/regulatoryLayersAPI'
+import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import { Identification } from '@features/layersSelector/metadataPanel/regulatoryMetadata/Identification'
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
-import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
 import { forwardRef } from 'react'
-import { FingerprintSpinner } from 'react-epic-spinners'
 import styled from 'styled-components'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
@@ -51,7 +51,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
             </Content>
           </>
         ) : (
-          <CenteredFingerprintSpinner size={100} />
+          <CenteredFingerprintLoader color={THEME.color.slateGray} />
         )}
       </Wrapper>
     )
@@ -94,10 +94,4 @@ const Content = styled.div`
   color: ${p => p.theme.color.lightGray};
   overflow-y: auto;
   max-height: 72vh;
-`
-
-const CenteredFingerprintSpinner = styled(FingerprintSpinner)`
-  position: initial !important;
-  display: block;
-  margin-top: 300px;
 `
