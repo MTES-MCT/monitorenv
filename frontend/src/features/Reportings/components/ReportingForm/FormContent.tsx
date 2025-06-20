@@ -376,7 +376,10 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         />
         <Target />
         <Position />
-        <FormikTextarea label="Description du signalement" name="description" />
+        <DescriptionContainer>
+          <FormikTextarea label="Description du signalement" name="description" />
+          <DescriptionMessageText>La description est partagée dans Monitor Ext</DescriptionMessageText>
+        </DescriptionContainer>
         <Separator />
 
         <div>
@@ -502,3 +505,14 @@ export const MessageTitle = styled.header`
   font-weight: 500;
 `
 export const MessageText = styled.p``
+
+const DescriptionContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+const DescriptionMessageText = styled.span`
+  font-size: 12px;
+  font-style: italic;
+  color: ${p => p.theme.color.slateGray};
+`
