@@ -1,11 +1,20 @@
-import { Image, Link as LinkComponent, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { Link as LinkComponent, StyleSheet, Text, View } from '@react-pdf/renderer'
 
 import { layoutStyle } from '../style'
 
-import type { ImageFront, Link } from '@components/Form/types'
+import type { Link } from '@components/Form/types'
 
 export const style = StyleSheet.create({
-  image: {
+  imageLandscape: {
+    alignSelf: 'center',
+    height: '650pt',
+    objectFit: 'contain',
+    width: 'auto'
+  },
+  imagePortrait: {
+    alignSelf: 'center',
+    maxHeight: '650pt',
+    objectFit: 'contain',
     width: '100%'
   },
   imageWrapper: {
@@ -15,7 +24,7 @@ export const style = StyleSheet.create({
   }
 })
 
-export function Attachments({ images, links }: { images?: ImageFront[]; links: Link[] }) {
+export function LinksAttachments({ links }: { links: Link[] }) {
   return (
     <>
       <View style={layoutStyle.header1}>
@@ -32,16 +41,6 @@ export function Attachments({ images, links }: { images?: ImageFront[]; links: L
                   <Text>{link.linkUrl}</Text>
                 </LinkComponent>
               </View>
-            ))}
-          </View>
-        </View>
-      )}
-      {images && images.length > 0 && (
-        <View>
-          <Text style={layoutStyle.header2}>Photos</Text>
-          <View style={style.imageWrapper}>
-            {images.map(image => (
-              <Image key={image.id} src={image.image} style={style.image} />
             ))}
           </View>
         </View>
