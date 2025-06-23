@@ -9,7 +9,7 @@ import { type Reporting } from 'domain/entities/reporting'
 import { Dashboard } from './types'
 import { filterReportings } from './useCases/filters/filterReportings'
 
-import type { DashboardFilters } from './components/DashboardForm/slice'
+import type { DashboardFilters, VigilanceAreaFilters } from './components/DashboardForm/slice'
 import type { ImageApi, Link } from '@components/Form/types'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import type { TagOption } from 'domain/entities/tags'
@@ -572,7 +572,13 @@ export const getFilteredVigilanceAreas = createSelector(
   [
     (state: DashboardState) => state.dashboards,
     (state: DashboardState) => state.activeDashboardId,
-    (_, filters: DashboardFilters | undefined) => filters
+    (
+      _,
+      filters: {
+        dashboardFilters: DashboardFilters | undefined
+        vigilanceAreaFilters: VigilanceAreaFilters | undefined
+      }
+    ) => filters
   ],
   (dashboards, activeDashboardId, filters) => {
     if (!activeDashboardId) {
@@ -580,16 +586,24 @@ export const getFilteredVigilanceAreas = createSelector(
     }
 
     if (dashboards[activeDashboardId]) {
-      const regulatoryTagsFilter = filters?.regulatoryTags
-      const periodFilter = filters?.vigilanceAreaPeriod
-      const specificPeriodFilter = filters?.specificPeriod
+      const regulatoryTagsFilter = filters.dashboardFilters?.regulatoryTags
+      const periodFilter = filters.dashboardFilters?.vigilanceAreaPeriod
+      const specificPeriodFilter = filters.dashboardFilters?.specificPeriod
+
       const vigilanceAreas = dashboards[activeDashboardId].extractedArea?.vigilanceAreas ?? []
 
-      let filteredVigilanceAreasByThemes = vigilanceAreas
+      let filteredVigilanceAreas = vigilanceAreas
 
       if (regulatoryTagsFilter && regulatoryTagsFilter.length > 0) {
-        filteredVigilanceAreasByThemes = vigilanceAreas?.filter(({ tags }) =>
+        filteredVigilanceAreas = vigilanceAreas?.filter(({ tags }) =>
           tags?.some(tag => regulatoryTagsFilter?.some(tagFilter => tagFilter.id === tag.id))
+        )
+      }
+
+      if (filters.vigilanceAreaFilters?.visibility && filters.vigilanceAreaFilters.visibility.length > 0) {
+        filteredVigilanceAreas = filteredVigilanceAreas.filter(
+          vigilanceArea =>
+            vigilanceArea.visibility && filters.vigilanceAreaFilters?.visibility.includes(vigilanceArea.visibility)
         )
       }
 
@@ -597,10 +611,10 @@ export const getFilteredVigilanceAreas = createSelector(
         !periodFilter ||
         (periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && !specificPeriodFilter)
       ) {
-        return filteredVigilanceAreasByThemes
+        return filteredVigilanceAreas
       }
 
-      return getFilterVigilanceAreasPerPeriod(filteredVigilanceAreasByThemes, periodFilter, specificPeriodFilter)
+      return getFilterVigilanceAreasPerPeriod(filteredVigilanceAreas, periodFilter, specificPeriodFilter)
     }
 
     return undefined

@@ -1,5 +1,6 @@
 import { NearbyUnitDateRangeEnum } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import { RecentActivity } from '@features/RecentActivity/types'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { type ControlUnit, type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { DateRangeEnum } from 'domain/entities/dateRange'
@@ -9,12 +10,30 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import type { RecentActivityFiltersEnum } from '@features/RecentActivity/slice'
-import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { TagOption } from 'domain/entities/tags'
 
 const persistConfig = {
   key: 'dashboardFilters_V2',
   storage
+}
+
+const INITIAL_DASHBOARD_FILTERS: DashboardFiltersType = {
+  controlUnitFilters: {},
+  filters: {},
+  nearbyUnitFilters: {
+    periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS
+  },
+  recentActivityFilters: {
+    periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
+  },
+  reportingFilters: {
+    dateRange: DateRangeEnum.MONTH,
+    status: [StatusFilterEnum.IN_PROGRESS],
+    type: ReportingTypeEnum.INFRACTION_SUSPICION
+  },
+  vigilanceAreaFilters: {
+    visibility: [VigilanceArea.Visibility.PUBLIC]
+  }
 }
 
 export type ReportingFilters = {
@@ -46,6 +65,10 @@ export type ControlUnitFilters = {
   type?: ControlUnit.ControlUnitResourceType
 }
 
+export type VigilanceAreaFilters = {
+  visibility: VigilanceArea.Visibility[]
+}
+
 export type DashboardFilters = {
   amps?: string[]
   previewSelection?: boolean
@@ -68,6 +91,7 @@ export type DashboardFiltersType = {
   nearbyUnitFilters: NearbyUnitFilters
   recentActivityFilters: RecentActivityFilters
   reportingFilters: ReportingFilters
+  vigilanceAreaFilters: VigilanceAreaFilters
 }
 
 type DashboardFiltersState = {
@@ -95,21 +119,7 @@ export const dashboardFiltersSlice = createSlice({
   reducers: {
     createDashboardFilters(state, action: PayloadAction<{ id: string }>) {
       const { id } = action.payload
-      state.dashboards[id] = {
-        controlUnitFilters: {},
-        filters: {},
-        nearbyUnitFilters: {
-          periodFilter: NearbyUnitDateRangeEnum.NEXT_OR_LAST_SEVEN_DAYS
-        },
-        recentActivityFilters: {
-          periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
-        },
-        reportingFilters: {
-          dateRange: DateRangeEnum.MONTH,
-          status: [StatusFilterEnum.IN_PROGRESS],
-          type: ReportingTypeEnum.INFRACTION_SUSPICION
-        }
-      }
+      state.dashboards[id] = INITIAL_DASHBOARD_FILTERS
     },
     deleteDashboardFilters(state, action: PayloadAction<{ id: string }>) {
       const { id } = action.payload
@@ -150,21 +160,7 @@ export const dashboardFiltersSlice = createSlice({
       if (!id) {
         return
       }
-      state.dashboards[id] = filters ?? {
-        controlUnitFilters: {},
-        filters: {},
-        nearbyUnitFilters: {
-          periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS
-        },
-        recentActivityFilters: {
-          periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
-        },
-        reportingFilters: {
-          dateRange: DateRangeEnum.MONTH,
-          status: [StatusFilterEnum.IN_PROGRESS],
-          type: ReportingTypeEnum.INFRACTION_SUSPICION
-        }
-      }
+      state.dashboards[id] = filters ?? INITIAL_DASHBOARD_FILTERS
     },
     setFilters(state, action: PayloadAction<{ filters: DashboardFilters; id: string | undefined }>) {
       const { filters, id } = action.payload
@@ -175,20 +171,11 @@ export const dashboardFiltersSlice = createSlice({
         state.dashboards[id].filters = { ...state.dashboards[id].filters, ...filters }
       } else {
         state.dashboards[id] = {
-          controlUnitFilters: {},
-          filters,
+          ...INITIAL_DASHBOARD_FILTERS,
           nearbyUnitFilters: {
             from: undefined,
             periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS,
             to: undefined
-          },
-          recentActivityFilters: {
-            periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
-          },
-          reportingFilters: {
-            dateRange: DateRangeEnum.MONTH,
-            status: [StatusFilterEnum.IN_PROGRESS],
-            type: ReportingTypeEnum.INFRACTION_SUSPICION
           }
         }
       }
@@ -230,6 +217,16 @@ export const dashboardFiltersSlice = createSlice({
       if (state.dashboards[id]) {
         const { reportingFilters } = state.dashboards[id]
         state.dashboards[id].reportingFilters = { ...reportingFilters, ...filters }
+      }
+    },
+    setVigilanceAreaFilters(state, action: PayloadAction<{ filters: VigilanceAreaFilters; id: string | undefined }>) {
+      const { filters, id } = action.payload
+      if (!id) {
+        return
+      }
+      if (state.dashboards[id]) {
+        const { vigilanceAreaFilters } = state.dashboards[id]
+        state.dashboards[id].vigilanceAreaFilters = { ...vigilanceAreaFilters, ...filters }
       }
     },
     updateFilters: (
@@ -274,6 +271,17 @@ export const getNearbyUnitFilters = createSelector(
     }
 
     return dashboards?.[dashboardId]?.nearbyUnitFilters
+  }
+)
+
+export const getVigilanceAreaFilters = createSelector(
+  [(state: DashboardFiltersState) => state.dashboards, (_, dashboardId: string | undefined) => dashboardId],
+  (dashboards, dashboardId) => {
+    if (!dashboardId) {
+      return undefined
+    }
+
+    return dashboards?.[dashboardId]?.vigilanceAreaFilters
   }
 )
 

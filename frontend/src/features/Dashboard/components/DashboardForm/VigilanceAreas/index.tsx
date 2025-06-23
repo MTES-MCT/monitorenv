@@ -12,6 +12,7 @@ import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 import { ResultNumber, SelectedLayerList, StyledLayerList } from '../style'
 import { StyledToggleSelectAll } from '../ToggleSelectAll'
+import { Filters } from './Filters'
 import { Layer } from './Layer'
 import { Panel } from './Panel'
 import { getSelectionState, handleSelection } from '../ToggleSelectAll/utils'
@@ -40,7 +41,7 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
     const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-    const sortedVigilanecAreas = [...vigilanceAreas].sort((a, b) => a.name.localeCompare(b.name))
+    const sortedVigilanceAreas = [...vigilanceAreas].sort((a, b) => a.name.localeCompare(b.name))
 
     const { selectedVigilanceAreas } = useGetVigilanceAreasQuery(undefined, {
       selectFromResult: ({ data }) => ({
@@ -101,20 +102,23 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
           }
           titleRef={ref}
         >
-          <StyledLayerList
-            $baseLayersLength={sortedVigilanecAreas.length}
-            $showBaseLayers={isExpanded}
-            data-cy="dashboard-vigilance-areas-list"
-          >
-            {sortedVigilanecAreas.map(vigilanceArea => (
-              <Layer
-                key={vigilanceArea.id}
-                isPinned={selectedVigilanceAreaIds.includes(vigilanceArea.id)}
-                isSelected={false}
-                vigilanceArea={vigilanceArea}
-              />
-            ))}
-          </StyledLayerList>
+          <>
+            <Filters />
+            <StyledLayerList
+              $baseLayersLength={sortedVigilanceAreas.length}
+              $showBaseLayers={isExpanded}
+              data-cy="dashboard-vigilance-areas-list"
+            >
+              {sortedVigilanceAreas.map(vigilanceArea => (
+                <Layer
+                  key={vigilanceArea.id}
+                  isPinned={selectedVigilanceAreaIds.includes(vigilanceArea.id)}
+                  isSelected={false}
+                  vigilanceArea={vigilanceArea}
+                />
+              ))}
+            </StyledLayerList>
+          </>
         </Accordion>
         <SelectedAccordion
           isExpanded={isExpandedSelectedAccordion}
