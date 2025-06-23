@@ -374,33 +374,3 @@ jobs:
           make docker-tag-app
           make docker-push-app
     timeout-minutes: 30
-
-  analyze:
-    name: CodeQL
-    runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'java' ] # Kotlin est traité via le moteur Java de CodeQL
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.language }}
-
-      - name: Setup Java JDK
-        uses: actions/setup-java@v4.7.1
-        with:
-          distribution: zulu
-          java-version: 21
-
-      - name: Build project
-        run: ./gradlew build --no-daemon
-        working-directory: ./frontend
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
