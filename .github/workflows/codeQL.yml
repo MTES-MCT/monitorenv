@@ -1,0 +1,45 @@
+name: CI/CD Back & Front
+
+on:
+  push:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  analyze:
+    name: CodeQL
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'java', 'python', 'javascript' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Setup Java JDK
+        if: matrix.language == 'java'
+        uses: actions/setup-java@v4.7.1
+        with:
+          distribution: zulu
+          java-version: 21
+
+      - name: Build project
+        if: matrix.language == 'java'
+        run: ./gradlew build --no-daemon -Dorg.gradle.jvmargs="-Xmx2g"
+        working-directory: ./backend
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
