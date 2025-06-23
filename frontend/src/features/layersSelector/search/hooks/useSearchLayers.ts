@@ -7,7 +7,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import Fuse, { type Expression } from 'fuse.js'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { useMemo } from 'react'
 
 import { getFilterVigilanceAreasPerPeriod } from '../../utils/getFilteredVigilanceAreasPerPeriod'
@@ -39,7 +39,7 @@ export function useSearchLayers() {
   const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery()
 
   const debouncedSearchLayers = useMemo(() => {
-    const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
+    const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) ?? [], {
       ignoreLocation: true,
       includeScore: false,
       keys: [
@@ -55,7 +55,7 @@ export function useSearchLayers() {
       minMatchCharLength: 2,
       threshold: 0.2
     })
-    const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) || [], {
+    const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) ?? [], {
       ignoreLocation: true,
       includeScore: false,
       keys: ['name', 'type'],
@@ -64,7 +64,7 @@ export function useSearchLayers() {
     })
 
     const fuseVigilanceAreas = new Fuse(
-      (vigilanceAreaLayers?.entities && Object.values(vigilanceAreaLayers?.entities)) || [],
+      (vigilanceAreaLayers?.entities && Object.values(vigilanceAreaLayers?.entities)) ?? [],
       {
         ignoreLocation: true,
         includeScore: false,

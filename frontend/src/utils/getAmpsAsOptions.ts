@@ -1,4 +1,4 @@
-import { chain } from 'lodash'
+import { chain } from 'lodash-es'
 
 import type { Option } from '@mtes-mct/monitor-ui'
 import type { EntityState } from '@reduxjs/toolkit'
