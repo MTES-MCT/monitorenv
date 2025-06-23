@@ -39,7 +39,7 @@ export function ImagesAttachments({
         const imageStyle = isLandscape ? style.imageLandscape : style.imagePortrait
 
         return (
-          <Page key={image.name} orientation={image.orientation} size="A4" style={[layoutStyle.page]}>
+          <Page key={image.name} orientation={image.orientation} style={[layoutStyle.page]}>
             <Headings name={briefName} />
             {withPageTitle && index === 0 && (
               <View style={layoutStyle.header1}>
