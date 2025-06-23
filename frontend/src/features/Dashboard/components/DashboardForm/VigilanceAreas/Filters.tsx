@@ -11,7 +11,7 @@ export function Filters() {
   const dashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
 
   const vigilanceAreaFilters = useAppSelector(state => getVigilanceAreaFilters(state.dashboardFilters, dashboardId))
-  const statusOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
+  const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
   const setVisibilityFilter = (visibilityOption: Option<string>, isChecked: boolean | undefined) => {
     if (isChecked) {
@@ -39,14 +39,14 @@ export function Filters() {
 
   return (
     <Wrapper>
-      {statusOptions.map(statusOption => (
+      {visibilityOptions.map(visibilityOption => (
         <StyledCheckbox
-          key={statusOption.label}
-          checked={vigilanceAreaFilters?.visibility?.includes(statusOption.value as VigilanceArea.Visibility)}
+          key={visibilityOption.label}
+          checked={vigilanceAreaFilters?.visibility?.includes(visibilityOption.value as VigilanceArea.Visibility)}
           inline
-          label={statusOption.label}
-          name={statusOption.label}
-          onChange={isChecked => setVisibilityFilter(statusOption, isChecked)}
+          label={visibilityOption.label}
+          name={visibilityOption.label}
+          onChange={isChecked => setVisibilityFilter(visibilityOption, isChecked)}
         />
       ))}
     </Wrapper>

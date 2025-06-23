@@ -13,12 +13,14 @@ type VigilanceAreaSliceState = {
   seaFronts: string[]
   searchQuery: string | undefined
   status: VigilanceArea.Status[]
+  visibility: VigilanceArea.Visibility[]
 }
 const INITIAL_STATE: VigilanceAreaSliceState = {
   createdBy: [],
   seaFronts: [],
   searchQuery: undefined,
-  status: [VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED]
+  status: [VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED],
+  visibility: [VigilanceArea.Visibility.PUBLIC]
 }
 export const vigilanceAreaFiltersSlice = createSlice({
   initialState: INITIAL_STATE,
@@ -36,6 +38,9 @@ export const vigilanceAreaFiltersSlice = createSlice({
     },
     setStatus: (state, action: PayloadAction<VigilanceArea.Status[]>) => {
       state.status = action.payload
+    },
+    setVisibility: (state, action: PayloadAction<VigilanceArea.Visibility[]>) => {
+      state.visibility = action.payload
     },
     updateFilters: (state, action) => {
       state[action.payload.key] = action.payload.value
