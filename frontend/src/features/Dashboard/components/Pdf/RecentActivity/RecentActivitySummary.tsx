@@ -91,7 +91,7 @@ export function RecentActivitySummary({
         <Text>
           Les cercles représentent les <Text style={layoutStyle.bold}>actions de contrôle</Text>. Une action de contrôle
           est un ensemble de contrôles réalisés sur plusieurs cibles de même type, à une seule et même localisation, sur
-          une thématique/sous thématique donnée (ex : un contrôle mouillage de 30 navires au même endroit).
+          une thématique/sous thématique donnée (ex : un contrôle mouillage de 8 navires au même endroit).
         </Text>
       </View>
       <View style={{ flexDirection: 'row', gap: 10 }}>
