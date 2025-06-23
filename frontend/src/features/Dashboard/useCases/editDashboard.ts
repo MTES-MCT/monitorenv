@@ -24,7 +24,7 @@ export const editDashboard =
       controlUnitFilters: dashboardFilters?.controlUnitFilters ?? {},
       filters: dashboardFilters?.filters ?? {},
       nearbyUnitFilters: dashboardFilters?.nearbyUnitFilters ?? {
-        periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS
+        periodFilter: NearbyUnitDateRangeEnum.NEXT_OR_LAST_SEVEN_DAYS
       },
       recentActivityFilters: dashboardFilters?.recentActivityFilters ?? {
         periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS

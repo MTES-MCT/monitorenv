@@ -99,7 +99,7 @@ export const dashboardFiltersSlice = createSlice({
         controlUnitFilters: {},
         filters: {},
         nearbyUnitFilters: {
-          periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS
+          periodFilter: NearbyUnitDateRangeEnum.NEXT_OR_LAST_SEVEN_DAYS
         },
         recentActivityFilters: {
           periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
