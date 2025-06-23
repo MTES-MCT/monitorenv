@@ -123,6 +123,9 @@ const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $metadat
         padding-left: 20px;
         padding-right: 20px;
     `}
+  &:first-child {
+    border-top: 1px solid ${p => p.theme.color.lightGray};
+  }
 `
 const NameContainer = styled.div`
   align-items: center;
