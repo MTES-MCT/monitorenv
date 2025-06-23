@@ -15,7 +15,7 @@ import {
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Checkbox, CheckPicker } from '@mtes-mct/monitor-ui'
+import { Checkbox, CheckPicker, getOptionsFromLabelledEnum, type Option } from '@mtes-mct/monitor-ui'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import styled from 'styled-components'
 
@@ -43,10 +43,12 @@ export function VigilanceAreasFilters() {
     createdBy: createdByFilter,
     seaFronts: seaFrontFilter,
     searchQuery: searchQueryFilter,
-    status: statusFilter
+    status: statusFilter,
+    visibility: visibilityFilter
   } = useAppSelector(state => state.vigilanceAreaFilters)
 
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
+  const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
   const hasFilters =
     seaFrontFilter?.length > 0 ||
@@ -100,11 +102,55 @@ export function VigilanceAreasFilters() {
     })
   }
 
+  const updateVisibilityFilter = (visibilityOption: Option<string>, isChecked: boolean | undefined) => {
+    const currentVisibilityFilter = visibilityFilter
+    let newVisibilityFilter: VigilanceArea.Visibility[] = []
+    if (isChecked) {
+      newVisibilityFilter = [...currentVisibilityFilter, visibilityOption.value as VigilanceArea.Visibility]
+    } else {
+      newVisibilityFilter = currentVisibilityFilter.filter(
+        visibility => visibility !== (visibilityOption.value as VigilanceArea.Visibility)
+      )
+    }
+
+    dispatch(vigilanceAreaFiltersActions.setVisibility(newVisibilityFilter))
+  }
+
   const hasCustomPeriodFilter = filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
 
   return (
     <Wrapper>
-      <SearchFilter />
+      <FiltersFirstLine>
+        <SearchFilter />
+        <StyledStatusFilter>
+          {visibilityOptions.map(visibility => (
+            <Checkbox
+              key={visibility.label}
+              checked={visibilityFilter?.includes(visibility.value as VigilanceArea.Visibility)}
+              label={visibility.label}
+              name={visibility.label}
+              onChange={isChecked => updateVisibilityFilter(visibility, isChecked)}
+            />
+          ))}
+          <Separator />
+          <>
+            <Checkbox
+              key={VigilanceArea.StatusLabel.PUBLISHED}
+              checked={statusFilter.includes(VigilanceArea.Status.PUBLISHED)}
+              label={VigilanceArea.StatusLabel.PUBLISHED}
+              name={VigilanceArea.StatusLabel.PUBLISHED}
+              onChange={checked => updateStatusFilter(checked, VigilanceArea.Status.PUBLISHED)}
+            />
+            <Checkbox
+              key={VigilanceArea.StatusLabel.DRAFT}
+              checked={statusFilter.includes(VigilanceArea.Status.DRAFT)}
+              label={VigilanceArea.StatusLabel.DRAFT}
+              name={VigilanceArea.StatusLabel.DRAFT}
+              onChange={checked => updateStatusFilter(checked, VigilanceArea.Status.DRAFT)}
+            />
+          </>
+        </StyledStatusFilter>
+      </FiltersFirstLine>
 
       <FilterContainer>
         <PeriodFilter style={{ width: 320 }} />
@@ -136,22 +182,6 @@ export function VigilanceAreasFilters() {
           style={{ width: 181 }}
           value={seaFrontFilter}
         />
-        <>
-          <Checkbox
-            key={VigilanceArea.StatusLabel.PUBLISHED}
-            checked={statusFilter.includes(VigilanceArea.Status.PUBLISHED)}
-            label={VigilanceArea.StatusLabel.PUBLISHED}
-            name={VigilanceArea.StatusLabel.PUBLISHED}
-            onChange={checked => updateStatusFilter(checked, VigilanceArea.Status.PUBLISHED)}
-          />
-          <Checkbox
-            key={VigilanceArea.StatusLabel.DRAFT}
-            checked={statusFilter.includes(VigilanceArea.Status.DRAFT)}
-            label={VigilanceArea.StatusLabel.DRAFT}
-            name={VigilanceArea.StatusLabel.DRAFT}
-            onChange={checked => updateStatusFilter(checked, VigilanceArea.Status.DRAFT)}
-          />
-        </>
       </FilterContainer>
       {(hasCustomPeriodFilter || hasFilters) && (
         <TagsContainer>
@@ -176,10 +206,21 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 16px;
 `
+const FiltersFirstLine = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+export const StyledStatusFilter = styled.div`
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+`
 
 const FilterContainer = styled.div`
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
 `
 const OptionValue = styled.span`
@@ -187,4 +228,9 @@ const OptionValue = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+export const Separator = styled.div`
+  border-right: ${p => `1px solid ${p.theme.color.slateGray}`};
+  height: 50%;
+  width: 2px;
 `
