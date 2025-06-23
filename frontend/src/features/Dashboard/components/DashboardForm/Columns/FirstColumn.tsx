@@ -16,8 +16,7 @@ import { VigilanceAreas } from '../VigilanceAreas'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
 import { BackgroundMap } from '../BackgroundMap'
-
-import type { DashboardFilters } from '../slice'
+import { getVigilanceAreaFilters, type DashboardFilters } from '../slice'
 
 type FirstColumnProps = {
   dashboard: DashboardType
@@ -68,7 +67,12 @@ export function FirstColumn({
   const filteredRegulatoryAreas = useAppSelector(state =>
     getFilteredRegulatoryAreas(state.dashboard, filters?.regulatoryTags)
   )
-  const filteredVigilanceAreas = useAppSelector(state => getFilteredVigilanceAreas(state.dashboard, filters))
+
+  const dashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+  const vigilanceAreaFilters = useAppSelector(state => getVigilanceAreaFilters(state.dashboardFilters, dashboardId))
+  const filteredVigilanceAreas = useAppSelector(state =>
+    getFilteredVigilanceAreas(state.dashboard, { dashboardFilters: filters, vigilanceAreaFilters })
+  )
 
   const [columnWidth, setColumnWidth] = useState<number | undefined>(undefined)
 

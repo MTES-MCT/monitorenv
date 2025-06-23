@@ -3,6 +3,7 @@ import { NearbyUnitDateRangeEnum } from '@features/Dashboard/components/Dashboar
 import { RecentActivity } from '@features/RecentActivity/types'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { Level } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { ReportingTypeEnum, StatusFilterEnum } from 'domain/entities/reporting'
@@ -33,6 +34,9 @@ export const editDashboard =
         dateRange: DateRangeEnum.MONTH,
         status: [StatusFilterEnum.IN_PROGRESS],
         type: ReportingTypeEnum.INFRACTION_SUSPICION
+      },
+      vigilanceAreaFilters: dashboardFilters?.vigilanceAreaFilters ?? {
+        visibility: [VigilanceArea.Visibility.PUBLIC]
       }
     }
 
