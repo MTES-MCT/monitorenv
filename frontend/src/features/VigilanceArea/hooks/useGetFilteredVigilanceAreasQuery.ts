@@ -12,12 +12,13 @@ import { isVigilanceAreaPartOfSeaFront } from '../useCases/filters/isVigilanceAr
 import { isVigilanceAreaPartOfStatus } from '../useCases/filters/isVigilanceAreaPartOfStatus'
 import { isVigilanceAreaPartOfTag } from '../useCases/filters/isVigilanceAreaPartOfTag'
 import { isVigilanceAreaPartOfTheme } from '../useCases/filters/isVigilanceAreaPartOfTheme'
+import { isVigilanceAreaPartOfVisibility } from '../useCases/filters/isVigilanceAreaPartOfVisibility'
 
 export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
   const isSuperUser = useMemo(() => user?.isSuperUser, [user])
 
-  const { createdBy, seaFronts, searchQuery, status } = useAppSelector(state => state.vigilanceAreaFilters)
+  const { createdBy, seaFronts, searchQuery, status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
@@ -41,7 +42,8 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
         isVigilanceAreaPartOfSeaFront(vigilanceArea, seaFronts) &&
         isVigilanceAreaPartOfStatus(vigilanceArea, isSuperUser ? status : [VigilanceArea.Status.PUBLISHED]) &&
         isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
-        isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes)
+        isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes) &&
+        isVigilanceAreaPartOfVisibility(vigilanceArea, visibility)
     )
 
     const vigilanceAreasByPeriod = getFilterVigilanceAreasPerPeriod(
@@ -94,6 +96,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
     createdBy,
     seaFronts,
     status,
+    visibility,
     filteredRegulatoryTags,
     isSuperUser,
     filteredRegulatoryThemes

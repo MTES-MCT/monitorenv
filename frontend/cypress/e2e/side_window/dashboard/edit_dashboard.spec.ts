@@ -21,6 +21,8 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
 
     // Edit the dashboard
     cy.get('h2').contains('Zones de vigilance').click()
+
+    cy.fill('Interne CACEM', true)
     cy.wait(250)
     cy.getDataCy('dashboard-vigilance-area-zone-tags-and-buttons-8')
       .find('.Element-Tag')
