@@ -11,7 +11,6 @@ export const style = StyleSheet.create({
   },
   imageLandscape: {
     alignSelf: 'center',
-    height: '500pt',
     objectFit: 'contain',
     width: 'auto'
   },
@@ -36,7 +35,8 @@ export function ImagesAttachments({
     <>
       {images?.map((image, index) => {
         const isLandscape = image.orientation === Orientation.LANDSCAPE
-        const imageStyle = isLandscape ? style.imageLandscape : style.imagePortrait
+        const lanscapeImageHeight = index === 0 && isLandscape ? { height: '400pt' } : { height: '500pt' }
+        const imageStyle = isLandscape ? [style.imageLandscape, lanscapeImageHeight] : style.imagePortrait
 
         return (
           <Page key={image.name} orientation={image.orientation} style={[layoutStyle.page]}>
