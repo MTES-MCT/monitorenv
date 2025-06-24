@@ -15,7 +15,7 @@ export function Filters() {
 
   const setVisibilityFilter = (visibilityOption: Option<string>, isChecked: boolean | undefined) => {
     if (isChecked) {
-      const currentVisibilityFilter = vigilanceAreaFilters?.visibility || []
+      const currentVisibilityFilter = vigilanceAreaFilters?.visibility ?? []
       dispatch(
         dashboardFiltersActions.setVigilanceAreaFilters({
           filters: { visibility: [...currentVisibilityFilter, visibilityOption.value as VigilanceArea.Visibility] },
