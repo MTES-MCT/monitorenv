@@ -7,6 +7,7 @@ import { FrequencyCell } from '../Rows/FrequencyCell'
 import { HighlightCell } from '../Rows/HighlightCell'
 import { LocalizeCell } from '../Rows/LocalizeCell'
 import { StatusCell } from '../Rows/StatusCell'
+import { VisibilityCell } from '../Rows/VisibilityCell'
 
 import type { Row } from '@tanstack/react-table'
 
@@ -17,7 +18,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Début',
     id: 'startDatePeriod',
-    size: 92 + legacyFirefoxOffset
+    size: 90 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.endDatePeriod,
@@ -25,7 +26,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDatePeriod',
-    size: 92 + legacyFirefoxOffset
+    size: 90 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.frequency,
@@ -68,7 +69,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Commentaire',
     id: 'comments',
-    size: 397 + legacyFirefoxOffset
+    size: 327 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.seaFront,
@@ -79,12 +80,20 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     size: 104 + legacyFirefoxOffset
   },
   {
+    accessorFn: row => row.visibility,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <VisibilityCell visibility={info.getValue()} />),
+    enableSorting: true,
+    header: () => 'Visibilité',
+    id: 'visibility',
+    size: 130 + legacyFirefoxOffset
+  },
+  {
     accessorFn: row => row.isDraft,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <StatusCell isDraft={info.getValue()} />),
     enableSorting: true,
     header: () => 'Statut',
     id: 'isDraft',
-    size: 135 + legacyFirefoxOffset
+    size: 125 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.createdBy,
@@ -92,7 +101,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Créée par',
     id: 'createdBy',
-    size: 100 + legacyFirefoxOffset
+    size: 97 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,

@@ -23,5 +23,5 @@ const StatusContainer = styled.div<{ $color: string }>`
   align-items: center;
   color: ${p => p.$color};
   display: flex;
-  gap: 8px;
+  gap: 4px;
 `
