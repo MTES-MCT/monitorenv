@@ -67,4 +67,14 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
     cy.fill('Rechercher dans les zones de vigilance', 'Proin', { delay: 400 })
     cy.getDataCy('vigilance-area-row').should('have.length', 1)
   })
+
+  it('Should filter vigilance areas by visibility', () => {
+    // with both visibility options checked
+    cy.fill('Interne CACEM', true)
+    cy.getDataCy('vigilance-area-row').should('have.length', 4)
+
+    // with on PUBLIC visibility option checked
+    cy.fill('Interne CACEM', false)
+    cy.getDataCy('vigilance-area-row').should('have.length', 3)
+  })
 })
