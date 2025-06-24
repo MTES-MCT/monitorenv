@@ -43,6 +43,11 @@ export function getDatesFromFilters({ from, periodFilter, to }: GetDatesFromFilt
       toDate = customDayjs().utc().endOf('day').toISOString()
       break
 
+    case NearbyUnitDateRangeEnum.NEXT_OR_LAST_SEVEN_DAYS:
+      fromDate = customDayjs().utc().startOf('day').subtract(7, 'day').toISOString()
+      toDate = customDayjs().utc().startOf('day').add(7, 'day').toISOString()
+      break
+
     case NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS:
       fromDate = customDayjs().utc().startOf('day').subtract(7, 'day').toISOString()
       toDate = customDayjs().utc().startOf('day').toISOString()
