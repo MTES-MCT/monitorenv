@@ -33,9 +33,7 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
         )
       )
     },
-    onModifyEnd: (geom: GeoJSON.Geometry | Geometry) =>
-      dispatch(dashboardActions.setGeometry(geom as GeoJSON.Geometry)),
-    withConversionToGeoJSONGeometryObject: false
+    onModifyEnd: (geom: GeoJSON.Geometry | Geometry) => dispatch(dashboardActions.setGeometry(geom as GeoJSON.Geometry))
   })
 
   return null
