@@ -1,10 +1,12 @@
+import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
 import {
   Accent,
   Button,
   CoordinatesFormat,
   DataTable,
   FormikCoordinatesInput,
-  FormikTextInput
+  FormikTextInput,
+  Level
 } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
@@ -15,7 +17,6 @@ import styled from 'styled-components'
 import { INITIAL_STATION_FORM_VALUES, STATION_FORM_SCHEMA } from './constants'
 import { getStationFormValuesFromStation, getStationDataFromStationFormValues, isStationData } from './utils'
 import { stationsAPI, useGetStationQuery } from '../../../../api/stationsAPI'
-import { globalActions } from '../../../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../libs/FrontendError'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../../../BackOffice/components/BackofficeMenu/constants'
@@ -54,9 +55,12 @@ export function StationForm() {
       if (isNew) {
         await dispatch(stationsAPI.endpoints.createStation.initiate(stationData))
         dispatch(
-          globalActions.setToast({
-            message: `Base "${stationData.name}" créée.`,
-            type: 'success'
+          addBackOfficeBanner({
+            children: `Base "${stationData.name}" créée.`,
+            isClosable: true,
+            isFixed: true,
+            level: Level.SUCCESS,
+            withAutomaticClosing: true
           })
         )
 
@@ -71,9 +75,12 @@ export function StationForm() {
 
       await dispatch(stationsAPI.endpoints.updateStation.initiate(stationData))
       dispatch(
-        globalActions.setToast({
-          message: `Base "${stationData.name}" mise à jour.`,
-          type: 'success'
+        addBackOfficeBanner({
+          children: `Base "${stationData.name}" mise à jour.`,
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
         })
       )
 

@@ -1,8 +1,9 @@
+import { newUserError } from '@libs/error'
+
 import { monitorenvPublicApi } from './api'
 import { ARCHIVE_GENERIC_ERROR_MESSAGE, DELETE_GENERIC_ERROR_MESSAGE } from './constants'
 import { ApiErrorCode, type BackendApiBooleanResponse } from './types'
 import { FrontendApiError } from '../libs/FrontendApiError'
-import { newUserError } from '../libs/UserError'
 
 import type { Administration } from '../domain/entities/administration'
 
@@ -28,8 +29,8 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
         url: `/v1/administrations/${administrationId}/archive`
       }),
       transformErrorResponse: response => {
-        if (response.data.type === ApiErrorCode.UNARCHIVED_CHILD) {
-          return newUserError(ARCHIVE_ADMINISTRATION_ERROR_MESSAGE)
+        if (response.data.code === ApiErrorCode.UNARCHIVED_CHILD) {
+          return newUserError(ARCHIVE_ADMINISTRATION_ERROR_MESSAGE, 'backoffice')
         }
 
         return new FrontendApiError(ARCHIVE_GENERIC_ERROR_MESSAGE, response)
@@ -65,8 +66,8 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
         url: `/v1/administrations/${administrationId}`
       }),
       transformErrorResponse: response => {
-        if (response.data.type === ApiErrorCode.FOREIGN_KEY_CONSTRAINT) {
-          return newUserError(DELETE_ADMINISTRATION_ERROR_MESSAGE)
+        if (response.data.code === ApiErrorCode.CANNOT_DELETE_ENTITY) {
+          return newUserError(DELETE_ADMINISTRATION_ERROR_MESSAGE, 'backoffice')
         }
 
         return new FrontendApiError(DELETE_GENERIC_ERROR_MESSAGE, response)

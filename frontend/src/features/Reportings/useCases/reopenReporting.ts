@@ -1,7 +1,9 @@
 import { reportingActions } from '@features/Reportings/slice'
+import { Level } from '@mtes-mct/monitor-ui'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { setToast, ReportingContext } from '../../../domain/shared_slices/Global'
+import { ReportingContext } from '../../../domain/shared_slices/Global'
+import { displayReportingBanner } from '../utils'
 
 import type { Reporting } from '../../../domain/entities/reporting'
 
@@ -18,17 +20,21 @@ export const reopenReporting =
         }
 
         await dispatch(reportingActions.setReporting(updatedReporting))
-        dispatch(
-          setToast({
-            containerId: reportingContext,
-            message: 'Le signalement a bien été réouvert',
-            type: 'success'
-          })
-        )
+        displayReportingBanner({
+          context: reportingContext,
+          dispatch,
+          level: Level.SUCCESS,
+          message: 'Le signalement a bien été réouvert'
+        })
       } else {
         throw Error('Erreur à la réouvertue du signalement')
       }
     } catch (error) {
-      dispatch(setToast({ containerId: reportingContext, message: error }))
+      displayReportingBanner({
+        context: reportingContext,
+        dispatch,
+        level: Level.ERROR,
+        message: error instanceof Error ? error.message : String(error)
+      })
     }
   }

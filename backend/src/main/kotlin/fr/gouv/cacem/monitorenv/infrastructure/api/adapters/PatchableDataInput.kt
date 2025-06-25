@@ -2,9 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -34,12 +33,16 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(
                     return@associateWith convertJsonValueToType(
                         nextPropValueFromRequest,
                         parameter.name
-                            ?: throw BackendInternalException(
+                            ?: throw BackendUsageException(
+                                BackendUsageErrorCode.UNVALID_PROPERTY,
                                 "${this::class.simpleName}: Property name not found.",
+                                parameter.name,
                             ),
                         propType?.returnType?.classifier as? KClass<*>
-                            ?: throw BackendInternalException(
+                            ?: throw BackendUsageException(
+                                BackendUsageErrorCode.UNVALID_PROPERTY,
                                 "${this::class.simpleName}: Type for `${parameter.name}` not found.",
+                                parameter.name,
                             ),
                     )
                 }
@@ -60,9 +63,10 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(
                 if (jsonNode.isBoolean) {
                     jsonNode.asBoolean()
                 } else {
-                    throw BackendRequestException(
-                        BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.UNVALID_PROPERTY,
                         "${this::class.simpleName}: Property `$propName` is not of type `Boolean`.",
+                        propName,
                     )
                 }
 
@@ -70,9 +74,10 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(
                 if (jsonNode.canConvertToInt()) {
                     jsonNode.asInt()
                 } else {
-                    throw BackendRequestException(
-                        BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.UNVALID_PROPERTY,
                         "${this::class.simpleName}: Property `$propName` is not of type `Int`.",
+                        propName,
                     )
                 }
 
@@ -80,14 +85,17 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(
                 if (jsonNode.isTextual) {
                     jsonNode.asText()
                 } else {
-                    throw BackendRequestException(
-                        BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.UNVALID_PROPERTY,
                         "${this::class.simpleName}: Property `$propName` is not of type `String`.",
+                        propName,
                     )
                 }
 
-            else -> throw BackendInternalException(
+            else -> throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
                 "${this::class.simpleName}: Unsupported type `$propType` for property `$propName`.",
+                propName,
             )
         }
 }

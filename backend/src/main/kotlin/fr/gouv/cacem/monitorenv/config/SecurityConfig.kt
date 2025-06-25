@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.config
 
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.log.CustomAuthenticationEntryPoint
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.SpaController.Companion.FRONTEND_APP_ROUTES
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -37,6 +38,7 @@ class SecurityConfig(
                     authorize
                         .requestMatchers(
                             "/",
+                            *FRONTEND_APP_ROUTES.toTypedArray(),
                             "/index.html",
                             "/*.js",
                             "/*.png",

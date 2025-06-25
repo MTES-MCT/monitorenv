@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetail
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import org.locationtech.jts.geom.Geometry
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 interface IReportingRepository {
     fun archiveOutdatedReportings(): Int
@@ -54,7 +54,7 @@ interface IReportingRepository {
 
     fun findByMissionId(missionId: Int): List<ReportingDetailsDTO>
 
-    fun findById(reportingId: Int): ReportingDetailsDTO
+    fun findById(reportingId: Int): ReportingDetailsDTO?
 
     fun findAllById(reportingId: List<Int>): List<ReportingDetailsDTO>
 

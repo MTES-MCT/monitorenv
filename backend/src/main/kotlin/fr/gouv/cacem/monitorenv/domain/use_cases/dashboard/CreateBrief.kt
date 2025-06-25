@@ -20,7 +20,7 @@ class CreateBrief(
             return dashboardFile.createEditableBrief(brief)
         } catch (e: Exception) {
             val errorMessage = "Brief with id ${brief.dashboard.id} couldn't be created"
-            logger.error(errorMessage)
+            logger.error(errorMessage, e)
             throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, message = errorMessage)
         }
     }

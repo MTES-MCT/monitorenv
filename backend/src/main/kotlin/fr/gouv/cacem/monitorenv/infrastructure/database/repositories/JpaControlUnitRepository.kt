@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.NearbyUnit
@@ -11,11 +10,11 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDepartmentAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
-import fr.gouv.cacem.monitorenv.utils.requirePresent
 import org.locationtech.jts.geom.Geometry
+import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.dao.InvalidDataAccessApiUsageException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
@@ -28,6 +27,8 @@ class JpaControlUnitRepository(
     private val dbMissionRepository: IDBMissionRepository,
     private val mapper: ObjectMapper,
 ) : IControlUnitRepository {
+    private val logger = LoggerFactory.getLogger(JpaControlUnitRepository::class.java)
+
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun archiveById(controlUnitId: Int) {
@@ -44,29 +45,23 @@ class JpaControlUnitRepository(
     override fun findAll(): List<FullControlUnitDTO> = dbControlUnitRepository.findAll().map { it.toFullControlUnit() }
 
     @Transactional
-    override fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO =
-        dbControlUnitRepository.findById(controlUnitId).get().toFullControlUnit()
+    override fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO? =
+        dbControlUnitRepository.findByIdOrNull(controlUnitId)?.toFullControlUnit()
 
     @Transactional
-    override fun findById(controlUnitId: Int): ControlUnitEntity =
-        dbControlUnitRepository.findById(controlUnitId).get().toControlUnit()
+    override fun findById(controlUnitId: Int): ControlUnitEntity? =
+        dbControlUnitRepository.findByIdOrNull(controlUnitId)?.toControlUnit()
 
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
-    override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity =
-        try {
-            val administrationModel = requirePresent(dbAdministrationRepository.findById(controlUnit.administrationId))
-            val departmentAreaModel =
-                controlUnit.departmentAreaInseeCode?.let { dbDepartmentAreaRepository.findByInseeCode(it) }
-            val controlUnitModel =
-                ControlUnitModel.fromControlUnit(controlUnit, administrationModel, departmentAreaModel)
-            dbControlUnitRepository.save(controlUnitModel).toControlUnit()
-        } catch (e: InvalidDataAccessApiUsageException) {
-            throw NotFoundException(
-                "Unable to find (and update) control unit with `id` = ${controlUnit.id}.",
-                e,
-            )
-        }
+    override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity {
+        val administration = dbAdministrationRepository.getReferenceById(controlUnit.administrationId)
+        val departmentAreaModel =
+            controlUnit.departmentAreaInseeCode?.let { dbDepartmentAreaRepository.findByInseeCode(it) }
+        val controlUnitModel =
+            ControlUnitModel.fromControlUnit(controlUnit, administration, departmentAreaModel)
+        return dbControlUnitRepository.save(controlUnitModel).toControlUnit()
+    }
 
     @Transactional
     override fun findNearbyUnits(

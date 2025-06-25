@@ -8,7 +8,7 @@ interface IAdministrationRepository {
 
     fun deleteById(administrationId: Int)
 
-    fun findById(administrationId: Int): FullAdministrationDTO
+    fun findById(administrationId: Int): FullAdministrationDTO?
 
     fun findAll(): List<FullAdministrationDTO>
 

@@ -5,7 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.domain.exceptions.NotFoundException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
@@ -14,30 +15,36 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel.
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel.Companion.fromThemeEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.AbstractReportingModel.Companion.fromReportingEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBSemaphoreRepository
 import org.apache.commons.lang3.StringUtils
 import org.locationtech.jts.geom.Geometry
+import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 @Repository
 class JpaReportingRepository(
     private val dbReportingRepository: IDBReportingRepository,
     private val dbMissionRepository: IDBMissionRepository,
-    private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
-    private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
     private val mapper: ObjectMapper,
 ) : IReportingRepository {
+    private val logger = LoggerFactory.getLogger(JpaReportingRepository::class.java)
+
     @Transactional
     override fun attachEnvActionsToReportings(
         envActionId: UUID,
@@ -62,9 +69,8 @@ class JpaReportingRepository(
         dbReportingRepository.detachDanglingEnvActions(missionId, envActionIds)
     }
 
-    // FIXME (25/07/2024) : passer par le findByIdOrNull et refacto
-    override fun findById(reportingId: Int): ReportingDetailsDTO =
-        dbReportingRepository.findById(reportingId).get().toReportingDetailsDTO(mapper)
+    override fun findById(reportingId: Int): ReportingDetailsDTO? =
+        dbReportingRepository.findByIdOrNull(reportingId)?.toReportingDetailsDTO(mapper)
 
     @Transactional
     override fun findAllById(reportingId: List<Int>): List<ReportingDetailsDTO> =
@@ -143,7 +149,7 @@ class JpaReportingRepository(
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     override fun save(reporting: ReportingEntity): ReportingDetailsDTO {
-        return try {
+        try {
             val missionReference =
                 if (reporting.missionId != null) {
                     dbMissionRepository.getReferenceById(
@@ -213,12 +219,15 @@ class JpaReportingRepository(
 
             return dbReportingRepository.saveAndFlush(reportingModel).toReportingDetailsDTO(mapper)
         } catch (e: JpaObjectRetrievalFailureException) {
-            throw NotFoundException(
-                "Invalid reference to semaphore, control unit or mission: not found in referential",
-                e,
-            )
+            val errorMessage =
+                "Invalid reference to semaphore, control unit or mission: not found in referential"
+            logger.error(errorMessage, e)
+            throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, errorMessage)
         } catch (e: DataIntegrityViolationException) {
-            throw NotFoundException("Invalid combination of mission and/or envAction", e)
+            val errorMessage =
+                "Invalid combination of mission and/or envAction"
+            logger.error(errorMessage, e)
+            throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, errorMessage)
         }
     }
 

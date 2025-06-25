@@ -4,7 +4,16 @@ import fr.gouv.cacem.monitorenv.config.EditableBriefProperties
 import fr.gouv.cacem.monitorenv.config.LegicemProperties
 import fr.gouv.cacem.monitorenv.config.MonitorExtProperties
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.dashboard.*
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefFileEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DetailRenderable
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefAmpEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefRegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefTargetDetailsEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefVigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.file.dashboard.IDashboardFile
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
@@ -17,17 +26,34 @@ import org.apache.batik.transcoder.TranscoderOutput
 import org.apache.batik.transcoder.image.PNGTranscoder
 import org.apache.poi.util.Units
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy
-import org.apache.poi.xwpf.usermodel.*
+import org.apache.poi.xwpf.usermodel.BreakType
+import org.apache.poi.xwpf.usermodel.Document
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment
+import org.apache.poi.xwpf.usermodel.TableRowHeightRule
+import org.apache.poi.xwpf.usermodel.TableWidthType
+import org.apache.poi.xwpf.usermodel.XWPFDocument
+import org.apache.poi.xwpf.usermodel.XWPFFooter
+import org.apache.poi.xwpf.usermodel.XWPFParagraph
+import org.apache.poi.xwpf.usermodel.XWPFRun
+import org.apache.poi.xwpf.usermodel.XWPFTable
+import org.apache.poi.xwpf.usermodel.XWPFTableCell
+import org.apache.poi.xwpf.usermodel.XWPFTableRow
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.awt.image.BufferedImage
-import java.io.*
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStream
 import java.math.BigInteger
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Base64
+import java.util.Locale
 import javax.imageio.ImageIO
 
 @Component
@@ -48,7 +74,7 @@ class DashboardFile(
             if (controlUnits.isNotEmpty()) {
                 controlUnits.joinToString(
                     ", ",
-                ) { it.name }
+                ) { it?.name ?: "Unité inconnue" }
             } else {
                 "Aucune unité sélectionnée"
             }

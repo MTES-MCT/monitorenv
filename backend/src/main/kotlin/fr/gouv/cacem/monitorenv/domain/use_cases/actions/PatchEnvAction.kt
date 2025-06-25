@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
 import org.slf4j.LoggerFactory
-import java.util.UUID
+import java.util.*
 
 @UseCase
 class PatchEnvAction(
@@ -28,6 +28,8 @@ class PatchEnvAction(
             logger.info("envaction $id patched")
             return patchedEnvAction
         }
-        throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, "envAction $id not found")
+        val errorMessage = "envAction $id not found"
+        logger.error(errorMessage)
+        throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, errorMessage)
     }
 }

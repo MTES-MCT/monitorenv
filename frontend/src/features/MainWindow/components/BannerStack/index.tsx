@@ -1,9 +1,9 @@
+import { Item } from '@components/BannerStack/item'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { isDefined } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { Item } from './Item'
 import { mainWindowActions } from '../../slice'
 
 // TODO Implement top positionning with a visible `<Healthcheck />`.
