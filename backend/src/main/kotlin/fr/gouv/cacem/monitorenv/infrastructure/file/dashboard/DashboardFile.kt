@@ -38,11 +38,13 @@ import org.apache.poi.xwpf.usermodel.XWPFRun
 import org.apache.poi.xwpf.usermodel.XWPFTable
 import org.apache.poi.xwpf.usermodel.XWPFTableCell
 import org.apache.poi.xwpf.usermodel.XWPFTableRow
+import org.imgscalr.Scalr
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -97,7 +99,6 @@ class DashboardFile(
         val base64Content = Base64Converter().convertToBase64(odtFile)
         tempFile.delete()
 
-        println("base64Content $base64Content")
         return BriefFileEntity(
             fileName = "Brief-${brief.dashboard.name}.odt",
             fileContent = base64Content,
@@ -138,7 +139,7 @@ class DashboardFile(
             "\${briefName}" to dashboard.name,
             "\${comments}" to (dashboard.comments ?: "Aucun commentaire"),
             "\${controlUnits}" to controlUnitsName,
-            "\${totalRegulatoryAreasText}" to buildCountText("zones règlementaires", regulatoryCount, true),
+            "\${totalRegulatoryAreasText}" to buildCountText("zones réglementaires", regulatoryCount, true),
             "\${totalRegulatoryAreas}" to regulatoryCount.toString(),
             "\${totalAmpsText}" to buildCountText("aires marines protégées", ampCount, true),
             "\${totalAmps}" to ampCount.toString(),
@@ -159,7 +160,7 @@ class DashboardFile(
         brief: BriefEntity,
     ) {
         document.paragraphs.firstOrNull { it.text.contains("\${globalMap}") }?.let { paragraph ->
-            createImageFromBase64("global_map", brief.image?.image ?: "", paragraph)
+            createImageFromBase64("global_map", brief.image, paragraph)
             paragraph.runs.forEach { it.setText("", 0) }
         }
     }
@@ -253,7 +254,7 @@ class DashboardFile(
 
         val headerRow = table.getRow(0) ?: table.createRow()
         val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
-        headerCell.setText("Zones règlementaires - $totalRegulatoryAreas sélectionnée(s)")
+        headerCell.setText("Zones réglementaires - $totalRegulatoryAreas sélectionnée(s)")
         styleCell(headerCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = "FFFFFF")
         mergeCellsHorizontally(table)
         setCellColor(headerCell, "8CC3C0")
@@ -470,7 +471,8 @@ class DashboardFile(
 
             createImageFromBase64(
                 name = item.title,
-                image = item.image.image,
+                image = item.image,
+                minimap = item.minimap,
                 paragraph = imageParagraph,
             )
 
@@ -504,7 +506,47 @@ class DashboardFile(
             }
         }
         cleanParagraphPlaceholder(document, paragraph)
+    }
 
+    private fun mergeImages(
+        image: String,
+        overlay: String,
+    ): ByteArray {
+        val mainImageData = cleanBase64String(image)
+        val overlayImageData = cleanBase64String(overlay)
+
+        val mainImage = mainImageData.inputStream().use { ImageIO.read(it) }
+        val overlayRaw = overlayImageData.inputStream().use { ImageIO.read(it) }
+
+        val overlayWidth = 150
+        val overlayHeight = 90
+        val overlayResized =
+            Scalr.resize(overlayRaw, Scalr.Method.QUALITY, Scalr.Mode.FIT_EXACT, overlayWidth, overlayHeight)
+
+        val borderedOverlay =
+            BufferedImage(overlayWidth + 5, overlayHeight + 5, BufferedImage.TYPE_INT_ARGB).apply {
+                val g = createGraphics()
+                g.color = Color.WHITE
+                g.fillRect(0, 0, width, height)
+                g.drawImage(overlayResized, 2, 2, null)
+                g.dispose()
+            }
+
+        // merge image with overlay
+        val combined =
+            BufferedImage(mainImage.width, mainImage.height, BufferedImage.TYPE_INT_ARGB).apply {
+                val g = createGraphics()
+                g.drawImage(mainImage, 0, 0, null)
+                val x = mainImage.width - borderedOverlay.width - 10
+                val y = mainImage.height - borderedOverlay.height - 10
+                g.drawImage(borderedOverlay, x, y, null)
+                g.dispose()
+            }
+
+        return ByteArrayOutputStream().use { outputStream ->
+            ImageIO.write(combined, "png", outputStream)
+            outputStream.toByteArray()
+        }
     }
 
     private fun addTargetDetailRows(
@@ -766,14 +808,14 @@ class DashboardFile(
         // Merge the cells
         val firstCell = tableRow.getCell(fromCol)
         firstCell
-            .getCTTc()
+            .ctTc
             .addNewTcPr()
             .addNewHMerge()
             .`val` = STMerge.RESTART
         for (col in fromCol + 1..toCol) {
             tableRow
                 .getCell(col)
-                .getCTTc()
+                .ctTc
                 .addNewTcPr()
                 .addNewHMerge()
                 .`val` = STMerge.CONTINUE
@@ -913,13 +955,19 @@ class DashboardFile(
         name: String,
         image: String?,
         paragraph: XWPFParagraph,
+        minimap: String? = null,
+        height: Int = 450,
+        width: Int = 675,
     ) {
         val sanitizedFileName =
             name
                 .replace(Regex("[\\\\/:*?\"<>|{}]"), "_")
                 .replace("\\s+".toRegex(), "_")
 
-        val imageData = image?.let { cleanBase64String(it) }
+        val imageData: ByteArray? =
+            image?.let {
+                minimap?.let { minimapData -> mergeImages(it, minimapData) } ?: cleanBase64String(it)
+            }
 
         val tempImageFile = File("temp_image_$sanitizedFileName}.png")
         if (imageData != null) {
@@ -933,8 +981,8 @@ class DashboardFile(
             inputStreamImg,
             XWPFDocument.PICTURE_TYPE_PNG,
             "$sanitizedFileName.png",
-            Units.pixelToEMU(675), // Largeur
-            Units.pixelToEMU(450), // Hauteur
+            Units.pixelToEMU(width), // Largeur
+            Units.pixelToEMU(height), // Hauteur
         )
         inputStreamImg.close()
         if (!tempImageFile.delete()) {

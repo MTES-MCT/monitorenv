@@ -21,8 +21,10 @@ import { getTitle } from 'domain/entities/layers/utils'
 import { type Reporting, ReportingTypeEnum } from 'domain/entities/reporting'
 import { vesselTypeLabel } from 'domain/entities/vesselType'
 
+import { getImage, getMinimap } from '../components/Pdf/utils'
 import { Dashboard } from '../types'
 
+import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { RecentActivityFilters } from '@features/RecentActivity/slice'
 import type { RecentActivity } from '@features/RecentActivity/types'
 import type { HomeAppThunk } from '@store/index'
@@ -35,7 +37,7 @@ type ExportBriefProps = {
     recentActivity: RecentActivity.RecentControlsActivity[],
     controlUnitIds: number[],
     isLight?: boolean
-  ) => Promise<any[]> | undefined
+  ) => Promise<ExportImageType[]> | undefined
   recentActivityFilters: RecentActivityFilters | undefined
 }
 export const exportBrief =
@@ -63,7 +65,7 @@ export const exportBrief =
 
     const images = await getImages(recentActivity ?? [], dashboard.controlUnitIds, false)
 
-    const wholeImage = images?.find(img => String(img.featureId)?.includes('WHOLE_DASHBOARD'))
+    const wholeImage = images?.find(img => String(img.featureId)?.includes('WHOLE_DASHBOARD'))?.image
 
     /* VIGILANCE AREAS */
     const vigilanceAreas = getVigilanceAreasByIds(getState(), dashboard.vigilanceAreaIds)
@@ -95,17 +97,15 @@ export const exportBrief =
       const filteredRegulatoryAreas = allLinkedRegulatoryAreas.filter(regulatoryArea =>
         vigilanceArea.linkedRegulatoryAreas?.includes(regulatoryArea.id)
       )
-      const image = images?.find(
-        img =>
-          String(img.featureId)?.includes(Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS) &&
-          String(img.featureId).split(':')[1] === String(vigilanceArea.id)
-      )
+      const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
+      const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
 
       return {
         ...vigilanceArea,
         image,
         linkedAMPs: filteredAmps.map(amp => amp.name).join(', '),
-        linkedRegulatoryAreas: filteredRegulatoryAreas.map(regulatoryArea => regulatoryArea.entityName).join(', ')
+        linkedRegulatoryAreas: filteredRegulatoryAreas.map(regulatoryArea => regulatoryArea.entityName).join(', '),
+        minimap
       }
     })
     /* REGULATORY AREAS */
@@ -122,15 +122,13 @@ export const exportBrief =
       url: regulatoryArea.url
     }))
     const regulatoryAreasWithImages = formattedRegulatoryAreas.map(regulatoryArea => {
-      const image = images?.find(
-        img =>
-          String(img.featureId)?.includes('DASHBOARD_REGULATORY_AREAS') &&
-          String(img.featureId).split(':')[1] === String(regulatoryArea.id)
-      )
+      const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_REGULATORY_AREAS, regulatoryArea.id)
+      const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_REGULATORY_AREAS, regulatoryArea.id)
 
       return {
         ...regulatoryArea,
-        image
+        image,
+        minimap
       }
     })
 
@@ -146,14 +144,13 @@ export const exportBrief =
       url: amp.urlLegicem
     }))
     const ampsWithImages = formattedAmps.map(amp => {
-      const image = images?.find(
-        img =>
-          String(img.featureId)?.includes('DASHBOARD_AMP') && String(img.featureId).split(':')[1] === String(amp.id)
-      )
+      const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_AMP, amp.id)
+      const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_AMP, amp.id)
 
       return {
         ...amp,
-        image
+        image,
+        minimap
       }
     })
 
