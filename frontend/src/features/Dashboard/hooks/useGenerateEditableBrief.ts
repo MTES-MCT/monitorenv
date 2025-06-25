@@ -15,12 +15,15 @@ export function useGenerateEditableBrief(dashboard: Dashboard.Dashboard) {
   const recentActivityFilters = useAppSelector(state =>
     getRecentActivityFilters(state.dashboardFilters, activeDashboardId)
   )
+  const nearbyUnits = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.selectedNearbyUnits : []
+  )
 
   const { getImages } = useExportImages()
 
   const downloadEditableBrief = async () => {
     setIsLoadingBrief(true)
-    await dispatch(exportBrief({ dashboard, getImages, recentActivityFilters }))
+    await dispatch(exportBrief({ dashboard, getImages, nearbyUnits, recentActivityFilters }))
     setIsLoadingBrief(false)
   }
 

@@ -4,11 +4,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.apache.poi.xwpf.usermodel.XWPFTableCell
 
 interface DetailRenderable {
-    val title: String
-    val image: String?
-    val minimap: String?
-
-    fun buildDetailsRows(document: XWPFDocument): List<List<String>>
+    fun buildDetailsRows(): List<List<String>>
 
     fun customizeValueCell(
         rowIndex: Int,

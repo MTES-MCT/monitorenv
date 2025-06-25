@@ -14,10 +14,10 @@ data class EditableBriefAmpEntity(
     val refReg: String? = null,
     val type: String? = null,
     val urlLegicem: String? = null,
-) : DetailRenderable {
+) : DetailWithImagesRenderable {
     override val title = name
 
-    override fun buildDetailsRows(document: XWPFDocument): List<List<String>> =
+    override fun buildDetailsRows(): List<List<String>> =
         listOf(
             listOf("Nature d'AMP", designation),
             listOf("Résumé reg.sur Légicem", urlLegicem ?: ""),

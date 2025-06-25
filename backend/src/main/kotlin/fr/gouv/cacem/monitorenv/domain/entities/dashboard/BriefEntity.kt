@@ -1,10 +1,11 @@
 package fr.gouv.cacem.monitorenv.domain.entities.dashboard
 
 data class BriefEntity(
-    val amps: List<EditableBriefAmpEntity>? = listOf(),
+    val amps: List<EditableBriefAmpEntity>,
     val dashboard: DashboardEntity,
     val image: String? = null,
-    val regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>? = listOf(),
-    val reportings: List<EditableBriefReportingEntity>? = listOf(),
-    val vigilanceAreas: List<EditableBriefVigilanceAreaEntity>? = listOf(),
+    val nearbyUnits: List<EditableBriefNearbyUnitEntity>,
+    val regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>,
+    val reportings: List<EditableBriefReportingEntity>,
+    val vigilanceAreas: List<EditableBriefVigilanceAreaEntity>,
 )
