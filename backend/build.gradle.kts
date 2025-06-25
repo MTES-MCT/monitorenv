@@ -111,6 +111,8 @@ dependencies {
     // the two following apoche poi dependencies should have the same version
     implementation("org.apache.poi:poi:5.4.1")
     implementation("org.apache.poi:poi-ooxml:5.4.1")
+    // Scalr (image resizer with better quality)
+    implementation("org.imgscalr:imgscalr-lib:4.2")
 
     // SVG
     implementation("org.apache.xmlgraphics:batik-transcoder:1.19")

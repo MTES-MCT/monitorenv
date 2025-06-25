@@ -8,7 +8,8 @@ data class EditableBriefAmpEntity(
     val id: Int,
     val color: String,
     val designation: String,
-    override val image: BriefImageEntity,
+    override val image: String?,
+    override val minimap: String?,
     val name: String,
     val refReg: String? = null,
     val type: String? = null,
@@ -28,7 +29,7 @@ data class EditableBriefAmpEntity(
         document: XWPFDocument,
     ) {
         if (rowIndex == 1) {
-            while (cell.paragraphs.size > 0) {
+            while (cell.paragraphs.isNotEmpty()) {
                 cell.removeParagraph(0)
             }
             WordUtils.addHyperlink(cell, urlLegicem ?: "", refReg, document)

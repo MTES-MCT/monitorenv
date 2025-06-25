@@ -6,7 +6,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.apache.poi.xwpf.usermodel.XWPFTableCell
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 
 data class EditableBriefVigilanceAreaEntity(
     val color: String,
@@ -16,7 +16,8 @@ data class EditableBriefVigilanceAreaEntity(
     val frequency: String,
     val id: Int,
     val isAtAllTimes: Boolean,
-    override val image: BriefImageEntity,
+    override val image: String?,
+    override val minimap: String?,
     val linkedAMPs: String? = null,
     val linkedRegulatoryAreas: String? = null,
     val links: List<LinkEntity>? = null,
