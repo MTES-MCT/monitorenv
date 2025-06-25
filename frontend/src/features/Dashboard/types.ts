@@ -158,6 +158,7 @@ export namespace Dashboard {
     amps: AmpForEditableBrief[]
     dashboard: Dashboard
     image?: string
+    nearbyUnits: NearbyUnit[]
     regulatoryAreas: RegulatoryAreaForEditableBrief[]
     reportings: ReportingForEditableBrief[]
     vigilanceAreas: VigilanceAreaForEditableBrief[]

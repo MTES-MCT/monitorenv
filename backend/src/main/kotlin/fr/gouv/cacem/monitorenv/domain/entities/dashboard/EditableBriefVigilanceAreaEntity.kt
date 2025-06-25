@@ -25,7 +25,7 @@ data class EditableBriefVigilanceAreaEntity(
     val startDatePeriod: ZonedDateTime? = null,
     val themes: String? = null,
     val visibility: String? = null,
-) : DetailRenderable {
+) : DetailWithImagesRenderable {
     override val title = name
 
     companion object {
@@ -33,7 +33,7 @@ data class EditableBriefVigilanceAreaEntity(
         const val LINK_ROW_INDEX = 6
     }
 
-    override fun buildDetailsRows(document: XWPFDocument): List<List<String>> {
+    override fun buildDetailsRows(): List<List<String>> {
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
         val periodDate = "Du ${startDatePeriod?.format(formatter)} au ${endDatePeriod?.format(formatter)}"
 
@@ -61,7 +61,7 @@ data class EditableBriefVigilanceAreaEntity(
                 val cellRun = cell.addParagraph().createRun()
                 cellRun.fontFamily = "Arial"
                 cellRun.fontSize = 10
-                cellRun.setText(buildDetailsRows(document)[0][1])
+                cellRun.setText(buildDetailsRows()[0][1])
                 cellRun.addBreak()
                 cellRun.setText(frequency)
                 cellRun.addBreak()
