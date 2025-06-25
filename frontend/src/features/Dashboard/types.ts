@@ -153,7 +153,7 @@ export namespace Dashboard {
   export type EditableBriefExport = {
     amps: AmpForEditableBrief[]
     dashboard: Dashboard
-    image?: ExportImageType
+    image?: string
     regulatoryAreas: RegulatoryAreaForEditableBrief[]
     reportings: ReportingForEditableBrief[]
     vigilanceAreas: VigilanceAreaForEditableBrief[]
@@ -192,10 +192,11 @@ export namespace Dashboard {
     endingOccurenceDate: string
     frequency: string
     id: number
-    image?: ExportImageType
+    image?: string
     linkedAMPs?: string
     linkedRegulatoryAreas?: string
     links?: Link[]
+    minimap?: string
     name: string
     startDatePeriod?: string
     themes?: string
@@ -206,7 +207,8 @@ export namespace Dashboard {
     color: string
     designation: string
     id: number
-    image?: ExportImageType
+    image?: string
+    minimap?: string
     name: string
     refReg?: string
     type?: string
@@ -218,8 +220,9 @@ export namespace Dashboard {
     entityName: string
     facade: string
     id: number
-    image?: ExportImageType
+    image?: string
     layerName: string
+    minimap?: string
     refReg: string
     themes?: string
     type: string

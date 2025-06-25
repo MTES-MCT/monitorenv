@@ -9,7 +9,8 @@ data class EditableBriefRegulatoryAreaEntity(
     val color: String,
     val entityName: String,
     val facade: String? = null,
-    override val image: BriefImageEntity,
+    override val image: String?,
+    override val minimap: String?,
     val layerName: String,
     val refReg: String? = null,
     val themes: String? = null,
@@ -37,7 +38,7 @@ data class EditableBriefRegulatoryAreaEntity(
         document: XWPFDocument,
     ) {
         if (rowIndex == LINK_ROW_INDEX) {
-            while (cell.paragraphs.size > 0) {
+            while (cell.paragraphs.isNotEmpty()) {
                 cell.removeParagraph(0)
             }
             WordUtils.addHyperlink(cell, url ?: "", refReg, document)
