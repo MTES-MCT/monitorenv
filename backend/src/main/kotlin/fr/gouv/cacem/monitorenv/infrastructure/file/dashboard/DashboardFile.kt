@@ -3,10 +3,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.file.dashboard
 import fr.gouv.cacem.monitorenv.config.EditableBriefProperties
 import fr.gouv.cacem.monitorenv.config.LegicemProperties
 import fr.gouv.cacem.monitorenv.config.MonitorExtProperties
-import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefFileEntity
-import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DetailRenderable
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DetailWithImagesRenderable
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefAmpEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefRegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefReportingEntity
@@ -14,7 +13,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefTargetDet
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefVigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.file.dashboard.IDashboardFile
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.file.reporting.ReportingFlags
@@ -182,11 +180,11 @@ class DashboardFile(
         brief: BriefEntity,
     ) {
         document.paragraphs.firstOrNull { it.text.contains("\${regulatoryAreasTable}") }?.let {
-            createRegulatoryTable(it, brief.regulatoryAreas ?: emptyList())
+            createRegulatoryTable(it, brief.regulatoryAreas)
         }
 
         document.paragraphs.firstOrNull { it.text.contains("\${ampsAndVigilanceAreasTables}") }?.let {
-            createSideBySideTables(it, brief.vigilanceAreas ?: emptyList(), brief.amps ?: emptyList())
+            createSideBySideTables(it, brief.vigilanceAreas, brief.amps)
         }
     }
 
@@ -194,20 +192,24 @@ class DashboardFile(
         document: XWPFDocument,
         brief: BriefEntity,
     ) {
+        document.paragraphs.firstOrNull { it.text.contains("\${reportingsDetails}") }?.let { paragraph ->
+            createReportingsDetails(paragraph, brief.reportings)
+        }
+
         document.paragraphs.firstOrNull { it.text.contains("\${regulatoryAreasDetails}") }?.let { paragraph ->
-            createDetailsSection(paragraph, brief.regulatoryAreas ?: emptyList())
+            createDetailsSection(paragraph, brief.regulatoryAreas)
         }
 
         document.paragraphs.firstOrNull { it.text.contains("\${ampsDetails}") }?.let { paragraph ->
-            createDetailsSection(paragraph, brief.amps ?: emptyList())
+            createDetailsSection(paragraph, brief.amps)
         }
 
         document.paragraphs.firstOrNull { it.text.contains("\${vigilanceAreasDetails}") }?.let { paragraph ->
-            createDetailsSection(paragraph, brief.vigilanceAreas ?: emptyList())
+            createDetailsSection(paragraph, brief.vigilanceAreas)
         }
 
         document.paragraphs.firstOrNull { it.text.contains("\${reportingsDetails}") }?.let { paragraph ->
-            createReportingsDetails(paragraph, brief.reportings ?: emptyList())
+            createReportingsDetails(paragraph, brief.reportings)
         }
     }
 
@@ -394,7 +396,7 @@ class DashboardFile(
             setCellColor(cellTitle, "E5E5EB")
             cellTitle.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER)
 
-            addReportingGeneralInformations(
+            addReportingGeneralInformation(
                 table,
                 reporting,
             )
@@ -452,7 +454,7 @@ class DashboardFile(
         pageBreakParagraph.createRun().addBreak(BreakType.PAGE)
     }
 
-    private fun <T : DetailRenderable> createDetailsSection(
+    private fun <T : DetailWithImagesRenderable> createDetailsSection(
         paragraph: XWPFParagraph,
         items: List<T>,
     ) {
@@ -481,7 +483,7 @@ class DashboardFile(
             setTableBorders(table, "D4E5F4")
             table.setWidth("100%")
 
-            val rows = item.buildDetailsRows(document)
+            val rows = item.buildDetailsRows()
 
             for ((index, rowData) in rows.withIndex()) {
                 val row = table.createRow()
@@ -554,88 +556,7 @@ class DashboardFile(
         target: EditableBriefTargetDetailsEntity,
         reporting: EditableBriefReportingEntity,
     ) {
-        val targetLabel = "Type de cible"
-        val rows: List<List<String>> =
-            when (reporting.targetType) {
-                TargetTypeEnum.INDIVIDUAL ->
-                    listOf(
-                        listOf(
-                            targetLabel,
-                            "Personne physique",
-                            "Identité de la personne",
-                            target.operatorName ?: "",
-                            "",
-                            "",
-                        ),
-                    )
-
-                TargetTypeEnum.COMPANY ->
-                    listOf(
-                        listOf(
-                            targetLabel,
-                            "Personne morale",
-                            "Nom de la personne morale",
-                            target.operatorName ?: "",
-                            "Identité de la personne contrôlée",
-                            target.vesselName ?: "",
-                        ),
-                    )
-
-                TargetTypeEnum.OTHER ->
-                    listOf(
-                        listOf(targetLabel, "Autre", "", "", "", ""),
-                    )
-
-                else -> {
-                    if (reporting.vehicleType != VehicleTypeEnum.VESSEL) {
-                        listOf(
-                            listOf(
-                                targetLabel,
-                                "Véhicule",
-                                "Immatriculation",
-                                target.externalReferenceNumber ?: "",
-                                "Identité de la personne contrôlée",
-                                target.operatorName ?: "",
-                            ),
-                            listOf(
-                                "Type de véhicule",
-                                translateVehicleType(reporting.vehicleType),
-                                "",
-                                "",
-                                "",
-                                "",
-                            ),
-                        )
-                    } else {
-                        listOf(
-                            listOf(
-                                targetLabel,
-                                "Véhicule",
-                                "Nom du navire",
-                                target.vesselName ?: "",
-                                "Immatriculation",
-                                target.externalReferenceNumber ?: "",
-                            ),
-                            listOf(
-                                "Type de véhicule",
-                                "Navire",
-                                "MMSI",
-                                target.mmsi ?: "",
-                                "Taille",
-                                target.size ?: "",
-                            ),
-                            listOf(
-                                "IMO",
-                                target.imo ?: "",
-                                "Nom du capitaine",
-                                target.operatorName ?: "",
-                                "Type de navire",
-                                target.vesselType ?: "",
-                            ),
-                        )
-                    }
-                }
-            }
+        val rows: List<List<String>> = target.buildDetailsRows(reporting)
 
         rows.forEach { rowData ->
             val row = table.createRow()
@@ -663,15 +584,7 @@ class DashboardFile(
         }
     }
 
-    private fun translateVehicleType(vehicleType: VehicleTypeEnum?): String =
-        when (vehicleType) {
-            VehicleTypeEnum.VEHICLE_AIR -> "Véhicule aérien"
-            VehicleTypeEnum.VEHICLE_LAND -> "Véhicule terrestre"
-            VehicleTypeEnum.VESSEL -> "Navire"
-            else -> "Autre véhicule"
-        }
-
-    private fun addReportingGeneralInformations(
+    private fun addReportingGeneralInformation(
         table: XWPFTable,
         reporting: EditableBriefReportingEntity,
     ) {
@@ -685,20 +598,14 @@ class DashboardFile(
             row.addNewTableCell()
         }
 
-        val labels = listOf("Thématique", "Localisation", "Source")
-        val values =
-            listOf(
-                "${reporting.theme} / ${reporting.subThemes}",
-                reporting.localization,
-                reporting.reportingSources,
-            )
+        val detailRows = reporting.buildDetailsRows()
 
-        labels.indices.forEach { i ->
-            val labelCell = row.getCell(i * 2)
-            configureCell(labelCell, labels[i], bold = false, color = "707785", width = 1200)
+        for ((index, rowData) in detailRows.withIndex()) {
+            val labelCell = row.getCell(index * 2)
+            configureCell(labelCell, rowData[0], bold = false, color = "707785", width = 1200)
 
-            val valueCell = row.getCell(i * 2 + 1)
-            configureCell(valueCell, values[i], bold = true, width = 2660)
+            val valueCell = row.getCell(index * 2 + 1)
+            configureCell(valueCell, rowData[1], bold = true, width = 2660)
         }
     }
 

@@ -24,6 +24,7 @@ import { vesselTypeLabel } from 'domain/entities/vesselType'
 import { getImage, getMinimap } from '../components/Pdf/utils'
 import { Dashboard } from '../types'
 
+import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { RecentActivityFilters } from '@features/RecentActivity/slice'
 import type { RecentActivity } from '@features/RecentActivity/types'
@@ -38,10 +39,11 @@ type ExportBriefProps = {
     controlUnitIds: number[],
     isLight?: boolean
   ) => Promise<ExportImageType[]> | undefined
+  nearbyUnits: NearbyUnit[] | undefined
   recentActivityFilters: RecentActivityFilters | undefined
 }
 export const exportBrief =
-  ({ dashboard, getImages, recentActivityFilters }: ExportBriefProps): HomeAppThunk =>
+  ({ dashboard, getImages, nearbyUnits, recentActivityFilters }: ExportBriefProps): HomeAppThunk =>
   async (dispatch, getState) => {
     /* RECENT ACTIVITY */
     const startAfterFilter = recentActivityFilters?.startedAfter
@@ -232,6 +234,7 @@ export const exportBrief =
           id: dashboard.createdAt ? dashboard.id : ''
         },
         image: wholeImage,
+        nearbyUnits: nearbyUnits ?? [],
         regulatoryAreas: regulatoryAreasWithImages,
         reportings: formattedReportings ?? [],
         vigilanceAreas: vigilanceAreasWithImagesAndLinkedLayers
