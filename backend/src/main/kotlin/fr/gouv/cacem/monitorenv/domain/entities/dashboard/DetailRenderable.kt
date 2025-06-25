@@ -5,7 +5,8 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell
 
 interface DetailRenderable {
     val title: String
-    val image: BriefImageEntity
+    val image: String?
+    val minimap: String?
 
     fun buildDetailsRows(document: XWPFDocument): List<List<String>>
 
