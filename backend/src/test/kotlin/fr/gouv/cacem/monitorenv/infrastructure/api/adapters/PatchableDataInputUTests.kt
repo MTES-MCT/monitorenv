@@ -1,9 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.exceptions.BackendInternalException
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -138,13 +137,13 @@ class PatchableDataInputUTests {
 
         // Then
         val exception =
-            assertThrows<BackendRequestException> {
+            assertThrows<BackendUsageException> {
                 // When
                 FakeDataInput
                     .fromFakeEntity(existingFakeEntityFromDatabase)
                     .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
             }
-        assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
+        assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `isAwesome` is not of type `Boolean`.")
     }
 
@@ -160,13 +159,13 @@ class PatchableDataInputUTests {
 
         // Then
         val exception =
-            assertThrows<BackendRequestException> {
+            assertThrows<BackendUsageException> {
                 // When
                 FakeDataInput
                     .fromFakeEntity(existingFakeEntityFromDatabase)
                     .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
             }
-        assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
+        assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `rank` is not of type `Int`.")
     }
 
@@ -182,13 +181,13 @@ class PatchableDataInputUTests {
 
         // Then
         val exception =
-            assertThrows<BackendRequestException> {
+            assertThrows<BackendUsageException> {
                 // When
                 FakeDataInput
                     .fromFakeEntity(existingFakeEntityFromDatabase)
                     .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
             }
-        assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
+        assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `name` is not of type `String`.")
     }
 
@@ -208,7 +207,7 @@ class PatchableDataInputUTests {
 
         // Then
         val exception =
-            assertThrows<BackendInternalException> {
+            assertThrows<BackendUsageException> {
                 // When
                 FakeDataInput(anUnsupportedTypedProp = "A value")
                     .patchFromRequestData(objectMapper, fakeRequestDataAsJson)

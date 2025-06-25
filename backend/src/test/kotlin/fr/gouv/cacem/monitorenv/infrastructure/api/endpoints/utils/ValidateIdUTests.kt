@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.infrastructure.api.utils.validateId
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,11 +47,11 @@ class ValidateIdUTests {
 
         // Then
         val exception =
-            assertThrows<BackendRequestException> {
+            assertThrows<BackendUsageException> {
                 // When
                 fakeController.patch(1, fakeRequestDataAsJson)
             }
-        assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
+        assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining("`id` is missing in the request data.")
     }
 
@@ -62,11 +62,11 @@ class ValidateIdUTests {
 
         // Then
         val exception =
-            assertThrows<BackendRequestException> {
+            assertThrows<BackendUsageException> {
                 // When
                 fakeController.patch(1, fakeRequestDataAsJson)
             }
-        assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
+        assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining("`id` is `null` in the request data.")
     }
 
@@ -77,11 +77,11 @@ class ValidateIdUTests {
 
         // Then
         val exception =
-            assertThrows<BackendRequestException> {
+            assertThrows<BackendUsageException> {
                 // When
                 fakeController.patch(1, fakeRequestDataAsJson)
             }
-        assertThat(exception.code).isEqualTo(BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE)
+        assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining("`id` must be an integer in the request data.")
     }
 
@@ -92,11 +92,11 @@ class ValidateIdUTests {
 
         // Then
         val exception =
-            assertThrows<BackendRequestException> {
+            assertThrows<BackendUsageException> {
                 // When
                 fakeController.patch(1, fakeRequestDataAsJson)
             }
-        assertThat(exception.code).isEqualTo(BackendRequestErrorCode.BODY_ID_MISMATCH_REQUEST_PATH_ID)
+        assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining(
             "Request data `id` ('2') doesn't match the {id} in the request path ('1').",
         )

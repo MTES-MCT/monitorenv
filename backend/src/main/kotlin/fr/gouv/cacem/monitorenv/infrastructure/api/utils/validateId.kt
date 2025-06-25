@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestErrorCode
-import fr.gouv.cacem.monitorenv.infrastructure.exceptions.BackendRequestException
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 
 fun validateId(
     requestDataAsJson: String,
@@ -14,30 +14,30 @@ fun validateId(
     val idAsJsonNode = requestDataAsJsonNode.get(idPropName)
 
     if (idAsJsonNode == null) {
-        throw BackendRequestException(
-            BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
+        throw BackendUsageException(
+            BackendUsageErrorCode.UNVALID_PROPERTY,
             "`$idPropName` is missing in the request data.",
         )
     }
 
     if (idAsJsonNode.isNull) {
-        throw BackendRequestException(
-            BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
+        throw BackendUsageException(
+            BackendUsageErrorCode.UNVALID_PROPERTY,
             "`$idPropName` is `null` in the request data.",
         )
     }
 
     if (!idAsJsonNode.isInt) {
-        throw BackendRequestException(
-            BackendRequestErrorCode.WRONG_REQUEST_BODY_PROPERTY_TYPE,
+        throw BackendUsageException(
+            BackendUsageErrorCode.UNVALID_PROPERTY,
             "`$idPropName` must be an integer in the request data.",
         )
     }
 
     val requestDataId = idAsJsonNode.asInt()
     if (requestDataId != idFromRequestPath) {
-        throw BackendRequestException(
-            BackendRequestErrorCode.BODY_ID_MISMATCH_REQUEST_PATH_ID,
+        throw BackendUsageException(
+            BackendUsageErrorCode.UNVALID_PROPERTY,
             "Request data `$idPropName` ('$requestDataId') doesn't match the {$idPropName} in the request path ('$idFromRequestPath').",
         )
     }
