@@ -16,14 +16,14 @@ data class EditableBriefRegulatoryAreaEntity(
     val themes: String? = null,
     val type: String? = null,
     val url: String? = null,
-) : DetailRenderable {
+) : DetailWithImagesRenderable {
     override val title = layerName
 
     companion object {
         const val LINK_ROW_INDEX = 4
     }
 
-    override fun buildDetailsRows(document: XWPFDocument): List<List<String>> =
+    override fun buildDetailsRows(): List<List<String>> =
         listOf(
             listOf("Entité", entityName),
             listOf("Ensemble reg", type ?: ""),
