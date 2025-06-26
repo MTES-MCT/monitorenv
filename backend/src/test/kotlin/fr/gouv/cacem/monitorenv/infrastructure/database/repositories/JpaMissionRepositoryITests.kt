@@ -33,7 +33,7 @@ import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
-import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
@@ -970,7 +970,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 controlUnits =
                     listOf(
                         LegacyControlUnitEntity(
-                            id = 5,
+                            id = 10004,
                             name = "DPM – DDTM 35",
                             administration = "DDTM",
                             isArchived = false,
@@ -993,7 +993,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val throwable = catchThrowable { jpaMissionRepository.save(newMission) }
 
         // Then
-        assertThat(throwable).isInstanceOf(DataIntegrityViolationException::class.java)
+        assertThat(throwable).isInstanceOf(JpaObjectRetrievalFailureException::class.java)
     }
 
     @Test
@@ -1026,7 +1026,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val throwable = catchThrowable { jpaMissionRepository.save(newMission) }
 
         // Then
-        assertThat(throwable).isInstanceOf(DataIntegrityViolationException::class.java)
+        assertThat(throwable).isInstanceOf(JpaObjectRetrievalFailureException::class.java)
     }
 
     @Test
