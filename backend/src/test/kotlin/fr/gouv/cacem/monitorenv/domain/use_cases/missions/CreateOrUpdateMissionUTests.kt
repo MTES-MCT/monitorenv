@@ -11,11 +11,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPoint
@@ -233,5 +236,29 @@ class CreateOrUpdateMissionUTests {
 
         // Then
         assertThat(createdMission.createdAtUtc).isEqualTo(ZonedDateTime.parse("2022-01-23T20:29:03Z"))
+    }
+
+    @Test
+    fun `execute should throw BackendUsageException when save failed`() {
+        // Given
+        val missionToUpdate = aMissionEntity()
+
+        given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
+        given(missionRepository.findById(100))
+            .willReturn(missionToUpdate.copy(createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")))
+        given(missionRepository.save(anyOrNull())).willThrow(RuntimeException("Save failed"))
+
+        // When
+        assertThatThrownBy {
+            CreateOrUpdateMission(
+                missionRepository = missionRepository,
+                facadeRepository = facadeAreasRepository,
+                eventPublisher = applicationEventPublisher,
+                postgisFunctionRepository = postgisFunctionRepository,
+            ).execute(
+                missionToUpdate,
+            )
+        }.isInstanceOf(BackendUsageException::class.java)
+            .hasMessage("Unable to save mission with `id` = ${missionToUpdate.id}.")
     }
 }

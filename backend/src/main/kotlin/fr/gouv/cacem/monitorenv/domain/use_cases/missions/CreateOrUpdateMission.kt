@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
@@ -25,42 +27,44 @@ class CreateOrUpdateMission(
         @UseCaseValidation<MissionEntity>(validator = MissionValidator::class)
         mission: MissionEntity,
     ): MissionEntity {
-        logger.info("Attempt to CREATE or UPDATE mission ${mission.id}")
+        try {
+            logger.info("Attempt to CREATE or UPDATE mission ${mission.id}")
 
-        val normalizedMission =
-            mission.geom?.let { nonNullGeom ->
-                mission.copy(
-                    geom = postgisFunctionRepository.normalizeMultipolygon(nonNullGeom),
+            val normalizedMission =
+                mission.geom?.let { nonNullGeom ->
+                    mission.copy(
+                        geom = postgisFunctionRepository.normalizeMultipolygon(nonNullGeom),
+                    )
+                }
+                    ?: mission
+
+            val facade =
+                normalizedMission.geom?.let { nonNullGeom ->
+                    facadeRepository.findFacadeFromGeometry(nonNullGeom)
+                }
+            val storedMission = normalizedMission.id?.let { id -> missionRepository.findById(id) }
+
+            val missionToSave =
+                normalizedMission.copy(
+                    facade = facade,
+                    observationsByUnit = storedMission?.observationsByUnit,
+                    envActions = storedMission?.envActions,
+                )
+            val savedMission = missionRepository.save(missionToSave)
+
+            if (mission.id != null) {
+                logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
+                eventPublisher.publishEvent(
+                    UpdateMissionEvent(savedMission.mission),
                 )
             }
-                ?: mission
+            logger.info("Mission ${savedMission.mission.id} created or updated")
 
-        val facade =
-            normalizedMission.geom?.let { nonNullGeom ->
-                facadeRepository.findFacadeFromGeometry(nonNullGeom)
-            }
-        val storedMission = normalizedMission.id?.let { id -> missionRepository.findById(id) }
-
-        val missionToSave =
-            normalizedMission.copy(
-                facade = facade,
-                observationsByUnit = storedMission?.observationsByUnit,
-                envActions = storedMission?.envActions,
-            )
-        val savedMission = missionRepository.save(missionToSave)
-
-        if (savedMission.mission.id == null) {
-            throw IllegalArgumentException("Mission id is null")
+            return savedMission.mission
+        } catch (ex: Exception) {
+            val errorMessage = "Unable to save mission with `id` = ${mission.id}."
+            logger.error(errorMessage, ex)
+            throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, message = errorMessage)
         }
-
-        if (mission.id != null) {
-            logger.info("Sending CREATE/UPDATE event for mission id ${savedMission.mission.id}.")
-            eventPublisher.publishEvent(
-                UpdateMissionEvent(savedMission.mission),
-            )
-        }
-        logger.info("Mission ${savedMission.mission.id} created or updated")
-
-        return savedMission.mission
     }
 }
