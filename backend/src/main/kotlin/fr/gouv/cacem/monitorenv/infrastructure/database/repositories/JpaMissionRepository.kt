@@ -13,7 +13,15 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlResourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlUnitModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlResourceRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlUnitRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.apache.commons.lang3.StringUtils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -28,6 +36,7 @@ class JpaMissionRepository(
     private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
     private val dbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
+    private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbMissionControlUnitRepository: IDBMissionControlUnitRepository,
     private val dbMissionControlResourceRepository: IDBMissionControlResourceRepository,
     private val dbEnvActionRepository: IDBEnvActionRepository,
@@ -191,25 +200,11 @@ class JpaMissionRepository(
         mission: MissionEntity,
         missionModel: MissionModel,
     ): List<MissionControlResourceModel> {
-        // Extract all control units resources unique control unit resource IDs
-        val uniqueControlUnitResourceIds =
-            mission.controlUnits
-                .flatMap { controlUnit -> controlUnit.resources.map { it.id } }
-                .distinct()
-        // Fetch all of them as models
-        val controlUnitResourceModels =
-            dbControlUnitResourceRepository.findAllById(uniqueControlUnitResourceIds)
-        // Create an `[id] → ControlUnitResourceModel` map
-        val controlUnitResourceModelMap =
-            controlUnitResourceModels.associateBy { requireNotNull(it.id) }
-
         val controlResources =
             mission.controlUnits.flatMap { controlUnit ->
                 controlUnit.resources.map { controlUnitResource ->
                     val controlUnitResourceModel =
-                        requireNotNull(
-                            controlUnitResourceModelMap[controlUnitResource.id],
-                        )
+                        dbControlUnitResourceRepository.getReferenceById(controlUnitResource.id)
 
                     MissionControlResourceModel(
                         resource = controlUnitResourceModel,
@@ -229,6 +224,7 @@ class JpaMissionRepository(
             mission.controlUnits.map { controlUnit ->
                 MissionControlUnitModel.fromLegacyControlUnit(
                     controlUnit,
+                    dbControlUnitRepository.getReferenceById(controlUnit.id),
                     missionModel,
                 )
             }
