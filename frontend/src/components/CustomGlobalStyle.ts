@@ -41,22 +41,22 @@ html {
 .hide {
     display: none;
   }
-  
+
   .visible {
     visibility: visible;
   }
-  
+
   .active-tab {
     background-color: #707785;
   }
-  
+
   .highlight {
     margin: 0;
     padding: 0;
     background-color: #cccfd6;
     color: rgb(81, 81, 81);
   }
-  
+
   .collapsed {
     display: none;
   }
@@ -78,4 +78,9 @@ html {
     line-height: normal;
   }
 
+  ul,ol,menu {
+    list-style: none;
+    padding-left:0;
+    margin-bottom: 0;
+  }
 `

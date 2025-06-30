@@ -18,7 +18,7 @@ type FooterProps = {
 }
 function LightBriefTooltip() {
   return (
-    <StyledTooltip isSideWindow>
+    <Tooltip isSideWindow orientation="TOP_LEFT">
       <TooltipList>
         <TooltipListLine>
           <Icon.Confirm color={THEME.color.mediumSeaGreen} />
@@ -53,7 +53,7 @@ function LightBriefTooltip() {
           <span>Détails des AMP</span>
         </TooltipListLine>
       </TooltipList>
-    </StyledTooltip>
+    </Tooltip>
   )
 }
 export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
@@ -263,17 +263,7 @@ const TextLight = styled.span`
   color: ${p => p.theme.color.slateGray};
 `
 
-const StyledTooltip = styled(Tooltip)`
-  margin-left: 16px;
-  bottom: 93px;
-  right: 120px;
-  top: auto;
-  left: auto;
-`
-
 const TooltipList = styled.ul`
-  list-style: none;
-  padding-left: 0;
   display: flex;
   flex-direction: column;
 `

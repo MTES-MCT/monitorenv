@@ -110,7 +110,6 @@ const ButtonsWrapper = styled.menu<{
 }>`
   display: flex;
   flex-direction: column;
-  list-style: none;
   position: absolute;
   row-gap: 8px;
   right: ${p => (!p.$hasFullHeightRightDialogOpen || p.$isRightMenuOpened ? 10 : 0)}px;
@@ -126,6 +125,5 @@ const ToolButtons = styled.ul`
   display: flex;
   flex-direction: column;
   row-gap: 8px;
-  list-style: none;
   padding: 0;
 `

@@ -1,4 +1,5 @@
 import { VesselTypeSelector } from '@features/commonComponents/VesselTypeSelector'
+import { RepeatedOffense } from '@features/Reportings/components/ReportingReadOnly/RepeatedOffense'
 import {
   Accent,
   Button,
@@ -70,7 +71,7 @@ export function TargetDetails({ form, push, remove }) {
       )}
 
       {form.values.targetType === ReportingTargetTypeEnum.VEHICLE && form?.values.targetDetails?.length > 0
-        ? form.values.targetDetails.map((_, index) => (
+        ? form.values.targetDetails.map((targetDetail, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <TargetWrapper key={index}>
               <Label>
@@ -94,6 +95,8 @@ export function TargetDetails({ form, push, remove }) {
                 )}
                 {form.values.vehicleType === VehicleTypeEnum.VESSEL && (
                   <>
+                    <RepeatedOffense mmsi={targetDetail.mmsi} />
+
                     <StyledVesselForm>
                       <FormikTextInput isLight label="MMSI" name={`targetDetails.${index}.mmsi`} />
                       <FormikTextInput isLight label="Nom du navire" name={`targetDetails.${index}.vesselName`} />

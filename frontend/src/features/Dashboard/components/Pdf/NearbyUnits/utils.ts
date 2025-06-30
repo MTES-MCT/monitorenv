@@ -1,11 +1,9 @@
 import { uniqBy } from 'lodash'
 
-import { ActionTypeEnum, InfractionTypeEnum, type Mission } from '../../../../../domain/entities/missions'
+import { ActionTypeEnum, type EnvAction, InfractionTypeEnum } from '../../../../../domain/entities/missions'
 
-export const getTotalInfraction = (missions: Mission[]) => {
-  const controls = missions
-    .flatMap(mission => mission.envActions)
-    .filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
+export const getTotalInfraction = (envActions: EnvAction[]) => {
+  const controls = envActions.filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
 
   return controls.reduce(
     (totalInfraction, control) =>
@@ -14,10 +12,8 @@ export const getTotalInfraction = (missions: Mission[]) => {
   )
 }
 
-export const getTotalPV = (missions: Mission[]) => {
-  const controls = missions
-    .flatMap(mission => mission.envActions)
-    .filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
+export const getTotalPV = (envActions: EnvAction[]) => {
+  const controls = envActions.filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
 
   return controls.reduce(
     (totalInfraction, control) =>
@@ -33,21 +29,16 @@ export const getTotalPV = (missions: Mission[]) => {
   )
 }
 
-export const getTotalNbControls = (missions: Mission[]) => {
-  const controls = missions
-    .flatMap(mission => mission.envActions)
-    .filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
+export const getTotalNbControls = (envActions: EnvAction[]) => {
+  const controls = envActions.filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
 
   return controls.reduce((totalInfraction, control) => totalInfraction + (control.actionNumberOfControls ?? 0), 0)
 }
 
-export const getAllThemes = (missions: Mission[]) => {
-  const controlsAndSurveillances = missions
-    .flatMap(mission => mission.envActions)
-    .filter(
-      envAction =>
-        envAction.actionType === ActionTypeEnum.CONTROL || envAction.actionType === ActionTypeEnum.SURVEILLANCE
-    )
+export const getAllThemes = (envActions: EnvAction[]) => {
+  const controlsAndSurveillances = envActions.filter(
+    envAction => envAction.actionType === ActionTypeEnum.CONTROL || envAction.actionType === ActionTypeEnum.SURVEILLANCE
+  )
 
   return uniqBy(
     controlsAndSurveillances.flatMap(action => action.themes ?? []),
