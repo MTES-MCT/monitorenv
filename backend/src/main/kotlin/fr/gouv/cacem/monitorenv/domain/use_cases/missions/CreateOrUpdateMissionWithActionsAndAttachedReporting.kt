@@ -9,10 +9,12 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
 import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionWithEnvActionsValidator
 import org.slf4j.LoggerFactory
-import java.util.UUID
+import org.springframework.context.ApplicationEventPublisher
+import java.util.*
 
 @UseCase
 class CreateOrUpdateMissionWithActionsAndAttachedReporting(
@@ -21,6 +23,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private val reportingRepository: IReportingRepository,
     private val getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions,
     private val getFullMission: GetFullMission,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
     private val logger =
         LoggerFactory.getLogger(
@@ -68,9 +71,23 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
         }
 
         reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.id)
+
+        attachedReportingIds.forEach {
+            val reporting = reportingRepository.findById(it)
+            logger.info(
+                "Sending CREATE/UPDATE event for reporting id ${reporting.reporting}.",
+            )
+            eventPublisher.publishEvent(
+                UpdateReportingEvent(reporting),
+            )
+        }
+
         envActionsAttachedToReportingIds.forEach { envActionsAttachedToReportingId ->
             envActionsAttachedToReportingId.first?.let {
-                reportingRepository.attachEnvActionsToReportings(it, envActionsAttachedToReportingId.second)
+                reportingRepository.attachEnvActionsToReportings(
+                    it,
+                    envActionsAttachedToReportingId.second,
+                )
             }
         }
 
@@ -89,6 +106,8 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private fun getListOfEnvActionIds(
         envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?,
     ): List<UUID> =
-        envActionsAttachedToReportingIds?.filter { it.second.isNotEmpty() }?.mapNotNull { it.first }
+        envActionsAttachedToReportingIds?.filter { it.second.isNotEmpty() }?.mapNotNull {
+            it.first
+        }
             ?: emptyList()
 }
