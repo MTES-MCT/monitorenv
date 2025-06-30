@@ -22,6 +22,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
 import java.util.*
@@ -46,6 +47,9 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
     @Mock
     private val getFullMission: GetFullMission = mock()
+
+    @Mock
+    private val applicationEventPublisher: ApplicationEventPublisher = mock()
 
     val wktReader = WKTReader()
 
@@ -80,6 +84,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+                eventPublisher = applicationEventPublisher,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = attachedReportingIds,
@@ -116,6 +121,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+                eventPublisher = applicationEventPublisher,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = attachedReportingIds,
@@ -194,6 +200,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+                eventPublisher = applicationEventPublisher,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = attachedReportingIds,
@@ -254,6 +261,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+                eventPublisher = applicationEventPublisher,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = listOf(),
@@ -284,6 +292,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 reportingRepository = reportingRepository,
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
+                eventPublisher = applicationEventPublisher,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = listOf(),

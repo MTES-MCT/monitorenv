@@ -22,6 +22,7 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
   const valuesToSave = omit(values, ['attachedMission'])
   const newOrNextReportingData = isNewReporting(valuesToSave.id) ? { ...valuesToSave, id: undefined } : valuesToSave
   const endpoint = reportingsAPI.endpoints.createReporting
+  await dispatch(reportingActions.setIsListeningToEvents(false))
 
   try {
     const response = await dispatch(endpoint.initiate(newOrNextReportingData))
@@ -39,6 +40,9 @@ export const createMissionFromReporting = (values: Reporting | Partial<Reporting
       await dispatch(updateMapInteractionListeners(MapInteractionListenerEnum.NONE))
       await dispatch(reportingActions.deleteSelectedReporting(values.id))
       await dispatch(addMission({ attachedReporting: response.data }))
+      setTimeout(async () => {
+        await dispatch(reportingActions.setIsListeningToEvents(true))
+      }, 500)
     } else {
       throw Error('Erreur à la création de la mission depuis le signalement')
     }
