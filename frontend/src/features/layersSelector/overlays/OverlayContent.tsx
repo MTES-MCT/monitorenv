@@ -70,7 +70,7 @@ function computeVigilanceAreaPeriod(properties: VigilanceArea.VigilanceAreaPrope
   }
   if (properties.startDatePeriod) {
     return `${[
-      `${properties.startDatePeriod ? `Du ${customDayjs(properties.startDatePeriod).utc().format('DD/MM/YYYY')}` : ''}  
+      `${properties.startDatePeriod ? `Du ${customDayjs(properties.startDatePeriod).utc().format('DD/MM/YYYY')}` : ''}
       ${properties?.endDatePeriod ? `au ${customDayjs(properties.endDatePeriod).utc().format('DD/MM/YYYY')}` : ''}`,
       frequencyText(properties.frequency, false),
       endingOccurenceText(properties.endingCondition, properties.computedEndDate, false)
@@ -286,7 +286,6 @@ export function OverlayContent({ items }: OverlayContentProps) {
 }
 
 const Layerlist = styled.ul`
-  list-style: none;
   padding: 0;
   margin: 0;
   max-height: 470px;

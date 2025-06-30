@@ -77,7 +77,6 @@ const Controls = styled.ul`
   display: flex;
   gap: 16px;
   padding: 0;
-  list-style: none;
 `
 
 const Header = styled.header`
