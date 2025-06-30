@@ -148,4 +148,8 @@ class JpaEnvActionRepository(
                     observations = valueObject.observations,
                 )
             }
+
+    @Transactional
+    override fun findAllByMmsi(mmsi: String): List<EnvActionEntity> =
+        idbEnvActionRepository.findAllEnvActionByMmsi(mmsi).map { it.toActionEntity(objectMapper) }
 }

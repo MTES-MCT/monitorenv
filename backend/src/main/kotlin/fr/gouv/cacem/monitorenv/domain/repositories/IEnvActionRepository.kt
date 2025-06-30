@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntit
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
 import org.locationtech.jts.geom.Geometry
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 interface IEnvActionRepository {
     fun findById(id: UUID): EnvActionEntity?
@@ -19,4 +19,6 @@ interface IEnvActionRepository {
         startedAfter: Instant,
         startedBefore: Instant,
     ): List<RecentControlsActivityListDTO>
+
+    fun findAllByMmsi(mmsi: String): List<EnvActionEntity>
 }

@@ -218,4 +218,28 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
             assertThat(control.administrationIds).containsAnyOf(1005, 1008)
         }
     }
+
+    @Test
+    fun `findAllByMmsi should return envActions with given mmsi`() {
+        // Given
+        val mmsi = "123456789"
+
+        // When
+        val envActions = jpaEnvActionRepository.findAllByMmsi(mmsi)
+
+        // Then
+        assertThat(envActions).hasSize(1)
+    }
+
+    @Test
+    fun `findAllByMmsi should return empty when there is no envAction with given mmsi`() {
+        // Given
+        val mmsi = "987654321"
+
+        // When
+        val envActions = jpaEnvActionRepository.findAllByMmsi(mmsi)
+
+        // Then
+        assertThat(envActions).hasSize(0)
+    }
 }
