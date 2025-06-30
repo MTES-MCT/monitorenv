@@ -99,7 +99,7 @@ export function useSearchLayers() {
       const filteredVigilancesAreas = [...vigilanceAreasPerPeriod]
       const filteredVigilancesAreaIds = filteredVigilancesAreas
         .filter(vigilanceArea => !!vigilanceArea.id)
-        .map(({ id }) => id) as number[]
+        .map(({ id }) => id)
 
       if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldSearchByExtent) {
         let searchedAMPS
