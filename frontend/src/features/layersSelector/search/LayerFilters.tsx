@@ -2,6 +2,7 @@ import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
+import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -63,6 +64,8 @@ export function LayerFilters({
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
   const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
 
+  const { status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
+
   const handleSetFilteredAmpTypes = nextAmpThemes => {
     setFilteredAmpTypes(nextAmpThemes ?? [])
   }
@@ -98,6 +101,15 @@ export function LayerFilters({
   }
 
   const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
+
+  const deleteVisibilityFilter = () => {
+    dispatch(
+      vigilanceAreaFiltersActions.setVisibility([VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE])
+    )
+  }
+  const deleteStatusFilter = () => {
+    dispatch(vigilanceAreaFiltersActions.setStatus([VigilanceArea.Status.PUBLISHED, VigilanceArea.Status.DRAFT]))
+  }
 
   return (
     <FiltersWrapper>
@@ -159,7 +171,11 @@ export function LayerFilters({
         />
       )}
 
-      {(filteredRegulatoryTags.length > 0 || filteredAmpTypes?.length > 0 || filteredRegulatoryThemes.length > 0) && (
+      {(filteredRegulatoryTags.length > 0 ||
+        filteredAmpTypes?.length > 0 ||
+        filteredRegulatoryThemes.length > 0 ||
+        visibility.length !== 2 ||
+        status.length !== 2) && (
         <TagWrapper>
           {filteredRegulatoryThemes?.map(theme => (
             <>
@@ -211,14 +227,25 @@ export function LayerFilters({
               {type}
             </SingleTag>
           ))}
+          {visibility.length === 1 && visibility[0] && (
+            <SingleTag accent={Accent.SECONDARY} onDelete={deleteVisibilityFilter} title={visibility[0]}>
+              {VigilanceArea.VisibilityLabel[visibility[0]]}
+            </SingleTag>
+          )}
+          {status.length === 1 && status[0] && (
+            <SingleTag accent={Accent.SECONDARY} onDelete={deleteStatusFilter} title={status[0]}>
+              {VigilanceArea.StatusLabel[status[0]]}
+            </SingleTag>
+          )}
         </TagWrapper>
       )}
+
       {(filteredRegulatoryTags.length > 0 ||
         filteredRegulatoryThemes.length > 0 ||
         filteredAmpTypes?.length > 0 ||
-        filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS) && (
-        <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>
-      )}
+        filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS ||
+        status.length !== 2 ||
+        visibility.length !== 2) && <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>}
     </FiltersWrapper>
   )
 }
@@ -234,11 +261,10 @@ const FiltersWrapper = styled.ul`
   margin-bottom: 0;
 `
 const TagWrapper = styled.div`
-  margin-top: 8px;
-  margin-bottom: 16px;
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+  margin-top: 8px;
 `
 const ResetFilters = styled.div`
   color: ${p => p.theme.color.slateGray};

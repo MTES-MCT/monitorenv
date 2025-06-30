@@ -1,4 +1,5 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
+import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -49,87 +50,70 @@ export function LayerSearch() {
 
   const debouncedSearchLayers = useSearchLayers()
 
+  const genericSearchParams = {
+    ampTypes: filteredAmpTypes,
+    extent: searchExtent,
+    regulatoryTags: filteredRegulatoryTags,
+    regulatoryThemes: filteredRegulatoryThemes,
+    searchedText: globalSearchText,
+    shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+    vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+    vigilanceAreaSpecificPeriodFilter
+  }
+
   const handleSearchInputChange = searchedText => {
     dispatch(setGlobalSearchText(searchedText))
 
     debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryTags: filteredRegulatoryTags,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter
+      ...genericSearchParams,
+      searchedText
     })
   }
 
   const handleSetFilteredAmpTypes = filteredTypes => {
     dispatch(setFilteredAmpTypes(filteredTypes))
     debouncedSearchLayers({
-      ampTypes: filteredTypes,
-      extent: searchExtent,
-      regulatoryTags: filteredRegulatoryTags,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter
+      ...genericSearchParams,
+      ampTypes: filteredTypes
     })
   }
 
   const handleSetFilteredRegulatoryTags = (filteredTags: TagOption[]) => {
     dispatch(setFilteredRegulatoryTags(filteredTags))
     debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryTags: filteredTags,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter
+      ...genericSearchParams,
+      regulatoryTags: filteredTags
     })
   }
 
   const handleSetFilteredRegulatoryThemes = (filteredThemes: ThemeOption[]) => {
     dispatch(setFilteredRegulatoryThemes(filteredThemes))
     debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryTags: filteredRegulatoryTags,
-      regulatoryThemes: filteredThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter
+      ...genericSearchParams,
+      regulatoryThemes: filteredThemes
     })
   }
 
   const handleResetFilters = () => {
     dispatch(resetFilters())
     debouncedSearchLayers({
+      ...genericSearchParams,
       ampTypes: [],
-      extent: searchExtent,
       regulatoryTags: [],
       regulatoryThemes: [],
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
       vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
       vigilanceAreaSpecificPeriodFilter: undefined
     })
+    dispatch(
+      vigilanceAreaFiltersActions.setVisibility([VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE])
+    )
+    dispatch(vigilanceAreaFiltersActions.setStatus([VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED]))
   }
 
   const updateDateRangeFilter = (dateRange: DateAsStringRange | undefined) => {
     dispatch(setVigilanceAreaSpecificPeriodFilter(dateRange))
     debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryTags: filteredRegulatoryTags,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      ...genericSearchParams,
       vigilanceAreaSpecificPeriodFilter: dateRange
     })
   }

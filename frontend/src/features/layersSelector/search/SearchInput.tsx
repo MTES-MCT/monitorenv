@@ -1,4 +1,5 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size, TextInput } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -15,12 +16,15 @@ export function SearchInput({
 }) {
   const defaultVigilanceAreaPeriod =
     filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
+  const { status: statusFilter, visibility: visibilityFilter } = useAppSelector(state => state.vigilanceAreaFilters)
 
   const numberOfFilters =
     filteredRegulatoryTags.length +
     filteredRegulatoryThemes.length +
     (filteredAmpTypes?.length ?? 0) +
-    (!defaultVigilanceAreaPeriod ? 1 : 0)
+    (!defaultVigilanceAreaPeriod ? 1 : 0) +
+    (statusFilter.length !== 2 ? 1 : 0) +
+    (visibilityFilter.length !== 2 ? 1 : 0)
 
   return (
     <SearchHeader>

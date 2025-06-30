@@ -10,7 +10,7 @@ type LayerSearchState = {
   filteredAmpTypes: string[]
   filteredRegulatoryTags: TagOption[]
   filteredRegulatoryThemes: ThemeOption[]
-  filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
+  filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod
   globalSearchText: string
   isAmpSearchResultsVisible: boolean
   isRegulatorySearchResultsVisible: boolean
@@ -93,7 +93,7 @@ const layerSearchSlice = createSlice({
       state.filteredRegulatoryThemes = action.payload
     },
 
-    setFilteredVigilanceAreaPeriod(state, action: PayloadAction<VigilanceArea.VigilanceAreaFilterPeriod | undefined>) {
+    setFilteredVigilanceAreaPeriod(state, action: PayloadAction<VigilanceArea.VigilanceAreaFilterPeriod>) {
       state.filteredVigilanceAreaPeriod = action.payload
     },
 
