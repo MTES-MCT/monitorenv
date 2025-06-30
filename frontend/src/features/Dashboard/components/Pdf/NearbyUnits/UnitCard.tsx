@@ -69,11 +69,12 @@ type NearbyUnitsProps = {
 }
 
 export function UnitCard({ controlUnit, missions, status }: NearbyUnitsProps) {
+  const envActions = missions.flatMap(mission => mission.envActions)
   const dateRange = getDateRange(missions)
-  const themes = displayThemes(getAllThemes(missions))
-  const nbControls = getTotalNbControls(missions)
-  const nbInfractions = getTotalInfraction(missions)
-  const nbPV = getTotalPV(missions)
+  const themes = displayThemes(getAllThemes(envActions))
+  const nbControls = getTotalNbControls(envActions)
+  const nbInfractions = getTotalInfraction(envActions)
+  const nbPV = getTotalPV(envActions)
 
   return (
     <View style={styles.card}>
