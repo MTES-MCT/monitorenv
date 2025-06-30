@@ -67,4 +67,18 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
         startedAfter: Instant,
         startedBefore: Instant,
     ): List<Array<Any>>
+
+    @Query(
+        """
+    SELECT *
+    FROM env_actions envAction
+    WHERE EXISTS (
+      SELECT 1
+      FROM jsonb_array_elements(envAction.value->'infractions') AS infractions
+      WHERE infractions ->> 'mmsi' = :mmsi
+    )
+    """,
+        nativeQuery = true,
+    )
+    fun findAllEnvActionByMmsi(mmsi: String): List<EnvActionModel>
 }

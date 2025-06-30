@@ -86,6 +86,7 @@ VALUES ('e2257638-ddef-4611-960c-7675a3254c38', 38, 'SURVEILLANCE', '{
          "infractions": [
            {
              "id": "5d5b7829-68cd-4436-8c0b-1cc8db7788a0",
+             "mmsi": "123456789",
              "natinf": [
                "10038",
                "10231"
