@@ -65,7 +65,10 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
                     val errorMessage =
                         "Reporting ${reporting.reporting.id} is already attached to a mission"
                     logger.error(errorMessage)
-                    throw BackendUsageException(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED, errorMessage)
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.CHILD_ALREADY_ATTACHED,
+                        errorMessage,
+                    )
                 }
             }
         }
@@ -74,12 +77,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
 
         attachedReportingIds.forEach {
             val reporting = reportingRepository.findById(it)
-            logger.info(
-                "Sending CREATE/UPDATE event for reporting id ${reporting.reporting}.",
-            )
-            eventPublisher.publishEvent(
-                UpdateReportingEvent(reporting),
-            )
+            if (reporting !== null) {
+                eventPublisher.publishEvent(
+                    UpdateReportingEvent(reporting),
+                )
+            }
         }
 
         envActionsAttachedToReportingIds.forEach { envActionsAttachedToReportingId ->
