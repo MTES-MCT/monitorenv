@@ -8,7 +8,7 @@ const persistConfig = {
   storage
 }
 
-type VigilanceAreaSliceState = {
+export type VigilanceAreaSliceState = {
   createdBy: string[]
   seaFronts: string[]
   searchQuery: string | undefined
@@ -20,7 +20,7 @@ const INITIAL_STATE: VigilanceAreaSliceState = {
   seaFronts: [],
   searchQuery: undefined,
   status: [VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED],
-  visibility: [VigilanceArea.Visibility.PUBLIC]
+  visibility: [VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE]
 }
 export const vigilanceAreaFiltersSlice = createSlice({
   initialState: INITIAL_STATE,

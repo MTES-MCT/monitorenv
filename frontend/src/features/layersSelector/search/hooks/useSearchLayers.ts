@@ -26,11 +26,12 @@ export type SearchProps = {
   regulatoryThemes: ThemeOption[]
   searchedText: string
   shouldSearchByExtent: boolean
-  vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined
+  vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod
   vigilanceAreaSpecificPeriodFilter: string[] | undefined
 }
 export function useSearchLayers() {
   const dispatch = useAppDispatch()
+
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
   const isSuperUser = user?.isSuperUser
 
@@ -88,26 +89,17 @@ export function useSearchLayers() {
       const shouldSearchThroughAMPTypes = ampTypes?.length > 0
       const shouldSearchThroughRegulatoryTags = regulatoryTags?.length > 0
       const shouldSearchThroughRegulatoryThemes = regulatoryThemes?.length > 0
+      const vigilanceAreasPerPeriod = getFilterVigilanceAreasPerPeriod(
+        vigilanceAreaLayers?.entities ? Object.values(vigilanceAreaLayers.entities) : [],
+        vigilanceAreaPeriodFilter,
+        vigilanceAreaSpecificPeriodFilter,
+        isSuperUser
+      )
 
-      let vigilanceAreasPerPeriod = [] as Array<VigilanceArea.VigilanceArea>
-      let vigilanceAreaIdsPerPeriod = [] as number[]
-
-      if (vigilanceAreaPeriodFilter) {
-        vigilanceAreasPerPeriod = getFilterVigilanceAreasPerPeriod(
-          vigilanceAreaLayers?.entities ? Object.values(vigilanceAreaLayers.entities) : [],
-          vigilanceAreaPeriodFilter,
-          vigilanceAreaSpecificPeriodFilter,
-          isSuperUser
-        )
-
-        vigilanceAreaIdsPerPeriod = vigilanceAreasPerPeriod
-          .filter(vigilanceArea => !!vigilanceArea.id)
-          .map(({ id }) => id) as number[]
-      }
-
-      const vigilanceAreaPeriodFilterByUserType = isSuperUser
-        ? vigilanceAreaPeriodFilter
-        : VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT
+      const filteredVigilancesAreas = [...vigilanceAreasPerPeriod]
+      const filteredVigilancesAreaIds = filteredVigilancesAreas
+        .filter(vigilanceArea => !!vigilanceArea.id)
+        .map(({ id }) => id) as number[]
 
       if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldSearchByExtent) {
         let searchedAMPS
@@ -221,14 +213,13 @@ export function useSearchLayers() {
             $and: filterExpression
           })
 
-          searchedVigilanceArea = vigilanceAreaPeriodFilterByUserType
-            ? resultSearchVigilanceAreas.filter(({ item }) => item.id && vigilanceAreaIdsPerPeriod.includes(item.id))
-            : resultSearchVigilanceAreas
+          searchedVigilanceArea =
+            filteredVigilancesAreas.length > 0
+              ? resultSearchVigilanceAreas.filter(({ item }) => item.id && filteredVigilancesAreaIds.includes(item.id))
+              : resultSearchVigilanceAreas
           vigilanceAreaSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
         } else {
-          searchedVigilanceArea = vigilanceAreaPeriodFilterByUserType
-            ? vigilanceAreasPerPeriod
-            : Object.values(vigilanceAreaLayers?.entities ?? {})
+          searchedVigilanceArea = filteredVigilancesAreas
           vigilanceAreaSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
 
@@ -238,10 +229,9 @@ export function useSearchLayers() {
           extent,
           vigilanceAreaSchema
         )
-
         dispatch(setVigilanceAreasSearchResult(searchedVigilanceAreasInExtent))
       } else {
-        dispatch(setVigilanceAreasSearchResult(vigilanceAreaIdsPerPeriod))
+        dispatch(setVigilanceAreasSearchResult(filteredVigilancesAreaIds))
         dispatch(setRegulatoryLayersSearchResult(undefined))
       }
     }
@@ -250,7 +240,7 @@ export function useSearchLayers() {
       dispatch(closeMetadataPanel())
       debounce(searchFunction, 300, { trailing: true })(args)
     }
-  }, [dispatch, regulatoryLayers, amps, vigilanceAreaLayers, isSuperUser])
+  }, [regulatoryLayers?.entities, amps?.entities, vigilanceAreaLayers?.entities, isSuperUser, dispatch])
 
   return debouncedSearchLayers
 }

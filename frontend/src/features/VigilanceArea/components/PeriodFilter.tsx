@@ -32,6 +32,10 @@ export function PeriodFilter({ style }: { style?: React.CSSProperties }) {
   const handleSetFilteredVigilancePeriod = (
     nextVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
   ) => {
+    if (!nextVigilanceAreaPeriod) {
+      return
+    }
+
     dispatch(setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod))
 
     if (nextVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD) {
