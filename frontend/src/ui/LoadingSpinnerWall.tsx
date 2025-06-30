@@ -7,8 +7,8 @@ export type LoadingSpinnerWallProps = {
 
 export function LoadingSpinnerWall({ message = 'Chargement...' }: LoadingSpinnerWallProps) {
   return (
-    <Wrapper data-cy="first-loader">
-      <FulfillingBouncingCircleLoader className="update-vessels" color={THEME.color.lightGray} size={48} />
+    <Wrapper>
+      <FulfillingBouncingCircleLoader color={THEME.color.lightGray} size={48} />
       <StyledLoadingMessage>{message}</StyledLoadingMessage>
     </Wrapper>
   )
