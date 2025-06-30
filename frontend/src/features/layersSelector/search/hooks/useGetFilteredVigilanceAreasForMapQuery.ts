@@ -1,5 +1,5 @@
-import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
+import { useGetVigilanceAreasWithFilters } from '@features/VigilanceArea/hooks/useGetVigilanceAreasWithFilters'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { isVigilanceAreaPartOfStatus } from '@features/VigilanceArea/useCases/filters/isVigilanceAreaPartOfStatus'
 import { isVigilanceAreaPartOfTag } from '@features/VigilanceArea/useCases/filters/isVigilanceAreaPartOfTag'
@@ -9,29 +9,27 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { useMemo } from 'react'
 
-import { TWO_MINUTES } from '../../../../constants'
-
-export const useGetFilteredVigilanceAreasForMapQuery = (skip = false) => {
+export const useGetFilteredVigilanceAreasForMapQuery = () => {
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
   const isSuperUser = useMemo(() => user?.isSuperUser, [user])
 
   const { status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
-  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
-  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
-  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
 
-  const { data, isError, isFetching, isLoading } = useGetVigilanceAreasQuery(undefined, {
-    pollingInterval: TWO_MINUTES,
-    skip
-  })
+  const {
+    filteredRegulatoryTags,
+    filteredRegulatoryThemes,
+    filteredVigilanceAreaPeriod,
+    isError,
+    isFetching,
+    isLoading,
+    vigilanceAreas,
+    vigilanceAreaSpecificPeriodFilter
+  } = useGetVigilanceAreasWithFilters()
 
   const filteredVigilanceAreas = useMemo(() => {
-    if (!data?.entities) {
+    if (!vigilanceAreas) {
       return { entities: {}, ids: [] }
     }
-
-    const vigilanceAreas = Object.values(data.entities)
 
     const tempVigilanceAreas = vigilanceAreas.filter(
       vigilanceArea =>
@@ -60,7 +58,7 @@ export const useGetFilteredVigilanceAreasForMapQuery = (skip = false) => {
       ids: vigilanceAreasByPeriod.map(vigilanceArea => vigilanceArea.id)
     }
   }, [
-    data?.entities,
+    vigilanceAreas,
     filteredVigilanceAreaPeriod,
     vigilanceAreaSpecificPeriodFilter,
     isSuperUser,
