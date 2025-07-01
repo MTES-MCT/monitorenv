@@ -193,3 +193,8 @@ export const getReportingStatus = ({
 
   return ReportingStatusEnum.IN_PROGRESS
 }
+
+export type SuspicionOfOffense = {
+  amount: number
+  themes: string[]
+}
