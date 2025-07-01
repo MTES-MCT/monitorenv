@@ -35,10 +35,10 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     id: 'frequency',
     size: 160 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => {
-      const frequencyA = rowA.original.frequency
-      const frequencyB = rowB.original.frequency
+      const labelA = VigilanceArea.FrequencyLabel[rowA.original.frequency] ?? ''
+      const labelB = VigilanceArea.FrequencyLabel[rowB.original.frequency] ?? ''
 
-      return VigilanceArea.FrequencyLabel[frequencyA].localeCompare(VigilanceArea.FrequencyLabel[frequencyB])
+      return labelA.localeCompare(labelB)
     }
   },
   {
