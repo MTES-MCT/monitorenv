@@ -774,4 +774,30 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(reportings).isEmpty()
     }
+
+    @Test
+    fun `findAllSuspicionOfOffenseByMmsi should return a SuspicionOfOffense `() {
+        // Given
+        val mmsi = "012314231345"
+
+        // When
+        val suspicionOfOffense = jpaReportingRepository.findNbOfSuspicionOfOffense(mmsi)
+
+        // Then
+        assertThat(suspicionOfOffense.amount).isEqualTo(1)
+        assertThat(suspicionOfOffense.themes).hasSize(1)
+    }
+
+    @Test
+    fun `findAllSuspicionOfOffenseByMmsi should return SuspicionOfOffense when there is no reporting for given mmsi `() {
+        // Given
+        val mmsi = "unknown mmsi"
+
+        // When
+        val suspicionOfOffense = jpaReportingRepository.findNbOfSuspicionOfOffense(mmsi)
+
+        // Then
+        assertThat(suspicionOfOffense.amount).isZero()
+        assertThat(suspicionOfOffense.themes).isNull()
+    }
 }

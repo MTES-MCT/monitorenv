@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfOffense
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
@@ -61,4 +62,6 @@ interface IReportingRepository {
     fun save(reporting: ReportingEntity): ReportingDetailsDTO
 
     fun findAllIdsByGeometry(geometry: Geometry): List<Int>
+
+    fun findNbOfSuspicionOfOffense(mmsi: String): SuspicionOfOffense
 }

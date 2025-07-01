@@ -1,5 +1,5 @@
 import { VesselTypeSelector } from '@features/commonComponents/VesselTypeSelector'
-import { RepeatedOffense } from '@features/Reportings/components/ReportingReadOnly/RepeatedOffense'
+import { HistoryOfOffense } from '@features/Reportings/components/ReportingReadOnly/HistoryOfOffense'
 import {
   Accent,
   Button,
@@ -95,7 +95,7 @@ export function TargetDetails({ form, push, remove }) {
                 )}
                 {form.values.vehicleType === VehicleTypeEnum.VESSEL && (
                   <>
-                    <RepeatedOffense mmsi={targetDetail.mmsi} />
+                    <HistoryOfOffense mmsi={targetDetail.mmsi} />
 
                     <StyledVesselForm>
                       <FormikTextInput isLight label="MMSI" name={`targetDetails.${index}.mmsi`} />

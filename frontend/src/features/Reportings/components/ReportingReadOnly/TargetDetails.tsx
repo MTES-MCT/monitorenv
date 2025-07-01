@@ -4,7 +4,7 @@ import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import styled from 'styled-components'
 
-import { RepeatedOffense } from './RepeatedOffense'
+import { HistoryOfOffense } from './HistoryOfOffense'
 
 import type { Reporting } from 'domain/entities/reporting'
 
@@ -81,7 +81,7 @@ export function TargetDetails({ isSuperUser, reporting }: { isSuperUser: boolean
                 )}
                 {reporting.vehicleType === VehicleTypeEnum.VESSEL && (
                   <>
-                    <RepeatedOffense mmsi={reporting.targetDetails[index]?.mmsi} />
+                    <HistoryOfOffense mmsi={reporting.targetDetails[index]?.mmsi} />
 
                     <StyledVesselForm>
                       <TextInput
