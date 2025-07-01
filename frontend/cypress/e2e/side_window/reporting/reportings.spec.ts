@@ -114,4 +114,12 @@ context('Reportings', () => {
       expect(response && response.body?.attachedEnvActionId).equal(null)
     })
   })
+
+  it('Reporting with MMSI should retrieve repeated offenses from previous envActions and suspicions of offense', () => {
+    cy.intercept('GET', '/bff/v1/infractions/9876543210').as('getRepeatedOffenses')
+    cy.intercept('GET', '/bff/v1/infractions/reporting/9876543210').as('getSuspicionOfOffense')
+    cy.getDataCy('edit-reporting-5').click({ force: true })
+    cy.wait(['@getRepeatedOffenses', '@getSuspicionOfOffense'])
+    cy.contains('Antécédents: ')
+  })
 })

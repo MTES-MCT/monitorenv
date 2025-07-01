@@ -1,12 +1,7 @@
 import { Check } from '@features/Dashboard/components/Pdf/icons/Check'
 import { Clock } from '@features/Dashboard/components/Pdf/icons/Clock'
-import {
-  getAllThemes,
-  getTotalInfraction,
-  getTotalNbControls,
-  getTotalPV
-} from '@features/Dashboard/components/Pdf/NearbyUnits/utils'
 import { areaStyle, layoutStyle } from '@features/Dashboard/components/Pdf/style'
+import { getAllThemes, getTotalInfraction, getTotalNbControls, getTotalPV } from '@features/Mission/utils'
 import { pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
 import { displayThemes } from '@utils/getThemesAsOptions'
