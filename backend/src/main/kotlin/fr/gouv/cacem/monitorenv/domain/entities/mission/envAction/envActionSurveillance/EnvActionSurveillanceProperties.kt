@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import org.locationtech.jts.geom.Geometry
@@ -18,7 +17,6 @@ data class EnvActionSurveillanceProperties(
         actionEndDateTimeUtc: ZonedDateTime?,
         completedBy: String?,
         completion: ActionCompletionEnum?,
-        controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
         geom: Geometry?,
@@ -33,7 +31,6 @@ data class EnvActionSurveillanceProperties(
         awareness = awareness,
         completedBy = completedBy,
         completion = completion,
-        controlPlans = controlPlans,
         department = department,
         facade = facade,
         geom = geom,
