@@ -776,28 +776,42 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findAllSuspicionOfOffenseByMmsi should return a SuspicionOfOffense `() {
+    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfOffense with given mmsi`() {
         // Given
         val mmsi = "012314231345"
 
         // When
-        val suspicionOfOffense = jpaReportingRepository.findNbOfSuspicionOfOffense(mmsi)
+        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, listOf())
 
         // Then
-        assertThat(suspicionOfOffense.amount).isEqualTo(1)
-        assertThat(suspicionOfOffense.themes).hasSize(1)
+        assertThat(suspicionOfInfractions.ids).hasSize(1)
+        assertThat(suspicionOfInfractions.themes).hasSize(1)
     }
 
     @Test
-    fun `findAllSuspicionOfOffenseByMmsi should return SuspicionOfOffense when there is no reporting for given mmsi `() {
+    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfOffense with given mmsi without the given id`() {
+        // Given
+        val mmsi = "012314231345"
+        val idsToExclude = listOf(3)
+
+        // When
+        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idsToExclude)
+
+        // Then
+        assertThat(suspicionOfInfractions.ids).isNull()
+        assertThat(suspicionOfInfractions.themes).isNull()
+    }
+
+    @Test
+    fun `findAllSuspicionOfInfractionsByMmsi should return SuspicionOfOffense when there is no reporting for given mmsi `() {
         // Given
         val mmsi = "unknown mmsi"
 
         // When
-        val suspicionOfOffense = jpaReportingRepository.findNbOfSuspicionOfOffense(mmsi)
+        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, listOf())
 
         // Then
-        assertThat(suspicionOfOffense.amount).isZero()
-        assertThat(suspicionOfOffense.themes).isNull()
+        assertThat(suspicionOfInfractions.ids).isNull()
+        assertThat(suspicionOfInfractions.themes).isNull()
     }
 }

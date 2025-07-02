@@ -73,7 +73,8 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
         { id: 'LIST', type: 'Missions' },
         { id: 'LIST', type: 'Reportings' },
         { id: 'LIST', type: 'NearbyUnits' },
-        ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
+        ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const })),
+        'Infractions'
       ],
       query: mission => ({
         body: mission,
@@ -85,7 +86,8 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
       invalidatesTags: [
         { id: 'LIST', type: 'Missions' },
         { id: 'LIST', type: 'Reportings' },
-        { id: 'LIST', type: 'NearbyUnits' }
+        { id: 'LIST', type: 'NearbyUnits' },
+        'Infractions'
       ],
       query: ({ id }) => ({
         method: 'DELETE',
@@ -130,7 +132,8 @@ export const missionsAPI = monitorenvPrivateApi.injectEndpoints({
         { id: 'LIST', type: 'Reportings' },
         { id: 'LIST', type: 'NearbyUnits' },
         ...attachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const })),
-        ...detachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const }))
+        ...detachedReportingIds.map(reportingId => ({ id: reportingId, type: 'Reportings' as const })),
+        'Infractions'
       ],
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },

@@ -198,7 +198,7 @@ export function TableReportingsFiltersWithRef(
           <CheckPicker
             isLabelHidden
             isTransparent
-            label="Type de cible"
+            label="Filtre type de cible"
             menuStyle={{ maxWidth: '200%' }}
             name="targetType"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TARGET_TYPE_FILTER)}

@@ -286,7 +286,7 @@ context('Reporting', () => {
     cy.clickButton('Confirmer la suppression')
   })
 
-  it('Should save target detail when vessel type is "VESSEL"', () => {
+  it('Should save target detail when vessel type is "VESSEL" and retrieve repeated infractions from previous envActions and suspicions of infraction', () => {
     cy.clickButton('Chercher des signalements')
     cy.clickButton('Ajouter un signalement')
     createReporting().then(({ response: createdResponse }) => {
@@ -297,6 +297,7 @@ context('Reporting', () => {
       cy.fill('Type de cible', 'Véhicule')
       cy.fill('Type de véhicule', 'Navire')
       cy.fill('MMSI', '123456789')
+      cy.contains('Antécédents : 0 infraction (suspicion)1 infraction, 1 PV')
       cy.fill('Nom du navire', 'BALTIK')
       cy.fill('IMO', 'IMO123')
       cy.fill('Nom du capitaine', 'John Doe')

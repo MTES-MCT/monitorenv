@@ -1,21 +1,28 @@
 import { monitorenvPrivateApi } from './api'
 
 import type { NatinfType } from '../domain/entities/natinfs'
-import type { SuspicionOfOffense } from '../domain/entities/reporting'
+import type { SuspicionOfInfractions } from '../domain/entities/reporting'
 import type { EnvAction } from 'domain/entities/missions'
 
+type SuspicionOfInfractionsQuery = {
+  idsToExclude: number[]
+  mmsi: string
+}
 export const infractionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
     getEnvActionsByMmsi: build.query<EnvAction[], string>({
+      providesTags: () => ['Infractions'],
       query: mmsi => `/v1/infractions/${mmsi}`
     }),
     getInfractions: build.query<NatinfType[], void>({
       query: () => `/v1/natinfs`
     }),
-    getSuspicionOfOffense: build.query<SuspicionOfOffense, string>({
-      query: mmsi => `/v1/infractions/reportings/${mmsi}`
+    getSuspicionOfInfractions: build.query<SuspicionOfInfractions, SuspicionOfInfractionsQuery>({
+      providesTags: () => ['Suspicions'],
+      query: ({ idsToExclude, mmsi }) =>
+        `/v1/infractions/reportings/${mmsi}?${idsToExclude.map(id => `idsToExclude=${id}`).join('&')}`
     })
   })
 })
 
-export const { useGetEnvActionsByMmsiQuery, useGetInfractionsQuery, useGetSuspicionOfOffenseQuery } = infractionsAPI
+export const { useGetEnvActionsByMmsiQuery, useGetInfractionsQuery, useGetSuspicionOfInfractionsQuery } = infractionsAPI
