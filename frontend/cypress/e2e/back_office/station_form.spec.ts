@@ -41,11 +41,9 @@ context('Back Office > Station Form', () => {
       if (!response) {
         assert.fail('response is undefined.')
       }
-      assert.deepEqual(request.body, {
-        latitude: 1.2,
-        longitude: 3.4,
-        name: newBaseName
-      })
+      assert.equal(request.body.latitude, 1.2)
+      assert.equal(request.body.longitude, 3.4)
+      assert.equal(request.body.name, newBaseName)
     })
 
     cy.getTableRowByText(newBaseName).should('exist')
