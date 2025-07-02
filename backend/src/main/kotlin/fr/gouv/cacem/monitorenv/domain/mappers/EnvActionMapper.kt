@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.domain.mappers
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteProperties
@@ -33,7 +32,6 @@ object EnvActionMapper {
         actionStartDateTimeUtc: ZonedDateTime?,
         completedBy: String?,
         completion: ActionCompletionEnum?,
-        controlPlans: List<EnvActionControlPlanEntity>?,
         department: String?,
         facade: String?,
         geom: Geometry?,
@@ -60,7 +58,6 @@ object EnvActionMapper {
                             actionStartDateTimeUtc = actionStartDateTimeUtc,
                             completedBy = completedBy,
                             completion = completion,
-                            controlPlans = controlPlans,
                             department = department,
                             facade = facade,
                             geom = geom,
@@ -81,7 +78,6 @@ object EnvActionMapper {
                             actionStartDateTimeUtc = actionStartDateTimeUtc,
                             completedBy = completedBy,
                             completion = completion,
-                            controlPlans = controlPlans,
                             department = department,
                             facade = facade,
                             geom = geom,
