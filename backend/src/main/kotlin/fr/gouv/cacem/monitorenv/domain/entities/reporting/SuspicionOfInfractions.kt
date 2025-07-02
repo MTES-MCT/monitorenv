@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.reporting
 
-class SuspicionOfOffense(
-    val amount: Long,
+class SuspicionOfInfractions(
+    val ids: Array<Int>?,
     val themes: Array<String>?,
 )

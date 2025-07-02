@@ -1,12 +1,12 @@
 import { FormContent } from '@features/Reportings/components/ReportingReadOnly/FormContent'
+import { getFormattedReportingId } from '@features/Reportings/utils'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 import { ActionTypeEnum, type Mission, type NewMission } from '../../../../../../domain/entities/missions'
-import { useAppDispatch } from '../../../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../../../hooks/useAppSelector'
-import { getFormattedReportingId } from '../../../../../Reportings/utils'
 import { attachReportingToMissionSliceActions } from '../../AttachReporting/slice'
 import { FormTitle } from '../../style'
 

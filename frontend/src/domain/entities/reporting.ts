@@ -194,7 +194,7 @@ export const getReportingStatus = ({
   return ReportingStatusEnum.IN_PROGRESS
 }
 
-export type SuspicionOfOffense = {
-  amount: number
+export type SuspicionOfInfractions = {
+  ids: number[]
   themes: string[]
 }

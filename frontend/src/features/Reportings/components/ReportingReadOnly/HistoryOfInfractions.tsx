@@ -1,7 +1,9 @@
-import { useGetEnvActionsByMmsiQuery, useGetSuspicionOfOffenseQuery } from '@api/infractionsAPI'
+import { useGetEnvActionsByMmsiQuery, useGetSuspicionOfInfractionsQuery } from '@api/infractionsAPI'
 import { Bold, Italic } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { getAllThemes, getTotalInfraction, getTotalPV } from '@features/Mission/utils'
+import { isNewReporting } from '@features/Reportings/utils'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { uniq } from 'lodash/fp'
@@ -9,20 +11,32 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 import { useDebounce } from 'use-debounce'
 
-export function HistoryOfOffense({ mmsi }: { mmsi: string | undefined }) {
-  const [debouncedMmsi] = useDebounce(mmsi, 200)
+import { ReportingContext } from '../../../../domain/shared_slices/Global'
+
+export function HistoryOfInfractions({
+  isReadOnly = false,
+  mmsi,
+  reportingId
+}: {
+  isReadOnly?: boolean
+  mmsi: string | undefined
+  reportingId: string | number | undefined
+}) {
+  const reportingContext =
+    useAppSelector(state => (reportingId ? state.reporting.reportings[reportingId]?.context : undefined)) ??
+    ReportingContext.MAP
+
+  const [debouncedMmsi] = useDebounce(mmsi, 300)
   const NB_CHAR_MMSI = 9
 
-  const canSearch = debouncedMmsi && debouncedMmsi.length >= NB_CHAR_MMSI
+  const canSearch = reportingId && debouncedMmsi && debouncedMmsi.length >= NB_CHAR_MMSI
 
   const { data: envActions, isLoading: isLoadingEnvActions } = useGetEnvActionsByMmsiQuery(
-    canSearch ? debouncedMmsi : skipToken,
-    { refetchOnMountOrArgChange: true }
+    canSearch ? debouncedMmsi : skipToken
   )
 
-  const { data: suspicionOfOffense, isLoading: isLoadingSuspicions } = useGetSuspicionOfOffenseQuery(
-    canSearch ? debouncedMmsi : skipToken,
-    { refetchOnMountOrArgChange: true }
+  const { data: suspicionOfInfractions, isLoading: isLoadingSuspicions } = useGetSuspicionOfInfractionsQuery(
+    canSearch ? { idsToExclude: isNewReporting(reportingId) ? [] : [+reportingId], mmsi: debouncedMmsi } : skipToken
   )
 
   const totalInfraction = useMemo(() => getTotalInfraction(envActions ?? []), [envActions])
@@ -30,30 +44,40 @@ export function HistoryOfOffense({ mmsi }: { mmsi: string | undefined }) {
   const totalPV = useMemo(() => getTotalPV(envActions ?? []), [envActions])
 
   const themes = useMemo(
-    () => uniq([...getAllThemes(envActions ?? []).map(theme => theme.name), ...(suspicionOfOffense?.themes ?? [])]),
-    [envActions, suspicionOfOffense?.themes]
+    () => uniq([...getAllThemes(envActions ?? []).map(theme => theme.name), ...(suspicionOfInfractions?.themes ?? [])]),
+    [envActions, suspicionOfInfractions?.themes]
   )
 
   const isLoading = isLoadingEnvActions || isLoadingSuspicions
 
+  const informationsMessage = isReadOnly
+    ? 'ne peuvent être affichés que si un MMSI est rentré'
+    : 'entrez un MMSI pour lancer la recherche'
+
   return (
     <Wrapper $align={!isLoading}>
-      <span>Antécedents : {!canSearch ? 'entrez un MMSI pour lancer la recherche' : ''}</span>
-      {!isLoading && canSearch && envActions && suspicionOfOffense && (
+      <span>Antécédents : {!canSearch ? informationsMessage : ''}</span>
+      {!isLoading && canSearch && envActions && suspicionOfInfractions && (
         <>
-          <InfractionAndPV>
-            <p>{suspicionOfOffense?.amount} infractions (suspicion)</p>
+          <InfractionsAndPV>
+            <p>
+              {suspicionOfInfractions?.ids.length} {pluralize('infraction', suspicionOfInfractions?.ids.length)}{' '}
+              (suspicion)
+            </p>
             <Icon.CircleFilled color={THEME.color.maximumRed} size={8} />
             <p>
               {totalInfraction} {pluralize('infraction', totalInfraction)}, {totalPV} PV
             </p>
-          </InfractionAndPV>
+          </InfractionsAndPV>
           {themes.length > 0 && (
-            <StyledTooltip orientation="TOP_LEFT">
+            <StyledTooltip
+              isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
+              orientation="TOP_LEFT"
+            >
               <Header as="header">Thématiques&nbsp;: </Header>
               <ul>
                 {themes.map(theme => (
-                  <li>{theme}</li>
+                  <li key={theme}>{theme}</li>
                 ))}
               </ul>
             </StyledTooltip>
@@ -73,7 +97,7 @@ const Wrapper = styled(Italic)<{ $align: boolean }>`
   gap: 16px;
   ${p => (p.$align ? 'justify-content: start;' : 'justify-content: space-between;')}
 `
-const InfractionAndPV = styled.span`
+const InfractionsAndPV = styled.span`
   color: black;
   font-size: 13px;
   font-weight: bold;

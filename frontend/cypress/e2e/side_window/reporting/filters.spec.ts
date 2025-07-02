@@ -71,7 +71,7 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by target type', () => {
-    cy.fill('Type de cible', ['Autre'])
+    cy.fill('Filtre type de cible', ['Autre'])
     cy.wait(500)
     cy.wait('@getReportings')
 

@@ -1,5 +1,5 @@
 import { VesselTypeSelector } from '@features/commonComponents/VesselTypeSelector'
-import { HistoryOfOffense } from '@features/Reportings/components/ReportingReadOnly/HistoryOfOffense'
+import { HistoryOfInfractions } from '@features/Reportings/components/ReportingReadOnly/HistoryOfInfractions'
 import {
   Accent,
   Button,
@@ -18,7 +18,9 @@ import styled from 'styled-components'
 
 import { StyledEmptyTarget, StyledVesselContainer, StyledVesselForm } from '../../../../style'
 
-export function TargetDetails({ form, push, remove }) {
+import type { FieldArrayRenderProps } from 'formik'
+
+export function TargetDetails({ form, push, remove }: Pick<FieldArrayRenderProps, 'form' | 'push' | 'remove'>) {
   // Ensure that the component is re-rendered when the number of targets changes
   // -> use of index as key in targetDetaiils.map()
   const { forceUpdate } = useForceUpdate()
@@ -95,7 +97,7 @@ export function TargetDetails({ form, push, remove }) {
                 )}
                 {form.values.vehicleType === VehicleTypeEnum.VESSEL && (
                   <>
-                    <HistoryOfOffense mmsi={targetDetail.mmsi} />
+                    <HistoryOfInfractions mmsi={targetDetail.mmsi} reportingId={form.values.id} />
 
                     <StyledVesselForm>
                       <FormikTextInput isLight label="MMSI" name={`targetDetails.${index}.mmsi`} />
