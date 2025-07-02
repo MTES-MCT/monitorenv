@@ -114,6 +114,7 @@ class CreateOrUpdateReportingUTests {
         val createdReportingWithSemaphore =
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
+                missionRepository = missionRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
@@ -128,6 +129,7 @@ class CreateOrUpdateReportingUTests {
         val createdReportingWithControlUnit =
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
+                missionRepository = missionRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
@@ -162,6 +164,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
+                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -197,6 +200,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
+                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -262,6 +266,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
+                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -278,6 +283,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
+                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -294,6 +300,7 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
+                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -319,6 +326,7 @@ class CreateOrUpdateReportingUTests {
         assertThatThrownBy {
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
+                missionRepository = missionRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,

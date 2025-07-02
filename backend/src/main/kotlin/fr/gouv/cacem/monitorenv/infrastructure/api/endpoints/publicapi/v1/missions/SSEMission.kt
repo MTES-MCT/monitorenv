@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions
 
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateFullMissionEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionWithRapportNavActionsDataOutput
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener
@@ -80,6 +82,45 @@ class SSEMission(
                     return@map sseEmitter
                 } catch (e: Exception) {
                     logger.info("Error when sending mission event with id ${event.mission.id} : $e")
+                    sseEmitter.completeWithError(e)
+
+                    return@map sseEmitter
+                }
+            }
+
+        synchronized(mutexLock) {
+            sseStore.removeAll(sseEmittersToRemove)
+        }
+        logger.info("Removed ${sseEmittersToRemove.size} SSE listeners of mission updates.")
+    }
+
+    /**
+     * This method listen for `FullMissionEvent` to send to the frontend listeners
+     */
+    @Async
+    @EventListener(UpdateFullMissionEvent::class)
+    fun handleUpdateFullMissionEvent(event: UpdateFullMissionEvent) {
+        logger.info("SSE: Received mission event for full mission ${event.mission.mission.id}.")
+        val missionId = event.mission.mission.id
+
+        logger.info("SSE: Sending update of full mission $missionId to ${sseStore.size} listener(s).")
+        val sseEmittersToRemove =
+            sseStore.map { sseEmitter ->
+                try {
+                    val data = MissionDataOutput.fromMissionDTO(event.mission)
+                    val sseEvent =
+                        event()
+                            .name(missionUpdateEventName)
+                            .data(data)
+                            .reconnectTime(0)
+                            .build()
+
+                    sseEmitter.send(sseEvent)
+                    sseEmitter.complete()
+
+                    return@map sseEmitter
+                } catch (e: Exception) {
+                    logger.info("Error when sending full mission event with id ${event.mission.mission.id} : $e")
                     sseEmitter.completeWithError(e)
 
                     return@map sseEmitter

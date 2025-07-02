@@ -5,8 +5,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateFullMissionEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
@@ -19,6 +21,7 @@ import org.springframework.context.ApplicationEventPublisher
 class CreateOrUpdateReporting(
     private val reportingRepository: IReportingRepository,
     private val facadeRepository: IFacadeAreasRepository,
+    private val missionRepository: IMissionRepository,
     private val postgisFunctionRepository: IPostgisFunctionRepository,
     private val eventPublisher: ApplicationEventPublisher,
 ) {
@@ -37,20 +40,25 @@ class CreateOrUpdateReporting(
                 reporting.missionId != null &&
                 reporting.detachedFromMissionAtUtc == null
 
-        if (reporting.id != null && reportingToSaveIsAttachedToMission) {
-            reportingRepository.findById(reporting.id)?.let { existingReporting ->
+        var existingReporting: ReportingDetailsDTO? = null
+
+        if (reporting.id != null) {
+            existingReporting = reportingRepository.findById(reporting.id)
+
+            if (reportingToSaveIsAttachedToMission && existingReporting != null) {
                 val existingReportingIsAttachedToAnotherMission =
                     existingReporting.reporting.missionId != null &&
                         existingReporting.reporting.detachedFromMissionAtUtc == null &&
                         existingReporting.reporting.missionId != reporting.missionId
+
                 if (existingReportingIsAttachedToAnotherMission) {
-                    val errorMessage =
-                        "Reporting ${reporting.id} is already attached to a mission"
+                    val errorMessage = "Reporting ${reporting.id} is already attached to a mission"
                     logger.error(errorMessage)
                     throw BackendUsageException(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED, errorMessage)
                 }
             }
         }
+
         val normalizedGeometry =
             reporting.geom?.let { nonNullGeometry ->
                 postgisFunctionRepository.normalizeGeometry(nonNullGeometry)
@@ -70,6 +78,30 @@ class CreateOrUpdateReporting(
             )
         logger.info("Reporting ${savedReporting.reporting.id} created or updated")
 
+        // send mission event if reporting is newly attached to a mission
+        if (reportingToSaveIsAttachedToMission &&
+            savedReporting.reporting.missionId != null &&
+            savedReporting.reporting.id != null
+        ) {
+            reportingRepository.attachReportingsToMission(
+                listOf(savedReporting.reporting.id),
+                savedReporting.reporting.missionId,
+            )
+            val attachedMission = missionRepository.findFullMissionById(savedReporting.reporting.missionId)
+
+            val hadSameMissionBefore = existingReporting?.reporting?.missionId == reporting.missionId
+            val hadDifferentMissionBefore = (
+                existingReporting?.reporting?.missionId != null &&
+                    !hadSameMissionBefore
+            )
+            val reportingHasNoAttachedMission = existingReporting?.reporting?.missionId == null
+
+            if ((hadDifferentMissionBefore || reportingHasNoAttachedMission) && attachedMission != null) {
+                eventPublisher.publishEvent(
+                    UpdateFullMissionEvent(attachedMission),
+                )
+            }
+        }
         if (reporting.id != null) {
             logger.info(
                 "Sending CREATE/UPDATE event for reporting id ${savedReporting.reporting.id}.",
