@@ -1183,13 +1183,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             EnvActionControlEntity(
                 id = UUID.fromString("bf9f4062-83d3-4a85-b89b-76c0ded6473d"),
                 actionTargetType = ActionTargetTypeEnum.VEHICLE,
-                controlPlans =
-                    listOf(
-                        EnvActionControlPlanEntity(
-                            subThemeIds = listOf(47),
-                            themeId = 2,
-                        ),
-                    ),
                 completion = ActionCompletionEnum.TO_COMPLETE,
                 vehicleType = VehicleTypeEnum.VESSEL,
                 actionNumberOfControls = 4,
@@ -1246,64 +1239,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             .usingRecursiveComparison()
             .ignoringFields("mission.id", "mission.envActions.id", "mission.createdAtUtc", "mission.updatedAtUtc")
             .isEqualTo(expectedUpdatedMission)
-    }
-
-    @Test
-    @Transactional
-    fun `save Should update control plans of envActions`() {
-        val mission = jpaMissionRepository.findById(34)
-        val envAction =
-            mission?.envActions?.find {
-                it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807")
-            }
-        assertThat(envAction?.controlPlans?.size).isEqualTo(1)
-        assertThat(
-            envAction
-                ?.controlPlans
-                ?.get(0)
-                ?.subThemeIds
-                ?.size,
-        ).isEqualTo(1)
-        val nextControlPlans =
-            listOf(
-                EnvActionControlPlanEntity(
-                    subThemeIds = listOf(57, 33),
-                    themeId = 1,
-                ),
-                EnvActionControlPlanEntity(
-                    tagIds = listOf(1, 2, 3),
-                    themeId = 14,
-                ),
-                EnvActionControlPlanEntity(
-                    themeId = 10,
-                ),
-            )
-        val nextMission =
-            mission?.copy(
-                envActions =
-                    mission.envActions?.map {
-                        if (it.id ==
-                            UUID.fromString(
-                                "b8007c8a-5135-4bc3-816f-c69c7b75d807",
-                            ) &&
-                            it is EnvActionControlEntity
-                        ) {
-                            it.copy(controlPlans = nextControlPlans)
-                        } else {
-                            it
-                        }
-                    },
-            )
-        val updatedMission = jpaMissionRepository.save(nextMission!!)
-        val updatedControlPlan =
-            updatedMission.mission.envActions
-                ?.find { it.id == UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807") }
-                ?.controlPlans
-        assertThat(updatedControlPlan?.size).isEqualTo(3)
-        assertThat(updatedControlPlan?.get(0)?.subThemeIds?.size).isEqualTo(2)
-        assertThat(updatedControlPlan?.get(0)?.subThemeIds?.get(0)).isEqualTo(57)
-        assertThat(updatedControlPlan?.get(1)?.tagIds?.size).isEqualTo(3)
-        assertThat(updatedControlPlan?.get(1)?.tagIds?.get(0)).isEqualTo(1)
     }
 
     @Test

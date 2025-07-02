@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionCont
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
@@ -21,7 +20,6 @@ data class EnvActionControlProperties(
         id: UUID,
         actionEndDateTimeUtc: ZonedDateTime?,
         actionStartDateTimeUtc: ZonedDateTime?,
-        controlPlans: List<EnvActionControlPlanEntity>?,
         completedBy: String?,
         completion: ActionCompletionEnum?,
         department: String?,
@@ -43,7 +41,6 @@ data class EnvActionControlProperties(
         actionTargetType = actionTargetType,
         completedBy = completedBy,
         completion = completion,
-        controlPlans = controlPlans,
         department = department,
         facade = facade,
         geom = geom,
