@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
@@ -97,33 +96,6 @@ class EnvActionModel(
     @OrderBy("id")
     val attachedReporting: MutableSet<ReportingModel>? = LinkedHashSet(),
     @OneToMany(
-        fetch = FetchType.EAGER,
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true,
-        mappedBy = "envAction",
-    )
-    @Fetch(FetchMode.SUBSELECT)
-    @OrderBy("orderIndex")
-    var controlPlanThemes: MutableSet<EnvActionsControlPlanThemeModel>? = LinkedHashSet(),
-    @OneToMany(
-        fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true,
-        mappedBy = "envAction",
-    )
-    @Fetch(FetchMode.SUBSELECT)
-    @OrderBy("orderIndex")
-    var controlPlanSubThemes: MutableSet<EnvActionsControlPlanSubThemeModel>? = LinkedHashSet(),
-    @OneToMany(
-        fetch = FetchType.EAGER,
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true,
-        mappedBy = "envAction",
-    )
-    @Fetch(FetchMode.SUBSELECT)
-    @OrderBy("orderIndex")
-    var controlPlanTags: MutableSet<EnvActionsControlPlanTagModel>? = LinkedHashSet(),
-    @OneToMany(
         mappedBy = "envAction",
         fetch = FetchType.LAZY,
         orphanRemoval = true,
@@ -142,29 +114,8 @@ class EnvActionModel(
     @JsonManagedReference
     var tags: Set<TagEnvActionModel>,
 ) {
-    fun toActionEntity(mapper: ObjectMapper): EnvActionEntity {
-        val controlPlans =
-            controlPlanThemes?.map { it ->
-                EnvActionControlPlanEntity(
-                    themeId = it.id.themeId,
-                    subThemeIds =
-                        controlPlanSubThemes
-                            ?.filter { subTheme ->
-                                it.id.themeId ==
-                                    subTheme.controlPlanSubTheme
-                                        ?.controlPlanTheme
-                                        ?.id
-                            }?.map { it.id.subthemeId },
-                    tagIds =
-                        controlPlanTags
-                            ?.filter { tag ->
-                                it.id.themeId ==
-                                    tag.controlPlanTag?.controlPlanTheme?.id
-                            }?.map { it.id.tagId },
-                )
-            }
-
-        return EnvActionMapper.getEnvActionEntityFromJSON(
+    fun toActionEntity(mapper: ObjectMapper): EnvActionEntity =
+        EnvActionMapper.getEnvActionEntityFromJSON(
             mapper = mapper,
             id = id,
             actionEndDateTimeUtc = actionEndDateTime?.atZone(UTC),
@@ -172,7 +123,6 @@ class EnvActionModel(
             actionStartDateTimeUtc = actionStartDateTime?.atZone(UTC),
             completedBy = completedBy,
             completion = completion,
-            controlPlans = controlPlans,
             department = department,
             facade = facade,
             geom = geom,
@@ -187,15 +137,11 @@ class EnvActionModel(
             tags = toTagEntities(tags.toList()),
             themes = toThemeEntities(themes.toList()),
         )
-    }
 
     companion object {
         fun fromEnvActionEntity(
             action: EnvActionEntity,
             mission: MissionModel,
-            controlPlanThemesReferenceModelMap: Map<Int, ControlPlanThemeModel>,
-            controlPlanSubThemesReferenceModelMap: Map<Int, ControlPlanSubThemeModel>,
-            controlPlanTagsReferenceModelMap: Map<Int, ControlPlanTagModel>,
             mapper: ObjectMapper,
         ): EnvActionModel {
             val envActionModel =
@@ -231,38 +177,6 @@ class EnvActionModel(
                 envActionModel.tags = fromTagEntities(action.tags, envActionModel)
             }
 
-            action.controlPlans?.forEach {
-                if (it.themeId == null) return@forEach
-                controlPlanThemesReferenceModelMap[it.themeId]?.let { controlPlanTheme ->
-                    envActionModel.controlPlanThemes?.add(
-                        EnvActionsControlPlanThemeModel.fromEnvActionControlPlanThemeEntity(
-                            envAction = envActionModel,
-                            controlPlanTheme = controlPlanTheme,
-                        ),
-                    )
-                }
-                it.subThemeIds?.forEach { subThemeId ->
-                    controlPlanSubThemesReferenceModelMap[subThemeId]?.let { controlPlanSubTheme ->
-                        envActionModel.controlPlanSubThemes?.add(
-                            EnvActionsControlPlanSubThemeModel
-                                .fromEnvActionControlPlanSubThemeEntity(
-                                    envAction = envActionModel,
-                                    controlPlanSubTheme = controlPlanSubTheme,
-                                ),
-                        )
-                    }
-                }
-                it.tagIds?.forEach { tagId ->
-                    controlPlanTagsReferenceModelMap[tagId]?.let { controlPlanTag ->
-                        envActionModel.controlPlanTags?.add(
-                            EnvActionsControlPlanTagModel.fromEnvActionControlPlanTagEntity(
-                                envAction = envActionModel,
-                                controlPlanTag = controlPlanTag,
-                            ),
-                        )
-                    }
-                }
-            }
             return envActionModel
         }
     }

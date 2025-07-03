@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -68,14 +67,6 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
                 today,
                 tomorrow,
                 observationsByUnit,
-                controlPlans =
-                    listOf(
-                        EnvActionControlPlanEntity(
-                            themeId = 11,
-                            subThemeIds = listOf(51),
-                            tagIds = listOf(),
-                        ),
-                    ),
             )
 
         // When
@@ -83,7 +74,6 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(envActionEntity).isEqualTo(anEnvAction)
-        assertThat(envActionEntity.controlPlans?.size).isEqualTo(1)
     }
 
     @Test

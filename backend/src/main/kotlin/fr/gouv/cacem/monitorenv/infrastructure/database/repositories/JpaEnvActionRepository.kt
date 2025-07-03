@@ -7,8 +7,10 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
 import org.geolatte.geom.MultiPoint
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
@@ -20,15 +22,12 @@ import java.sql.Timestamp
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @Repository
 class JpaEnvActionRepository(
     private val idbEnvActionRepository: IDBEnvActionRepository,
     private val idbMissionRepository: IDBMissionRepository,
-    private val idbControlPlanThemeRepository: IDBControlPlanThemeRepository,
-    private val idbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
-    private val idbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val objectMapper: ObjectMapper,
 ) : IEnvActionRepository {
     @Transactional
@@ -39,42 +38,16 @@ class JpaEnvActionRepository(
     override fun save(envAction: EnvActionEntity): EnvActionEntity {
         val mission: MissionModel? = idbMissionRepository.findByEnvActionId(envAction.id)
         mission?.let {
-            val controlPlanThemesReferenceModelMap: MutableMap<Int, ControlPlanThemeModel> =
-                mutableMapOf()
-            val controlPlanTagsReferenceModelMap: MutableMap<Int, ControlPlanTagModel> =
-                mutableMapOf()
-            val controlPlanSubThemesReferenceModelMap: MutableMap<Int, ControlPlanSubThemeModel> =
-                mutableMapOf()
-
-            envAction.controlPlans?.forEach { controlPlan ->
-                controlPlan.tagIds?.forEach { tagId ->
-                    controlPlanTagsReferenceModelMap[tagId] =
-                        idbControlPlanTagRepository.getReferenceById(tagId)
-                }
-                controlPlan.themeId?.let { themeId ->
-                    controlPlanThemesReferenceModelMap[themeId] =
-                        idbControlPlanThemeRepository.getReferenceById(themeId)
-                }
-                controlPlan.subThemeIds?.forEach { subthemeId ->
-                    controlPlanSubThemesReferenceModelMap[subthemeId] =
-                        idbControlPlanSubThemeRepository.getReferenceById(subthemeId)
-                }
-            }
             return idbEnvActionRepository
                 .save(
                     EnvActionModel.fromEnvActionEntity(
                         envAction,
                         mission = mission,
-                        controlPlanThemesReferenceModelMap =
-                        controlPlanThemesReferenceModelMap,
-                        controlPlanTagsReferenceModelMap =
-                        controlPlanTagsReferenceModelMap,
-                        controlPlanSubThemesReferenceModelMap =
-                        controlPlanSubThemesReferenceModelMap,
                         mapper = objectMapper,
                     ),
                 ).toActionEntity(objectMapper)
         }
+
         throw BackendUsageException(
             code = BackendUsageErrorCode.ENTITY_NOT_FOUND,
             data = "Trying to save an envAction without mission",

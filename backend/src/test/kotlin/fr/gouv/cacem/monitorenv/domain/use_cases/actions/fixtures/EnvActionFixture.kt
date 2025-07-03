@@ -5,7 +5,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
@@ -39,7 +38,6 @@ class EnvActionFixture {
             startTime: ZonedDateTime? = null,
             endTime: ZonedDateTime? = null,
             observationsByUnit: String? = null,
-            controlPlans: List<EnvActionControlPlanEntity>? = null,
             tags: List<TagEntity> = listOf(),
             themes: List<ThemeEntity> = listOf(),
         ): EnvActionEntity =
@@ -51,7 +49,6 @@ class EnvActionFixture {
                 actionStartDateTimeUtc = startTime,
                 completedBy = "John Doe",
                 completion = ActionCompletionEnum.COMPLETED,
-                controlPlans = controlPlans,
                 department = "Department X",
                 facade = "Facade Y",
                 geom = null,
@@ -73,8 +70,6 @@ class EnvActionFixture {
             actionNumberOfControls: Int? = infractions.size,
             actionTargetTypeEnum: ActionTargetTypeEnum? = null,
             vehicleTypeEnum: VehicleTypeEnum? = null,
-            controlPlans: List<EnvActionControlPlanEntity>? =
-                listOf(EnvActionControlPlanEntity(subThemeIds = listOf(1))),
             geom: Geometry? = polygon,
             themes: List<ThemeEntity> = listOf(),
         ): EnvActionControlEntity =
@@ -86,7 +81,6 @@ class EnvActionFixture {
                 actionNumberOfControls = actionNumberOfControls,
                 actionTargetType = actionTargetTypeEnum,
                 vehicleType = vehicleTypeEnum,
-                controlPlans = controlPlans,
                 geom = geom,
                 tags = listOf(),
                 themes = themes,
@@ -96,8 +90,6 @@ class EnvActionFixture {
             startTime: ZonedDateTime? = null,
             endTime: ZonedDateTime? = null,
             openBy: String? = "CDA",
-            controlPlans: List<EnvActionControlPlanEntity>? =
-                listOf(EnvActionControlPlanEntity(subThemeIds = listOf(1))),
             geom: Geometry? = polygon,
         ): EnvActionSurveillanceEntity =
             EnvActionSurveillanceEntity(
@@ -106,7 +98,6 @@ class EnvActionFixture {
                 actionEndDateTimeUtc = endTime,
                 openBy = openBy,
                 awareness = null,
-                controlPlans = controlPlans,
                 geom = geom,
                 tags = listOf(),
                 themes = listOf(),
