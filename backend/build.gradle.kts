@@ -129,7 +129,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.0.0")
     testImplementation("net.ttddyy:datasource-proxy:1.10.1")
     testImplementation("io.mockk:mockk:1.14.4")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
