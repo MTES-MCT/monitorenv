@@ -42,12 +42,16 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
         if (values[key] === undefined && JSON.stringify(missionEvent[key]) === 'null') {
           return
         }
+
+        if (key === 'attachedReportings') {
+          dispatch(attachReportingToMissionSliceActions.setAttachedReportings(missionEvent.attachedReportings))
+          if (missionEvent.attachedReportings === undefined) {
+            return
+          }
+        }
         // eslint-disable-next-line no-console
         console.log(`SSE: setting form key "${key}" to "${JSON.stringify(missionEvent[key])}"`)
         setFieldValue(key, undefine(missionEvent[key]))
-        if (key === 'attachedReportings') {
-          dispatch(attachReportingToMissionSliceActions.setAttachedReportings(missionEvent.attachedReportings))
-        }
       })
 
       // we need to wait for the form to be updated before removing the mission event from the context
