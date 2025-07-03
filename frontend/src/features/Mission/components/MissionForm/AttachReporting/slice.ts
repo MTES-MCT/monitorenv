@@ -26,7 +26,7 @@ const attachReportingToMissionSlice = createSlice({
       return INITIAL_STATE
     },
     setAttachedReportings(state, action) {
-      const attachedReportings = action.payload
+      const attachedReportings = action.payload ?? []
       state.attachedReportings = attachedReportings
 
       const attachedReportingIds = attachedReportings.map(reporting => reporting.id)
