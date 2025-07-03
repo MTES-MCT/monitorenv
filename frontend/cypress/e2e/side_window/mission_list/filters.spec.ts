@@ -251,7 +251,8 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.getDataCy('edit-mission-34').click({ force: true })
 
     cy.getDataCy('action-card').eq(1).click()
-    cy.getDataCy('infraction-0-identification').should('contain', 'BALTIK')
+    cy.clickButton('Editer')
+    cy.getDataCy('infraction-form-registrationNumber').should('have.value', 'BALTIK')
     cy.getDataCy('quit-edit-mission').click()
   })
 })

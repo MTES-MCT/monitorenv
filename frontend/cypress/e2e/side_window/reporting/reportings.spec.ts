@@ -26,6 +26,9 @@ context('Reportings', () => {
     cy.wait('@archiveReporting').then(({ response }) => {
       expect(response && response.statusCode).equal(204)
     })
+    cy.getDataCy('edit-reporting-5').click({ force: true })
+    cy.clickButton('Rouvrir le signalement')
+    cy.clickButton('Fermer')
   })
 
   it('Reporting should be duplicate and editable in Reportings Table', () => {
@@ -51,7 +54,7 @@ context('Reportings', () => {
       expect(reporting.reportingSources[0]?.sourceName).equal('Reporting dupliqué')
       expect(reporting.reportingSources[0]?.id).not.equal(null)
       expect(reporting.description).equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
-      expect(reporting.reportType).equal('OBSERVATION')
+      expect(reporting.reportType).equal('INFRACTION_SUSPICION')
       expect(reporting.openBy).equal('CDA')
 
       // clean
@@ -120,6 +123,7 @@ context('Reportings', () => {
   })
 
   it('Reporting with MMSI should retrieve repeated infractions from previous envActions and suspicions of infraction', () => {
+    cy.getDataCy('status-filter-Archivés').click()
     cy.intercept('GET', '/bff/v1/infractions/9876543210').as('getRepeatedInfractions')
     cy.intercept('GET', '/bff/v1/infractions/reportings/9876543210?idsToExclude=5').as('getSuspicionOfInfraction')
     cy.getDataCy('edit-reporting-5').click({ force: true })
@@ -162,6 +166,8 @@ context('Reportings', () => {
           // cleanup
           cy.clickButton('Supprimer le signalement')
           cy.clickButton('Confirmer la suppression')
+          cy.clickButton('Réinitialiser les filtres')
+
           cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
           cy.intercept('PUT', '/bff/v1/missions').as('createMission')
           cy.clickButton('Missions et contrôles')
