@@ -3,6 +3,7 @@
  * @see https://github.com/MTES-MCT/monitorenv/blob/main/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/adapters/publicapi/outputs/MissionDataOutput.kt#L11
  */
 export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES = [
+  'attachedReportingIds',
   'detachedReportingIds',
   'detachedReportings',
   // TODO add the update of the env actions
