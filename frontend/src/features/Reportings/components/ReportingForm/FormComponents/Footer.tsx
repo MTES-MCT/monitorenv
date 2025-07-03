@@ -14,6 +14,8 @@ import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
+import { getCenter } from 'ol/extent'
+import { MultiPolygon } from 'ol/geom'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -89,11 +91,25 @@ export function Footer({
 
   const copyTargetInfos = () => {
     const isMultiPoint = values.geom?.type === 'MultiPoint'
-    const formattedCoordinates = isMultiPoint
-      ? formatCoordinates(values.geom?.coordinates[0] as Coordinate, coordinatesFormat)
-      : undefined
+    const isMultiPolygon = values.geom?.type === 'MultiPolygon'
+
+    const coordinates = values.geom?.coordinates
+    let formattedCoordinates
+    if (isMultiPoint && coordinates) {
+      formattedCoordinates = formatCoordinates(coordinates[0] as Coordinate, coordinatesFormat)
+    }
+
+    if (isMultiPolygon && coordinates && coordinates[0]) {
+      const multiPolygon = new MultiPolygon(coordinates as Coordinate[][][])
+      const centroid = getCenter(multiPolygon.getExtent())
+      formattedCoordinates = `${formatCoordinates(
+        centroid as Coordinate,
+        coordinatesFormat
+      )} (calculées depuis le centroïd de la zone du signalement)`
+    }
+
     const globalInfos = [
-      `${formattedCoordinates ? `Coordonnées: ${formattedCoordinates}\n` : ''}`,
+      `${formattedCoordinates ? `Coordonnées: ${formattedCoordinates}` : ''}`,
       `Réponse VHF: ${values.withVHFAnswer ? 'Oui' : 'Non'}`
     ].join('\n')
 
