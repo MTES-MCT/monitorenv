@@ -166,7 +166,7 @@ $$
                 '0106000020E6100000010000000103000000010000000500000057F77C6FBF2D15C038E1B84BCD2E48403A42C339BDB014C038E1B84BCD2E48403A42C339BDB014C010F24763BA37484057F77C6FBF2D15C010F24763BA37484057F77C6FBF2D15C038E1B84BCD2E4840',
                 true, NULL, 'Zone de vigilance 7', 'Sémaphore de Fécamp',
                 date_within_quarter - INTERVAL '1 day',
-                NULL, NULL, '{}', '{}',
+                NULL, 'PUBLIC', '{}', '{}',
                 date_within_quarter + INTERVAL '4 months');
 
         -- period : outer this year
