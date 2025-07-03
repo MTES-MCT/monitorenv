@@ -54,7 +54,10 @@ class CreateOrUpdateReporting(
                 if (existingReportingIsAttachedToAnotherMission) {
                     val errorMessage = "Reporting ${reporting.id} is already attached to a mission"
                     logger.error(errorMessage)
-                    throw BackendUsageException(BackendUsageErrorCode.CHILD_ALREADY_ATTACHED, errorMessage)
+                    throw BackendUsageException(
+                        BackendUsageErrorCode.CHILD_ALREADY_ATTACHED,
+                        errorMessage,
+                    )
                 }
             }
         }
@@ -79,29 +82,19 @@ class CreateOrUpdateReporting(
         logger.info("Reporting ${savedReporting.reporting.id} created or updated")
 
         // send mission event if reporting is newly attached to a mission
-        if (reportingToSaveIsAttachedToMission &&
+        if (savedReporting.reporting.attachedToMissionAtUtc != null &&
             savedReporting.reporting.missionId != null &&
-            savedReporting.reporting.id != null
+            savedReporting.reporting.detachedFromMissionAtUtc == null
         ) {
-            reportingRepository.attachReportingsToMission(
-                listOf(savedReporting.reporting.id),
-                savedReporting.reporting.missionId,
-            )
             val attachedMission = missionRepository.findFullMissionById(savedReporting.reporting.missionId)
 
-            val hadSameMissionBefore = existingReporting?.reporting?.missionId == reporting.missionId
-            val hadDifferentMissionBefore = (
-                existingReporting?.reporting?.missionId != null &&
-                    !hadSameMissionBefore
-            )
-            val reportingHasNoAttachedMission = existingReporting?.reporting?.missionId == null
-
-            if ((hadDifferentMissionBefore || reportingHasNoAttachedMission) && attachedMission != null) {
+            if (attachedMission != null) {
                 eventPublisher.publishEvent(
                     UpdateFullMissionEvent(attachedMission),
                 )
             }
         }
+
         if (reporting.id != null) {
             logger.info(
                 "Sending CREATE/UPDATE event for reporting id ${savedReporting.reporting.id}.",
