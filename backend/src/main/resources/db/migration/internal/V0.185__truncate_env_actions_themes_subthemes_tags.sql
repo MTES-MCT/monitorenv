@@ -1,0 +1,2 @@
+TRUNCATE env_actions_control_plan_themes, env_actions_control_plan_sub_themes, env_actions_control_plan_tags;
+DROP TABLE env_actions_control_plan_themes, env_actions_control_plan_sub_themes, env_actions_control_plan_tags;
