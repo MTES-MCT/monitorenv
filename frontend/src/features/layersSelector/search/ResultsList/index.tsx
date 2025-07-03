@@ -76,12 +76,16 @@ export function ResultList({ searchedText }: ResultListProps) {
   const { vigilanceAreas } = useGetFilteredVigilanceAreasForMapQuery()
   const vigilanceAreasResults =
     !vigilanceAreaSearchResult && areMyVigilanceAreasOpen ? vigilanceAreas?.ids : vigilanceAreaSearchResult ?? []
-  const totalVigilanceAreas = vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 
   const sortedVigilanceAreasResultsByName = vigilanceAreasResults
     .map(id => vigilanceAreas?.entities[id])
     .filter(vigilanceArea => !!vigilanceArea)
     .sort((vigilanceAreaA, vigilanceAreaB) => (vigilanceAreaA?.name ?? '').localeCompare(vigilanceAreaB?.name ?? ''))
+
+  const totalVigilanceAreas =
+    sortedVigilanceAreasResultsByName.length > 0
+      ? sortedVigilanceAreasResultsByName.length
+      : vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {

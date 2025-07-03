@@ -3,6 +3,7 @@ import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
+import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import {
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
@@ -31,9 +32,13 @@ export function VigilanceAreasFilters() {
   const trigramsAsOptions = trigrams?.map(trigram => ({ label: trigram, value: trigram })) ?? []
 
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
-
+  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
+  const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
+  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
+  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
 
   const {
     createdBy: createdByFilter,
@@ -42,6 +47,8 @@ export function VigilanceAreasFilters() {
     status: statusFilter,
     visibility: visibilityFilter
   } = useAppSelector(state => state.vigilanceAreaFilters)
+
+  const debouncedSearchLayers = useSearchLayers()
 
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
@@ -74,6 +81,16 @@ export function VigilanceAreasFilters() {
     }
 
     dispatch(vigilanceAreaFiltersActions.setStatus(filter))
+    debouncedSearchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
+    })
   }
 
   const resetFilters = () => {
@@ -85,6 +102,17 @@ export function VigilanceAreasFilters() {
     dispatch(setFilteredVigilanceAreaPeriod(VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS))
     dispatch(setIsVigilanceAreaSearchResultsVisible(false))
     dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
+
+    debouncedSearchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryTags: [],
+      regulatoryThemes: [],
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
+      vigilanceAreaSpecificPeriodFilter: undefined
+    })
   }
 
   const updateVisibilityFilter = (visibilityOption: Option<string>, isChecked: boolean | undefined) => {
@@ -99,6 +127,16 @@ export function VigilanceAreasFilters() {
     }
 
     dispatch(vigilanceAreaFiltersActions.setVisibility(newVisibilityFilter))
+    debouncedSearchLayers({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
+    })
   }
 
   const hasCustomPeriodFilter = filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
