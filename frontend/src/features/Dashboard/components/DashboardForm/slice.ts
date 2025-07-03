@@ -21,7 +21,9 @@ const INITIAL_DASHBOARD_FILTERS: DashboardFiltersType = {
   controlUnitFilters: {},
   filters: {},
   nearbyUnitFilters: {
-    periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS
+    from: undefined,
+    periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS,
+    to: undefined
   },
   recentActivityFilters: {
     periodFilter: RecentActivity.RecentActivityDateRangeEnum.SEVEN_LAST_DAYS
@@ -170,14 +172,7 @@ export const dashboardFiltersSlice = createSlice({
       if (state.dashboards[id]) {
         state.dashboards[id].filters = { ...state.dashboards[id].filters, ...filters }
       } else {
-        state.dashboards[id] = {
-          ...INITIAL_DASHBOARD_FILTERS,
-          nearbyUnitFilters: {
-            from: undefined,
-            periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS,
-            to: undefined
-          }
-        }
+        state.dashboards[id] = INITIAL_DASHBOARD_FILTERS
       }
     },
     setListFilters(state, action: PayloadAction<Partial<DashboardsListFilters>>) {
