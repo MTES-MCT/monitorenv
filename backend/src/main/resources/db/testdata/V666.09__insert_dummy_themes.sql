@@ -22,7 +22,3 @@ where year = 2025;
 INSERT INTO themes (name, parent_id, started_at, ended_at, control_plan_tags_id)
 SELECT DISTINCT tag, theme_id, '2023-01-01 00:00:00'::timestamp, '2099-12-31 23:59:59'::timestamp, id
 FROM control_plan_tags;
-
-INSERT INTO themes_vigilance_areas (vigilance_areas_id, themes_id)
-VALUES (2, 108),
-       (2, 341);

@@ -193,3 +193,8 @@ SELECT pg_catalog.setval('public.vigilance_areas_id_seq', 10, true);
 UPDATE vigilance_areas
 SET validated_at = COALESCE(created_at, '2024-07-01 00:00:00')
 WHERE is_draft IS FALSE;
+
+INSERT INTO themes_vigilance_areas (vigilance_areas_id, themes_id)
+VALUES (2, 108),
+       (2, 341);
+
