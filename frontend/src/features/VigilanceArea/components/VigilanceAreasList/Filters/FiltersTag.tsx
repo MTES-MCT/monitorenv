@@ -1,3 +1,4 @@
+import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import { setFilteredRegulatoryTags, setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -15,6 +16,25 @@ export function FilterTags() {
   const dispatch = useAppDispatch()
   const { createdBy, seaFronts } = useAppSelector(state => state.vigilanceAreaFilters)
   const { filteredRegulatoryTags, filteredRegulatoryThemes } = useAppSelector(state => state.layerSearch)
+  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
+  const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
+  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
+  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
+  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
+
+  const debouncedSearchLayers = useSearchLayers()
+
+  const genericSearchParams = {
+    ampTypes: filteredAmpTypes,
+    extent: searchExtent,
+    regulatoryTags: filteredRegulatoryTags,
+    regulatoryThemes: filteredRegulatoryThemes,
+    searchedText: globalSearchText,
+    shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+    vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+    vigilanceAreaSpecificPeriodFilter
+  }
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: string, filter) => {
     const updatedFilter = filter.filter(unit => unit !== valueToDelete)
@@ -33,6 +53,10 @@ export function FilterTags() {
       .filter(tag => tag.id !== valueToDelete.id)
 
     dispatch(setFilteredRegulatoryTags(updatedFilter))
+    debouncedSearchLayers({
+      ...genericSearchParams,
+      regulatoryTags: updatedFilter
+    })
   }
 
   const onDeleteThemeTag = (valueToDelete: ThemeOption, themeFilter: ThemeOption[]) => {
@@ -42,6 +66,10 @@ export function FilterTags() {
       .filter(theme => theme.id !== valueToDelete.id)
 
     dispatch(setFilteredRegulatoryThemes(updatedFilter))
+    debouncedSearchLayers({
+      ...genericSearchParams,
+      regulatoryThemes: updatedFilter
+    })
   }
 
   const hasFilters =
