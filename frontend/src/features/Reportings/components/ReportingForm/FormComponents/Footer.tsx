@@ -1,15 +1,23 @@
+import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { StyledButton, ButtonWithWiteBg, StyledDeleteButton, StyledFooter } from '@features/Reportings/style'
 import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
 import { reopenReporting } from '@features/Reportings/useCases/reopenReporting'
 import { getTimeLeft, isNewReporting } from '@features/Reportings/utils'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, THEME, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Level, THEME, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { formatCoordinates } from '@utils/coordinates'
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from 'domain/entities/reporting'
+import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
+import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useEffect, useState } from 'react'
+import styled from 'styled-components'
+
+import type { Coordinate } from 'ol/coordinate'
 
 type ReportingFooterProps = {
   isAutoSaveEnabled: boolean
@@ -29,6 +37,7 @@ export function Footer({
   const reportingContext =
     useAppSelector(state => (activeReportingId ? state.reporting.reportings[activeReportingId]?.context : undefined)) ??
     ReportingContext.MAP
+  const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
 
   const dispatch = useAppDispatch()
   const { setFieldValue, validateForm, values } = useFormikContext<Reporting>()
@@ -78,6 +87,56 @@ export function Footer({
     dispatch(archiveReporting(Number(values.id), reportingContext, true))
   }
 
+  const copyTargetInfos = () => {
+    const isMultiPoint = values.geom?.type === 'MultiPoint'
+    const formattedCoordinates = isMultiPoint
+      ? formatCoordinates(values.geom?.coordinates[0] as Coordinate, coordinatesFormat)
+      : undefined
+    const globalInfos = [
+      `${formattedCoordinates ? `Coordonnées: ${formattedCoordinates}\n` : ''}`,
+      `Réponse VHF: ${values.withVHFAnswer ? 'Oui' : 'Non'}`
+    ].join('\n')
+
+    const targetDetails = values.targetDetails
+      .map(
+        target =>
+          `${target.mmsi ? `MMSI: ${target.mmsi}\n` : ''}${
+            target.vesselName ? `Nom du navire:${target.vesselName}\n` : ''
+          }${target.size ? `Taille: ${target.size}m\n` : ''}`
+      )
+      .flat()
+      .join('\n')
+
+    navigator.clipboard
+      .writeText([globalInfos, targetDetails].join('\n'))
+      .then(() => {
+        const bannerProps = {
+          children: 'Signalement copié dans le presse papier (Nom du navire, MMSI, Taille, Localisation, réponse VHF)',
+          isClosable: true,
+          isFixed: true,
+          level: Level.SUCCESS,
+          withAutomaticClosing: true
+        }
+
+        return reportingContext === ReportingContext.MAP
+          ? dispatch(addMainWindowBanner(bannerProps))
+          : dispatch(addSideWindowBanner(bannerProps))
+      })
+      .catch(() => {
+        const errorBannerProps = {
+          children: "Les infos du signalement n'ont pas pu être copiés dans le presse papier",
+          isClosable: true,
+          isFixed: true,
+          level: Level.ERROR,
+          withAutomaticClosing: true
+        }
+
+        return reportingContext === ReportingContext.MAP
+          ? dispatch(addMainWindowBanner(errorBannerProps))
+          : dispatch(addSideWindowBanner(errorBannerProps))
+      })
+  }
+
   if (isNewReporting(values.id)) {
     return (
       <StyledFooter $justify="end">
@@ -90,13 +149,23 @@ export function Footer({
 
   return (
     <StyledFooter>
-      <StyledDeleteButton
-        accent={Accent.SECONDARY}
-        color={THEME.color.maximumRed}
-        Icon={Icon.Delete}
-        onClick={onDelete}
-        title="Supprimer le signalement"
-      />
+      <div>
+        <StyledDeleteButton
+          accent={Accent.SECONDARY}
+          color={THEME.color.maximumRed}
+          Icon={Icon.Delete}
+          onClick={onDelete}
+          title="Supprimer le signalement"
+        />
+        <StyledIconButton
+          disabled={
+            values.targetType !== ReportingTargetTypeEnum.VEHICLE || values.vehicleType !== VehicleTypeEnum.VESSEL
+          }
+          Icon={Icon.Duplicate}
+          onClick={copyTargetInfos}
+          title="Copier le nom du navire, le MMSI, la taille, la localisation, et la réponse VHF"
+        />
+      </div>
 
       <div>
         {reportingStatus === ReportingStatusEnum.ARCHIVED || values.isArchived ? (
@@ -121,3 +190,8 @@ export function Footer({
     </StyledFooter>
   )
 }
+
+export const StyledIconButton = styled(IconButton)`
+  border: 1px solid ${p => p.theme.color.white};
+  margin-left: 8px;
+`
