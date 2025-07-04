@@ -20,6 +20,7 @@ class SSEMission(
     val mutexLock = Any()
 
     private val missionUpdateEventName = "MISSION_UPDATE"
+    private val fullMissionUpdateEventName = "FULL_MISSION_UPDATE"
 
     companion object {
         private const val TWENTY_FOUR_HOURS = (24 * 60 * 60 * 1000).toLong()
@@ -110,7 +111,7 @@ class SSEMission(
                     val data = MissionDataOutput.fromMissionDTO(event.mission)
                     val sseEvent =
                         event()
-                            .name(missionUpdateEventName)
+                            .name(fullMissionUpdateEventName)
                             .data(data)
                             .reconnectTime(0)
                             .build()
