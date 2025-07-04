@@ -268,7 +268,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.getDataCy('add-control-administration').contains('Douane')
     cy.getDataCy('add-control-unit').contains('DF 61 Port-de-Bouc')
 
-    cy.wait(250)
+    cy.wait(400)
 
     // Add a control
     cy.clickButton('Ajouter')

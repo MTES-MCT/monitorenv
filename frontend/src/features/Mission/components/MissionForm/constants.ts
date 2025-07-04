@@ -4,7 +4,6 @@
  */
 export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES = [
   'attachedReportingIds',
-  'attachedReportings',
   'detachedReportingIds',
   'detachedReportings',
   // TODO add the update of the env actions
