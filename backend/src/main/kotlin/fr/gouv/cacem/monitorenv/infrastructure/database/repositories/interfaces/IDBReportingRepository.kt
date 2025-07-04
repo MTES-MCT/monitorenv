@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfInfractions
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModelJpa
@@ -203,4 +204,27 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
+
+    @Query(
+        """
+    SELECT ARRAY_AGG(DISTINCT reporting.id) AS ids, ARRAY_AGG(DISTINCT themes.name) AS themes
+    FROM reportings reporting
+    LEFT JOIN themes_reportings ON reporting.id = themes_reportings.reportings_id
+    INNER JOIN themes ON themes.id = themes_reportings.themes_id AND themes.parent_id IS NULL
+    WHERE EXISTS (
+      SELECT 1
+      FROM jsonb_array_elements(reporting.target_details) AS details
+      WHERE details ->> 'mmsi' = :mmsi
+      AND reporting.report_type = 'INFRACTION_SUSPICION'
+      AND reporting.is_infraction_proven IS TRUE
+      AND reporting.is_deleted IS FALSE
+      AND (:idsToExclude IS NULL OR reporting.id NOT IN :idsToExclude)
+    )
+    """,
+        nativeQuery = true,
+    )
+    fun findAllSuspicionOfInfractionsByMmsi(
+        mmsi: String,
+        idsToExclude: List<Int>,
+    ): SuspicionOfInfractions
 }

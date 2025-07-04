@@ -1,4 +1,4 @@
-import { type EntityState, createEntityAdapter } from '@reduxjs/toolkit'
+import { createEntityAdapter, type EntityState } from '@reduxjs/toolkit'
 
 import { monitorenvPrivateApi } from './api'
 import { getQueryString } from '../utils/getQueryStringFormatted'
@@ -38,7 +38,8 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
         { id: 'LIST', type: 'Reportings' },
         { id: 'LIST', type: 'Missions' },
         { id: missionId, type: 'Missions' },
-        'ExtractArea'
+        'ExtractArea',
+        'Suspicions'
       ],
       query: reporting => ({
         body: reporting,
@@ -47,7 +48,7 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     deleteReporting: build.mutation({
-      invalidatesTags: [{ id: 'LIST', type: 'Reportings' }, 'ExtractArea'],
+      invalidatesTags: [{ id: 'LIST', type: 'Reportings' }, 'ExtractArea', 'Suspicions'],
       query: ({ id }) => ({
         method: 'DELETE',
         url: `/v1/reportings/${id}`
@@ -57,7 +58,7 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       invalidatesTags: (_, __, results) =>
         results?.ids
           ? [{ id: 'LIST', type: 'Reportings' }, ...results.ids.map(id => ({ id, type: 'Reportings' as const }))]
-          : [{ id: 'LIST', type: 'Reportings' }, 'ExtractArea'],
+          : [{ id: 'LIST', type: 'Reportings' }, 'ExtractArea', 'Suspicions'],
       query: ({ ids }: { ids: number[] }) => ({
         body: ids,
         method: 'PUT',
@@ -90,7 +91,8 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
         { id: 'LIST', type: 'Reportings' },
         { id: 'LIST', type: 'Missions' },
         { id: missionId, type: 'Missions' },
-        'ExtractArea'
+        'ExtractArea',
+        'Suspicions'
       ],
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },

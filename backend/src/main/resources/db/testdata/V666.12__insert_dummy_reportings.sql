@@ -23,7 +23,8 @@ VALUES (2, 2300002, 'VEHICLE', 'VESSEL', '[
 ]',
         '0104000020E610000001000000010100000062C9C715311E13C050CB31D53D4F4840', 'NAMO', 'Description 2',
         'INFRACTION_SUSPICION', 'Police des mouillages', '{ZMEL}', 'ACTION TAKEN', true, true,
-        now() - INTERVAL '2 days', 2, false, false, 'RST', NULL, NULL, NULL, NULL, 113, false, now() - INTERVAL '2 days');
+        now() - INTERVAL '2 days', 2, false, false, 'RST', NULL, NULL, NULL, NULL, 113, false,
+        now() - INTERVAL '2 days');
 INSERT INTO public.reportings
 VALUES (3, 2300003, 'VEHICLE', 'VESSEL', '[
   {
@@ -33,7 +34,8 @@ VALUES (3, 2300003, 'VEHICLE', 'VESSEL', '[
 ]',
         '0106000020E610000001000000010300000001000000040000006E15B8857C090CC02C07754424784840552A202082FC09C0C0FD120D667A484025BF296025E00BC0805DC2889C7F48406E15B8857C090CC02C07754424784840',
         'NAMO', 'Description 3', 'INFRACTION_SUSPICION', 'Police des mouillages', '{ZMEL}', 'ACTION TAKEN', true, true,
-        now() - INTERVAL '1 hour', 1, false, false, 'DEF', NULL, NULL, NULL, NULL, 109, false, now() - INTERVAL '1 hour');
+        now() - INTERVAL '1 hour', 1, false, false, 'DEF', NULL, NULL, NULL, NULL, 109, false,
+        now() - INTERVAL '1 hour');
 INSERT INTO public.reportings
 VALUES (4, 2300004, 'INDIVIDUAL', NULL, '[
   {
@@ -53,7 +55,7 @@ VALUES (5, 2300005, 'VEHICLE', 'VESSEL', '[
   }
 ]',
         '0104000020E6100000010000000101000000417927B8BBBBD73F06D9D38A46E24840', 'Guadeloupe',
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'OBSERVATION','Pêche à pied',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'INFRACTION_SUSPICION', 'Pêche à pied',
         '{Braconnage}', NULL,
         true, true,
         now() - INTERVAL '1 hour', 6, false, false, 'CDA', NULL, NULL, NULL, NULL, 108, false,

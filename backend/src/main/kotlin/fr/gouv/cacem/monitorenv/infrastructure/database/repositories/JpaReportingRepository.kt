@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfInfractions
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
@@ -234,6 +235,11 @@ class JpaReportingRepository(
     @Transactional
     override fun findAllIdsByGeometry(geometry: Geometry): List<Int> =
         dbReportingRepository.findAllIdsByGeom(geometry = geometry)
+
+    override fun findSuspicionOfInfractionsByMmsi(
+        mmsi: String,
+        idsToExclude: List<Int>,
+    ): SuspicionOfInfractions = dbReportingRepository.findAllSuspicionOfInfractionsByMmsi(mmsi, idsToExclude)
 
     @Transactional
     override fun delete(reportingId: Int) {

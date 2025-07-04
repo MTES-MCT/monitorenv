@@ -4,6 +4,8 @@ import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import styled from 'styled-components'
 
+import { HistoryOfInfractions } from './HistoryOfInfractions'
+
 import type { Reporting } from 'domain/entities/reporting'
 
 const EMPTY_VALUE = '--'
@@ -79,6 +81,12 @@ export function TargetDetails({ isSuperUser, reporting }: { isSuperUser: boolean
                 )}
                 {reporting.vehicleType === VehicleTypeEnum.VESSEL && (
                   <>
+                    <HistoryOfInfractions
+                      isReadOnly
+                      mmsi={reporting.targetDetails[index]?.mmsi}
+                      reportingId={reporting.id}
+                    />
+
                     <StyledVesselForm>
                       <TextInput
                         isLight

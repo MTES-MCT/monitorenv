@@ -2,10 +2,10 @@ import { getOptionsFromLabelledEnum, MultiRadio, TextInput, Toggle } from '@mtes
 import { displaySubTags, displayTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 import {
+  type Reporting,
   ReportingSourceEnum,
   ReportingSourceLabels,
-  ReportingTypeLabels,
-  type Reporting
+  ReportingTypeLabels
 } from 'domain/entities/reporting'
 import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
 import { vehicleTypeLabels } from 'domain/entities/vehicleType'

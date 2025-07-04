@@ -1,3 +1,6 @@
+import { createPendingMission } from '../../utils/createPendingMission'
+import { createReporting } from '../../utils/createReporting'
+
 import type { Reporting } from 'domain/entities/reporting'
 
 context('Reportings', () => {
@@ -6,6 +9,7 @@ context('Reportings', () => {
     cy.visit(`/side_window`, {
       onBeforeLoad() {
         Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
+        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
       }
     })
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
@@ -22,6 +26,9 @@ context('Reportings', () => {
     cy.wait('@archiveReporting').then(({ response }) => {
       expect(response && response.statusCode).equal(204)
     })
+    cy.getDataCy('edit-reporting-5').click({ force: true })
+    cy.clickButton('Rouvrir le signalement')
+    cy.clickButton('Fermer')
   })
 
   it('Reporting should be duplicate and editable in Reportings Table', () => {
@@ -47,7 +54,7 @@ context('Reportings', () => {
       expect(reporting.reportingSources[0]?.sourceName).equal('Reporting dupliqué')
       expect(reporting.reportingSources[0]?.id).not.equal(null)
       expect(reporting.description).equal('Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
-      expect(reporting.reportType).equal('OBSERVATION')
+      expect(reporting.reportType).equal('INFRACTION_SUSPICION')
       expect(reporting.openBy).equal('CDA')
 
       // clean
@@ -112,6 +119,63 @@ context('Reportings', () => {
 
       expect(request.body.attachedEnvActionId).equal(null)
       expect(response && response.body?.attachedEnvActionId).equal(null)
+    })
+  })
+
+  it('Reporting with MMSI should retrieve repeated infractions from previous envActions and suspicions of infraction', () => {
+    cy.getDataCy('status-filter-Archivés').click()
+    cy.intercept('GET', '/bff/v1/infractions/9876543210').as('getRepeatedInfractions')
+    cy.intercept('GET', '/bff/v1/infractions/reportings/9876543210?idsToExclude=5').as('getSuspicionOfInfraction')
+    cy.getDataCy('edit-reporting-5').click({ force: true })
+    cy.wait(['@getRepeatedInfractions', '@getSuspicionOfInfraction'])
+    cy.contains('Antécédents : 0 infraction (suspicion)0 infraction, 0 PV')
+    createPendingMission().then(({ body }) => {
+      cy.intercept('PUT', `/bff/v1/missions/${body.id}`).as('updateMission')
+      // Add a control
+      cy.clickButton('Ajouter')
+      cy.clickButton('Ajouter des contrôles')
+      cy.wait(500)
+
+      cy.fill('Nb total de contrôles', 1)
+
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Navire')
+
+      cy.clickButton('+ Ajouter un contrôle avec infraction')
+      cy.fill('MMSI', '9876543210')
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Réponse administrative', 'Sanction')
+      cy.fill('Appréhension/saisie', 'Oui')
+      cy.fill('Mise en demeure', 'Oui')
+      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('Nb de cibles avec cette infraction', 1)
+      cy.clickButton("Valider l'infraction")
+      cy.getDataCy('control-open-by').type('ABC')
+
+      cy.wait('@updateMission').then(() => {
+        cy.clickButton('Signalements')
+        cy.wait('@getReportings')
+        cy.contains('Antécédents : 0 infraction (suspicion)1 infraction, 1 PV')
+        cy.clickButton('Fermer')
+        cy.clickButton('Ajouter un nouveau signalement')
+        createReporting().then(() => {
+          cy.fill('Type de cible', 'Véhicule', { force: true })
+          cy.fill('Type de véhicule', 'Navire', { force: true })
+          cy.fill('MMSI', '9876543210', { force: true })
+          cy.contains('Antécédents : 1 infraction (suspicion)1 infraction, 1 PV')
+          // cleanup
+          cy.clickButton('Supprimer le signalement')
+          cy.clickButton('Confirmer la suppression')
+          cy.clickButton('Réinitialiser les filtres')
+
+          cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+          cy.intercept('PUT', '/bff/v1/missions').as('createMission')
+          cy.clickButton('Missions et contrôles')
+          cy.getDataCy(`edit-mission-${body.id}`).scrollIntoView().click({ force: true })
+          cy.clickButton('Supprimer la mission')
+          cy.clickButton('Confirmer la suppression')
+        })
+      })
     })
   })
 })

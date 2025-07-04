@@ -2,7 +2,7 @@ import { TargetSelector } from '@features/commonComponents/TargetSelector'
 import { VehicleTypeSelector } from '@features/commonComponents/VehicleTypeSelector'
 import { StyledInlineContainer } from '@features/Reportings/style'
 import { getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
-import { ReportingTargetTypeLabels, ReportingTargetTypeEnum } from 'domain/entities/targetType'
+import { ReportingTargetTypeEnum, ReportingTargetTypeLabels } from 'domain/entities/targetType'
 import { FieldArray, useFormikContext } from 'formik'
 
 import { TargetDetails } from './TargetDetails'

@@ -1,12 +1,7 @@
 import { Check } from '@features/Dashboard/components/Pdf/icons/Check'
 import { Clock } from '@features/Dashboard/components/Pdf/icons/Clock'
-import {
-  getAllThemes,
-  getTotalInfraction,
-  getTotalNbControls,
-  getTotalPV
-} from '@features/Dashboard/components/Pdf/NearbyUnits/utils'
 import { areaStyle, layoutStyle } from '@features/Dashboard/components/Pdf/style'
+import { getAllThemes, getTotalInfraction, getTotalNbControls, getTotalPV } from '@features/Mission/utils'
 import { pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { StyleSheet, Text, View } from '@react-pdf/renderer'
 import { displayThemes } from '@utils/getThemesAsOptions'
@@ -69,11 +64,12 @@ type NearbyUnitsProps = {
 }
 
 export function UnitCard({ controlUnit, missions, status }: NearbyUnitsProps) {
+  const envActions = missions.flatMap(mission => mission.envActions)
   const dateRange = getDateRange(missions)
-  const themes = displayThemes(getAllThemes(missions))
-  const nbControls = getTotalNbControls(missions)
-  const nbInfractions = getTotalInfraction(missions)
-  const nbPV = getTotalPV(missions)
+  const themes = displayThemes(getAllThemes(envActions))
+  const nbControls = getTotalNbControls(envActions)
+  const nbInfractions = getTotalInfraction(envActions)
+  const nbPV = getTotalPV(envActions)
 
   return (
     <View style={styles.card}>

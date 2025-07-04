@@ -774,4 +774,44 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(reportings).isEmpty()
     }
+
+    @Test
+    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfOffense with given mmsi`() {
+        // Given
+        val mmsi = "012314231345"
+
+        // When
+        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, listOf())
+
+        // Then
+        assertThat(suspicionOfInfractions.ids).hasSize(1)
+        assertThat(suspicionOfInfractions.themes).hasSize(1)
+    }
+
+    @Test
+    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfOffense with given mmsi without the given id`() {
+        // Given
+        val mmsi = "012314231345"
+        val idsToExclude = listOf(3)
+
+        // When
+        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idsToExclude)
+
+        // Then
+        assertThat(suspicionOfInfractions.ids).isNull()
+        assertThat(suspicionOfInfractions.themes).isNull()
+    }
+
+    @Test
+    fun `findAllSuspicionOfInfractionsByMmsi should return SuspicionOfOffense when there is no reporting for given mmsi `() {
+        // Given
+        val mmsi = "unknown mmsi"
+
+        // When
+        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, listOf())
+
+        // Then
+        assertThat(suspicionOfInfractions.ids).isNull()
+        assertThat(suspicionOfInfractions.themes).isNull()
+    }
 }

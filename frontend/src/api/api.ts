@@ -29,7 +29,16 @@ export const monitorenvPrivateApi = createApi({
   },
   endpoints: () => ({}),
   reducerPath: 'monitorenvPrivateApi',
-  tagTypes: ['Missions', 'Reportings', 'VigilanceAreas', 'Dashboards', 'ExtractArea', 'NearbyUnits']
+  tagTypes: [
+    'Missions',
+    'Reportings',
+    'VigilanceAreas',
+    'Dashboards',
+    'ExtractArea',
+    'NearbyUnits',
+    'Suspicions',
+    'Infractions'
+  ]
 })
 
 // =============================================================================

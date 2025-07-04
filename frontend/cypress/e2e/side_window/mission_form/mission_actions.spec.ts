@@ -32,6 +32,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       onBeforeLoad: () => {
         Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
         Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
+        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_UPDATE', 'true')
       }
     })
     cy.wait('@getMissions')
