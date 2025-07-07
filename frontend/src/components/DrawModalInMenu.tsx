@@ -76,7 +76,7 @@ export function DrawModalInMenu({
 const Controls = styled.ul`
   display: flex;
   gap: 16px;
-  padding: 0;
+  padding: 0 0 10px 0;
 `
 
 const Header = styled.header`
