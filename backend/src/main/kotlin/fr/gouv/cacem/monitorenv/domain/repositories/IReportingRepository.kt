@@ -1,15 +1,11 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfInfractions
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import org.locationtech.jts.geom.Geometry
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 interface IReportingRepository {
     fun archiveOutdatedReportings(): Int
@@ -65,6 +61,6 @@ interface IReportingRepository {
 
     fun findSuspicionOfInfractionsByMmsi(
         mmsi: String,
-        idsToExclude: List<Int>,
+        idToExclude: Int?,
     ): SuspicionOfInfractions
 }

@@ -4,7 +4,7 @@ import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import styled from 'styled-components'
 
-import { HistoryOfInfractions } from './HistoryOfInfractions'
+import { HistoryOfInfractions } from '../ReportingForm/FormComponents/Target/HistoryOfInfractions'
 
 import type { Reporting } from 'domain/entities/reporting'
 

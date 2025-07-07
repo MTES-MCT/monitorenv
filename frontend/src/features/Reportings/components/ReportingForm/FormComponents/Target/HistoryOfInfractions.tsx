@@ -11,7 +11,7 @@ import { useMemo } from 'react'
 import styled from 'styled-components'
 import { useDebounce } from 'use-debounce'
 
-import { ReportingContext } from '../../../../domain/shared_slices/Global'
+import { ReportingContext } from '../../../../../../domain/shared_slices/Global'
 
 export function HistoryOfInfractions({
   isReadOnly = false,
@@ -29,14 +29,14 @@ export function HistoryOfInfractions({
   const [debouncedMmsi] = useDebounce(mmsi, 300)
   const NB_CHAR_MMSI = 9
 
-  const canSearch = reportingId && debouncedMmsi && debouncedMmsi.length >= NB_CHAR_MMSI
+  const canSearch = reportingId && debouncedMmsi && debouncedMmsi.length === NB_CHAR_MMSI
 
   const { data: envActions, isLoading: isLoadingEnvActions } = useGetEnvActionsByMmsiQuery(
     canSearch ? debouncedMmsi : skipToken
   )
 
   const { data: suspicionOfInfractions, isLoading: isLoadingSuspicions } = useGetSuspicionOfInfractionsQuery(
-    canSearch ? { idsToExclude: isNewReporting(reportingId) ? [] : [+reportingId], mmsi: debouncedMmsi } : skipToken
+    canSearch ? { idToExclude: isNewReporting(reportingId) ? undefined : +reportingId, mmsi: debouncedMmsi } : skipToken
   )
 
   const totalInfraction = useMemo(() => getTotalInfraction(envActions ?? []), [envActions])

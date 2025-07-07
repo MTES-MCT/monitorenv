@@ -1,8 +1,7 @@
+import { useGetNatinfsQuery } from '@api/natinfsAPI'
 import { CustomSearch, MultiSelect } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useMemo } from 'react'
-
-import { useGetInfractionsQuery } from '../../../../../../../api/infractionsAPI'
 
 import type { Infraction } from '../../../../../../../domain/entities/missions'
 import type { NatinfType } from 'domain/entities/natinfs'
@@ -20,7 +19,7 @@ const sortNatinf = (a: NatinfType, b: NatinfType) => {
 
 export function NatinfSelector({ infractionPath }) {
   const [natinfField, meta, natinfHelpers] = useField<Infraction['natinf']>(`${infractionPath}.natinf`)
-  const { data, isError, isLoading } = useGetInfractionsQuery()
+  const { data, isError, isLoading } = useGetNatinfsQuery()
 
   const sortedNatinfs = useMemo(
     () =>

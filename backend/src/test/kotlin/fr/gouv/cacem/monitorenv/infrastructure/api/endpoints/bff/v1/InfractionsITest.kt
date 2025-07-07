@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.UUID
+import java.util.*
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -50,7 +50,7 @@ class InfractionsITest {
         // When
         mockMvc
             .perform(
-                get("/bff/v1/infractions/$mmsi")
+                get("/bff/v1/infractions/actions/$mmsi")
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then
@@ -63,7 +63,7 @@ class InfractionsITest {
         // Given
         val mmsi = "0123456789"
 
-        given(getSuspicionOfInfractionsByMmsi.execute(mmsi, listOf()))
+        given(getSuspicionOfInfractionsByMmsi.execute(mmsi, null))
             .willReturn(
                 SuspicionOfInfractions(ids = arrayOf(1, 2), themes = arrayOf(aTheme().name)),
             )

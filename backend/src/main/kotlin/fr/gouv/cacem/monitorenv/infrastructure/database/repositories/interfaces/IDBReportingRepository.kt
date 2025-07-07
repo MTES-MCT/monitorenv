@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
@@ -218,13 +218,13 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
       AND reporting.report_type = 'INFRACTION_SUSPICION'
       AND reporting.is_infraction_proven IS TRUE
       AND reporting.is_deleted IS FALSE
-      AND (:idsToExclude IS NULL OR reporting.id NOT IN :idsToExclude)
+      AND (:idToExclude IS NULL OR reporting.id <> :idToExclude)
     )
     """,
         nativeQuery = true,
     )
     fun findAllSuspicionOfInfractionsByMmsi(
         mmsi: String,
-        idsToExclude: List<Int>,
+        idToExclude: Int?,
     ): SuspicionOfInfractions
 }
