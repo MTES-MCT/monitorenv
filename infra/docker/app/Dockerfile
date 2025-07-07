@@ -131,6 +131,7 @@ USER monitorenv
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 
 CMD ["sh", "-c", "exec java \
+    ${MONITORENV_JVM_OPTIONS} \
     -Dhttp.proxyHost=${MONITORENV_HTTP_PROXY_HOST} \
     -Dhttp.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
     -Dhttps.proxyHost=${MONITORENV_HTTP_PROXY_HOST} \
