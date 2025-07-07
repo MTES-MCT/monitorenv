@@ -1,5 +1,5 @@
 import { VesselTypeSelector } from '@features/commonComponents/VesselTypeSelector'
-import { HistoryOfInfractions } from '@features/Reportings/components/ReportingReadOnly/HistoryOfInfractions'
+import { HistoryOfInfractions } from '@features/Reportings/components/ReportingForm/FormComponents/Target/HistoryOfInfractions'
 import {
   Accent,
   Button,

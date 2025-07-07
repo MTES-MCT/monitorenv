@@ -130,8 +130,8 @@ class JpaReportingRepository(
                 targetDetail.vesselType?.name,
             ).any { field ->
                 !field.isNullOrBlank() &&
-                    normalizeField(field)
-                        .contains(normalizeField(searchQuery), ignoreCase = true)
+                        normalizeField(field)
+                            .contains(normalizeField(searchQuery), ignoreCase = true)
             }
         } ?: false
     }
@@ -238,8 +238,8 @@ class JpaReportingRepository(
 
     override fun findSuspicionOfInfractionsByMmsi(
         mmsi: String,
-        idsToExclude: List<Int>,
-    ): SuspicionOfInfractions = dbReportingRepository.findAllSuspicionOfInfractionsByMmsi(mmsi, idsToExclude)
+        idToExclude: Int?,
+    ): SuspicionOfInfractions = dbReportingRepository.findAllSuspicionOfInfractionsByMmsi(mmsi, idToExclude)
 
     @Transactional
     override fun delete(reportingId: Int) {

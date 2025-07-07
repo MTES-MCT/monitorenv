@@ -124,8 +124,8 @@ context('Reportings', () => {
 
   it('Reporting with MMSI should retrieve repeated infractions from previous envActions and suspicions of infraction', () => {
     cy.getDataCy('status-filter-Archivés').click()
-    cy.intercept('GET', '/bff/v1/infractions/9876543210').as('getRepeatedInfractions')
-    cy.intercept('GET', '/bff/v1/infractions/reportings/9876543210?idsToExclude=5').as('getSuspicionOfInfraction')
+    cy.intercept('GET', '/bff/v1/infractions/actions/987654321').as('getRepeatedInfractions')
+    cy.intercept('GET', '/bff/v1/infractions/reportings/987654321?idsToExclude=5').as('getSuspicionOfInfraction')
     cy.getDataCy('edit-reporting-5').click({ force: true })
     cy.wait(['@getRepeatedInfractions', '@getSuspicionOfInfraction'])
     cy.contains('Antécédents : 0 infraction (suspicion)0 infraction, 0 PV')
@@ -142,7 +142,7 @@ context('Reportings', () => {
       cy.fill('Type de véhicule', 'Navire')
 
       cy.clickButton('+ Ajouter un contrôle avec infraction')
-      cy.fill('MMSI', '9876543210')
+      cy.fill('MMSI', '987654321')
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Appréhension/saisie', 'Oui')
@@ -161,7 +161,7 @@ context('Reportings', () => {
         createReporting().then(() => {
           cy.fill('Type de cible', 'Véhicule', { force: true })
           cy.fill('Type de véhicule', 'Navire', { force: true })
-          cy.fill('MMSI', '9876543210', { force: true })
+          cy.fill('MMSI', '987654321', { force: true })
           cy.contains('Antécédents : 1 infraction (suspicion)1 infraction, 1 PV')
           // cleanup
           cy.clickButton('Supprimer le signalement')

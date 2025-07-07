@@ -3,11 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
@@ -22,7 +18,7 @@ import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
 import java.time.Year
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 @Import(DataSourceProxyBeanPostProcessor::class)
 class JpaReportingRepositoryITests : AbstractDBTests() {
@@ -317,7 +313,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 status = null,
                 targetTypes = null,
                 isAttachedToMission = null,
-                searchQuery = "9876543210",
+                searchQuery = "987654321",
             )
         assertThat(reportings.size).isEqualTo(1)
     }
@@ -355,7 +351,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 status = null,
                 targetTypes = null,
                 isAttachedToMission = null,
-                searchQuery = "012314231345",
+                searchQuery = "012314231",
             )
         assertThat(reportings.size).isEqualTo(1)
     }
@@ -776,12 +772,12 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfOffense with given mmsi`() {
+    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfInfraction with given mmsi`() {
         // Given
-        val mmsi = "012314231345"
+        val mmsi = "012314231"
 
         // When
-        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, listOf())
+        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, null)
 
         // Then
         assertThat(suspicionOfInfractions.ids).hasSize(1)
@@ -789,10 +785,10 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfOffense with given mmsi without the given id`() {
+    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfInfraction with given mmsi without the given id`() {
         // Given
-        val mmsi = "012314231345"
-        val idsToExclude = listOf(3)
+        val mmsi = "012314231"
+        val idsToExclude = 3
 
         // When
         val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idsToExclude)
@@ -803,12 +799,12 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findAllSuspicionOfInfractionsByMmsi should return SuspicionOfOffense when there is no reporting for given mmsi `() {
+    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfInfraction when there is no reporting for given mmsi `() {
         // Given
         val mmsi = "unknown mmsi"
 
         // When
-        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, listOf())
+        val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, null)
 
         // Then
         assertThat(suspicionOfInfractions.ids).isNull()

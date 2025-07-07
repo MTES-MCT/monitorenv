@@ -14,11 +14,11 @@ class GetSuspicionOfInfractionsByMmsi(
 
     fun execute(
         mmsi: String,
-        idsToExclude: List<Int>,
+        idToExclude: Int?,
     ): SuspicionOfInfractions {
         logger.info("Attempt to find suspicions of infraction with mmsi $mmsi")
 
-        val suspicionOfInfractions = reportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idsToExclude)
+        val suspicionOfInfractions = reportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idToExclude)
 
         logger.info("Found ${suspicionOfInfractions.ids?.size ?: 0} suspicions of infraction.")
 

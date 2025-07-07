@@ -11,7 +11,7 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
-class GetNbSuspicionOfInfractionByMmsiUTest {
+class GetSuspicionOfInfractionsByMmsiUTest {
     private val reportingRepository: IReportingRepository = mock()
 
     val getSuspicionOfInfractionsByMmsi = GetSuspicionOfInfractionsByMmsi(reportingRepository)
@@ -20,14 +20,14 @@ class GetNbSuspicionOfInfractionByMmsiUTest {
     fun `execute should return nb of suspicion of infractions with given MMSI`(log: CapturedOutput) {
         // Given
         val mmsi = "0123456789"
-        val idsToExclude = listOf(1)
+        val idToExclude = 1
         val expectedSuspicionOfInfractions = SuspicionOfInfractions(arrayOf(1, 2), arrayOf("themes"))
-        given(reportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idsToExclude)).willReturn(
+        given(reportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idToExclude)).willReturn(
             expectedSuspicionOfInfractions,
         )
 
         // When
-        val suspicionOfInfraction = getSuspicionOfInfractionsByMmsi.execute(mmsi, idsToExclude)
+        val suspicionOfInfraction = getSuspicionOfInfractionsByMmsi.execute(mmsi, idToExclude)
 
         // Then
         assertThat(suspicionOfInfraction).isEqualTo(expectedSuspicionOfInfractions)

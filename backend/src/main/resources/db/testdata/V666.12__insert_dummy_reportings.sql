@@ -28,7 +28,7 @@ VALUES (2, 2300002, 'VEHICLE', 'VESSEL', '[
 INSERT INTO public.reportings
 VALUES (3, 2300003, 'VEHICLE', 'VESSEL', '[
   {
-    "mmsi": "012314231345",
+    "mmsi": "012314231",
     "vesselName": "Vessel 3"
   }
 ]',
@@ -50,7 +50,7 @@ VALUES (4, 2300004, 'INDIVIDUAL', NULL, '[
 INSERT INTO public.reportings
 VALUES (5, 2300005, 'VEHICLE', 'VESSEL', '[
   {
-    "mmsi": "9876543210",
+    "mmsi": "987654321",
     "vesselName": ""
   }
 ]',
