@@ -21,7 +21,7 @@ class GetAuthorizedUser(
         return if (userEntity != null) {
             logger.info("Found user $hashedEmail")
             AuthorizedUser(
-                email = email, // On garde en clair côté domaine, pas côté front
+                email = email,
                 isSuperUser = userEntity.isSuperUser,
             )
         } else {

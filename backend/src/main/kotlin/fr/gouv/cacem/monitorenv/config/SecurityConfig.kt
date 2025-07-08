@@ -28,14 +28,12 @@ class SecurityConfig(
 ) {
     private val logger = LoggerFactory.getLogger(SecurityConfig::class.java)
 
-    // Bean du service custom pour récupérer les claims OIDC
     @Bean
     fun customOidcUserService(): OidcUserService {
         return object : OidcUserService() {
             override fun loadUser(userRequest: OidcUserRequest): OidcUser {
                 try {
                     val oidcUser = super.loadUser(userRequest)
-                    logger.info("✅ User loaded: {}", oidcUser.claims)
                     val siretsClaimRaw = oidcUser.claims["SIRET"]
 
                     val tokenSirets: Set<String> =
@@ -45,14 +43,10 @@ class SecurityConfig(
                             else -> throw OAuth2AuthenticationException("SIRET claim missing or malformed")
                         }
 
-                    logger.info("Token SIRETs: $tokenSirets")
-                    // Vérifie si au moins un SIRET demandé est dans la liste des SIRETs du token
                     val isAuthorized = listOf("1234567890").any { it in tokenSirets }
-                    logger.info("Is user authorized for requested SIRET(s): $isAuthorized")
                     if (!isAuthorized) {
                         throw OAuth2AuthenticationException("User not authorized for the requested SIRET(s)")
                     }
-                    logger.info("User is authorized for the requested SIRET(s) $oidcUser")
                     return oidcUser
                 } catch (e: Exception) {
                     logger.error("⛔ Exception in loadUser", e)
@@ -104,7 +98,7 @@ class SecurityConfig(
                         .anyRequest()
                         .authenticated()
                 } else {
-                    logger.info(
+                    logger.warn(
                         """
                         ❌ OIDC Authentication is disabled.
                         All requests will be denied.
@@ -140,7 +134,7 @@ class SecurityConfig(
         val configuration =
             CorsConfiguration().apply {
                 allowedOrigins = listOf("*")
-                allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
                 allowCredentials = true
             }
