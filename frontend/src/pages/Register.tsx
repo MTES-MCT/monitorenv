@@ -10,26 +10,33 @@ export function Register() {
 
   return (
     <Wrapper>
-      Merci de contacter{' '}
-      <a href="mailto:monitor@beta.gouv.fr?subject=Création de compte MonitorEnv">monitor@beta.gouv.fr</a> pour accéder
-      à MonitorEnv avec Cerbère.
+      <span>
+        Merci de contacter{' '}
+        <a href="mailto:monitor@beta.gouv.fr?subject=Création de compte MonitorEnv">monitor@beta.gouv.fr</a> pour
+        accéder à MonitorEnv avec Cerbère.
+      </span>
       <Button onClick={goToLoginPage}>Retourner à la page de connexion</Button>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  color: white;
-  font-size: 13px;
-  text-align: center;
-  width: 100vw;
-  padding-top: 43vh;
-  height: 100vh;
-  overflow: hidden;
-
+  align-items: center;
   background: url('landing_background.png') no-repeat center center fixed;
+  background-size: cover;
+  color: ${p => p.theme.color.white};
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100vh;
+  justify-content: center;
+  width: 100vw;
+
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
+  > span > a {
+    color: ${p => p.theme.color.white};
+    text-decoration: underline;
+  }
 `
