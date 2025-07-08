@@ -1,18 +1,102 @@
 server:
-    port: 8880
-spring:
-    security:
-        oauth2:
-            client:
-                registration:
-                    proconnect:
-                        provider: ${MONITORENV_OIDC_PROVIDER}
-                        client-id: ${MONITORENV_OIDC_CLIENT_ID}
-                        client-secret: ${MONITORENV_OIDC_CLIENT_SECRET}
-                        authorization-grant-type: authorization_code
-                        redirect-uri: ${MONITORENV_OIDC_REDIRECT_URI}
-                        scope: openid,profile
-                provider:
-                    proconnect:
-                        issuer-uri: ${MONITORENV_OIDC_ISSUER_URI}
+  port: 8880
+  forward-headers-strategy: framework
+  use-forward-headers: true
+  compression:
+    enabled: true
+    excluded-user-agents: ""
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
+    min-response-size: 2048
 
+host:
+  ip: ${MONITORENV_URL}
+
+monitorenv:
+  ajp:
+    port: 8000
+  version: ${VERSION}
+  sentry:
+    enabled: ${MONITORENV_SENTRY_ENABLED}
+    environment: ${ENVIRONMENT}
+    dsn: ${SENTRY_DSN}
+  oidc:
+    enabled: ${MONITORENV_OIDC_ENABLED}
+    loginUrl: ${MONITORENV_OIDC_LOGIN_URL}
+    successUrl: ${MONITORENV_OIDC_SUCCESS_URL}
+    errorUrl: ${MONITORENV_OIDC_ERROR_URL}
+    authorizedSirets: ${MONITORENV_OIDC_AUTHORIZED_SIRETS}
+  api:
+    protected:
+      paths: /bff/v1/*
+      super-user-paths: /bff/v1/missions/*,/bff/v1/reportings/*,/bff/v1/semaphores/*,/bff/v1/stations/*
+      public-paths: /api/v1/authorization/management/*
+      api-key: ${MONITORENV_API_KEY}
+  brief:
+    templatePath: /template_export_brief.docx
+    tmpDocxPath: tmp_brief.docx
+    tmpOdtPath: tmp_brief.odt
+  ext:
+    id: ${MONITORENV_EXT_ID}
+    password: ${MONITORENV_EXT_PASSWORD}
+  legicem:
+    id: ${MONITORENV_LEGICEM_ID}
+    password: ${MONITORENV_LEGICEM_PASSWORD}
+
+spring:
+  jmx:
+    enabled: true
+  mvc:
+    static-path-pattern: "/**"
+  web:
+    resources:
+      static-locations: file:${STATIC_FILES_PATH}
+  flyway:
+    locations: ${FLYWAY_MIGRATION_PATH}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+        jdbc:
+          time_zone: UTC
+  datasource:
+    url: ${ENV_DB_URL}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maxLifetime: 60000
+  security:
+    oauth2:
+      client:
+        registration:
+          proconnect:
+            provider: proconnect
+            client-id: ${MONITORENV_OIDC_CLIENT_ID}
+            client-secret: ${MONITORENV_OIDC_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${MONITORENV_OIDC_REDIRECT_URI}
+            scope: openid,profile
+        provider:
+          proconnect:
+            issuer-uri: ${MONITORENV_OIDC_ISSUER_URI}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enable: false
+
+monitorfish:
+  url: ${MONITORFISH_URL}
+  xApiKey: ${MONITORFISH_API_KEY}
+
+rapportnav:
+  url: ${RAPPORTNAV_URL}
+  timeout: 3000
