@@ -6,6 +6,7 @@ import {
   getTimeLeft
 } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { useTracking } from '@hooks/useTracking'
 import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
@@ -22,7 +23,6 @@ import { StatusActionTag } from '../../StatusActionTag'
 
 type ReportingCardProps = {
   feature: any
-  isCardVisible?: boolean
   isOnlyHoverable?: boolean
   isSuperUser?: boolean
   onClose: () => void
@@ -59,7 +59,6 @@ function StatusTag({
 
 export function ReportingCard({
   feature,
-  isCardVisible = true,
   isOnlyHoverable = false,
   isSuperUser = true,
   onClose,
@@ -70,6 +69,12 @@ export function ReportingCard({
   const { trackEvent } = useTracking()
 
   const ref = useRef<HTMLDivElement>(null)
+
+  const listener = useAppSelector(state => state.draw.listener)
+  const isMissionAttachmentInProgress = useAppSelector(
+    state => state.attachMissionToReporting.isMissionAttachmentInProgress
+  )
+  const displayReportingsLayer = useAppSelector(state => state.global.layers.displayReportingsLayer)
 
   const {
     controlStatus,
@@ -148,7 +153,7 @@ export function ReportingCard({
     }
   }, [feature, updateMargins])
 
-  if (!isCardVisible) {
+  if (listener || isMissionAttachmentInProgress || !displayReportingsLayer) {
     return null
   }
 

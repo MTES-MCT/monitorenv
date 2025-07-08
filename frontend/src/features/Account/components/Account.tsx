@@ -1,28 +1,27 @@
+import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
 import { StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
-import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { globalActions } from 'domain/shared_slices/Global'
-import { useAuth } from 'react-oidc-context'
 
 export function Account() {
   const dispatch = useAppDispatch()
   const isAccountVisible = useAppSelector(state => state.global.visibility.isAccountDialogVisible)
-  const auth = useAuth()
+  const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
+  const { data: user } = useGetCurrentUserAuthorizationQuery()
 
-  const oidcConfig = getOIDCConfig()
-
-  const logout = () => {
-    auth.signoutRedirect()
-  }
   const toggle = () => {
     dispatch(globalActions.hideAllDialogs())
     dispatch(globalActions.setDisplayedItems({ visibility: { isAccountDialogVisible: !isAccountVisible } }))
   }
+  const logout = () => {
+    window.location.href =
+      'http://localhost:8085/realms/monitor/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:3000/login'
+  }
 
-  if (!oidcConfig.IS_OIDC_ENABLED) {
+  if (!oidcEnabled) {
     return null
   }
 
@@ -33,10 +32,8 @@ export function Account() {
           <MapMenuDialog.Header>
             <MapMenuDialog.Title>Déconnexion</MapMenuDialog.Title>
           </MapMenuDialog.Header>
-          <MapMenuDialog.Body>
-            {auth?.user?.profile.email ?? 'Vous n’êtes pas connecté avec Cerbère'}
-          </MapMenuDialog.Body>
-          {auth?.user?.profile.email && (
+
+          {user && (
             <MapMenuDialog.Footer>
               <Button accent={Accent.SECONDARY} Icon={Icon.Logout} isFullWidth onClick={logout}>
                 Se déconnecter

@@ -1,13 +1,10 @@
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
-import { getOIDCConfig } from 'auth/getOIDCConfig'
+import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
 import { paths } from 'paths'
-import { useAuth } from 'react-oidc-context'
 import { Navigate } from 'react-router'
 
 export function RequireAuth({ children, redirect = false, requireSuperUser = false }) {
-  const oidcConfig = getOIDCConfig()
-  const auth = useAuth()
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride({ skip: !auth?.isAuthenticated })
+  const { data: user } = useGetCurrentUserAuthorizationQuery()
+  const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
 
   const handleRedirect = (path, shouldRedirect) => {
     if (shouldRedirect) {
@@ -17,10 +14,10 @@ export function RequireAuth({ children, redirect = false, requireSuperUser = fal
     return null
   }
 
-  if (!oidcConfig.IS_OIDC_ENABLED) {
+  if (!oidcEnabled) {
     return children
   }
-  if (!auth.isAuthenticated) {
+  if (!user) {
     return handleRedirect(paths.login, redirect)
   }
   if (requireSuperUser && !user?.isSuperUser) {
