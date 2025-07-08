@@ -86,46 +86,52 @@ export function RecentActvityOverlay({
   return (
     <>
       {/* To display list of recent controls after click */}
-      <OverlayPositionOnCoordinates
-        coordinates={layerOverlayCoordinates}
-        layerOverlayIsOpen={isControlsListClicked}
-        map={map}
-        name={`${Layers.RECENT_ACTIVITY_AREA_ICON}:${FEATURE_ID}`}
-      >
-        {isControlsListClicked && layerOverlayItems && (
+      {isControlsListClicked && layerOverlayItems && (
+        <OverlayPositionOnCoordinates
+          coordinates={layerOverlayCoordinates}
+          layerOverlayIsOpen={isControlsListClicked}
+          map={map}
+          name={`${Layers.RECENT_ACTIVITY_AREA_ICON}:${FEATURE_ID}`}
+        >
           <SelectedOverlay isSuperUser={isSuperUser} items={layerOverlayItems} />
-        )}
-      </OverlayPositionOnCoordinates>
+        </OverlayPositionOnCoordinates>
+      )}
 
       {/* To display recent control after click */}
-      <OverlayPositionOnCentroid
-        appClassName="overlay-recent-control-activity-selected"
-        feature={selectedControlId ? selectedFeature ?? dashboardSelectedFeature : undefined}
-        map={map}
-        mapClickEvent={mapClickEvent}
-        zIndex={5000}
-      >
-        {!!(selectedControlId && (selectedFeature || dashboardSelectedFeature)) && (
-          <RecentActivityControlCard
-            control={selectedFeature ?? dashboardSelectedFeature}
-            isSelected
-            isSuperUser={isSuperUser}
-          />
-        )}
-      </OverlayPositionOnCentroid>
+      {selectedControlId && (
+        <OverlayPositionOnCentroid
+          appClassName="overlay-recent-control-activity-selected"
+          feature={selectedFeature ?? dashboardSelectedFeature}
+          map={map}
+          mapClickEvent={mapClickEvent}
+          zIndex={5000}
+        >
+          {!!(selectedControlId && (selectedFeature || dashboardSelectedFeature)) && (
+            <RecentActivityControlCard
+              control={selectedFeature ?? dashboardSelectedFeature}
+              isSelected
+              isSuperUser={isSuperUser}
+            />
+          )}
+        </OverlayPositionOnCentroid>
+      )}
 
       {/* If only one recent controls hovered */}
-      <OverlayPositionOnCentroid
-        appClassName="overlay-recent-control-activity-hovered"
-        feature={hoveredFeature ?? dashboardHoveredFeature}
-        map={map}
-        mapClickEvent={mapClickEvent}
-        zIndex={5000}
-      >
-        {isHoveredOverlayVisible && (hoveredFeature || dashboardHoveredFeature) && !isHoveredFeatureSameAsSelected && (
-          <RecentActivityControlCard control={hoveredFeature ?? dashboardHoveredFeature} />
-        )}
-      </OverlayPositionOnCentroid>
+      {(hoveredFeature || dashboardHoveredFeature) && (
+        <OverlayPositionOnCentroid
+          appClassName="overlay-recent-control-activity-hovered"
+          feature={hoveredFeature ?? dashboardHoveredFeature}
+          map={map}
+          mapClickEvent={mapClickEvent}
+          zIndex={5000}
+        >
+          {isHoveredOverlayVisible &&
+            (hoveredFeature || dashboardHoveredFeature) &&
+            !isHoveredFeatureSameAsSelected && (
+              <RecentActivityControlCard control={hoveredFeature ?? dashboardHoveredFeature} />
+            )}
+        </OverlayPositionOnCentroid>
+      )}
 
       {/* To display list of recent controls on hover */}
       {createPortal(

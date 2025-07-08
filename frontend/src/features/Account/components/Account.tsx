@@ -2,29 +2,21 @@ import { StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
-import { getOIDCConfig } from 'auth/getOIDCConfig'
+import { Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { globalActions } from 'domain/shared_slices/Global'
-import { useAuth } from 'react-oidc-context'
 
 export function Account() {
   const dispatch = useAppDispatch()
   const isAccountVisible = useAppSelector(state => state.global.visibility.isAccountDialogVisible)
-  const auth = useAuth()
 
-  const oidcConfig = getOIDCConfig()
-
-  const logout = () => {
-    auth.signoutRedirect()
-  }
   const toggle = () => {
     dispatch(globalActions.hideAllDialogs())
     dispatch(globalActions.setDisplayedItems({ visibility: { isAccountDialogVisible: !isAccountVisible } }))
   }
 
-  if (!oidcConfig.IS_OIDC_ENABLED) {
+  /*  if (!oidcConfig.IS_OIDC_ENABLED) {
     return null
-  }
+  } */
 
   return (
     <>
@@ -33,7 +25,7 @@ export function Account() {
           <MapMenuDialog.Header>
             <MapMenuDialog.Title>Déconnexion</MapMenuDialog.Title>
           </MapMenuDialog.Header>
-          <MapMenuDialog.Body>
+          {/* <MapMenuDialog.Body>
             {auth?.user?.profile.email ?? 'Vous n’êtes pas connecté avec Cerbère'}
           </MapMenuDialog.Body>
           {auth?.user?.profile.email && (
@@ -42,7 +34,7 @@ export function Account() {
                 Se déconnecter
               </Button>
             </MapMenuDialog.Footer>
-          )}
+          )} */}
         </StyledMapMenuDialogContainer>
       )}
 
