@@ -4,6 +4,7 @@ import { Navigate } from 'react-router'
 
 export function RequireAuth({ children, redirect = false, requireSuperUser = false }) {
   const { data: user } = useGetCurrentUserAuthorizationQuery()
+  const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
 
   const handleRedirect = (path, shouldRedirect) => {
     if (shouldRedirect) {
@@ -11,6 +12,13 @@ export function RequireAuth({ children, redirect = false, requireSuperUser = fal
     }
 
     return null
+  }
+
+  if (!oidcEnabled) {
+    return children
+  }
+  if (!user) {
+    return handleRedirect(paths.login, redirect)
   }
   if (requireSuperUser && !user?.isSuperUser) {
     return handleRedirect(paths.register, redirect)
