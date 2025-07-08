@@ -105,7 +105,7 @@ export function Footer({
       formattedCoordinates = `${formatCoordinates(
         centroid as Coordinate,
         coordinatesFormat
-      )} (calculées depuis le centroïd de la zone du signalement)`
+      )} (calculées depuis le centroïde de la zone du signalement)`
     }
 
     const globalInfos = [
