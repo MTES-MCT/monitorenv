@@ -1,9 +1,11 @@
 import { Bold } from '@components/style'
-import { FirstLine, ResourcesAndPortsText } from '@features/Dashboard/components/DashboardForm/ControlUnits/Item'
+import { FirstLine } from '@features/Dashboard/components/DashboardForm/ControlUnits/Item'
 import { dashboardActions } from '@features/Dashboard/slice'
+import { getAllThemes, getTotalInfraction, getTotalNbControls, getTotalPV } from '@features/Dashboard/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { displayThemes } from '@utils/getThemesAsOptions'
 import styled from 'styled-components'
 
 import { getDateRange } from './utils'
@@ -31,6 +33,10 @@ export function Item({ isSelected = false, nearbyUnit }: { isSelected?: boolean;
   }
 
   const maxRangeMissionDate = getDateRange(nearbyUnit.missions)
+  const themes = displayThemes(getAllThemes(nearbyUnit.missions))
+  const nbControls = getTotalNbControls(nearbyUnit.missions)
+  const nbInfractions = getTotalInfraction(nearbyUnit.missions)
+  const nbPV = getTotalPV(nearbyUnit.missions)
 
   const topicSelectionState = getSelectionStateNearbyUnit(nearbyUnit, selectedNearbyUnits ?? [])
 
@@ -76,11 +82,25 @@ export function Item({ isSelected = false, nearbyUnit }: { isSelected?: boolean;
       </FirstLine>
 
       {!isSelected && (
-        <ResourcesAndPortsText>
-          {nearbyUnit.missions.length} {pluralize('mission', nearbyUnit.missions.length)} •{' '}
-          {maxRangeMissionDate?.start ? `Du ${maxRangeMissionDate?.start}` : ''}{' '}
-          {maxRangeMissionDate?.end ? `au ${maxRangeMissionDate?.end}` : ''}
-        </ResourcesAndPortsText>
+        <>
+          <MissionDatesAndControls>
+            <div>
+              {nearbyUnit.missions.length} {pluralize('mission', nearbyUnit.missions.length)} •{' '}
+              {maxRangeMissionDate?.start ? `Du ${maxRangeMissionDate?.start}` : ''}{' '}
+              {maxRangeMissionDate?.end ? `au ${maxRangeMissionDate?.end}` : ''}
+            </div>
+            <ControlsText>
+              <span>
+                {nbControls} {pluralize('ctrl', nbControls)}
+              </span>
+              <Bullet />
+              <StyledBold>
+                {nbInfractions} {pluralize('inf', nbInfractions)}, {nbPV} PV
+              </StyledBold>
+            </ControlsText>
+          </MissionDatesAndControls>
+          <StyledBold title={themes}>{themes}</StyledBold>
+        </>
       )}
     </Wrapper>
   )
@@ -90,7 +110,30 @@ const Wrapper = styled.li<{ $isSelected: boolean }>`
   background-color: ${p => (p.$isSelected ? p.theme.color.white : p.theme.color.gainsboro)};
   padding: ${p => (p.$isSelected ? '10px 16px' : '16px')};
 `
+const Bullet = styled.div`
+  border-radius: 50%;
+  background-color: ${p => p.theme.color.maximumRed};
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  margin-left: 16px;
+`
 
+const MissionDatesAndControls = styled.div`
+  color: ${p => p.theme.color.slateGray};
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  margin-top: 8px;
+`
+
+const ControlsText = styled.div`
+  align-items: center;
+  display: flex;
+`
+const StyledBold = styled(Bold)`
+  color: ${p => p.theme.color.gunMetal};
+`
 export const UnitDesignation = styled.span`
   display: flex;
   gap: 16px;

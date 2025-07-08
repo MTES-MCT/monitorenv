@@ -568,59 +568,6 @@ export const getFilteredAmps = createSelector(
   }
 )
 
-export const getFilteredVigilanceAreas = createSelector(
-  [
-    (state: DashboardState) => state.dashboards,
-    (state: DashboardState) => state.activeDashboardId,
-    (
-      _,
-      filters: {
-        dashboardFilters: DashboardFilters | undefined
-        vigilanceAreaFilters: VigilanceAreaFilters | undefined
-      }
-    ) => filters
-  ],
-  (dashboards, activeDashboardId, filters) => {
-    if (!activeDashboardId) {
-      return undefined
-    }
-
-    if (dashboards[activeDashboardId]) {
-      const regulatoryTagsFilter = filters.dashboardFilters?.regulatoryTags
-      const periodFilter = filters.dashboardFilters?.vigilanceAreaPeriod
-      const specificPeriodFilter = filters.dashboardFilters?.specificPeriod
-
-      const vigilanceAreas = dashboards[activeDashboardId].extractedArea?.vigilanceAreas ?? []
-
-      let filteredVigilanceAreas = vigilanceAreas
-
-      if (regulatoryTagsFilter && regulatoryTagsFilter.length > 0) {
-        filteredVigilanceAreas = vigilanceAreas?.filter(({ tags }) =>
-          tags?.some(tag => regulatoryTagsFilter?.some(tagFilter => tagFilter.id === tag.id))
-        )
-      }
-
-      if (filters.vigilanceAreaFilters?.visibility && filters.vigilanceAreaFilters.visibility.length > 0) {
-        filteredVigilanceAreas = filteredVigilanceAreas.filter(
-          vigilanceArea =>
-            vigilanceArea.visibility && filters.vigilanceAreaFilters?.visibility.includes(vigilanceArea.visibility)
-        )
-      }
-
-      if (
-        !periodFilter ||
-        (periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && !specificPeriodFilter)
-      ) {
-        return filteredVigilanceAreas
-      }
-
-      return getFilterVigilanceAreasPerPeriod(filteredVigilanceAreas, periodFilter, specificPeriodFilter)
-    }
-
-    return undefined
-  }
-)
-
 export const getDashboards = (state: DashboardState) => state.dashboards
 export const getActiveDashboardId = (state: DashboardState) => state.activeDashboardId
 
@@ -636,6 +583,71 @@ export const getDashboardById = createSelector([getDashboards, getId], (dashboar
 export const isCancelEditModalOpen = createSelector([getDashboards, getId], (dashboards, id) =>
   id ? !!dashboards[id]?.isCancelEditModalOpen : false
 )
+
+const getDashboardFilters = (
+  _: DashboardState,
+  filters: {
+    dashboardFilters?: DashboardFilters
+  }
+) => filters.dashboardFilters
+
+const getVigilanceAreaFilters = (
+  _: DashboardState,
+  filters: {
+    vigilanceAreaFilters?: VigilanceAreaFilters
+  }
+) => filters.vigilanceAreaFilters
+
+const getVigilanceAreas = createSelector([getDashboards, getActiveDashboardId], (dashboards, activeDashboardId) => {
+  if (activeDashboardId && dashboards[activeDashboardId]) {
+    return dashboards[activeDashboardId].extractedArea?.vigilanceAreas ?? []
+  }
+
+  return []
+})
+
+const getVigilanceAreasByTags = createSelector(
+  [getVigilanceAreas, getDashboardFilters],
+  (vigilanceAreas, dashboardFilters) => {
+    const regulatoryTagsFilter = dashboardFilters?.regulatoryTags
+    if (regulatoryTagsFilter?.length) {
+      return vigilanceAreas.filter(({ tags }) =>
+        tags?.some(tag => regulatoryTagsFilter.some(tagFilter => tagFilter.id === tag.id))
+      )
+    }
+
+    return vigilanceAreas
+  }
+)
+
+const getVigilanceAreasByVisibility = createSelector(
+  [getVigilanceAreasByTags, getVigilanceAreaFilters],
+  (vigilanceAreas, vigilanceAreaFilters) => {
+    if (vigilanceAreaFilters?.visibility?.length) {
+      return vigilanceAreas.filter(v => v.visibility && vigilanceAreaFilters.visibility.includes(v.visibility))
+    }
+
+    return vigilanceAreas
+  }
+)
+
+const getVigilanceAreasByPeriod = createSelector(
+  [getVigilanceAreasByVisibility, getDashboardFilters],
+  (vigilanceAreas, dashboardFilters) => {
+    const periodFilter = dashboardFilters?.vigilanceAreaPeriod
+    const specificPeriodFilter = dashboardFilters?.specificPeriod
+
+    if (
+      !periodFilter ||
+      (periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && !specificPeriodFilter)
+    ) {
+      return vigilanceAreas
+    }
+
+    return getFilterVigilanceAreasPerPeriod(vigilanceAreas, periodFilter, specificPeriodFilter)
+  }
+)
+export const getFilteredVigilanceAreas = getVigilanceAreasByPeriod
 
 export const dashboardActions = dashboardSlice.actions
 export const dashboardReducer = dashboardSlice.reducer
