@@ -33,7 +33,6 @@ class GetAuthorizedUserUTest {
         val user = getAuthorizedUser.execute(email)
 
         // Then
-        assertThat(user.hashedEmail).isEqualTo(hashedEmail)
         assertThat(user.isSuperUser).isEqualTo(isSuperUser)
         assertThat(log.out).contains("Attempt to GET user $hashedEmail")
         assertThat(log.out).contains("Found user $hashedEmail")
@@ -50,9 +49,8 @@ class GetAuthorizedUserUTest {
         val user = getAuthorizedUser.execute(email)
 
         // Then
-        assertThat(user.hashedEmail).isEqualTo(hashedEmail)
         assertThat(user.isSuperUser).isEqualTo(false)
         assertThat(log.out).contains("Attempt to GET user $hashedEmail")
-        assertThat(log.out).contains("User $hashedEmail not found, defaulting to super-user=false")
+        assertThat(log.out).contains("User $hashedEmail not found, defaulting to superUser=false")
     }
 }
