@@ -1,21 +1,22 @@
-import { FrontendApiError } from '@libs/FrontendApiError'
+// import { FrontendApiError } from '@libs/FrontendApiError'
 
 import { monitorenvPrivateApi } from './api'
-import { ApiErrorCode, type Meta } from './types'
+// import { type Meta } from './types'
 
 import type { UserAuthorization, UserAuthorizationData } from 'domain/entities/authorization/types'
 
-const ERROR_AUTHENTICATION_REQUIRED = 'Authentification requise'
+/* const ERROR_AUTHENTICATION_REQUIRED = 'Authentification requise'
 const ERROR_TOKEN_EXPIRED = "Jeton d'authentification expiré"
 const ERROR_AUTHENTICATION_FAILED = "Erreur d'authentification"
-
+ */
 export const authorizationAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     getCurrentUserAuthorization: builder.query<UserAuthorization, void>({
       keepUnusedDataFor: 0,
       query: () => '/v1/authorization/current',
-      transformErrorResponse: (_, meta: Meta) => {
-        const authenticateResponse = meta?.response?.headers.get('WWW-Authenticate')
+      transformErrorResponse: () => {
+        // console.log('Error in getCurrentUserAuthorization:', error, meta)
+        /*  const authenticateResponse = meta?.response?.headers.get('WWW-Authenticate')
         const errorData = {
           code: ApiErrorCode.AUTHENTICATION_REQUIRED,
           data: { isSuperUser: false },
@@ -37,11 +38,14 @@ export const authorizationAPI = monitorenvPrivateApi.injectEndpoints({
         throw new FrontendApiError(ERROR_AUTHENTICATION_FAILED, {
           data: errorData,
           status: 403
-        })
+        }) */
       },
-      transformResponse: (response: UserAuthorizationData) => ({
-        isSuperUser: response.isSuperUser
-      })
+      transformResponse: (response: UserAuthorizationData) =>
+        // console.log('Transformed response in getCurrentUserAuthorization:', response)
+
+        ({
+          isSuperUser: response.isSuperUser
+        })
     })
   })
 })

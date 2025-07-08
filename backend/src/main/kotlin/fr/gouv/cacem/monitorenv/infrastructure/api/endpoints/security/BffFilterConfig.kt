@@ -24,6 +24,7 @@ class BffFilterConfig(
 
     @Bean(name = ["userAuthorizationCheckFilter"])
     fun userAuthorizationCheckFilter(): FilterRegistrationBean<UserAuthorizationCheckFilter> {
+        logger.info("✅ UserAuthorizationCheckFilter triggered")
         val registrationBean = FilterRegistrationBean<UserAuthorizationCheckFilter>()
 
         registrationBean.order = USER_AUTH_FILTER_PRECEDENCE

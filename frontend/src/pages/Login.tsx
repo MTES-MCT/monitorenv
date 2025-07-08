@@ -1,29 +1,24 @@
+/* import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Button } from '@mtes-mct/monitor-ui'
-import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { paths } from 'paths'
-import { useAuth } from 'react-oidc-context'
-import { Navigate } from 'react-router'
+import { useEffect, useState } from 'react'
+import { Navigate } from 'react-router' */
 import styled from 'styled-components'
 import { LoadingSpinnerWall } from 'ui/LoadingSpinnerWall'
 
 export function Login() {
-  const oidcConfig = getOIDCConfig()
-  const auth = useAuth()
-  const { data: user, isSuccess } = useGetCurrentUserAuthorizationQueryOverride({
-    skip: !auth?.isAuthenticated
-  })
+  // const { data: user, isError, isLoading } = useGetCurrentUserAuthorizationQuery()
 
-  const logout = () => {
-    auth.removeUser()
-    auth.signoutRedirect()
+  /* const logout = () => {
+    window.location.href = 'http://localhost:3000/login'
+  } */
+
+  const onConnect = () => {
+    window.location.href = 'http://localhost:8880/oauth2/authorization/proconnect'
   }
 
-  if (!oidcConfig.IS_OIDC_ENABLED) {
-    return <div>OIDC is disabled</div>
-  }
-
-  if (auth?.isAuthenticated && isSuccess && user?.isSuperUser) {
+  /*   if (auth?.isAuthenticated && isSuccess && user?.isSuperUser) {
     return <Navigate to={paths.home} />
   }
 
@@ -41,22 +36,47 @@ export function Login() {
       return <div>Déconnexion en cours...</div>
     default:
       break
-  }
+  } 
+      */
 
-  if (auth.isAuthenticated) {
+  /*   if (user) {
     return (
       <Wrapper>
-        Hello {auth.user?.profile.email}
+        Hello {user.isSuperUser ? 'Super User' : 'User'}
         <br />
         <Button onClick={logout}>Se déconnecter</Button>
       </Wrapper>
     )
-  }
+  } */
 
   return (
     <Wrapper>
-      {auth.isLoading ? <LoadingSpinnerWall /> : <Button onClick={() => auth.signinRedirect()}>Se connecter</Button>}
-      {auth.error && <div>Oops... {auth.error?.message}</div>}
+      {false ? (
+        <LoadingSpinnerWall />
+      ) : (
+        <div>
+          <form action="#" method="post">
+            <button
+              aria-label="Se connecter avec ProConnect"
+              className="proconnect-button"
+              onClick={onConnect}
+              type="button"
+            >
+              Se connecter avec ProConnect
+            </button>
+          </form>
+          <p>
+            <a
+              href="https://www.proconnect.gouv.fr/"
+              rel="noopener noreferrer"
+              target="_blank"
+              title="Qu’est-ce que ProConnect ? - nouvelle fenêtre"
+            >
+              Qu’est-ce que ProConnect ?
+            </a>
+          </p>
+        </div>
+      )}
     </Wrapper>
   )
 }
