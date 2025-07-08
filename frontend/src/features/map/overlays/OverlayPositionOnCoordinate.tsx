@@ -39,6 +39,9 @@ export function OverlayPositionOnCoordinates({
 
   const attachContentToOverlay = useCallback(
     (ref: HTMLDivElement) => {
+      if (olOverlayRef.current && map) {
+        map.removeOverlay(olOverlayRef.current)
+      }
       containerRef.current = ref
       if (ref) {
         olOverlayRef.current = new Overlay({
@@ -46,11 +49,14 @@ export function OverlayPositionOnCoordinates({
           element: ref,
           offset: currentOffset.current
         })
+        if (map) {
+          map.addOverlay(olOverlayRef.current)
+        }
       } else {
         olOverlayRef.current = null
       }
     },
-    [containerRef, olOverlayRef]
+    [map]
   )
 
   const moveLineWithThrottle = useCallback(
@@ -79,18 +85,6 @@ export function OverlayPositionOnCoordinates({
     },
     [dispatch, map, coordinates, name]
   )
-
-  useEffect(() => {
-    if (map && olOverlayRef.current) {
-      map.addOverlay(olOverlayRef.current)
-    }
-
-    return () => {
-      if (map && olOverlayRef.current) {
-        map.removeOverlay(olOverlayRef.current)
-      }
-    }
-  }, [map, olOverlayRef])
 
   useEffect(() => {
     if (olOverlayRef.current) {

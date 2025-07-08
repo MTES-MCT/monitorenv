@@ -1,14 +1,12 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff
 
-import fr.gouv.cacem.monitorenv.domain.hash
 import fr.gouv.cacem.monitorenv.domain.use_cases.authorization.GetAuthorizedUser
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.UserAuthorizationDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.security.UserAuthorizationCheckFilter
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -32,23 +30,17 @@ class UserAuthorization(
     @GetMapping("v1/authorization/current")
     @Operation(summary = "Get current logged user authorization")
     fun getCurrentUserAuthorization(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
+        @AuthenticationPrincipal principal: Any,
     ): UserAuthorizationDataOutput? {
-        val email: String? = response.getHeader(UserAuthorizationCheckFilter.EMAIL_HEADER)
-        if (email == null) {
-            logger.error("Email not found. Rejecting authentication.")
+        logger.info("Getting current user authorization $principal")
+        val user =
+            principal as? OidcUser
+                ?: throw IllegalStateException("Authenticated user is not an OidcUser")
 
-            response.status = HttpServletResponse.SC_UNAUTHORIZED
+        val authorizedUser = getAuthorizedUser.execute(user.email)
 
-            return null
-        }
-
-        val authorizedUser = getAuthorizedUser.execute(email)
-
-        // The email is hashed as we don't want to have a clear email in the header
-        response.setHeader(UserAuthorizationCheckFilter.EMAIL_HEADER, hash(email))
-
-        return UserAuthorizationDataOutput.fromUserAuthorization(authorizedUser)
+        return UserAuthorizationDataOutput.fromUserAuthorization(
+            authorizedUser = authorizedUser,
+        )
     }
 }

@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.authorization
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.authorization.UserAuthorization
+import fr.gouv.cacem.monitorenv.domain.entities.authorization.AuthorizedUser
 import fr.gouv.cacem.monitorenv.domain.hash
 import fr.gouv.cacem.monitorenv.domain.repositories.IUserAuthorizationRepository
 import org.slf4j.LoggerFactory
@@ -12,21 +12,24 @@ class GetAuthorizedUser(
 ) {
     private val logger = LoggerFactory.getLogger(GetAuthorizedUser::class.java)
 
-    fun execute(email: String): UserAuthorization {
+    fun execute(email: String): AuthorizedUser {
         val hashedEmail = hash(email)
         logger.info("Attempt to GET user $hashedEmail")
 
-        val userAuthorization = userAuthorizationRepository.findByHashedEmail(hashedEmail)
+        val userEntity = userAuthorizationRepository.findByHashedEmail(hashedEmail)
 
-        if (userAuthorization != null) {
+        return if (userEntity != null) {
             logger.info("Found user $hashedEmail")
-            return userAuthorization
+            AuthorizedUser(
+                email = email, // On garde en clair côté domaine, pas côté front
+                isSuperUser = userEntity.isSuperUser,
+            )
+        } else {
+            logger.info("User $hashedEmail not found, defaulting to superUser=false")
+            AuthorizedUser(
+                email = email,
+                isSuperUser = false,
+            )
         }
-
-        logger.info("User $hashedEmail not found, defaulting to super-user=false")
-        return UserAuthorization(
-            hashedEmail = hashedEmail,
-            isSuperUser = false,
-        )
     }
 }
