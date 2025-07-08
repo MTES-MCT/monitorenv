@@ -54,26 +54,30 @@ export function SemaphoreOverlay({
 
   return (
     <>
-      <OverlayPositionOnCentroid
-        appClassName="overlay-semaphore-selected"
-        feature={canOverlayBeOpened ? selectedFeature : undefined}
-        map={map}
-        mapClickEvent={mapClickEvent}
-        options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
-        zIndex={3000}
-      >
-        <SemaphoreCard feature={selectedFeature} isSuperUser={isSuperUser} selected />
-      </OverlayPositionOnCentroid>
-      <OverlayPositionOnCentroid
-        appClassName="overlay-semaphore-hover"
-        feature={displayHoveredFeature ? hoveredFeature : undefined}
-        map={map}
-        mapClickEvent={mapClickEvent}
-        options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
-        zIndex={3000}
-      >
-        <SemaphoreCard feature={hoveredFeature} isSuperUser={isSuperUser} />
-      </OverlayPositionOnCentroid>
+      {canOverlayBeOpened && selectedFeature && (
+        <OverlayPositionOnCentroid
+          appClassName="overlay-semaphore-selected"
+          feature={selectedFeature}
+          map={map}
+          mapClickEvent={mapClickEvent}
+          options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
+          zIndex={3000}
+        >
+          <SemaphoreCard feature={selectedFeature} isSuperUser={isSuperUser} selected />
+        </OverlayPositionOnCentroid>
+      )}
+      {displayHoveredFeature && hoveredFeature && (
+        <OverlayPositionOnCentroid
+          appClassName="overlay-semaphore-hover"
+          feature={hoveredFeature}
+          map={map}
+          mapClickEvent={mapClickEvent}
+          options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
+          zIndex={3000}
+        >
+          <SemaphoreCard feature={hoveredFeature} isSuperUser={isSuperUser} />
+        </OverlayPositionOnCentroid>
+      )}
     </>
   )
 }

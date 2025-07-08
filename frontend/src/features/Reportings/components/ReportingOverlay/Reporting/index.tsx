@@ -5,7 +5,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened, removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { ReportingCard } from './ReportingCard'
 
@@ -32,11 +32,6 @@ export function ReportingOverlay({
   const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
-  const listener = useAppSelector(state => state.draw.listener)
-  const isMissionAttachmentInProgress = useAppSelector(
-    state => state.attachMissionToReporting.isMissionAttachmentInProgress
-  )
-  const displayReportingsLayer = useAppSelector(state => state.global.layers.displayReportingsLayer)
   const displayReportingsOverlay = useAppSelector(state => state.global.layers.displayReportingsOverlay)
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
@@ -60,11 +55,6 @@ export function ReportingOverlay({
     currentfeatureId.startsWith(Layers.REPORTINGS.code) &&
     currentfeatureId !== `${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`
 
-  const isCardVisible = useMemo(
-    () => displayReportingsLayer && !listener && !isMissionAttachmentInProgress,
-    [displayReportingsLayer, listener, isMissionAttachmentInProgress]
-  )
-
   const updateHoveredMargins = (cardHeight: number) => {
     if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
       setHoveredOptions({ margins: { ...hoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
@@ -84,39 +74,41 @@ export function ReportingOverlay({
 
   return (
     <>
-      <OverlayPositionOnCentroid
-        appClassName="overlay-reporting-selected"
-        feature={displayReportingsOverlay && canOverlayBeOpened ? feature : undefined}
-        map={map}
-        mapClickEvent={mapClickEvent}
-        options={selectedOptions}
-        zIndex={5000}
-      >
-        <ReportingCard
+      {displayReportingsOverlay && canOverlayBeOpened && feature && (
+        <OverlayPositionOnCentroid
+          appClassName="overlay-reporting-selected"
           feature={feature}
-          isCardVisible={isCardVisible}
-          isSuperUser={isSuperUser}
-          onClose={close}
-          selected
-          updateMargins={updateSelectedMargins}
-        />
-      </OverlayPositionOnCentroid>
-      <OverlayPositionOnCentroid
-        appClassName="overlay-reporting-hover"
-        feature={displayReportingsOverlay && displayHoveredFeature ? hoveredFeature : undefined}
-        map={map}
-        mapClickEvent={mapClickEvent}
-        options={hoveredOptions}
-        zIndex={5000}
-      >
-        <ReportingCard
+          map={map}
+          mapClickEvent={mapClickEvent}
+          options={selectedOptions}
+          zIndex={5000}
+        >
+          <ReportingCard
+            feature={feature}
+            isSuperUser={isSuperUser}
+            onClose={close}
+            selected
+            updateMargins={updateSelectedMargins}
+          />
+        </OverlayPositionOnCentroid>
+      )}
+      {displayReportingsOverlay && displayHoveredFeature && hoveredFeature && (
+        <OverlayPositionOnCentroid
+          appClassName="overlay-reporting-hover"
           feature={hoveredFeature}
-          isCardVisible={isCardVisible}
-          isSuperUser={isSuperUser}
-          onClose={close}
-          updateMargins={updateHoveredMargins}
-        />
-      </OverlayPositionOnCentroid>
+          map={map}
+          mapClickEvent={mapClickEvent}
+          options={hoveredOptions}
+          zIndex={5000}
+        >
+          <ReportingCard
+            feature={hoveredFeature}
+            isSuperUser={isSuperUser}
+            onClose={close}
+            updateMargins={updateHoveredMargins}
+          />
+        </OverlayPositionOnCentroid>
+      )}
     </>
   )
 }
