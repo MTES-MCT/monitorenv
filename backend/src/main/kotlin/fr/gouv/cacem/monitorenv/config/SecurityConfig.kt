@@ -43,7 +43,7 @@ class SecurityConfig(
                             else -> throw OAuth2AuthenticationException("SIRET claim missing or malformed")
                         }
 
-                    val isAuthorized = listOf("1234567890").any { it in tokenSirets }
+                    val isAuthorized = oidcProperties.authorizedSirets.any { it in tokenSirets }
                     if (!isAuthorized) {
                         throw OAuth2AuthenticationException("User not authorized for the requested SIRET(s)")
                     }
@@ -110,24 +110,28 @@ class SecurityConfig(
                 oauth2
                     .userInfoEndpoint { userInfo ->
                         userInfo.oidcUserService(customOidcUserService())
-                    }.loginPage("/oauth2/authorization/proconnect")
+                    }.loginPage(oidcProperties.loginUrl)
                     .successHandler(successHandler())
                     .failureHandler(authenticationFailureHandler())
             }.logout { logout ->
-                logout.logoutSuccessUrl("/login")
+                logout
+                    .logoutSuccessUrl(oidcProperties.successUrl)
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .deleteCookies("JSESSIONID")
             }
         return http.build()
     }
 
     @Bean
     fun successHandler(): AuthenticationSuccessHandler {
-        val redirectUrl = "http://localhost:3000"
-        return SimpleUrlAuthenticationSuccessHandler(redirectUrl)
+        println("Redirect URL is: '${oidcProperties.successUrl}'")
+        return SimpleUrlAuthenticationSuccessHandler(oidcProperties.successUrl)
     }
 
     @Bean
     fun authenticationFailureHandler(): AuthenticationFailureHandler =
-        SimpleUrlAuthenticationFailureHandler("/login?error=true")
+        SimpleUrlAuthenticationFailureHandler(oidcProperties.errorUrl)
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
