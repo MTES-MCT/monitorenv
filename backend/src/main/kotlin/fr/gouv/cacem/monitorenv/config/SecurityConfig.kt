@@ -1,26 +1,66 @@
 package fr.gouv.cacem.monitorenv.config
 
-import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.log.CustomAuthenticationEntryPoint
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.SpaController.Companion.FRONTEND_APP_ROUTES
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.AuthenticationFailureHandler
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import kotlin.String
+import kotlin.apply
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    val oidcProperties: OIDCProperties,
-    val authenticationEntryPoint: CustomAuthenticationEntryPoint,
+    private val oidcProperties: OIDCProperties,
 ) {
-    private val logger: Logger = LoggerFactory.getLogger(SecurityConfig::class.java)
+    private val logger = LoggerFactory.getLogger(SecurityConfig::class.java)
+
+    // Bean du service custom pour récupérer les claims OIDC
+    @Bean
+    fun customOidcUserService(): OidcUserService {
+        return object : OidcUserService() {
+            override fun loadUser(userRequest: OidcUserRequest): OidcUser {
+                try {
+                    val oidcUser = super.loadUser(userRequest)
+                    logger.info("✅ User loaded: {}", oidcUser.claims)
+                    val siretsClaimRaw = oidcUser.claims["SIRET"]
+
+                    val tokenSirets: Set<String> =
+                        when (siretsClaimRaw) {
+                            is List<*> -> siretsClaimRaw.filterIsInstance<String>().toSet()
+                            is String -> setOf(siretsClaimRaw)
+                            else -> throw OAuth2AuthenticationException("SIRET claim missing or malformed")
+                        }
+
+                    logger.info("Token SIRETs: $tokenSirets")
+                    // Vérifie si au moins un SIRET demandé est dans la liste des SIRETs du token
+                    val isAuthorized = listOf("1234567890").any { it in tokenSirets }
+                    logger.info("Is user authorized for requested SIRET(s): $isAuthorized")
+                    if (!isAuthorized) {
+                        throw OAuth2AuthenticationException("User not authorized for the requested SIRET(s)")
+                    }
+                    logger.info("User is authorized for the requested SIRET(s) $oidcUser")
+                    return oidcUser
+                } catch (e: Exception) {
+                    logger.error("⛔ Exception in loadUser", e)
+                    throw e
+                }
+            }
+        }
+    }
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -36,6 +76,7 @@ class SecurityConfig(
                     )
 
                     authorize
+                        // Autorise tout le monde sur ces routes (ex: statiques, version, health)
                         .requestMatchers(
                             "/",
                             *FRONTEND_APP_ROUTES.toTypedArray(),
@@ -63,39 +104,48 @@ class SecurityConfig(
                         .anyRequest()
                         .authenticated()
                 } else {
-                    logger.warn(
+                    logger.info(
                         """
-                        ⚠️   WARNING ⚠️   - OIDC Authentication is NOT enabled.
+                        ❌ OIDC Authentication is disabled.
+                        All requests will be denied.
                         """.trimIndent(),
                     )
-
                     authorize.requestMatchers("/**").permitAll()
                 }
+            }.oauth2Login { oauth2 ->
+                oauth2
+                    .userInfoEndpoint { userInfo ->
+                        userInfo.oidcUserService(customOidcUserService())
+                    }.loginPage("/oauth2/authorization/proconnect")
+                    .successHandler(successHandler())
+                    .failureHandler(authenticationFailureHandler())
+            }.logout { logout ->
+                logout.logoutSuccessUrl("/login")
             }
-
-        if (oidcProperties.enabled == true) {
-            http.oauth2ResourceServer { oauth2ResourceServer ->
-                oauth2ResourceServer
-                    .jwt(Customizer.withDefaults())
-                    .authenticationEntryPoint(authenticationEntryPoint)
-            }
-        }
-
         return http.build()
     }
+
+    @Bean
+    fun successHandler(): AuthenticationSuccessHandler {
+        val redirectUrl = "http://localhost:3000"
+        return SimpleUrlAuthenticationSuccessHandler(redirectUrl)
+    }
+
+    @Bean
+    fun authenticationFailureHandler(): AuthenticationFailureHandler =
+        SimpleUrlAuthenticationFailureHandler("/login?error=true")
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration =
             CorsConfiguration().apply {
                 allowedOrigins = listOf("*")
-                allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 allowedHeaders = listOf("Authorization", "Cache-Control", "Content-Type")
+                allowCredentials = true
             }
-
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
-
         return source
     }
 }

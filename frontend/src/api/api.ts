@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { setAuthorizationHeader } from './utils/setAuthorizationHeaders'
 import { normalizeRtkBaseQuery } from '../utils/normalizeRtkBaseQuery'
 
 import type { BackendApiErrorResponse } from './types'
@@ -11,7 +10,7 @@ import type { BackendApiErrorResponse } from './types'
 // We'll need that later on for authentication.
 const monitorenvPrivateApiQuery = fetchBaseQuery({
   baseUrl: '/bff',
-  prepareHeaders: setAuthorizationHeader
+  credentials: 'include'
 })
 export const monitorenvPrivateApi = createApi({
   baseQuery: async (args, api, extraOptions) => {
