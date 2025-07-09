@@ -23,6 +23,7 @@ private val polygon =
 class VigilanceAreaFixture {
     companion object {
         fun aVigilanceAreaEntity(
+            id: Int = 1,
             createdBy: String = "ABC",
             isDraft: Boolean = true,
             themes: List<ThemeEntity> = listOf(aTheme(id = 1, name = "AMP")),
@@ -38,7 +39,7 @@ class VigilanceAreaFixture {
             comments: String? = "Basic area comments",
         ): VigilanceAreaEntity =
             VigilanceAreaEntity(
-                id = 1,
+                id = id,
                 comments = comments,
                 computedEndDate = ZonedDateTime.parse("2024-01-25T00:00:00Z"),
                 createdBy = createdBy,

@@ -15,6 +15,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.DeleteVigilanceAr
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetTrigrams
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreasByIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
@@ -33,6 +34,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -54,6 +56,9 @@ class VigilanceAreasITests {
 
     @MockitoBean
     private lateinit var getVigilanceAreaById: GetVigilanceAreaById
+
+    @MockitoBean
+    private lateinit var getVigilanceAreasByIds: GetVigilanceAreasByIds
 
     @MockitoBean
     private lateinit var createOrUpdateVigilanceArea: CreateOrUpdateVigilanceArea
@@ -133,36 +138,38 @@ class VigilanceAreasITests {
                 ),
         )
 
+    private val vigilanceArea2 =
+        VigilanceAreaEntity(
+            id = 2,
+            name = "Vigilance Area 2",
+            isArchived = false,
+            isDeleted = false,
+            isDraft = true,
+            comments = null,
+            createdBy = "DEF",
+            endingCondition = EndingConditionEnum.NEVER,
+            endingOccurrenceDate = null,
+            endingOccurrencesNumber = null,
+            frequency = FrequencyEnum.ALL_WEEKS,
+            endDatePeriod = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
+            geom = polygon,
+            images = listOf(),
+            links = null,
+            seaFront = "MED",
+            source = "Un particulier",
+            startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
+            themes = listOf(),
+            visibility = VisibilityEnum.PUBLIC,
+            createdAt = ZonedDateTime.parse(createdAt),
+            updatedAt = ZonedDateTime.parse(updatedAt),
+            isAtAllTimes = true,
+            tags = listOf(),
+        )
+
     @Test
     fun `Should get all vigilance areas`() {
         // Given
-        val vigilanceArea2 =
-            VigilanceAreaEntity(
-                id = 2,
-                name = "Vigilance Area 2",
-                isArchived = false,
-                isDeleted = false,
-                isDraft = true,
-                comments = null,
-                createdBy = "DEF",
-                endingCondition = EndingConditionEnum.NEVER,
-                endingOccurrenceDate = null,
-                endingOccurrencesNumber = null,
-                frequency = FrequencyEnum.ALL_WEEKS,
-                endDatePeriod = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
-                geom = polygon,
-                images = listOf(),
-                links = null,
-                seaFront = "MED",
-                source = "Un particulier",
-                startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
-                themes = listOf(),
-                visibility = VisibilityEnum.PUBLIC,
-                createdAt = ZonedDateTime.parse(createdAt),
-                updatedAt = ZonedDateTime.parse(updatedAt),
-                isAtAllTimes = true,
-                tags = listOf(),
-            )
+
         given(getAllVigilanceAreas.execute()).willReturn(listOf(vigilanceArea1, vigilanceArea2))
         // When
         mockMvc
@@ -450,5 +457,44 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[0]", equalTo("ABC")))
             .andExpect(jsonPath("$[1]", equalTo("DEF")))
             .andExpect(jsonPath("$[2]", equalTo("GHI")))
+    }
+
+    @Test
+    fun `Should return empty list when no vigilance areas found by ids`() {
+        // Given
+        val ids = listOf(1, 2, 3)
+        given(getVigilanceAreasByIds.execute(ids)).willReturn(emptyList())
+
+        // When
+        mockMvc
+            .perform(
+                post("/bff/v1/vigilance_areas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(ids)),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$").isEmpty())
+    }
+
+    @Test
+    fun `Should get vigilance areas by ids`() {
+        // Given
+        val ids = listOf(1, 2)
+        given(getVigilanceAreasByIds.execute(ids)).willReturn(listOf(vigilanceArea1, vigilanceArea2))
+
+        // When
+        mockMvc
+            .perform(
+                post("/bff/v1/vigilance_areas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(ids)),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].id", equalTo(1)))
+            .andExpect(jsonPath("$[0].name", equalTo("Vigilance Area 1")))
+            .andExpect(jsonPath("$[1].id", equalTo(2)))
+            .andExpect(jsonPath("$[1].name", equalTo("Vigilance Area 2")))
     }
 }

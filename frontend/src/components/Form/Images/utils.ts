@@ -4,6 +4,22 @@ export const IMAGES_INFORMATIONS_TEXT = '5 photos maximum. Formats autorisés: j
 const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
 const IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR = 'Vous ne pouvez charger que 5 images au total'
 
+function isValidBase64(str: string): boolean {
+  if (str.length % 4 !== 0) {
+    return false
+  }
+
+  // Check the pattern only on a short section (beginning and end) to avoid performance issues with very long strings
+  const head = str.slice(0, 1000)
+  const tail = str.slice(-1000)
+  const base64Pattern = /^[A-Za-z0-9+/]*={0,2}$/
+
+  if (!base64Pattern.test(head) || !base64Pattern.test(tail)) {
+    return false
+  }
+
+  return true
+}
 export async function convertImagesForFront(images: ImageApi[], ref: HTMLElement): Promise<ImageFront[]> {
   const processedImages = await Promise.all(
     images.map(async image => {
@@ -12,8 +28,7 @@ export async function convertImagesForFront(images: ImageApi[], ref: HTMLElement
         if (!allowedMimeTypes.includes(image.mimeType)) {
           throw new Error('Invalid MIME type')
         }
-        const base64Pattern = /^[a-zA-Z0-9+/]+={0,2}$/
-        if (!base64Pattern.test(image.content)) {
+        if (!isValidBase64(image.content)) {
           throw new Error('Invalid base64 content')
         }
         const base64Image = `data:${image.mimeType};base64,${image.content}`
@@ -37,10 +52,10 @@ export async function convertImagesForFront(images: ImageApi[], ref: HTMLElement
 
   return processedImages.filter(image => image !== undefined)
 }
+
 export const compressImage = (img: HTMLImageElement, type: string, quality = 0.3) => {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
-
   const { width } = img
   const { height } = img
 

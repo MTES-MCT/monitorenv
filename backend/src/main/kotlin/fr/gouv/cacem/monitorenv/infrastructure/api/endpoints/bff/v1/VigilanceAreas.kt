@@ -19,6 +19,7 @@ class VigilanceAreas(
     private val getVigilanceAreaById: GetVigilanceAreaById,
     private val deleteVigilanceArea: DeleteVigilanceArea,
     private val getTrigrams: GetTrigrams,
+    private val getVigilanceAreasByIds: GetVigilanceAreasByIds,
 ) {
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new vigilance area")
@@ -37,6 +38,19 @@ class VigilanceAreas(
         val vigilanceAreas = getVigilanceAreas.execute()
 
         return vigilanceAreas.map { VigilanceAreasDataOutput.fromVigilanceArea(it) }
+    }
+
+    @PostMapping("")
+    @Operation(summary = "List vigilance areas by ids")
+    fun getAll(
+        @RequestBody
+        ids: List<Int>,
+    ): List<VigilanceAreaDataOutput> {
+        val vigilanceAreas = getVigilanceAreasByIds.execute(ids)
+        if (vigilanceAreas.isNullOrEmpty()) {
+            return emptyList()
+        }
+        return vigilanceAreas.map { VigilanceAreaDataOutput.fromVigilanceArea(it) }
     }
 
     @GetMapping("/{vigilanceAreaId}")
