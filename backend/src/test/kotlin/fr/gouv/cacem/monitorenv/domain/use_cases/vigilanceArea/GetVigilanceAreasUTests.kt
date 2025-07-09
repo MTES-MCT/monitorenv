@@ -27,7 +27,7 @@ class GetVigilanceAreasUTests {
         val result = GetVigilanceAreas(vigilanceAreaRepository).execute()
 
         assertThat(result).isEqualTo(vigilancesAreas)
-        assertThat(log.out).contains("GET vigilance areas withs ids")
+        assertThat(log.out).contains("Attempt to GET all vigilance areas")
         assertThat(log.out).contains("Found ${result.size} vigilance areas")
     }
 }
