@@ -76,7 +76,9 @@ export function NearbyUnits({ nearbyUnits }: NearbyUnitsProps) {
           <View>
             <View style={[layoutStyle.header2, { alignItems: 'center', columnGap: 21 }]}>
               <Text>Récemment sur zone</Text>
-              <Text style={{ fontSize: 8, fontWeight: 'bold' }}>{`Du ${dateRange?.start} au ${dateRange?.end}`}</Text>
+              <Text style={{ fontSize: 8, fontWeight: 'bold' }}>
+                {dateRange?.isSingleDayRange ? `Le ${dateRange?.start}` : `Du ${dateRange?.start} au ${dateRange?.end}`}
+              </Text>
             </View>
             <View style={layoutStyle.cardWrapper}>
               {unitsRecentlyInArea.map(unit => (
