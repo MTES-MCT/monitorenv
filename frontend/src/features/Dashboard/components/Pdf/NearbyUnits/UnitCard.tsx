@@ -98,8 +98,14 @@ export function UnitCard({ controlUnit, missions, status }: NearbyUnitsProps) {
       </View>
 
       <View style={[layoutStyle.row, styles.controlUnit.subTitle]}>
-        {missions.length > 0 && <Text> {missions.length} missions • </Text>}
-        <Text>{`Du ${dateRange?.start} au ${dateRange?.end}`}</Text>
+        {missions.length > 0 && (
+          <Text>
+            {missions.length} {pluralize('mission', missions.length)} •{' '}
+          </Text>
+        )}
+        <Text>
+          {dateRange?.isSingleDayRange ? `Le ${dateRange?.start}` : `Du ${dateRange?.start} au ${dateRange?.end}`}
+        </Text>
       </View>
 
       <View style={styles.separator} />
@@ -116,7 +122,7 @@ export function UnitCard({ controlUnit, missions, status }: NearbyUnitsProps) {
               <Text style={styles.controlUnit.infractions}>
                 {nbInfractions} {pluralize('infraction', nbInfractions)}
               </Text>
-              <Text style={styles.controlUnit.infractions}>, {nbPV} PV</Text>
+              {nbPV > 0 && <Text style={styles.controlUnit.infractions}>, {nbPV} PV</Text>}
             </View>
           )}
         </View>

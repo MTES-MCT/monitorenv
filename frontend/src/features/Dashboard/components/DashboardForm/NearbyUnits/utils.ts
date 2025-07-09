@@ -1,4 +1,5 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import { isSameDay } from 'rsuite/esm/utils/dateUtils'
 
 import { NearbyUnitDateRangeEnum } from './types'
 
@@ -25,8 +26,9 @@ export function getDateRange(missions: Mission[]) {
       start: missions[0]?.startDateTimeUtc ? customDayjs(missions[0].startDateTimeUtc) : undefined
     }
   )
+  const isSingleDayRange = start && end ? isSameDay(start.toDate(), end.toDate()) : false
 
-  return { end: end?.format('DD/MM/YYYY'), start: start?.format('DD/MM/YYYY') }
+  return { end: end?.format('DD/MM/YYYY'), isSingleDayRange, start: start?.format('DD/MM/YYYY') }
 }
 
 type GetDatesFromFiltersProps = {

@@ -86,17 +86,27 @@ export function Item({ isSelected = false, nearbyUnit }: { isSelected?: boolean;
           <MissionDatesAndControls>
             <div>
               {nearbyUnit.missions.length} {pluralize('mission', nearbyUnit.missions.length)} •{' '}
-              {maxRangeMissionDate?.start ? `Du ${maxRangeMissionDate?.start}` : ''}{' '}
-              {maxRangeMissionDate?.end ? `au ${maxRangeMissionDate?.end}` : ''}
+              {maxRangeMissionDate?.isSingleDayRange
+                ? `Le ${maxRangeMissionDate?.start}`
+                : `Du ${maxRangeMissionDate?.start} au ${maxRangeMissionDate?.end}`}
             </div>
             <ControlsText>
-              <span>
-                {nbControls} {pluralize('ctrl', nbControls)}
-              </span>
-              <Bullet />
-              <StyledBold>
-                {nbInfractions} {pluralize('inf', nbInfractions)}, {nbPV} PV
-              </StyledBold>
+              {nbControls > 0 && (
+                <>
+                  <span>
+                    {nbControls} {pluralize('ctrl', nbControls)}
+                  </span>
+                  {nbInfractions > 0 && (
+                    <>
+                      <Bullet />
+                      <StyledBold>
+                        {nbInfractions} {pluralize('inf', nbInfractions)}
+                        {nbPV > 0 && `, ${nbPV} PV`}
+                      </StyledBold>
+                    </>
+                  )}
+                </>
+              )}
             </ControlsText>
           </MissionDatesAndControls>
           <StyledBold title={themes}>{themes}</StyledBold>
