@@ -11,23 +11,27 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
-class GetVigilanceAreasUTests {
+class GetVigilanceAreasByIdsUTest {
     private val vigilanceAreaRepository: IVigilanceAreaRepository = mock()
 
+    private val getVigilanceAreasByIds = GetVigilanceAreasByIds(vigilanceAreaRepository)
+
     @Test
-    fun `execute should return all vigilance areas`(log: CapturedOutput) {
+    fun `execute should return all vigilance areas that match ids`(log: CapturedOutput) {
+        val ids = listOf(1, 2, 3)
         val vigilancesAreas =
             listOf(
-                VigilanceAreaFixture.aVigilanceAreaEntity(),
+                VigilanceAreaFixture.aVigilanceAreaEntity(id = 1),
                 VigilanceAreaFixture.aVigilanceAreaEntityWithImagesAndLink(),
+                VigilanceAreaFixture.aVigilanceAreaEntity(id = 3),
             )
 
-        given(vigilanceAreaRepository.findAll()).willReturn(vigilancesAreas)
+        given(vigilanceAreaRepository.findAllById(ids)).willReturn(vigilancesAreas)
 
-        val result = GetVigilanceAreas(vigilanceAreaRepository).execute()
+        val result = getVigilanceAreasByIds.execute(ids)
 
         assertThat(result).isEqualTo(vigilancesAreas)
-        assertThat(log.out).contains("GET vigilance areas withs ids")
-        assertThat(log.out).contains("Found ${result.size} vigilance areas")
+        assertThat(log.out).contains("Attempt to GET vigilance areas withs ids: $ids")
+        assertThat(log.out).contains("Found ${result?.size} vigilance areas")
     }
 }

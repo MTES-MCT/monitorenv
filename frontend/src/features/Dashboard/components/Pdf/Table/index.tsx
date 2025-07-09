@@ -10,7 +10,7 @@ import { groupBy } from 'lodash'
 import { layoutStyle } from '../style'
 
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
-import type { VigilanceArea } from '@features/VigilanceArea/types'
+import type { Dashboard } from '@features/Dashboard/types'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
@@ -78,7 +78,7 @@ export function AreaTable({
   amps: AMPFromAPI[]
   image: ExportImageType | undefined
   regulatoryAreas: RegulatoryLayerWithMetadata[]
-  vigilanceAreas: VigilanceArea.VigilanceArea[]
+  vigilanceAreas: Dashboard.VigilanceAreaWithImages[]
 }) {
   const groupedRegulatoryAreas = groupBy(
     [...regulatoryAreas].sort((a, b) => a.layerName.localeCompare(b.layerName)),

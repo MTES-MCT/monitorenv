@@ -81,6 +81,12 @@ class JpaVigilanceAreaRepository(
             it.toVigilanceAreaEntity()
         }
 
+    @Transactional
+    override fun findAllById(ids: List<Int>): List<VigilanceAreaEntity> =
+        dbVigilanceAreaRepository.findAllById(ids).map {
+            it.toVigilanceAreaEntity()
+        }
+
     override fun findAllIdsByGeometryAndIsDraftIsFalse(geometry: Geometry): List<Int> =
         dbVigilanceAreaRepository.findAllIdsByGeometryAndIsDraftIsFalse(geometry)
 

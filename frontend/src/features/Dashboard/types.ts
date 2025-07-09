@@ -52,6 +52,10 @@ export namespace Dashboard {
     vigilanceAreaIds: number[]
   }
 
+  export type VigilanceAreaWithImages = Omit<VigilanceArea.VigilanceArea, 'images'> & {
+    images: ImageFront[]
+  }
+
   export type Brief = {
     allLinkedAMPs: AMPFromAPI[]
     allLinkedRegulatoryAreas: RegulatoryLayerWithMetadata[]
@@ -72,7 +76,7 @@ export namespace Dashboard {
     selectedControlUnits: ControlUnit.ControlUnit[]
     themes: ThemeFromAPI[]
     updatedAt?: string
-    vigilanceAreas: VigilanceArea.VigilanceArea[]
+    vigilanceAreas: VigilanceAreaWithImages[]
   }
 
   export type DashboardToApi = {
