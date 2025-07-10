@@ -112,7 +112,9 @@ export function RecentActivityLayerEvents({
 
         if (type === Layers.RECENT_CONTROLS_ACTIVITY.code || type === Layers.DASHBOARD_RECENT_ACTIVITY.code) {
           const { properties } = recentActivityFeature
-
+          if (!properties) {
+            return acc
+          }
           acc.push({
             layerType: type,
             properties: properties as RecentActivity.RecentControlsActivity
