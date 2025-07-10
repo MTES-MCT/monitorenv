@@ -1,7 +1,7 @@
 import { Bold } from '@components/style'
 import { FirstLine } from '@features/Dashboard/components/DashboardForm/ControlUnits/Item'
 import { dashboardActions } from '@features/Dashboard/slice'
-import { getAllThemes, getTotalInfraction, getTotalNbControls, getTotalPV } from '@features/Dashboard/utils'
+import { getAllThemes, getTotalInfraction, getTotalNbControls, getTotalPV } from '@features/Mission/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, pluralize, THEME } from '@mtes-mct/monitor-ui'
@@ -32,11 +32,12 @@ export function Item({ isSelected = false, nearbyUnit }: { isSelected?: boolean;
     }
   }
 
+  const envActions = nearbyUnit.missions.flatMap(mission => mission.envActions)
   const maxRangeMissionDate = getDateRange(nearbyUnit.missions)
-  const themes = displayThemes(getAllThemes(nearbyUnit.missions))
-  const nbControls = getTotalNbControls(nearbyUnit.missions)
-  const nbInfractions = getTotalInfraction(nearbyUnit.missions)
-  const nbPV = getTotalPV(nearbyUnit.missions)
+  const themes = displayThemes(getAllThemes(envActions))
+  const nbControls = getTotalNbControls(envActions)
+  const nbInfractions = getTotalInfraction(envActions)
+  const nbPV = getTotalPV(envActions)
 
   const topicSelectionState = getSelectionStateNearbyUnit(nearbyUnit, selectedNearbyUnits ?? [])
 
