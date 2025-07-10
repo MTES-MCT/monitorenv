@@ -2,7 +2,7 @@
  * These properties does not require to be sync - so we do not update them.
  * @see https://github.com/MTES-MCT/monitorenv/blob/main/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/adapters/publicapi/outputs/MissionDataOutput.kt#L11
  */
-export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES = [
+export const FULL_MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES = [
   'attachedReportingIds',
   'detachedReportingIds',
   'detachedReportings',
@@ -12,6 +12,18 @@ export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES = [
   'fishActions',
   'hasRapportNavActions',
   'observationsByUnit'
+]
+
+export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES = [
+  ...FULL_MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES,
+  'attachedReportings'
+]
+
+export const FULL_MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM = [
+  ...FULL_MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES,
+  'facade',
+  'updatedAtUtc',
+  'createdAtUtc'
 ]
 
 export const MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM = [

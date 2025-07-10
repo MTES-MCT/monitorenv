@@ -7,7 +7,11 @@ import { omit } from 'lodash'
 import { useEffect } from 'react'
 
 import { attachReportingToMissionSliceActions } from './AttachReporting/slice'
-import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
+import {
+  FULL_MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM,
+  MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM
+} from './constants'
+import { FULL_MISSION_UPDATE_EVENT } from './hooks/useListenMissionEventUpdates'
 
 import type { Mission } from '../../../../domain/entities/missions'
 
@@ -21,7 +25,7 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
   const dispatch = useAppDispatch()
 
   const { setFieldValue, values } = useFormikContext<Mission>()
-  const { getMissionEventById, setMissionEventInContext } = useMissionEventContext()
+  const { event, getMissionEventById, setMissionEventInContext } = useMissionEventContext()
   const missionEvent = getMissionEventById(missionId)
 
   useEffect(
@@ -30,10 +34,16 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
         return
       }
 
-      const receivedDiff = diff(
+      let receivedDiff = diff(
         omit(values, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM),
         omit(missionEvent, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
       )
+      if (event === FULL_MISSION_UPDATE_EVENT) {
+        receivedDiff = diff(
+          omit(values, FULL_MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM),
+          omit(missionEvent, FULL_MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
+        )
+      }
 
       /**
        * We iterate and use `setFieldValue` on each diff key to avoid a global re-render of the <MissionForm/> component
