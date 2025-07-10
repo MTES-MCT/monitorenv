@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import kotlinx.coroutines.runBlocking
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.web.filter.OncePerRequestFilter
 
 class UserAuthorizationCheckFilter(
@@ -29,20 +30,20 @@ class UserAuthorizationCheckFilter(
         val authentication = SecurityContextHolder.getContext().authentication
 
         if (oidcProperties.enabled == false) {
-            logger.debug("OIDC disabled: user authorization is not checked.")
+            logger.info("OIDC disabled: user authorization is not checked.")
             filterChain.doFilter(request, response)
 
             return@runBlocking
         }
 
         if (authentication == null || !authentication.isAuthenticated) {
-            logger.warn(missingAuthenticatedUserMessage)
+            logger.info(missingAuthenticatedUserMessage)
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, missingAuthenticatedUserMessage)
             return@runBlocking
         }
-        logger.debug("Authenticated user : $authentication")
-        val email = authentication.name
-        logger.debug("Authenticated user email/username: $email")
+
+        val email = (authentication.principal as OidcUser).email
+        logger.info("Authenticated user email/username: $email")
 
         val isSuperUserPath =
             protectedPathsAPIProperties.superUserPaths

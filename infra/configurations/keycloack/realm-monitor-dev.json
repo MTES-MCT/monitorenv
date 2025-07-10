@@ -14,7 +14,7 @@
         "http://localhost:3000"
       ],
       "publicClient": false,
-      "secret": "",
+      "secret": "PNKVjpo4DNCVMCVYUZiS3wepPJdtdFhH",
       "protocolMappers": [
         {
             "name": "SIRET attribute",
