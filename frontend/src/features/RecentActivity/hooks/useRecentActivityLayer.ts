@@ -6,7 +6,7 @@ import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import OpenLayerMap from 'ol/Map'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 
 import { recentControlActivityStyle } from '../components/Layers/style'
 import { getDatesFromFilters, getRecentActivityFeatures } from '../utils'
