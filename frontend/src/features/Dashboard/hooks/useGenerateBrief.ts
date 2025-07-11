@@ -5,8 +5,9 @@ import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
+import { useGetVigilanceAreasByIdsQuery } from '@api/vigilanceAreasAPI'
 import { useImageConverter } from '@components/Form/Images/hook/useImageConverter'
+import { convertImagesForFront } from '@components/Form/Images/utils'
 import { renderPDF } from '@features/Dashboard/components/Pdf/renderPdf'
 import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { RecentActivity } from '@features/RecentActivity/types'
@@ -31,12 +32,12 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const regulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, dashboard.regulatoryAreaIds))
   const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
-  const vigilanceAreas = useAppSelector(state => getVigilanceAreasByIds(state, dashboard.vigilanceAreaIds))
+  const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery(dashboard.vigilanceAreaIds)
 
   const [allLinkedAMPIds, allLinkedRegulatoryAreaIds] = useMemo(
     () => [
-      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
-      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
+      Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
+      Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
     ],
     [vigilanceAreas]
   )
@@ -53,6 +54,17 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
 
   const { getImages, loading: loadingImages } = useExportImages()
   const attachementImages = useImageConverter(dashboard.images)
+
+  const getVigilanceAreasWithFormattedImages = async () => {
+    const formattedVigilancesAreas =
+      (await vigilanceAreas?.map(async vigilanceArea => {
+        const images = await convertImagesForFront(vigilanceArea.images ?? [], document.body)
+
+        return { ...vigilanceArea, images }
+      })) ?? []
+
+    return Promise.all(formattedVigilancesAreas)
+  }
 
   const generateBrief = async ({ isLight = false }: { isLight?: boolean } = {}) => {
     const startAfterFilter = filters?.startedAfter
@@ -79,6 +91,8 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     )
     const images = await getImages(recentActivity, dashboard.controlUnitIds, isLight)
 
+    const formattedVigilancesAreas = await getVigilanceAreasWithFormattedImages()
+
     return {
       allLinkedAMPs,
       allLinkedRegulatoryAreas,
@@ -99,7 +113,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       selectedControlUnits,
       themes: Object.values(themes ?? []),
       updatedAt: dashboard.updatedAt,
-      vigilanceAreas
+      vigilanceAreas: formattedVigilancesAreas
     } as Dashboard.Brief
   }
 

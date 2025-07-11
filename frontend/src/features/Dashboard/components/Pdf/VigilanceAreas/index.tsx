@@ -1,10 +1,11 @@
+import { Orientation, type ImageFront } from '@components/Form/types'
 import { Dashboard } from '@features/Dashboard/types'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
-import { Link, Text, View } from '@react-pdf/renderer'
+import { Image, Link, Text, View } from '@react-pdf/renderer'
 import { displayTags } from '@utils/getTagsAsOptions'
 
 import { ExternalLink } from '../icons/ExternalLink'
@@ -16,6 +17,52 @@ import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
+function chunkArray(array: ImageFront[], size: number) {
+  const result: ImageFront[][] = []
+  for (let i = 0; i < array.length; i += size) {
+    const slicedImages = array.slice(i, i + size)
+    result.push(slicedImages)
+  }
+
+  return result
+}
+
+function ImageGrid({ images }) {
+  const rows = chunkArray(images, 3)
+  const isLandscape = img => img.orientation === Orientation.LANDSCAPE
+
+  const landscapeImageStyle = {
+    maxWidth: '200pt',
+    objectFit: 'contain'
+  }
+
+  const portraitImageStyle = {
+    maxHeight: '250pt',
+    objectFit: 'contain'
+  }
+
+  return (
+    <>
+      {rows.map((row, rowIndex) => (
+        <View
+          // eslint-disable-next-line react/no-array-index-key
+          key={rowIndex}
+          style={{
+            alignItems: 'flex-start',
+            flexDirection: 'row',
+            gap: 6,
+            marginBottom: 6
+          }}
+        >
+          {row.map(img => (
+            <Image key={img.id} src={img.image} style={isLandscape(img) ? landscapeImageStyle : portraitImageStyle} />
+          ))}
+        </View>
+      ))}
+    </>
+  )
+}
+
 export function VigilanceAreas({
   images,
   linkedAMPs,
@@ -25,7 +72,7 @@ export function VigilanceAreas({
   images: ExportImageType[]
   linkedAMPs: AMPFromAPI[]
   linkedRegulatoryAreas: RegulatoryLayerWithMetadata[]
-  vigilanceAreas: VigilanceArea.VigilanceArea[]
+  vigilanceAreas: Dashboard.VigilanceAreaWithImages[]
 }) {
   return (
     <>
@@ -61,100 +108,113 @@ export function VigilanceAreas({
           const minimap = getMinimap(images, Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
 
           return (
-            <View key={vigilanceArea.id} style={areaStyle.wrapper} wrap={false}>
-              <AreaImage image={image} minimap={minimap} />
-              <View style={areaStyle.card}>
-                <View style={areaStyle.header}>
-                  <View
-                    style={[
-                      areaStyle.layerLegend,
-                      {
-                        backgroundColor: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments)
-                      }
-                    ]}
-                  />
-                  <Text> {vigilanceArea.name}</Text>
-                </View>
-                <View style={[areaStyle.content, { rowGap: 3 }]}>
-                  <View>
-                    <View style={areaStyle.description}>
-                      <Text>Période</Text>
-                    </View>
-                    <View style={areaStyle.details}>
-                      <Text>
-                        {formattedStartPeriod ? `Du ${formattedStartPeriod} au ${formattedEndPeriod}` : EMPTY_VALUE}
-                      </Text>
-                      <Text>{frequencyText(vigilanceArea?.frequency)}</Text>
-                      <Text>{endingOccurenceText(vigilanceArea?.endingCondition, vigilanceArea?.computedEndDate)}</Text>
-                    </View>
+            <View key={vigilanceArea.id}>
+              <View style={areaStyle.wrapper} wrap={false}>
+                <AreaImage image={image} minimap={minimap} />
+                <View style={areaStyle.card}>
+                  <View style={areaStyle.header}>
+                    <View
+                      style={[
+                        areaStyle.layerLegend,
+                        {
+                          backgroundColor: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments)
+                        }
+                      ]}
+                    />
+                    <Text> {vigilanceArea.name}</Text>
                   </View>
-                  <View>
-                    <View style={areaStyle.description}>
-                      <Text>Thématique</Text>
-                    </View>
-                    <View style={areaStyle.details}>
-                      <Text>{vigilanceArea.tags ? displayTags(vigilanceArea.tags) : EMPTY_VALUE}</Text>
-                    </View>
-                  </View>
-                  <View>
-                    <View style={areaStyle.description}>
-                      <Text>Visibilité</Text>
-                    </View>
-                    <View style={areaStyle.details}>
-                      <Text>
-                        {vigilanceArea.visibility
-                          ? VigilanceArea.VisibilityLabel[vigilanceArea?.visibility]
-                          : EMPTY_VALUE}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-                <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
-                  <View>
-                    <Text style={[areaStyle.description, { width: 'auto' }]}>Commentaires</Text>
-                    <Text style={[areaStyle.details, { width: 'auto' }]}>{vigilanceArea.comments}</Text>
-                  </View>
-                </View>
-                {regulatoryAreas.length > 0 && (
-                  <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
+                  <View style={[areaStyle.content, { rowGap: 3 }]}>
                     <View>
-                      <Text style={[areaStyle.description, { width: 'auto' }]}>Réglementations en lien</Text>
-                      {regulatoryAreas.map(linkedRegulatoryArea => (
-                        <Text key={linkedRegulatoryArea.id} style={[areaStyle.details, { width: 'auto' }]}>
-                          {linkedRegulatoryArea.entityName}
+                      <View style={areaStyle.description}>
+                        <Text>Période</Text>
+                      </View>
+                      <View style={areaStyle.details}>
+                        <Text>
+                          {formattedStartPeriod ? `Du ${formattedStartPeriod} au ${formattedEndPeriod}` : EMPTY_VALUE}
                         </Text>
-                      ))}
-                    </View>
-                  </View>
-                )}
-                {amps.length > 0 && (
-                  <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
-                    <View>
-                      <Text style={[areaStyle.description, { width: 'auto' }]}>AMP en lien</Text>
-                      {amps.map(linkedAmp => (
-                        <Text key={linkedAmp.id} style={[areaStyle.details, { width: 'auto' }]}>
-                          {linkedAmp.name}
+                        <Text>{frequencyText(vigilanceArea?.frequency)}</Text>
+                        <Text>
+                          {endingOccurenceText(vigilanceArea?.endingCondition, vigilanceArea?.computedEndDate)}
                         </Text>
-                      ))}
+                      </View>
+                    </View>
+                    <View>
+                      <View style={areaStyle.description}>
+                        <Text>Thématique</Text>
+                      </View>
+                      <View style={areaStyle.details}>
+                        <Text>{vigilanceArea.tags ? displayTags(vigilanceArea.tags) : EMPTY_VALUE}</Text>
+                      </View>
+                    </View>
+                    <View>
+                      <View style={areaStyle.description}>
+                        <Text>Visibilité</Text>
+                      </View>
+                      <View style={areaStyle.details}>
+                        <Text>
+                          {vigilanceArea.visibility
+                            ? VigilanceArea.VisibilityLabel[vigilanceArea?.visibility]
+                            : EMPTY_VALUE}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                )}
-                {vigilanceArea.links && vigilanceArea.links?.length > 0 && (
                   <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
                     <View>
-                      <Text style={[areaStyle.description, { width: 'auto' }]}>Liens utiles</Text>
-                      {vigilanceArea.links.map(link => (
-                        <Link key={link.linkUrl} href={link.linkUrl} style={layoutStyle.link}>
-                          <View style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}>
-                            <Text>{link.linkText} </Text>
-                            <ExternalLink color={layoutStyle.link.color} size={8} />
-                          </View>
-                        </Link>
-                      ))}
+                      <Text style={[areaStyle.description, { width: 'auto' }]}>Commentaires</Text>
+                      <Text style={[areaStyle.details, { width: 'auto' }]}>{vigilanceArea.comments}</Text>
                     </View>
                   </View>
-                )}
+                  {regulatoryAreas.length > 0 && (
+                    <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
+                      <View>
+                        <Text style={[areaStyle.description, { width: 'auto' }]}>Réglementations en lien</Text>
+                        {regulatoryAreas.map(linkedRegulatoryArea => (
+                          <Text key={linkedRegulatoryArea.id} style={[areaStyle.details, { width: 'auto' }]}>
+                            {linkedRegulatoryArea.entityName}
+                          </Text>
+                        ))}
+                      </View>
+                    </View>
+                  )}
+                  {amps.length > 0 && (
+                    <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
+                      <View>
+                        <Text style={[areaStyle.description, { width: 'auto' }]}>AMP en lien</Text>
+                        {amps.map(linkedAmp => (
+                          <Text key={linkedAmp.id} style={[areaStyle.details, { width: 'auto' }]}>
+                            {linkedAmp.name}
+                          </Text>
+                        ))}
+                      </View>
+                    </View>
+                  )}
+                  {vigilanceArea.links && vigilanceArea.links?.length > 0 && (
+                    <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
+                      <View>
+                        <Text style={[areaStyle.description, { width: 'auto' }]}>Liens utiles</Text>
+                        {vigilanceArea.links.map(link => (
+                          <Link key={link.linkUrl} href={link.linkUrl} style={layoutStyle.link}>
+                            <View style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}>
+                              <Text>{link.linkText} </Text>
+                              <ExternalLink color={layoutStyle.link.color} size={8} />
+                            </View>
+                          </Link>
+                        ))}
+                      </View>
+                    </View>
+                  )}
+                </View>
               </View>
+              {vigilanceArea.images && vigilanceArea.images.length > 0 && (
+                <View wrap>
+                  <Text style={[layoutStyle.selected, layoutStyle.bold, { marginBottom: 4, marginTop: 13 }]}>
+                    Photos
+                  </Text>
+
+                  <ImageGrid images={vigilanceArea.images} />
+                </View>
+              )}
             </View>
           )
         })}

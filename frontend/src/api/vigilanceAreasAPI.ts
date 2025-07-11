@@ -52,6 +52,17 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
           })
         )
     }),
+    getVigilanceAreasByIds: build.query<VigilanceArea.VigilanceArea[], number[]>({
+      providesTags: result =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ id, type: 'VigilanceAreas' as const })),
+              { id: 'LIST', type: 'VigilanceAreas' }
+            ]
+          : [{ id: 'LIST', type: 'VigilanceAreas' }],
+      query: ids => ({ body: ids, method: 'POST', url: '/v1/vigilance_areas' })
+    }),
+
     updateVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({
       invalidatesTags: (_, __, { id }) => [
         { id: 'LIST', type: 'VigilanceAreas' },
@@ -71,10 +82,10 @@ export const {
   useCreateVigilanceAreaMutation,
   useGetTrigramsQuery,
   useGetVigilanceAreaQuery,
+  useGetVigilanceAreasByIdsQuery,
   useGetVigilanceAreasQuery,
   useUpdateVigilanceAreaMutation
 } = vigilanceAreasAPI
-
 export const getVigilanceAreasByIds = createSelector(
   [vigilanceAreasAPI.endpoints.getVigilanceAreas.select(), (_, ids: number[]) => ids],
   ({ data }, ids) => Object.values(data?.entities ?? []).filter(vigilanceArea => ids.includes(vigilanceArea.id))
