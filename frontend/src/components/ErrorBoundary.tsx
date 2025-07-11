@@ -4,19 +4,20 @@ type ErrorBoundaryProps = {
   children: React.ReactNode
 }
 type ErrorBoundaryState = {
+  error: Error | undefined
   hasError: boolean
 }
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props) {
     super(props)
-    this.state = { hasError: false }
+    this.state = { error: undefined, hasError: false }
   }
 
   static getDerivedStateFromError(error) {
     // eslint-disable-next-line no-console
     console.log(error)
 
-    return { hasError: true }
+    return { error, hasError: true }
   }
 
   override componentDidCatch(error, errorInfo) {
@@ -26,7 +27,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
   override render() {
     const { children } = this.props
-    const { hasError } = this.state
+    const { error, hasError } = this.state
 
     if (hasError) {
       return (
@@ -42,6 +43,10 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
           }}
         >
           Une erreur est survenue.
+          {error?.cause ? String(error.cause) : null}
+          {error?.message ? String(error.message) : null}
+          {error?.stack ? String(error.stack) : null}
+          {error ? String(error) : null}
         </div>
       )
     }
