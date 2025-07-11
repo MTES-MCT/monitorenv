@@ -1,7 +1,7 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 

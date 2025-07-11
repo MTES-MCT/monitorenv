@@ -15,7 +15,7 @@ import {
   Size
 } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { uniq, uniqBy } from 'lodash'
+import { uniq, uniqBy } from 'lodash-es'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 

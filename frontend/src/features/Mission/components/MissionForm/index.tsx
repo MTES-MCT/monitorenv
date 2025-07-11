@@ -1,6 +1,6 @@
 import { Banner, Icon, Level, THEME } from '@mtes-mct/monitor-ui'
 import { Form, Formik } from 'formik'
-import { noop } from 'lodash'
+import { noop } from 'lodash-es'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 

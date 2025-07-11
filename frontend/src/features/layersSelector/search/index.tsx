@@ -6,7 +6,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
-import _ from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -125,9 +125,9 @@ export function LayerSearch() {
   const ampTypes = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
 
   const allowResetResults =
-    !_.isEmpty(regulatoryLayersSearchResult) ||
-    !_.isEmpty(ampsSearchResult) ||
-    (!_.isEmpty(vigilanceAreaSearchResult) &&
+    !isEmpty(regulatoryLayersSearchResult) ||
+    !isEmpty(ampsSearchResult) ||
+    (!isEmpty(vigilanceAreaSearchResult) &&
       filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS)
 
   return (
