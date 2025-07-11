@@ -406,17 +406,23 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             )
         val theme =
             aTheme(
-                id = 2,
-                name = "AMP sans réglementation particulière",
+                id = 105,
+                name = "Épave",
                 startedAt = ZonedDateTime.parse("2023-01-01T00:00Z"),
                 endedAt = ZonedDateTime.parse("2099-12-31T23:59:59Z"),
                 subThemes =
                     listOf(
                         aTheme(
-                            id = 160,
-                            name = "Contrôle dans une AMP sans réglementation particulière",
-                            startedAt = ZonedDateTime.parse("2023-01-01T00:00Z"),
-                            endedAt = ZonedDateTime.parse("2023-12-31T00:00Z"),
+                            id = 228,
+                            name = "Découverte d'une épave maritime",
+                            startedAt = ZonedDateTime.parse("2024-01-01T00:00Z"),
+                            endedAt = ZonedDateTime.parse("2024-12-31T00:00Z"),
+                        ),
+                        aTheme(
+                            id = 241,
+                            name = "Épave / Navire abandonné",
+                            startedAt = ZonedDateTime.parse("2024-01-01T00:00Z"),
+                            endedAt = ZonedDateTime.parse("2024-12-31T00:00Z"),
                         ),
                     ),
             )
@@ -485,9 +491,104 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         assertThat(reportingDTO.reporting.theme.name).isEqualTo(theme.name)
         assertThat(reportingDTO.reporting.theme.subThemes).hasSize(theme.subThemes.size)
         reportingDTO.reporting.theme.subThemes.find { it.id == theme.subThemes[0].id }.let {
-            assertThat(it?.id).isEqualTo(160)
-            assertThat(it?.name).isEqualTo("Contrôle dans une AMP sans réglementation particulière")
+            assertThat(it?.id).isEqualTo(228)
+            assertThat(it?.name).isEqualTo("Découverte d'une épave maritime")
         }
+        reportingDTO.reporting.theme.subThemes.find { it.id == theme.subThemes[1].id }.let {
+            assertThat(it?.id).isEqualTo(241)
+            assertThat(it?.name).isEqualTo("Épave / Navire abandonné")
+        }
+        val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(12)
+    }
+
+    @Test
+    @Transactional
+    fun `save should create a new Reporting with no sub-themes`() {
+        // Given
+        val numberOfExistingReportings = jpaReportingRepository.count()
+        assertThat(numberOfExistingReportings).isEqualTo(11)
+
+        // When
+        val wktReader = WKTReader()
+        val multipolygonString =
+            "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        // Given
+        val theme =
+            aTheme(
+                id = 105,
+                name = "Épave",
+                startedAt = ZonedDateTime.parse("2023-01-01T00:00Z"),
+                endedAt = ZonedDateTime.parse("2099-12-31T23:59:59Z"),
+                subThemes = listOf(),
+            )
+
+        val newReporting =
+            ReportingEntity(
+                reportingSources =
+                    listOf(
+                        ReportingSourceEntity(
+                            id = null,
+                            sourceType = SourceTypeEnum.SEMAPHORE,
+                            semaphoreId = 21,
+                            controlUnitId = null,
+                            sourceName = null,
+                            reportingId = null,
+                        ),
+                    ),
+                targetType = TargetTypeEnum.VEHICLE,
+                vehicleType = VehicleTypeEnum.VESSEL,
+                geom = polygon,
+                seaFront = "NAMO",
+                description = "Test reporting",
+                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                actionTaken = "Aucune",
+                isControlRequired = false,
+                hasNoUnitAvailable = false,
+                createdAt = ZonedDateTime.parse("2023-04-01T00:00:00Z"),
+                validityTime = 24,
+                isArchived = false,
+                isDeleted = false,
+                openBy = "CDA",
+                isInfractionProven = true,
+                tags = listOf(),
+                theme = theme,
+            )
+
+        jpaReportingRepository.save(newReporting)
+
+        val reportingDTO = jpaReportingRepository.findById(12)
+
+        // Then
+        assertThat(reportingDTO.reporting.id).isEqualTo(12)
+
+        val currentYear = Year.now().value.toString()
+        val reportingId = (currentYear.substring(currentYear.length - 2) + "00001").toLong()
+        assertThat(reportingDTO.reporting.reportingId).isEqualTo(reportingId)
+        assertThat(reportingDTO.reporting.reportingSources[0].sourceType).isEqualTo(SourceTypeEnum.SEMAPHORE)
+        assertThat(reportingDTO.reporting.reportingSources[0].semaphoreId).isEqualTo(21)
+        assertThat(reportingDTO.reporting.targetType).isEqualTo(TargetTypeEnum.VEHICLE)
+        assertThat(reportingDTO.reporting.vehicleType).isEqualTo(VehicleTypeEnum.VESSEL)
+        assertThat(reportingDTO.reporting.geom).isEqualTo(polygon)
+        assertThat(reportingDTO.reporting.seaFront).isEqualTo("NAMO")
+        assertThat(reportingDTO.reporting.description).isEqualTo("Test reporting")
+        assertThat(reportingDTO.reporting.reportType)
+            .isEqualTo(ReportingTypeEnum.INFRACTION_SUSPICION)
+        assertThat(reportingDTO.reporting.actionTaken).isEqualTo("Aucune")
+        assertThat(reportingDTO.reporting.isControlRequired).isEqualTo(false)
+        assertThat(reportingDTO.reporting.hasNoUnitAvailable).isEqualTo(false)
+        assertThat(reportingDTO.reporting.createdAt)
+            .isEqualTo(ZonedDateTime.parse("2023-04-01T00:00:00Z"))
+        assertThat(reportingDTO.reporting.validityTime).isEqualTo(24)
+        assertThat(reportingDTO.reporting.isArchived).isEqualTo(false)
+        assertThat(reportingDTO.reporting.openBy).isEqualTo("CDA")
+        assertThat(reportingDTO.reporting.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
+        assertThat(reportingDTO.reporting.theme.id).isEqualTo(theme.id)
+        assertThat(reportingDTO.reporting.theme.name).isEqualTo(theme.name)
+        assertThat(reportingDTO.reporting.theme.subThemes).hasSize(0)
+
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
         assertThat(numberOfExistingReportingsAfterSave).isEqualTo(12)
     }

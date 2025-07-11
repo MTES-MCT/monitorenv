@@ -3,14 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import jakarta.persistence.Embeddable
-import jakarta.persistence.EmbeddedId
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.MapsId
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.io.Serializable
 
 @Entity
@@ -30,34 +23,57 @@ data class ThemeReportingModel(
 ) {
     companion object {
         fun toThemeEntities(themes: List<ThemeReportingModel>): List<ThemeEntity> {
-            val parents = themes.map { it.theme }.filter { it.parent === null }
+            val parentsFromSubThemes =
+                themes
+                    .map { it.theme }
+                    .filter { it.parent !== null }
+                    .distinctBy { it.parent?.id }
+                    .map { it.parent }
 
-            return parents.map { parent ->
-                val subThemes = themes.filter { it.theme.parent?.id == parent.id }.map { it.theme }
-                parent.subThemes = subThemes
-                return@map parent.toThemeEntity()
+            if (parentsFromSubThemes.isNotEmpty()) {
+                return parentsFromSubThemes.map { parent ->
+                    if (parent == null) {
+                        return listOf()
+                    }
+                    val subThemes = themes.filter { it.theme.parent?.id == parent.id }.map { it.theme }
+                    parent.subThemes = subThemes
+                    return@map parent.toThemeEntity()
+                }
             }
+
+            val themesWithoutSubThemes = themes.map { it.theme }.filter { it.parent === null }
+            if (themesWithoutSubThemes.isNotEmpty()) {
+                return themesWithoutSubThemes.map { theme ->
+                    theme.subThemes = emptyList()
+                    theme.toThemeEntity()
+                }
+            }
+
+            return emptyList()
         }
 
         fun fromThemeEntity(
             theme: ThemeEntity,
             reporting: ReportingModel,
         ): MutableSet<ThemeReportingModel> =
-            listOf(
-                ThemeReportingModel(
-                    id = ThemeReportingPk(theme.id, reporting.id),
-                    theme = ThemeModel.fromThemeEntity(theme),
-                    reporting = reporting,
-                ),
-            ).plus(
-                theme.subThemes.map { subTheme ->
+            if (theme.subThemes.isEmpty()) {
+                mutableSetOf(
                     ThemeReportingModel(
-                        id = ThemeReportingPk(subTheme.id, reporting.id),
-                        theme = ThemeModel.fromThemeEntity(subTheme),
+                        id = ThemeReportingPk(theme.id, reporting.id),
+                        theme = ThemeModel.fromThemeEntity(theme),
                         reporting = reporting,
-                    )
-                },
-            ).toMutableSet()
+                    ),
+                )
+            } else {
+                theme.subThemes
+                    .map { subTheme ->
+                        ThemeReportingModel(
+                            id = ThemeReportingPk(subTheme.id, reporting.id),
+                            theme = ThemeModel.fromThemeEntity(subTheme),
+                            reporting = reporting,
+                        )
+                    }.toMutableSet()
+            }
     }
 }
 
