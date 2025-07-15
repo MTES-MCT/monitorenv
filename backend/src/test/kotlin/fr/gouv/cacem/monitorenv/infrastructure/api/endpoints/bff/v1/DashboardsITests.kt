@@ -5,8 +5,18 @@ import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
-import fr.gouv.cacem.monitorenv.domain.entities.dashboard.*
-import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.*
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefFileEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefRecentActivityEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ExtractedAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.CreateBrief
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.DeleteDashboard
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.ExtractArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboard
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.GetDashboards
+import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.SaveDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.DashboardDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.ImageDataInput
@@ -22,12 +32,15 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.UUID
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -358,7 +371,16 @@ class DashboardsITests {
                 vigilanceAreas = listOf(1),
                 name = "Test Dashboard",
             )
-        val brief = BriefEntity(dashboard = dashboard)
+        val brief =
+            BriefEntity(
+                dashboard = dashboard,
+                amps = emptyList(),
+                reportings = emptyList(),
+                vigilanceAreas = emptyList(),
+                regulatoryAreas = emptyList(),
+                nearbyUnits = emptyList(),
+                recentActivity = EditableBriefRecentActivityEntity(null, null, "toto", emptyList()),
+            )
         given(createBrief.execute(brief)).willReturn(
             BriefFileEntity(
                 fileName = "Brief-Test Dashboard.odt",

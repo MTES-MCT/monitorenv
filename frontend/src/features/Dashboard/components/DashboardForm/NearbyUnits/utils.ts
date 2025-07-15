@@ -1,7 +1,7 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { isSameDay } from 'rsuite/esm/utils/dateUtils'
 
-import { NearbyUnitDateRangeEnum } from './types'
+import { type NearbyUnit, NearbyUnitDateRangeEnum } from './types'
 
 import type { Dayjs } from 'dayjs'
 import type { Mission } from 'domain/entities/missions'
@@ -28,7 +28,19 @@ export function getDateRange(missions: Mission[]) {
   )
   const isSingleDayRange = start && end ? isSameDay(start.toDate(), end.toDate()) : false
 
-  return { end: end?.format('DD/MM/YYYY'), isSingleDayRange, start: start?.format('DD/MM/YYYY') }
+  return { end, isSingleDayRange, start }
+}
+
+export function getDateRangeFormatted(missions: Mission[]) {
+  const dateRange = getDateRange(missions)
+
+  return dateRange
+    ? {
+        end: dateRange.end?.format('DD/MM/YYYY'),
+        isSingleDayRange: dateRange.isSingleDayRange,
+        start: dateRange.start?.format('DD/MM/YYYY')
+      }
+    : undefined
 }
 
 type GetDatesFromFiltersProps = {
@@ -71,4 +83,39 @@ export function getDatesFromFilters({ from, periodFilter, to }: GetDatesFromFilt
   }
 
   return { from: fromDate, to: toDate }
+}
+
+export const getUnitsCurrentlyInArea = (nearbyUnits: NearbyUnit[]): NearbyUnit[] => {
+  const now = customDayjs().utc()
+
+  return nearbyUnits
+    .flatMap(nearbyUnit => ({
+      controlUnit: nearbyUnit.controlUnit,
+      missions: nearbyUnit.missions.filter(mission =>
+        now.isBetween(customDayjs(mission.startDateTimeUtc), customDayjs(mission.endDateTimeUtc))
+      )
+    }))
+    .filter(({ missions }) => missions.length > 0)
+}
+
+export const getUnitsRecentlyInArea = (nearbyUnits: NearbyUnit[]): NearbyUnit[] => {
+  const startOfDay = customDayjs().utc().startOf('day')
+
+  return nearbyUnits
+    .flatMap(nearbyUnit => ({
+      controlUnit: nearbyUnit.controlUnit,
+      missions: nearbyUnit.missions.filter(mission => customDayjs(mission.endDateTimeUtc).isBefore(startOfDay))
+    }))
+    .filter(({ missions }) => missions.length > 0)
+}
+
+export const getUnitsToBeInArea = (nearbyUnits: NearbyUnit[]): NearbyUnit[] => {
+  const endOfDay = customDayjs().utc().endOf('day')
+
+  return nearbyUnits
+    .flatMap(nearbyUnit => ({
+      controlUnit: nearbyUnit.controlUnit,
+      missions: nearbyUnit.missions.filter(mission => customDayjs(mission.startDateTimeUtc).isAfter(endOfDay))
+    }))
+    .filter(({ missions }) => missions.length > 0)
 }

@@ -377,7 +377,11 @@ export function useExportImages() {
     }
   }, [])
 
-  const getImages = (recentActivity: RecentActivity.RecentControlsActivity[], controlUnitIds: number[], isLight) => {
+  const getImages = (
+    recentActivity: RecentActivity.RecentControlsActivity[],
+    controlUnitIds: number[],
+    isLight: boolean
+  ) => {
     if (!mapRef.current) {
       return undefined
     }

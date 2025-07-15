@@ -8,7 +8,7 @@ import { Accent, Icon, IconButton, pluralize, THEME } from '@mtes-mct/monitor-ui
 import { displayThemes } from '@utils/getThemesAsOptions'
 import styled from 'styled-components'
 
-import { getDateRange } from './utils'
+import { getDateRangeFormatted } from './utils'
 import { getPinIcon, getSelectionStateNearbyUnit } from '../ToggleSelectAll/utils'
 
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
@@ -33,7 +33,7 @@ export function Item({ isSelected = false, nearbyUnit }: { isSelected?: boolean;
   }
 
   const envActions = nearbyUnit.missions.flatMap(mission => mission.envActions)
-  const maxRangeMissionDate = getDateRange(nearbyUnit.missions)
+  const maxRangeMissionDate = getDateRangeFormatted(nearbyUnit.missions)
   const themes = displayThemes(getAllThemes(envActions))
   const nbControls = getTotalNbControls(envActions)
   const nbInfractions = getTotalInfraction(envActions)

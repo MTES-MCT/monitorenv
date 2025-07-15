@@ -39,4 +39,9 @@ class JpaThemeRepository(
             tagIds = ((controlPlans?.get(2) ?: emptyList<Int>()) as? Array<Int>)?.asList(),
         )
     }
+
+    override fun findAllById(ids: List<Int>): List<ThemeEntity> =
+        dbThemeRepository.findAllById(ids).map {
+            it.toThemeEntity()
+        }
 }

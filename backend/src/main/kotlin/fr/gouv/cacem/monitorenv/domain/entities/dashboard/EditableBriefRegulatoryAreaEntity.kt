@@ -20,7 +20,7 @@ data class EditableBriefRegulatoryAreaEntity(
     override val title = layerName
 
     companion object {
-        const val LINK_ROW_INDEX = 4
+        private const val LINK_ROW_INDEX = 4
     }
 
     override fun buildDetailsRows(): List<List<String>> =
