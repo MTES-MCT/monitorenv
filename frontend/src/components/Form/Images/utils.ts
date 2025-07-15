@@ -1,4 +1,4 @@
-import { Orientation, type ImageApi, type ImageFront } from '../types'
+import { type ImageApi, type ImageFront, Orientation } from '../types'
 
 export const IMAGES_INFORMATIONS_TEXT = '5 photos maximum. Formats autorisés: jpeg, png, webp'
 const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"

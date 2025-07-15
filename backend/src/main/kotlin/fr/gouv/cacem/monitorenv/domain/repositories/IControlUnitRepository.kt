@@ -13,6 +13,8 @@ interface IControlUnitRepository {
 
     fun findById(controlUnitId: Int): ControlUnitEntity?
 
+    fun findAllById(controlUnitIds: List<Int>): List<ControlUnitEntity>
+
     fun findFullControlUnitById(controlUnitId: Int): FullControlUnitDTO?
 
     fun findAll(): List<FullControlUnitDTO>

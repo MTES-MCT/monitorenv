@@ -2,8 +2,6 @@ package fr.gouv.cacem.monitorenv.domain.entities.dashboard
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import org.apache.poi.xwpf.usermodel.XWPFDocument
-import org.apache.poi.xwpf.usermodel.XWPFTableCell
 
 data class EditableBriefReportingEntity(
     val id: Int? = null,
@@ -26,12 +24,4 @@ data class EditableBriefReportingEntity(
             listOf("Localisation", localization),
             listOf("Source", reportingSources),
         )
-
-    override fun customizeValueCell(
-        rowIndex: Int,
-        cell: XWPFTableCell,
-        document: XWPFDocument,
-    ) {
-        TODO("Not yet implemented")
-    }
 }

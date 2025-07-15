@@ -1,6 +1,10 @@
-import { getDateRange } from '@features/Dashboard/components/DashboardForm/NearbyUnits/utils'
+import {
+  getDateRangeFormatted,
+  getUnitsCurrentlyInArea,
+  getUnitsRecentlyInArea,
+  getUnitsToBeInArea
+} from '@features/Dashboard/components/DashboardForm/NearbyUnits/utils'
 import { layoutStyle } from '@features/Dashboard/components/Pdf/style'
-import { customDayjs } from '@mtes-mct/monitor-ui'
 import { Text, View } from '@react-pdf/renderer'
 
 import { UnitCard } from './UnitCard'
@@ -12,34 +16,10 @@ type NearbyUnitsProps = {
 }
 
 export function NearbyUnits({ nearbyUnits }: NearbyUnitsProps) {
-  const startOfDay = customDayjs().utc().startOf('day')
-  const endOfDay = customDayjs().utc().endOf('day')
-  const now = customDayjs().utc()
-
-  const unitsCurrentlyInArea: NearbyUnit[] = nearbyUnits
-    .flatMap(nearbyUnit => ({
-      controlUnit: nearbyUnit.controlUnit,
-      missions: nearbyUnit.missions.filter(mission =>
-        now.isBetween(customDayjs(mission.startDateTimeUtc), customDayjs(mission.endDateTimeUtc))
-      )
-    }))
-    .filter(({ missions }) => missions.length > 0)
-
-  const unitsRecentlyInArea: NearbyUnit[] = nearbyUnits
-    .flatMap(nearbyUnit => ({
-      controlUnit: nearbyUnit.controlUnit,
-      missions: nearbyUnit.missions.filter(mission => customDayjs(mission.endDateTimeUtc).isBefore(startOfDay))
-    }))
-    .filter(({ missions }) => missions.length > 0)
-
-  const dateRange = getDateRange(unitsRecentlyInArea.flatMap(({ missions }) => missions))
-
-  const unitsToBeInArea: NearbyUnit[] = nearbyUnits
-    .flatMap(nearbyUnit => ({
-      controlUnit: nearbyUnit.controlUnit,
-      missions: nearbyUnit.missions.filter(mission => customDayjs(mission.startDateTimeUtc).isAfter(endOfDay))
-    }))
-    .filter(({ missions }) => missions.length > 0)
+  const unitsCurrentlyInArea: NearbyUnit[] = getUnitsCurrentlyInArea(nearbyUnits)
+  const unitsRecentlyInArea: NearbyUnit[] = getUnitsRecentlyInArea(nearbyUnits)
+  const unitsToBeInArea: NearbyUnit[] = getUnitsToBeInArea(nearbyUnits)
+  const dateRange = getDateRangeFormatted(unitsRecentlyInArea.flatMap(({ missions }) => missions))
 
   return (
     <>
@@ -66,7 +46,7 @@ export function NearbyUnits({ nearbyUnits }: NearbyUnitsProps) {
                   key={unit.controlUnit.id}
                   controlUnit={unit.controlUnit}
                   missions={unit.missions}
-                  status="NOW"
+                  status="IN_PROGRESS"
                 />
               ))}
             </View>
@@ -86,7 +66,7 @@ export function NearbyUnits({ nearbyUnits }: NearbyUnitsProps) {
                   key={unit.controlUnit.id}
                   controlUnit={unit.controlUnit}
                   missions={unit.missions}
-                  status="PAST"
+                  status="DONE"
                 />
               ))}
             </View>

@@ -158,7 +158,8 @@ export namespace Dashboard {
     amps: AmpForEditableBrief[]
     dashboard: Dashboard
     image?: string
-    nearbyUnits: NearbyUnit[]
+    nearbyUnits: NearbyUnitForEditableBrief[]
+    recentActivity: RecentActivityForEditableBrief
     regulatoryAreas: RegulatoryAreaForEditableBrief[]
     reportings: ReportingForEditableBrief[]
     vigilanceAreas: VigilanceAreaForEditableBrief[]
@@ -206,6 +207,39 @@ export namespace Dashboard {
     startDatePeriod?: string
     themes?: string
     visibility?: string
+  }
+  type RecentActivityForEditableBrief = {
+    image?: string
+    period: string
+    recentActivitiesPerUnit: RecentActivityPerUnitForEditableBrief[]
+    startAfter?: string
+    startBefore?: string
+  }
+
+  type RecentActivityPerUnitForEditableBrief = {
+    controlUnitId: number
+    image?: string
+    recentControls: RecentActivityControlForEditableBrief[]
+  }
+
+  type RecentActivityControlForEditableBrief = {
+    controlUnitIds: number[]
+    image?: string
+    nbControls: number
+    nbTarget: number
+    themeIds: number[]
+  }
+
+  type NearbyUnitForEditableBrief = {
+    administration: string
+    controlUnit: string
+    maxDate?: string
+    minDate?: string
+    nbControls: number
+    nbInfractions: number
+    nbPV: number
+    status: string
+    themes: string
   }
 
   type AmpForEditableBrief = {

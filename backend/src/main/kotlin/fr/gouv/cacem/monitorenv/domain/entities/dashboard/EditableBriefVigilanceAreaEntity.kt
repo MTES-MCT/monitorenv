@@ -29,8 +29,8 @@ data class EditableBriefVigilanceAreaEntity(
     override val title = name
 
     companion object {
-        const val DATE_ROW_INDEX = 0
-        const val LINK_ROW_INDEX = 6
+        private const val DATE_ROW_INDEX = 0
+        private const val LINK_ROW_INDEX = 6
     }
 
     override fun buildDetailsRows(): List<List<String>> {

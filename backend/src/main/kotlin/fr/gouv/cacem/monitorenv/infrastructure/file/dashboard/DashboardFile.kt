@@ -7,14 +7,19 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefFileEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DetailWithImagesRenderable
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefAmpEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefNearbyUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefNearbyUnitEntity.Companion.NB_CELLS
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefRecentActivityEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefRegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefTargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefVigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.MissionStatus
 import fr.gouv.cacem.monitorenv.domain.file.dashboard.IDashboardFile
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.file.reporting.ReportingFlags
 import fr.gouv.cacem.monitorenv.utils.Base64Converter
 import fr.gouv.cacem.monitorenv.utils.OfficeConverter
@@ -59,6 +64,7 @@ import javax.imageio.ImageIO
 @Component
 class DashboardFile(
     private val controlUnitRepository: IControlUnitRepository,
+    private val themeRepository: IThemeRepository,
     private val editableBriefProperties: EditableBriefProperties,
     private val legicemProperties: LegicemProperties,
     private val monitorExtProperties: MonitorExtProperties,
@@ -131,6 +137,29 @@ class DashboardFile(
         val vigilanceCount = dashboard.vigilanceAreaIds.size
         val reportingCount = dashboard.reportingIds.size
         val totalZones = regulatoryCount + ampCount + vigilanceCount
+        val hasRecentlyNearbyUnits = brief.nearbyUnits.any { it.status === MissionStatus.DONE }
+        val nearbyUnitsMinDateRange =
+            brief.nearbyUnits
+                .filter { it.status == MissionStatus.DONE }
+                .mapNotNull { it.minDate }
+                .minOrNull()
+                ?.format(
+                    DateTimeFormatter.ofPattern(
+                        "dd/MM/yyyy",
+                        Locale.FRENCH,
+                    ),
+                )
+        val nearbyUnitsMaxDateRange =
+            brief.nearbyUnits
+                .filter { it.status == MissionStatus.DONE }
+                .mapNotNull { it.maxDate }
+                .maxOrNull()
+                ?.format(
+                    DateTimeFormatter.ofPattern(
+                        "dd/MM/yyyy",
+                        Locale.FRENCH,
+                    ),
+                )
 
         return mapOf(
             "\${editedAt}" to formattedDate,
@@ -150,6 +179,23 @@ class DashboardFile(
             "\${legicemPassword}" to legicemProperties.password,
             "\${monitorExtId}" to monitorExtProperties.id,
             "\${monitorExtPassword}" to monitorExtProperties.password,
+            "\${recentActivityPeriod}" to "Du ${
+                brief.recentActivity.startAfter?.format(
+                    DateTimeFormatter.ofPattern(
+                        "dd/MM/yyyy",
+                        Locale.FRENCH,
+                    ),
+                )
+            } au ${
+                brief.recentActivity.startBefore?.format(
+                    DateTimeFormatter.ofPattern(
+                        "dd/MM/yyyy",
+                        Locale.FRENCH,
+                    ),
+                )
+            }" + if (brief.recentActivity.period.isEmpty()) "" else " - ${brief.recentActivity.period}",
+            "\${nearbyUnitsDateRange}" to
+                if (hasRecentlyNearbyUnits) "Du $nearbyUnitsMinDateRange au $nearbyUnitsMaxDateRange" else "",
         )
     }
 
@@ -192,6 +238,31 @@ class DashboardFile(
         document: XWPFDocument,
         brief: BriefEntity,
     ) {
+        document.paragraphs.firstOrNull { it.text.contains("\${unitsCurrentlyInArea}") }?.let { paragraph ->
+            createNearbyUnitsDetails(
+                paragraph,
+                brief.nearbyUnits.filter { it.status === MissionStatus.IN_PROGRESS },
+            )
+        }
+
+        document.paragraphs.firstOrNull { it.text.contains("\${unitsRecentlyInArea}") }?.let { paragraph ->
+            createNearbyUnitsDetails(
+                paragraph,
+                brief.nearbyUnits.filter { it.status === MissionStatus.DONE },
+            )
+        }
+
+        document.paragraphs.firstOrNull { it.text.contains("\${unitsToBeInArea}") }?.let { paragraph ->
+            createNearbyUnitsDetails(
+                paragraph,
+                brief.nearbyUnits.filter { it.status === MissionStatus.FUTURE },
+            )
+        }
+
+        document.paragraphs.firstOrNull { it.text.contains("\${recentActivityDetails}") }?.let { paragraph ->
+            createRecentActivityDetails(paragraph, brief.recentActivity)
+        }
+
         document.paragraphs.firstOrNull { it.text.contains("\${reportingsDetails}") }?.let { paragraph ->
             createReportingsDetails(paragraph, brief.reportings)
         }
@@ -206,10 +277,6 @@ class DashboardFile(
 
         document.paragraphs.firstOrNull { it.text.contains("\${vigilanceAreasDetails}") }?.let { paragraph ->
             createDetailsSection(paragraph, brief.vigilanceAreas)
-        }
-
-        document.paragraphs.firstOrNull { it.text.contains("\${reportingsDetails}") }?.let { paragraph ->
-            createReportingsDetails(paragraph, brief.reportings)
         }
     }
 
@@ -256,7 +323,7 @@ class DashboardFile(
 
         val headerRow = table.getRow(0) ?: table.createRow()
         val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
-        headerCell.setText("Zones réglementaires - $totalRegulatoryAreas sélectionnée(s)")
+        headerCell.text = "Zones réglementaires - $totalRegulatoryAreas sélectionnée(s)"
         styleCell(headerCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = "FFFFFF")
         mergeCellsHorizontally(table)
         setCellColor(headerCell, "8CC3C0")
@@ -273,11 +340,11 @@ class DashboardFile(
 
                 val nameCell = row.getCell(0)
                 if (index == 0) {
-                    nameCell.setText(layerName)
+                    nameCell.text = layerName
                     styleCell(nameCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
                     layerCellCreated[firstRowIndex] = row.getCell(0)
                 } else {
-                    row.getCell(0).setText("")
+                    row.getCell(0).text = ""
                 }
                 setCellWidth(nameCell, 3000)
 
@@ -287,7 +354,7 @@ class DashboardFile(
                 styleCell(colorCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
 
                 val entityCell = row.getCell(2) ?: row.createCell()
-                entityCell.setText(area.entityName)
+                entityCell.text = area.entityName
                 setCellWidth(entityCell, 6750)
                 styleCell(entityCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
             }
@@ -318,7 +385,7 @@ class DashboardFile(
             styleCell(colorCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
 
             val nameCell = row.getCell(1) ?: row.createCell()
-            nameCell.setText("${amp.name} / ${amp.type}")
+            nameCell.text = "${amp.name} / ${amp.type}"
             setCellWidth(nameCell, 4750)
             styleCell(nameCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
         }
@@ -341,10 +408,46 @@ class DashboardFile(
             styleCell(colorCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
 
             val nameCell = row.getCell(1) ?: row.createCell()
-            nameCell.setText(area.name)
+            nameCell.text = area.name
             setCellWidth(nameCell, 4750)
             styleCell(nameCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
         }
+    }
+
+    private fun createNearbyUnitsDetails(
+        paragraph: XWPFParagraph,
+        nearbyUnits: List<EditableBriefNearbyUnitEntity>,
+    ) {
+        val document = paragraph.document as XWPFDocument
+        if (nearbyUnits.isEmpty()) {
+            cleanParagraphPlaceholder(document, paragraph)
+            return
+        }
+
+        paragraph.runs.forEach { it.setText("", 0) }
+
+        for (nearbyUnit in nearbyUnits) {
+            val tableParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
+            val table = document.insertNewTbl(tableParagraph.ctp.newCursor())
+            deleteFirstEmptyLineInTable(table)
+            table.setWidth("100%")
+            setTableBorders(table, "CCCFD6", false)
+
+            val row =
+                table.createRow().apply {
+                    height = 500
+                    heightRule = TableRowHeightRule.AUTO
+                }
+
+            loop@ for (index in 0..NB_CELLS - 1) {
+                val cell = row.getCell(index) ?: row.createCell()
+                setCellWidth(cell, 2500)
+                cell.paragraphs.toList().forEach { _ -> cell.removeParagraph(0) }
+                nearbyUnit.customizeValueCell(index, cell, document)
+            }
+        }
+
+        cleanParagraphPlaceholder(document, paragraph)
     }
 
     private fun createReportingsDetails(
@@ -374,7 +477,7 @@ class DashboardFile(
 
             val rowTitle = table.getRow(0)
             rowTitle.height = 300
-            rowTitle.setHeightRule(TableRowHeightRule.EXACT)
+            rowTitle.heightRule = TableRowHeightRule.EXACT
             val cellTitle = rowTitle.getCell(0)
             cellTitle.removeParagraph(0)
 
@@ -394,7 +497,7 @@ class DashboardFile(
             runWithImage.fontFamily = "Arial"
 
             setCellColor(cellTitle, "E5E5EB")
-            cellTitle.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER)
+            cellTitle.verticalAlignment = XWPFTableCell.XWPFVertAlign.CENTER
 
             addReportingGeneralInformation(
                 table,
@@ -421,7 +524,7 @@ class DashboardFile(
         }
 
         val parentTable = document.insertNewTbl(paragraph.ctp.newCursor())
-        parentTable.setWidth(10000)
+        parentTable.width = 10000
         parentTable.widthType = TableWidthType.DXA
         setTableBorders(parentTable, "FFFFFF")
 
@@ -431,7 +534,7 @@ class DashboardFile(
 
         row.apply {
             height = 300
-            setHeightRule(TableRowHeightRule.AUTO)
+            heightRule = TableRowHeightRule.AUTO
         }
 
         setCellWidth(cell1, 5000)
@@ -452,6 +555,263 @@ class DashboardFile(
 
         val pageBreakParagraph = document.createParagraph()
         pageBreakParagraph.createRun().addBreak(BreakType.PAGE)
+    }
+
+    private fun createRecentActivityDetails(
+        paragraph: XWPFParagraph,
+        item: EditableBriefRecentActivityEntity,
+    ) {
+        val document = paragraph.document as XWPFDocument
+
+        if (item.recentActivitiesPerUnit.isEmpty()) {
+            return
+        }
+        val wrapperParagraph = document.insertNewParagraph(paragraph.ctp.newCursor())
+        val wrapperTable = document.insertNewTbl(wrapperParagraph.ctp.newCursor())
+
+        wrapperTable.setWidth("100%")
+        setTableBorders(wrapperTable, "FFFFFF", false)
+
+        val firstRow = wrapperTable.createRow()
+        val firstCell = firstRow.getCell(0) ?: firstRow.createCell()
+
+        val firstCellParagraph = firstCell.addParagraph()
+
+        val imageParagraph = document.insertNewParagraph(firstCellParagraph.ctp.newCursor())
+
+        firstRow.apply {
+            height = 300
+            heightRule = TableRowHeightRule.AUTO
+        }
+
+        setCellWidth(firstCell, 5000)
+
+        createImageFromBase64(
+            name = "all_recent_activity",
+            image = item.image,
+            paragraph = imageParagraph,
+            height = 220,
+            width = 330,
+        )
+        val allRecentActivityTitle = document.insertNewParagraph(firstCellParagraph.ctp.newCursor())
+        allRecentActivityTitle.createRun().apply {
+            setText("Pression de contrôles - toutes unités confondues")
+            isBold = true
+            fontSize = 9
+            fontFamily = "Arial"
+            addBreak()
+        }
+        val allRecentActivityNbControls = document.insertNewParagraph(firstCellParagraph.ctp.newCursor())
+
+        allRecentActivityNbControls.createRun().apply {
+            val totalControls =
+                item.recentActivitiesPerUnit.sumOf { recentActivity ->
+                    recentActivity.recentControls.sumOf { it.nbControls }
+                }
+            val pluralTotalControls = if (totalControls > 1) "s" else ""
+            val totalNbTarget =
+                item.recentActivitiesPerUnit.sumOf { recentActivity ->
+                    recentActivity.recentControls.sumOf { it.nbTarget }
+                }
+            val pluralTotalNbTarget = if (totalNbTarget > 1) "s" else ""
+            setText(
+                "$totalControls actions de contrôle$pluralTotalControls et $totalNbTarget cible$pluralTotalNbTarget contrôlée$pluralTotalNbTarget",
+            )
+            fontSize = 8
+            isItalic = true
+            fontFamily = "Arial"
+            addBreak()
+            addBreak()
+        }
+        val themesTableParagraph = document.insertNewParagraph(firstCellParagraph.ctp.newCursor())
+        val themesTable = document.insertNewTbl(themesTableParagraph.ctp.newCursor())
+        themesTable.setWidth("100%")
+        setTableBorders(themesTable, "CCCFD6", false)
+
+        val headerRow = themesTable.getRow(0) ?: themesTable.createRow()
+        headerRow.apply {
+            height = 300
+            setHeightRule(TableRowHeightRule.AUTO)
+        }
+        val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
+        headerCell.setText("Thématiques")
+        styleCell(headerCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = "707785")
+        setCellColor(headerCell, "E5E5EB")
+
+        val themes =
+            themeRepository.findAllById(
+                item.recentActivitiesPerUnit
+                    .flatMap { it.recentControls.flatMap { it.themeIds } }
+                    .distinct(),
+            )
+
+        val controlsByThemeId: Map<Int, Int> =
+            item.recentActivitiesPerUnit
+                .flatMap { perUnit -> perUnit.recentControls }
+                .flatMap { control -> control.themeIds.map { themeId -> themeId to control.nbControls } }
+                .groupBy({ it.first }, { it.second })
+                .mapValues { (_, nbControlsList) -> nbControlsList.sum() }
+
+        controlsByThemeId.map { (themeId, controls) ->
+            val newRow =
+                themesTable.createRow().apply {
+                    heightRule = TableRowHeightRule.AUTO
+                }
+            val themeCell = newRow.getCell(0) ?: newRow.createCell()
+
+            themeCell.text = themes.find { it.id == themeId }?.name ?: "Thématique non renseignée"
+            styleCell(themeCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT)
+            setCellWidth(themeCell, 3500)
+            addBottomBorder(themeCell)
+
+            val nbControlsCell = newRow.getCell(1) ?: newRow.createCell()
+            val plural = if (controls > 1) "s" else ""
+            nbControlsCell.text = "$controls action$plural de ctrl"
+            styleCell(
+                nbControlsCell,
+                bold = false,
+                fontSize = 8,
+                alignment = ParagraphAlignment.RIGHT,
+                color = "707785",
+            )
+            setCellWidth(nbControlsCell, 1500)
+            addBottomBorder(nbControlsCell)
+        }
+
+        val controlUnits =
+            controlUnitRepository.findAllById(
+                item.recentActivitiesPerUnit
+                    .flatMap { recentActivity ->
+                        recentActivity.recentControls.flatMap { it.controlUnitIds }
+                    }.distinct(),
+            )
+
+        val tableParagraph = document.insertNewParagraph(firstCellParagraph.ctp.newCursor())
+        val table = document.insertNewTbl(tableParagraph.ctp.newCursor())
+        table.setWidth("100%")
+        setTableBorders(table, "CCCFD6", false)
+
+        val unitHeaderRow = table.getRow(0) ?: table.createRow()
+        unitHeaderRow.apply {
+            height = 300
+            setHeightRule(TableRowHeightRule.AUTO)
+        }
+        val unitHeaderCell = unitHeaderRow.getCell(0) ?: unitHeaderRow.createCell()
+        unitHeaderCell.setText("Unités concernés")
+        styleCell(unitHeaderCell, bold = true, fontSize = 9, alignment = ParagraphAlignment.LEFT, color = "707785")
+        setCellColor(unitHeaderCell, "E5E5EB")
+        val nbUnitHeaderCell = unitHeaderRow.getCell(1) ?: unitHeaderRow.createCell()
+        nbUnitHeaderCell.setText(controlUnits.size.toString())
+        styleCell(nbUnitHeaderCell, bold = true, fontSize = 9, alignment = ParagraphAlignment.RIGHT, color = "707785")
+        setCellColor(nbUnitHeaderCell, "E5E5EB")
+
+        controlUnits.map { controlUnit ->
+            val unitRow =
+                table.createRow().apply {
+                    heightRule = TableRowHeightRule.AUTO
+                }
+            val labelCell = unitRow.getCell(0) ?: unitRow.createCell()
+            labelCell.text = controlUnit.name
+            styleCell(labelCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT)
+            addBottomBorder(labelCell)
+        }
+
+        var wrapperTableRow = firstRow
+
+        item.recentActivitiesPerUnit.forEachIndexed { index, recentActivity ->
+            if (index % 2 == 1) {
+                wrapperTableRow = wrapperTable.createRow()
+                wrapperTableRow.isCantSplitRow = true
+            }
+            val wrapperTableCell = wrapperTableRow.getCell((index + 1) % 2) ?: wrapperTableRow.createCell()
+            val cellParagraph = wrapperTableCell.addParagraph()
+
+            val controlUnit = controlUnitRepository.findById(recentActivity.controlUnitId)
+
+            val imageParagraph = document.insertNewParagraph(cellParagraph.ctp.newCursor())
+
+            createImageFromBase64(
+                name = "Activites recentes ${controlUnit?.name}",
+                image = recentActivity.image,
+                paragraph = imageParagraph,
+                height = 220,
+                width = 330,
+            )
+            val allRecentActivityTitle = document.insertNewParagraph(cellParagraph.ctp.newCursor())
+            allRecentActivityTitle.createRun().apply {
+                setText("Pression de contrôles - ${controlUnit?.name}")
+                isBold = true
+                fontSize = 9
+                fontFamily = "Arial"
+                addBreak()
+            }
+            val recentActivityNbControls = document.insertNewParagraph(cellParagraph.ctp.newCursor())
+
+            recentActivityNbControls.createRun().apply {
+                val totalControls = recentActivity.recentControls.sumOf { it.nbControls }
+                val pluralTotalControls = if (totalControls > 1) "s" else ""
+                val totalNbTarget = recentActivity.recentControls.sumOf { it.nbTarget }
+                val pluralTotalNbTarget = if (totalNbTarget > 1) "s" else ""
+                setText(
+                    "$totalControls action$pluralTotalControls de contrôle$pluralTotalControls et $totalNbTarget cible$pluralTotalNbTarget contrôlée$pluralTotalNbTarget",
+                )
+                fontSize = 8
+                isItalic = true
+                fontFamily = "Arial"
+                addBreak()
+                addBreak()
+            }
+            val themesTableParagraph = document.insertNewParagraph(cellParagraph.ctp.newCursor())
+            val themesTable = document.insertNewTbl(themesTableParagraph.ctp.newCursor())
+            themesTable.setWidth("100%")
+            setTableBorders(themesTable, "CCCFD6", false)
+
+            val headerRow = themesTable.getRow(0) ?: themesTable.createRow()
+            headerRow.apply {
+                height = 300
+                setHeightRule(TableRowHeightRule.AUTO)
+            }
+            val headerCell = headerRow.getCell(0) ?: headerRow.createCell()
+            headerCell.setText("Thématiques")
+            styleCell(headerCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = "707785")
+            setCellColor(headerCell, "E5E5EB")
+
+            val themes = themeRepository.findAllById(recentActivity.recentControls.flatMap { it.themeIds })
+
+            val controlsByThemeId: Map<Int, Int> =
+                recentActivity.recentControls
+                    .flatMap { control -> control.themeIds.map { themeId -> themeId to control.nbControls } } // (themeId, nbControls)
+                    .groupBy({ it.first }, { it.second }) // groupBy themeId
+                    .mapValues { (_, nbControlsList) -> nbControlsList.sum() }
+
+            controlsByThemeId.map { (themeId, controls) ->
+                val newRow =
+                    themesTable.createRow().apply {
+                        heightRule = TableRowHeightRule.AUTO
+                    }
+                val themeCell = newRow.getCell(0) ?: newRow.createCell()
+
+                themeCell.text = themes.find { it.id == themeId }?.name ?: "Thématique non renseignée"
+                styleCell(themeCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT)
+                setCellWidth(themeCell, 3500)
+                addBottomBorder(themeCell)
+
+                val nbControlsCell = newRow.getCell(1) ?: newRow.createCell()
+                val plural = if (controls > 1) "s" else ""
+                nbControlsCell.text = "$controls action$plural de ctrl"
+                styleCell(
+                    nbControlsCell,
+                    bold = false,
+                    fontSize = 8,
+                    alignment = ParagraphAlignment.RIGHT,
+                    color = "707785",
+                )
+                setCellWidth(nbControlsCell, 1500)
+                addBottomBorder(nbControlsCell)
+            }
+        }
+
+        cleanParagraphPlaceholder(document, paragraph)
     }
 
     private fun <T : DetailWithImagesRenderable> createDetailsSection(
@@ -489,12 +849,12 @@ class DashboardFile(
                 val row = table.createRow()
 
                 val labelCell = row.getCell(0) ?: row.createCell()
-                labelCell.setText(rowData[0])
+                labelCell.text = rowData[0]
                 setCellWidth(labelCell, 2500)
                 styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
 
                 val valueCell = row.getCell(1) ?: row.createCell()
-                valueCell.setText(rowData[1])
+                valueCell.text = rowData[1]
                 item.customizeValueCell(index, valueCell, document)
 
                 setCellWidth(valueCell, 7500)
@@ -520,10 +880,10 @@ class DashboardFile(
         val mainImage = mainImageData.inputStream().use { ImageIO.read(it) }
         val overlayRaw = overlayImageData.inputStream().use { ImageIO.read(it) }
 
-        val overlayWidth = 150
-        val overlayHeight = 90
+        val overlayWidth = 330
+        val overlayHeight = 200
         val overlayResized =
-            Scalr.resize(overlayRaw, Scalr.Method.QUALITY, Scalr.Mode.FIT_EXACT, overlayWidth, overlayHeight)
+            Scalr.resize(overlayRaw, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_EXACT, overlayWidth, overlayHeight)
 
         val borderedOverlay =
             BufferedImage(overlayWidth + 5, overlayHeight + 5, BufferedImage.TYPE_INT_ARGB).apply {
@@ -561,7 +921,7 @@ class DashboardFile(
         rows.forEach { rowData ->
             val row = table.createRow()
             row.height = 300
-            row.setHeightRule(TableRowHeightRule.AUTO)
+            row.heightRule = TableRowHeightRule.AUTO
 
             while (row.tableCells.size < rowData.size) {
                 row.addNewTableCell()
@@ -572,12 +932,12 @@ class DashboardFile(
                 val value = pair.getOrElse(1) { "" }
 
                 val labelCell = row.getCell(index * 2)
-                labelCell.setText(label)
+                labelCell.text = label
                 setCellWidth(labelCell, 1500)
                 styleCell(labelCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = "707785")
 
                 val valueCell = row.getCell(index * 2 + 1)
-                valueCell.setText(value)
+                valueCell.text = value
                 setCellWidth(valueCell, 1830)
                 styleCell(valueCell, bold = true, fontSize = 8, alignment = ParagraphAlignment.LEFT)
             }
@@ -591,7 +951,7 @@ class DashboardFile(
         val row =
             table.createRow().apply {
                 height = 300
-                setHeightRule(TableRowHeightRule.AUTO)
+                heightRule = TableRowHeightRule.AUTO
             }
 
         while (row.tableCells.size < 6) {
@@ -602,7 +962,7 @@ class DashboardFile(
 
         for ((index, rowData) in detailRows.withIndex()) {
             val labelCell = row.getCell(index * 2)
-            configureCell(labelCell, rowData[0], bold = false, color = "707785", width = 1200)
+            configureCell(labelCell, rowData[0], bold = false, color = "707785", width = 1500)
 
             val valueCell = row.getCell(index * 2 + 1)
             configureCell(valueCell, rowData[1], bold = true, width = 2660)
@@ -656,7 +1016,7 @@ class DashboardFile(
         color: String? = null,
         width: Int,
     ) {
-        cell.setText(text)
+        cell.text = text
         setCellWidth(cell, width)
         styleCell(cell, bold = bold, fontSize = 8, alignment = ParagraphAlignment.LEFT, color = color)
         addBottomBorder(cell)
@@ -807,21 +1167,16 @@ class DashboardFile(
             color = borderColor
         }
 
-        if (withInsideBorder) {
-            tableBorders.addNewInsideH().apply {
-                `val` = borderType
-                sz = borderSize
-                color = borderColor
-            }
+        tableBorders.addNewInsideH().apply {
+            `val` = borderType
+            sz = borderSize
+            color = if (withInsideBorder) borderColor else "FFFFFF"
+        }
 
-            tableBorders.addNewInsideV().apply {
-                `val` = borderType
-                sz = borderSize
-                color = borderColor
-            }
-        } else {
-            tableBorders.unsetInsideH()
-            tableBorders.unsetInsideV()
+        tableBorders.addNewInsideV().apply {
+            `val` = borderType
+            sz = borderSize
+            color = if (withInsideBorder) borderColor else "FFFFFF"
         }
     }
 
@@ -832,7 +1187,7 @@ class DashboardFile(
         alignment: ParagraphAlignment,
         color: String? = "000000",
     ) {
-        cell.setVerticalAlignment(XWPFTableCell.XWPFVertAlign.CENTER)
+        cell.verticalAlignment = XWPFTableCell.XWPFVertAlign.CENTER
         // Ensure the cell has at least one paragraph
         val paragraph =
             if (cell.paragraphs.isEmpty()) {

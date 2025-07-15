@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefFileEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefRecentActivityEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.file.dashboard.IDashboardFile
@@ -15,7 +16,7 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.OutputCaptureExtension
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(OutputCaptureExtension::class)
 class CreateBriefUTest {
@@ -50,6 +51,12 @@ class CreateBriefUTest {
                         links = emptyList(),
                         images = emptyList(),
                     ),
+                amps = emptyList(),
+                reportings = emptyList(),
+                vigilanceAreas = emptyList(),
+                regulatoryAreas = emptyList(),
+                nearbyUnits = emptyList(),
+                recentActivity = EditableBriefRecentActivityEntity(null, null, "toto", emptyList()),
             )
 
         given(dashboardFile.createEditableBrief(brief)).willReturn(
@@ -91,6 +98,12 @@ class CreateBriefUTest {
                         links = emptyList(),
                         images = emptyList(),
                     ),
+                amps = emptyList(),
+                reportings = emptyList(),
+                vigilanceAreas = emptyList(),
+                regulatoryAreas = emptyList(),
+                nearbyUnits = emptyList(),
+                recentActivity = EditableBriefRecentActivityEntity(null, null, "toto", emptyList()),
             )
         given(dashboardFile.createEditableBrief(brief)).willThrow(IllegalArgumentException::class.java)
 

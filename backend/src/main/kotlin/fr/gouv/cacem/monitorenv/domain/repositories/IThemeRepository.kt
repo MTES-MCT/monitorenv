@@ -16,4 +16,6 @@ interface IThemeRepository {
     ): List<ThemeEntity>
 
     fun findEnvActionControlPlanByIds(ids: List<Int>): EnvActionControlPlanEntity
+
+    fun findAllById(ids: List<Int>): List<ThemeEntity>
 }

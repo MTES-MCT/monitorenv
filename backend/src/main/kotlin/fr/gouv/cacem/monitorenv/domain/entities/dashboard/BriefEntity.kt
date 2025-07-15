@@ -5,6 +5,7 @@ data class BriefEntity(
     val dashboard: DashboardEntity,
     val image: String? = null,
     val nearbyUnits: List<EditableBriefNearbyUnitEntity>,
+    val recentActivity: EditableBriefRecentActivityEntity,
     val regulatoryAreas: List<EditableBriefRegulatoryAreaEntity>,
     val reportings: List<EditableBriefReportingEntity>,
     val vigilanceAreas: List<EditableBriefVigilanceAreaEntity>,

@@ -7,7 +7,7 @@ import { StyleSheet, Text, View } from '@react-pdf/renderer'
 import { displayThemes } from '@utils/getThemesAsOptions'
 
 import { type Mission } from '../../../../../domain/entities/missions'
-import { getDateRange } from '../../DashboardForm/NearbyUnits/utils'
+import { getDateRangeFormatted } from '../../DashboardForm/NearbyUnits/utils'
 import { Dot } from '../icons/Dot'
 
 import type { LegacyControlUnit } from '../../../../../domain/entities/legacyControlUnit'
@@ -60,12 +60,12 @@ const styles = StyleSheet.create({
 type NearbyUnitsProps = {
   controlUnit: LegacyControlUnit
   missions: Mission[]
-  status: 'NOW' | 'PAST' | 'FUTURE'
+  status: 'IN_PROGRESS' | 'DONE' | 'FUTURE'
 }
 
 export function UnitCard({ controlUnit, missions, status }: NearbyUnitsProps) {
   const envActions = missions.flatMap(mission => mission.envActions)
-  const dateRange = getDateRange(missions)
+  const dateRange = getDateRangeFormatted(missions)
   const themes = displayThemes(getAllThemes(envActions))
   const nbControls = getTotalNbControls(envActions)
   const nbInfractions = getTotalInfraction(envActions)
@@ -77,13 +77,13 @@ export function UnitCard({ controlUnit, missions, status }: NearbyUnitsProps) {
         <Text style={styles.controlUnit.name}>
           {controlUnit.name} ({controlUnit.administration})
         </Text>
-        {status === 'NOW' && (
+        {status === 'IN_PROGRESS' && (
           <View style={[layoutStyle.row, { gap: 2.5 }]}>
             <Clock color={THEME.color.blueGray} size={9} />
             <Text style={{ color: THEME.color.blueGray }}>En cours</Text>
           </View>
         )}
-        {status === 'PAST' && (
+        {status === 'DONE' && (
           <View style={[layoutStyle.row, { gap: 2.5 }]}>
             <Check color={THEME.color.gunMetal} size={9} />
             <Text style={{ color: THEME.color.gunMetal }}>Terminée</Text>

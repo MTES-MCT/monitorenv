@@ -1,10 +1,10 @@
 import { describe, expect, it } from '@jest/globals'
 
-import { getDateRange } from './utils'
+import { getDateRangeFormatted } from './utils'
 
 import type { Mission } from '../../../../../domain/entities/missions'
 
-describe('getDateRange', () => {
+describe('getDateRangeFormatted', () => {
   it('should return correct start and end dates for one mission', () => {
     const missions = [
       {
@@ -12,7 +12,7 @@ describe('getDateRange', () => {
         startDateTimeUtc: '2023-01-01'
       }
     ] as Mission[]
-    expect(getDateRange(missions)).toEqual({ end: '05/01/2023', isSingleDayRange: false, start: '01/01/2023' })
+    expect(getDateRangeFormatted(missions)).toEqual({ end: '05/01/2023', isSingleDayRange: false, start: '01/01/2023' })
   })
 
   it('should return global start and end for multiple missions', () => {
@@ -26,7 +26,7 @@ describe('getDateRange', () => {
         startDateTimeUtc: '2023-01-01'
       }
     ] as Mission[]
-    expect(getDateRange(missions)).toEqual({ end: '05/02/2023', isSingleDayRange: false, start: '01/01/2023' })
+    expect(getDateRangeFormatted(missions)).toEqual({ end: '05/02/2023', isSingleDayRange: false, start: '01/01/2023' })
   })
 
   it('should return undefined when there is no endDateTimeUtc', () => {
@@ -36,7 +36,7 @@ describe('getDateRange', () => {
         // no end date
       }
     ] as Mission[]
-    expect(getDateRange(missions)).toEqual({ end: undefined, isSingleDayRange: false, start: '01/01/2023' })
+    expect(getDateRangeFormatted(missions)).toEqual({ end: undefined, isSingleDayRange: false, start: '01/01/2023' })
   })
 
   it('should return single day range when start and end are the same', () => {
@@ -46,11 +46,11 @@ describe('getDateRange', () => {
         startDateTimeUtc: '2023-02-01'
       }
     ] as Mission[]
-    expect(getDateRange(missions)).toEqual({ end: '01/02/2023', isSingleDayRange: true, start: '01/02/2023' })
+    expect(getDateRangeFormatted(missions)).toEqual({ end: '01/02/2023', isSingleDayRange: true, start: '01/02/2023' })
   })
 
   it('should return undefined when there is no date', () => {
     const missions = [] as Mission[]
-    expect(getDateRange(missions)).toBeUndefined()
+    expect(getDateRangeFormatted(missions)).toBeUndefined()
   })
 })

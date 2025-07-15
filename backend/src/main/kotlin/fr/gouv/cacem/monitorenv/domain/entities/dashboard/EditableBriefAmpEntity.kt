@@ -17,6 +17,10 @@ data class EditableBriefAmpEntity(
 ) : DetailWithImagesRenderable {
     override val title = name
 
+    companion object {
+        private const val LINK_ROW_INDEX = 1
+    }
+
     override fun buildDetailsRows(): List<List<String>> =
         listOf(
             listOf("Nature d'AMP", designation),
@@ -28,7 +32,7 @@ data class EditableBriefAmpEntity(
         cell: XWPFTableCell,
         document: XWPFDocument,
     ) {
-        if (rowIndex == 1) {
+        if (rowIndex == LINK_ROW_INDEX) {
             while (cell.paragraphs.isNotEmpty()) {
                 cell.removeParagraph(0)
             }

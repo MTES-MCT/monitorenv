@@ -4,8 +4,16 @@ import { recentActivityAPI } from '@api/recentActivity'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { reportingsAPI } from '@api/reportingsAPI'
 import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
+import {
+  getDateRange,
+  getUnitsCurrentlyInArea,
+  getUnitsRecentlyInArea,
+  getUnitsToBeInArea
+} from '@features/Dashboard/components/DashboardForm/NearbyUnits/utils'
 import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { getAllThemes, getTotalInfraction, getTotalNbControls, getTotalPV } from '@features/Mission/utils'
+import { RecentActivity } from '@features/RecentActivity/types'
 import { getDatesFromFilters } from '@features/RecentActivity/utils'
 import { getFormattedReportingId } from '@features/Reportings/utils'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
@@ -24,20 +32,23 @@ import { vesselTypeLabel } from 'domain/entities/vesselType'
 import { getImage, getMinimap } from '../components/Pdf/utils'
 import { Dashboard } from '../types'
 
+import type { LegacyControlUnit } from '../../../domain/entities/legacyControlUnit'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { RecentActivityFilters } from '@features/RecentActivity/slice'
-import type { RecentActivity } from '@features/RecentActivity/types'
 import type { HomeAppThunk } from '@store/index'
+import type { Mission } from 'domain/entities/missions'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Coordinate } from 'ol/coordinate'
+
+import Layer = Dashboard.Layer
 
 type ExportBriefProps = {
   dashboard: Dashboard.Dashboard
   getImages: (
     recentActivity: RecentActivity.RecentControlsActivity[],
     controlUnitIds: number[],
-    isLight?: boolean
+    isLight: boolean
   ) => Promise<ExportImageType[]> | undefined
   nearbyUnits: NearbyUnit[] | undefined
   recentActivityFilters: RecentActivityFilters | undefined
@@ -226,6 +237,73 @@ export const exportBrief =
         })
       : []
 
+    function formatNearbyUnits(
+      missions: Mission[],
+      controlUnit: LegacyControlUnit,
+      status: 'IN_PROGRESS' | 'DONE' | 'FUTURE'
+    ) {
+      const envActions = missions.flatMap(mission => mission.envActions)
+      const dateRange = getDateRange(missions)
+      const themes = displayThemes(getAllThemes(envActions)) ?? ''
+      const nbControls = getTotalNbControls(envActions)
+      const nbInfractions = getTotalInfraction(envActions)
+      const nbPV = getTotalPV(envActions)
+
+      return {
+        administration: controlUnit.administration,
+        controlUnit: controlUnit.name,
+        maxDate: dateRange?.end?.toISOString(),
+        minDate: dateRange?.start?.toISOString(),
+        nbControls,
+        nbInfractions,
+        nbPV,
+        status,
+        themes
+      }
+    }
+
+    const formattedNearbyUnits = [
+      ...getUnitsRecentlyInArea(nearbyUnits ?? []).map(({ controlUnit, missions }) =>
+        formatNearbyUnits(missions, controlUnit, 'DONE')
+      ),
+      ...getUnitsCurrentlyInArea(nearbyUnits ?? []).map(({ controlUnit, missions }) =>
+        formatNearbyUnits(missions, controlUnit, 'IN_PROGRESS')
+      ),
+      ...getUnitsToBeInArea(nearbyUnits ?? []).map(({ controlUnit, missions }) =>
+        formatNearbyUnits(missions, controlUnit, 'FUTURE')
+      )
+    ]
+
+    const allRecentActivityImage = images?.find(
+      img => img.featureId === Dashboard.featuresCode.DASHBOARD_ALL_RECENT_ACTIVITY
+    )
+
+    const formattedRecentActivity = {
+      image: allRecentActivityImage?.image,
+      period: recentActivityFilters?.periodFilter
+        ? RecentActivity.RecentActivityDateRangeLabels[recentActivityFilters.periodFilter]
+        : '',
+      recentActivitiesPerUnit: dashboard.controlUnitIds.flatMap(controlUnitId => {
+        const image = getImage(images ?? [], Layer.DASHBOARD_RECENT_ACTIVITY_BY_UNIT, controlUnitId)
+
+        return {
+          controlUnitId,
+          image,
+          recentControls:
+            recentActivity
+              ?.filter(item => item.controlUnitIds.includes(controlUnitId))
+              ?.map(item => ({
+                controlUnitIds: item.controlUnitIds,
+                nbControls: item.actionNumberOfControls,
+                nbTarget: item.infractions.reduce((acc, infraction) => acc + infraction.nbTarget, 0),
+                themeIds: item.themeIds
+              })) ?? []
+        }
+      }),
+      startAfter,
+      startBefore
+    }
+
     const { data, error } = await dispatch(
       dashboardsAPI.endpoints.exportBrief.initiate({
         amps: ampsWithImages,
@@ -234,7 +312,8 @@ export const exportBrief =
           id: dashboard.createdAt ? dashboard.id : ''
         },
         image: wholeImage,
-        nearbyUnits: nearbyUnits ?? [],
+        nearbyUnits: formattedNearbyUnits,
+        recentActivity: formattedRecentActivity,
         regulatoryAreas: regulatoryAreasWithImages,
         reportings: formattedReportings ?? [],
         vigilanceAreas: vigilanceAreasWithImagesAndLinkedLayers
