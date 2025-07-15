@@ -56,7 +56,7 @@ class CreateBriefUTest {
                 vigilanceAreas = emptyList(),
                 regulatoryAreas = emptyList(),
                 nearbyUnits = emptyList(),
-                recentActivity = EditableBriefRecentActivityEntity(null, null, "toto", emptyList()),
+                recentActivity = EditableBriefRecentActivityEntity(null, null, "toto", emptyList(), emptyList()),
             )
 
         given(dashboardFile.createEditableBrief(brief)).willReturn(
@@ -103,7 +103,7 @@ class CreateBriefUTest {
                 vigilanceAreas = emptyList(),
                 regulatoryAreas = emptyList(),
                 nearbyUnits = emptyList(),
-                recentActivity = EditableBriefRecentActivityEntity(null, null, "toto", emptyList()),
+                recentActivity = EditableBriefRecentActivityEntity(null, null, "toto", emptyList(), emptyList()),
             )
         given(dashboardFile.createEditableBrief(brief)).willThrow(IllegalArgumentException::class.java)
 

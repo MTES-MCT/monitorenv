@@ -207,20 +207,19 @@ export namespace Dashboard {
   type RecentActivityForEditableBrief = {
     image?: string
     period: string
-    recentActivitiesPerUnit: RecentActivityPerUnitForEditableBrief[]
+    recentActivities: RecentActivityControlForEditableBrief[]
+    selectedControlUnits: RecentActivityPerUnitForEditableBrief[]
     startAfter?: string
     startBefore?: string
   }
 
   type RecentActivityPerUnitForEditableBrief = {
-    controlUnitId: number
+    id: number
     image?: string
-    recentControls: RecentActivityControlForEditableBrief[]
   }
 
   type RecentActivityControlForEditableBrief = {
     controlUnitIds: number[]
-    image?: string
     nbControls: number
     nbTarget: number
     themeIds: number[]

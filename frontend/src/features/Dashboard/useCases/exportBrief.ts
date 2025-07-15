@@ -283,23 +283,17 @@ export const exportBrief =
       period: recentActivityFilters?.periodFilter
         ? RecentActivity.RecentActivityDateRangeLabels[recentActivityFilters.periodFilter]
         : '',
-      recentActivitiesPerUnit: dashboard.controlUnitIds.flatMap(controlUnitId => {
-        const image = getImage(images ?? [], Layer.DASHBOARD_RECENT_ACTIVITY_BY_UNIT, controlUnitId)
-
-        return {
-          controlUnitId,
-          image,
-          recentControls:
-            recentActivity
-              ?.filter(item => item.controlUnitIds.includes(controlUnitId))
-              ?.map(item => ({
-                controlUnitIds: item.controlUnitIds,
-                nbControls: item.actionNumberOfControls,
-                nbTarget: item.infractions.reduce((acc, infraction) => acc + infraction.nbTarget, 0),
-                themeIds: item.themeIds
-              })) ?? []
-        }
-      }),
+      recentActivities:
+        recentActivity?.map(item => ({
+          controlUnitIds: item.controlUnitIds,
+          nbControls: item.actionNumberOfControls,
+          nbTarget: item.infractions.reduce((acc, infraction) => acc + infraction.nbTarget, 0),
+          themeIds: item.themeIds
+        })) ?? [],
+      selectedControlUnits: dashboard.controlUnitIds.map(controlUnitId => ({
+        id: controlUnitId,
+        image: getImage(images ?? [], Layer.DASHBOARD_RECENT_ACTIVITY_BY_UNIT, controlUnitId)
+      })),
       startAfter,
       startBefore
     }
