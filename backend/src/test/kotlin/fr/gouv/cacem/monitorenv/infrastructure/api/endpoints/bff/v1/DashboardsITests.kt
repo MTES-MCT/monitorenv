@@ -379,7 +379,7 @@ class DashboardsITests {
                 vigilanceAreas = emptyList(),
                 regulatoryAreas = emptyList(),
                 nearbyUnits = emptyList(),
-                recentActivity = EditableBriefRecentActivityEntity(null, null, "toto", emptyList()),
+                recentActivity = EditableBriefRecentActivityEntity(null, null, "toto", emptyList(), emptyList()),
             )
         given(createBrief.execute(brief)).willReturn(
             BriefFileEntity(

@@ -6,6 +6,7 @@ data class EditableBriefRecentActivityEntity(
     val startAfter: ZonedDateTime?,
     val startBefore: ZonedDateTime?,
     val period: String,
-    val recentActivitiesPerUnit: List<EditableBriefRecentPerUnitActivityEntity>,
+    val recentActivities: List<EditableBriefRecentControlActivityEntity>,
+    val selectedControlUnits: List<EditableBriefRecentPerUnitActivityEntity>,
     val image: String? = null,
 )
