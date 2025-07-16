@@ -74,41 +74,37 @@ export function ReportingOverlay({
 
   return (
     <>
-      {displayReportingsOverlay && canOverlayBeOpened && feature && (
-        <OverlayPositionOnCentroid
-          appClassName="overlay-reporting-selected"
+      <OverlayPositionOnCentroid
+        appClassName="overlay-reporting-selected"
+        feature={displayReportingsOverlay && canOverlayBeOpened ? feature : undefined}
+        map={map}
+        mapClickEvent={mapClickEvent}
+        options={selectedOptions}
+        zIndex={5000}
+      >
+        <ReportingCard
           feature={feature}
-          map={map}
-          mapClickEvent={mapClickEvent}
-          options={selectedOptions}
-          zIndex={5000}
-        >
-          <ReportingCard
-            feature={feature}
-            isSuperUser={isSuperUser}
-            onClose={close}
-            selected
-            updateMargins={updateSelectedMargins}
-          />
-        </OverlayPositionOnCentroid>
-      )}
-      {displayReportingsOverlay && displayHoveredFeature && hoveredFeature && (
-        <OverlayPositionOnCentroid
-          appClassName="overlay-reporting-hover"
+          isSuperUser={isSuperUser}
+          onClose={close}
+          selected
+          updateMargins={updateSelectedMargins}
+        />
+      </OverlayPositionOnCentroid>
+      <OverlayPositionOnCentroid
+        appClassName="overlay-reporting-hover"
+        feature={displayReportingsOverlay && displayHoveredFeature ? hoveredFeature : undefined}
+        map={map}
+        mapClickEvent={mapClickEvent}
+        options={hoveredOptions}
+        zIndex={5000}
+      >
+        <ReportingCard
           feature={hoveredFeature}
-          map={map}
-          mapClickEvent={mapClickEvent}
-          options={hoveredOptions}
-          zIndex={5000}
-        >
-          <ReportingCard
-            feature={hoveredFeature}
-            isSuperUser={isSuperUser}
-            onClose={close}
-            updateMargins={updateHoveredMargins}
-          />
-        </OverlayPositionOnCentroid>
-      )}
+          isSuperUser={isSuperUser}
+          onClose={close}
+          updateMargins={updateHoveredMargins}
+        />
+      </OverlayPositionOnCentroid>
     </>
   )
 }

@@ -1,24 +1,22 @@
 import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
+import { paths } from 'paths'
+import { useLocation } from 'react-router'
 
-type UseQueryOptions = Parameters<typeof useGetCurrentUserAuthorizationQuery>[1]
+export const useGetCurrentUserAuthorizationQueryOverride = () => {
+  const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
+  const location = useLocation()
 
-export const useGetCurrentUserAuthorizationQueryOverride = (options: UseQueryOptions = {}) => {
-  const { skip, ...optionsWithoutSkip } = options
-
-  const response = useGetCurrentUserAuthorizationQuery(undefined, {
-    skip,
-    ...optionsWithoutSkip
+  const { data } = useGetCurrentUserAuthorizationQuery(undefined, {
+    skip: !oidcEnabled
   })
 
-  /* const location = useLocation()
-
-  if (!oidcConfig.IS_OIDC_ENABLED) {
+  if (!oidcEnabled) {
     if (location.pathname === paths.ext) {
-      return { data: { isAuthenticated: true, isSuperUser: false }, isSuccess: true }
+      return { isSuperUser: false }
     }
 
-    return { data: { isAuthenticated: true, isSuperUser: true }, isSuccess: true }
-  } */
+    return { isSuperUser: true }
+  }
 
-  return response
+  return data
 }

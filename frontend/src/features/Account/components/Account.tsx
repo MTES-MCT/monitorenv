@@ -17,8 +17,7 @@ export function Account() {
     dispatch(globalActions.setDisplayedItems({ visibility: { isAccountDialogVisible: !isAccountVisible } }))
   }
   const logout = () => {
-    window.location.href =
-      'http://localhost:8085/realms/monitor/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:3000/login'
+    window.location.href = '/logout'
   }
 
   if (!oidcEnabled) {

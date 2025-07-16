@@ -10,8 +10,8 @@ import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurren
 import { useMemo } from 'react'
 
 export const useGetFilteredVigilanceAreasForMapQuery = () => {
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const result = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = result?.isSuperUser ?? true
 
   const { status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
 
