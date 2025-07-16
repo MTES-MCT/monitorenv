@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefAmpEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefRegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefVigilanceAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.dashboard.MissionStatus
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.NearbyUnitMissionStatus
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import org.apache.poi.xwpf.usermodel.BreakType
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment
@@ -78,10 +78,10 @@ class SummaryFile(
         val vigilanceCount = dashboard.vigilanceAreaIds.size
         val reportingCount = dashboard.reportingIds.size
         val totalZones = regulatoryCount + ampCount + vigilanceCount
-        val hasRecentlyNearbyUnits = brief.nearbyUnits.any { it.status === MissionStatus.DONE }
+        val hasRecentlyNearbyUnits = brief.nearbyUnits.any { it.status === NearbyUnitMissionStatus.DONE }
         val nearbyUnitsMinDateRange =
             brief.nearbyUnits
-                .filter { it.status == MissionStatus.DONE }
+                .filter { it.status == NearbyUnitMissionStatus.DONE }
                 .mapNotNull { it.minDate }
                 .minOrNull()
                 ?.format(
@@ -92,7 +92,7 @@ class SummaryFile(
                 )
         val nearbyUnitsMaxDateRange =
             brief.nearbyUnits
-                .filter { it.status == MissionStatus.DONE }
+                .filter { it.status == NearbyUnitMissionStatus.DONE }
                 .mapNotNull { it.maxDate }
                 .maxOrNull()
                 ?.format(
@@ -102,6 +102,45 @@ class SummaryFile(
                     ),
                 )
 
+        val recentActivityDateRange =
+            if (brief.recentActivity.startAfter == brief.recentActivity.startBefore) {
+                "Le ${
+                    brief.recentActivity.startAfter?.format(
+                        DateTimeFormatter.ofPattern(
+                            datePattern,
+                            Locale.FRENCH,
+                        ),
+                    )
+                }"
+            } else {
+                "Du ${
+                    brief.recentActivity.startAfter?.format(
+                        DateTimeFormatter.ofPattern(
+                            datePattern,
+                            Locale.FRENCH,
+                        ),
+                    )
+                } au ${
+                    brief.recentActivity.startBefore?.format(
+                        DateTimeFormatter.ofPattern(
+                            datePattern,
+                            Locale.FRENCH,
+                        ),
+                    )
+                }"
+            }
+        val nearbyUnitDateRange =
+            if (hasRecentlyNearbyUnits) {
+                if (nearbyUnitsMinDateRange ==
+                    nearbyUnitsMaxDateRange
+                ) {
+                    "Le $nearbyUnitsMinDateRange"
+                } else {
+                    "Du $nearbyUnitsMinDateRange au $nearbyUnitsMaxDateRange"
+                }
+            } else {
+                ""
+            }
         return mapOf(
             "\${editedAt}" to formattedDate,
             "\${briefName}" to dashboard.name,
@@ -120,23 +159,11 @@ class SummaryFile(
             "\${legicemPassword}" to legicemProperties.password,
             "\${monitorExtId}" to monitorExtProperties.id,
             "\${monitorExtPassword}" to monitorExtProperties.password,
-            "\${recentActivityPeriod}" to "Du ${
-                brief.recentActivity.startAfter?.format(
-                    DateTimeFormatter.ofPattern(
-                        datePattern,
-                        Locale.FRENCH,
-                    ),
-                )
-            } au ${
-                brief.recentActivity.startBefore?.format(
-                    DateTimeFormatter.ofPattern(
-                        datePattern,
-                        Locale.FRENCH,
-                    ),
-                )
-            }" + if (brief.recentActivity.period.isEmpty()) "" else " - ${brief.recentActivity.period}",
+            "\${recentActivityPeriod}" to
+                recentActivityDateRange +
+                if (brief.recentActivity.period.isEmpty()) "" else " - ${brief.recentActivity.period}",
             "\${nearbyUnitsDateRange}" to
-                if (hasRecentlyNearbyUnits) "Du $nearbyUnitsMinDateRange au $nearbyUnitsMaxDateRange" else "",
+                nearbyUnitDateRange,
         )
     }
 
