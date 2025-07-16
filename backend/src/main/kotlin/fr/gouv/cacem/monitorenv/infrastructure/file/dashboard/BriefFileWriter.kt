@@ -79,8 +79,8 @@ abstract class BriefFileWriter : IBriefFileWriter {
         val mainImage = mainImageData.inputStream().use { ImageIO.read(it) }
         val overlayRaw = overlayImageData.inputStream().use { ImageIO.read(it) }
 
-        val overlayWidth = 330
-        val overlayHeight = 200
+        val overlayWidth = 150
+        val overlayHeight = 100
         val overlayResized =
             Scalr.resize(overlayRaw, Scalr.Method.QUALITY, Scalr.Mode.FIT_EXACT, overlayWidth, overlayHeight)
 
