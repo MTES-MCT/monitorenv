@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.security
 
-import fr.gouv.cacem.monitorenv.config.ApiClient
 import fr.gouv.cacem.monitorenv.config.OIDCProperties
 import fr.gouv.cacem.monitorenv.config.ProtectedPathsAPIProperties
 import fr.gouv.cacem.monitorenv.domain.use_cases.authorization.GetIsAuthorizedUser
@@ -15,10 +14,8 @@ import org.springframework.web.filter.OncePerRequestFilter
 class UserAuthorizationCheckFilter(
     private val oidcProperties: OIDCProperties,
     private val protectedPathsAPIProperties: ProtectedPathsAPIProperties,
-    private val apiClient: ApiClient,
     private val getIsAuthorizedUser: GetIsAuthorizedUser,
 ) : OncePerRequestFilter() {
-    private val currentUserAuthorizationControllerPath = "/bff/v1/authorization/current"
     private val insufficientAuthorizationMessage = "Insufficient authorization"
     private val missingAuthenticatedUserMessage = "Missing authenticated user"
 
@@ -44,6 +41,12 @@ class UserAuthorizationCheckFilter(
 
         val email = (authentication.principal as OidcUser).email
         logger.info("Authenticated user email/username: $email")
+        if (email == null) {
+            logger.warn(missingAuthenticatedUserMessage)
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, missingAuthenticatedUserMessage)
+
+            return@runBlocking
+        }
 
         val isSuperUserPath =
             protectedPathsAPIProperties.superUserPaths
