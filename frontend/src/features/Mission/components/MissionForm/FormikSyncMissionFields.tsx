@@ -34,14 +34,16 @@ export function FormikSyncMissionFields({ missionId }: FormikSyncMissionFormProp
         return
       }
 
-      let receivedDiff = diff(
-        omit(values, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM),
-        omit(missionEvent, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
-      )
+      let receivedDiff
       if (event === FULL_MISSION_UPDATE_EVENT) {
         receivedDiff = diff(
           omit(values, FULL_MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM),
           omit(missionEvent, FULL_MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
+        )
+      } else {
+        receivedDiff = diff(
+          omit(values, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM),
+          omit(missionEvent, MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM)
         )
       }
 
