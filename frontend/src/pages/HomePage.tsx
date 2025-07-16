@@ -28,9 +28,8 @@ import { useAppSelector } from '../hooks/useAppSelector'
 export function HomePage() {
   const dispatch = useAppDispatch()
 
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const result = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = result?.isSuperUser ?? true
 
   const displayDrawModal = useAppSelector(state => state.global.menus.displayDrawModal)
   const displayLocateOnMap = useAppSelector(state => state.global.menus.displayLocateOnMap)

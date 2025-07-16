@@ -19,9 +19,9 @@ type ReportingFormProps = {
   totalReportings: number
 }
 export function ReportingFormWithContext({ context, totalReportings }: ReportingFormProps) {
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const result = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = result?.isSuperUser ?? true
 
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const reportingFormVisibility = useAppSelector(state => state.global.visibility.reportingFormVisibility)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)

@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.security
 
-import fr.gouv.cacem.monitorenv.config.ApiClient
 import fr.gouv.cacem.monitorenv.config.OIDCProperties
 import fr.gouv.cacem.monitorenv.config.ProtectedPathsAPIProperties
 import fr.gouv.cacem.monitorenv.domain.use_cases.authorization.GetIsAuthorizedUser
@@ -17,7 +16,6 @@ import org.springframework.context.annotation.Configuration
 class BffFilterConfig(
     private val protectedPathsAPIProperties: ProtectedPathsAPIProperties,
     private val oidcProperties: OIDCProperties,
-    private val apiClient: ApiClient,
     private val getIsAuthorizedUser: GetIsAuthorizedUser,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(BffFilterConfig::class.java)
@@ -31,7 +29,6 @@ class BffFilterConfig(
             UserAuthorizationCheckFilter(
                 oidcProperties,
                 protectedPathsAPIProperties,
-                apiClient,
                 getIsAuthorizedUser,
             )
         registrationBean.urlPatterns = protectedPathsAPIProperties.paths

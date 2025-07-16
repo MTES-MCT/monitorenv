@@ -7,9 +7,16 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties(prefix = "monitorenv.oidc")
 class OIDCProperties {
     var enabled: Boolean? = false
-    var cacheInMinutes: Int = 120
+    var clientId: String = ""
+    var clientSecret: String = ""
+    var redirectUri: String = ""
     var loginUrl: String = ""
     var successUrl: String = ""
     var errorUrl: String = ""
     var authorizedSirets: List<String> = listOf()
+    var issuerUri: String = ""
+    var authorizationUri: String = ""
+    var tokenUri: String = ""
+    var userInfoUri: String = ""
+    var jwkSetUri: String = ""
 }
