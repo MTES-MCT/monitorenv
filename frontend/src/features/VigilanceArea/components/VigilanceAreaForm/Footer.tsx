@@ -8,9 +8,10 @@ type VigilanceAreaFormFooterProps = {
   onDelete: () => void
   onPublish: () => void
   onSave: () => void
+  onUnpublish: () => void
 }
 
-export function Footer({ isDraft, onCancel, onDelete, onPublish, onSave }: VigilanceAreaFormFooterProps) {
+export function Footer({ isDraft, onCancel, onDelete, onPublish, onSave, onUnpublish }: VigilanceAreaFormFooterProps) {
   return (
     <FooterContainer>
       <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={onDelete} size={Size.SMALL}>
@@ -23,9 +24,15 @@ export function Footer({ isDraft, onCancel, onDelete, onPublish, onSave }: Vigil
         <Button accent={Accent.SECONDARY} onClick={onSave} size={Size.SMALL}>
           Enregistrer
         </Button>
-        <Button disabled={!isDraft} onClick={onPublish} size={Size.SMALL}>
-          {isDraft ? 'Publier' : 'Publiée'}
-        </Button>
+        {isDraft ? (
+          <Button onClick={onPublish} size={Size.SMALL}>
+            Publier
+          </Button>
+        ) : (
+          <Button onClick={onUnpublish} size={Size.SMALL}>
+            Dépublier
+          </Button>
+        )}
       </FooterRightButtons>
     </FooterContainer>
   )

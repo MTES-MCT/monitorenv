@@ -33,4 +33,5 @@ data class VigilanceAreaEntity(
     val visibility: VisibilityEnum? = null,
     val createdAt: ZonedDateTime?,
     val updatedAt: ZonedDateTime?,
+    val validatedAt: ZonedDateTime?,
 )

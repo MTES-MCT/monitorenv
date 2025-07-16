@@ -4,7 +4,6 @@ import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/util
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { displaySubTags, displayTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes, displayThemes } from '@utils/getThemesAsOptions'
-import styled from 'styled-components'
 
 import {
   PanelDateItem,
@@ -29,14 +28,6 @@ export function PanelPeriodAndThemes({ vigilanceArea }: { vigilanceArea: Vigilan
   return (
     <>
       <PanelSubPart>
-        <StyledUpsertDates>
-          {vigilanceArea?.createdAt &&
-            `Créée le ${customDayjs(vigilanceArea?.createdAt).utc().format('DD/MM/YY')}${
-              vigilanceArea?.updatedAt ? ', ' : '.'
-            }`}
-          {vigilanceArea?.updatedAt &&
-            `dernière modification le ${customDayjs(vigilanceArea?.updatedAt).utc().format('DD/MM/YY')}.`}
-        </StyledUpsertDates>
         <PanelInlineItem>
           <PanelInlineItemLabel $isInline>Période</PanelInlineItemLabel>
           <PanelDateItem>
@@ -96,9 +87,3 @@ export function PanelPeriodAndThemes({ vigilanceArea }: { vigilanceArea: Vigilan
     </>
   )
 }
-
-const StyledUpsertDates = styled.span`
-  font-style: italic;
-  color: ${p => p.theme.color.slateGray};
-  transform: translateY(-8px);
-`

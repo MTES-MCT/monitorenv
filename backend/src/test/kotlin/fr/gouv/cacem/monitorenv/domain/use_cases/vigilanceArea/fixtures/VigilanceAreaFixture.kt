@@ -65,6 +65,7 @@ class VigilanceAreaFixture {
                 updatedAt = null,
                 isAtAllTimes = isAtAllTimes,
                 tags = tags,
+                validatedAt = null,
             )
 
         fun aVigilanceAreaEntityWithImagesAndLink(): VigilanceAreaEntity =
@@ -119,6 +120,7 @@ class VigilanceAreaFixture {
                 updatedAt = null,
                 isAtAllTimes = false,
                 tags = listOf(aTag(name = "AMP")),
+                validatedAt = null,
             )
 
         fun anArchivedVigilanceAreaEntity(): VigilanceAreaEntity =
@@ -149,6 +151,7 @@ class VigilanceAreaFixture {
                 updatedAt = ZonedDateTime.parse("2024-01-01T12:00:00Z"),
                 isAtAllTimes = false,
                 tags = listOf(aTag(name = "AMP")),
+                validatedAt = null,
             )
     }
 }

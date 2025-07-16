@@ -2,7 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
@@ -106,6 +110,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                 isAtAllTimes = false,
                 tags = listOf(aTag(id = 5)),
                 themes = listOf(ThemeFixture.aTheme(id = 9)),
+                validatedAt = ZonedDateTime.parse("2025-01-01T00:00:00Z"),
             )
 
         // When
@@ -137,6 +142,8 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(savedVigilanceArea.themes).hasSize(1)
         assertThat(savedVigilanceArea.themes[0].name).isEqualTo("Pêche à pied")
         assertThat(savedVigilanceArea.themes[0].id).isEqualTo(9)
+        assertThat(savedVigilanceArea.validatedAt)
+            .isEqualTo(ZonedDateTime.parse("2025-01-01T00:00:00Z"))
     }
 
     @Test

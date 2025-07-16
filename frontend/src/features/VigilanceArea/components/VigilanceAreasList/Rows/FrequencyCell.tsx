@@ -5,5 +5,5 @@ export function FrequencyCell({ frequency }: { frequency: VigilanceArea.Frequenc
     return <span>-</span>
   }
 
-  return <span>{VigilanceArea.FrequencyLabel[frequency]}</span>
+  return <span>{VigilanceArea.FrequencyLabelForList[frequency]}</span>
 }

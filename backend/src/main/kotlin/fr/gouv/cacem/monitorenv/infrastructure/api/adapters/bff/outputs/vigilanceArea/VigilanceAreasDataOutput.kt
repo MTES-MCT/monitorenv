@@ -36,6 +36,7 @@ data class VigilanceAreasDataOutput(
     val themes: List<ThemeOutput>,
     val visibility: VisibilityEnum? = null,
     val tags: List<TagOutput>,
+    val validatedAt: ZonedDateTime?,
 ) {
     companion object {
         fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreasDataOutput =
@@ -63,6 +64,7 @@ data class VigilanceAreasDataOutput(
                 themes = vigilanceArea.themes.map { fromThemeEntity(it) },
                 visibility = vigilanceArea.visibility,
                 tags = vigilanceArea.tags.map { fromTagEntity(it) },
+                validatedAt = vigilanceArea.validatedAt,
             )
     }
 }

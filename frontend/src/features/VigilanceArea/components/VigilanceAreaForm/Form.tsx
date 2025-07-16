@@ -9,7 +9,9 @@ import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/Vigil
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
 import { hideLayers } from '@features/VigilanceArea/useCases/hideLayers'
+import { publish } from '@features/VigilanceArea/useCases/publish'
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
+import { unpublish } from '@features/VigilanceArea/useCases/unpublish'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -62,10 +64,18 @@ export function Form() {
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(themes ?? [])), [themes])
   // const regulatoryTagsCustomSearch = useMemo(() => new CustomSearch(tagsOptions, ['label']), [tagsOptions])
 
-  const publish = () => {
+  const onPublish = () => {
     validateForm({ ...values, isDraft: false }).then(errors => {
       if (isEmpty(errors)) {
-        dispatch(saveVigilanceArea({ ...values, isDraft: false }, true))
+        dispatch(publish(values))
+      }
+    })
+  }
+
+  const onUnpublish = () => {
+    validateForm({ ...values, isDraft: true }).then(errors => {
+      if (isEmpty(errors)) {
+        dispatch(unpublish(values))
       }
     })
   }
@@ -87,7 +97,7 @@ export function Form() {
     dispatch(vigilanceAreaActions.closeMainForm())
   }
 
-  const save = () => {
+  const onSave = () => {
     validateForm({ ...values }).then(errors => {
       if (isEmpty(errors)) {
         dispatch(saveVigilanceArea(values))
@@ -263,7 +273,14 @@ export function Form() {
           placeholder="Description de la source de l'information"
         />
       </StyledForm>
-      <Footer isDraft={values.isDraft} onCancel={cancel} onDelete={onDelete} onPublish={publish} onSave={save} />
+      <Footer
+        isDraft={values.isDraft}
+        onCancel={cancel}
+        onDelete={onDelete}
+        onPublish={onPublish}
+        onSave={onSave}
+        onUnpublish={onUnpublish}
+      />
     </FormContainer>
   )
 }
