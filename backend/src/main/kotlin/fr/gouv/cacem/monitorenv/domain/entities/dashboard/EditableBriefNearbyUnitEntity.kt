@@ -17,7 +17,7 @@ data class EditableBriefNearbyUnitEntity(
     val nbInfractions: Int,
     val nbPV: Int,
     val themes: String,
-    val status: MissionStatus,
+    val status: NearbyUnitMissionStatus,
 ) : CustomizableCell {
     companion object {
         private const val NAME_ROW_INDEX = 0
@@ -77,9 +77,9 @@ data class EditableBriefNearbyUnitEntity(
                         isBold = true
                         color =
                             when (status) {
-                                MissionStatus.IN_PROGRESS -> "5697D2"
-                                MissionStatus.FUTURE -> "7CBEF4"
-                                MissionStatus.DONE -> "000000"
+                                NearbyUnitMissionStatus.IN_PROGRESS -> "5697D2"
+                                NearbyUnitMissionStatus.FUTURE -> "7CBEF4"
+                                NearbyUnitMissionStatus.DONE -> "000000"
                             }
                         setText(status.label)
                     }

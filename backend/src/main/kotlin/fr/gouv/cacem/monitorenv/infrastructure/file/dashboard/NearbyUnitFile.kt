@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.file.dashboard
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefNearbyUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefNearbyUnitEntity.Companion.NB_CELLS
-import fr.gouv.cacem.monitorenv.domain.entities.dashboard.MissionStatus
+import fr.gouv.cacem.monitorenv.domain.entities.dashboard.NearbyUnitMissionStatus
 import org.apache.poi.xwpf.usermodel.TableRowHeightRule
 import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.apache.poi.xwpf.usermodel.XWPFParagraph
@@ -18,21 +18,21 @@ class NearbyUnitFile : BriefFileWriter() {
         document.paragraphs.firstOrNull { it.text.contains("\${unitsCurrentlyInArea}") }?.let { paragraph ->
             createNearbyUnitsDetails(
                 paragraph,
-                brief.nearbyUnits.filter { it.status === MissionStatus.IN_PROGRESS },
+                brief.nearbyUnits.filter { it.status === NearbyUnitMissionStatus.IN_PROGRESS },
             )
         }
 
         document.paragraphs.firstOrNull { it.text.contains("\${unitsRecentlyInArea}") }?.let { paragraph ->
             createNearbyUnitsDetails(
                 paragraph,
-                brief.nearbyUnits.filter { it.status === MissionStatus.DONE },
+                brief.nearbyUnits.filter { it.status === NearbyUnitMissionStatus.DONE },
             )
         }
 
         document.paragraphs.firstOrNull { it.text.contains("\${unitsToBeInArea}") }?.let { paragraph ->
             createNearbyUnitsDetails(
                 paragraph,
-                brief.nearbyUnits.filter { it.status === MissionStatus.FUTURE },
+                brief.nearbyUnits.filter { it.status === NearbyUnitMissionStatus.FUTURE },
             )
         }
     }

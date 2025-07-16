@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.dashboard
 
-enum class MissionStatus(
+enum class NearbyUnitMissionStatus(
     val label: String,
 ) {
     IN_PROGRESS("En cours"),

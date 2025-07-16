@@ -75,11 +75,11 @@ class RecentActivityFile(
             val totalControls =
                 recentActivity.recentActivities.sumOf { it.nbControls }
 
-            val pluralTotalControls = if (totalControls > 1) "s" else ""
+            val pluralTotalControls = getPlural(totalControls)
             val totalNbTarget =
                 recentActivity.recentActivities.sumOf { it.nbTarget }
 
-            val pluralTotalNbTarget = if (totalNbTarget > 1) "s" else ""
+            val pluralTotalNbTarget = getPlural(totalNbTarget)
             setText(
                 "$totalControls actions de contrôle$pluralTotalControls et $totalNbTarget cible$pluralTotalNbTarget contrôlée$pluralTotalNbTarget",
             )
@@ -147,9 +147,9 @@ class RecentActivityFile(
 
             recentActivityNbControls.createRun().apply {
                 val totalControls = recentActivitiesPerUnit.sumOf { it.nbControls }
-                val pluralTotalControls = if (totalControls > 1) "s" else ""
+                val pluralTotalControls = getPlural(totalControls)
                 val totalNbTarget = recentActivitiesPerUnit.sumOf { it.nbTarget }
-                val pluralTotalNbTarget = if (totalNbTarget > 1) "s" else ""
+                val pluralTotalNbTarget = getPlural(totalNbTarget)
                 setText(
                     "$totalControls action$pluralTotalControls de contrôle$pluralTotalControls et $totalNbTarget cible$pluralTotalNbTarget contrôlée$pluralTotalNbTarget",
                 )
@@ -253,7 +253,7 @@ class RecentActivityFile(
             setCellWidth(themeCell, 3000)
 
             val nbControlsCell = newRow.getCell(1) ?: newRow.createCell()
-            val plural = if (controls > 1) "s" else ""
+            val plural = getPlural(controls)
             nbControlsCell.text = "$controls action$plural de ctrl"
             styleCell(
                 nbControlsCell,

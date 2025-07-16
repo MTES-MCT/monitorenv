@@ -262,6 +262,11 @@ abstract class BriefFileWriter : IBriefFileWriter {
         }
     }
 
+    fun getPlural(totalControls: Int): String {
+        val pluralTotalControls = if (totalControls > 1) "s" else ""
+        return pluralTotalControls
+    }
+
     private fun createLayerTitle(
         title: String,
         paragraph: XWPFParagraph,
