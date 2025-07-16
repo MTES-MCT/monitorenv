@@ -112,6 +112,8 @@ describe('Create Vigilance Area', () => {
       cy.getDataCy('banner-stack').should('be.visible')
       cy.getDataCy('banner-stack').contains('La zone de vigilance a bien été créée')
 
+      cy.contains('Créée le')
+
       cy.wait(250)
       cy.get('#root').click(500, 650)
       cy.clickButton('Editer')

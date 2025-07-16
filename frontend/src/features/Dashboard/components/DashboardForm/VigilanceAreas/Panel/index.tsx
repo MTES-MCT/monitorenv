@@ -2,6 +2,7 @@ import { useGetVigilanceAreaQuery } from '@api/vigilanceAreasAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { PanelComments } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelComments'
+import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelDates'
 import { PanelImages } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelImages'
 import { PanelLinks } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelLinks'
 import { PanelPeriodAndThemes } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelPeriodAndThemes'
@@ -17,7 +18,7 @@ import {
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
-import { forwardRef, type ComponentProps } from 'react'
+import { type ComponentProps, forwardRef } from 'react'
 import styled from 'styled-components'
 
 import { Amps } from './Amps'
@@ -54,9 +55,13 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
         </TitleContainer>
 
         <SubHeaderContainer>
-          {vigilanceArea?.isDraft && (
+          {vigilanceArea?.isDraft ? (
             <Tag backgroundColor={THEME.color.slateGray} color={THEME.color.white}>
               Brouillon
+            </Tag>
+          ) : (
+            <Tag backgroundColor={THEME.color.mediumSeaGreen} color={THEME.color.white}>
+              Publiée
             </Tag>
           )}
           <IconButton
@@ -70,8 +75,8 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
       </Header>
       <PanelContainer>
         <PanelBody>
+          <PanelDates vigilanceArea={vigilanceArea} />
           <PanelPeriodAndThemes vigilanceArea={vigilanceArea} />
-
           <PanelComments comments={vigilanceArea?.comments} />
 
           {vigilanceArea?.linkedRegulatoryAreas && vigilanceArea?.linkedRegulatoryAreas.length > 0 && (

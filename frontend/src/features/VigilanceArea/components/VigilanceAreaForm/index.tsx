@@ -43,7 +43,7 @@ export function VigilanceAreaForm({
   const isPanelOpen = !!(selectedVigilanceAreaId && !editingVigilanceAreaId) || isReadOnly
   const isFormOpen = !!(selectedVigilanceAreaId && editingVigilanceAreaId) && !isReadOnly
 
-  const isNewVigilanceArea = !!(vigilanceAreaId === NEW_VIGILANCE_AREA_ID)
+  const isNewVigilanceArea = vigilanceAreaId === NEW_VIGILANCE_AREA_ID
 
   const { data: vigilanceArea } = useGetVigilanceAreaQuery(!isNewVigilanceArea ? vigilanceAreaId : skipToken)
 
@@ -109,9 +109,13 @@ export function VigilanceAreaForm({
         </TitleContainer>
         {isPanelOpen && (
           <SubHeaderContainer>
-            {vigilanceArea?.isDraft && (
+            {vigilanceArea?.isDraft ? (
               <Tag backgroundColor={THEME.color.slateGray} color={THEME.color.white}>
                 Brouillon
+              </Tag>
+            ) : (
+              <Tag backgroundColor={THEME.color.mediumSeaGreen} color={THEME.color.white}>
+                Publiée
               </Tag>
             )}
             <IconButton

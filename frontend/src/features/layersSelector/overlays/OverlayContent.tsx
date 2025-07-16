@@ -334,6 +334,7 @@ const ButtonContainer = styled.div`
   display: flex;
   line-height: 0;
   margin-left: auto;
+  align-items: center;
 `
 const Period = styled.span`
   color: ${p => p.theme.color.slateGray};

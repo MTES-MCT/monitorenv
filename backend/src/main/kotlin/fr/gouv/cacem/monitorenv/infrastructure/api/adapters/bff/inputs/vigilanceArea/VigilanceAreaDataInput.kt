@@ -37,6 +37,7 @@ data class VigilanceAreaDataInput(
     val createdAt: ZonedDateTime? = null,
     val updatedAt: ZonedDateTime? = null,
     val tags: List<TagInput> = listOf(),
+    val validatedAt: ZonedDateTime? = null,
 ) {
     fun toVigilanceAreaEntity(): VigilanceAreaEntity =
         VigilanceAreaEntity(
@@ -67,5 +68,6 @@ data class VigilanceAreaDataInput(
             createdAt = this.createdAt,
             updatedAt = this.updatedAt,
             tags = tags.map { it.toTagEntity() },
+            validatedAt = this.validatedAt,
         )
 }

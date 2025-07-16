@@ -117,6 +117,7 @@ data class VigilanceAreaModel(
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     var themes: List<ThemeVigilanceAreaModel>,
+    @Column(name = "validated_at") var validatedAt: ZonedDateTime?,
 ) {
     companion object {
         fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel {
@@ -148,6 +149,7 @@ data class VigilanceAreaModel(
                     createdAt = vigilanceArea.createdAt,
                     updatedAt = vigilanceArea.updatedAt,
                     tags = listOf(),
+                    validatedAt = vigilanceArea.validatedAt,
                 )
             vigilanceAreaModel.tags = fromTagEntities(vigilanceArea.tags, vigilanceAreaModel)
             vigilanceAreaModel.themes = fromThemeEntities(vigilanceArea.themes, vigilanceAreaModel)
@@ -185,6 +187,7 @@ data class VigilanceAreaModel(
             createdAt = createdAt,
             updatedAt = updatedAt,
             tags = toTagEntities(tags),
+            validatedAt = validatedAt,
         )
 
     @PrePersist

@@ -1,11 +1,14 @@
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
+import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelDates'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
+import { publish } from '@features/VigilanceArea/useCases/publish'
 import { saveVigilanceArea } from '@features/VigilanceArea/useCases/saveVigilanceArea'
+import { unpublish } from '@features/VigilanceArea/useCases/unpublish'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Button, Icon, Size } from '@mtes-mct/monitor-ui'
+import { Accent, Button, customDayjs, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
@@ -44,7 +47,7 @@ export function VigilanceAreaPanel({
 
   const { validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
 
-  const isFormValidForPublish = useMemo(() => {
+  const isFormValidToBePublished = useMemo(() => {
     try {
       PublishedSchema.validateSync(values, { abortEarly: false })
 
@@ -70,7 +73,7 @@ export function VigilanceAreaPanel({
     setIsDeleteModalOpen(false)
   }
 
-  const edit = () => {
+  const onEdit = () => {
     if (!editingVigilanceAreaId) {
       dispatch(vigilanceAreaActions.setEditingVigilanceAreaId(selectedVigilanceAreaId))
 
@@ -82,10 +85,22 @@ export function VigilanceAreaPanel({
     dispatch(vigilanceAreaActions.openCancelModal(values.id))
   }
 
-  const publish = () => {
+  const validate = () => {
+    dispatch(saveVigilanceArea({ ...values, validatedAt: customDayjs().utc().toISOString() }, false))
+  }
+
+  const onPublish = () => {
     validateForm({ ...values, isDraft: false }).then(errors => {
       if (isEmpty(errors)) {
-        dispatch(saveVigilanceArea({ ...values, isDraft: false }, true))
+        dispatch(publish(values))
+      }
+    })
+  }
+
+  const onUnpublish = () => {
+    validateForm({ ...values, isDraft: true }).then(errors => {
+      if (isEmpty(errors)) {
+        dispatch(unpublish(values))
       }
     })
   }
@@ -106,10 +121,9 @@ export function VigilanceAreaPanel({
           subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
           title="Supprimer la zone de vigilance&nbsp;?"
         />
+        <PanelDates onValidate={validate} vigilanceArea={vigilanceArea} />
         <PanelPeriodAndThemes vigilanceArea={vigilanceArea} />
-
         <PanelComments comments={vigilanceArea?.comments} />
-
         {values?.linkedRegulatoryAreas && values?.linkedRegulatoryAreas.length > 0 && (
           <PanelSubPart>
             <PanelInlineItemLabel>Réglementations en lien</PanelInlineItemLabel>
@@ -135,12 +149,18 @@ export function VigilanceAreaPanel({
             Supprimer
           </DeleteButton>
           <FooterRightButtons>
-            <Button accent={Accent.SECONDARY} onClick={edit} size={Size.SMALL}>
+            <Button accent={Accent.SECONDARY} onClick={onEdit} size={Size.SMALL}>
               Editer
             </Button>
-            <Button disabled={!isFormValidForPublish || !vigilanceArea?.isDraft} onClick={publish} size={Size.SMALL}>
-              {vigilanceArea?.isDraft ? 'Publier' : 'Publiée'}
-            </Button>
+            {vigilanceArea?.isDraft ? (
+              <Button disabled={!isFormValidToBePublished} onClick={onPublish} size={Size.SMALL}>
+                Publier
+              </Button>
+            ) : (
+              <Button disabled={!isFormValidToBePublished} onClick={onUnpublish} size={Size.SMALL}>
+                Dépublier
+              </Button>
+            )}
           </FooterRightButtons>
         </FooterContainer>
       )}

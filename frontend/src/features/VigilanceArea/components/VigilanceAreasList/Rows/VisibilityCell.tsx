@@ -5,5 +5,5 @@ export function VisibilityCell({ visibility }: { visibility: VigilanceArea.Visib
     return <span>-</span>
   }
 
-  return <span>{VigilanceArea.VisibilityLabel[visibility]}</span>
+  return <span>{VigilanceArea.VisibilityLabelForList[visibility]}</span>
 }

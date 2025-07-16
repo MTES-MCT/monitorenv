@@ -7,6 +7,7 @@ import { FrequencyCell } from '../Rows/FrequencyCell'
 import { HighlightCell } from '../Rows/HighlightCell'
 import { LocalizeCell } from '../Rows/LocalizeCell'
 import { StatusCell } from '../Rows/StatusCell'
+import { ValidationDateCell } from '../Rows/ValidationDateCell'
 import { VisibilityCell } from '../Rows/VisibilityCell'
 
 import type { Row } from '@tanstack/react-table'
@@ -34,13 +35,21 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Récurrence',
     id: 'frequency',
-    size: 160 + legacyFirefoxOffset,
+    size: 110 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => {
-      const labelA = VigilanceArea.FrequencyLabel[rowA.original.frequency] ?? ''
-      const labelB = VigilanceArea.FrequencyLabel[rowB.original.frequency] ?? ''
+      const labelA = VigilanceArea.FrequencyLabelForList[rowA.original.frequency] ?? ''
+      const labelB = VigilanceArea.FrequencyLabelForList[rowB.original.frequency] ?? ''
 
       return labelA.localeCompare(labelB)
     }
+  },
+  {
+    accessorFn: row => row.validatedAt,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <ValidationDateCell date={info.getValue()} />),
+    enableSorting: true,
+    header: () => 'Validité',
+    id: 'validatedAt',
+    size: 90 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.name,
@@ -69,7 +78,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Commentaire',
     id: 'comments',
-    size: 327 + legacyFirefoxOffset
+    size: 310 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.seaFront,
@@ -77,7 +86,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 104 + legacyFirefoxOffset
+    size: 100 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.visibility,
@@ -85,7 +94,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Visibilité',
     id: 'visibility',
-    size: 130 + legacyFirefoxOffset
+    size: 100 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.isDraft,

@@ -39,6 +39,7 @@ data class VigilanceAreaDataOutput(
     val createdAt: ZonedDateTime?,
     val updatedAt: ZonedDateTime?,
     val tags: List<TagOutput>,
+    val validatedAt: ZonedDateTime?,
 ) {
     companion object {
         fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaDataOutput =
@@ -71,6 +72,7 @@ data class VigilanceAreaDataOutput(
                 updatedAt = vigilanceArea.updatedAt,
                 isAtAllTimes = vigilanceArea.isAtAllTimes,
                 tags = vigilanceArea.tags.map { fromTagEntity(it) },
+                validatedAt = vigilanceArea.validatedAt,
             )
     }
 }

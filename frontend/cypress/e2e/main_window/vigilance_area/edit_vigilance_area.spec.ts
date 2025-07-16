@@ -36,6 +36,7 @@ describe('Edit Vigilance Area', () => {
       expect(updatedVigilanceArea.links.length).equal(2)
       expect(updatedVigilanceArea.links[1].linkText).equal('Ceci est un lien en rapport avec la zone de vigilance')
       expect(updatedVigilanceArea.links[1].linkUrl).equal('https://www.google.com')
+      cy.contains('Dernière modification le')
 
       // Reset data
       cy.clickButton('Editer')
@@ -141,7 +142,7 @@ describe('Edit Vigilance Area', () => {
       cy.clickButton('Enregistrer')
     })
   })
-  it('Should edit the vigilance area and no longer see it in the list of draft vigilance areas', () => {
+  it('Should publish the vigilance area and no longer see it in the list of draft vigilance areas then unpublish it', () => {
     cy.visit('/')
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
 
@@ -150,6 +151,12 @@ describe('Edit Vigilance Area', () => {
     cy.getDataCy('vigilance-area-zone-Zone de vigilance 5').should('be.visible')
     cy.clickButton('Afficher la zone de vigilance')
     cy.clickButton('Publier')
+    cy.contains('Dernière modification le')
+    cy.contains('Validée le')
+    cy.getDataCy('vigilance-area-validate').should('not.be.disabled')
     cy.getDataCy('vigilance-area-zone-Zone de vigilance 5').should('not.exist')
+    cy.clickButton('Dépublier')
+    cy.getDataCy('vigilance-area-validate').should('be.disabled')
+    cy.getDataCy('vigilance-area-zone-Zone de vigilance 5').should('be.visible')
   })
 })

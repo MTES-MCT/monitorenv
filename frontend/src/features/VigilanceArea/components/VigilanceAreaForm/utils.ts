@@ -24,6 +24,7 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     startDatePeriod: undefined,
     tags: [],
     themes: [],
+    validatedAt: undefined,
     visibility: VigilanceArea.Visibility.PRIVATE
   }
 }

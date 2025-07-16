@@ -31,6 +31,7 @@ export namespace VigilanceArea {
     tags?: TagFromAPI[]
     themes?: ThemeFromAPI[]
     updatedAt?: string
+    validatedAt?: string
     visibility?: Visibility
   }
 
@@ -60,6 +61,7 @@ export namespace VigilanceArea {
     tags?: TagFromAPI[]
     themes?: ThemeFromAPI[]
     updatedAt?: string
+    validatedAt?: string
     visibility?: Visibility
   }
 
@@ -75,6 +77,13 @@ export namespace VigilanceArea {
     ALL_WEEKS = 'Toutes les semaines',
     ALL_MONTHS = 'Tous les mois',
     ALL_YEARS = 'Tous les ans'
+  }
+
+  export enum FrequencyLabelForList {
+    NONE = 'Aucune',
+    ALL_WEEKS = 'Semaines',
+    ALL_MONTHS = 'Mois',
+    ALL_YEARS = 'Années'
   }
 
   export enum EndingCondition {
@@ -97,6 +106,11 @@ export namespace VigilanceArea {
   export enum VisibilityLabel {
     PUBLIC = 'Publique',
     PRIVATE = 'Interne CACEM'
+  }
+
+  export enum VisibilityLabelForList {
+    PUBLIC = 'Publique',
+    PRIVATE = 'CACEM'
   }
 
   export enum VigilanceAreaFilterPeriod {

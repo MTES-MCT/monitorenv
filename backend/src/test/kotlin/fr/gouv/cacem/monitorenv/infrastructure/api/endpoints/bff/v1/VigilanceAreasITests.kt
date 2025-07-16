@@ -136,6 +136,7 @@ class VigilanceAreasITests {
                             ),
                     ),
                 ),
+            validatedAt = null,
         )
 
     private val vigilanceArea2 =
@@ -164,6 +165,7 @@ class VigilanceAreasITests {
             updatedAt = ZonedDateTime.parse(updatedAt),
             isAtAllTimes = true,
             tags = listOf(),
+            validatedAt = ZonedDateTime.parse("2025-01-01T00:00:00Z"),
         )
 
     @Test
@@ -194,6 +196,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].themes").isEmpty())
             .andExpect(jsonPath("$[0].visibility", equalTo("PRIVATE")))
+            .andExpect(jsonPath("$[0].validatedAt").doesNotExist())
             .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
             .andExpect(jsonPath("$[1].id", equalTo(2)))
             .andExpect(jsonPath("$[1].name", equalTo("Vigilance Area 2")))
@@ -213,6 +216,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[1].themes").isEmpty())
             .andExpect(jsonPath("$[1].visibility", equalTo("PUBLIC")))
             .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
+            .andExpect(jsonPath("$[1].validatedAt", equalTo("2025-01-01T00:00:00Z")))
     }
 
     @Test
