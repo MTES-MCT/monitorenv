@@ -21,8 +21,7 @@ class CaffeineConfiguration(
 
     @Bean
     fun cacheManager(ticker: Ticker): CacheManager? {
-        // TODO : Still useful? Should we remove it?
-        val cacheInMinutes = oidcProperties.cacheInMinutes
+        val cacheInMinutes = 120
 
         val userAuthorizationCache = buildMinutesCache(userAuthorization, ticker, cacheInMinutes)
         val controlUnitsCache = buildMinutesCache(controlUnits, ticker, cacheInMinutes)
