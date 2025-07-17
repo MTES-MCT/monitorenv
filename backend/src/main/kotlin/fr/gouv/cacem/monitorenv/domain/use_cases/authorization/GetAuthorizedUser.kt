@@ -14,7 +14,7 @@ class GetAuthorizedUser(
 
     fun execute(email: String): AuthorizedUser {
         val hashedEmail = hash(email)
-        logger.info("Attempt to GET user $hashedEmail")
+        logger.info("Attempt to GET user $email")
 
         val userEntity = userAuthorizationRepository.findByHashedEmail(hashedEmail)
 
