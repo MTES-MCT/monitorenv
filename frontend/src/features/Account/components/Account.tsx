@@ -1,17 +1,19 @@
-import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
 import { StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
 import { globalActions } from 'domain/shared_slices/Global'
 
 export function Account() {
   const dispatch = useAppDispatch()
   const isAccountVisible = useAppSelector(state => state.global.visibility.isAccountDialogVisible)
-  const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
-  const { data: user } = useGetCurrentUserAuthorizationQuery()
 
+  const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
+  const isOidcEnabled = oidcEnabled === 'true'
+
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
   const toggle = () => {
     dispatch(globalActions.hideAllDialogs())
     dispatch(globalActions.setDisplayedItems({ visibility: { isAccountDialogVisible: !isAccountVisible } }))
@@ -20,7 +22,7 @@ export function Account() {
     window.location.href = '/logout'
   }
 
-  if (!oidcEnabled) {
+  if (!isOidcEnabled) {
     return null
   }
 

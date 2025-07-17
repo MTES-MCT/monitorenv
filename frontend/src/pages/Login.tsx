@@ -4,12 +4,13 @@ import styled from 'styled-components'
 
 export function Login() {
   const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
+  const isOidcEnabled = oidcEnabled === 'true'
 
   const onConnect = () => {
     window.location.href = '/oauth2/authorization/proconnect'
   }
 
-  if (!oidcEnabled) {
+  if (!isOidcEnabled) {
     return <Navigate to={paths.home} />
   }
 

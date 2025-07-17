@@ -1,12 +1,11 @@
-import { useGetCurrentUserAuthorizationQuery } from '@api/authorizationAPI'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Wrapper } from '@pages/Login'
 import { paths } from 'paths'
 import { Navigate } from 'react-router'
 import { LoadingSpinnerWall } from 'ui/LoadingSpinnerWall'
 
 export function RequireAuth({ children, redirect = false, requireSuperUser = false }) {
-  const { data: user, isLoading } = useGetCurrentUserAuthorizationQuery()
-  const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
+  const { data: user, isLoading } = useGetCurrentUserAuthorizationQueryOverride()
 
   const handleRedirect = (path, shouldRedirect) => {
     if (shouldRedirect) {
@@ -16,9 +15,6 @@ export function RequireAuth({ children, redirect = false, requireSuperUser = fal
     return null
   }
 
-  if (!oidcEnabled) {
-    return children
-  }
   if (isLoading) {
     return (
       <Wrapper>
