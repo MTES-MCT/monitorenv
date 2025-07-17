@@ -32,8 +32,8 @@ export type SearchProps = {
 export function useSearchLayers() {
   const dispatch = useAppDispatch()
 
-  const result = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = result?.isSuperUser ?? true
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = user?.isSuperUser ?? true
 
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()

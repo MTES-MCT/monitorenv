@@ -13,8 +13,8 @@ import { isReportingPartOfTag } from '../useCases/filters/isReportingPartOfTag'
 import { isReportingPartOfTheme } from '../useCases/filters/isReportingPartOfTheme'
 
 export const useGetFilteredReportingsQuery = (skip = false) => {
-  const result = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = result?.isSuperUser ?? true
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = user?.isSuperUser ?? true
 
   const {
     isAttachedToMissionFilter,

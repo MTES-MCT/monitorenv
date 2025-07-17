@@ -21,10 +21,14 @@ monitorenv:
     dsn: ${SENTRY_DSN}
   oidc:
     enabled: ${MONITORENV_OIDC_ENABLED}
+    clientId: ${MONITORENV_OIDC_CLIENT_ID:}
+    clientSecret: ${MONITORENV_OIDC_CLIENT_SECRET:}
+    redirectUri: ${MONITORENV_OIDC_REDIRECT_URI:}
     loginUrl: ${MONITORENV_OIDC_LOGIN_URL}
     successUrl: ${MONITORENV_OIDC_SUCCESS_URL}
     errorUrl: ${MONITORENV_OIDC_ERROR_URL}
     authorizedSirets: ${MONITORENV_OIDC_AUTHORIZED_SIRETS}
+    issuerUri: ${MONITORENV_OIDC_ISSUER_URI:}
   api:
     protected:
       paths: /bff/v1/*
@@ -67,20 +71,6 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       maxLifetime: 60000
-  security:
-    oauth2:
-      client:
-        registration:
-          proconnect:
-            provider: proconnect
-            client-id: ${MONITORENV_OIDC_CLIENT_ID}
-            client-secret: ${MONITORENV_OIDC_CLIENT_SECRET}
-            authorization-grant-type: authorization_code
-            redirect-uri: ${MONITORENV_OIDC_REDIRECT_URI}
-            scope: openid,profile
-        provider:
-          proconnect:
-            issuer-uri: ${MONITORENV_OIDC_ISSUER_URI}
 
 management:
   endpoints:

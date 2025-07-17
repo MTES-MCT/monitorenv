@@ -128,25 +128,25 @@ class SecurityConfig(
                         .anyRequest()
                         .authenticated()
                 }
-                if (oidcProperties.enabled == true && clientRegistrationRepository != null) {
-                    http
-                        .oauth2Login { oauth2 ->
-                            oauth2
-                                .userInfoEndpoint { userInfo ->
-                                    userInfo.oidcUserService(customOidcUserService())
-                                }.loginPage(oidcProperties.loginUrl)
-                                .successHandler(successHandler())
-                                .failureHandler(authenticationFailureHandler())
-                        }.logout { logout ->
-                            logout
-                                .logoutSuccessHandler(oidcLogoutSuccessHandler())
-                                .logoutRequestMatcher(AntPathRequestMatcher("/logout", "GET"))
-                                .invalidateHttpSession(true)
-                                .clearAuthentication(true)
-                                .deleteCookies("JSESSIONID")
-                        }
-                }
             }
+        if (oidcProperties.enabled == true && clientRegistrationRepository != null) {
+            http
+                .oauth2Login { oauth2 ->
+                    oauth2
+                        .userInfoEndpoint { userInfo ->
+                            userInfo.oidcUserService(customOidcUserService())
+                        }.loginPage(oidcProperties.loginUrl)
+                        .successHandler(successHandler())
+                        .failureHandler(authenticationFailureHandler())
+                }.logout { logout ->
+                    logout
+                        .logoutSuccessHandler(oidcLogoutSuccessHandler())
+                        .logoutRequestMatcher(AntPathRequestMatcher("/logout", "GET"))
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                }
+        }
 
         return http.build()
     }
