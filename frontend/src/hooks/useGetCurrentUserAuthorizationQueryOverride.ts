@@ -4,19 +4,23 @@ import { useLocation } from 'react-router'
 
 export const useGetCurrentUserAuthorizationQueryOverride = () => {
   const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
-  const location = useLocation()
+  const isOidcEnabled = oidcEnabled === 'true'
 
-  const { data } = useGetCurrentUserAuthorizationQuery(undefined, {
-    skip: !oidcEnabled
+  const location = useLocation()
+  const { data, isLoading } = useGetCurrentUserAuthorizationQuery(undefined, {
+    skip: !isOidcEnabled
   })
 
-  if (!oidcEnabled) {
+  if (!isOidcEnabled) {
     if (location.pathname === paths.ext) {
-      return { isSuperUser: false }
+      return { data: { isSuperUser: false } }
     }
 
-    return { isSuperUser: true }
+    return { data: { isSuperUser: true } }
   }
 
-  return data
+  return {
+    data,
+    isLoading
+  }
 }

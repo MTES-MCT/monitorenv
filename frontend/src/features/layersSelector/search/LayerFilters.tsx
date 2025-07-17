@@ -56,8 +56,8 @@ export function LayerFilters({
   updateDateRangeFilter
 }: LayerFiltersProps) {
   const dispatch = useAppDispatch()
-  const result = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = result?.isSuperUser ?? true
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = user?.isSuperUser ?? true
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
