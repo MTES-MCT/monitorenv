@@ -4,7 +4,6 @@ import fr.gouv.cacem.monitorenv.MonitorEnvApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.context.TestPropertySource
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.output.OutputFrame
@@ -15,7 +14,6 @@ import java.time.Duration
 import java.time.temporal.ChronoUnit
 
 @Testcontainers
-@TestPropertySource("classpath:/application.properties")
 @SpringBootTest(
     classes = [MonitorEnvApplication::class],
     properties = ["monitorenv.scheduling.enabled=false"],
