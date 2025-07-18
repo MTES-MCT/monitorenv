@@ -94,7 +94,7 @@ export function HistoryOfInfractions({
           <InfractionsAndPV>
             <Icon.CircleFilled color={dotColor()} size={8} />
             {totalSuspicionOfInfractions === 0 && totalInfraction === 0 ? (
-              <span>Pas d&apos;antécédant</span>
+              <span>Pas d&apos;antécédent</span>
             ) : (
               <>
                 <BoldOrNormalText $isBold={totalSuspicionOfInfractions > 0}>
