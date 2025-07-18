@@ -54,24 +54,64 @@ export function HistoryOfInfractions({
     ? 'ne peuvent être affichés que si un MMSI est rentré'
     : 'entrez un MMSI pour lancer la recherche'
 
+  const totalSuspicionOfInfractions = suspicionOfInfractions?.ids.length ?? 0
+  const dotColor = () => {
+    if (totalInfraction === 0) {
+      return THEME.color.mediumSeaGreen
+    }
+
+    if (totalPV === 0) {
+      return THEME.color.goldenPoppy
+    }
+
+    return THEME.color.maximumRed
+  }
+
+  if (!canSearch) {
+    return (
+      <Wrapper $align={!isLoading}>
+        <HistoryText>Antécédents : {informationsMessage}</HistoryText>
+      </Wrapper>
+    )
+  }
+
   return (
     <Wrapper $align={!isLoading}>
-      <span>Antécédents : {!canSearch ? informationsMessage : ''}</span>
-      {!isLoading && canSearch && envActions && suspicionOfInfractions && (
+      <HistoryText>
+        Antécédents
+        <StyledTooltip
+          iconSize={16}
+          isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
+          orientation="TOP_LEFT"
+        >
+          <span>Seul les signalements avec suspicion d&apos;infraction sont comptabilisés ici</span>
+        </StyledTooltip>
+        :
+      </HistoryText>
+
+      {!isLoading && canSearch && (
         <>
           <InfractionsAndPV>
-            <p>
-              {suspicionOfInfractions?.ids.length} {pluralize('infraction', suspicionOfInfractions?.ids.length)}{' '}
-              (suspicion)
-            </p>
-            <Icon.CircleFilled color={THEME.color.maximumRed} size={8} />
-            <p>
-              {totalInfraction} {pluralize('infraction', totalInfraction)}, {totalPV} PV
-            </p>
+            <Icon.CircleFilled color={dotColor()} size={8} />
+            {totalSuspicionOfInfractions === 0 && totalInfraction === 0 ? (
+              <span>Pas d&apos;antécédant</span>
+            ) : (
+              <>
+                <BoldOrNormalText $isBold={totalSuspicionOfInfractions > 0}>
+                  {totalSuspicionOfInfractions} {pluralize('signalement', totalSuspicionOfInfractions)},
+                </BoldOrNormalText>
+                <BoldOrNormalText $isBold={totalInfraction > 0}>
+                  {totalInfraction} {pluralize('infraction', totalInfraction)},
+                </BoldOrNormalText>
+                <BoldOrNormalText $isBold={totalPV > 0}>{totalPV} PV</BoldOrNormalText>
+              </>
+            )}
           </InfractionsAndPV>
+
           {themes.length > 0 && (
             <StyledTooltip
               isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
+              linkText="En savoir plus"
               orientation="TOP_LEFT"
             >
               <Header as="header">Thématiques&nbsp;: </Header>
@@ -89,30 +129,38 @@ export function HistoryOfInfractions({
   )
 }
 
-const Wrapper = styled(Italic)<{ $align: boolean }>`
-  font-size: 11px;
+const Wrapper = styled.div<{ $align: boolean }>`
+  align-items: center;
   color: ${({ theme }) => theme.color.slateGray};
   display: flex;
-  align-items: center;
-  gap: 16px;
+  font-size: 11px;
+  gap: 8px;
   ${p => (p.$align ? 'justify-content: start;' : 'justify-content: space-between;')}
 `
 const InfractionsAndPV = styled.span`
-  color: black;
-  font-size: 13px;
-  font-weight: bold;
-  font-style: normal;
-  display: flex;
-  gap: 5px;
   align-items: center;
+  color: black;
+  display: flex;
+  font-size: 13px;
+  gap: 5px;
+`
+
+const BoldOrNormalText = styled.span<{ $isBold: boolean }>`
+  font-weight: ${p => (p.$isBold ? 'bold' : 'normal')};
 `
 
 const StyledTooltip = styled(Tooltip)`
-  z-index: 101 !important;
+  max-width: 215px;
   padding: 8px;
+  z-index: 101 !important;
 `
 const Header = styled(Bold)`
   margin-bottom: 4px;
+`
+const HistoryText = styled(Italic)`
+  align-items: center;
+  display: flex;
+  gap: 2px;
 `
 
 const LoadingIcon = styled(Icon.Reset)`
@@ -122,6 +170,6 @@ const LoadingIcon = styled(Icon.Reset)`
     }
   }
   animation: spin 2s linear infinite;
-  transform-origin: center;
   color: ${p => p.theme.color.charcoal};
+  transform-origin: center;
 `

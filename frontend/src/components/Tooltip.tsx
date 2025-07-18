@@ -8,7 +8,9 @@ type TooltipType = {
   children: ReactNode
   className?: string
   color?: string
+  iconSize?: number
   isSideWindow?: boolean
+  linkText?: string
   orientation?: 'BOTTOM_RIGHT' | 'TOP_LEFT'
 }
 
@@ -17,7 +19,9 @@ export function Tooltip({
   className,
   color = THEME.color.slateGray,
   Icon = IconUi.Info,
+  iconSize = 18,
   isSideWindow = false,
+  linkText = undefined,
   orientation = 'BOTTOM_RIGHT'
 }: TooltipType) {
   const ref = useRef<HTMLDivElement>(null)
@@ -31,16 +35,32 @@ export function Tooltip({
   return (
     <>
       <Wrapper ref={ref}>
-        <Icon
-          aria-describedby={id}
-          color={color}
-          onBlur={() => setIsVisible(false)}
-          onFocus={() => setIsVisible(true)}
-          onMouseLeave={() => setIsVisible(false)}
-          onMouseOver={() => setIsVisible(true)}
-          style={{ cursor: 'pointer' }}
-          tabIndex={0}
-        />
+        {linkText ? (
+          <LinkText
+            aria-describedby={id}
+            color={color}
+            onBlur={() => setIsVisible(false)}
+            onFocus={() => setIsVisible(true)}
+            onMouseLeave={() => setIsVisible(false)}
+            onMouseOver={() => setIsVisible(true)}
+            style={{ cursor: 'pointer' }}
+            tabIndex={0}
+          >
+            {linkText}
+          </LinkText>
+        ) : (
+          <Icon
+            aria-describedby={id}
+            color={color}
+            onBlur={() => setIsVisible(false)}
+            onFocus={() => setIsVisible(true)}
+            onMouseLeave={() => setIsVisible(false)}
+            onMouseOver={() => setIsVisible(true)}
+            size={iconSize}
+            style={{ cursor: 'pointer' }}
+            tabIndex={0}
+          />
+        )}
       </Wrapper>
 
       {isVisible &&
@@ -84,4 +104,8 @@ const Wrapper = styled.div`
   > span:hover {
     color: ${p => p.theme.color.blueYonder};
   }
+`
+const LinkText = styled.span`
+  text-decoration: underline;
+  font-style: normal;
 `
