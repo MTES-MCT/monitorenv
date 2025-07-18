@@ -1,17 +1,13 @@
 import { createPendingMission } from '../../utils/createPendingMission'
 import { createReporting } from '../../utils/createReporting'
+import { visitSideWindow } from '../../utils/visitSideWindow'
 
 import type { Reporting } from 'domain/entities/reporting'
 
 context('Reportings', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`, {
-      onBeforeLoad() {
-        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
-      }
-    })
+    visitSideWindow()
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.clickButton('Signalements')
     cy.wait('@getReportings')
@@ -128,7 +124,7 @@ context('Reportings', () => {
     cy.intercept('GET', '/bff/v1/infractions/reportings/987654321?idToExclude=5').as('getSuspicionOfInfraction')
     cy.getDataCy('edit-reporting-5').click({ force: true })
     cy.wait(['@getRepeatedInfractions', '@getSuspicionOfInfraction'])
-    cy.contains('Antécédents : 0 infraction (suspicion)0 infraction, 0 PV')
+    cy.contains("Pas d'antécédent")
     createPendingMission().then(({ body }) => {
       cy.intercept('PUT', `/bff/v1/missions/${body.id}`).as('updateMission')
       // Add a control
@@ -155,14 +151,21 @@ context('Reportings', () => {
       cy.wait('@updateMission').then(() => {
         cy.clickButton('Signalements')
         cy.wait('@getReportings')
-        cy.contains('Antécédents : 0 infraction (suspicion)1 infraction, 1 PV')
+        cy.contains('0 signalement')
+        cy.contains('1 infraction')
+        cy.contains('1 PV')
         cy.clickButton('Fermer')
         cy.clickButton('Ajouter un nouveau signalement')
         createReporting().then(() => {
+          cy.wait(250)
           cy.fill('Type de cible', 'Véhicule', { force: true })
+          cy.wait(250)
           cy.fill('Type de véhicule', 'Navire', { force: true })
+          cy.wait(250)
           cy.fill('MMSI', '987654321', { force: true })
-          cy.contains('Antécédents : 1 infraction (suspicion)1 infraction, 1 PV')
+          cy.contains('1 signalement')
+          cy.contains('1 infraction')
+          cy.contains('1 PV')
           // cleanup
           cy.clickButton('Supprimer le signalement')
           cy.clickButton('Confirmer la suppression')
