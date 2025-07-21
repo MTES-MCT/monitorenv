@@ -77,17 +77,7 @@ export function HistoryOfInfractions({
 
   return (
     <Wrapper $align={!isLoading}>
-      <HistoryText>
-        Antécédents
-        <StyledTooltip
-          iconSize={16}
-          isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
-          orientation="TOP_LEFT"
-        >
-          <span>Seul les signalements avec suspicion d&apos;infraction sont comptabilisés ici</span>
-        </StyledTooltip>
-        :
-      </HistoryText>
+      <HistoryText>Antécédents:</HistoryText>
 
       {!isLoading && canSearch && (
         <>
@@ -97,9 +87,19 @@ export function HistoryOfInfractions({
               <span>Pas d&apos;antécédent</span>
             ) : (
               <>
-                <BoldOrNormalText $isBold={totalSuspicionOfInfractions > 0}>
-                  {totalSuspicionOfInfractions} {pluralize('signalement', totalSuspicionOfInfractions)},
-                </BoldOrNormalText>
+                <>
+                  <BoldOrNormalText $isBold={totalSuspicionOfInfractions > 0}>
+                    {totalSuspicionOfInfractions} {pluralize('signalement', totalSuspicionOfInfractions)}
+                  </BoldOrNormalText>
+                  <StyledTooltip
+                    iconSize={16}
+                    isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
+                    orientation="TOP_LEFT"
+                  >
+                    <span>Seul les signalements avec suspicion d&apos;infraction sont comptabilisés ici</span>
+                  </StyledTooltip>
+                  ,
+                </>
                 <BoldOrNormalText $isBold={totalInfraction > 0}>
                   {totalInfraction} {pluralize('infraction', totalInfraction)},
                 </BoldOrNormalText>
