@@ -19,3 +19,18 @@ export const StyledLayerList = styled(LayerSelector.LayerList)`
   height: auto;
   max-height: 100%;
 `
+
+export const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $metadataIsShown: boolean }>`
+  background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : p.theme.color.white)};
+  padding-left: 24px;
+  padding-right: 24px;
+  justify-content: space-between;
+
+  ${p =>
+    p.$isSelected &&
+    `
+        padding-left: 20px;
+        padding-right: 20px;
+       
+    `}
+`
