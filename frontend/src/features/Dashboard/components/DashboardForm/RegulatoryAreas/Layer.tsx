@@ -14,6 +14,7 @@ import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayers
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { StyledLayer } from '../style'
 
 type RegulatoryLayerProps = {
   isPinned?: boolean
@@ -81,19 +82,20 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
       $metadataIsShown={openPanel?.id === layerId && openPanel?.isPinned === isSelected}
       onClick={toggleZoneMetadata}
     >
-      <LayerLegend
-        layerType={MonitorEnvLayers.REGULATORY_ENV}
-        legendKey={layer?.entityName ?? 'aucun'}
-        type={displayTags(layer?.tags) ?? 'aucun'}
-      />
-      <LayerSelector.Name
-        $withLargeWidth
-        data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-area-zone-${layer?.id}`}
-        title={layer?.entityName}
-      >
-        {layer?.entityName ?? 'AUCUN NOM'}
-      </LayerSelector.Name>
-
+      <Wrapper>
+        <LayerLegend
+          layerType={MonitorEnvLayers.REGULATORY_ENV}
+          legendKey={layer?.entityName ?? 'aucun'}
+          type={displayTags(layer?.tags) ?? 'aucun'}
+        />
+        <LayerSelector.Name
+          $withLargeWidth
+          data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-area-zone-${layer?.id}`}
+          title={layer?.entityName}
+        >
+          {layer?.entityName ?? 'AUCUN NOM'}
+        </LayerSelector.Name>
+      </Wrapper>
       <LayerSelector.IconGroup>
         {isSelected ? (
           <IconButton
@@ -118,15 +120,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
   )
 }
 
-const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $metadataIsShown: boolean }>`
-  background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : p.theme.color.white)};
-  padding-left: 24px;
-  padding-right: 24px;
-  ${p =>
-    p.$isSelected &&
-    `
-        padding-left: 20px;
-        padding-right: 20px;
-       
-    `}
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
 `
