@@ -11,7 +11,7 @@ import { useMemo } from 'react'
 
 export const useGetFilteredVigilanceAreasForMapQuery = () => {
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const isSuperUser = user?.isSuperUser ?? true
 
   const { status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
 

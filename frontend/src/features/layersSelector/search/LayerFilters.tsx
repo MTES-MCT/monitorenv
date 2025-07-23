@@ -57,7 +57,7 @@ export function LayerFilters({
 }: LayerFiltersProps) {
   const dispatch = useAppDispatch()
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser
+  const isSuperUser = user?.isSuperUser ?? true
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))

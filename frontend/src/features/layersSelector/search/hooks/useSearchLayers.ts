@@ -33,7 +33,7 @@ export function useSearchLayers() {
   const dispatch = useAppDispatch()
 
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser
+  const isSuperUser = user?.isSuperUser ?? true
 
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()

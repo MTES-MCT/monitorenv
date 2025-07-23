@@ -14,8 +14,8 @@ import { isReportingPartOfTheme } from '../useCases/filters/isReportingPartOfThe
 
 export const useGetFilteredReportingsQuery = (skip = false) => {
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = user?.isSuperUser ?? true
 
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
   const {
     isAttachedToMissionFilter,
     isUnattachedToMissionFilter,

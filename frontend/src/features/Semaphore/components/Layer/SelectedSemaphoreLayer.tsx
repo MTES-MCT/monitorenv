@@ -31,7 +31,7 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
   )
 
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const isSuperUser = user?.isSuperUser ?? true
 
   const { data: semaphores } = useGetSemaphoresQuery()
   const { reportings } = useGetFilteredReportingsQuery()

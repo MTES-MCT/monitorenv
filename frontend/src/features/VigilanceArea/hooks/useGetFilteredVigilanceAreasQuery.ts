@@ -15,7 +15,7 @@ import { isVigilanceAreaPartOfVisibility } from '../useCases/filters/isVigilance
 
 export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const isSuperUser = user?.isSuperUser ?? true
 
   const { createdBy, seaFronts, searchQuery, status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
 

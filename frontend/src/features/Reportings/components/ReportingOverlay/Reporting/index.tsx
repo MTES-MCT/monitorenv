@@ -5,7 +5,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened, removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 
 import { ReportingCard } from './ReportingCard'
 
@@ -32,11 +32,6 @@ export function ReportingOverlay({
   const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
-  const listener = useAppSelector(state => state.draw.listener)
-  const isMissionAttachmentInProgress = useAppSelector(
-    state => state.attachMissionToReporting.isMissionAttachmentInProgress
-  )
-  const displayReportingsLayer = useAppSelector(state => state.global.layers.displayReportingsLayer)
   const displayReportingsOverlay = useAppSelector(state => state.global.layers.displayReportingsOverlay)
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
@@ -59,11 +54,6 @@ export function ReportingOverlay({
     typeof currentfeatureId === 'string' &&
     currentfeatureId.startsWith(Layers.REPORTINGS.code) &&
     currentfeatureId !== `${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`
-
-  const isCardVisible = useMemo(
-    () => displayReportingsLayer && !listener && !isMissionAttachmentInProgress,
-    [displayReportingsLayer, listener, isMissionAttachmentInProgress]
-  )
 
   const updateHoveredMargins = (cardHeight: number) => {
     if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
@@ -94,7 +84,6 @@ export function ReportingOverlay({
       >
         <ReportingCard
           feature={feature}
-          isCardVisible={isCardVisible}
           isSuperUser={isSuperUser}
           onClose={close}
           selected
@@ -111,7 +100,6 @@ export function ReportingOverlay({
       >
         <ReportingCard
           feature={hoveredFeature}
-          isCardVisible={isCardVisible}
           isSuperUser={isSuperUser}
           onClose={close}
           updateMargins={updateHoveredMargins}

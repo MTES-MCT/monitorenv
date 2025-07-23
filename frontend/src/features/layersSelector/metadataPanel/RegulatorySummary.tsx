@@ -12,7 +12,7 @@ type RegulatorySummaryProps = {
 export function RegulatorySummary({ regulatoryReference, type, url }: RegulatorySummaryProps) {
   const { trackEvent } = useTracking()
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser
+  const isSuperUser = user?.isSuperUser ?? true
 
   const goToRegulatoryReference = () => {
     if (isSuperUser) {

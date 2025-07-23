@@ -35,6 +35,7 @@ export default defineConfig(({ mode }) => {
     ],
 
     server: {
+      host: '0.0.0.0',
       port: 3000,
       proxy: {
         '/api': {
@@ -42,6 +43,18 @@ export default defineConfig(({ mode }) => {
         },
         '/bff': {
           target: 'http://localhost:8880'
+        },
+        '/logout': {
+          target: 'http://localhost:8880'
+        },
+        '/oauth2': {
+          target: 'http://localhost:8880'
+        },
+        '/realms': {
+          target: 'http://localhost:8085'
+        },
+        '/resources': {
+          target: 'http://localhost:8085'
         }
       }
     }

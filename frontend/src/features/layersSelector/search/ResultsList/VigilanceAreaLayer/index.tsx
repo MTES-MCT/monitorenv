@@ -28,7 +28,7 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
 
   const { trackEvent } = useTracking()
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser
+  const isSuperUser = user?.isSuperUser ?? true
 
   const myVigilanceAreaIds = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIds)
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)

@@ -32,8 +32,7 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   )
 
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
-
+  const isSuperUser = user?.isSuperUser ?? true
   const { data: semaphores } = useGetSemaphoresQuery()
 
   const { reportings } = useGetFilteredReportingsQuery(!isSuperUser)

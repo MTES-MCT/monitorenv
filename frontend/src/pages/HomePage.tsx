@@ -29,8 +29,7 @@ export function HomePage() {
   const dispatch = useAppDispatch()
 
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const isSuperUser = user?.isSuperUser ?? true
 
   const displayDrawModal = useAppSelector(state => state.global.menus.displayDrawModal)
   const displayLocateOnMap = useAppSelector(state => state.global.menus.displayLocateOnMap)
