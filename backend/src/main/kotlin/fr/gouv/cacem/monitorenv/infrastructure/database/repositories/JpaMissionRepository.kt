@@ -13,9 +13,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlResourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlUnitModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanSubThemeRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanTagRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlPlanThemeRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
@@ -32,9 +29,6 @@ import java.time.Instant
 
 @Repository
 class JpaMissionRepository(
-    private val dbControlPlanThemeRepository: IDBControlPlanThemeRepository,
-    private val dbControlPlanSubThemeRepository: IDBControlPlanSubThemeRepository,
-    private val dbControlPlanTagRepository: IDBControlPlanTagRepository,
     private val dbControlUnitResourceRepository: IDBControlUnitResourceRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbMissionControlUnitRepository: IDBMissionControlUnitRepository,
