@@ -60,7 +60,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     size: 272 + legacyFirefoxOffset
   },
   {
-    accessorFn: row => row.tags?.map(tag => tag.name).join(', '),
+    accessorFn: row => row.themes?.map(theme => theme.name).join(', '),
     cell: info =>
       isFetching ? (
         <StyledSkeletonRow />

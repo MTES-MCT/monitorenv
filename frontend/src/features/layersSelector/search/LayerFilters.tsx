@@ -21,8 +21,8 @@ import {
   type Option,
   SingleTag
 } from '@mtes-mct/monitor-ui'
-import { filterSubTags } from '@utils/getTagsAsOptions'
-import { filterSubThemes } from '@utils/getThemesAsOptions'
+import { deleteTagTag } from '@utils/deleteTagTag'
+import { deleteThemeTag } from '@utils/deleteThemeTag'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -80,22 +80,16 @@ export function LayerFilters({
     if (filteredRegulatoryTags.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
-    const updatedFilter: TagOption[] = filteredRegulatoryTags
-      .map(tag => filterSubTags(tag, regulatoryTagToDelete))
-      .filter(tag => tag !== undefined)
-      .filter(tag => tag.id !== regulatoryTagToDelete.id)
+    const updatedFilter = deleteTagTag(filteredRegulatoryTags, regulatoryTagToDelete)
 
     setFilteredRegulatoryTags(updatedFilter)
   }
 
-  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: TagOption) => () => {
+  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: ThemeOption) => () => {
     if (filteredRegulatoryThemes.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
-    const updatedFilter: TagOption[] = filteredRegulatoryThemes
-      .map(theme => filterSubThemes(theme, regulatoryThemeToDelete))
-      .filter(theme => theme !== undefined)
-      .filter(theme => theme.id !== regulatoryThemeToDelete.id)
+    const updatedFilter = deleteThemeTag(filteredRegulatoryThemes, regulatoryThemeToDelete)
 
     setFilteredRegulatoryThemes(updatedFilter)
   }
