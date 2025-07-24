@@ -10,7 +10,6 @@ import viteTsconfigPaths from 'vite-tsconfig-paths'
 // eslint-disable-next-line import/no-default-export
 export default defineConfig(
   // @see https://vite.dev/config/#using-environment-variables-in-config
-
   {
     build: {
       minify: true,
@@ -20,11 +19,15 @@ export default defineConfig(
         treeshake: true,
         input: {
           index: './index.html'
+        },
+        output: {
+          manualChunks: {
+            'monitor-ui': ['@mtes-mct/monitor-ui']
+          }
         }
       },
       target: 'esnext'
     },
-
     plugins: [
       react(),
       viteTsconfigPaths(),
