@@ -1,5 +1,4 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
-import { isSameDay } from 'rsuite/esm/utils/dateUtils'
 
 import { type NearbyUnit, NearbyUnitDateRangeEnum } from './types'
 
@@ -26,7 +25,7 @@ export function getDateRange(missions: Mission[]) {
       start: missions[0]?.startDateTimeUtc ? customDayjs(missions[0].startDateTimeUtc) : undefined
     }
   )
-  const isSingleDayRange = start && end ? isSameDay(start.toDate(), end.toDate()) : false
+  const isSingleDayRange = start && end ? start.isSame(end, 'day') : false
 
   return { end, isSingleDayRange, start }
 }

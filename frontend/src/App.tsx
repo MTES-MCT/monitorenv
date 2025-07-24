@@ -20,8 +20,7 @@ import { BrowserRouter, Route, Routes } from 'react-router'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import { CustomProvider as RsuiteCustomProvider } from 'rsuite'
-
-import { FR_FR_LOCALE } from './uiMonitor/locale_frFR'
+import frFR from 'rsuite/locales/fr_FR'
 
 export function App() {
   useMatomo()
@@ -41,7 +40,7 @@ export function App() {
       <OnlyFontGlobalStyle />
       <CustomGlobalStyle />
 
-      <RsuiteCustomProvider disableRipple locale={FR_FR_LOCALE}>
+      <RsuiteCustomProvider disableRipple locale={frFR}>
         <ErrorBoundary>
           <ReduxProvider store={homeStore}>
             <PersistGate loading={undefined} persistor={persistor}>
