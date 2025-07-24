@@ -9,9 +9,26 @@ export function isVigilanceAreaPartOfTheme(
     return true
   }
 
-  const allThemes = vigilanceArea.themes
-    ? [...vigilanceArea.themes, ...vigilanceArea.themes.flatMap(({ subThemes }) => subThemes)]
+  const vigilanceAreaThemesWithoutChildren = vigilanceArea.themes
+    ? [...vigilanceArea.themes.filter(tag => tag.subThemes?.length === 0)]
+    : []
+  const vigilanceAreaSubThemes = vigilanceArea.themes
+    ? [...vigilanceArea.themes.flatMap(({ subThemes }) => subThemes)]
     : []
 
-  return themesFilter.some(themeFilter => allThemes.some(theme => theme.id === themeFilter.id))
+  const allThemesWithoutChildrenFilter = [...themesFilter.filter(tagFilter => tagFilter?.subThemes?.length === 0)]
+  const allSubThemesFilter = themesFilter.flatMap(tagFilter => tagFilter?.subThemes || [])
+
+  const hasMatchingSubThemes = allSubThemesFilter.some(tagFilter =>
+    vigilanceAreaSubThemes.some(subTag => subTag.id === tagFilter.id)
+  )
+
+  let hasMatchingThemes = false
+  if (vigilanceAreaThemesWithoutChildren.length > 0) {
+    hasMatchingThemes = allThemesWithoutChildrenFilter.some(tagFilter =>
+      vigilanceAreaThemesWithoutChildren.some(tag => tag.id === tagFilter.id)
+    )
+  }
+
+  return hasMatchingThemes || hasMatchingSubThemes
 }

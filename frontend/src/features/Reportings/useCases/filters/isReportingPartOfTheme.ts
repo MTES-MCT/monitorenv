@@ -6,7 +6,20 @@ export function isReportingPartOfTheme(reporting: Reporting, themesFilter: Theme
     return true
   }
 
-  const allThemes = [reporting.theme, ...reporting.theme.subThemes]
+  const isReportingThemeIsWithoutChildren = reporting.theme.subThemes.length === 0
+  const allReportingSubThemes = [...reporting.theme.subThemes]
 
-  return themesFilter.some(themeFilter => allThemes.some(theme => theme.id === themeFilter.id))
+  const allThemesWithoutChildrenFilter = [...themesFilter.filter(themeFilter => themeFilter?.subThemes?.length === 0)]
+  const allSubThemesFilter = themesFilter.flatMap(themeFilter => themeFilter?.subThemes || [])
+
+  let hasMatchingThemes = false
+  if (isReportingThemeIsWithoutChildren) {
+    hasMatchingThemes = allThemesWithoutChildrenFilter.some(themeFilter => reporting.theme.id === themeFilter.id)
+  }
+
+  const hasMatchingSubThemes = allSubThemesFilter?.some(subThemeFilter =>
+    allReportingSubThemes.some(subTheme => subTheme.id === subThemeFilter.id)
+  )
+
+  return hasMatchingThemes || hasMatchingSubThemes
 }
