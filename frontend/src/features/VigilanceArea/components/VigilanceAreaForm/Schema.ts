@@ -5,6 +5,19 @@ import * as Yup from 'yup'
 import type { ImageApi } from '@components/Form/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
+export const VigilanceAreaSourceSchema: Yup.Schema<Omit<VigilanceArea.VigilanceAreaSource, 'id'>> = Yup.object()
+  .shape({
+    controlUnitContacts: Yup.array().optional(),
+    email: Yup.string().optional(),
+    name: Yup.string().optional(),
+    phone: Yup.string().optional()
+  })
+  .test(
+    'at-least-one-contact',
+    'At least one contact method must be provided: name, email, phone, or controlUnitContact',
+    value => !!(value?.name || value?.email || value?.phone || (value?.controlUnitContacts?.length ?? 0) > 0)
+  )
+
 export const DraftSchema: Yup.Schema<
   Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'isArchived' | 'seaFront'>
 > = Yup.object()
@@ -30,7 +43,7 @@ export const DraftSchema: Yup.Schema<
     linkedRegulatoryAreas: Yup.array().optional(),
     links: Yup.array().optional(),
     name: Yup.string().required(),
-    source: Yup.string().optional(),
+    sources: Yup.array().of(VigilanceAreaSourceSchema).optional(),
     startDatePeriod: Yup.string().optional(),
     tags: Yup.array().ensure().optional(),
     themes: Yup.array().ensure().optional(),
@@ -98,7 +111,7 @@ export const PublishedSchema: Yup.Schema<
     linkedRegulatoryAreas: Yup.array().optional(),
     links: Yup.array().optional(),
     name: Yup.string().required(),
-    source: Yup.string().optional(),
+    sources: Yup.array().of(VigilanceAreaSourceSchema).optional(),
     startDatePeriod: Yup.string().when('isAtAllTimes', {
       is: false,
       otherwise: schema => schema.nullable(),
@@ -121,7 +134,6 @@ export const PublishedSchema: Yup.Schema<
       }),
     visibility: Yup.mixed<VigilanceArea.Visibility>().oneOf(Object.values(VigilanceArea.Visibility)).required()
   })
-
   .required()
 
 export const VigilanceAreaSchema = Yup.lazy(value => {

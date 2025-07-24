@@ -1,37 +1,33 @@
-import { Tooltip } from '@components/Tooltip'
-import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
-import { THEME } from '@mtes-mct/monitor-ui'
+import { Bold } from '@components/style'
+import { formatPhoneNumber } from '@features/ControlUnit/components/ControlUnitDialog/ControlUnitContactList/Item'
+import { Link } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { PanelInlineItem, PanelInlineItemLabel, PanelInlineItemValue, PanelInternText, PanelSubPart } from '../style'
+type SourceProps = {
+  email?: string
+  name?: string
+  phone?: string
+}
 
-export function PanelSource({ createdBy, source }: { createdBy: string | undefined; source: string | undefined }) {
+export function PanelSource({ email, name, phone }: SourceProps) {
   return (
-    <PanelSubPart data-cy="vigilance-area-panel-source">
-      <Wrapper>
-        <PanelInternText>Section interne CACEM</PanelInternText>
-        <Tooltip color={THEME.color.maximumRed}>
-          Même si la visibilité de la zone de vigilance est publique, les infos de cette section &quot;Interne
-          CACEM&quot; ne seront pas visibles sur la version de MonitorEnv utilisée hors du centre.
-        </Tooltip>
-      </Wrapper>
-      <PanelInlineItem>
-        <PanelInlineItemLabel>Créé par</PanelInlineItemLabel>
-        <PanelInlineItemValue>{createdBy ?? EMPTY_VALUE}</PanelInlineItemValue>
-      </PanelInlineItem>
-      {source && (
-        <PanelInlineItem>
-          <PanelInlineItemLabel>Source</PanelInlineItemLabel>
-          <PanelInlineItemValue $maxLine={2} title={source}>
-            {source}
-          </PanelInlineItemValue>
-        </PanelInlineItem>
+    <Container>
+      {name && <Bold>{name}</Bold>}
+      {phone && <Phone>{formatPhoneNumber(phone)}</Phone>}
+      {email && (
+        <Link href={`mailto:${email}`} rel="noreferrer" target="_blank">
+          {email}
+        </Link>
       )}
-    </PanelSubPart>
+    </Container>
   )
 }
 
-const Wrapper = styled.div`
+const Phone = styled.span`
+  color: ${$p => $p.theme.color.slateGray};
+`
+
+const Container = styled.div`
   display: flex;
-  gap: 8px;
+  flex-direction: column;
 `

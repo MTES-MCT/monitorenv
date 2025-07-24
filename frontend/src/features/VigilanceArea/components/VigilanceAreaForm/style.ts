@@ -122,10 +122,14 @@ export const PanelImageContainer = styled.div`
   }
 `
 
-export const PanelInlineItem = styled.div`
+export const PanelItem = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 16px;
+`
+
+export const PanelInlineItem = styled(PanelItem)`
+  flex-direction: row;
 `
 
 export const PanelInlineItemLabel = styled.span<{ $isInline?: boolean }>`

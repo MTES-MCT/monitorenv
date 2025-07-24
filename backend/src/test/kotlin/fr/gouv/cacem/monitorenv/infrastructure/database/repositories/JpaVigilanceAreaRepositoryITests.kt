@@ -2,13 +2,15 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
-import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -63,7 +65,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(vigilanceArea?.isDraft).isFalse()
         assertThat(vigilanceArea?.links?.get(0)?.linkText).isEqualTo("lien vers arrêté réfectoral")
         assertThat(vigilanceArea?.links?.get(0)?.linkUrl).isEqualTo("www.google.fr")
-        assertThat(vigilanceArea?.source).isEqualTo("Unité BSN Ste Maxime")
+        assertThat(vigilanceArea?.sources[0]?.name).isEqualTo("Unité BSN Ste Maxime")
         assertThat(vigilanceArea?.name).isEqualTo("Zone de vigilance 1")
         assertThat(vigilanceArea?.themes).isEmpty()
         assertThat(vigilanceArea?.visibility).isEqualTo(VisibilityEnum.PUBLIC)
@@ -120,14 +122,20 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                         ),
                     ),
                 links = null,
-                source = "Source de la zone de vigilance",
+                sources = listOf(
+                    VigilanceAreaSourceEntity(
+                        id = null, name = "Source de la zone de vigilance", phone = null,
+                        email = null,
+                        controlUnitContacts = null
+                    ),
+                ),
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = null,
                 updatedAt = null,
                 isAtAllTimes = false,
                 tags = listOf(aTag(id = 5)),
-                themes = listOf(ThemeFixture.aTheme(id = 9)),
+                themes = listOf(aTheme(id = 9)),
                 validatedAt = ZonedDateTime.parse("2025-01-01T00:00:00Z"),
             )
 
@@ -146,7 +154,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(savedVigilanceArea.isDeleted).isFalse()
         assertThat(savedVigilanceArea.isDraft).isTrue()
         assertThat(savedVigilanceArea.links).isNull()
-        assertThat(savedVigilanceArea.source).isEqualTo("Source de la zone de vigilance")
+        assertThat(savedVigilanceArea.sources[0].name).isEqualTo("Source de la zone de vigilance")
         assertThat(savedVigilanceArea.name).isEqualTo("Nouvelle zone de vigilance")
         assertThat(savedVigilanceArea.startDatePeriod)
             .isEqualTo(ZonedDateTime.parse("2024-08-18T00:00:00Z"))
@@ -169,9 +177,26 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
     fun `save should update vigilance area`() {
         // Given
         val vigilanceArea = jpaVigilanceAreaRepository.findById(5)
+        val controlUnitContact = ControlUnitContactEntity(
+            id = 1,
+            controlUnitId = 10000,
+            email = "email_1",
+            isEmailSubscriptionContact = true,
+            isSmsSubscriptionContact = false,
+            name = "Contact 1",
+            phone = "0601xxxxxx",
+        )
         val updatedVigilanceArea =
             vigilanceArea!!.copy(
                 name = "Zone de vigilance mise à jour",
+                sources = listOf(
+                    VigilanceAreaSourceEntity(
+                        id = null, controlUnitContacts = listOf(controlUnitContact),
+                        name = null,
+                        email = null,
+                        phone = null
+                    )
+                ),
                 isDraft = false,
             )
 
@@ -190,7 +215,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(savedVigilanceArea.isDeleted).isFalse()
         assertThat(savedVigilanceArea.isDraft).isFalse()
         assertThat(savedVigilanceArea.links).isNull()
-        assertThat(savedVigilanceArea.source).isNull()
+        assertThat(savedVigilanceArea.sources[0].controlUnitContacts).contains(controlUnitContact)
         assertThat(savedVigilanceArea.name).isEqualTo("Zone de vigilance mise à jour")
         assertThat(savedVigilanceArea.tags[0].id).isEqualTo(1)
         assertThat(savedVigilanceArea.tags[1].id).isEqualTo(2)

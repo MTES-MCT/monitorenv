@@ -12,6 +12,24 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaControlUnitContactRepository: JpaControlUnitContactRepository
 
+    @Autowired
+    private lateinit var jpaVigilanceAreaRepository: JpaVigilanceAreaRepository
+
+    @Test
+    fun `deleteById should delete a contact by id and delete all contact from vigilanceAreaSource`() {
+        // Given
+        val contactId = 1
+        val vigilanceArea = jpaVigilanceAreaRepository.findById(1)
+        assertThat(vigilanceArea?.sources?.any { it.controlUnitContacts?.isNotEmpty() == true }).isTrue
+
+        // When
+        jpaControlUnitContactRepository.deleteById(contactId)
+
+        // Then
+        val vigilanceAreaWithoutControlUnitContact = jpaVigilanceAreaRepository.findById(1)
+        assertThat(vigilanceAreaWithoutControlUnitContact?.sources?.all { it.controlUnitContacts.isNullOrEmpty() }).isTrue
+    }
+
     @Test
     @Transactional
     fun `findAll() should find all contacts`() {

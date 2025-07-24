@@ -16,6 +16,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetTrigrams
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.GetVigilanceAreasByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaSourceFixture.Companion.aVigilanceAreaSource
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaSourceFixture.Companion.aVigilanceAreaSourceInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
@@ -77,7 +79,7 @@ class VigilanceAreasITests {
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-            MultiPolygon
+                MultiPolygon
 
     private val vigilanceArea1 =
         VigilanceAreaEntity(
@@ -111,7 +113,7 @@ class VigilanceAreasITests {
                 ),
             links = null,
             seaFront = "MED",
-            source = "Source de la zone de vigilance",
+            sources = listOf(aVigilanceAreaSource(name = "Source de la zone de vigilance")),
             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
             themes = listOf(),
             visibility = VisibilityEnum.PRIVATE,
@@ -157,7 +159,7 @@ class VigilanceAreasITests {
             images = listOf(),
             links = null,
             seaFront = "MED",
-            source = "Un particulier",
+            sources = listOf(aVigilanceAreaSource(name = "Un particulier")),
             startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
             themes = listOf(),
             visibility = VisibilityEnum.PUBLIC,
@@ -192,7 +194,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            ).andExpect(jsonPath("$[0].source", equalTo("Source de la zone de vigilance")))
+            ).andExpect(jsonPath("$[0].sources[0].name", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].themes").isEmpty())
             .andExpect(jsonPath("$[0].visibility", equalTo("PRIVATE")))
@@ -211,7 +213,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[1].geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            ).andExpect(jsonPath("$[1].source", equalTo("Un particulier")))
+            ).andExpect(jsonPath("$[1].sources[0].name", equalTo("Un particulier")))
             .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
             .andExpect(jsonPath("$[1].themes").isEmpty())
             .andExpect(jsonPath("$[1].visibility", equalTo("PUBLIC")))
@@ -241,7 +243,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
+            ).andExpect(jsonPath("$.sources[0].name", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
@@ -291,7 +293,7 @@ class VigilanceAreasITests {
                     ),
                 links = null,
                 seaFront = "MED",
-                source = "Source de la zone de vigilance",
+                sources = listOf(aVigilanceAreaSourceInput(name = "Source de la zone de vigilance")),
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,
@@ -342,7 +344,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
+            ).andExpect(jsonPath("$.sources[0].name", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
@@ -387,7 +389,7 @@ class VigilanceAreasITests {
                 images = emptyList(),
                 links = null,
                 seaFront = "MED",
-                source = "Source de la zone de vigilance",
+                sources = listOf(aVigilanceAreaSourceInput(name = "Source de la zone de vigilance")),
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,
@@ -426,7 +428,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
-            ).andExpect(jsonPath("$.source", equalTo("Source de la zone de vigilance")))
+            ).andExpect(jsonPath("$.sources[0].name", equalTo("Source de la zone de vigilance")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))

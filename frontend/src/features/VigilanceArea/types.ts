@@ -1,4 +1,6 @@
 /* eslint-disable typescript-sort-keys/string-enum */
+import { ControlUnit } from '@mtes-mct/monitor-ui'
+
 import type { ImageApi, Link } from '@components/Form/types'
 import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
@@ -26,7 +28,7 @@ export namespace VigilanceArea {
     links?: Link[]
     name: string | undefined
     seaFront: string | undefined
-    source?: string
+    sources?: VigilanceAreaSource[]
     startDatePeriod?: string
     tags?: TagFromAPI[]
     themes?: ThemeFromAPI[]
@@ -56,13 +58,21 @@ export namespace VigilanceArea {
     links?: Link[]
     name: string
     seaFront: string | undefined
-    source?: string
+    sources?: VigilanceAreaSource[]
     startDatePeriod?: string
     tags?: TagFromAPI[]
     themes?: ThemeFromAPI[]
     updatedAt?: string
     validatedAt?: string
     visibility?: Visibility
+  }
+
+  export interface VigilanceAreaSource {
+    controlUnitContacts?: ControlUnit.ControlUnitContactData[]
+    email?: string
+    id?: string
+    name?: string
+    phone?: string
   }
 
   export enum Frequency {
