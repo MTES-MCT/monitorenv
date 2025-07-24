@@ -1,6 +1,6 @@
 import { overlayStroke } from '@features/map/overlays/style'
 import { OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { getCenter } from 'ol/extent'
 import { GeoJSON } from 'ol/format'
 import { LineString, MultiLineString, Point } from 'ol/geom'

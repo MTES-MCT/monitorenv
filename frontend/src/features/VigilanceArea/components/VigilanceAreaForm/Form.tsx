@@ -29,7 +29,7 @@ import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 

@@ -4,7 +4,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
 import { Form, Formik } from 'formik'
-import { noop } from 'lodash'
+import { noop } from 'lodash-es'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 

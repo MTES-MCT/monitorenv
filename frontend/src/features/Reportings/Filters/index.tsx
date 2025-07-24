@@ -9,7 +9,7 @@ import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum, type O
 import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
-import _, { reduce } from 'lodash'
+import { chain, reduce } from 'lodash-es'
 import { type MutableRefObject, useMemo, useRef } from 'react'
 
 import { MapReportingsFilters } from './Map'
@@ -126,7 +126,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       return unitListAsOptions
     }
 
-    return _.chain(unitListAsOptions)
+    return chain(unitListAsOptions)
       .concat(semaphoresAsOptions)
       .sort((a, b) => a.label.localeCompare(b.label))
       .value()

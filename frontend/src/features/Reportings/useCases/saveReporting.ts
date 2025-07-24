@@ -5,7 +5,7 @@ import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
 } from 'domain/use_cases/map/updateMapInteractionListeners'
-import omit from 'lodash/omit'
+import { omit } from 'lodash-es'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { ApiErrorCode } from '../../../api/types'

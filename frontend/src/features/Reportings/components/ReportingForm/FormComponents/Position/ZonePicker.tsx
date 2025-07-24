@@ -7,7 +7,7 @@ import { InteractionListener, OLGeometryType } from 'domain/entities/map/constan
 import { drawPolygon } from 'domain/use_cases/draw/drawGeometry'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 

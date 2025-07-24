@@ -1,5 +1,5 @@
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import { difference, intersection, isEqual } from 'lodash'
+import { difference, intersection, isEqual } from 'lodash-es'
 import React from 'react'
 
 import type { SelectionState } from '.'
