@@ -11,13 +11,12 @@ data class VigilanceAreaSourceInput(
     val email: String?,
     val phone: String?,
 ) {
-    fun toVigilanceAreaSourceEntity(): VigilanceAreaSourceEntity {
-        return VigilanceAreaSourceEntity(
+    fun toVigilanceAreaSourceEntity(): VigilanceAreaSourceEntity =
+        VigilanceAreaSourceEntity(
             id = id,
             name = name,
             email = email,
             phone = phone,
-            controlUnitContacts = controlUnitContacts?.map { it.toControlUnitContact() }
+            controlUnitContacts = controlUnitContacts?.map { it.toControlUnitContact() },
         )
-    }
 }

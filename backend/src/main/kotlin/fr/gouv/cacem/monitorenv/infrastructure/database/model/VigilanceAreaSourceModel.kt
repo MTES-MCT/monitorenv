@@ -34,7 +34,6 @@ class VigilanceAreaSourceModel(
     @Column(name = "email") val email: String?,
     @Column(name = "phone") val phone: String?,
 ) {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
@@ -59,20 +58,24 @@ class VigilanceAreaSourceModel(
             phone = vigilanceAreaSource.phone,
         )
 
-        fun toVigilanceAreaSources(vigilanceAreaSourceModel: List<VigilanceAreaSourceModel>): List<VigilanceAreaSourceEntity> {
-            return vigilanceAreaSourceModel.groupBy { it.controlUnitContact?.controlUnit?.id }
+        fun toVigilanceAreaSources(
+            vigilanceAreaSourceModel: List<VigilanceAreaSourceModel>,
+        ): List<VigilanceAreaSourceEntity> {
+            return vigilanceAreaSourceModel
+                .groupBy { it.controlUnitContact?.controlUnit?.id }
                 .flatMap { (controlUnitId, sources) ->
                     if (controlUnitId != null) {
                         return@flatMap listOf(
                             VigilanceAreaSourceEntity(
                                 id = null,
-                                controlUnitContacts = sources.mapNotNull { source ->
-                                    source.controlUnitContact?.toControlUnitContact()
-                                },
+                                controlUnitContacts =
+                                    sources.mapNotNull { source ->
+                                        source.controlUnitContact?.toControlUnitContact()
+                                    },
                                 name = null,
                                 phone = null,
-                                email = null
-                            )
+                                email = null,
+                            ),
                         )
                     } else {
                         return@flatMap sources.map { source ->
@@ -81,12 +84,11 @@ class VigilanceAreaSourceModel(
                                 controlUnitContacts = null,
                                 name = source.name,
                                 phone = source.phone,
-                                email = source.email
+                                email = source.email,
                             )
                         }
                     }
                 }
         }
-
     }
 }

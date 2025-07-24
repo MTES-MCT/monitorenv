@@ -6,5 +6,6 @@ import java.util.UUID
 
 interface IDBVigilanceAreaSourceRepository : JpaRepository<VigilanceAreaSourceModel, UUID> {
     fun deleteAllByVigilanceAreaId(vigilanceAreaId: Int)
+
     fun deleteAllByControlUnitContactId(controlUnitContactId: Int)
 }

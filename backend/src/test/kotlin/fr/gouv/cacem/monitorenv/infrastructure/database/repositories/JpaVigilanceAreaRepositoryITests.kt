@@ -122,13 +122,16 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                         ),
                     ),
                 links = null,
-                sources = listOf(
-                    VigilanceAreaSourceEntity(
-                        id = null, name = "Source de la zone de vigilance", phone = null,
-                        email = null,
-                        controlUnitContacts = null
+                sources =
+                    listOf(
+                        VigilanceAreaSourceEntity(
+                            id = null,
+                            name = "Source de la zone de vigilance",
+                            phone = null,
+                            email = null,
+                            controlUnitContacts = null,
+                        ),
                     ),
-                ),
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = null,
@@ -177,26 +180,29 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
     fun `save should update vigilance area`() {
         // Given
         val vigilanceArea = jpaVigilanceAreaRepository.findById(5)
-        val controlUnitContact = ControlUnitContactEntity(
-            id = 1,
-            controlUnitId = 10000,
-            email = "email_1",
-            isEmailSubscriptionContact = true,
-            isSmsSubscriptionContact = false,
-            name = "Contact 1",
-            phone = "0601xxxxxx",
-        )
+        val controlUnitContact =
+            ControlUnitContactEntity(
+                id = 1,
+                controlUnitId = 10000,
+                email = "email_1",
+                isEmailSubscriptionContact = true,
+                isSmsSubscriptionContact = false,
+                name = "Contact 1",
+                phone = "0601xxxxxx",
+            )
         val updatedVigilanceArea =
             vigilanceArea!!.copy(
                 name = "Zone de vigilance mise à jour",
-                sources = listOf(
-                    VigilanceAreaSourceEntity(
-                        id = null, controlUnitContacts = listOf(controlUnitContact),
-                        name = null,
-                        email = null,
-                        phone = null
-                    )
-                ),
+                sources =
+                    listOf(
+                        VigilanceAreaSourceEntity(
+                            id = null,
+                            controlUnitContacts = listOf(controlUnitContact),
+                            name = null,
+                            email = null,
+                            phone = null,
+                        ),
+                    ),
                 isDraft = false,
             )
 

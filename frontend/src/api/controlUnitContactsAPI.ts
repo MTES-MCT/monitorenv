@@ -1,6 +1,7 @@
+import { FrontendError } from '@libs/FrontendError'
 import { type ControlUnit } from '@mtes-mct/monitor-ui'
 
-import { monitorenvPublicApi } from './api'
+import { monitorenvPrivateApi, monitorenvPublicApi } from './api'
 import { FrontendApiError } from '../libs/FrontendApiError'
 
 const GET_CONTROL_UNIT_CONTACT_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette contact."
@@ -19,6 +20,16 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
 
     deleteControlUnitContact: builder.mutation<void, number>({
       invalidatesTags: () => [{ type: 'ControlUnits' }],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+
+          // Invalider manuellement le cache d'une autre API
+          dispatch(monitorenvPrivateApi.util.invalidateTags([{ id: 'LIST', type: 'VigilanceAreas' }]))
+        } catch {
+          throw new FrontendError('Impossible de mettre à jour le cache des zones de vigilances')
+        }
+      },
       query: controlUnitContactId => ({
         method: 'DELETE',
         url: `/v1/control_unit_contacts/${controlUnitContactId}`
@@ -39,6 +50,16 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
 
     patchControlUnitContact: builder.mutation<void, ControlUnit.ControlUnitContactData>({
       invalidatesTags: () => [{ type: 'ControlUnits' }],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled
+
+          // Invalider manuellement le cache d'une autre API
+          dispatch(monitorenvPrivateApi.util.invalidateTags([{ id: 'LIST', type: 'VigilanceAreas' }]))
+        } catch {
+          throw new FrontendError('Impossible de mettre à jour le cache des zones de vigilances')
+        }
+      },
       query: nextControlUnitContactData => ({
         body: nextControlUnitContactData,
         method: 'PATCH',

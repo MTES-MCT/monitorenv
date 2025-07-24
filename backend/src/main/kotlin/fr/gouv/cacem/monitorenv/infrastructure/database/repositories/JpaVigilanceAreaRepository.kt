@@ -45,13 +45,14 @@ class JpaVigilanceAreaRepository(
         val savedThemes = saveThemes(savedVigilanceArea, vigilanceArea.themes)
         val savedSources = saveSources(savedVigilanceArea, vigilanceArea.sources)
 
-        return savedVigilanceArea.copy(tags = savedTags, themes = savedThemes, sources = savedSources)
+        return savedVigilanceArea
+            .copy(tags = savedTags, themes = savedThemes, sources = savedSources)
             .toVigilanceAreaEntity()
     }
 
     private fun addImages(
         images: List<ImageEntity>?,
-        vigilanceAreaModel: VigilanceAreaModel
+        vigilanceAreaModel: VigilanceAreaModel,
     ) {
         val vigilanceAreaImagesModel =
             images?.map {
@@ -64,10 +65,9 @@ class JpaVigilanceAreaRepository(
         vigilanceAreaModel.images.addAll(vigilanceAreaImagesModel ?: emptyList())
     }
 
-
     private fun saveSources(
         vigilanceAreaModel: VigilanceAreaModel,
-        sources: List<VigilanceAreaSourceEntity>
+        sources: List<VigilanceAreaSourceEntity>,
     ): List<VigilanceAreaSourceModel> {
         vigilanceAreaModel.id?.let {
             dbVigilanceAreaSourceRepository.deleteAllByVigilanceAreaId(it)
@@ -80,29 +80,33 @@ class JpaVigilanceAreaRepository(
     private fun fromVigilanceAreaSources(
         vigilanceAreaModel: VigilanceAreaModel,
         sources: List<VigilanceAreaSourceEntity>,
-    ): List<VigilanceAreaSourceModel> = sources.flatMap { source ->
-        if (!source.controlUnitContacts.isNullOrEmpty()) {
-            return@flatMap source.controlUnitContacts.map {
-                val controlUnitContactModel =
-                    if (it.id != null) controlUnitContactRepository.getReferenceById(it.id) else null
-                return@map VigilanceAreaSourceModel.fromVigilanceAreaSource(
-                    source,
-                    controlUnitContactModel,
-                    vigilanceAreaModel
+    ): List<VigilanceAreaSourceModel> =
+        sources.flatMap { source ->
+            if (!source.controlUnitContacts.isNullOrEmpty()) {
+                return@flatMap source.controlUnitContacts.map {
+                    val controlUnitContactModel =
+                        if (it.id != null) controlUnitContactRepository.getReferenceById(it.id) else null
+                    return@map VigilanceAreaSourceModel.fromVigilanceAreaSource(
+                        source,
+                        controlUnitContactModel,
+                        vigilanceAreaModel,
+                    )
+                }
+            } else {
+                return@flatMap listOf(
+                    VigilanceAreaSourceModel.fromVigilanceAreaSource(
+                        source,
+                        null,
+                        vigilanceAreaModel,
+                    ),
                 )
             }
-        } else {
-            return@flatMap listOf(
-                VigilanceAreaSourceModel.fromVigilanceAreaSource(
-                    source,
-                    null,
-                    vigilanceAreaModel
-                )
-            )
         }
-    }
 
-    private fun saveTags(vigilanceAreaModel: VigilanceAreaModel, tags: List<TagEntity>): List<TagVigilanceAreaModel> {
+    private fun saveTags(
+        vigilanceAreaModel: VigilanceAreaModel,
+        tags: List<TagEntity>,
+    ): List<TagVigilanceAreaModel> {
         vigilanceAreaModel.id?.let {
             dbTagVigilanceAreaRepository.deleteAllByVigilanceAreaId(it)
         }
@@ -115,7 +119,7 @@ class JpaVigilanceAreaRepository(
 
     private fun saveThemes(
         vigilanceAreaModel: VigilanceAreaModel,
-        themes: List<ThemeEntity>
+        themes: List<ThemeEntity>,
     ): List<ThemeVigilanceAreaModel> {
         vigilanceAreaModel.id?.let {
             dbThemeVigilanceAreaRepository.deleteAllByVigilanceAreaId(it)
