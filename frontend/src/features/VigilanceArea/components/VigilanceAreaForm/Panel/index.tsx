@@ -16,9 +16,9 @@ import { useMemo, useState } from 'react'
 
 import { PanelComments } from './PanelComments'
 import { PanelImages } from './PanelImages'
+import { PanelInternalCACEMSection } from './PanelInternalCACEMSection'
 import { PanelLinks } from './PanelLinks'
 import { PanelPeriodAndThemes } from './PanelPeriodAndThemes'
-import { PanelSource } from './PanelSource'
 import { AMPList } from '../AddAMPs/AMPList'
 import { RegulatoryAreas } from '../AddRegulatoryAreas/RegulatoryAreas'
 import {
@@ -133,7 +133,9 @@ export function VigilanceAreaPanel({
         )}
 
         {vigilanceArea?.links && vigilanceArea?.links.length > 0 && <PanelLinks links={vigilanceArea.links} />}
-        {isSuperUser && <PanelSource createdBy={vigilanceArea?.createdBy} source={vigilanceArea?.source} />}
+        {isSuperUser && (
+          <PanelInternalCACEMSection createdBy={vigilanceArea.createdBy} sources={vigilanceArea.sources} />
+        )}
       </PanelBody>
       {isSuperUser && (
         <FooterContainer>

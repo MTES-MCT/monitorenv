@@ -4,6 +4,8 @@ import { Tooltip } from '@components/Tooltip'
 import { ZonePicker } from '@components/ZonePicker'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
+import { Source } from '@features/VigilanceArea/components/VigilanceAreaForm/Source'
+import { createNewVigilanceAreaSource } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -15,6 +17,8 @@ import { unpublish } from '@features/VigilanceArea/useCases/unpublish'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
+  Accent,
+  Button,
   CheckTreePicker,
   type DateAsStringRange,
   DateRangePicker,
@@ -23,12 +27,14 @@ import {
   FormikTextarea,
   FormikTextInput,
   getOptionsFromLabelledEnum,
+  Icon,
+  Label,
   THEME
 } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions, parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { InteractionListener } from 'domain/entities/map/constants'
-import { useFormikContext } from 'formik'
+import { FieldArray, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -267,10 +273,35 @@ export function Form() {
           </Tooltip>
         </Wrapper>
         <StyledTrigramInput isErrorMessageHidden isRequired label="Créé par" name="createdBy" />
-        <FormikTextarea
-          label="Source de l'information"
-          name="source"
-          placeholder="Description de la source de l'information"
+        <FieldArray
+          name="sources"
+          render={({ push, remove }) => (
+            <Wrapper style={{ flexDirection: 'column' }}>
+              <Label>Sources</Label>
+              {values.sources?.map((source, index) => (
+                <Source
+                  key={source.id ?? index}
+                  hasError={formErrors.sources?.[index]}
+                  index={index}
+                  initialSource={source}
+                  onValidate={vigilanceAreaSource => {
+                    remove(index)
+                    push(vigilanceAreaSource)
+                  }}
+                  remove={remove}
+                />
+              ))}
+              <Button
+                accent={Accent.SECONDARY}
+                Icon={Icon.Plus}
+                isFullWidth
+                onClick={() => push(createNewVigilanceAreaSource())}
+              >
+                Ajouter une source
+              </Button>
+            </Wrapper>
+          )}
+          validateOnChange={false}
         />
       </StyledForm>
       <Footer

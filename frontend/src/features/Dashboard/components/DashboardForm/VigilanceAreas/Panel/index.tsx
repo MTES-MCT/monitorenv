@@ -4,9 +4,9 @@ import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { PanelComments } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelComments'
 import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelDates'
 import { PanelImages } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelImages'
+import { PanelInternalCACEMSection } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelInternalCACEMSection'
 import { PanelLinks } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelLinks'
 import { PanelPeriodAndThemes } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelPeriodAndThemes'
-import { PanelSource } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelSource'
 import {
   Header,
   PanelBody,
@@ -88,7 +88,7 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
           )}
 
           {vigilanceArea?.links && vigilanceArea?.links.length > 0 && <PanelLinks links={vigilanceArea.links} />}
-          <PanelSource createdBy={vigilanceArea?.createdBy} source={vigilanceArea?.source} />
+          <PanelInternalCACEMSection createdBy={vigilanceArea?.createdBy} sources={vigilanceArea?.sources} />
         </PanelBody>
       </PanelContainer>
     </Wrapper>

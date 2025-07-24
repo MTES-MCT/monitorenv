@@ -8,10 +8,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel.Companion.fromTagEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel.Companion.toTagEntities
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeVigilanceAreaModel.Companion.fromThemeEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeVigilanceAreaModel.Companion.toThemeEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaSourceModel.Companion.toVigilanceAreaSources
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -29,6 +28,7 @@ import jakarta.persistence.OrderBy
 import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
+import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
@@ -46,6 +46,9 @@ import java.time.ZonedDateTime
     name = "VigilanceAreaModel.fullLoad",
     attributeNodes = [
         NamedAttributeNode("images"),
+        NamedAttributeNode("sources"),
+        NamedAttributeNode("tags"),
+        NamedAttributeNode("themes"),
     ],
 )
 @Table(name = "vigilance_areas")
@@ -54,6 +57,10 @@ data class VigilanceAreaModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vigilanceArea")
+    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
+    val sources: List<VigilanceAreaSourceModel>,
     @Column(name = "comments") val comments: String? = null,
     @Column(name = "computed_end_date") val computedEndDate: Instant? = null,
     @Column(name = "created_by") val createdBy: String? = null,
@@ -68,8 +75,8 @@ data class VigilanceAreaModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val frequency: FrequencyEnum? = null,
-    @JsonSerialize(using = GeometrySerializer::class)
-    @JsonDeserialize(contentUsing = GeometryDeserializer::class)
+    @param:JsonSerialize(using = GeometrySerializer::class)
+    @param:JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon? = null,
     @OneToMany(
@@ -96,7 +103,6 @@ data class VigilanceAreaModel(
     @Column(name = "name", nullable = false) val name: String,
     @Column(name = "start_date_period") val startDatePeriod: Instant? = null,
     @Column(name = "sea_front") val seaFront: String? = null,
-    @Column(name = "source") val source: String? = null,
     @Column(name = "visibility", columnDefinition = "vigilance_area_visibility")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
@@ -109,18 +115,20 @@ data class VigilanceAreaModel(
     )
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
-    var tags: List<TagVigilanceAreaModel>,
+    val tags: List<TagVigilanceAreaModel>,
     @OneToMany(
         mappedBy = "vigilanceArea",
         fetch = FetchType.LAZY,
     )
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
-    var themes: List<ThemeVigilanceAreaModel>,
+    val themes: List<ThemeVigilanceAreaModel>,
     @Column(name = "validated_at") var validatedAt: ZonedDateTime?,
 ) {
     companion object {
-        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel {
+        fun fromVigilanceArea(
+            vigilanceArea: VigilanceAreaEntity,
+        ): VigilanceAreaModel {
             val vigilanceAreaModel =
                 VigilanceAreaModel(
                     id = vigilanceArea.id,
@@ -142,17 +150,17 @@ data class VigilanceAreaModel(
                     linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,
                     name = vigilanceArea.name,
                     seaFront = vigilanceArea.seaFront,
-                    source = vigilanceArea.source,
                     startDatePeriod = vigilanceArea.startDatePeriod?.toInstant(),
                     themes = listOf(),
                     visibility = vigilanceArea.visibility,
                     createdAt = vigilanceArea.createdAt,
                     updatedAt = vigilanceArea.updatedAt,
                     tags = listOf(),
+                    sources = listOf(),
                     validatedAt = vigilanceArea.validatedAt,
                 )
-            vigilanceAreaModel.tags = fromTagEntities(vigilanceArea.tags, vigilanceAreaModel)
-            vigilanceAreaModel.themes = fromThemeEntities(vigilanceArea.themes, vigilanceAreaModel)
+//            vigilanceAreaModel.tags = fromTagEntities(vigilanceArea.tags, vigilanceAreaModel)
+//            vigilanceAreaModel.themes = fromThemeEntities(vigilanceArea.themes, vigilanceAreaModel)
 
             return vigilanceAreaModel
         }
@@ -180,7 +188,7 @@ data class VigilanceAreaModel(
             linkedRegulatoryAreas = linkedRegulatoryAreas,
             name = name,
             seaFront = seaFront,
-            source = source,
+            sources = toVigilanceAreaSources(sources),
             startDatePeriod = startDatePeriod?.atZone(UTC),
             themes = toThemeEntities(themes),
             visibility = visibility,
@@ -199,4 +207,14 @@ data class VigilanceAreaModel(
     private fun preUpdate() {
         this.updatedAt = ZonedDateTime.now()
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as VigilanceAreaModel
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
 }

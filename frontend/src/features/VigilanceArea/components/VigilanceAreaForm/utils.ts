@@ -21,7 +21,7 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     links: [],
     name: undefined,
     seaFront: undefined,
-    source: undefined,
+    sources: undefined,
     startDatePeriod: undefined,
     tags: [],
     themes: [],
@@ -29,6 +29,14 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     visibility: VigilanceArea.Visibility.PRIVATE
   }
 }
+
+export const createNewVigilanceAreaSource: () => VigilanceArea.VigilanceAreaSource = () => ({
+  controlUnitContacts: undefined,
+  email: undefined,
+  id: undefined,
+  name: undefined,
+  phone: undefined
+})
 
 export const isFormValid = (vigilanceArea: VigilanceArea.VigilanceArea | undefined) => {
   const SchemaToValidate = vigilanceArea?.isDraft ? PublishedSchema : DraftSchema

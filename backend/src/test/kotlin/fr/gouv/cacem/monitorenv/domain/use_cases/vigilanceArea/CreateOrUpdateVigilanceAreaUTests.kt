@@ -49,6 +49,7 @@ class CreateOrUpdateVigilanceAreaUTests {
                 name = "test_name",
                 tags = emptyList(),
                 themes = emptyList(),
+                sources = emptyList(),
                 validatedAt = null,
             )
 
