@@ -50,7 +50,8 @@ html {
     background-color: #707785;
   }
 
-  .highlight {
+  .highlight,
+  mark {
     margin: 0;
     padding: 0;
     background-color: #cccfd6;

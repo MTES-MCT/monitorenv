@@ -150,7 +150,7 @@ const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInT
         > .rs-checkbox {
           > .rs-checkbox-checker {
             > label {
-              .rs-checkbox-wrapper {
+              .rs-checkbox-control {
                 ${p => !p.$isSideWindowOpenInTab && 'top:-8px;'}
                 left: -16px;
               }
@@ -166,7 +166,7 @@ const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInT
         > .rs-checkbox {
           > .rs-checkbox-checker {
             > label {
-              .rs-checkbox-wrapper {
+              .rs-checkbox-control {
                 ${p => !p.$isSideWindowOpenInTab && 'top:-8px;'}
               }
             }
