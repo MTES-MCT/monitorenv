@@ -26,6 +26,7 @@
       "@store/*": ["store/*"],
       "@utils/*": ["utils/*"]
     },
+    "erasableSyntaxOnly": false,
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
