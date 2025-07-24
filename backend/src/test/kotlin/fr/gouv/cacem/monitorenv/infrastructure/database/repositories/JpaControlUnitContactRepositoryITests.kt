@@ -27,7 +27,9 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         // Then
         val vigilanceAreaWithoutControlUnitContact = jpaVigilanceAreaRepository.findById(1)
-        assertThat(vigilanceAreaWithoutControlUnitContact?.sources?.all { it.controlUnitContacts.isNullOrEmpty() }).isTrue
+        assertThat(
+            vigilanceAreaWithoutControlUnitContact?.sources?.all { it.controlUnitContacts.isNullOrEmpty() },
+        ).isTrue
     }
 
     @Test

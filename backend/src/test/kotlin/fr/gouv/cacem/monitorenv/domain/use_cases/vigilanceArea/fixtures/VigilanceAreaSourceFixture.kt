@@ -16,7 +16,7 @@ class VigilanceAreaSourceFixture {
     companion object {
         fun aVigilanceAreaSource(
             id: UUID? = null,
-            name: String = "source"
+            name: String = "source",
         ): VigilanceAreaSourceEntity =
             VigilanceAreaSourceEntity(
                 id = id,
@@ -28,7 +28,7 @@ class VigilanceAreaSourceFixture {
 
         fun aVigilanceAreaSourceInput(
             id: UUID? = null,
-            name: String = "source"
+            name: String = "source",
         ): VigilanceAreaSourceInput =
             VigilanceAreaSourceInput(
                 id = id,

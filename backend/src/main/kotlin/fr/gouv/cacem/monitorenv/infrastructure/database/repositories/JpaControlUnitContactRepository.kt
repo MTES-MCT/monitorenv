@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaControlUnitContactRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbControlUnitContactRepository: IDBControlUnitContactRepository,
-    private val dbVigilanceAreaSourceRepository: IDBVigilanceAreaSourceRepository
+    private val dbVigilanceAreaSourceRepository: IDBVigilanceAreaSourceRepository,
 ) : IControlUnitContactRepository {
     private val logger = LoggerFactory.getLogger(JpaControlUnitContactRepository::class.java)
 

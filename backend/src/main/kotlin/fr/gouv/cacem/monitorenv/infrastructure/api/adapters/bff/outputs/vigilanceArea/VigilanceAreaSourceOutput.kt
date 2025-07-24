@@ -12,17 +12,18 @@ data class VigilanceAreaSourceOutput(
     val phone: String?,
 ) {
     companion object {
-        fun fromVigilanceAreaSourceEntity(vigilanceAreaSource: VigilanceAreaSourceEntity): VigilanceAreaSourceOutput {
-            return VigilanceAreaSourceOutput(
+        fun fromVigilanceAreaSourceEntity(vigilanceAreaSource: VigilanceAreaSourceEntity): VigilanceAreaSourceOutput =
+            VigilanceAreaSourceOutput(
                 id = vigilanceAreaSource.id,
                 name = vigilanceAreaSource.name,
                 email = vigilanceAreaSource.email,
                 phone = vigilanceAreaSource.phone,
-                controlUnitContacts = vigilanceAreaSource.controlUnitContacts?.map {
-                    ControlUnitContactDataOutput.fromControlUnitContact(
-                        it
-                    )
-                })
-        }
+                controlUnitContacts =
+                    vigilanceAreaSource.controlUnitContacts?.map {
+                        ControlUnitContactDataOutput.fromControlUnitContact(
+                            it,
+                        )
+                    },
+            )
     }
 }

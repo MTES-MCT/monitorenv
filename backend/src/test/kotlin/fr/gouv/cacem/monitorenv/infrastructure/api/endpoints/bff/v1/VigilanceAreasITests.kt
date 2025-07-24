@@ -79,7 +79,7 @@ class VigilanceAreasITests {
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-                MultiPolygon
+            MultiPolygon
 
     private val vigilanceArea1 =
         VigilanceAreaEntity(

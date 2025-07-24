@@ -126,9 +126,7 @@ data class VigilanceAreaModel(
     @Column(name = "validated_at") var validatedAt: ZonedDateTime?,
 ) {
     companion object {
-        fun fromVigilanceArea(
-            vigilanceArea: VigilanceAreaEntity,
-        ): VigilanceAreaModel {
+        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel {
             val vigilanceAreaModel =
                 VigilanceAreaModel(
                     id = vigilanceArea.id,
