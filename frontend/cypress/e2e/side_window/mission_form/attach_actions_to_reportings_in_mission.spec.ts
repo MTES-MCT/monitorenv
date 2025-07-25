@@ -226,12 +226,13 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
             cy.getDataCy('infraction-form-nbTarget').should('have.value', 1)
             cy.getDataCy('infraction-form-registrationNumber').should('have.value', '987654321')
             cy.getDataCy('infraction-form-vesselName').should('have.value', 'The Boat')
-            cy.get('.Field-MultiRadio').contains("Type d'infraction").get('[aria-checked="true"]').contains('Avec PV')
-            cy.get('.Field-MultiRadio')
-              .contains('Réponse administrative')
-              .get('[aria-checked="true"]')
-              .contains('Sanction')
-            cy.get('.Field-MultiRadio').contains('Mise en demeure').get('[aria-checked="true"]').contains('En attente')
+            cy.get('input[name="envActions[0].infractions[0].infractionType"][value="WITH_REPORT"]').should(
+              'be.checked'
+            )
+            cy.get('input[name="envActions[0].infractions[0].administrativeResponse"][value="SANCTION"]').should(
+              'be.checked'
+            )
+            cy.get('input[name="envActions[0].infractions[0].formalNotice"][value="PENDING"]').should('be.checked')
             cy.get('[name="infraction-natinf"]').should('have.value', 1508)
             cy.getDataCy('infraction-form-nbTarget').should('have.value', 1)
 
