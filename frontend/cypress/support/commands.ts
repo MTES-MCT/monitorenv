@@ -1,10 +1,13 @@
 import { registerMonitorUiCustomCommands } from '@mtes-mct/monitor-ui/cypress'
 
+import { getFeaturesFromLayer } from './commands/getFeaturesFromLayer'
+
 registerMonitorUiCustomCommands()
 function unquote(str: string): string {
   return str.replace(/(^")|("$)/g, '')
 }
 
+Cypress.Commands.add('getFeaturesFromLayer', getFeaturesFromLayer)
 Cypress.Commands.add(
   'before',
   {
@@ -25,7 +28,3 @@ Cypress.Commands.add(
     return unquote(before.getPropertyValue(property))
   }
 )
-
-Cypress.Commands.add('cleanScreenshots', (fromNumber: number): void => {
-  cy.exec(`cd cypress/e2e/__image_snapshots__/ && find . | grep -P "[${fromNumber}-7]\\.png" | xargs -i rm {}\n`)
-})

@@ -1,18 +1,23 @@
 import { FAKE_MAPBOX_RESPONSE } from '../constants'
-import { getBaseLayerSnapShot } from './utils'
 
 context('MonitorExt', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
+
+    cy.intercept('GET', '/bff/v1/semaphores').as('getSemaphores')
+    cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
+    cy.intercept('GET', '/bff/v1/reportings?*').as('getReportings')
     cy.visit('/ext#@-195375.91,6028315.57,7.57')
     cy.wait(500)
+
+    cy.wait(['@getSemaphores', '@getVigilanceAreas', '@getReportings'])
   })
 
   it('A user can search semaphore', () => {
     cy.wait(200)
     cy.clickButton('Chercher un sémaphore')
-    cy.fill('Rechercher un sémaphore', 'Sémaphore de Fécamp', { delay: 400 })
-    getBaseLayerSnapShot()
+    cy.fill('Rechercher un sémaphore', 'Sémaphore de Fécamp', { delay: 200 })
+    cy.url().should('contain', '/ext#@41280.98,6406155.75,14.00')
   })
 
   it("A user can't see missions, reportings, bases and measurements tools button", () => {

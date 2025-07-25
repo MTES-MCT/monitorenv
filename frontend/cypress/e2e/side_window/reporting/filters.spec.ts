@@ -105,17 +105,19 @@ context('Reportings', () => {
 
   it('Should filter reportings by tags', () => {
     cy.wait(200)
-    cy.fill('Filtre tags et sous-tags', ['AMP'])
-    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('AMP')
+    cy.fill('Filtre tags et sous-tags', ['Dragage'])
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Dragage')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
+    cy.get('.Table-SimpleTable tr').should('have.length', 2)
+  })
 
-      cy.wrap(row).should('contain', 'AMP')
-    })
+  it('Should filter reportings by subTags', () => {
+    cy.wait(200)
+    cy.fill('Filtre tags et sous-tags', ['subtagMouillage1'])
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Mouillage')
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('subtagMouillage1')
+
+    cy.get('.Table-SimpleTable tr').should('have.length', 2)
   })
 
   it('Should filter reportings by sea-fronts', () => {

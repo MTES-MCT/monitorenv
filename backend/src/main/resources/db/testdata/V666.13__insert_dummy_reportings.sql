@@ -183,3 +183,16 @@ INSERT INTO public.reportings_control_plan_sub_themes
 VALUES (10, 202);
 INSERT INTO public.reportings_control_plan_sub_themes
 VALUES (11, 192);
+
+/* Add Dragage Tag */
+INSERT INTO public.tags_reportings (reportings_id, tags_id)
+VALUES (5, 7);
+
+/* Add SubtagMouillage1 Tag */
+INSERT INTO public.tags_reportings (reportings_id, tags_id)
+VALUES (7, 5), (7, 10);
+
+/* Add SubtagMouillage2 Tag */
+INSERT INTO public.tags_reportings (reportings_id, tags_id)
+VALUES (8, 5), (8, 11);
+

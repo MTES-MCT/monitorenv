@@ -67,11 +67,29 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(vigilanceArea?.name).isEqualTo("Zone de vigilance 1")
         assertThat(vigilanceArea?.themes).isEmpty()
         assertThat(vigilanceArea?.visibility).isEqualTo(VisibilityEnum.PUBLIC)
-        assertThat(vigilanceArea?.tags).hasSize(2)
-        assertThat(vigilanceArea?.tags?.get(0)?.id).isEqualTo(6)
-        assertThat(vigilanceArea?.tags?.get(0)?.name).isEqualTo("Extraction granulats")
-        assertThat(vigilanceArea?.tags?.get(1)?.id).isEqualTo(7)
-        assertThat(vigilanceArea?.tags?.get(1)?.name).isEqualTo("Dragage")
+        assertThat(vigilanceArea?.tags).hasSize(3)
+        assertThat(vigilanceArea?.tags?.get(0)?.id).isEqualTo(5)
+        assertThat(vigilanceArea?.tags?.get(0)?.name).isEqualTo("Mouillage")
+        assertThat(
+            vigilanceArea
+                ?.tags
+                ?.get(0)
+                ?.subTags
+                ?.get(0)
+                ?.id,
+        ).isEqualTo(11)
+        assertThat(
+            vigilanceArea
+                ?.tags
+                ?.get(0)
+                ?.subTags
+                ?.get(0)
+                ?.name,
+        ).isEqualTo("subtagMouillage2")
+        assertThat(vigilanceArea?.tags?.get(1)?.id).isEqualTo(6)
+        assertThat(vigilanceArea?.tags?.get(1)?.name).isEqualTo("Extraction granulats")
+        assertThat(vigilanceArea?.tags?.get(2)?.id).isEqualTo(7)
+        assertThat(vigilanceArea?.tags?.get(2)?.name).isEqualTo("Dragage")
     }
 
     @Test
