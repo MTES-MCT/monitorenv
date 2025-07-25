@@ -1,4 +1,6 @@
-import { FAKE_MAPBOX_RESPONSE } from '../../constants'
+import { Layers } from 'domain/entities/layers/constants'
+
+import { FAKE_MAPBOX_RESPONSE, PAGE_CENTER_PIXELS } from '../../constants'
 
 context('LayerTree > AMP Layers', () => {
   beforeEach(() => {
@@ -21,15 +23,9 @@ context('LayerTree > AMP Layers', () => {
 
     cy.getDataCy('amp-layer-type').first().click({ force: true }).wait(2000)
 
-    // Then
-    cy.get('.baselayer').toMatchImageSnapshot({
-      imageConfig: {
-        threshold: 0.05,
-        thresholdType: 'percent'
-      },
-      screenshotConfig: {
-        clip: { height: 500, width: 250, x: 410, y: 0 }
-      }
+    cy.getFeaturesFromLayer(Layers.AMP.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(1)
+      expect(features?.[0]?.get('type')).to.equal('Natura 2000')
     })
   })
 

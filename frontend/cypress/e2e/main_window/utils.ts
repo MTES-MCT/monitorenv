@@ -5,15 +5,3 @@ export function goToMainWindow() {
 
   cy.visit(`/`).wait(1000)
 }
-
-export function getBaseLayerSnapShot() {
-  cy.get('.baselayer').toMatchImageSnapshot({
-    imageConfig: {
-      threshold: 0.05,
-      thresholdType: 'percent'
-    },
-    screenshotConfig: {
-      clip: { height: 250, width: 250, x: 440, y: 450 }
-    }
-  })
-}

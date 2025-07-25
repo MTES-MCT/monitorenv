@@ -1,4 +1,5 @@
 import { MultiRadio, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { isCypress } from '@utils/isCypress'
 import {
   getGeoJSONFromFeature,
   getGeoJSONFromFeatureList,
@@ -52,7 +53,7 @@ export type BaseMapChildrenProps = {
 }
 
 export const CENTERED_ON_FRANCE = [2.99049, 46.82801]
-const initialMap = new OpenLayerMap({
+export const initialMap = new OpenLayerMap({
   controls: defaultControls().extend([
     new Zoom({
       className: 'zoom'
@@ -193,6 +194,25 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
       setUnitsSelectionIsOpen(false)
     }
   }, [clickedOutsideComponent])
+
+  // Only expose helpers when running under Cypress
+  if (isCypress()) {
+    // @ts-ignore
+    window.olTestUtils = {
+      getFeaturesFromLayer: (name: string, layerPixel: [number, number]) => {
+        const layer = initialMap.getFeaturesAtPixel(layerPixel, {
+          hitTolerance: HIT_PIXEL_TO_TOLERANCE * 2,
+          layerFilter: l => {
+            const cypressLayer = l as VectorLayerWithName | WebGLVectorLayerWithName
+
+            return cypressLayer.name === name || cypressLayer.get('name') === name
+          }
+        })
+
+        return layer ?? []
+      }
+    }
+  }
 
   return (
     <MapWrapper>

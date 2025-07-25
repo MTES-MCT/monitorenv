@@ -112,7 +112,7 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.wait(250)
 
     // Filter
-    cy.fill('Thématique réglementaire', ['Mixte'])
+    cy.fill('Tag', ['Mixte'])
     cy.get('h2').contains('Zones réglementaires').click()
     cy.wait(250)
     // because result list have a separator so we need to multiply the results by 2

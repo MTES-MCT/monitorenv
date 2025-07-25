@@ -1,5 +1,7 @@
-import { FAKE_MAPBOX_RESPONSE } from '../../constants'
-import { getBaseLayerSnapShot } from '../utils'
+import { Layers } from 'domain/entities/layers/constants'
+
+import { FAKE_MAPBOX_RESPONSE, PAGE_CENTER_PIXELS } from '../../constants'
+// import { getBaseLayerSnapShot } from '../utils'
 
 context('LayerTree > Vigilance Area Layers', () => {
   beforeEach(() => {
@@ -25,25 +27,39 @@ context('LayerTree > Vigilance Area Layers', () => {
     cy.getDataCy('vigilance-area-result-zone').contains('Zone de vigilance 4').click()
     cy.getDataCy('vigilance-area-title').contains('Zone de vigilance 4')
     cy.wait(1000) // let OL do the rendering
-    getBaseLayerSnapShot()
+    cy.getFeaturesFromLayer(Layers.VIGILANCE_AREA_PREVIEW.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(1)
+      expect(features?.[0]?.get('name')).to.equal('Zone de vigilance 4')
+    })
 
     // Save vigilance Area in "Mes zones de vigilance"
     cy.clickButton('Sélectionner la zone')
     cy.getDataCy('my-vigilance-areas-layers').click()
     cy.clickButton('Effacer les résultats de la recherche')
     cy.wait(250)
-    getBaseLayerSnapShot()
+    cy.getFeaturesFromLayer(Layers.VIGILANCE_AREA.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(1)
+    })
 
     cy.getDataCy('my-vigilance-areas-layers').click()
     cy.clickButton('Cacher la zone')
     cy.wait(250)
-    getBaseLayerSnapShot()
+    cy.getFeaturesFromLayer(Layers.VIGILANCE_AREA.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(0)
+    })
+
     cy.clickButton('Afficher la zone')
     cy.wait(250)
-    getBaseLayerSnapShot()
+    cy.getFeaturesFromLayer(Layers.VIGILANCE_AREA.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(1)
+    })
+
     cy.clickButton('Supprimer la zone de ma sélection')
     cy.wait(250)
-    getBaseLayerSnapShot()
+    cy.getFeaturesFromLayer(Layers.VIGILANCE_AREA.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(0)
+    })
+
     cy.getDataCy('my-vigilance-area-no-result').should('be.visible')
   })
 
