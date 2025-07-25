@@ -18,7 +18,7 @@ import {
   SingleTag,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
-import { filterSubTags } from '@utils/getTagsAsOptions'
+import { deleteTagTag } from '@utils/deleteTagTag'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, missionTypeEnum } from 'domain/entities/missions'
 import { MissionFiltersEnum, type MissionFiltersState, updateFilters } from 'domain/shared_slices/MissionFilters'
@@ -106,10 +106,8 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
     }
 
     const onDeleteTagTag = (valueToDelete: TagOption, tagFilter: TagOption[]) => {
-      const updatedFilter = tagFilter
-        .map(tag => filterSubTags(tag, valueToDelete))
-        .filter(theme => theme !== undefined)
-        .filter(theme => theme.id !== valueToDelete.id)
+      const updatedFilter = deleteTagTag(tagFilter, valueToDelete)
+
       dispatch(
         updateFilters({
           key: MissionFiltersEnum.TAGS_FILTER,

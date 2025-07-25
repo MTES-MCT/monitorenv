@@ -21,7 +21,7 @@ import { DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { getTitle } from 'domain/entities/layers/utils'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { isArray, isEqual } from 'lodash'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { dashboardFiltersActions, type DashboardsListFilters, INITIAL_LIST_FILTERS_STATE } from '../DashboardForm/slice'
@@ -99,17 +99,17 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
   })
 
   const seaFrontTags = (
-    <>
+    <Fragment key={`dashboard-seaFronts-${orientation === 'row' ? 'row' : 'column'}`}>
       {seaFronts?.map(seaFront => (
         <SingleTag key={seaFront} onDelete={() => onDeleteTag(seaFront, 'seaFronts', seaFronts)}>
           {String(`${orientation === 'row' ? 'Façade ' : ''} ${seaFront}`)}
         </SingleTag>
       ))}
-    </>
+    </Fragment>
   )
 
   const controlUnitTags = (
-    <>
+    <Fragment key={`dashboard-controlUnitTags-${orientation === 'row' ? 'row' : 'column'}`}>
       {controlUnits?.map(controlUnit => (
         <SingleTag key={controlUnit} onDelete={() => onDeleteTag(controlUnit, 'controlUnits', controlUnits)}>
           {String(
@@ -119,24 +119,23 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
           )}
         </SingleTag>
       ))}
-    </>
+    </Fragment>
   )
 
   const regulatoryTagsTags = (
-    <>
+    <Fragment key={`dashboard-regulatoryTags-${orientation === 'row' ? 'row' : 'column'}`}>
       {regulatoryTags?.map(tag => (
         <SingleTag key={tag} onDelete={() => onDeleteTag(tag, 'regulatoryTags', regulatoryTags)}>
           {String(`${orientation === 'row' ? 'Thématique ' : ''}${getTitle(tag)}`)}
         </SingleTag>
       ))}
-    </>
+    </Fragment>
   )
 
   const specificPeriodDatePicker = (
-    <>
+    <Fragment key={`dashboard-specificPeriod-${orientation === 'row' ? 'row' : 'column'}`}>
       {updatedAt === DateRangeEnum.CUSTOM && (
         <DateRangePicker
-          key="dashboard-specificPeriod-filter"
           defaultValue={specificPeriod}
           isLabelHidden={orientation === 'column'}
           isStringDate
@@ -145,7 +144,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
           onChange={updateUpdateAtSpecificPeriodFilter}
         />
       )}
-    </>
+    </Fragment>
   )
 
   return (
@@ -206,25 +205,25 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
             customSearch={regulatoryTagsCustomSearch}
             isLabelHidden
             isTransparent
-            label="Thématique réglementaire"
+            label="Tags"
             name="regulatoryTags"
             onChange={updateRegulatoryTagsFilter}
             options={regulatoryTagsAsOptions}
-            placeholder="Thématique réglementaire"
-            renderValue={() =>
-              regulatoryTags && <OptionValue>{`Thématique réglementaire (${regulatoryTags.length})`}</OptionValue>
-            }
+            placeholder="Tag"
+            renderValue={() => regulatoryTags && <OptionValue>{`Tag (${regulatoryTags.length})`}</OptionValue>}
             style={{ width: 320 }}
             value={regulatoryTags}
           />
           {orientation === 'column' && regulatoryTagsTags}
         </FilterWrapper>
       </FiltersContainer>
-      <TagsContainer>
-        {orientation === 'row' && [specificPeriodDatePicker, seaFrontTags, controlUnitTags, regulatoryTagsTags]}
+      {orientation === 'row' && (
+        <TagsContainer>
+          {[specificPeriodDatePicker, seaFrontTags, controlUnitTags, regulatoryTagsTags]}
 
-        {orientation === 'row' && hasFilters && <ReinitializeFiltersButton onClick={resetFilter} />}
-      </TagsContainer>
+          {hasFilters && <ReinitializeFiltersButton onClick={resetFilter} />}
+        </TagsContainer>
+      )}
     </Wrapper>
   )
 }

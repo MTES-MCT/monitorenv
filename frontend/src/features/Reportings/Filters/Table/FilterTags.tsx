@@ -1,8 +1,8 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { SingleTag } from '@mtes-mct/monitor-ui'
+import { deleteThemeTag } from '@utils/deleteThemeTag'
 import { filterSubTags } from '@utils/getTagsAsOptions'
-import { filterSubThemes } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -28,10 +28,7 @@ export function FilterTags() {
     )
   }
   const onDeleteThemeTag = (valueToDelete: ThemeOption, filter: ThemeOption[]) => {
-    const updatedFilter: ThemeOption[] = filter
-      .map(theme => filterSubThemes(theme, valueToDelete))
-      .filter(theme => theme !== undefined)
-      .filter(theme => theme.id !== valueToDelete.id)
+    const updatedFilter = deleteThemeTag(filter, valueToDelete)
 
     dispatch(
       reportingsFiltersActions.updateFilters({

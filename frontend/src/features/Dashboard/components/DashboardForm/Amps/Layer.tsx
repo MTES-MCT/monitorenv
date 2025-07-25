@@ -12,6 +12,7 @@ import styled from 'styled-components'
 
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { StyledLayer } from '../style'
 
 type AmpLayerProps = {
   isPinned?: boolean
@@ -102,21 +103,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
   )
 }
 
-const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $metadataIsShown: boolean }>`
-  background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : p.theme.color.white)};
-  padding-left: 24px;
-  padding-right: 24px;
-  justify-content: space-between;
-
-  ${p =>
-    p.$isSelected &&
-    `
-        padding-left: 20px;
-        padding-right: 20px;
-    `}
-`
-
 const Wrapper = styled.div`
   display: flex;
-  justify-content: baseline;
+  align-items: center;
 `

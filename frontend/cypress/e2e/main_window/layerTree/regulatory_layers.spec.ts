@@ -1,5 +1,6 @@
-import { FAKE_MAPBOX_RESPONSE } from '../../constants'
-import { getBaseLayerSnapShot } from '../utils'
+import { Layers } from 'domain/entities/layers/constants'
+
+import { FAKE_MAPBOX_RESPONSE, PAGE_CENTER_PIXELS } from '../../constants'
 
 context('LayerTree > Regulatory Layers', () => {
   beforeEach(() => {
@@ -25,7 +26,14 @@ context('LayerTree > Regulatory Layers', () => {
     cy.getDataCy('regulatory-result-zone').contains('Zone au sud de la cale').click()
     cy.getDataCy('regulatory-metadata-header').contains('ZMEL Cale Querlen').click()
     cy.wait(1000) // let OL do the rendering
-    getBaseLayerSnapShot()
+
+    cy.getFeaturesFromLayer(Layers.REGULATORY_ENV_PREVIEW.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(2)
+      expect(features?.[0]?.get('layerName')).to.equal('ZMEL_Cale_Querlen')
+      expect(features?.[0]?.get('id')).to.equal(17)
+      expect(features?.[1]?.get('layerName')).to.equal('ZMEL_Cale_Querlen')
+      expect(features?.[1]?.get('id')).to.equal(697)
+    })
 
     cy.log('add the regulation to My Zones')
     cy.clickButton('Sélectionner la zone')
@@ -33,22 +41,34 @@ context('LayerTree > Regulatory Layers', () => {
     cy.getDataCy('my-regulatory-layers').click() // zoom on the regulation's zone
     cy.clickButton('Effacer les résultats de la recherche')
     cy.wait(250)
-    getBaseLayerSnapShot()
+
     cy.clickButton('Cacher la/les zone(s)')
     cy.wait(250)
-    getBaseLayerSnapShot()
+    cy.getFeaturesFromLayer(Layers.REGULATORY_ENV.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(0)
+    })
+
     cy.clickButton('Afficher la/les zone(s)')
     cy.wait(250)
-    getBaseLayerSnapShot()
+    cy.getFeaturesFromLayer(Layers.REGULATORY_ENV.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(1)
+    })
+
     cy.clickButton('Cacher la zone')
     cy.wait(250)
-    getBaseLayerSnapShot()
+    cy.getFeaturesFromLayer(Layers.REGULATORY_ENV.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(0)
+    })
+
     cy.clickButton('Afficher la zone')
     cy.wait(250)
-    getBaseLayerSnapShot()
+    cy.getFeaturesFromLayer(Layers.REGULATORY_ENV.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(1)
+    })
+
     cy.clickButton('Supprimer la zone de ma sélection')
     cy.wait(250)
-    getBaseLayerSnapShot()
+
     cy.getDataCy('my-regulatory-layers-list').contains('Aucune zone sélectionnée')
   })
 

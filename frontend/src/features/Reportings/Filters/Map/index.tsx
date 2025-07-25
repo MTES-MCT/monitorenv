@@ -8,10 +8,10 @@ import {
   type OptionValueType,
   SingleTag
 } from '@mtes-mct/monitor-ui'
-import { filterSubTags } from '@utils/getTagsAsOptions'
-import { filterSubThemes } from '@utils/getThemesAsOptions'
+import { deleteTagTag } from '@utils/deleteTagTag'
+import { deleteThemeTag } from '@utils/deleteThemeTag'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { forwardRef } from 'react'
+import { forwardRef, Fragment } from 'react'
 import styled from 'styled-components'
 
 import {
@@ -83,18 +83,13 @@ export function MapReportingsFiltersWithRef(
     dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
   }
   const onDeleteTagTag = (valueToDelete: TagOption, filter: TagOption[]) => {
-    const updatedFilter: TagOption[] = filter
-      .map(tag => filterSubTags(tag, valueToDelete))
-      .filter(tag => tag !== undefined)
-      .filter(tag => tag.id !== valueToDelete.id)
+    const updatedFilter = deleteTagTag(filter, valueToDelete)
+
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.TAG_FILTER, value: updatedFilter }))
   }
 
   const onDeleteThemeTag = (valueToDelete: ThemeOption, filter: ThemeOption[]) => {
-    const updatedFilter: ThemeOption[] = filter
-      .map(theme => filterSubThemes(theme, valueToDelete))
-      .filter(theme => theme !== undefined)
-      .filter(theme => theme.id !== valueToDelete.id)
+    const updatedFilter = deleteThemeTag(filter, valueToDelete)
 
     dispatch(
       reportingsFiltersActions.updateFilters({
@@ -251,7 +246,7 @@ export function MapReportingsFiltersWithRef(
           menuStyle={{ maxWidth: '200%' }}
           name="themes"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
-          options={themesOptions}
+          options={[...themesOptions, { id: 11111111, name: 'Autres' }]}
           placeholder="Thématiques"
           shouldShowLabels={false}
           value={themeFilter}
@@ -261,16 +256,14 @@ export function MapReportingsFiltersWithRef(
         {themeFilter && themeFilter.length > 0 && (
           <StyledTagsContainer>
             {themeFilter.map(theme => (
-              <>
-                <SingleTag key={theme.id} onDelete={() => onDeleteThemeTag(theme, themeFilter)}>
-                  {theme.name}
-                </SingleTag>
+              <Fragment key={theme.id}>
+                <SingleTag onDelete={() => onDeleteThemeTag(theme, themeFilter)}>{theme.name}</SingleTag>
                 {theme.subThemes?.map(subTheme => (
                   <SingleTag key={subTheme.id} onDelete={() => onDeleteThemeTag(subTheme, themeFilter)}>
                     {subTheme.name}
                   </SingleTag>
                 ))}
-              </>
+              </Fragment>
             ))}
           </StyledTagsContainer>
         )}

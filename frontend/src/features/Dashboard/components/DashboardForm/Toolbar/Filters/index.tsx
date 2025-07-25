@@ -106,12 +106,12 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
           // customSearch={regulatoryTagsAsOptions.length > 10 ? regulatoryTagsCustomSearch : undefined}
           isLabelHidden
           isTransparent
-          label="Thématique réglementaire"
+          label="Tag"
           labelKey="name"
           name="regulatoryTags"
           onChange={setFilteredRegulatoryTags}
           options={regulatoryTagsAsOptions}
-          placeholder="Thématique réglementaire"
+          placeholder="Tag"
           renderExtraFooter={renderExtraFooter}
           shouldShowLabels={false}
           style={{ width: '310px' }}

@@ -9,7 +9,7 @@ function setDateRangeWithControlsFilter(): {
 } {
   cy.fill('Période', 'Période spécifique')
   const startDateFilter = getUtcDateInMultipleFormats('2024-01-01T00:00:00.000Z')
-  const futureDate = customDayjs.utc().endOf('day').add(4, 'month').format('YYYY-MM-DDT23:59:59.000Z')
+  const futureDate = customDayjs.utc().endOf('day').add(5, 'month').format('YYYY-MM-DDT23:59:59.000Z')
   const endDateFilter = getUtcDateInMultipleFormats(futureDate)
   cy.fill('Période spécifique', [startDateFilter.asDatePickerDate, endDateFilter.asDatePickerDate])
 

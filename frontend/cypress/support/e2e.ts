@@ -1,8 +1,6 @@
 /// <reference path="../../node_modules/@mtes-mct/monitor-ui/cypress/global.d.ts" />
 
-import 'cypress-mouse-position/commands'
-import 'cypress-plugin-snapshots/commands'
-
+import type { FeatureLike } from 'ol/Feature'
 import './commands'
 import './commands/dragTo'
 import './commands/loadPath'
@@ -11,7 +9,6 @@ declare global {
   namespace Cypress {
     interface Chainable {
       before(property: string): string
-      cleanScreenshots(fromNumber: number): void
       dragTo(
         selector: string,
         options?: Partial<{
@@ -19,8 +16,8 @@ declare global {
           isSmooth: boolean
         }>
       ): void
+      getFeaturesFromLayer(layerName: string, layerPixel: [number, number]): Cypress.Chainable<Array<FeatureLike>>
       loadPath(path: string): void
-      toMatchImageSnapshot(settings: any): Chainable<Element>
     }
   }
 }

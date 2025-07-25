@@ -34,6 +34,13 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
     verifyVigilanceAreaRows('Dragage')
   })
 
+  it('Should filter vigilance areas by subTags filter', () => {
+    cy.fill('Filtre tags et sous-tags', ['subtagMouillage1'])
+    cy.getDataCy('vigilance-areas-filter-tags').find('.Component-SingleTag > span').contains('subtagMouillage1')
+    cy.getDataCy('vigilance-area-row').should('have.length', 1)
+    verifyVigilanceAreaRows('Mouillage')
+  })
+
   it('Should filter vigilance areas by themes filter', () => {
     cy.fill('Filtre thématiques et sous-thématiques', ['Réglementation du parc national'])
     cy.getDataCy('vigilance-areas-filter-tags')

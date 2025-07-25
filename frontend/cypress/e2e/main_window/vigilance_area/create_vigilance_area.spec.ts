@@ -1,4 +1,5 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { Layers } from 'domain/entities/layers/constants'
 
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 import { getFutureDate } from '../../utils/getFutureDate'
@@ -49,16 +50,11 @@ describe('Create Vigilance Area', () => {
     cy.get('#root').click(850, 780)
     cy.wait(250)
     cy.get('#root').click(850, 780)
-    cy.get('.baselayer').toMatchImageSnapshot({
-      imageConfig: {
-        threshold: 0.05,
-        thresholdType: 'percent'
-      },
-      screenshotConfig: {
-        clip: { height: 500, width: 250, x: 410, y: 0 }
-      }
-    })
     cy.clickButton('Valider les tracés')
+
+    cy.getFeaturesFromLayer(Layers.VIGILANCE_AREA.code, [850, 780]).should(features => {
+      expect(features).to.have.length(1)
+    })
 
     cy.fixture('image.png', null).then(fileContent => {
       cy.get('input[type=file]').selectFile(
@@ -94,6 +90,7 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.endDatePeriod).equal(`${endDate[0]}-${endDateMonth}-${endDateDay}T23:59:59.000Z`)
       expect(createdVigilanceArea.frequency).equal(VigilanceArea.Frequency.ALL_WEEKS)
       expect(createdVigilanceArea.endingCondition).equal(VigilanceArea.EndingCondition.NEVER)
+      expect(createdVigilanceArea.geom.type).equal('MultiPolygon')
       expect(createdVigilanceArea.themes[0].id).equal(9)
       expect(createdVigilanceArea.themes[0].name).equal('Pêche à pied')
       expect(createdVigilanceArea.themes[0].subThemes[0].id).equal(330)

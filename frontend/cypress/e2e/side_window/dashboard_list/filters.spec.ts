@@ -75,9 +75,9 @@ context('Side Window > Dashboard List > Filter Bar', () => {
     cy.clickButton('Réinitialiser les filtres')
   })
 
-  it('Should filter dashboard by regulatory themes', () => {
+  it('Should filter dashboard by tags', () => {
     cy.wait(200)
-    cy.fill('Thématique réglementaire', ['Mixte'])
+    cy.fill('Tags', ['Mixte'])
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
     cy.get('.Table-SimpleTable tr').each((row, index) => {

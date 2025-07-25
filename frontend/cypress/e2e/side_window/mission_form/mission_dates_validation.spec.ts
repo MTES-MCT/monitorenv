@@ -38,6 +38,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     // Given
     cy.wait(200)
     cy.getDataCy('add-mission').click()
+    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
 
     // When
     const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
@@ -60,7 +61,7 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.clickButton('Ajouter une zone de surveillance')
     dispatch(setGeometry(surveillanceGeometry))
 
-    cy.fill('Thématiques et sous-thématiques de surveillance', ['Destruction', 'Espèce protégée'])
+    cy.fill('Thématiques et sous-thématiques de surveillance', ['Destruction', 'Autres espèces protégées'])
 
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
     cy.wait(250)
@@ -115,8 +116,10 @@ context('Side Window > Mission Form > Mission dates', () => {
     // Add a second surveillance
     cy.clickButton('Ajouter')
     cy.clickButton('Ajouter une surveillance')
+    cy.clickButton('Ajouter une zone de surveillance')
+    dispatch(setGeometry(surveillanceGeometry))
 
-    cy.fill('Thématiques et sous-thématiques de surveillance', ['Mouillage individuel', 'Autre', 'Drone'])
+    cy.fill('Thématiques et sous-thématiques de surveillance', ['Autre mouillage individuel', 'Drone'])
 
     cy.getDataCy('surveillance-duration-matches-mission').should('not.have.class', 'rs-checkbox-checked')
 
@@ -160,8 +163,6 @@ context('Side Window > Mission Form > Mission dates', () => {
     cy.get('.Element-FieldError').contains('La date de fin doit être antérieure à celle de fin de mission')
     cy.wait(200)
 
-    // Valid end date of surveillance
-    cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
     const validSurveillanceEndDate = getFutureDate(4, 'day')
     cy.fill('Date et heure de fin de surveillance', validSurveillanceEndDate)
     cy.wait(250)
@@ -181,12 +182,8 @@ context('Side Window > Mission Form > Mission dates', () => {
           return
         }
         expect(response.statusCode).equal(200)
-        const id = response.body.id
-        cy.clickButton('Fermer')
 
         // clean
-        cy.getDataCy(`edit-mission-${id}`).scrollIntoView().click({ force: true })
-        cy.getDataCy('action-card').eq(0).click()
         cy.clickButton('Supprimer la mission')
         cy.clickButton('Confirmer la suppression')
       }

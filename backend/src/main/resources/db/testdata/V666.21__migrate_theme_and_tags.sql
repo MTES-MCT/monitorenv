@@ -37,3 +37,13 @@ INSERT INTO tags_regulatory_areas (tags_id, regulatory_areas_id)
 VALUES (10, 16),
        (5, 16),
        (9, 17);
+
+/* VIGILANCE AREAS */
+/* Add SubtagMouillage1 Tag */
+INSERT INTO tags_vigilance_areas (vigilance_areas_id, tags_id)
+VALUES (7, 10), (7, 5);
+
+/* Add SubtagMouillage2 Tag */
+INSERT INTO tags_vigilance_areas (vigilance_areas_id, tags_id)
+VALUES (1, 11), (1, 5);
+

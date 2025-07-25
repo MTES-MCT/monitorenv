@@ -38,3 +38,5 @@ export const FAKE_MISSION_WITH_EXTERNAL_ACTIONS = {
   body: { canDelete: false, sources: ['MONITORFISH', 'RAPPORT_NAV'] },
   statusCode: 200
 }
+
+export const PAGE_CENTER_PIXELS = [640, 512] as [number, number]

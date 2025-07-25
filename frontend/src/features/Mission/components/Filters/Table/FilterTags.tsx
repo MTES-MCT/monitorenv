@@ -5,7 +5,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { FrontendError } from '@libs/FrontendError'
 import { customDayjs, SingleTag } from '@mtes-mct/monitor-ui'
-import { filterSubTags } from '@utils/getTagsAsOptions'
+import { deleteTagTag } from '@utils/deleteTagTag'
 import { FrontCompletionStatusLabel, missionStatusLabels, missionTypeEnum } from 'domain/entities/missions'
 import { MissionFiltersEnum, type MissionFiltersState, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { useMemo } from 'react'
@@ -55,10 +55,7 @@ export function FilterTags() {
   }
 
   const onDeleteTagTag = (valueToDelete: TagOption, tagFilter: TagOption[]) => {
-    const updatedFilter: TagOption[] = tagFilter
-      .map(tag => filterSubTags(tag, valueToDelete))
-      .filter(tag => tag !== undefined)
-      .filter(tag => tag.id !== valueToDelete.id)
+    const updatedFilter = deleteTagTag(tagFilter, valueToDelete)
     dispatch(
       updateFilters({
         key: MissionFiltersEnum.TAGS_FILTER,
