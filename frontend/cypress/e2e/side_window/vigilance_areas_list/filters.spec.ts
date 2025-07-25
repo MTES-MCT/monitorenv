@@ -31,13 +31,14 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
   it('Should filter vigilance areas by tags filter', () => {
     cy.fill('Filtre tags et sous-tags', ['Dragage'])
     cy.getDataCy('vigilance-areas-filter-tags').find('.Component-SingleTag > span').contains('Dragage')
-    cy.getDataCy('vigilance-area-row').should('have.length', 2)
+    verifyVigilanceAreaRows('Dragage')
   })
 
   it('Should filter vigilance areas by subTags filter', () => {
     cy.fill('Filtre tags et sous-tags', ['subtagMouillage1'])
     cy.getDataCy('vigilance-areas-filter-tags').find('.Component-SingleTag > span').contains('subtagMouillage1')
     cy.getDataCy('vigilance-area-row').should('have.length', 1)
+    verifyVigilanceAreaRows('Mouillage')
   })
 
   it('Should filter vigilance areas by themes filter', () => {

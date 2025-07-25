@@ -60,7 +60,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     size: 272 + legacyFirefoxOffset
   },
   {
-    accessorFn: row => row.themes?.map(theme => theme.name).join(', '),
+    accessorFn: row => row.tags?.map(tag => tag.name).join(', '),
     cell: info =>
       isFetching ? (
         <StyledSkeletonRow />
@@ -68,7 +68,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
         <span title={info.getValue()}>{info.getValue() && info.getValue().length > 0 ? info.getValue() : '-'}</span>
       ),
     enableSorting: true,
-    header: () => 'Thématique',
+    header: () => 'Tags',
     id: 'themes',
     size: 260 + legacyFirefoxOffset
   },
