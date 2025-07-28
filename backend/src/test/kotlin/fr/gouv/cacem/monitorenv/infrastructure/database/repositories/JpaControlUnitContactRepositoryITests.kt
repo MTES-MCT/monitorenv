@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +16,11 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaVigilanceAreaRepository: JpaVigilanceAreaRepository
 
+    @Autowired
+    private lateinit var entityManager: EntityManager
+
     @Test
+    @Transactional
     fun `deleteById should delete a contact by id and delete all contact from vigilanceAreaSource`() {
         // Given
         val contactId = 1
@@ -24,6 +29,8 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         // When
         jpaControlUnitContactRepository.deleteById(contactId)
+        entityManager.flush()
+        entityManager.clear()
 
         // Then
         val vigilanceAreaWithoutControlUnitContact = jpaVigilanceAreaRepository.findById(1)

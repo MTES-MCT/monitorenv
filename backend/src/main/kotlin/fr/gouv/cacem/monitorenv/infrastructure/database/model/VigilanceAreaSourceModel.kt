@@ -64,8 +64,8 @@ class VigilanceAreaSourceModel(
             return vigilanceAreaSourceModel
                 .groupBy { it.controlUnitContact?.controlUnit?.id }
                 .flatMap { (controlUnitId, sources) ->
-                    if (controlUnitId != null) {
-                        return@flatMap listOf(
+                    return@flatMap if (controlUnitId != null) {
+                        listOf(
                             VigilanceAreaSourceEntity(
                                 id = null,
                                 controlUnitContacts =

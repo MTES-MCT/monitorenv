@@ -24,7 +24,7 @@ INSERT INTO vigilance_areas_source (id, vigilance_areas_id, name)
      FROM vigilance_areas v);
 
 -- DELETING OLD COLUMNS
--- ALTER TABLE vigilance_areas
---     DROP COLUMN source;
+ALTER TABLE vigilance_areas
+    DROP COLUMN source;
 
 COMMIT;

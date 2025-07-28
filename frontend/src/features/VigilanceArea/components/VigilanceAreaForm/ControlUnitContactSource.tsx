@@ -3,8 +3,15 @@ import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { Bold } from '@components/style'
 import { formatPhoneNumber } from '@features/ControlUnit/components/ControlUnitDialog/ControlUnitContactList/Item'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { ControlUnit, CustomSearch, getOptionsFromIdAndName, Link, Select } from '@mtes-mct/monitor-ui'
-import { Checkbox } from '@mtes-mct/monitor-ui__root'
+import {
+  Checkbox,
+  ControlUnit,
+  CustomSearch,
+  Fieldset,
+  getOptionsFromIdAndName,
+  Link,
+  Select
+} from '@mtes-mct/monitor-ui'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -75,31 +82,36 @@ export function ControlUnitContactSource({
         searchable={unitsWithContactAsOption.length > 10}
         value={selectedControlUnitId}
       />
-      {selectedControlUnit?.controlUnitContacts.map(controlUnitContact => (
-        <Wrapper key={controlUnitContact.id}>
-          <Checkbox
-            checked={
-              !!selectedControlUnitContacts.find(selectedContact => selectedContact.id === controlUnitContact.id)
-            }
-            label={
-              <Contact>
-                <FirstLine>
-                  <Bold>
-                    {ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
-                  </Bold>
-                  {controlUnitContact.phone && <Phone>{formatPhoneNumber(controlUnitContact.phone)}</Phone>}
-                </FirstLine>
-
-                <Link href={`mailto:${controlUnitContact.email}`} rel="noreferrer" target="_blank">
-                  {controlUnitContact.email}
-                </Link>
-              </Contact>
-            }
-            name="select"
-            onChange={checked => onSelectControlUnitContact(checked, controlUnitContact)}
-          />
-        </Wrapper>
-      ))}
+      {selectedControlUnit && (
+        <>
+          <Fieldset isLegendHidden legend={`Contacts de ${selectedControlUnit.name}`} />
+          {selectedControlUnit.controlUnitContacts.map(controlUnitContact => (
+            <Wrapper key={controlUnitContact.id}>
+              <Checkbox
+                checked={
+                  !!selectedControlUnitContacts.find(selectedContact => selectedContact.id === controlUnitContact.id)
+                }
+                label={
+                  <Contact>
+                    <FirstLine>
+                      <Bold>
+                        {ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] ||
+                          controlUnitContact.name}
+                      </Bold>{' '}
+                      {controlUnitContact.phone && <Phone>{formatPhoneNumber(controlUnitContact.phone)}</Phone>}
+                    </FirstLine>{' '}
+                    <Link href={`mailto:${controlUnitContact.email}`} rel="noreferrer" target="_blank">
+                      {controlUnitContact.email}
+                    </Link>
+                  </Contact>
+                }
+                name="select"
+                onChange={checked => onSelectControlUnitContact(checked, controlUnitContact)}
+              />
+            </Wrapper>
+          ))}
+        </>
+      )}
     </>
   )
 }

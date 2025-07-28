@@ -82,8 +82,8 @@ class JpaVigilanceAreaRepository(
         sources: List<VigilanceAreaSourceEntity>,
     ): List<VigilanceAreaSourceModel> =
         sources.flatMap { source ->
-            if (!source.controlUnitContacts.isNullOrEmpty()) {
-                return@flatMap source.controlUnitContacts.map {
+            return@flatMap if (!source.controlUnitContacts.isNullOrEmpty()) {
+                source.controlUnitContacts.map {
                     val controlUnitContactModel =
                         if (it.id != null) controlUnitContactRepository.getReferenceById(it.id) else null
                     return@map VigilanceAreaSourceModel.fromVigilanceAreaSource(
@@ -93,7 +93,7 @@ class JpaVigilanceAreaRepository(
                     )
                 }
             } else {
-                return@flatMap listOf(
+                listOf(
                     VigilanceAreaSourceModel.fromVigilanceAreaSource(
                         source,
                         null,

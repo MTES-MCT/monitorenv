@@ -157,8 +157,6 @@ data class VigilanceAreaModel(
                     sources = listOf(),
                     validatedAt = vigilanceArea.validatedAt,
                 )
-//            vigilanceAreaModel.tags = fromTagEntities(vigilanceArea.tags, vigilanceAreaModel)
-//            vigilanceAreaModel.themes = fromThemeEntities(vigilanceArea.themes, vigilanceAreaModel)
 
             return vigilanceAreaModel
         }
