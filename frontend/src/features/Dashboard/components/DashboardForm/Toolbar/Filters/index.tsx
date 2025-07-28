@@ -103,7 +103,6 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
     <FiltersContainer>
       <div>
         <CheckTreePicker
-          // customSearch={regulatoryTagsAsOptions.length > 10 ? regulatoryTagsCustomSearch : undefined}
           isLabelHidden
           isTransparent
           label="Tag"
@@ -117,6 +116,7 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
           style={{ width: '310px' }}
           value={filters?.regulatoryTags}
           valueKey="id"
+          virtualized
         />
         <Select
           isLabelHidden

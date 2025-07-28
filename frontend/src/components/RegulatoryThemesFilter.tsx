@@ -62,7 +62,7 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
       style={style}
       value={filteredRegulatoryThemes}
       valueKey="id"
-      // customSearch={regulatoryTagsCustomSearch}
+      virtualized
     />
   )
 }

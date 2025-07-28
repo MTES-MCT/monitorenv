@@ -211,6 +211,7 @@ export function TableReportingsFiltersWithRef(
             value={targetTypeFilter}
           />
           <CheckTreePicker
+            key={`theme${themesOptions.length}${JSON.stringify(themeFilter)}`}
             childrenKey="subThemes"
             data-cy="reporting-theme-filter"
             isLabelHidden
@@ -225,6 +226,7 @@ export function TableReportingsFiltersWithRef(
             style={{ width: 310 }}
             value={themeFilter}
             valueKey="id"
+            virtualized
           />
           <CheckTreePicker
             childrenKey="subTags"
@@ -243,6 +245,7 @@ export function TableReportingsFiltersWithRef(
             style={{ width: 310 }}
             value={tagFilter}
             valueKey="id"
+            virtualized
           />
 
           <CheckPicker
