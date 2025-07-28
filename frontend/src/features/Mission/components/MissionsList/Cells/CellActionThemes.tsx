@@ -1,3 +1,4 @@
+import { SubThemesOrSubTagsContainer, ThemesOrTagsContainer } from '@components/Table/style'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 import {
   ActionTypeEnum,
@@ -6,7 +7,6 @@ import {
   type EnvActionSurveillance
 } from 'domain/entities/missions'
 import { useMemo } from 'react'
-import styled from 'styled-components'
 
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
@@ -30,7 +30,7 @@ const getThemesCell = (envActions: EnvAction[]) => {
   const toThemeCell = (theme: ThemeFromAPI) => ({
     component: (
       <>
-        {theme.name} <SubThemesContainer>({displaySubThemes([theme])})</SubThemesContainer>
+        {theme.name} <SubThemesOrSubTagsContainer>({displaySubThemes([theme])})</SubThemesOrSubTagsContainer>
       </>
     ),
     title: `${theme.name} (${theme.subThemes.map(subTheme => subTheme.name).join(', ')})`
@@ -45,19 +45,10 @@ export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
 
   return cellContent?.length > 0
     ? cellContent.map(({ component, title }, index) => (
-        <ThemesAndSubThemesContainer key={title} data-cy="cell-envActions-themes" title={cellTitle}>
+        <ThemesOrTagsContainer key={title} data-cy="cell-envActions-themes" title={cellTitle}>
           {component}
           {index < cellContent.length - 1 ? ' - ' : ''}
-        </ThemesAndSubThemesContainer>
+        </ThemesOrTagsContainer>
       ))
     : null
 }
-
-const ThemesAndSubThemesContainer = styled.span`
-  color: ${p => p.theme.color.charcoal};
-  font-weight: 500;
-`
-const SubThemesContainer = styled.span`
-  color: ${p => p.theme.color.slateGray};
-  font-weight: 400;
-`
