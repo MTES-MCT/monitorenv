@@ -121,7 +121,7 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.sources[0].controlUnitContacts[0].id).equal(2)
       expect(createdVigilanceArea.sources[1].name).equal('Mike data')
       expect(createdVigilanceArea.sources[1].phone).equal('0123456789')
-      expect(createdVigilanceArea.sources[1].name).equal('mike.data@gmail.com')
+      expect(createdVigilanceArea.sources[1].email).equal('mike.data@gmail.com')
 
       cy.getDataCy('banner-stack').should('be.visible')
       cy.getDataCy('banner-stack').contains('La zone de vigilance a bien été créée')
