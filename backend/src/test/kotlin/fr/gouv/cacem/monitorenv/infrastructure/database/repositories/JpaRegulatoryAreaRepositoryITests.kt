@@ -89,7 +89,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea.tags[0].name).isEqualTo("PN")
         assertThat(requestedRegulatoryArea.tags[0].subTags[0].name).isEqualTo("subtagPN2")
         assertThat(requestedRegulatoryArea.tags[1].name).isEqualTo("Mouillage")
-        assertThat(requestedRegulatoryArea.tags[1].subTags).isEmpty()
+        assertThat(requestedRegulatoryArea.tags[1].subTags[0].name).isEqualTo("subtagMouillage1")
         assertThat(requestedRegulatoryArea.date).isEqualTo(searchedRegulatoryArea.date)
         assertThat(requestedRegulatoryArea.dureeValidite).isEqualTo(searchedRegulatoryArea.dureeValidite)
         assertThat(requestedRegulatoryArea.dateFin).isEqualTo(searchedRegulatoryArea.dateFin)
