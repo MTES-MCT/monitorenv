@@ -1,3 +1,5 @@
+import { isPartOfTags } from '@utils/isPartOfTags'
+
 import {
   ActionTypeEnum,
   type EnvActionControl,
@@ -23,22 +25,8 @@ export function isMissionPartOfSelectedTags(mission: Mission, selectedTags: TagO
     .flatMap(action => action.tags)
     .filter(tag => tag !== undefined)
 
-  const missionTagsWithoutChildren = [...missionTags.filter(tag => tag.subTags?.length === 0)]
-  const missionSubTags = [...missionTags.flatMap(({ subTags }) => subTags)]
-
-  const allTagsWithoutChildrenFilter = [...selectedTags.filter(tagFilter => tagFilter?.subTags?.length === 0)]
-  const allSubTagsFilter = selectedTags.flatMap(tagFilter => tagFilter?.subTags || [])
-
-  const hasMatchingSubTags = allSubTagsFilter.some(tagFilter =>
-    missionSubTags.some(subTag => subTag.id === tagFilter.id)
-  )
-
-  let hasMatchingTags = false
-  if (missionTagsWithoutChildren.length > 0) {
-    hasMatchingTags = allTagsWithoutChildrenFilter.some(tagFilter =>
-      missionTagsWithoutChildren.some(tag => tag.id === tagFilter.id)
-    )
-  }
-
-  return hasMatchingTags || hasMatchingSubTags
+  return isPartOfTags({
+    filterTags: selectedTags,
+    tagsToCompare: missionTags
+  })
 }
