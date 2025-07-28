@@ -2,13 +2,14 @@ import { DateCell } from '@components/Table/DateCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 
-import { EditCell } from '../Rows/EditCell'
-import { FrequencyCell } from '../Rows/FrequencyCell'
-import { HighlightCell } from '../Rows/HighlightCell'
-import { LocalizeCell } from '../Rows/LocalizeCell'
-import { StatusCell } from '../Rows/StatusCell'
-import { ValidationDateCell } from '../Rows/ValidationDateCell'
-import { VisibilityCell } from '../Rows/VisibilityCell'
+import { EditCell } from '../Cells/EditCell'
+import { FrequencyCell } from '../Cells/FrequencyCell'
+import { HighlightCell } from '../Cells/HighlightCell'
+import { LocalizeCell } from '../Cells/LocalizeCell'
+import { StatusCell } from '../Cells/StatusCell'
+import { TagsCell } from '../Cells/TagsCell'
+import { ValidationDateCell } from '../Cells/ValidationDateCell'
+import { VisibilityCell } from '../Cells/VisibilityCell'
 
 import type { Row } from '@tanstack/react-table'
 
@@ -60,13 +61,8 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     size: 272 + legacyFirefoxOffset
   },
   {
-    accessorFn: row => row.tags?.map(tag => tag.name).join(', '),
-    cell: info =>
-      isFetching ? (
-        <StyledSkeletonRow />
-      ) : (
-        <span title={info.getValue()}>{info.getValue() && info.getValue().length > 0 ? info.getValue() : '-'}</span>
-      ),
+    accessorFn: row => row.tags,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <TagsCell tags={info.getValue()} />),
     enableSorting: true,
     header: () => 'Tags',
     id: 'themes',

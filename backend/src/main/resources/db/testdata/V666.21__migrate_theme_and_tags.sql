@@ -36,7 +36,8 @@ FROM regulations_cacem r
 INSERT INTO tags_regulatory_areas (tags_id, regulatory_areas_id)
 VALUES (10, 16),
        (5, 16),
-       (9, 17);
+       (9, 17),
+       (10, 17);
 
 /* VIGILANCE AREAS */
 /* Add SubtagMouillage1 Tag */

@@ -3,10 +3,10 @@ import { LocalizeCell } from '@components/Table/LocalizeCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { type Row } from '@tanstack/react-table'
 
-import { ControlUnitsCell } from '../Rows/ControlUnitsCell'
-import { EditDashboardCell } from '../Rows/EditDashboardCell'
-import { RegulatoryAreasThemesCell } from '../Rows/RegulatoryAreasThemesCell'
-import { TotalSelectedItemsCell } from '../Rows/TotalSelectedItemsCell'
+import { ControlUnitsCell } from '../Cells/ControlUnitsCell'
+import { EditDashboardCell } from '../Cells/EditDashboardCell'
+import { RegulatoryAreasTagsCell } from '../Cells/RegulatoryAreasTagsCell'
+import { TotalSelectedItemsCell } from '../Cells/TotalSelectedItemsCell'
 
 import type { Dashboard } from '@features/Dashboard/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
@@ -70,7 +70,8 @@ export const Columns = (
   },
   {
     accessorFn: row => row.regulatoryAreaIds,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <RegulatoryAreasThemesCell themeIds={info.getValue()} />),
+    cell: info =>
+      isFetching ? <StyledSkeletonRow /> : <RegulatoryAreasTagsCell regulatoryAreaIds={info.getValue()} />,
     enableSorting: true,
     header: () => 'Tags des zones sélectionnées',
     id: 'regulatoryAreaIds',
