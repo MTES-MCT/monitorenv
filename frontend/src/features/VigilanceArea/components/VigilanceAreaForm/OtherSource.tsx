@@ -29,7 +29,7 @@ export function OtherSource({
         error={error}
         isErrorMessageHidden
         isLight
-        label="Numéro de téléphone."
+        label="Numéro de téléphone"
         name="phone"
         onChange={onPhoneChange}
         value={editedSource.phone}

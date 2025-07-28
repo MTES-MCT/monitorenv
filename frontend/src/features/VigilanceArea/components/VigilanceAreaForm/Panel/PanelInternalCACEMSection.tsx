@@ -5,6 +5,8 @@ import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { THEME } from '@mtes-mct/monitor-ui'
+import { groupBy } from 'lodash'
+import { Fragment } from 'react/jsx-runtime'
 import styled from 'styled-components'
 
 import {
@@ -50,20 +52,30 @@ export function PanelInternalCACEMSection({
         <PanelInlineItem>
           <PanelInlineItemLabel>Sources</PanelInlineItemLabel>
           <PanelItem>
-            {sources.map(source =>
-              (source.controlUnitContacts?.length ?? 0) > 0 ? (
-                source.controlUnitContacts?.map(contact => (
-                  <PanelSource
-                    key={contact.id}
-                    email={contact.email}
-                    name={getControlUnitName(contact.controlUnitId)}
-                    phone={contact.phone}
-                  />
-                ))
-              ) : (
-                <PanelSource key={source.id} email={source.email} name={source.name} phone={source.phone} />
-              )
-            )}
+            {sources.map(source => (
+              <Fragment key={source.id}>
+                {(source.controlUnitContacts?.length ?? 0) > 0 ? (
+                  <>
+                    {Object.entries(groupBy(source.controlUnitContacts, item => item.controlUnitId)).map(
+                      ([controlUnitId, contacts]) => (
+                        <div key={`control_unit_source_${controlUnitId}`}>
+                          <PanelSource name={getControlUnitName(+controlUnitId)} />
+                          {contacts.map(contact => (
+                            <PanelSource
+                              key={`control_unit_contact_source_${contact.id}`}
+                              email={contact.email}
+                              phone={contact.phone}
+                            />
+                          ))}
+                        </div>
+                      )
+                    )}
+                  </>
+                ) : (
+                  <PanelSource email={source.email} name={source.name} phone={source.phone} />
+                )}
+              </Fragment>
+            ))}
           </PanelItem>
         </PanelInlineItem>
       )}

@@ -1,6 +1,6 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { Layers } from 'domain/entities/layers/constants'
 
+import { Layers } from '../../../../src/domain/entities/layers/constants'
 import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 import { getFutureDate } from '../../utils/getFutureDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
@@ -41,7 +41,6 @@ describe('Create Vigilance Area', () => {
     cy.fill('Visibilité', 'Publique')
     cy.fill('Commentaire', 'Ceci est un commentaire')
     cy.fill('Créé par', 'ABC')
-
     cy.clickButton('Définir un tracé pour la zone de vigilance')
     cy.get('#root').click(490, 580)
     cy.wait(250)
@@ -70,6 +69,19 @@ describe('Create Vigilance Area', () => {
         }
       )
     })
+
+    cy.clickButton('Ajouter une source')
+    cy.fill('Source (1)', 'Unité')
+    cy.fill("Nom de l'unité", 'Cultures marines – DDTM 40')
+    cy.get('label').contains('Contact 2 06 02 xx xx xx').click()
+    cy.clickButton('Valider')
+
+    cy.clickButton('Ajouter une source')
+    cy.fill('Source (2)', 'Autre')
+    cy.fill('Nom', 'Mike data')
+    cy.fill('Numéro de téléphone', '0123456789')
+    cy.fill('Email', 'mike.data@gmail.com')
+    cy.clickButton('Valider')
 
     cy.wait(500)
 
@@ -105,6 +117,11 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.images[0].name).equal('image.png')
       expect(createdVigilanceArea.images[0].size).equal(396656)
       expect(createdVigilanceArea.images[0].mimeType).equal('image/png')
+      expect(createdVigilanceArea.sources).to.have.length(2)
+      expect(createdVigilanceArea.sources[0].controlUnitContacts[0].id).equal(2)
+      expect(createdVigilanceArea.sources[1].name).equal('Mike data')
+      expect(createdVigilanceArea.sources[1].phone).equal('0123456789')
+      expect(createdVigilanceArea.sources[1].name).equal('mike.data@gmail.com')
 
       cy.getDataCy('banner-stack').should('be.visible')
       cy.getDataCy('banner-stack').contains('La zone de vigilance a bien été créée')

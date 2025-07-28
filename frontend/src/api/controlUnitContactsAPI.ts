@@ -24,7 +24,7 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
         try {
           await queryFulfilled
 
-          // Invalider manuellement le cache d'une autre API
+          // Manually invalidate bff rtk cache
           dispatch(monitorenvPrivateApi.util.invalidateTags([{ id: 'LIST', type: 'VigilanceAreas' }]))
         } catch {
           throw new FrontendError('Impossible de mettre à jour le cache des zones de vigilances')
@@ -54,7 +54,7 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
         try {
           await queryFulfilled
 
-          // Invalider manuellement le cache d'une autre API
+          // Manually invalidate bff rtk cache
           dispatch(monitorenvPrivateApi.util.invalidateTags([{ id: 'LIST', type: 'VigilanceAreas' }]))
         } catch {
           throw new FrontendError('Impossible de mettre à jour le cache des zones de vigilances')

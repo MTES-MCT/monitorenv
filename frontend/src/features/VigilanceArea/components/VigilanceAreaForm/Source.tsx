@@ -18,16 +18,14 @@ type SourceProps = {
   onValidate: (vigilanceAreaSource: VigilanceArea.VigilanceAreaSource) => void
   remove: (index: number) => void
 }
-enum VigilanceAreaSourceLabels {
-  CONTROL_UNIT = 'Unité',
-  OTHER = 'Autre'
-}
 
 export function Source({ hasError, index, initialSource, onValidate, remove }: SourceProps) {
-  const sourceOptions = getOptionsFromLabelledEnum(VigilanceAreaSourceLabels)
+  const sourceOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaSourceTypeLabel)
   const isNewlyCreatedSource = Object.values(initialSource).every(value => value === undefined)
   const [sourceType, setSourceType] = useState<string | undefined>(
-    isNewlyCreatedSource || (initialSource.controlUnitContacts?.length ?? 0) ? 'CONTROL_UNIT' : 'OTHER'
+    isNewlyCreatedSource || (initialSource.controlUnitContacts?.length ?? 0)
+      ? VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT
+      : VigilanceArea.VigilanceAreaSourceType.OTHER
   )
   const [isEditing, setIsEditing] = useState(isNewlyCreatedSource)
   const [editedSource, setEditedSource] = useState(initialSource)
@@ -51,10 +49,10 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
   }
 
   const onChangeSourceType = (nextValue: string | undefined) => {
-    if (nextValue === 'OTHER') {
+    if (nextValue === VigilanceArea.VigilanceAreaSourceType.OTHER) {
       setEditedSource(source => ({ ...source, controlUnitContacts: undefined }))
     }
-    if (nextValue === 'CONTROL_UNIT') {
+    if (nextValue === VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT) {
       setEditedSource(source => ({ ...source, email: undefined, name: undefined, phone: undefined }))
     }
     setSourceType(nextValue)
@@ -135,17 +133,26 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
               <>
                 {Object.entries(groupBy(initialSource.controlUnitContacts, source => source.controlUnitId)).map(
                   ([controlUnitId, contacts]) => (
-                    <div>
+                    <div key={`control_unit_source_${controlUnitId}`}>
                       <PanelSource name={getControlUnitName(+controlUnitId)} />
                       {contacts.map(contact => (
-                        <PanelSource email={contact.email} phone={contact.phone} />
+                        <PanelSource
+                          key={`control_unit_contact_source_${contact.id}`}
+                          email={contact.email}
+                          phone={contact.phone}
+                        />
                       ))}
                     </div>
                   )
                 )}
               </>
             ) : (
-              <PanelSource email={initialSource.email} name={initialSource.name} phone={initialSource.phone} />
+              <PanelSource
+                key={initialSource.id}
+                email={initialSource.email}
+                name={initialSource.name}
+                phone={initialSource.phone}
+              />
             )}
           </ContactWrapper>
           <PanelButtons>

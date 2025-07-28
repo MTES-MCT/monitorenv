@@ -165,4 +165,14 @@ export namespace VigilanceArea {
     DRAFT = 'Non publiée',
     PUBLISHED = 'Publiée'
   }
+
+  export enum VigilanceAreaSourceType {
+    CONTROL_UNIT = 'CONTROL_UNIT',
+    OTHER = 'OTHER'
+  }
+
+  export enum VigilanceAreaSourceTypeLabel {
+    CONTROL_UNIT = 'Unité',
+    OTHER = 'Autre'
+  }
 }
