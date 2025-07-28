@@ -24,64 +24,55 @@ html {
 }
 
 * {
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-    scrollbar-width: thin; /* Firefox */
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: ${p => p.theme.color.lightGray};
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: ${p => p.theme.color.slateGray};
-    }
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  scrollbar-width: thin; /* Firefox */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: ${p => p.theme.color.lightGray};
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: ${p => p.theme.color.slateGray};
+  }
 }
 
 .hide {
-    display: none;
-  }
+  display: none;
+}
 
-  .visible {
-    visibility: visible;
-  }
+.visible {
+  visibility: visible;
+}
 
-  .active-tab {
-    background-color: #707785;
-  }
+.active-tab {
+  background-color: #707785;
+}
 
-  .highlight,
-  mark {
-    margin: 0;
-    padding: 0;
-    background-color: #cccfd6;
-    color: rgb(81, 81, 81);
-  }
+.collapsed {
+  display: none;
+}
 
-  .collapsed {
-    display: none;
-  }
+.rs-radio-checker {
+  line-height: normal;
+}
 
-  .rs-radio-checker {
-    line-height: normal;
+.Field-Checkbox {
+  > .rs-checkbox {
+    > .rs-checkbox-checker > label {
+      line-height: normal !important;
+    }
   }
+}
 
+h2 {
+  line-height: normal;
+}
 
-  .Field-Checkbox {
-    > .rs-checkbox {
-        > .rs-checkbox-checker > label {
-            line-height: normal !important;
-        }
-      }
-  }
-
-  h2 {
-    line-height: normal;
-  }
-
-  ul,ol,menu {
-    list-style: none;
-    padding-left:0;
-    margin-bottom: 0;
-  }
+ul,ol,menu {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
 `

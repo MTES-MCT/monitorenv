@@ -49,6 +49,7 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">
       <CheckTreePicker
+        key={themesOptions.length}
         childrenKey="subThemes"
         error={error.error}
         isErrorMessageHidden
@@ -64,6 +65,7 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
         options={themesOptions}
         value={envActions[actionIndex]?.themes}
         valueKey="id"
+        virtualized
       />
     </ActionThemeWrapper>
   )

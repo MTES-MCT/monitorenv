@@ -62,7 +62,7 @@ export function RegulatoryTagsFilter({ style }: { style?: React.CSSProperties })
       style={style}
       value={filteredRegulatoryTags}
       valueKey="id"
-      // customSearch={regulatoryTagsCustomSearch}
+      virtualized
     />
   )
 }

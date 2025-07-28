@@ -310,6 +310,7 @@ export const MapMissionFilters = forwardRef<HTMLDivElement, MapMissionFiltersPro
             shouldShowLabels={false}
             value={selectedTags}
             valueKey="id"
+            virtualized
           />
           {selectedTags &&
             selectedTags?.length > 0 &&
