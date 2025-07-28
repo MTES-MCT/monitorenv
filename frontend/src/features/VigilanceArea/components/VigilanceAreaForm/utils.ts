@@ -1,3 +1,4 @@
+import { DraftSchema, PublishedSchema } from '@features/VigilanceArea/components/VigilanceAreaForm/Schema'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 
 export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceArea, 'id'> {
@@ -27,4 +28,10 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     validatedAt: undefined,
     visibility: VigilanceArea.Visibility.PRIVATE
   }
+}
+
+export const isFormValid = (vigilanceArea: VigilanceArea.VigilanceArea | undefined) => {
+  const SchemaToValidate = vigilanceArea?.isDraft ? PublishedSchema : DraftSchema
+
+  return SchemaToValidate.isValidSync(vigilanceArea, { abortEarly: false })
 }

@@ -10,30 +10,23 @@ export const Header = styled.header<{ $isEditing: boolean }>`
   justify-content: space-between;
   padding: 9px 16px 10px 16px;
 `
-export const Title = styled.span<{ $isDraft: boolean; $isFullWidth: boolean }>`
+export const Title = styled.span`
   font-size: 15px;
   color: ${p => p.theme.color.gunMetal};
-  overflow: hidden;
-  margin-left: 8px;
-  min-width: 0;
-  max-width: ${p => {
-    if (p.$isFullWidth) {
-      return '100%'
-    }
-
-    return p.$isDraft ? '230px' : '318px'
-  }};
-  text-overflow: ellipsis;
   white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `
 export const SubHeaderContainer = styled.div`
   align-items: center;
   display: flex;
-  gap: 16px;
+  gap: 8px;
 `
 export const TitleContainer = styled.div`
   align-items: center;
   display: flex;
+  gap: 8px;
+  min-width: 0;
 `
 
 export const DeleteButton = styled(Button)`

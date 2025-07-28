@@ -125,9 +125,9 @@ export const PublishedSchema: Yup.Schema<
   .required()
 
 export const VigilanceAreaSchema = Yup.lazy(value => {
-  const isMissionPublished = !value.isDraft
+  const isVigilanceAreaPublished = !value.isDraft
 
-  if (isMissionPublished) {
+  if (isVigilanceAreaPublished) {
     return PublishedSchema
   }
 
