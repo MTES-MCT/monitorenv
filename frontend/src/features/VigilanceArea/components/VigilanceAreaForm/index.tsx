@@ -98,12 +98,7 @@ export function VigilanceAreaForm({
             size={Size.NORMAL}
             type={vigilanceArea?.name ?? 'aucun nom'}
           />
-          <Title
-            $isDraft={vigilanceArea?.isDraft ?? true}
-            $isFullWidth={isNewVigilanceArea}
-            data-cy="vigilance-area-title"
-            title={title}
-          >
+          <Title data-cy="vigilance-area-title" title={title}>
             {title}
           </Title>
         </TitleContainer>

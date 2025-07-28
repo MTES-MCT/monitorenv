@@ -49,9 +49,7 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
             size={Size.NORMAL}
             type={vigilanceArea?.name ?? 'aucun nom'}
           />
-          <StyledTitle $isDraft={vigilanceArea?.isDraft ?? true} $isFullWidth title={vigilanceArea?.name}>
-            {vigilanceArea?.name}
-          </StyledTitle>
+          <StyledTitle>{vigilanceArea?.name}</StyledTitle>
         </TitleContainer>
 
         <SubHeaderContainer>

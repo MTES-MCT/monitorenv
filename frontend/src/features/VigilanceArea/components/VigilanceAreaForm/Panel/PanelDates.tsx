@@ -1,5 +1,7 @@
 import { ValidatedAt } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/ValidateAt'
+import { isFormValid } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { PanelSubPart } from '../style'
@@ -13,6 +15,8 @@ export function PanelDates({
   onValidate?: () => void
   vigilanceArea: VigilanceArea.VigilanceArea | undefined
 }) {
+  const isValid = useMemo(() => isFormValid(vigilanceArea), [vigilanceArea])
+
   if (!vigilanceArea?.createdAt && !vigilanceArea?.updatedAt && !vigilanceArea?.validatedAt) {
     return null
   }
@@ -27,7 +31,7 @@ export function PanelDates({
         </StyledDates>
         {vigilanceArea?.validatedAt && (
           <ValidatedAt
-            disabled={vigilanceArea.isDraft}
+            disabled={vigilanceArea.isDraft || (!vigilanceArea.isDraft && !isValid)}
             onValidate={onValidate}
             validatedAt={vigilanceArea.validatedAt}
           />

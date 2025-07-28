@@ -1,5 +1,6 @@
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelDates'
+import { isFormValid } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { deleteVigilanceArea } from '@features/VigilanceArea/useCases/deleteVigilanceArea'
@@ -20,7 +21,6 @@ import { PanelPeriodAndThemes } from './PanelPeriodAndThemes'
 import { PanelSource } from './PanelSource'
 import { AMPList } from '../AddAMPs/AMPList'
 import { RegulatoryAreas } from '../AddRegulatoryAreas/RegulatoryAreas'
-import { PublishedSchema } from '../Schema'
 import {
   DeleteButton,
   FooterContainer,
@@ -47,15 +47,7 @@ export function VigilanceAreaPanel({
 
   const { validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
 
-  const isFormValidToBePublished = useMemo(() => {
-    try {
-      PublishedSchema.validateSync(values, { abortEarly: false })
-
-      return true
-    } catch (e: any) {
-      return false
-    }
-  }, [values])
+  const isValid = useMemo(() => isFormValid(vigilanceArea), [vigilanceArea])
 
   const onConfirmDeleteModal = () => {
     if (!vigilanceArea?.id) {
@@ -153,11 +145,11 @@ export function VigilanceAreaPanel({
               Editer
             </Button>
             {vigilanceArea?.isDraft ? (
-              <Button disabled={!isFormValidToBePublished} onClick={onPublish} size={Size.SMALL}>
+              <Button disabled={!isValid} onClick={onPublish} size={Size.SMALL}>
                 Publier
               </Button>
             ) : (
-              <Button disabled={!isFormValidToBePublished} onClick={onUnpublish} size={Size.SMALL}>
+              <Button disabled={!isValid} onClick={onUnpublish} size={Size.SMALL}>
                 Dépublier
               </Button>
             )}
