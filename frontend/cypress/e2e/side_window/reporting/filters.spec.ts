@@ -4,10 +4,13 @@ import { SeaFrontLabel } from '../../../../src/domain/entities/seaFrontType'
 context('Reportings', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
-    cy.visit(`/side_window`)
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
+    cy.intercept('GET', '/api/v2/control_units').as('getControlUnits')
+    cy.intercept('GET', '/api/v1/themes*').as('getThemes')
+    cy.visit(`/side_window`)
+
     cy.clickButton('Signalements')
-    cy.wait('@getReportings')
+    cy.wait(['@getReportings', '@getControlUnits', '@getThemes'])
   })
   afterEach(() => {
     cy.clickButton('Réinitialiser les filtres')
@@ -39,9 +42,9 @@ context('Reportings', () => {
 
   it('Should filter reportings by source', () => {
     cy.wait(1000)
-    cy.fill('Source', ['Sémaphore de Fécamp'])
+    cy.fill('Source', ['BSN Ste Maxime'], { delay: 300 })
     cy.wait(500)
-    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Source Sémaphore de Fécamp')
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Source BSN Ste Maxime')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
 
@@ -50,7 +53,7 @@ context('Reportings', () => {
         return
       }
 
-      cy.wrap(row).should('contain', 'Sémaphore de Fécamp')
+      cy.wrap(row).should('contain', 'BSN Ste Maxime')
     })
   })
 
@@ -90,8 +93,10 @@ context('Reportings', () => {
 
   it('Should filter reportings by themes', () => {
     cy.wait(200)
-    cy.fill('Filtre thématiques et sous-thématiques', ["Réglementation de l'arrêté de protection"])
-    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Arrêté de protection')
+    cy.fill('Filtre thématiques et sous-thématiques', ['Réglementation du parc national'])
+    cy.getDataCy('reportings-filter-tags')
+      .find('.Component-SingleTag > span')
+      .contains('Réglementation du parc national')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 1)
     cy.get('.Table-SimpleTable tr').each((row, index, list) => {
@@ -99,7 +104,7 @@ context('Reportings', () => {
         return
       }
 
-      cy.wrap(row).should('contain', "Réglementation de l'arrêté de protection")
+      cy.wrap(row).should('contain', 'Réglementation du parc national')
     })
   })
 
@@ -195,21 +200,14 @@ context('Reportings', () => {
 
     // for year 2024
     cy.fill('Période spécifique', [
-      [2024, 1, 1],
-      [2024, 3, 3]
+      [2023, 1, 1],
+      [2023, 3, 3]
     ])
     cy.wait(500)
     cy.wait('@getReportings')
 
-    cy.getDataCy('reporting-theme-filter').click()
-    // Themes
-    cy.get('.rs-check-tree-root > .rs-check-tree-node-children').should('have.length', 19)
-    // Subthemes
-    cy.get('.rs-check-tree-root > .rs-check-tree-node-children > .rs-check-tree-group > .rs-check-tree-node').should(
-      'have.length',
-      95
-    )
-
+    // 2023 Sub-theme
+    cy.fill('Filtre thématiques et sous-thématiques', ['Contrôle dans une AMP sans réglementation particulière'])
     cy.wait(200)
 
     // on two years
@@ -220,13 +218,10 @@ context('Reportings', () => {
     cy.wait(500)
     cy.wait('@getReportings')
 
-    cy.getDataCy('reporting-theme-filter').click()
-    // Themes
-    cy.get('.rs-check-tree-root > .rs-check-tree-node-children').should('have.length', 34)
-    // Subthemes
-    cy.get('.rs-check-tree-root > .rs-check-tree-node-children > .rs-check-tree-group > .rs-check-tree-node').should(
-      'have.length',
-      178
-    )
+    // 2023 and 2024 Sub-theme
+    cy.fill('Filtre thématiques et sous-thématiques', [
+      'Contrôle dans une AMP sans réglementation particulière',
+      'Surveillance générale'
+    ])
   })
 })

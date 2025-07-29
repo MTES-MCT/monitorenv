@@ -246,7 +246,7 @@ export function MapReportingsFiltersWithRef(
           menuStyle={{ maxWidth: '200%' }}
           name="themes"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.THEME_FILTER)}
-          options={[...themesOptions, { id: 11111111, name: 'Autres' }]}
+          options={themesOptions}
           placeholder="Thématiques"
           shouldShowLabels={false}
           value={themeFilter}
