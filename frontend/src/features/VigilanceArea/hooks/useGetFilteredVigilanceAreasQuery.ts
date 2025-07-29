@@ -1,6 +1,5 @@
 import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { CustomSearch } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 
@@ -14,8 +13,7 @@ import { isVigilanceAreaPartOfTheme } from '../useCases/filters/isVigilanceAreaP
 import { isVigilanceAreaPartOfVisibility } from '../useCases/filters/isVigilanceAreaPartOfVisibility'
 
 export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const { createdBy, seaFronts, searchQuery, status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
 

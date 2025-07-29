@@ -6,12 +6,10 @@ import { isVigilanceAreaPartOfTag } from '@features/VigilanceArea/useCases/filte
 import { isVigilanceAreaPartOfTheme } from '@features/VigilanceArea/useCases/filters/isVigilanceAreaPartOfTheme'
 import { isVigilanceAreaPartOfVisibility } from '@features/VigilanceArea/useCases/filters/isVigilanceAreaPartOfVisibility'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { useMemo } from 'react'
 
 export const useGetFilteredVigilanceAreasForMapQuery = () => {
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const { status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
 

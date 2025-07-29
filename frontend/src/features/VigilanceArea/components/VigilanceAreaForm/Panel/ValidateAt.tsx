@@ -1,3 +1,4 @@
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, customDayjs, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -11,6 +12,8 @@ export function ValidatedAt({
   onValidate: () => void
   validatedAt: string | undefined
 }) {
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
   const nbMonths = useMemo(() => {
     const now = customDayjs().utc()
     const validatedAtDate = customDayjs(validatedAt).utc()
@@ -31,16 +34,18 @@ export function ValidatedAt({
             Validée le {customDayjs(validatedAt).utc().format('DD/MM/YY')}.{' '}
             <LastValidation $warning={nbMonths >= 6}>{nbMonths >= 3 && `(${nbMonths} mois)`}</LastValidation>
           </StyledDates>
-          <Button
-            accent={Accent.SECONDARY}
-            data-cy="vigilance-area-validate"
-            disabled={disabled}
-            Icon={Icon.Check}
-            onClick={onValidate}
-            size={Size.SMALL}
-          >
-            Revalider
-          </Button>
+          {isSuperUser && (
+            <Button
+              accent={Accent.SECONDARY}
+              data-cy="vigilance-area-validate"
+              disabled={disabled}
+              Icon={Icon.Check}
+              onClick={onValidate}
+              size={Size.SMALL}
+            >
+              Revalider
+            </Button>
+          )}
         </StyledValidatedAt>
       )}
     </>

@@ -10,12 +10,10 @@ import type { Feature } from 'ol'
 
 export function RecentActivityControlCard({
   control,
-  isSelected = false,
-  isSuperUser = true
+  isSelected = false
 }: {
   control?: Feature
   isSelected?: boolean
-  isSuperUser?: boolean
 }) {
   const dispatch = useAppDispatch()
 
@@ -52,7 +50,6 @@ export function RecentActivityControlCard({
       controlThemes={controlThemes}
       infractions={infractions}
       isSelected={isSelected}
-      isSuperUser={isSuperUser}
       onClose={closeControl}
       onConsultMission={consultMission}
     />

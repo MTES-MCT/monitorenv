@@ -5,7 +5,7 @@ import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice
 import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
+import { useAppSelector } from '@hooks/useAppSelector'
 import Fuse, { type Expression } from 'fuse.js'
 import { debounce } from 'lodash'
 import { useMemo } from 'react'
@@ -31,9 +31,7 @@ export type SearchProps = {
 }
 export function useSearchLayers() {
   const dispatch = useAppDispatch()
-
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()

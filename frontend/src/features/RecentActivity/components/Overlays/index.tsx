@@ -10,19 +10,13 @@ import { HoveredOverlay } from './HoveredOverlay'
 import { RecentActivityControlCard } from './RecentActivityControlCard'
 import { SelectedOverlay } from './SelectedOverlay'
 
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { RecentActivity } from '@features/RecentActivity/types'
 import type { OverlayItem } from 'domain/types/map'
-import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
 export const FEATURE_ID = 'RecentActivityAreaIconFeature'
 
-export function RecentActvityOverlay({
-  currentFeatureListOver,
-  isSuperUser,
-  map,
-  mapClickEvent,
-  pixel
-}: BaseMapChildrenWithSuperUserProps) {
+export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEvent, pixel }: BaseMapChildrenProps) {
   const layerOverlayItems = useShallowEqualSelector(state => state.recentActivity.layersAndOverlays.layerOverlayItems)
   const layerOverlayCoordinates = useShallowEqualSelector(
     state => state.recentActivity.layersAndOverlays.layerOverlayCoordinates
@@ -92,9 +86,7 @@ export function RecentActvityOverlay({
         map={map}
         name={`${Layers.RECENT_ACTIVITY_AREA_ICON}:${FEATURE_ID}`}
       >
-        {isControlsListClicked && layerOverlayItems && (
-          <SelectedOverlay isSuperUser={isSuperUser} items={layerOverlayItems} />
-        )}
+        {isControlsListClicked && layerOverlayItems && <SelectedOverlay items={layerOverlayItems} />}
       </OverlayPositionOnCoordinates>
 
       {/* To display recent control after click */}
@@ -106,11 +98,7 @@ export function RecentActvityOverlay({
         zIndex={5000}
       >
         {!!(selectedControlId && (selectedFeature || dashboardSelectedFeature)) && (
-          <RecentActivityControlCard
-            control={selectedFeature ?? dashboardSelectedFeature}
-            isSelected
-            isSuperUser={isSuperUser}
-          />
+          <RecentActivityControlCard control={selectedFeature ?? dashboardSelectedFeature} isSelected />
         )}
       </OverlayPositionOnCentroid>
 

@@ -64,10 +64,11 @@ import { ActionOverlay } from './overlays/actions'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
-export function Map({ isSuperUser }) {
+export function Map() {
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const displayRecentActivityLegend =
     (displayRecentActivityLayer || !!activeDashboardId) && !isRecentActivityDialogVisible
@@ -118,11 +119,11 @@ export function Map({ isSuperUser }) {
         {/* @ts-ignore */}
         <SemaphoresLayer />
         {/* @ts-ignore */}
-        <SemaphoreOverlay isSuperUser={false} />
+        <SemaphoreOverlay />
 
         {/* REPORTING */}
         {/* @ts-ignore */}
-        <EditingReportingLayer isSuperUser={false} />
+        <EditingReportingLayer />
         {/* @ts-ignore */}
         <SelectedReportingLayer />
         {/* @ts-ignore */}
@@ -130,7 +131,7 @@ export function Map({ isSuperUser }) {
         {/* @ts-ignore */}
         <ReportingsLayer />
         {/* @ts-ignore */}
-        <ReportingOverlay isSuperUser={false} />
+        <ReportingOverlay />
 
         {/* VIGILANCE AREA */}
         {/* @ts-ignore */}
@@ -146,9 +147,9 @@ export function Map({ isSuperUser }) {
         {/* @ts-ignore */}
         <DrawRecentActivityLayer />
         {/* @ts-ignore */}
-        <RecentActivityLayerEvents isSuperUser={false} />
+        <RecentActivityLayerEvents />
         {/* @ts-ignore */}
-        <RecentActvityOverlay isSuperUser={false} />
+        <RecentActvityOverlay />
         {/* @ts-ignore */}
         {displayRecentActivityLegend ? <RecentActivityLegend location="OUTSIDE" /> : null}
 
@@ -234,11 +235,11 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       <SelectedSemaphoreLayer />
       {/* @ts-ignore */}
-      <SemaphoreOverlay isSuperUser />
+      <SemaphoreOverlay />
 
       {/* REPORTING */}
       {/* @ts-ignore */}
-      <EditingReportingLayer isSuperUser />
+      <EditingReportingLayer />
       {/* @ts-ignore */}
       <SelectedReportingLayer />
       {/* @ts-ignore */}
@@ -246,7 +247,7 @@ export function Map({ isSuperUser }) {
       {/* @ts-ignore */}
       <ReportingsLayer />
       {/* @ts-ignore */}
-      <ReportingOverlay isSuperUser />
+      <ReportingOverlay />
       {/* @ts-ignore */}
       <MissionToAttachLayer />
       {/* @ts-ignore */}

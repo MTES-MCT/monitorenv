@@ -9,8 +9,8 @@ import { useMemo, useState } from 'react'
 
 import { ReportingCard } from './ReportingCard'
 
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
-import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
 const OPTIONS = {
   margins: {
@@ -23,12 +23,7 @@ const OPTIONS = {
   }
 }
 
-export function ReportingOverlay({
-  currentFeatureOver,
-  isSuperUser,
-  map,
-  mapClickEvent
-}: BaseMapChildrenWithSuperUserProps) {
+export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
@@ -95,7 +90,6 @@ export function ReportingOverlay({
         <ReportingCard
           feature={feature}
           isCardVisible={isCardVisible}
-          isSuperUser={isSuperUser}
           onClose={close}
           selected
           updateMargins={updateSelectedMargins}
@@ -112,7 +106,6 @@ export function ReportingOverlay({
         <ReportingCard
           feature={hoveredFeature}
           isCardVisible={isCardVisible}
-          isSuperUser={isSuperUser}
           onClose={close}
           updateMargins={updateHoveredMargins}
         />

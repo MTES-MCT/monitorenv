@@ -6,8 +6,9 @@ import {
   getTimeLeft
 } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { useTracking } from '@hooks/useTracking'
-import { Accent, Button, Icon, IconButton, Size, THEME, Tag, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { Accent, Button, getLocalizedDayjs, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { ControlStatusEnum, ReportingTypeEnum, ReportingTypeLabels } from 'domain/entities/reporting'
 import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
@@ -24,7 +25,6 @@ type ReportingCardProps = {
   feature: any
   isCardVisible?: boolean
   isOnlyHoverable?: boolean
-  isSuperUser?: boolean
   onClose: () => void
   selected?: boolean
   updateMargins: (margin: number) => void
@@ -61,12 +61,13 @@ export function ReportingCard({
   feature,
   isCardVisible = true,
   isOnlyHoverable = false,
-  isSuperUser = true,
   onClose,
   selected = false,
   updateMargins
 }: ReportingCardProps) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
   const { trackEvent } = useTracking()
 
   const ref = useRef<HTMLDivElement>(null)
@@ -210,7 +211,7 @@ export function ReportingCard({
 
 const Wrapper = styled.div`
   padding: 10px;
-  box-shadow: 0px 3px 6px #70778540;
+  box-shadow: 0 3px 6px #70778540;
   border-radius: 1px;
   background-color: ${p => p.theme.color.white};
   display: flex;
@@ -246,7 +247,7 @@ const StyledHeaderSecondLine = styled.div`
   }
 `
 const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
-  padding: 0px;
+  padding: 0;
   margin-left: 8px;
   ${p => !p.$isVisible && 'visibility: hidden;'};
 `
