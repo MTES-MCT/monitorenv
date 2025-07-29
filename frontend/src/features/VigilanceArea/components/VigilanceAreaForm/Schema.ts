@@ -7,7 +7,7 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const VigilanceAreaSourceSchema: Yup.Schema<Omit<VigilanceArea.VigilanceAreaSource, 'id'>> = Yup.object()
   .shape({
-    controlUnitContacts: Yup.array().optional(),
+    controlUnitContacts: Yup.array().ensure().optional(),
     email: Yup.string().optional(),
     name: Yup.string().optional(),
     phone: Yup.string().optional()
@@ -43,7 +43,7 @@ export const DraftSchema: Yup.Schema<
     linkedRegulatoryAreas: Yup.array().optional(),
     links: Yup.array().optional(),
     name: Yup.string().required(),
-    sources: Yup.array().of(VigilanceAreaSourceSchema).optional(),
+    sources: Yup.array().of(VigilanceAreaSourceSchema).ensure(),
     startDatePeriod: Yup.string().optional(),
     tags: Yup.array().ensure().optional(),
     themes: Yup.array().ensure().optional(),

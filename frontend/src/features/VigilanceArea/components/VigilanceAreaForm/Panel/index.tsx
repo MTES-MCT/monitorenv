@@ -134,11 +134,7 @@ export function VigilanceAreaPanel({
 
         {vigilanceArea?.links && vigilanceArea?.links.length > 0 && <PanelLinks links={vigilanceArea.links} />}
         {isSuperUser && (
-          <PanelInternalCACEMSection
-            key="vigilanceAreaForm"
-            createdBy={vigilanceArea.createdBy}
-            sources={vigilanceArea.sources}
-          />
+          <PanelInternalCACEMSection createdBy={vigilanceArea.createdBy} sources={vigilanceArea.sources} />
         )}
       </PanelBody>
       {isSuperUser && (

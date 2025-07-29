@@ -21,7 +21,7 @@ export function OtherSource({
         isErrorMessageHidden
         isLight
         label="Nom"
-        name="name"
+        name="sourceName"
         onChange={onNameChange}
         value={editedSource.name}
       />
@@ -30,7 +30,7 @@ export function OtherSource({
         isErrorMessageHidden
         isLight
         label="Numéro de téléphone"
-        name="phone"
+        name="sourcePhone"
         onChange={onPhoneChange}
         value={editedSource.phone}
       />
@@ -39,7 +39,7 @@ export function OtherSource({
         isErrorMessageHidden
         isLight
         label="Email"
-        name="email"
+        name="sourceEmail"
         onChange={onEmailChange}
         value={editedSource.email}
       />

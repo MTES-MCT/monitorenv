@@ -76,7 +76,7 @@ export function ControlUnitContactSource({
         isErrorMessageHidden
         isLight
         label="Nom de l'unité"
-        name="name"
+        name="unit"
         onChange={onChangeControlUnitId}
         options={unitsWithContactAsOption ?? []}
         searchable={unitsWithContactAsOption.length > 10}
