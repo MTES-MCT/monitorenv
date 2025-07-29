@@ -26,7 +26,7 @@ import { restorePreviousDisplayedItems, setDisplayedItems } from '../../domain/s
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
-export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
+export function LayersSidebar() {
   const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
 
   const { metadataLayerId, metadataLayerType, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
@@ -88,7 +88,7 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
           {!isLinkingAmpToVigilanceArea && <RegulatoryLayers />}
           {!isLinkingZonesToVigilanceArea && (
             <>
-              <MyVigilanceAreas isSuperUser={isSuperUser} />
+              <MyVigilanceAreas />
               <AdministrativeLayers />
               <LocalizedAreas />
               <BaseLayerList />
@@ -108,7 +108,6 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
               key={selectedVigilanceAreaId}
               isOpen={secondVigilanceAreaPanelOpen}
               isReadOnly
-              isSuperUser={isSuperUser}
               vigilanceAreaId={selectedVigilanceAreaId}
             />
           )}
@@ -122,7 +121,6 @@ export function LayersSidebar({ isSuperUser }: { isSuperUser: boolean }) {
             <VigilanceAreaForm
               key={editingVigilanceAreaId}
               isOpen={mainVigilanceAreaFormOpen}
-              isSuperUser={isSuperUser}
               vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
             />
           )}
@@ -206,7 +204,7 @@ const VigilanceAreaPanelShifter = styled.div<{
 const Sidebar = styled.div<{ $isLayersSidebarVisible: boolean; $isVisible: boolean }>`
   margin-left: ${p => (p.$isLayersSidebarVisible ? 0 : '-455px')};
   opacity: ${p => (p.$isVisible ? 1 : 0)};
-  top: 0px;
+  top: 0;
   left: 46px;
   z-index: 1;
   border-radius: 2px;
@@ -225,7 +223,7 @@ const SidebarLayersIcon = styled(IconButton)<{ $isVisible: boolean }>`
 
 const SpinnerWrapper = styled.div<{ $isLayersSidebarVisible: boolean }>`
   position: absolute;
-  top: 0px;
+  top: 0;
   left: ${props => (props.$isLayersSidebarVisible ? '460px' : '56px')};
   display: flex;
   padding: 4px;
@@ -234,6 +232,5 @@ const Message = styled.div`
   font-size: 14px;
   font-weight: 900;
   white-space: nowrap;
-  padding: 4px;
-  padding-left: 8px;
+  padding: 4px 4px 4px 8px;
 `
