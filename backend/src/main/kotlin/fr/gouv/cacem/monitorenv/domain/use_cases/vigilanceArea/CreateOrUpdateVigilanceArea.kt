@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.SaveDashboard
 import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
 import fr.gouv.cacem.monitorenv.domain.validators.vigilance_area.VigilanceAreaValidator
 import org.slf4j.LoggerFactory
+import java.time.ZonedDateTime
 
 @UseCase
 class CreateOrUpdateVigilanceArea(
@@ -28,9 +29,15 @@ class CreateOrUpdateVigilanceArea(
                 vigilanceArea.geom?.let { nonNullGeom ->
                     facadeAreasRepository.findFacadeFromGeometry(nonNullGeom)
                 }
+            var vigilanceAreaToSave = vigilanceArea.copy(seaFront = seaFront)
+            if (vigilanceArea.isArchived &&
+                (vigilanceArea.computedEndDate?.isAfter(ZonedDateTime.now()) == true || vigilanceArea.isAtAllTimes)
+            ) {
+                vigilanceAreaToSave = vigilanceAreaToSave.copy(isArchived = false)
+            }
 
             val savedVigilanceArea =
-                vigilanceAreaRepository.save(vigilanceArea.copy(seaFront = seaFront))
+                vigilanceAreaRepository.save(vigilanceAreaToSave)
             logger.info("Vigilance area ${savedVigilanceArea.id} created or updated")
             return savedVigilanceArea
         } catch (e: Exception) {
