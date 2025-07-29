@@ -116,8 +116,11 @@ context('Side Window > Mission Form > Mission actions', () => {
 
   it('should retrieve all themes into awareness select field in surveillance actions', () => {
     // Given
+    cy.intercept('GET', '/api/v1/themes*').as('getThemes')
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
+
     cy.getDataCy('action-card').eq(0).click()
+    cy.wait('@getThemes')
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
 

@@ -211,7 +211,7 @@ export function TableReportingsFiltersWithRef(
             value={targetTypeFilter}
           />
           <CheckTreePicker
-            key={`theme${themesOptions.length}${JSON.stringify(themeFilter)}`}
+            key={themesOptions.length}
             childrenKey="subThemes"
             data-cy="reporting-theme-filter"
             isLabelHidden
