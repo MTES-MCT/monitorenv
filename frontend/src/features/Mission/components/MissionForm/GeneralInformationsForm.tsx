@@ -1,5 +1,7 @@
 import { CompletionStatusTag } from '@features/Mission/components/CompletionStatusTag'
 import {
+  Accent,
+  Button,
   DatePicker,
   FieldError,
   FormikCheckbox,
@@ -35,9 +37,11 @@ import { MissionZonePicker } from './MissionZonePicker'
 import { FormTitle, Separator } from './style'
 
 export function GeneralInformationsForm({
-  missionCompletion = undefined
+  missionCompletion = undefined,
+  onCreateDashboard
 }: {
   missionCompletion?: FrontCompletionStatus
+  onCreateDashboard: () => void
 }) {
   const { newWindowContainerRef } = useNewWindow()
 
@@ -82,6 +86,9 @@ export function GeneralInformationsForm({
     <StyledContainer>
       <StyledHeader>
         <FormTitle>{title}</FormTitle>
+        <Button accent={Accent.SECONDARY} onClick={() => onCreateDashboard()}>
+          Créer un tableau de bord
+        </Button>
       </StyledHeader>
       <Separator />
 

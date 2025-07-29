@@ -66,6 +66,14 @@ html {
   }
 }
 
+.Field-Radio {
+  > .rs-radio {
+    > .rs-radio-checker > label > .rs-radio-label {
+      line-height: normal !important;
+    }
+  }
+}
+
 h2 {
   line-height: normal;
 }
