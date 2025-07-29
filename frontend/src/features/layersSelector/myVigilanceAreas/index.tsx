@@ -12,8 +12,10 @@ import styled from 'styled-components'
 import { MyVigilanceAreaLayerZone } from './MyVigilanceAreaLayerZone'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
-export function MyVigilanceAreas({ isSuperUser }: { isSuperUser: boolean }) {
+export function MyVigilanceAreas() {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery()
 
   const draftVigilanceAreas = Object.values(vigilanceAreas?.entities ?? {})

@@ -31,14 +31,9 @@ import {
   PanelSubPart
 } from '../style'
 
-export function VigilanceAreaPanel({
-  isSuperUser,
-  vigilanceArea
-}: {
-  isSuperUser: boolean
-  vigilanceArea: VigilanceArea.VigilanceArea | undefined
-}) {
+export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: VigilanceArea.VigilanceArea | undefined }) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)

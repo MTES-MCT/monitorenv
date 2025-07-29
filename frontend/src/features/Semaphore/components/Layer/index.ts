@@ -2,7 +2,6 @@ import { useGetSemaphoresQuery } from '@api/semaphoresAPI'
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { Layers } from 'domain/entities/layers/constants'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
@@ -10,7 +9,7 @@ import { setSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getSemaphoreStyle } from './style'
 import { getSemaphoresPoint } from './utils'
@@ -31,8 +30,8 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
     [displaySemaphoresLayer, hasMapInteraction]
   )
 
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser ?? true
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
   const { data: semaphores } = useGetSemaphoresQuery()
 
   const { reportings } = useGetFilteredReportingsQuery(!isSuperUser)

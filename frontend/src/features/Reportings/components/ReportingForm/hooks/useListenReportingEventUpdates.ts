@@ -7,8 +7,9 @@ import { reportingEventListener } from '../sse'
 const REPORTING_UPDATES_URL = `/bff/reportings/sse`
 const REPORTING_UPDATE_EVENT = `REPORTING_UPDATE`
 
-export function useListenReportingEventUpdates(isSuperUser = true) {
+export function useListenReportingEventUpdates() {
   const isListeningToEvents = useAppSelector(state => state.reporting.isListeningToEvents)
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const eventSourceRef = useRef<EventSource>()
   const { contextReportingEvent, setReportingEventInContext } = useReportingEventContext()
   const listener = useRef(reportingEventListener(reporting => setReportingEventInContext(reporting)))

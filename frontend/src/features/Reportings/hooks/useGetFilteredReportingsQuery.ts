@@ -1,6 +1,5 @@
 import { useGetReportingsQuery } from '@api/reportingsAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { StatusFilterEnum } from 'domain/entities/reporting'
@@ -13,8 +12,7 @@ import { isReportingPartOfTag } from '../useCases/filters/isReportingPartOfTag'
 import { isReportingPartOfTheme } from '../useCases/filters/isReportingPartOfTheme'
 
 export const useGetFilteredReportingsQuery = (skip = false) => {
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser ?? true
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const {
     isAttachedToMissionFilter,

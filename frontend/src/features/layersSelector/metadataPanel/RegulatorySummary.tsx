@@ -1,8 +1,8 @@
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { useTracking } from '@hooks/useTracking'
 import styled from 'styled-components'
 
-import { SectionTitle, Section, List } from './MetadataPanel.style'
+import { List, Section, SectionTitle } from './MetadataPanel.style'
 
 type RegulatorySummaryProps = {
   regulatoryReference: string | undefined
@@ -11,8 +11,7 @@ type RegulatorySummaryProps = {
 }
 export function RegulatorySummary({ regulatoryReference, type, url }: RegulatorySummaryProps) {
   const { trackEvent } = useTracking()
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser ?? true
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const goToRegulatoryReference = () => {
     if (isSuperUser) {
