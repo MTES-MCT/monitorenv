@@ -58,6 +58,20 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
     setSourceType(nextValue)
   }
 
+  const cancel = () => {
+    if (isNewlyCreatedSource) {
+      remove(index)
+    } else {
+      setEditedSource(initialSource)
+      setIsEditing(false)
+    }
+  }
+
+  const validate = () => {
+    setIsEditing(false)
+    onValidate(editedSource)
+  }
+
   return (
     <>
       {isEditing ? (
@@ -100,27 +114,10 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
             )}
 
             <Buttons>
-              <Button
-                accent={Accent.SECONDARY}
-                onClick={() => {
-                  if (isNewlyCreatedSource) {
-                    remove(index)
-                  } else {
-                    setEditedSource(initialSource)
-                    setIsEditing(false)
-                  }
-                }}
-              >
+              <Button accent={Accent.SECONDARY} onClick={cancel}>
                 Annuler
               </Button>
-              <ValidateButton
-                disabled={!isValid(editedSource)}
-                onClick={() => {
-                  setIsEditing(false)
-                  onValidate(editedSource)
-                }}
-                type="submit"
-              >
+              <ValidateButton disabled={!isValid(editedSource)} onClick={validate} type="submit">
                 Valider
               </ValidateButton>
             </Buttons>

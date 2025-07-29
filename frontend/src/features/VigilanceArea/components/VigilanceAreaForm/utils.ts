@@ -21,7 +21,7 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     links: [],
     name: undefined,
     seaFront: undefined,
-    sources: undefined,
+    sources: [],
     startDatePeriod: undefined,
     tags: [],
     themes: [],
