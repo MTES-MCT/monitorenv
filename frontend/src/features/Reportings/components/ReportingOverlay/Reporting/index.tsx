@@ -9,8 +9,8 @@ import { useState } from 'react'
 
 import { ReportingCard } from './ReportingCard'
 
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
-import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
 const OPTIONS = {
   margins: {
@@ -23,12 +23,7 @@ const OPTIONS = {
   }
 }
 
-export function ReportingOverlay({
-  currentFeatureOver,
-  isSuperUser,
-  map,
-  mapClickEvent
-}: BaseMapChildrenWithSuperUserProps) {
+export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
@@ -82,13 +77,7 @@ export function ReportingOverlay({
         options={selectedOptions}
         zIndex={5000}
       >
-        <ReportingCard
-          feature={feature}
-          isSuperUser={isSuperUser}
-          onClose={close}
-          selected
-          updateMargins={updateSelectedMargins}
-        />
+        <ReportingCard feature={feature} onClose={close} selected updateMargins={updateSelectedMargins} />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-hover"
@@ -98,12 +87,7 @@ export function ReportingOverlay({
         options={hoveredOptions}
         zIndex={5000}
       >
-        <ReportingCard
-          feature={hoveredFeature}
-          isSuperUser={isSuperUser}
-          onClose={close}
-          updateMargins={updateHoveredMargins}
-        />
+        <ReportingCard feature={hoveredFeature} onClose={close} updateMargins={updateHoveredMargins} />
       </OverlayPositionOnCentroid>
     </>
   )

@@ -51,12 +51,12 @@ const hoverTooltip = (text: string, className: string) => <StyledTooltip classNa
 
 type SemaphoreCardProps = {
   feature: any
-  isSuperUser: boolean
   selected?: boolean
 }
 
-export function SemaphoreCard({ feature, isSuperUser, selected = false }: SemaphoreCardProps) {
+export function SemaphoreCard({ feature, selected = false }: SemaphoreCardProps) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const displaySemaphoresLayer = useAppSelector(state => state.global.layers.displaySemaphoresLayer)
   const hasMapInteraction = useHasMapInteraction()

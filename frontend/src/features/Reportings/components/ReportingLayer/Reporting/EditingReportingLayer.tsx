@@ -4,15 +4,16 @@ import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates, VisibilityState } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getEditingReportingZoneFeature } from './reportingsGeometryHelpers'
 import { editingReportingStyleFn } from './style'
 
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
-import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
-export function EditingReportingLayer({ currentFeatureOver, isSuperUser, map }: BaseMapChildrenWithSuperUserProps) {
+export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 

@@ -17,16 +17,13 @@ import { useEffect, useRef } from 'react'
 
 import { FEATURE_ID } from '../Overlays'
 
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { RecentActivity } from '@features/RecentActivity/types'
-import type { BaseMapChildrenWithSuperUserProps } from 'types'
 
-export function RecentActivityLayerEvents({
-  isSuperUser = true,
-  map,
-  mapClickEvent
-}: BaseMapChildrenWithSuperUserProps) {
+export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const { trackEvent } = useTracking()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const isControlsListClicked = useAppSelector(state => state.recentActivity.layersAndOverlays.isControlsListClicked)
   const vectorSource = useRef(new VectorSource({}))

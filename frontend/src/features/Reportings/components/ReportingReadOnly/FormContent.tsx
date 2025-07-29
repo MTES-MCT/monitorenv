@@ -1,3 +1,4 @@
+import { useAppSelector } from '@hooks/useAppSelector'
 import { getOptionsFromLabelledEnum, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
 import { displaySubTags, displayTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
@@ -17,7 +18,8 @@ import { Validity } from './Validity'
 
 const EMPTY_VALUE = '--'
 
-export function FormContent({ isSuperUser = true, reporting }: { isSuperUser?: boolean; reporting: Reporting }) {
+export function FormContent({ reporting }: { reporting: Reporting }) {
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
 
@@ -70,7 +72,7 @@ export function FormContent({ isSuperUser = true, reporting }: { isSuperUser?: b
           />
         </TargetContainer>
 
-        <TargetDetails isSuperUser={isSuperUser} reporting={reporting} />
+        <TargetDetails reporting={reporting} />
         <Location geom={reporting.geom} />
         <TextInput
           isLight

@@ -1,4 +1,4 @@
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, customDayjs, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -12,9 +12,7 @@ export function ValidatedAt({
   onValidate: () => void
   validatedAt: string | undefined
 }) {
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const nbMonths = useMemo(() => {
     const now = customDayjs().utc()

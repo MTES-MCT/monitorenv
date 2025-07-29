@@ -1,7 +1,6 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { useTracking } from '@hooks/useTracking'
-import { Accent, Icon, IconButton, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -27,8 +26,7 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
   const ref = createRef<HTMLSpanElement>()
 
   const { trackEvent } = useTracking()
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser ?? true
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const myVigilanceAreaIds = useAppSelector(state => state.vigilanceArea.myVigilanceAreaIds)
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)

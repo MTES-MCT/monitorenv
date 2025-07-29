@@ -7,7 +7,7 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
 
 import type { VectorLayerWithName } from '../../../../domain/types/layer'
-import type { BaseMapChildrenWithSuperUserProps } from 'types'
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 const SUPER_USER_MARGINS = {
   xLeft: 50,
@@ -25,13 +25,9 @@ const MARGINS = {
   yTop: -70
 }
 
-export function SemaphoreOverlay({
-  currentFeatureOver,
-  isSuperUser,
-  map,
-  mapClickEvent
-}: BaseMapChildrenWithSuperUserProps) {
+export function SemaphoreOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const selectedFeature = map
     ?.getLayers()
@@ -62,7 +58,7 @@ export function SemaphoreOverlay({
         options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
         zIndex={3000}
       >
-        <SemaphoreCard feature={selectedFeature} isSuperUser={isSuperUser} selected />
+        <SemaphoreCard feature={selectedFeature} selected />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-semaphore-hover"
@@ -72,7 +68,7 @@ export function SemaphoreOverlay({
         options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
         zIndex={3000}
       >
-        <SemaphoreCard feature={hoveredFeature} isSuperUser={isSuperUser} />
+        <SemaphoreCard feature={hoveredFeature} />
       </OverlayPositionOnCentroid>
     </>
   )

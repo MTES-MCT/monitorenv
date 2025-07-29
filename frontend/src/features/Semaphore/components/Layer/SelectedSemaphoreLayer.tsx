@@ -1,9 +1,8 @@
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
 import { getSelectedSemaphoreStyle } from './style'
@@ -30,8 +29,7 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
     [displaySemaphoresLayer, hasMapInteraction, selectedSemaphoreId]
   )
 
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-  const isSuperUser = user?.isSuperUser ?? true
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const { data: semaphores } = useGetSemaphoresQuery()
   const { reportings } = useGetFilteredReportingsQuery()

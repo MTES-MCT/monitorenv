@@ -64,100 +64,156 @@ import { ActionOverlay } from './overlays/actions'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
-export function Map({ isSuperUser }) {
+export function Map() {
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const displayRecentActivityLegend =
     (displayRecentActivityLayer || !!activeDashboardId) && !isRecentActivityDialogVisible
 
-  if (!isSuperUser) {
-    return (
-      <BaseMap
-      // BaseMap forwards map & mapClickEvent as props to children
-      // handleMovingAndZoom={handleMovingAndZoom}
-      // handlePointerMove={handlePointerMove}
-      //
-      // -> only add child to BaseMap if it requires map or mapClickEvent
-      >
-        {/* @ts-ignore */}
-        <ZoomListener />
-        {/* @ts-ignore */}
-        <MapAttributionsBox />
-        {/* @ts-ignore */}
-        <MapCoordinatesBox />
-        {/* @ts-ignore */}
-        <MapLayer />
+  const baseChildren = [
+    // @ts-ignore
+    <ZoomListener key="ZoomListener" />,
+    // @ts-ignore
+    <MapAttributionsBox key="MapAttributionsBox" />,
+    // @ts-ignore
+    <MapCoordinatesBox key="MapCoordinatesBox" />,
+    // @ts-ignore
+    <MapLayer key="MapLayer" />,
 
-        {/* ZONE */}
-        {/* @ts-ignore */}
-        <AMPLayers />
-        {/* @ts-ignore */}
-        <AMPPreviewLayer />
-        {/* @ts-ignore */}
-        <RegulatoryLayers />
-        {/* @ts-ignore */}
-        <RegulatoryPreviewLayer />
-        {/* @ts-ignore */}
-        <AdministrativeLayers />
-        {/* @ts-ignore */}
-        <SearchExtentLayer />
-        {/* @ts-ignore */}
-        <LayerEvents />
-        {/* @ts-ignore */}
-        <LayersOverlay />
+    // ZONE
+    // @ts-ignore
+    <AMPLayers key="AMPLayers" />,
+    // @ts-ignore
+    <AMPPreviewLayer key="AMPPreviewLayer" />,
+    // @ts-ignore
+    <RegulatoryLayers key="RegulatoryLayers" />,
+    // @ts-ignore
+    <RegulatoryPreviewLayer key="RegulatoryPreviewLayer" />,
+    // @ts-ignore
+    <AdministrativeLayers key="AdministrativeLayers" />,
+    // @ts-ignore
+    <SearchExtentLayer key="SearchExtentLayer" />,
+    // @ts-ignore
+    <LayerEvents key="LayerEvents" />,
+    // @ts-ignore
+    <LayersOverlay key="LayersOverlay" />,
 
-        {/* MAP */}
-        {/* @ts-ignore */}
-        <MapExtentController />
-        {/* @ts-ignore */}
-        <MapHistory />
+    // MAP
+    // @ts-ignore
+    <MapExtentController key="MapExtentController" />,
+    // @ts-ignore
+    <MapHistory key="MapHistory" />,
 
-        {/* SEMAPHORE */}
-        {/* @ts-ignore */}
-        <SemaphoresLayer />
-        {/* @ts-ignore */}
-        <SemaphoreOverlay isSuperUser={false} />
+    // SEMAPHORE
+    // @ts-ignore
+    <SemaphoresLayer key="SemaphoresLayer" />,
+    // @ts-ignore
+    <SemaphoreOverlay key="SemaphoreOverlay" />,
 
-        {/* REPORTING */}
-        {/* @ts-ignore */}
-        <EditingReportingLayer isSuperUser={false} />
-        {/* @ts-ignore */}
-        <SelectedReportingLayer />
-        {/* @ts-ignore */}
-        <HoveredReportingLayer />
-        {/* @ts-ignore */}
-        <ReportingsLayer />
-        {/* @ts-ignore */}
-        <ReportingOverlay isSuperUser={false} />
+    // REPORTING
+    // @ts-ignore
+    <EditingReportingLayer key="EditingReportingLayer" />,
+    // @ts-ignore
+    <SelectedReportingLayer key="SelectedReportingLayer" />,
+    // @ts-ignore
+    <HoveredReportingLayer key="HoveredReportingLayer" />,
+    // @ts-ignore
+    <ReportingsLayer key="ReportingsLayer" />,
+    // @ts-ignore
+    <ReportingOverlay key="ReportingOverlay" />,
 
-        {/* VIGILANCE AREA */}
-        {/* @ts-ignore */}
-        <VigilanceAreasLayer />
-        {/* @ts-ignore */}
-        <PreviewVigilanceAreasLayer />
-        {/* @ts-ignore */}
-        <SelectedVigilanceAreaLayer />
+    // VIGILANCE AREA
+    // @ts-ignore
+    <VigilanceAreasLayer key="VigilanceAreasLayer" />,
+    // @ts-ignore
+    <PreviewVigilanceAreasLayer key="PreviewVigilanceAreasLayer" />,
+    // @ts-ignore
+    <SelectedVigilanceAreaLayer key="SelectedVigilanceAreaLayer" />,
 
-        {/* RECENT ACTIVITY */}
-        {/* @ts-ignore */}
-        <RecentControlsActivityLayer />
-        {/* @ts-ignore */}
-        <DrawRecentActivityLayer />
-        {/* @ts-ignore */}
-        <RecentActivityLayerEvents isSuperUser={false} />
-        {/* @ts-ignore */}
-        <RecentActvityOverlay isSuperUser={false} />
-        {/* @ts-ignore */}
-        {displayRecentActivityLegend ? <RecentActivityLegend location="OUTSIDE" /> : null}
+    // RECENT ACTIVITY
+    // @ts-ignore
+    <RecentControlsActivityLayer key="RecentControlsActivityLayer" />,
+    // @ts-ignore
+    <DrawRecentActivityLayer key="DrawRecentActivityLayer" />,
+    // @ts-ignore
+    <RecentActivityLayerEvents key="RecentActivityLayerEvents" />,
+    // @ts-ignore
+    <RecentActvityOverlay key="RecentActvityOverlay" />,
+    // @ts-ignore
+    displayRecentActivityLegend ? <RecentActivityLegend key="RecentActivityLegend" location="OUTSIDE" /> : null,
 
-        {/* LOCALIZED AREAS */}
-        {/* @ts-ignore */}
-        <LocalizedAreasLayer />
-      </BaseMap>
-    )
-  }
+    // LOCALIZED AREAS
+    // @ts-ignore
+    <LocalizedAreasLayer key="LocalizedAreasLayer" />
+  ]
+
+  const superUserChildren = isSuperUser
+    ? [
+        // @ts-ignore
+        <MeasurementLayer key="MeasurementLayer" />,
+        // @ts-ignore
+        <InterestPointLayer key="InterestPointLayer" />,
+        // @ts-ignore
+        <DrawLayer key="DrawLayer" />,
+        // @ts-ignore
+        <MissionsLayer key="MissionsLayer" />,
+        // @ts-ignore
+        <SelectedMissionLayer key="SelectedMissionLayer" />,
+        // @ts-ignore
+        <EditingMissionLayer key="EditingMissionLayer" />,
+        // @ts-ignore
+        <HoveredMissionLayer key="HoveredMissionLayer" />,
+        // @ts-ignore
+        <MissionOverlays key="MissionOverlays" />,
+        // @ts-ignore
+        <ActionOverlay key="ActionOverlay" />,
+        // @ts-ignore
+        <ReportingToAttachLayer key="ReportingToAttachLayer" />,
+        // @ts-ignore
+        <HoveredReportingToAttachLayer key="HoveredReportingToAttachLayer" />,
+        // @ts-ignore
+        <ReportingToAttachOverlays key="ReportingToAttachOverlays" />,
+        // @ts-ignore
+        <HoveredSemaphoreLayer key="HoveredSemaphoreLayer" />,
+        // @ts-ignore
+        <SelectedSemaphoreLayer key="SelectedSemaphoreLayer" />,
+        // @ts-ignore
+        <MissionToAttachLayer key="MissionToAttachLayer" />,
+        // @ts-ignore
+        <HoveredMissionToAttachLayer key="HoveredMissionToAttachLayer" />,
+        // @ts-ignore
+        <SelectedMissionToAttachLayer key="SelectedMissionToAttachLayer" />,
+        // @ts-ignore
+        <MissionToAttachOverlays key="MissionToAttachOverlays" />,
+        // @ts-ignore
+        <StationLayer key="StationLayer" />,
+        // @ts-ignore
+        <StationOverlay key="StationOverlay" />,
+        // @ts-ignore
+        <DrawVigilanceAreaLayer key="DrawVigilanceAreaLayer" />,
+        // @ts-ignore
+        <EditingVigilanceAreaLayer key="EditingVigilanceAreaLayer" />,
+        // @ts-ignore
+        <DrawDashboardLayer key="DrawDashboardLayer" />,
+        // @ts-ignore
+        <ActiveDashboardLayer key="ActiveDashboardLayer" />,
+        // @ts-ignore
+        <DashboardPreviewLayer key="DashboardPreviewLayer" />,
+        // @ts-ignore
+        <DashboardReportingOverlay key="DashboardReportingOverlay" />,
+        // @ts-ignore
+        <DashboardOverlay key="DashboardOverlay" />,
+        // @ts-ignore
+        <DashboardsLayer key="DashboardsLayer" />,
+        // @ts-ignore
+        <SelectedDashboardLayer key="SelectedDashboardLayer" />,
+        // @ts-ignore
+        <DashboardRecentActivityLayer key="DashboardRecentActivityLayer" />
+      ]
+    : []
 
   return (
     <BaseMap
@@ -167,146 +223,7 @@ export function Map({ isSuperUser }) {
     //
     // -> only add child to BaseMap if it requires map or mapClickEvent
     >
-      {/* @ts-ignore */}
-      <ZoomListener />
-      {/* @ts-ignore */}
-      <MapAttributionsBox />
-      {/* @ts-ignore */}
-      <MapCoordinatesBox />
-      {/* @ts-ignore */}
-      <MapLayer />
-
-      {/* ZONE */}
-      {/* @ts-ignore */}
-      <AMPLayers />
-      {/* @ts-ignore */}
-      <AMPPreviewLayer />
-      {/* @ts-ignore */}
-      <RegulatoryLayers />
-      {/* @ts-ignore */}
-      <RegulatoryPreviewLayer />
-      {/* @ts-ignore */}
-      <AdministrativeLayers />
-      {/* @ts-ignore */}
-      <SearchExtentLayer />
-      {/* @ts-ignore */}
-      <LayerEvents />
-      {/* @ts-ignore */}
-      <LayersOverlay />
-
-      {/* MAP */}
-      {/* @ts-ignore */}
-      <MeasurementLayer />
-      {/* @ts-ignore */}
-      <InterestPointLayer />
-      {/* @ts-ignore */}
-      <MapExtentController />
-      {/* @ts-ignore */}
-      <MapHistory />
-      {/* @ts-ignore */}
-      <DrawLayer />
-
-      {/* MISSION */}
-      {/* @ts-ignore */}
-      <MissionsLayer />
-      {/* @ts-ignore */}
-      <SelectedMissionLayer />
-      {/* @ts-ignore */}
-      <EditingMissionLayer />
-      {/* @ts-ignore */}
-      <HoveredMissionLayer />
-      {/* @ts-ignore */}
-      <MissionOverlays />
-      {/* @ts-ignore */}
-      <ActionOverlay />
-      {/* @ts-ignore */}
-      <ReportingToAttachLayer />
-      {/* @ts-ignore */}
-      <HoveredReportingToAttachLayer />
-      {/* @ts-ignore */}
-      <ReportingToAttachOverlays />
-
-      {/* SEMAPHORE */}
-      {/* @ts-ignore */}
-      <SemaphoresLayer />
-      {/* @ts-ignore */}
-      <HoveredSemaphoreLayer />
-      {/* @ts-ignore */}
-      <SelectedSemaphoreLayer />
-      {/* @ts-ignore */}
-      <SemaphoreOverlay isSuperUser />
-
-      {/* REPORTING */}
-      {/* @ts-ignore */}
-      <EditingReportingLayer isSuperUser />
-      {/* @ts-ignore */}
-      <SelectedReportingLayer />
-      {/* @ts-ignore */}
-      <HoveredReportingLayer />
-      {/* @ts-ignore */}
-      <ReportingsLayer />
-      {/* @ts-ignore */}
-      <ReportingOverlay isSuperUser />
-      {/* @ts-ignore */}
-      <MissionToAttachLayer />
-      {/* @ts-ignore */}
-      <HoveredMissionToAttachLayer />
-      {/* @ts-ignore */}
-      <SelectedMissionToAttachLayer />
-      {/* @ts-ignore */}
-      <MissionToAttachOverlays />
-
-      {/* STATION */}
-      {/* @ts-ignore */}
-      <StationLayer />
-      {/* @ts-ignore */}
-      <StationOverlay />
-
-      {/* VIGILANCE AREA */}
-      {/* @ts-ignore */}
-      <VigilanceAreasLayer />
-      {/* @ts-ignore */}
-      <PreviewVigilanceAreasLayer />
-      {/* @ts-ignore */}
-      <DrawVigilanceAreaLayer />
-      {/* @ts-ignore */}
-      <SelectedVigilanceAreaLayer />
-      {/* @ts-ignore */}
-      <EditingVigilanceAreaLayer />
-
-      {/* DASHBOARD */}
-      {/* @ts-ignore */}
-      <DrawDashboardLayer />
-      {/* @ts-ignore */}
-      <ActiveDashboardLayer />
-      {/* @ts-ignore */}
-      <DashboardPreviewLayer />
-      {/* @ts-ignore */}
-      <DashboardReportingOverlay />
-      {/* @ts-ignore */}
-      <DashboardOverlay />
-      {/* @ts-ignore */}
-      <DashboardsLayer />
-      {/* @ts-ignore */}
-      <SelectedDashboardLayer />
-      {/* @ts-ignore */}
-      <DashboardRecentActivityLayer />
-
-      {/* RECENT ACTIVITY */}
-      {/* @ts-ignore */}
-      <RecentControlsActivityLayer />
-      {/* @ts-ignore */}
-      <DrawRecentActivityLayer />
-      {/* @ts-ignore */}
-      <RecentActivityLayerEvents />
-      {/* @ts-ignore */}
-      <RecentActvityOverlay />
-      {/* @ts-ignore */}
-      {displayRecentActivityLegend ? <RecentActivityLegend location="OUTSIDE" /> : null}
-
-      {/* LOCALIZED AREAS */}
-      {/* @ts-ignore */}
-      <LocalizedAreasLayer />
+      {[...baseChildren, ...superUserChildren]}
     </BaseMap>
   )
 }

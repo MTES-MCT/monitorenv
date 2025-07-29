@@ -1,6 +1,7 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { updateSelectedControlId } from '@features/RecentActivity/useCases/updateSelectedControlId'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { useTracking } from '@hooks/useTracking'
 import { pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { displayThemes } from '@utils/getThemesAsOptions'
@@ -15,16 +16,16 @@ import type { Feature } from 'ol'
 
 export function OverlayContent({
   isSelected,
-  isSuperUser = true,
   items,
   singleFeature
 }: {
   isSelected?: boolean
-  isSuperUser?: boolean
   items: OverlayItem<string, RecentActivity.RecentControlsActivity>[]
   singleFeature?: Feature
 }) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
   const { data } = useGetThemesQuery()
   const { trackEvent } = useTracking()
 
