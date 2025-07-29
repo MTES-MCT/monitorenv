@@ -20,6 +20,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { ActionForm } from './ActionForm'
 import { ActionsTimeLine } from './ActionsTimeLine'
 import { CancelEditModal } from './CancelEditModal'
+import { CreateDashboardModal } from './CreateDashboardModal'
 import { DeleteModal } from './DeleteModal'
 import { ExternalActionsModal } from './ExternalActionsModal'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
@@ -50,10 +51,11 @@ import type { AtLeast } from '../../../../types'
 
 enum ModalTypes {
   ACTIONS = 'ACTIONS',
+  CREATE_DASHBOARD = 'CREATE_DASHBOARD',
   DELETE = 'DELETE'
 }
 
-type ModalProps = ModalTypes.ACTIONS | ModalTypes.DELETE
+type ModalProps = ModalTypes.ACTIONS | ModalTypes.DELETE | ModalTypes.CREATE_DASHBOARD
 
 type MissionFormProps = {
   activeActionId: string | undefined
@@ -278,9 +280,17 @@ export function MissionForm({
         open={openModal === ModalTypes.ACTIONS}
         sources={actionsSources}
       />
+      <CreateDashboardModal
+        mission={selectedMission}
+        onClose={() => setOpenModal(undefined)}
+        open={openModal === ModalTypes.CREATE_DASHBOARD}
+      />
       <Wrapper>
         <FirstColumn>
-          <GeneralInformationsForm missionCompletion={missionCompletionFrontStatus} />
+          <GeneralInformationsForm
+            missionCompletion={missionCompletionFrontStatus}
+            onCreateDashboard={() => setOpenModal(ModalTypes.CREATE_DASHBOARD)}
+          />
         </FirstColumn>
         <SecondColumn>
           <ActionsTimeLine currentActionId={activeActionId} setCurrentActionId={handleSetCurrentActionId} />

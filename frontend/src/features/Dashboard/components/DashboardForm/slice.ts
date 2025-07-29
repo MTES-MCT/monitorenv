@@ -17,7 +17,7 @@ const persistConfig = {
   storage
 }
 
-const INITIAL_DASHBOARD_FILTERS: DashboardFiltersType = {
+export const INITIAL_DASHBOARD_FILTERS: DashboardFiltersType = {
   controlUnitFilters: {},
   filters: {},
   nearbyUnitFilters: {
