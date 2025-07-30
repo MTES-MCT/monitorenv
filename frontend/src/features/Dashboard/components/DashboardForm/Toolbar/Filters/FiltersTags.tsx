@@ -76,12 +76,12 @@ export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
         </CustomPeriodContainer>
       )}
       {filters?.tags?.map(tag => (
-        <SingleTag key={tag.id} onDelete={() => deleteTag(tag)} title={tag.name}>
+        <SingleTag key={tag.name} onDelete={() => deleteTag(tag)} title={tag.name}>
           {`Tag ${tag.name}`}
         </SingleTag>
       ))}
       {filters?.themes?.map(theme => (
-        <SingleTag key={theme.id} onDelete={() => deleteTheme(theme)} title={theme.name}>
+        <SingleTag key={theme.name} onDelete={() => deleteTheme(theme)} title={theme.name}>
           {`Thème ${theme.name}`}
         </SingleTag>
       ))}
