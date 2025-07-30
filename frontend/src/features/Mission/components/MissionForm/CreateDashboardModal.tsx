@@ -144,7 +144,7 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
       </StyledBody>
       <Dialog.Action>
         <Button disabled={!geomSource} onClick={confirmCreateDashboard}>
-          Créer un tableau de bord
+          Créer le tableau de bord
         </Button>
         <Button accent={Accent.SECONDARY} onClick={cancelCreateDashboard}>
           Annuler
