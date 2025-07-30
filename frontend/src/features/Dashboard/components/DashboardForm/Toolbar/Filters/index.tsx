@@ -116,7 +116,6 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
           style={{ width: '310px' }}
           value={filters?.regulatoryTags}
           valueKey="id"
-          virtualized
         />
         <Select
           isLabelHidden

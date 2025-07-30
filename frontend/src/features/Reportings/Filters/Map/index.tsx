@@ -251,7 +251,6 @@ export function MapReportingsFiltersWithRef(
           shouldShowLabels={false}
           value={themeFilter}
           valueKey="id"
-          virtualized
         />
 
         {themeFilter && themeFilter.length > 0 && (
@@ -283,7 +282,6 @@ export function MapReportingsFiltersWithRef(
           shouldShowLabels={false}
           value={tagFilter}
           valueKey="id"
-          virtualized
         />
 
         {tagFilter && tagFilter.length > 0 && (

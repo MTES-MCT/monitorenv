@@ -33,7 +33,6 @@ export function ActionTags({ actionIndex }: ActionTagsProps) {
         renderedValue="Tags"
         value={getTagsAsOptions(currentTags.value)}
         valueKey="id"
-        virtualized
       />
     </Wrapper>
   )

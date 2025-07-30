@@ -226,7 +226,6 @@ export function TableReportingsFiltersWithRef(
             style={{ width: 310 }}
             value={themeFilter}
             valueKey="id"
-            virtualized
           />
           <CheckTreePicker
             childrenKey="subTags"
@@ -245,7 +244,6 @@ export function TableReportingsFiltersWithRef(
             style={{ width: 310 }}
             value={tagFilter}
             valueKey="id"
-            virtualized
           />
 
           <CheckPicker
