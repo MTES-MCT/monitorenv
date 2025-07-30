@@ -109,22 +109,22 @@ export function Footer({
     }
 
     const globalInfos = [
-      `${formattedCoordinates ? `Coordonnées: ${formattedCoordinates}` : ''}`,
-      `Réponse VHF: ${values.withVHFAnswer ? 'Oui' : 'Non'}`
+      `Réponse VHF: ${values.withVHFAnswer ? 'Oui' : 'Non'}`,
+      `${formattedCoordinates ? `Localisation: ${formattedCoordinates}` : ''}`
     ].join('\n')
 
     const targetDetails = values.targetDetails
       .map(
         target =>
-          `${target.mmsi ? `MMSI: ${target.mmsi}\n` : ''}${
-            target.vesselName ? `Nom du navire:${target.vesselName}\n` : ''
+          `${target.vesselName ? `Nom du navire:${target.vesselName}\n` : ''}${
+            target.mmsi ? `MMSI: ${target.mmsi}\n` : ''
           }${target.size ? `Taille: ${target.size}m\n` : ''}`
       )
       .flat()
       .join('\n')
 
     navigator.clipboard
-      .writeText([globalInfos, targetDetails].join('\n'))
+      .writeText([targetDetails, globalInfos].join('\n'))
       .then(() => {
         const bannerProps = {
           children: 'Signalement copié dans le presse papier (Nom du navire, MMSI, Taille, Localisation, réponse VHF)',
@@ -173,14 +173,16 @@ export function Footer({
           onClick={onDelete}
           title="Supprimer le signalement"
         />
-        <StyledIconButton
-          disabled={
-            values.targetType !== ReportingTargetTypeEnum.VEHICLE || values.vehicleType !== VehicleTypeEnum.VESSEL
-          }
-          Icon={Icon.Duplicate}
-          onClick={copyTargetInfos}
-          title="Copier le nom du navire, le MMSI, la taille, la localisation, et la réponse VHF"
-        />
+        {reportingContext === ReportingContext.MAP && (
+          <StyledIconButton
+            disabled={
+              values.targetType !== ReportingTargetTypeEnum.VEHICLE || values.vehicleType !== VehicleTypeEnum.VESSEL
+            }
+            Icon={Icon.Duplicate}
+            onClick={copyTargetInfos}
+            title="Copier le nom du navire, le MMSI, la taille, la localisation, et la réponse VHF"
+          />
+        )}
       </div>
 
       <div>

@@ -213,7 +213,6 @@ export function Form() {
             options={themesOptions}
             value={getThemesAsOptions(values.themes ?? [])}
             valueKey="id"
-            virtualized
           />
           <CheckTreePicker
             childrenKey="subTags"
@@ -231,7 +230,6 @@ export function Form() {
             renderedValue="Tags"
             value={getTagsAsOptions(values.tags ?? [])}
             valueKey="id"
-            virtualized
           />
           <ThemesAndTagsText $hasError={!!(formErrors.themes || formErrors.tags)}>
             Sélectionner au moins une thématique/sous-thématique ou un tag/sous-tag

@@ -188,7 +188,6 @@ export const TableMissionFilters = forwardRef<HTMLDivElement, TableMissionFilter
               style={tagPickerStyle}
               value={selectedTags}
               valueKey="id"
-              virtualized
             />
             <CheckPicker
               data-cy="select-statuses-filter"

@@ -421,7 +421,6 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
             options={themesOptions}
             value={values.theme ? [values.theme] : undefined}
             valueKey="id"
-            virtualized
           />
 
           {isVesselInformationRequested && (
@@ -455,7 +454,6 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
             renderedValue="Tags"
             value={values.tags}
             valueKey="id"
-            virtualized
           />
         </StyledThemeContainer>
 

@@ -65,7 +65,6 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
         options={themesOptions}
         value={envActions[actionIndex]?.themes}
         valueKey="id"
-        virtualized
       />
     </ActionThemeWrapper>
   )
