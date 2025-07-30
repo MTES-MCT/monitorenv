@@ -1,4 +1,3 @@
-import { useGetTagsByRegulatoryAreaIdsQuery } from '@api/tagsAPI'
 import { type DashboardType } from '@features/Dashboard/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -16,6 +15,7 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
+import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -35,13 +35,11 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
 
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
-  const allRegulatoryAreaIds = extractedArea?.regulatoryAreas.flatMap(reg => reg.id) ?? []
-  const { data: regulatoryTags } = useGetTagsByRegulatoryAreaIdsQuery(allRegulatoryAreaIds)
-  const regulatoryTagsAsOptions = getTagsAsOptions(Object.values(regulatoryTags ?? []))
-  // const regulatoryTagsCustomSearch = useMemo(
-  //   () => new CustomSearch(regulatoryTagsAsOptions, ['label']),
-  //   [regulatoryTagsAsOptions]
-  // )
+  const tags = extractedArea?.tags ?? []
+  const tagsAsOptions = getTagsAsOptions(Object.values(tags))
+
+  const themes = extractedArea?.themes ?? []
+  const themesAsOptions = getThemesAsOptions(Object.values(themes))
 
   const ampsAsOptions = useMemo(() => getAmpsAsOptions(extractedArea?.amps ?? []), [extractedArea?.amps])
   const ampCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions, ['label']), [ampsAsOptions])
@@ -49,41 +47,81 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
   const setFilteredRegulatoryTags = (nextTag: TagOption[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: nextTag }, id }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { tags: nextTag }, id }))
   }
 
-  const areAllRegulatoryChecked = useMemo(
-    () => filters?.regulatoryTags?.length === regulatoryTagsAsOptions?.length,
-    [filters?.regulatoryTags, regulatoryTagsAsOptions]
+  const areAllTagsChecked = useMemo(
+    () => filters?.tags?.length === tagsAsOptions?.length,
+    [filters?.tags, tagsAsOptions]
   )
 
-  const indeterminate = useMemo(
-    () => filters?.regulatoryTags && filters.regulatoryTags.length > 0 && !areAllRegulatoryChecked,
-    [filters?.regulatoryTags, areAllRegulatoryChecked]
+  const indeterminateTags = useMemo(
+    () => filters?.tags && filters.tags.length > 0 && !areAllTagsChecked,
+    [filters?.tags, areAllTagsChecked]
   )
 
-  const checkAll = () => {
-    if (areAllRegulatoryChecked) {
-      dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: undefined }, id }))
+  const checkAllTags = () => {
+    if (areAllTagsChecked) {
+      dispatch(dashboardFiltersActions.setFilters({ filters: { tags: undefined }, id }))
 
       return
     }
 
-    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: regulatoryTagsAsOptions }, id }))
+    dispatch(dashboardFiltersActions.setFilters({ filters: { tags: tagsAsOptions }, id }))
   }
-  const renderExtraFooter = () => (
-    <SelectAllRegulatoryAreasContainer>
+
+  const renderTagsExtraFooter = () => (
+    <SelectAllContainer>
       <Checkbox
-        checked={areAllRegulatoryChecked}
-        indeterminate={indeterminate}
+        checked={areAllTagsChecked}
+        indeterminate={indeterminateTags}
         inline
-        label="Tout sélectionner"
-        name="selectAll"
-        onChange={checkAll}
+        label="Sélectionner tous les tags"
+        name="selectAllTags"
+        onChange={checkAllTags}
       >
-        Check all
+        Sélectionner tous les tags
       </Checkbox>
-    </SelectAllRegulatoryAreasContainer>
+    </SelectAllContainer>
+  )
+
+  const setFilteredThemes = (nextTheme: TagOption[] | undefined) => {
+    dispatch(dashboardFiltersActions.setFilters({ filters: { themes: nextTheme }, id }))
+  }
+
+  const areAllThemesChecked = useMemo(
+    () => filters?.themes?.length === themesAsOptions?.length,
+    [filters?.themes, themesAsOptions]
+  )
+
+  const indeterminateThemes = useMemo(
+    () => filters?.themes && filters.themes.length > 0 && !areAllThemesChecked,
+    [filters?.themes, areAllThemesChecked]
+  )
+
+  const checkAllThemes = () => {
+    if (areAllThemesChecked) {
+      dispatch(dashboardFiltersActions.setFilters({ filters: { themes: undefined }, id }))
+
+      return
+    }
+
+    dispatch(dashboardFiltersActions.setFilters({ filters: { themes: themesAsOptions }, id }))
+  }
+
+  const renderThemesExtraFooter = () => (
+    <SelectAllContainer>
+      <Checkbox
+        checked={areAllThemesChecked}
+        indeterminate={indeterminateThemes}
+        inline
+        label="Sélectionner toutes les thématiques"
+        name="selectAllThemes"
+        onChange={checkAllThemes}
+      >
+        Sélectionner toutes les thématiques
+      </Checkbox>
+    </SelectAllContainer>
   )
 
   const setFilteredAmpTypes = (value: string[] | undefined) => {
@@ -101,20 +139,38 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
 
   return (
     <FiltersContainer>
-      <div>
+      <SelectContainer>
         <CheckTreePicker
+          key={tagsAsOptions.length}
           isLabelHidden
           isTransparent
           label="Tag"
           labelKey="name"
-          name="regulatoryTags"
+          name="tags"
           onChange={setFilteredRegulatoryTags}
-          options={regulatoryTagsAsOptions}
+          options={tagsAsOptions}
           placeholder="Tag"
-          renderExtraFooter={renderExtraFooter}
+          renderedValue="Tag"
+          renderExtraFooter={renderTagsExtraFooter}
           shouldShowLabels={false}
           style={{ width: '310px' }}
-          value={filters?.regulatoryTags}
+          value={filters?.tags}
+          valueKey="id"
+        />
+        <CheckTreePicker
+          key={themesAsOptions.length}
+          isLabelHidden
+          isTransparent
+          label="Thématique"
+          labelKey="name"
+          name="themes"
+          onChange={setFilteredThemes}
+          options={themesAsOptions}
+          placeholder="Thématique"
+          renderExtraFooter={renderThemesExtraFooter}
+          shouldShowLabels={false}
+          style={{ width: '310px' }}
+          value={filters?.themes}
           valueKey="id"
         />
         <Select
@@ -141,7 +197,7 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
           style={{ width: '310px' }}
           value={filters?.amps}
         />
-      </div>
+      </SelectContainer>
       <SelectedPinButton onClick={showSelectedItems} type="button">
         <Icon.Pin color={THEME.color.slateGray} />
         Prévisualiser la sélection
@@ -161,13 +217,18 @@ const FiltersContainer = styled.div`
   display: flex;
   flex: 1;
   justify-content: space-between;
+  flex-wrap: wrap;
   > div {
     display: flex;
     gap: 16px;
   }
 `
+const SelectContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
 
-const SelectAllRegulatoryAreasContainer = styled.div`
+const SelectAllContainer = styled.div`
   border-top: 1px solid ${p => p.theme.color.lightGray};
   padding: 8px;
 `

@@ -6,6 +6,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 class JpaThemeRepositoryITest : AbstractDBTests() {
@@ -82,28 +84,55 @@ class JpaThemeRepositoryITest : AbstractDBTests() {
         assertThat(controlPlans.tagIds).isEmpty()
     }
 
-    // TODO : Ajouter des données de test
-//    @Transactional
-//    @Test
-//    fun `findAllWithinByRegulatoryAreaIds should return all regulatory themes with regulatory subThemes within validity range time`() {
-//        // Given
-//        val regulatoryAreaIds = listOf(16, 17)
-//        val expectedTagSize = 3
-//
-//        // When
-//        val regulatoryTags = jpaThemeRepository.findAllWithinByRegulatoryAreaIds(regulatoryAreaIds)
-//
-//        // Then
-//        assertEquals(expectedTagSize, regulatoryTags.size)
-//        regulatoryTags.forEach { regulatoryTag ->
-//            // Clear cache otherwise we have not all subtags
-//            entityManager.clear()
-//            val baseTheme = dbThemeRepository.findByIdOrNull(regulatoryTag.id)
-//            assertThat(baseTheme?.subThemes).hasSizeGreaterThanOrEqualTo(regulatoryTag.subThemes.size)
-//            assertThat(regulatoryTag.endedAt == null || regulatoryTag.endedAt.isAfter(ZonedDateTime.now())).isTrue()
-//            regulatoryTag.subThemes.forEach { subTheme ->
-//                assertThat(subTheme.endedAt == null || subTheme.endedAt.isAfter(ZonedDateTime.now())).isTrue()
-//            }
-//        }
-//    }
+    @Transactional
+    @Test
+    fun `findAllWithinByVigilanceAreaIds should return all vigilance areas themes with subThemes within validity range time`() {
+        // Given
+        val vigilanceAreaIds = listOf(2)
+        val expectedThemeSize = 1
+
+        // When
+        val vigilanceAreasThemes = jpaThemeRepository.findAllWithinByVigilanceAreasIds(vigilanceAreaIds)
+
+        // Then
+        assertEquals(expectedThemeSize, vigilanceAreasThemes.size)
+        vigilanceAreasThemes.forEach { vigilanceAreaTheme ->
+            // Clear cache otherwise we have not all subthemes
+            entityManager.clear()
+            val baseTheme = dbThemeRepository.findByIdOrNull(vigilanceAreaTheme.id)
+            assertThat(baseTheme?.subThemes).hasSizeGreaterThanOrEqualTo(vigilanceAreaTheme.subThemes.size)
+            assertThat(
+                vigilanceAreaTheme.endedAt == null || vigilanceAreaTheme.endedAt.isAfter(ZonedDateTime.now()),
+            ).isTrue()
+            vigilanceAreaTheme.subThemes.forEach { subTheme ->
+                assertThat(subTheme.endedAt == null || subTheme.endedAt.isAfter(ZonedDateTime.now())).isTrue()
+            }
+        }
+    }
+
+    @Transactional
+    @Test
+    fun `findAllWithinByRegulatoryAreaIds should return all regulatory areas themes with subThemes within validity range time`() {
+        // Given
+        val regulatoryAreaIds = listOf(16, 17)
+        val expectedThemeSize = 2
+
+        // When
+        val regulatoryAreasThemes = jpaThemeRepository.findAllWithinByRegulatoryAreaIds(regulatoryAreaIds)
+
+        // Then
+        assertEquals(expectedThemeSize, regulatoryAreasThemes.size)
+        regulatoryAreasThemes.forEach { regulatoryAreaTheme ->
+            // Clear cache otherwise we have not all subthemes
+            entityManager.clear()
+            val baseTheme = dbThemeRepository.findByIdOrNull(regulatoryAreaTheme.id)
+            assertThat(baseTheme?.subThemes).hasSizeGreaterThanOrEqualTo(regulatoryAreaTheme.subThemes.size)
+            assertThat(
+                regulatoryAreaTheme.endedAt == null || regulatoryAreaTheme.endedAt.isAfter(ZonedDateTime.now()),
+            ).isTrue()
+            regulatoryAreaTheme.subThemes.forEach { subTheme ->
+                assertThat(subTheme.endedAt == null || subTheme.endedAt.isAfter(ZonedDateTime.now())).isTrue()
+            }
+        }
+    }
 }

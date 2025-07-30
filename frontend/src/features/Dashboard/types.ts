@@ -15,6 +15,7 @@ import type { ImageApi, ImageFront, Link } from '@components/Form/types'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
+import type { TagFromAPI } from 'domain/entities/tags'
 import type { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -25,6 +26,8 @@ export namespace Dashboard {
     inseeCode: string
     regulatoryAreas: RegulatoryLayerCompactFromAPI[]
     reportings: Reporting[]
+    tags: TagFromAPI[]
+    themes: ThemeFromAPI[]
     vigilanceAreas: VigilanceArea.VigilanceAreaFromApi[] | VigilanceArea.VigilanceAreaLayer[]
   }
   export interface ExtractedAreaFromApi {
@@ -32,6 +35,8 @@ export namespace Dashboard {
     inseeCode: string
     regulatoryAreaIds: number[]
     reportingIds: number[]
+    tags: TagFromAPI[]
+    themes: ThemeFromAPI[]
     vigilanceAreaIds: number[]
   }
   export type Dashboard = {

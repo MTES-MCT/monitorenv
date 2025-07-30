@@ -15,6 +15,11 @@ interface IThemeRepository {
         time: ZonedDateTime = ZonedDateTime.now(),
     ): List<ThemeEntity>
 
+    fun findAllWithinByVigilanceAreasIds(
+        vigilanceAreasIds: List<Int>,
+        time: ZonedDateTime = ZonedDateTime.now(),
+    ): List<ThemeEntity>
+
     fun findEnvActionControlPlanByIds(ids: List<Int>): EnvActionControlPlanEntity
 
     fun findAllById(ids: List<Int>): List<ThemeEntity>

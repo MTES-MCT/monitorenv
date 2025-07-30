@@ -13,6 +13,7 @@ import type { DashboardFilters, VigilanceAreaFilters } from './components/Dashbo
 import type { ImageApi, Link } from '@components/Form/types'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
@@ -520,23 +521,34 @@ export const getFilteredRegulatoryAreas = createSelector(
   [
     (state: DashboardState) => state.dashboards,
     (state: DashboardState) => state.activeDashboardId,
-    (_, regulatoryTagsFilter: TagOption[] | undefined) => regulatoryTagsFilter
+    (_, filters: { tags?: TagOption[]; themes?: ThemeOption[] }) => filters
   ],
-  (dashboards, activeDashboardId, regulatoryTagsFilter) => {
+  (dashboards, activeDashboardId, filters) => {
     if (!activeDashboardId) {
       return undefined
     }
 
-    if (dashboards[activeDashboardId]) {
-      const regulatoryAreas = dashboards[activeDashboardId].extractedArea?.regulatoryAreas
+    const tagsFilter = filters?.tags ?? []
+    const themesFilters = filters?.themes ?? []
 
-      if (!regulatoryTagsFilter || regulatoryTagsFilter.length === 0) {
-        return regulatoryAreas
+    if (dashboards[activeDashboardId]) {
+      let regulatoryAreas = dashboards[activeDashboardId].extractedArea?.regulatoryAreas
+
+      if (tagsFilter && tagsFilter?.length > 0) {
+        regulatoryAreas = regulatoryAreas?.filter(
+          ({ tags, themes }) =>
+            tags.some(({ id }) => tagsFilter?.some(tagFilter => tagFilter.id === id)) ||
+            themes.some(({ id }) => themesFilters?.some(themeFilter => themeFilter.id === id))
+        )
       }
 
-      return regulatoryAreas?.filter(({ tags }) =>
-        tags.some(({ id }) => regulatoryTagsFilter?.some(tagFilter => tagFilter.id === id))
-      )
+      if (themesFilters && themesFilters?.length > 0) {
+        regulatoryAreas = regulatoryAreas?.filter(({ themes }) =>
+          themes?.some(theme => themesFilters?.some(themeFilter => themeFilter.id === theme.id))
+        )
+      }
+
+      return regulatoryAreas
     }
 
     return undefined
@@ -606,22 +618,31 @@ const getVigilanceAreas = createSelector([getDashboards, getActiveDashboardId], 
   return []
 })
 
-const getVigilanceAreasByTags = createSelector(
+const getVigilanceAreasByTagsAndThemes = createSelector(
   [getVigilanceAreas, getDashboardFilters],
   (vigilanceAreas, dashboardFilters) => {
-    const regulatoryTagsFilter = dashboardFilters?.regulatoryTags
-    if (regulatoryTagsFilter?.length) {
-      return vigilanceAreas.filter(({ tags }) =>
-        tags?.some(tag => regulatoryTagsFilter.some(tagFilter => tagFilter.id === tag.id))
+    let filteredVigilanceAreas = [...vigilanceAreas]
+    const tagsFilter = dashboardFilters?.tags
+    const themesFilter = dashboardFilters?.themes
+
+    if (tagsFilter?.length) {
+      filteredVigilanceAreas = [...filteredVigilanceAreas].filter(({ tags }) =>
+        tags?.some(tag => tagsFilter.some(tagFilter => tagFilter.id === tag.id))
       )
     }
 
-    return vigilanceAreas
+    if (themesFilter?.length) {
+      filteredVigilanceAreas = [...filteredVigilanceAreas].filter(({ themes }) =>
+        themes?.some(theme => themesFilter.some(themeFilter => themeFilter.id === theme.id))
+      )
+    }
+
+    return filteredVigilanceAreas
   }
 )
 
 const getVigilanceAreasByVisibility = createSelector(
-  [getVigilanceAreasByTags, getVigilanceAreaFilters],
+  [getVigilanceAreasByTagsAndThemes, getVigilanceAreaFilters],
   (vigilanceAreas, vigilanceAreaFilters) => {
     if (vigilanceAreaFilters?.visibility?.length) {
       return vigilanceAreas.filter(v => v.visibility && vigilanceAreaFilters.visibility.includes(v.visibility))

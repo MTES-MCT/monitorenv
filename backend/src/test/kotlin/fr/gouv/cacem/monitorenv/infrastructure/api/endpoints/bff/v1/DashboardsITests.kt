@@ -89,6 +89,8 @@ class DashboardsITests {
                     regulatoryAreaIds = regulatoryAreas,
                     ampIds = amps,
                     vigilanceAreaIds = vigilanceAreas,
+                    tags = emptyList(),
+                    themes = emptyList(),
                 ),
             )
 
@@ -124,6 +126,8 @@ class DashboardsITests {
                     regulatoryAreaIds = regulatoryAreas,
                     ampIds = amps,
                     vigilanceAreaIds = vigilanceAreas,
+                    tags = emptyList(),
+                    themes = emptyList(),
                 ),
             )
 
