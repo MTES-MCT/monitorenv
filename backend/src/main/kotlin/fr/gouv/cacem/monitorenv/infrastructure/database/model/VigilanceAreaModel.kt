@@ -83,7 +83,7 @@ data class VigilanceAreaModel(
         mappedBy = "vigilanceArea",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)

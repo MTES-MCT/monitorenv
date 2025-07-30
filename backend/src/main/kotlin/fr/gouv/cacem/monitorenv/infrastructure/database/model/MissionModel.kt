@@ -234,7 +234,6 @@ class MissionModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val missionSource: MissionSourceEnum,
-    // FIXME (10/06/2024) 'Basic' attribute type should not be a container
     @Column(name = "mission_types", columnDefinition = "text[]")
     @Enumerated(EnumType.STRING)
     val missionTypes: List<MissionTypeEnum>,

@@ -68,7 +68,7 @@ abstract class AbstractReportingModel(
         mappedBy = "reporting",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
     )
     @JsonManagedReference
     @Fetch(value = FetchMode.SUBSELECT)
@@ -103,7 +103,7 @@ abstract class AbstractReportingModel(
     @Column(name = "is_archived", nullable = false) open val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) open val isDeleted: Boolean,
     @Column(name = "open_by") open val openBy: String? = null,
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = true)
     @JsonBackReference
     open val mission: MissionModel? = null,

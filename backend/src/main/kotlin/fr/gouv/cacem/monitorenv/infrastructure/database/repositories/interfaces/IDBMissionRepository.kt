@@ -25,11 +25,46 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     )
     fun delete(id: Int)
 
-    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         """
-        SELECT mission
+        SELECT DISTINCT mission
         FROM MissionModel mission
+        LEFT JOIN FETCH mission.envActions envactions
+            LEFT JOIN FETCH envactions.themes themeEnvActions
+                LEFT JOIN FETCH themeEnvActions.theme themes
+                    LEFT JOIN themes.parent
+            LEFT JOIN FETCH envactions.tags tagEnvActions
+                LEFT JOIN FETCH tagEnvActions.tag tags
+                    LEFT JOIN tags.parent
+            LEFT JOIN FETCH envactions.attachedReporting envActionAttachedReporting
+            LEFT JOIN FETCH envActionAttachedReporting.themes envActionAttachedReportingThemes
+                LEFT JOIN FETCH envActionAttachedReportingThemes.theme envActionAttachedReportingThemesTheme
+                    LEFT JOIN envActionAttachedReportingThemesTheme.parent
+            LEFT JOIN FETCH envActionAttachedReporting.tags envActionAttachedReportingTags
+                LEFT JOIN FETCH envActionAttachedReportingTags.tag envActionAttachedReportingTagsTag
+                    LEFT JOIN envActionAttachedReportingTagsTag.parent
+        LEFT JOIN FETCH mission.controlUnits missionControlUnits
+            LEFT JOIN FETCH missionControlUnits.unit unit
+                LEFT JOIN FETCH unit.administration unitAdministration
+                LEFT JOIN FETCH unit.controlUnitResources unitResources
+                    LEFT JOIN FETCH unitResources.station
+        LEFT JOIN FETCH mission.attachedReportings attachedReportings
+            LEFT JOIN FETCH attachedReportings.themes attachedReportingThemes
+                LEFT JOIN FETCH attachedReportingThemes.theme attachedReportingThemesTheme
+                LEFT JOIN attachedReportingThemesTheme.parent
+            LEFT JOIN FETCH attachedReportings.tags attachedReportingTags
+                LEFT JOIN FETCH attachedReportingTags.tag attachedReportingTagsTag
+                    LEFT JOIN attachedReportingTagsTag.parent
+            LEFT JOIN FETCH attachedReportings.reportingSources attachedReportingSources
+                LEFT JOIN FETCH attachedReportingSources.semaphore
+                LEFT JOIN FETCH attachedReportingSources.controlUnit
+            LEFT JOIN FETCH attachedReportings.attachedEnvAction attachedEnvActions
+                LEFT JOIN FETCH attachedEnvActions.themes attachedEnvActionsThemes
+                    LEFT JOIN FETCH attachedEnvActionsThemes.theme attachedEnvActionsThemesTheme
+                        LEFT JOIN attachedEnvActionsThemesTheme.parent
+                LEFT JOIN FETCH attachedEnvActions.tags attachedEnvActionsTags
+                    LEFT JOIN FETCH attachedEnvActionsTags.tag attachedEnvActionsTagsTag
+                        LEFT JOIN attachedEnvActionsTagsTag.parent
         WHERE
             mission.isDeleted = false
             AND
