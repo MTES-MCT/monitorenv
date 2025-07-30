@@ -46,7 +46,7 @@ export const createDashboardFromMission =
         const formattedDashboardFilters = {
           ...INITIAL_DASHBOARD_FILTERS,
           filters: {
-            regulatoryTags: dashboardToCreate.tags
+            tags: dashboardToCreate.tags
           }
         }
 

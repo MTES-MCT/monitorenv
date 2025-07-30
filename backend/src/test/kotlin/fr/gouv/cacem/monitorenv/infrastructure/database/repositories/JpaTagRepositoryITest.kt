@@ -33,6 +33,7 @@ class JpaTagRepositoryITest : AbstractDBTests() {
         tags.forEach { tag ->
             assertThat(tag.endedAt == null || tag.endedAt.isAfter(ZonedDateTime.now())).isTrue()
             tag.subTags.forEach { subTag ->
+
                 assertThat(subTag.endedAt == null || subTag.endedAt.isAfter(ZonedDateTime.now())).isTrue()
             }
         }
@@ -70,6 +71,33 @@ class JpaTagRepositoryITest : AbstractDBTests() {
             assertThat(regulatoryTag.endedAt == null || regulatoryTag.endedAt.isAfter(ZonedDateTime.now())).isTrue()
             regulatoryTag.subTags.forEach { subTheme ->
                 assertThat(subTheme.endedAt == null || subTheme.endedAt.isAfter(ZonedDateTime.now())).isTrue()
+            }
+        }
+    }
+
+    @Transactional
+    @Test
+    fun `findAllWithinByVigilanceAreasIds should return all vigilance areas tags with subTags within validity range time`() {
+        // Given
+        val vigilanceAreasIds = listOf(1, 2, 3)
+        val expectedTagSize = 7
+
+        // When
+        val regulatoryAndVigilanceTags =
+            jpaTagRepository.findAllWithinByVigilanceAreasIds(
+                vigilanceAreasIds,
+            )
+
+        // Then
+        assertEquals(expectedTagSize, regulatoryAndVigilanceTags.size)
+        regulatoryAndVigilanceTags.forEach { tag ->
+            // Clear cache otherwise we have not all subtags
+            entityManager.clear()
+            val baseTag = dbTagRepository.findByIdOrNull(tag.id)
+            assertThat(baseTag?.subTags).hasSizeGreaterThanOrEqualTo(tag.subTags.size)
+            assertThat(tag.endedAt == null || tag.endedAt.isAfter(ZonedDateTime.now())).isTrue()
+            tag.subTags.forEach { subTag ->
+                assertThat(subTag.endedAt == null || subTag.endedAt.isAfter(ZonedDateTime.now())).isTrue()
             }
         }
     }

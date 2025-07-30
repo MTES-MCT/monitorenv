@@ -23,4 +23,13 @@ class JpaTagRepository(
         dbTagRepository.findAllWithinByRegulatoryAreaIds(regulatoryAreaIds, time).map {
             it.toTagEntity()
         }
+
+    @Transactional
+    override fun findAllWithinByVigilanceAreasIds(
+        vigilanceAreasIds: List<Int>,
+        time: ZonedDateTime,
+    ): List<TagEntity> =
+        dbTagRepository.findAllWithinByVigilanceAreasIds(vigilanceAreasIds, time).map {
+            it.toTagEntity()
+        }
 }

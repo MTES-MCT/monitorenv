@@ -10,4 +10,9 @@ interface ITagRepository {
         regulatoryAreaIds: List<Int>,
         time: ZonedDateTime = ZonedDateTime.now(),
     ): List<TagEntity>
+
+    fun findAllWithinByVigilanceAreasIds(
+        vigilanceAreasIds: List<Int>,
+        time: ZonedDateTime = ZonedDateTime.now(),
+    ): List<TagEntity>
 }

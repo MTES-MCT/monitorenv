@@ -11,6 +11,7 @@ import storage from 'redux-persist/lib/storage'
 
 import type { RecentActivityFiltersEnum } from '@features/RecentActivity/slice'
 import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 
 const persistConfig = {
   key: 'dashboardFilters_V2',
@@ -74,8 +75,9 @@ export type VigilanceAreaFilters = {
 export type DashboardFilters = {
   amps?: string[]
   previewSelection?: boolean
-  regulatoryTags?: TagOption[]
   specificPeriod?: DateAsStringRange | undefined
+  tags?: TagOption[]
+  themes?: ThemeOption[]
   vigilanceAreaPeriod?: VigilanceArea.VigilanceAreaFilterPeriod | undefined
 }
 

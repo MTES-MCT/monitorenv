@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { dashboardFiltersActions } from '../../slice'
 
 import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 
 type FiltersTagsProps = {
   dashboardKey: string
@@ -19,16 +20,21 @@ export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
 
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
-  const setFilteredRegulatoryTags = (value: TagOption[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { regulatoryTags: value }, id }))
+  const setFilteredTags = (value: TagOption[] | undefined) => {
+    dispatch(dashboardFiltersActions.setFilters({ filters: { tags: value }, id }))
+  }
+
+  const deleteTag = (tagToDelete: TagOption) => {
+    setFilteredTags(filters?.tags?.filter(theme => theme.id !== tagToDelete.id))
+  }
+
+  const deleteTheme = (themeToDelete: ThemeOption) => {
+    const filtersThemes = filters?.themes?.filter(theme => theme.id !== themeToDelete.id)
+    dispatch(dashboardFiltersActions.setFilters({ filters: { themes: filtersThemes }, id }))
   }
 
   const setFilteredAmpTypes = (value: string[] | undefined) => {
     dispatch(dashboardFiltersActions.setFilters({ filters: { amps: value }, id }))
-  }
-
-  const deleteRegulatoryTag = (regulatoryTagToDelete: TagOption) => {
-    setFilteredRegulatoryTags(filters?.regulatoryTags?.filter(theme => theme.id !== regulatoryTagToDelete.id))
   }
 
   const deleteAmpType = (ampTypeToDelete: string) => {
@@ -44,7 +50,8 @@ export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
   }
 
   const hasFilters = !!(
-    (filters?.regulatoryTags && filters?.regulatoryTags.length > 0) ||
+    (filters?.tags && filters?.tags.length > 0) ||
+    (filters?.themes && filters?.themes.length > 0) ||
     (filters?.amps && filters?.amps.length > 0) ||
     filters?.vigilanceAreaPeriod
   )
@@ -68,9 +75,14 @@ export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
           />
         </CustomPeriodContainer>
       )}
-      {filters?.regulatoryTags?.map(tag => (
-        <SingleTag key={tag.id} onDelete={() => deleteRegulatoryTag(tag)} title={tag.name}>
+      {filters?.tags?.map(tag => (
+        <SingleTag key={tag.id} onDelete={() => deleteTag(tag)} title={tag.name}>
           {tag.name}
+        </SingleTag>
+      ))}
+      {filters?.themes?.map(theme => (
+        <SingleTag key={theme.id} onDelete={() => deleteTheme(theme)} title={theme.name}>
+          {theme.name}
         </SingleTag>
       ))}
 

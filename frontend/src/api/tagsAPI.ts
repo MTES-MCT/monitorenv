@@ -12,12 +12,8 @@ export const tagAPI = monitorenvPrivateApi.injectEndpoints({
     getTags: builder.query<EntityState<TagFromAPI, number>, void>({
       query: () => `/v1/tags`,
       transformErrorResponse: response => new FrontendApiError(GET_TAGS_ERROR_MESSAGE, response)
-    }),
-    getTagsByRegulatoryAreaIds: builder.query<EntityState<TagFromAPI, number>, number[]>({
-      query: ids => ({ body: ids, method: 'POST', url: '/v1/tags/regulatoryAreas' }),
-      transformErrorResponse: response => new FrontendApiError(GET_TAGS_ERROR_MESSAGE, response)
     })
   })
 })
 
-export const { useGetTagsByRegulatoryAreaIdsQuery, useGetTagsQuery } = tagAPI
+export const { useGetTagsQuery } = tagAPI

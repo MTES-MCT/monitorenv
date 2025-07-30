@@ -39,6 +39,14 @@ VALUES (10, 16),
        (9, 17),
        (10, 17);
 
+INSERT INTO themes_regulatory_areas (themes_id, regulatory_areas_id)
+VALUES (101, 16),
+       (296, 16),
+       (9, 17),
+       (290, 17),
+       (330, 17),
+       (331, 17);
+
 /* VIGILANCE AREAS */
 /* Add SubtagMouillage1 Tag */
 INSERT INTO tags_vigilance_areas (vigilance_areas_id, tags_id)
@@ -47,4 +55,8 @@ VALUES (7, 10), (7, 5);
 /* Add SubtagMouillage2 Tag */
 INSERT INTO tags_vigilance_areas (vigilance_areas_id, tags_id)
 VALUES (1, 11), (1, 5);
+
+/* Add SubtagPN2 Tag */
+INSERT INTO tags_vigilance_areas (vigilance_areas_id, tags_id)
+VALUES (3, 9), (4, 9);
 

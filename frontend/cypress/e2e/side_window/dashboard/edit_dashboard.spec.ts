@@ -118,6 +118,15 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     // because result list have a separator so we need to multiply the results by 2
     cy.getDataCy('dashboard-regulatory-areas-list').children().should('have.length', 4)
     cy.getDataCy('dashboard-filter-tags').find('.Component-SingleTag > span').contains('Mixte')
+    cy.fill('Tag', undefined)
+
+    cy.fill('Thématique', ['Pêche à pied'])
+    cy.get('h2').contains('Zones réglementaires').click()
+    cy.wait(250)
+    // because result list have a separator so we need to multiply the results by 2
+    cy.getDataCy('dashboard-regulatory-areas-list').children().should('have.length', 2)
+    cy.getDataCy('dashboard-filter-tags').find('.Component-SingleTag > span').contains('Pêche à pied')
+    cy.fill('Thématique', undefined)
 
     cy.fill('Période de vigilance', 'Période spécifique')
     const { asDatePickerDate: expectedStartDate } = getUtcDateInMultipleFormats('2024/09/01')

@@ -27,6 +27,15 @@ class JpaThemeRepository(
             it.toThemeEntity()
         }
 
+    @Transactional
+    override fun findAllWithinByVigilanceAreasIds(
+        vigilanceAreasIds: List<Int>,
+        time: ZonedDateTime,
+    ): List<ThemeEntity> =
+        dbThemeRepository.findAllWithinByVigilanceAreasIds(vigilanceAreasIds, time).map {
+            it.toThemeEntity()
+        }
+
     override fun findEnvActionControlPlanByIds(ids: List<Int>): EnvActionControlPlanEntity {
         val result = dbThemeRepository.findAllControlPlanThemeIdsByIds(ids)
         val controlPlans = result[0] as? Array<Any>
