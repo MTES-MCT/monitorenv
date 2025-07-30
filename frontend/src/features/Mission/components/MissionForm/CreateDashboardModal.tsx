@@ -2,7 +2,7 @@ import { createDashboardFromMission } from '@features/Dashboard/useCases/createD
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Dialog, MultiRadio, TextInput } from '@mtes-mct/monitor-ui'
 import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import type { ControlOrSurveillance, Mission, NewMission } from 'domain/entities/missions'
@@ -13,11 +13,11 @@ const EMPTY_VALUE = '-'
 type CreateDashboardModalProps = {
   mission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
   onClose: () => void
-  open: boolean
 }
 
-export function CreateDashboardModal({ mission, onClose, open }: CreateDashboardModalProps) {
+export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalProps) {
   const dispatch = useAppDispatch()
+
   const missionGeom =
     mission?.geom?.coordinates.length && mission.geom?.coordinates.length > 0 ? mission.geom : undefined
 
@@ -38,15 +38,13 @@ export function CreateDashboardModal({ mission, onClose, open }: CreateDashboard
         : -1
     }) as ControlOrSurveillance[]
 
+  const firstEnvAction = sortedEnvActions?.[0]
+
   function initialGeomSource() {
     if (missionGeom) {
       return 'MISSION'
     }
-    if (
-      sortedEnvActions &&
-      sortedEnvActions[0]?.geom?.coordinates &&
-      sortedEnvActions[0].geom?.coordinates.length > 0
-    ) {
+    if (sortedEnvActions && firstEnvAction?.geom?.coordinates && firstEnvAction.geom?.coordinates.length > 0) {
       return 'ACTION'
     }
 
@@ -55,25 +53,35 @@ export function CreateDashboardModal({ mission, onClose, open }: CreateDashboard
 
   const [geomSource, setGeomSource] = useState(initialGeomSource())
 
+  const dashboardGeom = useMemo(() => {
+    if (geomSource === 'MISSION' && missionGeom) {
+      return missionGeom
+    }
+    if (geomSource === 'ACTION' && firstEnvAction?.geom?.coordinates) {
+      return firstEnvAction.geom
+    }
+
+    return undefined
+  }, [geomSource, missionGeom, firstEnvAction?.geom])
+
   const geomSourceOptions = [
-    { isDisabled: !geomSource, label: 'De la mission (calculée automatiquement ou manuelle)', value: 'MISSION' },
-    { isDisabled: !geomSource, label: 'De la dernière action de contrôle ou surveillance', value: 'ACTION' }
+    { isDisabled: !missionGeom, label: 'De la mission (calculée automatiquement ou manuelle)', value: 'MISSION' },
+    {
+      isDisabled: !firstEnvAction?.geom?.coordinates.length,
+      label: 'De la dernière action de contrôle ou surveillance',
+      value: 'ACTION'
+    }
   ]
   const confirmCreateDashboard = () => {
-    const dashboardGeom = geomSource === 'MISSION' ? missionGeom : sortedEnvActions[0]?.geom
-
     if (!dashboardGeom) {
       return
     }
     const dashboardData = {
       controlUnitIds: mission?.controlUnits?.map(unit => unit.id as number) || [],
-      filters: {
-        filters: {
-          regulatoryTags: sortedEnvActions[0]?.tags || []
-        }
-      },
       geom: dashboardGeom,
-      id: `new-${mission?.id || 'dashboard'}`
+      id: `new-${mission?.id || 'dashboard'}`,
+      tags: firstEnvAction?.tags ?? undefined,
+      themes: firstEnvAction?.themes ?? undefined
     }
 
     dispatch(createDashboardFromMission(dashboardData))
@@ -87,54 +95,52 @@ export function CreateDashboardModal({ mission, onClose, open }: CreateDashboard
     setGeomSource(source)
   }
 
-  const dashboardThemes = sortedEnvActions[0]?.themes?.map(theme => theme.name).join(', ') || EMPTY_VALUE
-  const dashboardTags = sortedEnvActions[0]?.tags?.map(tag => tag.name).join(', ') || EMPTY_VALUE
+  const dashboardThemes = firstEnvAction?.themes?.map(theme => theme.name).join(', ') || EMPTY_VALUE
+  const dashboardTags = firstEnvAction?.tags?.map(tag => tag.name).join(', ') || EMPTY_VALUE
 
   return (
-    open && (
-      <Dialog>
-        <Dialog.Title>Créer un tableau de bord</Dialog.Title>
-        <StyledBody>
-          <h5>Informations récupérées</h5>
-          <ControlUnitsContainer>
-            {mission?.controlUnits?.map((unit, index) => (
-              <ControlUnitContainer>
-                <StyledTextInput
-                  label={`Administration ${index + 1}`}
-                  name="administration"
-                  plaintext
-                  value={unit.administration ? unit.administration : EMPTY_VALUE}
-                />
-                <StyledTextInput
-                  label={`Unité ${index + 1}`}
-                  name="controlUnit"
-                  plaintext
-                  value={unit.name ? unit.name : EMPTY_VALUE}
-                />
-              </ControlUnitContainer>
-            ))}
-          </ControlUnitsContainer>
-          <MultiRadio
-            isRequired
-            label="Données de localisation"
-            name="geomSourceType"
-            onChange={updateGeomSource}
-            options={geomSourceOptions}
-            value={geomSource}
-          />
-          <StyledTextInput label="Thématiques" name="themes" plaintext value={dashboardThemes} />
-          <StyledTextInput label="Tags" name="tags" plaintext value={dashboardTags} />
-        </StyledBody>
-        <Dialog.Action>
-          <Button disabled={!geomSource} onClick={confirmCreateDashboard}>
-            Créer un tableau de bord
-          </Button>
-          <Button accent={Accent.SECONDARY} onClick={cancelCreateDashboard}>
-            Annuler
-          </Button>
-        </Dialog.Action>
-      </Dialog>
-    )
+    <Dialog>
+      <Dialog.Title>Créer un tableau de bord</Dialog.Title>
+      <StyledBody>
+        <h5>Informations récupérées</h5>
+        <ControlUnitsContainer>
+          {mission?.controlUnits?.map((unit, index) => (
+            <ControlUnitContainer key={unit.id}>
+              <StyledTextInput
+                label={`Administration ${index + 1}`}
+                name="administration"
+                plaintext
+                value={unit.administration ? unit.administration : EMPTY_VALUE}
+              />
+              <StyledTextInput
+                label={`Unité ${index + 1}`}
+                name="controlUnit"
+                plaintext
+                value={unit.name ? unit.name : EMPTY_VALUE}
+              />
+            </ControlUnitContainer>
+          ))}
+        </ControlUnitsContainer>
+        <MultiRadio
+          isRequired
+          label="Données de localisation"
+          name="geomSourceType"
+          onChange={updateGeomSource}
+          options={geomSourceOptions}
+          value={geomSource}
+        />
+        <StyledTextInput label="Thématiques" name="themes" plaintext value={dashboardThemes} />
+        <StyledTextInput label="Tags" name="tags" plaintext value={dashboardTags} />
+      </StyledBody>
+      <Dialog.Action>
+        <Button disabled={!geomSource} onClick={confirmCreateDashboard}>
+          Créer un tableau de bord
+        </Button>
+        <Button accent={Accent.SECONDARY} onClick={cancelCreateDashboard}>
+          Annuler
+        </Button>
+      </Dialog.Action>
+    </Dialog>
   )
 }
 const StyledBody = styled(Dialog.Body)`
@@ -142,7 +148,7 @@ const StyledBody = styled(Dialog.Body)`
   gap: 32px;
 `
 
-const ControlUnitsContainer = styled.p`
+const ControlUnitsContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;

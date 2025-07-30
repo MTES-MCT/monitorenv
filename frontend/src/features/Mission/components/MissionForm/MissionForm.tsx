@@ -280,11 +280,9 @@ export function MissionForm({
         open={openModal === ModalTypes.ACTIONS}
         sources={actionsSources}
       />
-      <CreateDashboardModal
-        mission={selectedMission}
-        onClose={() => setOpenModal(undefined)}
-        open={openModal === ModalTypes.CREATE_DASHBOARD}
-      />
+      {openModal === ModalTypes.CREATE_DASHBOARD && (
+        <CreateDashboardModal mission={selectedMission} onClose={() => setOpenModal(undefined)} />
+      )}
       <Wrapper>
         <FirstColumn>
           <GeneralInformationsForm

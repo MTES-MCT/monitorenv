@@ -12,6 +12,7 @@ import { populateExtractAreaFromApi } from '../utils'
 import type { Dashboard } from '../types'
 import type { HomeAppThunk } from '@store/index'
 import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const GET_EXTRACTED_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu créer le tableau de bord"
@@ -20,6 +21,7 @@ type DashboardToCreateType = {
   controlUnitIds: number[]
   geom: GeoJSON.Geometry
   tags?: TagOption[]
+  themes?: ThemeOption[]
 }
 export const createDashboardFromMission =
   (dashboardToCreate: DashboardToCreateType): HomeAppThunk =>
@@ -42,16 +44,19 @@ export const createDashboardFromMission =
           reportingIds: [],
           vigilanceAreaIds: []
         }
+        const filteredTags = dashboardToCreate.tags?.filter(tag => data.tags?.some(t => t.id === tag.id))
+        const filteredThemes = dashboardToCreate.themes?.filter(theme => data.themes?.some(t => t.id === theme.id))
 
         const formattedDashboardFilters = {
           ...INITIAL_DASHBOARD_FILTERS,
           filters: {
-            tags: dashboardToCreate.tags
+            tags: filteredTags ?? [],
+            themes: filteredThemes ?? []
           }
         }
 
         const extractedArea = await populateExtractAreaFromApi(dispatch, data)
-        dispatch(dashboardFiltersActions.setDashboardFilters({ filters: formattedDashboardFilters, id: newId }))
+        dispatch(dashboardFiltersActions.setDashboardFilters({ filters: formattedDashboardFilters, id: dashboard.id }))
         dispatch(dashboardActions.createDashboard({ dashboard, defaultName: newDashboardName, extractedArea }))
         dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: newId })))
       }
