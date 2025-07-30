@@ -2,13 +2,17 @@ import { createDashboardFromMission } from '@features/Dashboard/useCases/createD
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Dialog, MultiRadio, TextInput } from '@mtes-mct/monitor-ui'
 import dayjs from 'dayjs'
+import { ActionTypeEnum, type ControlOrSurveillance, type Mission, type NewMission } from 'domain/entities/missions'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import type { ControlOrSurveillance, Mission, NewMission } from 'domain/entities/missions'
+import { computeCircleZone } from './hooks/useUpdateMissionZone'
+
 import type { AtLeast } from 'types'
 
 const EMPTY_VALUE = '-'
+
+type GeomSourceType = 'MISSION' | 'ACTION' | undefined
 
 type CreateDashboardModalProps = {
   mission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
@@ -22,7 +26,9 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
     mission?.geom?.coordinates.length && mission.geom?.coordinates.length > 0 ? mission.geom : undefined
 
   const sortedEnvActions = mission?.envActions
-    ?.filter(action => action.actionType === 'SURVEILLANCE' || action.actionType === 'CONTROL')
+    ?.filter(
+      action => action.actionType === ActionTypeEnum.SURVEILLANCE || action.actionType === ActionTypeEnum.CONTROL
+    )
     .sort((actionA, actionB) => {
       if (actionA.actionStartDateTimeUtc === undefined) {
         return -1
@@ -51,18 +57,22 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
     return undefined
   }
 
-  const [geomSource, setGeomSource] = useState(initialGeomSource())
+  const [geomSource, setGeomSource] = useState<GeomSourceType>(initialGeomSource())
 
   const dashboardGeom = useMemo(() => {
     if (geomSource === 'MISSION' && missionGeom) {
       return missionGeom
     }
     if (geomSource === 'ACTION' && firstEnvAction?.geom?.coordinates) {
+      if (firstEnvAction.actionType === ActionTypeEnum.CONTROL) {
+        return computeCircleZone(firstEnvAction.geom.coordinates[0])
+      }
+
       return firstEnvAction.geom
     }
 
     return undefined
-  }, [geomSource, missionGeom, firstEnvAction?.geom])
+  }, [geomSource, missionGeom, firstEnvAction?.geom, firstEnvAction?.actionType])
 
   const geomSourceOptions = [
     { isDisabled: !missionGeom, label: 'De la mission (calculée automatiquement ou manuelle)', value: 'MISSION' },

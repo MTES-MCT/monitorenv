@@ -139,65 +139,66 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
 
   return (
     <FiltersContainer>
-      <SelectContainer>
-        <CheckTreePicker
-          key={tagsAsOptions.length}
-          isLabelHidden
-          isTransparent
-          label="Tag"
-          labelKey="name"
-          name="tags"
-          onChange={setFilteredRegulatoryTags}
-          options={tagsAsOptions}
-          placeholder="Tag"
-          renderedValue="Tag"
-          renderExtraFooter={renderTagsExtraFooter}
-          shouldShowLabels={false}
-          style={{ width: '310px' }}
-          value={filters?.tags}
-          valueKey="id"
-        />
-        <CheckTreePicker
-          key={themesAsOptions.length}
-          isLabelHidden
-          isTransparent
-          label="Thématique"
-          labelKey="name"
-          name="themes"
-          onChange={setFilteredThemes}
-          options={themesAsOptions}
-          placeholder="Thématique"
-          renderExtraFooter={renderThemesExtraFooter}
-          shouldShowLabels={false}
-          style={{ width: '310px' }}
-          value={filters?.themes}
-          valueKey="id"
-        />
-        <Select
-          isLabelHidden
-          isTransparent
-          label="Période de vigilance"
-          name="periodOfVigilanceArea"
-          onChange={setFilteredVigilancePeriod}
-          options={vigilanceAreaPeriodOptions}
-          placeholder="Période de vigilance"
-          style={{ width: '310px' }}
-          value={filters?.vigilanceAreaPeriod}
-        />
-        <CheckPicker
-          customSearch={ampsAsOptions.length > 10 ? ampCustomSearch : undefined}
-          isLabelHidden
-          isTransparent
-          label="Type d'AMP"
-          name="ampTypes"
-          onChange={setFilteredAmpTypes}
-          options={ampsAsOptions}
-          placeholder="Type d'AMP"
-          renderValue={() => filters?.amps && <OptionValue>{`Type d'AMP (${filters?.amps.length})`}</OptionValue>}
-          style={{ width: '310px' }}
-          value={filters?.amps}
-        />
-      </SelectContainer>
+      <CheckTreePicker
+        key={`tags-${tagsAsOptions.length}`}
+        disabled={tagsAsOptions.length === 0}
+        isLabelHidden
+        isTransparent
+        label="Tag"
+        labelKey="name"
+        name="tags"
+        onChange={setFilteredRegulatoryTags}
+        options={tagsAsOptions}
+        placeholder="Tag"
+        renderedValue="Tag"
+        renderExtraFooter={renderTagsExtraFooter}
+        shouldShowLabels={false}
+        style={{ width: '310px' }}
+        value={filters?.tags}
+        valueKey="id"
+      />
+      <CheckTreePicker
+        key={`themes-${themesAsOptions.length}`}
+        disabled={themesAsOptions.length === 0}
+        isLabelHidden
+        isTransparent
+        label="Thématique"
+        labelKey="name"
+        name="themes"
+        onChange={setFilteredThemes}
+        options={themesAsOptions}
+        placeholder="Thématique"
+        renderExtraFooter={renderThemesExtraFooter}
+        shouldShowLabels={false}
+        style={{ width: '310px' }}
+        value={filters?.themes}
+        valueKey="id"
+      />
+      <Select
+        isLabelHidden
+        isTransparent
+        label="Période de vigilance"
+        name="periodOfVigilanceArea"
+        onChange={setFilteredVigilancePeriod}
+        options={vigilanceAreaPeriodOptions}
+        placeholder="Période de vigilance"
+        style={{ width: '310px' }}
+        value={filters?.vigilanceAreaPeriod}
+      />
+      <CheckPicker
+        customSearch={ampsAsOptions.length > 10 ? ampCustomSearch : undefined}
+        isLabelHidden
+        isTransparent
+        label="Type d'AMP"
+        name="ampTypes"
+        onChange={setFilteredAmpTypes}
+        options={ampsAsOptions}
+        placeholder="Type d'AMP"
+        renderValue={() => filters?.amps && <OptionValue>{`Type d'AMP (${filters?.amps.length})`}</OptionValue>}
+        style={{ width: '310px' }}
+        value={filters?.amps}
+      />
+
       <SelectedPinButton onClick={showSelectedItems} type="button">
         <Icon.Pin color={THEME.color.slateGray} />
         Prévisualiser la sélection
@@ -216,16 +217,9 @@ const OptionValue = styled.span`
 const FiltersContainer = styled.div`
   display: flex;
   flex: 1;
-  justify-content: space-between;
+
   flex-wrap: wrap;
-  > div {
-    display: flex;
-    gap: 16px;
-  }
-`
-const SelectContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  gap: 16px;
 `
 
 const SelectAllContainer = styled.div`

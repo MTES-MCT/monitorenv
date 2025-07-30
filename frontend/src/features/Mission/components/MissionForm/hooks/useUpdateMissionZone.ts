@@ -29,7 +29,7 @@ function roundCoordinates(coordinates) {
   })
 }
 
-function computeCircleZone(coordinates) {
+export function computeCircleZone(coordinates) {
   const circleGeometry = new Feature({
     geometry: circular(coordinates, CIRCULAR_ZONE_RADIUS, 64).transform(WSG84_PROJECTION, OPENLAYERS_PROJECTION)
   }).getGeometry()

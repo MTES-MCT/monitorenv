@@ -52,6 +52,7 @@ const Wrapper = styled.div`
 `
 const FirstLine = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   justify-content: space-between;
 `
