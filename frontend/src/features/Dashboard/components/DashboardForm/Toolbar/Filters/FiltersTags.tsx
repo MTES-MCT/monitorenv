@@ -77,12 +77,12 @@ export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
       )}
       {filters?.tags?.map(tag => (
         <SingleTag key={tag.id} onDelete={() => deleteTag(tag)} title={tag.name}>
-          {tag.name}
+          {`Tag ${tag.name}`}
         </SingleTag>
       ))}
       {filters?.themes?.map(theme => (
         <SingleTag key={theme.id} onDelete={() => deleteTheme(theme)} title={theme.name}>
-          {theme.name}
+          {`Thème ${theme.name}`}
         </SingleTag>
       ))}
 

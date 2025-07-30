@@ -23,7 +23,7 @@ export const INITIAL_DASHBOARD_FILTERS: DashboardFiltersType = {
   filters: {},
   nearbyUnitFilters: {
     from: undefined,
-    periodFilter: NearbyUnitDateRangeEnum.SEVEN_LAST_DAYS,
+    periodFilter: NearbyUnitDateRangeEnum.NEXT_OR_LAST_SEVEN_DAYS,
     to: undefined
   },
   recentActivityFilters: {
