@@ -5,7 +5,7 @@ import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function CellActionTheme({ theme }: { theme: ThemeFromAPI }) {
   const subThemes = displaySubThemes([theme])
-  const content = [theme.name, subThemes].join(': ')
+  const content = [theme.name, `(${subThemes})`].join(' ')
 
   return content !== '' ? (
     <ThemesOrTagsContainer title={content}>
