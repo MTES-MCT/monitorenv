@@ -15,7 +15,7 @@ export function PanelDates({
   onValidate?: () => void
   vigilanceArea: VigilanceArea.VigilanceArea | undefined
 }) {
-  const isValid = useMemo(() => isFormValid(vigilanceArea), [vigilanceArea])
+  const isValid = useMemo(() => isFormValid(vigilanceArea, false), [vigilanceArea])
 
   if (!vigilanceArea?.createdAt && !vigilanceArea?.updatedAt && !vigilanceArea?.validatedAt) {
     return null

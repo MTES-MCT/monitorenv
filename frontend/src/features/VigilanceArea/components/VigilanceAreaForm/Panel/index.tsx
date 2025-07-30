@@ -47,7 +47,10 @@ export function VigilanceAreaPanel({
 
   const { validateForm, values } = useFormikContext<VigilanceArea.VigilanceArea>()
 
-  const isValid = useMemo(() => isFormValid(vigilanceArea), [vigilanceArea])
+  const isValid = useMemo(
+    () => (againstDraftSchema: boolean) => isFormValid(vigilanceArea, againstDraftSchema),
+    [vigilanceArea]
+  )
 
   const onConfirmDeleteModal = () => {
     if (!vigilanceArea?.id) {
@@ -147,11 +150,11 @@ export function VigilanceAreaPanel({
               Editer
             </Button>
             {vigilanceArea?.isDraft ? (
-              <Button disabled={!isValid} onClick={onPublish} size={Size.SMALL}>
+              <Button disabled={!isValid(false)} onClick={onPublish} size={Size.SMALL}>
                 Publier
               </Button>
             ) : (
-              <Button disabled={!isValid} onClick={onUnpublish} size={Size.SMALL}>
+              <Button disabled={!isValid(true)} onClick={onUnpublish} size={Size.SMALL}>
                 Dépublier
               </Button>
             )}

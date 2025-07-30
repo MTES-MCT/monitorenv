@@ -38,15 +38,7 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
 
     return `${unit?.name} (${unit?.administration?.name})`
   }
-  const isValid = (value: VigilanceArea.VigilanceAreaSource) => {
-    try {
-      VigilanceAreaSourceSchema.validateSync(value)
-
-      return true
-    } catch (error) {
-      return false
-    }
-  }
+  const isValid = (value: VigilanceArea.VigilanceAreaSource) => VigilanceAreaSourceSchema.isValidSync(value)
 
   const onChangeSourceType = (nextValue: string | undefined) => {
     if (nextValue === VigilanceArea.VigilanceAreaSourceType.OTHER) {
