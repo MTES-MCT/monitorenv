@@ -38,8 +38,8 @@ export const createNewVigilanceAreaSource: () => VigilanceArea.VigilanceAreaSour
   phone: undefined
 })
 
-export const isFormValid = (vigilanceArea: VigilanceArea.VigilanceArea | undefined) => {
-  const SchemaToValidate = vigilanceArea?.isDraft ? PublishedSchema : DraftSchema
+export const isFormValid = (vigilanceArea: VigilanceArea.VigilanceArea | undefined, againstDraftSchema: boolean) => {
+  const SchemaToValidate = againstDraftSchema ? DraftSchema : PublishedSchema
 
   return SchemaToValidate.isValidSync(vigilanceArea, { abortEarly: false })
 }
