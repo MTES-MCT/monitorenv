@@ -1150,6 +1150,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // When
         jpaMissionRepository.save(missionToUpdate)
         val updatedMission = jpaMissionRepository.findFullMissionById(id)
+        assertThat(updatedMission?.mission?.updatedAtUtc).isNotNull
         assertThat(updatedMission)
             .usingRecursiveComparison()
             .ignoringFields("mission.envActions.id", "mission.createdAtUtc", "mission.updatedAtUtc")

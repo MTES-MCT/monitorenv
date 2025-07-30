@@ -181,6 +181,7 @@ class JpaMissionRepository(
 
         val savedControlResources = saveControlResources(mission, missionModel)
         savedMission.controlResources?.addAll(savedControlResources)
+        dbMissionRepository.flush()
 
         return savedMission.toMissionDTO(mapper)
     }
