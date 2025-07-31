@@ -52,17 +52,18 @@ export function PanelInternalCACEMSection({
         <PanelInlineItem>
           <PanelInlineItemLabel>Sources</PanelInlineItemLabel>
           <PanelItem>
-            {sources.map(source => (
-              <Fragment key={source.id}>
+            {sources.map((source, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Fragment key={index}>
                 {(source.controlUnitContacts?.length ?? 0) > 0 ? (
                   <>
                     {Object.entries(groupBy(source.controlUnitContacts, item => item.controlUnitId)).map(
                       ([controlUnitId, contacts]) => (
-                        <div key={`control_unit_source_${controlUnitId}`}>
+                        <div key={`control-unit-source-${controlUnitId}`}>
                           <PanelSource name={getControlUnitName(+controlUnitId)} />
                           {contacts.map(contact => (
                             <PanelSource
-                              key={`control_unit_contact_source_${contact.id}`}
+                              key={`control-unit-contact-source-${contact.id}`}
                               email={contact.email}
                               phone={contact.phone}
                             />

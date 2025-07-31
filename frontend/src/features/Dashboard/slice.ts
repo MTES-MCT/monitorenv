@@ -12,8 +12,6 @@ import { filterReportings } from './useCases/filters/filterReportings'
 import type { DashboardFilters, VigilanceAreaFilters } from './components/DashboardForm/slice'
 import type { ImageApi, Link } from '@components/Form/types'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
-import type { TagOption } from 'domain/entities/tags'
-import type { ThemeOption } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
@@ -468,6 +466,16 @@ export const dashboardSlice = createSlice({
   }
 })
 
+const getDashboardFilters = (
+  _: DashboardState,
+  filters: {
+    dashboardFilters?: DashboardFilters
+  }
+) => filters.dashboardFilters
+
+export const getDashboards = (state: DashboardState) => state.dashboards
+export const getActiveDashboardId = (state: DashboardState) => state.activeDashboardId
+
 export const getOpenedPanel = createSelector(
   [
     (state: DashboardState) => state.dashboards,
@@ -517,43 +525,47 @@ export const getReportingToDisplay = createSelector(
   }
 )
 
-export const getFilteredRegulatoryAreas = createSelector(
-  [
-    (state: DashboardState) => state.dashboards,
-    (state: DashboardState) => state.activeDashboardId,
-    (_, filters: { tags?: TagOption[]; themes?: ThemeOption[] }) => filters
-  ],
-  (dashboards, activeDashboardId, filters) => {
-    if (!activeDashboardId) {
-      return undefined
+const getRegulatoryAreas = createSelector([getDashboards, getActiveDashboardId], (dashboards, activeDashboardId) => {
+  if (activeDashboardId && dashboards[activeDashboardId]) {
+    return dashboards[activeDashboardId].extractedArea?.regulatoryAreas ?? []
+  }
+
+  return []
+})
+
+const getRegulatoryAreasByTags = createSelector(
+  [getRegulatoryAreas, getDashboardFilters],
+  (regulatoryAreas, dashboardFilters) => {
+    const filteredRegulatoryAreas = [...regulatoryAreas]
+    const tagsFilter = dashboardFilters?.tags
+
+    if (!tagsFilter || tagsFilter.length === 0) {
+      return filteredRegulatoryAreas
     }
 
-    const tagsFilter = filters?.tags ?? []
-    const themesFilters = filters?.themes ?? []
-
-    if (dashboards[activeDashboardId]) {
-      let regulatoryAreas = dashboards[activeDashboardId].extractedArea?.regulatoryAreas
-
-      if (tagsFilter && tagsFilter?.length > 0) {
-        regulatoryAreas = regulatoryAreas?.filter(
-          ({ tags, themes }) =>
-            tags.some(({ id }) => tagsFilter?.some(tagFilter => tagFilter.id === id)) ||
-            themes.some(({ id }) => themesFilters?.some(themeFilter => themeFilter.id === id))
-        )
-      }
-
-      if (themesFilters && themesFilters?.length > 0) {
-        regulatoryAreas = regulatoryAreas?.filter(({ themes }) =>
-          themes?.some(theme => themesFilters?.some(themeFilter => themeFilter.id === theme.id))
-        )
-      }
-
-      return regulatoryAreas
-    }
-
-    return undefined
+    return filteredRegulatoryAreas?.filter(({ tags }) =>
+      tags.some(({ id }) => tagsFilter?.some(tagFilter => tagFilter.id === id))
+    )
   }
 )
+
+const getRegulatoryAreasByThemes = createSelector(
+  [getRegulatoryAreasByTags, getDashboardFilters],
+  (regulatoryAreas, dashboardFilters) => {
+    const filteredRegulatoryAreas = [...regulatoryAreas]
+    const themesFilter = dashboardFilters?.themes
+
+    if (!themesFilter || themesFilter.length === 0) {
+      return filteredRegulatoryAreas
+    }
+
+    return filteredRegulatoryAreas?.filter(({ themes }) =>
+      themes.some(({ id }) => themesFilter?.some(themeFilter => themeFilter.id === id))
+    )
+  }
+)
+
+export const getFilteredRegulatoryAreas = getRegulatoryAreasByThemes
 
 export const getFilteredAmps = createSelector(
   [
@@ -580,9 +592,6 @@ export const getFilteredAmps = createSelector(
   }
 )
 
-export const getDashboards = (state: DashboardState) => state.dashboards
-export const getActiveDashboardId = (state: DashboardState) => state.activeDashboardId
-
 // The extra variables are accessible like so.
 // We create a selector that ignores the state variable
 // Returning just the passed id
@@ -595,13 +604,6 @@ export const getDashboardById = createSelector([getDashboards, getId], (dashboar
 export const isCancelEditModalOpen = createSelector([getDashboards, getId], (dashboards, id) =>
   id ? !!dashboards[id]?.isCancelEditModalOpen : false
 )
-
-const getDashboardFilters = (
-  _: DashboardState,
-  filters: {
-    dashboardFilters?: DashboardFilters
-  }
-) => filters.dashboardFilters
 
 const getVigilanceAreaFilters = (
   _: DashboardState,
