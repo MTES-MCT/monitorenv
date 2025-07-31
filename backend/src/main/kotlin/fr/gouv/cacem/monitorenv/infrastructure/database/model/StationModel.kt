@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -19,7 +18,6 @@ import java.time.Instant
 
 @Entity
 @Table(name = "bases")
-@BatchSize(size = 30)
 data class StationModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)

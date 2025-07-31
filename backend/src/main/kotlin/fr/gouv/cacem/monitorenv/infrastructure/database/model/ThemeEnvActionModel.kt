@@ -9,13 +9,11 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 import java.io.Serializable
 import java.util.UUID
 
 @Entity
 @Table(name = "themes_env_actions")
-@BatchSize(size = 30)
 data class ThemeEnvActionModel(
     @EmbeddedId
     val id: ThemeEnvActionPk,

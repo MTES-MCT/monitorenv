@@ -10,12 +10,10 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 import java.io.Serializable
 
 @Entity
 @Table(name = "tags_regulatory_areas")
-@BatchSize(size = 30)
 data class TagRegulatoryAreaModel(
     @EmbeddedId
     val id: TagRegulatoryAreaPk,
