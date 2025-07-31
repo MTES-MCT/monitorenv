@@ -1,6 +1,6 @@
 import { createDashboardFromMission } from '@features/Dashboard/useCases/createDasboardFromMission'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { Accent, Button, Dialog, MultiRadio, TextInput } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Dialog, MultiRadio, TextInput, type Option } from '@mtes-mct/monitor-ui'
 import dayjs from 'dayjs'
 import { ActionTypeEnum, type ControlOrSurveillance, type Mission, type NewMission } from 'domain/entities/missions'
 import { useMemo, useState } from 'react'
@@ -46,7 +46,7 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
 
   const firstEnvAction = sortedEnvActions?.[0]
 
-  function initialGeomSource() {
+  function initialGeomSource(): GeomSourceType {
     if (missionGeom) {
       return 'MISSION'
     }
@@ -74,15 +74,19 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
     return undefined
   }, [geomSource, missionGeom, firstEnvAction?.geom, firstEnvAction?.actionType])
 
-  const geomSourceOptions = [
-    { isDisabled: !missionGeom, label: 'De la mission (calculée automatiquement ou manuelle)', value: 'MISSION' },
+  const geomSourceOptions: Option<'MISSION' | 'ACTION'>[] = [
+    {
+      isDisabled: !missionGeom,
+      label: 'De la mission (calculée automatiquement ou manuelle)',
+      value: 'MISSION'
+    },
     {
       isDisabled: !firstEnvAction?.geom?.coordinates.length,
       label: 'De la dernière action de contrôle ou surveillance',
       value: 'ACTION'
     }
   ]
-  const confirmCreateDashboard = () => {
+  const confirm = () => {
     if (!dashboardGeom) {
       return
     }
@@ -97,11 +101,11 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
     dispatch(createDashboardFromMission(dashboardData))
   }
 
-  const cancelCreateDashboard = () => {
+  const cancel = () => {
     onClose()
   }
 
-  const updateGeomSource = source => {
+  const updateGeomSource = (source: GeomSourceType) => {
     setGeomSource(source)
   }
 
@@ -109,7 +113,7 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
   const dashboardTags = firstEnvAction?.tags?.map(tag => tag.name).join(', ') || EMPTY_VALUE
 
   return (
-    <Dialog>
+    <Dialog isAbsolute>
       <Dialog.Title>Créer un tableau de bord</Dialog.Title>
       <StyledBody>
         <h5>Informations récupérées</h5>
@@ -143,10 +147,10 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
         <StyledTextInput label="Tags" name="tags" plaintext value={dashboardTags} />
       </StyledBody>
       <Dialog.Action>
-        <Button disabled={!geomSource} onClick={confirmCreateDashboard}>
+        <Button disabled={!geomSource} onClick={confirm}>
           Créer le tableau de bord
         </Button>
-        <Button accent={Accent.SECONDARY} onClick={cancelCreateDashboard}>
+        <Button accent={Accent.SECONDARY} onClick={cancel}>
           Annuler
         </Button>
       </Dialog.Action>

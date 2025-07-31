@@ -30,7 +30,7 @@ export const TerritorialPressure = forwardRef<HTMLDivElement, TerritorialPressur
 
     // Regulatory Areas link
     const filteredRegulatoryAreas = useAppSelector(state =>
-      getFilteredRegulatoryAreas(state.dashboard, { tags: filters?.tags, themes: filters?.themes })
+      getFilteredRegulatoryAreas(state.dashboard, { dashboardFilters: filters })
     )
     const regulatoryAreaIds = filteredRegulatoryAreas?.map(area => area.id)
     const formattedRegulatoryAreaLink = useMemo(

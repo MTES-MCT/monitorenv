@@ -65,7 +65,7 @@ export function FirstColumn({
 
   const filteredAmps = useAppSelector(state => getFilteredAmps(state.dashboard, filters?.amps))
   const filteredRegulatoryAreas = useAppSelector(state =>
-    getFilteredRegulatoryAreas(state.dashboard, { tags: filters?.tags, themes: filters?.themes })
+    getFilteredRegulatoryAreas(state.dashboard, { dashboardFilters: filters })
   )
 
   const dashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
