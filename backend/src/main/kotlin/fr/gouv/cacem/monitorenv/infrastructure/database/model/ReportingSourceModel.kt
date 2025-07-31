@@ -1,15 +1,25 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToOne
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.JdbcType
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
-import java.util.*
+import java.util.UUID
 
 @Entity
 @Table(name = "reportings_source")
@@ -24,15 +34,12 @@ class ReportingSourceModel(
     val sourceType: SourceTypeEnum,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reportings_id", nullable = false)
-    @JsonBackReference
     val reporting: ReportingModel,
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "semaphore_id")
-    @JsonBackReference
     val semaphore: SemaphoreModel? = null,
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id")
-    @JsonBackReference
     val controlUnit: ControlUnitModel? = null,
     @Column(name = "source_name") val sourceName: String? = null,
 ) {

@@ -24,7 +24,7 @@ import java.time.Instant
 class ReportingModel(
     override val id: Int? = null,
     override val reportingId: Long? = null,
-    override val reportingSources: MutableSet<ReportingSourceModel> = LinkedHashSet(),
+    override val reportingSources: MutableList<ReportingSourceModel> = mutableListOf(),
     override val targetType: TargetTypeEnum? = null,
     override val vehicleType: VehicleTypeEnum? = null,
     override val targetDetails: List<TargetDetailsEntity>? = listOf(),
@@ -47,8 +47,8 @@ class ReportingModel(
     override val updatedAtUtc: Instant? = null,
     override val withVHFAnswer: Boolean? = null,
     override val isInfractionProven: Boolean,
-    override var tags: MutableSet<TagReportingModel>,
-    override var themes: MutableSet<ThemeReportingModel>,
+    override var tags: List<TagReportingModel>,
+    override var themes: List<ThemeReportingModel>,
 ) : AbstractReportingModel(
         id = id,
         reportingId = reportingId,

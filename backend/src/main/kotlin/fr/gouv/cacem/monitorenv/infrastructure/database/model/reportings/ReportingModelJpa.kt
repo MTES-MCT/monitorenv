@@ -10,9 +10,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceMod
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel
 import jakarta.persistence.Entity
-import jakarta.persistence.NamedAttributeNode
-import jakarta.persistence.NamedEntityGraph
-import jakarta.persistence.NamedSubgraph
 import jakarta.persistence.Table
 import org.hibernate.annotations.Formula
 import org.locationtech.jts.geom.Geometry
@@ -24,106 +21,10 @@ import java.time.Instant
  */
 @Entity
 @Table(name = "reportings")
-@NamedEntityGraph(
-    name = "ReportingModel.fullLoad",
-    attributeNodes =
-        [
-            NamedAttributeNode("reportingSources", subgraph = "subgraph.reportingSources"),
-            NamedAttributeNode("mission", subgraph = "subgraph.mission"),
-            NamedAttributeNode(
-                "attachedEnvAction",
-                subgraph = "subgraph.envActions",
-            ),
-            NamedAttributeNode("themes", subgraph = "subgraph.themesReportings"),
-            NamedAttributeNode("tags", subgraph = "subgraph.tagsReportings"),
-        ],
-    subgraphs =
-        [
-            NamedSubgraph(
-                name = "subgraph.reportingSources",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("controlUnit"),
-                        NamedAttributeNode("semaphore"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.mission",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
-                        NamedAttributeNode("controlUnits"),
-                        NamedAttributeNode("controlResources"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.envActions",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "themes",
-                            subgraph = "subgraph.themesEnvAction",
-                        ),
-                        NamedAttributeNode(
-                            "tags",
-                            subgraph = "subgraph.tagsEnvAction",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.themesReportings",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("reporting"),
-                        NamedAttributeNode("theme", subgraph = "subgraph.themes"),
-
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.tagsReportings",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("reporting"),
-                        NamedAttributeNode("tag", subgraph = "subgraph.tags"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.themesEnvAction",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("envAction"),
-                        NamedAttributeNode("theme", subgraph = "subgraph.themes"),
-
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.tagsEnvAction",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("envAction"),
-                        NamedAttributeNode("tag", subgraph = "subgraph.tags"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.themes",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("parent"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.tags",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("parent"),
-                    ],
-            ),
-        ],
-)
 open class ReportingModelJpa(
     override val id: Int? = null,
     override val reportingId: Long? = null,
-    override val reportingSources: MutableSet<ReportingSourceModel> = LinkedHashSet(),
+    override val reportingSources: List<ReportingSourceModel> = listOf(),
     override val targetType: TargetTypeEnum? = null,
     override val vehicleType: VehicleTypeEnum? = null,
     override val targetDetails: MutableList<TargetDetailsEntity>? = mutableListOf(),
@@ -148,8 +49,8 @@ open class ReportingModelJpa(
     override val isInfractionProven: Boolean,
     @Formula("created_at + INTERVAL '1 hour' * validity_time")
     open val validityEndTime: Instant? = null,
-    override var tags: MutableSet<TagReportingModel>,
-    override var themes: MutableSet<ThemeReportingModel>,
+    override var tags: List<TagReportingModel>,
+    override var themes: List<ThemeReportingModel>,
 ) : AbstractReportingModel(
         id = id,
         reportingId = reportingId,

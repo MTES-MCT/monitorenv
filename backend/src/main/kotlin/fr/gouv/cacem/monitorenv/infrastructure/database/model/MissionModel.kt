@@ -1,8 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo
-import com.fasterxml.jackson.annotation.JsonManagedReference
-import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -14,24 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttached
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import jakarta.persistence.Basic
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.NamedAttributeNode
-import jakarta.persistence.NamedEntityGraph
-import jakarta.persistence.NamedSubgraph
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OrderBy
-import jakarta.persistence.PrePersist
-import jakarta.persistence.PreUpdate
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -44,138 +24,7 @@ import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
 
-@JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator::class,
-    property = "id",
-)
 @Entity
-@NamedEntityGraph(
-    name = "MissionModel.fullLoad",
-    attributeNodes =
-        [
-            NamedAttributeNode("envActions", subgraph = "subgraph.envActions"),
-            NamedAttributeNode(
-                "attachedReportings",
-                subgraph = "subgraph.attachedReportings",
-            ),
-            NamedAttributeNode(
-                "controlResources",
-                subgraph = "subgraph.missionControlResources",
-            ),
-            NamedAttributeNode(
-                "controlUnits",
-                subgraph = "subgraph.missionControlUnits",
-            ),
-        ],
-    subgraphs =
-        [
-            NamedSubgraph(
-                name = "subgraph.envActions",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("attachedReporting"),
-                        NamedAttributeNode(
-                            "themes",
-                            subgraph = "subgraph.themesEnvAction",
-                        ),
-                        NamedAttributeNode(
-                            "tags",
-                            subgraph = "subgraph.tagsEnvAction",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.attachedReportings",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("themes", subgraph = "subgraph.themesReportings"),
-                        NamedAttributeNode("tags", subgraph = "subgraph.tagsReportings"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.themesEnvAction",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("envAction"),
-                        NamedAttributeNode("theme", subgraph = "subgraph.themes"),
-
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.tagsEnvAction",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("envAction"),
-                        NamedAttributeNode("tag", subgraph = "subgraph.tags"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.themesReportings",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("reporting"),
-                        NamedAttributeNode("theme", subgraph = "subgraph.themes"),
-
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.tagsReportings",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("reporting"),
-                        NamedAttributeNode("tag", subgraph = "subgraph.tags"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.missionControlResources",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "resource",
-                            subgraph = "subgraph.controlResource",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.missionControlUnits",
-                attributeNodes =
-                    [
-                        NamedAttributeNode(
-                            "unit",
-                            subgraph = "subgraph.controlUnit",
-                        ),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.controlUnit",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("administration"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.controlResource",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("station"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.themes",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("parent"),
-                    ],
-            ),
-            NamedSubgraph(
-                name = "subgraph.tags",
-                attributeNodes =
-                    [
-                        NamedAttributeNode("parent"),
-                    ],
-            ),
-        ],
-)
 @Table(name = "missions")
 class MissionModel(
     @Id
@@ -184,30 +33,27 @@ class MissionModel(
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
     @OneToMany(mappedBy = "mission", fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
-    val attachedReportings: MutableSet<ReportingModel>? = LinkedHashSet(),
+    @Fetch(FetchMode.SUBSELECT)
+    val attachedReportings: List<ReportingModel>? = listOf(),
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    val controlResources: MutableSet<MissionControlResourceModel>? = LinkedHashSet(),
+    val controlResources: MutableList<MissionControlResourceModel>? = mutableListOf(),
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
+    val controlUnits: MutableList<MissionControlUnitModel>? = mutableListOf(),
     @Column(name = "completed_by") val completedBy: String? = null,
     @Column(name = "created_at_utc", updatable = false) var createdAtUtc: Instant?,
     @OneToMany(
@@ -215,10 +61,9 @@ class MissionModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    val envActions: MutableSet<EnvActionModel>? = LinkedHashSet(),
+    val envActions: MutableList<EnvActionModel>? = mutableListOf(),
     @Column(name = "end_datetime_utc") val endDateTimeUtc: Instant? = null,
     @Column(name = "facade") val facade: String? = null,
     @JsonSerialize(using = GeometrySerializer::class)
@@ -234,7 +79,6 @@ class MissionModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val missionSource: MissionSourceEnum,
-    // FIXME (10/06/2024) 'Basic' attribute type should not be a container
     @Column(name = "mission_types", columnDefinition = "text[]")
     @Enumerated(EnumType.STRING)
     val missionTypes: List<MissionTypeEnum>,

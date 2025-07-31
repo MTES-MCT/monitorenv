@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -28,7 +27,6 @@ data class VigilanceAreaImageModel(
     val name: String,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vigilance_area_id", nullable = false)
-    @JsonBackReference
     val vigilanceArea: VigilanceAreaModel,
     @Column(name = "size", nullable = false)
     val size: Int,

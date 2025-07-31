@@ -1,17 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.time.ZonedDateTime
@@ -26,7 +16,7 @@ data class ThemeModel(
     val name: String,
     val startedAt: ZonedDateTime?,
     val endedAt: ZonedDateTime?,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     val parent: ThemeModel?,
     @OneToMany(
@@ -34,7 +24,7 @@ data class ThemeModel(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     var subThemes: List<ThemeModel>,
 ) {
     fun toThemeEntity(): ThemeEntity =

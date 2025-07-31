@@ -1,11 +1,20 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -24,7 +33,6 @@ data class ControlUnitResourceModel(
     @ManyToOne(fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "control_unit_id", nullable = false)
-    @JsonBackReference
     val controlUnit: ControlUnitModel,
     @Column(name = "is_archived", nullable = false)
     val isArchived: Boolean,
@@ -36,7 +44,6 @@ data class ControlUnitResourceModel(
     val photo: ByteArray? = byteArrayOf(),
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_id", nullable = false)
-    @JsonBackReference
     val station: StationModel,
     @Column(name = "type", nullable = false, columnDefinition = "control_unit_resource_type")
     @Enumerated(EnumType.STRING)

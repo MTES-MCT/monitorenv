@@ -8,7 +8,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.Reporti
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModelJpa
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -112,7 +111,6 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         envActionIds: List<UUID>,
     )
 
-    @EntityGraph(value = "ReportingModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         """
         SELECT DISTINCT reporting
@@ -174,7 +172,6 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         isAttachedToMission: Boolean?,
     ): List<ReportingModelJpa>
 
-    @EntityGraph(value = "ReportingModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         value =
             """

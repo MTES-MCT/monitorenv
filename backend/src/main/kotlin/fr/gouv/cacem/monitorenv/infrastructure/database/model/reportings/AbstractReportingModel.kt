@@ -1,7 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings
 
-import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -68,12 +66,11 @@ abstract class AbstractReportingModel(
         mappedBy = "reporting",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    open val reportingSources: MutableSet<ReportingSourceModel> = LinkedHashSet(),
+    open val reportingSources: List<ReportingSourceModel> = listOf(),
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
@@ -103,15 +100,14 @@ abstract class AbstractReportingModel(
     @Column(name = "is_archived", nullable = false) open val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) open val isDeleted: Boolean,
     @Column(name = "open_by") open val openBy: String? = null,
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = true)
-    @JsonBackReference
     open val mission: MissionModel? = null,
     @Column(name = "attached_to_mission_at_utc") open val attachedToMissionAtUtc: Instant? = null,
     @Column(name = "detached_from_mission_at_utc")
     open val detachedFromMissionAtUtc: Instant? = null,
     @JdbcType(UUIDJdbcType::class)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "attached_env_action_id",
         columnDefinition = "uuid",
@@ -127,18 +123,16 @@ abstract class AbstractReportingModel(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
-    open var themes: MutableSet<ThemeReportingModel>,
+    @Fetch(FetchMode.SUBSELECT)
+    open var themes: List<ThemeReportingModel>,
     @OneToMany(
         mappedBy = "reporting",
         fetch = FetchType.LAZY,
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
-    open var tags: MutableSet<TagReportingModel>,
+    @Fetch(FetchMode.SUBSELECT)
+    open var tags: List<TagReportingModel>,
 ) {
     fun toReporting() =
         ReportingEntity(
@@ -254,8 +248,8 @@ abstract class AbstractReportingModel(
                 updatedAtUtc = reporting.updatedAtUtc?.toInstant(),
                 withVHFAnswer = reporting.withVHFAnswer,
                 isInfractionProven = reporting.isInfractionProven,
-                tags = mutableSetOf(),
-                themes = mutableSetOf(),
+                tags = listOf(),
+                themes = listOf(),
             )
     }
 }

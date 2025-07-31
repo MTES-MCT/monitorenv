@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaSourceEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -24,11 +23,9 @@ class VigilanceAreaSourceModel(
     val id: UUID?,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vigilance_areas_id", nullable = false)
-    @JsonBackReference
     val vigilanceArea: VigilanceAreaModel,
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_contacts_id")
-    @JsonBackReference
     val controlUnitContact: ControlUnitContactModel?,
     @Column(name = "name") val name: String?,
     @Column(name = "email") val email: String?,
