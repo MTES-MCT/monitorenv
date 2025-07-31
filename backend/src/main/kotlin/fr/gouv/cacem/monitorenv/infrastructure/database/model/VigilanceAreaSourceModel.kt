@@ -12,12 +12,10 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.BatchSize
 import java.util.UUID
 
 @Entity
 @Table(name = "vigilance_areas_source")
-@BatchSize(size = 30)
 class VigilanceAreaSourceModel(
     @Id
     @Column(name = "id", unique = true, nullable = false)

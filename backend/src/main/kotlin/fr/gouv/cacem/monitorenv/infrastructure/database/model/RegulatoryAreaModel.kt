@@ -11,7 +11,6 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.locationtech.jts.geom.MultiPolygon
@@ -20,7 +19,6 @@ import org.n52.jackson.datatype.jts.GeometrySerializer
 
 @Entity
 @Table(name = "regulations_cacem")
-@BatchSize(size = 30)
 data class RegulatoryAreaModel(
     @Id @Column(name = "id") val id: Int,
     @Column(name = "date") val date: String?,

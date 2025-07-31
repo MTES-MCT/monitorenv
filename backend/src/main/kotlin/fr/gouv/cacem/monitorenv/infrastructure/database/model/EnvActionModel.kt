@@ -1,7 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo
-import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -30,7 +28,6 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
@@ -44,13 +41,8 @@ import java.time.Instant
 import java.time.ZoneOffset.UTC
 import java.util.UUID
 
-@JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator::class,
-    property = "id",
-)
 @Entity
 @Table(name = "env_actions")
-@BatchSize(size = 30)
 class EnvActionModel(
     @Id
     @JdbcType(UUIDJdbcType::class)

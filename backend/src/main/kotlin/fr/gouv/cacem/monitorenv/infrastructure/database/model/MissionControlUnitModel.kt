@@ -10,11 +10,9 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 
 @Entity
 @Table(name = "missions_control_units")
-@BatchSize(size = 30)
 data class MissionControlUnitModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

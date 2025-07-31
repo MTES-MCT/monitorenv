@@ -13,7 +13,6 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
@@ -27,7 +26,6 @@ import java.time.Instant
     usage = CacheConcurrencyStrategy.READ_WRITE,
 )
 @Table(name = "control_units")
-@BatchSize(size = 30)
 data class ControlUnitModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
