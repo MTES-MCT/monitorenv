@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
@@ -32,6 +30,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
@@ -51,6 +50,7 @@ import java.util.UUID
 )
 @Entity
 @Table(name = "env_actions")
+@BatchSize(size = 30)
 class EnvActionModel(
     @Id
     @JdbcType(UUIDJdbcType::class)
@@ -77,7 +77,6 @@ class EnvActionModel(
     @Column(name = "department") val department: String? = null,
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "mission_id")
-    @JsonBackReference
     val mission: MissionModel,
     @Column(name = "is_administrative_control") val isAdministrativeControl: Boolean? = null,
     @Column(name = "is_compliance_with_water_regulations_control")
@@ -92,7 +91,6 @@ class EnvActionModel(
         mappedBy = "attachedEnvAction",
     )
     @Fetch(FetchMode.SUBSELECT)
-    @JsonManagedReference
     @OrderBy("id")
     val attachedReporting: MutableSet<ReportingModel>? = LinkedHashSet(),
     @OneToMany(
@@ -101,8 +99,7 @@ class EnvActionModel(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     var themes: Set<ThemeEnvActionModel>,
     @OneToMany(
         mappedBy = "envAction",
@@ -110,8 +107,7 @@ class EnvActionModel(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     var tags: Set<TagEnvActionModel>,
 ) {
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity =

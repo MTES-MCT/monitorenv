@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
@@ -11,21 +10,22 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import java.io.Serializable
 
 @Entity
 @Table(name = "tags_vigilance_areas")
+@BatchSize(size = 30)
 data class TagVigilanceAreaModel(
     @EmbeddedId
     var id: TagVigilanceAreaPk,
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tags_id")
     @MapsId("tagId")
     val tag: TagModel,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vigilance_areas_id")
     @MapsId("vigilanceAreaId")
-    @JsonBackReference
     val vigilanceArea: VigilanceAreaModel,
 ) {
     companion object {

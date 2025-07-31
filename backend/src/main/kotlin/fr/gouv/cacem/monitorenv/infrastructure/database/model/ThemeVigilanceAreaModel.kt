@@ -10,10 +10,12 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import java.io.Serializable
 
 @Entity
 @Table(name = "themes_vigilance_areas")
+@BatchSize(size = 30)
 data class ThemeVigilanceAreaModel(
     @EmbeddedId
     var id: ThemeVigilanceAreaPk,

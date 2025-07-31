@@ -1,7 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings
 
-import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -34,6 +32,7 @@ import jakarta.persistence.MappedSuperclass
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import org.hibernate.Hibernate
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Generated
@@ -50,6 +49,7 @@ import java.time.Instant
 import java.time.ZoneOffset.UTC
 
 @MappedSuperclass
+@BatchSize(size = 30)
 abstract class AbstractReportingModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,8 +70,7 @@ abstract class AbstractReportingModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     open val reportingSources: MutableSet<ReportingSourceModel> = LinkedHashSet(),
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
@@ -105,13 +104,12 @@ abstract class AbstractReportingModel(
     @Column(name = "open_by") open val openBy: String? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = true)
-    @JsonBackReference
     open val mission: MissionModel? = null,
     @Column(name = "attached_to_mission_at_utc") open val attachedToMissionAtUtc: Instant? = null,
     @Column(name = "detached_from_mission_at_utc")
     open val detachedFromMissionAtUtc: Instant? = null,
     @JdbcType(UUIDJdbcType::class)
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "attached_env_action_id",
         columnDefinition = "uuid",
@@ -127,8 +125,7 @@ abstract class AbstractReportingModel(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     open var themes: MutableSet<ThemeReportingModel>,
     @OneToMany(
         mappedBy = "reporting",
@@ -136,8 +133,7 @@ abstract class AbstractReportingModel(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     open var tags: MutableSet<TagReportingModel>,
 ) {
     fun toReporting() =

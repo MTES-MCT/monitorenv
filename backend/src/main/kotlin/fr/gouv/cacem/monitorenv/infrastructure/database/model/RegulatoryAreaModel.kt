@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
@@ -12,6 +11,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.locationtech.jts.geom.MultiPolygon
@@ -20,6 +20,7 @@ import org.n52.jackson.datatype.jts.GeometrySerializer
 
 @Entity
 @Table(name = "regulations_cacem")
+@BatchSize(size = 30)
 data class RegulatoryAreaModel(
     @Id @Column(name = "id") val id: Int,
     @Column(name = "date") val date: String?,
@@ -42,15 +43,13 @@ data class RegulatoryAreaModel(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     var tags: List<TagRegulatoryAreaModel>,
     @OneToMany(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     var themes: List<ThemeRegulatoryAreaModel>,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,

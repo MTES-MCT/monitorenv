@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
@@ -15,6 +14,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Type
@@ -24,6 +24,7 @@ import java.util.UUID
 
 @Entity
 @Table(name = "dashboard")
+@BatchSize(size = 30)
 data class DashboardModel(
     @Id
     @Column(name = "id", unique = true, nullable = false)
@@ -42,6 +43,7 @@ data class DashboardModel(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
     )
+    @Fetch(FetchMode.SUBSELECT)
     val dashboardDatas: MutableList<DashboardDatasModel>,
     @OneToMany(
         mappedBy = "dashboard",
@@ -49,8 +51,7 @@ data class DashboardModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     var images: MutableList<DashboardImageModel> = mutableListOf(),
     @Column(name = "links", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
