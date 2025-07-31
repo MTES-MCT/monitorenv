@@ -165,7 +165,7 @@ export function TableReportingsFiltersWithRef(
           />
 
           <CheckPicker
-            key={sourceOptions.length}
+            key={`reportings-sources-${sourceOptions.length}`}
             customSearch={sourceCustomSearch}
             data-cy="select-source-filter"
             isLabelHidden
@@ -211,7 +211,7 @@ export function TableReportingsFiltersWithRef(
             value={targetTypeFilter}
           />
           <CheckTreePicker
-            key={themesOptions.length}
+            key={`reportings-themes-${themesOptions.length}`}
             childrenKey="subThemes"
             data-cy="reporting-theme-filter"
             isLabelHidden
@@ -228,6 +228,7 @@ export function TableReportingsFiltersWithRef(
             valueKey="id"
           />
           <CheckTreePicker
+            key={`reportings-tags-${tagsOptions.length}`}
             childrenKey="subTags"
             data-cy="reporting-tag-filter"
             isLabelHidden

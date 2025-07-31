@@ -16,8 +16,6 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
 
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(themes ?? [])), [themes])
 
-  // const regulatoryTagsCustomSearch = useMemo(() => new CustomSearch(tagsOptions, ['label']), [tagsOptions])
-
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
@@ -47,6 +45,7 @@ export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties 
 
   return (
     <CheckTreePicker
+      key={`regulatory-themes-${themesOptions.length}`}
       childrenKey="subThemes"
       isLabelHidden
       isTransparent

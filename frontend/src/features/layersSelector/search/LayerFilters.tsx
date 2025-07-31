@@ -23,7 +23,7 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
 import { deleteThemeTag } from '@utils/deleteThemeTag'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from './slice'
@@ -172,13 +172,8 @@ export function LayerFilters({
         status.length !== 2) && (
         <TagWrapper>
           {filteredRegulatoryThemes?.map(theme => (
-            <>
-              <SingleTag
-                key={theme.id}
-                accent={Accent.SECONDARY}
-                onDelete={handleDeleteRegulatoryTheme(theme)}
-                title={theme.name}
-              >
+            <Fragment key={`filteredRegulatoryThemes-${theme.id}`}>
+              <SingleTag accent={Accent.SECONDARY} onDelete={handleDeleteRegulatoryTheme(theme)} title={theme.name}>
                 {theme.name}
               </SingleTag>
               {theme.subThemes?.map(subTheme => (
@@ -191,16 +186,11 @@ export function LayerFilters({
                   {subTheme.name}
                 </SingleTag>
               ))}
-            </>
+            </Fragment>
           ))}
           {filteredRegulatoryTags?.map(tag => (
-            <>
-              <SingleTag
-                key={tag.id}
-                accent={Accent.SECONDARY}
-                onDelete={handleDeleteRegulatoryTag(tag)}
-                title={tag.name}
-              >
+            <Fragment key={`filteredRegulatoryTags-${tag.id}`}>
+              <SingleTag accent={Accent.SECONDARY} onDelete={handleDeleteRegulatoryTag(tag)} title={tag.name}>
                 {tag.name}
               </SingleTag>
               {tag.subTags?.map(subTag => (
@@ -213,7 +203,7 @@ export function LayerFilters({
                   {subTag.name}
                 </SingleTag>
               ))}
-            </>
+            </Fragment>
           ))}
 
           {filteredAmpTypes?.map(type => (
