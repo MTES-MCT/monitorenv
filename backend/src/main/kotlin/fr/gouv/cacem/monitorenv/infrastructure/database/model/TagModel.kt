@@ -12,12 +12,14 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.time.ZonedDateTime
 
 @Entity
 @Table(name = "tags")
+@BatchSize(size = 30)
 data class TagModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
@@ -34,7 +36,7 @@ data class TagModel(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     var subTags: List<TagModel>,
 ) {
     fun toTagEntity(): TagEntity =

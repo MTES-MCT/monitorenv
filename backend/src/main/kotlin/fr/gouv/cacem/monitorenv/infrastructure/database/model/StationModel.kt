@@ -1,22 +1,32 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.dtos.FullStationDTO
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
 @Entity
 @Table(name = "bases")
+@BatchSize(size = 30)
 data class StationModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "station")
-    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     val controlUnitResources: List<ControlUnitResourceModel> = listOf(),
     @Column(name = "latitude", nullable = false)
     val latitude: Double,

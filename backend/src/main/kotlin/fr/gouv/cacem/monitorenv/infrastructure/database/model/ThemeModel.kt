@@ -12,12 +12,14 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import java.time.ZonedDateTime
 
 @Entity
 @Table(name = "themes")
+@BatchSize(size = 30)
 data class ThemeModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
@@ -26,7 +28,7 @@ data class ThemeModel(
     val name: String,
     val startedAt: ZonedDateTime?,
     val endedAt: ZonedDateTime?,
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     val parent: ThemeModel?,
     @OneToMany(
@@ -34,7 +36,7 @@ data class ThemeModel(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     var subThemes: List<ThemeModel>,
 ) {
     fun toThemeEntity(): ThemeEntity =

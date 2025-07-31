@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -11,11 +10,13 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import java.io.Serializable
 import java.util.UUID
 
 @Entity
 @Table(name = "dashboard_images")
+@BatchSize(size = 30)
 data class DashboardImageModel(
     @Id
     @Column(name = "id", unique = true, nullable = false)
@@ -29,7 +30,6 @@ data class DashboardImageModel(
     val name: String,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dashboard_id", nullable = false)
-    @JsonBackReference
     var dashboard: DashboardModel?,
     @Column(name = "size", nullable = false)
     val size: Int,
