@@ -1,11 +1,19 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
@@ -19,28 +27,25 @@ import java.time.Instant
     usage = CacheConcurrencyStrategy.READ_WRITE,
 )
 @Table(name = "control_units")
+@BatchSize(size = 30)
 data class ControlUnitModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "administration_id", nullable = false)
-    @JsonBackReference
     val administration: AdministrationModel,
     @Column(name = "area_note")
     val areaNote: String? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
-    @JsonManagedReference
     @Fetch(FetchMode.SUBSELECT)
     val controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
-    @JsonManagedReference
     @Fetch(FetchMode.SUBSELECT)
     val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_area_insee_dep")
-    @JsonBackReference
     val departmentArea: DepartmentAreaModel? = null,
     @Column(name = "archived", nullable = false)
     val isArchived: Boolean,

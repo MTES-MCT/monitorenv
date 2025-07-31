@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
@@ -29,6 +28,7 @@ import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
@@ -52,13 +52,13 @@ import java.time.ZonedDateTime
     ],
 )
 @Table(name = "vigilance_areas")
+@BatchSize(size = 30)
 data class VigilanceAreaModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "vigilanceArea")
-    @JsonManagedReference
     @Fetch(FetchMode.SUBSELECT)
     val sources: List<VigilanceAreaSourceModel>,
     @Column(name = "comments") val comments: String? = null,
@@ -85,8 +85,7 @@ data class VigilanceAreaModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     var images: MutableList<VigilanceAreaImageModel> = mutableListOf(),
     @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
@@ -113,15 +112,13 @@ data class VigilanceAreaModel(
         mappedBy = "vigilanceArea",
         fetch = FetchType.LAZY,
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     val tags: List<TagVigilanceAreaModel>,
     @OneToMany(
         mappedBy = "vigilanceArea",
         fetch = FetchType.LAZY,
     )
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
     val themes: List<ThemeVigilanceAreaModel>,
     @Column(name = "validated_at") var validatedAt: ZonedDateTime?,
 ) {

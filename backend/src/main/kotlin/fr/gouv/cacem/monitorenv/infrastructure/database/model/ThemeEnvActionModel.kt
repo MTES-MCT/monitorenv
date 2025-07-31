@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
@@ -10,11 +9,13 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import java.io.Serializable
 import java.util.UUID
 
 @Entity
 @Table(name = "themes_env_actions")
+@BatchSize(size = 30)
 data class ThemeEnvActionModel(
     @EmbeddedId
     val id: ThemeEnvActionPk,
@@ -25,7 +26,6 @@ data class ThemeEnvActionModel(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "env_actions_id")
     @MapsId("envActionId")
-    @JsonBackReference
     val envAction: EnvActionModel,
 ) {
     companion object {

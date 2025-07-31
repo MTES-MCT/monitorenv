@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
-import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
@@ -33,6 +32,7 @@ import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
@@ -177,6 +177,7 @@ import java.time.ZoneOffset.UTC
         ],
 )
 @Table(name = "missions")
+@BatchSize(size = 30)
 class MissionModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -184,9 +185,8 @@ class MissionModel(
     @Column(name = "id", unique = true, nullable = false)
     val id: Int? = null,
     @OneToMany(mappedBy = "mission", fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
     @OrderBy("id")
+    @Fetch(FetchMode.SUBSELECT)
     val attachedReportings: MutableSet<ReportingModel>? = LinkedHashSet(),
     @OneToMany(
         mappedBy = "mission",
@@ -194,8 +194,7 @@ class MissionModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     val controlResources: MutableSet<MissionControlResourceModel>? = LinkedHashSet(),
     @OneToMany(
@@ -204,8 +203,7 @@ class MissionModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
     @Column(name = "completed_by") val completedBy: String? = null,
@@ -215,8 +213,7 @@ class MissionModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @JsonManagedReference
-    @Fetch(value = FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     val envActions: MutableSet<EnvActionModel>? = LinkedHashSet(),
     @Column(name = "end_datetime_utc") val endDateTimeUtc: Instant? = null,
