@@ -10,12 +10,10 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 import java.io.Serializable
 
 @Entity
 @Table(name = "vigilance_area_images")
-@BatchSize(size = 30)
 data class VigilanceAreaImageModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)

@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
@@ -24,7 +23,6 @@ import java.time.Instant
     usage = CacheConcurrencyStrategy.READ_WRITE,
 )
 @Table(name = "administrations")
-@BatchSize(size = 30)
 data class AdministrationModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)

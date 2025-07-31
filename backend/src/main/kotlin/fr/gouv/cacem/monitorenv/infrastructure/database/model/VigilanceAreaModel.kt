@@ -2,33 +2,13 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel.Companion.toTagEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeVigilanceAreaModel.Companion.toThemeEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaSourceModel.Companion.toVigilanceAreaSources
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.NamedAttributeNode
-import jakarta.persistence.NamedEntityGraph
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OrderBy
-import jakarta.persistence.PrePersist
-import jakarta.persistence.PreUpdate
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
-import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
@@ -42,17 +22,7 @@ import java.time.ZoneOffset.UTC
 import java.time.ZonedDateTime
 
 @Entity
-@NamedEntityGraph(
-    name = "VigilanceAreaModel.fullLoad",
-    attributeNodes = [
-        NamedAttributeNode("images"),
-        NamedAttributeNode("sources"),
-        NamedAttributeNode("tags"),
-        NamedAttributeNode("themes"),
-    ],
-)
 @Table(name = "vigilance_areas")
-@BatchSize(size = 30)
 data class VigilanceAreaModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)

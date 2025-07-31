@@ -10,13 +10,11 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 import java.io.Serializable
 import java.util.UUID
 
 @Entity
 @Table(name = "dashboard_images")
-@BatchSize(size = 30)
 data class DashboardImageModel(
     @Id
     @Column(name = "id", unique = true, nullable = false)

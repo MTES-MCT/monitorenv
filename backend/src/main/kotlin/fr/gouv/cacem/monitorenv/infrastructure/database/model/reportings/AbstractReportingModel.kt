@@ -32,7 +32,6 @@ import jakarta.persistence.MappedSuperclass
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
 import org.hibernate.Hibernate
-import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Generated
@@ -49,7 +48,6 @@ import java.time.Instant
 import java.time.ZoneOffset.UTC
 
 @MappedSuperclass
-@BatchSize(size = 30)
 abstract class AbstractReportingModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

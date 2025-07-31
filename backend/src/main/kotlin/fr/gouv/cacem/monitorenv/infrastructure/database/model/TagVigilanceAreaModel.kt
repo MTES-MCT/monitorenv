@@ -10,12 +10,10 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.MapsId
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
-import org.hibernate.annotations.BatchSize
 import java.io.Serializable
 
 @Entity
 @Table(name = "tags_vigilance_areas")
-@BatchSize(size = 30)
 data class TagVigilanceAreaModel(
     @EmbeddedId
     var id: TagVigilanceAreaPk,

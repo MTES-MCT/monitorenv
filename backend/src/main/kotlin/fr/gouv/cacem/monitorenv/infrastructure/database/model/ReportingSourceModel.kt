@@ -17,14 +17,12 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.JdbcType
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import java.util.UUID
 
 @Entity
 @Table(name = "reportings_source")
-@BatchSize(size = 30)
 class ReportingSourceModel(
     @Id
     @Column(name = "id", unique = true, nullable = false)

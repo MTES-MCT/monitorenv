@@ -5,12 +5,11 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import org.hibernate.annotations.DynamicUpdate
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 @DynamicUpdate
 interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
@@ -96,7 +95,6 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         startedBefore: Instant?,
     ): List<MissionModel>
 
-    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         value = """
         SELECT mission
@@ -109,19 +107,16 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     )
     fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
 
-    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         "SELECT mission FROM MissionModel mission JOIN mission.controlUnits missionControlUnitResources WHERE missionControlUnitResources.unit.id = :controlUnitId",
     )
     fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
 
-    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         "SELECT mission FROM MissionModel mission JOIN mission.controlResources missionControlUnitResources WHERE missionControlUnitResources.resource.id = :controlUnitResourceId",
     )
     fun findByControlUnitResourceId(controlUnitResourceId: Int): List<MissionModel>
 
-    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         """
         SELECT mission
@@ -141,7 +136,6 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         to: Instant?,
     ): List<MissionModel>
 
-    @EntityGraph(value = "MissionModel.fullLoad", type = EntityGraph.EntityGraphType.LOAD)
     @Query(
         "SELECT mission FROM MissionModel mission JOIN mission.envActions envActions WHERE envActions.id = :envActionId",
     )
