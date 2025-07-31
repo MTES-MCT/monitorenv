@@ -16,8 +16,6 @@ export function RegulatoryTagsFilter({ style }: { style?: React.CSSProperties })
 
   const tagsOptions = useMemo(() => getTagsAsOptions(Object.values(tags ?? [])), [tags])
 
-  // const regulatoryTagsCustomSearch = useMemo(() => new CustomSearch(tagsOptions, ['label']), [tagsOptions])
-
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
@@ -47,6 +45,7 @@ export function RegulatoryTagsFilter({ style }: { style?: React.CSSProperties })
 
   return (
     <CheckTreePicker
+      key={`regulatory-tags-${tagsOptions.length}`}
       childrenKey="subTags"
       isLabelHidden
       isTransparent
