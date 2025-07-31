@@ -2,16 +2,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
-import jakarta.persistence.Embeddable
-import jakarta.persistence.EmbeddedId
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.MapsId
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.io.Serializable
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "tags_env_actions")
@@ -42,7 +35,7 @@ data class TagEnvActionModel(
         fun fromTagEntities(
             tags: List<TagEntity>,
             envAction: EnvActionModel,
-        ): Set<TagEnvActionModel> =
+        ): List<TagEnvActionModel> =
             tags
                 .map { theme -> fromTagEntity(theme, envAction) }
                 .plus(
@@ -51,7 +44,7 @@ data class TagEnvActionModel(
                             fromTagEntity(subTag, envAction)
                         }
                     },
-                ).toSet()
+                )
 
         fun toTagEntities(tags: List<TagEnvActionModel>): List<TagEntity> {
             val parents = tags.map { it.tag }.filter { it.parent === null }

@@ -70,7 +70,7 @@ abstract class AbstractReportingModel(
     )
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    open val reportingSources: MutableSet<ReportingSourceModel> = LinkedHashSet(),
+    open val reportingSources: List<ReportingSourceModel> = listOf(),
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
@@ -124,7 +124,7 @@ abstract class AbstractReportingModel(
         cascade = [CascadeType.ALL],
     )
     @Fetch(FetchMode.SUBSELECT)
-    open var themes: MutableSet<ThemeReportingModel>,
+    open var themes: List<ThemeReportingModel>,
     @OneToMany(
         mappedBy = "reporting",
         fetch = FetchType.LAZY,
@@ -132,7 +132,7 @@ abstract class AbstractReportingModel(
         cascade = [CascadeType.ALL],
     )
     @Fetch(FetchMode.SUBSELECT)
-    open var tags: MutableSet<TagReportingModel>,
+    open var tags: List<TagReportingModel>,
 ) {
     fun toReporting() =
         ReportingEntity(
@@ -248,8 +248,8 @@ abstract class AbstractReportingModel(
                 updatedAtUtc = reporting.updatedAtUtc?.toInstant(),
                 withVHFAnswer = reporting.withVHFAnswer,
                 isInfractionProven = reporting.isInfractionProven,
-                tags = mutableSetOf(),
-                themes = mutableSetOf(),
+                tags = listOf(),
+                themes = listOf(),
             )
     }
 }

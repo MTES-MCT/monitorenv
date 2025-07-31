@@ -35,7 +35,7 @@ class MissionModel(
     @OneToMany(mappedBy = "mission", fetch = FetchType.LAZY)
     @OrderBy("id")
     @Fetch(FetchMode.SUBSELECT)
-    val attachedReportings: MutableSet<ReportingModel>? = LinkedHashSet(),
+    val attachedReportings: List<ReportingModel>? = listOf(),
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -44,7 +44,7 @@ class MissionModel(
     )
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    val controlResources: MutableSet<MissionControlResourceModel>? = LinkedHashSet(),
+    val controlResources: MutableList<MissionControlResourceModel>? = mutableListOf(),
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -53,7 +53,7 @@ class MissionModel(
     )
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    val controlUnits: MutableSet<MissionControlUnitModel>? = LinkedHashSet(),
+    val controlUnits: MutableList<MissionControlUnitModel>? = mutableListOf(),
     @Column(name = "completed_by") val completedBy: String? = null,
     @Column(name = "created_at_utc", updatable = false) var createdAtUtc: Instant?,
     @OneToMany(
@@ -63,7 +63,7 @@ class MissionModel(
     )
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    val envActions: MutableSet<EnvActionModel>? = LinkedHashSet(),
+    val envActions: MutableList<EnvActionModel>? = mutableListOf(),
     @Column(name = "end_datetime_utc") val endDateTimeUtc: Instant? = null,
     @Column(name = "facade") val facade: String? = null,
     @JsonSerialize(using = GeometrySerializer::class)

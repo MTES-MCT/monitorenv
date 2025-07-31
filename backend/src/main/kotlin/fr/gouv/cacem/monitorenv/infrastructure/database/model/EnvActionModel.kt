@@ -15,18 +15,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeEnvActionMode
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeEnvActionModel.Companion.toThemeEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
-import jakarta.persistence.OrderBy
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -39,7 +28,7 @@ import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "env_actions")
@@ -84,7 +73,7 @@ class EnvActionModel(
     )
     @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    val attachedReporting: MutableSet<ReportingModel>? = LinkedHashSet(),
+    val attachedReporting: List<ReportingModel>? = listOf(),
     @OneToMany(
         mappedBy = "envAction",
         fetch = FetchType.LAZY,
@@ -92,7 +81,7 @@ class EnvActionModel(
         cascade = [CascadeType.ALL],
     )
     @Fetch(FetchMode.SUBSELECT)
-    var themes: Set<ThemeEnvActionModel>,
+    var themes: List<ThemeEnvActionModel>,
     @OneToMany(
         mappedBy = "envAction",
         fetch = FetchType.LAZY,
@@ -100,7 +89,7 @@ class EnvActionModel(
         cascade = [CascadeType.ALL],
     )
     @Fetch(FetchMode.SUBSELECT)
-    var tags: Set<TagEnvActionModel>,
+    var tags: List<TagEnvActionModel>,
 ) {
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity =
         EnvActionMapper.getEnvActionEntityFromJSON(
@@ -153,8 +142,8 @@ class EnvActionModel(
                     mission = mission,
                     geom = action.geom,
                     value = EnvActionMapper.envActionEntityToJSON(mapper, action),
-                    themes = setOf(),
-                    tags = setOf(),
+                    themes = listOf(),
+                    tags = listOf(),
                 )
             if (action is EnvActionControlEntity) {
                 envActionModel.themes = fromThemeEntities(action.themes, envActionModel)
