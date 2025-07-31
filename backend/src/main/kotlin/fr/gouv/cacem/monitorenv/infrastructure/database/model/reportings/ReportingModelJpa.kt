@@ -4,7 +4,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import org.hibernate.annotations.Formula
@@ -20,7 +24,7 @@ import java.time.Instant
 open class ReportingModelJpa(
     override val id: Int? = null,
     override val reportingId: Long? = null,
-    override val reportingSources: MutableSet<ReportingSourceModel> = LinkedHashSet(),
+    override val reportingSources: List<ReportingSourceModel> = listOf(),
     override val targetType: TargetTypeEnum? = null,
     override val vehicleType: VehicleTypeEnum? = null,
     override val targetDetails: MutableList<TargetDetailsEntity>? = mutableListOf(),
@@ -45,8 +49,8 @@ open class ReportingModelJpa(
     override val isInfractionProven: Boolean,
     @Formula("created_at + INTERVAL '1 hour' * validity_time")
     open val validityEndTime: Instant? = null,
-    override var tags: MutableSet<TagReportingModel>,
-    override var themes: MutableSet<ThemeReportingModel>,
+    override var tags: List<TagReportingModel>,
+    override var themes: List<ThemeReportingModel>,
 ) : AbstractReportingModel(
         id = id,
         reportingId = reportingId,

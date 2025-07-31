@@ -2,14 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import jakarta.persistence.Embeddable
-import jakarta.persistence.EmbeddedId
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.MapsId
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.io.Serializable
 
 @Entity
@@ -40,7 +33,7 @@ data class ThemeReportingModel(
         fun fromThemeEntity(
             theme: ThemeEntity,
             reporting: ReportingModel,
-        ): MutableSet<ThemeReportingModel> =
+        ): List<ThemeReportingModel> =
             listOf(
                 ThemeReportingModel(
                     id = ThemeReportingPk(theme.id, reporting.id),
@@ -55,7 +48,7 @@ data class ThemeReportingModel(
                         reporting = reporting,
                     )
                 },
-            ).toMutableSet()
+            )
     }
 }
 
