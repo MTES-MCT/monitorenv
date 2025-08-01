@@ -5,7 +5,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "3.5.3"
+    id("org.springframework.boot") version "3.5.4"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
     kotlin("jvm") version "2.2.0"
@@ -54,13 +54,13 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.2.0"
+val ktorVersion = "3.2.3"
 val testcontainersVersion = "1.21.3"
-val sentryVersion = "8.16.0"
-val flywayVersion = "11.10.1"
+val sentryVersion = "8.18.0"
+val flywayVersion = "11.10.5"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.3"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.4"))
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -79,7 +79,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.hibernate.orm:hibernate-spatial:6.6.13.Final")
     implementation("org.hibernate.validator:hibernate-validator:8.0.2.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.10.1")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.10.3")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -87,7 +87,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.2")
     implementation("org.n52.jackson:jackson-datatype-jts:2.0.0")
 
     // HTTP Clients (Ktor)
@@ -101,13 +101,13 @@ dependencies {
     implementation("io.sentry:sentry-log4j2:$sentryVersion")
 
     // Cache
-    implementation("com.github.ben-manes.caffeine:caffeine:3.2.1")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.2")
 
     // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
 
     // JodConverter
-    implementation("org.jodconverter:jodconverter-local-lo:4.4.9")
+    implementation("org.jodconverter:jodconverter-local-lo:4.4.10")
     // the two following apoche poi dependencies should have the same version
     implementation("org.apache.poi:poi:5.4.1")
     implementation("org.apache.poi:poi-ooxml:5.4.1")
@@ -131,9 +131,9 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:5.0.0")
-    testImplementation("net.ttddyy:datasource-proxy:1.10.1")
-    testImplementation("io.mockk:mockk:1.14.4")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.1.0")
+    testImplementation("net.ttddyy:datasource-proxy:1.11.0")
+    testImplementation("io.mockk:mockk:1.14.5")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
