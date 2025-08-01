@@ -10,12 +10,10 @@ import { AttachMission } from '../ReportingForm/AttachMission'
 import { Header } from '../ReportingForm/Header'
 
 export function ReportingReadOnly({
-  isSuperUser = true,
   reducedReportingsOnContext,
   reporting,
   withMissionCard = false
 }: {
-  isSuperUser?: boolean
   reducedReportingsOnContext: number
   reporting?: Reporting
   withMissionCard?: boolean
@@ -49,7 +47,7 @@ export function ReportingReadOnly({
         reporting={reporting}
       />
       <Wrapper $totalReducedReportings={reducedReportingsOnContext}>
-        <FormContent isSuperUser={isSuperUser} reporting={reporting} />
+        <FormContent reporting={reporting} />
         {withMissionCard && <AttachMission isReadOnly />}
       </Wrapper>
     </>

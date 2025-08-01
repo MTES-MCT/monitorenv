@@ -78,6 +78,10 @@ export function OverlayPositionOnCentroid({
 
   const attachContentToOverlay = useCallback(
     (ref: HTMLDivElement) => {
+      if (olOverlayRef.current && map) {
+        map.removeOverlay(olOverlayRef.current)
+      }
+
       containerRef.current = ref
       if (ref) {
         olOverlayRef.current = new Overlay({
@@ -85,11 +89,14 @@ export function OverlayPositionOnCentroid({
           element: ref,
           offset: currentOffset.current
         })
+        if (map) {
+          map.addOverlay(olOverlayRef.current)
+        }
       } else {
         olOverlayRef.current = null
       }
     },
-    [containerRef, olOverlayRef, appClassName]
+    [map, appClassName]
   )
 
   useEffect(() => {
@@ -103,18 +110,6 @@ export function OverlayPositionOnCentroid({
       currentCoordinates.current = undefined
     }
   }, [feature])
-
-  useEffect(() => {
-    if (map && olOverlayRef.current) {
-      map.addOverlay(olOverlayRef.current)
-    }
-
-    return () => {
-      if (map && olOverlayRef.current) {
-        map.removeOverlay(olOverlayRef.current)
-      }
-    }
-  }, [map, olOverlayRef])
 
   const moveLineWithThrottle = useCallback(
     (target, delay) => {

@@ -2,27 +2,27 @@ import { StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { Accent, Button, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
-import { getOIDCConfig } from 'auth/getOIDCConfig'
 import { globalActions } from 'domain/shared_slices/Global'
-import { useAuth } from 'react-oidc-context'
 
 export function Account() {
   const dispatch = useAppDispatch()
   const isAccountVisible = useAppSelector(state => state.global.visibility.isAccountDialogVisible)
-  const auth = useAuth()
 
-  const oidcConfig = getOIDCConfig()
+  const oidcEnabled = import.meta.env.FRONTEND_OIDC_ENABLED
+  const isOidcEnabled = oidcEnabled === 'true'
 
-  const logout = () => {
-    auth.signoutRedirect()
-  }
+  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
   const toggle = () => {
     dispatch(globalActions.hideAllDialogs())
     dispatch(globalActions.setDisplayedItems({ visibility: { isAccountDialogVisible: !isAccountVisible } }))
   }
+  const logout = () => {
+    window.location.href = '/logout'
+  }
 
-  if (!oidcConfig.IS_OIDC_ENABLED) {
+  if (!isOidcEnabled) {
     return null
   }
 
@@ -33,10 +33,8 @@ export function Account() {
           <MapMenuDialog.Header>
             <MapMenuDialog.Title>Déconnexion</MapMenuDialog.Title>
           </MapMenuDialog.Header>
-          <MapMenuDialog.Body>
-            {auth?.user?.profile.email ?? 'Vous n’êtes pas connecté avec Cerbère'}
-          </MapMenuDialog.Body>
-          {auth?.user?.profile.email && (
+
+          {user && (
             <MapMenuDialog.Footer>
               <Button accent={Accent.SECONDARY} Icon={Icon.Logout} isFullWidth onClick={logout}>
                 Se déconnecter

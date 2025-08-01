@@ -1,7 +1,6 @@
 import { FormContainer, SideWindowBackground } from '@features/Reportings/style'
 import { getReportingInitialValues, isNewReporting } from '@features/Reportings/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
 import { Form, Formik } from 'formik'
 import { noop } from 'lodash'
@@ -19,9 +18,8 @@ type ReportingFormProps = {
   totalReportings: number
 }
 export function ReportingFormWithContext({ context, totalReportings }: ReportingFormProps) {
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const reportingFormVisibility = useAppSelector(state => state.global.visibility.reportingFormVisibility)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
@@ -74,7 +72,6 @@ export function ReportingFormWithContext({ context, totalReportings }: Reporting
                   <FormContent reducedReportingsOnContext={totalReportings} selectedReporting={selectedReporting} />
                 ) : (
                   <ReportingReadOnly
-                    isSuperUser={isSuperUser}
                     reducedReportingsOnContext={totalReportings}
                     reporting={selectedReporting as Reporting}
                     withMissionCard

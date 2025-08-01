@@ -1,15 +1,21 @@
+import { accountActions } from '@features/Account/slice'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
-import { getOIDCConfig } from 'auth/getOIDCConfig'
+import { Wrapper } from '@pages/Login'
 import { paths } from 'paths'
-import { useAuth } from 'react-oidc-context'
+import { useEffect } from 'react'
 import { Navigate } from 'react-router'
+import { LoadingSpinnerWall } from 'ui/LoadingSpinnerWall'
 
 export function RequireAuth({ children, redirect = false, requireSuperUser = false }) {
-  const oidcConfig = getOIDCConfig()
-  const auth = useAuth()
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride({ skip: !auth?.isAuthenticated })
+  const dispatch = useAppDispatch()
+  const { data: user, isLoading } = useGetCurrentUserAuthorizationQueryOverride()
 
-  const handleRedirect = (path, shouldRedirect) => {
+  useEffect(() => {
+    dispatch(accountActions.setIsSuperUser(user?.isSuperUser))
+  }, [user, dispatch])
+
+  const handleRedirect = (path: string, shouldRedirect: boolean) => {
     if (shouldRedirect) {
       return <Navigate replace to={path} />
     }
@@ -17,10 +23,14 @@ export function RequireAuth({ children, redirect = false, requireSuperUser = fal
     return null
   }
 
-  if (!oidcConfig.IS_OIDC_ENABLED) {
-    return children
+  if (isLoading) {
+    return (
+      <Wrapper>
+        <LoadingSpinnerWall />
+      </Wrapper>
+    )
   }
-  if (!auth.isAuthenticated) {
+  if (!user) {
     return handleRedirect(paths.login, redirect)
   }
   if (requireSuperUser && !user?.isSuperUser) {

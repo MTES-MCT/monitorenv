@@ -14,17 +14,14 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { globalActions } from 'domain/shared_slices/Global'
 import styled from 'styled-components'
 
-type MenuProps = {
-  isSuperUser: boolean
-}
-
 export type MenuButtonProps = {
   onClickMenuButton: () => void
   onVisibiltyChange: (layer: string) => void
 }
 
-export function Menu({ isSuperUser }: MenuProps) {
+export function Menu() {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const displaySearchSemaphoreButton = useAppSelector(state => state.global.menus.displaySearchSemaphoreButton)
   const displayInterestPoint = useAppSelector(state => state.global.menus.displayInterestPoint)
   const displayMeasurement = useAppSelector(state => state.global.menus.displayMeasurement)

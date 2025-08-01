@@ -1,3 +1,4 @@
+import { accountSliceReducer } from '@features/Account/slice'
 import { dashboardFiltersPersistedReducer } from '@features/Dashboard/components/DashboardForm/slice'
 import { dashboardReducer } from '@features/Dashboard/slice'
 import { interestPointSlicePersistedReducer } from '@features/InterestPoint/slice'
@@ -39,6 +40,7 @@ import { stationReducer } from '../features/Station/slice'
 export const homeReducers = {
   [monitorenvPrivateApi.reducerPath]: monitorenvPrivateApi.reducer,
   [monitorenvPublicApi.reducerPath]: monitorenvPublicApi.reducer,
+  account: accountSliceReducer,
   administrationTable: administrationTablePersistedReducer,
   administrative: administrativeSlicePersistedReducer,
   amp: ampSlicePersistedReducer,
@@ -60,8 +62,8 @@ export const homeReducers = {
   mapControlUnitListDialog: controlUnitListDialogPersistedReducer,
   measurement: measurementSlicePersistedReducer,
   mission: missionSliceReducer,
-  missionFilters: missionFiltersPersistedReducer,
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
+  missionFilters: missionFiltersPersistedReducer,
   missionForms: missionFormsSliceReducer,
   recentActivity: recentActivityPersitedReducer,
   regulatory: regulatorySlicePersistedReducer,

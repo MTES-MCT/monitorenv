@@ -1,4 +1,5 @@
 import { StyledVesselForm } from '@features/Reportings/style'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Label, TextInput } from '@mtes-mct/monitor-ui'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
@@ -10,7 +11,9 @@ import type { Reporting } from 'domain/entities/reporting'
 
 const EMPTY_VALUE = '--'
 
-export function TargetDetails({ isSuperUser, reporting }: { isSuperUser: boolean; reporting: Reporting }) {
+export function TargetDetails({ reporting }: { reporting: Reporting }) {
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
   return (
     <>
       {reporting.targetType && reporting.targetType !== ReportingTargetTypeEnum.VEHICLE && (

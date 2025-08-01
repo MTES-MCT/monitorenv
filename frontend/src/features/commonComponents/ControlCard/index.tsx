@@ -1,4 +1,5 @@
 import { ControlInfractionsTags } from '@features/Mission/components/ControlInfractionsTags'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, getLocalizedDayjs, Icon, IconButton, pluralize, Size, THEME } from '@mtes-mct/monitor-ui'
 import { TargetTypeEnum, TargetTypeLabels } from 'domain/entities/targetType'
 import styled from 'styled-components'
@@ -12,7 +13,6 @@ export function ControlCard({
   controlThemes,
   infractions,
   isSelected = false,
-  isSuperUser = true,
   onClose,
   onConsultMission
 }: {
@@ -22,10 +22,11 @@ export function ControlCard({
   controlThemes: string
   infractions: Infraction[]
   isSelected?: boolean
-  isSuperUser?: boolean
   onClose?: () => void
   onConsultMission?: () => void
 }) {
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
   const parsedActionStartDateTimeUtc = new Date(actionStartDateTimeUtc)
   const actionDate = getLocalizedDayjs(parsedActionStartDateTimeUtc).format('DD MMM à HH:mm')
 
@@ -75,7 +76,7 @@ export function ControlCard({
 }
 
 const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
-  padding: 0px;
+  padding: 0;
   margin-left: 8px;
   ${p => !p.$isVisible && 'visibility: hidden;'};
 `
@@ -89,7 +90,7 @@ const StyledControlCardHeader = styled.div`
   padding: 12px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
   gap: 10px;
   flex: 0 0 200px;
 `

@@ -6,7 +6,6 @@ import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
 import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useGetCurrentUserAuthorizationQueryOverride } from '@hooks/useGetCurrentUserAuthorizationQueryOverride'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router'
@@ -27,10 +26,7 @@ import { useAppSelector } from '../hooks/useAppSelector'
 
 export function HomePage() {
   const dispatch = useAppDispatch()
-
-  const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
-
-  const isSuperUser = useMemo(() => user?.isSuperUser, [user])
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const displayDrawModal = useAppSelector(state => state.global.menus.displayDrawModal)
   const displayLocateOnMap = useAppSelector(state => state.global.menus.displayLocateOnMap)
@@ -42,7 +38,7 @@ export function HomePage() {
 
   const dashboards = useAppSelector(state => state.dashboard.dashboards)
 
-  const reportingEvent = useListenReportingEventUpdates(isSuperUser)
+  const reportingEvent = useListenReportingEventUpdates()
 
   const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
 
@@ -96,8 +92,8 @@ export function HomePage() {
         <Healthcheck />
         <BannerStack />
 
-        <Map isSuperUser={isSuperUser} />
-        <LayersSidebar isSuperUser={isSuperUser ?? false} />
+        <Map />
+        <LayersSidebar />
         <RightMenuOnHoverArea />
         {displayDrawModal && <DrawModal />}
         <AttachMissionToReportingModal />
@@ -105,7 +101,7 @@ export function HomePage() {
         {displayLocateOnMap && <LocateOnMap />}
         {isControlUnitDialogVisible && isSuperUser && <ControlUnitDialog />}
 
-        <Menu isSuperUser={isSuperUser} />
+        <Menu />
 
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
       </Wrapper>
