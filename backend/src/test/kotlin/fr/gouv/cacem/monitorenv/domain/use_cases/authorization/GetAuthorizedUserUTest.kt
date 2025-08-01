@@ -34,8 +34,8 @@ class GetAuthorizedUserUTest {
 
         // Then
         assertThat(user.isSuperUser).isEqualTo(isSuperUser)
-        assertThat(log.out).contains("Attempt to GET user $email")
-        assertThat(log.out).contains("Found user $email")
+        assertThat(log.out).contains("Attempt to GET user $hashedEmail")
+        assertThat(log.out).contains("Found user $hashedEmail")
     }
 
     @Test
@@ -50,7 +50,7 @@ class GetAuthorizedUserUTest {
 
         // Then
         assertThat(user.isSuperUser).isEqualTo(false)
-        assertThat(log.out).contains("Attempt to GET user $email")
-        assertThat(log.out).contains("User $email not found, defaulting to superUser=false")
+        assertThat(log.out).contains("Attempt to GET user $hashedEmail")
+        assertThat(log.out).contains("User $hashedEmail not found, defaulting to superUser=false")
     }
 }

@@ -12,20 +12,26 @@ class GetAuthorizedUser(
 ) {
     private val logger = LoggerFactory.getLogger(GetAuthorizedUser::class.java)
 
-    fun execute(email: String): AuthorizedUser {
+    fun execute(email: String?): AuthorizedUser {
+        if (email == null) {
+            logger.info("⚠ No email provided (OIDC disabled), defaulting to super-user=true")
+            return AuthorizedUser(
+                email = null,
+                isSuperUser = true,
+            )
+        }
         val hashedEmail = hash(email)
-        logger.info("Attempt to GET user $email")
+        logger.info("Attempt to GET user $hashedEmail")
 
-        val userEntity = userAuthorizationRepository.findByHashedEmail(hashedEmail)
-
-        return if (userEntity != null) {
-            logger.info("Found user $email")
+        return try {
+            val userEntity = userAuthorizationRepository.findByHashedEmail(hashedEmail)
+            logger.info("Found user $hashedEmail")
             AuthorizedUser(
                 email = email,
                 isSuperUser = userEntity.isSuperUser,
             )
-        } else {
-            logger.info("User $email not found, defaulting to superUser=false")
+        } catch (e: Exception) {
+            logger.info("User $hashedEmail not found, defaulting to superUser=false")
             AuthorizedUser(
                 email = email,
                 isSuperUser = false,
