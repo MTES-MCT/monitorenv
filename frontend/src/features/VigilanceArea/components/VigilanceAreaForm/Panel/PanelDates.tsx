@@ -10,9 +10,11 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 
 export function PanelDates({
   onValidate = () => {},
+  readOnly = false,
   vigilanceArea
 }: {
   onValidate?: () => void
+  readOnly?: boolean
   vigilanceArea: VigilanceArea.VigilanceArea | undefined
 }) {
   const isValid = useMemo(() => isFormValid(vigilanceArea, false), [vigilanceArea])
@@ -33,6 +35,7 @@ export function PanelDates({
           <ValidatedAt
             disabled={vigilanceArea.isDraft || (!vigilanceArea.isDraft && !isValid)}
             onValidate={onValidate}
+            readOnly={readOnly}
             validatedAt={vigilanceArea.validatedAt}
           />
         )}

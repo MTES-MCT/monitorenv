@@ -6,10 +6,12 @@ import styled from 'styled-components'
 export function ValidatedAt({
   disabled,
   onValidate,
+  readOnly = false,
   validatedAt
 }: {
   disabled: boolean
   onValidate: () => void
+  readOnly?: boolean
   validatedAt: string | undefined
 }) {
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
@@ -36,7 +38,7 @@ export function ValidatedAt({
             Validée le {customDayjs(validatedAt).utc().format('DD/MM/YY')}.{' '}
             <LastValidation $warning={nbMonths >= 6}>{nbMonths >= 3 && `(${nbMonths} mois)`}</LastValidation>
           </StyledDates>
-          {isSuperUser && (
+          {isSuperUser && !readOnly && (
             <Button
               accent={Accent.SECONDARY}
               data-cy="vigilance-area-validate"
