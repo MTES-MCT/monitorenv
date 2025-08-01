@@ -30,14 +30,19 @@ class UserAuthorization(
     @GetMapping("v1/authorization/current")
     @Operation(summary = "Get current logged user authorization")
     fun getCurrentUserAuthorization(
-        @AuthenticationPrincipal principal: Any,
+        @AuthenticationPrincipal principal: OidcUser?,
     ): UserAuthorizationDataOutput? {
         logger.info("Getting current user authorization $principal")
-        val user =
-            principal as? OidcUser
-                ?: throw IllegalStateException("Authenticated user is not an OidcUser")
+        if (principal == null) {
+            logger.info("Getting current user authorization - OIDC disabled, returning default authorization")
+            val authorizedUser = getAuthorizedUser.execute(null)
+            return UserAuthorizationDataOutput.fromUserAuthorization(
+                authorizedUser = authorizedUser,
+            )
+        }
 
-        val authorizedUser = getAuthorizedUser.execute(user.email)
+        logger.info("Getting current user authorization for user: ${principal.email}")
+        val authorizedUser = getAuthorizedUser.execute(principal.email)
 
         return UserAuthorizationDataOutput.fromUserAuthorization(
             authorizedUser = authorizedUser,
