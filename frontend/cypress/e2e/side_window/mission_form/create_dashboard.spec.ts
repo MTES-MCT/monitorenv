@@ -13,11 +13,13 @@ context('Side Window > Mission Form > Create dashboard from mission', () => {
     cy.get('[data-cy="edit-mission-38"]').click({ force: true })
     cy.clickButton('Créer un tableau de bord')
 
-    cy.contains('.rs-plaintext', 'DDTM')
-    cy.contains('.rs-plaintext', 'DML 2A')
-    cy.get('[role=radiogroup]').find('.rs-radio').first().should('have.class', 'rs-radio-checked')
-    cy.contains('.rs-plaintext', 'Culture marine')
-    cy.contains('.rs-plaintext', '-')
+    cy.getDataCy('create-dashboard-modal').within(() => {
+      cy.contains('DDTM')
+      cy.contains('DML 2A')
+      cy.get('[role=radiogroup]').find('.rs-radio').first().should('have.class', 'rs-radio-checked')
+      cy.contains('Culture marine')
+      cy.contains('-')
+    })
 
     cy.clickButton('Créer le tableau de bord')
     cy.wait(['@getDashboardDatas', '@getVigilanceAreas', '@getReportings', '@getNearbyControlUnits'])

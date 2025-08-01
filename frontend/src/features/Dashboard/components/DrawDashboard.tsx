@@ -22,7 +22,7 @@ export function DrawDashboard({ className, onCancel }: { className?: string; onC
 
   const handleValidate = () => {
     if (geometry) {
-      dispatch(createDashboard(geometry))
+      dispatch(createDashboard({ geom: geometry }))
     }
     dispatch(resetDrawing())
     dispatch(dashboardActions.setIsDrawing(false))

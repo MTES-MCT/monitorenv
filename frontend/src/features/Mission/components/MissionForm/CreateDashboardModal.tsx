@@ -1,4 +1,4 @@
-import { createDashboardFromMission } from '@features/Dashboard/useCases/createDasboardFromMission'
+import { createDashboard } from '@features/Dashboard/useCases/createDashboard'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Dialog, MultiRadio, TextInput, type Option } from '@mtes-mct/monitor-ui'
 import dayjs from 'dayjs'
@@ -90,15 +90,13 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
     if (!dashboardGeom) {
       return
     }
+
     const dashboardData = {
       controlUnitIds: mission?.controlUnits?.map(unit => unit.id as number) || [],
-      geom: dashboardGeom,
-      id: `new-${mission?.id || 'dashboard'}`,
       tags: firstEnvAction?.tags ?? undefined,
       themes: firstEnvAction?.themes ?? undefined
     }
-
-    dispatch(createDashboardFromMission(dashboardData))
+    dispatch(createDashboard({ geom: dashboardGeom, missionData: dashboardData }))
   }
 
   const cancel = () => {
@@ -113,7 +111,7 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
   const dashboardTags = firstEnvAction?.tags?.map(tag => tag.name).join(', ') || EMPTY_VALUE
 
   return (
-    <Dialog isAbsolute>
+    <Dialog data-cy="create-dashboard-modal" isAbsolute>
       <Dialog.Title>Créer un tableau de bord</Dialog.Title>
       <StyledBody>
         <h5>Informations récupérées</h5>

@@ -8,15 +8,13 @@ type CancelEditModalProps = {
   isMissionFormValid: boolean
   onCancel: () => void
   onConfirm: () => void
-  open: boolean
 }
 export function CancelEditModal({
   isAutoSaveEnabled,
   isDirty,
   isMissionFormValid,
   onCancel,
-  onConfirm,
-  open
+  onConfirm
 }: CancelEditModalProps) {
   const isMissionUnsaved = !isAutoSaveEnabled && isDirty && isMissionFormValid
   const title = isMissionUnsaved ? 'Enregistrer les modifications' : 'Enregistrement impossible'
@@ -40,19 +38,17 @@ export function CancelEditModal({
   }, [isMissionUnsaved])
 
   return (
-    open && (
-      <Dialog data-cy="cancel-edit-modal" isAbsolute>
-        <Dialog.Title>{title}</Dialog.Title>
-        <Dialog.Body $color={THEME.color.gunMetal}>{body}</Dialog.Body>
+    <Dialog data-cy="cancel-edit-modal" isAbsolute>
+      <Dialog.Title>{title}</Dialog.Title>
+      <Dialog.Body $color={THEME.color.gunMetal}>{body}</Dialog.Body>
 
-        <Dialog.Action>
-          <Button accent={Accent.SECONDARY} onClick={onConfirm}>
-            Quitter sans enregistrer
-          </Button>
-          <Button onClick={onCancel}>Retourner à l&apos;édition</Button>
-        </Dialog.Action>
-      </Dialog>
-    )
+      <Dialog.Action>
+        <Button accent={Accent.SECONDARY} onClick={onConfirm}>
+          Quitter sans enregistrer
+        </Button>
+        <Button onClick={onCancel}>Retourner à l&apos;édition</Button>
+      </Dialog.Action>
+    </Dialog>
   )
 }
 
