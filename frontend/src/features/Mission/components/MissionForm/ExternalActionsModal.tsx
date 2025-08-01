@@ -6,11 +6,10 @@ import { MissionSourceEnum } from '../../../../domain/entities/missions'
 
 type ExternalActionsModalProps = {
   onClose: () => void
-  open: boolean
   sources: MissionSourceEnum[]
 }
 
-export function ExternalActionsModal({ onClose, open, sources }: ExternalActionsModalProps) {
+export function ExternalActionsModal({ onClose, sources }: ExternalActionsModalProps) {
   const isCNSP = sources.includes(MissionSourceEnum.MONITORFISH)
   const isRapportNav = sources.includes(MissionSourceEnum.RAPPORT_NAV)
 
@@ -27,29 +26,27 @@ export function ExternalActionsModal({ onClose, open, sources }: ExternalActions
   }, [isCNSP, isRapportNav])
 
   return (
-    open && (
-      <Dialog data-cy="external-actions-modal" isAbsolute>
-        <Dialog.Title>Suppression impossible</Dialog.Title>
-        <Dialog.Body>
-          <Alert>
-            <Icon.Attention color={THEME.color.maximumRed} size={30} />
-          </Alert>
-          <Text data-cy="external-action-modal-text">{`La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par ${sourceText}.`}</Text>
-          <Bold>
-            {`Si vous souhaitez tout de même la supprimer, veuillez contacter ${sourceText} pour qu'${
-              isCNSP && isRapportNav ? 'ils suppriment' : 'il supprime'
-            } d'abord
+    <Dialog data-cy="external-actions-modal" isAbsolute>
+      <Dialog.Title>Suppression impossible</Dialog.Title>
+      <Dialog.Body>
+        <Alert>
+          <Icon.Attention color={THEME.color.maximumRed} size={30} />
+        </Alert>
+        <Text data-cy="external-action-modal-text">{`La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par ${sourceText}.`}</Text>
+        <Bold>
+          {`Si vous souhaitez tout de même la supprimer, veuillez contacter ${sourceText} pour qu'${
+            isCNSP && isRapportNav ? 'ils suppriment' : 'il supprime'
+          } d'abord
             ses événements.`}
-          </Bold>
-        </Dialog.Body>
+        </Bold>
+      </Dialog.Body>
 
-        <Dialog.Action>
-          <Button data-cy="external-actions-modal-close" onClick={onClose}>
-            Fermer
-          </Button>
-        </Dialog.Action>
-      </Dialog>
-    )
+      <Dialog.Action>
+        <Button data-cy="external-actions-modal-close" onClick={onClose}>
+          Fermer
+        </Button>
+      </Dialog.Action>
+    </Dialog>
   )
 }
 

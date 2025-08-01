@@ -262,24 +262,17 @@ export function MissionForm({
 
       <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues, false)} />
       <FormikSyncMissionFields missionId={id} />
-      <CancelEditModal
-        isAutoSaveEnabled={isAutoSaveEnabled}
-        isDirty={dirty}
-        isMissionFormValid={isMissionFormValid}
-        onCancel={returnToEdition}
-        onConfirm={cancelForm}
-        open={sideWindow.showConfirmCancelModal}
-      />
-      <DeleteModal
-        onCancel={returnToEdition}
-        onConfirm={validateDeleteMission}
-        open={openModal === ModalTypes.DELETE}
-      />
-      <ExternalActionsModal
-        onClose={returnToEdition}
-        open={openModal === ModalTypes.ACTIONS}
-        sources={actionsSources}
-      />
+      {sideWindow.showConfirmCancelModal && (
+        <CancelEditModal
+          isAutoSaveEnabled={isAutoSaveEnabled}
+          isDirty={dirty}
+          isMissionFormValid={isMissionFormValid}
+          onCancel={returnToEdition}
+          onConfirm={cancelForm}
+        />
+      )}
+      {openModal === ModalTypes.DELETE && <DeleteModal onCancel={returnToEdition} onConfirm={validateDeleteMission} />}
+      {openModal === ModalTypes.ACTIONS && <ExternalActionsModal onClose={returnToEdition} sources={actionsSources} />}
       {openModal === ModalTypes.CREATE_DASHBOARD && (
         <CreateDashboardModal mission={selectedMission} onClose={() => setOpenModal(undefined)} />
       )}
