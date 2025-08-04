@@ -123,11 +123,7 @@ export function Footer({
             target.mmsi ? `MMSI: ${target.mmsi}\n` : ''
           }${target.size ? `Taille: ${target.size}m\n` : ''}`
 
-          if (
-            values.vehicleType !== VehicleTypeEnum.VESSEL ||
-            values.vehicleType !== VehicleTypeEnum.VESSEL ||
-            !target.mmsi
-          ) {
+          if (!target.mmsi) {
             return ''
           }
 
