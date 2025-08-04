@@ -73,7 +73,7 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
       </Header>
       <PanelContainer>
         <PanelBody>
-          <PanelDates vigilanceArea={vigilanceArea} />
+          <PanelDates createdAt={vigilanceArea?.createdAt} updatedAt={vigilanceArea?.updatedAt} />
           <PanelPeriodAndThemes vigilanceArea={vigilanceArea} />
           <PanelComments comments={vigilanceArea?.comments} />
 

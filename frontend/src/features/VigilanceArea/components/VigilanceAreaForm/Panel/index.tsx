@@ -1,5 +1,6 @@
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelDates'
+import { ValidatedAt } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/ValidateAt'
 import { isFormValid } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -116,7 +117,15 @@ export function VigilanceAreaPanel({
           subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
           title="Supprimer la zone de vigilance&nbsp;?"
         />
-        <PanelDates onValidate={validate} vigilanceArea={vigilanceArea} />
+        <PanelDates createdAt={vigilanceArea?.createdAt} updatedAt={vigilanceArea?.updatedAt}>
+          {vigilanceArea.validatedAt && (
+            <ValidatedAt
+              disabled={vigilanceArea.isDraft || (!vigilanceArea.isDraft && !isValid(false))}
+              onValidate={validate}
+              validatedAt={vigilanceArea.validatedAt}
+            />
+          )}
+        </PanelDates>
         <PanelPeriodAndThemes vigilanceArea={vigilanceArea} />
         <PanelComments comments={vigilanceArea?.comments} />
         {values?.linkedRegulatoryAreas && values?.linkedRegulatoryAreas.length > 0 && (

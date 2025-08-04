@@ -10,7 +10,7 @@ export function ValidatedAt({
 }: {
   disabled: boolean
   onValidate: () => void
-  validatedAt: string | undefined
+  validatedAt: string
 }) {
   const { data: user } = useGetCurrentUserAuthorizationQueryOverride()
 
@@ -29,28 +29,24 @@ export function ValidatedAt({
   }, [validatedAt])
 
   return (
-    <>
-      {validatedAt && (
-        <StyledValidatedAt>
-          <StyledDates>
-            Validée le {customDayjs(validatedAt).utc().format('DD/MM/YY')}.{' '}
-            <LastValidation $warning={nbMonths >= 6}>{nbMonths >= 3 && `(${nbMonths} mois)`}</LastValidation>
-          </StyledDates>
-          {isSuperUser && (
-            <Button
-              accent={Accent.SECONDARY}
-              data-cy="vigilance-area-validate"
-              disabled={disabled}
-              Icon={Icon.Check}
-              onClick={onValidate}
-              size={Size.SMALL}
-            >
-              Revalider
-            </Button>
-          )}
-        </StyledValidatedAt>
+    <StyledValidatedAt>
+      <StyledDates>
+        Validée le {customDayjs(validatedAt).utc().format('DD/MM/YY')}.{' '}
+        <LastValidation $warning={nbMonths >= 6}>{nbMonths >= 3 && `(${nbMonths} mois)`}</LastValidation>
+      </StyledDates>
+      {isSuperUser && (
+        <Button
+          accent={Accent.SECONDARY}
+          data-cy="vigilance-area-validate"
+          disabled={disabled}
+          Icon={Icon.Check}
+          onClick={onValidate}
+          size={Size.SMALL}
+        >
+          Revalider
+        </Button>
       )}
-    </>
+    </StyledValidatedAt>
   )
 }
 

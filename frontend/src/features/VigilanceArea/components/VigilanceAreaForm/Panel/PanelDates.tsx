@@ -1,43 +1,30 @@
-import { ValidatedAt } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/ValidateAt'
-import { isFormValid } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { customDayjs } from '@mtes-mct/monitor-ui'
-import { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import { PanelSubPart } from '../style'
 
-import type { VigilanceArea } from '@features/VigilanceArea/types'
-
 export function PanelDates({
-  onValidate = () => {},
-  vigilanceArea
+  children,
+  createdAt,
+  updatedAt
 }: {
-  onValidate?: () => void
-  vigilanceArea: VigilanceArea.VigilanceArea | undefined
+  children?: React.ReactNode
+  createdAt?: string
+  updatedAt?: string
 }) {
-  const isValid = useMemo(() => isFormValid(vigilanceArea, false), [vigilanceArea])
-
-  if (!vigilanceArea?.createdAt && !vigilanceArea?.updatedAt && !vigilanceArea?.validatedAt) {
+  if (!createdAt && !updatedAt && !children) {
     return null
   }
 
   return (
-    <>
-      <PanelSubPart>
-        <StyledDates>
-          {vigilanceArea?.createdAt && `Créée le ${customDayjs(vigilanceArea.createdAt).utc().format('DD/MM/YY')}. `}
-          {vigilanceArea?.updatedAt &&
-            `Dernière modification le ${customDayjs(vigilanceArea.updatedAt).utc().format('DD/MM/YY')}.`}
-        </StyledDates>
-        {vigilanceArea?.validatedAt && (
-          <ValidatedAt
-            disabled={vigilanceArea.isDraft || (!vigilanceArea.isDraft && !isValid)}
-            onValidate={onValidate}
-            validatedAt={vigilanceArea.validatedAt}
-          />
-        )}
-      </PanelSubPart>
-    </>
+    <PanelSubPart>
+      <StyledDates>
+        {createdAt && `Créée le ${customDayjs(createdAt).utc().format('DD/MM/YY')}. `}
+        {updatedAt && `Dernière modification le ${customDayjs(updatedAt).utc().format('DD/MM/YY')}.`}
+      </StyledDates>
+      {children}
+    </PanelSubPart>
   )
 }
 
