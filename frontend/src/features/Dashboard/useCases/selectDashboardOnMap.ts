@@ -21,7 +21,7 @@ export const selectDashboardOnMap =
 
       const { data: amps } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
 
-      const { data: regulatoryAreas } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate())
+      const { data: regulatoryAreas } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate(true))
       const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
 
       const filteredAmps = Object.values(amps?.entities ?? []).filter(amp => dashboard.ampIds.includes(amp.id))
