@@ -40,7 +40,7 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
-  const { layer } = useGetRegulatoryAreasQuery(undefined, {
+  const { layer } = useGetRegulatoryAreasQuery({ withGeometry: true }, {
     selectFromResult: result => {
       const layerGroup = result?.currentData?.regulatoryAreasByLayer.find(group => group.group === groupName)
 

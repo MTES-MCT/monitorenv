@@ -34,6 +34,15 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
   const ref = createRef<HTMLLIElement>()
 
   const layer = regulatoryAreas.find(regulatoryArea => regulatoryArea.id === layerId)
+  // const { layer } = useGetRegulatoryLayersQuery(
+  //   { withGeometry: true },
+  //   {
+  //     selectFromResult: result => ({
+  //       layer: result?.currentData?.entities[layerId]
+  //     })
+  //   }
+  // )
+
   const handleSelectZone = e => {
     e.stopPropagation()
 

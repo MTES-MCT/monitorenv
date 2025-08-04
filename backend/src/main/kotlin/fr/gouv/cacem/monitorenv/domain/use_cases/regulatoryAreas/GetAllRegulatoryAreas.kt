@@ -11,9 +11,9 @@ class GetAllRegulatoryAreas(
 ) {
     private val logger = LoggerFactory.getLogger(GetAllRegulatoryAreas::class.java)
 
-    fun execute(): List<RegulatoryAreaEntity> {
+    fun execute(withGeometry: Boolean): List<RegulatoryAreaEntity> {
         logger.info("Attempt to GET all regulatory areas")
-        val regulatoryAreas = regulatoryAreaRepository.findAll()
+        val regulatoryAreas = regulatoryAreaRepository.findAll(withGeometry)
         logger.info("Found ${regulatoryAreas.size} regulatory areas")
 
         return regulatoryAreas
