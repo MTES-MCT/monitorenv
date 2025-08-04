@@ -3,7 +3,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, THEME, WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -28,11 +28,14 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
 
   const ref = createRef<HTMLSpanElement>()
 
-  const { layer } = useGetRegulatoryLayersQuery(undefined, {
-    selectFromResult: result => ({
-      layer: result?.currentData?.entities[layerId]
-    })
-  })
+  const { layer } = useGetRegulatoryLayersQuery(
+    { withGeometry: true },
+    {
+      selectFromResult: result => ({
+        layer: result?.currentData?.entities[layerId]
+      })
+    }
+  )
 
   const handleSelectZone = e => {
     e.stopPropagation()
