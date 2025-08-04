@@ -6,7 +6,7 @@ import { getTimeLeft, isNewReporting } from '@features/Reportings/utils'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, Level, THEME, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Level, THEME, customDayjs, getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
 import { ReportingStatusEnum, type Reporting, getReportingStatus } from 'domain/entities/reporting'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
@@ -18,6 +18,8 @@ import { getCenter } from 'ol/extent'
 import { MultiPolygon } from 'ol/geom'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+
+import { useGetHistoryOfInfractions } from '../hooks/useGetHistoryOfInfractions'
 
 import type { Coordinate } from 'ol/coordinate'
 
@@ -43,6 +45,7 @@ export function Footer({
 
   const dispatch = useAppDispatch()
   const { setFieldValue, validateForm, values } = useFormikContext<Reporting>()
+  const getHistoryByMmsi = useGetHistoryOfInfractions()
 
   const reportingStatus = getReportingStatus(values)
 
@@ -89,7 +92,7 @@ export function Footer({
     dispatch(archiveReporting(Number(values.id), reportingContext, true))
   }
 
-  const copyTargetInfos = () => {
+  const copyTargetInfos = async () => {
     const isMultiPoint = values.geom?.type === 'MultiPoint'
     const isMultiPolygon = values.geom?.type === 'MultiPolygon'
 
@@ -110,24 +113,57 @@ export function Footer({
 
     const globalInfos = [
       `Réponse VHF: ${values.withVHFAnswer ? 'Oui' : 'Non'}`,
-      `${formattedCoordinates ? `Localisation: ${formattedCoordinates}` : ''}`
+      `${formattedCoordinates ? `Localisation: ${formattedCoordinates}\n` : ''}`
     ].join('\n')
 
-    const targetDetails = values.targetDetails
-      .map(
-        target =>
-          `${target.vesselName ? `Nom du navire:${target.vesselName}\n` : ''}${
+    const targetDetails = () =>
+      Promise.all(
+        values.targetDetails.map(async target => {
+          const targetInfos = `${target.vesselName ? `Nom du navire:${target.vesselName}\n` : ''}${
             target.mmsi ? `MMSI: ${target.mmsi}\n` : ''
           }${target.size ? `Taille: ${target.size}m\n` : ''}`
+
+          if (
+            values.vehicleType !== VehicleTypeEnum.VESSEL ||
+            values.vehicleType !== VehicleTypeEnum.VESSEL ||
+            !target.mmsi
+          ) {
+            return ''
+          }
+
+          const history = await getHistoryByMmsi({
+            canSearch: true,
+            debouncedMmsi: target.mmsi,
+            reportingId: values.id
+          })
+
+          const totalSuspicionOfInfractions = history?.suspicionOfInfractions.length ?? 0
+
+          let targetHistory
+          if (totalSuspicionOfInfractions === 0 && history?.totalInfraction === 0) {
+            targetHistory = 'Pas d’antécédent'
+          } else {
+            targetHistory = `Antécédents: ${totalSuspicionOfInfractions} ${pluralize(
+              'signalement',
+              totalSuspicionOfInfractions
+            )}, ${history?.totalInfraction} ${pluralize('infraction', history?.totalInfraction ?? 0)}, ${
+              history?.totalPV ?? 0
+            } PV\n`
+          }
+
+          return `${targetInfos}${globalInfos}${targetHistory}`
+        })
       )
-      .flat()
-      .join('\n')
+
+    const alltargetDetails = await targetDetails()
+    const formattedTargetDetails = alltargetDetails.join('\n')
 
     navigator.clipboard
-      .writeText([targetDetails, globalInfos].join('\n'))
+      .writeText(formattedTargetDetails)
       .then(() => {
         const bannerProps = {
-          children: 'Signalement copié dans le presse papier (Nom du navire, MMSI, Taille, Localisation, réponse VHF)',
+          children:
+            'Signalement copié dans le presse papier (Nom du navire, MMSI, taille, localisation, réponse VHF, antécédents)',
           isClosable: true,
           isFixed: true,
           level: Level.SUCCESS,
