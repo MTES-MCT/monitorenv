@@ -2,15 +2,30 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel.Companion.toTagEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeVigilanceAreaModel.Companion.toThemeEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaSourceModel.Companion.toVigilanceAreaSources
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
@@ -29,7 +44,6 @@ data class VigilanceAreaModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "vigilanceArea")
-    @Fetch(FetchMode.SUBSELECT)
     val sources: List<VigilanceAreaSourceModel>,
     @Column(name = "comments") val comments: String? = null,
     @Column(name = "computed_end_date") val computedEndDate: Instant? = null,
@@ -55,7 +69,6 @@ data class VigilanceAreaModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     var images: MutableList<VigilanceAreaImageModel> = mutableListOf(),
     @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
@@ -82,13 +95,13 @@ data class VigilanceAreaModel(
         mappedBy = "vigilanceArea",
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
+    @OrderBy("id")
     val tags: List<TagVigilanceAreaModel>,
     @OneToMany(
         mappedBy = "vigilanceArea",
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
+    @OrderBy("id")
     val themes: List<ThemeVigilanceAreaModel>,
     @Column(name = "validated_at") var validatedAt: ZonedDateTime?,
 ) {

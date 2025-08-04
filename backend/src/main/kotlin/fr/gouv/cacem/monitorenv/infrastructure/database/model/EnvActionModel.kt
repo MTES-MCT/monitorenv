@@ -13,12 +13,20 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagEnvActionModel.
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagEnvActionModel.Companion.toTagEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeEnvActionModel.Companion.fromThemeEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeEnvActionModel.Companion.toThemeEntities
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
@@ -28,7 +36,7 @@ import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
-import java.util.*
+import java.util.UUID
 
 @Entity
 @Table(name = "env_actions")
@@ -71,7 +79,6 @@ class EnvActionModel(
         fetch = FetchType.LAZY,
         mappedBy = "attachedEnvAction",
     )
-    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     val attachedReporting: List<ReportingModel>? = listOf(),
     @OneToMany(
@@ -80,7 +87,6 @@ class EnvActionModel(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(FetchMode.SUBSELECT)
     var themes: List<ThemeEnvActionModel>,
     @OneToMany(
         mappedBy = "envAction",
@@ -88,7 +94,6 @@ class EnvActionModel(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(FetchMode.SUBSELECT)
     var tags: List<TagEnvActionModel>,
 ) {
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity =

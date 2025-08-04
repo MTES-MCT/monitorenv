@@ -11,8 +11,6 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
@@ -24,7 +22,6 @@ data class StationModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "station")
-    @Fetch(FetchMode.SUBSELECT)
     val controlUnitResources: List<ControlUnitResourceModel> = listOf(),
     @Column(name = "latitude", nullable = false)
     val latitude: Double,

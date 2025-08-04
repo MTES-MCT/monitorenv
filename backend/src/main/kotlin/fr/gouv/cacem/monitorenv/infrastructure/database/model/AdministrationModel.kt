@@ -13,8 +13,6 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
@@ -29,7 +27,6 @@ data class AdministrationModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "administration")
-    @Fetch(FetchMode.SUBSELECT)
     val controlUnits: List<ControlUnitModel>? = mutableListOf(),
     @Column(name = "is_archived")
     val isArchived: Boolean,

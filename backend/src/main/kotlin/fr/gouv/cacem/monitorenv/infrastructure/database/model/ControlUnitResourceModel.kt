@@ -4,20 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceE
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
@@ -31,7 +19,6 @@ data class ControlUnitResourceModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
     @ManyToOne(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "control_unit_id", nullable = false)
     val controlUnit: ControlUnitModel,
     @Column(name = "is_archived", nullable = false)
