@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings
+package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
@@ -10,16 +10,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel.Companion.toTagEntities
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel.Companion.toThemeEntities
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
+import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
@@ -28,12 +24,11 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.MappedSuperclass
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OrderBy
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.Formula
 import org.hibernate.annotations.Generated
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
@@ -47,12 +42,18 @@ import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
 
-@MappedSuperclass
-abstract class AbstractReportingModel(
+/**
+ *
+ * For native queries prupose only
+ * For JPQL queries you should use [ReportingModelJpa]
+ */
+@Entity
+@Table(name = "reportings")
+class ReportingModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    open val id: Int? = null,
+    val id: Int? = null,
     @Generated(event = [EventType.INSERT])
     @Column(
         name = "reporting_id",
@@ -61,51 +62,50 @@ abstract class AbstractReportingModel(
         updatable = false,
         insertable = false,
     )
-    open val reportingId: Long? = null,
+    val reportingId: Long? = null,
     @OneToMany(
         mappedBy = "reporting",
         cascade = [CascadeType.ALL],
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
-    open val reportingSources: List<ReportingSourceModel> = listOf(),
+    val reportingSources: MutableList<ReportingSourceModel> = mutableListOf(),
     @Column(name = "target_type", columnDefinition = "reportings_target_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
-    open val targetType: TargetTypeEnum? = null,
+    val targetType: TargetTypeEnum? = null,
     @Column(name = "vehicle_type", columnDefinition = "reportings_vehicle_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
-    open val vehicleType: VehicleTypeEnum? = null,
+    val vehicleType: VehicleTypeEnum? = null,
     @Column(name = "target_details", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
-    open val targetDetails: List<TargetDetailsEntity>? = listOf(),
+    val targetDetails: List<TargetDetailsEntity>? = listOf(),
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
-    open val geom: Geometry? = null,
-    @Column(name = "sea_front") open val seaFront: String? = null,
-    @Column(name = "description") open val description: String? = null,
+    val geom: Geometry? = null,
+    @Column(name = "sea_front") val seaFront: String? = null,
+    @Column(name = "description") val description: String? = null,
     @Column(name = "report_type", columnDefinition = "reportings_report_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
-    open val reportType: ReportingTypeEnum? = null,
-    @Column(name = "action_taken") open val actionTaken: String? = null,
-    @Column(name = "is_control_required") open val isControlRequired: Boolean? = null,
-    @Column(name = "has_no_unit_available") open val hasNoUnitAvailable: Boolean? = null,
-    @Column(name = "created_at") open val createdAt: Instant,
-    @Column(name = "validity_time") open val validityTime: Int? = null,
-    @Column(name = "is_archived", nullable = false) open val isArchived: Boolean,
-    @Column(name = "is_deleted", nullable = false) open val isDeleted: Boolean,
-    @Column(name = "open_by") open val openBy: String? = null,
+    val reportType: ReportingTypeEnum? = null,
+    @Column(name = "action_taken") val actionTaken: String? = null,
+    @Column(name = "is_control_required") val isControlRequired: Boolean? = null,
+    @Column(name = "has_no_unit_available") val hasNoUnitAvailable: Boolean? = null,
+    @Column(name = "created_at") val createdAt: Instant,
+    @Column(name = "validity_time") val validityTime: Int? = null,
+    @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
+    @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
+    @Column(name = "open_by") val openBy: String? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = true)
-    open val mission: MissionModel? = null,
-    @Column(name = "attached_to_mission_at_utc") open val attachedToMissionAtUtc: Instant? = null,
+    val mission: MissionModel? = null,
+    @Column(name = "attached_to_mission_at_utc") val attachedToMissionAtUtc: Instant? = null,
     @Column(name = "detached_from_mission_at_utc")
-    open val detachedFromMissionAtUtc: Instant? = null,
+    val detachedFromMissionAtUtc: Instant? = null,
     @JdbcType(UUIDJdbcType::class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -113,26 +113,26 @@ abstract class AbstractReportingModel(
         columnDefinition = "uuid",
         referencedColumnName = "id",
     )
-    open val attachedEnvAction: EnvActionModel? = null,
-    @Column(name = "updated_at_utc") @UpdateTimestamp open val updatedAtUtc: Instant? = null,
-    @Column(name = "with_vhf_answer") open val withVHFAnswer: Boolean? = null,
-    @Column(name = "is_infraction_proven") open val isInfractionProven: Boolean,
+    val attachedEnvAction: EnvActionModel? = null,
+    @Column(name = "updated_at_utc") @UpdateTimestamp val updatedAtUtc: Instant? = null,
+    @Column(name = "with_vhf_answer") val withVHFAnswer: Boolean? = null,
+    @Column(name = "is_infraction_proven") val isInfractionProven: Boolean,
     @OneToMany(
         mappedBy = "reporting",
         fetch = FetchType.LAZY,
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(FetchMode.SUBSELECT)
-    open var themes: List<ThemeReportingModel>,
+    var themes: List<ThemeReportingModel>,
     @OneToMany(
         mappedBy = "reporting",
         fetch = FetchType.LAZY,
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(FetchMode.SUBSELECT)
-    open var tags: List<TagReportingModel>,
+    var tags: List<TagReportingModel>,
+    @Formula("created_at + INTERVAL '1 hour' * validity_time")
+    val validityEndTime: Instant? = null,
 ) {
     fun toReporting() =
         ReportingEntity(
@@ -210,7 +210,7 @@ abstract class AbstractReportingModel(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as AbstractReportingModel
+        other as ReportingModel
 
         return id != null && id == other.id
     }

@@ -3,13 +3,21 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.*
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
+import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @Entity
 @Table(name = "dashboard")
@@ -31,7 +39,6 @@ data class DashboardModel(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(FetchMode.SUBSELECT)
     val dashboardDatas: MutableList<DashboardDatasModel>,
     @OneToMany(
         mappedBy = "dashboard",
@@ -39,7 +46,6 @@ data class DashboardModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
     var images: MutableList<DashboardImageModel> = mutableListOf(),
     @Column(name = "links", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)

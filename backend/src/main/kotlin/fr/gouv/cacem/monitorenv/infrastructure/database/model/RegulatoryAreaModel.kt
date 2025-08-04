@@ -11,8 +11,6 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -41,13 +39,11 @@ data class RegulatoryAreaModel(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
     var tags: List<TagRegulatoryAreaModel>,
     @OneToMany(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
     var themes: List<ThemeRegulatoryAreaModel>,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,

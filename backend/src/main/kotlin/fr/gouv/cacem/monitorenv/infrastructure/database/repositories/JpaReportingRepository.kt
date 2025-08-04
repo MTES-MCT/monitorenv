@@ -11,11 +11,11 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel.Companion.fromReportingEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagReportingModel.Companion.fromTagEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeReportingModel.Companion.fromThemeEntity
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.AbstractReportingModel.Companion.fromReportingEntity
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository

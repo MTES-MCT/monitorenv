@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
@@ -24,7 +23,6 @@ data class ThemeVigilanceAreaModel(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vigilance_areas_id")
     @MapsId("vigilanceAreaId")
-    @JsonBackReference
     val vigilanceArea: VigilanceAreaModel,
 ) {
     companion object {

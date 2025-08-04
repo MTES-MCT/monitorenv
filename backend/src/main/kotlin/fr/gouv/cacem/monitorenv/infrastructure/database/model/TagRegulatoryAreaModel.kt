@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.annotation.JsonBackReference
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
@@ -24,7 +23,6 @@ data class TagRegulatoryAreaModel(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regulatory_areas_id")
     @MapsId("regulatoryAreaId")
-    @JsonBackReference
     val regulatoryArea: RegulatoryAreaModel,
 ) {
     companion object {

@@ -16,8 +16,6 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
 
@@ -37,10 +35,8 @@ data class ControlUnitModel(
     @Column(name = "area_note")
     val areaNote: String? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
-    @Fetch(FetchMode.SUBSELECT)
     val controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
-    @Fetch(FetchMode.SUBSELECT)
     val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_area_insee_dep")

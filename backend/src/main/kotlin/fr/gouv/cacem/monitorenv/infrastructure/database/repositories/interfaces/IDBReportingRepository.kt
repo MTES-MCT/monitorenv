@@ -4,15 +4,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfInfractions
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModelJpa
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Modifying(clearAutomatically = true, flushAutomatically = true)
@@ -114,7 +113,7 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     @Query(
         """
         SELECT DISTINCT reporting
-        FROM ReportingModelJpa reporting
+        FROM ReportingModel reporting
         WHERE reporting.isDeleted = false
             AND reporting.createdAt >= CAST(CAST(:startedAfter as text) AS timestamp)
             AND (CAST(CAST(:startedBefore as text) AS timestamp) IS NULL OR reporting.createdAt <= CAST(CAST(:startedBefore as text) AS timestamp))
@@ -170,28 +169,28 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         status: List<String>? = emptyList(),
         targetTypes: List<TargetTypeEnum>? = emptyList(),
         isAttachedToMission: Boolean?,
-    ): List<ReportingModelJpa>
+    ): List<ReportingModel>
 
     @Query(
         value =
             """
         SELECT reporting
-        FROM ReportingModelJpa reporting
+        FROM ReportingModel reporting
         INNER JOIN ReportingSourceModel rs ON reporting.id = rs.reporting.id
         WHERE rs.controlUnit.id = :controlUnitId
         """,
     )
-    fun findByControlUnitId(controlUnitId: Int): List<ReportingModelJpa>
+    fun findByControlUnitId(controlUnitId: Int): List<ReportingModel>
 
     @Query(
         value =
             """
         SELECT reporting
-        FROM ReportingModelJpa reporting
+        FROM ReportingModel reporting
         WHERE reporting.mission.id = :missionId
         """,
     )
-    fun findByMissionId(missionId: Int): List<ReportingModelJpa>
+    fun findByMissionId(missionId: Int): List<ReportingModel>
 
     @Query(
         value =

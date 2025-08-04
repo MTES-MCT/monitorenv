@@ -2,8 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import jakarta.persistence.*
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import java.time.ZonedDateTime
 
 @Entity
@@ -24,7 +22,6 @@ data class TagModel(
         fetch = FetchType.LAZY,
         cascade = [CascadeType.ALL],
     )
-    @Fetch(FetchMode.SUBSELECT)
     var subTags: List<TagModel>,
 ) {
     fun toTagEntity(): TagEntity =

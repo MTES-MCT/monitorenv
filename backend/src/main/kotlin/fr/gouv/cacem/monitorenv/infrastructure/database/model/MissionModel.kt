@@ -10,11 +10,22 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.reportings.ReportingModel
-import jakarta.persistence.*
+import jakarta.persistence.Basic
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.OrderBy
+import jakarta.persistence.PrePersist
+import jakarta.persistence.PreUpdate
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.dialect.PostgreSQLEnumJdbcType
@@ -34,7 +45,6 @@ class MissionModel(
     val id: Int? = null,
     @OneToMany(mappedBy = "mission", fetch = FetchType.LAZY)
     @OrderBy("id")
-    @Fetch(FetchMode.SUBSELECT)
     val attachedReportings: List<ReportingModel>? = listOf(),
     @OneToMany(
         mappedBy = "mission",
@@ -42,7 +52,6 @@ class MissionModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     val controlResources: MutableList<MissionControlResourceModel>? = mutableListOf(),
     @OneToMany(
@@ -51,7 +60,6 @@ class MissionModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     val controlUnits: MutableList<MissionControlUnitModel>? = mutableListOf(),
     @Column(name = "completed_by") val completedBy: String? = null,
@@ -61,7 +69,6 @@ class MissionModel(
         orphanRemoval = true,
         fetch = FetchType.LAZY,
     )
-    @Fetch(FetchMode.SUBSELECT)
     @OrderBy("id")
     val envActions: MutableList<EnvActionModel>? = mutableListOf(),
     @Column(name = "end_datetime_utc") val endDateTimeUtc: Instant? = null,
