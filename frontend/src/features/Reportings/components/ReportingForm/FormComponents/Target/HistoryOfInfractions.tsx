@@ -1,17 +1,19 @@
-import { useGetEnvActionsByMmsiQuery, useGetSuspicionOfInfractionsQuery } from '@api/infractionsAPI'
 import { Bold, Italic } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
-import { getAllThemes, getTotalInfraction, getTotalPV } from '@features/Mission/utils'
-import { isNewReporting } from '@features/Reportings/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
-import { skipToken } from '@reduxjs/toolkit/query'
-import { uniq } from 'lodash/fp'
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useDebounce } from 'use-debounce'
 
 import { ReportingContext } from '../../../../../../domain/shared_slices/Global'
+import {
+  initialHistory,
+  useGetHistoryOfInfractions,
+  type HistoryOfInfractionsProps
+} from '../../hooks/useGetHistoryOfInfractions'
+
+const NB_CHAR_MMSI = 9
 
 export function HistoryOfInfractions({
   isReadOnly = false,
@@ -20,47 +22,52 @@ export function HistoryOfInfractions({
 }: {
   isReadOnly?: boolean
   mmsi: string | undefined
-  reportingId: string | number | undefined
+  reportingId: string | number
 }) {
   const reportingContext =
     useAppSelector(state => (reportingId ? state.reporting.reportings[reportingId]?.context : undefined)) ??
     ReportingContext.MAP
 
   const [debouncedMmsi] = useDebounce(mmsi, 300)
-  const NB_CHAR_MMSI = 9
 
-  const canSearch = reportingId && debouncedMmsi && debouncedMmsi.length === NB_CHAR_MMSI
+  const canSearch = !!(reportingId && debouncedMmsi && debouncedMmsi.length === NB_CHAR_MMSI)
 
-  const { data: envActions, isLoading: isLoadingEnvActions } = useGetEnvActionsByMmsiQuery(
-    canSearch ? debouncedMmsi : skipToken
-  )
+  const getHistoryByMmsi = useGetHistoryOfInfractions()
 
-  const { data: suspicionOfInfractions, isLoading: isLoadingSuspicions } = useGetSuspicionOfInfractionsQuery(
-    canSearch ? { idToExclude: isNewReporting(reportingId) ? undefined : +reportingId, mmsi: debouncedMmsi } : skipToken
-  )
+  const [history, setHistory] = useState<HistoryOfInfractionsProps>(initialHistory)
 
-  const totalInfraction = useMemo(() => getTotalInfraction(envActions ?? []), [envActions])
+  useEffect(() => {
+    const fetchHistory = async () => {
+      if (!canSearch || !debouncedMmsi) {
+        setHistory(initialHistory)
 
-  const totalPV = useMemo(() => getTotalPV(envActions ?? []), [envActions])
+        return
+      }
+      const result = await getHistoryByMmsi({
+        canSearch,
+        debouncedMmsi,
+        reportingId
+      })
+      setHistory(result ?? initialHistory)
+    }
 
-  const themes = useMemo(
-    () => uniq([...getAllThemes(envActions ?? []).map(theme => theme.name), ...(suspicionOfInfractions?.themes ?? [])]),
-    [envActions, suspicionOfInfractions?.themes]
-  )
+    fetchHistory()
 
-  const isLoading = isLoadingEnvActions || isLoadingSuspicions
+    // no need to listen getHistoryByMmsi
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canSearch, debouncedMmsi, reportingId])
 
   const informationsMessage = isReadOnly
     ? 'ne peuvent être affichés que si un MMSI est rentré'
     : 'entrez un MMSI pour lancer la recherche'
 
-  const totalSuspicionOfInfractions = suspicionOfInfractions?.ids.length ?? 0
+  const totalSuspicionOfInfractions = history.suspicionOfInfractions.length ?? 0
   const dotColor = () => {
-    if (totalInfraction === 0) {
+    if (history.totalInfraction === 0) {
       return THEME.color.mediumSeaGreen
     }
 
-    if (totalPV === 0) {
+    if (history.totalPV === 0) {
       return THEME.color.goldenPoppy
     }
 
@@ -69,21 +76,21 @@ export function HistoryOfInfractions({
 
   if (!canSearch) {
     return (
-      <Wrapper $align={!isLoading}>
+      <Wrapper $align={!history.isLoading}>
         <HistoryText>Antécédents : {informationsMessage}</HistoryText>
       </Wrapper>
     )
   }
 
   return (
-    <Wrapper $align={!isLoading}>
+    <Wrapper $align={!history.isLoading}>
       <HistoryText>Antécédents:</HistoryText>
 
-      {!isLoading && canSearch && (
+      {!history.isLoading && canSearch && (
         <>
           <InfractionsAndPV>
             <Icon.CircleFilled color={dotColor()} size={8} />
-            {totalSuspicionOfInfractions === 0 && totalInfraction === 0 ? (
+            {totalSuspicionOfInfractions === 0 && history.totalInfraction === 0 ? (
               <span>Pas d&apos;antécédent</span>
             ) : (
               <>
@@ -100,15 +107,15 @@ export function HistoryOfInfractions({
                   </StyledTooltip>
                   ,
                 </>
-                <BoldOrNormalText $isBold={totalInfraction > 0}>
-                  {totalInfraction} {pluralize('infraction', totalInfraction)},
+                <BoldOrNormalText $isBold={history.totalInfraction > 0}>
+                  {history.totalInfraction} {pluralize('infraction', history.totalInfraction)},
                 </BoldOrNormalText>
-                <BoldOrNormalText $isBold={totalPV > 0}>{totalPV} PV</BoldOrNormalText>
+                <BoldOrNormalText $isBold={history.totalPV > 0}>{history.totalPV} PV</BoldOrNormalText>
               </>
             )}
           </InfractionsAndPV>
 
-          {themes.length > 0 && (
+          {history.themes.length > 0 && (
             <StyledTooltip
               isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
               linkText="En savoir plus"
@@ -116,7 +123,7 @@ export function HistoryOfInfractions({
             >
               <Header as="header">Thématiques&nbsp;: </Header>
               <ul>
-                {themes.map(theme => (
+                {history.themes.map(theme => (
                   <li key={theme}>{theme}</li>
                 ))}
               </ul>
@@ -124,7 +131,7 @@ export function HistoryOfInfractions({
           )}
         </>
       )}
-      {isLoading && <LoadingIcon />}
+      {history.isLoading && <LoadingIcon />}
     </Wrapper>
   )
 }

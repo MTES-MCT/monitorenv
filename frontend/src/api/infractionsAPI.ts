@@ -21,4 +21,4 @@ export const infractionsAPI = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-export const { useGetEnvActionsByMmsiQuery, useGetSuspicionOfInfractionsQuery } = infractionsAPI
+export const { useLazyGetEnvActionsByMmsiQuery, useLazyGetSuspicionOfInfractionsQuery } = infractionsAPI
