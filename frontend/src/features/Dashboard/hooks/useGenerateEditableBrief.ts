@@ -1,3 +1,4 @@
+import { useGetVigilanceAreasByIdsQuery } from '@api/vigilanceAreasAPI'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useState } from 'react'
@@ -19,11 +20,13 @@ export function useGenerateEditableBrief(dashboard: Dashboard.Dashboard) {
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.selectedNearbyUnits : []
   )
 
+  const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery(dashboard.vigilanceAreaIds)
+
   const { getImages } = useExportImages()
 
   const downloadEditableBrief = async () => {
     setIsLoadingBrief(true)
-    await dispatch(exportBrief({ dashboard, getImages, nearbyUnits, recentActivityFilters }))
+    await dispatch(exportBrief({ dashboard, getImages, nearbyUnits, recentActivityFilters, vigilanceAreas }))
     setIsLoadingBrief(false)
   }
 

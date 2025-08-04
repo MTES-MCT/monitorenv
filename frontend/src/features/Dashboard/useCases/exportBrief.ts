@@ -3,7 +3,7 @@ import { dashboardsAPI } from '@api/dashboardsAPI'
 import { recentActivityAPI } from '@api/recentActivity'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { reportingsAPI } from '@api/reportingsAPI'
-import { getVigilanceAreasByIds } from '@api/vigilanceAreasAPI'
+import { convertImagesForFront } from '@components/Form/Images/utils'
 import {
   getDateRange,
   getUnitsCurrentlyInArea,
@@ -52,9 +52,10 @@ type ExportBriefProps = {
   ) => Promise<ExportImageType[]> | undefined
   nearbyUnits: NearbyUnit[] | undefined
   recentActivityFilters: RecentActivityFilters | undefined
+  vigilanceAreas: VigilanceArea.VigilanceArea[] | undefined
 }
 export const exportBrief =
-  ({ dashboard, getImages, nearbyUnits, recentActivityFilters }: ExportBriefProps): HomeAppThunk =>
+  ({ dashboard, getImages, nearbyUnits, recentActivityFilters, vigilanceAreas }: ExportBriefProps): HomeAppThunk =>
   async (dispatch, getState) => {
     /* RECENT ACTIVITY */
     const startAfterFilter = recentActivityFilters?.startedAfter
@@ -81,46 +82,50 @@ export const exportBrief =
     const wholeImage = images?.find(img => String(img.featureId)?.includes('WHOLE_DASHBOARD'))?.image
 
     /* VIGILANCE AREAS */
-    const vigilanceAreas = getVigilanceAreasByIds(getState(), dashboard.vigilanceAreaIds)
     const [allLinkedAMPIds, allLinkedRegulatoryAreaIds] = [
-      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
-      Array.from(new Set(vigilanceAreas.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
+      Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
+      Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
     ]
     const allLinkedAMPs = getAmpsByIds(getState(), allLinkedAMPIds)
     const allLinkedRegulatoryAreas = getRegulatoryAreasByIds(getState(), allLinkedRegulatoryAreaIds)
-    const formattedVigilanceAreas = vigilanceAreas.map(vigilanceArea => ({
-      color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
-      comments: vigilanceArea.comments,
-      endDatePeriod: vigilanceArea.endDatePeriod,
-      endingOccurenceDate: endingOccurenceText(vigilanceArea.endingCondition, vigilanceArea.computedEndDate),
-      frequency: frequencyText(vigilanceArea.frequency),
-      id: vigilanceArea.id,
-      isAtAllTimes: vigilanceArea.isAtAllTimes,
-      linkedAMPs: vigilanceArea.linkedAMPs,
-      linkedRegulatoryAreas: vigilanceArea.linkedRegulatoryAreas,
-      links: vigilanceArea.links,
-      name: vigilanceArea.name,
-      startDatePeriod: vigilanceArea.startDatePeriod,
-      themes: displayThemes(vigilanceArea.themes),
-      visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
-    }))
 
-    const vigilanceAreasWithImagesAndLinkedLayers = formattedVigilanceAreas.map(vigilanceArea => {
-      const filteredAmps = allLinkedAMPs.filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
-      const filteredRegulatoryAreas = allLinkedRegulatoryAreas.filter(regulatoryArea =>
-        vigilanceArea.linkedRegulatoryAreas?.includes(regulatoryArea.id)
+    const getVigilanceAreasWithImagesAttachments = () =>
+      Promise.all(
+        (vigilanceAreas ?? []).map(async vigilanceArea => {
+          const filteredAmps = allLinkedAMPs.filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
+          const filteredRegulatoryAreas = allLinkedRegulatoryAreas.filter(regulatoryArea =>
+            vigilanceArea.linkedRegulatoryAreas?.includes(regulatoryArea.id)
+          )
+          const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
+          const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
+          const imagesAttachments = (await convertImagesForFront(vigilanceArea.images ?? [], document.body)).map(
+            vigilanceAreaImage => vigilanceAreaImage.image
+          )
+
+          return {
+            color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
+            comments: vigilanceArea.comments,
+            endDatePeriod: vigilanceArea.endDatePeriod,
+            endingOccurenceDate: endingOccurenceText(vigilanceArea.endingCondition, vigilanceArea.computedEndDate),
+            frequency: frequencyText(vigilanceArea.frequency),
+            id: vigilanceArea.id as number,
+            image,
+            imagesAttachments,
+            isAtAllTimes: vigilanceArea.isAtAllTimes,
+            linkedAMPs: filteredAmps.map(amp => amp.name).join(', '),
+            linkedRegulatoryAreas: filteredRegulatoryAreas.map(regulatoryArea => regulatoryArea.entityName).join(', '),
+            links: vigilanceArea.links,
+            minimap,
+            name: vigilanceArea.name as string,
+            startDatePeriod: vigilanceArea.startDatePeriod,
+            themes: displayThemes(vigilanceArea.themes),
+            visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
+          }
+        })
       )
-      const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
-      const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
 
-      return {
-        ...vigilanceArea,
-        image,
-        linkedAMPs: filteredAmps.map(amp => amp.name).join(', '),
-        linkedRegulatoryAreas: filteredRegulatoryAreas.map(regulatoryArea => regulatoryArea.entityName).join(', '),
-        minimap
-      }
-    })
+    const formattedVigilancesAreas = await getVigilanceAreasWithImagesAttachments()
+
     /* REGULATORY AREAS */
     const regulatoryAreas = getRegulatoryAreasByIds(getState(), dashboard.regulatoryAreaIds)
     const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => ({
@@ -310,7 +315,7 @@ export const exportBrief =
         recentActivity: formattedRecentActivity,
         regulatoryAreas: regulatoryAreasWithImages,
         reportings: formattedReportings ?? [],
-        vigilanceAreas: vigilanceAreasWithImagesAndLinkedLayers
+        vigilanceAreas: formattedVigilancesAreas
       })
     )
 
