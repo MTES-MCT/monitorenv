@@ -39,11 +39,14 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
-  const { layer } = useGetRegulatoryLayersQuery(undefined, {
-    selectFromResult: result => ({
-      layer: result?.currentData?.entities[layerId]
-    })
-  })
+  const { layer } = useGetRegulatoryLayersQuery(
+    { withGeometry: true },
+    {
+      selectFromResult: result => ({
+        layer: result?.currentData?.entities[layerId]
+      })
+    }
+  )
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
   const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)

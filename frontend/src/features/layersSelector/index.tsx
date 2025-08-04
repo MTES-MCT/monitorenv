@@ -1,5 +1,3 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { LocalizedAreas } from '@features/LocalizedArea'
 import { NumberOfFilters } from '@features/map/shared/style'
@@ -12,7 +10,7 @@ import {
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useMountTransition } from '@hooks/useMountTransition'
-import { Accent, FulfillingBouncingCircleLoader, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import styled from 'styled-components'
 
@@ -48,8 +46,8 @@ export function LayersSidebar() {
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
   const nbOfFiltersSetted = useAppSelector(state => state.vigilanceAreaFilters.nbOfFiltersSetted)
 
-  const regulatoryAreas = useGetRegulatoryLayersQuery()
-  const amps = useGetAMPsQuery()
+  // const regulatoryAreas = useGetRegulatoryLayersQuery()
+  // const amps = useGetAMPsQuery()
 
   const dispatch = useAppDispatch()
 
@@ -139,30 +137,30 @@ export function LayersSidebar() {
             )}
           </MetadataPanelShifter>
 
-          <VigilanceAreaPanelShifter
-            $isLayersSidebarVisible={isLayersSidebarVisible}
-            $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
-          >
-            {mainVigilanceAreaFormOpen && (
-              <VigilanceAreaForm
-                key={editingVigilanceAreaId}
-                isOpen={mainVigilanceAreaFormOpen}
-                vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
-              />
-            )}
-          </VigilanceAreaPanelShifter>
-        </Sidebar>
+        <VigilanceAreaPanelShifter
+          $isLayersSidebarVisible={isLayersSidebarVisible}
+          $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
+        >
+          {mainVigilanceAreaFormOpen && (
+            <VigilanceAreaForm
+              key={editingVigilanceAreaId}
+              isOpen={mainVigilanceAreaFormOpen}
+              vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
+            />
+          )}
+        </VigilanceAreaPanelShifter>
+      </Sidebar>
       )}
-      {(regulatoryAreas.isLoading || amps.isLoading) && (
-        <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>
-          <FulfillingBouncingCircleLoader color={THEME.color.gunMetal} size={30} />
-          <Message>
-            Chargement des zones cartographiques ({regulatoryAreas.isLoading && 'Zones réglementaires'}
-            {regulatoryAreas.isLoading && amps.isLoading ? ' et ' : ''}
-            {amps.isLoading && 'Aires Marines Protégées'})
-          </Message>
-        </SpinnerWrapper>
-      )}
+      {/* {(regulatoryAreas.isLoading || amps.isLoading) && ( */}
+      {/*   <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}> */}
+      {/*     <FulfillingBouncingCircleLoader color={THEME.color.gunMetal} size={30} /> */}
+      {/*     <Message> */}
+      {/*       Chargement des zones cartographiques ({regulatoryAreas.isLoading && 'Zones réglementaires'} */}
+      {/*       {regulatoryAreas.isLoading && amps.isLoading ? ' et ' : ''} */}
+      {/*       {amps.isLoading && 'Aires Marines Protégées'}) */}
+      {/*     </Message> */}
+      {/*   </SpinnerWrapper> */}
+      {/* )} */}
     </Container>
   )
 }

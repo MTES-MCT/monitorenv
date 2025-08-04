@@ -26,7 +26,7 @@ export async function populateExtractAreaFromApi(
   dispatch: ThunkDispatch<HomeRootState, void, Action>,
   extractedAreaFromApi: Dashboard.ExtractedAreaFromApi
 ): Promise<Dashboard.ExtractedArea> {
-  const { data: regulatoryLayers } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate())
+  const { data: regulatoryLayers } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate(true))
   const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
   const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
   const { data: reportings } = await dispatch(

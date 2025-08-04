@@ -29,11 +29,14 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
 
   const ref = createRef<HTMLLIElement>()
 
-  const { layer } = useGetRegulatoryLayersQuery(undefined, {
-    selectFromResult: result => ({
-      layer: result?.currentData?.entities[layerId]
-    })
-  })
+  const { layer } = useGetRegulatoryLayersQuery(
+    { withGeometry: true },
+    {
+      selectFromResult: result => ({
+        layer: result?.currentData?.entities[layerId]
+      })
+    }
+  )
 
   const handleSelectZone = e => {
     e.stopPropagation()
