@@ -17,7 +17,7 @@ data class EditableBriefVigilanceAreaEntity(
     val id: Int,
     val isAtAllTimes: Boolean,
     override val image: String?,
-    val imagesAttachments: List<String>? = null,
+    val imagesAttachments: List<ImageEntity>? = null,
     override val minimap: String?,
     val linkedAMPs: String? = null,
     val linkedRegulatoryAreas: String? = null,

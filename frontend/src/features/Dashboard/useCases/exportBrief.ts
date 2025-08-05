@@ -3,7 +3,6 @@ import { dashboardsAPI } from '@api/dashboardsAPI'
 import { recentActivityAPI } from '@api/recentActivity'
 import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
 import { reportingsAPI } from '@api/reportingsAPI'
-import { convertImagesForFront } from '@components/Form/Images/utils'
 import {
   getDateRange,
   getUnitsCurrentlyInArea,
@@ -89,18 +88,42 @@ export const exportBrief =
     const allLinkedAMPs = getAmpsByIds(getState(), allLinkedAMPIds)
     const allLinkedRegulatoryAreas = getRegulatoryAreasByIds(getState(), allLinkedRegulatoryAreaIds)
 
+    const getVigilanceAreaAmpsAndRegulatoryAreas = (vigilanceArea: VigilanceArea.VigilanceArea) => {
+      const filteredAmps = allLinkedAMPs
+        .filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
+        .map(amp => amp.name)
+        .join(', ')
+
+      const filteredRegulatoryAreas = allLinkedRegulatoryAreas
+        .filter(regulatoryArea => vigilanceArea.linkedRegulatoryAreas?.includes(regulatoryArea.id))
+        .map(regulatoryArea => regulatoryArea.entityName)
+        .join(', ')
+
+      return { filteredAmps, filteredRegulatoryAreas }
+    }
+
+    const getVigilancesAeasImages = async (vigilanceArea: VigilanceArea.VigilanceArea) => {
+      const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
+      const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
+      const imagesAttachments = vigilanceArea.images?.map(imageAttachment => ({
+        content: imageAttachment.content,
+        mimeType: imageAttachment.mimeType,
+        name: imageAttachment.name,
+        size: imageAttachment.size
+      }))
+
+      return {
+        image,
+        imagesAttachments,
+        minimap
+      }
+    }
+
     const getVigilanceAreasWithImagesAttachments = () =>
       Promise.all(
         (vigilanceAreas ?? []).map(async vigilanceArea => {
-          const filteredAmps = allLinkedAMPs.filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
-          const filteredRegulatoryAreas = allLinkedRegulatoryAreas.filter(regulatoryArea =>
-            vigilanceArea.linkedRegulatoryAreas?.includes(regulatoryArea.id)
-          )
-          const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
-          const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
-          const imagesAttachments = (await convertImagesForFront(vigilanceArea.images ?? [], document.body)).map(
-            vigilanceAreaImage => vigilanceAreaImage.image
-          )
+          const { image, imagesAttachments, minimap } = await getVigilancesAeasImages(vigilanceArea)
+          const { filteredAmps, filteredRegulatoryAreas } = getVigilanceAreaAmpsAndRegulatoryAreas(vigilanceArea)
 
           return {
             color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
@@ -112,8 +135,8 @@ export const exportBrief =
             image,
             imagesAttachments,
             isAtAllTimes: vigilanceArea.isAtAllTimes,
-            linkedAMPs: filteredAmps.map(amp => amp.name).join(', '),
-            linkedRegulatoryAreas: filteredRegulatoryAreas.map(regulatoryArea => regulatoryArea.entityName).join(', '),
+            linkedAMPs: filteredAmps,
+            linkedRegulatoryAreas: filteredRegulatoryAreas,
             links: vigilanceArea.links,
             minimap,
             name: vigilanceArea.name as string,

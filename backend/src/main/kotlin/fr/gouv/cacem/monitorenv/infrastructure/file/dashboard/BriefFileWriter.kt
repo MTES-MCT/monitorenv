@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.file.dashboard
 
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DetailWithImagesRenderable
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefVigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.utils.ByteArrayConverter
 import org.apache.batik.transcoder.TranscoderInput
 import org.apache.batik.transcoder.TranscoderOutput
 import org.apache.batik.transcoder.image.PNGTranscoder
@@ -25,6 +26,7 @@ import java.io.File
 import java.math.BigInteger
 import java.util.Base64
 import javax.imageio.ImageIO
+import kotlin.collections.forEach
 
 abstract class BriefFileWriter : IBriefFileWriter {
     private val logger = LoggerFactory.getLogger(BriefFileWriter::class.java)
@@ -61,7 +63,7 @@ abstract class BriefFileWriter : IBriefFileWriter {
             XWPFDocument.PICTURE_TYPE_PNG,
             "$sanitizedFileName.png",
             Units.pixelToEMU(width),
-            Units.pixelToEMU(height)
+            Units.pixelToEMU(height),
         )
         inputStreamImg.close()
         if (!tempImageFile.delete()) {
@@ -332,33 +334,31 @@ abstract class BriefFileWriter : IBriefFileWriter {
 
             deleteFirstEmptyLineInTable(table)
 
-            if(item is EditableBriefVigilanceAreaEntity && item.imagesAttachments != null && item.imagesAttachments.isNotEmpty()) {
-                val imagesParagraph = document.insertNewParagraph(tableParagraph.ctp.newCursor())
-                for (image in item.imagesAttachments) {
-                    paragraph.createRun().addBreak()
-                    val dimensions = getImageDimensionsFromBase64(image)
-                    val isPortrait = dimensions?.let { it.first < it.second } ?: false
-                    createImageFromBase64(
-                        name = item.title,
-                        image = image,
-                        paragraph = imagesParagraph,
-                        height = if(isPortrait)  600 else 400,
-                        width = if(isPortrait) 400 else 600,
-                    )
-                    paragraph.createRun().addBreak()
-                }
-            }
+            val imagesAttachmentsParagraph = document.insertNewParagraph(tableParagraph.ctp.newCursor())
+            addAvigilanceAreasImages(
+                paragraph = imagesAttachmentsParagraph,
+                item = item,
+            )
 
             if (i < items.lastIndex) {
-                tableParagraph.createRun().addBreak(BreakType.PAGE)
+                imagesAttachmentsParagraph.createRun().addBreak(BreakType.PAGE)
             }
         }
         cleanParagraphPlaceholder(document, paragraph)
     }
 
-    private fun getImageDimensionsFromBase64(base64String: String): Pair<Int, Int>? {
-        val imageBytes = Base64.getDecoder().decode(base64String.substringAfter("base64,"))
-        val bufferedImage = ImageIO.read(ByteArrayInputStream(imageBytes))
-        return bufferedImage?.let { it.width to it.height }
+    private fun addAvigilanceAreasImages(
+        paragraph: XWPFParagraph,
+        item: DetailWithImagesRenderable,
+    ) {
+        if (item is EditableBriefVigilanceAreaEntity &&
+            item.imagesAttachments != null &&
+            item.imagesAttachments.isNotEmpty()
+        ) {
+            item.imagesAttachments.forEach { image ->
+                ByteArrayConverter().createImageFromByteArray(image, paragraph)
+                paragraph.createRun().addBreak()
+            }
+        }
     }
 }

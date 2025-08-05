@@ -204,7 +204,7 @@ export namespace Dashboard {
     frequency: string
     id: number
     image?: string
-    imagesAttachments?: string[]
+    imagesAttachments?: ImageApi[]
     linkedAMPs?: string
     linkedRegulatoryAreas?: string
     links?: Link[]

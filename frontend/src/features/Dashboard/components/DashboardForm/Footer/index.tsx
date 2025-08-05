@@ -258,6 +258,10 @@ const StyledDropdownItem = styled(Dropdown.Item)`
   color: ${p => p.theme.color.gunMetal};
   justify-content: space-between;
   width: 175px;
+  > span {
+    display: flex;
+    gap: 8px;
+  }
 `
 const TextLight = styled.span`
   color: ${p => p.theme.color.slateGray};

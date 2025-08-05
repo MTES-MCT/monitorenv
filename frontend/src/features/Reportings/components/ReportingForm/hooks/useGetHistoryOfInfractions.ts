@@ -5,7 +5,7 @@ import { uniq } from 'lodash'
 
 type UseGetHistoryOfInfractionsProps = {
   canSearch: boolean
-  debouncedMmsi: string
+  mmsi: string
   reportingId: string | number
 }
 
@@ -30,20 +30,20 @@ export const useGetHistoryOfInfractions = () => {
   const [getSuspicionOfInfractions, { isLoading: isLoadingLazySuspicions }] = useLazyGetSuspicionOfInfractionsQuery()
 
   const getHistoryByMmsi = async ({
-    debouncedMmsi,
+    mmsi,
     reportingId
   }: UseGetHistoryOfInfractionsProps): Promise<HistoryOfInfractionsProps | undefined> => {
-    if (!debouncedMmsi) {
+    if (!mmsi) {
       return initialHistory
     }
 
     let envActionsByMmsi
     let suspicionOfInfractionsByMmsi
-    if (debouncedMmsi) {
-      envActionsByMmsi = await getEnvActionsByMmsi(debouncedMmsi).unwrap()
+    if (mmsi) {
+      envActionsByMmsi = await getEnvActionsByMmsi(mmsi).unwrap()
       suspicionOfInfractionsByMmsi = await getSuspicionOfInfractions({
         idToExclude: isNewReporting(reportingId) ? undefined : +reportingId,
-        mmsi: debouncedMmsi
+        mmsi
       }).unwrap()
     }
 
