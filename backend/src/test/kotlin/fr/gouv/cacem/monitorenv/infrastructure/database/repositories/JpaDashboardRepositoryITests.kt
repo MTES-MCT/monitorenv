@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import io.ktor.util.*
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
@@ -15,6 +16,9 @@ import java.util.UUID
 class JpaDashboardRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaDashboardRepository: JpaDashboardRepository
+
+    @Autowired
+    private lateinit var entityManager: EntityManager
 
     @Test
     fun `save should save a dashboard and return saved entity when dashboard doesnt exist`() {
@@ -129,7 +133,7 @@ class JpaDashboardRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `delete should update set deleted to true`() {
+    fun `delete should update set deleted to true and delete all related elements`() {
         // Given
         val id = UUID.fromString("e1e99b92-1e61-4f9f-9cbf-8cfae2395d41")
         assertThat(jpaDashboardRepository.findById(id)?.isDeleted).isFalse()
@@ -138,6 +142,16 @@ class JpaDashboardRepositoryITests : AbstractDBTests() {
         jpaDashboardRepository.delete(id)
 
         // Then
-        assertThat(jpaDashboardRepository.findById(id)?.isDeleted).isTrue()
+        entityManager.flush()
+        entityManager.clear()
+        val dashboardDeleted = jpaDashboardRepository.findById(id)
+
+        assertThat(dashboardDeleted?.isDeleted).isTrue()
+        assertThat(dashboardDeleted?.regulatoryAreaIds).isEmpty()
+        assertThat(dashboardDeleted?.ampIds).isEmpty()
+        assertThat(dashboardDeleted?.vigilanceAreaIds).isEmpty()
+        assertThat(dashboardDeleted?.reportingIds).isEmpty()
+        assertThat(dashboardDeleted?.controlUnitIds).isEmpty()
+        assertThat(dashboardDeleted?.inseeCode).isNull()
     }
 }
