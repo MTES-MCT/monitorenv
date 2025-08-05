@@ -102,7 +102,7 @@ export const exportBrief =
       return { filteredAmps, filteredRegulatoryAreas }
     }
 
-    const getVigilancesAeasImages = async (vigilanceArea: VigilanceArea.VigilanceArea) => {
+    const getVigilancesAeasImages = (vigilanceArea: VigilanceArea.VigilanceArea) => {
       const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
       const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS, vigilanceArea.id)
       const imagesAttachments = vigilanceArea.images?.map(imageAttachment => ({
@@ -119,35 +119,30 @@ export const exportBrief =
       }
     }
 
-    const getVigilanceAreasWithImagesAttachments = () =>
-      Promise.all(
-        (vigilanceAreas ?? []).map(async vigilanceArea => {
-          const { image, imagesAttachments, minimap } = await getVigilancesAeasImages(vigilanceArea)
-          const { filteredAmps, filteredRegulatoryAreas } = getVigilanceAreaAmpsAndRegulatoryAreas(vigilanceArea)
+    const vigilanceAreasWithImagesAttachments = (vigilanceAreas ?? []).map(vigilanceArea => {
+      const { image, imagesAttachments, minimap } = getVigilancesAeasImages(vigilanceArea)
+      const { filteredAmps, filteredRegulatoryAreas } = getVigilanceAreaAmpsAndRegulatoryAreas(vigilanceArea)
 
-          return {
-            color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
-            comments: vigilanceArea.comments,
-            endDatePeriod: vigilanceArea.endDatePeriod,
-            endingOccurenceDate: endingOccurenceText(vigilanceArea.endingCondition, vigilanceArea.computedEndDate),
-            frequency: frequencyText(vigilanceArea.frequency),
-            id: vigilanceArea.id as number,
-            image,
-            imagesAttachments,
-            isAtAllTimes: vigilanceArea.isAtAllTimes,
-            linkedAMPs: filteredAmps,
-            linkedRegulatoryAreas: filteredRegulatoryAreas,
-            links: vigilanceArea.links,
-            minimap,
-            name: vigilanceArea.name as string,
-            startDatePeriod: vigilanceArea.startDatePeriod,
-            themes: displayThemes(vigilanceArea.themes),
-            visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
-          }
-        })
-      )
-
-    const formattedVigilancesAreas = await getVigilanceAreasWithImagesAttachments()
+      return {
+        color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
+        comments: vigilanceArea.comments,
+        endDatePeriod: vigilanceArea.endDatePeriod,
+        endingOccurenceDate: endingOccurenceText(vigilanceArea.endingCondition, vigilanceArea.computedEndDate),
+        frequency: frequencyText(vigilanceArea.frequency),
+        id: vigilanceArea.id as number,
+        image,
+        imagesAttachments,
+        isAtAllTimes: vigilanceArea.isAtAllTimes,
+        linkedAMPs: filteredAmps,
+        linkedRegulatoryAreas: filteredRegulatoryAreas,
+        links: vigilanceArea.links,
+        minimap,
+        name: vigilanceArea.name as string,
+        startDatePeriod: vigilanceArea.startDatePeriod,
+        themes: displayThemes(vigilanceArea.themes),
+        visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
+      }
+    })
 
     /* REGULATORY AREAS */
     const regulatoryAreas = getRegulatoryAreasByIds(getState(), dashboard.regulatoryAreaIds)
@@ -338,7 +333,7 @@ export const exportBrief =
         recentActivity: formattedRecentActivity,
         regulatoryAreas: regulatoryAreasWithImages,
         reportings: formattedReportings ?? [],
-        vigilanceAreas: formattedVigilancesAreas
+        vigilanceAreas: vigilanceAreasWithImagesAttachments
       })
     )
 

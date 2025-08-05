@@ -41,7 +41,7 @@ class AttachmentFile : BriefFileWriter() {
         document.paragraphs.firstOrNull { it.text.contains("\${images}") }?.let { paragraph ->
             paragraph.runs.forEach { it.setText("", 0) }
             images.forEach { image ->
-                ByteArrayConverter().createImageFromByteArray(image, paragraph)
+                ByteArrayConverter.createImageFromByteArray(image, paragraph)
                 paragraph.createRun().addBreak()
             }
         }

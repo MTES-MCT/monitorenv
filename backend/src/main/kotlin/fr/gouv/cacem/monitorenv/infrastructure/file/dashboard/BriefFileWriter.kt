@@ -356,7 +356,7 @@ abstract class BriefFileWriter : IBriefFileWriter {
             item.imagesAttachments.isNotEmpty()
         ) {
             item.imagesAttachments.forEach { image ->
-                ByteArrayConverter().createImageFromByteArray(image, paragraph)
+                ByteArrayConverter.createImageFromByteArray(image, paragraph)
                 paragraph.createRun().addBreak()
             }
         }

@@ -12,45 +12,53 @@ import java.io.FileInputStream
 import javax.imageio.ImageIO
 
 class ByteArrayConverter {
-    private val logger: Logger = LoggerFactory.getLogger(ByteArrayConverter::class.java)
+    companion object {
+        private val logger: Logger = LoggerFactory.getLogger(ByteArrayConverter::class.java)
 
-    fun createImageFromByteArray(
-        imageEntity: ImageEntity,
-        paragraph: XWPFParagraph,
-    ) {
-        val run = paragraph.createRun()
+        fun createImageFromByteArray(
+            imageEntity: ImageEntity,
+            paragraph: XWPFParagraph,
+        ) {
+            val run = paragraph.createRun()
 
-        val tempFile = File.createTempFile("temp_image_${imageEntity.name}", ".tmp")
-        tempFile.writeBytes(imageEntity.content)
+            val tempFile = File.createTempFile("temp_image_${imageEntity.name}", ".tmp")
+            tempFile.writeBytes(imageEntity.content)
 
-        try {
-            val inputStream = FileInputStream(tempFile)
+            try {
+                val inputStream = FileInputStream(tempFile)
 
-            val image: BufferedImage = ImageIO.read(tempFile)
-            val width = image.width
-            val height = image.height
-            val imageType =
-                when (imageEntity.mimeType.lowercase()) {
-                    "image/png" -> XWPFDocument.PICTURE_TYPE_PNG
-                    "image/jpeg", "image/jpg" -> XWPFDocument.PICTURE_TYPE_JPEG
-                    "image/gif" -> XWPFDocument.PICTURE_TYPE_GIF
-                    "image/bmp" -> XWPFDocument.PICTURE_TYPE_BMP
-                    "image/wmf" -> XWPFDocument.PICTURE_TYPE_WMF
-                    else -> throw IllegalArgumentException("Type d'image non supporté : ${imageEntity.mimeType}")
+                val image: BufferedImage = ImageIO.read(tempFile)
+                val ratio = image.width.toDouble() / image.height.toDouble()
+                var width = 675
+                var height = (675 / ratio).toInt()
+                if (ratio < 1) {
+                    height = 650
+                    width = (height * ratio).toInt()
                 }
 
-            run.addPicture(
-                inputStream,
-                imageType,
-                imageEntity.name,
-                Units.pixelToEMU(width),
-                Units.pixelToEMU(height),
-            )
+                val imageType =
+                    when (imageEntity.mimeType.lowercase()) {
+                        "image/png" -> XWPFDocument.PICTURE_TYPE_PNG
+                        "image/jpeg", "image/jpg" -> XWPFDocument.PICTURE_TYPE_JPEG
+                        "image/gif" -> XWPFDocument.PICTURE_TYPE_GIF
+                        "image/bmp" -> XWPFDocument.PICTURE_TYPE_BMP
+                        "image/wmf" -> XWPFDocument.PICTURE_TYPE_WMF
+                        else -> throw IllegalArgumentException("Type d'image non supporté : ${imageEntity.mimeType}")
+                    }
 
-            inputStream.close()
-        } finally {
-            if (!tempFile.delete()) {
-                logger.warn("Failed to delete temporary file: ${tempFile.absolutePath}")
+                run.addPicture(
+                    inputStream,
+                    imageType,
+                    imageEntity.name,
+                    Units.pixelToEMU(width),
+                    Units.pixelToEMU(height),
+                )
+
+                inputStream.close()
+            } finally {
+                if (!tempFile.delete()) {
+                    logger.warn("Failed to delete temporary file: ${tempFile.absolutePath}")
+                }
             }
         }
     }
