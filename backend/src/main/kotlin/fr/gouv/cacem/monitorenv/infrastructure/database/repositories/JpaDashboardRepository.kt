@@ -65,6 +65,7 @@ class JpaDashboardRepository(
     @Transactional
     override fun delete(id: UUID) {
         dashboardRepository.delete(id)
+        dashboardDatasRepository.deleteAllByDashboardId(id)
     }
 
     private fun addRegulatoryAreas(
