@@ -1,7 +1,6 @@
 server:
   port: 8880
   forward-headers-strategy: framework
-  use-forward-headers: true
   compression:
     enabled: true
     excluded-user-agents: ""
@@ -66,6 +65,7 @@ spring:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
         jdbc:
           time_zone: UTC
+        default_batch_fetch_size: ${MONITORENV_BATCH_SIZE:50}
   datasource:
     url: ${ENV_DB_URL}
     driver-class-name: org.postgresql.Driver
