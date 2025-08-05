@@ -45,7 +45,7 @@ export function HistoryOfInfractions({
       }
       const result = await getHistoryByMmsi({
         canSearch,
-        debouncedMmsi,
+        mmsi: debouncedMmsi,
         reportingId
       })
       setHistory(result ?? initialHistory)

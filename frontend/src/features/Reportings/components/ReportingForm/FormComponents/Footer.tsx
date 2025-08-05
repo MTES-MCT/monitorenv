@@ -129,7 +129,7 @@ export function Footer({
 
           const history = await getHistoryByMmsi({
             canSearch: true,
-            debouncedMmsi: target.mmsi,
+            mmsi: target.mmsi,
             reportingId: values.id
           })
 
