@@ -44,8 +44,8 @@ class DashboardFile(
 
         val tempFile = saveDocument(document)
         val odtFile =
-            OfficeConverter().convert(editableBriefProperties.tmpDocxPath, editableBriefProperties.tmpOdtPath)
-        val base64Content = Base64Converter().convertToBase64(odtFile)
+            OfficeConverter.convert(editableBriefProperties.tmpDocxPath, editableBriefProperties.tmpOdtPath)
+        val base64Content = Base64Converter.convertToBase64(odtFile)
         tempFile.delete()
 
         return BriefFileEntity(
