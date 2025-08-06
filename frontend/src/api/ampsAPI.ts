@@ -1,6 +1,6 @@
 import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
 import { FrontendApiError } from '@libs/FrontendApiError'
-import { type EntityState, createEntityAdapter, createSelector, type EntityId } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSelector, type EntityId, type EntityState } from '@reduxjs/toolkit'
 import { boundingExtent, createEmpty } from 'ol/extent'
 import { createCachedSelector } from 're-reselect'
 
@@ -15,13 +15,17 @@ const initialState = AMPAdapter.getInitialState()
 
 const GET_AMP_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les Zones AMP"
 
+type AmpQueryOption = {
+  withGeometry?: boolean
+}
+
 export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     getAMP: builder.query<AMP, number>({
       query: id => `/v1/amps/${id}`,
       transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response),
       transformResponse: (response: AMPFromAPI) => {
-        const bbox = boundingExtent(response.geom.coordinates.flat().flat() as Coordinate[])
+        const bbox = boundingExtent((response.geom?.coordinates ?? []).flat().flat() as Coordinate[])
 
         return {
           ...response,
@@ -29,14 +33,14 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
         }
       }
     }),
-    getAMPs: builder.query<EntityState<AMP, number>, void>({
-      query: () => `/v1/amps`,
+    getAMPs: builder.query<EntityState<AMP, number>, AmpQueryOption | void>({
+      query: ({ withGeometry } = { withGeometry: false }) => `/v1/amps?withGeometry=${withGeometry}`,
       transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response),
       transformResponse: (response: AMPFromAPI[]) =>
         AMPAdapter.setAll(
           initialState,
           response.map(amp => {
-            const bbox = boundingExtent(amp.geom.coordinates.flat().flat() as Coordinate[])
+            const bbox = boundingExtent((amp.geom?.coordinates ?? []).flat().flat() as Coordinate[])
 
             return {
               ...amp,
@@ -74,12 +78,12 @@ export const getNumberOfAMPByGroupName = createCachedSelector(
 )((_, groupName: string) => groupName)
 
 export const getAmpsByIds = createSelector(
-  [ampsAPI.endpoints.getAMPs.select(), (_, ids: number[]) => ids],
+  [ampsAPI.endpoints.getAMPs.select({ withGeometry: true }), (_, ids: number[]) => ids],
   ({ data }, ids) => Object.values(data?.entities ?? []).filter(amp => ids.includes(amp.id))
 )
 
 export const getExtentOfAMPLayersGroupByGroupName = createCachedSelector(
-  [ampsAPI.endpoints.getAMPs.select(), getAMPsIdsByGroupName],
+  [ampsAPI.endpoints.getAMPs.select({ withGeometry: true }), getAMPsIdsByGroupName],
   (ampsQuery, ampIdsByName) => {
     const amps = ampIdsByName?.map(id => ampsQuery.data?.entities[id]).filter((amp): amp is AMP => !!amp)
     if (amps) {

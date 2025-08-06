@@ -48,7 +48,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryLayers, isLoading } = useGetRegulatoryLayersQuery()
   const regulatoryLayersByLayerName = useMemo(
     () =>
       groupBy(

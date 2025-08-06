@@ -20,7 +20,7 @@ import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: number[] }) {
   const dispatch = useAppDispatch()
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery({ withGeometry: true })
 
   const regulatoryAreas = regulatoryAreaIds.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
 
