@@ -5,7 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaModel.Companion.toTagEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaModel.Companion.toThemeEntities
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -34,12 +39,12 @@ data class RegulatoryAreaModel(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    var tags: List<TagRegulatoryAreaModel>,
+    var tags: List<TagRegulatoryAreaModel> = emptyList(),
     @OneToMany(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    var themes: List<ThemeRegulatoryAreaModel>,
+    var themes: List<ThemeRegulatoryAreaModel> = emptyList(),
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
