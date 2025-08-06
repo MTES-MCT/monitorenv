@@ -118,8 +118,9 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Given
     cy.intercept('GET', '/api/v1/themes*').as('getThemes')
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
-
+    cy.wait(250)
     cy.getDataCy('action-card').eq(0).click()
+    cy.wait(250)
     cy.wait('@getThemes')
 
     cy.intercept('PUT', `/bff/v1/missions/34`).as('updateMission')
