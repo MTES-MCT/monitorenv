@@ -1,6 +1,7 @@
 // Successful archiving and deleting use cases are tested in `administration_form.spec.ts` for Test Idempotency purpose
 context('Back Office > Administration Table > Row Actions', () => {
   beforeEach(() => {
+    cy.login('superuser')
     cy.intercept('GET', `/api/v1/administrations`).as('getAdministrations')
 
     cy.visit(`/backoffice/administrations`)

@@ -4,6 +4,7 @@ import { setGeometry } from 'domain/shared_slices/Draw'
 
 import { getFutureDate } from '../../utils/getFutureDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+import { visitSideWindow } from '../../utils/visitSideWindow'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -25,13 +26,9 @@ const surveillanceGeometry: GeoJSON.Geometry = {
 }
 context('Side Window > Mission Form > Mission dates', () => {
   beforeEach(() => {
-    cy.viewport(1280, 1024)
-    cy.visit(`/side_window`, {
-      onBeforeLoad: () => {
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
-      }
-    })
+    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+    visitSideWindow()
+    cy.wait('@getMissions')
   })
 
   it('A mission should be created with surveillances and valid dates', () => {

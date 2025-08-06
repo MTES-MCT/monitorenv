@@ -2,10 +2,9 @@ import { expectPathToBe } from '../utils/expectPathToBe'
 
 context('Back Office > Control Unit Form', () => {
   beforeEach(() => {
+    cy.login('superuser')
     cy.intercept('GET', `/api/v2/control_units`).as('getControlUnits')
-
     cy.visit(`/backoffice/control_units`)
-
     cy.wait('@getControlUnits')
   })
 
