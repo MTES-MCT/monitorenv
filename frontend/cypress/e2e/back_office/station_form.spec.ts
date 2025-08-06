@@ -2,10 +2,9 @@ import { faker } from '@faker-js/faker'
 
 context('Back Office > Station Form', () => {
   beforeEach(() => {
+    cy.login('superuser')
     cy.intercept('GET', `/api/v1/stations`).as('getStations')
-
     cy.visit(`/backoffice/stations`)
-
     cy.wait('@getStations')
   })
 
