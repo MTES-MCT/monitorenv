@@ -121,6 +121,7 @@ dependencies {
 
     // Devtools
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("org.springframework.cloud:spring-cloud-gateway-proxyexchange-webmvc:4.3.0")
 
     // Testing
     testImplementation("org.springframework.security:spring-security-test")
