@@ -29,6 +29,7 @@ type VigilanceAreaFormProps = {
 }
 export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId }: VigilanceAreaFormProps) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const formTypeOpen = useAppSelector(state => state.vigilanceArea.formTypeOpen)
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
@@ -98,14 +99,18 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
         </TitleContainer>
         {isPanelOpen && (
           <SubHeaderContainer>
-            {vigilanceArea?.isDraft ? (
-              <Tag backgroundColor={THEME.color.slateGray} color={THEME.color.white}>
-                Brouillon
-              </Tag>
-            ) : (
-              <Tag backgroundColor={THEME.color.mediumSeaGreen} color={THEME.color.white}>
-                Publiée
-              </Tag>
+            {isSuperUser && (
+              <>
+                {vigilanceArea?.isDraft ? (
+                  <Tag backgroundColor={THEME.color.slateGray} color={THEME.color.white}>
+                    Brouillon
+                  </Tag>
+                ) : (
+                  <Tag backgroundColor={THEME.color.mediumSeaGreen} color={THEME.color.white}>
+                    Publiée
+                  </Tag>
+                )}
+              </>
             )}
             <IconButton
               accent={Accent.TERTIARY}
