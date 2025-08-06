@@ -51,6 +51,9 @@ monitorenv:
   legicem:
     id: ${MONITORENV_LEGICEM_ID}
     password: ${MONITORENV_LEGICEM_PASSWORD}
+  keycloak:
+    proxy:
+        enabled: ${MONITORENV_KEYCLOAK_PROXY_ENABLED:false}
 
 spring:
   jmx:
