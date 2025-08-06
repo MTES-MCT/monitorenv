@@ -1,5 +1,6 @@
 context('Back Office > Administration Table > Filters', () => {
   beforeEach(() => {
+    cy.login('superuser')
     cy.intercept('GET', `/api/v1/administrations`).as('getAdministrations')
 
     cy.visit(`/backoffice/administrations`)

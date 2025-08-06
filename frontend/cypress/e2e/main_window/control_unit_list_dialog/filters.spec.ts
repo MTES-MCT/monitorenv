@@ -2,6 +2,7 @@ import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 
 context('Main Window > Control Unit List Dialog > Filters', () => {
   beforeEach(() => {
+    cy.login('superuser')
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
 
     cy.visit(`/`).wait(1000)
