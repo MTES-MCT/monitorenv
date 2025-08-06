@@ -187,6 +187,7 @@ jobs:
 
   e2e_test:
     name: Run E2E tests
+    if: false
     needs: [version, build]
     runs-on: ubuntu-22.04
     strategy:

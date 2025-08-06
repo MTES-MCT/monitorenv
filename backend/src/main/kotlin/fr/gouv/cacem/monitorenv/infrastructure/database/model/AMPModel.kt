@@ -28,10 +28,10 @@ data class AMPModel(
     @Column(name = "updated_at")
     val updatedAt: String? = null,
 ) {
-    fun toAMP() =
+    fun toAMP(withGeometry: Boolean) =
         AMPEntity(
             id = id,
-            geom = geom,
+            geom = if (withGeometry) geom else null,
             name = name,
             designation = designation,
             refReg = refReg,

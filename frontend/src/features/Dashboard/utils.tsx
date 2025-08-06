@@ -33,6 +33,7 @@ export async function populateExtractAreaFromApi(
       ids: extractedAreaFromApi.regulatoryAreaIds
     })
   )
+  // TODO: use getAmpByIds
   const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
   const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
   const { data: reportings } = await dispatch(

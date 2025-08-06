@@ -58,8 +58,8 @@ export function LayersSidebar() {
     searchExtent
   } = useAppSelector(state => state.layerSearch)
 
-  const regulatoryAreas = useGetFilteredRegulatoryAreas()
-  const amps = useGetAMPsQuery()
+  // const regulatoryAreas = useGetFilteredRegulatoryAreas()
+  // const amps = useGetAMPsQuery()
 
   const dispatch = useAppDispatch()
 
@@ -248,18 +248,4 @@ const Layers = styled.div`
 
 const SidebarLayersIcon = styled(IconButton)<{ $isVisible: boolean }>`
   ${p => (p.$isVisible ? '' : 'display: none;')}
-`
-
-const SpinnerWrapper = styled.div<{ $isLayersSidebarVisible: boolean }>`
-  position: absolute;
-  top: 0;
-  left: ${props => (props.$isLayersSidebarVisible ? '460px' : '56px')};
-  display: flex;
-  padding: 4px;
-`
-const Message = styled.div`
-  font-size: 14px;
-  font-weight: 900;
-  white-space: nowrap;
-  padding: 4px 4px 4px 8px;
 `

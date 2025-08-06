@@ -19,6 +19,7 @@ export const selectDashboardOnMap =
       const { data: reportings } = await dispatch(
         reportingsAPI.endpoints.getReportingsByIds.initiate(dashboard.reportingIds)
       )
+      // TODO : use getAmpByIds
       const { data: amps } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
 
       const { data: regulatoryAreas } = await dispatch(

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -21,8 +22,10 @@ class Amps(
 ) {
     @GetMapping("")
     @Operation(summary = "Get AMPs")
-    fun getAll(): List<AMPDataOutput> {
-        val amps = getAllAMPs.execute()
+    fun getAll(
+        @RequestParam(name = "withGeometry") withGeometry: Boolean,
+    ): List<AMPDataOutput> {
+        val amps = getAllAMPs.execute(withGeometry)
         return amps.map { AMPDataOutput.fromAMPEntity(it) }
     }
 

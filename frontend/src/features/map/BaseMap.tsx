@@ -1,4 +1,5 @@
-import { MultiRadio, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { useSyncMapViewToRedux } from '@features/map/hook/useSyncMapView'
+import { MultiRadio, OPENLAYERS_PROJECTION, WSG84_PROJECTION, THEME } from '@mtes-mct/monitor-ui'
 import { isCypress } from '@utils/isCypress'
 import {
   getGeoJSONFromFeature,
@@ -282,6 +283,8 @@ function BaseMapNotMemoized({
       }
     }
   }
+
+  useSyncMapViewToRedux(initialMap)
 
   return (
     <MapWrapper className={className}>

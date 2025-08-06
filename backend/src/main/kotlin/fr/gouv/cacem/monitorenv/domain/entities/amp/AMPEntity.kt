@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter
 data class AMPEntity(
     val id: Int,
     val designation: String,
-    val geom: MultiPolygon,
+    val geom: MultiPolygon?,
     val name: String,
     val refReg: String? = null,
     val type: String? = null,
