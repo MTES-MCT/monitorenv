@@ -47,6 +47,8 @@ services:
       - MONITORENV_OIDC_USER_INFO_URI=${MONITORENV_OIDC_USER_INFO_URI}
       - MONITORENV_OIDC_JWK_SET_URI=${MONITORENV_OIDC_JWK_SET_URI}
       - MONITORENV_OIDC_PROVIDER=${MONITORENV_OIDC_PROVIDER}
+      - MONITORENV_OIDC_PROXY_URL=${MONITORENV_OIDC_PROXY_URL}
+      - MONITORENV_KEYCLOAK_PROXY_ENABLED=${MONITORENV_KEYCLOAK_PROXY_ENABLED}
       - MONITORENV_URL=${MONITORENV_URL}
       - MONITORFISH_API_KEY=${MONITORFISH_API_KEY}
       - MONITORFISH_URL=${MONITORFISH_URL}
@@ -126,8 +128,8 @@ services:
 
   keycloak:
     container_name: monitorenv_keycloak
-    profiles: [ dev ]
-    image: quay.io/keycloak/keycloak:latest
+    profiles: [ dev, test ]
+    image: quay.io/keycloak/keycloak:23.0.0
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
