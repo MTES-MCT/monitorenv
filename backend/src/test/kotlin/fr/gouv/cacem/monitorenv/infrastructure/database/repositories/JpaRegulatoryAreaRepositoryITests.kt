@@ -20,7 +20,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return all regulatoryAreas`() {
         // When
-        val regulatoryAreas = jpaRegulatoryAreasRepository.findAll()
+        val regulatoryAreas = jpaRegulatoryAreasRepository.findAll(false)
         assertThat(regulatoryAreas).hasSize(13)
     }
 

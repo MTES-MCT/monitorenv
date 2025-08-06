@@ -26,7 +26,9 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
 
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery({ withGeometry: isLayerVisible })
+  const { bbox, zoom } = useAppSelector(state => state.map.mapView)
+
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery({ bbox, withGeometry: isLayerVisible, zoom })
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 

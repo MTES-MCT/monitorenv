@@ -26,11 +26,12 @@ type RegulatoryLayerProps = {
 export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
+  const { bbox, zoom } = useAppSelector(state => state.map.mapView)
 
   const ref = createRef<HTMLLIElement>()
 
   const { layer } = useGetRegulatoryLayersQuery(
-    { withGeometry: true },
+    { bbox, withGeometry: true, zoom },
     {
       selectFromResult: result => ({
         layer: result?.currentData?.entities[layerId]

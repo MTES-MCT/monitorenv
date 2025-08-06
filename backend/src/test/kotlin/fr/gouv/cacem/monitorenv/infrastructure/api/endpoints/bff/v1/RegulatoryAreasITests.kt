@@ -76,11 +76,11 @@ class RegulatoryAreasITests {
                 polyName = "Zone au sud de la cale",
                 resume = "Descriptif de la zone réglementaire",
             )
-        given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
+        given(getAllRegulatoryAreas.execute(false)).willReturn(listOf(regulatoryArea))
 
         // When
         mockMvc
-            .perform(get("/bff/v1/regulatory"))
+            .perform(get("/bff/v1/regulatory?withGeometry=false"))
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

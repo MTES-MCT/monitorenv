@@ -19,10 +19,10 @@ class GetAllAMPsUTest {
     fun `execute should return all amps`(log: CapturedOutput) {
         // Given
         val expectedAmps = listOf(anAmp(), anAmp())
-        given(ampRepository.findAll()).willReturn(expectedAmps)
+        given(ampRepository.findAll(false)).willReturn(expectedAmps)
 
         // When
-        val amps = getAllAMPs.execute()
+        val amps = getAllAMPs.execute(false)
 
         // Then
         assertThat(amps).isEqualTo(expectedAmps)

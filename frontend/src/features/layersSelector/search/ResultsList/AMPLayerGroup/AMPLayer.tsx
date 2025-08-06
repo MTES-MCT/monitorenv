@@ -29,11 +29,14 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const ampsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
 
-  const { layer } = useGetAMPsQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      layer: data?.entities[layerId]
-    })
-  })
+  const { layer } = useGetAMPsQuery(
+    { withGeometry: true },
+    {
+      selectFromResult: ({ data }) => ({
+        layer: data?.entities[layerId]
+      })
+    }
+  )
   const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
   const isZoneSelected = selectedAmpLayerIds.includes(layerId)

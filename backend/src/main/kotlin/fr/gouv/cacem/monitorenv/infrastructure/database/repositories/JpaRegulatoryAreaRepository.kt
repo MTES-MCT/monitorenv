@@ -11,8 +11,20 @@ import org.springframework.stereotype.Repository
 class JpaRegulatoryAreaRepository(
     private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository,
 ) : IRegulatoryAreaRepository {
-    override fun findAll(withGeometry: Boolean): List<RegulatoryAreaEntity> =
-        dbRegulatoryAreaRepository.findAllByOrderByLayerName().map { it.toRegulatoryArea(withGeometry) }
+    override fun findAll(
+        withGeometry: Boolean,
+        zoom: Int?,
+        bbox: List<Double>?,
+    ): List<RegulatoryAreaEntity> =
+        dbRegulatoryAreaRepository
+            .findAllByOrderByLayerName(
+                zoom,
+                bbox?.get(0),
+                bbox?.get(1),
+                bbox?.get(2),
+                bbox?.get(3),
+                withGeometry,
+            ).map { it.toRegulatoryArea(withGeometry) }
 
     override fun findById(id: Int): RegulatoryAreaEntity? =
         dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea(true)
