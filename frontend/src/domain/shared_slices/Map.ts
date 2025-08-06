@@ -28,9 +28,16 @@ type MapSliceStateType = {
   fitToExtent?: Extent
   isAreaSelected: boolean
   isolatedLayer: IsolatedLayerType | undefined
+  mapView: MapView
   selectedBaseLayer: BaseLayer
   zoomToCenter?: Coordinate
 }
+
+export type MapView = {
+  bbox: Extent | undefined
+  zoom: number | undefined
+}
+
 const initialState: MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS,
   currentMapExtentTracker: undefined,
@@ -38,6 +45,7 @@ const initialState: MapSliceStateType = {
   fitToExtent: undefined,
   isAreaSelected: false,
   isolatedLayer: undefined,
+  mapView: { bbox: undefined, zoom: undefined },
   selectedBaseLayer: BaseLayer.LIGHT,
   zoomToCenter: undefined
 }
@@ -94,6 +102,9 @@ const mapSlice = createSlice({
     setIsolateMode(state, action: PayloadAction<IsolatedLayerType | undefined>) {
       state.isolatedLayer = action.payload
     },
+    setMapView(state, action: PayloadAction<MapView>) {
+      state.mapView = action.payload
+    },
     setZoomToCenter(state, action) {
       state.zoomToCenter = action.payload
     }
@@ -110,5 +121,6 @@ export const {
   setDistanceUnit,
   setFitToExtent,
   setIsolateMode,
+  setMapView,
   setZoomToCenter
 } = mapActions

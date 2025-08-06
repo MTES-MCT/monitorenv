@@ -7,6 +7,7 @@ import {
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { groupBy } from 'lodash'
+import React from 'react'
 import styled from 'styled-components'
 
 import { AMPLayerGroup } from './AMPLayerGroup'
@@ -48,7 +49,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryLayers, isLoading } = useGetRegulatoryLayersQuery()
   const regulatoryLayersByLayerName = groupBy(
     !regulatoryLayersSearchResult && areRegulatoryResultsOpen
       ? regulatoryLayers?.ids
@@ -87,25 +88,22 @@ export function ResultList({ searchedText }: ResultListProps) {
       ? sortedVigilanceAreasResultsByName.length
       : vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
 
-  const toggleRegulatory = () => {
-    if (!isRegulatorySearchResultsVisible) {
-      dispatch(setIsRegulatorySearchResultsVisible(true))
-    }
+  const toggleRegulatory = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
     dispatch(closeMetadataPanel())
     dispatch(layerSidebarActions.toggleRegulatoryResults())
   }
-  const toggleAMPs = () => {
-    if (!isAmpSearchResultsVisible) {
-      dispatch(setIsAmpSearchResultsVisible(true))
-    }
+  const toggleAMPs = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
     dispatch(closeMetadataPanel())
     dispatch(layerSidebarActions.toggleAmpResults())
   }
 
-  const toggleVigilanceAreas = () => {
-    if (!isVigilanceAreaSearchResultsVisible) {
-      dispatch(setIsVigilanceAreaSearchResultsVisible(true))
-    }
+  const toggleVigilanceAreas = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
     dispatch(closeMetadataPanel())
     dispatch(layerSidebarActions.toggleVigilanceAreaResults())
   }
@@ -141,16 +139,18 @@ export function ResultList({ searchedText }: ResultListProps) {
           <Header>
             <StyledCheckbox
               checked={isRegulatorySearchResultsVisible}
-              label=""
+              label={
+                <Title data-cy="regulatory-result-list-button" onClick={toggleRegulatory}>
+                  ZONES RÉGLEMENTAIRES &nbsp;
+                  <NumberOfResults>
+                    ({totalRegulatoryAreas} {pluralize('résultat', totalRegulatoryAreas)})
+                  </NumberOfResults>
+                  {isLoading && <span>LOADING</span>}
+                </Title>
+              }
               name="isRegulatorySearchResultsVisible"
               onChange={toggleRegulatoryVisibility}
             />
-            <Title data-cy="regulatory-result-list-button" onClick={toggleRegulatory}>
-              ZONES RÉGLEMENTAIRES &nbsp;
-              <NumberOfResults>
-                ({totalRegulatoryAreas} {pluralize('résultat', totalRegulatoryAreas)})
-              </NumberOfResults>
-            </Title>
           </Header>
           <SubList $isExpanded={areRegulatoryResultsOpen} data-cy="regulatory-result-list">
             {Object.entries(sortedRegulatoryResultsByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
@@ -170,16 +170,17 @@ export function ResultList({ searchedText }: ResultListProps) {
           <HeaderAMP>
             <StyledCheckbox
               checked={isAmpSearchResultsVisible}
-              label=""
+              label={
+                <Title data-cy="amp-results-list-button" onClick={toggleAMPs}>
+                  ZONES AMP &nbsp;
+                  <NumberOfResults>
+                    ({totalAmps} {pluralize('résultat', totalAmps)})
+                  </NumberOfResults>
+                </Title>
+              }
               name="isAmpSearchResultsVisible"
               onChange={toggleAMPVisibility}
             />
-            <Title data-cy="amp-results-list-button" onClick={toggleAMPs}>
-              ZONES AMP &nbsp;
-              <NumberOfResults>
-                ({totalAmps} {pluralize('résultat', totalAmps)})
-              </NumberOfResults>
-            </Title>
           </HeaderAMP>
           <SubListAMP $isExpanded={areAmpsResultsOpen} data-cy="amp-result-list">
             {Object.entries(sortedAmpResultsByName).map(([ampName, ampIdsInGroup]) => (
@@ -194,16 +195,17 @@ export function ResultList({ searchedText }: ResultListProps) {
           <Header>
             <StyledCheckbox
               checked={isVigilanceAreaSearchResultsVisible}
-              label=""
+              label={
+                <Title data-cy="vigilance-area-results-list-button" onClick={toggleVigilanceAreas}>
+                  ZONES DE VIGILANCE &nbsp;
+                  <NumberOfResults>
+                    ({totalVigilanceAreas} {pluralize('résultat', totalVigilanceAreas)})
+                  </NumberOfResults>
+                </Title>
+              }
               name="isVigilanceAreaSearchResultsVisible"
               onChange={toggleVigilanceAreaVisibility}
             />
-            <Title data-cy="vigilance-area-results-list-button" onClick={toggleVigilanceAreas}>
-              ZONES DE VIGILANCE &nbsp;
-              <NumberOfResults>
-                ({totalVigilanceAreas} {pluralize('résultat', totalVigilanceAreas)})
-              </NumberOfResults>
-            </Title>
           </Header>
           <SubList $isExpanded={areMyVigilanceAreasOpen} data-cy="vigilance-area-result-list">
             {sortedVigilanceAreasResultsByName?.map(vigilanceArea => (
@@ -226,8 +228,8 @@ const Header = styled.div`
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `
 const Title = styled.div`
-  padding: 8px 0px 8px 8px;
-  width: 100%;
+  padding: 2px 8px 8px 8px;
+  font-weight: bold;
 `
 
 const StyledCheckbox = styled(Checkbox)`

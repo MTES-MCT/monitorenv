@@ -1,3 +1,4 @@
+import { useSyncMapViewToRedux } from '@features/map/hook/useSyncMapView'
 import { MultiRadio, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { isCypress } from '@utils/isCypress'
 import {
@@ -177,6 +178,11 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     initialMap.addControl(updateScaleControl())
     initialMap.on('click', event => handleMapClick(event, initialMap))
     initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
+
+    return () => {
+      initialMap.un('click', event => handleMapClick(event, initialMap))
+      initialMap.un('pointermove', event => handleMouseOverFeature(event, initialMap))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -213,6 +219,8 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
       }
     }
   }
+
+  useSyncMapViewToRedux(initialMap)
 
   return (
     <MapWrapper>

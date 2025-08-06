@@ -32,7 +32,8 @@ export const getRecentControlActivityGeometry = ({
     hasInfraction: control.infractions.length > 0,
     iconSize,
     ratioInfractionsInControls,
-    ...control
+    ...control,
+    geom: null
   })
 
   return feature

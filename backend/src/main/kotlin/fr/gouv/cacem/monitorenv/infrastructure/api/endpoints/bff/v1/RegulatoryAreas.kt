@@ -6,7 +6,11 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.Regulato
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/bff/v1/regulatory")
@@ -30,8 +34,10 @@ class RegulatoryAreas(
     @Operation(summary = "Get regulatory Areas")
     fun getAll(
         @RequestParam(name = "withGeometry") withGeometry: Boolean,
+        @RequestParam(name = "zoom", required = false) zoom: Int?,
+        @RequestParam(name = "bbox", required = false) bbox: List<Double>?,
     ): List<RegulatoryAreaWithMetadataDataOutput> {
-        val regulatoryAreas = getAllRegulatoryAreas.execute(withGeometry)
+        val regulatoryAreas = getAllRegulatoryAreas.execute(withGeometry, zoom, bbox)
         return regulatoryAreas.map { RegulatoryAreaWithMetadataDataOutput.fromRegulatoryAreaEntity(it) }
     }
 }

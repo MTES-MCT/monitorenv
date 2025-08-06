@@ -16,7 +16,7 @@ data class AMPModel(
     @Column(name = "des_desigfr")
     val designation: String,
     @Column(name = "geom")
-    val geom: MultiPolygon,
+    val geom: MultiPolygon?,
     @Column(name = "mpa_oriname")
     val name: String,
     @Column(name = "ref_reg")
@@ -26,10 +26,10 @@ data class AMPModel(
     @Column(name = "url_legicem")
     val urlLegicem: String? = null,
 ) {
-    fun toAMP() =
+    fun toAMP(withGeometry: Boolean) =
         AMPEntity(
             id = id,
-            geom = geom,
+            geom = if (withGeometry) geom else null,
             name = name,
             designation = designation,
             refReg = refReg,
