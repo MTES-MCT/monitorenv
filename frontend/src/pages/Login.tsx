@@ -18,9 +18,10 @@ export function Login() {
     <Wrapper>
       <form action="#" method="post">
         <button
-          aria-label="Se connecter avec ProConnect"
+          aria-label="S'identifier avec ProConnect"
           className="proconnect-button"
           onClick={onConnect}
+          title="S'identifier avec ProConnect"
           type="button"
         />
       </form>

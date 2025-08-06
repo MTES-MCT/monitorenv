@@ -28,6 +28,7 @@ monitorenv:
     errorUrl: ${MONITORENV_OIDC_ERROR_URL}
     authorizedSirets: ${MONITORENV_OIDC_AUTHORIZED_SIRETS}
     issuerUri: ${MONITORENV_OIDC_ISSUER_URI:}
+    proxyUrl: ${MONITORENV_OIDC_PROXY_URL:}
   api:
     protected:
       paths: /bff/v1/*
@@ -44,6 +45,9 @@ monitorenv:
   legicem:
     id: ${MONITORENV_LEGICEM_ID}
     password: ${MONITORENV_LEGICEM_PASSWORD}
+  keycloak:
+    proxy:
+        enabled: ${MONITORENV_KEYCLOAK_PROXY_ENABLED:false}
 
 spring:
   jmx:
