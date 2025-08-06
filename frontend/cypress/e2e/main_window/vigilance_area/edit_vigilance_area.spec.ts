@@ -1,13 +1,12 @@
-import { FAKE_MAPBOX_RESPONSE } from '../../constants'
+import { goToMainWindow } from '../utils'
 
 describe('Edit Vigilance Area', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
     cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
 
-    cy.viewport(1580, 1024)
+    goToMainWindow()
   })
   it('Should successfully update a vigilance area', () => {
     cy.visit('/#@-192242.97,5819420.73,9.93')

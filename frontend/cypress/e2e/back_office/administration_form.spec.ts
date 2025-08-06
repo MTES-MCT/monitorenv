@@ -1,9 +1,8 @@
 context('Back Office > Administration Form', () => {
   beforeEach(() => {
+    cy.login('superuser')
     cy.intercept('GET', `/api/v1/administrations`).as('getAdministrations')
-
     cy.visit(`/backoffice/administrations`)
-
     cy.wait('@getAdministrations')
   })
 

@@ -1,23 +1,15 @@
 import { omit } from 'lodash'
 
-import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 import { createReporting } from '../../utils/createReporting'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+import { goToMainWindow } from '../utils'
 
 context('Reporting', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.intercept('GET', '/api/v1/stations').as('getStations')
 
-    cy.viewport(1580, 1024)
-
-    cy.visit(`/`, {
-      onBeforeLoad() {
-        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
-      }
-    })
-
+    goToMainWindow()
     cy.wait(['@getReportings', '@getStations'])
   })
 

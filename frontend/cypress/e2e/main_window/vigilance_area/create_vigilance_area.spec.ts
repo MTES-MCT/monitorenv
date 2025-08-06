@@ -1,22 +1,20 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
 
 import { Layers } from '../../../../src/domain/entities/layers/constants'
-import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 import { getFutureDate } from '../../utils/getFutureDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+import { goToMainWindow } from '../utils'
 
 const startDate = getFutureDate(7, 'day')
 const endDate = getFutureDate(31, 'day')
 
 describe('Create Vigilance Area', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
     cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
 
-    cy.viewport(1580, 1024)
-    cy.visit('/')
+    goToMainWindow()
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas').as('createVigilanceArea')

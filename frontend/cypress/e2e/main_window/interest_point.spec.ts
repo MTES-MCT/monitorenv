@@ -1,10 +1,8 @@
-import { FAKE_MAPBOX_RESPONSE } from '../constants'
+import { goToMainWindow } from './utils'
 
 context('InterestPoint', () => {
   beforeEach(() => {
-    cy.login('monitorenv')
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
-    cy.visit('/#@-824534.42,6082993.21,8.70')
+    goToMainWindow()
   })
 
   describe('An interest point', () => {

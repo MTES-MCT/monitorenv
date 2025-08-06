@@ -3,21 +3,15 @@ import { getFormattedReportingId } from '@features/Reportings/utils'
 
 import { createMissionWithAttachedReportingAndAttachedAction } from '../../utils/createMissionWithAttachedReportingAndAttachedAction'
 import { createReportingOnSideWindow } from '../../utils/createReportingOnSideWindow'
+import { visitSideWindow } from '../../utils/visitSideWindow'
 
 const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 
 context('Side Window > Mission Form > Attach action to reporting', () => {
   beforeEach(() => {
-    cy.viewport(1280, 1024)
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
 
-    cy.visit(`/side_window`, {
-      onBeforeLoad: () => {
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
-        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
-      }
-    })
+    visitSideWindow()
     cy.wait('@getMissions')
   })
 

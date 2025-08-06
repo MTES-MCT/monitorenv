@@ -1,11 +1,14 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+import { visitSideWindow } from '../../utils/visitSideWindow'
 
 context('Side Window > Mission List > Filter Bar', () => {
   beforeEach(() => {
-    cy.viewport(1280, 1024)
-    cy.visit(`/side_window`).wait(1000)
+    cy.intercept('GET', '/bff/v1/missions').as('getMissions')
+    visitSideWindow()
+
+    cy.wait('@getMissions')
   })
 
   afterEach(() => {

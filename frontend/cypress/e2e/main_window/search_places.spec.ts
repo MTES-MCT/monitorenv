@@ -1,9 +1,8 @@
-import { FAKE_MAPBOX_RESPONSE } from '../constants'
+import { goToMainWindow } from './utils'
 
 context('Search Places', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
-    cy.visit('/#@-824534.42,6082993.21,8.70')
+    goToMainWindow()
   })
 
   it('A user can search a place and zoom on it when it is selected', () => {
