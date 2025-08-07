@@ -11,8 +11,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateFullMissionEvent
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture.Companion.aReportingSourceControlUnit
@@ -46,9 +44,6 @@ class CreateOrUpdateReportingUTests {
 
     @Mock
     private val facadeRepository: IFacadeAreasRepository = mock()
-
-    @Mock
-    private val missionRepository: IMissionRepository = mock()
 
     @Mock
     private val postgisFunctionRepository: IPostgisFunctionRepository = mock()
@@ -116,7 +111,6 @@ class CreateOrUpdateReportingUTests {
         val createdReportingWithSemaphore =
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
-                missionRepository = missionRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
@@ -131,7 +125,6 @@ class CreateOrUpdateReportingUTests {
         val createdReportingWithControlUnit =
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
-                missionRepository = missionRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
@@ -166,7 +159,6 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -202,7 +194,6 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -268,7 +259,6 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -285,7 +275,6 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -302,7 +291,6 @@ class CreateOrUpdateReportingUTests {
             Assertions.catchThrowable {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
-                    missionRepository = missionRepository,
                     facadeRepository = facadeRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
@@ -328,60 +316,11 @@ class CreateOrUpdateReportingUTests {
         assertThatThrownBy {
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
-                missionRepository = missionRepository,
                 facadeRepository = facadeRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
             ).execute(reportingWithNewAttachedMission)
         }.isInstanceOf(BackendUsageException::class.java)
             .hasMessage("Reporting 1 is already attached to a mission")
-    }
-
-    @Test
-    fun `execute should publish a mission event if it is attached to reporting`() {
-        // Given
-        val reporting =
-            aReporting(
-                id = 42,
-                missionId = 123,
-                attachedToMissionAtUtc = ZonedDateTime.now(),
-            )
-        val reportingDetails = ReportingDetailsDTO(reporting = reporting, reportingSources = listOf())
-        val fullMission =
-            MissionFixture.aMissionDetailsDTO(
-                missionEntity = MissionFixture.aMissionEntity(id = 123),
-                attachedReportingIds = listOf(reporting.id!!),
-            )
-
-        given(postgisFunctionRepository.normalizeGeometry(reporting.geom!!)).willReturn(
-            reporting.geom,
-        )
-        given(facadeRepository.findFacadeFromGeometry(reporting.geom!!)).willReturn("Facade 1")
-        given(reportingRepository.findById(reporting.id))
-            .willReturn(
-                ReportingDetailsDTO(
-                    reporting =
-                        aReporting(
-                            id = 42,
-                            missionId = null,
-                            attachedToMissionAtUtc = null,
-                        ),
-                    reportingSources = listOf(),
-                ),
-            )
-        given(reportingRepository.save(reporting)).willReturn(reportingDetails)
-        given(missionRepository.findFullMissionById(123)).willReturn(fullMission)
-
-        // When
-        CreateOrUpdateReporting(
-            reportingRepository = reportingRepository,
-            missionRepository = missionRepository,
-            facadeRepository = facadeRepository,
-            postgisFunctionRepository = postgisFunctionRepository,
-            eventPublisher = applicationEventPublisher,
-        ).execute(reporting)
-
-        // Then
-        verify(applicationEventPublisher, times(1)).publishEvent(UpdateFullMissionEvent(fullMission))
     }
 }

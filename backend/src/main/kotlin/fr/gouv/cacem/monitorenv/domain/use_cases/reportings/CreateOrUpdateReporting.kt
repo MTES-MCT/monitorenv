@@ -5,10 +5,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateFullMissionEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
 import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
@@ -21,7 +19,6 @@ import org.springframework.context.ApplicationEventPublisher
 class CreateOrUpdateReporting(
     private val reportingRepository: IReportingRepository,
     private val facadeRepository: IFacadeAreasRepository,
-    private val missionRepository: IMissionRepository,
     private val postgisFunctionRepository: IPostgisFunctionRepository,
     private val eventPublisher: ApplicationEventPublisher,
 ) {
@@ -40,12 +37,10 @@ class CreateOrUpdateReporting(
                 reporting.missionId != null &&
                 reporting.detachedFromMissionAtUtc == null
 
-        var existingReporting: ReportingDetailsDTO? = null
 
-        if (reporting.id != null) {
-            existingReporting = reportingRepository.findById(reporting.id)
+        if (reporting.id != null && reportingToSaveIsAttachedToMission) {
+            reportingRepository.findById(reporting.id)?.let { existingReporting ->
 
-            if (reportingToSaveIsAttachedToMission && existingReporting != null) {
                 val existingReportingIsAttachedToAnotherMission =
                     existingReporting.reporting.missionId != null &&
                         existingReporting.reporting.detachedFromMissionAtUtc == null &&
@@ -60,6 +55,7 @@ class CreateOrUpdateReporting(
                     )
                 }
             }
+
         }
 
         val normalizedGeometry =
@@ -80,20 +76,6 @@ class CreateOrUpdateReporting(
                 ),
             )
         logger.info("Reporting ${savedReporting.reporting.id} created or updated")
-
-        // send mission event if reporting is newly attached to a mission
-        if (savedReporting.reporting.attachedToMissionAtUtc != null &&
-            savedReporting.reporting.missionId != null &&
-            savedReporting.reporting.detachedFromMissionAtUtc == null
-        ) {
-            val attachedMission = missionRepository.findFullMissionById(savedReporting.reporting.missionId)
-
-            if (attachedMission != null) {
-                eventPublisher.publishEvent(
-                    UpdateFullMissionEvent(attachedMission),
-                )
-            }
-        }
 
         if (reporting.id != null) {
             logger.info(
