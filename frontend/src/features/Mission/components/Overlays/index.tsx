@@ -3,7 +3,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { MissionCard } from './MissionCard'
 
@@ -46,17 +46,23 @@ export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: Base
     currentfeatureId.startsWith(Layers.MISSIONS.code) &&
     currentfeatureId !== `${Layers.MISSIONS.code}:${selectedMissionId}`
 
-  const updateHoveredMargins = (cardHeight: number) => {
-    if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
-      setHoveredOptions({ margins: { ...hoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
-    }
-  }
+  const updateHoveredMargins = useCallback(
+    (cardHeight: number) => {
+      if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
+        setHoveredOptions({ margins: { ...hoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+      }
+    },
+    [hoveredOptions.margins]
+  )
 
-  const updateSelectedMargins = (cardHeight: number) => {
-    if (OPTIONS.margins.yTop - cardHeight !== selectedOptions.margins.yTop) {
-      setSelectedOptions({ margins: { ...selectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
-    }
-  }
+  const updateSelectedMargins = useCallback(
+    (cardHeight: number) => {
+      if (OPTIONS.margins.yTop - cardHeight !== selectedOptions.margins.yTop) {
+        setSelectedOptions({ margins: { ...selectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+      }
+    },
+    [selectedOptions.margins]
+  )
 
   return (
     <>

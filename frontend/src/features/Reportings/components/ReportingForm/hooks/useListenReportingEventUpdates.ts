@@ -20,11 +20,6 @@ export function useListenReportingEventUpdates() {
     }
     eventSourceRef.current = new EventSource(REPORTING_UPDATES_URL)
 
-    eventSourceRef.current?.addEventListener('open', () => {
-      // eslint-disable-next-line no-console
-      console.log(`SSE: Connected to reportings endpoint.`)
-    })
-
     return () => {
       eventSourceRef?.current?.close()
     }
@@ -35,10 +30,15 @@ export function useListenReportingEventUpdates() {
       eventSourceRef.current?.removeEventListener(REPORTING_UPDATE_EVENT, listener.current)
       setReportingEventInContext(undefined)
 
-      return
+      return undefined
     }
+
     listener.current = reportingEventListener(reporting => setReportingEventInContext(reporting))
     eventSourceRef.current?.addEventListener(REPORTING_UPDATE_EVENT, listener.current)
+
+    return () => {
+      eventSourceRef.current?.removeEventListener(REPORTING_UPDATE_EVENT, listener.current)
+    }
   }, [isListeningToEvents, setReportingEventInContext])
 
   return contextReportingEvent

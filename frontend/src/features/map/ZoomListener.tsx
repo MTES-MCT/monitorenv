@@ -20,13 +20,19 @@ export function ZoomListener({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     if (!map) {
-      return
+      return () => {}
     }
 
     const view = map.getView()
     view.on('change:resolution', () => {
       debouncedHandleChangeResolution()
     })
+
+    return () => {
+      view.un('change:resolution', () => {
+        debouncedHandleChangeResolution()
+      })
+    }
   }, [map, debouncedHandleChangeResolution])
 
   return null

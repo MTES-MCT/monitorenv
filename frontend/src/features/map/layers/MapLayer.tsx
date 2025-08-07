@@ -61,7 +61,7 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
 
   useEffect(() => {
     if (!map || !selectedBaseLayer || !baseLayersObjects[selectedBaseLayer]) {
-      return
+      return () => {}
     }
 
     function showAnotherBaseLayer() {
@@ -72,15 +72,21 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
       olLayers.insertAt(0, baseLayersObjects[selectedBaseLayer]())
 
       if (!layerToRemove) {
-        return
+        return undefined
       }
 
-      window.setTimeout(() => {
+      return window.setTimeout(() => {
         olLayers.remove(layerToRemove)
       }, 300)
     }
 
-    showAnotherBaseLayer()
+    const id = showAnotherBaseLayer()
+
+    return () => {
+      if (id) {
+        window.clearTimeout(id)
+      }
+    }
   }, [baseLayersObjects, map, selectedBaseLayer])
 
   return null

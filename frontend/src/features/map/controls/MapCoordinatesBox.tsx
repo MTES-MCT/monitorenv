@@ -46,7 +46,14 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
     if (map) {
       map.on('pointermove', event => throttleAndHandlePointerMove(event))
     }
-  })
+
+    return () => {
+      if (map) {
+        map.un('pointermove', event => throttleAndHandlePointerMove(event))
+        window.clearTimeout(timeoutForPointerMove)
+      }
+    }
+  }, [map])
 
   const wrapperRef = useRef(null)
 
