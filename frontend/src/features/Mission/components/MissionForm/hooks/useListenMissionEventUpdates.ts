@@ -22,11 +22,6 @@ export function useListenMissionEventUpdates() {
   useEffect(() => {
     eventSourceRef.current = new EventSource(MISSION_UPDATES_URL)
 
-    eventSourceRef.current?.addEventListener('open', () => {
-      // eslint-disable-next-line no-console
-      console.log(`SSE: Connected to missions endpoint.`)
-    })
-
     return () => {
       eventSourceRef?.current?.close()
     }
@@ -39,7 +34,7 @@ export function useListenMissionEventUpdates() {
       setMissionEventInContext(undefined)
       setEventType(undefined)
 
-      return
+      return undefined
     }
     listener.current = missionEventListener((mission, event) => {
       setMissionEventInContext(mission)
@@ -48,6 +43,11 @@ export function useListenMissionEventUpdates() {
 
     eventSourceRef.current?.addEventListener(MISSION_UPDATE_EVENT, listener.current)
     eventSourceRef.current?.addEventListener(FULL_MISSION_UPDATE_EVENT, listener.current)
+
+    return () => {
+      eventSourceRef.current?.removeEventListener(MISSION_UPDATE_EVENT, listener.current)
+      eventSourceRef.current?.removeEventListener(FULL_MISSION_UPDATE_EVENT, listener.current)
+    }
   }, [isListeningToEvents, setMissionEventInContext, setEventType])
 
   return contextMissionEvent

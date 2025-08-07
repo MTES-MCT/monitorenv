@@ -177,8 +177,13 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     initialMap.addControl(updateScaleControl())
     initialMap.on('click', event => handleMapClick(event, initialMap))
     initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+
+    return () => {
+      initialMap.un('click', event => handleMapClick(event, initialMap))
+      initialMap.un('pointermove', event => handleMouseOverFeature(event, initialMap))
+      initialMap.setTarget(undefined)
+    }
+  }, [handleMapClick, handleMouseOverFeature, updateScaleControl])
 
   const updateDistanceUnit = (value: DistanceUnit | undefined) => {
     if (!value) {

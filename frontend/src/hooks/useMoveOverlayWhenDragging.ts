@@ -36,23 +36,33 @@ export const useMoveOverlayWhenDragging = ({ currentOffset, map, moveLineWithThr
 
   useEffect(() => {
     let hammer
+    const handlePan = (deltaX, deltaY) =>
+      overlay?.setOffset([currentOffset.current[X] + deltaX, currentOffset.current[Y] + deltaY])
+
+    const handlePanEnd = (deltaX, deltaY) => {
+      // eslint-disable-next-line no-param-reassign
+      currentOffset.current = [currentOffset.current[X] + deltaX, currentOffset.current[Y] + deltaY]
+    }
     if (showed && overlay && overlay.getElement()) {
       hammer = new Hammer(overlay.getElement())
+
       hammer.on('pan', ({ deltaX, deltaY }) => {
-        overlay.setOffset([currentOffset.current[X] + deltaX, currentOffset.current[Y] + deltaY])
+        handlePan(deltaX, deltaY)
       })
 
       hammer.on('panend', ({ deltaX, deltaY }) => {
-        // TODO Remove this re-assigment.
-        // eslint-disable-next-line no-param-reassign
-        currentOffset.current = [currentOffset.current[X] + deltaX, currentOffset.current[Y] + deltaY]
+        handlePanEnd(deltaX, deltaY)
       })
     }
 
     return () => {
       if (hammer) {
-        hammer.off('pan')
-        hammer.off('panend')
+        hammer.off('pan', ({ deltaX, deltaY }) => {
+          handlePan(deltaX, deltaY)
+        })
+        hammer.off('panend', ({ deltaX, deltaY }) => {
+          handlePanEnd(deltaX, deltaY)
+        })
       }
     }
   }, [showed, overlay, currentOffset])
