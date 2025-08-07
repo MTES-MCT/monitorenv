@@ -46,11 +46,11 @@ class AmpsITests {
                 type = "mon type",
                 urlLegicem = "mon url legicem",
             )
-        given(getAllAMPs.execute()).willReturn(listOf(amp))
+        given(getAllAMPs.execute(false)).willReturn(listOf(amp))
 
         // When
         mockMvc
-            .perform(get("/bff/v1/amps"))
+            .perform(get("/bff/v1/amps?withGeometry=false"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(amp.id)))

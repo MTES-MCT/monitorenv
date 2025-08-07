@@ -6,7 +6,7 @@ import {
   getIsLinkingRegulatoryToVigilanceArea,
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
-import { Accent, FulfillingBouncingCircleLoader, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import styled from 'styled-components'
 
@@ -19,8 +19,6 @@ import { AmpLayers } from './myAmps'
 import { RegulatoryLayers } from './myRegulatoryLayers'
 import { MyVigilanceAreas } from './myVigilanceAreas'
 import { LayerSearch } from './search'
-import { useGetAMPsQuery } from '../../api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../domain/entities/layers/constants'
 import { restorePreviousDisplayedItems, setDisplayedItems } from '../../domain/shared_slices/Global'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
@@ -44,9 +42,6 @@ export function LayersSidebar() {
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
-
-  const regulatoryAreas = useGetRegulatoryLayersQuery()
-  const amps = useGetAMPsQuery()
 
   const dispatch = useAppDispatch()
 
@@ -126,16 +121,6 @@ export function LayersSidebar() {
           )}
         </VigilanceAreaPanelShifter>
       </Sidebar>
-      {(regulatoryAreas.isLoading || amps.isLoading) && (
-        <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>
-          <FulfillingBouncingCircleLoader color={THEME.color.gunMetal} size={30} />
-          <Message>
-            Chargement des zones cartographiques ({regulatoryAreas.isLoading && 'Zones réglementaires'}
-            {regulatoryAreas.isLoading && amps.isLoading ? ' et ' : ''}
-            {amps.isLoading && 'Aires Marines Protégées'})
-          </Message>
-        </SpinnerWrapper>
-      )}
     </Container>
   )
 }
@@ -219,18 +204,4 @@ const Layers = styled.div`
 
 const SidebarLayersIcon = styled(IconButton)<{ $isVisible: boolean }>`
   ${p => (p.$isVisible ? '' : 'display: none;')}
-`
-
-const SpinnerWrapper = styled.div<{ $isLayersSidebarVisible: boolean }>`
-  position: absolute;
-  top: 0;
-  left: ${props => (props.$isLayersSidebarVisible ? '460px' : '56px')};
-  display: flex;
-  padding: 4px;
-`
-const Message = styled.div`
-  font-size: 14px;
-  font-weight: 900;
-  white-space: nowrap;
-  padding: 4px 4px 4px 8px;
 `

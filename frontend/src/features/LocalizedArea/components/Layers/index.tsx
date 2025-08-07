@@ -7,7 +7,7 @@ import { GeoJSON } from 'ol/format'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
-import { useEffect, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useRef } from 'react'
 
 import { localizedAreaStyle } from './style'
 
@@ -31,7 +31,8 @@ const getLocalizedAreaZoneFeature = (localizedArea: LocalizedArea.LocalizedArea)
   feature.setId(`${Layers.LOCALIZED_AREAS.code}:${localizedArea.id}`)
   feature.setProperties({
     area,
-    ...localizedArea
+    ...localizedArea,
+    geom: null
   })
 
   return feature

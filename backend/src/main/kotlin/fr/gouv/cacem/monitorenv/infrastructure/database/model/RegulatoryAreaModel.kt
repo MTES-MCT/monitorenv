@@ -39,16 +39,16 @@ data class RegulatoryAreaModel(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    var tags: List<TagRegulatoryAreaModel>,
+    var tags: List<TagRegulatoryAreaModel> = emptyList(),
     @OneToMany(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    var themes: List<ThemeRegulatoryAreaModel>,
+    var themes: List<ThemeRegulatoryAreaModel> = emptyList(),
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
-    fun toRegulatoryArea() =
+    fun toRegulatoryArea(withGeometry: Boolean) =
         RegulatoryAreaEntity(
             id = id,
             date = date,
@@ -58,7 +58,7 @@ data class RegulatoryAreaModel(
             edition = edition,
             entityName = entityName,
             facade = facade,
-            geom = geom,
+            geom = if (withGeometry) geom else null,
             layerName = layerName,
             observation = observation,
             refReg = refReg,

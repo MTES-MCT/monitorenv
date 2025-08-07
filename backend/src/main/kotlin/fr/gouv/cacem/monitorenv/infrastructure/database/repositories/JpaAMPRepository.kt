@@ -10,7 +10,8 @@ import org.springframework.stereotype.Repository
 class JpaAMPRepository(
     private val dbAMPRepository: IDBAMPRepository,
 ) : IAMPRepository {
-    override fun findAll(): List<AMPEntity> = dbAMPRepository.findAllByOrderByName().map { it.toAMP() }
+    override fun findAll(withGeometry: Boolean): List<AMPEntity> =
+        dbAMPRepository.findAllByOrderByName().map { it.toAMP(withGeometry) }
 
     override fun count(): Long = dbAMPRepository.count()
 

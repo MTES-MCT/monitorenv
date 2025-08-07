@@ -19,7 +19,8 @@ export function getAMPFeature({ code, isolatedLayer, layer }) {
     area,
     isFilled: isLayerFilled,
     layerId: layer.id,
-    ...layer
+    ...layer,
+    geom: null
   })
 
   return feature
