@@ -25,7 +25,7 @@ export function SideWindowLauncher() {
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const reportings = useAppSelector(state => state.reporting.reportings)
   const dashboards = useAppSelector(state => state.dashboard.dashboards)
-  const sideWindow = useAppSelector(state => state.sideWindow)
+  const sideWindowStatus = useAppSelector(state => state.sideWindow.status)
   const reportingFormVisibility = useAppSelector(state => state.global.visibility.reportingFormVisibility)
 
   const reportingsOpenOnSideWindow = useMemo(
@@ -59,7 +59,7 @@ export function SideWindowLauncher() {
     [dashboards]
   )
 
-  const onUnload = () => {
+  const onUnload = useCallback(() => {
     dispatch(sideWindowActions.close())
     dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
     dispatch(reportingActions.resetReportingsOnSideWindow(reportingsOpenOnSideWindow))
@@ -74,9 +74,11 @@ export function SideWindowLauncher() {
     if (reportingFormVisibility.context === ReportingContext.SIDE_WINDOW) {
       dispatch(setReportingFormVisibility({ context: ReportingContext.MAP, visibility: VisibilityState.NONE }))
     }
-  }
+  }, [dispatch, reportingsOpenOnSideWindow, activeMissionId, selectedMissionIdOnMap, reportingFormVisibility])
 
-  if (sideWindow.status === SideWindowStatus.CLOSED) {
+  const features = useMemo(() => ({ height: 1200, width: window.innerWidth }), [])
+
+  if (sideWindowStatus === SideWindowStatus.CLOSED) {
     onUnload()
 
     return null
@@ -86,11 +88,11 @@ export function SideWindowLauncher() {
     <NewWindow
       closeOnUnmount
       copyStyles
-      features={{ height: 1200, width: window.innerWidth }}
+      features={features}
       name="MonitorEnv"
       onChangeFocus={onChangeFocus}
       onUnload={onUnload}
-      shouldHaveFocus={sideWindow.status === SideWindowStatus.VISIBLE}
+      shouldHaveFocus={sideWindowStatus === SideWindowStatus.VISIBLE}
       showPrompt={hasAtLeastOneMissionFormDirty || hasAtLeastOneReportingFormDirty || hasAtLeastOneDashboardFormDirty}
       title="MonitorEnv"
     >

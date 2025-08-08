@@ -4,7 +4,6 @@ import { useDrawLayer } from '@hooks/useDrawLayer'
 import { Layers } from 'domain/entities/layers/constants'
 import { drawFeature } from 'domain/use_cases/draw/drawFeature'
 import { DrawEvent } from 'ol/interaction/Draw'
-import React from 'react'
 
 import { dashboardActions } from '../../slice'
 
@@ -12,7 +11,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Geometry } from 'ol/geom'
 
-function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
+export function DrawDashboardLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const geometry = useAppSelector(state => state.dashboard.geometry)
   const interactionType = useAppSelector(state => state.dashboard.interactionType)
@@ -38,5 +37,3 @@ function UnmemoizeDrawDashboardLayer({ map }: BaseMapChildrenProps) {
 
   return null
 }
-
-export const DrawDashboardLayer = React.memo(UnmemoizeDrawDashboardLayer)

@@ -45,7 +45,7 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
     withRowSelection: false
   })
 
-  const { rows } = useMemo(() => table.getRowModel(), [table])
+  const { rows } = table.getRowModel()
 
   const rowVirtualizer = useTableVirtualizer({
     estimateSize: 30,
@@ -53,7 +53,7 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
     rows
   })
 
-  const virtualRows = useMemo(() => rowVirtualizer.getVirtualItems(), [rowVirtualizer])
+  const virtualRows = rowVirtualizer.getVirtualItems()
 
   return (
     <StyledTable
