@@ -86,8 +86,8 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
 
   useEffect(() => {
     const clickedAmpFeatures = getClickedFeatures({
+      featureList: mapClickEvent?.featureList,
       isRegulatoryOrAmp: true,
-      mapClickEvent,
       typesList: [
         Layers.AMP_PREVIEW.code,
         Layers.AMP.code,
@@ -96,8 +96,8 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       ]
     })
     const clickedRegulatoryFeatures = getClickedFeatures({
+      featureList: mapClickEvent?.featureList,
       isRegulatoryOrAmp: true,
-      mapClickEvent,
       typesList: [
         Layers.REGULATORY_ENV_PREVIEW.code,
         Layers.REGULATORY_ENV.code,
@@ -106,8 +106,8 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       ]
     })
     const clickedVigilanceAreaFeatures = getClickedFeatures({
+      featureList: mapClickEvent?.featureList,
       isRegulatoryOrAmp: false,
-      mapClickEvent,
       typesList: [
         Layers.VIGILANCE_AREA.code,
         Layers.VIGILANCE_AREA_PREVIEW.code,
@@ -127,7 +127,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
     if (isLinkingZonesToVigilanceArea && mapClickEvent.coordinates) {
       dispatch(closeMetadataPanel())
       dispatch(openLayerOverlay(mapClickEvent.coordinates))
-      const items = getClickedItems(mapClickEvent, isLinkingZonesToVigilanceArea)
+      const items = getClickedItems(isLinkingZonesToVigilanceArea, mapClickEvent?.featureList)
       dispatch(setLayerOverlayItems(items))
 
       return
@@ -191,7 +191,7 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
       dispatch(closeMetadataPanel())
       dispatch(openLayerOverlay(mapClickEvent.coordinates))
 
-      const items = getClickedItems(mapClickEvent, isLinkingZonesToVigilanceArea)
+      const items = getClickedItems(isLinkingZonesToVigilanceArea, mapClickEvent?.featureList)
       dispatch(setLayerOverlayItems(items))
 
       if (editingVigilanceAreaId) {

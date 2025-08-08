@@ -11,6 +11,7 @@ const GET_THEMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les thèmes."
 export const themeAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
     getThemes: builder.query<EntityState<ThemeFromAPI, number>, DateAsStringRange | void>({
+      keepUnusedDataFor: 0,
       query: dateRange =>
         dateRange
           ? `/v1/themes?startedAt=${encodeURIComponent(dateRange[0])}&endedAt=${encodeURIComponent(dateRange[1])}`
