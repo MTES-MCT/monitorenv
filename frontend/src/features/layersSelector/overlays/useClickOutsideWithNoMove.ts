@@ -30,6 +30,13 @@ export const useClickOutsideWithNoMove = (
       clickTimer.current = setTimeout(() => {
         setIsDragging(true)
       }, 200)
+
+      // eslint-disable-next-line consistent-return
+      return () => {
+        if (clickTimer.current) {
+          clearTimeout(clickTimer.current)
+        }
+      }
     },
     [zoneRefOrzoneRefs]
   )

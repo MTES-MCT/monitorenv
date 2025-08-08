@@ -81,66 +81,48 @@ export function getFilters(
       withCacheInvalidation: true
     }
   )
-  const filters: Array<Filter<ControlUnit.ControlUnit>> = []
+  const filters: Filter<ControlUnit.ControlUnit>[] = []
 
   // Search query
   // ⚠️ Order matters! Search query should be kept before other filters.
-  if (filtersState.query && filtersState.query.trim().length > 0) {
-    const filter: Filter<ControlUnit.ControlUnit> = () => customSearch.find(filtersState.query as string)
-
-    filters.push(filter)
+  const query = filtersState.query?.trim()
+  if (query && query.length > 0) {
+    filters.push(() => customSearch.find(query))
   }
 
-  // Administration
-  if (filtersState.administrationId) {
-    const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
-      controlUnits.filter(controlUnit => controlUnit.administrationId === filtersState.administrationId)
+  const { administrationId, stationId, type } = filtersState
 
-    filters.push(filter)
+  if (administrationId) {
+    filters.push(controlUnits => controlUnits.filter(unit => unit.administrationId === administrationId))
   }
 
-  // Base
-  if (filtersState.stationId) {
-    const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
-      controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-        const matches = controlUnit.controlUnitResources.filter(
-          ({ isArchived, stationId }) => !isArchived && stationId === filtersState.stationId
-        )
-
-        return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
-      }, [])
-
-    filters.push(filter)
+  if (stationId) {
+    filters.push(controlUnits =>
+      controlUnits.filter(unit =>
+        unit.controlUnitResources.some(({ isArchived, stationId: sid }) => !isArchived && sid === stationId)
+      )
+    )
   }
 
-  // Control Unit Resource Category
-  if ('categories' in filtersState && filtersState.categories) {
-    const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
-      controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-        const matches = controlUnit.controlUnitResources.filter(({ isArchived, type }) => {
-          const category = getControlUnitResourceCategoryFromType(type)
+  if ('categories' in filtersState && filtersState.categories?.length) {
+    const { categories } = filtersState
+    filters.push(controlUnits =>
+      controlUnits.filter(unit =>
+        unit.controlUnitResources.some(({ isArchived, type: resourceType }) => {
+          const category = getControlUnitResourceCategoryFromType(resourceType)
 
-          return !isArchived && !!category && filtersState.categories?.includes(category)
+          return !isArchived && category && categories.includes(category)
         })
-
-        return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
-      }, [])
-
-    filters.push(filter)
+      )
+    )
   }
 
-  // Control Unit Resource Type
-  if (filtersState.type) {
-    const filter: Filter<ControlUnit.ControlUnit> = controlUnits =>
-      controlUnits.reduce<ControlUnit.ControlUnit[]>((previousControlUnits, controlUnit) => {
-        const matches = controlUnit.controlUnitResources.filter(
-          ({ isArchived, type }) => !isArchived && type === filtersState.type
-        )
-
-        return matches.length > 0 ? [...previousControlUnits, controlUnit] : previousControlUnits
-      }, [])
-
-    filters.push(filter)
+  if (type) {
+    filters.push(controlUnits =>
+      controlUnits.filter(unit =>
+        unit.controlUnitResources.some(({ isArchived, type: resourceType }) => !isArchived && resourceType === type)
+      )
+    )
   }
 
   return filters

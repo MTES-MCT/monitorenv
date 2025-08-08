@@ -13,7 +13,7 @@ import {
   useNewWindow
 } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { forwardRef, useMemo } from 'react'
+import { forwardRef, memo, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../../../domain/entities/reporting'
@@ -290,9 +290,11 @@ export function TableReportingsFiltersWithRef(
   )
 }
 
-export const TableReportingsFilters = forwardRef<HTMLDivElement, TableReportingsFiltersProps>(
+export const TableReportingsFiltersNotMemoized = forwardRef<HTMLDivElement, TableReportingsFiltersProps>(
   TableReportingsFiltersWithRef
 )
+
+export const TableReportingsFilters = memo(TableReportingsFiltersNotMemoized)
 
 const FilterWrapper = styled.div`
   display: flex;

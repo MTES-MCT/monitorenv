@@ -11,7 +11,7 @@ import {
 import { deleteTagTag } from '@utils/deleteTagTag'
 import { deleteThemeTag } from '@utils/deleteThemeTag'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { forwardRef, Fragment } from 'react'
+import { forwardRef, Fragment, memo } from 'react'
 import styled from 'styled-components'
 
 import {
@@ -305,7 +305,11 @@ export function MapReportingsFiltersWithRef(
   )
 }
 
-export const MapReportingsFilters = forwardRef<HTMLDivElement, MapReportingsFiltersProps>(MapReportingsFiltersWithRef)
+const MapReportingsFiltersNotMemoized = forwardRef<HTMLDivElement, MapReportingsFiltersProps>(
+  MapReportingsFiltersWithRef
+)
+
+export const MapReportingsFilters = memo(MapReportingsFiltersNotMemoized)
 
 const FilterWrapper = styled.div`
   display: flex;

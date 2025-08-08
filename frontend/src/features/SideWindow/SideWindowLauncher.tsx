@@ -77,6 +77,8 @@ export function SideWindowLauncher() {
   }
 
   if (sideWindow.status === SideWindowStatus.CLOSED) {
+    onUnload()
+
     return null
   }
 

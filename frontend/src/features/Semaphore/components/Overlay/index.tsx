@@ -1,5 +1,6 @@
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
+import { useMemo } from 'react'
 
 import { SemaphoreCard } from './SemaphoreCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -29,15 +30,20 @@ export function SemaphoreOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
-  const selectedFeature = map
-    ?.getLayers()
-    ?.getArray()
-    ?.find(
-      (l): l is VectorLayerWithName =>
-        Object.prototype.hasOwnProperty.call(l, 'name') && (l as VectorLayerWithName).name === Layers.SEMAPHORES.code
-    )
-    ?.getSource()
-    ?.getFeatureById(`${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`)
+  const selectedFeature = useMemo(
+    () =>
+      map
+        ?.getLayers()
+        ?.getArray()
+        ?.find(
+          (l): l is VectorLayerWithName =>
+            Object.prototype.hasOwnProperty.call(l, 'name') &&
+            (l as VectorLayerWithName).name === Layers.SEMAPHORES.code
+        )
+        ?.getSource()
+        ?.getFeatureById(`${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`),
+    [map, selectedSemaphoreId]
+  )
 
   const canOverlayBeOpened = useAppSelector(state => isOverlayOpened(state.global, String(selectedFeature?.getId())))
 
@@ -48,6 +54,8 @@ export function SemaphoreOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
     currentfeatureId.startsWith(Layers.SEMAPHORES.code) &&
     currentfeatureId !== `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`
 
+  const margins = isSuperUser ? SUPER_USER_MARGINS : MARGINS
+
   return (
     <>
       <OverlayPositionOnCentroid
@@ -55,7 +63,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         feature={canOverlayBeOpened ? selectedFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
-        options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
+        options={{ margins }}
         zIndex={3000}
       >
         <SemaphoreCard feature={selectedFeature} selected />
@@ -65,7 +73,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
         feature={displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
-        options={{ margins: isSuperUser ? SUPER_USER_MARGINS : MARGINS }}
+        options={{ margins }}
         zIndex={3000}
       >
         <SemaphoreCard feature={hoveredFeature} />
