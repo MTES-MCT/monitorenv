@@ -5,6 +5,7 @@ import { AttachMissionToReportingModal } from '@features/Reportings/components/R
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
 import { reportingActions } from '@features/Reportings/slice'
+import { SideWindowStatus } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -27,6 +28,7 @@ import { useAppSelector } from '../hooks/useAppSelector'
 export function HomePage() {
   const dispatch = useAppDispatch()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+  const sideWindow = useAppSelector(state => state.sideWindow)
 
   const displayDrawModal = useAppSelector(state => state.global.menus.displayDrawModal)
   const displayLocateOnMap = useAppSelector(state => state.global.menus.displayLocateOnMap)
@@ -106,7 +108,7 @@ export function HomePage() {
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
       </Wrapper>
 
-      <SideWindowLauncher />
+      {sideWindow.status !== SideWindowStatus.CLOSED && <SideWindowLauncher />}
     </>
   )
 }

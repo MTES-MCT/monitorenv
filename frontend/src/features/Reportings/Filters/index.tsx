@@ -69,26 +69,27 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   }, [periodFilter, startedAfter, startedBefore])
 
   const { data: theme } = useGetThemesQuery(dateRange)
-
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(theme ?? [])), [theme])
 
   const { data: tags } = useGetTagsQuery()
-
   const tagsOptions = useMemo(() => getTagsAsOptions(Object.values(tags ?? [])), [tags])
 
   const { data: semaphores } = useGetSemaphoresQuery()
   const controlUnitsOptions = useMemo(() => (controlUnits ? Array.from(controlUnits) : []), [controlUnits])
-
-  const unitListAsOptions = controlUnitsOptions
-    .filter(unit => !unit.isArchived && !unit.name.includes('Sémaphore'))
-    .sort((a, b) => a?.name?.localeCompare(b?.name))
-    .map(sortedUnits => ({
-      label: sortedUnits.name,
-      value: {
-        id: sortedUnits.id,
-        label: sortedUnits.name
-      }
-    }))
+  const unitListAsOptions = useMemo(
+    () =>
+      controlUnitsOptions
+        .filter(unit => !unit.isArchived && !unit.name.includes('Sémaphore'))
+        .sort((a, b) => a?.name?.localeCompare(b?.name))
+        .map(sortedUnits => ({
+          label: sortedUnits.name,
+          value: {
+            id: sortedUnits.id,
+            label: sortedUnits.name
+          }
+        })),
+    [controlUnitsOptions]
+  )
 
   const semaphoresAsOptions = useMemo(
     () =>
@@ -139,17 +140,30 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
   const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
   const targetTypeOtions = getOptionsFromLabelledEnum(ReportingTargetTypeLabels)
 
-  const optionsList = {
-    dateRangeOptions,
-    seaFrontsOptions,
-    sourceOptions,
-    sourceTypeOptions,
-    statusOptions,
-    tagsOptions,
-    targetTypeOtions,
-    themesOptions,
-    typeOptions
-  }
+  const optionsList = useMemo(
+    () => ({
+      dateRangeOptions,
+      seaFrontsOptions,
+      sourceOptions,
+      sourceTypeOptions,
+      statusOptions,
+      tagsOptions,
+      targetTypeOtions,
+      themesOptions,
+      typeOptions
+    }),
+    [
+      dateRangeOptions,
+      seaFrontsOptions,
+      sourceOptions,
+      sourceTypeOptions,
+      statusOptions,
+      tagsOptions,
+      targetTypeOtions,
+      themesOptions,
+      typeOptions
+    ]
+  )
 
   const updatePeriodFilter = period => {
     dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))

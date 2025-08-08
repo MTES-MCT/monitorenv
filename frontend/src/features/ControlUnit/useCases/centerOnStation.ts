@@ -46,7 +46,11 @@ export const centerOnStation =
 
     dispatch(stationActions.hightlightFeatureIds(highlightedStationFeatureIds))
 
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       dispatch(stationActions.hightlightFeatureIds([]))
     }, FIVE_SECONDS)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
   }

@@ -22,7 +22,10 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     state => state.layerSearch.isVigilanceAreaSearchResultsVisible
   )
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
-  const isLayerVisible = displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible && isLayersSidebarVisible
+  const isLayerVisible = useMemo(
+    () => displayVigilanceAreaLayer && isVigilanceAreaSearchResultsVisible && isLayersSidebarVisible,
+    [displayVigilanceAreaLayer, isVigilanceAreaSearchResultsVisible, isLayersSidebarVisible]
+  )
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 

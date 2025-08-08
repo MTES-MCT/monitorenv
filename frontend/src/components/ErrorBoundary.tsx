@@ -6,6 +6,16 @@ type ErrorBoundaryProps = {
 type ErrorBoundaryState = {
   hasError: boolean
 }
+
+const style = {
+  alignItems: 'center',
+  display: 'flex',
+  flexGrow: 1,
+  height: '100%',
+  justifyContent: 'center',
+  padding: '30px',
+  width: '100%'
+}
 export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props) {
     super(props)
@@ -29,21 +39,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     const { hasError } = this.state
 
     if (hasError) {
-      return (
-        <div
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-            flexGrow: 1,
-            height: '100%',
-            justifyContent: 'center',
-            padding: '30px',
-            width: '100%'
-          }}
-        >
-          Une erreur est survenue.
-        </div>
-      )
+      return <div style={style}>Une erreur est survenue.</div>
     }
 
     return children

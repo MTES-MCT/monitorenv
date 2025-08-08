@@ -5,7 +5,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { DashboardCard } from './DashboardCard'
 
@@ -31,15 +31,20 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
 
   const selectedDashboardOnMap = useAppSelector(state => state.dashboard.selectedDashboardOnMap)
 
-  const feature = map
-    ?.getLayers()
-    ?.getArray()
-    ?.find(
-      (l): l is VectorLayerWithName =>
-        Object.prototype.hasOwnProperty.call(l, 'name') && (l as VectorLayerWithName).name === Layers.DASHBOARDS.code
-    )
-    ?.getSource()
-    ?.getFeatureById(`${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`)
+  const feature = useMemo(
+    () =>
+      map
+        ?.getLayers()
+        ?.getArray()
+        ?.find(
+          (l): l is VectorLayerWithName =>
+            Object.prototype.hasOwnProperty.call(l, 'name') &&
+            (l as VectorLayerWithName).name === Layers.DASHBOARDS.code
+        )
+        ?.getSource()
+        ?.getFeatureById(`${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`),
+    [map, selectedDashboardOnMap?.id]
+  )
 
   const canOverlayBeOpened = useAppSelector(state =>
     isOverlayOpened(state.global, `${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`)
@@ -55,16 +60,22 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
     currentfeatureId !== `${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}` &&
     hoveredFeature?.getProperties().dashboard
 
-  const updateSelectedMargins = (cardHeight: number) => {
-    if (OPTIONS.margins.yTop - cardHeight !== selectedOptions.margins.yTop) {
-      setSelectedOptions({ margins: { ...selectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
-    }
-  }
-  const updateHoveredMargins = (cardHeight: number) => {
-    if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
-      setHoveredOptions({ margins: { ...hoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
-    }
-  }
+  const updateSelectedMargins = useCallback(
+    (cardHeight: number) => {
+      if (OPTIONS.margins.yTop - cardHeight !== selectedOptions.margins.yTop) {
+        setSelectedOptions({ margins: { ...selectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+      }
+    },
+    [selectedOptions.margins]
+  )
+  const updateHoveredMargins = useCallback(
+    (cardHeight: number) => {
+      if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
+        setHoveredOptions({ margins: { ...hoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+      }
+    },
+    [hoveredOptions.margins]
+  )
 
   const close = () => {
     dispatch(dashboardActions.setSelectedDashboardOnMap(undefined))

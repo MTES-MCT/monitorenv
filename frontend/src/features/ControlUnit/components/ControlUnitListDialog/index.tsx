@@ -29,13 +29,7 @@ export function ControlUnitListDialog({ onClose, onVisibiltyChange }: ControlUni
       return []
     }
 
-    const results = getFilteredControlUnits(
-      'MAP_CONTROL_UNIT_LIST',
-      mapControlUnitListDialog.filtersState,
-      controlUnits ?? []
-    )
-
-    return results
+    return getFilteredControlUnits('MAP_CONTROL_UNIT_LIST', mapControlUnitListDialog.filtersState, controlUnits ?? [])
   }, [mapControlUnitListDialog.filtersState, controlUnits])
 
   const toggleBaseLayer = () => {

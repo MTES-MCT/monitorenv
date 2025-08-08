@@ -1,7 +1,7 @@
 import { ChevronIcon } from '@features/commonStyles/icons/ChevronIcon.style'
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
 import { flexRender } from '@tanstack/react-table'
-import { forwardRef } from 'react'
+import { forwardRef, memo } from 'react'
 import styled from 'styled-components'
 
 import { getPaddingValuesForVirtualizeTable, PaddingForVirtualizeTable } from './PaddingForVirtualizeTable'
@@ -72,7 +72,9 @@ export function TableWithRef({ className = '', columnsLength, rows, rowVirtualiz
   )
 }
 
-export const Table = forwardRef(TableWithRef)
+const TableNotMemoized = forwardRef(TableWithRef)
+
+export const Table = memo(TableNotMemoized)
 
 const StyledChevronIcon = styled(ChevronIcon)`
   margin-top: 0px;

@@ -22,8 +22,8 @@ import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { type MutableRefObject, useMemo, useRef } from 'react'
 
-import { MapMissionFilters } from './Map'
-import { TableMissionFilters } from './Table'
+import { MapMissionsFilters } from './Map'
+import { TableMissionsFilters } from './Table'
 
 import type { TagOption } from '../../../../domain/entities/tags'
 
@@ -68,10 +68,10 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const { data: legacyControlUnits, isLoading } = useGetLegacyControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const { data } = useGetThemesQuery(dateRange)
-  const themesAsOptions = getThemesAsOptionsCheckPicker(Object.values(data ?? []))
+  const themesAsOptions = useMemo(() => getThemesAsOptionsCheckPicker(Object.values(data ?? [])), [data])
 
   const { data: tags } = useGetTagsQuery()
-  const tagsAsOptions = getTagsAsOptions(Object.values(tags ?? []))
+  const tagsAsOptions = useMemo(() => getTagsAsOptions(Object.values(tags ?? [])), [tags])
 
   const activeAdministrations = useMemo(
     () =>
@@ -97,17 +97,29 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
   const completionStatusAsOptions = getOptionsFromLabelledEnum(FrontCompletionStatusLabel)
 
-  const optionsList = {
-    administrations: activeAdministrations,
-    completion: completionStatusAsOptions,
-    controlUnits: controlUnitsAsOptions,
-    dates: dateRangeOptions,
-    seaFronts: seaFrontsAsOptions,
-    status: missionStatusesAsOptions,
-    tags: tagsAsOptions,
-    themes: themesAsOptions,
-    types: missionTypesAsOptions
-  }
+  const optionsList = useMemo(
+    () => ({
+      administrations: activeAdministrations,
+      completion: completionStatusAsOptions,
+      controlUnits: controlUnitsAsOptions,
+      dates: dateRangeOptions,
+      seaFronts: seaFrontsAsOptions,
+      status: missionStatusesAsOptions,
+      tags: tagsAsOptions,
+      themes: themesAsOptions,
+      types: missionTypesAsOptions
+    }),
+    [
+      activeAdministrations,
+      completionStatusAsOptions,
+      controlUnitsAsOptions,
+      seaFrontsAsOptions,
+      missionStatusesAsOptions,
+      tagsAsOptions,
+      themesAsOptions,
+      missionTypesAsOptions
+    ]
+  )
 
   const updatePeriodFilter = (nextDateRange: DateRangeEnum | undefined) => {
     dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: nextDateRange }))
@@ -163,7 +175,7 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
   return (
     <>
       {context === MissionFilterContext.TABLE ? (
-        <TableMissionFilters
+        <TableMissionsFilters
           ref={wrapperRef}
           onResetFilters={resetFilters}
           onUpdateAdministrationFilter={updateAdministrationFilter}
@@ -173,7 +185,7 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
           optionsList={optionsList}
         />
       ) : (
-        <MapMissionFilters
+        <MapMissionsFilters
           ref={wrapperRef}
           onUpdateAdministrationFilter={updateAdministrationFilter}
           onUpdateDateRangeFilter={updateDateRangeFilter}

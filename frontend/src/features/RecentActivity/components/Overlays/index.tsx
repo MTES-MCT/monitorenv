@@ -4,6 +4,7 @@ import { useAppSelector, useShallowEqualSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { findMapFeatureById } from '@utils/findMapFeatureById'
 import { Layers } from 'domain/entities/layers/constants'
+import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 
 import { HoveredOverlay } from './HoveredOverlay'
@@ -49,33 +50,49 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
   const isHoveredFeatureSameAsSelected =
     hoveredItems?.length === 1 && hoveredItems[0] && selectedControlId === hoveredItems[0].properties.id
 
-  const selectedFeature = findMapFeatureById(
-    map,
-    Layers.RECENT_CONTROLS_ACTIVITY.code,
-    `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${selectedControlId}`
-  )
-  const dashboardSelectedFeature = findMapFeatureById(
-    map,
-    Layers.DASHBOARD_RECENT_ACTIVITY.code,
-    `${Layers.DASHBOARD_RECENT_ACTIVITY.code}:${selectedControlId}`
+  const selectedFeature = useMemo(
+    () =>
+      findMapFeatureById(
+        map,
+        Layers.RECENT_CONTROLS_ACTIVITY.code,
+        `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${selectedControlId}`
+      ),
+    [map, selectedControlId]
   )
 
-  const hoveredFeature =
-    hoveredItems && hoveredItems.length === 1 && hoveredItems[0]
-      ? findMapFeatureById(
-          map,
-          Layers.RECENT_CONTROLS_ACTIVITY.code,
-          `${Layers.RECENT_CONTROLS_ACTIVITY.code}:${hoveredItems?.[0].properties.id}`
-        )
-      : undefined
-  const dashboardHoveredFeature =
-    hoveredItems && hoveredItems.length === 1 && hoveredItems[0]
-      ? findMapFeatureById(
-          map,
-          Layers.DASHBOARD_RECENT_ACTIVITY.code,
-          `${Layers.DASHBOARD_RECENT_ACTIVITY.code}:${hoveredItems?.[0].properties.id}`
-        )
-      : undefined
+  const dashboardSelectedFeature = useMemo(
+    () =>
+      findMapFeatureById(
+        map,
+        Layers.DASHBOARD_RECENT_ACTIVITY.code,
+        `${Layers.DASHBOARD_RECENT_ACTIVITY.code}:${selectedControlId}`
+      ),
+    [map, selectedControlId]
+  )
+
+  const hoveredFeature = useMemo(
+    () =>
+      hoveredItems && hoveredItems.length === 1 && hoveredItems[0]
+        ? findMapFeatureById(
+            map,
+            hoveredItems[0].layerType,
+            `${hoveredItems[0].layerType}:${hoveredItems[0].properties.id}`
+          )
+        : undefined,
+    [map, hoveredItems]
+  )
+
+  const dashboardHoveredFeature = useMemo(
+    () =>
+      hoveredItems && hoveredItems.length === 1 && hoveredItems[0]
+        ? findMapFeatureById(
+            map,
+            Layers.DASHBOARD_RECENT_ACTIVITY.code,
+            `${Layers.DASHBOARD_RECENT_ACTIVITY.code}:${hoveredItems?.[0].properties.id}`
+          )
+        : undefined,
+    [map, hoveredItems]
+  )
 
   return (
     <>
