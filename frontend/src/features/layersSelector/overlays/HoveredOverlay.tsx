@@ -9,16 +9,20 @@ import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulator
 import type { OverlayItem } from 'domain/types/map'
 
 export function HoveredOverlay({
+  isVisible,
   items,
   pixel
 }: {
-  items: OverlayItem<
-    RegulatoryOrAMPOrViglanceAreaLayerType,
-    AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties
-  >[]
-  pixel: number[]
+  isVisible: boolean
+  items:
+    | OverlayItem<
+        RegulatoryOrAMPOrViglanceAreaLayerType,
+        AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties
+      >[]
+    | undefined
+  pixel: number[] | undefined
 }) {
-  if (!pixel) {
+  if (!pixel || !isVisible) {
     return null
   }
 
@@ -27,7 +31,7 @@ export function HoveredOverlay({
   return (
     <Menu $x={x} $y={y}>
       <OverlayContent items={items?.slice(0, 3)} />
-      {items?.length > 1 && (
+      {items && items?.length > 1 && (
         <Footer>
           {items?.length === 4 && <More>1 autre zone</More>}
           {items && items.length > 4 && <More>{items.length - 2} autres zones</More>}

@@ -3,6 +3,7 @@ import { getIsLinkingZonesToVigilanceArea, VigilanceAreaFormTypeOpen } from '@fe
 import { useAppSelector, useShallowEqualSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { Layers } from 'domain/entities/layers/constants'
+import { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 
 import { HoveredOverlay } from './HoveredOverlay'
@@ -26,7 +27,10 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
   )
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const hoveredItems = getHoveredItems(currentFeatureListOver, isLinkingZonesToVigilanceArea)
+  const hoveredItems = useMemo(
+    () => getHoveredItems(currentFeatureListOver, isLinkingZonesToVigilanceArea),
+    [currentFeatureListOver, isLinkingZonesToVigilanceArea]
+  )
 
   const isHoveredOverlayVisible =
     !layerOverlayIsOpen &&
@@ -46,7 +50,10 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
       >
         {layerOverlayIsOpen && <PinnedOverlay items={layerOverlayItems} />}
       </OverlayPositionOnCoordinates>
-      {createPortal(isHoveredOverlayVisible && <HoveredOverlay items={hoveredItems} pixel={pixel} />, document.body)}
+      {createPortal(
+        <HoveredOverlay isVisible={!!isHoveredOverlayVisible} items={hoveredItems} pixel={pixel} />,
+        document.body
+      )}
     </>
   )
 }

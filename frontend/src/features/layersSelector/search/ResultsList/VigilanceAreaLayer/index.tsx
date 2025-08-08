@@ -72,10 +72,20 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
   }
 
   useEffect(() => {
+    let timeout: number | undefined
+
     if (layerId === selectedVigilanceAreaId && ref?.current) {
-      ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      timeout = window.setTimeout(() => {
+        ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 50)
     }
-  }, [layerId, ref, selectedVigilanceAreaId])
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout)
+      }
+    }
+  }, [layerId, selectedVigilanceAreaId, ref])
 
   return (
     <LayerSelector.Layer

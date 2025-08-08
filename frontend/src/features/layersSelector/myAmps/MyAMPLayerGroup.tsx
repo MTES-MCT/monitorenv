@@ -1,5 +1,6 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { intersection } from 'lodash'
+import { useCallback } from 'react'
 
 import { MyAMPLayerZone } from './MyAMPLayerZone'
 import { getNumberOfAMPByGroupName } from '../../../api/ampsAPI'
@@ -31,29 +32,35 @@ export function MyAMPLayerGroup({
 
   const ampLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
 
-  const fitToGroupExtent = () => {
+  const fitToGroupExtent = useCallback(() => {
     const extent = getExtentOfLayersGroup(layers)
     dispatch(setFitToExtent(extent))
-  }
+  }, [dispatch, layers])
 
-  const handleRemoveZone = e => {
-    e.stopPropagation()
-    dispatch(removeAmpZonesFromMyLayers(groupLayerIds))
-  }
+  const handleRemoveZone = useCallback(
+    e => {
+      e.stopPropagation()
+      dispatch(removeAmpZonesFromMyLayers(groupLayerIds))
+    },
+    [dispatch, groupLayerIds]
+  )
 
-  const toggleLayerDisplay = e => {
-    e.stopPropagation()
-    if (ampZonesAreShowed) {
-      dispatch(hideAmpLayers(groupLayerIds))
-    } else {
-      fitToGroupExtent()
-      dispatch(showAmpLayer(groupLayerIds))
-    }
-  }
+  const toggleLayerDisplay = useCallback(
+    e => {
+      e.stopPropagation()
+      if (ampZonesAreShowed) {
+        dispatch(hideAmpLayers(groupLayerIds))
+      } else {
+        fitToGroupExtent()
+        dispatch(showAmpLayer(groupLayerIds))
+      }
+    },
+    [ampZonesAreShowed, dispatch, groupLayerIds, fitToGroupExtent]
+  )
 
-  const addZonesToVigilanceArea = () => {
+  const addZonesToVigilanceArea = useCallback(() => {
     dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea(groupLayerIds))
-  }
+  }, [dispatch, groupLayerIds])
 
   return (
     <MyLayerGroup

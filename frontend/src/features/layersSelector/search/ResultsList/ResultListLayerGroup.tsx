@@ -8,8 +8,8 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import _, { difference } from 'lodash'
-import { useState } from 'react'
+import { difference, includes, intersection } from 'lodash'
+import { useCallback, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 
 import { AMPLayer } from './AMPLayerGroup/AMPLayer'
@@ -44,9 +44,9 @@ export function ResultListLayerGroup({
   const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
-  const zonesSelected = _.intersection(selectedLayerIds, layerIds)
+  const zonesSelected = intersection(selectedLayerIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
-  const forceZonesAreOpen = _.includes(layerIds, layerIdToDisplay)
+  const forceZonesAreOpen = includes(layerIds, layerIdToDisplay)
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const AMPLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
@@ -58,31 +58,34 @@ export function ResultListLayerGroup({
     difference(layerIds, regulatoryAreasLinkedToVigilanceAreaForm).length === 0 ||
     difference(layerIds, AMPLinkedToVigilanceAreaForm).length === 0
 
-  const handleCheckAllZones = e => {
-    e.stopPropagation()
-    if (allTopicZonesAreChecked) {
-      removeLayers(layerIds)
-    } else {
-      addLayers(layerIds)
-    }
-  }
+  const handleCheckAllZones = useCallback(
+    e => {
+      e.stopPropagation()
+      if (allTopicZonesAreChecked) {
+        removeLayers(layerIds)
+      } else {
+        addLayers(layerIds)
+      }
+    },
+    [allTopicZonesAreChecked, addLayers, layerIds, removeLayers]
+  )
 
-  const clickOnGroupZones = () => {
+  const clickOnGroupZones = useCallback(() => {
     setZonesAreOpen(!zonesAreOpen)
 
     if (!zonesAreOpen) {
       dispatch(setFitToExtent(groupExtent))
     }
-  }
+  }, [dispatch, groupExtent, zonesAreOpen])
 
-  const addZonesToVigilanceArea = () => {
+  const addZonesToVigilanceArea = useCallback(() => {
     if (isLinkingAMPToVigilanceArea) {
       dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea(layerIds))
 
       return
     }
     dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(layerIds))
-  }
+  }, [dispatch, isLinkingAMPToVigilanceArea, layerIds])
 
   return (
     <>
