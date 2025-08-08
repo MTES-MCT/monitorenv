@@ -77,8 +77,8 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
 
   useEffect(() => {
     const clickedFeatures = getClickedFeatures({
+      featureList: mapClickEvent?.featureList,
       isRegulatoryOrAmp: false,
-      mapClickEvent,
       typesList: [Layers.RECENT_CONTROLS_ACTIVITY.code, Layers.DASHBOARD_RECENT_ACTIVITY.code]
     })
     const numberOfClickedFeatures = clickedFeatures?.length ?? 0

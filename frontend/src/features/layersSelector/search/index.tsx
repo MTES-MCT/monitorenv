@@ -7,7 +7,7 @@ import { type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import _ from 'lodash'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { useSearchLayers } from './hooks/useSearchLayers'
@@ -50,51 +50,75 @@ export function LayerSearch() {
 
   const debouncedSearchLayers = useSearchLayers()
 
-  const genericSearchParams = {
-    ampTypes: filteredAmpTypes,
-    extent: searchExtent,
-    regulatoryTags: filteredRegulatoryTags,
-    regulatoryThemes: filteredRegulatoryThemes,
-    searchedText: globalSearchText,
-    shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-    vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-    vigilanceAreaSpecificPeriodFilter
-  }
+  const genericSearchParams = useMemo(
+    () => ({
+      ampTypes: filteredAmpTypes,
+      extent: searchExtent,
+      regulatoryTags: filteredRegulatoryTags,
+      regulatoryThemes: filteredRegulatoryThemes,
+      searchedText: globalSearchText,
+      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
+      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
+    }),
+    [
+      filteredAmpTypes,
+      searchExtent,
+      filteredRegulatoryTags,
+      filteredRegulatoryThemes,
+      globalSearchText,
+      shouldFilterSearchOnMapExtent,
+      filteredVigilanceAreaPeriod,
+      vigilanceAreaSpecificPeriodFilter
+    ]
+  )
 
-  const handleSearchInputChange = searchedText => {
-    dispatch(setGlobalSearchText(searchedText))
+  const handleSearchInputChange = useCallback(
+    searchedText => {
+      dispatch(setGlobalSearchText(searchedText))
 
-    debouncedSearchLayers({
-      ...genericSearchParams,
-      searchedText
-    })
-  }
+      debouncedSearchLayers({
+        ...genericSearchParams,
+        searchedText
+      })
+    },
+    [dispatch, debouncedSearchLayers, genericSearchParams]
+  )
 
-  const handleSetFilteredAmpTypes = filteredTypes => {
-    dispatch(setFilteredAmpTypes(filteredTypes))
-    debouncedSearchLayers({
-      ...genericSearchParams,
-      ampTypes: filteredTypes
-    })
-  }
+  const handleSetFilteredAmpTypes = useCallback(
+    filteredTypes => {
+      dispatch(setFilteredAmpTypes(filteredTypes))
+      debouncedSearchLayers({
+        ...genericSearchParams,
+        ampTypes: filteredTypes
+      })
+    },
+    [dispatch, debouncedSearchLayers, genericSearchParams]
+  )
 
-  const handleSetFilteredRegulatoryTags = (filteredTags: TagOption[]) => {
-    dispatch(setFilteredRegulatoryTags(filteredTags))
-    debouncedSearchLayers({
-      ...genericSearchParams,
-      regulatoryTags: filteredTags
-    })
-  }
+  const handleSetFilteredRegulatoryTags = useCallback(
+    (filteredTags: TagOption[]) => {
+      dispatch(setFilteredRegulatoryTags(filteredTags))
+      debouncedSearchLayers({
+        ...genericSearchParams,
+        regulatoryTags: filteredTags
+      })
+    },
+    [dispatch, debouncedSearchLayers, genericSearchParams]
+  )
 
-  const handleSetFilteredRegulatoryThemes = (filteredThemes: ThemeOption[]) => {
-    dispatch(setFilteredRegulatoryThemes(filteredThemes))
-    debouncedSearchLayers({
-      ...genericSearchParams,
-      regulatoryThemes: filteredThemes
-    })
-  }
+  const handleSetFilteredRegulatoryThemes = useCallback(
+    (filteredThemes: ThemeOption[]) => {
+      dispatch(setFilteredRegulatoryThemes(filteredThemes))
+      debouncedSearchLayers({
+        ...genericSearchParams,
+        regulatoryThemes: filteredThemes
+      })
+    },
+    [dispatch, debouncedSearchLayers, genericSearchParams]
+  )
 
-  const handleResetFilters = () => {
+  const handleResetFilters = useCallback(() => {
     dispatch(resetFilters())
     debouncedSearchLayers({
       ...genericSearchParams,
@@ -108,19 +132,22 @@ export function LayerSearch() {
       vigilanceAreaFiltersActions.setVisibility([VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE])
     )
     dispatch(vigilanceAreaFiltersActions.setStatus([VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED]))
-  }
+  }, [dispatch, debouncedSearchLayers, genericSearchParams])
 
-  const updateDateRangeFilter = (dateRange: DateAsStringRange | undefined) => {
-    dispatch(setVigilanceAreaSpecificPeriodFilter(dateRange))
-    debouncedSearchLayers({
-      ...genericSearchParams,
-      vigilanceAreaSpecificPeriodFilter: dateRange
-    })
-  }
+  const updateDateRangeFilter = useCallback(
+    (dateRange: DateAsStringRange | undefined) => {
+      dispatch(setVigilanceAreaSpecificPeriodFilter(dateRange))
+      debouncedSearchLayers({
+        ...genericSearchParams,
+        vigilanceAreaSpecificPeriodFilter: dateRange
+      })
+    },
+    [dispatch, debouncedSearchLayers, genericSearchParams]
+  )
 
-  const openOrCloseRegFilters = () => {
+  const openOrCloseRegFilters = useCallback(() => {
     dispatch(layerSidebarActions.toggleRegFilters())
-  }
+  }, [dispatch])
 
   const ampTypes = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
 

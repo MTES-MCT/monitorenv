@@ -28,27 +28,44 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
     vigilanceAreaSpecificPeriodFilter
   } = useGetVigilanceAreasWithFilters(skip)
 
+  const tempVigilanceAreas = useMemo(
+    () =>
+      vigilanceAreas.filter(
+        vigilanceArea =>
+          isVigilanceAreaPartOfCreatedBy(vigilanceArea, createdBy) &&
+          isVigilanceAreaPartOfSeaFront(vigilanceArea, seaFronts) &&
+          isVigilanceAreaPartOfStatus(vigilanceArea, isSuperUser ? status : [VigilanceArea.Status.PUBLISHED]) &&
+          isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
+          isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes) &&
+          isVigilanceAreaPartOfVisibility(vigilanceArea, visibility)
+      ),
+    [
+      vigilanceAreas,
+      createdBy,
+      seaFronts,
+      isSuperUser,
+      status,
+      filteredRegulatoryTags,
+      filteredRegulatoryThemes,
+      visibility
+    ]
+  )
+
+  const vigilanceAreasByPeriod = useMemo(
+    () =>
+      getFilterVigilanceAreasPerPeriod(
+        tempVigilanceAreas,
+        filteredVigilanceAreaPeriod,
+        vigilanceAreaSpecificPeriodFilter,
+        isSuperUser
+      ),
+    [tempVigilanceAreas, filteredVigilanceAreaPeriod, vigilanceAreaSpecificPeriodFilter, isSuperUser]
+  )
+
   const filteredVigilanceAreas = useMemo(() => {
     if (!vigilanceAreas) {
       return { entities: {}, ids: [] }
     }
-
-    const tempVigilanceAreas = vigilanceAreas.filter(
-      vigilanceArea =>
-        isVigilanceAreaPartOfCreatedBy(vigilanceArea, createdBy) &&
-        isVigilanceAreaPartOfSeaFront(vigilanceArea, seaFronts) &&
-        isVigilanceAreaPartOfStatus(vigilanceArea, isSuperUser ? status : [VigilanceArea.Status.PUBLISHED]) &&
-        isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
-        isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes) &&
-        isVigilanceAreaPartOfVisibility(vigilanceArea, visibility)
-    )
-
-    const vigilanceAreasByPeriod = getFilterVigilanceAreasPerPeriod(
-      tempVigilanceAreas,
-      filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter,
-      isSuperUser
-    )
 
     const customSearch = new CustomSearch(
       vigilanceAreasByPeriod,
@@ -85,19 +102,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
       entities: vigilanceAreasEntities,
       ids: vigilanceAreasFilteredByUserType.map(vigilanceArea => vigilanceArea.id)
     }
-  }, [
-    vigilanceAreas,
-    filteredVigilanceAreaPeriod,
-    vigilanceAreaSpecificPeriodFilter,
-    isSuperUser,
-    searchQuery,
-    createdBy,
-    seaFronts,
-    status,
-    filteredRegulatoryTags,
-    filteredRegulatoryThemes,
-    visibility
-  ])
+  }, [vigilanceAreas, vigilanceAreasByPeriod, isSuperUser, searchQuery, tempVigilanceAreas])
 
   return { isError, isFetching, isLoading, vigilanceAreas: filteredVigilanceAreas }
 }

@@ -4,7 +4,6 @@ import { useDrawLayer } from '@hooks/useDrawLayer'
 import { Layers } from 'domain/entities/layers/constants'
 import { drawFeature } from 'domain/use_cases/draw/drawFeature'
 import { DrawEvent } from 'ol/interaction/Draw'
-import React from 'react'
 
 import { recentActivityActions } from '../../slice'
 
@@ -12,7 +11,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Geometry } from 'ol/geom'
 
-function UnmemoizeDrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
+export function DrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const geometry = useAppSelector(state => state.recentActivity.drawedGeometry)
   const interactionType = useAppSelector(state => state.recentActivity.interactionType)
@@ -39,5 +38,3 @@ function UnmemoizeDrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
 
   return null
 }
-
-export const DrawRecentActivityLayer = React.memo(UnmemoizeDrawRecentActivityLayer)

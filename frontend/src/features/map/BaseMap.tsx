@@ -46,7 +46,7 @@ import type { MapBrowserEvent } from 'ol'
 
 export type BaseMapChildrenProps = {
   currentFeatureListOver?: SerializedFeature<Record<string, any>>[]
-  currentFeatureOver: SerializedFeature<Record<string, any>> | undefined
+  currentFeatureOver: SerializedFeature<Record<string, any>>
   map: OpenLayerMap
   mapClickEvent: MapClickEvent
   pixel?: number[]
@@ -82,9 +82,7 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
   const [currentFeatureOver, setCurrentFeatureOver] = useState<SerializedFeature<Record<string, any>> | undefined>(
     undefined
   )
-  const [currentFeatureListOver, setCurrentFeatureListOver] = useState<
-    SerializedFeature<Record<string, any>>[] | undefined
-  >(undefined)
+  const [currentFeatureListOver, setCurrentFeatureListOver] = useState<SerializedFeature<Record<string, any>>[]>([])
   const [pixel, setPixel] = useState<number[] | undefined>(undefined)
 
   const mapElement = useRef() as MutableRefObject<HTMLDivElement>
@@ -150,9 +148,14 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
             }
           })
           const priorityFeatures = getHighestPriorityFeatures(features, priorityLayersOrder)
-          setCurrentFeatureListOver(getGeoJSONFromFeatureList(priorityFeatures))
 
-          setCurrentFeatureOver(getGeoJSONFromFeature(priorityFeatures?.[0]))
+          const featureListHover = getGeoJSONFromFeatureList(priorityFeatures) as SerializedFeature<
+            Record<string, any>
+          >[]
+          setCurrentFeatureListOver(featureListHover)
+
+          const hoveredFeature = getGeoJSONFromFeature<Record<string, any>>(priorityFeatures?.[0])
+          setCurrentFeatureOver(hoveredFeature)
 
           setPixel(event.pixel)
         }
@@ -177,6 +180,14 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     initialMap.addControl(updateScaleControl())
     initialMap.on('click', event => handleMapClick(event, initialMap))
     initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
+
+    return () => {
+      initialMap.un('click', event => handleMapClick(event, initialMap))
+      initialMap.un('pointermove', event => handleMouseOverFeature(event, initialMap))
+      initialMap.setTarget(undefined)
+      initialMap.getControls().clear()
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

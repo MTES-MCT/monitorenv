@@ -53,10 +53,10 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
     withRowSelection: false
   })
 
-  const { rows } = useMemo(() => table.getRowModel(), [table])
+  const { rows } = table.getRowModel()
   const rowVirtualizer = useTableVirtualizer({ estimateSize: 30, ref: tableContainerRef, rows })
 
-  const virtualRows = useMemo(() => rowVirtualizer.getVirtualItems(), [rowVirtualizer])
+  const virtualRows = rowVirtualizer.getVirtualItems()
 
   return (
     <Table

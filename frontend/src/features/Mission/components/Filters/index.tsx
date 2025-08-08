@@ -20,7 +20,7 @@ import { type DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, MissionStatusLabel, MissionTypeLabel } from 'domain/entities/missions'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
-import { type MutableRefObject, useMemo, useRef } from 'react'
+import { type MutableRefObject, useCallback, useMemo, useRef } from 'react'
 
 import { MapMissionsFilters } from './Map'
 import { TableMissionsFilters } from './Table'
@@ -43,6 +43,11 @@ export type MissionOptionsListType = {
   themes: Option<number>[]
   types: Option<string>[]
 }
+
+const missionStatusesAsOptions = getOptionsFromLabelledEnum(MissionStatusLabel)
+const missionTypesAsOptions = getOptionsFromLabelledEnum(MissionTypeLabel)
+const seaFrontsAsOptions = Object.values(SeaFrontLabels)
+const completionStatusAsOptions = getOptionsFromLabelledEnum(FrontCompletionStatusLabel)
 
 export function MissionFilters({ context }: { context: MissionFilterContext }) {
   const wrapperRef = useRef() as MutableRefObject<HTMLDivElement>
@@ -92,11 +97,6 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     return getOptionsFromIdAndName(selectableControlUnits) ?? []
   }, [legacyControlUnits, selectedAdministrationNames])
 
-  const missionStatusesAsOptions = getOptionsFromLabelledEnum(MissionStatusLabel)
-  const missionTypesAsOptions = getOptionsFromLabelledEnum(MissionTypeLabel)
-  const seaFrontsAsOptions = Object.values(SeaFrontLabels)
-  const completionStatusAsOptions = getOptionsFromLabelledEnum(FrontCompletionStatusLabel)
-
   const optionsList = useMemo(
     () => ({
       administrations: activeAdministrations,
@@ -109,65 +109,69 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
       themes: themesAsOptions,
       types: missionTypesAsOptions
     }),
-    [
-      activeAdministrations,
-      completionStatusAsOptions,
-      controlUnitsAsOptions,
-      seaFrontsAsOptions,
-      missionStatusesAsOptions,
-      tagsAsOptions,
-      themesAsOptions,
-      missionTypesAsOptions
-    ]
+    [activeAdministrations, controlUnitsAsOptions, tagsAsOptions, themesAsOptions]
   )
 
-  const updatePeriodFilter = (nextDateRange: DateRangeEnum | undefined) => {
-    dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: nextDateRange }))
+  const updatePeriodFilter = useCallback(
+    (nextDateRange: DateRangeEnum | undefined) => {
+      dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: nextDateRange }))
 
-    // these filters are only uses when user selects a date range
-    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: undefined }))
-    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
+      // these filters are only uses when user selects a date range
+      dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: undefined }))
+      dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: undefined }))
 
-    // if we change the year, we reset the theme and subtheme filters
-    const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : undefined
-    const currentYear = customDayjs().get('year')
-    if (actuelFilterYear && currentYear !== actuelFilterYear) {
-      dispatch(updateFilters({ key: MissionFiltersEnum.THEME_FILTER, value: undefined }))
-    }
-  }
+      // if we change the year, we reset the theme and subtheme filters
+      const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : undefined
+      const currentYear = customDayjs().get('year')
+      if (actuelFilterYear && currentYear !== actuelFilterYear) {
+        dispatch(updateFilters({ key: MissionFiltersEnum.THEME_FILTER, value: undefined }))
+      }
+    },
+    [dispatch, startedAfter]
+  )
 
-  const updateAdministrationFilter = (nextSelectedAdministrationIds: string[] | undefined) => {
-    const administrationsUpdatedWithUnits = administrations?.filter(admin =>
-      nextSelectedAdministrationIds?.includes(admin.name)
-    )
+  const updateAdministrationFilter = useCallback(
+    (nextSelectedAdministrationIds: string[] | undefined) => {
+      const administrationsUpdatedWithUnits = administrations?.filter(admin =>
+        nextSelectedAdministrationIds?.includes(admin.name)
+      )
 
-    const unitsFiltered = selectedControlUnitIds?.filter(unitId =>
-      administrationsUpdatedWithUnits?.find(control => control.controlUnitIds.includes(unitId))
-    )
+      const unitsFiltered = selectedControlUnitIds?.filter(unitId =>
+        administrationsUpdatedWithUnits?.find(control => control.controlUnitIds.includes(unitId))
+      )
 
-    dispatch(updateFilters({ key: MissionFiltersEnum.UNIT_FILTER, value: unitsFiltered }))
-    dispatch(updateFilters({ key: MissionFiltersEnum.ADMINISTRATION_FILTER, value: nextSelectedAdministrationIds }))
-  }
+      dispatch(updateFilters({ key: MissionFiltersEnum.UNIT_FILTER, value: unitsFiltered }))
+      dispatch(updateFilters({ key: MissionFiltersEnum.ADMINISTRATION_FILTER, value: nextSelectedAdministrationIds }))
+    },
+    [administrations, dispatch, selectedControlUnitIds]
+  )
 
-  const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {
-    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: date?.[0] ? date[0] : undefined }))
-    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: date?.[1] ? date[1] : undefined }))
+  const updateDateRangeFilter = useCallback(
+    (date: DateAsStringRange | undefined) => {
+      dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: date?.[0] ? date[0] : undefined }))
+      dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: date?.[1] ? date[1] : undefined }))
 
-    // if we change the year, we reset the theme and subtheme filters
-    const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : customDayjs().get('year')
-    const newFilterYear = date?.[0] ? customDayjs(date[0]).get('year') : undefined
-    if (newFilterYear && newFilterYear !== actuelFilterYear) {
-      dispatch(updateFilters({ key: MissionFiltersEnum.THEME_FILTER, value: undefined }))
-    }
-  }
+      // if we change the year, we reset the theme and subtheme filters
+      const actuelFilterYear = startedAfter ? customDayjs(startedAfter).get('year') : customDayjs().get('year')
+      const newFilterYear = date?.[0] ? customDayjs(date[0]).get('year') : undefined
+      if (newFilterYear && newFilterYear !== actuelFilterYear) {
+        dispatch(updateFilters({ key: MissionFiltersEnum.THEME_FILTER, value: undefined }))
+      }
+    },
+    [dispatch, startedAfter]
+  )
 
-  const updateSimpleFilter = (nextSelectedValues: number[] | undefined | boolean, filterKey: MissionFiltersEnum) => {
-    dispatch(updateFilters({ key: filterKey, value: nextSelectedValues }))
-  }
+  const updateSimpleFilter = useCallback(
+    (nextSelectedValues: number[] | undefined | boolean, filterKey: MissionFiltersEnum) => {
+      dispatch(updateFilters({ key: filterKey, value: nextSelectedValues }))
+    },
+    [dispatch]
+  )
 
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     dispatch(resetMissionFilters())
-  }
+  }, [dispatch])
+
   if (isLoading) {
     return <div>Chargement</div>
   }

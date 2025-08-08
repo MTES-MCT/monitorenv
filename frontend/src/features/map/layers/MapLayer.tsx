@@ -2,7 +2,7 @@ import TileLayer from 'ol/layer/Tile'
 import { OSM } from 'ol/source'
 import TileWMS from 'ol/source/TileWMS'
 import XYZ from 'ol/source/XYZ'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Layers } from '../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -10,7 +10,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 type MapLayerProps = {
   map?: any
 }
-function UnmemoizedMapLayer({ map }: MapLayerProps) {
+export function MapLayer({ map }: MapLayerProps) {
   const selectedBaseLayer = useAppSelector(state => state.map.selectedBaseLayer)
 
   const [baseLayersObjects] = useState({
@@ -75,9 +75,14 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
         return
       }
 
-      window.setTimeout(() => {
+      const timeoutId = window.setTimeout(() => {
         olLayers.remove(layerToRemove)
       }, 300)
+
+      // eslint-disable-next-line consistent-return
+      return () => {
+        window.clearTimeout(timeoutId)
+      }
     }
 
     showAnotherBaseLayer()
@@ -85,7 +90,5 @@ function UnmemoizedMapLayer({ map }: MapLayerProps) {
 
   return null
 }
-
-export const MapLayer = React.memo(UnmemoizedMapLayer)
 
 MapLayer.displayName = 'MapLayer'

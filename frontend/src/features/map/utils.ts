@@ -10,20 +10,20 @@ import { uniqBy } from 'lodash'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
-import type { MapClickEvent, OverlayItem, SerializedFeature } from 'domain/types/map'
+import type { OverlayItem, SerializedFeature } from 'domain/types/map'
 import type { FeatureLike } from 'ol/Feature'
 
 type GetClickedFeatureType = {
+  featureList: SerializedFeature<Record<string, any>>[] | undefined
   isRegulatoryOrAmp: boolean
-  mapClickEvent: MapClickEvent
   typesList: string[]
 }
 export const getClickedFeatures = ({
+  featureList,
   isRegulatoryOrAmp,
-  mapClickEvent,
   typesList
 }: GetClickedFeatureType): SerializedFeature<Record<string, any>>[] | undefined =>
-  mapClickEvent.featureList?.filter(feature => {
+  featureList?.filter(feature => {
     const featureId = isRegulatoryOrAmp ? String(feature.id) : String(feature.id).split(':')[0]
 
     return featureId && typesList.some(type => featureId.includes(type))
@@ -57,8 +57,10 @@ export const getOverlayItemsFromFeatures = (
     return acc
   }, [] as OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties>[])
 
-export const getClickedItems = (mapClickEvent: MapClickEvent, isLinkingZonesToVigilanceArea: boolean) =>
-  getOverlayItemsFromFeatures(mapClickEvent?.featureList, isLinkingZonesToVigilanceArea)
+export const getClickedItems = (
+  isLinkingZonesToVigilanceArea: boolean,
+  featureList: SerializedFeature<Record<string, any>>[] | undefined
+) => getOverlayItemsFromFeatures(featureList, isLinkingZonesToVigilanceArea)
 
 export const getHoveredItems = (
   features: SerializedFeature<Record<string, any>>[] | undefined,

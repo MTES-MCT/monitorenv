@@ -1,5 +1,6 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMemo } from 'react'
 
 import { TWO_MINUTES } from '../../../constants'
 
@@ -14,7 +15,7 @@ export const useGetVigilanceAreasWithFilters = (skip = false) => {
     skip
   })
 
-  const vigilanceAreas = data ? Object.values(data?.entities) : []
+  const vigilanceAreas = useMemo(() => (data ? Object.values(data?.entities) : []), [data])
 
   return {
     filteredRegulatoryTags,

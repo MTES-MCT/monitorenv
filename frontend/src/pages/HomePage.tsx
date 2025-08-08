@@ -28,7 +28,7 @@ import { useAppSelector } from '../hooks/useAppSelector'
 export function HomePage() {
   const dispatch = useAppDispatch()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
-  const sideWindow = useAppSelector(state => state.sideWindow)
+  const sideWindowStatus = useAppSelector(state => state.sideWindow.status)
 
   const displayDrawModal = useAppSelector(state => state.global.menus.displayDrawModal)
   const displayLocateOnMap = useAppSelector(state => state.global.menus.displayLocateOnMap)
@@ -108,7 +108,7 @@ export function HomePage() {
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
       </Wrapper>
 
-      {sideWindow.status !== SideWindowStatus.CLOSED && <SideWindowLauncher />}
+      {sideWindowStatus !== SideWindowStatus.CLOSED && <SideWindowLauncher />}
     </>
   )
 }

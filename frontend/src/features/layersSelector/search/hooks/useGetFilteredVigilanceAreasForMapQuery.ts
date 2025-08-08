@@ -24,25 +24,33 @@ export const useGetFilteredVigilanceAreasForMapQuery = () => {
     vigilanceAreaSpecificPeriodFilter
   } = useGetVigilanceAreasWithFilters()
 
+  const tempVigilanceAreas = useMemo(
+    () =>
+      vigilanceAreas.filter(
+        vigilanceArea =>
+          isVigilanceAreaPartOfStatus(vigilanceArea, isSuperUser ? status : [VigilanceArea.Status.PUBLISHED]) &&
+          isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
+          isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes) &&
+          isVigilanceAreaPartOfVisibility(vigilanceArea, isSuperUser ? visibility : [VigilanceArea.Visibility.PUBLIC])
+      ),
+    [vigilanceAreas, isSuperUser, status, filteredRegulatoryTags, filteredRegulatoryThemes, visibility]
+  )
+
+  const vigilanceAreasByPeriod = useMemo(
+    () =>
+      getFilterVigilanceAreasPerPeriod(
+        tempVigilanceAreas,
+        filteredVigilanceAreaPeriod,
+        vigilanceAreaSpecificPeriodFilter,
+        isSuperUser
+      ),
+    [tempVigilanceAreas, filteredVigilanceAreaPeriod, vigilanceAreaSpecificPeriodFilter, isSuperUser]
+  )
+
   const filteredVigilanceAreas = useMemo(() => {
     if (!vigilanceAreas) {
       return { entities: {}, ids: [] }
     }
-
-    const tempVigilanceAreas = vigilanceAreas.filter(
-      vigilanceArea =>
-        isVigilanceAreaPartOfStatus(vigilanceArea, isSuperUser ? status : [VigilanceArea.Status.PUBLISHED]) &&
-        isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
-        isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes) &&
-        isVigilanceAreaPartOfVisibility(vigilanceArea, isSuperUser ? visibility : [VigilanceArea.Visibility.PUBLIC])
-    )
-
-    const vigilanceAreasByPeriod = getFilterVigilanceAreasPerPeriod(
-      tempVigilanceAreas,
-      filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter,
-      isSuperUser
-    )
 
     const sortedVigilanceAreas = [...vigilanceAreasByPeriod]
     const vigilanceAreasEntities = sortedVigilanceAreas.reduce((acc, vigilanceArea) => {
@@ -55,16 +63,7 @@ export const useGetFilteredVigilanceAreasForMapQuery = () => {
       entities: vigilanceAreasEntities,
       ids: vigilanceAreasByPeriod.map(vigilanceArea => vigilanceArea.id)
     }
-  }, [
-    vigilanceAreas,
-    filteredVigilanceAreaPeriod,
-    vigilanceAreaSpecificPeriodFilter,
-    isSuperUser,
-    status,
-    filteredRegulatoryTags,
-    filteredRegulatoryThemes,
-    visibility
-  ])
+  }, [vigilanceAreas, vigilanceAreasByPeriod])
 
   return { isError, isFetching, isLoading, vigilanceAreas: filteredVigilanceAreas }
 }

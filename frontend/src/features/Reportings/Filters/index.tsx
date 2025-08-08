@@ -9,8 +9,8 @@ import { customDayjs, type DateAsStringRange, getOptionsFromLabelledEnum, type O
 import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
-import _, { reduce } from 'lodash'
-import { type MutableRefObject, useMemo, useRef } from 'react'
+import { chain, reduce } from 'lodash'
+import { type MutableRefObject, useCallback, useMemo, useRef } from 'react'
 
 import { MapReportingsFilters } from './Map'
 import { reportingsFiltersActions, ReportingsFiltersEnum, type SourceFilterProps } from './slice'
@@ -44,6 +44,12 @@ export type ReportingsOptionsListType = {
   themesOptions: ThemeOption[]
   typeOptions: Option<string>[]
 }
+const dateRangeOptions = getOptionsFromLabelledEnum(ReportingDateRangeLabels)
+const typeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
+const sourceTypeOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
+const seaFrontsOptions = Object.values(SeaFrontLabels)
+const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
+const targetTypeOtions = getOptionsFromLabelledEnum(ReportingTargetTypeLabels)
 
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
@@ -127,18 +133,11 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       return unitListAsOptions
     }
 
-    return _.chain(unitListAsOptions)
+    return chain(unitListAsOptions)
       .concat(semaphoresAsOptions)
       .sort((a, b) => a.label.localeCompare(b.label))
       .value()
   }, [unitListAsOptions, semaphoresAsOptions, sourceTypeFilter])
-
-  const dateRangeOptions = getOptionsFromLabelledEnum(ReportingDateRangeLabels)
-  const typeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
-  const sourceTypeOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
-  const seaFrontsOptions = Object.values(SeaFrontLabels)
-  const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
-  const targetTypeOtions = getOptionsFromLabelledEnum(ReportingTargetTypeLabels)
 
   const optionsList = useMemo(
     () => ({
@@ -152,71 +151,76 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       themesOptions,
       typeOptions
     }),
-    [
-      dateRangeOptions,
-      seaFrontsOptions,
-      sourceOptions,
-      sourceTypeOptions,
-      statusOptions,
-      tagsOptions,
-      targetTypeOtions,
-      themesOptions,
-      typeOptions
-    ]
+    [sourceOptions, tagsOptions, themesOptions]
   )
 
-  const updatePeriodFilter = period => {
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))
+  const updatePeriodFilter = useCallback(
+    period => {
+      dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.PERIOD_FILTER, value: period }))
 
-    // these filters are only uses when user selects a date range
-    dispatch(
-      reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_AFTER_FILTER, value: undefined })
-    )
-    dispatch(
-      reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
-    )
-  }
+      // these filters are only uses when user selects a date range
+      dispatch(
+        reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_AFTER_FILTER, value: undefined })
+      )
+      dispatch(
+        reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER, value: undefined })
+      )
+    },
+    [dispatch]
+  )
 
-  const updateDateRangeFilter = (date: DateAsStringRange | undefined) => {
-    dispatch(
-      reportingsFiltersActions.updateFilters({
-        key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
-        value: date && date[0] ? date[0] : undefined
-      })
-    )
-    dispatch(
-      reportingsFiltersActions.updateFilters({
-        key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER,
-        value: date && date[1] ? date[1] : undefined
-      })
-    )
-  }
+  const updateDateRangeFilter = useCallback(
+    (date: DateAsStringRange | undefined) => {
+      dispatch(
+        reportingsFiltersActions.updateFilters({
+          key: ReportingsFiltersEnum.STARTED_AFTER_FILTER,
+          value: date && date[0] ? date[0] : undefined
+        })
+      )
+      dispatch(
+        reportingsFiltersActions.updateFilters({
+          key: ReportingsFiltersEnum.STARTED_BEFORE_FILTER,
+          value: date && date[1] ? date[1] : undefined
+        })
+      )
+    },
+    [dispatch]
+  )
 
-  const updateSimpleFilter = (value: any, filter: ReportingsFiltersEnum) => {
-    dispatch(reportingsFiltersActions.updateFilters({ key: filter, value }))
-  }
+  const updateSimpleFilter = useCallback(
+    (value: any, filter: ReportingsFiltersEnum) => {
+      dispatch(reportingsFiltersActions.updateFilters({ key: filter, value }))
+    },
+    [dispatch]
+  )
 
-  const updateCheckboxFilter = (isChecked, value, key, filter) => {
-    const updatedFilter = [...filter]
+  const updateCheckboxFilter = useCallback(
+    (isChecked, value, key, filter) => {
+      const updatedFilter = [...filter]
 
-    if (!isChecked && updatedFilter.includes(String(value))) {
-      const newFilter = updatedFilter.filter(status => status !== String(value))
-      dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
-    }
-    if (isChecked && !updatedFilter.includes(value)) {
-      const newFilter = [...updatedFilter, value]
-      dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
-    }
-  }
+      if (!isChecked && updatedFilter.includes(String(value))) {
+        const newFilter = updatedFilter.filter(status => status !== String(value))
+        dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
+      }
+      if (isChecked && !updatedFilter.includes(value)) {
+        const newFilter = [...updatedFilter, value]
+        dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
+      }
+    },
+    [dispatch]
+  )
 
-  const updateSourceTypeFilter = types => {
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_TYPE_FILTER, value: types }))
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: undefined }))
-  }
+  const updateSourceTypeFilter = useCallback(
+    types => {
+      dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_TYPE_FILTER, value: types }))
+      dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_FILTER, value: undefined }))
+    },
+    [dispatch]
+  )
 
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     dispatch(reportingsFiltersActions.resetReportingsFilters())
-  }
+  }, [dispatch])
 
   return context === ReportingFilterContext.TABLE ? (
     <TableReportingsFilters
