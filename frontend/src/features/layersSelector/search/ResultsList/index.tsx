@@ -7,6 +7,7 @@ import {
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { groupBy } from 'lodash'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { AMPLayerGroup } from './AMPLayerGroup'
@@ -49,38 +50,62 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryLayersByLayerName = groupBy(
-    !regulatoryLayersSearchResult && areRegulatoryResultsOpen
-      ? regulatoryLayers?.ids
-      : regulatoryLayersSearchResult ?? [],
-    r => regulatoryLayers?.entities[r]?.layerName
+  const regulatoryLayersByLayerName = useMemo(
+    () =>
+      groupBy(
+        !regulatoryLayersSearchResult && areRegulatoryResultsOpen
+          ? regulatoryLayers?.ids
+          : regulatoryLayersSearchResult ?? [],
+        r => regulatoryLayers?.entities[r]?.layerName
+      ),
+    [regulatoryLayersSearchResult, areRegulatoryResultsOpen, regulatoryLayers]
   )
-  const sortedRegulatoryResultsByLayerName = Object.fromEntries(
-    Object.entries(regulatoryLayersByLayerName).sort(([layerNameA], [layerNameB]) =>
-      layerNameA.localeCompare(layerNameB)
-    )
+
+  const sortedRegulatoryResultsByLayerName = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(regulatoryLayersByLayerName).sort(([layerNameA], [layerNameB]) =>
+          layerNameA.localeCompare(layerNameB)
+        )
+      ),
+    [regulatoryLayersByLayerName]
   )
   const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
 
   const { data: amps } = useGetAMPsQuery()
-  const ampResultsByAMPName = groupBy(
-    !ampsSearchResult && areAmpsResultsOpen ? amps?.ids : ampsSearchResult ?? [],
-    a => amps?.entities[a]?.name
+  const ampResultsByAMPName = useMemo(
+    () =>
+      groupBy(
+        !ampsSearchResult && areAmpsResultsOpen ? amps?.ids : ampsSearchResult ?? [],
+        a => amps?.entities[a]?.name
+      ),
+    [ampsSearchResult, areAmpsResultsOpen, amps]
   )
-  const sortedAmpResultsByName = Object.fromEntries(
-    Object.entries(ampResultsByAMPName).sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
+  const sortedAmpResultsByName = useMemo(
+    () =>
+      Object.fromEntries(Object.entries(ampResultsByAMPName).sort(([nameA], [nameB]) => nameA.localeCompare(nameB))),
+    [ampResultsByAMPName]
   )
 
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
   const { vigilanceAreas } = useGetFilteredVigilanceAreasForMapQuery()
-  const vigilanceAreasResults =
-    !vigilanceAreaSearchResult && areMyVigilanceAreasOpen ? vigilanceAreas?.ids : vigilanceAreaSearchResult ?? []
+  const vigilanceAreasResults = useMemo(
+    () =>
+      !vigilanceAreaSearchResult && areMyVigilanceAreasOpen ? vigilanceAreas?.ids : vigilanceAreaSearchResult ?? [],
+    [vigilanceAreaSearchResult, areMyVigilanceAreasOpen, vigilanceAreas]
+  )
 
-  const sortedVigilanceAreasResultsByName = vigilanceAreasResults
-    .map(id => vigilanceAreas?.entities[id])
-    .filter(vigilanceArea => !!vigilanceArea)
-    .sort((vigilanceAreaA, vigilanceAreaB) => (vigilanceAreaA?.name ?? '').localeCompare(vigilanceAreaB?.name ?? ''))
+  const sortedVigilanceAreasResultsByName = useMemo(
+    () =>
+      vigilanceAreasResults
+        .map(id => vigilanceAreas?.entities[id])
+        .filter(vigilanceArea => !!vigilanceArea)
+        .sort((vigilanceAreaA, vigilanceAreaB) =>
+          (vigilanceAreaA?.name ?? '').localeCompare(vigilanceAreaB?.name ?? '')
+        ),
+    [vigilanceAreasResults, vigilanceAreas]
+  )
 
   const totalVigilanceAreas =
     sortedVigilanceAreasResultsByName.length > 0

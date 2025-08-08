@@ -82,8 +82,18 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
   }
 
   useEffect(() => {
+    let timeout: number | undefined
+
     if (layerId === regulatoryMetadataLayerId && ref?.current) {
-      ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      timeout = window.setTimeout(() => {
+        ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }, 50)
+    }
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout)
+      }
     }
   }, [layerId, regulatoryMetadataLayerId, ref])
 

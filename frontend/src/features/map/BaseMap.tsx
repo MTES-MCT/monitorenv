@@ -16,6 +16,7 @@ import View from 'ol/View'
 import {
   Children,
   cloneElement,
+  memo,
   type MutableRefObject,
   type ReactElement,
   useCallback,
@@ -69,7 +70,7 @@ export const initialMap = new OpenLayerMap({
   })
 })
 
-export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
+function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
   const dispatch = useAppDispatch()
 
   const [mapClickEvent, setMapClickEvent] = useState<MapClickEvent>({
@@ -157,10 +158,12 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
           const hoveredFeature = getGeoJSONFromFeature<Record<string, any>>(priorityFeatures?.[0])
           setCurrentFeatureOver(hoveredFeature)
 
-          setPixel(event.pixel)
+          if (event.pixel !== pixel) {
+            setPixel(event.pixel)
+          }
         }
       }, 50),
-    []
+    [pixel]
   )
 
   const control = useRef<ScaleLine>()
@@ -262,6 +265,8 @@ export function BaseMap({ children }: { children: Array<ReactElement<BaseMapChil
     </MapWrapper>
   )
 }
+
+export const BaseMap = memo(BaseMapNotMemoized)
 
 const StyledScaleLine = styled.div``
 const MapWrapper = styled.div`

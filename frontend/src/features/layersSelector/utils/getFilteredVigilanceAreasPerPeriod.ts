@@ -1,10 +1,7 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { customDayjs } from '@mtes-mct/monitor-ui'
-import isBetween from 'dayjs/plugin/isBetween'
 
 import type { Dayjs } from 'dayjs'
-
-customDayjs.extend(isBetween)
 
 function isWithinPeriod(endDate: Dayjs, startDate: Dayjs, startDateFilter: Dayjs, endDateFilter: Dayjs) {
   return (

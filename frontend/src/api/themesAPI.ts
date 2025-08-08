@@ -17,12 +17,8 @@ export const themeAPI = monitorenvPublicApi.injectEndpoints({
           ? `/v1/themes?startedAt=${encodeURIComponent(dateRange[0])}&endedAt=${encodeURIComponent(dateRange[1])}`
           : 'v1/themes',
       transformErrorResponse: response => new FrontendApiError(GET_THEMES_ERROR_MESSAGE, response)
-    }),
-    getThemesByRegulatoryAreaIds: builder.query<EntityState<ThemeFromAPI, number>, number[]>({
-      query: ids => ({ body: ids, method: 'POST', url: '/v1/themes/regulatoryAreas' }),
-      transformErrorResponse: response => new FrontendApiError(GET_THEMES_ERROR_MESSAGE, response)
     })
   })
 })
 
-export const { useGetThemesByRegulatoryAreaIdsQuery, useGetThemesQuery } = themeAPI
+export const { useGetThemesQuery } = themeAPI

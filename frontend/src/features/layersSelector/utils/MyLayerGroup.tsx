@@ -4,7 +4,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { difference } from 'lodash'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { getExtentOfLayersGroup } from './getExtentOfLayersGroup'
 import { LayerSelector } from './LayerSelector.style'
@@ -42,7 +42,10 @@ export function MyLayerGroup({
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
-  const isLayerGroupDisabled = difference(groupLayerIds, zonesLinkedToVigilanceArea).length === 0
+  const isLayerGroupDisabled = useMemo(
+    () => difference(groupLayerIds, zonesLinkedToVigilanceArea).length === 0,
+    [groupLayerIds, zonesLinkedToVigilanceArea]
+  )
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const fitToGroupExtent = () => {

@@ -3,6 +3,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { LocalizedAreaPanel } from './components/LocalizedAreaPanel'
@@ -27,22 +28,30 @@ export function LocalizedAreas() {
     dispatch(layerSidebarActions.toggleLocalizedAreas())
   }
 
-  const groupedLocalizedAreas = localizedAreas?.entities
-    ? Object.values(localizedAreas.entities).reduce(
-        (acc: Record<string, LocalizedArea.LocalizedAreaWithBbox[]>, localizedArea) => {
-          const { groupName } = localizedArea
-          acc[groupName] ??= []
-          acc[groupName].push(localizedArea)
+  const groupedLocalizedAreas = useMemo(
+    () =>
+      localizedAreas?.entities
+        ? Object.values(localizedAreas.entities).reduce(
+            (acc: Record<string, LocalizedArea.LocalizedAreaWithBbox[]>, localizedArea) => {
+              const { groupName } = localizedArea
+              acc[groupName] ??= []
+              acc[groupName].push(localizedArea)
 
-          return acc
-        },
-        {} as Record<string, LocalizedArea.LocalizedAreaWithBbox[]>
-      )
-    : undefined
+              return acc
+            },
+            {} as Record<string, LocalizedArea.LocalizedAreaWithBbox[]>
+          )
+        : undefined,
+    [localizedAreas]
+  )
 
-  const selectedLocalizedArea = localizedAreas?.entities
-    ? Object.values(localizedAreas.entities)?.find(localizedArea => localizedArea.groupName === metadataLayerId)
-    : undefined
+  const selectedLocalizedArea = useMemo(
+    () =>
+      localizedAreas?.entities
+        ? Object.values(localizedAreas.entities)?.find(localizedArea => localizedArea.groupName === metadataLayerId)
+        : undefined,
+    [localizedAreas, metadataLayerId]
+  )
 
   const totalLocalizedAreas = Object.keys(groupedLocalizedAreas || {}).length
 

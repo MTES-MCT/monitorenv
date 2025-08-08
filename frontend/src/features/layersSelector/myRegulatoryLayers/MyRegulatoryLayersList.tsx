@@ -1,5 +1,5 @@
 import { groupBy, isEmpty } from 'lodash'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { RegulatoryLayerGroup } from './MyRegulatoryLayerGroup'
 import { getSelectedRegulatoryLayers } from '../../../api/regulatoryLayersAPI'
@@ -12,6 +12,14 @@ export function RegulatoryLayersList() {
 
   const [totalNumberOfZones, setTotalNumberOfZones] = useState(0)
 
+  const layersByLayersName = useMemo(
+    () =>
+      groupBy(
+        selectedRegulatoryLayers.sort((a, b) => a?.layerName?.localeCompare(b?.layerName)),
+        r => r?.layerName
+      ),
+    [selectedRegulatoryLayers]
+  )
   if (isEmpty(selectedRegulatoryLayers)) {
     return (
       <LayerSelector.LayerList
@@ -23,11 +31,6 @@ export function RegulatoryLayersList() {
       </LayerSelector.LayerList>
     )
   }
-
-  const layersByLayersName = groupBy(
-    selectedRegulatoryLayers.sort((a, b) => a?.layerName?.localeCompare(b?.layerName)),
-    r => r?.layerName
-  )
 
   return (
     <LayerSelector.LayerList

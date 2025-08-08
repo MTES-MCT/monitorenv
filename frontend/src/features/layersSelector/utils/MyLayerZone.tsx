@@ -7,6 +7,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { IconButton, Accent, Size, Icon, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { LayerLegend } from './LayerLegend.style'
@@ -54,10 +55,13 @@ export function MyLayerZone({
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const isDisabled =
-    layerType === MonitorEnvLayers.AMP
-      ? ampLinkedToVigilanceAreaForm.includes(id)
-      : regulatoryAreasLinkedToVigilanceAreaForm.includes(id)
+  const isDisabled = useMemo(
+    () =>
+      layerType === MonitorEnvLayers.AMP
+        ? ampLinkedToVigilanceAreaForm.includes(id)
+        : regulatoryAreasLinkedToVigilanceAreaForm.includes(id),
+    [ampLinkedToVigilanceAreaForm, id, layerType, regulatoryAreasLinkedToVigilanceAreaForm]
+  )
 
   const zoomToLayerExtent = () => {
     const extent = transformExtent(
