@@ -2,13 +2,13 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Layers } from 'domain/entities/layers/constants'
 import {
   ActionTypeEnum,
+  type ControlOrSurveillance,
   type EnvActionControl,
   type EnvActionSurveillance,
   getMissionStatus,
   type Mission,
-  type NewMission,
   type NewEnvActionControl,
-  type ControlOrSurveillance
+  type NewMission
 } from 'domain/entities/missions'
 import Feature from 'ol/Feature'
 import GeoJSON from 'ol/format/GeoJSON'
@@ -110,7 +110,7 @@ const getActionFeature = (
     geometry
   })
   feature.setId(`${Layers.ACTIONS.code}:${action.actionType}:${action.id}`)
-  feature.setProperties({ ...actionProperties })
+  feature.setProperties({ ...actionProperties, geom: null })
 
   if (action.actionType === ActionTypeEnum.CONTROL) {
     feature.setStyle(selectedMissionControlStyle(feature, missionGeom, isEditingSurveillanceZoneOrControlPoint))

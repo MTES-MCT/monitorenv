@@ -11,7 +11,7 @@ import { GeoJSON as OLGeoJSON } from 'ol/format'
 import { type Geometry } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useRef } from 'react'
 
 import { dashboardIcon } from './style'
 
@@ -58,7 +58,7 @@ export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
         })
         const feature = new Feature({ geometry })
         feature.setId(`${Layers.DASHBOARDS.code}:${dashboard.id}`)
-        feature.setProperties({ dashboard })
+        feature.setProperties({ ...dashboard, geom: null })
 
         return feature
       })
