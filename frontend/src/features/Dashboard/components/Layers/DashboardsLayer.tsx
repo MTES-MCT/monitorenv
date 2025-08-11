@@ -58,7 +58,8 @@ export function DashboardsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
         })
         const feature = new Feature({ geometry })
         feature.setId(`${Layers.DASHBOARDS.code}:${dashboard.id}`)
-        feature.setProperties({ ...dashboard, geom: null })
+        const dashboardWithoutGeom = { ...dashboard, geom: null }
+        feature.setProperties({ dashboard: dashboardWithoutGeom })
 
         return feature
       })
