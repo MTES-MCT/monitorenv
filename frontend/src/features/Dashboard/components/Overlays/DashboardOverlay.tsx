@@ -2,6 +2,7 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositionOnCentroid'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { findMapFeatureById } from '@utils/findMapFeatureById'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
@@ -10,7 +11,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { DashboardCard } from './DashboardCard'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-import type { VectorLayerWithName } from 'domain/types/layer'
 
 const OPTIONS = {
   margins: {
@@ -32,17 +32,7 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
   const selectedDashboardOnMap = useAppSelector(state => state.dashboard.selectedDashboardOnMap)
 
   const feature = useMemo(
-    () =>
-      map
-        ?.getLayers()
-        ?.getArray()
-        ?.find(
-          (l): l is VectorLayerWithName =>
-            Object.prototype.hasOwnProperty.call(l, 'name') &&
-            (l as VectorLayerWithName).name === Layers.DASHBOARDS.code
-        )
-        ?.getSource()
-        ?.getFeatureById(`${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`),
+    () => findMapFeatureById(map, Layers.DASHBOARD.code, `${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`),
     [map, selectedDashboardOnMap?.id]
   )
 

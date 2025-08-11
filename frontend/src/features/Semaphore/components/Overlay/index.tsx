@@ -1,3 +1,4 @@
+import { findMapFeatureById } from '@utils/findMapFeatureById'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import { useMemo } from 'react'
@@ -7,7 +8,6 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
 
-import type { VectorLayerWithName } from '../../../../domain/types/layer'
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 const SUPER_USER_MARGINS = {
@@ -31,17 +31,7 @@ export function SemaphoreOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const selectedFeature = useMemo(
-    () =>
-      map
-        ?.getLayers()
-        ?.getArray()
-        ?.find(
-          (l): l is VectorLayerWithName =>
-            Object.prototype.hasOwnProperty.call(l, 'name') &&
-            (l as VectorLayerWithName).name === Layers.SEMAPHORES.code
-        )
-        ?.getSource()
-        ?.getFeatureById(`${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`),
+    () => findMapFeatureById(map, Layers.SEMAPHORES.code, `${Layers.SEMAPHORES.code}:${selectedSemaphoreId}`),
     [map, selectedSemaphoreId]
   )
 
