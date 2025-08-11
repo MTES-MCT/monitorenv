@@ -26,7 +26,8 @@ export function getRegulatoryFeature({ code, isolatedLayer, layer }: RegulatoryF
     area,
     isFilled: isLayerFilled,
     layerId: layer.id,
-    ...layer
+    ...layer,
+    geom: null
   })
 
   return feature

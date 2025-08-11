@@ -33,6 +33,7 @@ export const getVigilanceAreaZoneFeature = (
   feature.setProperties({
     area,
     ...vigilanceArea,
+    geom: null,
     isFilled: isLayerFilled,
     isSelected
   })
@@ -57,7 +58,8 @@ export const getFormattedGeomForFeature = (geom, vigilanceArea) => {
     area,
     ...vigilanceArea,
     isFilled: true,
-    ...(vigilanceArea && { isSelected: true })
+    ...(vigilanceArea && { isSelected: true }),
+    geom: null
   })
 
   return feature

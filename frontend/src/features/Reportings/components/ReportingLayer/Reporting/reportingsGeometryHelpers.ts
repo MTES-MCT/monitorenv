@@ -18,7 +18,8 @@ export const getReportingZoneFeature = (reporting: Reporting | AtLeast<Reporting
 
   feature.setId(`${layername}:${reporting.id}`)
   feature.setProperties({
-    ...reporting
+    ...reporting,
+    geom: null
   })
 
   return feature
@@ -36,7 +37,8 @@ export const getEditingReportingZoneFeature = (reporting: AtLeast<Reporting, 'id
   })
   feature.setId(`${layername}:${reporting.id}`)
   feature.setProperties({
-    ...reporting
+    ...reporting,
+    geom: null
   })
 
   return feature
