@@ -6,7 +6,7 @@ import {
   type MapClickEvent,
   type SerializedFeature
 } from 'domain/types/map'
-import { throttle } from 'lodash'
+import { isEqual, throttle } from 'lodash'
 import { defaults as defaultControls, ScaleLine } from 'ol/control'
 import Zoom from 'ol/control/Zoom'
 import { platformModifierKeyOnly } from 'ol/events/condition'
@@ -84,7 +84,43 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
     undefined
   )
   const [currentFeatureListOver, setCurrentFeatureListOver] = useState<SerializedFeature<Record<string, any>>[]>([])
+
   const [pixel, setPixel] = useState<number[] | undefined>(undefined)
+
+  const safeSetCurrentFeatureListOver = useCallback(newList => {
+    setCurrentFeatureListOver(prevList => {
+      if (isEqual(prevList, newList)) {
+        return prevList
+      }
+
+      return newList
+    })
+  }, [])
+
+  const safeSetCurrentFeatureOver = useCallback(newFeature => {
+    setCurrentFeatureOver(prevFeature => {
+      if (isEqual(prevFeature, newFeature)) {
+        return prevFeature
+      }
+
+      return newFeature
+    })
+  }, [])
+
+  const safeSetPixel = useCallback(newPixel => {
+    setPixel(prevPixel => {
+      if (
+        prevPixel &&
+        newPixel &&
+        prevPixel.length === newPixel.length &&
+        prevPixel.every((v, i) => v === newPixel[i])
+      ) {
+        return prevPixel
+      }
+
+      return newPixel
+    })
+  }, [])
 
   const mapElement = useRef() as MutableRefObject<HTMLDivElement>
 
@@ -153,17 +189,15 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
           const featureListHover = getGeoJSONFromFeatureList(priorityFeatures) as SerializedFeature<
             Record<string, any>
           >[]
-          setCurrentFeatureListOver(featureListHover)
 
           const hoveredFeature = getGeoJSONFromFeature<Record<string, any>>(priorityFeatures?.[0])
-          setCurrentFeatureOver(hoveredFeature)
 
-          if (event.pixel !== pixel) {
-            setPixel(event.pixel)
-          }
+          safeSetCurrentFeatureListOver(featureListHover)
+          safeSetCurrentFeatureOver(hoveredFeature)
+          safeSetPixel(event.pixel)
         }
       }, 50),
-    [pixel]
+    [safeSetCurrentFeatureListOver, safeSetCurrentFeatureOver, safeSetPixel]
   )
 
   const control = useRef<ScaleLine>()
@@ -243,7 +277,6 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
             pixel
           })
       )}
-
       <StyledDistanceUnitContainer ref={wrapperRef}>
         <DistanceUnitsTypeSelection $isOpen={unitsSelectionIsOpen}>
           <Header onClick={() => setUnitsSelectionIsOpen(false)}>Unités des distances</Header>
