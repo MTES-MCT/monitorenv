@@ -4,13 +4,13 @@ import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositio
 import { ReportingCard } from '@features/Reportings/components/ReportingOverlay/Reporting/ReportingCard'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { findMapFeatureById } from '@utils/findMapFeatureById'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import { useCallback, useMemo, useState } from 'react'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-import type { VectorLayerWithName } from 'domain/types/layer'
 
 const OPTIONS = {
   margins: {
@@ -27,21 +27,16 @@ export function DashboardReportingOverlay({ currentFeatureOver, map, mapClickEve
   const selectedReporting = useAppSelector(state => getReportingToDisplay(state.dashboard))
   const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
 
-  const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
-  const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
+  const [reportingHoveredOptions, setReportingHoveredOptions] = useState(OPTIONS)
+  const [reportingSelectedOptions, setReportingSelectedOptions] = useState(OPTIONS)
 
   const feature = useMemo(
     () =>
-      map
-        ?.getLayers()
-        ?.getArray()
-        ?.find(
-          (l): l is VectorLayerWithName =>
-            Object.prototype.hasOwnProperty.call(l, 'name') &&
-            (l as VectorLayerWithName).name === Layers.DASHBOARD_PREVIEW.code
-        )
-        ?.getSource()
-        ?.getFeatureById(`${Dashboard.Layer.DASHBOARD_REPORTINGS}:${selectedReporting?.id}`),
+      findMapFeatureById(
+        map,
+        Layers.DASHBOARD_PREVIEW.code,
+        `${Dashboard.Layer.DASHBOARD_REPORTINGS}:${selectedReporting?.id}`
+      ),
     [map, selectedReporting?.id]
   )
 
@@ -55,21 +50,25 @@ export function DashboardReportingOverlay({ currentFeatureOver, map, mapClickEve
   const displayHoveredFeature =
     typeof currentfeatureId === 'string' && currentfeatureId.startsWith(Dashboard.Layer.DASHBOARD_REPORTINGS)
 
-  const updateSelectedMargins = useCallback(
+  const updateReportingSelectedMargins = useCallback(
     (cardHeight: number) => {
-      if (OPTIONS.margins.yTop - cardHeight !== selectedOptions.margins.yTop) {
-        setSelectedOptions({ margins: { ...selectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+      if (OPTIONS.margins.yTop - cardHeight !== reportingSelectedOptions.margins.yTop) {
+        setReportingSelectedOptions({
+          margins: { ...reportingSelectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight }
+        })
       }
     },
-    [selectedOptions.margins]
+    [reportingSelectedOptions.margins]
   )
-  const updateHoveredMargins = useCallback(
+  const updateReportingHoveredMargins = useCallback(
     (cardHeight: number) => {
-      if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
-        setHoveredOptions({ margins: { ...hoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+      if (OPTIONS.margins.yTop - cardHeight !== reportingHoveredOptions.margins.yTop) {
+        setReportingHoveredOptions({
+          margins: { ...reportingHoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight }
+        })
       }
     },
-    [hoveredOptions.margins]
+    [reportingHoveredOptions.margins]
   )
 
   const close = () => {
@@ -83,20 +82,20 @@ export function DashboardReportingOverlay({ currentFeatureOver, map, mapClickEve
         feature={displayDashboardLayer && canOverlayBeOpened ? feature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
-        options={selectedOptions}
+        options={reportingSelectedOptions}
         zIndex={5000}
       >
-        <ReportingCard feature={feature} onClose={close} selected updateMargins={updateSelectedMargins} />
+        <ReportingCard feature={feature} onClose={close} selected updateMargins={updateReportingSelectedMargins} />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-hover"
         feature={displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
-        options={hoveredOptions}
+        options={reportingHoveredOptions}
         zIndex={5000}
       >
-        <ReportingCard feature={hoveredFeature} onClose={close} updateMargins={updateHoveredMargins} />
+        <ReportingCard feature={hoveredFeature} onClose={close} updateMargins={updateReportingHoveredMargins} />
       </OverlayPositionOnCentroid>
     </>
   )

@@ -1,5 +1,6 @@
 import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositionOnCentroid'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { findMapFeatureById } from '@utils/findMapFeatureById'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
@@ -8,7 +9,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { MissionCard } from './MissionCard'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-import type { VectorLayerWithName } from 'domain/types/layer'
 
 const OPTIONS = {
   margins: {
@@ -24,20 +24,11 @@ const OPTIONS = {
 export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const selectedMissionId = useAppSelector(state => state.mission.selectedMissionIdOnMap)
 
-  const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
-  const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
+  const [missionHoveredOptions, setMissionHoveredOptions] = useState(OPTIONS)
+  const [missionSelectedOptions, setMissionSelectedOptions] = useState(OPTIONS)
 
   const feature = useMemo(
-    () =>
-      map
-        ?.getLayers()
-        ?.getArray()
-        ?.find(
-          (l): l is VectorLayerWithName =>
-            Object.prototype.hasOwnProperty.call(l, 'name') && (l as VectorLayerWithName).name === Layers.MISSIONS.code
-        )
-        ?.getSource()
-        ?.getFeatureById(`${Layers.MISSIONS.code}:${selectedMissionId}`),
+    () => findMapFeatureById(map, Layers.MISSIONS.code, `${Layers.MISSIONS.code}:${selectedMissionId}`),
     [map, selectedMissionId]
   )
 
@@ -50,22 +41,26 @@ export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: Base
     currentfeatureId.startsWith(Layers.MISSIONS.code) &&
     currentfeatureId !== `${Layers.MISSIONS.code}:${selectedMissionId}`
 
-  const updateHoveredMargins = useCallback(
+  const updateMissionHoveredMargins = useCallback(
     (cardHeight: number) => {
-      if (OPTIONS.margins.yTop - cardHeight !== hoveredOptions.margins.yTop) {
-        setHoveredOptions({ margins: { ...hoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+      if (OPTIONS.margins.yTop - cardHeight !== missionHoveredOptions.margins.yTop) {
+        setMissionHoveredOptions({
+          margins: { ...missionHoveredOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight }
+        })
       }
     },
-    [hoveredOptions.margins]
+    [missionHoveredOptions.margins]
   )
 
-  const updateSelectedMargins = useCallback(
+  const updateMissionSelectedMargins = useCallback(
     (cardHeight: number) => {
-      if (OPTIONS.margins.yTop - cardHeight !== selectedOptions.margins.yTop) {
-        setSelectedOptions({ margins: { ...selectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight } })
+      if (OPTIONS.margins.yTop - cardHeight !== missionSelectedOptions.margins.yTop) {
+        setMissionSelectedOptions({
+          margins: { ...missionSelectedOptions.margins, yTop: OPTIONS.margins.yTop - cardHeight }
+        })
       }
     },
-    [selectedOptions.margins]
+    [missionSelectedOptions.margins]
   )
 
   return (
@@ -75,20 +70,20 @@ export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: Base
         feature={canOverlayBeOpened ? feature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
-        options={selectedOptions}
+        options={missionSelectedOptions}
         zIndex={6500}
       >
-        <MissionCard feature={feature} selected updateMargins={updateSelectedMargins} />
+        <MissionCard feature={feature} selected updateMargins={updateMissionSelectedMargins} />
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-mission-hover"
         feature={displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
-        options={hoveredOptions}
+        options={missionHoveredOptions}
         zIndex={6000}
       >
-        <MissionCard feature={hoveredFeature} updateMargins={updateHoveredMargins} />
+        <MissionCard feature={hoveredFeature} updateMargins={updateMissionHoveredMargins} />
       </OverlayPositionOnCentroid>
     </>
   )

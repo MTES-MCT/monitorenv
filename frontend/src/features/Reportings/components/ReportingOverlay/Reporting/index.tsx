@@ -2,6 +2,7 @@ import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositio
 import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { findMapFeatureById } from '@utils/findMapFeatureById'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened, removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
@@ -10,7 +11,6 @@ import { useCallback, useMemo, useState } from 'react'
 import { ReportingCard } from './ReportingCard'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-import type { VectorLayerWithName } from 'domain/types/layer'
 
 const OPTIONS = {
   margins: {
@@ -32,20 +32,9 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
 
   const feature = useMemo(
-    () =>
-      map
-        ?.getLayers()
-        ?.getArray()
-        ?.find(
-          (l): l is VectorLayerWithName =>
-            Object.prototype.hasOwnProperty.call(l, 'name') &&
-            (l as VectorLayerWithName).name === Layers.REPORTINGS.code
-        )
-        ?.getSource()
-        ?.getFeatureById(`${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`),
+    () => findMapFeatureById(map, Layers.REPORTINGS.code, `${Layers.REPORTINGS.code}:${selectedReportingIdOnMap}`),
     [map, selectedReportingIdOnMap]
   )
-
   const canOverlayBeOpened = useAppSelector(state => isOverlayOpened(state.global, String(feature?.getId())))
 
   const hoveredFeature = convertToFeature(currentFeatureOver)
