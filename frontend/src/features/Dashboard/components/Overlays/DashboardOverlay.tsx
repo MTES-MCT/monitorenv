@@ -32,7 +32,7 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
   const selectedDashboardOnMap = useAppSelector(state => state.dashboard.selectedDashboardOnMap)
 
   const feature = useMemo(
-    () => findMapFeatureById(map, Layers.DASHBOARD.code, `${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`),
+    () => findMapFeatureById(map, Layers.DASHBOARDS.code, `${Layers.DASHBOARDS.code}:${selectedDashboardOnMap?.id}`),
     [map, selectedDashboardOnMap?.id]
   )
 
