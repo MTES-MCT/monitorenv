@@ -1,5 +1,6 @@
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { Accent, Icon, IconButton, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -30,7 +31,7 @@ type RegulatoryLayerProps = {
 
 export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
 
@@ -104,20 +105,22 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
       data-cy="regulatory-result-zone"
       onClick={toggleZoneMetadata}
     >
-      <LayerLegend
-        layerType={MonitorEnvLayers.REGULATORY_ENV}
-        legendKey={layer?.entityName ?? 'aucun'}
-        type={layer?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
-      />
-      <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.entityName}>
-        <Highlighter
-          autoEscape
-          highlightClassName="highlight"
-          searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-          textToHighlight={layer?.entityName ?? ''}
+      <StyledTransparentButton>
+        <LayerLegend
+          layerType={MonitorEnvLayers.REGULATORY_ENV}
+          legendKey={layer?.entityName ?? 'aucun'}
+          type={layer?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
         />
-        {!layer?.entityName && 'AUCUN NOM'}
-      </LayerSelector.Name>
+        <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.entityName}>
+          <Highlighter
+            autoEscape
+            highlightClassName="highlight"
+            searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
+            textToHighlight={layer?.entityName ?? ''}
+          />
+          {!layer?.entityName && 'AUCUN NOM'}
+        </LayerSelector.Name>
+      </StyledTransparentButton>
       <LayerSelector.IconGroup>
         {isLinkingRegulatoryToVigilanceArea ? (
           <IconButton

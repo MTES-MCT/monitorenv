@@ -55,7 +55,12 @@ export function EditArea({ dashboardKey, geometry, onValidate }: EditAreaProps) 
     <Row>
       <StyledDrawedPolygonWithCenterButton onCenterOnMap={() => handleCenterOnMap()} />
 
-      <IconButton accent={Accent.SECONDARY} Icon={Icon.EditUnbordered} onClick={handleEditArea} />
+      <IconButton
+        accent={Accent.SECONDARY}
+        Icon={Icon.EditUnbordered}
+        onClick={handleEditArea}
+        title="Modifier la zone du tableau de bord"
+      />
     </Row>
   )
 }

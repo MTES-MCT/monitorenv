@@ -38,37 +38,40 @@ export const Weather = forwardRef<HTMLDivElement, WeatherProps>(({ geom, isExpan
 
   return (
     <Accordion
+      controls={
+        coordinates && (
+          <StyledLink
+            href={`https://www.windy.com/${coordinates.latitude}/${coordinates.longitude}`}
+            onClick={e => e.stopPropagation()}
+            rel="noreferrer"
+            target="_blank"
+            title="Ouvrir Windy"
+          >
+            <Icon.ExternalLink size={16} />
+          </StyledLink>
+        )
+      }
       isExpanded={isExpanded}
       setExpandedAccordion={setExpandedAccordion}
       title={
         <TitleContainer>
           <Title>Météo</Title>
-          {coordinates && (
-            <StyledLink
-              href={`https://www.windy.com/${coordinates.latitude}/${coordinates.longitude}`}
-              onClick={e => e.stopPropagation()}
-              rel="noreferrer"
-              target="_blank"
-            >
-              <Icon.ExternalLink size={16} />
-            </StyledLink>
-          )}
         </TitleContainer>
       }
       titleRef={ref}
     >
       {coordinates ? (
         <WindyContainer>
-          <iframe
-            allowFullScreen
-            height="100%"
-            src={`https://embed.windy.com/embed2.html?lat=${coordinates.latitude}&lon=${coordinates.longitude}&zoom=7`}
-            style={{
-              border: 'none'
-            }}
-            title="windy weather"
-            width="100%"
-          />
+          {/* <iframe */}
+          {/*   allowFullScreen */}
+          {/*   height="100%" */}
+          {/*   src={`https://embed.windy.com/embed2.html?lat=${coordinates.latitude}&lon=${coordinates.longitude}&zoom=7`} */}
+          {/*   style={{ */}
+          {/*     border: 'none' */}
+          {/*   }} */}
+          {/*   title="windy weather" */}
+          {/*   width="100%" */}
+          {/* /> */}
         </WindyContainer>
       ) : (
         <CoordinatesError>Nous n&apos;avons pas pu calculer l&apos;emplacement </CoordinatesError>

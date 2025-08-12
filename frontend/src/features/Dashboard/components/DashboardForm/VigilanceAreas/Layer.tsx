@@ -1,5 +1,6 @@
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -12,7 +13,7 @@ import styled from 'styled-components'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { LayerName, LayerNameContainer } from '../style'
+import { LayerName } from '../style'
 
 type VigilanceAreaLayerProps = {
   isPinned?: boolean
@@ -24,7 +25,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
 
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const handleSelectZone = e => {
     e.stopPropagation()
@@ -67,7 +68,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
       $withBorderBottom
       onClick={toggleZoneMetadata}
     >
-      <LayerNameContainer>
+      <StyledTransparentButton>
         <LayerLegend
           isDisabled={vigilanceArea?.isArchived}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
@@ -80,7 +81,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
         >
           {vigilanceArea?.name}
         </LayerName>
-      </LayerNameContainer>
+      </StyledTransparentButton>
       <TagAndButtons data-cy={`dashboard-vigilance-area-zone-tags-and-buttons-${vigilanceArea.id}`}>
         {vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE && (
           <StyledTag accent={Accent.PRIMARY} title="Zone de vigilance interne au CACEM">
