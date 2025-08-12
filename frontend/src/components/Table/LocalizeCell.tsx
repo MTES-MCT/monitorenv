@@ -10,7 +10,7 @@ export function LocalizeCell({ geom }: { geom: any }) {
   if (!geom) {
     return <StyledEmptyContainer>-</StyledEmptyContainer>
   }
-  const handleZoomToMission = () => {
+  const handleZoom = () => {
     const feature = getFeature(geom)
 
     const extent = feature?.getGeometry()?.getExtent()
@@ -19,7 +19,9 @@ export function LocalizeCell({ geom }: { geom: any }) {
     }
   }
 
-  return <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToMission} />
+  return (
+    <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoom} title="Centrer sur la carte" />
+  )
 }
 
 const StyledEmptyContainer = styled.div`

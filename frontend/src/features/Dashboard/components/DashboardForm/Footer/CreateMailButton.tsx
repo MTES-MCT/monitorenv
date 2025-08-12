@@ -74,7 +74,7 @@ export function CreateMailButton({ dashboard }: { dashboard: Dashboard.Dashboard
       target="_blank"
     >
       {isLoadingBrief || loadingImages ? <Icon.Reset /> : <Icon.Send />}
-      <span>Partager le brief</span>
+      Partager le brief
     </MailButton>
   )
 }

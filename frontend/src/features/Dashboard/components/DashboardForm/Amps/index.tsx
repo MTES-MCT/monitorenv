@@ -68,27 +68,29 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
       <div>
         {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
         <Accordion
+          controls={
+            (amps.length !== 0 || selectedAmpIds.length !== 0) && (
+              <StyledToggleSelectAll
+                onSelection={() =>
+                  handleSelection({
+                    allIds: amps.map(amp => amp.id),
+                    onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
+                    onSelect: payload => dispatch(dashboardActions.addItems(payload)),
+                    selectedIds: selectedAmpIds,
+                    selectionState,
+                    type: Dashboard.Block.AMP
+                  })
+                }
+                selectionState={selectionState}
+              />
+            )
+          }
           isExpanded={isExpanded}
           setExpandedAccordion={setExpandedAccordion}
           title={
             <TitleContainer>
               <Title>Zones AMP</Title>
               <ResultNumber>{`(${amps.length} ${pluralize('résultat', amps.length)})`}</ResultNumber>
-              {(amps.length !== 0 || selectedAmpIds.length !== 0) && (
-                <StyledToggleSelectAll
-                  onSelection={() =>
-                    handleSelection({
-                      allIds: amps.map(amp => amp.id),
-                      onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
-                      onSelect: payload => dispatch(dashboardActions.addItems(payload)),
-                      selectedIds: selectedAmpIds,
-                      selectionState,
-                      type: Dashboard.Block.AMP
-                    })
-                  }
-                  selectionState={selectionState}
-                />
-              )}
             </TitleContainer>
           }
           titleRef={ref}

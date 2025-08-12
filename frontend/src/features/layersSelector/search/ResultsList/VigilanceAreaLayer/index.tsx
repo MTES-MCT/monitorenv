@@ -1,3 +1,4 @@
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useTracking } from '@hooks/useTracking'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -23,7 +24,7 @@ type RegulatoryLayerProps = {
 export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
 
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const { trackEvent } = useTracking()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
@@ -95,20 +96,23 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
       data-cy="vigilance-area-result-zone"
       onClick={toggleZoneMetadata}
     >
-      <LayerLegend
-        isDisabled={layer?.isArchived}
-        layerType={MonitorEnvLayers.VIGILANCE_AREA}
-        legendKey={layer?.comments}
-        type={layer?.name ?? 'aucun'}
-      />
-      <LayerSelector.Name onClick={fitToVigilanceAreaLayer} title={layer?.name}>
-        <Highlighter
-          autoEscape
-          highlightClassName="highlight"
-          searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-          textToHighlight={layer?.name ?? ''}
+      <StyledTransparentButton>
+        <LayerLegend
+          isDisabled={layer?.isArchived}
+          layerType={MonitorEnvLayers.VIGILANCE_AREA}
+          legendKey={layer?.comments}
+          type={layer?.name ?? 'aucun'}
         />
-      </LayerSelector.Name>
+        <LayerSelector.Name onClick={fitToVigilanceAreaLayer} title={layer?.name}>
+          <Highlighter
+            autoEscape
+            highlightClassName="highlight"
+            searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
+            textToHighlight={layer?.name ?? ''}
+          />
+        </LayerSelector.Name>
+      </StyledTransparentButton>
+
       <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}

@@ -1,3 +1,4 @@
+import { TransparentButton } from '@components/style'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { type ForwardedRef, type ReactNode } from 'react'
 import styled from 'styled-components'
@@ -5,6 +6,7 @@ import styled from 'styled-components'
 type AccordionProps = {
   children: ReactNode
   className?: string
+  controls?: ReactNode
   isExpanded: boolean
   name?: string
   setExpandedAccordion: () => void
@@ -15,6 +17,7 @@ type AccordionProps = {
 export function Accordion({
   children,
   className,
+  controls,
   isExpanded,
   name,
   setExpandedAccordion,
@@ -23,13 +26,11 @@ export function Accordion({
 }: AccordionProps) {
   return (
     <AccordionContainer className={className}>
-      <AccordionHeader
-        ref={titleRef}
-        aria-controls={`${title}-accordion`}
-        aria-expanded={isExpanded}
-        onClick={setExpandedAccordion}
-      >
-        {title}
+      <AccordionHeader ref={titleRef} onClick={setExpandedAccordion}>
+        <TransparentButton aria-controls={`${name}-accordion`} aria-expanded={isExpanded}>
+          {title}
+        </TransparentButton>
+        {controls}
         <StyledIconButton
           $isExpanded={isExpanded}
           accent={Accent.TERTIARY}
@@ -57,7 +58,8 @@ export const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
 `
 export const AccordionHeader = styled.header`
   cursor: pointer;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
   justify-content: space-between;
   padding: 21px 24px;
 `

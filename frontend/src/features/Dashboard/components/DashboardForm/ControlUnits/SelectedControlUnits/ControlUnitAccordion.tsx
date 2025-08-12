@@ -1,8 +1,8 @@
-import { Bold } from '@components/style'
+import { Bold, TransparentButton } from '@components/style'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { Accent, Icon, IconButton, type ControlUnit } from '@mtes-mct/monitor-ui'
+import { Accent, type ControlUnit, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { Details } from './Details'
@@ -26,23 +26,24 @@ export function ControlUnitAccordion({
 
   return (
     <AccordionContainer>
-      <AccordionHeader
-        aria-controls={`control-unit-accordion-${controlUnit.id}`}
-        aria-expanded={isExpanded}
-        data-cy={`dashboard-control-unit-accordion-${controlUnit.id}`}
-      >
-        <TitleContainer onClick={() => expandUnit(controlUnit.id)}>
+      <AccordionHeader data-cy={`dashboard-control-unit-accordion-${controlUnit.id}`}>
+        <TitleButton
+          aria-controls={`control-unit-accordion-${controlUnit.id}`}
+          aria-expanded={isExpanded}
+          onClick={() => expandUnit(controlUnit.id)}
+        >
           <Bold>
             {controlUnit.name} - {controlUnit.administration.name}
           </Bold>
+        </TitleButton>
 
-          <StyledIconButton
-            $isExpanded={isExpanded}
-            accent={Accent.TERTIARY}
-            Icon={Icon.Chevron}
-            onClick={() => expandUnit(controlUnit.id)}
-          />
-        </TitleContainer>
+        <StyledIconButton
+          $isExpanded={isExpanded}
+          accent={Accent.TERTIARY}
+          Icon={Icon.Chevron}
+          onClick={() => expandUnit(controlUnit.id)}
+          title={isExpanded ? 'Replier le contenu' : 'Déplier le contenu'}
+        />
         <IconButton
           accent={Accent.TERTIARY}
           Icon={Icon.Close}
@@ -73,13 +74,11 @@ const AccordionHeader = styled.header`
   justify-content: space-between;
   padding: 21px 20px;
 `
-const TitleContainer = styled.div`
-  cursor: pointer;
+const TitleButton = styled(TransparentButton)`
   display: inline-flex;
   font-size: 16px;
   gap: 8px;
   width: 63%;
-
   span {
     overflow: hidden;
     text-overflow: ellipsis;

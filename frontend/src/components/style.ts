@@ -53,3 +53,14 @@ export const TagsContainer = styled.div<{ $withTopMargin?: boolean }>`
   margin-top: ${p => (p.$withTopMargin ? '16px' : '0px')};
   max-width: 100%;
 `
+
+export const TransparentButton = styled.button.attrs(() => ({
+  type: 'button'
+}))`
+  background: transparent;
+  &:hover {
+    background: transparent;
+  }
+  width: 100%;
+  height: 100%;
+`

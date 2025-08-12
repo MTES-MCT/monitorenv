@@ -1,30 +1,13 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useEscapeKey } from '@hooks/useEscapeKey'
-import {
-  Accent,
-  Icon,
-  IconButton,
-  Size,
-  TextInput,
-  THEME,
-  useClickOutsideEffect,
-  useNewWindow
-} from '@mtes-mct/monitor-ui'
-import { useCallback, useRef, useState, type MouseEventHandler } from 'react'
+import { TextInput, useClickOutsideEffect, useNewWindow } from '@mtes-mct/monitor-ui'
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { dashboardActions } from '../slice'
 
-export function DashboardTab({
-  close,
-  name,
-  tabKey
-}: {
-  close: MouseEventHandler<HTMLButtonElement>
-  name: string
-  tabKey: string
-}) {
+export function DashboardTab({ name, tabKey }: { name: string; tabKey: string }) {
   const dispatch = useAppDispatch()
   const isEditing = useAppSelector(state => state.dashboard.dashboards[tabKey]?.isEditingTabName)
   const ref = useRef<HTMLInputElement>(null)
@@ -39,11 +22,6 @@ export function DashboardTab({
       dispatch(dashboardActions.setIsEditingTabName({ isEditing: false, key: tabKey }))
     }
   }
-
-  const editName = useCallback(() => {
-    setUpdatedName(name)
-    dispatch(dashboardActions.setIsEditingTabName({ isEditing: true, key: tabKey }))
-  }, [dispatch, name, tabKey])
 
   const { newWindowContainerRef } = useNewWindow()
 
@@ -75,17 +53,8 @@ export function DashboardTab({
       ) : (
         <Container>
           <DashboardName title={name}>{name}</DashboardName>
-          <Icon.EditUnbordered onClick={() => editName()} />
         </Container>
       )}
-      <IconButton
-        accent={Accent.TERTIARY}
-        color={THEME.color.slateGray}
-        Icon={Icon.Close}
-        onClick={close}
-        size={Size.SMALL}
-        title={`Fermer ${name}`}
-      />
     </>
   )
 }
@@ -96,11 +65,10 @@ const Container = styled.div`
 `
 const DashboardName = styled.span`
   margin-right: 16px;
-  max-width: 50%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `
 const StyledTextInput = styled(TextInput)`
-  flex-grow: 1;
+  flex-grow: 0.8;
 `

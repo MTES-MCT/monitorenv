@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { deleteTab } from './useCases/deleteTab'
 import { switchTab } from './useCases/switchTab'
-import { isMissionNew, getMissionTitle, getNewMissionTitle } from './utils'
+import { getMissionTitle, getNewMissionTitle, isMissionNew } from './utils'
 import { getMissionStatus, missionStatusLabels } from '../../domain/entities/missions'
 import { sideWindowPaths } from '../../domain/entities/sideWindow'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
