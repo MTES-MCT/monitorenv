@@ -77,6 +77,23 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
         {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
 
         <Accordion
+          controls={
+            (vigilanceAreas.length !== 0 || selectedVigilanceAreaIds.length !== 0) && (
+              <StyledToggleSelectAll
+                onSelection={() =>
+                  handleSelection({
+                    allIds: uniqVigilanceAreasIds,
+                    onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
+                    onSelect: payload => dispatch(dashboardActions.addItems(payload)),
+                    selectedIds: selectedVigilanceAreaIds,
+                    selectionState,
+                    type: Dashboard.Block.VIGILANCE_AREAS
+                  })
+                }
+                selectionState={selectionState}
+              />
+            )
+          }
           isExpanded={isExpanded}
           setExpandedAccordion={setExpandedAccordion}
           title={
@@ -86,21 +103,6 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
                 'résultat',
                 vigilanceAreas.length
               )})`}</ResultNumber>
-              {(vigilanceAreas.length !== 0 || selectedVigilanceAreaIds.length !== 0) && (
-                <StyledToggleSelectAll
-                  onSelection={() =>
-                    handleSelection({
-                      allIds: uniqVigilanceAreasIds,
-                      onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
-                      onSelect: payload => dispatch(dashboardActions.addItems(payload)),
-                      selectedIds: selectedVigilanceAreaIds,
-                      selectionState,
-                      type: Dashboard.Block.VIGILANCE_AREAS
-                    })
-                  }
-                  selectionState={selectionState}
-                />
-              )}
             </TitleContainer>
           }
           titleRef={ref}

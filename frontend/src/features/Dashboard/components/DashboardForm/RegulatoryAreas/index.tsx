@@ -83,6 +83,23 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
         {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
 
         <Accordion
+          controls={
+            (regulatoryAreas.length !== 0 || selectedRegulatoryAreaIds.length !== 0) && (
+              <StyledToggleSelectAll
+                onSelection={() =>
+                  handleSelection({
+                    allIds: uniqRegulatoryAreasIds,
+                    onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
+                    onSelect: payload => dispatch(dashboardActions.addItems(payload)),
+                    selectedIds: selectedRegulatoryAreaIds,
+                    selectionState,
+                    type: Dashboard.Block.REGULATORY_AREAS
+                  })
+                }
+                selectionState={selectionState}
+              />
+            )
+          }
           isExpanded={isExpanded}
           setExpandedAccordion={setExpandedAccordion}
           title={
@@ -92,21 +109,6 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
                 'résultat',
                 regulatoryAreas.length
               )})`}</ResultNumber>
-              {(regulatoryAreas.length !== 0 || selectedRegulatoryAreaIds.length !== 0) && (
-                <StyledToggleSelectAll
-                  onSelection={() =>
-                    handleSelection({
-                      allIds: uniqRegulatoryAreasIds,
-                      onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
-                      onSelect: payload => dispatch(dashboardActions.addItems(payload)),
-                      selectedIds: selectedRegulatoryAreaIds,
-                      selectionState,
-                      type: Dashboard.Block.REGULATORY_AREAS
-                    })
-                  }
-                  selectionState={selectionState}
-                />
-              )}
             </TitleContainer>
           }
           titleRef={ref}

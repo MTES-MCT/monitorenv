@@ -1,4 +1,5 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
+import { TransparentButton } from '@components/style'
 import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -198,4 +199,10 @@ const SearchContainer = styled.div`
 `
 const Search = styled.div`
   width: 352px;
+`
+
+export const StyledTransparentButton = styled(TransparentButton)`
+  display: flex;
+  align-items: center;
+  width: 80%;
 `
