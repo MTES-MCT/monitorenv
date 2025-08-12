@@ -123,6 +123,7 @@ class SecurityConfig(
                             "/favicon-32.ico",
                             "/asset-manifest.json",
                             "/proxy/**",
+                            "/realms/**",
                             "/swagger-ui/**",
                             "v3/**",
                             // Used to redirect to the frontend SPA, see Spa.kt
