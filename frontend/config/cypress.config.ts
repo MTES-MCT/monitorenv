@@ -5,7 +5,7 @@ const IS_CI = Boolean(process.env.CI)
 
 export default defineConfig({
   e2e: {
-    baseUrl: `http://${IS_CI ? '0.0.0.0:8880' : 'localhost:3000'}`,
+    baseUrl: `http://${IS_CI ? 'localhost:8880' : 'localhost:3000'}`,
     specPattern: ['cypress/e2e/**/*.spec.ts']
   },
   pageLoadTimeout: 120000,
