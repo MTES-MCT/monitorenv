@@ -1,5 +1,6 @@
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -23,7 +24,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
 
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const handleSelectZone = e => {
     e.stopPropagation()
@@ -66,7 +67,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
       $withBorderBottom
       onClick={toggleZoneMetadata}
     >
-      <NameContainer>
+      <StyledTransparentButton>
         <LayerLegend
           isDisabled={vigilanceArea?.isArchived}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
@@ -79,7 +80,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
         >
           {vigilanceArea?.name}
         </LayerSelector.Name>
-      </NameContainer>
+      </StyledTransparentButton>
       <TagAndButtons data-cy={`dashboard-vigilance-area-zone-tags-and-buttons-${vigilanceArea.id}`}>
         {vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE && (
           <StyledTag accent={Accent.PRIMARY} title="Zone de vigilance interne au CACEM">
@@ -127,10 +128,7 @@ const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $metadat
     border-top: 1px solid ${p => p.theme.color.lightGray};
   }
 `
-const NameContainer = styled.div`
-  align-items: center;
-  display: flex;
-`
+
 const TagAndButtons = styled.div`
   display: flex;
   gap: 10px;

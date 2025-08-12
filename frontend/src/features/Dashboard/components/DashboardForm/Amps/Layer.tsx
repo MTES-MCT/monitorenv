@@ -1,6 +1,7 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -8,7 +9,6 @@ import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTIO
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { Projection, transformExtent } from 'ol/proj'
 import { createRef } from 'react'
-import styled from 'styled-components'
 
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
@@ -23,7 +23,7 @@ type AmpLayerProps = {
 export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) {
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const { layer } = useGetAMPsQuery(undefined, {
     selectFromResult: result => ({
@@ -70,7 +70,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
       $metadataIsShown={openPanel?.id === layerId && openPanel?.isPinned === isSelected}
       onClick={toggleZoneMetadata}
     >
-      <Wrapper>
+      <StyledTransparentButton>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
         <LayerSelector.Name
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}amp-zone-${layer?.id}`}
@@ -78,7 +78,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
         >
           {layer?.type ?? 'AUCUN TYPE'}
         </LayerSelector.Name>
-      </Wrapper>
+      </StyledTransparentButton>
       <LayerSelector.IconGroup>
         {isSelected ? (
           <IconButton
@@ -102,8 +102,3 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
     </StyledLayer>
   )
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-`
