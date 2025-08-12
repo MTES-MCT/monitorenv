@@ -1,6 +1,7 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -11,7 +12,7 @@ import { createRef } from 'react'
 
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { LayerName, LayerNameContainer, StyledLayer } from '../style'
+import { LayerName, StyledLayer } from '../style'
 
 type AmpLayerProps = {
   isPinned?: boolean
@@ -22,7 +23,7 @@ type AmpLayerProps = {
 export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) {
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const { layer } = useGetAMPsQuery(undefined, {
     selectFromResult: result => ({
@@ -69,7 +70,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
       $metadataIsShown={openPanel?.id === layerId && openPanel?.isPinned === isSelected}
       onClick={toggleZoneMetadata}
     >
-      <LayerNameContainer>
+      <StyledTransparentButton>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
         <LayerName
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}amp-zone-${layer?.id}`}
@@ -77,7 +78,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
         >
           {layer?.type ?? 'AUCUN TYPE'}
         </LayerName>
-      </LayerNameContainer>
+      </StyledTransparentButton>
       <LayerSelector.IconGroup>
         {isSelected ? (
           <IconButton

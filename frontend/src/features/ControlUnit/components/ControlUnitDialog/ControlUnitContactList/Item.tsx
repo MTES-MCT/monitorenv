@@ -49,14 +49,17 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
             <Icon.Subscription size={14} title="Numéro de diffusion pour les préavis et les rapports de contrôle" />
           )}
         </NameAndContactContainer>
-        <MailContainer>
-          <Link href={`mailto:${controlUnitContact.email}`} rel="noreferrer" target="_blank">
-            {controlUnitContact.email}
-          </Link>
-          {controlUnitContact.isEmailSubscriptionContact && (
-            <Icon.Subscription size={14} title="Adresse de diffusion pour les préavis et les rapports de contrôle" />
-          )}
-        </MailContainer>
+        {controlUnitContact.email && (
+          <MailContainer>
+            <Link href={`mailto:${controlUnitContact.email}`} rel="noreferrer" target="_blank">
+              {controlUnitContact.email}
+            </Link>
+
+            {controlUnitContact.isEmailSubscriptionContact && (
+              <Icon.Subscription size={14} title="Adresse de diffusion pour les préavis et les rapports de contrôle" />
+            )}
+          </MailContainer>
+        )}
       </Left>
       {onEdit && (
         <Right>

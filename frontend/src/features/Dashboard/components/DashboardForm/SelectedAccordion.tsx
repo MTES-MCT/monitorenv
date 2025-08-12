@@ -1,6 +1,8 @@
+import { TransparentButton } from '@components/style'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import React from 'react'
 import styled from 'styled-components'
 
 type SelectedAccordionProps = {
@@ -31,18 +33,17 @@ export function SelectedAccordion({
 
   return (
     <AccordionContainer>
-      <AccordionHeader
-        aria-controls={`selected-${title}-accordion`}
-        aria-expanded={isExpanded}
-        onClick={onClickAccordion}
-      >
-        <Title>{title}</Title>
+      <AccordionHeader onClick={onClickAccordion}>
+        <TitleButton aria-controls={`selected-${title}-accordion`} aria-expanded={isExpanded}>
+          {title}
+        </TitleButton>
         {!isReadOnly && (
           <StyledIconButton
             $isExpanded={isExpanded}
             accent={Accent.TERTIARY}
             Icon={Icon.Chevron}
             onClick={onClickAccordion}
+            title={isExpanded ? 'Replier le contenu' : 'Déplier le contenu'}
           />
         )}
       </AccordionHeader>
@@ -76,9 +77,14 @@ const AccordionHeader = styled.header`
   height: 32px;
 `
 
-const Title = styled.span`
+const TitleButton = styled(TransparentButton)`
   font-size: 13px;
   font-weight: 500;
+  text-align: start;
+  background: transparent;
+  &:hover {
+    background: transparent;
+  }
 `
 
 const AccordionContent = styled.div<{ $isExpanded: boolean }>`

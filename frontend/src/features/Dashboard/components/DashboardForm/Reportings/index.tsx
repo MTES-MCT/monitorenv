@@ -48,6 +48,23 @@ export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
     return (
       <div>
         <Accordion
+          controls={
+            (reportings.length !== 0 || selectedReportingIds.length !== 0) && (
+              <StyledToggleSelectAll
+                onSelection={() =>
+                  handleSelection({
+                    allIds: reportings.map(reporting => +reporting.id),
+                    onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
+                    onSelect: payload => dispatch(dashboardActions.addItems(payload)),
+                    selectedIds: selectedReportingIds,
+                    selectionState,
+                    type: Dashboard.Block.REPORTINGS
+                  })
+                }
+                selectionState={selectionState}
+              />
+            )
+          }
           isExpanded={isExpanded}
           name="reportings"
           setExpandedAccordion={setExpandedAccordion}
@@ -55,21 +72,6 @@ export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
             <TitleContainer>
               <Title>Signalements</Title>
               <ResultNumber>{`(${reportings.length} ${pluralize('résultat', reportings.length)})`}</ResultNumber>
-              {(reportings.length !== 0 || selectedReportingIds.length !== 0) && (
-                <StyledToggleSelectAll
-                  onSelection={() =>
-                    handleSelection({
-                      allIds: reportings.map(reporting => +reporting.id),
-                      onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
-                      onSelect: payload => dispatch(dashboardActions.addItems(payload)),
-                      selectedIds: selectedReportingIds,
-                      selectionState,
-                      type: Dashboard.Block.REPORTINGS
-                    })
-                  }
-                  selectionState={selectionState}
-                />
-              )}
             </TitleContainer>
           }
           titleRef={ref}

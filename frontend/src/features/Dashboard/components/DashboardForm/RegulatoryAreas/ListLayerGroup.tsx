@@ -1,6 +1,7 @@
 import { getNumberOfRegulatoryLayerZonesByGroupName } from '@api/regulatoryLayersAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -54,14 +55,16 @@ export function ListLayerGroup({
   }
 
   return (
-    <>
+    <li>
       <StyledGroupWrapper $isOpen={zonesAreOpen} $isSelected={isSelected} onClick={clickOnGroupZones}>
-        <LayerSelector.GroupName
-          data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-result-group`}
-          title={groupName}
-        >
-          {getTitle(groupName)}
-        </LayerSelector.GroupName>
+        <StyledTransparentButton>
+          <LayerSelector.GroupName
+            data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-result-group`}
+            title={groupName}
+          >
+            {getTitle(groupName)}
+          </LayerSelector.GroupName>
+        </StyledTransparentButton>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
           {isSelected ? (
@@ -88,7 +91,7 @@ export function ListLayerGroup({
           />
         ))}
       </LayerSelector.SubGroup>
-    </>
+    </li>
   )
 }
 
