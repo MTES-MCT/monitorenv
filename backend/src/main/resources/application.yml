@@ -1,5 +1,6 @@
 server:
   port: 8880
+  use-forward-headers: true
   forward-headers-strategy: framework
   compression:
     enabled: true

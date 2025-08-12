@@ -208,6 +208,7 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MONITORENV_VERSION: ${{ needs.version.outputs.VERSION }}
       VERSION: ${{needs.version.outputs.VERSION}}
+      VITE_CYPRESS_PORT: 8880
       PUPPETEER_SKIP_DOWNLOAD: "true"
     steps:
       - name: Checkout
