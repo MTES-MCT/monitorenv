@@ -1,3 +1,4 @@
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingZonesToVigilanceArea,
@@ -90,14 +91,16 @@ export function ResultListLayerGroup({
   return (
     <>
       <LayerSelector.GroupWrapper $isOpen={forceZonesAreOpen || zonesAreOpen} onClick={clickOnGroupZones}>
-        <LayerSelector.GroupName data-cy="result-group" title={groupName}>
-          <Highlighter
-            autoEscape
-            highlightClassName="highlight"
-            searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-            textToHighlight={getTitle(groupName) ?? ''}
-          />
-        </LayerSelector.GroupName>
+        <StyledTransparentButton>
+          <LayerSelector.GroupName data-cy="result-group" title={groupName}>
+            <Highlighter
+              autoEscape
+              highlightClassName="highlight"
+              searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
+              textToHighlight={getTitle(groupName) ?? ''}
+            />
+          </LayerSelector.GroupName>
+        </StyledTransparentButton>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
           {isLinkingZonesToVigilanceArea ? (
