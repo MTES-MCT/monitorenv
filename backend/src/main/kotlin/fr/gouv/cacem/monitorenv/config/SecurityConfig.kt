@@ -117,6 +117,7 @@ class SecurityConfig(
                             "/asset-manifest.json",
                             "/proxy/**",
                             "/realms/**",
+                            "/resources/**",
                             "/swagger-ui/**",
                             "v3/**",
                             // Used to redirect to the frontend SPA, see Spa.kt
