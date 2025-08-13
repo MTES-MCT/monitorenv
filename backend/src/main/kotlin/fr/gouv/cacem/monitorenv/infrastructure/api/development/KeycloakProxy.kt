@@ -73,10 +73,11 @@ class KeycloakProxyController(
         val headerNames = request.headerNames
         while (headerNames.hasMoreElements()) {
             val headerName = headerNames.nextElement()
-            val headerValues = request.getHeaders(headerName)
-
-            while (headerValues.hasMoreElements()) {
-                proxy.header(headerName, headerValues.nextElement())
+            if (!headerName.isNullOrBlank()) {
+                val headerValues = request.getHeaders(headerName)
+                while (headerValues.hasMoreElements()) {
+                    proxy.header(headerName, headerValues.nextElement())
+                }
             }
         }
 
@@ -132,10 +133,11 @@ class KeycloakProxyController(
         val headerNames = request.headerNames
         while (headerNames.hasMoreElements()) {
             val headerName = headerNames.nextElement()
-            val headerValues = request.getHeaders(headerName)
-
-            while (headerValues.hasMoreElements()) {
-                proxy.header(headerName, headerValues.nextElement())
+            if (!headerName.isNullOrBlank()) {
+                val headerValues = request.getHeaders(headerName)
+                while (headerValues.hasMoreElements()) {
+                    proxy.header(headerName, headerValues.nextElement())
+                }
             }
         }
 
@@ -152,10 +154,15 @@ class KeycloakProxyController(
 
         val formDataBytes = formData.toString().toByteArray(StandardCharsets.UTF_8)
 
+        val cookieHeader = request.getHeader("Cookie")
+        if (!cookieHeader.isNullOrBlank()) {
+            proxy.header("Cookie", cookieHeader)
+        }
         // Ensure the content length matches the size of the byte array
         proxy
             .header("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .header("Content-Length", formDataBytes.size.toString())
+            .header("Access-Control-Expose-Headers", "Set-Cookie")
         val response = proxy.uri(targetUri.toString()).body(formDataBytes).post()
 
         // Rewrite HTML responses to fix form action URLs
