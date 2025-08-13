@@ -12,14 +12,7 @@ export function login(user: string) {
     cy.wait(500)
 
     cy.clickButton("S'identifier avec ProConnect")
-
-    cy.wait(10000)
-
-    cy.get('body').then($body => {
-      if ($body.find('[name="username"]').length === 0) {
-        cy.log('⚠️ Aucun champ username trouvé, page vide ?')
-      }
-    })
+    cy.wait(5000)
 
     // Login with Keycloak
     cy.get('[name="username"]').type(user)
