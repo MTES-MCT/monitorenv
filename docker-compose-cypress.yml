@@ -4,6 +4,9 @@ services:
       - MONITORENV_OIDC_PROXY_URL=${MONITORENV_OIDC_PROXY_URL}
       - MONITORENV_KEYCLOAK_PROXY_ENABLED=${MONITORENV_KEYCLOAK_PROXY_ENABLED}
       - SPRING_CLOUD_GATEWAY_MVC_FORM_FILTER_ENABLED=false
+    depends_on:
+      keycloak:
+        condition: service_healthy
   keycloak:
     container_name: monitorenv_keycloak
     profiles: [ test ]
