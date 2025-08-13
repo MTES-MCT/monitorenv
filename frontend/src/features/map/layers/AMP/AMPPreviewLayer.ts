@@ -1,7 +1,10 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { Feature } from 'ol'
+import { intersects } from 'ol/extent'
 import VectorLayer from 'ol/layer/Vector'
+import { transformExtent } from 'ol/proj'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
@@ -23,6 +26,7 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
+  const currentMapExtentTracker = useAppSelector(state => state.map.currentMapExtentTracker)
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 
@@ -45,6 +49,10 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const ampLayersFeatures = useMemo(() => {
     let ampFeatures: Feature[] = []
 
+    if (!currentMapExtentTracker || !isLayerVisible) {
+      return ampFeatures
+    }
+
     if (ampsSearchResult || ampLayers?.entities) {
       const ampsToDisplay = ampsSearchResult ?? ampLayers?.ids ?? []
 
@@ -53,8 +61,11 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
           return amplayers
         }
         const layer = ampLayers?.entities[id]
+        const currentExtent = transformExtent(currentMapExtentTracker, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+        const layerBbox = layer?.bbox
+        const isIntersecting = layerBbox && intersects(layerBbox, currentExtent)
 
-        if (layer && layer.geom) {
+        if (layer && layer.geom && isIntersecting) {
           const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, isolatedLayer, layer })
 
           if (feature) {
@@ -70,7 +81,16 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
     }
 
     return ampFeatures
-  }, [ampLayers?.entities, ampLayers?.ids, ampMetadataLayerId, ampsSearchResult, isolatedLayer, showedAmpLayerIds])
+  }, [
+    ampLayers?.entities,
+    ampLayers?.ids,
+    ampMetadataLayerId,
+    ampsSearchResult,
+    isolatedLayer,
+    showedAmpLayerIds,
+    isLayerVisible,
+    currentMapExtentTracker
+  ])
 
   useEffect(() => {
     ampPreviewVectorSourceRef.current?.clear(true)
