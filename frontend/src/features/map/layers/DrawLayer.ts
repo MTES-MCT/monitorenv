@@ -1,6 +1,7 @@
 import { useDrawLayer } from '@hooks/useDrawLayer'
 import { Layers } from 'domain/entities/layers/constants'
 import { DrawEvent } from 'ol/interaction/Draw'
+import { useCallback } from 'react'
 
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { setGeometry } from '../../../domain/use_cases/draw/setGeometry'
@@ -22,10 +23,18 @@ export function DrawLayer({ map }: BaseMapChildrenProps) {
     isDrawing: !!interactionType,
     layerName: Layers.DRAW_DASHBOARD.code,
     map,
-    onDrawEnd: (event: DrawEvent) => {
-      dispatch(addFeatureToDrawedFeature(event.feature))
-    },
-    onModifyEnd: (geom: GeoJSONType.Geometry | Geometry) => dispatch(setGeometry(geom as Geometry)),
+    onDrawEnd: useCallback(
+      (event: DrawEvent) => {
+        dispatch(addFeatureToDrawedFeature(event.feature))
+      },
+      [dispatch]
+    ),
+    onModifyEnd: useCallback(
+      (geom: GeoJSONType.Geometry | Geometry) => {
+        dispatch(setGeometry(geom as Geometry))
+      },
+      [dispatch]
+    ),
     withConversionToGeoJSONGeometryObject: false
   })
 
