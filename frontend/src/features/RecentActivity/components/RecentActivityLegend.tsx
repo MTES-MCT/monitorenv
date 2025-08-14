@@ -3,6 +3,7 @@ import { recentActivityActions } from '@features/RecentActivity/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { memo } from 'react'
 import styled, { css } from 'styled-components'
 
 import { calculateDotSize } from '../utils'
@@ -41,11 +42,11 @@ export const LEGEND_COLORS = [
 ]
 
 export const MEDIUM_DOT_SIZE = 50
-export function RecentActivityLegend({ location }: { location: LegendLocation }) {
+const mediumDotSize = calculateDotSize(MEDIUM_DOT_SIZE)
+
+export const RecentActivityLegend = memo(({ location }: { location: LegendLocation }) => {
   const dispatch = useAppDispatch()
   const isLegendOpen = useAppSelector(state => state.recentActivity.isLegendOpen)
-
-  const mediumDotSize = calculateDotSize(MEDIUM_DOT_SIZE)
 
   return (
     <LegendContainer $isOpen={isLegendOpen} $location={location}>
@@ -101,7 +102,7 @@ export function RecentActivityLegend({ location }: { location: LegendLocation })
       )}
     </LegendContainer>
   )
-}
+})
 
 const LegendContainer = styled.div<{ $isOpen: boolean; $location: LegendLocation }>`
   position: fixed;

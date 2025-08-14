@@ -1,12 +1,13 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { useMapContext } from 'context/map/MapContext'
 import { Feature } from 'ol'
 import { intersects } from 'ol/extent'
 import VectorLayer from 'ol/layer/Vector'
 import { transformExtent } from 'ol/proj'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useMemo, useRef } from 'react'
 
 import { getRegulatoryFeature } from './regulatoryGeometryHelpers'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
@@ -14,13 +15,13 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
+export const RegulatoryPreviewLayer = memo(() => {
+  const { map } = useMapContext()
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
@@ -119,4 +120,4 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   }, [map])
 
   return null
-}
+})

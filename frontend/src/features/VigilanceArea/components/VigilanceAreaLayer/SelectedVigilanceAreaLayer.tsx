@@ -6,20 +6,21 @@ import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { memo, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
 import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
+export const SelectedVigilanceAreaLayer = memo(() => {
+  const { map } = useMapContext()
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
@@ -194,4 +195,4 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   }, [isLayerVisible, isRegulatoryLayerVisible, isAMPLayerVisible])
 
   return null
-}
+})

@@ -3,14 +3,13 @@ import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { findMapFeatureById } from '@utils/findMapFeatureById'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened, removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, memo, useMemo, useState } from 'react'
 
 import { ReportingCard } from './ReportingCard'
-
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 const OPTIONS = {
   margins: {
@@ -23,7 +22,9 @@ const OPTIONS = {
   }
 }
 
-export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
+export const ReportingOverlay = memo(() => {
+  const { currentFeatureOver, map, mapClickEvent } = useMapContext()
+
   const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
@@ -91,4 +92,4 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
       </OverlayPositionOnCentroid>
     </>
   )
-}
+})

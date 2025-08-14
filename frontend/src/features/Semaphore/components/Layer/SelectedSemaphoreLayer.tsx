@@ -1,8 +1,9 @@
 import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGetFilteredReportingsQuery'
+import { useMapContext } from 'context/map/MapContext'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useMemo, useRef } from 'react'
 
 import { getSemaphoreZoneFeature } from './semaphoresGeometryHelpers'
 import { getSelectedSemaphoreStyle } from './style'
@@ -12,12 +13,13 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 
-import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
+export const SelectedSemaphoreLayer = memo(() => {
+  const { map } = useMapContext()
+
   const { displaySemaphoresLayer } = useAppSelector(state => state.global.layers)
   const isSemaphoreHighlighted = useAppSelector(state => state.semaphoresSlice.isSemaphoreHighlighted)
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
@@ -109,4 +111,4 @@ export function SelectedSemaphoreLayer({ map }: BaseMapChildrenProps) {
   }, [isLayerVisible])
 
   return null
-}
+})

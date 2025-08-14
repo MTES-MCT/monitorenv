@@ -4,15 +4,14 @@ import { useDrawLayer } from '@hooks/useDrawLayer'
 import { Layers } from 'domain/entities/layers/constants'
 import { drawFeature } from 'domain/use_cases/draw/drawFeature'
 import { DrawEvent } from 'ol/interaction/Draw'
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 
 import { recentActivityActions } from '../../slice'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Geometry } from 'ol/geom'
 
-export function DrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
+export const DrawRecentActivityLayer = memo(() => {
   const dispatch = useAppDispatch()
   const geometry = useAppSelector(state => state.recentActivity.drawedGeometry)
   const interactionType = useAppSelector(state => state.recentActivity.interactionType)
@@ -23,7 +22,6 @@ export function DrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
     interactionType,
     isDrawing,
     layerName: Layers.DRAW_RECENT_ACTIVITY.code,
-    map,
     onDrawEnd: useCallback(
       (event: DrawEvent) => {
         dispatch(
@@ -43,4 +41,4 @@ export function DrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
   })
 
   return null
-}
+})

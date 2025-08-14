@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import styled from 'styled-components'
 
-export function MapAttributionsBox() {
+export const MapAttributionsBox = memo(() => {
   const [isVisible, setIsVisible] = useState(false)
 
   return (
@@ -18,7 +18,7 @@ export function MapAttributionsBox() {
       </Button>
     </Wrapper>
   )
-}
+})
 
 const Wrapper = styled.div`
   bottom: 8px;

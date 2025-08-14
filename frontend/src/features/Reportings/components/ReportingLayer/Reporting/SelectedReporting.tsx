@@ -1,8 +1,9 @@
 import { hasAlreadyFeature } from '@features/map/layers/utils'
+import { useMapContext } from 'context/map/MapContext'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
+import { type MutableRefObject, memo, useEffect, useRef, useMemo } from 'react'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { selectedReportingStyleFn } from './style'
@@ -11,9 +12,10 @@ import { Layers } from '../../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 
 import type { VectorLayerWithName } from '../../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
 
-export function SelectedReportingLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export const SelectedReportingLayer = memo(() => {
+  const { currentFeatureOver, map } = useMapContext()
+
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const displayReportingSelectedLayer = useAppSelector(state => state.global.layers.displayReportingSelectedLayer)
@@ -82,4 +84,4 @@ export function SelectedReportingLayer({ currentFeatureOver, map }: BaseMapChild
   }, [currentFeatureOver, selectedReporting])
 
   return null
-}
+})

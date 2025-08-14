@@ -1,19 +1,20 @@
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMapContext } from 'context/map/MapContext'
 import { Feature } from 'ol'
 import { fromExtent } from 'ol/geom/Polygon'
 import { Vector } from 'ol/layer'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useRef } from 'react'
 
-import type {} from 'domain/types/layer'
 import { dottedLayerStyle } from './styles/dottedLayer.style'
 
-import type { BaseMapChildrenProps } from '../BaseMap'
 import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function SearchExtentLayer({ map }: BaseMapChildrenProps) {
+export const SearchExtentLayer = memo(() => {
+  const { map } = useMapContext()
+
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
 
   const isLayerVisible = !!searchExtent
@@ -56,4 +57,4 @@ export function SearchExtentLayer({ map }: BaseMapChildrenProps) {
   }, [map])
 
   return null
-}
+})

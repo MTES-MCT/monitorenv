@@ -1,21 +1,23 @@
 import { hasAlreadyFeature } from '@features/map/layers/utils'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
+import { type MutableRefObject, memo, useEffect, useRef, useMemo } from 'react'
 
 import { getMissionZoneFeature, getActionsFeatures } from './missionGeometryHelpers'
 import { selectedMissionStyle } from './missions.style'
 import { useGetMissionsQuery } from '../../../../api/missionsAPI'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export const SelectedMissionLayer = memo(() => {
+  const { currentFeatureOver, map } = useMapContext()
+
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const displayMissionSelectedLayer = useAppSelector(state => state.global.layers.displayMissionSelectedLayer)
@@ -121,4 +123,4 @@ export function SelectedMissionLayer({ currentFeatureOver, map }: BaseMapChildre
   }, [currentFeatureOver, selectedMission])
 
   return null
-}
+})

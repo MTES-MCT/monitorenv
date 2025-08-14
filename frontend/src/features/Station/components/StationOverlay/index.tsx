@@ -1,6 +1,7 @@
+import { useMapContext } from 'context/map/MapContext'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
 import { OVERLAY_MARGINS } from './constants'
 import { StationCard } from './StationCard'
@@ -9,9 +10,9 @@ import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { findMapFeatureById } from '../../../../utils/findMapFeatureById'
 import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
 
-import type { BaseMapChildrenProps } from '../../../map/BaseMap'
+export const StationOverlay = memo(() => {
+  const { currentFeatureOver, map, mapClickEvent } = useMapContext()
 
-export function StationOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const selectedBaseFeatureId = useAppSelector(state => state.station.selectedFeatureId)
   const hoveredFeature = convertToFeature(currentFeatureOver)
 
@@ -54,4 +55,4 @@ export function StationOverlay({ currentFeatureOver, map, mapClickEvent }: BaseM
       </OverlayPositionOnCentroid>
     </>
   )
-}
+})

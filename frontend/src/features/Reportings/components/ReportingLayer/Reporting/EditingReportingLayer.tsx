@@ -1,18 +1,20 @@
 import { hasAlreadyFeature } from '@features/map/layers/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates, VisibilityState } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useMemo, useRef } from 'react'
 
 import { getEditingReportingZoneFeature } from './reportingsGeometryHelpers'
 import { editingReportingStyleFn } from './style'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 
-export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export const EditingReportingLayer = memo(() => {
+  const { currentFeatureOver, map } = useMapContext()
+
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
@@ -102,4 +104,4 @@ export function EditingReportingLayer({ currentFeatureOver, map }: BaseMapChildr
   }, [editingReporting, currentFeatureOver])
 
   return null
-}
+})

@@ -5,13 +5,12 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { useDrawLayer } from '@hooks/useDrawLayer'
 import { Layers } from 'domain/entities/layers/constants'
 import { DrawEvent } from 'ol/interaction/Draw'
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Geometry } from 'ol/geom'
 
-export function DrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
+export const DrawVigilanceAreaLayer = memo(() => {
   const dispatch = useAppDispatch()
   const geometry = useAppSelector(state => state.vigilanceArea.geometry)
   const interactionType = useAppSelector(state => state.vigilanceArea.interactionType)
@@ -23,7 +22,6 @@ export function DrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     interactionType,
     isDrawing: isDrawFormOpen,
     layerName: Layers.DRAW_VIGILANCE_AREA.code,
-    map,
     onDrawEnd: useCallback(
       (event: DrawEvent) => {
         dispatch(addFeatureToDrawedFeature(event.feature))
@@ -37,4 +35,4 @@ export function DrawVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   })
 
   return null
-}
+})

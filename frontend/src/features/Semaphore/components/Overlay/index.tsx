@@ -1,14 +1,13 @@
 import { findMapFeatureById } from '@utils/findMapFeatureById'
+import { useMapContext } from 'context/map/MapContext'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
 import { SemaphoreCard } from './SemaphoreCard'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { OverlayPositionOnCentroid } from '../../../map/overlays/OverlayPositionOnCentroid'
-
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 const SUPER_USER_MARGINS = {
   xLeft: 50,
@@ -26,7 +25,9 @@ const MARGINS = {
   yTop: -70
 }
 
-export function SemaphoreOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
+export const SemaphoreOverlay = memo(() => {
+  const { currentFeatureOver, map, mapClickEvent } = useMapContext()
+
   const selectedSemaphoreId = useAppSelector(state => state.semaphoresSlice.selectedSemaphoreId)
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
@@ -70,4 +71,4 @@ export function SemaphoreOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
       </OverlayPositionOnCentroid>
     </>
   )
-}
+})

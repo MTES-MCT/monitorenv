@@ -1,12 +1,13 @@
 import { useRecentActivitylayer } from '@features/RecentActivity/hooks/useRecentActivityLayer'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
+import { memo } from 'react'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-
-export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
+export const RecentControlsActivityLayer = memo(() => {
+  const { map } = useMapContext()
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const hasMapInteraction = useHasMapInteraction()
 
@@ -29,4 +30,4 @@ export function RecentControlsActivityLayer({ map }: BaseMapChildrenProps) {
   })
 
   return null
-}
+})

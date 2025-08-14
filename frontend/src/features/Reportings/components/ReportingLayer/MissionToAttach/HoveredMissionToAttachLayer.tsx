@@ -1,15 +1,17 @@
 import { missionZoneStyle } from '@features/Mission/components/Layers/missions.style'
+import { useMapContext } from 'context/map/MapContext'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useRef } from 'react'
 
 import { Layers } from '../../../../../domain/entities/layers/constants'
 
 import type { VectorLayerWithName } from '../../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
 
-export function HoveredMissionToAttachLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export const HoveredMissionToAttachLayer = memo(() => {
+  const { currentFeatureOver, map } = useMapContext()
+
   const vectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
 
   const vectorLayerRef = useRef(
@@ -40,4 +42,4 @@ export function HoveredMissionToAttachLayer({ currentFeatureOver, map }: BaseMap
   }, [currentFeatureOver])
 
   return null
-}
+})

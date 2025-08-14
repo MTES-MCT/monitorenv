@@ -1,10 +1,11 @@
 import { useGetFilteredMissionsQuery } from '@features/Mission/hooks/useGetFilteredMissionsQuery'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { memo, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getMissionZoneFeature } from './missionGeometryHelpers'
 import { missionStyleFn } from './missions.style'
@@ -14,12 +15,13 @@ import { useHasMapInteraction } from '../../../../hooks/useHasMapInteraction'
 import { missionActions } from '../../slice'
 import { getActiveMission } from '../MissionForm/slice'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
+export const MissionsLayer = memo(() => {
+  const { map, mapClickEvent } = useMapContext()
+
   const dispatch = useAppDispatch()
   const displayMissionsLayer = useAppSelector(state => state.global.layers.displayMissionsLayer)
   const { missions } = useGetFilteredMissionsQuery()
@@ -134,4 +136,4 @@ export function MissionsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [dispatch, mapClickEvent])
 
   return null
-}
+})

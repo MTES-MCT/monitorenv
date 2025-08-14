@@ -7,19 +7,21 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { FrontendError } from '@libs/FrontendError'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { memo, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getFeatureStyle, getStationPointFeature } from './utils'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 
-export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
+export const StationLayer = memo(() => {
+  const { map, mapClickEvent } = useMapContext()
+
   const vectorSourceRef = useRef(new VectorSource())
   const vectorLayerRef = useRef(
     new VectorLayer({
@@ -186,4 +188,4 @@ export function StationLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   )
 
   return null
-}
+})

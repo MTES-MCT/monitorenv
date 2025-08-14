@@ -1,5 +1,6 @@
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
+import { useMapContext } from 'context/map/MapContext'
 import { getCenter } from 'ol/extent'
 import Feature from 'ol/Feature'
 import Circle from 'ol/geom/Circle'
@@ -12,7 +13,7 @@ import { transform } from 'ol/proj'
 import { METERS_PER_UNIT } from 'ol/proj/Units'
 import VectorSource from 'ol/source/Vector'
 import { getLength } from 'ol/sphere'
-import { useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
 
 import { measurementStyle, measurementStyleWithCenter } from './styles/measurement.style'
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -28,7 +29,6 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getNauticalMilesFromMeters } from '../../../utils/utils'
 import { MeasurementOverlay } from '../overlays/MeasurementOverlay'
 
-import type { BaseMapChildrenProps } from '../BaseMap'
 import type { Geometry } from 'ol/geom'
 
 type Measurement = {
@@ -68,7 +68,9 @@ function getNauticalMilesRadiusOfCircularPolygon(polygon, distanceUnit) {
   return getNauticalMilesFromMeters(radius)
 }
 
-export function MeasurementLayer({ map }: BaseMapChildrenProps) {
+export const MeasurementLayer = memo(() => {
+  const { map } = useMapContext()
+
   const dispatch = useAppDispatch()
 
   const distanceUnit = useAppSelector(state => state.map.distanceUnit)
@@ -331,4 +333,4 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
       </div>
     </>
   )
-}
+})

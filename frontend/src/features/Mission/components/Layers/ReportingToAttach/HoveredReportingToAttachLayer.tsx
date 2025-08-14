@@ -1,14 +1,16 @@
 import { hoveredReportingStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useRef } from 'react'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 
-export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export const HoveredReportingToAttachLayer = memo(() => {
+  const { currentFeatureOver, map } = useMapContext()
+
   const vectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource>
 
   const vectorLayerRef = useRef(
@@ -39,4 +41,4 @@ export function HoveredReportingToAttachLayer({ currentFeatureOver, map }: BaseM
   }, [currentFeatureOver])
 
   return null
-}
+})

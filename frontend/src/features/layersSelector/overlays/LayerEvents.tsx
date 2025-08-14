@@ -4,6 +4,7 @@ import { recentActivityActions } from '@features/RecentActivity/slice'
 import { getIsLinkingZonesToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
@@ -14,7 +15,7 @@ import { Feature } from 'ol'
 import { Point } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 
 import { FEATURE_ID } from '.'
 import { layerListIconStyle } from './style'
@@ -26,9 +27,9 @@ import {
   setLayerOverlayItems
 } from '../metadataPanel/slice'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
+export const LayerEvents = memo(() => {
+  const { map, mapClickEvent } = useMapContext()
 
-export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
@@ -237,4 +238,4 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [dispatch, mapClickEvent.coordinates, mapClickEvent.featureList, numberOfClickedFeatures])
 
   return null
-}
+})

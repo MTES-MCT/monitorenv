@@ -7,13 +7,13 @@ import {
   resetModifyInteractions
 } from '@utils/drawFunctions'
 import { getFeature } from '@utils/getFeature'
+import { useMapContext } from 'context/map/MapContext'
 import { convertToGeoJSONGeometryObject } from 'domain/entities/layers'
 import { Layers } from 'domain/entities/layers/constants'
 import { isEmpty } from 'lodash'
 import { GeoJSON } from 'ol/format'
 import { Draw, Modify } from 'ol/interaction'
 import VectorLayer from 'ol/layer/Vector'
-import OpenLayerMap from 'ol/Map'
 import VectorSource from 'ol/source/Vector'
 import { useCallback, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
@@ -30,7 +30,6 @@ type UseDrawLayerProps = {
   interactionType: InteractionType | undefined
   isDrawing: boolean
   layerName: string
-  map: OpenLayerMap
   onDrawEnd: (event: DrawEvent) => void
   onModifyEnd: (event: GeoJSONType.Geometry | Geometry) => void
   withConversionToGeoJSONGeometryObject?: boolean
@@ -41,11 +40,11 @@ export function useDrawLayer({
   interactionType,
   isDrawing,
   layerName,
-  map,
   onDrawEnd,
   onModifyEnd,
   withConversionToGeoJSONGeometryObject = true
 }: UseDrawLayerProps) {
+  const { map } = useMapContext()
   // Memoize the feature creation
   const feature = useMemo(() => getFeature(geometry), [geometry])
 

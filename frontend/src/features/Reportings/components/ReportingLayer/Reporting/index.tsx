@@ -3,6 +3,7 @@ import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGet
 import { reportingActions } from '@features/Reportings/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { InteractionListener } from 'domain/entities/map/constants'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
@@ -10,17 +11,18 @@ import { convertToFeature } from 'domain/types/map'
 import { reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 
 import { getReportingZoneFeature } from './reportingsGeometryHelpers'
 import { reportingPinStyleFn } from './style'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
+export const ReportingsLayer = memo(() => {
+  const { map, mapClickEvent } = useMapContext()
+
   const dispatch = useAppDispatch()
   const displayReportingsLayer = useAppSelector(state => state.global.layers.displayReportingsLayer)
 
@@ -159,4 +161,4 @@ export function ReportingsLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [dispatch, mapClickEvent])
 
   return null
-}
+})

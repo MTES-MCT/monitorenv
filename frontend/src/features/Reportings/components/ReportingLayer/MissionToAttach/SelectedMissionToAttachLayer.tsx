@@ -1,18 +1,20 @@
 import { hasAlreadyFeature } from '@features/map/layers/utils'
 import { getMissionZoneFeature } from '@features/Mission/components/Layers/missionGeometryHelpers'
 import { selectedMissionStyle } from '@features/Mission/components/Layers/missions.style'
+import { useMapContext } from 'context/map/MapContext'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useRef } from 'react'
 
 import { useGetMissionsQuery } from '../../../../../api/missionsAPI'
 import { Layers } from '../../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 
 import type { VectorLayerWithName } from '../../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
 
-export function SelectedMissionToAttachLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export const SelectedMissionToAttachLayer = memo(() => {
+  const { currentFeatureOver, map } = useMapContext()
+
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
   )
@@ -71,4 +73,4 @@ export function SelectedMissionToAttachLayer({ currentFeatureOver, map }: BaseMa
   }, [attachedMission, currentFeatureOver])
 
   return null
-}
+})
