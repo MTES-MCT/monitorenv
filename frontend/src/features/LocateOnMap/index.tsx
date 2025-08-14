@@ -42,7 +42,12 @@ export function LocateOnMap() {
         placeholder="rechercher un lieu (port, lieu-dit, baie...)"
         size={Size.LARGE}
       />
-      <StyledIconButton accent={Accent.PRIMARY} Icon={Icon.Search} size={Size.LARGE} />
+      <StyledIconButton
+        accent={Accent.PRIMARY}
+        Icon={Icon.Search}
+        size={Size.LARGE}
+        title="rechercher un lieu (port, lieu-dit, baie...)"
+      />
     </Wrapper>
   )
 }

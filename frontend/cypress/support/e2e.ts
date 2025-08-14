@@ -1,6 +1,8 @@
 /// <reference path="../../node_modules/@mtes-mct/monitor-ui/cypress/global.d.ts" />
 
 import type { FeatureLike } from 'ol/Feature'
+import 'cypress-axe'
+
 import './commands'
 import './commands/dragTo'
 import './commands/loadPath'

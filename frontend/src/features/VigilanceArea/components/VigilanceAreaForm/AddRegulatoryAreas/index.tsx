@@ -23,10 +23,10 @@ export function AddRegulatoryAreas() {
       <Label>Réglementations en lien avec la zone de vigilance</Label>
       <Button
         accent={Accent.SECONDARY}
-        aria-label="Ajouter une réglementation en lien"
         Icon={Icon.Plus}
         isFullWidth
         onClick={addRegulatory}
+        title="Ajouter une réglementation en lien"
       >
         Ajouter une réglementation en lien
       </Button>

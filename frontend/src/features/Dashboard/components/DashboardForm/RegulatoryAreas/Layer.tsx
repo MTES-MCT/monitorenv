@@ -1,14 +1,14 @@
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, THEME, WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef } from 'react'
-import styled from 'styled-components'
 
 import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
@@ -26,7 +26,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
 
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const { layer } = useGetRegulatoryLayersQuery(undefined, {
     selectFromResult: result => ({
@@ -82,20 +82,19 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
       $metadataIsShown={openPanel?.id === layerId && openPanel?.isPinned === isSelected}
       onClick={toggleZoneMetadata}
     >
-      <Wrapper>
+      <StyledTransparentButton>
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layer?.entityName ?? 'aucun'}
           type={displayTags(layer?.tags) ?? 'aucun'}
         />
         <LayerSelector.Name
-          $withLargeWidth
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-area-zone-${layer?.id}`}
           title={layer?.entityName}
         >
           {layer?.entityName ?? 'AUCUN NOM'}
         </LayerSelector.Name>
-      </Wrapper>
+      </StyledTransparentButton>
       <LayerSelector.IconGroup>
         {isSelected ? (
           <IconButton
@@ -119,8 +118,3 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
     </StyledLayer>
   )
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-`

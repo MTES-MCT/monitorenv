@@ -84,7 +84,11 @@ export function Menu() {
       )}
       <ToolWrapper>
         <ToolButtons>
-          {displayMeasurement && isSuperUser && <MeasurementMapButton />}
+          {displayMeasurement && isSuperUser && (
+            <li>
+              <MeasurementMapButton />
+            </li>
+          )}
           {displayInterestPoint && isSuperUser && (
             <li>
               <InterestPointMapButton />

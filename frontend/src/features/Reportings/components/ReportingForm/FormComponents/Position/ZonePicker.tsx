@@ -48,19 +48,26 @@ export function ZonePicker() {
       {value?.coordinates?.length > 0 && value.type === OLGeometryType.MULTIPOLYGON && (
         <Row>
           <DrawedPolygonWithCenterButton onCenterOnMap={() => handleCenterOnMap()} />
-          <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
           <IconButton
             accent={Accent.SECONDARY}
-            aria-label="Supprimer cette zone"
+            disabled={isEditingZone}
+            Icon={Icon.Edit}
+            onClick={handleAddZone}
+            title="Ajouter une zone"
+          />
+          <IconButton
+            accent={Accent.SECONDARY}
             disabled={isEditingZone}
             Icon={Icon.Delete}
             onClick={deleteZone}
+            title="Supprimer cette zone"
           />
         </Row>
       )}
     </Field>
   )
 }
+
 const Field = styled.div`
   align-items: flex-start;
   display: flex;
