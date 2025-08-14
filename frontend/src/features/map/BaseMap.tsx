@@ -262,10 +262,9 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
     }
   }
 
-  return (
-    <MapWrapper>
-      <MapContainer ref={mapElement} />
-      {Children.map(
+  const memoizedChildren = useMemo(
+    () =>
+      Children.map(
         children,
         child =>
           child &&
@@ -276,7 +275,15 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
             mapClickEvent,
             pixel
           })
-      )}
+      ),
+    [children, currentFeatureListOver, currentFeatureOver, mapClickEvent, pixel]
+  )
+
+  return (
+    <MapWrapper>
+      <MapContainer ref={mapElement} />
+      {memoizedChildren}
+
       <StyledDistanceUnitContainer ref={wrapperRef}>
         <DistanceUnitsTypeSelection $isOpen={unitsSelectionIsOpen}>
           <Header onClick={() => setUnitsSelectionIsOpen(false)}>Unités des distances</Header>

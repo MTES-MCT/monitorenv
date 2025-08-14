@@ -4,6 +4,7 @@ import { useDrawLayer } from '@hooks/useDrawLayer'
 import { Layers } from 'domain/entities/layers/constants'
 import { drawFeature } from 'domain/use_cases/draw/drawFeature'
 import { DrawEvent } from 'ol/interaction/Draw'
+import { useCallback } from 'react'
 
 import { recentActivityActions } from '../../slice'
 
@@ -23,17 +24,22 @@ export function DrawRecentActivityLayer({ map }: BaseMapChildrenProps) {
     isDrawing,
     layerName: Layers.DRAW_RECENT_ACTIVITY.code,
     map,
-    onDrawEnd: (event: DrawEvent) => {
-      dispatch(
-        drawFeature(
-          event.feature,
-          geom => dispatch(recentActivityActions.setGeometry(geom as GeoJSON.MultiPolygon)),
-          state => state.recentActivity.drawedGeometry
+    onDrawEnd: useCallback(
+      (event: DrawEvent) => {
+        dispatch(
+          drawFeature(
+            event.feature,
+            geom => dispatch(recentActivityActions.setGeometry(geom as GeoJSON.MultiPolygon)),
+            state => state.recentActivity.drawedGeometry
+          )
         )
-      )
-    },
-    onModifyEnd: (geom: GeoJSON.Geometry | Geometry) =>
-      dispatch(recentActivityActions.setGeometry(geom as GeoJSON.MultiPolygon))
+      },
+      [dispatch]
+    ),
+    onModifyEnd: useCallback(
+      (geom: GeoJSON.Geometry | Geometry) => dispatch(recentActivityActions.setGeometry(geom as GeoJSON.MultiPolygon)),
+      [dispatch]
+    )
   })
 
   return null

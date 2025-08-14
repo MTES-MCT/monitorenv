@@ -89,15 +89,13 @@ export function useDrawLayer({
   )
 
   useEffect(() => {
-    map.getLayers().push(vectorLayerRef.current)
+    map.addLayer(vectorLayerRef.current)
 
     return () => {
-      if (map) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        map.removeLayer(vectorLayerRef.current)
-      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      map.removeLayer(vectorLayerRef.current)
     }
-  }, [map, vectorLayerRef])
+  }, [map])
 
   useEffect(() => {
     resetModifyInteractions(map)
@@ -105,28 +103,25 @@ export function useDrawLayer({
     drawVectorSourceRef.current.clear(true)
 
     if (isEmpty(feature) || !isDrawing) {
-      return undefined
+      return
     }
     vectorSourceRef.current.addFeature(feature)
     const modify = new Modify({
       source: vectorSourceRef.current
     })
-    map?.addInteraction(modify)
 
     modify.on('modifyend', setGeometryOnModifyEnd)
+    map?.addInteraction(modify)
 
+    // eslint-disable-next-line consistent-return
     return () => {
-      if (map) {
-        map.removeInteraction(modify)
-        modify.un('modifyend', setGeometryOnModifyEnd)
-      }
+      modify.un('modifyend', setGeometryOnModifyEnd)
+      map.removeInteraction(modify)
     }
-    // we don't want to listen onModifyEnd to avoid re-render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, feature, isDrawing, vectorSourceRef, drawVectorSourceRef])
+  }, [map, feature, isDrawing, setGeometryOnModifyEnd])
 
   useEffect(() => {
-    if (!map || !isDrawing || !interactionType) {
+    if (!isDrawing || !interactionType) {
       return undefined
     }
 
@@ -141,24 +136,24 @@ export function useDrawLayer({
       type: geometryType
     })
 
-    map.addInteraction(draw)
-
-    draw.on('drawend', event => {
+    const handleDrawEnd = (event: DrawEvent) => {
       onDrawEnd(event)
       event.stopPropagation()
       drawVectorSourceRef.current.clear(true)
-    })
+    }
+
+    draw.on('drawend', handleDrawEnd)
+    map.addInteraction(draw)
 
     return () => {
-      if (map) {
-        map.removeInteraction(draw)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        vectorSourceRef.current.clear(true)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        drawVectorSourceRef.current.clear(true)
-      }
+      draw.un('drawend', handleDrawEnd)
+      map.removeInteraction(draw)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      vectorSourceRef.current.clear(true)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      drawVectorSourceRef.current.clear(true)
     }
     // we don't want to listen onDrawEnd
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, interactionType, isDrawing, drawVectorSourceRef, vectorSourceRef])
+  }, [map, interactionType, isDrawing, onDrawEnd])
 }

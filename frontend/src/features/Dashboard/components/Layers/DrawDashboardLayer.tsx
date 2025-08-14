@@ -4,6 +4,7 @@ import { useDrawLayer } from '@hooks/useDrawLayer'
 import { Layers } from 'domain/entities/layers/constants'
 import { drawFeature } from 'domain/use_cases/draw/drawFeature'
 import { DrawEvent } from 'ol/interaction/Draw'
+import { useCallback } from 'react'
 
 import { dashboardActions } from '../../slice'
 
@@ -23,16 +24,22 @@ export function DrawDashboardLayer({ map }: BaseMapChildrenProps) {
     isDrawing,
     layerName: Layers.DRAW_DASHBOARD.code,
     map,
-    onDrawEnd: (event: DrawEvent) => {
-      dispatch(
-        drawFeature(
-          event.feature,
-          geom => dispatch(dashboardActions.setGeometry(geom)),
-          state => state.dashboard.geometry
+    onDrawEnd: useCallback(
+      (event: DrawEvent) => {
+        dispatch(
+          drawFeature(
+            event.feature,
+            geom => dispatch(dashboardActions.setGeometry(geom)),
+            state => state.dashboard.geometry
+          )
         )
-      )
-    },
-    onModifyEnd: (geom: GeoJSON.Geometry | Geometry) => dispatch(dashboardActions.setGeometry(geom as GeoJSON.Geometry))
+      },
+      [dispatch]
+    ),
+    onModifyEnd: useCallback(
+      (geom: GeoJSON.Geometry | Geometry) => dispatch(dashboardActions.setGeometry(geom as GeoJSON.Geometry)),
+      [dispatch]
+    )
   })
 
   return null
