@@ -24,7 +24,14 @@ export function LocalizeCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: nu
     }
   }
 
-  return <StyledIconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoomToVigilanceArea} />
+  return (
+    <StyledIconButton
+      accent={Accent.TERTIARY}
+      Icon={Icon.FocusZones}
+      onClick={handleZoomToVigilanceArea}
+      title="Centrer sur la carte"
+    />
+  )
 }
 
 const StyledIconButton = styled(IconButton)`

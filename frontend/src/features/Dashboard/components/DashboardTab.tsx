@@ -1,3 +1,4 @@
+import { TabTitle } from '@components/NavBar'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useEscapeKey } from '@hooks/useEscapeKey'
@@ -52,7 +53,7 @@ export function DashboardTab({ name, tabKey }: { name: string; tabKey: string })
         />
       ) : (
         <Container>
-          <DashboardName title={name}>{name}</DashboardName>
+          <TabTitle title={name}>{name}</TabTitle>
         </Container>
       )}
     </>
@@ -63,12 +64,7 @@ const Container = styled.div`
   display: flex;
   width: 89%;
 `
-const DashboardName = styled.span`
-  margin-right: 16px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`
+
 const StyledTextInput = styled(TextInput)`
-  flex-grow: 0.8;
+  flex-grow: 0.75;
 `

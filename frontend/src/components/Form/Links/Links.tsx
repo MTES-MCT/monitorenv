@@ -57,13 +57,7 @@ export function Links({ links, onDelete, onValidate }: LinkComponentProps) {
     <LinksContainer>
       <div>
         <Label>Liens utiles</Label>
-        <Button
-          accent={Accent.SECONDARY}
-          aria-label="Ajouter un lien utile"
-          Icon={Icon.Plus}
-          isFullWidth
-          onClick={addLink}
-        >
+        <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={addLink} title="Ajouter un lien utile">
           Ajouter un lien utile
         </Button>
       </div>

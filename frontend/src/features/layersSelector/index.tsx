@@ -6,6 +6,7 @@ import {
   getIsLinkingRegulatoryToVigilanceArea,
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
+import { useMountTransition } from '@hooks/useMountTransition'
 import { Accent, FulfillingBouncingCircleLoader, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import styled from 'styled-components'
@@ -63,12 +64,16 @@ export function LayersSidebar() {
     dispatch(setDisplayedItems({ visibility: { isLayersSidebarVisible: !isLayersSidebarVisible } }))
   }
 
+  const isSideBarVisible =
+    (displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)) || mainVigilanceAreaFormOpen
+
+  const hasTransition = useMountTransition(isSideBarVisible, 500)
+
   return (
     <Container>
       <SidebarLayersIcon
         $isVisible={displayLayersSidebar}
         accent={Accent.PRIMARY}
-        aria-label="Arbre des couches"
         className={isLayersSidebarVisible ? '_active' : ''}
         data-cy="layers-sidebar"
         Icon={Icon.MapLayers}
@@ -76,56 +81,56 @@ export function LayersSidebar() {
         size={Size.LARGE}
         title="Arbre des couches"
       />
-      <Sidebar
-        $isLayersSidebarVisible={isLayersSidebarVisible}
-        $isVisible={
-          (displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)) || mainVigilanceAreaFormOpen
-        }
-      >
-        <LayerSearch />
-        <Layers>
-          {!isLinkingRegulatoryToVigilanceArea && <AmpLayers />}
-          {!isLinkingAmpToVigilanceArea && <RegulatoryLayers />}
-          {!isLinkingZonesToVigilanceArea && (
-            <>
-              <MyVigilanceAreas />
-              <AdministrativeLayers />
-              <LocalizedAreas />
-              <BaseLayerList />
-            </>
-          )}
-        </Layers>
-
-        <MetadataPanelShifter
-          $isLayersSidebarVisible={isLayersSidebarVisible}
-          $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
-          $metadataPanelIsOpen={metadataPanelIsOpen || !!selectedVigilanceAreaId}
+      {(hasTransition || isSideBarVisible) && (
+        <Sidebar
+          $isLayersSidebarVisible={hasTransition && isLayersSidebarVisible}
+          $isVisible={hasTransition && isSideBarVisible}
         >
-          {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
-          {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
-          {secondVigilanceAreaPanelOpen && (
-            <VigilanceAreaForm
-              key={selectedVigilanceAreaId}
-              isOpen={secondVigilanceAreaPanelOpen}
-              isReadOnly
-              vigilanceAreaId={selectedVigilanceAreaId}
-            />
-          )}
-        </MetadataPanelShifter>
+          <LayerSearch />
+          <Layers>
+            {!isLinkingRegulatoryToVigilanceArea && <AmpLayers />}
+            {!isLinkingAmpToVigilanceArea && <RegulatoryLayers />}
+            {!isLinkingZonesToVigilanceArea && (
+              <>
+                <MyVigilanceAreas />
+                <AdministrativeLayers />
+                <LocalizedAreas />
+                <BaseLayerList />
+              </>
+            )}
+          </Layers>
 
-        <VigilanceAreaPanelShifter
-          $isLayersSidebarVisible={isLayersSidebarVisible}
-          $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
-        >
-          {mainVigilanceAreaFormOpen && (
-            <VigilanceAreaForm
-              key={editingVigilanceAreaId}
-              isOpen={mainVigilanceAreaFormOpen}
-              vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
-            />
-          )}
-        </VigilanceAreaPanelShifter>
-      </Sidebar>
+          <MetadataPanelShifter
+            $isLayersSidebarVisible={isLayersSidebarVisible}
+            $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
+            $metadataPanelIsOpen={metadataPanelIsOpen || !!selectedVigilanceAreaId}
+          >
+            {metadataLayerType === MonitorEnvLayers.REGULATORY_ENV && metadataLayerId && <RegulatoryMetadata />}
+            {metadataLayerType === MonitorEnvLayers.AMP && metadataLayerId && <AmpMetadata />}
+            {secondVigilanceAreaPanelOpen && (
+              <VigilanceAreaForm
+                key={selectedVigilanceAreaId}
+                isOpen={secondVigilanceAreaPanelOpen}
+                isReadOnly
+                vigilanceAreaId={selectedVigilanceAreaId}
+              />
+            )}
+          </MetadataPanelShifter>
+
+          <VigilanceAreaPanelShifter
+            $isLayersSidebarVisible={isLayersSidebarVisible}
+            $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
+          >
+            {mainVigilanceAreaFormOpen && (
+              <VigilanceAreaForm
+                key={editingVigilanceAreaId}
+                isOpen={mainVigilanceAreaFormOpen}
+                vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
+              />
+            )}
+          </VigilanceAreaPanelShifter>
+        </Sidebar>
+      )}
       {(regulatoryAreas.isLoading || amps.isLoading) && (
         <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}>
           <FulfillingBouncingCircleLoader color={THEME.color.gunMetal} size={30} />
@@ -202,7 +207,7 @@ const VigilanceAreaPanelShifter = styled.div<{
 `
 
 const Sidebar = styled.div<{ $isLayersSidebarVisible: boolean; $isVisible: boolean }>`
-  margin-left: ${p => (p.$isLayersSidebarVisible ? 0 : '-455px')};
+  transform: ${p => (p.$isLayersSidebarVisible ? 'translateX(0);' : `translateX(-100%) translateX(-104px);`)};
   opacity: ${p => (p.$isVisible ? 1 : 0)};
   top: 0;
   left: 46px;

@@ -19,10 +19,10 @@ import {
   WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
 import {
-  ReportingSourceEnum,
-  ReportingSourceLabels,
   type Reporting,
-  type ReportingSource
+  type ReportingSource,
+  ReportingSourceEnum,
+  ReportingSourceLabels
 } from 'domain/entities/reporting'
 import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { setZoomToCenter } from 'domain/shared_slices/Map'
@@ -155,10 +155,10 @@ export function Source({ index, push, remove }: SourceProps) {
           {index !== 0 && (
             <DeleteButton
               accent={Accent.SECONDARY}
-              aria-label="Supprimer cette source"
               color={THEME.color.maximumRed}
               Icon={Icon.Delete}
               onClick={() => remove(index)}
+              title="Supprimer cette source"
             />
           )}
         </div>
