@@ -118,7 +118,8 @@ export function CustomCircleRange() {
   }, [dispatch])
 
   return (
-    <Wrapper
+    measurementTypeToAdd === MeasurementType.CIRCLE_RANGE && (
+      <Wrapper
       $healthcheckTextWarning={!!healthcheckTextWarning}
       $isOpen={measurementTypeToAdd === MeasurementType.CIRCLE_RANGE}
     >
@@ -152,6 +153,7 @@ export function CustomCircleRange() {
         <CancelButton onClick={cancelAddCircleRange}>Annuler</CancelButton>
       </Body>
     </Wrapper>
+    )
   )
 }
 

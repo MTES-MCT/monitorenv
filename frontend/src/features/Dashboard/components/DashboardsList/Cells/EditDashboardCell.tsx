@@ -12,7 +12,6 @@ export function EditDashboardCell({ id }: { id: number }) {
   return (
     <StyledIconButton
       accent={Accent.TERTIARY}
-      aria-label="Éditer le tableau de bord"
       data-cy={`edit-dashboard-${id}`}
       Icon={Icon.Edit}
       onClick={edit}

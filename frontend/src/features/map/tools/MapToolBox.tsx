@@ -6,7 +6,7 @@ export const MapToolBox = styled(MapComponentStyle)<{
   $isOpen: boolean
 }>`
   background: ${p => p.theme.color.white};
-  margin-right: ${p => (p.$isOpen ? '36px' : '-420px')};
+  ${p => (p.$isOpen ? 'transform: translateX(0);' : 'transform: translateX(200%);')};
   opacity: ${p => (p.$isOpen ? '1' : '0')};
   right: 10px;
   border-radius: 2px;

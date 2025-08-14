@@ -1,3 +1,4 @@
+import { TransparentButton } from '@components/style'
 import { Icon, Tag } from '@mtes-mct/monitor-ui'
 import { ReportingTypeEnum } from 'domain/entities/reporting'
 import styled from 'styled-components'
@@ -6,6 +7,7 @@ import { ActionTypeEnum } from '../../../../../../domain/entities/missions'
 
 export const Card = styled.div`
   flex: 1;
+  position: relative;
 `
 
 export const Action = styled.div`
@@ -58,7 +60,7 @@ const getBackgroundColor = p => {
   }
 }
 
-export const ActionSummaryWrapper = styled.div<{
+export const ActionSummaryWrapper = styled(TransparentButton)<{
   $hasError?: boolean
   $reportingType?: ReportingTypeEnum
   $selected?: boolean
@@ -66,13 +68,14 @@ export const ActionSummaryWrapper = styled.div<{
 }>`
   display: flex;
   justify-content: space-between;
+  text-align: start;
   flex-direction: column;
   gap: 8px;
   border-color: ${p => getBorderColor(p)};
   border-size: ${p => (p.$selected ? `3px` : `1px`)};
   border-style: solid;
   padding: 16px;
-  background: ${p => getBackgroundColor(p)};
+  background: ${p => getBackgroundColor(p)} !important;
 `
 
 export const ContentContainer = styled.div`
@@ -118,11 +121,9 @@ export const NoteContent = styled.div`
 `
 
 export const ButtonsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-  justify-content: inherit;
-  gap: 16px;
+  position: absolute;
+  top: 16px;
+  right: 16px;
 `
 export const ActionButtons = styled.div`
   display: flex;
@@ -150,13 +151,6 @@ export const ReportingDate = styled.span`
 `
 export const StyledTag = styled(Tag)`
   background-color: ${p => p.theme.color.maximumRed15};
-`
-export const TagsContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-wrap: wrap;
 `
 
 export const ControlContainer = styled.div<{ $isEndAlign: boolean }>`

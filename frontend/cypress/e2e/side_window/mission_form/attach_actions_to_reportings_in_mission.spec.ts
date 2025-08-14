@@ -179,7 +179,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
       createMissionWithAttachedReportingAndAttachedAction().then(missionResponse => {
         const missionId = missionResponse.body.id
         cy.intercept('PUT', `/bff/v1/missions/${missionId}`).as('updateMission')
-        cy.clickButton('Editer')
+        cy.clickButton("Modifier l'infraction")
         cy.getDataCy('infraction-form').should('be.visible')
 
         cy.getDataCy('envaction-theme-element').contains('Carénage sauvage')

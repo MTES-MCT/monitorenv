@@ -148,3 +148,9 @@ const StyledNavMenu = styled(Nav.Menu)`
     height: 100% !important;
   }
 `
+
+export const TabTitle = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`

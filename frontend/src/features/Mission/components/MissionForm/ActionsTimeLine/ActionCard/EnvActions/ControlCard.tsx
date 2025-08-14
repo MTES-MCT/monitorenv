@@ -1,15 +1,16 @@
 import { Icon, THEME } from '@mtes-mct/monitor-ui'
+import { type EnvActionControl } from 'domain/entities/missions'
+import styled from 'styled-components'
 
 import { TargetTypeLabels } from '../../../../../../../domain/entities/targetType'
 import { ControlInfractionsTags } from '../../../../ControlInfractionsTags'
-import { Accented, ControlSummary, SummaryContent, Title } from '../style'
-
-import type { EnvActionControl } from 'domain/entities/missions'
+import { Accented, ControlSummary, StyledTag, SummaryContent, Title } from '../style'
 
 type ControlCardProps = {
   action: EnvActionControl
+  attachedReportingId: string
 }
-export function ControlCard({ action }: ControlCardProps) {
+export function ControlCard({ action, attachedReportingId }: ControlCardProps) {
   return (
     <>
       <Icon.ControlUnit color={THEME.color.charcoal} size={20} />
@@ -31,14 +32,34 @@ export function ControlCard({ action }: ControlCardProps) {
             </ControlSummary>
           )}
 
-          {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
-            <ControlInfractionsTags
-              actionNumberOfControls={action.actionNumberOfControls}
-              infractions={action?.infractions}
-            />
-          )}
+          <TagContainer>
+            {!!action.actionNumberOfControls && action.actionNumberOfControls > 0 && (
+              <ControlInfractionsTags
+                actionNumberOfControls={action.actionNumberOfControls}
+                infractions={action?.infractions}
+              />
+            )}
+            {attachedReportingId && (
+              <ReportingTag
+                data-cy="control-attached-reporting-tag"
+                Icon={Icon.Link}
+              >{`Signalement ${attachedReportingId}`}</ReportingTag>
+            )}
+          </TagContainer>
         </div>
       </SummaryContent>
     </>
   )
 }
+
+const TagContainer = styled.div`
+  display: flex;
+  justify-content: end;
+  margin-top: 8px;
+`
+
+const ReportingTag = styled(StyledTag)`
+  align-self: end;
+  flex: 1;
+  max-width: 50%;
+`

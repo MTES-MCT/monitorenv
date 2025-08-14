@@ -65,7 +65,6 @@ export function Item({ isSelected = false, nearbyUnit }: { isSelected?: boolean;
         {isSelected ? (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Retirer l'unité de la sélection"
             color={THEME.color.slateGray}
             Icon={Icon.Close}
             onClick={selectNearbyUnit}

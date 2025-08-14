@@ -589,12 +589,12 @@ context('Side Window > Mission Form > Mission actions', () => {
       // cases with identification
       // Company
       cy.fill('Type de cible', 'Personne morale')
-      cy.clickButton('Editer')
+      cy.clickButton("Modifier l'infraction")
       cy.fill('Identité de la personne contrôlée', 'John Doe')
       cy.clickButton("Valider l'infraction")
       cy.getDataCy('infraction-0-identification').contains('John Doe')
 
-      cy.clickButton('Editer')
+      cy.clickButton("Modifier l'infraction")
       cy.fill('Nom de la personne morale', 'World company')
       cy.clickButton("Valider l'infraction")
       cy.getDataCy('infraction-0-identification').contains('World company - John Doe')
@@ -607,22 +607,22 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Type de cible', 'Véhicule')
       cy.fill('Type de véhicule', 'Navire')
 
-      cy.clickButton('Editer')
+      cy.clickButton("Modifier l'infraction")
       cy.fill('Immatriculation', 'ABC123')
       cy.clickButton("Valider l'infraction")
       cy.getDataCy('infraction-0-identification').contains('ABC123')
 
-      cy.clickButton('Editer')
+      cy.clickButton("Modifier l'infraction")
       cy.fill('IMO', 'IMO123')
       cy.clickButton("Valider l'infraction")
       cy.getDataCy('infraction-0-identification').contains('IMO123')
 
-      cy.clickButton('Editer')
+      cy.clickButton("Modifier l'infraction")
       cy.fill('MMSI', '123456789')
       cy.clickButton("Valider l'infraction")
       cy.getDataCy('infraction-0-identification').contains('123456789')
 
-      cy.clickButton('Editer')
+      cy.clickButton("Modifier l'infraction")
       cy.fill('Nom du navire', 'Le hollandais volant')
       cy.fill('Taille', 16)
       cy.clickButton("Valider l'infraction")

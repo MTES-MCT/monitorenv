@@ -1,5 +1,6 @@
 import { dashboardActions } from '@features/Dashboard/slice'
 import { useClickOutside } from '@hooks/useClickOutside'
+import { useMountTransition } from '@hooks/useMountTransition'
 import { Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -26,7 +27,6 @@ export function MeasurementMapButton() {
   const isOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT_MENU, [isMapToolVisible])
   const isMeasurementToolOpen = useMemo(() => isMapToolVisible === MapToolType.MEASUREMENT, [isMapToolVisible])
   const wrapperRef = useRef(null)
-
   useClickOutside(wrapperRef, () => {
     if (isOpen) {
       dispatch(globalActions.setIsMapToolVisible(undefined))
@@ -64,6 +64,8 @@ export function MeasurementMapButton() {
     }
   }, [measurementTypeToAdd])
 
+  const hasTransition = useMountTransition(isOpen, 500)
+
   const openOrCloseMeasurementMenu = useCallback(() => {
     if (measurementTypeToAdd) {
       dispatch(setMeasurementTypeToAdd(undefined))
@@ -76,7 +78,7 @@ export function MeasurementMapButton() {
   }, [dispatch, measurementTypeToAdd])
 
   return (
-    <>
+    <Wrapper>
       <MapToolButton
         dataCy="measurement"
         icon={measurementIcon}
@@ -86,24 +88,31 @@ export function MeasurementMapButton() {
         title="Mesurer une distance"
       />
 
-      <MeasurementOptions ref={wrapperRef} $healthcheckTextWarning={!!healthcheckTextWarning} $isOpen={isOpen}>
-        <MeasurementItem
-          className="_active"
-          data-cy="measurement-multiline"
-          Icon={() => Icon.MeasureBrokenLine({ size: 28 })}
-          onClick={() => makeMeasurement(MeasurementType.MULTILINE)}
-          title="Mesure d'une distance avec lignes brisées"
-        />
-        <MeasurementItem
-          className="_active"
-          data-cy="measurement-circle-range"
-          Icon={() => Icon.MeasureCircle({ size: 28 })}
-          onClick={() => makeMeasurement(MeasurementType.CIRCLE_RANGE)}
-          title="Rayon d'action"
-        />
-      </MeasurementOptions>
+      {(isOpen || hasTransition) && (
+        <MeasurementOptions
+          ref={wrapperRef}
+          $healthcheckTextWarning={!!healthcheckTextWarning}
+          $isOpen={isOpen && hasTransition}
+        >
+          <MeasurementItem
+            className="_active"
+            data-cy="measurement-multiline"
+            Icon={() => Icon.MeasureBrokenLine({ size: 28 })}
+            onClick={() => makeMeasurement(MeasurementType.MULTILINE)}
+            title="Mesure d'une distance avec lignes brisées"
+          />
+          <MeasurementItem
+            className="_active"
+            data-cy="measurement-circle-range"
+            Icon={() => Icon.MeasureCircle({ size: 28 })}
+            onClick={() => makeMeasurement(MeasurementType.CIRCLE_RANGE)}
+            title="Rayon d'action"
+          />
+        </MeasurementOptions>
+      )}
+
       <CustomCircleRange />
-    </>
+    </Wrapper>
   )
 }
 
@@ -120,10 +129,14 @@ const MeasurementOptions = styled(MapComponentStyle)<{
 }>`
   border-radius: 2px;
   display: inline-block;
-  margin-right: ${p => (p.$isOpen ? '36px' : '-200px')};
+  transform: ${p => (p.$isOpen ? 'translateX(-35px)' : 'translateX(100%)')};
   opacity: ${p => (p.$isOpen ? '1' : '0')};
   position: absolute;
   right: 10px;
   transition: all 0.5s;
   width: 175px;
+`
+
+const Wrapper = styled.div`
+  display: flex;
 `

@@ -47,8 +47,8 @@ export function Location({ geom }) {
         </ZoneWrapper>
 
         <IconButtonsContainer>
-          <IconButton accent={Accent.SECONDARY} disabled Icon={Icon.Edit} />
-          <IconButton accent={Accent.SECONDARY} disabled Icon={Icon.Delete} />
+          <IconButton accent={Accent.SECONDARY} disabled Icon={Icon.Edit} title="Modifier cette zone" />
+          <IconButton accent={Accent.SECONDARY} disabled Icon={Icon.Delete} title="Supprimer cette zone" />
         </IconButtonsContainer>
       </GeomContainer>
     </div>

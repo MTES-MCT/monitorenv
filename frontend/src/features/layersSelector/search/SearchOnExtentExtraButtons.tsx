@@ -81,7 +81,6 @@ export function SearchOnExtentExtraButtons({ allowResetResults }: SearchOnExtent
     <>
       <SearchOnExtentButton
         accent={Accent.PRIMARY}
-        aria-label="Définir la zone de recherche et afficher les tracés"
         className={shouldFilterSearchOnMapExtent ? '_active' : ''}
         Icon={Icon.FocusZones}
         onClick={toggleFilterSearchOnMapExtent}
@@ -104,9 +103,9 @@ export function SearchOnExtentExtraButtons({ allowResetResults }: SearchOnExtent
         <ResetSearch
           $allowResetResults={allowResetResults}
           accent={Accent.TERTIARY}
-          aria-label="Effacer les résultats de la recherche"
           Icon={Icon.Close}
           onClick={handleResetSearch}
+          title="Effacer les résultats de la recherche"
         >
           Effacer les résultats de la recherche
         </ResetSearch>
