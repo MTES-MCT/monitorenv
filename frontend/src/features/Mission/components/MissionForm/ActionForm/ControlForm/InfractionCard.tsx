@@ -157,7 +157,12 @@ export function InfractionCard({
         </SummaryDetails>
       </Summary>
       <ButtonsWrapper>
-        <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={setCurrentInfractionIndex} title="Editer" />
+        <IconButton
+          accent={Accent.SECONDARY}
+          Icon={Icon.Edit}
+          onClick={setCurrentInfractionIndex}
+          title="Modifier l'infraction"
+        />
 
         <>
           <IconButton
@@ -166,9 +171,14 @@ export function InfractionCard({
             disabled={!canAddInfraction}
             Icon={Icon.Duplicate}
             onClick={duplicateInfraction}
-            title="dupliquer"
+            title="Dupliquer l'infraction"
           />
-          <StyledDeleteIconButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={removeInfraction} />
+          <StyledDeleteIconButton
+            accent={Accent.SECONDARY}
+            Icon={Icon.Delete}
+            onClick={removeInfraction}
+            title="Supprimer l'infraction"
+          />
         </>
       </ButtonsWrapper>
     </Wrapper>
