@@ -116,11 +116,11 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
       <LayerSelector.IconGroup>
         <IconButton
           accent={Accent.TERTIARY}
-          aria-label="Sélectionner la zone"
           color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
           data-cy="regulatory-zone-check"
           Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
           onClick={handleSelectZone}
+          title="Sélectionner la zone"
         />
       </LayerSelector.IconGroup>
     </LayerSelector.Layer>

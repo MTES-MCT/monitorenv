@@ -101,13 +101,14 @@ export function MultiPointPicker({ actionIndex, isGeomSameAsAttachedReportingGeo
                   disabled={isAddingAControl}
                   Icon={Icon.Edit}
                   onClick={handleAddPoint}
+                  title="Ajouter une zone"
                 />
                 <IconButton
                   accent={Accent.SECONDARY}
-                  aria-label="Supprimer cette zone"
                   disabled={isAddingAControl}
                   Icon={Icon.Delete}
                   onClick={() => handleDeleteZone(index)}
+                  title="Supprimer cette zone"
                 />
               </>
             </Row>

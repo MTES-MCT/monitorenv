@@ -125,20 +125,20 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
         {isLinkingRegulatoryToVigilanceArea ? (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Ajouter la zone réglementaire à la zone de vigilance"
             data-cy="regulatory-zone-add"
             disabled={regulatoryAreasLinkedToVigilanceAreaForm.includes(layerId)}
             Icon={Icon.Plus}
             onClick={addRegulatoryToVigilanceArea}
+            title="Ajouter la zone réglementaire à la zone de vigilance"
           />
         ) : (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Sélectionner la zone"
             color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
             data-cy="regulatory-zone-check"
             Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
+            title="Sélectionner la zone"
           />
         )}
       </LayerSelector.IconGroup>

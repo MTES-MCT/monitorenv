@@ -92,7 +92,6 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
         {isSelected ? (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Supprimer la zone"
             color={THEME.color.slateGray}
             Icon={Icon.Close}
             onClick={removeZone}
@@ -101,11 +100,11 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
         ) : (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Sélectionner la zone"
             color={isPinned ? THEME.color.blueGray : THEME.color.slateGray}
             data-cy={`dashboard-vigilance-area-zone-check-${vigilanceArea.id}`}
             Icon={isPinned ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
+            title="Sélectionner la zone"
           />
         )}
       </TagAndButtons>
