@@ -1,6 +1,6 @@
 import { NavBar } from '@components/NavBar'
-import { TransparentButton } from '@components/style'
 import { EditTabName } from '@features/Dashboard/components/EditTabName'
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -26,9 +26,7 @@ export function DashboardsNavBar() {
       edit: undefined,
       icon: <Icon.Summary />,
       isActive: !activeDashboardId,
-      isEditing: false,
       label: <span>Liste des tableaux de bords</span>,
-      name: undefined,
       nextPath: sideWindowPaths.DASHBOARDS
     }
 
@@ -43,13 +41,20 @@ export function DashboardsNavBar() {
       const controls = <EditTabName tabKey={key} />
 
       return {
-        close: closeDashboard,
-        edit: controls,
+        close: (
+          <IconButton
+            accent={Accent.TERTIARY}
+            color={THEME.color.slateGray}
+            Icon={Icon.Close}
+            onClick={e => closeDashboard(nextPath, e)}
+            size={Size.SMALL}
+            title={`Fermer ${dashboard.name}`}
+          />
+        ),
+        edit: !isEditingTabName ? controls : undefined,
         icon: <Icon.CircleFilled color={THEME.color.blueGray} size={14} />,
         isActive: activeDashboardId === key,
-        isEditing: isEditingTabName,
         label: tab,
-        name: dashboard.name,
         nextPath
       }
     })
@@ -76,7 +81,7 @@ export function DashboardsNavBar() {
             data-cy={`dashboard-${index}`}
             onClick={() => selectDashboard(item.nextPath)}
             onKeyDown={e => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (e.key === 'Enter') {
                 e.preventDefault()
                 selectDashboard(item.nextPath)
               }
@@ -85,21 +90,11 @@ export function DashboardsNavBar() {
           >
             {item.label}
           </Tab>
-
           {(item.edit || item.close) && (
-            <>
-              {!item.isEditing && item.edit}
-              {item.close && (
-                <IconButton
-                  accent={Accent.TERTIARY}
-                  color={THEME.color.slateGray}
-                  Icon={Icon.Close}
-                  onClick={e => item.close(item.nextPath, e)}
-                  size={Size.SMALL}
-                  title={`Fermer ${item.name}`}
-                />
-              )}
-            </>
+            <Controls>
+              {item.edit}
+              {item.close}
+            </Controls>
           )}
         </TabWrapper>
       ))}
@@ -109,9 +104,15 @@ export function DashboardsNavBar() {
 
 const TabWrapper = styled.div`
   display: flex;
-  position: relative;
+  gap: 8px;
 `
 
-const Tab = styled(TransparentButton)`
+const Tab = styled(StyledTransparentButton)`
   text-align: start;
+`
+
+const Controls = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
 `

@@ -21,13 +21,7 @@ export function AddAMPs() {
   return (
     <div>
       <Label>AMP en lien avec la zone de vigilance</Label>
-      <Button
-        accent={Accent.SECONDARY}
-        aria-label="Ajouter une AMP en lien"
-        Icon={Icon.Plus}
-        isFullWidth
-        onClick={addAMP}
-      >
+      <Button accent={Accent.SECONDARY} Icon={Icon.Plus} isFullWidth onClick={addAMP} title="Ajouter une AMP en lien">
         Ajouter une AMP en lien
       </Button>
 

@@ -72,42 +72,48 @@ export function ButtonsGroupRow({ id }) {
   return (
     <>
       <ButtonsGroup>
-        <IconButton
-          accent={Accent.TERTIARY}
-          data-cy={`duplicate-reporting-${id}`}
-          Icon={Icon.Duplicate}
-          onClick={duplicate}
-          title="Dupliquer"
-        />
-        <IconButton
-          accent={Accent.TERTIARY}
-          data-cy={`edit-reporting-${id}`}
-          Icon={Icon.Edit}
-          onClick={edit}
-          title="Editer"
-        />
-
-        <StyledDropdown
-          accent={Accent.TERTIARY}
-          data-cy={`more-actions-reporting-${id}`}
-          Icon={Icon.More}
-          onSelect={archiveOrDelete}
-        >
-          <Dropdown.Item
-            accent={Accent.SECONDARY}
-            data-cy={`archive-reporting-${id}`}
-            eventKey={ACTIONS.ARCHIVE}
-            Icon={Icon.Archive}
-            title="Archiver"
+        <li>
+          <IconButton
+            accent={Accent.TERTIARY}
+            data-cy={`duplicate-reporting-${id}`}
+            Icon={Icon.Duplicate}
+            onClick={duplicate}
+            title="Dupliquer"
           />
-          <Dropdown.Item
-            accent={Accent.SECONDARY}
-            data-cy={`delete-reporting-${id}`}
-            eventKey={ACTIONS.DELETE}
-            Icon={Icon.Delete}
-            title="Supprimer"
+        </li>
+        <li>
+          <IconButton
+            accent={Accent.TERTIARY}
+            data-cy={`edit-reporting-${id}`}
+            Icon={Icon.Edit}
+            onClick={edit}
+            title="Editer"
           />
-        </StyledDropdown>
+        </li>
+        <li>
+          <StyledDropdown
+            accent={Accent.TERTIARY}
+            aria-label="Menu d'actions supplémentaires"
+            data-cy={`more-actions-reporting-${id}`}
+            Icon={Icon.More}
+            onSelect={archiveOrDelete}
+          >
+            <Dropdown.Item
+              accent={Accent.SECONDARY}
+              data-cy={`archive-reporting-${id}`}
+              eventKey={ACTIONS.ARCHIVE}
+              Icon={Icon.Archive}
+              title="Archiver"
+            />
+            <Dropdown.Item
+              accent={Accent.SECONDARY}
+              data-cy={`delete-reporting-${id}`}
+              eventKey={ACTIONS.DELETE}
+              Icon={Icon.Delete}
+              title="Supprimer"
+            />
+          </StyledDropdown>
+        </li>
       </ButtonsGroup>
       <DeleteModal
         cancelButtonText="Annuler"
@@ -132,19 +138,21 @@ export function ButtonsGroupRow({ id }) {
   )
 }
 
-const ButtonsGroup = styled.div`
+const ButtonsGroup = styled.ul`
   display: flex;
   flex-direction: row;
   gap: 8px;
   justify-content: space-evenly;
 
-  > div {
-    > .rs-btn {
-      padding-left: 0px !important;
+  > li {
+    > div {
+      > .rs-btn {
+        padding-left: 0px !important;
+      }
     }
-  }
-  > button {
-    padding: 0px;
+    > button {
+      padding: 0px;
+    }
   }
 `
 

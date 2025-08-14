@@ -41,7 +41,7 @@ export function PointPicker() {
     dispatch(drawPoint(value, InteractionListener.REPORTING_POINT))
   }, [dispatch, value])
 
-  const handleDeleteZone = useCallback(() => {
+  const handleDeletePoint = useCallback(() => {
     if (value) {
       setValue(undefined)
     }
@@ -61,13 +61,19 @@ export function PointPicker() {
             />
           </ZoneWrapper>
 
-          <IconButton accent={Accent.SECONDARY} disabled={isAddingAPoint} Icon={Icon.Edit} onClick={handleAddPoint} />
           <IconButton
             accent={Accent.SECONDARY}
-            aria-label="Supprimer cette zone"
+            disabled={isAddingAPoint}
+            Icon={Icon.Edit}
+            onClick={handleAddPoint}
+            title="Ajouter une point"
+          />
+          <IconButton
+            accent={Accent.SECONDARY}
             disabled={isAddingAPoint}
             Icon={Icon.Delete}
-            onClick={handleDeleteZone}
+            onClick={handleDeletePoint}
+            title="Supprimer ce point"
           />
         </Row>
       )}
@@ -85,6 +91,7 @@ const Row = styled.div`
   &:first-of-type {
     margin-top: 8px;
   }
+
   align-items: center;
   display: flex;
   width: 100%;

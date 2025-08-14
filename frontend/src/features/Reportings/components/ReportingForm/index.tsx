@@ -17,6 +17,7 @@ type ReportingFormProps = {
   context: ReportingContext
   totalReportings: number
 }
+
 export function ReportingFormWithContext({ context, totalReportings }: ReportingFormProps) {
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 

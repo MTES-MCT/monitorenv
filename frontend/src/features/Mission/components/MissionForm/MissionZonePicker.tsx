@@ -99,13 +99,14 @@ export function MissionZonePicker() {
                   disabled={isEditingZone}
                   Icon={Icon.Edit}
                   onClick={handleAddZone}
+                  title="Ajouter une zone de mission"
                 />
                 <IconButton
                   accent={Accent.SECONDARY}
-                  aria-label="Supprimer cette zone de mission"
                   disabled={isEditingZone}
                   Icon={Icon.Delete}
                   onClick={() => deleteZone(index)}
+                  title="Supprimer cette zone de mission"
                 />
               </>
             </Row>

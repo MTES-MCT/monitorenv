@@ -73,7 +73,6 @@ export const getPinIcon = (
       return (
         <IconButton
           accent={Accent.TERTIARY}
-          aria-label={label}
           color={THEME.color.blueGray}
           Icon={Icon.PinFilled}
           onClick={onClick}
@@ -84,7 +83,6 @@ export const getPinIcon = (
       return (
         <IconButton
           accent={Accent.TERTIARY}
-          aria-label={label}
           color={THEME.color.blueGray}
           Icon={Icon.Pin}
           onClick={onClick}
@@ -95,7 +93,6 @@ export const getPinIcon = (
       return (
         <IconButton
           accent={Accent.TERTIARY}
-          aria-label={label}
           color={THEME.color.slateGray}
           Icon={Icon.Pin}
           onClick={onClick}
