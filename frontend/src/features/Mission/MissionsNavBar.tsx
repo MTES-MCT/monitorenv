@@ -1,8 +1,8 @@
-import { NavBar } from '@components/NavBar'
+import { NavBar, TabTitle } from '@components/NavBar'
+import { StyledTransparentButton } from '@features/layersSelector/search'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import { generatePath } from 'react-router'
-import { Nav } from 'rsuite'
 import styled from 'styled-components'
 
 import { deleteTab } from './useCases/deleteTab'
@@ -27,13 +27,15 @@ function MissionStatus({ mission }) {
 }
 
 export function MissionsNavBar() {
-  const selectedMissions = useAppSelector(state => state.missionForms.missions)
-
   const dispatch = useAppDispatch()
+  const selectedMissions = useAppSelector(state => state.missionForms.missions)
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
 
   const tabs = useMemo(() => {
     const missionsList = {
+      close: undefined,
       icon: <Icon.Summary />,
+      isActive: !activeMissionId,
       label: 'Liste des missions',
       nextPath: sideWindowPaths.MISSIONS
     }
@@ -53,27 +55,26 @@ export function MissionsNavBar() {
       const title = missionIsNewMission ? getNewMissionTitle(missionForm) : getMissionTitle(missionForm)
 
       return {
-        icon: !missionIsNewMission ? <MissionStatus mission={missionForm} /> : undefined,
-        label: (
-          <>
-            <span>{title}</span>
-            <IconButton
-              accent={Accent.TERTIARY}
-              color={THEME.color.slateGray}
-              Icon={Icon.Close}
-              onClick={() => close(nextPath)}
-              size={Size.SMALL}
-              style={{ marginLeft: 'auto' }}
-              title={`Fermer ${title}`}
-            />
-          </>
+        close: (
+          <IconButton
+            accent={Accent.TERTIARY}
+            color={THEME.color.slateGray}
+            Icon={Icon.Close}
+            onClick={() => close(nextPath)}
+            size={Size.SMALL}
+            style={{ marginLeft: 'auto' }}
+            title={`Fermer ${title}`}
+          />
         ),
+        icon: !missionIsNewMission ? <MissionStatus mission={missionForm} /> : undefined,
+        isActive: missionForm.id === activeMissionId,
+        label: <TabTitle>{title}</TabTitle>,
         nextPath
       }
     })
 
     return [missionsList, ...openMissions]
-  }, [dispatch, selectedMissions])
+  }, [activeMissionId, dispatch, selectedMissions])
 
   const selectTab = nextPath => {
     if (!nextPath) {
@@ -85,9 +86,23 @@ export function MissionsNavBar() {
   return (
     <NavBar name="missions" onSelect={selectTab}>
       {tabs.map((item, index) => (
-        <Nav.Item key={item.nextPath} data-cy={`mission-${index}`} eventKey={item.nextPath} icon={item.icon}>
-          {item.label}
-        </Nav.Item>
+        <TabWrapper key={item.nextPath} className={`rs-navbar-item ${item.isActive ? 'rs-navbar-item-active' : ''}`}>
+          {item.icon}
+          <Tab
+            data-cy={`mission-${index}`}
+            onClick={() => selectTab(item.nextPath)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                selectTab(item.nextPath)
+              }
+            }}
+            tabIndex={item.isActive ? -1 : 0}
+          >
+            {item.label}
+          </Tab>
+          {item.close}
+        </TabWrapper>
       ))}
     </NavBar>
   )
@@ -101,4 +116,14 @@ export const StyledStatus = styled.div<{ $borderColor: string | undefined; $colo
   border-radius: 50%;
   display: flex;
   border: ${p => (p.$borderColor ? `1px solid ${p.$borderColor}` : '0px')};
+`
+
+const TabWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+`
+
+const Tab = styled(StyledTransparentButton)`
+  text-align: start;
+  overflow: hidden;
 `

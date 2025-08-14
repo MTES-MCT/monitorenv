@@ -66,7 +66,6 @@ export function ListLayerGroup({ groupName, isSelected = false, layerIds, select
           {isSelected ? (
             <IconButton
               accent={Accent.TERTIARY}
-              aria-label="Supprimer la/les zone(s)"
               color={THEME.color.slateGray}
               Icon={Icon.Close}
               onClick={removeAllZones}

@@ -9,11 +9,11 @@ export function CellEditMission({ id }: { id: number }) {
 
   return (
     <StyledIconButton
-      aria-label="Editer"
       data-cy={`edit-mission-${id}`}
       Icon={Icon.Edit}
       onClick={setMission}
       size={Size.SMALL}
+      title="Editer"
     />
   )
 }

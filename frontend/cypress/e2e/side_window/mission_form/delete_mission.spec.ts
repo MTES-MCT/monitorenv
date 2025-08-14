@@ -98,7 +98,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
       const missionId = response.body.id
       cy.intercept('PUT', `/bff/v1/missions/${missionId}`).as('updateMission')
 
-      cy.clickButton('Editer')
+      cy.clickButton("Modifier l'infraction")
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Mise en demeure', 'Oui')
