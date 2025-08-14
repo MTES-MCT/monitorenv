@@ -1,24 +1,26 @@
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
 import { reportingPinStyleFn } from '@features/Reportings/components/ReportingLayer/Reporting/style'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { StatusFilterEnum } from 'domain/entities/reporting'
 import { convertToFeature } from 'domain/types/map'
 import { reduce } from 'lodash'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 
 import { useGetReportingsQuery } from '../../../../../api/reportingsAPI'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { attachReportingFromMap } from '../../../useCases/attachReportingFromMap'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
+export const ReportingToAttachLayer = memo(() => {
+  const { map, mapClickEvent } = useMapContext()
+
   const dispatch = useAppDispatch()
   const isReportingAttachmentInProgress = useAppSelector(
     state => state.attachReportingToMission.isReportingAttachmentInProgress
@@ -106,4 +108,4 @@ export function ReportingToAttachLayer({ map, mapClickEvent }: BaseMapChildrenPr
   }, [dispatch, mapClickEvent])
 
   return null
-}
+})

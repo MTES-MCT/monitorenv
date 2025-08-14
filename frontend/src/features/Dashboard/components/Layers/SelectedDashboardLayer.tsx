@@ -8,21 +8,23 @@ import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useRef, type MutableRefObject, useEffect } from 'react'
+import { memo, useRef, type MutableRefObject, useEffect } from 'react'
 
 import { getDashboardStyle } from './style'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
-export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
+export const SelectedDashboardLayer = memo(() => {
+  const { map } = useMapContext()
+
   const dispatch = useAppDispatch()
   const { displayDashboardLayer } = useAppSelector(state => state.global.layers)
   const selectedDashboardOnMap = useAppSelector(state => state.dashboard.selectedDashboardOnMap)
@@ -125,4 +127,6 @@ export function SelectedDashboardLayer({ map }: BaseMapChildrenProps) {
       dashboardDatasVectorSourceRef.current?.addFeatures(feats)
     }
   }, [dispatch, selectedDashboardOnMap, isolatedLayer])
-}
+
+  return null
+})

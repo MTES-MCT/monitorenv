@@ -1,4 +1,5 @@
 import { getFeature } from '@utils/getFeature'
+import { useMapContext } from 'context/map/MapContext'
 import { getCenter } from 'ol/extent'
 import Feature from 'ol/Feature'
 import Circle from 'ol/geom/Circle'
@@ -23,7 +24,6 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { MeasurementOverlay } from '../overlays/MeasurementOverlay'
 
-import type { BaseMapChildrenProps } from '../BaseMap'
 import type { Measurement } from '@features/map/layers/measurement'
 import type { Coordinate } from 'ol/coordinate'
 import type { EventsKey } from 'ol/events'
@@ -33,7 +33,8 @@ const DRAW_START_EVENT = 'drawstart'
 const DRAW_ABORT_EVENT = 'drawabort'
 const DRAW_END_EVENT = 'drawend'
 
-export function MeasurementLayer({ map }: BaseMapChildrenProps) {
+export function MeasurementLayer() {
+  const { map } = useMapContext()
   const dispatch = useAppDispatch()
 
   const distanceUnit = useAppSelector(state => state.map.distanceUnit)

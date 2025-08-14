@@ -1,12 +1,13 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { useMapContext } from 'context/map/MapContext'
 import { Feature } from 'ol'
 import { intersects } from 'ol/extent'
 import VectorLayer from 'ol/layer/Vector'
 import { transformExtent } from 'ol/proj'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { type MutableRefObject, useEffect, memo, useMemo, useRef } from 'react'
 
 import { getAMPFeature } from './AMPGeometryHelpers'
 import { getAMPLayerStyle } from './AMPLayers.style'
@@ -14,13 +15,13 @@ import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
+export const AMPPreviewLayer = memo(() => {
+  const { map } = useMapContext()
   const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
@@ -118,4 +119,4 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   }, [map])
 
   return null
-}
+})

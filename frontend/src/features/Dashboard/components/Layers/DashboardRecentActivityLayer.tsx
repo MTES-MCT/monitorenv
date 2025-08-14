@@ -3,16 +3,18 @@ import { useRecentActivitylayer } from '@features/RecentActivity/hooks/useRecent
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 
 import { getRecentActivityFilters } from '../DashboardForm/slice'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
-export function DashboardRecentActivityLayer({ map }: BaseMapChildrenProps) {
+export const DashboardRecentActivityLayer = memo(() => {
+  const { map } = useMapContext()
+
   const dispatch = useAppDispatch()
   const hasMapInteraction = useHasMapInteraction()
 
@@ -52,4 +54,4 @@ export function DashboardRecentActivityLayer({ map }: BaseMapChildrenProps) {
   }, [activeDashboardId, controls, totalOfControls, dispatch])
 
   return null
-}
+})

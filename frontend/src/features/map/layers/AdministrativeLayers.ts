@@ -1,20 +1,20 @@
-import _ from 'lodash'
-import { useEffect } from 'react'
+import { useMapContext } from 'context/map/MapContext'
+import { isEmpty } from 'lodash'
+import { memo, useEffect } from 'react'
 
 import { LayerType } from '../../../domain/entities/layers/constants'
 import { getAdministrativeVectorLayer } from '../../../domain/use_cases/administrative/showAdministrativeLayer'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
-import type { BaseMapChildrenProps } from '../BaseMap'
-
-export function AdministrativeLayers({ map }: BaseMapChildrenProps) {
+export const AdministrativeLayers = memo(() => {
+  const { map } = useMapContext()
   const showedAdministrativeLayerIds = useAppSelector(state => state.administrative.showedAdministrativeLayerIds)
 
   useEffect(() => {
     if (map && showedAdministrativeLayerIds) {
       const olLayers = map.getLayers()
       const olLayersList = olLayers?.getArray()
-      if (_.isEmpty(olLayersList)) {
+      if (isEmpty(olLayersList)) {
         return
       }
       // remove layers
@@ -41,4 +41,4 @@ export function AdministrativeLayers({ map }: BaseMapChildrenProps) {
   }, [map, showedAdministrativeLayerIds])
 
   return null
-}
+})

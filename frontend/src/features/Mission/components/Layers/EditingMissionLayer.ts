@@ -1,22 +1,24 @@
 import { hasAlreadyFeature } from '@features/map/layers/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { InteractionListener } from 'domain/entities/map/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useRef, useMemo } from 'react'
+import { type MutableRefObject, memo, useEffect, useRef, useMemo } from 'react'
 
 import { getActionsFeatures, getMissionZoneFeature } from './missionGeometryHelpers'
 import { selectedMissionStyle } from './missions.style'
 import { getActiveMission } from '../MissionForm/slice'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export const EditingMissionLayer = memo(() => {
+  const { currentFeatureOver, map } = useMapContext()
+
   const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
   const selectedMissionIdOnMap = useAppSelector(state => state.mission.selectedMissionIdOnMap)
   const editingMission = useAppSelector(state => getActiveMission(state.missionForms)?.missionForm)
@@ -119,4 +121,4 @@ export function EditingMissionLayer({ currentFeatureOver, map }: BaseMapChildren
   }, [editingMission, currentFeatureOver, isEditingSurveillanceZoneOrControlPoint])
 
   return null
-}
+})

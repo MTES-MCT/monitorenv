@@ -1,13 +1,13 @@
-import { useEffect } from 'react'
+import { useMapContext } from 'context/map/MapContext'
+import { memo, useEffect } from 'react'
 
 import { useAppSelector } from '../../hooks/useAppSelector'
-
-import type { BaseMapChildrenProps } from './BaseMap'
 
 const DEFAULT_MAP_ANIMATION_DURATION = 1000
 const MAX_ZOOM_LEVEL = 14
 
-export function MapExtentController({ map }: BaseMapChildrenProps) {
+export const MapExtentController = memo(() => {
+  const { map } = useMapContext()
   const fitToExtent = useAppSelector(state => state.map.fitToExtent)
   const zoomToCenter = useAppSelector(state => state.map.zoomToCenter)
 
@@ -29,4 +29,4 @@ export function MapExtentController({ map }: BaseMapChildrenProps) {
   }, [map, zoomToCenter])
 
   return null
-}
+})

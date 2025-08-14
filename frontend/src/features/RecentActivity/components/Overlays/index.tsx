@@ -3,21 +3,22 @@ import { OverlayPositionOnCoordinates } from '@features/map/overlays/OverlayPosi
 import { useAppSelector, useShallowEqualSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { findMapFeatureById } from '@utils/findMapFeatureById'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 
 import { HoveredOverlay } from './HoveredOverlay'
 import { RecentActivityControlCard } from './RecentActivityControlCard'
 import { SelectedOverlay } from './SelectedOverlay'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { RecentActivity } from '@features/RecentActivity/types'
 import type { OverlayItem } from 'domain/types/map'
 
 export const FEATURE_ID = 'RecentActivityAreaIconFeature'
 
-export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEvent, pixel }: BaseMapChildrenProps) {
+export const RecentActivityOverlay = memo(() => {
+  const { currentFeatureListOver, map, mapClickEvent, pixel } = useMapContext()
   const layerOverlayItems = useShallowEqualSelector(state => state.recentActivity.layersAndOverlays.layerOverlayItems)
   const layerOverlayCoordinates = useShallowEqualSelector(
     state => state.recentActivity.layersAndOverlays.layerOverlayCoordinates
@@ -26,24 +27,28 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
   const selectedControlId = useAppSelector(state => state.recentActivity.layersAndOverlays.selectedControlId)
   const hasMapListener = useHasMapInteraction()
 
-  const hoveredItems = currentFeatureListOver?.reduce((acc, recentActivityFeature) => {
-    const type = String(recentActivityFeature.id).split(':')[0]
+  const hoveredItems = useMemo(
+    () =>
+      currentFeatureListOver?.reduce((acc, recentActivityFeature) => {
+        const type = String(recentActivityFeature.id).split(':')[0]
 
-    if (type === Layers.RECENT_CONTROLS_ACTIVITY.code || type === Layers.DASHBOARD_RECENT_ACTIVITY.code) {
-      const { properties } = recentActivityFeature
+        if (type === Layers.RECENT_CONTROLS_ACTIVITY.code || type === Layers.DASHBOARD_RECENT_ACTIVITY.code) {
+          const { properties } = recentActivityFeature
 
-      if (!properties) {
+          if (!properties) {
+            return acc
+          }
+
+          acc.push({
+            layerType: type,
+            properties: properties as RecentActivity.RecentControlsActivity
+          })
+        }
+
         return acc
-      }
-
-      acc.push({
-        layerType: type,
-        properties: properties as RecentActivity.RecentControlsActivity
-      })
-    }
-
-    return acc
-  }, [] as OverlayItem<string, RecentActivity.RecentControlsActivity>[])
+      }, [] as OverlayItem<string, RecentActivity.RecentControlsActivity>[]),
+    [currentFeatureListOver]
+  )
 
   const isHoveredOverlayVisible = !hasMapListener && hoveredItems && hoveredItems.length > 0 && pixel
 
@@ -145,4 +150,4 @@ export function RecentActvityOverlay({ currentFeatureListOver, map, mapClickEven
       )}
     </>
   )
-}
+})

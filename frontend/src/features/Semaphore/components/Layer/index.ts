@@ -3,23 +3,25 @@ import { useGetFilteredReportingsQuery } from '@features/Reportings/hooks/useGet
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { setSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useMemo, useRef } from 'react'
 
 import { getSemaphoreStyle } from './style'
 import { getSemaphoresPoint } from './utils'
 
-import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
+export const SemaphoresLayer = memo(() => {
+  const { map, mapClickEvent } = useMapContext()
+
   const dispatch = useAppDispatch()
   const { displaySemaphoresLayer } = useAppSelector(state => state.global.layers)
   // we don't want to display sempahores on the map if the user so decides (displaySemaphoresLayer variable)
@@ -83,4 +85,4 @@ export function SemaphoresLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
   }, [dispatch, mapClickEvent])
 
   return null
-}
+})

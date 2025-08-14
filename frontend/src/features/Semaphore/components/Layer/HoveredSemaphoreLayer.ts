@@ -1,17 +1,19 @@
+import { useMapContext } from 'context/map/MapContext'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef, type MutableRefObject } from 'react'
+import { memo, useEffect, useRef, type MutableRefObject } from 'react'
 
 import { reportingLinkStyle } from './style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 
-import type { BaseMapChildrenProps } from '../../../map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function HoveredSemaphoreLayer({ currentFeatureOver, map }: BaseMapChildrenProps) {
+export const HoveredSemaphoreLayer = memo(() => {
+  const { currentFeatureOver, map } = useMapContext()
+
   const hoveredSemaphoreVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
     VectorSource<Feature<Geometry>>
   >
@@ -45,4 +47,4 @@ export function HoveredSemaphoreLayer({ currentFeatureOver, map }: BaseMapChildr
   }, [currentFeatureOver])
 
   return null
-}
+})

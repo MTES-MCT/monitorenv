@@ -8,19 +8,21 @@ import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatory
 import { getReportingZoneFeature } from '@features/Reportings/components/ReportingLayer/Reporting/reportingsGeometryHelpers'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
 
 import { getDashboardStyle } from './style'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
+export const DashboardPreviewLayer = memo(() => {
+  const { map } = useMapContext()
+
   const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
@@ -167,4 +169,4 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
   }, [isLayerVisible])
 
   return null
-}
+})

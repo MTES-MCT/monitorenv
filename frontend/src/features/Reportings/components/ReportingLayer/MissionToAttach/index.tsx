@@ -1,10 +1,11 @@
 import { getMissionZoneFeature } from '@features/Mission/components/Layers/missionGeometryHelpers'
 import { missionStyleFn } from '@features/Mission/components/Layers/missions.style'
 import { customDayjs } from '@mtes-mct/monitor-ui'
+import { useMapContext } from 'context/map/MapContext'
 import { convertToFeature } from 'domain/types/map'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { memo, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { useGetMissionsQuery } from '../../../../../api/missionsAPI'
 import { Layers } from '../../../../../domain/entities/layers/constants'
@@ -14,11 +15,12 @@ import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { attachMission } from '../../../useCases/attachMission'
 
 import type { VectorLayerWithName } from '../../../../../domain/types/layer'
-import type { BaseMapChildrenProps } from '../../../../map/BaseMap'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProps) {
+export const MissionToAttachLayer = memo(() => {
+  const { map, mapClickEvent } = useMapContext()
+
   const dispatch = useAppDispatch()
   const isMissionAttachmentInProgress = useAppSelector(
     state => state.attachMissionToReporting.isMissionAttachmentInProgress
@@ -79,4 +81,4 @@ export function MissionToAttachLayer({ map, mapClickEvent }: BaseMapChildrenProp
   }, [dispatch, mapClickEvent])
 
   return null
-}
+})

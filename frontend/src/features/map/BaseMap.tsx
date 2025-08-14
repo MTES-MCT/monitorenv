@@ -1,5 +1,6 @@
 import { MultiRadio, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { isCypress } from '@utils/isCypress'
+import { MapContext } from 'context/map/MapContext'
 import {
   getGeoJSONFromFeature,
   getGeoJSONFromFeatureList,
@@ -13,18 +14,7 @@ import { platformModifierKeyOnly } from 'ol/events/condition'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
 import View from 'ol/View'
-import {
-  Children,
-  cloneElement,
-  memo,
-  type MutableRefObject,
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import { memo, type MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { getHighestPriorityFeatures } from './utils'
@@ -69,7 +59,7 @@ export const initialMap = new OpenLayerMap({
   })
 })
 
-function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
+function BaseMapNotMemoized({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch()
 
   const [mapClickEvent, setMapClickEvent] = useState<MapClickEvent>({
@@ -259,47 +249,45 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
     }
   }
 
-  const memoizedChildren = useMemo(
-    () =>
-      Children.map(
-        children,
-        child =>
-          child &&
-          cloneElement(child, {
-            currentFeatureListOver,
-            currentFeatureOver,
-            map: initialMap,
-            mapClickEvent,
-            pixel
-          })
-      ),
-    [children, currentFeatureListOver, currentFeatureOver, mapClickEvent, pixel]
+  const contextValue = useMemo(
+    () => ({
+      currentFeatureListOver,
+      currentFeatureOver,
+      map: initialMap,
+      mapClickEvent,
+      pixel
+    }),
+    [mapClickEvent, currentFeatureListOver, currentFeatureOver, pixel]
   )
 
-  return (
-    <MapWrapper>
-      <MapContainer ref={mapElement} />
-      {memoizedChildren}
+  const stableChildren = useMemo(() => <>{children}</>, [children])
 
-      <StyledDistanceUnitContainer ref={wrapperRef}>
-        <DistanceUnitsTypeSelection $isOpen={unitsSelectionIsOpen}>
-          <Header onClick={() => setUnitsSelectionIsOpen(false)}>Unités des distances</Header>
-          <MultiRadio
-            isInline
-            isLabelHidden
-            label="Unités de distance"
-            name="unitsDistance"
-            onChange={updateDistanceUnit}
-            options={[
-              { label: 'Nautiques', value: DistanceUnit.NAUTICAL },
-              { label: 'Mètres', value: DistanceUnit.METRIC }
-            ]}
-            value={distanceUnit}
-          />
-        </DistanceUnitsTypeSelection>
-      </StyledDistanceUnitContainer>
-      <StyledScaleLine className="scale-line" id="scale-line" onClick={() => setUnitsSelectionIsOpen(true)} />
-    </MapWrapper>
+  return (
+    <MapContext.Provider value={contextValue}>
+      <MapWrapper>
+        <MapContainer ref={mapElement} />
+        {stableChildren}
+
+        <StyledDistanceUnitContainer ref={wrapperRef}>
+          <DistanceUnitsTypeSelection $isOpen={unitsSelectionIsOpen}>
+            <Header onClick={() => setUnitsSelectionIsOpen(false)}>Unités des distances</Header>
+            <MultiRadio
+              isInline
+              isLabelHidden
+              label="Unités de distance"
+              name="unitsDistance"
+              onChange={updateDistanceUnit}
+              options={[
+                { label: 'Nautiques', value: DistanceUnit.NAUTICAL },
+                { label: 'Mètres', value: DistanceUnit.METRIC }
+              ]}
+              value={distanceUnit}
+            />
+          </DistanceUnitsTypeSelection>
+        </StyledDistanceUnitContainer>
+        <StyledScaleLine className="scale-line" id="scale-line" onClick={() => setUnitsSelectionIsOpen(true)} />
+      </MapWrapper>
+    </MapContext.Provider>
   )
 }
 

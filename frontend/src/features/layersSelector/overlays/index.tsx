@@ -2,19 +2,20 @@ import { getHoveredItems } from '@features/map/utils'
 import { getIsLinkingZonesToVigilanceArea, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useAppSelector, useShallowEqualSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 
 import { HoveredOverlay } from './HoveredOverlay'
 import { PinnedOverlay } from './PinnedOverlay'
 import { OverlayPositionOnCoordinates } from '../../map/overlays/OverlayPositionOnCoordinate'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
-
 export const FEATURE_ID = 'AreaIconFeature'
 
-export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChildrenProps) {
+export const LayersOverlay = memo(() => {
+  const { currentFeatureListOver, map, pixel } = useMapContext()
+
   const { layerOverlayCoordinates, layerOverlayIsOpen, layerOverlayItems } = useShallowEqualSelector(state => ({
     layerOverlayCoordinates: state.layersMetadata.layerOverlayCoordinates,
     layerOverlayIsOpen: state.layersMetadata.layerOverlayIsOpen,
@@ -56,4 +57,4 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
       )}
     </>
   )
-}
+})

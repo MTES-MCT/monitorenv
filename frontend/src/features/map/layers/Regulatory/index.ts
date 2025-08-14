@@ -1,8 +1,9 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
+import { useMapContext } from 'context/map/MapContext'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useMemo, useRef } from 'react'
 
 import { getRegulatoryFeature } from './regulatoryGeometryHelpers'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
@@ -10,14 +11,14 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
+export const RegulatoryLayers = memo(() => {
+  const { map } = useMapContext()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
@@ -89,4 +90,4 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   }, [isLayerVisible])
 
   return null
-}
+})

@@ -5,12 +5,11 @@ import { ReportingCard } from '@features/Reportings/components/ReportingOverlay/
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { findMapFeatureById } from '@utils/findMapFeatureById'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useCallback, useMemo, useState } from 'react'
-
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
+import { memo, useCallback, useMemo, useState } from 'react'
 
 const OPTIONS = {
   margins: {
@@ -22,7 +21,9 @@ const OPTIONS = {
     yTop: -55
   }
 }
-export function DashboardReportingOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
+export const DashboardReportingOverlay = memo(() => {
+  const { currentFeatureOver, map, mapClickEvent } = useMapContext()
+
   const dispatch = useAppDispatch()
   const selectedReporting = useAppSelector(state => getReportingToDisplay(state.dashboard))
   const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
@@ -99,4 +100,4 @@ export function DashboardReportingOverlay({ currentFeatureOver, map, mapClickEve
       </OverlayPositionOnCentroid>
     </>
   )
-}
+})

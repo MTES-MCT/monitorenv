@@ -2,6 +2,7 @@ import { editInterestPoint, removeInterestPoint } from '@features/InterestPoint/
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, usePrevious } from '@mtes-mct/monitor-ui'
+import { useMapContext } from 'context/map/MapContext'
 import { InterestPointLine } from 'domain/entities/interestPointLine'
 import { areCoordinatesModified } from 'domain/entities/interestPoints'
 import { Layers } from 'domain/entities/layers/constants'
@@ -14,7 +15,7 @@ import { Draw } from 'ol/interaction'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { getLength } from 'ol/sphere'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 
 import { InterestPointOverlay } from './InterestPointOverlay'
 import { POIStyle, getInterestPointStyle, getLineStyle } from '../../map/layers/styles/interestPoint.style'
@@ -22,7 +23,6 @@ import { modifyFeatureWhenCoordinatesAreModifiedAction } from '../useCases/layer
 import { startDrawingAction } from '../useCases/layer/startDrawing'
 import { saveInterestPointFeature } from '../useCases/saveInterestPointFeature'
 
-import type { BaseMapChildrenProps } from '../../map/BaseMap'
 import type { NewInterestPoint } from '@features/InterestPoint/types'
 import type { Coordinate } from 'ol/coordinate'
 import type { FeatureLike } from 'ol/Feature'
@@ -31,7 +31,9 @@ const DRAW_END_EVENT = 'drawend'
 
 export const MIN_ZOOM = 7
 
-export function InterestPointLayer({ map }: BaseMapChildrenProps) {
+export const InterestPointLayer = memo(() => {
+  const { map } = useMapContext()
+
   const dispatch = useAppDispatch()
   const displayInterestPointLayer = useAppSelector(state => state.global.layers.displayInterestPointLayer)
 
@@ -270,4 +272,4 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
       )}
     </div>
   )
-}
+})

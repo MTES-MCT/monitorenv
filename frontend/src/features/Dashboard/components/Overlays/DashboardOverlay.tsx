@@ -3,14 +3,13 @@ import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositio
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { findMapFeatureById } from '@utils/findMapFeatureById'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 
 import { DashboardCard } from './DashboardCard'
-
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 const OPTIONS = {
   margins: {
@@ -22,7 +21,9 @@ const OPTIONS = {
     yTop: -55
   }
 }
-export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
+export const DashboardOverlay = memo(() => {
+  const { currentFeatureOver, map, mapClickEvent } = useMapContext()
+
   const dispatch = useAppDispatch()
 
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
@@ -108,4 +109,4 @@ export function DashboardOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
       </OverlayPositionOnCentroid>
     </>
   )
-}
+})

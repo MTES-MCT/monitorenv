@@ -1,19 +1,20 @@
 import { useGetFilteredVigilanceAreasForMapQuery } from '@features/layersSelector/search/hooks/useGetFilteredVigilanceAreasForMapQuery'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
 import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
-export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
+export const PreviewVigilanceAreasLayer = memo(() => {
+  const { map } = useMapContext()
   const displayVigilanceAreaLayer = useAppSelector(state => state.global.layers.displayVigilanceAreaLayer)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
@@ -94,4 +95,4 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   }, [map])
 
   return null
-}
+})

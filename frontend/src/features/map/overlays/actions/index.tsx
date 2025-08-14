@@ -1,4 +1,6 @@
+import { useMapContext } from 'context/map/MapContext'
 import { convertToFeature } from 'domain/types/map'
+import { memo } from 'react'
 
 import { MissionControlCard } from './MissionControlCard'
 import { SurveillanceCard } from './SurveillanceCard'
@@ -6,9 +8,9 @@ import { Layers } from '../../../../domain/entities/layers/constants'
 import { ActionTypeEnum } from '../../../../domain/entities/missions'
 import { OverlayPositionOnCentroid } from '../OverlayPositionOnCentroid'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
+export const ActionOverlay = memo(() => {
+  const { currentFeatureOver, map, mapClickEvent } = useMapContext()
 
-export function ActionOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
   const hoveredFeature = convertToFeature(currentFeatureOver)
   const currentfeatureId = hoveredFeature?.getId()
   const displayHoveredFeature =
@@ -32,4 +34,4 @@ export function ActionOverlay({ currentFeatureOver, map, mapClickEvent }: BaseMa
       {displaySurveillanceCard && <SurveillanceCard feature={hoveredFeature} />}
     </OverlayPositionOnCentroid>
   )
-}
+})

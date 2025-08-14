@@ -20,7 +20,7 @@ import { ReportingToAttachOverlays } from '@features/Mission/components/Overlays
 import { DrawRecentActivityLayer } from '@features/RecentActivity/components/Layers/DrawRecentActivityLayer'
 import { RecentActivityLayerEvents } from '@features/RecentActivity/components/Layers/RecentActivityLayerEvents'
 import { RecentControlsActivityLayer } from '@features/RecentActivity/components/Layers/RecentControlsActivityLayer'
-import { RecentActvityOverlay } from '@features/RecentActivity/components/Overlays'
+import { RecentActivityOverlay } from '@features/RecentActivity/components/Overlays'
 import { RecentActivityLegend } from '@features/RecentActivity/components/RecentActivityLegend'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
 import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/DrawVigilanceAreaLayer'
@@ -28,6 +28,7 @@ import { EditingVigilanceAreaLayer } from '@features/VigilanceArea/components/Vi
 import { PreviewVigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/PreviewVigilanceAreasLayer'
 import { SelectedVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/SelectedVigilanceAreaLayer'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMemo } from 'react'
 
 import { BaseMap } from './BaseMap'
 import { MapAttributionsBox } from './controls/MapAttributionsBox'
@@ -74,151 +75,106 @@ export function Map() {
   const displayRecentActivityLegend =
     (displayRecentActivityLayer || !!activeDashboardId) && !isRecentActivityDialogVisible
 
-  const baseChildren = [
-    // @ts-ignore
-    <ZoomListener key="ZoomListener" />,
-    // @ts-ignore
-    <MapAttributionsBox key="MapAttributionsBox" />,
-    // @ts-ignore
-    <MapCoordinatesBox key="MapCoordinatesBox" />,
-    // @ts-ignore
-    <MapLayer key="MapLayer" />,
-    // @ts-ignore
-    <InterestPointLayer key="InterestPointLayer" />,
+  const baseChildren = useMemo(
+    () => [
+      <ZoomListener key="ZoomListener" />,
+      <MapAttributionsBox key="MapAttributionsBox" />,
+      <MapCoordinatesBox key="MapCoordinatesBox" />,
+      <MapLayer key="MapLayer" />,
 
-    // ZONE
-    // @ts-ignore
-    <AMPLayers key="AMPLayers" />,
-    // @ts-ignore
-    <AMPPreviewLayer key="AMPPreviewLayer" />,
-    // @ts-ignore
-    <RegulatoryLayers key="RegulatoryLayers" />,
-    // @ts-ignore
-    <RegulatoryPreviewLayer key="RegulatoryPreviewLayer" />,
-    // @ts-ignore
-    <AdministrativeLayers key="AdministrativeLayers" />,
-    // @ts-ignore
-    <SearchExtentLayer key="SearchExtentLayer" />,
-    // @ts-ignore
-    <LayerEvents key="LayerEvents" />,
-    // @ts-ignore
-    <LayersOverlay key="LayersOverlay" />,
+      // ZONE
 
-    // MAP
-    // @ts-ignore
-    <MapExtentController key="MapExtentController" />,
-    // @ts-ignore
-    <MapHistory key="MapHistory" />,
+      <AMPLayers key="AMPLayers" />,
+      <AMPPreviewLayer key="AMPPreviewLayer" />,
+      <RegulatoryLayers key="RegulatoryLayers" />,
+      <RegulatoryPreviewLayer key="RegulatoryPreviewLayer" />,
+      <AdministrativeLayers key="AdministrativeLayers" />,
+      <SearchExtentLayer key="SearchExtentLayer" />,
+      <LayerEvents key="LayerEvents" />,
+      <LayersOverlay key="LayersOverlay" />,
 
-    // SEMAPHORE
-    // @ts-ignore
-    <SemaphoresLayer key="SemaphoresLayer" />,
-    // @ts-ignore
-    <SemaphoreOverlay key="SemaphoreOverlay" />,
+      // MAP
+      <MapExtentController key="MapExtentController" />,
+      <MapHistory key="MapHistory" />,
 
-    // REPORTING
-    // @ts-ignore
-    <EditingReportingLayer key="EditingReportingLayer" />,
-    // @ts-ignore
-    <SelectedReportingLayer key="SelectedReportingLayer" />,
-    // @ts-ignore
-    <HoveredReportingLayer key="HoveredReportingLayer" />,
-    // @ts-ignore
-    <ReportingsLayer key="ReportingsLayer" />,
-    // @ts-ignore
-    <ReportingOverlay key="ReportingOverlay" />,
+      // SEMAPHORE
+      <SemaphoresLayer key="SemaphoresLayer" />,
+      <SemaphoreOverlay key="SemaphoreOverlay" />,
 
-    // VIGILANCE AREA
-    // @ts-ignore
-    <VigilanceAreasLayer key="VigilanceAreasLayer" />,
-    // @ts-ignore
-    <PreviewVigilanceAreasLayer key="PreviewVigilanceAreasLayer" />,
-    // @ts-ignore
-    <SelectedVigilanceAreaLayer key="SelectedVigilanceAreaLayer" />,
+      // REPORTING
+      <EditingReportingLayer key="EditingReportingLayer" />,
+      <SelectedReportingLayer key="SelectedReportingLayer" />,
+      <HoveredReportingLayer key="HoveredReportingLayer" />,
+      <ReportingsLayer key="ReportingsLayer" />,
+      <ReportingOverlay key="ReportingOverlay" />,
 
-    // RECENT ACTIVITY
-    // @ts-ignore
-    <RecentControlsActivityLayer key="RecentControlsActivityLayer" />,
-    // @ts-ignore
-    <DrawRecentActivityLayer key="DrawRecentActivityLayer" />,
-    // @ts-ignore
-    <RecentActivityLayerEvents key="RecentActivityLayerEvents" />,
-    // @ts-ignore
-    <RecentActvityOverlay key="RecentActvityOverlay" />,
-    // @ts-ignore
-    displayRecentActivityLegend ? <RecentActivityLegend key="RecentActivityLegend" location="OUTSIDE" /> : null,
+      // VIGILANCE AREA
+      <VigilanceAreasLayer key="VigilanceAreasLayer" />,
+      <PreviewVigilanceAreasLayer key="PreviewVigilanceAreasLayer" />,
+      <SelectedVigilanceAreaLayer key="SelectedVigilanceAreaLayer" />,
 
-    // LOCALIZED AREAS
-    // @ts-ignore
-    <LocalizedAreasLayer key="LocalizedAreasLayer" />,
+      // RECENT ACTIVITY
+      <RecentControlsActivityLayer key="RecentControlsActivityLayer" />,
+      <DrawRecentActivityLayer key="DrawRecentActivityLayer" />,
+      <RecentActivityLayerEvents key="RecentActivityLayerEvents" />,
+      <RecentActivityOverlay key="RecentActivityOverlay" />,
 
-    // LOCATE ON MAP
-    // @ts-ignore
-    <LocateOnMapLayer key="LocateOnMapLayer" />
-  ]
+      displayRecentActivityLegend ? <RecentActivityLegend key="RecentActivityLegend" location="OUTSIDE" /> : null,
 
-  const superUserChildren = isSuperUser
-    ? [
-        // @ts-ignore
-        <MeasurementLayer key="MeasurementLayer" />,
-        // @ts-ignore
-        <DrawLayer key="DrawLayer" />,
-        // @ts-ignore
-        <MissionsLayer key="MissionsLayer" />,
-        // @ts-ignore
-        <SelectedMissionLayer key="SelectedMissionLayer" />,
-        // @ts-ignore
-        <EditingMissionLayer key="EditingMissionLayer" />,
-        // @ts-ignore
-        <HoveredMissionLayer key="HoveredMissionLayer" />,
-        // @ts-ignore
-        <MissionOverlays key="MissionOverlays" />,
-        // @ts-ignore
-        <ActionOverlay key="ActionOverlay" />,
-        // @ts-ignore
-        <ReportingToAttachLayer key="ReportingToAttachLayer" />,
-        // @ts-ignore
-        <HoveredReportingToAttachLayer key="HoveredReportingToAttachLayer" />,
-        // @ts-ignore
-        <ReportingToAttachOverlays key="ReportingToAttachOverlays" />,
-        // @ts-ignore
-        <HoveredSemaphoreLayer key="HoveredSemaphoreLayer" />,
-        // @ts-ignore
-        <SelectedSemaphoreLayer key="SelectedSemaphoreLayer" />,
-        // @ts-ignore
-        <MissionToAttachLayer key="MissionToAttachLayer" />,
-        // @ts-ignore
-        <HoveredMissionToAttachLayer key="HoveredMissionToAttachLayer" />,
-        // @ts-ignore
-        <SelectedMissionToAttachLayer key="SelectedMissionToAttachLayer" />,
-        // @ts-ignore
-        <MissionToAttachOverlays key="MissionToAttachOverlays" />,
-        // @ts-ignore
-        <StationLayer key="StationLayer" />,
-        // @ts-ignore
-        <StationOverlay key="StationOverlay" />,
-        // @ts-ignore
-        <DrawVigilanceAreaLayer key="DrawVigilanceAreaLayer" />,
-        // @ts-ignore
-        <EditingVigilanceAreaLayer key="EditingVigilanceAreaLayer" />,
-        // @ts-ignore
-        <DrawDashboardLayer key="DrawDashboardLayer" />,
-        // @ts-ignore
-        <ActiveDashboardLayer key="ActiveDashboardLayer" />,
-        // @ts-ignore
-        <DashboardPreviewLayer key="DashboardPreviewLayer" />,
-        // @ts-ignore
-        <DashboardReportingOverlay key="DashboardReportingOverlay" />,
-        // @ts-ignore
-        <DashboardOverlay key="DashboardOverlay" />,
-        // @ts-ignore
-        <DashboardsLayer key="DashboardsLayer" />,
-        // @ts-ignore
-        <SelectedDashboardLayer key="SelectedDashboardLayer" />,
-        // @ts-ignore
-        <DashboardRecentActivityLayer key="DashboardRecentActivityLayer" />
-      ]
-    : []
+      // LOCALIZED AREAS
+      <LocalizedAreasLayer key="LocalizedAreasLayer" />,
+
+      // LOCATE ON MAP
+      <LocateOnMapLayer key="LocateOnMapLayer" />
+    ],
+    [displayRecentActivityLegend]
+  )
+
+  const superUserChildren = useMemo(() => {
+    if (!isSuperUser) {
+      return []
+    }
+
+    return [
+      <MeasurementLayer key="MeasurementLayer" />,
+      <InterestPointLayer key="InterestPointLayer" />,
+      <DrawLayer key="DrawLayer" />,
+
+      <MissionsLayer key="MissionsLayer" />,
+      <SelectedMissionLayer key="SelectedMissionLayer" />,
+      <EditingMissionLayer key="EditingMissionLayer" />,
+      <HoveredMissionLayer key="HoveredMissionLayer" />,
+      <MissionOverlays key="MissionOverlays" />,
+      <ActionOverlay key="ActionOverlay" />,
+
+      <ReportingToAttachLayer key="ReportingToAttachLayer" />,
+      <HoveredReportingToAttachLayer key="HoveredReportingToAttachLayer" />,
+      <ReportingToAttachOverlays key="ReportingToAttachOverlays" />,
+
+      <HoveredSemaphoreLayer key="HoveredSemaphoreLayer" />,
+      <SelectedSemaphoreLayer key="SelectedSemaphoreLayer" />,
+
+      <MissionToAttachLayer key="MissionToAttachLayer" />,
+      <HoveredMissionToAttachLayer key="HoveredMissionToAttachLayer" />,
+      <SelectedMissionToAttachLayer key="SelectedMissionToAttachLayer" />,
+      <MissionToAttachOverlays key="MissionToAttachOverlays" />,
+
+      <StationLayer key="StationLayer" />,
+      <StationOverlay key="StationOverlay" />,
+
+      <DrawVigilanceAreaLayer key="DrawVigilanceAreaLayer" />,
+      <EditingVigilanceAreaLayer key="EditingVigilanceAreaLayer" />,
+
+      <DrawDashboardLayer key="DrawDashboardLayer" />,
+      <ActiveDashboardLayer key="ActiveDashboardLayer" />,
+      <DashboardPreviewLayer key="DashboardPreviewLayer" />,
+      <DashboardReportingOverlay key="DashboardReportingOverlay" />,
+      <DashboardOverlay key="DashboardOverlay" />,
+      <DashboardsLayer key="DashboardsLayer" />,
+      <SelectedDashboardLayer key="SelectedDashboardLayer" />,
+      <DashboardRecentActivityLayer key="DashboardRecentActivityLayer" />
+    ]
+  }, [isSuperUser])
 
   return (
     <BaseMap

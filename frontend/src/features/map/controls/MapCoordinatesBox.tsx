@@ -1,5 +1,6 @@
 import { getCoordinates, getOptionsFromLabelledEnum, MultiRadio, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
-import { useEffect, useRef, useState } from 'react'
+import { useMapContext } from 'context/map/MapContext'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { CoordinatesFormat, CoordinatesFormatLabel } from '../../../domain/entities/map/constants'
@@ -8,7 +9,6 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../../hooks/useClickOutsideWhenOpened'
 
-import type { BaseMapChildrenProps } from '../BaseMap'
 import type { Coordinate } from 'ol/coordinate'
 
 let lastEventForPointerMove
@@ -16,7 +16,8 @@ let timeoutForPointerMove
 
 const COORDINATES_OPTIONS = getOptionsFromLabelledEnum(CoordinatesFormatLabel)
 
-export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
+export const MapCoordinatesBox = memo(() => {
+  const { map } = useMapContext()
   const [coordinates, setCursorCoordinates] = useState<Coordinate>()
 
   useEffect(() => {
@@ -75,6 +76,16 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
     }
   }, [clickedOutsideComponent])
 
+  const getShowedCoordinates = useCallback(() => {
+    const transformedCoordinates = getCoordinates(coordinates, OPENLAYERS_PROJECTION, coordinatesFormat)
+
+    if (Array.isArray(transformedCoordinates) && transformedCoordinates.length === 2) {
+      return `${transformedCoordinates[0]} ${transformedCoordinates[1]}`
+    }
+
+    return ''
+  }, [coordinates, coordinatesFormat])
+
   return (
     <div ref={wrapperRef}>
       <CoordinatesTypeSelection $isOpen={coordinatesSelectionIsOpen}>
@@ -93,21 +104,11 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
         />
       </CoordinatesTypeSelection>
       <Coordinates onClick={() => setCoordinatesSelectionIsOpen(!coordinatesSelectionIsOpen)}>
-        {getShowedCoordinates(coordinates, coordinatesFormat)} ({coordinatesFormat})
+        {getShowedCoordinates()} ({coordinatesFormat})
       </Coordinates>
     </div>
   )
-}
-
-const getShowedCoordinates = (coordinates, coordinatesFormat) => {
-  const transformedCoordinates = getCoordinates(coordinates, OPENLAYERS_PROJECTION, coordinatesFormat)
-
-  if (Array.isArray(transformedCoordinates) && transformedCoordinates.length === 2) {
-    return `${transformedCoordinates[0]} ${transformedCoordinates[1]}`
-  }
-
-  return ''
-}
+})
 
 const StyledMultiRadio = styled(MultiRadio)`
   padding: 12px;

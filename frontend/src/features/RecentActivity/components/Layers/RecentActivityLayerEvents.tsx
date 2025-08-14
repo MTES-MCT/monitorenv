@@ -5,6 +5,7 @@ import { updateSelectedControlId } from '@features/RecentActivity/useCases/updat
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useTracking } from '@hooks/useTracking'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { getOverlayCoordinates } from 'domain/shared_slices/Global'
 import { type OverlayItem } from 'domain/types/map'
@@ -13,14 +14,14 @@ import { Feature } from 'ol'
 import { Point } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 
 import { FEATURE_ID } from '../Overlays'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { RecentActivity } from '@features/RecentActivity/types'
 
-export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
+export const RecentActivityLayerEvents = memo(() => {
+  const { map, mapClickEvent } = useMapContext()
   const dispatch = useAppDispatch()
   const { trackEvent } = useTracking()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
@@ -128,4 +129,4 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
   }, [dispatch, mapClickEvent])
 
   return null
-}
+})

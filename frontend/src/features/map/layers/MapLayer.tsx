@@ -1,16 +1,15 @@
+import { useMapContext } from 'context/map/MapContext'
 import TileLayer from 'ol/layer/Tile'
 import { OSM } from 'ol/source'
 import TileWMS from 'ol/source/TileWMS'
 import XYZ from 'ol/source/XYZ'
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 
 import { Layers } from '../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
-type MapLayerProps = {
-  map?: any
-}
-export function MapLayer({ map }: MapLayerProps) {
+export const MapLayer = memo(() => {
+  const { map } = useMapContext()
   const selectedBaseLayer = useAppSelector(state => state.map.selectedBaseLayer)
 
   const [baseLayersObjects] = useState({
@@ -67,7 +66,9 @@ export function MapLayer({ map }: MapLayerProps) {
     function showAnotherBaseLayer() {
       const olLayers = map.getLayers()
       // eslint-disable-next-line no-underscore-dangle
-      const layerToRemove = olLayers.getArray().find(layer => layer.className_ === Layers.BASE_LAYER.code)
+      const layerToRemove = olLayers
+        .getArray()
+        .find(layer => typeof layer.getClassName === 'function' && layer.getClassName() === Layers.BASE_LAYER.code)
 
       olLayers.insertAt(0, baseLayersObjects[selectedBaseLayer]())
 
@@ -89,6 +90,4 @@ export function MapLayer({ map }: MapLayerProps) {
   }, [baseLayersObjects, map, selectedBaseLayer])
 
   return null
-}
-
-MapLayer.displayName = 'MapLayer'
+})

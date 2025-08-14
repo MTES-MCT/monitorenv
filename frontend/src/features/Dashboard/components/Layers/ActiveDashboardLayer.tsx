@@ -10,20 +10,22 @@ import { getReportingZoneFeature } from '@features/Reportings/components/Reporti
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { getFeature } from '@utils/getFeature'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
 
 import { dashboardIcon, getDashboardStyle } from './style'
 import { Dashboard } from '../../types'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
-export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
+export const ActiveDashboardLayer = memo(() => {
+  const { map } = useMapContext()
+
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
@@ -198,4 +200,4 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   }, [isLayerVisible])
 
   return null
-}
+})

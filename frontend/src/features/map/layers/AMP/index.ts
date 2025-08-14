@@ -1,8 +1,9 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
+import { useMapContext } from 'context/map/MapContext'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { memo, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
 import { getAMPFeature } from './AMPGeometryHelpers'
 import { getAMPLayerStyle } from './AMPLayers.style'
@@ -10,14 +11,14 @@ import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
-export function AMPLayers({ map }: BaseMapChildrenProps) {
+export const AMPLayers = memo(() => {
+  const { map } = useMapContext()
   const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
   const showedAmpMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
@@ -87,4 +88,4 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
   }, [isLayerVisible])
 
   return null
-}
+})

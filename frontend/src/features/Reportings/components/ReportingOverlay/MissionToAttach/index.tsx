@@ -1,10 +1,10 @@
 import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositionOnCentroid'
 import { MissionCard } from '@features/Mission/components/Overlays/MissionCard'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { convertToFeature } from 'domain/types/map'
-
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
+import { memo } from 'react'
 
 const OPTIONS = {
   margins: {
@@ -17,7 +17,9 @@ const OPTIONS = {
   }
 }
 
-export function MissionToAttachOverlays({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
+export const MissionToAttachOverlays = memo(() => {
+  const { currentFeatureOver, map, mapClickEvent } = useMapContext()
+
   const displayMissionToAttachLayer = useAppSelector(state => state.global.layers.displayMissionToAttachLayer)
   const feature = convertToFeature(currentFeatureOver)
   const currentfeatureId = feature?.getId()
@@ -36,4 +38,4 @@ export function MissionToAttachOverlays({ currentFeatureOver, map, mapClickEvent
       <MissionCard feature={feature} isOnlyHoverable />
     </OverlayPositionOnCentroid>
   )
-}
+})

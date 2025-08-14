@@ -1,18 +1,18 @@
 import { useGetLocalizedAreasQuery } from '@api/localizedAreasAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
 import { GeoJSON } from 'ol/format'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { getArea } from 'ol/sphere'
-import { type MutableRefObject, useEffect, useRef } from 'react'
+import { type MutableRefObject, memo, useEffect, useRef } from 'react'
 
 import { localizedAreaStyle } from './style'
 
 import type { LocalizedArea } from '@features/LocalizedArea/types'
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
@@ -38,7 +38,8 @@ const getLocalizedAreaZoneFeature = (localizedArea: LocalizedArea.LocalizedArea)
   return feature
 }
 
-export function LocalizedAreasLayer({ map }: BaseMapChildrenProps) {
+export const LocalizedAreasLayer = memo(() => {
+  const { map } = useMapContext()
   const { showedLocalizedAreaLayerIds } = useAppSelector(state => state.localizedArea)
 
   const { data: localizedAreas } = useGetLocalizedAreasQuery()
@@ -84,4 +85,4 @@ export function LocalizedAreasLayer({ map }: BaseMapChildrenProps) {
   }, [localizedAreas, showedLocalizedAreaLayerIds])
 
   return null
-}
+})

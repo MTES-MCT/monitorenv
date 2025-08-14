@@ -1,14 +1,13 @@
 import { OverlayPositionOnCentroid } from '@features/map/overlays/OverlayPositionOnCentroid'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { findMapFeatureById } from '@utils/findMapFeatureById'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { isOverlayOpened } from 'domain/shared_slices/Global'
 import { convertToFeature } from 'domain/types/map'
-import { useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 
 import { MissionCard } from './MissionCard'
-
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 const OPTIONS = {
   margins: {
@@ -21,7 +20,9 @@ const OPTIONS = {
   }
 }
 
-export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: BaseMapChildrenProps) {
+export const MissionOverlays = memo(() => {
+  const { currentFeatureOver, map, mapClickEvent } = useMapContext()
+
   const selectedMissionId = useAppSelector(state => state.mission.selectedMissionIdOnMap)
 
   const [missionHoveredOptions, setMissionHoveredOptions] = useState(OPTIONS)
@@ -87,4 +88,4 @@ export function MissionOverlays({ currentFeatureOver, map, mapClickEvent }: Base
       </OverlayPositionOnCentroid>
     </>
   )
-}
+})
