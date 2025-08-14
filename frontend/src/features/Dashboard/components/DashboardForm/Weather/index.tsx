@@ -62,16 +62,16 @@ export const Weather = forwardRef<HTMLDivElement, WeatherProps>(({ geom, isExpan
     >
       {coordinates ? (
         <WindyContainer>
-          {/* <iframe */}
-          {/*   allowFullScreen */}
-          {/*   height="100%" */}
-          {/*   src={`https://embed.windy.com/embed2.html?lat=${coordinates.latitude}&lon=${coordinates.longitude}&zoom=7`} */}
-          {/*   style={{ */}
-          {/*     border: 'none' */}
-          {/*   }} */}
-          {/*   title="windy weather" */}
-          {/*   width="100%" */}
-          {/* /> */}
+          <iframe
+            allowFullScreen
+            height="100%"
+            src={`https://embed.windy.com/embed2.html?lat=${coordinates.latitude}&lon=${coordinates.longitude}&zoom=7`}
+            style={{
+              border: 'none'
+            }}
+            title="windy weather"
+            width="100%"
+          />
         </WindyContainer>
       ) : (
         <CoordinatesError>Nous n&apos;avons pas pu calculer l&apos;emplacement </CoordinatesError>
