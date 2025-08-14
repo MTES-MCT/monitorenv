@@ -65,7 +65,7 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-edit').click()
 
       // The interest point is moved to the East side
-      cy.getDataCy('dms-coordinates-input').eq(1).type('{backspace}E')
+      cy.getDataCy('dms-coordinates-input').type('{backspace}E')
       cy.getDataCy('interest-point-save').click()
 
       // Then
@@ -75,7 +75,7 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-edit').should('not.be.visible')
       // Force because the interest point is not in the DOM anymore
       cy.getDataCy('interest-point-edit').click({ force: true })
-      cy.getDataCy('dms-coordinates-input').eq(1).should('have.value', '47° 42′ 07″ N 007° 54′ 51″ E')
+      cy.getDataCy('dms-coordinates-input').should('have.value', '47° 42′ 07″ N 007° 54′ 51″ E')
       cy.get('.rs-radio').first().should('have.class', 'rs-radio-checked')
       cy.getDataCy('interest-point-save').click()
 
@@ -237,7 +237,7 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-observations').should('have.length', 1)
 
       cy.getDataCy('interest-point').click()
-      cy.getDataCy('dms-coordinates-input').eq(1).should('have.value', '__° __′ __″ _ ___° __′ __″ _')
+      cy.getDataCy('dms-coordinates-input').should('have.value', '__° __′ __″ _ ___° __′ __″ _')
       cy.get('#root').click(300, 430)
       cy.getDataCy('interest-point-name-input').type('Phénomène 2')
       cy.getDataCy('interest-point-observations-input').type('Est encore dans la bergerie')
@@ -246,11 +246,12 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-observations').eq(0).contains('Est encore dans la bergerie')
 
       cy.getDataCy('interest-point').click()
-      cy.getDataCy('dms-coordinates-input').eq(1).should('have.value', '__° __′ __″ _ ___° __′ __″ _')
+      cy.getDataCy('dms-coordinates-input').should('have.value', '__° __′ __″ _ ___° __′ __″ _')
       cy.get('#root').click(650, 690)
       cy.getDataCy('interest-point-name-input').type('Phénomène 3')
       cy.getDataCy('interest-point-observations-input').type('Est encore encore dans la bergerie')
       cy.getDataCy('interest-point-save').click()
+      cy.getDataCy('interest-point-observations').should('have.length', 3)
       cy.getDataCy('interest-point-observations').should('have.length', 3)
       cy.getDataCy('interest-point-observations').eq(0).contains('Est encore encore dans la bergerie')
     })
