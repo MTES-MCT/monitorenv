@@ -14,13 +14,11 @@ import { isMissionNew } from '../../utils'
 import type { Mission as MissionType, NewMission } from '../../../../domain/entities/missions'
 
 export function MissionFormWrapper() {
-  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
-
   const selectedMission = useAppSelector(state => getActiveMission(state.missionForms))
+  const activeMissionId = selectedMission?.missionForm?.id
+  const engagedControlUnit = useMemo(() => selectedMission?.engagedControlUnit, [selectedMission])
 
-  const engagedControlUnit = selectedMission?.engagedControlUnit
-
-  const activeAction = selectedMission?.activeAction
+  const activeAction = useMemo(() => selectedMission?.activeAction, [selectedMission])
 
   const missionIsNewMission = useMemo(() => isMissionNew(activeMissionId), [activeMissionId])
 
@@ -61,7 +59,7 @@ export function MissionFormWrapper() {
       )}
 
       <Formik
-        key={missionValues.id}
+        key={activeMissionId}
         enableReinitialize
         initialValues={missionValues}
         onSubmit={noop}

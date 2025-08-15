@@ -1,3 +1,4 @@
+import { useGetThemesQuery } from '@api/themesAPI'
 import { actionFactory } from '@features/Mission/Missions.helpers'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -79,6 +80,10 @@ export function ControlForm({
 
   const envActionIndex = envActions.findIndex(envAction => envAction.id === currentActionId)
   const currentAction = envActions?.[envActionIndex]
+
+  const startDate = currentAction?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
+  const { data } = useGetThemesQuery([startDate, startDate])
+  const themes = useMemo(() => Object.values(data ?? []), [data])
 
   const targetTypeOptions = getOptionsFromLabelledEnum(TargetTypeLabels)
 
@@ -184,10 +189,6 @@ export function ControlForm({
       setFieldValue(`envActions[${envActionIndex}].themes`, undefined)
     }
     setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
-  }
-
-  const handleRemoveAction = () => {
-    removeControlAction()
   }
 
   const duplicateControl = useCallback(() => {
@@ -353,7 +354,7 @@ export function ControlForm({
           <StyledDeleteIconButton
             accent={Accent.SECONDARY}
             Icon={Icon.Delete}
-            onClick={handleRemoveAction}
+            onClick={removeControlAction}
             size={Size.SMALL}
             title="Supprimer le contrôle"
           />
@@ -388,7 +389,7 @@ export function ControlForm({
           )}
         </div>
 
-        <ActionThemes actionIndex={envActionIndex} actionType={ActionTypeEnum.CONTROL} />
+        <ActionThemes actionIndex={envActionIndex} actionType={ActionTypeEnum.CONTROL} themes={themes} />
         <ActionTags actionIndex={envActionIndex} />
 
         <div>
