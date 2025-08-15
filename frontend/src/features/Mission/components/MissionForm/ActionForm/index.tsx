@@ -1,5 +1,5 @@
 import { useField } from 'formik'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ControlForm } from './ControlForm'
@@ -16,16 +16,17 @@ type ActionFormProps = {
 }
 export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormProps) {
   const [attachedReportingsField] = useField<Reporting[]>('attachedReportings')
-  const reportingActionIndex = (attachedReportingsField.value ?? []).findIndex(
-    reporting => reporting.id === currentActionId
+  const reportingActionIndex = useMemo(
+    () => (attachedReportingsField.value ?? []).findIndex(reporting => reporting.id === currentActionId),
+    [attachedReportingsField.value, currentActionId]
   )
 
-  const [reportingField] = useField<Reporting>(`attachedReportings.${reportingActionIndex}`)
-
   const [envActionsField, , envActionsHelper] = useField<EnvAction[]>('envActions')
-  const envActionIndex = (envActionsField.value ?? []).findIndex(envAction => envAction.id === currentActionId)
-  const [actionTypeField] = useField<ActionTypeEnum>(`envActions.${envActionIndex}.actionType`)
-  const [actionIdField] = useField<EnvAction['id']>(`envActions.${envActionIndex}.id`)
+  const envActionIndex = useMemo(
+    () => (envActionsField.value ?? []).findIndex(envAction => envAction.id === currentActionId),
+    [envActionsField.value, currentActionId]
+  )
+  const currentEnvAction = useMemo(() => envActionsField.value[envActionIndex], [envActionsField.value, envActionIndex])
 
   const removeAction = useCallback(() => {
     const actionsToUpdate = [...(envActionsField.value || [])]
@@ -42,11 +43,12 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
       </FormWrapper>
     )
   }
+
   if (reportingActionIndex !== -1) {
     return (
       <ReportingFormWrapper>
         <ReportingForm
-          key={reportingField.value.id}
+          key={attachedReportingsField.value[reportingActionIndex]?.id}
           reportingActionIndex={reportingActionIndex}
           setCurrentActionId={setCurrentActionId}
         />
@@ -54,13 +56,13 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
     )
   }
 
-  if (envActionIndex !== -1) {
-    switch (actionTypeField.value) {
+  if (currentEnvAction && envActionIndex !== -1) {
+    switch (currentEnvAction.actionType) {
       case ActionTypeEnum.CONTROL:
         return (
           <FormWrapper>
             <ControlForm
-              key={actionIdField.value}
+              key={currentEnvAction?.id}
               currentActionId={currentActionId}
               removeControlAction={removeAction}
             />
@@ -69,13 +71,13 @@ export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormPr
       case ActionTypeEnum.SURVEILLANCE:
         return (
           <FormWrapper>
-            <SurveillanceForm key={actionIdField.value} currentActionId={currentActionId} remove={removeAction} />
+            <SurveillanceForm key={currentEnvAction.id} currentActionId={currentActionId} onRemove={removeAction} />
           </FormWrapper>
         )
       case ActionTypeEnum.NOTE:
         return (
           <FormWrapper>
-            <NoteForm key={actionIdField.value} currentActionId={currentActionId} remove={removeAction} />
+            <NoteForm key={currentEnvAction.id} currentActionId={currentActionId} remove={removeAction} />
           </FormWrapper>
         )
 

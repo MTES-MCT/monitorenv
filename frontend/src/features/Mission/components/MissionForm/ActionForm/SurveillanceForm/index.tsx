@@ -54,7 +54,7 @@ import {
 import { ActionTags } from '../Tags/ActionTags'
 import { ActionThemes } from '../Themes/ActionThemes'
 
-export function SurveillanceForm({ currentActionId, remove }) {
+export function SurveillanceForm({ currentActionId, onRemove }: { currentActionId: string; onRemove: () => void }) {
   const { newWindowContainerRef } = useNewWindow()
 
   const dispatch = useAppDispatch()
@@ -69,9 +69,12 @@ export function SurveillanceForm({ currentActionId, remove }) {
 
   const [actionsFields] = useField<EnvAction[]>('envActions')
 
-  const envActionIndex = actionsFields.value.findIndex(envAction => envAction.id === currentActionId)
+  const envActionIndex = useMemo(
+    () => actionsFields.value.findIndex(envAction => envAction.id === currentActionId),
+    [actionsFields.value, currentActionId]
+  )
 
-  const currentAction = envActions[envActionIndex]
+  const currentAction = useMemo(() => envActions[envActionIndex], [envActions, envActionIndex])
 
   const startDate = envActions[envActionIndex]?.actionStartDateTimeUtc ?? startDateTimeUtc ?? new Date().toISOString()
 
@@ -81,21 +84,21 @@ export function SurveillanceForm({ currentActionId, remove }) {
     [envActionIndex, errors?.envActions]
   ) as FormikErrors<EnvActionSurveillance>
 
-  const [durationMatchMissionField] = useField(`envActions[${envActionIndex}].durationMatchesMission`)
-
-  const [envActionField] = useField(`envActions[${envActionIndex}]`)
-
   const surveillances = actionsFields.value.filter(action => action.actionType === ActionTypeEnum.SURVEILLANCE)
 
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length >= 1)
 
   const { data } = useGetThemesQuery([startDate, startDate])
+  const themes = useMemo(() => Object.values(data ?? []), [data])
+  const themesOptions = useMemo(() => getThemesAsOptions(themes), [themes])
 
-  const themesOptions = useMemo(() => getThemesAsOptions(Object.values(data ?? [])), [data])
-
-  const awarenessOptions = themesOptions
-    .filter(theme => currentAction?.themes?.map(({ id }) => id).includes(theme.id))
-    .map(({ id, name }) => ({ label: name, value: id }))
+  const awarenessOptions = useMemo(
+    () =>
+      themesOptions
+        .filter(theme => currentAction?.themes?.map(({ id }) => id).includes(theme.id))
+        .map(({ id, name }) => ({ label: name, value: id })),
+    [themesOptions, currentAction?.themes]
+  )
 
   const reportingAsOptions = useMemo(
     () =>
@@ -149,15 +152,6 @@ export function SurveillanceForm({ currentActionId, remove }) {
     })
   }
 
-  const duration = dateDifferenceInHours(
-    envActionField.value.actionStartDateTimeUtc,
-    envActionField.value.actionEndDateTimeUtc
-  )
-
-  const handleRemoveAction = () => {
-    remove(envActionIndex)
-  }
-
   const duplicateSurveillance = useCallback(() => {
     if (!currentAction) {
       return
@@ -170,7 +164,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
     dispatch(missionFormsActions.setActiveActionId(duplicatedAction.id))
   }, [currentAction, setFieldValue, envActions, dispatch])
 
-  const actualYearForThemes = customDayjs(startDate).year()
+  const actualYearForThemes = useMemo(() => customDayjs(startDate).year(), [startDate])
 
   const updateStartDateTime = (date: string | undefined) => {
     const newSurveillanceDateYear = date ? customDayjs(date).year() : undefined
@@ -180,10 +174,10 @@ export function SurveillanceForm({ currentActionId, remove }) {
 
     setFieldValue(`envActions[${envActionIndex}].actionStartDateTimeUtc`, date)
   }
+
   const updateEndDateTime = (date: string | undefined) => {
     setFieldValue(`envActions[${envActionIndex}].actionEndDateTimeUtc`, date)
   }
-
   useEffect(() => {
     if (actionsMissingFields[currentActionId] === 0 && currentAction?.completion === CompletionStatus.TO_COMPLETE) {
       setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.COMPLETED)
@@ -195,6 +189,12 @@ export function SurveillanceForm({ currentActionId, remove }) {
       setFieldValue(`envActions[${envActionIndex}].completion`, CompletionStatus.TO_COMPLETE)
     }
   }, [actionsMissingFields, setFieldValue, currentActionId, currentAction?.completion, envActionIndex])
+
+  if (!currentAction) {
+    return null
+  }
+
+  const duration = dateDifferenceInHours(currentAction.actionStartDateTimeUtc, currentAction.actionEndDateTimeUtc)
 
   return (
     <>
@@ -219,7 +219,7 @@ export function SurveillanceForm({ currentActionId, remove }) {
           <StyledDeleteIconButton
             accent={Accent.SECONDARY}
             Icon={Icon.Delete}
-            onClick={handleRemoveAction}
+            onClick={onRemove}
             size={Size.SMALL}
             title="Supprimer la surveillance"
           />
@@ -252,17 +252,17 @@ export function SurveillanceForm({ currentActionId, remove }) {
             />
           )}
         </div>
-        <ActionThemes actionIndex={envActionIndex} actionType={ActionTypeEnum.SURVEILLANCE} />
+        <ActionThemes actionIndex={envActionIndex} actionType={ActionTypeEnum.SURVEILLANCE} themes={themes} />
         <ActionTags actionIndex={envActionIndex} />
         <FlexSelectorWrapper>
           <Label $isRequired>Début et fin de surveillance (UTC)</Label>
           <StyledDatePickerContainer>
             <StyledDatePicker
-              key={`start-date-${durationMatchMissionField.value}`}
+              key={`start-date-${currentAction.durationMatchesMission}`}
               baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-start-date-time"
               defaultValue={currentAction?.actionStartDateTimeUtc ?? undefined}
-              disabled={!!durationMatchMissionField.value}
+              disabled={!!currentAction.durationMatchesMission}
               error={actionErrors?.actionStartDateTimeUtc}
               isCompact
               isErrorMessageHidden
@@ -276,11 +276,11 @@ export function SurveillanceForm({ currentActionId, remove }) {
               withTime
             />
             <StyledDatePicker
-              key={`end-date-${durationMatchMissionField.value}`}
+              key={`end-date-${currentAction.durationMatchesMission}`}
               baseContainer={newWindowContainerRef.current}
               data-cy="surveillance-end-date-time"
               defaultValue={currentAction?.actionEndDateTimeUtc ?? undefined}
-              disabled={!!durationMatchMissionField.value}
+              disabled={!!currentAction.durationMatchesMission}
               error={actionErrors?.actionEndDateTimeUtc}
               isCompact
               isErrorMessageHidden
@@ -293,13 +293,12 @@ export function SurveillanceForm({ currentActionId, remove }) {
               onChange={updateEndDateTime}
               withTime
             />
-            {envActionField.value.actionStartDateTimeUtc && envActionField.value.actionEndDateTimeUtc && (
+            {currentAction.actionStartDateTimeUtc && currentAction.actionEndDateTimeUtc && (
               <StyledDuration>
                 {duration === 0 ? "(Moins d'1 heure)" : `(${duration} ${pluralize('heure', duration)})`}
               </StyledDuration>
             )}
           </StyledDatePickerContainer>
-          {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
           {actionErrors?.actionStartDateTimeUtc && actionErrors?.actionStartDateTimeUtc !== HIDDEN_ERROR && (
             <FieldError>{actionErrors?.actionStartDateTimeUtc}</FieldError>
           )}
@@ -339,7 +338,6 @@ export function SurveillanceForm({ currentActionId, remove }) {
               name={`envActions[${envActionIndex}].completedBy`}
             />
           </StyledAuthorContainer>
-          {/* We simply want to display an error if the fields are not consistent, not if it's just a "field required" error. */}
           {actionErrors?.openBy && actionErrors?.openBy !== HIDDEN_ERROR && (
             <FieldError>{actionErrors.openBy}</FieldError>
           )}

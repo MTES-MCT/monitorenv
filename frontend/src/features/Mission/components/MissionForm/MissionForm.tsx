@@ -12,7 +12,7 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { useMissionEventContext } from 'context/mission/useMissionEventContext'
 import { useFormikContext } from 'formik'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { generatePath } from 'react-router'
 import styled from 'styled-components'
 import { useDebouncedCallback } from 'use-debounce'
@@ -124,9 +124,12 @@ export function MissionForm({
     }
   }, [attachedReportingIds, values?.attachedReportingIds?.length, setFieldValue, attachedReportings])
 
-  const handleSetCurrentActionId = (actionId: string | undefined) => {
-    dispatch(missionFormsActions.setActiveActionId(actionId))
-  }
+  const handleSetCurrentActionId = useCallback(
+    (actionId: string | undefined) => {
+      dispatch(missionFormsActions.setActiveActionId(actionId))
+    },
+    [dispatch]
+  )
 
   const returnToEdition = () => {
     dispatch(sideWindowActions.setShowConfirmCancelModal(false))
