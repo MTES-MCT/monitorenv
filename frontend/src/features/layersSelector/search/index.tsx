@@ -1,5 +1,4 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { TransparentButton } from '@components/style'
 import { NumberOfFilters } from '@features/map/shared/style'
 import {
   INITIAL_STATE,
@@ -174,10 +173,4 @@ const SearchContainer = styled.div`
 `
 const Search = styled.div`
   width: 352px;
-`
-
-export const StyledTransparentButton = styled(TransparentButton)`
-  display: flex;
-  align-items: center;
-  width: 80%;
 `

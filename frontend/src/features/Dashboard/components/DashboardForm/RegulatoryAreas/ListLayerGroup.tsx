@@ -1,7 +1,7 @@
 import { getNumberOfRegulatoryLayerZonesByGroupName } from '@api/regulatoryLayersAPI'
+import { StyledTransparentButton } from '@components/style'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { StyledTransparentButton } from '@features/layersSelector/search'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -20,6 +20,7 @@ type ResultListLayerGroupProps = {
   layerIds: number[]
   selectedRegulatoryAreaIds: number[]
 }
+
 export function ListLayerGroup({
   groupName,
   isSelected = false,

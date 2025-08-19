@@ -1,4 +1,4 @@
-import { StyledTransparentButton } from '@features/layersSelector/search'
+import { StyledTransparentButton } from '@components/style'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingZonesToVigilanceArea,
@@ -30,6 +30,7 @@ type ResultListLayerGroupProps = {
   selectedLayerIds: number[]
   totalNumberOfZones: number
 }
+
 export function ResultListLayerGroup({
   addLayers,
   groupExtent,

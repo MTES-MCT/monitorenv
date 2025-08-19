@@ -120,39 +120,39 @@ export function CustomCircleRange() {
   return (
     measurementTypeToAdd === MeasurementType.CIRCLE_RANGE && (
       <Wrapper
-      $healthcheckTextWarning={!!healthcheckTextWarning}
-      $isOpen={measurementTypeToAdd === MeasurementType.CIRCLE_RANGE}
-    >
-      <Header>Définir une valeur</Header>
-      <Body>
-        <CoordinatesInput
-          coordinatesFormat={coordinatesFormat}
-          defaultValue={circleCenterCoordinates}
-          label="Coordonnées"
-          name="coordinates"
-          onChange={updateCoordinates}
-        />
-        <RadiusWrapper>
-          <NumberInput
-            data-cy="measurement-circle-radius-input"
-            label="Distance (rayon)"
-            name="circleRadius"
-            onChange={nextValue => updateCustomCircleRadius(nextValue)}
-            style={{ width: 115 }}
-            value={circleRadius}
+        $healthcheckTextWarning={!!healthcheckTextWarning}
+        $isOpen={measurementTypeToAdd === MeasurementType.CIRCLE_RANGE}
+      >
+        <Header>Définir une valeur</Header>
+        <Body>
+          <CoordinatesInput
+            coordinatesFormat={coordinatesFormat}
+            defaultValue={circleCenterCoordinates}
+            label="Coordonnées"
+            name="coordinates"
+            onChange={updateCoordinates}
           />
-          <span>{distanceUnit === DistanceUnit.METRIC ? '(Mètres)' : '(Nm)'}</span>
-        </RadiusWrapper>
-        <OkButton
-          data-cy="measurement-circle-add"
-          disabled={!circleCenterCoordinates?.length || !circleRadius}
-          onClick={() => addCustomCircleRange()}
-        >
-          OK
-        </OkButton>
-        <CancelButton onClick={cancelAddCircleRange}>Annuler</CancelButton>
-      </Body>
-    </Wrapper>
+          <RadiusWrapper>
+            <NumberInput
+              data-cy="measurement-circle-radius-input"
+              label="Distance (rayon)"
+              name="circleRadius"
+              onChange={nextValue => updateCustomCircleRadius(nextValue)}
+              style={{ width: 115 }}
+              value={circleRadius}
+            />
+            <span>{distanceUnit === DistanceUnit.METRIC ? '(Mètres)' : '(Nm)'}</span>
+          </RadiusWrapper>
+          <OkButton
+            data-cy="measurement-circle-add"
+            disabled={!circleCenterCoordinates?.length || !circleRadius}
+            onClick={() => addCustomCircleRange()}
+          >
+            OK
+          </OkButton>
+          <CancelButton onClick={cancelAddCircleRange}>Annuler</CancelButton>
+        </Body>
+      </Wrapper>
     )
   )
 }
