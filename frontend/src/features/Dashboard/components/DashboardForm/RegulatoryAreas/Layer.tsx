@@ -1,6 +1,6 @@
+import { StyledTransparentButton } from '@components/style'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
-import { StyledTransparentButton } from '@features/layersSelector/search'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'

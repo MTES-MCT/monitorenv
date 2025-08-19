@@ -1,3 +1,4 @@
+import { useMountTransition } from '@hooks/useMountTransition'
 import { groupBy, isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 
@@ -28,43 +29,40 @@ export function AMPLayersList() {
       ),
     [selectedAmps]
   )
+  const hasTransition = useMountTransition(myAmpsIsOpen, 500)
   const layersLength = Object.keys(layersByLayersName).length
 
-  if (isEmpty(selectedAmpLayerIds)) {
-    return (
-      <LayerSelector.LayerList $baseLayersLength={0} $showBaseLayers={myAmpsIsOpen}>
-        <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
-      </LayerSelector.LayerList>
-    )
+  if (isEmpty(selectedAmpLayerIds) && myAmpsIsOpen) {
+    return <LayerSelector.NoLayerSelected>Aucune zone sélectionnée</LayerSelector.NoLayerSelected>
   }
 
   if (isLoading) {
-    return (
-      <LayerSelector.LayerList $baseLayersLength={0} $showBaseLayers={myAmpsIsOpen}>
-        <LayerSelector.NoLayerSelected>Chargement en cours</LayerSelector.NoLayerSelected>
-      </LayerSelector.LayerList>
-    )
+    return <LayerSelector.NoLayerSelected>Chargement en cours</LayerSelector.NoLayerSelected>
   }
 
   return (
-    <LayerSelector.LayerList
-      $baseLayersLength={layersLength + totalNumberOfZones}
-      $showBaseLayers={myAmpsIsOpen}
-      data-cy="my-amp-zones-list"
-    >
-      {layersByLayersName &&
-        Object.entries(layersByLayersName).map(
-          ([layerName, layers]) =>
-            layers!! && (
-              <MyAMPLayerGroup
-                key={layerName}
-                groupName={layerName}
-                layers={layers}
-                setTotalNumberOfZones={setTotalNumberOfZones}
-                showedAmpLayerIds={showedAmpLayerIds}
-              />
-            )
-        )}
-    </LayerSelector.LayerList>
+    <>
+      {(hasTransition || myAmpsIsOpen) && (
+        <LayerSelector.LayerList
+          $baseLayersLength={layersLength + totalNumberOfZones}
+          $showBaseLayers={hasTransition && myAmpsIsOpen}
+          data-cy="my-amp-zones-list"
+        >
+          {layersByLayersName &&
+            Object.entries(layersByLayersName).map(
+              ([layerName, layers]) =>
+                layers!! && (
+                  <MyAMPLayerGroup
+                    key={layerName}
+                    groupName={layerName}
+                    layers={layers}
+                    setTotalNumberOfZones={setTotalNumberOfZones}
+                    showedAmpLayerIds={showedAmpLayerIds}
+                  />
+                )
+            )}
+        </LayerSelector.LayerList>
+      )}
+    </>
   )
 }

@@ -7,6 +7,7 @@ import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
 import {
@@ -87,29 +88,32 @@ export function SearchOnExtentExtraButtons({ allowResetResults }: SearchOnExtent
         size={Size.LARGE}
         title="Définir la zone de recherche et afficher les tracés"
       />
-      <ExtraButtonsWrapper
-        $allowResetResults={allowResetResults}
-        $isVisible={isVisible}
-        $shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
-      >
-        <ReloadSearch
-          $isActive={shouldReloadSearchOnExtent}
-          accent={Accent.PRIMARY}
-          Icon={Icon.Search}
-          onClick={handleReloadSearch}
-        >
-          Relancer la recherche ici
-        </ReloadSearch>
-        <ResetSearch
-          $allowResetResults={allowResetResults}
-          accent={Accent.TERTIARY}
-          Icon={Icon.Close}
-          onClick={handleResetSearch}
-          title="Effacer les résultats de la recherche"
-        >
-          Effacer les résultats de la recherche
-        </ResetSearch>
-      </ExtraButtonsWrapper>
+      {isVisible &&
+        createPortal(
+          <ExtraButtonsWrapper
+            $allowResetResults={allowResetResults}
+            $shouldReloadSearchOnExtent={shouldReloadSearchOnExtent}
+          >
+            <ReloadSearch
+              $isActive={shouldReloadSearchOnExtent}
+              accent={Accent.PRIMARY}
+              Icon={Icon.Search}
+              onClick={handleReloadSearch}
+            >
+              Relancer la recherche ici
+            </ReloadSearch>
+            <ResetSearch
+              $allowResetResults={allowResetResults}
+              accent={Accent.TERTIARY}
+              Icon={Icon.Close}
+              onClick={handleResetSearch}
+              title="Effacer les résultats de la recherche"
+            >
+              Effacer les résultats de la recherche
+            </ResetSearch>
+          </ExtraButtonsWrapper>,
+          document.body
+        )}
     </>
   )
 }
@@ -131,18 +135,11 @@ const ResetSearch = styled(Button)<{ $allowResetResults: boolean }>`
 
 const ExtraButtonsWrapper = styled.div<{
   $allowResetResults: boolean
-  $isVisible: boolean
   $shouldReloadSearchOnExtent: boolean
 }>`
-  display: ${p => (p.$isVisible ? 'flex' : 'none')};
+  display: flex;
   position: fixed;
-  left: ${p => {
-    if (p.$shouldReloadSearchOnExtent || p.$allowResetResults) {
-      return `calc(
-        50% - ((${p.$shouldReloadSearchOnExtent ? '220px' : '0px'} + ${p.$allowResetResults ? '285px' : '0px'}) / 2)
-      )`
-    }
-
-    return '-400px'
-  }};
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
 `
