@@ -1,10 +1,10 @@
+import { StyledTransparentButton } from '@components/style'
 import {
   closeMetadataPanel,
   getDisplayedMetadataAMPLayerId,
   getMetadataIsOpenForAMPLayerId,
   openAMPMetadataPanel
 } from '@features/layersSelector/metadataPanel/slice'
-import { StyledTransparentButton } from '@features/layersSelector/search'
 import { getIsLinkingAMPToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'

@@ -1,9 +1,11 @@
+import { InlineTransparentButton } from '@components/style'
+import { ChevronIconButton } from '@features/commonStyles/icons/ChevronIconButton'
+
 import { RegulatoryLayersList } from './MyRegulatoryLayersList'
 import { getSelectedRegulatoryLayers } from '../../../api/regulatoryLayersAPI'
 import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { closeMetadataPanel } from '../metadataPanel/slice'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
@@ -23,15 +25,12 @@ export function RegulatoryLayers() {
 
   return (
     <>
-      <LayerSelector.Wrapper
-        $hasPinnedLayers={selectedRegulatoryLayers?.length > 0}
-        $isExpanded={myRegulatoryZonesIsOpen}
-        data-cy="my-regulatory-layers"
-        onClick={onTitleClicked}
-      >
-        <LayerSelector.Pin />
-        <LayerSelector.Title>Mes zones réglementaires</LayerSelector.Title>
-        <ChevronIcon $isOpen={myRegulatoryZonesIsOpen} $right />
+      <LayerSelector.Wrapper $hasPinnedLayers={selectedRegulatoryLayers?.length > 0} data-cy="my-regulatory-layers">
+        <InlineTransparentButton onClick={onTitleClicked}>
+          <LayerSelector.Pin />
+          <LayerSelector.Title>Mes zones réglementaires</LayerSelector.Title>
+        </InlineTransparentButton>
+        <ChevronIconButton $isOpen={myRegulatoryZonesIsOpen} onClick={onTitleClicked} />
       </LayerSelector.Wrapper>
       <RegulatoryLayersList />
     </>

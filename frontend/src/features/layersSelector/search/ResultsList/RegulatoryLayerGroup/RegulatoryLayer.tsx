@@ -1,4 +1,4 @@
-import { StyledTransparentButton } from '@features/layersSelector/search'
+import { StyledTransparentButton } from '@components/style'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'

@@ -1,5 +1,4 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { TransparentButton } from '@components/style'
 import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -159,38 +158,42 @@ export function LayerSearch() {
       filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS)
 
   return (
-    <SearchContainer>
-      <Search>
-        <SearchInput
-          displayRegFilters={displayRegFilters}
-          filteredAmpTypes={filteredAmpTypes}
-          filteredRegulatoryTags={filteredRegulatoryTags}
-          filteredRegulatoryThemes={filteredRegulatoryThemes}
-          filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
-          globalSearchText={globalSearchText}
-          placeholder="Rechercher une zone"
-          setGlobalSearchText={handleSearchInputChange}
-          toggleRegFilters={openOrCloseRegFilters}
-        />
-        {displayRegFilters && (
-          <LayerFilters
-            ampTypes={ampTypes}
+    <>
+      <SearchContainer>
+        <Search>
+          <SearchInput
+            displayRegFilters={displayRegFilters}
             filteredAmpTypes={filteredAmpTypes}
             filteredRegulatoryTags={filteredRegulatoryTags}
             filteredRegulatoryThemes={filteredRegulatoryThemes}
             filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
-            handleResetFilters={handleResetFilters}
-            setFilteredAmpTypes={handleSetFilteredAmpTypes}
-            setFilteredRegulatoryTags={handleSetFilteredRegulatoryTags}
-            setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
-            updateDateRangeFilter={updateDateRangeFilter}
+            globalSearchText={globalSearchText}
+            placeholder="Rechercher une zone"
+            setGlobalSearchText={handleSearchInputChange}
+            toggleRegFilters={openOrCloseRegFilters}
           />
-        )}
-        <ResultList searchedText={globalSearchText} />
-      </Search>
-
-      <SearchOnExtentExtraButtons allowResetResults={allowResetResults} debouncedSearchLayers={debouncedSearchLayers} />
-    </SearchContainer>
+          {displayRegFilters && (
+            <LayerFilters
+              ampTypes={ampTypes}
+              filteredAmpTypes={filteredAmpTypes}
+              filteredRegulatoryTags={filteredRegulatoryTags}
+              filteredRegulatoryThemes={filteredRegulatoryThemes}
+              filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
+              handleResetFilters={handleResetFilters}
+              setFilteredAmpTypes={handleSetFilteredAmpTypes}
+              setFilteredRegulatoryTags={handleSetFilteredRegulatoryTags}
+              setFilteredRegulatoryThemes={handleSetFilteredRegulatoryThemes}
+              updateDateRangeFilter={updateDateRangeFilter}
+            />
+          )}
+          <ResultList searchedText={globalSearchText} />
+        </Search>
+        <SearchOnExtentExtraButtons
+          allowResetResults={allowResetResults}
+          debouncedSearchLayers={debouncedSearchLayers}
+        />
+      </SearchContainer>
+    </>
   )
 }
 
@@ -199,10 +202,4 @@ const SearchContainer = styled.div`
 `
 const Search = styled.div`
   width: 352px;
-`
-
-export const StyledTransparentButton = styled(TransparentButton)`
-  display: flex;
-  align-items: center;
-  width: 80%;
 `

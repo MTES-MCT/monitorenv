@@ -1,4 +1,5 @@
 import { getExtentOfLocalizedAreasGroupByGroupName } from '@api/localizedAreasAPI'
+import { InlineTransparentButton } from '@components/style'
 import { closeMetadataPanel, openLocalizedAreasMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
@@ -57,15 +58,17 @@ export function LocalizedAreasItem({
     !!(firstLocalizedArea.controlUnitIds?.length && firstLocalizedArea.controlUnitIds?.length > 0)
 
   return (
-    <Row data-cy="localized-areas-layer-toggle" onClick={toggleLayer}>
-      <NameContainer>
-        <LayerLegend
-          layerType={MonitorEnvLayers.LOCALIZED_AREAS}
-          legendKey={firstLocalizedArea.name}
-          type={firstLocalizedArea.groupName}
-        />
-        <LayerName title={firstLocalizedArea.groupName}>{firstLocalizedArea.groupName}</LayerName>
-      </NameContainer>
+    <Wrapper>
+      <InlineTransparentButton data-cy="localized-areas-layer-toggle" onClick={toggleLayer}>
+        <NameContainer>
+          <LayerLegend
+            layerType={MonitorEnvLayers.LOCALIZED_AREAS}
+            legendKey={firstLocalizedArea.name}
+            type={firstLocalizedArea.groupName}
+          />
+          <LayerName title={firstLocalizedArea.groupName}>{firstLocalizedArea.groupName}</LayerName>
+        </NameContainer>
+      </InlineTransparentButton>
       <ButtonsContainer>
         {hasAmpIdsOrControlUnitIds && (
           <IconButton
@@ -89,7 +92,7 @@ export function LocalizedAreasItem({
           title={isLayerVisible ? 'Masquer le secteur local' : 'Afficher le secteur local'}
         />
       </ButtonsContainer>
-    </Row>
+    </Wrapper>
   )
 }
 
@@ -99,7 +102,7 @@ const LayerName = styled.span`
   white-space: nowrap;
 `
 
-const Row = styled.span`
+const Wrapper = styled.span`
   display: flex;
   font-weight: 500;
   justify-content: space-between;
