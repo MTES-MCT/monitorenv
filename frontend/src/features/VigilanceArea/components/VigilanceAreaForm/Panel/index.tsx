@@ -13,6 +13,7 @@ import { Accent, Button, customDayjs, Icon, Size } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import { PanelComments } from './PanelComments'
 import { PanelImages } from './PanelImages'
@@ -102,15 +103,20 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
   return (
     <PanelContainer>
       <PanelBody>
-        <DeleteModal
-          context="vigilance-area"
-          isAbsolute={false}
-          onCancel={cancelDeleteModal}
-          onConfirm={onConfirmDeleteModal}
-          open={isDeleteModalOpen}
-          subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
-          title="Supprimer la zone de vigilance&nbsp;?"
-        />
+        {isDeleteModalOpen &&
+          createPortal(
+            <DeleteModal
+              context="vigilance-area"
+              isAbsolute={false}
+              onCancel={cancelDeleteModal}
+              onConfirm={onConfirmDeleteModal}
+              open={isDeleteModalOpen}
+              subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
+              title="Supprimer la zone de vigilance&nbsp;?"
+            />,
+            document.body
+          )}
+
         <PanelDates onValidate={validate} vigilanceArea={vigilanceArea} />
         <PanelPeriodAndThemes vigilanceArea={vigilanceArea} />
         <PanelComments comments={vigilanceArea?.comments} />

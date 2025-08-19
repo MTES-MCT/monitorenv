@@ -1,10 +1,11 @@
+import { StyledTransparentButton } from '@components/style'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingZonesToVigilanceArea,
   vigilanceAreaActions
 } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { IconButton, Accent, Size, Icon, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Size, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { useMemo } from 'react'
@@ -103,10 +104,12 @@ export function MyLayerZone({
 
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown}>
-      <LayerLegend layerType={layerType} legendKey={name} type={type} />
-      <LayerSelector.Name data-cy={`my-zone-${displayedName}`} onClick={handleClickOnLayerName} title={displayedName}>
-        {displayedName}
-      </LayerSelector.Name>
+      <StyledTransparentButton onClick={handleClickOnLayerName}>
+        <LayerLegend layerType={layerType} legendKey={name} type={type} />
+        <LayerSelector.Name data-cy={`my-zone-${displayedName}`} title={displayedName}>
+          {displayedName}
+        </LayerSelector.Name>
+      </StyledTransparentButton>
       <LayerSelector.IconGroup>
         {isLinkingZonesToVigilanceArea ? (
           <PaddedIconButton
