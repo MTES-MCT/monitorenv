@@ -1,10 +1,11 @@
+import { StyledTransparentButton } from '@components/style'
 import { getIsLinkingZonesToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { IconButton, Accent, Icon, Size, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { difference } from 'lodash'
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { getExtentOfLayersGroup } from './getExtentOfLayersGroup'
 import { LayerSelector } from './LayerSelector.style'
@@ -40,7 +41,7 @@ export function MyLayerGroup({
   const dispatch = useAppDispatch()
 
   const groupLayerIds = layers.map(l => l.id)
-  const [zonesAreOpen, setZonesAreOpen] = useState(false)
+  const [zonesAreOpen, setZonesAreOpen] = useState(zonesAreShowed)
 
   const isLayerGroupDisabled = useMemo(
     () => difference(groupLayerIds, zonesLinkedToVigilanceArea).length === 0,
@@ -66,11 +67,13 @@ export function MyLayerGroup({
   }
 
   return (
-    <>
+    <li>
       <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
-        <LayerSelector.GroupName data-cy={`${name}-layer-topic`} onClick={handleClickOnGroupName} title={groupName}>
-          {groupName}
-        </LayerSelector.GroupName>
+        <StyledTransparentButton onClick={handleClickOnGroupName}>
+          <LayerSelector.GroupName data-cy={`${name}-layer-topic`} title={groupName}>
+            {groupName}
+          </LayerSelector.GroupName>
+        </StyledTransparentButton>
         <LayerSelector.IconGroup>
           <LayerSelector.NumberOfZones>{`${layers?.length}/${totalNumberOfZones}`}</LayerSelector.NumberOfZones>
           {isLinkingZonesToVigilanceArea ? (
@@ -108,6 +111,6 @@ export function MyLayerGroup({
       <LayerSelector.GroupList $isOpen={zonesAreOpen} $length={layers?.length}>
         {children}
       </LayerSelector.GroupList>
-    </>
+    </li>
   )
 }

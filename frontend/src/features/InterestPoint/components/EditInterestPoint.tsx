@@ -1,5 +1,4 @@
 import { StyledMapMenuDialogContainer } from '@components/style'
-import { SetCoordinates } from '@features/coordinates/SetCoordinates'
 import { addReporting } from '@features/Reportings/useCases/addReporting'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -7,13 +6,14 @@ import {
   Accent,
   Button,
   CoordinatesFormat,
+  CoordinatesInput,
+  getCoordinates,
   Icon,
   MapMenuDialog,
   OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION,
-  TextInput,
   Textarea,
-  getCoordinates
+  TextInput,
+  WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
 import { globalActions, ReportingContext, setDisplayedItems } from 'domain/shared_slices/Global'
 import { setFitToExtent } from 'domain/shared_slices/Map'
@@ -35,9 +35,11 @@ import type { Coordinate } from 'ol/coordinate'
 type EditInterestPointProps = {
   close: () => void
 }
+
 export function EditInterestPoint({ close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
 
+  const { coordinatesFormat } = useAppSelector(state => state.map)
   const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
 
   const isEditing = useAppSelector(state => state.interestPoint.isEditing)
@@ -157,7 +159,13 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
         />
       </MapMenuDialog.Header>
       <StyledDialogBody>
-        <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />
+        <CoordinatesInput
+          coordinatesFormat={coordinatesFormat}
+          defaultValue={coordinates}
+          label="Coordonnées"
+          name="coordinates"
+          onChange={updateCoordinates}
+        />
 
         <TextInput
           data-cy="interest-point-name-input"
