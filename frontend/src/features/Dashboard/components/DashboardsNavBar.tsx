@@ -1,6 +1,6 @@
 import { NavBar } from '@components/NavBar'
+import { StyledTransparentButton } from '@components/style'
 import { EditTabName } from '@features/Dashboard/components/EditTabName'
-import { StyledTransparentButton } from '@features/layersSelector/search'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'

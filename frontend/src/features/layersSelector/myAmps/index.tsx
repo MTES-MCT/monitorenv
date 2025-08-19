@@ -1,8 +1,10 @@
+import { InlineTransparentButton } from '@components/style'
+import { ChevronIconButton } from '@features/commonStyles/icons/ChevronIconButton'
+
 import { AMPLayersList } from './MyAMPLayersList'
 import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { closeMetadataPanel } from '../metadataPanel/slice'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
@@ -21,15 +23,12 @@ export function AmpLayers() {
 
   return (
     <>
-      <LayerSelector.Wrapper
-        $hasPinnedLayers={selectedAmpLayerIds?.length > 0}
-        $isExpanded={myAmpsIsOpen}
-        data-cy="my-amp-layers-zones"
-        onClick={onTitleClicked}
-      >
-        <LayerSelector.Pin />
-        <LayerSelector.Title>Mes AMP</LayerSelector.Title>
-        <ChevronIcon $isOpen={myAmpsIsOpen} $right />
+      <LayerSelector.Wrapper $hasPinnedLayers={selectedAmpLayerIds?.length > 0} data-cy="my-amp-layers-zones">
+        <InlineTransparentButton onClick={onTitleClicked}>
+          <LayerSelector.Pin />
+          <LayerSelector.Title>Mes AMP</LayerSelector.Title>
+        </InlineTransparentButton>
+        <ChevronIconButton $isOpen={myAmpsIsOpen} onClick={onTitleClicked} />
       </LayerSelector.Wrapper>
       <AMPLayersList />
     </>

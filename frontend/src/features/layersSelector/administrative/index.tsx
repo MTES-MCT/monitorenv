@@ -1,3 +1,6 @@
+import { InlineTransparentButton } from '@components/style'
+import { ChevronIconButton } from '@features/commonStyles/icons/ChevronIconButton'
+import { useMountTransition } from '@hooks/useMountTransition'
 import styled from 'styled-components'
 
 import { AdministrativeLayer } from './AdministrativeLayer'
@@ -5,7 +8,6 @@ import { administrativeLayers } from '../../../domain/entities/administrativeLay
 import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function AdministrativeLayers() {
@@ -15,19 +17,18 @@ export function AdministrativeLayers() {
   const onSectionTitleClicked = () => {
     dispatch(layerSidebarActions.toggleAdministrativeZones())
   }
+  const hasTransition = useMountTransition(administrativeZonesIsOpen, 500)
 
   return (
     <>
-      <LayerSelector.Wrapper
-        $isExpanded={administrativeZonesIsOpen}
-        data-cy="administrative-zones-open"
-        onClick={onSectionTitleClicked}
-      >
-        <LayerSelector.Title>Zones administratives</LayerSelector.Title>
-        <ChevronIcon $isOpen={administrativeZonesIsOpen} $right />
+      <LayerSelector.Wrapper data-cy="administrative-zones-open">
+        <InlineTransparentButton onClick={onSectionTitleClicked}>
+          <LayerSelector.Title>Zones administratives</LayerSelector.Title>
+        </InlineTransparentButton>
+        <ChevronIconButton $isOpen={administrativeZonesIsOpen} onClick={onSectionTitleClicked} />
       </LayerSelector.Wrapper>
-      {administrativeLayers && administrativeLayers.length ? (
-        <ZonesList $showZones={administrativeZonesIsOpen} $zonesLength={administrativeLayers.length}>
+      {(hasTransition || administrativeZonesIsOpen) && administrativeLayers.length ? (
+        <ZonesList $showZones={hasTransition && administrativeZonesIsOpen} $zonesLength={administrativeLayers.length}>
           {administrativeLayers.map(layers => {
             if (layers.length === 1 && layers[0]) {
               return (
@@ -62,7 +63,6 @@ const ListItem = styled.li`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden !important;
-  cursor: pointer;
   color: ${p => p.theme.color.gunMetal};
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 `

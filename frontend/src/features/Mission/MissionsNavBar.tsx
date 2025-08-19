@@ -1,5 +1,5 @@
 import { NavBar, TabTitle } from '@components/NavBar'
-import { StyledTransparentButton } from '@features/layersSelector/search'
+import { StyledTransparentButton } from '@components/style'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
 import { generatePath } from 'react-router'

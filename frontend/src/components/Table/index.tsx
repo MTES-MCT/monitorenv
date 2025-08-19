@@ -1,8 +1,7 @@
-import { ChevronIcon } from '@features/commonStyles/icons/ChevronIcon.style'
+import { StyledChevronIcon } from '@features/commonStyles/icons/ChevronIconButton'
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
 import { flexRender } from '@tanstack/react-table'
 import { forwardRef } from 'react'
-import styled from 'styled-components'
 
 import { getPaddingValuesForVirtualizeTable, PaddingForVirtualizeTable } from './PaddingForVirtualizeTable'
 import { TableContainer } from './style'
@@ -27,8 +26,8 @@ export function TableWithRef({ className = '', columnsLength, rows, rowVirtualiz
 
                       {header.column.getCanSort() &&
                         ({
-                          asc: <StyledChevronIcon $isOpen={false} $right={false} />,
-                          desc: <StyledChevronIcon $isOpen $right={false} />
+                          asc: <StyledChevronIcon $isOpen />,
+                          desc: <StyledChevronIcon $isOpen={false} />
                         }[header.column.getIsSorted() as string] ?? <Icon.SortingArrows size={14} />)}
                     </SimpleTable.SortContainer>
                   )}
@@ -73,8 +72,3 @@ export function TableWithRef({ className = '', columnsLength, rows, rowVirtualiz
 }
 
 export const Table = forwardRef(TableWithRef)
-
-const StyledChevronIcon = styled(ChevronIcon)`
-  margin-top: 0px;
-  margin-right: 0px;
-`

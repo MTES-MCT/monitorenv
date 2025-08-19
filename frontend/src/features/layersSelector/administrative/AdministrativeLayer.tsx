@@ -1,4 +1,5 @@
-import { Icon, THEME } from '@mtes-mct/monitor-ui'
+import { InlineTransparentButton } from '@components/style'
+import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { hideAdministrativeLayer, showAdministrativeLayer } from '../../../domain/shared_slices/Administrative'
@@ -20,10 +21,18 @@ export function AdministrativeLayer({ isGrouped, layer }) {
   }
 
   return (
-    <Row $isGrouped={isGrouped} data-cy="administrative-layer-toggle" onClick={toggleLayer}>
-      <LayerName title={layer.name}>{layer.name}</LayerName>
-      <Icon.Display color={isLayerVisible ? THEME.color.charcoal : THEME.color.lightGray} />
-    </Row>
+    <Wrapper $isGrouped={isGrouped}>
+      <Row data-cy="administrative-layer-toggle" onClick={toggleLayer}>
+        <LayerName title={layer.name}>{layer.name}</LayerName>
+      </Row>
+      <IconButton
+        accent={Accent.TERTIARY}
+        color={isLayerVisible ? THEME.color.charcoal : THEME.color.lightGray}
+        Icon={Icon.Display}
+        onClick={toggleLayer}
+        title={isLayerVisible ? 'Afficher la zone' : 'Masquer la zone'}
+      />
+    </Wrapper>
   )
 }
 
@@ -34,18 +43,20 @@ const LayerName = styled.span`
   padding-top: 5px;
 `
 
-const Row = styled.span<{ $isGrouped: boolean }>`
-  padding: ${props => (props.$isGrouped ? '5px 16px 6px 20px' : '6px 16px 6px 20px')};
-  padding-left: ${props => (props.$isGrouped ? '38px' : '20px')};
+const Row = styled(InlineTransparentButton)`
   display: flex;
   user-select: none;
   font-weight: 500;
+`
+
+const Wrapper = styled.div<{ $isGrouped: boolean }>`
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: ${props => (props.$isGrouped ? '5px 16px 6px 20px' : '6px 16px 6px 20px')};
+  padding-left: ${props => (props.$isGrouped ? '38px' : '20px')};
 
   &:hover {
     background: ${p => p.theme.color.blueYonder25};
-  }
-  & > :last-child {
-    margin-left: auto;
-    margin-top: 4px;
   }
 `

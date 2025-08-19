@@ -1,4 +1,6 @@
-import { MultiRadio, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
+import { InlineTransparentButton } from '@components/style'
+import { ChevronIconButton } from '@features/commonStyles/icons/ChevronIconButton'
+import { getOptionsFromLabelledEnum, MultiRadio } from '@mtes-mct/monitor-ui'
 import { BaseLayerLabel } from 'domain/entities/layers/BaseLayer'
 import styled from 'styled-components'
 
@@ -6,7 +8,6 @@ import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { selectBaseLayer } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { ChevronIcon } from '../../commonStyles/icons/ChevronIcon.style'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 const baseLayersKeys = getOptionsFromLabelledEnum(BaseLayerLabel)
@@ -25,9 +26,11 @@ export function BaseLayerList() {
 
   return (
     <>
-      <LayerSelector.Wrapper $isExpanded={baselayerIsOpen} onClick={onSectionTitleClicked}>
-        <LayerSelector.Title>Fonds de carte</LayerSelector.Title>
-        <ChevronIcon $isOpen={baselayerIsOpen} $right />
+      <LayerSelector.Wrapper>
+        <InlineTransparentButton onClick={onSectionTitleClicked}>
+          <LayerSelector.Title>Fonds de carte</LayerSelector.Title>
+        </InlineTransparentButton>
+        <ChevronIconButton $isOpen={baselayerIsOpen} onClick={onSectionTitleClicked} />
       </LayerSelector.Wrapper>
       <BaseLayersContainer $baseLayersLength={baseLayersKeys.length} $showBaseLayers={baselayerIsOpen}>
         <StyledMultiRadio
@@ -62,9 +65,11 @@ const StyledMultiRadio = styled(MultiRadio)`
       background-color: ${p => p.theme.color.blueYonder25};
     }
   }
+
   > div > div > .Element-Field:not(:last-child) {
     border-bottom: 1px solid ${p => p.theme.color.lightGray};
   }
+
   > div > div > .Element-Field:not(:first-child) {
     margin: 0px;
   }
