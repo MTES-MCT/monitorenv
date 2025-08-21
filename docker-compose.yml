@@ -126,8 +126,8 @@ services:
 
   keycloak:
     container_name: monitorenv_keycloak
-    profiles: [ dev ]
-    image: quay.io/keycloak/keycloak:latest
+    profiles: [ dev, test ]
+    image: quay.io/keycloak/keycloak:23.0.0
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
