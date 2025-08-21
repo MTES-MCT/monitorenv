@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { useEffect, useState, useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 
 import { loadGoogleMapScript } from './utils'
 
@@ -9,7 +9,7 @@ const GOOGLEMAPS_SCRIPT_URL = `${GOOGLEMAPS_SCRIPT_BASEURL}?key=${
   import.meta.env.FRONTEND_GOOGLEMAPS_API_KEY
 }&libraries=places`
 
-export const getPlaceCoordinates = placeId => {
+export const getPlaceCoordinates = (placeId: string) => {
   // @ts-ignore
   // see https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/URLSearchParams
   // URLSearchParams() constructor accepts "a record of string keys and string values."
