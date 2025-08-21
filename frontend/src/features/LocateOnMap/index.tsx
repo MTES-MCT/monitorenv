@@ -1,3 +1,4 @@
+import { useBeaches } from '@features/LocateOnMap/hook/useBeaches'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Search, Size, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getColorWithAlpha } from '@utils/utils'
 import { transformExtent } from 'ol/proj'
@@ -16,10 +17,19 @@ export function LocateOnMap() {
 
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
   const results = useGooglePlacesAPI(searchedLocation)
+  const { beaches, options: beachesResults } = useBeaches()
 
-  const handleSelectLocation = async placeId => {
+  const handleSelectLocation = async (placeId: string) => {
     if (!placeId) {
       return
+    }
+    if (placeId.startsWith('beaches')) {
+      const bbox = beaches.find(beach => beach.id === placeId)?.bbox
+      if (bbox) {
+        dispatch(setFitToExtent(transformExtent(bbox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)))
+
+        return
+      }
     }
     const boundingBox = await getPlaceCoordinates(placeId)
     if (boundingBox) {
@@ -38,7 +48,7 @@ export function LocateOnMap() {
         name="search-place"
         onChange={handleSelectLocation}
         onQuery={setSearchedLocation}
-        options={results}
+        options={[...results, ...beachesResults]}
         placeholder="rechercher un lieu (port, lieu-dit, baie...)"
         size={Size.LARGE}
       />
