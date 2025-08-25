@@ -64,7 +64,7 @@ dev-run-infra:
 	done
 
 	@echo "Database Ready for connections!"
-	docker compose up -d geoserver mock-monitorfish mock-rapportnav
+	docker compose up -d geoserver geoserver-init mock-monitorfish mock-rapportnav
 
 dev-dump-db:
 	sh ./infra/scripts/backup_dev_db.sh
