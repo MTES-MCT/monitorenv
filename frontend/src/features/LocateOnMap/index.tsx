@@ -17,7 +17,7 @@ export function LocateOnMap() {
 
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
   const results = useGooglePlacesAPI(searchedLocation)
-  const { beaches, options: beachesResults } = useBeaches()
+  const { beaches, error, options: beachesResults } = useBeaches()
 
   const handleSelectLocation = async (placeId: string) => {
     if (!placeId) {
@@ -41,6 +41,7 @@ export function LocateOnMap() {
     <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
       <StyledSearch
         data-cy="location-search-input"
+        error={error}
         isLabelHidden
         isLight
         isSearchIconHidden
