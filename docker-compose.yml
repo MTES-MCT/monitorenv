@@ -105,7 +105,6 @@ services:
 
   geoserver:
     container_name: monitorenv_geoserver
-    profiles: [ dev, production ]
     image: kartoza/geoserver:2.18.0
     environment:
       - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
@@ -116,13 +115,41 @@ services:
       - geoserver-data:/opt/geoserver/data_dir
       - geoserver-settings:/settings
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail -s http://localhost:8080/geoserver/index.html || exit 1" ]
-      interval: 1m30s
-      timeout: 1s
-      retries: 30
+      test: >
+        curl --fail -s -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD}
+        http://localhost:8080/geoserver/rest/workspaces.json || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_interval: 40s
+      start_period: 40s
     networks:
       - backend_network
     restart: always
+
+  geoserver-init:
+    profiles: [ dev, test ]
+    image: curlimages/curl:7.85.0
+    environment:
+      - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
+      - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
+      - GEOSERVER_HOST=geoserver
+      - GEOSERVER_PORT=8080
+      - GEOSERVER_DB_HOST=${GEOSERVER_DB_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SCHEMA=${POSTGRES_SCHEMA}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      geoserver:
+        condition: service_healthy
+    volumes:
+      - ./infra/init/geoserver_init_layers.sh:/init-geoserver.sh:ro
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: [ "/init-geoserver.sh" ]
+    networks:
+      - backend_network
 
   keycloak:
     container_name: monitorenv_keycloak
@@ -140,25 +167,6 @@ services:
     command:
       - start-dev
       - --import-realm
-
-  mock-geoserver:
-    profiles: [ test ]
-    image: wiremock/wiremock:3.8.0
-    networks:
-      - backend_network
-    ports:
-      - 8081:8080
-    volumes:
-      - ./frontend/cypress/mappings/geoserver:/home/wiremock/mappings
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl --fail http://localhost:8080/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=monitorfish:regulations&outputFormat=application/json&CQL_FILTER=topic=%27Ouest%20Cotentin%20Bivalves%27%20AND%20zone=%27Praires%20Ouest%20cotentin%27 || exit 1 ",
-        ]
-      interval: 1s
-      timeout: 1s
-      retries: 30
 
   mock-monitorfish:
     profiles: [ dev, test ]

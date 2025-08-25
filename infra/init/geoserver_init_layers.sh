@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 
+sleep 30
+
 curl -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces -H  "accept: text/html" -H  "content-type: application/json" \
 -d "{ \"workspace\": {\"name\": \"monitorenv\"}}"
 
@@ -344,3 +346,15 @@ curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${
 }
 EOF
 
+curl -v -u ${GEOSERVER_ADMIN_USER}:${GEOSERVER_ADMIN_PASSWORD} -X POST http://${GEOSERVER_HOST}:${GEOSERVER_PORT}/geoserver/rest/workspaces/monitorenv/datastores/monitorenv_postgis/featuretypes -H  "accept: text/html" -H  "content-type: application/json" -d @- << EOF
+{
+  "featureType": {
+    "name": "beaches",
+    "nativeName": "beaches",
+    "title": "beaches",
+    "nativeCRS": "EPSG:4326",
+    "srs": "EPSG:4326",
+    "enabled": true,
+  }
+}
+EOF
