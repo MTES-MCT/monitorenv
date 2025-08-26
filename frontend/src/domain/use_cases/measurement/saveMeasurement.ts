@@ -1,39 +1,37 @@
-import { OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
-import GeoJSON from 'ol/format/GeoJSON'
+import { getGeoJSONFromFeature } from 'domain/types/map'
+import { type Geometry, Polygon } from 'ol/geom'
 import Circle from 'ol/geom/Circle'
+import LineString from 'ol/geom/LineString'
 import { fromCircle } from 'ol/geom/Polygon'
-import { batch } from 'react-redux'
 
 import { DistanceUnit } from '../../entities/map/constants'
-import { addMeasurementDrawed, resetCircleMeasurementInDrawing } from '../../shared_slices/Measurement'
+import { addMeasurementDrawed } from '../../shared_slices/Measurement'
 
-export const saveMeasurement = (feature, measurement) => (dispatch, getState) => {
+import type { Feature } from 'ol'
+import type { Coordinate } from 'ol/coordinate'
+
+export const saveMeasurement = (feature: Feature<Geometry>, measurement: number) => (dispatch, getState) => {
   const { distanceUnit } = getState().map
+  feature.setId(feature.getProperties().geometry.ol_uid)
 
-  feature.setId(feature.ol_uid)
-
-  if (feature.getGeometry() instanceof Circle) {
-    feature.setGeometry(fromCircle(feature.getGeometry()))
+  const geom = feature.getGeometry()
+  let tooltipCoordinates: Coordinate | undefined
+  if (geom instanceof LineString) {
+    tooltipCoordinates = geom.getLastCoordinate()
   }
-
-  const geoJSONFeature = getGeoJSONFromFeature(feature)
-
-  const tooltipCoordinates = feature.getGeometry().getLastCoordinate()
-  batch(() => {
-    dispatch(
-      addMeasurementDrawed({
-        coordinates: tooltipCoordinates,
-        distanceUnit: distanceUnit || DistanceUnit.NAUTICAL,
-        feature: geoJSONFeature,
-        measurement
-      })
-    )
-    resetCircleMeasurementInDrawing()
-  })
-}
-
-function getGeoJSONFromFeature(feature) {
-  const parser = new GeoJSON()
-
-  return parser.writeFeatureObject(feature, { featureProjection: OPENLAYERS_PROJECTION })
+  if (geom instanceof Circle) {
+    feature.setGeometry(fromCircle(geom))
+    tooltipCoordinates = geom.getLastCoordinate()
+  }
+  if (geom instanceof Polygon) {
+    tooltipCoordinates = geom.getLastCoordinate()
+  }
+  dispatch(
+    addMeasurementDrawed({
+      coordinates: tooltipCoordinates,
+      distanceUnit: distanceUnit || DistanceUnit.NAUTICAL,
+      feature: getGeoJSONFromFeature<Record<string, string>>(feature),
+      measurement
+    })
+  )
 }

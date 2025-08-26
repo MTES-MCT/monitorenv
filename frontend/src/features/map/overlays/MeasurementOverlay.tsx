@@ -1,18 +1,20 @@
-import { Accent, Icon, IconButton, Size, THEME, pluralize } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, pluralize, Size, THEME } from '@mtes-mct/monitor-ui'
 import Overlay from 'ol/Overlay'
-import { type MutableRefObject, useEffect, useCallback, useRef, useMemo } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
-import { DistanceUnit, OLGeometryType } from '../../../domain/entities/map/constants'
+import { DistanceUnit } from '../../../domain/entities/map/constants'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
+import type { Type } from 'ol/geom/Geometry'
+
 type MeasurementOverlayProps = {
-  coordinates: any[]
+  coordinates: number[] | undefined
   deleteFeature?: Function
-  id?: String
+  id?: string | number | undefined
   map: any
-  measurement: any
-  type?: string
+  measurement: number | undefined
+  type?: Type
 }
 
 export function MeasurementOverlay({
@@ -27,25 +29,27 @@ export function MeasurementOverlay({
 
   const overlayRef = useRef()
   const olOverlayObjectRef = useRef() as MutableRefObject<Overlay>
-  const overlayCallback = useCallback(
-    ref => {
-      overlayRef.current = ref
-      if (ref) {
-        olOverlayObjectRef.current = new Overlay({
-          className: `ol-overlay-container ol-selectable measurement-overlay`,
-          element: ref,
-          offset: [0, -7],
-          position: coordinates,
-          positioning: 'bottom-center'
-        })
-      }
-    },
-    [overlayRef, olOverlayObjectRef, coordinates]
-  )
+  const overlayCallback = useCallback(ref => {
+    overlayRef.current = ref
+    if (ref && !olOverlayObjectRef.current) {
+      olOverlayObjectRef.current = new Overlay({
+        className: 'ol-overlay-container ol-selectable measurement-overlay',
+        element: ref,
+        offset: [0, -7],
+        positioning: 'bottom-center'
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    if (olOverlayObjectRef.current && coordinates) {
+      olOverlayObjectRef.current.setPosition(coordinates)
+    }
+  }, [coordinates])
 
   const measurementWithUnitDistance = useMemo(() => {
-    const prefixe = type === OLGeometryType.POLYGON ? 'r = ' : ''
-    if (distanceUnit === DistanceUnit.METRIC) {
+    const prefixe = type === 'Circle' || type === 'Polygon' ? 'r = ' : ''
+    if (distanceUnit === DistanceUnit.METRIC && measurement) {
       if (measurement < 1000) {
         return `${prefixe}${Math.round(measurement * 100) / 100} mètres`
       }
@@ -128,6 +132,7 @@ const ZoneSelected = styled.div`
 
 const StyledIconButton = styled(IconButton)`
   border-left: 1px solid ${p => p.theme.color.white};
+
   > div > svg {
     height: 13px;
     width: 13px;

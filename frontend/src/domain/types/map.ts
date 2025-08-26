@@ -6,6 +6,7 @@ import { type InteractionListener, type InteractionType } from '../entities/map/
 
 import type { Coordinate } from 'ol/coordinate'
 import type { Geometry } from 'ol/geom'
+import type { Type } from 'ol/geom/Geometry'
 
 export type OverlayItem<T, P> = {
   layerType: T
@@ -24,27 +25,9 @@ export type InteractionTypeAndListener = {
 }
 
 export type SerializedFeature<T> = {
-  geometry: Geometry
+  geometry: Geometry & { type?: Type }
   id: string | number
   properties: T
-}
-
-export const convertToSerializedFeature = <P>(
-  feature: Feature<Geometry> | undefined
-): SerializedFeature<P> | undefined => {
-  if (!feature) {
-    return undefined
-  }
-  const geometry = feature.getGeometry()
-  if (!geometry) {
-    return undefined
-  }
-
-  return {
-    geometry,
-    id: feature.getId() as string | number,
-    properties: feature.getProperties() as P
-  }
 }
 
 const parser = new GeoJSON({ featureProjection: OPENLAYERS_PROJECTION })
@@ -74,7 +57,6 @@ export const convertToFeature = <P>(
   if (!serializedFeature) {
     return undefined
   }
-  const feature = parser.readFeature(serializedFeature) as Feature<Geometry>
 
-  return feature
+  return parser.readFeature(serializedFeature) as Feature<Geometry>
 }
