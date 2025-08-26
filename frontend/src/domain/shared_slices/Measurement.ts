@@ -1,8 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import type { MeasurementType } from '../entities/map/constants'
+import type { Measurement } from '@features/map/layers/measurement'
 
 const persistConfig = {
   key: 'measurement',
@@ -10,28 +11,19 @@ const persistConfig = {
   whitelist: ['measurementsDrawed']
 }
 
-type CircleCoordinatesToAddType = {
-  circleCoordinatesToAdd: any
-  circleRadiusToAdd: any
-}
 type CircleMeasurementInDrawingType = {
-  coordinates: number[]
-  measurement: any
+  center: number[] | undefined
+  radius: number | undefined
 }
 
 export type MeasurementState = {
-  // TODO Type this prop.
-  circleMeasurementInDrawing: CircleMeasurementInDrawingType | undefined
-  // TODO Type this prop.
-  circleMeasurementToAdd: CircleCoordinatesToAddType | undefined
+  customCircleMesurement: CircleMeasurementInDrawingType | undefined
   measurementTypeToAdd: MeasurementType | undefined
-  // TODO Type this prop.
-  measurementsDrawed: Record<string, any>[]
+  measurementsDrawed: Measurement[]
 }
 
 const INITIAL_STATE: MeasurementState = {
-  circleMeasurementInDrawing: undefined,
-  circleMeasurementToAdd: undefined,
+  customCircleMesurement: undefined,
   measurementsDrawed: [],
   measurementTypeToAdd: undefined
 }
@@ -40,59 +32,27 @@ const measurementSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'measurement',
   reducers: {
-    addMeasurementDrawed(state, action) {
-      const nextMeasurementsDrawed = state.measurementsDrawed.concat(action.payload)
-
-      state.measurementsDrawed = nextMeasurementsDrawed
+    addMeasurementDrawed(state, action: PayloadAction<Measurement>) {
+      state.measurementsDrawed = state.measurementsDrawed.concat(action.payload)
     },
     removeMeasurementDrawed(state, action) {
-      const nextMeasurementsDrawed = state.measurementsDrawed.filter(
-        measurement => measurement.feature.id !== action.payload
+      state.measurementsDrawed = state.measurementsDrawed.filter(
+        measurement => measurement.feature?.id !== action.payload
       )
-
-      state.measurementsDrawed = nextMeasurementsDrawed
     },
     resetCircleMeasurementInDrawing(state) {
-      state.circleMeasurementInDrawing = undefined
-    },
-    resetCircleMeasurementToAdd(state) {
-      state.circleMeasurementToAdd = undefined
+      state.customCircleMesurement = undefined
     },
 
     resetMeasurementTypeToAdd(state) {
       state.measurementTypeToAdd = undefined
     },
 
-    /**
-     * Add a circle measurement currently in drawing mode - so the
-     * current measurement done in the map is showed in the Measurement box
-     * @param {Object} state
-     * @param {{
-     *  payload: {
-          circleCoordinates: string
-          circleRadius: string
-        }
-     * }} action - The coordinates and radius of the measurement
-     */
-    setCircleMeasurementInDrawing(state, action) {
-      state.circleMeasurementInDrawing = action.payload
+    setCustomCircleMesurement(state, action: PayloadAction<CircleMeasurementInDrawingType>) {
+      state.customCircleMesurement = action.payload
     },
 
-    /**
-     * Add a circle measurement to the measurements list from the measurement input form
-     * @param {Object} state
-     * @param {{
-     *  payload: {
-          circleCoordinatesToAdd: string
-          circleRadiusToAdd: string
-        }
-     * }} action - The coordinates and radius of the measurement
-     */
-    setCircleMeasurementToAdd(state, action) {
-      state.circleMeasurementToAdd = action.payload
-    },
-
-    setMeasurementDrawedDistanceUnit(state, action) {
+    setMeasurementDrawedDistanceUnit(state, action: PayloadAction<Measurement[]>) {
       state.measurementsDrawed = action.payload
     },
     setMeasurementTypeToAdd(state, action) {
@@ -105,10 +65,8 @@ export const {
   addMeasurementDrawed,
   removeMeasurementDrawed,
   resetCircleMeasurementInDrawing,
-  resetCircleMeasurementToAdd,
   resetMeasurementTypeToAdd,
-  setCircleMeasurementInDrawing,
-  setCircleMeasurementToAdd,
+  setCustomCircleMesurement,
   setMeasurementDrawedDistanceUnit,
   setMeasurementTypeToAdd
 } = measurementSlice.actions

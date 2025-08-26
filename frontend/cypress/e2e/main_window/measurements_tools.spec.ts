@@ -1,6 +1,6 @@
 import { FAKE_MAPBOX_RESPONSE } from '../constants'
 
-context('Measurement tools', () => {
+context('Types tools', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.visit('/#@-824534.42,6082993.21,8.70')

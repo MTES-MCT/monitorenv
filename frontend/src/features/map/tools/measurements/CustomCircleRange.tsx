@@ -1,107 +1,115 @@
-import { coordinatesAreDistinct, getCoordinates, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { boundingExtent } from 'ol/extent'
-import { transform, transformExtent } from 'ol/proj'
+import {
+  coordinatesAreDistinct,
+  CoordinatesInput,
+  NumberInput,
+  OPENLAYERS_PROJECTION,
+  WSG84_PROJECTION
+} from '@mtes-mct/monitor-ui'
+import { Feature } from 'ol'
+import { circular } from 'ol/geom/Polygon'
+import { METERS_PER_UNIT, transform } from 'ol/proj'
 import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { CoordinatesFormat, DistanceUnit, MeasurementType } from '../../../../domain/entities/map/constants'
+import { DistanceUnit, MeasurementType } from '../../../../domain/entities/map/constants'
 import { setIsMapToolVisible } from '../../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import {
   resetCircleMeasurementInDrawing,
-  setCircleMeasurementInDrawing,
-  setCircleMeasurementToAdd,
+  setCustomCircleMesurement,
   setMeasurementTypeToAdd
 } from '../../../../domain/shared_slices/Measurement'
+import { saveMeasurement } from '../../../../domain/use_cases/measurement/saveMeasurement'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { SetCoordinates } from '../../../coordinates/SetCoordinates'
 import { MapToolBox } from '../MapToolBox'
-
-import type { Coordinate } from 'ol/coordinate'
 
 export function CustomCircleRange() {
   const dispatch = useAppDispatch()
-  const { circleMeasurementInDrawing, measurementTypeToAdd } = useAppSelector(state => state.measurement)
+  const { customCircleMesurement, measurementTypeToAdd } = useAppSelector(state => state.measurement)
   const { healthcheckTextWarning } = useAppSelector(state => state.global)
-  const { distanceUnit } = useAppSelector(state => state.map)
+  const { coordinatesFormat, distanceUnit } = useAppSelector(state => state.map)
 
-  const circleCoordinates = useMemo(() => {
-    if (measurementTypeToAdd !== MeasurementType.CIRCLE_RANGE || !circleMeasurementInDrawing?.coordinates?.length) {
+  const circleCenterCoordinates = useMemo(() => {
+    if (measurementTypeToAdd !== MeasurementType.CIRCLE_RANGE || !customCircleMesurement?.center) {
       return []
     }
+    const [longitude, latitude] = transform(customCircleMesurement?.center, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
 
-    return getCoordinates(
-      circleMeasurementInDrawing?.coordinates,
-      OPENLAYERS_PROJECTION,
-      CoordinatesFormat.DECIMAL_DEGREES,
-      false
-    ).map(coordinate => parseFloat(coordinate.replace(/°/g, '')))
-  }, [measurementTypeToAdd, circleMeasurementInDrawing])
+    return longitude && latitude ? [latitude, longitude] : []
+  }, [measurementTypeToAdd, customCircleMesurement?.center])
 
   const circleRadius = useMemo(() => {
-    if (measurementTypeToAdd !== MeasurementType.CIRCLE_RANGE || !circleMeasurementInDrawing?.measurement) {
-      return ''
+    if (measurementTypeToAdd !== MeasurementType.CIRCLE_RANGE) {
+      return undefined
     }
 
-    return circleMeasurementInDrawing?.measurement.replace('r = ', '').replace('nm', '')
-  }, [measurementTypeToAdd, circleMeasurementInDrawing])
+    return customCircleMesurement?.radius
+  }, [measurementTypeToAdd, customCircleMesurement?.radius])
 
   /**
    * Compare with previous coordinates and update interest point coordinates
    * @param {number[]} nextCoordinates - Coordinates ([latitude, longitude]) to update, in decimal format.
    * @param {number[]} coordinates - Previous coordinates ([latitude, longitude]), in decimal format.
    */
-  const updateCoordinates = (nextCoordinates, coordinates) => {
+  const updateCoordinates = nextCoordinates => {
     if (!nextCoordinates?.length) {
       return
     }
 
-    if (!coordinates?.length || coordinatesAreDistinct(nextCoordinates, coordinates)) {
-      updateCustomCircleRange(nextCoordinates, circleRadius)
+    if (!circleCenterCoordinates || coordinatesAreDistinct(nextCoordinates, circleCenterCoordinates)) {
+      dispatch(
+        setCustomCircleMesurement({
+          center: nextCoordinates,
+          radius: customCircleMesurement?.radius
+        })
+      )
     }
   }
 
-  const updateCustomCircleRange = useCallback(
-    (nextCoordinates, nextCircleRadius) => {
-      // Convert to [longitude, latitude] and OpenLayers projection
-      const updatedCoordinates = transform(
-        [nextCoordinates[1], nextCoordinates[0]],
+  const updateCustomCircleRadius = useCallback(
+    (nextCircleRadius: number | undefined) => {
+      dispatch(
+        setCustomCircleMesurement({
+          center: customCircleMesurement?.center,
+          radius: nextCircleRadius
+        })
+      )
+    },
+    [customCircleMesurement?.center, dispatch]
+  )
+
+  const addCustomCircleRange = useCallback(() => {
+    if (!customCircleMesurement?.center || !circleRadius) {
+      return
+    }
+    const metersForOneNauticalMile = 1852
+
+    let radiusInMeters = METERS_PER_UNIT.m * circleRadius * metersForOneNauticalMile
+
+    if (distanceUnit === DistanceUnit.METRIC) {
+      radiusInMeters = METERS_PER_UNIT.m * circleRadius
+    }
+
+    const numberOfVertices = 64
+
+    const formattedCircleCenter = transform(customCircleMesurement?.center, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+    // We need to set feature with geom as WSG84_PROJECTION then convert feature geom to OPENLAYERS_PROJECTION
+    const circleFeature = new Feature({
+      geometry: circular(formattedCircleCenter, radiusInMeters, numberOfVertices).transform(
         WSG84_PROJECTION,
         OPENLAYERS_PROJECTION
       )
-
-      dispatch(
-        setCircleMeasurementInDrawing({
-          coordinates: updatedCoordinates,
-          measurement: nextCircleRadius
-        })
-      )
-    },
-    [dispatch]
-  )
-
-  const addCustomCircleRange = useCallback(
-    async (nextCoordinates, nextCircleRadius) => {
-      if (!nextCoordinates?.length || !nextCircleRadius?.length) {
-        return
-      }
-
-      await dispatch(
-        setCircleMeasurementToAdd({
-          circleCoordinatesToAdd: nextCoordinates,
-          circleRadiusToAdd: nextCircleRadius
-        })
-      )
-
-      const formattedCoordinates = [nextCoordinates[1], nextCoordinates[0]] as Coordinate
-      const extent = transformExtent(boundingExtent([formattedCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+    })
+    dispatch(saveMeasurement(circleFeature, circleRadius))
+    const extent = circleFeature.getGeometry()?.getExtent()
+    if (extent) {
       dispatch(setFitToExtent(extent))
-      dispatch(setMeasurementTypeToAdd(undefined))
-      dispatch(resetCircleMeasurementInDrawing())
-    },
-    [dispatch]
-  )
+    }
+
+    dispatch(setMeasurementTypeToAdd(undefined))
+    resetCircleMeasurementInDrawing()
+  }, [customCircleMesurement?.center, circleRadius, distanceUnit, dispatch])
 
   const cancelAddCircleRange = useCallback(() => {
     dispatch(setMeasurementTypeToAdd(null))
@@ -116,21 +124,28 @@ export function CustomCircleRange() {
     >
       <Header>Définir une valeur</Header>
       <Body>
-        <SetCoordinates coordinates={circleCoordinates} updateCoordinates={updateCoordinates} />
-        <p>Distance (rayon)</p>
-        <input
-          data-cy="measurement-circle-radius-input"
-          onChange={e => updateCustomCircleRange(circleCoordinates, e.target.value)}
-          style={{ width: 62 }}
-          type="text"
-          value={circleRadius}
+        <CoordinatesInput
+          coordinatesFormat={coordinatesFormat}
+          defaultValue={circleCenterCoordinates}
+          label="Coordonnées"
+          name="coordinates"
+          onChange={updateCoordinates}
         />
-        <span>{distanceUnit === DistanceUnit.METRIC ? '(Mètres)' : '(Nm)'}</span>
-        <br />
+        <RadiusWrapper>
+          <NumberInput
+            data-cy="measurement-circle-radius-input"
+            label="Distance (rayon)"
+            name="circleRadius"
+            onChange={nextValue => updateCustomCircleRadius(nextValue)}
+            style={{ width: 115 }}
+            value={circleRadius}
+          />
+          <span>{distanceUnit === DistanceUnit.METRIC ? '(Mètres)' : '(Nm)'}</span>
+        </RadiusWrapper>
         <OkButton
           data-cy="measurement-circle-add"
-          disabled={!circleCoordinates?.length || !circleRadius?.length}
-          onClick={() => addCustomCircleRange(circleCoordinates, circleRadius)}
+          disabled={!circleCenterCoordinates?.length || !circleRadius}
+          onClick={() => addCustomCircleRange()}
         >
           OK
         </OkButton>
@@ -210,4 +225,10 @@ const Header = styled.div`
 
 const Wrapper = styled(MapToolBox)`
   width: 306px;
+`
+
+const RadiusWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: last baseline;
 `
