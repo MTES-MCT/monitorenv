@@ -11,7 +11,22 @@ export function login(user: string) {
     cy.visit('/login')
     cy.wait(500)
 
+    cy.intercept('GET', '/realms/monitor/**').as('authRequest')
+    cy.intercept('**/realms/monitor/**').as('authResponse')
+
     cy.clickButton("S'identifier avec ProConnect")
+
+    cy.wait(5000)
+
+    cy.wait('@authRequest').then(interception => {
+      cy.log(`Status: ${interception?.response?.statusCode}`)
+      cy.log(`Headers: ${JSON.stringify(interception?.response?.headers)}`)
+    })
+    cy.wait('@authResponse').then(interception => {
+      cy.log(`Status: ${interception?.response?.statusCode}`)
+      cy.log(`Headers: ${JSON.stringify(interception?.response?.headers)}`)
+    })
+
     cy.wait(5000)
 
     // Login with Keycloak

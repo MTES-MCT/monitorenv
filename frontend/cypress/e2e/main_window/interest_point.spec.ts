@@ -2,15 +2,6 @@ import { goToMainWindow } from './utils'
 
 context('InterestPoint', () => {
   beforeEach(() => {
-    cy.intercept('GET', '/realms/monitor/**', req => {
-      cy.log('➡️ Requête sortante:', req.method, req.url, req.headers)
-    }).as('authRequest')
-
-    cy.intercept('**/realms/monitor/**', req => {
-      req.continue(res => {
-        cy.log('⬅️ Réponse:', res.statusCode, res.headers)
-      })
-    }).as('authResponse')
     goToMainWindow()
   })
 
