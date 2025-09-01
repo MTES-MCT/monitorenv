@@ -130,7 +130,43 @@ describe('filterVigilanceAreas', () => {
     updatedAt: undefined
   }
 
-  const areas = [todayMin2Days, today, quarter, year, allYear, outsideFilteredDate, infinite]
+  const last3Months = {
+    computedEndDate: `${customDayjs().subtract(1, 'month').format('YYYY-MM-DD')} 23:59:59.99999`,
+    createdAt: undefined,
+    endDatePeriod: `${customDayjs().subtract(1, 'month').format('YYYY-MM-DD')} 23:59:59.99999`,
+    endingCondition: VigilanceArea.EndingCondition.END_DATE,
+    endingOccurrenceDate: `${customDayjs().subtract(1, 'month').format('YYYY-MM-DD')} 23:59:59.00000`,
+    endingOccurrencesNumber: undefined,
+    frequency: VigilanceArea.Frequency.ALL_MONTHS,
+    id: 2,
+    isArchived: false,
+    isAtAllTimes: false,
+    isDraft: false,
+    name: 'Last 3 months',
+    seaFront: 'MED',
+    startDatePeriod: `${customDayjs().subtract(3, 'month').format('YYYY-MM-DD')} 00:00:00.00000`,
+    updatedAt: undefined
+  }
+
+  const last12Months = {
+    computedEndDate: `${customDayjs().subtract(10, 'months').format('YYYY-MM-DD')} 23:59:59.99999`,
+    createdAt: undefined,
+    endDatePeriod: `${customDayjs().subtract(10, 'months').format('YYYY-MM-DD')} 23:59:59.99999`,
+    endingCondition: VigilanceArea.EndingCondition.END_DATE,
+    endingOccurrenceDate: `${customDayjs().subtract(11, 'months').format('YYYY-MM-DD')} 23:59:59.00000`,
+    endingOccurrencesNumber: undefined,
+    frequency: VigilanceArea.Frequency.ALL_MONTHS,
+    id: 2,
+    isArchived: false,
+    isAtAllTimes: false,
+    isDraft: false,
+    name: 'Last 12 months',
+    seaFront: 'MED',
+    startDatePeriod: `${customDayjs().subtract(12, 'months').format('YYYY-MM-DD')} 00:00:00.00000`,
+    updatedAt: undefined
+  }
+
+  const areas = [todayMin2Days, today, quarter, year, allYear, outsideFilteredDate, infinite, last3Months, last12Months]
 
   it('filters areas for today', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.AT_THE_MOMENT)
@@ -139,17 +175,27 @@ describe('filterVigilanceAreas', () => {
 
   it('filters areas within current quarter', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER)
-    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite, last3Months])
   })
 
   it('filters areas within current year', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_YEAR)
-    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite, last3Months])
   })
 
   it('filters areas within next three months', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS)
     expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
+  })
+
+  it('filters areas within last three months', () => {
+    const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.LAST_THREE_MONTHS)
+    expect(result).toEqual([todayMin2Days, quarter, year, allYear, infinite, last3Months])
+  })
+
+  it('filters areas within last twelve months', () => {
+    const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.LAST_TWELVE_MONTHS)
+    expect(result).toEqual([todayMin2Days, quarter, year, allYear, infinite, last3Months, last12Months])
   })
   it('filters areas with vigilance area one complete year', () => {
     const vigilanceAreaOneCompleteYear = {
