@@ -58,6 +58,7 @@ val ktorVersion = "3.2.3"
 val testcontainersVersion = "1.21.3"
 val sentryVersion = "8.18.0"
 val flywayVersion = "11.10.5"
+val springCloudVersion = "2025.0.0"
 
 dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.4"))
@@ -73,6 +74,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-oauth2-resource-server")
     implementation("org.springframework.security:spring-security-oauth2-jose")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webmvc")
 
     // Database & Migration
     implementation("org.postgresql:postgresql")
@@ -121,7 +123,6 @@ dependencies {
 
     // Devtools
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
-    implementation("org.springframework.cloud:spring-cloud-gateway-proxyexchange-webmvc:4.3.0")
 
     // Testing
     testImplementation("org.springframework.security:spring-security-test")
@@ -137,6 +138,11 @@ dependencies {
     testImplementation("net.ttddyy:datasource-proxy:1.11.0")
     testImplementation("io.mockk:mockk:1.14.5")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+}
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+    }
 }
 
 springBoot {
