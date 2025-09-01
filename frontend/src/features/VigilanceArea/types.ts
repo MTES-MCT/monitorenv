@@ -125,6 +125,8 @@ export namespace VigilanceArea {
 
   export enum VigilanceAreaFilterPeriod {
     AT_THE_MOMENT = 'AT_THE_MOMENT',
+    LAST_THREE_MONTHS = 'LAST_THREE_MONTHS',
+    LAST_TWELVE_MONTHS = 'LAST_TWELVE_MONTHS',
     NEXT_THREE_MONTHS = 'NEXT_THREE_MONTHS',
     CURRENT_QUARTER = 'CURRENT_QUARTER',
     CURRENT_YEAR = 'CURRENT_YEAR',
@@ -132,6 +134,8 @@ export namespace VigilanceArea {
   }
 
   export enum VigilanceAreaFilterPeriodLabel {
+    LAST_TWELVE_MONTHS = 'Les douze derniers mois',
+    LAST_THREE_MONTHS = 'Les trois derniers mois',
     AT_THE_MOMENT = 'En ce moment',
     NEXT_THREE_MONTHS = 'Les trois prochains mois',
     CURRENT_QUARTER = 'Ce trimestre',

@@ -38,6 +38,10 @@ function calculatePeriodBounds(
       return { endDate: now.utc().endOf('year'), startDate: now.utc().startOf('year') }
     case VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS:
       return { endDate: now.utc().add(3, 'months').endOf('day'), startDate: now.utc().startOf('day') }
+    case VigilanceArea.VigilanceAreaFilterPeriod.LAST_THREE_MONTHS:
+      return { endDate: now.utc().startOf('day'), startDate: now.utc().subtract(3, 'months').startOf('day') }
+    case VigilanceArea.VigilanceAreaFilterPeriod.LAST_TWELVE_MONTHS:
+      return { endDate: now.utc().startOf('day'), startDate: now.utc().subtract(12, 'months').startOf('day') }
     default:
       // case where the specific period is chosen but no date is provided
       return { endDate: undefined, startDate: undefined }
