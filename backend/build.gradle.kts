@@ -5,15 +5,15 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "3.5.4"
+    id("org.springframework.boot") version "3.5.5"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
-    kotlin("jvm") version "2.2.0"
-    kotlin("plugin.spring") version "2.2.0"
-    kotlin("plugin.allopen") version "2.2.0"
-    kotlin("plugin.noarg") version "2.2.0"
-    kotlin("plugin.jpa") version "2.2.0"
-    kotlin("plugin.serialization") version "2.2.0"
+    kotlin("jvm") version "2.2.10"
+    kotlin("plugin.spring") version "2.2.10"
+    kotlin("plugin.allopen") version "2.2.10"
+    kotlin("plugin.noarg") version "2.2.10"
+    kotlin("plugin.jpa") version "2.2.10"
+    kotlin("plugin.serialization") version "2.2.10"
 }
 
 repositories {
@@ -56,11 +56,11 @@ tasks.withType<KotlinCompile> {
 
 val ktorVersion = "3.2.3"
 val testcontainersVersion = "1.21.3"
-val sentryVersion = "8.18.0"
-val flywayVersion = "11.10.5"
+val sentryVersion = "8.20.0"
+val flywayVersion = "11.11.2"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.4"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.5"))
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -88,7 +88,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.2")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
     implementation("org.n52.jackson:jackson-datatype-jts:2.0.0")
 
     // HTTP Clients (Ktor)
@@ -105,10 +105,10 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.2")
 
     // API Documentation
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.12")
 
     // JodConverter
-    implementation("org.jodconverter:jodconverter-local-lo:4.4.10")
+    implementation("org.jodconverter:jodconverter-local-lo:4.4.11")
     // the two following apoche poi dependencies should have the same version
     implementation("org.apache.poi:poi:5.4.1")
     implementation("org.apache.poi:poi-ooxml:5.4.1")
@@ -125,8 +125,8 @@ dependencies {
     // Testing
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.4")
-    testImplementation("org.assertj:assertj-core:3.27.3")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.5")
+    testImplementation("org.assertj:assertj-core:3.27.4")
     testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
