@@ -5,6 +5,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
+import { uniq } from 'lodash'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -66,6 +67,11 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
       [selectedVigilanceAreaIds, vigilanceAreas]
     )
 
+    const uniqVigilanceAreasIds = uniq([
+      ...selectedVigilanceAreaIds,
+      ...vigilanceAreas.map(vigilanceArea => vigilanceArea.id)
+    ])
+
     return (
       <div>
         {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
@@ -84,10 +90,7 @@ export const VigilanceAreas = forwardRef<HTMLDivElement, VigilanceAreasProps>(
                 <StyledToggleSelectAll
                   onSelection={() =>
                     handleSelection({
-                      allIds: vigilanceAreas.map(
-                        (vigilanceArea: VigilanceArea.VigilanceAreaFromApi | VigilanceArea.VigilanceAreaLayer) =>
-                          vigilanceArea.id
-                      ),
+                      allIds: uniqVigilanceAreasIds,
                       onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
                       onSelect: payload => dispatch(dashboardActions.addItems(payload)),
                       selectedIds: selectedVigilanceAreaIds,

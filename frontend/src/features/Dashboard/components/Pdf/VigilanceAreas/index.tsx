@@ -169,10 +169,19 @@ export function VigilanceAreas({
                     <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
                       <View>
                         <Text style={[areaStyle.description, { width: 'auto' }]}>Réglementations en lien</Text>
-                        {regulatoryAreas.map(linkedRegulatoryArea => (
-                          <Text key={linkedRegulatoryArea.id} style={[areaStyle.details, { width: 'auto' }]}>
-                            {linkedRegulatoryArea.entityName}
-                          </Text>
+                        {regulatoryAreas.map((linkedRegulatoryArea, index) => (
+                          <View
+                            key={linkedRegulatoryArea.id}
+                            style={{ marginBottom: index === regulatoryAreas.length - 1 ? 0 : 7 }}
+                          >
+                            <Link href={linkedRegulatoryArea.url} style={layoutStyle.link}>
+                              <View style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}>
+                                <Text>Résumé réglementaire sur Légicem </Text>
+                                <ExternalLink color={layoutStyle.link.color} size={8} />
+                              </View>
+                            </Link>
+                            <Text style={[areaStyle.details, { fontSize: 6.2 }]}>{linkedRegulatoryArea.refReg}</Text>
+                          </View>
                         ))}
                       </View>
                     </View>
@@ -181,10 +190,16 @@ export function VigilanceAreas({
                     <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
                       <View>
                         <Text style={[areaStyle.description, { width: 'auto' }]}>AMP en lien</Text>
-                        {amps.map(linkedAmp => (
-                          <Text key={linkedAmp.id} style={[areaStyle.details, { width: 'auto' }]}>
-                            {linkedAmp.name}
-                          </Text>
+                        {amps.map((linkedAmp, index) => (
+                          <View key={linkedAmp.id} style={{ marginBottom: index === amps.length - 1 ? 0 : 7 }}>
+                            <Link href={linkedAmp.urlLegicem} style={layoutStyle.link}>
+                              <View style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}>
+                                <Text>Résumé réglementaire sur Légicem </Text>
+                                <ExternalLink color={layoutStyle.link.color} size={8} />
+                              </View>
+                            </Link>
+                            <Text style={[areaStyle.details, { fontSize: 6.2 }]}>{linkedAmp.refReg}</Text>
+                          </View>
                         ))}
                       </View>
                     </View>
@@ -211,7 +226,6 @@ export function VigilanceAreas({
                   <Text style={[layoutStyle.selected, layoutStyle.bold, { marginBottom: 4, marginTop: 13 }]}>
                     Photos
                   </Text>
-
                   <ImageGrid images={vigilanceArea.images} />
                 </View>
               )}
