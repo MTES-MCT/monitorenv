@@ -4,7 +4,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { groupBy } from 'lodash'
+import { groupBy, uniq } from 'lodash'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -73,6 +73,11 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
       [regulatoryAreas, selectedRegulatoryAreaIds]
     )
 
+    const uniqRegulatoryAreasIds = uniq([
+      ...selectedRegulatoryAreaIds,
+      ...regulatoryAreas.map(regulatoryArea => regulatoryArea.id)
+    ])
+
     return (
       <div>
         {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
@@ -91,7 +96,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
                 <StyledToggleSelectAll
                   onSelection={() =>
                     handleSelection({
-                      allIds: regulatoryAreas.map(amp => amp.id),
+                      allIds: uniqRegulatoryAreasIds,
                       onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
                       onSelect: payload => dispatch(dashboardActions.addItems(payload)),
                       selectedIds: selectedRegulatoryAreaIds,
