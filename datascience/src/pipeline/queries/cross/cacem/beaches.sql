@@ -1,8 +1,8 @@
 SELECT 
     id,
-    nom,
+    nom as "name",
     insee,
-    nom_offici,
+    nom_offici as official_name,
     geom,
-    code_posta
+    code_posta as postcode
 FROM prod.plageslitto;
