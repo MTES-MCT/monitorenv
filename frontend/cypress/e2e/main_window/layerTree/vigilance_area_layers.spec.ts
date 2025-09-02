@@ -1,16 +1,14 @@
 import { Layers } from 'domain/entities/layers/constants'
 
-import { FAKE_MAPBOX_RESPONSE, PAGE_CENTER_PIXELS } from '../../constants'
-// import { getBaseLayerSnapShot } from '../utils'
+import { PAGE_CENTER_PIXELS } from '../../constants'
+import { goToMainWindow } from '../utils'
 
 context('LayerTree > Vigilance Area Layers', () => {
   beforeEach(() => {
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
     cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
-
-    cy.visit('/#@-444365.78,6153753.97,7.20')
+    goToMainWindow()
     cy.wait(['@getAmps', '@getRegulatoryAreas'])
 
     cy.wait('@getVigilanceAreas').then(({ response }) => expect(response?.statusCode).equal(200))

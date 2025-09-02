@@ -1,12 +1,11 @@
-import { FAKE_MAPBOX_RESPONSE } from '../../constants'
+import { goToMainWindow } from '../utils'
 
 context('LayerTree > Search zone', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
     cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
-    cy.visit('/#@-196785.63,5515456.96,7.26')
+    goToMainWindow()
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
     cy.clickButton('Arbre des couches').wait(1000)
   })
