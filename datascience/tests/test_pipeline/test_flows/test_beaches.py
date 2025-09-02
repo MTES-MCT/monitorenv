@@ -10,7 +10,7 @@ def test_load_localized_areas(create_cacem_tables):
   load_beaches.run(beaches)
   imported_beaches = read_query(
       db="monitorenv_remote",
-      query="SELECT id, nom, insee, nom_offici, geom, code_posta FROM beaches",
+      query="SELECT id, name, insee, official_name, geom, postcode FROM beaches",
       backend="geopandas",
       geom_col="geom",
       crs=4326,

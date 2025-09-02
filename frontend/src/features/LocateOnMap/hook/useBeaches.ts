@@ -17,7 +17,7 @@ export const useBeaches = () => {
         setBeaches(values)
         setOptions(
           values.map(value => ({
-            label: `${value.properties.nom}, ${value.properties.nom_offici}, ${value.properties.code_posta}`,
+            label: `${value.properties.name}, ${value.properties.official_name}, ${value.properties.postcode}`,
             value: value.id
           }))
         )

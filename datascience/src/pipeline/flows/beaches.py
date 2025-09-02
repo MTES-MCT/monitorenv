@@ -1,13 +1,8 @@
 from pathlib import Path
-import pandas as pd
 import prefect
 import geopandas as gpd
-from prefect import Flow, case, task
-from src.pipeline.generic_tasks import delete_rows, extract, load
-from src.pipeline.processing import df_values_to_psql_arrays
-from sqlalchemy import text
-from src.db_config import create_engine
-from src.pipeline.utils import psql_insert_copy
+from prefect import Flow, task
+from src.pipeline.generic_tasks import extract, load
 
 
 @task(checkpoint=False)
