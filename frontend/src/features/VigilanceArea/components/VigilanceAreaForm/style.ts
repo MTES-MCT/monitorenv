@@ -92,7 +92,7 @@ export const StyledImageButton = styled.button`
 export const PanelContainer = styled.div`
   background-color: ${p => p.theme.color.white};
   box-shadow: 0px 1px 3px #707785b3;
-  max-height: calc(100vh - 107px);
+  max-height: calc(100vh - 330px);
   display: flex;
   flex-direction: column;
   flex: 1;
