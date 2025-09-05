@@ -8,6 +8,7 @@ import { SelectedDashboardLayer } from '@features/Dashboard/components/Layers/Se
 import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { LocalizedAreasLayer } from '@features/LocalizedArea/components/Layers'
+import { LocateOnMapLayer } from '@features/LocateOnMap/Layer'
 import { MissionsLayer } from '@features/Mission/components/Layers'
 import { EditingMissionLayer } from '@features/Mission/components/Layers/EditingMissionLayer'
 import { HoveredMissionLayer } from '@features/Mission/components/Layers/HoveredMissionLayer'
@@ -147,7 +148,11 @@ export function Map() {
 
     // LOCALIZED AREAS
     // @ts-ignore
-    <LocalizedAreasLayer key="LocalizedAreasLayer" />
+    <LocalizedAreasLayer key="LocalizedAreasLayer" />,
+
+    // LOCATE ON MAP
+    // @ts-ignore
+    <LocateOnMapLayer key="LocateOnMapLayer" />
   ]
 
   const superUserChildren = isSuperUser
