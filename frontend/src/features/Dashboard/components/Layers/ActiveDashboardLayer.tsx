@@ -74,12 +74,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
       if (activeDashboard && !mapFocus) {
         // Regulatory Areas
         if (regulatoryLayers?.entities) {
-          let regulatoryLayersIds = activeDashboard.regulatoryAreaIds
-          const openPanelIsRegulatory = openPanel?.type === Dashboard.Block.REGULATORY_AREAS
-          // we don't want to display the area twice
-          if (openPanelIsRegulatory) {
-            regulatoryLayersIds = regulatoryLayersIds.filter(id => id !== openPanel?.id)
-          }
+          const regulatoryLayersIds = activeDashboard.regulatoryAreaIds
           const features = regulatoryLayersIds.reduce((feats: Feature[], layerId) => {
             const layer = regulatoryLayers.entities[layerId]
 
@@ -98,19 +93,12 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
 
             return feats
           }, [])
-
           layersVectorSourceRef.current.addFeatures(features)
         }
 
         // AMP
         if (ampLayers?.entities) {
-          let ampLayerIds = activeDashboard.ampIds
-          const openPanelIsRegulatory = openPanel?.type === Dashboard.Block.AMP
-          // we don't want to display the area twice
-          if (openPanelIsRegulatory) {
-            ampLayerIds = ampLayerIds.filter(id => id !== openPanel?.id)
-          }
-
+          const ampLayerIds = activeDashboard.ampIds
           const features = ampLayerIds?.reduce((feats: Feature[], layerId) => {
             const layer = ampLayers.entities[layerId]
 
@@ -133,12 +121,7 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
 
         // Vigilance Areas
         if (vigilanceAreas?.entities) {
-          let vigilanceAreaLayersIds = activeDashboard.vigilanceAreaIds
-          const openPanelIsVigilanceArea = openPanel?.type === Dashboard.Block.VIGILANCE_AREAS
-          // we don't want to display the area twice
-          if (openPanelIsVigilanceArea) {
-            vigilanceAreaLayersIds = vigilanceAreaLayersIds.filter(id => id !== openPanel?.id)
-          }
+          const vigilanceAreaLayersIds = activeDashboard.vigilanceAreaIds
           const features = vigilanceAreaLayersIds.reduce((feats: Feature[], layerId) => {
             const layer = vigilanceAreas.entities[layerId]
             if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
@@ -191,8 +174,6 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
     activeDashboard?.reportingIds,
     activeDashboard?.vigilanceAreaIds,
     map,
-    openPanel?.id,
-    openPanel?.type,
     regulatoryLayers,
     vigilanceAreas?.entities,
     mapFocus,

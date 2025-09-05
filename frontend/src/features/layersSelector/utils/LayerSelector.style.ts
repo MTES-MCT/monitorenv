@@ -33,7 +33,7 @@ const Name = styled.span<{ $withLargeWidth?: boolean }>`
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: ${p => (p.$withLargeWidth ? '500px' : '280px')};
+  width: ${p => (p.$withLargeWidth ? '463px' : '280px')};
 `
 
 const ZonesNumber = styled.span`

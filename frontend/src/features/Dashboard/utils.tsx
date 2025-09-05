@@ -50,14 +50,33 @@ export const extractFeatures = (
   dashboard: Dashboard.Dashboard | undefined,
   regulatoryLayers: EntityState<RegulatoryLayerWithMetadata, number> | undefined,
   ampLayers: EntityState<AMP, number> | undefined,
-  vigilanceAreas: EntityState<VigilanceArea.VigilanceAreaLayer, number> | undefined
+  vigilanceAreas: EntityState<VigilanceArea.VigilanceAreaLayer, number> | undefined,
+  allLinkedAMPIds: number[],
+  allLinkedRegulatoryAreaIds: number[]
 ) => {
   const allFeatures: Feature[] = []
 
   // RegulatoryAreas Features
   if (dashboard?.regulatoryAreaIds) {
     dashboard.regulatoryAreaIds.forEach(layerId => {
+      const isLinkedToVigilanceAreas = allLinkedRegulatoryAreaIds.includes(layerId)
       const layer = regulatoryLayers?.entities[layerId]
+      if (!isLinkedToVigilanceAreas && layer?.geom?.coordinates.length) {
+        const feature = getRegulatoryFeature({
+          code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
+          isolatedLayer: undefined,
+          layer
+        })
+        if (feature) {
+          allFeatures.push(feature)
+        }
+      }
+    })
+  }
+
+  if (allLinkedRegulatoryAreaIds.length > 0) {
+    allLinkedRegulatoryAreaIds.forEach(areaId => {
+      const layer = regulatoryLayers?.entities[areaId]
       if (layer?.geom?.coordinates.length) {
         const feature = getRegulatoryFeature({
           code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
@@ -74,7 +93,24 @@ export const extractFeatures = (
   // AMP Features
   if (dashboard?.ampIds) {
     dashboard.ampIds.forEach(layerId => {
+      const isLinkedToVigilanceAreas = allLinkedAMPIds.includes(layerId)
       const layer = ampLayers?.entities[layerId]
+      if (!isLinkedToVigilanceAreas && layer?.geom?.coordinates.length) {
+        const feature = getAMPFeature({
+          code: Dashboard.featuresCode.DASHBOARD_AMP,
+          isolatedLayer: undefined,
+          layer
+        })
+        if (feature) {
+          allFeatures.push(feature)
+        }
+      }
+    })
+  }
+
+  if (allLinkedAMPIds.length > 0) {
+    allLinkedAMPIds.forEach(ampId => {
+      const layer = ampLayers?.entities[ampId]
       if (layer?.geom?.coordinates.length) {
         const feature = getAMPFeature({
           code: Dashboard.featuresCode.DASHBOARD_AMP,

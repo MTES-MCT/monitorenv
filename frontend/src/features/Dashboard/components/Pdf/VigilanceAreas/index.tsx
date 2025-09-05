@@ -159,20 +159,23 @@ export function VigilanceAreas({
                       </View>
                     </View>
                   </View>
-                  <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
-                    <View>
-                      <Text style={[areaStyle.description, { width: 'auto' }]}>Commentaires</Text>
-                      <Text style={[areaStyle.details, { width: 'auto' }]}>{vigilanceArea.comments}</Text>
-                    </View>
-                  </View>
                   {regulatoryAreas.length > 0 && (
                     <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
                       <View>
                         <Text style={[areaStyle.description, { width: 'auto' }]}>Réglementations en lien</Text>
-                        {regulatoryAreas.map(linkedRegulatoryArea => (
-                          <Text key={linkedRegulatoryArea.id} style={[areaStyle.details, { width: 'auto' }]}>
-                            {linkedRegulatoryArea.entityName}
-                          </Text>
+                        {regulatoryAreas.map((linkedRegulatoryArea, index) => (
+                          <View
+                            key={linkedRegulatoryArea.id}
+                            style={{ marginBottom: index === regulatoryAreas.length - 1 ? 0 : 7 }}
+                          >
+                            <Link href={linkedRegulatoryArea.url} style={layoutStyle.link}>
+                              <View style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}>
+                                <Text>Résumé réglementaire sur Légicem </Text>
+                                <ExternalLink color={layoutStyle.link.color} size={8} />
+                              </View>
+                            </Link>
+                            <Text style={[areaStyle.details, { fontSize: 6.2 }]}>{linkedRegulatoryArea.refReg}</Text>
+                          </View>
                         ))}
                       </View>
                     </View>
@@ -182,9 +185,10 @@ export function VigilanceAreas({
                       <View>
                         <Text style={[areaStyle.description, { width: 'auto' }]}>AMP en lien</Text>
                         {amps.map(linkedAmp => (
-                          <Text key={linkedAmp.id} style={[areaStyle.details, { width: 'auto' }]}>
-                            {linkedAmp.name}
-                          </Text>
+                          <View key={linkedAmp.id} style={[areaStyle.details, { width: 'auto' }]}>
+                            <Text style={{ fontWeight: 'bold' }}>{linkedAmp.name} /</Text>
+                            <Text>{linkedAmp.type}</Text>
+                          </View>
                         ))}
                       </View>
                     </View>
@@ -206,12 +210,18 @@ export function VigilanceAreas({
                   )}
                 </View>
               </View>
+              <View style={[areaStyle.content, { border: `1 solid ${THEME.color.gainsboro}`, fontSize: 6.8 }]} wrap>
+                <View>
+                  <Text style={[areaStyle.description, { width: 'auto' }]}>Commentaires</Text>
+                  <Text style={[areaStyle.details, { width: 'auto' }]}>{vigilanceArea.comments}</Text>
+                </View>
+              </View>
+
               {vigilanceArea.images && vigilanceArea.images.length > 0 && (
                 <View wrap>
                   <Text style={[layoutStyle.selected, layoutStyle.bold, { marginBottom: 4, marginTop: 13 }]}>
                     Photos
                   </Text>
-
                   <ImageGrid images={vigilanceArea.images} />
                 </View>
               )}

@@ -100,6 +100,7 @@ const Wrapper = styled.div`
   box-shadow: 0px 3px 5px #70778540;
   position: absolute;
   width: 400px;
+  max-height: calc(100vh - 500px);
   z-index: 2;
 `
 const StyledTitle = styled(Title)`
