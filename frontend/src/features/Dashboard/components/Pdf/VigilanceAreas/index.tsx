@@ -159,12 +159,6 @@ export function VigilanceAreas({
                       </View>
                     </View>
                   </View>
-                  <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
-                    <View>
-                      <Text style={[areaStyle.description, { width: 'auto' }]}>Commentaires</Text>
-                      <Text style={[areaStyle.details, { width: 'auto' }]}>{vigilanceArea.comments}</Text>
-                    </View>
-                  </View>
                   {regulatoryAreas.length > 0 && (
                     <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
                       <View>
@@ -190,15 +184,10 @@ export function VigilanceAreas({
                     <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
                       <View>
                         <Text style={[areaStyle.description, { width: 'auto' }]}>AMP en lien</Text>
-                        {amps.map((linkedAmp, index) => (
-                          <View key={linkedAmp.id} style={{ marginBottom: index === amps.length - 1 ? 0 : 7 }}>
-                            <Link href={linkedAmp.urlLegicem} style={layoutStyle.link}>
-                              <View style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}>
-                                <Text>Résumé réglementaire sur Légicem </Text>
-                                <ExternalLink color={layoutStyle.link.color} size={8} />
-                              </View>
-                            </Link>
-                            <Text style={[areaStyle.details, { fontSize: 6.2 }]}>{linkedAmp.refReg}</Text>
+                        {amps.map(linkedAmp => (
+                          <View key={linkedAmp.id} style={[areaStyle.details, { width: 'auto' }]}>
+                            <Text style={{ fontWeight: 'bold' }}>{linkedAmp.name} /</Text>
+                            <Text>{linkedAmp.type}</Text>
                           </View>
                         ))}
                       </View>
@@ -221,6 +210,13 @@ export function VigilanceAreas({
                   )}
                 </View>
               </View>
+              <View style={[areaStyle.content, { border: `1 solid ${THEME.color.gainsboro}`, fontSize: 6.8 }]} wrap>
+                <View>
+                  <Text style={[areaStyle.description, { width: 'auto' }]}>Commentaires</Text>
+                  <Text style={[areaStyle.details, { width: 'auto' }]}>{vigilanceArea.comments}</Text>
+                </View>
+              </View>
+
               {vigilanceArea.images && vigilanceArea.images.length > 0 && (
                 <View wrap>
                   <Text style={[layoutStyle.selected, layoutStyle.bold, { marginBottom: 4, marginTop: 13 }]}>
