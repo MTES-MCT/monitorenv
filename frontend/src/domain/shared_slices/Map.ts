@@ -21,6 +21,14 @@ export type IsolatedLayerType = {
   type: RegulatoryOrAMPOrViglanceAreaLayerType
 }
 
+type LocateOnMap = {
+  extent: Extent
+  location: {
+    id: string
+    name: string
+  }
+}
+
 type MapSliceStateType = {
   coordinatesFormat: CoordinatesFormat
   currentMapExtentTracker?: number[]
@@ -28,6 +36,7 @@ type MapSliceStateType = {
   fitToExtent?: Extent
   isAreaSelected: boolean
   isolatedLayer: IsolatedLayerType | undefined
+  locateOnMap: LocateOnMap | undefined
   selectedBaseLayer: BaseLayer
   zoomToCenter?: Coordinate
 }
@@ -38,6 +47,7 @@ const initialState: MapSliceStateType = {
   fitToExtent: undefined,
   isAreaSelected: false,
   isolatedLayer: undefined,
+  locateOnMap: undefined,
   selectedBaseLayer: BaseLayer.LIGHT,
   zoomToCenter: undefined
 }
@@ -94,6 +104,9 @@ const mapSlice = createSlice({
     setIsolateMode(state, action: PayloadAction<IsolatedLayerType | undefined>) {
       state.isolatedLayer = action.payload
     },
+    setLocateOnMap(state, action: PayloadAction<LocateOnMap | undefined>) {
+      state.locateOnMap = action.payload
+    },
     setZoomToCenter(state, action) {
       state.zoomToCenter = action.payload
     }
@@ -110,5 +123,6 @@ export const {
   setDistanceUnit,
   setFitToExtent,
   setIsolateMode,
+  setLocateOnMap,
   setZoomToCenter
 } = mapActions

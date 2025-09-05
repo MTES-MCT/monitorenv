@@ -1,12 +1,21 @@
 import { useBeaches } from '@features/LocateOnMap/hook/useBeaches'
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Search, Size, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Icon,
+  IconButton,
+  OPENLAYERS_PROJECTION,
+  Size,
+  WSG84_PROJECTION,
+  Search,
+  CustomSearch
+} from '@mtes-mct/monitor-ui'
 import { getColorWithAlpha } from '@utils/utils'
 import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
 import styled from 'styled-components'
 
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
-import { setFitToExtent } from '../../domain/shared_slices/Map'
+import { setFitToExtent, setLocateOnMap } from '../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 
@@ -14,32 +23,48 @@ export function LocateOnMap() {
   const dispatch = useAppDispatch()
   const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
-
-  const [searchedLocation, setSearchedLocation] = useState<string | undefined>('')
+  const locateOnMap = useAppSelector(state => state.map.locateOnMap)
+  const [searchedLocation, setSearchedLocation] = useState<string | undefined>(undefined)
   const results = useGooglePlacesAPI(searchedLocation)
   const { beaches, error, options: beachesResults } = useBeaches()
 
-  const handleSelectLocation = async (placeId: string) => {
-    if (!placeId) {
+  const handleSelectLocation = async (location: { id: string; name: string } | undefined) => {
+    if (!location || !location?.id) {
+      dispatch(setLocateOnMap(undefined))
+
       return
     }
-    if (placeId.startsWith('beaches')) {
-      const bbox = beaches.find(beach => beach.id === placeId)?.bbox
-      if (bbox) {
-        dispatch(setFitToExtent(transformExtent(bbox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)))
+    let extent
 
-        return
+    if (location.id.startsWith('beaches')) {
+      const selectedBeach = beaches.find(beach => beach.id === location.id)
+      if (selectedBeach) {
+        extent = transformExtent(selectedBeach.bbox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+      }
+    } else {
+      const place = await getPlaceCoordinates(location.id)
+      if (place?.bbox) {
+        extent = transformExtent(place.bbox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)
       }
     }
-    const boundingBox = await getPlaceCoordinates(placeId)
-    if (boundingBox) {
-      dispatch(setFitToExtent(transformExtent(boundingBox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)))
-    }
+
+    dispatch(setLocateOnMap({ extent, location }))
+    dispatch(setFitToExtent(extent))
   }
+
+  const onQuery = (searchQuery: string | undefined) => {
+    setSearchedLocation(searchQuery)
+  }
+  const options = [...results, ...beachesResults]
+  const locateOnMapCustomSearch = new CustomSearch(options ?? [], ['label'], {
+    isStrict: true
+  })
 
   return (
     <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
       <StyledSearch
+        key="location-search"
+        customSearch={locateOnMapCustomSearch}
         data-cy="location-search-input"
         error={error}
         isLabelHidden
@@ -48,10 +73,12 @@ export function LocateOnMap() {
         label="Rechercher un lieu"
         name="search-place"
         onChange={handleSelectLocation}
-        onQuery={setSearchedLocation}
-        options={[...results, ...beachesResults]}
+        onQuery={onQuery}
+        options={options}
+        optionValueKey="name"
         placeholder="rechercher un lieu (port, lieu-dit, baie...)"
         size={Size.LARGE}
+        value={locateOnMap?.location}
       />
       <StyledIconButton accent={Accent.PRIMARY} Icon={Icon.Search} size={Size.LARGE} />
     </Wrapper>
