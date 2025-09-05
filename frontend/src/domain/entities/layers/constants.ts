@@ -44,6 +44,7 @@ export enum MonitorEnvLayers {
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
   LOCALIZED_AREAS = 'LOCALIZED_AREAS',
+  LOCATE_ON_MAP = 'LOCATE_ON_MAP',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
   MARPOL = 'MARPOL',
   MEASUREMENT = 'MEASUREMENT',
@@ -332,6 +333,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.RECENT_ACTIVITY_AREA_ICON]: {
     code: MonitorEnvLayers.RECENT_ACTIVITY_AREA_ICON,
+    zIndex: 1500
+  },
+  [MonitorEnvLayers.LOCATE_ON_MAP]: {
+    code: MonitorEnvLayers.LOCATE_ON_MAP,
     zIndex: 1500
   }
 }

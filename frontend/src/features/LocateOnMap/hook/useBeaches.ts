@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 type Options = {
   label: string
-  value: number
+  value: string
 }
 
 export const useBeaches = () => {
@@ -16,10 +16,17 @@ export const useBeaches = () => {
       .then(values => {
         setBeaches(values)
         setOptions(
-          values.map(value => ({
-            label: `${value.properties.name}, ${value.properties.official_name}, ${value.properties.postcode}`,
-            value: value.id
-          }))
+          values.map(value => {
+            const label = `${value.properties.name}, ${value.properties.official_name}, ${value.properties.postcode}`
+
+            return {
+              label,
+              value: {
+                id: value.id,
+                name: label
+              }
+            }
+          })
         )
       })
       .catch(() => {
