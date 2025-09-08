@@ -1,9 +1,10 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { reportingsFiltersMigrations } from '@store/migrations/reportingsFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { StatusFilterEnum } from 'domain/entities/reporting'
-import { isEqual, omit } from 'lodash'
-import { persistReducer } from 'redux-persist'
+import { isEqual } from 'lodash'
+import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -11,10 +12,15 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 export const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
 
+const migrations = {
+  2: (state: any) => reportingsFiltersMigrations.v2(state)
+}
+
 export type SourceFilterProps = {
   id: number
   label: string
 }
+
 export enum ReportingsFiltersEnum {
   ACTIONS = 'actionsFilter',
   IS_ATTACHED_TO_MISSION_FILTER = 'isAttachedToMissionFilter',
@@ -35,9 +41,9 @@ export enum ReportingsFiltersEnum {
 
 type ReportingsFiltersSliceType = {
   actionsFilter?: string[]
-  hasFilters: boolean
   isAttachedToMissionFilter?: boolean
   isUnattachedToMissionFilter?: boolean
+  nbOfFiltersSetted: number
   periodFilter: string
   seaFrontFilter: string[] | undefined
   searchQueryFilter: string | undefined
@@ -52,11 +58,11 @@ type ReportingsFiltersSliceType = {
   typeFilter?: string | undefined
 }
 
-const initialState: ReportingsFiltersSliceType = {
+export const INITIAL_STATE: ReportingsFiltersSliceType = {
   actionsFilter: [],
-  hasFilters: false,
   isAttachedToMissionFilter: false,
   isUnattachedToMissionFilter: false,
+  nbOfFiltersSetted: 0,
   periodFilter: DateRangeEnum.MONTH,
   seaFrontFilter: undefined,
   searchQueryFilter: undefined,
@@ -74,28 +80,39 @@ const initialState: ReportingsFiltersSliceType = {
 const persistConfig = {
   blacklist: ['searchQueryFilter'],
   key: 'reportingFilters',
-  storage
+  migrate: createMigrate(migrations),
+  storage,
+  version: 2
 }
 
 const reportingFiltersSlice = createSlice({
-  initialState,
+  initialState: INITIAL_STATE,
   name: 'reportingFilters',
   reducers: {
     resetReportingsFilters() {
-      return { ...initialState }
+      return { ...INITIAL_STATE }
     },
-    updateFilters(state, action) {
+    updateFilters<K extends keyof ReportingsFiltersSliceType>(
+      state: ReportingsFiltersSliceType,
+      action: PayloadAction<{
+        key: K
+        value: ReportingsFiltersSliceType[keyof ReportingsFiltersSliceType]
+      }>
+    ) {
+      const nextState = { ...state, [action.payload.key]: action.payload.value }
+
+      const keysToExclude = ['startedAfter', 'startedBefore', 'nbOfFiltersSetted']
+
+      const keysToCheck = Object.keys(INITIAL_STATE).filter(key => !keysToExclude.includes(key))
+
+      const nbOfFiltersSetted = keysToCheck.reduce(
+        (count, key) => (isEqual(nextState[key], INITIAL_STATE[key]) ? count : count + 1),
+        0
+      )
+
       return {
-        ...state,
-        [action.payload.key]: action.payload.value,
-        hasFilters: !isEqual(
-          omit(initialState, ['hasFilters', 'startedAfter', 'startedBefore']),
-          omit({ ...state, [action.payload.key]: action.payload.value }, [
-            'hasFilters',
-            'startedAfter',
-            'startedBefore'
-          ])
-        )
+        ...nextState,
+        nbOfFiltersSetted
       }
     }
   }

@@ -43,7 +43,7 @@ export function TableMissionsFiltersWithRef(
 ) {
   const { newWindowContainerRef } = useNewWindow()
   const {
-    hasFilters,
+    nbOfFiltersSetted,
     selectedAdministrationNames,
     selectedCompletionStatus,
     selectedControlUnitIds,
@@ -224,7 +224,7 @@ export function TableMissionsFiltersWithRef(
           />
         </FilterWrapperLine>
       </FilterWrapper>
-      <TagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM || hasFilters}>
+      <TagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM || nbOfFiltersSetted > 0}>
         {selectedPeriod === DateRangeEnum.CUSTOM && (
           <StyledCustomPeriodContainer>
             <DateRangePicker
@@ -243,7 +243,7 @@ export function TableMissionsFiltersWithRef(
         )}
         <FilterTags />
 
-        {hasFilters && <ReinitializeFiltersButton onClick={onResetFilters} />}
+        {nbOfFiltersSetted > 0 && <ReinitializeFiltersButton onClick={onResetFilters} />}
       </TagsContainer>
     </>
   )

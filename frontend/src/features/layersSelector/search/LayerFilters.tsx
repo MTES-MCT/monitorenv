@@ -42,6 +42,7 @@ type LayerFiltersProps = {
   setFilteredRegulatoryThemes: (filteredRegulatoryThemes: ThemeOption[]) => void
   updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
 }
+
 export function LayerFilters({
   ampTypes,
   filteredAmpTypes,
@@ -96,11 +97,19 @@ export function LayerFilters({
 
   const deleteVisibilityFilter = () => {
     dispatch(
-      vigilanceAreaFiltersActions.setVisibility([VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE])
+      vigilanceAreaFiltersActions.updateFilters({
+        key: 'visibility',
+        value: [VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE]
+      })
     )
   }
   const deleteStatusFilter = () => {
-    dispatch(vigilanceAreaFiltersActions.setStatus([VigilanceArea.Status.PUBLISHED, VigilanceArea.Status.DRAFT]))
+    dispatch(
+      vigilanceAreaFiltersActions.updateFilters({
+        key: 'status',
+        value: [VigilanceArea.Status.PUBLISHED, VigilanceArea.Status.DRAFT]
+      })
+    )
   }
 
   return (

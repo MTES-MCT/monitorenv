@@ -17,7 +17,7 @@ import type { ThemeFromAPI } from 'domain/entities/themes'
 export function FilterTags() {
   const dispatch = useAppDispatch()
   const {
-    hasFilters,
+    nbOfFiltersSetted,
     selectedAdministrationNames,
     selectedCompletionStatus,
     selectedControlUnitIds,
@@ -66,7 +66,7 @@ export function FilterTags() {
 
   const hasTagFilters = useMemo(
     () =>
-      hasFilters &&
+      nbOfFiltersSetted > 0 &&
       ((selectedAdministrationNames && selectedAdministrationNames?.length > 0) ||
         (selectedCompletionStatus && selectedCompletionStatus?.length > 0) ||
         (selectedControlUnitIds && selectedControlUnitIds?.length > 0) ||
@@ -76,7 +76,7 @@ export function FilterTags() {
         (selectedTags && selectedTags?.length > 0) ||
         (selectedThemes && selectedThemes?.length > 0)),
     [
-      hasFilters,
+      nbOfFiltersSetted,
       selectedAdministrationNames,
       selectedCompletionStatus,
       selectedControlUnitIds,

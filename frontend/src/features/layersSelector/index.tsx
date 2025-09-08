@@ -1,11 +1,16 @@
+import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { LocalizedAreas } from '@features/LocalizedArea'
+import { NumberOfFilters } from '@features/map/shared/style'
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, FulfillingBouncingCircleLoader, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import styled from 'styled-components'
@@ -19,12 +24,8 @@ import { AmpLayers } from './myAmps'
 import { RegulatoryLayers } from './myRegulatoryLayers'
 import { MyVigilanceAreas } from './myVigilanceAreas'
 import { LayerSearch } from './search'
-import { useGetAMPsQuery } from '../../api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../domain/entities/layers/constants'
 import { restorePreviousDisplayedItems, setDisplayedItems } from '../../domain/shared_slices/Global'
-import { useAppDispatch } from '../../hooks/useAppDispatch'
-import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LayersSidebar() {
   const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
@@ -63,8 +64,20 @@ export function LayersSidebar() {
     dispatch(setDisplayedItems({ visibility: { isLayersSidebarVisible: !isLayersSidebarVisible } }))
   }
 
+  const nbOfVigilanceAreaFiltersSetted = useAppSelector(state => state.vigilanceAreaFilters.nbOfFiltersSetted)
+
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+  const numberOfFiltersThemesAndTags =
+    (filteredRegulatoryTags.length > 0 ? 1 : 0) + (filteredRegulatoryThemes.length > 0 ? 1 : 0)
+  const numberOfVigilanceAreaFilters = numberOfFiltersThemesAndTags + nbOfVigilanceAreaFiltersSetted
+
+  const numberOfFilters = (filteredAmpTypes?.length > 0 ? 1 : 0) + numberOfVigilanceAreaFilters
+
   return (
     <Container>
+      {!isLayersSidebarVisible && numberOfFilters > 0 && <NumberOfFilters>{numberOfFilters}</NumberOfFilters>}
       <SidebarLayersIcon
         $isVisible={displayLayersSidebar}
         accent={Accent.PRIMARY}
@@ -82,7 +95,7 @@ export function LayersSidebar() {
           (displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)) || mainVigilanceAreaFormOpen
         }
       >
-        <LayerSearch />
+        <LayerSearch numberOfFilters={numberOfFilters} />
         <Layers>
           {!isLinkingRegulatoryToVigilanceArea && <AmpLayers />}
           {!isLinkingAmpToVigilanceArea && <RegulatoryLayers />}

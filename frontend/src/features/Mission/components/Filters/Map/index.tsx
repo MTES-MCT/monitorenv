@@ -74,15 +74,18 @@ function MapMissionsFiltersWithRef(
 
   const themeCustomSearch = useMemo(() => new CustomSearch(themes ?? [], ['label']), [themes])
 
-  const udpateStatusFilter = (isChecked, value) => {
-    const updatedFilter = [...(selectedStatuses ?? [])]
-
-    if (!isChecked && updatedFilter.includes(String(value))) {
-      const newFilter = updatedFilter.filter(statusFilter => statusFilter !== String(value))
-      dispatch(updateFilters({ key: MissionFiltersEnum.STATUS_FILTER, value: newFilter }))
+  const udpateStatusFilter = (isChecked: boolean | undefined, value: string) => {
+    if (!isChecked && selectedStatuses?.includes(String(value))) {
+      const newFilter = selectedStatuses?.filter(statusFilter => statusFilter !== String(value))
+      dispatch(
+        updateFilters({
+          key: MissionFiltersEnum.STATUS_FILTER,
+          value: newFilter.length > 0 ? newFilter : undefined
+        })
+      )
     }
-    if (isChecked && !updatedFilter.includes(value)) {
-      const newFilter = [...updatedFilter, value]
+    if (isChecked && !selectedStatuses?.includes(value)) {
+      const newFilter = [...(selectedStatuses ?? []), value]
       dispatch(updateFilters({ key: MissionFiltersEnum.STATUS_FILTER, value: newFilter }))
     }
   }
@@ -271,11 +274,11 @@ function MapMissionsFiltersWithRef(
           customSearch={themeCustomSearch}
           isLabelHidden
           isTransparent
-          label="Thématique"
+          label="Thématiques"
           name="theme"
           onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
           options={themes ?? []}
-          placeholder="Thématique"
+          placeholder="Thématiques"
           popupWidth={300}
           renderValue={() => selectedThemes && <OptionValue>{`Thème (${selectedThemes.length})`}</OptionValue>}
           value={selectedThemes}

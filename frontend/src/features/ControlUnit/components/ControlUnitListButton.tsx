@@ -1,3 +1,4 @@
+import { NumberOfFilters } from '@features/map/shared/style'
 import { missionFormsActions } from '@features/Mission/components/MissionForm/slice'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
 
@@ -12,6 +13,8 @@ import type { MenuButtonProps } from '@components/Menu'
 export function ControlUnitListButton({ onClickMenuButton, onVisibiltyChange }: MenuButtonProps) {
   const dispatch = useAppDispatch()
   const isControlUnitListDialogVisible = useAppSelector(state => state.global.visibility.isControlUnitListDialogVisible)
+
+  const numberOfFiltersSetted = useAppSelector(store => store.mapControlUnitListDialog.numberOfFiltersSetted)
 
   const toggleDialog = () => {
     onClickMenuButton()
@@ -31,6 +34,9 @@ export function ControlUnitListButton({ onClickMenuButton, onVisibiltyChange }: 
         <ControlUnitListDialog onClose={toggleDialog} onVisibiltyChange={onVisibiltyChange} />
       )}
 
+      {numberOfFiltersSetted > 0 && (
+        <NumberOfFilters data-cy="control-unit-number-filters">{numberOfFiltersSetted}</NumberOfFilters>
+      )}
       <MenuWithCloseButton.ButtonOnMap
         $isActive={isControlUnitListDialogVisible}
         Icon={Icon.ControlUnit}

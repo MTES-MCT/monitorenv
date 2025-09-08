@@ -1,5 +1,6 @@
 import { StyledMapMenuDialogContainer, StyledMapMenuDialogTitle } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { NumberOfFilters } from '@features/map/shared/style'
 import { recentActivityActions } from '@features/RecentActivity/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -18,6 +19,8 @@ export function RecentActivityMenuButton({ onClickMenuButton, onVisibiltyChange 
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const isDrawing = useAppSelector(state => state.recentActivity.isDrawing)
+
+  const nbOfFiltersSetted = useAppSelector(store => store.recentActivity.nbOfFiltersSetted)
 
   const toggleRecentActivityDialog = e => {
     e.preventDefault()
@@ -64,6 +67,10 @@ export function RecentActivityMenuButton({ onClickMenuButton, onVisibiltyChange 
           </MapMenuDialogContainer>
         </div>
       )}
+
+      {nbOfFiltersSetted > 0 && (
+        <NumberOfFilters data-cy="recent-activity-number-filters">{nbOfFiltersSetted}</NumberOfFilters>
+      )}
       <MenuWithCloseButton.ButtonOnMap
         className={isRecentActivityDialogVisible ? '_active' : undefined}
         Icon={Icon.PointsCloud}
@@ -74,6 +81,7 @@ export function RecentActivityMenuButton({ onClickMenuButton, onVisibiltyChange 
     </>
   )
 }
+
 const MapMenuDialogContainer = styled(StyledMapMenuDialogContainer)`
   max-height: 480px;
 `

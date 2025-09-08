@@ -1,4 +1,5 @@
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { NumberOfFilters } from '@features/map/shared/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, Size } from '@mtes-mct/monitor-ui'
@@ -17,9 +18,15 @@ export function ReportingsButton({ onClickMenuButton, onVisibiltyChange }: MenuB
     dispatch(globalActions.setDisplayedItems({ visibility: { isSearchReportingsVisible: !isSearchReportingsVisible } }))
   }
 
+  const nbOfFiltersSetted = useAppSelector(state => state.reportingFilters.nbOfFiltersSetted)
+
   return (
     <>
       {isSearchReportingsVisible && <SearchReportings onVisibiltyChange={onVisibiltyChange} />}
+
+      {nbOfFiltersSetted > 0 && (
+        <NumberOfFilters data-cy="reporting-number-filters">{nbOfFiltersSetted}</NumberOfFilters>
+      )}
       <MenuWithCloseButton.ButtonOnMap
         className={isSearchReportingsVisible ? '_active' : undefined}
         data-cy="reportings-button"

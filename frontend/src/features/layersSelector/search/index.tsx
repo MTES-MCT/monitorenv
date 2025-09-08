@@ -1,9 +1,10 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
+import { NumberOfFilters } from '@features/map/shared/style'
 import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { type DateAsStringRange } from '@mtes-mct/monitor-ui'
+import { Accent, type DateAsStringRange, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { isEmpty } from 'lodash'
@@ -27,7 +28,7 @@ import {
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
-export function LayerSearch() {
+export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
   const dispatch = useAppDispatch()
 
   const { data: amps } = useGetAMPsQuery()
@@ -47,6 +48,7 @@ export function LayerSearch() {
 
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
   const displayRegFilters = useAppSelector(state => state.layerSidebar.areRegFiltersOpen)
+  const displayLayersSidebar = useAppSelector(state => state.global.menus.displayLayersSidebar)
 
   const debouncedSearchLayers = useSearchLayers()
 
@@ -129,9 +131,17 @@ export function LayerSearch() {
       vigilanceAreaSpecificPeriodFilter: undefined
     })
     dispatch(
-      vigilanceAreaFiltersActions.setVisibility([VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE])
+      vigilanceAreaFiltersActions.updateFilters({
+        key: 'visibility',
+        value: [VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE]
+      })
     )
-    dispatch(vigilanceAreaFiltersActions.setStatus([VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED]))
+    dispatch(
+      vigilanceAreaFiltersActions.updateFilters({
+        key: 'status',
+        value: [VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED]
+      })
+    )
   }, [dispatch, debouncedSearchLayers, genericSearchParams])
 
   const updateDateRangeFilter = useCallback(
@@ -161,16 +171,23 @@ export function LayerSearch() {
     <SearchContainer>
       <Search>
         <SearchInput
-          displayRegFilters={displayRegFilters}
-          filteredAmpTypes={filteredAmpTypes}
-          filteredRegulatoryTags={filteredRegulatoryTags}
-          filteredRegulatoryThemes={filteredRegulatoryThemes}
-          filteredVigilanceAreaPeriod={filteredVigilanceAreaPeriod}
           globalSearchText={globalSearchText}
           placeholder="Rechercher une zone"
           setGlobalSearchText={handleSearchInputChange}
-          toggleRegFilters={openOrCloseRegFilters}
-        />
+        >
+          <div>
+            {displayLayersSidebar && numberOfFilters > 0 && <NumberOfFilters>{numberOfFilters}</NumberOfFilters>}
+            <IconButton
+              accent={Accent.PRIMARY}
+              className={displayRegFilters ? '_active' : ''}
+              Icon={Icon.FilterBis}
+              onClick={openOrCloseRegFilters}
+              size={Size.LARGE}
+              title="Filtrer par type de zones"
+            />
+          </div>
+        </SearchInput>
+
         {displayRegFilters && (
           <LayerFilters
             ampTypes={ampTypes}

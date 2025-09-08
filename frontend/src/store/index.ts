@@ -1,9 +1,9 @@
-import { type Action, type ThunkAction, configureStore, combineReducers, isPlain } from '@reduxjs/toolkit'
+import { monitorenvPrivateApi, monitorenvPublicApi } from '@api/api'
+import { type Action, combineReducers, configureStore, isPlain, type ThunkAction } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 
 import { homeReducers } from './reducers'
-import { monitorenvPrivateApi, monitorenvPublicApi } from '../api/api'
 
 const homeStore = configureStore({
   middleware: getDefaultMiddleware =>

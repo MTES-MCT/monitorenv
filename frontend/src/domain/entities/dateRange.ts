@@ -15,7 +15,7 @@ export type DateRangeLabel = {
 }
 
 export const DAY_OPTION = {
-  label: 'Aujourd’hui',
+  label: "Aujourd'hui",
   value: DateRangeEnum.DAY
 }
 export const dateRangeOptions = [

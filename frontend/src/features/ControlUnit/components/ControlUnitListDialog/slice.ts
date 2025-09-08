@@ -1,21 +1,35 @@
-import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { set } from 'lodash/fp'
-import { persistReducer } from 'redux-persist'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { controlUnitsFiltersMigrations } from '@store/migrations/controlUnitsFilters'
+import { isEqual } from 'lodash'
+import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import type { FiltersState } from './types'
 
 type ControlUnitListDialogState = {
   filtersState: FiltersState
+  numberOfFiltersSetted: number
 }
 
-const INITIAL_STATE: ControlUnitListDialogState = {
-  filtersState: {}
+export const INITIAL_STATE: ControlUnitListDialogState = {
+  filtersState: {
+    administrationId: undefined,
+    categories: undefined,
+    query: undefined,
+    stationId: undefined,
+    type: undefined
+  },
+  numberOfFiltersSetted: 0
+}
+const migrations = {
+  2: (state: any) => controlUnitsFiltersMigrations.v2(state)
 }
 
 const persistConfig = {
   key: 'controlUnitListDialog',
-  storage
+  migrate: createMigrate(migrations),
+  storage,
+  version: 2
 }
 
 const controlUnitListDialogSlice = createSlice({
@@ -29,10 +43,20 @@ const controlUnitListDialogSlice = createSlice({
       state,
       action: PayloadAction<{
         key: keyof FiltersState
-        value: any
+        value: FiltersState[keyof FiltersState]
       }>
     ) {
-      state.filtersState = set(action.payload.key, action.payload.value, state.filtersState)
+      const nextState = {
+        ...state.filtersState,
+        [action.payload.key]: action.payload.value
+      }
+      state.filtersState = nextState
+      const keysToCheck = Object.keys(INITIAL_STATE.filtersState).filter(key => !['query'].includes(key))
+
+      state.numberOfFiltersSetted = keysToCheck.reduce(
+        (count, key) => (isEqual(nextState[key], INITIAL_STATE.filtersState[key]) ? count : count + 1),
+        0
+      )
     }
   }
 })
