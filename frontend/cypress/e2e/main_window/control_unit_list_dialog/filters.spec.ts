@@ -59,4 +59,21 @@ context('Main Window > Control Unit List Dialog > Filters', () => {
 
     cy.contains('Cultures marines – DDTM 40').should('exist')
   })
+
+  it('Menu button should show the number of filter set', () => {
+    cy.fill('Administration', 'Douane')
+    cy.getDataCy('control-unit-number-filters').contains('1')
+    cy.fill('Type de moyen', 'Barge')
+    cy.getDataCy('control-unit-number-filters').contains('2')
+    cy.fill('Catégorie de moyen', ['Aérien', 'Terrestre'])
+    cy.getDataCy('control-unit-number-filters').contains('3')
+    cy.fill('Base du moyen', 'Marseille')
+    cy.getDataCy('control-unit-number-filters').contains('4')
+
+    cy.fill('Administration', undefined)
+    cy.fill('Type de moyen', undefined)
+    cy.fill('Catégorie de moyen', undefined)
+    cy.fill('Base du moyen', undefined)
+    cy.getDataCy('control-unit-number-filters').should('not.exist')
+  })
 })

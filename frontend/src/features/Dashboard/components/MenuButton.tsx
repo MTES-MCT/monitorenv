@@ -1,5 +1,6 @@
 import { DialogButton, DialogSeparator, StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { NumberOfFilters } from '@features/map/shared/style'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -20,9 +21,9 @@ export function DashboardMenuButton({ onClickMenuButton, onVisibiltyChange }: Me
   const dispatch = useAppDispatch()
   const isDashboardDialogVisible = useAppSelector(state => state.global.visibility.isDashboardDialogVisible)
   const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
-
   const isDrawing = useAppSelector(state => state.dashboard.isDrawing)
 
+  const nbOfFiltersSetted = useAppSelector(store => store.dashboardFilters.nbOfFiltersSetted)
   const toggleDashboardDialog = e => {
     e.preventDefault()
     onClickMenuButton()
@@ -84,6 +85,10 @@ export function DashboardMenuButton({ onClickMenuButton, onVisibiltyChange }: Me
             </MapMenuDialog.Footer>
           )}
         </StyledMapMenuDialogContainer>
+      )}
+
+      {nbOfFiltersSetted > 0 && (
+        <NumberOfFilters data-cy="dashboard-number-filters">{nbOfFiltersSetted}</NumberOfFilters>
       )}
       <MenuWithCloseButton.ButtonOnMap
         className={isDashboardDialogVisible ? '_active' : undefined}

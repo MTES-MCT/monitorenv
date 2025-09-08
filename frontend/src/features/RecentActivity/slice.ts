@@ -1,7 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { recentActivitiesFiltersMigrations } from '@store/migrations/recentActivitiesFilters'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { InteractionType } from 'domain/entities/map/constants'
-import { persistReducer } from 'redux-persist'
+import { isEqual } from 'lodash'
+import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { RecentActivity } from './types'
@@ -10,10 +12,15 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { OverlayItem } from 'domain/types/map'
 import type { Coordinate } from 'ol/coordinate'
 
+const migrations = {
+  2: (state: any) => recentActivitiesFiltersMigrations.v2(state)
+}
 const persistConfig = {
   blacklist: ['drawedGeometry', 'isDrawing', 'isGeometryValid', 'isLegendOpen', 'initialGeometry', 'layersAndOverlays'],
   key: 'recentActivity',
-  storage
+  migrate: createMigrate(migrations),
+  storage,
+  version: 2
 }
 
 export enum RecentActivityFiltersEnum {
@@ -50,9 +57,10 @@ export type RecentActivityState = {
     layerOverlayItems: OverlayItem<string, RecentActivity.RecentControlsActivity>[] | undefined
     selectedControlId: string | undefined
   }
+  nbOfFiltersSetted: number
 }
 
-const INITIAL_STATE: RecentActivityState = {
+export const INITIAL_STATE: RecentActivityState = {
   drawedGeometry: undefined,
   filters: {
     periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS,
@@ -69,7 +77,8 @@ const INITIAL_STATE: RecentActivityState = {
     layerOverlayCoordinates: undefined,
     layerOverlayItems: undefined,
     selectedControlId: undefined
-  }
+  },
+  nbOfFiltersSetted: 0
 }
 const recentActivitySlice = createSlice({
   initialState: INITIAL_STATE,
@@ -117,14 +126,21 @@ const recentActivitySlice = createSlice({
     updateFilters(
       state: RecentActivityState,
       action: PayloadAction<{
-        key: string
-        value: RecentActivityState['filters'][keyof RecentActivityState['filters']]
+        key: RecentActivityFiltersEnum
+        value: RecentActivityFilters[keyof RecentActivityFilters]
       }>
     ) {
-      state.filters = {
+      const nextState = {
         ...state.filters,
         [action.payload.key]: action.payload.value
       }
+      state.filters = nextState
+      const keysToCheck = Object.values(RecentActivityFiltersEnum)
+
+      state.nbOfFiltersSetted = keysToCheck.reduce(
+        (count, key) => (isEqual(nextState[key], INITIAL_STATE.filters[key]) ? count : count + 1),
+        0
+      )
     }
   }
 })

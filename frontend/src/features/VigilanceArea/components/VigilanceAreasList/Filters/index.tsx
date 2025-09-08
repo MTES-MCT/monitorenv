@@ -42,8 +42,8 @@ export function VigilanceAreasFilters() {
 
   const {
     createdBy: createdByFilter,
+    nbOfFiltersSetted,
     seaFronts: seaFrontFilter,
-    searchQuery: searchQueryFilter,
     status: statusFilter,
     visibility: visibilityFilter
   } = useAppSelector(state => state.vigilanceAreaFilters)
@@ -53,22 +53,12 @@ export function VigilanceAreasFilters() {
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
-  const hasFilters =
-    seaFrontFilter?.length > 0 ||
-    createdByFilter?.length > 0 ||
-    statusFilter.length !== 2 ||
-    visibilityFilter.length !== 2 ||
-    !!searchQueryFilter ||
-    filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS ||
-    filteredRegulatoryTags.length > 0 ||
-    filteredRegulatoryThemes.length > 0
-
   const updateSeaFrontFilter = (selectedSeaFronts: string[] | undefined) => {
-    dispatch(vigilanceAreaFiltersActions.setSeaFronts(selectedSeaFronts ?? []))
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'seaFronts', value: selectedSeaFronts }))
   }
 
   const updateCreatedByFilter = (selectedCreatedBy: string[] | undefined) => {
-    dispatch(vigilanceAreaFiltersActions.setCreatedBy(selectedCreatedBy ?? []))
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'createdBy', value: selectedCreatedBy }))
   }
 
   const updateStatusFilter = (checked: boolean | undefined, status: VigilanceArea.Status) => {
@@ -80,7 +70,7 @@ export function VigilanceAreasFilters() {
       filter.splice(filter.indexOf(status), 1)
     }
 
-    dispatch(vigilanceAreaFiltersActions.setStatus(filter))
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'status', value: filter }))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
@@ -126,7 +116,7 @@ export function VigilanceAreasFilters() {
       newVisibilityFilter = currentVisibilityFilter.filter(visibility => visibility !== optionValue)
     }
 
-    dispatch(vigilanceAreaFiltersActions.setVisibility(newVisibilityFilter))
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'visibility', value: newVisibilityFilter }))
     debouncedSearchLayers({
       ampTypes: filteredAmpTypes,
       extent: searchExtent,
@@ -206,7 +196,7 @@ export function VigilanceAreasFilters() {
           value={seaFrontFilter}
         />
       </FilterContainer>
-      {(hasCustomPeriodFilter || hasFilters) && (
+      {(hasCustomPeriodFilter || nbOfFiltersSetted > 0) && (
         <TagsContainer>
           {hasCustomPeriodFilter && (
             <CustomPeriodContainer>
@@ -217,7 +207,7 @@ export function VigilanceAreasFilters() {
 
           <FilterTags />
 
-          {(hasFilters || hasCustomPeriodFilter) && <ReinitializeFiltersButton onClick={resetFilters} />}
+          {(nbOfFiltersSetted > 0 || hasCustomPeriodFilter) && <ReinitializeFiltersButton onClick={resetFilters} />}
         </TagsContainer>
       )}
     </Wrapper>

@@ -20,18 +20,20 @@ import { isNotArchived } from '@utils/isNotArchived'
 import { DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { getTitle } from 'domain/entities/layers/utils'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
-import { isArray, isEqual } from 'lodash'
+import { isArray } from 'lodash'
 import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { dashboardFiltersActions, type DashboardsListFilters, INITIAL_LIST_FILTERS_STATE } from '../DashboardForm/slice'
+import { dashboardFiltersActions, type DashboardsListFilters } from '../DashboardForm/slice'
 
 type Orientation = 'row' | 'column'
+
 export function Filters({ orientation = 'row' }: { orientation?: Orientation }) {
   const dispatch = useAppDispatch()
   const { controlUnits, regulatoryTags, seaFronts, specificPeriod, updatedAt } = useAppSelector(
     state => state.dashboardFilters.filters
   )
+  const nbOfFiltersSetted = useAppSelector(state => state.dashboardFilters.nbOfFiltersSetted)
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
 
   const { data: allControlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
@@ -40,23 +42,23 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     [allControlUnits]
   )
   const updateSeaFrontFilter = (nextValue: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.setListFilters({ seaFronts: nextValue ?? [] }))
+    dispatch(dashboardFiltersActions.updateFilters({ key: 'seaFronts', value: nextValue ?? [] }))
   }
   const resetFilter = () => {
     dispatch(dashboardFiltersActions.resetFilters())
   }
   const updateControlUnitFilter = (nextValue: number[] | undefined) => {
-    dispatch(dashboardFiltersActions.setListFilters({ controlUnits: nextValue ?? [] }))
+    dispatch(dashboardFiltersActions.updateFilters({ key: 'controlUnits', value: nextValue ?? [] }))
   }
   const updateRegulatoryTagsFilter = (nextValue: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.setListFilters({ regulatoryTags: nextValue ?? [] }))
+    dispatch(dashboardFiltersActions.updateFilters({ key: 'regulatoryTags', value: nextValue ?? [] }))
   }
   const updateUpdatedAtFilter = (nextValue: OptionValueType | undefined) => {
     const value = nextValue as DateRangeEnum
-    dispatch(dashboardFiltersActions.setListFilters({ updatedAt: value }))
+    dispatch(dashboardFiltersActions.updateFilters({ key: 'updatedAt', value }))
   }
   const updateUpdateAtSpecificPeriodFilter = (nextValue: DateAsStringRange | undefined) => {
-    dispatch(dashboardFiltersActions.setListFilters({ specificPeriod: nextValue }))
+    dispatch(dashboardFiltersActions.updateFilters({ key: 'specificPeriod', value: nextValue ?? [] }))
   }
   const controlUnitCustomSearch = useMemo(
     () => new CustomSearch(activeControlUnitsOptions ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -75,12 +77,13 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
   const onDeleteTag = (
     valueToDelete: string | number,
     filterKey: keyof DashboardsListFilters,
-    filter: (string | number)[] | string
+    filter: DashboardsListFilters[keyof DashboardsListFilters]
   ) => {
-    let updatedFilter: (string | number)[] | string | undefined = filter
+    let updatedFilter = filter
 
     if (isArray(filter)) {
-      updatedFilter = filter.filter(unit => unit !== valueToDelete)
+      // FIXME(09/09/2025): Admission of weakness: any
+      updatedFilter = (filter as any).filter(unit => unit !== valueToDelete)
     }
     dispatch(
       dashboardFiltersActions.updateFilters({
@@ -89,14 +92,6 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
       })
     )
   }
-
-  const hasFilters = !isEqual(INITIAL_LIST_FILTERS_STATE, {
-    controlUnits,
-    regulatoryTags,
-    seaFronts,
-    specificPeriod,
-    updatedAt
-  })
 
   const seaFrontTags = (
     <Fragment key={`dashboard-seaFronts-${orientation === 'row' ? 'row' : 'column'}`}>
@@ -221,7 +216,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
         <TagsContainer>
           {[specificPeriodDatePicker, seaFrontTags, controlUnitTags, regulatoryTagsTags]}
 
-          {hasFilters && <ReinitializeFiltersButton onClick={resetFilter} />}
+          {nbOfFiltersSetted > 0 && <ReinitializeFiltersButton onClick={resetFilter} />}
         </TagsContainer>
       )}
     </Wrapper>

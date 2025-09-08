@@ -3,7 +3,6 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { SingleTag } from '@mtes-mct/monitor-ui'
 import { deleteThemeTag } from '@utils/deleteThemeTag'
 import { filterSubTags } from '@utils/getTagsAsOptions'
-import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
@@ -15,8 +14,15 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
-  const { hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, tagFilter, targetTypeFilter, themeFilter } =
-    useAppSelector(state => state.reportingFilters)
+  const {
+    nbOfFiltersSetted,
+    seaFrontFilter,
+    sourceFilter,
+    sourceTypeFilter,
+    tagFilter,
+    targetTypeFilter,
+    themeFilter
+  } = useAppSelector(state => state.reportingFilters)
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, filter) => {
     const updatedFilter = filter.filter(unit => unit !== valueToDelete)
@@ -51,19 +57,7 @@ export function FilterTags() {
     )
   }
 
-  const hasTagFilters = useMemo(
-    () =>
-      hasFilters &&
-      ((seaFrontFilter && seaFrontFilter?.length > 0) ||
-        (sourceFilter && sourceFilter?.length > 0) ||
-        (sourceTypeFilter && sourceTypeFilter?.length > 0) ||
-        (targetTypeFilter && targetTypeFilter?.length > 0) ||
-        (tagFilter && tagFilter?.length > 0) ||
-        (themeFilter && themeFilter?.length > 0)),
-    [hasFilters, seaFrontFilter, sourceFilter, sourceTypeFilter, targetTypeFilter, themeFilter, tagFilter]
-  )
-
-  if (!hasTagFilters) {
+  if (nbOfFiltersSetted < 0) {
     return null
   }
 

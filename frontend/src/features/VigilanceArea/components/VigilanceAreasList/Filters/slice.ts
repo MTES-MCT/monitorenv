@@ -1,22 +1,32 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { persistReducer } from 'redux-persist'
+import { vigilanceAreassFiltersMigrations } from '@store/migrations/vigilanceAreasFilters'
+import { isEqual } from 'lodash'
+import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+
+const migrations = {
+  2: (state: any) => vigilanceAreassFiltersMigrations.v2(state)
+}
 
 const persistConfig = {
   key: 'vigilanceAreaFilters',
-  storage
+  migrate: createMigrate(migrations),
+  storage,
+  version: 2
 }
 
 export type VigilanceAreaSliceState = {
   createdBy: string[]
+  nbOfFiltersSetted: number
   seaFronts: string[]
   searchQuery: string | undefined
   status: VigilanceArea.Status[]
   visibility: VigilanceArea.Visibility[]
 }
-const INITIAL_STATE: VigilanceAreaSliceState = {
+export const INITIAL_STATE: VigilanceAreaSliceState = {
   createdBy: [],
+  nbOfFiltersSetted: 0,
   seaFronts: [],
   searchQuery: undefined,
   status: [VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED],
@@ -27,23 +37,34 @@ export const vigilanceAreaFiltersSlice = createSlice({
   name: 'vigilanceAreaFilters',
   reducers: {
     resetFilters: () => INITIAL_STATE,
-    setCreatedBy: (state, action: PayloadAction<string[]>) => {
-      state.createdBy = action.payload
-    },
-    setSeaFronts: (state, action: PayloadAction<string[]>) => {
-      state.seaFronts = action.payload
-    },
     setSearchQueryFilter: (state, action: PayloadAction<string | undefined>) => {
       state.searchQuery = action.payload
     },
-    setStatus: (state, action: PayloadAction<VigilanceArea.Status[]>) => {
-      state.status = action.payload
-    },
-    setVisibility: (state, action: PayloadAction<VigilanceArea.Visibility[]>) => {
-      state.visibility = action.payload
-    },
-    updateFilters: (state, action) => {
-      state[action.payload.key] = action.payload.value
+    updateFilters: <K extends keyof VigilanceAreaSliceState>(
+      state: VigilanceAreaSliceState,
+      action: PayloadAction<{
+        key: K
+        value: VigilanceAreaSliceState[keyof VigilanceAreaSliceState]
+      }>
+    ) => {
+      const nextState = {
+        ...state,
+        [action.payload.key]: action.payload.value
+      }
+
+      const keysToCheck = Object.keys(INITIAL_STATE).filter(
+        key => !['searchQuery'].includes(key)
+      ) as (keyof VigilanceAreaSliceState)[]
+
+      const nbOfFiltersSetted = keysToCheck.reduce(
+        (count, key) => (isEqual(nextState[key], INITIAL_STATE[key]) ? count : count + 1),
+        0
+      )
+
+      return {
+        ...nextState,
+        nbOfFiltersSetted
+      }
     }
   }
 })

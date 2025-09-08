@@ -1,7 +1,8 @@
 import { DialogButton, StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { NumberOfFilters } from '@features/map/shared/style'
 import { addMission } from '@features/Mission/useCases/addMission'
-import { SideWindowStatus, sideWindowActions } from '@features/SideWindow/slice'
+import { sideWindowActions, SideWindowStatus } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
@@ -20,6 +21,8 @@ export function MissionsMenu({ onClickMenuButton, onVisibiltyChange }: MenuButto
   const isSearchMissionsVisible = useAppSelector(state => state.global.visibility.isSearchMissionsVisible)
   const displayMissionsLayer = useAppSelector(state => state.global.layers.displayMissionsLayer)
   const sideWindow = useAppSelector(state => state.sideWindow)
+
+  const nbOfFiltersSetted = useAppSelector(state => state.missionFilters.nbOfFiltersSetted)
 
   const isMissionButtonIsActive = useMemo(
     () => isMissionOrMissionsPage(sideWindow.currentPath) && sideWindow.status !== SideWindowStatus.CLOSED,
@@ -73,6 +76,8 @@ export function MissionsMenu({ onClickMenuButton, onVisibiltyChange }: MenuButto
           </MapMenuDialog.Footer>
         </StyledMapMenuDialogContainer>
       )}
+
+      {nbOfFiltersSetted > 0 && <NumberOfFilters data-cy="mission-number-filters">{nbOfFiltersSetted}</NumberOfFilters>}
       <MenuWithCloseButton.ButtonOnMap
         className={isMissionButtonIsActive ? '_active' : undefined}
         data-cy="missions-button"

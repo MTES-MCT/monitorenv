@@ -3,19 +3,25 @@ import { RecentActivity } from '@features/RecentActivity/types'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { type ControlUnit, type DateAsStringRange } from '@mtes-mct/monitor-ui'
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { dashboardsFiltersMigrations } from '@store/migrations/dashboardsFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { ReportingTypeEnum, StatusFilterEnum } from 'domain/entities/reporting'
-import { set } from 'lodash'
-import { persistReducer } from 'redux-persist'
+import { isEqual, set } from 'lodash'
+import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import type { RecentActivityFiltersEnum } from '@features/RecentActivity/slice'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
+const migrations = {
+  2: (state: any) => dashboardsFiltersMigrations.v2(state)
+}
 const persistConfig = {
   key: 'dashboardFilters_V2',
-  storage
+  migrate: createMigrate(migrations),
+  storage,
+  version: 2
 }
 
 export const INITIAL_DASHBOARD_FILTERS: DashboardFiltersType = {
@@ -103,6 +109,7 @@ type DashboardFiltersState = {
     [key: string]: DashboardFiltersType
   }
   filters: DashboardsListFilters
+  nbOfFiltersSetted: number
 }
 
 export const INITIAL_LIST_FILTERS_STATE: DashboardsListFilters = {
@@ -115,7 +122,8 @@ export const INITIAL_LIST_FILTERS_STATE: DashboardsListFilters = {
 
 const INITIAL_STATE: DashboardFiltersState = {
   dashboards: {},
-  filters: INITIAL_LIST_FILTERS_STATE
+  filters: INITIAL_LIST_FILTERS_STATE,
+  nbOfFiltersSetted: 0
 }
 export const dashboardFiltersSlice = createSlice({
   initialState: INITIAL_STATE,
@@ -178,7 +186,13 @@ export const dashboardFiltersSlice = createSlice({
       }
     },
     setListFilters(state, action: PayloadAction<Partial<DashboardsListFilters>>) {
-      state.filters = { ...state.filters, ...action.payload }
+      const nextState = { ...state.filters, ...action.payload }
+      state.filters = nextState
+      const keysToCheck = Object.keys(INITIAL_LIST_FILTERS_STATE)
+      state.nbOfFiltersSetted = keysToCheck.reduce(
+        (count, key) => (isEqual(nextState[key], INITIAL_LIST_FILTERS_STATE[key]) ? count : count + 1),
+        0
+      )
     },
     setNearbyUnitFilters(
       state,
@@ -226,14 +240,24 @@ export const dashboardFiltersSlice = createSlice({
         state.dashboards[id].vigilanceAreaFilters = { ...vigilanceAreaFilters, ...filters }
       }
     },
-    updateFilters: (
+    updateFilters: <K extends keyof DashboardsListFilters>(
       state,
       action: PayloadAction<{
-        key: keyof DashboardsListFilters
-        value: any
+        key: K
+        value: DashboardsListFilters[keyof DashboardsListFilters]
       }>
     ) => {
-      state.filters[action.payload.key] = action.payload.value
+      const nextState = {
+        ...state.filters,
+        [action.payload.key]: action.payload.value
+      }
+      state.filters = nextState
+      const keysToCheck = Object.keys(INITIAL_LIST_FILTERS_STATE)
+
+      state.nbOfFiltersSetted = keysToCheck.reduce(
+        (count, key) => (isEqual(nextState[key], INITIAL_LIST_FILTERS_STATE[key]) ? count : count + 1),
+        0
+      )
     }
   }
 })

@@ -7,7 +7,7 @@ import { deleteTagTag } from '@utils/deleteTagTag'
 import { deleteThemeTag } from '@utils/deleteThemeTag'
 import styled from 'styled-components'
 
-import { vigilanceAreaFiltersActions } from './slice'
+import { vigilanceAreaFiltersActions, type VigilanceAreaSliceState } from './slice'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
@@ -36,7 +36,7 @@ export function FilterTags() {
     vigilanceAreaSpecificPeriodFilter
   }
 
-  const onDeleteTag = (valueToDelete: string | any, filterKey: string, filter) => {
+  const onDeleteTag = (valueToDelete: string | any, filterKey: keyof VigilanceAreaSliceState, filter) => {
     const updatedFilter = filter.filter(unit => unit !== valueToDelete)
     dispatch(
       vigilanceAreaFiltersActions.updateFilters({

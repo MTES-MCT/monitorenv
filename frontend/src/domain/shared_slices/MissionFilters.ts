@@ -1,11 +1,13 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { isEqual, omit } from 'lodash'
-import { persistReducer } from 'redux-persist'
+import { missionFiltersMigrations } from '@store/migrations/missionsFilters'
+import { isEqual } from 'lodash'
+import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { DateRangeEnum, DAY_OPTION } from '../entities/dateRange'
 
+// import type { HomeRootState } from '@store/index'
 import type { TagOption } from 'domain/entities/tags'
 
 export const TODAY = customDayjs().utc().startOf('day').toISOString()
@@ -27,7 +29,7 @@ export enum MissionFiltersEnum {
 }
 
 type MissionFilterValues = {
-  hasFilters: boolean
+  nbOfFilters: boolean
   searchQuery: string | undefined
   selectedAdministrationNames: string[] | undefined
   selectedCompletionStatus: string[] | undefined
@@ -46,11 +48,11 @@ type MissionFilterValues = {
 export type MissionFiltersState = {
   [K in MissionFiltersEnum]: MissionFilterValues[K]
 } & {
-  hasFilters: boolean
+  nbOfFiltersSetted: number
 }
 
-const INITIAL_STATE: MissionFiltersState = {
-  hasFilters: false,
+export const INITIAL_STATE: MissionFiltersState = {
+  nbOfFiltersSetted: 0,
   searchQuery: undefined,
   selectedAdministrationNames: undefined,
   selectedCompletionStatus: undefined,
@@ -65,11 +67,16 @@ const INITIAL_STATE: MissionFiltersState = {
   startedAfter: TODAY,
   startedBefore: undefined
 }
+const migrations = {
+  2: (state: any) => missionFiltersMigrations.v2(state)
+}
 
 const persistConfig = {
   blacklist: ['searchQuery'],
   key: 'missionFilters',
-  storage
+  migrate: createMigrate(migrations),
+  storage,
+  version: 2
 }
 
 const missionFiltersSlice = createSlice({
@@ -89,17 +96,22 @@ const missionFiltersSlice = createSlice({
         value: MissionFiltersState[K]
       }>
     ) {
-      return {
+      const nextState: MissionFiltersState = {
         ...state,
-        [action.payload.key]: action.payload.value,
-        hasFilters: !isEqual(
-          omit(INITIAL_STATE, ['hasFilters', 'startedAfter', 'startedBefore']),
-          omit({ ...state, [action.payload.key]: action.payload.value }, [
-            'hasFilters',
-            'startedAfter',
-            'startedBefore'
-          ])
-        )
+        [action.payload.key]: action.payload.value
+      }
+
+      const keysToExclude = ['startedAfter', 'startedBefore', 'nbOfFiltersSetted']
+      const keysToCheck = Object.keys(INITIAL_STATE).filter(key => !keysToExclude.includes(key))
+
+      const nbOfFiltersSetted = keysToCheck.reduce(
+        (count, key) => (isEqual(nextState[key], INITIAL_STATE[key]) ? count : count + 1),
+        0
+      )
+
+      return {
+        ...nextState,
+        nbOfFiltersSetted
       }
     }
   }

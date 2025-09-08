@@ -1,5 +1,5 @@
 import { DrawModalInMenu } from '@components/DrawModalInMenu'
-import { recentActivityActions } from '@features/RecentActivity/slice'
+import { recentActivityActions, RecentActivityFiltersEnum } from '@features/RecentActivity/slice'
 import { resetDrawingZone } from '@features/RecentActivity/useCases/resetDrawingZone'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -20,7 +20,7 @@ export function DrawZone({ className }: { className?: string }) {
 
   const handleValidate = () => {
     if (drawedGeometry) {
-      dispatch(recentActivityActions.updateFilters({ key: 'geometry', value: drawedGeometry }))
+      dispatch(recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.GEOMETRY, value: drawedGeometry }))
     }
     dispatch(recentActivityActions.setInitialGeometry(undefined))
     dispatch(recentActivityActions.setIsDrawing(false))

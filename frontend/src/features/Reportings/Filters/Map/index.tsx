@@ -80,12 +80,22 @@ export function MapReportingsFiltersWithRef(
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: ReportingsFiltersEnum, reportingFilter) => {
     const updatedFilter = reportingFilter.filter(unit => unit !== valueToDelete)
-    dispatch(reportingsFiltersActions.updateFilters({ key: filterKey, value: updatedFilter }))
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: filterKey,
+        value: updatedFilter.length === 0 ? undefined : updatedFilter
+      })
+    )
   }
   const onDeleteTagTag = (valueToDelete: TagOption, filter: TagOption[]) => {
     const updatedFilter = deleteTagTag(filter, valueToDelete)
 
-    dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.TAG_FILTER, value: updatedFilter }))
+    dispatch(
+      reportingsFiltersActions.updateFilters({
+        key: ReportingsFiltersEnum.TAG_FILTER,
+        value: updatedFilter.length === 0 ? undefined : updatedFilter
+      })
+    )
   }
 
   const onDeleteThemeTag = (valueToDelete: ThemeOption, filter: ThemeOption[]) => {
@@ -94,7 +104,7 @@ export function MapReportingsFiltersWithRef(
     dispatch(
       reportingsFiltersActions.updateFilters({
         key: ReportingsFiltersEnum.THEME_FILTER,
-        value: updatedFilter
+        value: updatedFilter.length === 0 ? undefined : updatedFilter
       })
     )
   }

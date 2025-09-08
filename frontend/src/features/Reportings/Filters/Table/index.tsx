@@ -53,9 +53,9 @@ export function TableReportingsFiltersWithRef(
 ) {
   const { newWindowContainerRef } = useNewWindow()
   const {
-    hasFilters,
     isAttachedToMissionFilter,
     isUnattachedToMissionFilter,
+    nbOfFiltersSetted,
     periodFilter,
     seaFrontFilter = [],
     sourceFilter = [],
@@ -262,7 +262,7 @@ export function TableReportingsFiltersWithRef(
           />
         </StyledFiltersSecondLine>
       </FilterWrapper>
-      <StyledTagsContainer $withTopMargin={isCustomPeriodVisible || hasFilters}>
+      <StyledTagsContainer $withTopMargin={isCustomPeriodVisible || nbOfFiltersSetted > 0}>
         {isCustomPeriodVisible && (
           <CustomPeriodContainer>
             <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>
@@ -284,7 +284,7 @@ export function TableReportingsFiltersWithRef(
 
         <FilterTags />
 
-        {hasFilters && <ReinitializeFiltersButton onClick={resetFilters} />}
+        {nbOfFiltersSetted > 0 && <ReinitializeFiltersButton onClick={resetFilters} />}
       </StyledTagsContainer>
     </>
   )
