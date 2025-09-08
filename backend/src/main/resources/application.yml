@@ -7,6 +7,7 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
         min-response-size: 2048
 
+
 host:
     ip: ${MONITORENV_URL}
 
@@ -50,6 +51,12 @@ monitorenv:
             enabled: ${MONITORENV_KEYCLOAK_PROXY_ENABLED:false}
 
 spring:
+    cloud:
+        gateway:
+            server:
+                webmvc:
+                    form-filter:
+                        enabled: false
     jmx:
         enabled: true
     mvc:

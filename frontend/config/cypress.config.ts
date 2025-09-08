@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 import { defineConfig } from 'cypress'
 
-const IS_CI = Boolean(process.env.CI)
+const IS_CI = true
 
 export default defineConfig({
   chromeWebSecurity: false,

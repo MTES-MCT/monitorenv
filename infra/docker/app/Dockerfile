@@ -24,7 +24,7 @@ RUN sed -e "s/COMMIT_TO_CHANGE/$GITHUB_SHA/g" \
   -e "s/VERSION_TO_CHANGE/${VERSION}/g" \
   BUILD_GRADLE_WITH_ENV_VARS > build.gradle.kts
 
-RUN gradle assemble
+RUN gradle assemble --parallel -x test
 
 ###########################
 # Build frontend with npm #
@@ -34,6 +34,7 @@ FROM node:20-alpine AS build-front
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DISABLE_ESLINT_PLUGIN=true
 ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 ARG VERSION
 ARG ENV_PROFILE
