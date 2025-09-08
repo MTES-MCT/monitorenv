@@ -1,6 +1,7 @@
 import { StyledMapMenuDialogContainer, StyledMapMenuDialogTitle } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
-import { recentActivityActions } from '@features/RecentActivity/slice'
+import { NumberOfFilters } from '@features/map/shared/style'
+import { INITIAL_STATE, recentActivityActions } from '@features/RecentActivity/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, MapMenuDialog, Size } from '@mtes-mct/monitor-ui'
@@ -18,6 +19,25 @@ export function RecentActivityMenuButton({ onClickMenuButton, onVisibiltyChange 
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const isDrawing = useAppSelector(state => state.recentActivity.isDrawing)
+
+  const {
+    administrationIds: initialAdministrationIdsFilter,
+    controlUnitIds: initialControlUnitIdsFilter,
+    geometry: initialGeometryFilter,
+    periodFilter: initialPeriodFilter,
+    themeIds: initialThemeFilter
+  } = INITIAL_STATE.filters
+
+  const { administrationIds, controlUnitIds, geometry, periodFilter, themeIds } = useAppSelector(
+    store => store.recentActivity.filters
+  )
+
+  const nbFilters =
+    (administrationIds?.length !== initialAdministrationIdsFilter?.length ? 1 : 0) +
+    (controlUnitIds?.length !== initialControlUnitIdsFilter?.length ? 1 : 0) +
+    (geometry !== initialGeometryFilter ? 1 : 0) +
+    (periodFilter !== initialPeriodFilter ? 1 : 0) +
+    (themeIds?.length !== initialThemeFilter?.length ? 1 : 0)
 
   const toggleRecentActivityDialog = e => {
     e.preventDefault()
@@ -64,6 +84,8 @@ export function RecentActivityMenuButton({ onClickMenuButton, onVisibiltyChange 
           </MapMenuDialogContainer>
         </div>
       )}
+
+      {nbFilters > 0 && <NumberOfFilters data-cy="recent-activity-number-filters">{nbFilters}</NumberOfFilters>}
       <MenuWithCloseButton.ButtonOnMap
         className={isRecentActivityDialogVisible ? '_active' : undefined}
         Icon={Icon.PointsCloud}
@@ -74,6 +96,7 @@ export function RecentActivityMenuButton({ onClickMenuButton, onVisibiltyChange 
     </>
   )
 }
+
 const MapMenuDialogContainer = styled(StyledMapMenuDialogContainer)`
   max-height: 480px;
 `

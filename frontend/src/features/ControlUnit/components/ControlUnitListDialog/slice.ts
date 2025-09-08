@@ -1,4 +1,4 @@
-import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { set } from 'lodash/fp'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -9,7 +9,7 @@ type ControlUnitListDialogState = {
   filtersState: FiltersState
 }
 
-const INITIAL_STATE: ControlUnitListDialogState = {
+export const INITIAL_STATE: ControlUnitListDialogState = {
   filtersState: {}
 }
 

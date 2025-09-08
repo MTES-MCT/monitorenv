@@ -53,47 +53,47 @@ export function Menu() {
   return (
     <ButtonsWrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
       {displayMissionMenuButton && isSuperUser && (
-        <li>
+        <MenuItem>
           <MissionsMenu onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
-        </li>
+        </MenuItem>
       )}
       {displayReportingsButton && isSuperUser && (
-        <li>
+        <MenuItem>
           <ReportingsButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
-        </li>
+        </MenuItem>
       )}
       {displaySearchSemaphoreButton && (
-        <li>
+        <MenuItem>
           <SearchSemaphoreButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
-        </li>
+        </MenuItem>
       )}
       {isRightMenuControlUnitListButtonVisible && isSuperUser && (
-        <li>
+        <MenuItem>
           <ControlUnitListButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
-        </li>
+        </MenuItem>
       )}
       {displayRecentActivityMenuButton && (
-        <li>
+        <MenuItem>
           <RecentActivityMenuButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
-        </li>
+        </MenuItem>
       )}
       {displayDashboard && isSuperUser && (
-        <li>
+        <MenuItem>
           <DashboardMenuButton onClickMenuButton={onClickMenuButton} onVisibiltyChange={onVisibiltyChange} />
-        </li>
+        </MenuItem>
       )}
       <ToolWrapper>
         <ToolButtons>
           {displayMeasurement && isSuperUser && <MeasurementMapButton />}
           {displayInterestPoint && isSuperUser && (
-            <li>
+            <MenuItem>
               <InterestPointMapButton />
-            </li>
+            </MenuItem>
           )}
           {displayAccountButton && (
-            <li>
+            <MenuItem>
               <Account />
-            </li>
+            </MenuItem>
           )}
         </ToolButtons>
       </ToolWrapper>
@@ -123,4 +123,8 @@ const ToolButtons = styled.ul`
   flex-direction: column;
   row-gap: 8px;
   padding: 0;
+`
+
+const MenuItem = styled.li`
+  position: relative;
 `

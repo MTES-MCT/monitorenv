@@ -52,7 +52,7 @@ export type RecentActivityState = {
   }
 }
 
-const INITIAL_STATE: RecentActivityState = {
+export const INITIAL_STATE: RecentActivityState = {
   drawedGeometry: undefined,
   filters: {
     periodFilter: RecentActivity.RecentActivityDateRangeEnum.THIRTY_LAST_DAYS,

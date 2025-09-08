@@ -14,7 +14,7 @@ context('Side Window > Dashboard List > Filter Bar', () => {
   })
 
   it('Should filter dashboard for today', () => {
-    cy.fill('Période de mise à jour', 'Aujourd’hui')
+    cy.fill('Période de mise à jour', "Aujourd'hui")
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
 

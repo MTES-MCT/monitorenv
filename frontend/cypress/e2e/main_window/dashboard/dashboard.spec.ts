@@ -39,4 +39,23 @@ context('Dashboard', () => {
       })
     })
   })
+
+  it('Menu button should show the number of filter set', () => {
+    cy.clickButton('Voir les briefs pour les unités')
+    cy.fill('Façade', ['Guadeloupe'])
+    cy.getDataCy('dashboard-number-filters').contains('1')
+    cy.fill('Période de mise à jour', 'Année en cours')
+    cy.getDataCy('dashboard-number-filters').contains('2')
+    cy.fill('Unité', ['DML 2A'])
+    cy.getDataCy('dashboard-number-filters').contains('3')
+    cy.fill('Tags', ['AMP'])
+    cy.getDataCy('dashboard-number-filters').contains('4')
+
+    cy.fill('Façade', undefined)
+    cy.fill('Période de mise à jour', 'Un mois')
+    cy.fill('Unité', undefined)
+    cy.fill('Tags', undefined)
+
+    cy.getDataCy('dashboard-number-filters').should('not.exist')
+  })
 })

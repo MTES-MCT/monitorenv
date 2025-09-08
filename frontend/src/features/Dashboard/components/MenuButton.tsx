@@ -1,5 +1,7 @@
 import { DialogButton, DialogSeparator, StyledMapMenuDialogContainer } from '@components/style'
 import { MenuWithCloseButton } from '@features/commonStyles/map/MenuWithCloseButton'
+import { INITIAL_LIST_FILTERS_STATE as initialFilters } from '@features/Dashboard/components/DashboardForm/slice'
+import { NumberOfFilters } from '@features/map/shared/style'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -20,8 +22,25 @@ export function DashboardMenuButton({ onClickMenuButton, onVisibiltyChange }: Me
   const dispatch = useAppDispatch()
   const isDashboardDialogVisible = useAppSelector(state => state.global.visibility.isDashboardDialogVisible)
   const displayDashboardLayer = useAppSelector(state => state.global.layers.displayDashboardLayer)
-
   const isDrawing = useAppSelector(state => state.dashboard.isDrawing)
+
+  const {
+    controlUnits: initialControlUnitsFilter,
+    regulatoryTags: initialRegulatoryTagsFilter,
+    seaFronts: initialSeaFrontsFilter,
+    specificPeriod: initialSpecificPeriodFilter,
+    updatedAt: initialUpdatedAtFilter
+  } = initialFilters
+  const { controlUnits, regulatoryTags, seaFronts, specificPeriod, updatedAt } = useAppSelector(
+    store => store.dashboardFilters.filters
+  )
+
+  const nbFilters =
+    (controlUnits?.length !== initialControlUnitsFilter?.length ? 1 : 0) +
+    (regulatoryTags.length !== initialRegulatoryTagsFilter.length ? 1 : 0) +
+    (seaFronts.length !== initialSeaFrontsFilter.length ? 1 : 0) +
+    (specificPeriod !== initialSpecificPeriodFilter ? 1 : 0) +
+    (updatedAt !== initialUpdatedAtFilter ? 1 : 0)
 
   const toggleDashboardDialog = e => {
     e.preventDefault()
@@ -85,6 +104,8 @@ export function DashboardMenuButton({ onClickMenuButton, onVisibiltyChange }: Me
           )}
         </StyledMapMenuDialogContainer>
       )}
+
+      {nbFilters > 0 && <NumberOfFilters data-cy="dashboard-number-filters">{nbFilters}</NumberOfFilters>}
       <MenuWithCloseButton.ButtonOnMap
         className={isDashboardDialogVisible ? '_active' : undefined}
         data-cy="dashboard"

@@ -140,7 +140,12 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
         administrationsUpdatedWithUnits?.find(control => control.controlUnitIds.includes(unitId))
       )
 
-      dispatch(updateFilters({ key: MissionFiltersEnum.UNIT_FILTER, value: unitsFiltered }))
+      dispatch(
+        updateFilters({
+          key: MissionFiltersEnum.UNIT_FILTER,
+          value: (unitsFiltered?.length ?? 0) > 0 ? unitsFiltered : undefined
+        })
+      )
       dispatch(updateFilters({ key: MissionFiltersEnum.ADMINISTRATION_FILTER, value: nextSelectedAdministrationIds }))
     },
     [administrations, dispatch, selectedControlUnitIds]
