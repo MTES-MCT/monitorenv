@@ -1,7 +1,7 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { setMapView } from 'domain/shared_slices/Map'
-import { isEqual } from 'lodash'
+import { debounce, isEqual } from 'lodash'
 import { transformExtent } from 'ol/proj'
 import { useEffect, useRef } from 'react'
 
@@ -21,7 +21,7 @@ export const useSyncMapViewToRedux = (map: OpenLayerMap | undefined) => {
 
     const view = map.getView()
 
-    const handleMoveEnd = () => {
+    const handleMoveEnd = debounce(() => {
       const extent3857 = view.calculateExtent(map.getSize())
       const extent4326 = transformExtent(extent3857, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
       const zoom = view.getZoom()
@@ -36,7 +36,7 @@ export const useSyncMapViewToRedux = (map: OpenLayerMap | undefined) => {
 
         dispatch(setMapView({ bbox: extent4326, zoom: zoomValue }))
       }
-    }
+    }, 250)
 
     map.on('moveend', handleMoveEnd)
 
