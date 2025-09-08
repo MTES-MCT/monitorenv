@@ -114,7 +114,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     )
   })
 
-  it('should retrieve all themes into awareness select field in surveillance actions', () => {
+  it('Should retrieve all themes into awareness select field in surveillance actions', () => {
     // Given
     cy.intercept('GET', '/api/v1/themes*').as('getThemes')
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
@@ -717,7 +717,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       // update target type and check if vehicle type is cleaned
       cy.fill('Type de cible', 'Personne morale')
-      cy.get('[id="envActions.0.vehicleType"]').should('have.value', '')
+      cy.get('input[name="envActions.0.vehicleType"]').should('have.value', '')
 
       // re add vehicle type
       cy.fill('Type de cible', 'Véhicule')

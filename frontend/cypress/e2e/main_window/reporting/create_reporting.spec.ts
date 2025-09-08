@@ -382,8 +382,8 @@ context('Reporting', () => {
       cy.get('input[name="targetDetails.1.imo"]').type('123456789', { force: true })
       cy.get('input[id="targetDetails.1.size"]').type('12', { force: true })
       cy.get('input[name="targetDetails.1.vesselName"]').type('BALTIK', { force: true })
-      cy.get('div[id="targetDetails.1.vesselType"]').click({ force: true })
-      cy.get('div[id="targetDetails.1.vesselType-opt-MOTOR"]').click({ force: true })
+      cy.get('input[name="targetDetails.1.vesselType"]').click({ force: true })
+      cy.get('span[title="Moteur"]').click({ force: true })
       cy.getDataCy('reporting-target-info-message').should('not.exist')
 
       // clean
