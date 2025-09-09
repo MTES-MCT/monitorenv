@@ -1,5 +1,6 @@
 import { getFutureDate } from '../../utils/getFutureDate'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+import { goToMainWindow } from '../utils'
 
 describe('Create Vigilance Area', () => {
   beforeEach(() => {
@@ -7,8 +8,7 @@ describe('Create Vigilance Area', () => {
     cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
 
-    cy.viewport(1580, 1024)
-    cy.visit('/#@-1049081.65,5909154.00,6.00')
+    goToMainWindow()
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas').as('createVigilanceArea')

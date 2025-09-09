@@ -4,7 +4,6 @@ import { visitSideWindow } from '../../utils/visitSideWindow'
 context('Side Window > Dashboard > Edit Dashboard', () => {
   beforeEach(() => {
     cy.intercept('GET', '/bff/v1/dashboards').as('getDashboards')
-    cy.viewport(1280, 1024)
     visitSideWindow()
     cy.clickButton('Tableaux de bord')
     cy.wait('@getDashboards')

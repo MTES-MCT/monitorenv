@@ -1,13 +1,14 @@
 import { Layers } from 'domain/entities/layers/constants'
 
-import { FAKE_MAPBOX_RESPONSE, PAGE_CENTER_PIXELS } from '../../constants'
+import { PAGE_CENTER_PIXELS } from '../../constants'
+import { goToMainWindow } from '../utils'
 
 context('LayerTree > AMP Layers', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
     cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
-    cy.visit(`/`)
+    goToMainWindow()
+
     cy.wait(['@getAmps', '@getRegulatoryAreas'])
     cy.clickButton('Arbre des couches').wait(1000)
   })

@@ -5,6 +5,7 @@ import {
 
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
 import { getFutureDate } from '../../utils/getFutureDate'
+import { visitSideWindow } from '../../utils/visitSideWindow'
 
 import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
 
@@ -26,13 +27,7 @@ const surveillanceGeometry: GeoJSON.Geometry = {
 }
 context('Side Window > Mission Form > Mission zone', () => {
   beforeEach(() => {
-    cy.viewport(1280, 1024)
-    cy.visit(`/side_window`, {
-      onBeforeLoad: () => {
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
-      }
-    })
+    visitSideWindow()
 
     // Create mission with surveillance
     cy.clickButton('Ajouter une nouvelle mission')
