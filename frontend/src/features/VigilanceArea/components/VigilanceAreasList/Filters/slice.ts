@@ -15,7 +15,7 @@ export type VigilanceAreaSliceState = {
   status: VigilanceArea.Status[]
   visibility: VigilanceArea.Visibility[]
 }
-const INITIAL_STATE: VigilanceAreaSliceState = {
+export const INITIAL_STATE: VigilanceAreaSliceState = {
   createdBy: [],
   seaFronts: [],
   searchQuery: undefined,

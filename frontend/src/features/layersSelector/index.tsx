@@ -1,11 +1,18 @@
+import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { LocalizedAreas } from '@features/LocalizedArea'
+import { NumberOfFilters } from '@features/map/shared/style'
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
+import { INITIAL_STATE as initialVigilanceAreaFilter } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
+import { VigilanceArea } from '@features/VigilanceArea/types'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, FulfillingBouncingCircleLoader, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import styled from 'styled-components'
@@ -19,12 +26,8 @@ import { AmpLayers } from './myAmps'
 import { RegulatoryLayers } from './myRegulatoryLayers'
 import { MyVigilanceAreas } from './myVigilanceAreas'
 import { LayerSearch } from './search'
-import { useGetAMPsQuery } from '../../api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../domain/entities/layers/constants'
 import { restorePreviousDisplayedItems, setDisplayedItems } from '../../domain/shared_slices/Global'
-import { useAppDispatch } from '../../hooks/useAppDispatch'
-import { useAppSelector } from '../../hooks/useAppSelector'
 
 export function LayersSidebar() {
   const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
@@ -63,8 +66,35 @@ export function LayersSidebar() {
     dispatch(setDisplayedItems({ visibility: { isLayersSidebarVisible: !isLayersSidebarVisible } }))
   }
 
+  const { createdBy, seaFronts, status, visibility } = initialVigilanceAreaFilter
+  const {
+    createdBy: createdByFilter,
+    seaFronts: seaFrontsFilter,
+    status: statusFilter,
+    visibility: visibilityFilter
+  } = useAppSelector(state => state.vigilanceAreaFilters)
+
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
+  const defaultVigilanceAreaPeriod =
+    filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
+  const numberOfFiltersThemesAndTags =
+    (filteredRegulatoryTags.length > 0 ? 1 : 0) + (filteredRegulatoryThemes.length > 0 ? 1 : 0)
+  const numberOfVigilanceAreaFilters =
+    numberOfFiltersThemesAndTags +
+    (!defaultVigilanceAreaPeriod ? 1 : 0) +
+    (statusFilter.length !== status.length ? 1 : 0) +
+    (visibilityFilter.length !== visibility.length ? 1 : 0) +
+    (seaFrontsFilter.length !== seaFronts.length ? 1 : 0) +
+    (createdByFilter.length !== createdBy.length ? 1 : 0)
+
+  const numberOfFilters = (filteredAmpTypes?.length > 0 ? 1 : 0) + numberOfVigilanceAreaFilters
+
   return (
     <Container>
+      {!isLayersSidebarVisible && numberOfFilters > 0 && <NumberOfFilters>{numberOfFilters}</NumberOfFilters>}
       <SidebarLayersIcon
         $isVisible={displayLayersSidebar}
         accent={Accent.PRIMARY}
@@ -82,7 +112,7 @@ export function LayersSidebar() {
           (displayLayersSidebar && (isLayersSidebarVisible || metadataPanelIsOpen)) || mainVigilanceAreaFormOpen
         }
       >
-        <LayerSearch />
+        <LayerSearch numberOfFilters={numberOfFilters} />
         <Layers>
           {!isLinkingRegulatoryToVigilanceArea && <AmpLayers />}
           {!isLinkingAmpToVigilanceArea && <RegulatoryLayers />}

@@ -49,7 +49,7 @@ export type MissionFiltersState = {
   hasFilters: boolean
 }
 
-const INITIAL_STATE: MissionFiltersState = {
+export const INITIAL_STATE: MissionFiltersState = {
   hasFilters: false,
   searchQuery: undefined,
   selectedAdministrationNames: undefined,

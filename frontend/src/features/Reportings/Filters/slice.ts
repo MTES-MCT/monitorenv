@@ -15,6 +15,7 @@ export type SourceFilterProps = {
   id: number
   label: string
 }
+
 export enum ReportingsFiltersEnum {
   ACTIONS = 'actionsFilter',
   IS_ATTACHED_TO_MISSION_FILTER = 'isAttachedToMissionFilter',
@@ -52,7 +53,7 @@ type ReportingsFiltersSliceType = {
   typeFilter?: string | undefined
 }
 
-const initialState: ReportingsFiltersSliceType = {
+export const INITIAL_STATE: ReportingsFiltersSliceType = {
   actionsFilter: [],
   hasFilters: false,
   isAttachedToMissionFilter: false,
@@ -78,18 +79,18 @@ const persistConfig = {
 }
 
 const reportingFiltersSlice = createSlice({
-  initialState,
+  initialState: INITIAL_STATE,
   name: 'reportingFilters',
   reducers: {
     resetReportingsFilters() {
-      return { ...initialState }
+      return { ...INITIAL_STATE }
     },
     updateFilters(state, action) {
       return {
         ...state,
         [action.payload.key]: action.payload.value,
         hasFilters: !isEqual(
-          omit(initialState, ['hasFilters', 'startedAfter', 'startedBefore']),
+          omit(INITIAL_STATE, ['hasFilters', 'startedAfter', 'startedBefore']),
           omit({ ...state, [action.payload.key]: action.payload.value }, [
             'hasFilters',
             'startedAfter',
