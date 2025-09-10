@@ -85,7 +85,7 @@ export function Menu() {
       <ToolWrapper>
         <ToolButtons>
           {displayMeasurement && isSuperUser && <MeasurementMapButton />}
-          {displayInterestPoint && isSuperUser && (
+          {displayInterestPoint && (
             <MenuItem>
               <InterestPointMapButton />
             </MenuItem>

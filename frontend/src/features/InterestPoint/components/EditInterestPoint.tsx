@@ -37,6 +37,7 @@ type EditInterestPointProps = {
 }
 export function EditInterestPoint({ close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
 
@@ -184,10 +185,12 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
             Supprimer le point
           </Button>
         )}
-        {isEditing && <Separator />}
-        <Button accent={Accent.SECONDARY} disabled={coordinates.length === 0} onClick={createReporting}>
-          Créer un signalement
-        </Button>
+        {isSuperUser && isEditing && <Separator />}
+        {isSuperUser && (
+          <Button accent={Accent.SECONDARY} disabled={coordinates.length === 0} onClick={createReporting}>
+            Créer un signalement
+          </Button>
+        )}
       </MapMenuDialog.Footer>
     </StyledMapMenuDialogContainer>
   )

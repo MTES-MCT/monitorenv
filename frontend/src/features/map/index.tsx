@@ -83,6 +83,8 @@ export function Map() {
     <MapCoordinatesBox key="MapCoordinatesBox" />,
     // @ts-ignore
     <MapLayer key="MapLayer" />,
+    // @ts-ignore
+    <InterestPointLayer key="InterestPointLayer" />,
 
     // ZONE
     // @ts-ignore
@@ -159,8 +161,6 @@ export function Map() {
     ? [
         // @ts-ignore
         <MeasurementLayer key="MeasurementLayer" />,
-        // @ts-ignore
-        <InterestPointLayer key="InterestPointLayer" />,
         // @ts-ignore
         <DrawLayer key="DrawLayer" />,
         // @ts-ignore
