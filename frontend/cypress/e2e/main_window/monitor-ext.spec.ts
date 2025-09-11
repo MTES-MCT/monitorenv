@@ -27,7 +27,6 @@ context('MonitorExt', () => {
     cy.getDataCy('semaphores-button').should('exist')
     cy.get('button[title="Liste des unités de contrôle"]').should('not.exist')
     cy.getDataCy('measurement').should('not.exist')
-    cy.getDataCy('interest-point').should('not.exist')
   })
 
   it('A user can consult vigilance areas', () => {
@@ -55,5 +54,19 @@ context('MonitorExt', () => {
     cy.getDataCy('reporting-title').contains('23-00007 - Good Company')
     cy.get('.Field-TextInput').find('label').contains('Saisi par').should('not.exist')
     cy.get('.Field-TextInput').find('label').contains('Actions effectuées').should('not.exist')
+  })
+
+  it('A user can create and delete an interest point', () => {
+    cy.wait(1000).get('#root').click(325, 580).wait(250)
+
+    cy.clickButton("Créer un point d'intérêt")
+    cy.get('#root').click(490, 580)
+    cy.fill('Libellé du point', 'Point 1')
+    cy.fill('Observations', 'Ceci est un observation')
+    cy.clickButton('Créer le point')
+
+    // wait to zoom on interest point
+    cy.wait(1200)
+    cy.clickButton('Supprimer')
   })
 })
