@@ -1,8 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaSourceEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -12,6 +15,8 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.JdbcType
+import org.hibernate.dialect.PostgreSQLEnumJdbcType
 import java.util.UUID
 
 @Entity
@@ -30,6 +35,13 @@ class VigilanceAreaSourceModel(
     @Column(name = "name") val name: String?,
     @Column(name = "email") val email: String?,
     @Column(name = "phone") val phone: String?,
+    @Column(name = "comments") val comments: String?,
+    @Column(name = "link") val link: String?,
+    @Column(name = "is_anonymous", nullable = false) val isAnonymous: Boolean = false,
+    @Column(name = "type", columnDefinition = "vigilance_area_source_type")
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType::class)
+    val type: SourceTypeEnum = SourceTypeEnum.OTHER,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -53,6 +65,10 @@ class VigilanceAreaSourceModel(
             name = vigilanceAreaSource.name,
             email = vigilanceAreaSource.email,
             phone = vigilanceAreaSource.phone,
+            comments = vigilanceAreaSource.comments,
+            link = vigilanceAreaSource.link,
+            isAnonymous = vigilanceAreaSource.isAnonymous,
+            type = vigilanceAreaSource.type,
         )
 
         fun toVigilanceAreaSources(
@@ -72,6 +88,10 @@ class VigilanceAreaSourceModel(
                                 name = null,
                                 phone = null,
                                 email = null,
+                                link = null,
+                                comments = sources.firstOrNull { it.comments != null }?.comments,
+                                isAnonymous = sources.any { it.isAnonymous },
+                                type = SourceTypeEnum.CONTROL_UNIT,
                             ),
                         )
                     } else {
@@ -82,6 +102,10 @@ class VigilanceAreaSourceModel(
                                 name = source.name,
                                 phone = source.phone,
                                 email = source.email,
+                                link = source.link,
+                                comments = source.comments,
+                                isAnonymous = source.isAnonymous,
+                                type = source.type,
                             )
                         }
                     }

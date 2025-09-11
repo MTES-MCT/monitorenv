@@ -68,11 +68,15 @@ export namespace VigilanceArea {
   }
 
   export interface VigilanceAreaSource {
+    comments?: string
     controlUnitContacts?: ControlUnit.ControlUnitContactData[]
     email?: string
     id?: string
+    isAnonymous: boolean
+    link?: string
     name?: string
     phone?: string
+    type: VigilanceAreaSourceType
   }
 
   export enum Frequency {
@@ -172,11 +176,13 @@ export namespace VigilanceArea {
 
   export enum VigilanceAreaSourceType {
     CONTROL_UNIT = 'CONTROL_UNIT',
-    OTHER = 'OTHER'
+    OTHER = 'OTHER',
+    INTERNAL = 'INTERNAL'
   }
 
   export enum VigilanceAreaSourceTypeLabel {
     CONTROL_UNIT = 'Unité',
-    OTHER = 'Autre'
+    OTHER = 'Autre',
+    INTERNAL = 'Interne CACEM'
   }
 }

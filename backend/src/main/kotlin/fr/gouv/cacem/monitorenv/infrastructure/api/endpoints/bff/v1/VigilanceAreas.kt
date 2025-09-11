@@ -66,7 +66,7 @@ class VigilanceAreas(
     }
 
     @PutMapping(value = ["/{vigilanceAreaId}"], consumes = ["application/json"])
-    @Operation(summary = "Update a mission")
+    @Operation(summary = "Update a vigilance Area")
     fun update(
         @PathParam("Vigilance Area Id")
         @PathVariable(name = "vigilanceAreaId")

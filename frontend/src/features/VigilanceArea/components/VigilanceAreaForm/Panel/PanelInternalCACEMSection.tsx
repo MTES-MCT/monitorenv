@@ -60,11 +60,17 @@ export function PanelInternalCACEMSection({
                     {Object.entries(groupBy(source.controlUnitContacts, item => item.controlUnitId)).map(
                       ([controlUnitId, contacts]) => (
                         <div key={`control-unit-source-${controlUnitId}`}>
-                          <PanelSource name={getControlUnitName(+controlUnitId)} />
+                          <PanelSource
+                            isAnonymous={source.isAnonymous}
+                            isReadOnly
+                            name={getControlUnitName(+controlUnitId)}
+                          />
                           {contacts.map(contact => (
                             <PanelSource
                               key={`control-unit-contact-source-${contact.id}`}
+                              comments={source.comments}
                               email={contact.email}
+                              isReadOnly
                               phone={contact.phone}
                             />
                           ))}
@@ -73,7 +79,15 @@ export function PanelInternalCACEMSection({
                     )}
                   </>
                 ) : (
-                  <PanelSource email={source.email} name={source.name} phone={source.phone} />
+                  <PanelSource
+                    comments={source.comments}
+                    email={source.email}
+                    isAnonymous={source.isAnonymous}
+                    isReadOnly
+                    link={source.link}
+                    name={source.name}
+                    phone={source.phone}
+                  />
                 )}
               </Fragment>
             ))}

@@ -7,10 +7,16 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const VigilanceAreaSourceSchema: Yup.Schema<Omit<VigilanceArea.VigilanceAreaSource, 'id'>> = Yup.object()
   .shape({
+    comments: Yup.string().optional(),
     controlUnitContacts: Yup.array().ensure().optional(),
     email: Yup.string().optional(),
+    isAnonymous: Yup.boolean().required(),
+    link: Yup.string().optional(),
     name: Yup.string().optional(),
-    phone: Yup.string().optional()
+    phone: Yup.string().optional(),
+    type: Yup.mixed<VigilanceArea.VigilanceAreaSourceType>()
+      .oneOf(Object.values(VigilanceArea.VigilanceAreaSourceType))
+      .required('Requis')
   })
   .test(
     'at-least-one-contact',
