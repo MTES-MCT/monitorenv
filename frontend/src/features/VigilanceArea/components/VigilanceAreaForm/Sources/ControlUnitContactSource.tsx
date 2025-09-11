@@ -10,16 +10,17 @@ import {
   Fieldset,
   getOptionsFromIdAndName,
   Link,
-  Select
+  Select,
+  Textarea
 } from '@mtes-mct/monitor-ui'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 export function ControlUnitContactSource({
-  onSelect,
+  onEditSource,
   source
 }: {
-  onSelect: (controlUnitContacts: ControlUnit.ControlUnitContactData[] | undefined) => void
+  onEditSource: (source: VigilanceArea.VigilanceAreaSource) => void
   source: VigilanceArea.VigilanceAreaSource
 }) {
   const { data: controlUnitsData } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
@@ -57,15 +58,19 @@ export function ControlUnitContactSource({
       ? [...selectedControlUnitContacts, controlUnitContact]
       : selectedControlUnitContacts.filter(contact => contact.id !== controlUnitContact.id)
     setSelectedControlUnitContacts(nextSelectedControlUnitContacts)
-    onSelect(nextSelectedControlUnitContacts)
+    onUpdateField('controlUnitContacts', nextSelectedControlUnitContacts)
   }
 
   const onChangeControlUnitId = (nextValue: number | undefined) => {
     if (nextValue !== selectedControlUnitId) {
       setSelectedControlUnitContacts([])
-      onSelect(undefined)
+      onUpdateField('controlUnitContacts', undefined)
       setSelectedControlUnitId(nextValue)
     }
+  }
+
+  const onUpdateField = (field: string, value: any) => {
+    onEditSource({ ...source, [field]: value })
   }
 
   return (
@@ -112,6 +117,20 @@ export function ControlUnitContactSource({
           ))}
         </>
       )}
+      <Textarea
+        isLight
+        label="Commentaire"
+        name="comments"
+        onChange={comments => onUpdateField('comments', comments)}
+        placeholder="Information supplémentaire sur la source"
+        value={source.comments}
+      />
+      <Checkbox
+        checked={source.isAnonymous}
+        label="Source anonyme"
+        name="isAnonymous"
+        onChange={isChecked => onUpdateField('isAnonymous', isChecked ?? false)}
+      />
     </>
   )
 }
