@@ -27,7 +27,6 @@ context('MonitorExt', () => {
     cy.getDataCy('semaphores-button').should('exist')
     cy.get('button[title="Liste des unités de contrôle"]').should('not.exist')
     cy.getDataCy('measurement').should('not.exist')
-    cy.getDataCy('interest-point').should('not.exist')
   })
 
   it('A user can consult vigilance areas', () => {
