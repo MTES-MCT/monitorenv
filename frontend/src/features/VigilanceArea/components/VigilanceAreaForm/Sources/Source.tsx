@@ -10,8 +10,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 import { ControlUnitContactSource } from './ControlUnitContactSource'
-import { InternalSource } from './InternalSource'
-import { OtherSource } from './OtherSource'
+import { OtherOrInternalSource } from './OtherOrInternalSource'
 
 type SourceProps = {
   hasError: string | undefined
@@ -57,14 +56,16 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
       {isEditing ? (
         <>
           <Wrapper>
-            {initialSource.type === VigilanceArea.VigilanceAreaSourceType.OTHER && (
-              <OtherSource error={hasError} onEditSource={setEditedSource} source={editedSource} />
+            {initialSource.type !== VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT && (
+              <OtherOrInternalSource
+                error={hasError}
+                onEditSource={setEditedSource}
+                source={editedSource}
+                type={initialSource.type}
+              />
             )}
             {initialSource.type === VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT && (
               <ControlUnitContactSource onEditSource={setEditedSource} source={editedSource} />
-            )}
-            {initialSource.type === VigilanceArea.VigilanceAreaSourceType.INTERNAL && (
-              <InternalSource error={hasError} onEditSource={setEditedSource} source={editedSource} />
             )}
 
             <Buttons>
@@ -134,7 +135,6 @@ const Wrapper = styled.div`
   background-color: ${$p => $p.theme.color.gainsboro};
   padding: 8px;
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: 8px;
 `
@@ -143,6 +143,7 @@ const PanelWrapper = styled.div`
   background-color: ${$p => $p.theme.color.gainsboro};
   padding: 8px;
   display: flex;
+  flex: 1;
   gap: 8px;
   align-content: center;
   justify-content: space-between;
@@ -154,6 +155,7 @@ const ContactWrapper = styled.div`
   gap: 8px;
 `
 const PanelButtons = styled.div`
+  display: flex;
   margin: auto 0;
 `
 

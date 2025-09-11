@@ -49,5 +49,5 @@ const Container = styled.div`
 const NameContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 6px;
 `
