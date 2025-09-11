@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaSourceEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
@@ -82,24 +83,28 @@ class JpaVigilanceAreaRepository(
         sources: List<VigilanceAreaSourceEntity>,
     ): List<VigilanceAreaSourceModel> =
         sources.flatMap { source ->
-            return@flatMap if (!source.controlUnitContacts.isNullOrEmpty()) {
-                source.controlUnitContacts.map {
-                    val controlUnitContactModel =
-                        if (it.id != null) controlUnitContactRepository.getReferenceById(it.id) else null
-                    return@map VigilanceAreaSourceModel.fromVigilanceAreaSource(
-                        source,
-                        controlUnitContactModel,
-                        vigilanceAreaModel,
-                    )
+
+            when (source.type) {
+                SourceTypeEnum.CONTROL_UNIT -> {
+                    source.controlUnitContacts?.map {
+                        val controlUnitContactModel =
+                            if (it.id != null) controlUnitContactRepository.getReferenceById(it.id) else null
+                        VigilanceAreaSourceModel.fromVigilanceAreaSource(
+                            source,
+                            controlUnitContactModel,
+                            vigilanceAreaModel,
+                        )
+                    } ?: emptyList()
                 }
-            } else {
-                listOf(
-                    VigilanceAreaSourceModel.fromVigilanceAreaSource(
-                        source,
-                        null,
-                        vigilanceAreaModel,
-                    ),
-                )
+
+                SourceTypeEnum.OTHER, SourceTypeEnum.INTERNAL ->
+                    listOf(
+                        VigilanceAreaSourceModel.fromVigilanceAreaSource(
+                            source,
+                            null,
+                            vigilanceAreaModel,
+                        ),
+                    )
             }
         }
 

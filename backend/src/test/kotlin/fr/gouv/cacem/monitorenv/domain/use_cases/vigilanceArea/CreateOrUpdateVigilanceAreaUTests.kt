@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaSourceFixture.Companion.aVigilanceAreaSource
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -52,7 +53,7 @@ class CreateOrUpdateVigilanceAreaUTests {
                 name = "test_name",
                 tags = emptyList(),
                 themes = emptyList(),
-                sources = emptyList(),
+                sources = listOf(aVigilanceAreaSource(name = "test")),
                 validatedAt = null,
             )
 

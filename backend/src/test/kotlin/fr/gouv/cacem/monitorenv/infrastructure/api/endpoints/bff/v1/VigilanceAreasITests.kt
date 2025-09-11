@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
@@ -113,7 +114,14 @@ class VigilanceAreasITests {
                 ),
             links = null,
             seaFront = "MED",
-            sources = listOf(aVigilanceAreaSource(name = "Source de la zone de vigilance")),
+            sources =
+                listOf(
+                    aVigilanceAreaSource(
+                        name = "Source de la zone de vigilance",
+                        isAnonymous = true,
+                        comments = "Commentaires sur la source",
+                    ),
+                ),
             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
             themes = listOf(),
             visibility = VisibilityEnum.PRIVATE,
@@ -159,7 +167,14 @@ class VigilanceAreasITests {
             images = listOf(),
             links = null,
             seaFront = "MED",
-            sources = listOf(aVigilanceAreaSource(name = "Un particulier")),
+            sources =
+                listOf(
+                    aVigilanceAreaSource(
+                        name = "Un particulier",
+                        link = "https://example.com",
+                        type = SourceTypeEnum.INTERNAL,
+                    ),
+                ),
             startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
             themes = listOf(),
             visibility = VisibilityEnum.PUBLIC,
@@ -195,6 +210,9 @@ class VigilanceAreasITests {
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$[0].sources[0].name", equalTo("Source de la zone de vigilance")))
+            .andExpect(jsonPath("$[0].sources[0].isAnonymous", equalTo(true)))
+            .andExpect(jsonPath("$[0].sources[0].comments", equalTo("Commentaires sur la source")))
+            .andExpect(jsonPath("$[0].sources[0].type", equalTo("OTHER")))
             .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].themes").isEmpty())
             .andExpect(jsonPath("$[0].visibility", equalTo("PRIVATE")))
@@ -214,6 +232,9 @@ class VigilanceAreasITests {
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$[1].sources[0].name", equalTo("Un particulier")))
+            .andExpect(jsonPath("$[1].sources[0].isAnonymous", equalTo(false)))
+            .andExpect(jsonPath("$[1].sources[0].link", equalTo("https://example.com")))
+            .andExpect(jsonPath("$[1].sources[0].type", equalTo("INTERNAL")))
             .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
             .andExpect(jsonPath("$[1].themes").isEmpty())
             .andExpect(jsonPath("$[1].visibility", equalTo("PUBLIC")))
@@ -244,6 +265,9 @@ class VigilanceAreasITests {
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$.sources[0].name", equalTo("Source de la zone de vigilance")))
+            .andExpect(jsonPath("$.sources[0].isAnonymous", equalTo(true)))
+            .andExpect(jsonPath("$.sources[0].comments", equalTo("Commentaires sur la source")))
+            .andExpect(jsonPath("$.sources[0].type", equalTo("OTHER")))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
@@ -293,7 +317,15 @@ class VigilanceAreasITests {
                     ),
                 links = null,
                 seaFront = "MED",
-                sources = listOf(aVigilanceAreaSourceInput(name = "Source de la zone de vigilance")),
+                sources =
+                    listOf(
+                        aVigilanceAreaSourceInput(
+                            name = "Source de la zone de vigilance",
+                            type = SourceTypeEnum.OTHER,
+                            isAnonymous = true,
+                            comments = "Commentaires sur la source",
+                        ),
+                    ),
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,
@@ -345,6 +377,9 @@ class VigilanceAreasITests {
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$.sources[0].name", equalTo("Source de la zone de vigilance")))
+            .andExpect(jsonPath("$.sources[0].type", equalTo("OTHER")))
+            .andExpect(jsonPath("$.sources[0].comments", equalTo("Commentaires sur la source")))
+            .andExpect(jsonPath("$.sources[0].isAnonymous", equalTo(true)))
             .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
@@ -389,7 +424,15 @@ class VigilanceAreasITests {
                 images = emptyList(),
                 links = null,
                 seaFront = "MED",
-                sources = listOf(aVigilanceAreaSourceInput(name = "Source de la zone de vigilance")),
+                sources =
+                    listOf(
+                        aVigilanceAreaSourceInput(
+                            name = "Source de la zone de vigilance",
+                            type = SourceTypeEnum.OTHER,
+                            isAnonymous = true,
+                            comments = "Commentaires sur la source",
+                        ),
+                    ),
                 startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,

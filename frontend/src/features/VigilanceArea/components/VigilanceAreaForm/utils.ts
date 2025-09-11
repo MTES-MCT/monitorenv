@@ -30,14 +30,6 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
   }
 }
 
-export const createNewVigilanceAreaSource: () => VigilanceArea.VigilanceAreaSource = () => ({
-  controlUnitContacts: undefined,
-  email: undefined,
-  id: undefined,
-  name: undefined,
-  phone: undefined
-})
-
 export const isFormValid = (vigilanceArea: VigilanceArea.VigilanceArea | undefined, againstDraftSchema: boolean) => {
   const SchemaToValidate = againstDraftSchema ? DraftSchema : PublishedSchema
 

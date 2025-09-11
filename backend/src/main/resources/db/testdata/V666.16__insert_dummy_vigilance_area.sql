@@ -44,11 +44,11 @@ $$
                 '{"Dragage","Extraction granulats"}', 'PUBLIC', '{"12", "6"}', '{}',
                 today + INTERVAL '1 day');
 
-        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name)
-        VALUES (uuid_generate_v4(), 1, 'Unité BSN Ste Maxime');
+        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name, type, comments, is_anonymous)
+        VALUES (uuid_generate_v4(), 1, 'Unité BSN Ste Maxime', 'OTHER'::vigilance_area_source_type, 'Unité de surveillance locale', true);
 
-        INSERT INTO vigilance_areas_source (id, vigilance_areas_id, control_unit_contacts_id)
-                (SELECT DISTINCT uuid_generate_v4(), 1, 1);
+        INSERT INTO vigilance_areas_source (id, vigilance_areas_id, control_unit_contacts_id, type, comments, is_anonymous)
+         (SELECT DISTINCT uuid_generate_v4(), 1, 1, 'CONTROL_UNIT'::vigilance_area_source_type, 'On nous a appelé pour nous signaler un problème dans cette zone', false);
 
         -- period : within 3 months
         INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition,
@@ -68,8 +68,8 @@ $$
                 'PRIVATE', '{}', '{"625", "425"}',
                 date_within_year_and_3_months + INTERVAL '6 year');
 
-        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name)
-        VALUES (uuid_generate_v4(), 2, 'Unité PAM Themis');
+        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name, type, is_anonymous)
+        VALUES (uuid_generate_v4(), 2, 'Source anonyme d''une ZDV', 'OTHER'::vigilance_area_source_type, false);
 
 
         -- period : within this quarter
@@ -95,8 +95,8 @@ $$
                 'PUBLIC', '{}', '{}',
                 date_within_quarter + INTERVAL '11 year - 1 microsecond');
 
-        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name)
-        VALUES (uuid_generate_v4(), 3, 'Particulier qui était sur les lieux');
+        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name, type, is_anonymous)
+        VALUES (uuid_generate_v4(), 3, 'Particulier qui était sur les lieux', 'OTHER'::vigilance_area_source_type, true);
 
         -- period : within this year
         INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition,
@@ -114,8 +114,8 @@ $$
                 '{"AMP","PN"}', 'PRIVATE', '{}', '{}',
                 date_within_year_not_in_quarter_nor_3_months + INTERVAL '1 day');
 
-        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name)
-        VALUES (uuid_generate_v4(), 4, 'CACEM');
+        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name, type, is_anonymous)
+        VALUES (uuid_generate_v4(), 4, 'CACEM', 'INTERNAL'::vigilance_area_source_type, false);
 
         -- period : outer from current year
         INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition,
@@ -132,8 +132,8 @@ $$
                 '{"Extraction granulats"}', 'PUBLIC',
                 '{}', '{}', date_trunc('year', CURRENT_DATE) + INTERVAL '3 year');
 
-        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name)
-        VALUES (uuid_generate_v4(), 9, 'CACEM');
+        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name, type, is_anonymous)
+        VALUES (uuid_generate_v4(), 9, 'CACEM', 'INTERNAL'::vigilance_area_source_type, true);
 
         /* DRAFT VIGILANCE AREAS */
         -- outdated
@@ -170,8 +170,8 @@ $$
                 date_within_year_and_3_months - three_months,
                 NULL, 'PUBLIC', '{}', '{}', NULL);
 
-        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name)
-        VALUES (uuid_generate_v4(), 6, 'Unité BSN Ste Maxime');
+        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name, type, is_anonymous)
+        VALUES (uuid_generate_v4(), 6, 'Unité BSN Ste Maxime', 'OTHER'::vigilance_area_source_type, true);
 
         -- period : within this quarter
         INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition,
@@ -190,8 +190,8 @@ $$
                 NULL, 'PUBLIC', '{}', '{}',
                 date_within_quarter + INTERVAL '4 months');
 
-        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name)
-        VALUES (uuid_generate_v4(), 7, 'Sémaphore de Fécamp');
+        INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name, type, is_anonymous)
+        VALUES (uuid_generate_v4(), 7, 'Sémaphore de Fécamp', 'OTHER'::vigilance_area_source_type, false);
 
         -- period : outer this year
         INSERT INTO public.vigilance_areas(id, comments, created_by, end_date_period, ending_condition,

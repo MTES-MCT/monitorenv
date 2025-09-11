@@ -1,15 +1,16 @@
 import { getControlUnitsByIds } from '@api/controlUnitsAPI'
-import { ControlUnitContactSource } from '@features/VigilanceArea/components/VigilanceAreaForm/ControlUnitContactSource'
-import { OtherSource } from '@features/VigilanceArea/components/VigilanceAreaForm/OtherSource'
 import { PanelSource } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelSource'
 import { VigilanceAreaSourceSchema } from '@features/VigilanceArea/components/VigilanceAreaForm/Schema'
 import { ValidateButton } from '@features/VigilanceArea/components/VigilanceAreaForm/style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Button, getOptionsFromLabelledEnum, Icon, IconButton, MultiRadio } from '@mtes-mct/monitor-ui'
-import { groupBy } from 'lodash'
+import { Accent, Button, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { groupBy, omit } from 'lodash'
 import { useState } from 'react'
 import styled from 'styled-components'
+
+import { ControlUnitContactSource } from './ControlUnitContactSource'
+import { OtherOrInternalSource } from './OtherOrInternalSource'
 
 type SourceProps = {
   hasError: string | undefined
@@ -20,12 +21,8 @@ type SourceProps = {
 }
 
 export function Source({ hasError, index, initialSource, onValidate, remove }: SourceProps) {
-  const sourceOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaSourceTypeLabel)
-  const isNewlyCreatedSource = Object.values(initialSource).every(value => value === undefined)
-  const [sourceType, setSourceType] = useState<string | undefined>(
-    isNewlyCreatedSource || (initialSource.controlUnitContacts?.length ?? 0)
-      ? VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT
-      : VigilanceArea.VigilanceAreaSourceType.OTHER
+  const isNewlyCreatedSource = Object.values(omit(initialSource, ['type', 'isAnonymous'])).every(
+    value => value === undefined
   )
   const [isEditing, setIsEditing] = useState(isNewlyCreatedSource)
   const [editedSource, setEditedSource] = useState(initialSource)
@@ -39,16 +36,6 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
     return `${unit?.name} (${unit?.administration?.name})`
   }
   const isValid = (value: VigilanceArea.VigilanceAreaSource) => VigilanceAreaSourceSchema.isValidSync(value)
-
-  const onChangeSourceType = (nextValue: string | undefined) => {
-    if (nextValue === VigilanceArea.VigilanceAreaSourceType.OTHER) {
-      setEditedSource(source => ({ ...source, controlUnitContacts: undefined }))
-    }
-    if (nextValue === VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT) {
-      setEditedSource(source => ({ ...source, email: undefined, name: undefined, phone: undefined }))
-    }
-    setSourceType(nextValue)
-  }
 
   const cancel = () => {
     if (isNewlyCreatedSource) {
@@ -68,41 +55,17 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
     <>
       {isEditing ? (
         <>
-          <MultiRadio
-            data-cy={`reporting-source-selector-${index}`}
-            isErrorMessageHidden
-            isInline
-            label={`Source (${index + 1})`}
-            name={`reportingSources[${index}].sourceType`}
-            onChange={onChangeSourceType}
-            options={sourceOptions}
-            // type error if I use styledComponent to style it
-            style={{ float: 'left' }}
-            value={sourceType}
-          />
           <Wrapper>
-            {sourceType === 'OTHER' && (
-              <OtherSource
-                editedSource={editedSource}
+            {initialSource.type !== VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT && (
+              <OtherOrInternalSource
                 error={hasError}
-                onEmailChange={nextValue => {
-                  setEditedSource({ ...editedSource, email: nextValue })
-                }}
-                onNameChange={nextValue => {
-                  setEditedSource({ ...editedSource, name: nextValue })
-                }}
-                onPhoneChange={nextValue => {
-                  setEditedSource({ ...editedSource, phone: nextValue })
-                }}
+                onEditSource={setEditedSource}
+                source={editedSource}
+                type={initialSource.type}
               />
             )}
-            {sourceType === 'CONTROL_UNIT' && (
-              <ControlUnitContactSource
-                onSelect={nextValue => {
-                  setEditedSource({ ...editedSource, controlUnitContacts: nextValue })
-                }}
-                source={editedSource}
-              />
+            {initialSource.type === VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT && (
+              <ControlUnitContactSource onEditSource={setEditedSource} source={editedSource} />
             )}
 
             <Buttons>
@@ -118,15 +81,16 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
       ) : (
         <PanelWrapper>
           <ContactWrapper>
-            {initialSource.controlUnitContacts ? (
+            {initialSource.type === VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT ? (
               <>
                 {Object.entries(groupBy(initialSource.controlUnitContacts, source => source.controlUnitId)).map(
                   ([controlUnitId, contacts]) => (
                     <div key={`control_unit_source_${controlUnitId}`}>
-                      <PanelSource name={getControlUnitName(+controlUnitId)} />
+                      <PanelSource isAnonymous={initialSource.isAnonymous} name={getControlUnitName(+controlUnitId)} />
                       {contacts.map(contact => (
                         <PanelSource
                           key={`control_unit_contact_source_${contact.id}`}
+                          comments={initialSource.comments}
                           email={contact.email}
                           phone={contact.phone}
                         />
@@ -138,7 +102,10 @@ export function Source({ hasError, index, initialSource, onValidate, remove }: S
             ) : (
               <PanelSource
                 key={initialSource.id}
+                comments={initialSource.comments}
                 email={initialSource.email}
+                isAnonymous={initialSource.isAnonymous}
+                link={initialSource.link}
                 name={initialSource.name}
                 phone={initialSource.phone}
               />
@@ -176,6 +143,7 @@ const PanelWrapper = styled.div`
   background-color: ${$p => $p.theme.color.gainsboro};
   padding: 8px;
   display: flex;
+  flex: 1;
   gap: 8px;
   align-content: center;
   justify-content: space-between;
@@ -187,6 +155,7 @@ const ContactWrapper = styled.div`
   gap: 8px;
 `
 const PanelButtons = styled.div`
+  display: flex;
   margin: auto 0;
 `
 
