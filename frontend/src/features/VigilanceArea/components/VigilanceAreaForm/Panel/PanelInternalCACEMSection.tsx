@@ -35,6 +35,10 @@ export function PanelInternalCACEMSection({
     return `${unit?.name} (${unit?.administration?.name})`
   }
 
+  const internalSources = sources.filter(source => source.type === VigilanceArea.VigilanceAreaSourceType.INTERNAL)
+
+  const externalSources = sources.filter(source => source.type !== VigilanceArea.VigilanceAreaSourceType.INTERNAL)
+
   return (
     <PanelSubPart data-cy="vigilance-area-panel-source">
       <Wrapper>
@@ -48,14 +52,14 @@ export function PanelInternalCACEMSection({
         <PanelInlineItemLabel>Créé par</PanelInlineItemLabel>
         <PanelInlineItemValue>{createdBy ?? EMPTY_VALUE}</PanelInlineItemValue>
       </PanelInlineItem>
-      {sources.length > 0 && (
+      {externalSources.length > 0 && (
         <PanelInlineItem>
-          <PanelInlineItemLabel>Sources</PanelInlineItemLabel>
+          <PanelInlineItemLabel>Sources externes</PanelInlineItemLabel>
           <PanelItem>
-            {sources.map((source, index) => (
+            {externalSources.map((source, index) => (
               // eslint-disable-next-line react/no-array-index-key
               <Fragment key={index}>
-                {(source.controlUnitContacts?.length ?? 0) > 0 ? (
+                {source.type === VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT ? (
                   <>
                     {Object.entries(groupBy(source.controlUnitContacts, item => item.controlUnitId)).map(
                       ([controlUnitId, contacts]) => (
@@ -94,6 +98,26 @@ export function PanelInternalCACEMSection({
           </PanelItem>
         </PanelInlineItem>
       )}
+      {internalSources.length > 0 && (
+        <PanelInlineItem>
+          <StyledPanelInlineItemLabel>Sources CACEM</StyledPanelInlineItemLabel>
+          <PanelItem>
+            {internalSources.map((source, index) => (
+              <PanelSource
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                comments={source.comments}
+                email={source.email}
+                isAnonymous={source.isAnonymous}
+                isReadOnly
+                link={source.link}
+                name={source.name}
+                phone={source.phone}
+              />
+            ))}
+          </PanelItem>
+        </PanelInlineItem>
+      )}
     </PanelSubPart>
   )
 }
@@ -101,4 +125,7 @@ export function PanelInternalCACEMSection({
 const Wrapper = styled.div`
   display: flex;
   gap: 8px;
+`
+const StyledPanelInlineItemLabel = styled(PanelInlineItemLabel)`
+  width: 70px;
 `
