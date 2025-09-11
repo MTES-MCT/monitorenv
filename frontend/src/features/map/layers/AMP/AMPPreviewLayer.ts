@@ -25,11 +25,10 @@ export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-
-  const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global.visibility)
 
   const isLayerVisible = isLayersSidebarVisible && isAmpSearchResultsVisible && !isLinkingRegulatoryToVigilanceArea
+  const { data: ampLayers } = useGetAMPsQuery({ withGeometry: isLayerVisible })
 
   const ampPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const ampPreviewVectorLayerRef = useRef(

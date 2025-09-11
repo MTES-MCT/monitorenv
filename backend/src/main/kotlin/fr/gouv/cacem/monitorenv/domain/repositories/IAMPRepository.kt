@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import org.locationtech.jts.geom.Geometry
 
 interface IAMPRepository {
-    fun findAll(): List<AMPEntity>
+    fun findAll(withGeometry: Boolean): List<AMPEntity>
 
     fun count(): Long
 
