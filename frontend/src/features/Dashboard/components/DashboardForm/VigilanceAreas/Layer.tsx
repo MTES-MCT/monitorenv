@@ -12,6 +12,7 @@ import styled from 'styled-components'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
+import { LayerName, LayerNameContainer } from '../style'
 
 type VigilanceAreaLayerProps = {
   isPinned?: boolean
@@ -66,20 +67,20 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
       $withBorderBottom
       onClick={toggleZoneMetadata}
     >
-      <NameContainer>
+      <LayerNameContainer>
         <LayerLegend
           isDisabled={vigilanceArea?.isArchived}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
           legendKey={vigilanceArea?.comments ?? 'aucun nom'}
           type={vigilanceArea?.name ?? 'aucun nom'}
         />
-        <LayerSelector.Name
+        <LayerName
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}vigilance-area-zone-${vigilanceArea?.name}`}
           title={vigilanceArea?.name}
         >
           {vigilanceArea?.name}
-        </LayerSelector.Name>
-      </NameContainer>
+        </LayerName>
+      </LayerNameContainer>
       <TagAndButtons data-cy={`dashboard-vigilance-area-zone-tags-and-buttons-${vigilanceArea.id}`}>
         {vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE && (
           <StyledTag accent={Accent.PRIMARY} title="Zone de vigilance interne au CACEM">
@@ -127,10 +128,7 @@ const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $metadat
     border-top: 1px solid ${p => p.theme.color.lightGray};
   }
 `
-const NameContainer = styled.div`
-  align-items: center;
-  display: flex;
-`
+
 const TagAndButtons = styled.div`
   display: flex;
   gap: 10px;

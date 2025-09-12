@@ -8,13 +8,12 @@ import { displayTags } from '@utils/getTagsAsOptions'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef } from 'react'
-import styled from 'styled-components'
 
 import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { StyledLayer } from '../style'
+import { LayerName, LayerNameContainer, StyledLayer } from '../style'
 
 type RegulatoryLayerProps = {
   isPinned?: boolean
@@ -82,20 +81,19 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
       $metadataIsShown={openPanel?.id === layerId && openPanel?.isPinned === isSelected}
       onClick={toggleZoneMetadata}
     >
-      <Wrapper>
+      <LayerNameContainer>
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layer?.entityName ?? 'aucun'}
           type={displayTags(layer?.tags) ?? 'aucun'}
         />
-        <LayerSelector.Name
-          $withLargeWidth
+        <LayerName
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-area-zone-${layer?.id}`}
           title={layer?.entityName}
         >
           {layer?.entityName ?? 'AUCUN NOM'}
-        </LayerSelector.Name>
-      </Wrapper>
+        </LayerName>
+      </LayerNameContainer>
       <LayerSelector.IconGroup>
         {isSelected ? (
           <IconButton
@@ -119,8 +117,3 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
     </StyledLayer>
   )
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-`

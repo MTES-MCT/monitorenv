@@ -8,11 +8,10 @@ import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTIO
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { Projection, transformExtent } from 'ol/proj'
 import { createRef } from 'react'
-import styled from 'styled-components'
 
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { StyledLayer } from '../style'
+import { LayerName, LayerNameContainer, StyledLayer } from '../style'
 
 type AmpLayerProps = {
   isPinned?: boolean
@@ -70,15 +69,15 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
       $metadataIsShown={openPanel?.id === layerId && openPanel?.isPinned === isSelected}
       onClick={toggleZoneMetadata}
     >
-      <Wrapper>
+      <LayerNameContainer>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
-        <LayerSelector.Name
+        <LayerName
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}amp-zone-${layer?.id}`}
           title={layer?.type ?? 'aucun'}
         >
           {layer?.type ?? 'AUCUN TYPE'}
-        </LayerSelector.Name>
-      </Wrapper>
+        </LayerName>
+      </LayerNameContainer>
       <LayerSelector.IconGroup>
         {isSelected ? (
           <IconButton
@@ -102,8 +101,3 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
     </StyledLayer>
   )
 }
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-`

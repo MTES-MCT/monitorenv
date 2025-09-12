@@ -26,14 +26,14 @@ const Layer = styled.span<{ $metadataIsShown?: boolean; $withBorderBottom?: bool
   }
 `
 
-const Name = styled.span<{ $withLargeWidth?: boolean }>`
+const Name = styled.span`
   display: block;
   margin-left: 8px;
   overflow: hidden;
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: ${p => (p.$withLargeWidth ? '463px' : '280px')};
+  width: 280px;
 `
 
 const ZonesNumber = styled.span`
