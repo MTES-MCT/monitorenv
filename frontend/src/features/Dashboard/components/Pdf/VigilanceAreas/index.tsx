@@ -8,6 +8,7 @@ import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
 import { Image, Link, Text, View } from '@react-pdf/renderer'
 import { displayTags } from '@utils/getTagsAsOptions'
 
+import { ArrowRight } from '../icons/ArrowRight'
 import { ExternalLink } from '../icons/ExternalLink'
 import { AreaImage } from '../Layout/AreaImage'
 import { areaStyle, layoutStyle } from '../style'
@@ -159,38 +160,34 @@ export function VigilanceAreas({
                       </View>
                     </View>
                   </View>
-                  {regulatoryAreas.length > 0 && (
+                  {regulatoryAreas.length > 0 && regulatoryAreas.length < 3 && (
                     <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
-                      <View>
-                        <Text style={[areaStyle.description, { width: 'auto' }]}>Réglementations en lien</Text>
-                        {regulatoryAreas.map((linkedRegulatoryArea, index) => (
-                          <View
-                            key={linkedRegulatoryArea.id}
-                            style={{ marginBottom: index === regulatoryAreas.length - 1 ? 0 : 7 }}
-                          >
-                            <Link href={linkedRegulatoryArea.url} style={layoutStyle.link}>
-                              <View style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}>
-                                <Text>Résumé réglementaire sur Légicem </Text>
-                                <ExternalLink color={layoutStyle.link.color} size={8} />
-                              </View>
-                            </Link>
-                            <Text style={[areaStyle.details, { fontSize: 6.2 }]}>{linkedRegulatoryArea.refReg}</Text>
-                          </View>
-                        ))}
-                      </View>
+                      <Text style={[areaStyle.description, { width: 'auto' }]}>Réglementations en lien</Text>
+                      {regulatoryAreas.map((linkedRegulatoryArea, index) => (
+                        <View
+                          key={linkedRegulatoryArea.id}
+                          style={{ marginBottom: index === regulatoryAreas.length - 1 ? 0 : 7 }}
+                        >
+                          <Link href={linkedRegulatoryArea.url} style={layoutStyle.link}>
+                            <View style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}>
+                              <Text>Résumé réglementaire sur Légicem </Text>
+                              <ExternalLink color={layoutStyle.link.color} size={8} />
+                            </View>
+                          </Link>
+                          <Text style={[areaStyle.details, { fontSize: 6.2 }]}>{linkedRegulatoryArea.refReg}</Text>
+                        </View>
+                      ))}
                     </View>
                   )}
                   {amps.length > 0 && (
                     <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
-                      <View>
-                        <Text style={[areaStyle.description, { width: 'auto' }]}>AMP en lien</Text>
-                        {amps.map(linkedAmp => (
-                          <View key={linkedAmp.id} style={[areaStyle.details, { width: 'auto' }]}>
-                            <Text style={{ fontWeight: 'bold' }}>{linkedAmp.name} /</Text>
-                            <Text>{linkedAmp.type}</Text>
-                          </View>
-                        ))}
-                      </View>
+                      <Text style={[areaStyle.description, { width: 'auto' }]}>AMP en lien</Text>
+                      {amps.map(linkedAmp => (
+                        <View key={linkedAmp.id} style={[areaStyle.details, { width: 'auto' }]}>
+                          <Text style={{ fontWeight: 'bold' }}>{linkedAmp.name} /</Text>
+                          <Text>{linkedAmp.type}</Text>
+                        </View>
+                      ))}
                     </View>
                   )}
                   {vigilanceArea.links && vigilanceArea.links?.length > 0 && (
@@ -210,6 +207,34 @@ export function VigilanceAreas({
                   )}
                 </View>
               </View>
+              {regulatoryAreas.length > 0 && regulatoryAreas.length > 2 && (
+                <View
+                  style={[
+                    areaStyle.content,
+                    {
+                      border: `1 solid ${THEME.color.gainsboro}`,
+                      borderBottom: vigilanceArea.comments ? 'none' : `1 solid ${THEME.color.gainsboro}`,
+                      fontSize: 6.8
+                    }
+                  ]}
+                  wrap
+                >
+                  <Text style={[areaStyle.description, { width: 'auto' }]}>Résumés réglementaires sur Légicem</Text>
+
+                  {regulatoryAreas.map(linkedRegulatoryArea => (
+                    <View
+                      key={linkedRegulatoryArea.id}
+                      style={[layoutStyle.row, { alignItems: 'center', marginBottom: 3, width: 'auto' }]}
+                    >
+                      <ArrowRight color={THEME.color.slateGray} size={10} />
+                      <Link href={linkedRegulatoryArea.url}>
+                        <Text style={[layoutStyle.link, { fontSize: 6.2 }]}>{linkedRegulatoryArea.refReg}</Text>
+                      </Link>
+                    </View>
+                  ))}
+                </View>
+              )}
+
               <View style={[areaStyle.content, { border: `1 solid ${THEME.color.gainsboro}`, fontSize: 6.8 }]} wrap>
                 <View>
                   <Text style={[areaStyle.description, { width: 'auto' }]}>Commentaires</Text>

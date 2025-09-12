@@ -34,3 +34,18 @@ export const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $
        
     `}
 `
+
+export const LayerNameContainer = styled.div`
+  align-items: center;
+  display: flex;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+export const LayerName = styled.span`
+  margin-left: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
