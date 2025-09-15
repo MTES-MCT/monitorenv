@@ -5,8 +5,7 @@ import { useMemo } from 'react'
 import { TWO_MINUTES } from '../../../constants'
 
 export const useGetVigilanceAreasWithFilters = (skip = false) => {
-  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
-  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
+  const { period, specificPeriod } = useAppSelector(state => state.vigilanceAreaFilters)
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
 
@@ -20,11 +19,11 @@ export const useGetVigilanceAreasWithFilters = (skip = false) => {
   return {
     filteredRegulatoryTags,
     filteredRegulatoryThemes,
-    filteredVigilanceAreaPeriod,
+    filteredVigilanceAreaPeriod: period,
     isError,
     isFetching,
     isLoading,
     vigilanceAreas,
-    vigilanceAreaSpecificPeriodFilter
+    vigilanceAreaSpecificPeriodFilter: specificPeriod
   }
 }

@@ -7,7 +7,6 @@ import storage from 'redux-persist/lib/storage'
 
 import { DateRangeEnum, DAY_OPTION } from '../entities/dateRange'
 
-// import type { HomeRootState } from '@store/index'
 import type { TagOption } from 'domain/entities/tags'
 
 export const TODAY = customDayjs().utc().startOf('day').toISOString()

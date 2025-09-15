@@ -5,6 +5,8 @@ import { isEqual } from 'lodash'
 import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
+
 const migrations = {
   2: (state: any) => vigilanceAreassFiltersMigrations.v2(state)
 }
@@ -19,16 +21,20 @@ const persistConfig = {
 export type VigilanceAreaSliceState = {
   createdBy: string[]
   nbOfFiltersSetted: number
+  period: VigilanceArea.VigilanceAreaFilterPeriod
   seaFronts: string[]
   searchQuery: string | undefined
+  specificPeriod: DateAsStringRange | undefined
   status: VigilanceArea.Status[]
   visibility: VigilanceArea.Visibility[]
 }
 export const INITIAL_STATE: VigilanceAreaSliceState = {
   createdBy: [],
   nbOfFiltersSetted: 0,
+  period: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
   seaFronts: [],
   searchQuery: undefined,
+  specificPeriod: undefined,
   status: [VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED],
   visibility: [VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE]
 }
@@ -37,9 +43,6 @@ export const vigilanceAreaFiltersSlice = createSlice({
   name: 'vigilanceAreaFilters',
   reducers: {
     resetFilters: () => INITIAL_STATE,
-    setSearchQueryFilter: (state, action: PayloadAction<string | undefined>) => {
-      state.searchQuery = action.payload
-    },
     updateFilters: <K extends keyof VigilanceAreaSliceState>(
       state: VigilanceAreaSliceState,
       action: PayloadAction<{
@@ -53,8 +56,8 @@ export const vigilanceAreaFiltersSlice = createSlice({
       }
 
       const keysToCheck = Object.keys(INITIAL_STATE).filter(
-        key => !['searchQuery'].includes(key)
-      ) as (keyof VigilanceAreaSliceState)[]
+        key => !['nbOfFiltersSetted', 'specificPeriod'].includes(key)
+      )
 
       const nbOfFiltersSetted = keysToCheck.reduce(
         (count, key) => (isEqual(nextState[key], INITIAL_STATE[key]) ? count : count + 1),

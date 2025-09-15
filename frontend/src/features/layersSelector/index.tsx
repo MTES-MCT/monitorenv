@@ -4,6 +4,7 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { LocalizedAreas } from '@features/LocalizedArea'
 import { NumberOfFilters } from '@features/map/shared/style'
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
+import { INITIAL_STATE } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -64,16 +65,27 @@ export function LayersSidebar() {
     dispatch(setDisplayedItems({ visibility: { isLayersSidebarVisible: !isLayersSidebarVisible } }))
   }
 
-  const nbOfVigilanceAreaFiltersSetted = useAppSelector(state => state.vigilanceAreaFilters.nbOfFiltersSetted)
+  const {
+    period,
+    status: statusFilter,
+    visibility: visibilityFilter
+  } = useAppSelector(state => state.vigilanceAreaFilters)
 
-  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
-  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
-  const numberOfFiltersThemesAndTags =
-    (filteredRegulatoryTags.length > 0 ? 1 : 0) + (filteredRegulatoryThemes.length > 0 ? 1 : 0)
-  const numberOfVigilanceAreaFilters = numberOfFiltersThemesAndTags + nbOfVigilanceAreaFiltersSetted
+  const { filteredAmpTypes, filteredRegulatoryTags, filteredRegulatoryThemes, globalSearchText } = useAppSelector(
+    state => state.layerSearch
+  )
+  const numberOfMapFilters =
+    (filteredRegulatoryTags.length > 0 ? 1 : 0) +
+    (filteredRegulatoryThemes.length > 0 ? 1 : 0) +
+    (filteredAmpTypes?.length > 0 ? 1 : 0) +
+    (!globalSearchText ? 0 : 1)
 
-  const numberOfFilters = (filteredAmpTypes?.length > 0 ? 1 : 0) + numberOfVigilanceAreaFilters
+  const numberOfVigilanceAreaFilters =
+    (INITIAL_STATE.status.every(status => statusFilter.includes(status)) ? 0 : 1) +
+    (INITIAL_STATE.visibility.every(visibility => visibilityFilter.includes(visibility)) ? 0 : 1) +
+    (period === INITIAL_STATE.period ? 0 : 1)
+
+  const numberOfFilters = numberOfVigilanceAreaFilters + numberOfMapFilters
 
   return (
     <Container>

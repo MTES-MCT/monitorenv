@@ -15,7 +15,7 @@ export function SearchFilter() {
 
   const onQuery = useCallback(
     (value: string | undefined) => {
-      dispatch(vigilanceAreaFiltersActions.setSearchQueryFilter(value))
+      dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'searchQuery', value }))
     },
     [dispatch]
   )

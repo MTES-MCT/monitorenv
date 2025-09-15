@@ -12,7 +12,7 @@ export const vigilanceAreassFiltersMigrations = {
     }
 
     const keysToCheck = Object.keys(INITIAL_STATE).filter(
-      key => !['searchQuery'].includes(key)
+      key => !['nbOfFiltersSetted', 'specificPeriod'].includes(key)
     ) as (keyof VigilanceAreaSliceState)[]
 
     const nbOfFiltersSetted = keysToCheck.reduce(

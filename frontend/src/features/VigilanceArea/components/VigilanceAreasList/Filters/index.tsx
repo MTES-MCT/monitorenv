@@ -3,14 +3,11 @@ import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
-import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import {
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
-  setFilteredVigilanceAreaPeriod,
   setIsRegulatorySearchResultsVisible,
-  setIsVigilanceAreaSearchResultsVisible,
-  setVigilanceAreaSpecificPeriodFilter
+  setIsVigilanceAreaSearchResultsVisible
 } from '@features/layersSelector/search/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -31,24 +28,17 @@ export function VigilanceAreasFilters() {
   const { data: trigrams } = useGetTrigramsQuery()
   const trigramsAsOptions = trigrams?.map(trigram => ({ label: trigram, value: trigram })) ?? []
 
-  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
-  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
-  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
-  const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
-  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
-  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
 
   const {
     createdBy: createdByFilter,
-    nbOfFiltersSetted,
+    nbOfFiltersSetted: nbOfVigilanceAreaFilters,
+    period: periodFilter,
     seaFronts: seaFrontFilter,
     status: statusFilter,
     visibility: visibilityFilter
   } = useAppSelector(state => state.vigilanceAreaFilters)
-
-  const debouncedSearchLayers = useSearchLayers()
 
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
@@ -71,16 +61,6 @@ export function VigilanceAreasFilters() {
     }
 
     dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'status', value: filter }))
-    debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryTags: filteredRegulatoryTags,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter
-    })
   }
 
   const resetFilters = () => {
@@ -89,25 +69,12 @@ export function VigilanceAreasFilters() {
     dispatch(setFilteredRegulatoryTags([]))
     dispatch(setFilteredRegulatoryThemes([]))
     dispatch(setIsRegulatorySearchResultsVisible(false))
-    dispatch(setFilteredVigilanceAreaPeriod(VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS))
     dispatch(setIsVigilanceAreaSearchResultsVisible(false))
-    dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
-
-    debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryTags: [],
-      regulatoryThemes: [],
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
-      vigilanceAreaSpecificPeriodFilter: undefined
-    })
   }
 
-  const updateVisibilityFilter = (visibilityOption: Option<string>, isChecked: boolean | undefined) => {
+  const updateVisibilityFilter = (visibilityOption: Option, isChecked: boolean | undefined) => {
     const currentVisibilityFilter = visibilityFilter
-    let newVisibilityFilter: VigilanceArea.Visibility[] = []
+    let newVisibilityFilter: VigilanceArea.Visibility[]
     const optionValue = visibilityOption.value as VigilanceArea.Visibility
 
     if (isChecked) {
@@ -117,19 +84,11 @@ export function VigilanceAreasFilters() {
     }
 
     dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'visibility', value: newVisibilityFilter }))
-    debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryTags: filteredRegulatoryTags,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter
-    })
   }
 
-  const hasCustomPeriodFilter = filteredVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
+  const nbOfFilters = nbOfVigilanceAreaFilters + filteredRegulatoryTags.length + filteredRegulatoryThemes.length
+
+  const hasCustomPeriodFilter = periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
 
   return (
     <Wrapper>
@@ -196,7 +155,7 @@ export function VigilanceAreasFilters() {
           value={seaFrontFilter}
         />
       </FilterContainer>
-      {(hasCustomPeriodFilter || nbOfFiltersSetted > 0) && (
+      {(hasCustomPeriodFilter || nbOfFilters > 0) && (
         <TagsContainer>
           {hasCustomPeriodFilter && (
             <CustomPeriodContainer>
@@ -207,7 +166,7 @@ export function VigilanceAreasFilters() {
 
           <FilterTags />
 
-          {(nbOfFiltersSetted > 0 || hasCustomPeriodFilter) && <ReinitializeFiltersButton onClick={resetFilters} />}
+          {(nbOfFilters > 0 || hasCustomPeriodFilter) && <ReinitializeFiltersButton onClick={resetFilters} />}
         </TagsContainer>
       )}
     </Wrapper>

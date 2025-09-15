@@ -12,4 +12,5 @@ export const NumberOfFilters = styled.div`
   height: 20px;
   margin: auto;
   text-align: center;
+  z-index: 1;
 `

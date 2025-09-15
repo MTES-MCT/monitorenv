@@ -2,7 +2,10 @@ import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
-import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
+import {
+  INITIAL_STATE,
+  vigilanceAreaFiltersActions
+} from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -31,7 +34,7 @@ import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
 type LayerFiltersProps = {
-  ampTypes: Option<string>[]
+  ampTypes: Option[]
   filteredAmpTypes: string[]
   filteredRegulatoryTags: TagOption[]
   filteredRegulatoryThemes: ThemeOption[]
@@ -61,9 +64,12 @@ export function LayerFilters({
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
-  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
 
-  const { status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
+  const {
+    specificPeriod: vigilanceAreaSpecificPeriodFilter,
+    status,
+    visibility
+  } = useAppSelector(state => state.vigilanceAreaFilters)
 
   const handleSetFilteredAmpTypes = nextAmpThemes => {
     setFilteredAmpTypes(nextAmpThemes ?? [])
@@ -99,7 +105,7 @@ export function LayerFilters({
     dispatch(
       vigilanceAreaFiltersActions.updateFilters({
         key: 'visibility',
-        value: [VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE]
+        value: INITIAL_STATE.visibility
       })
     )
   }
@@ -107,7 +113,7 @@ export function LayerFilters({
     dispatch(
       vigilanceAreaFiltersActions.updateFilters({
         key: 'status',
-        value: [VigilanceArea.Status.PUBLISHED, VigilanceArea.Status.DRAFT]
+        value: INITIAL_STATE.status
       })
     )
   }

@@ -1,38 +1,15 @@
-import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
-import { setVigilanceAreaSpecificPeriodFilter } from '@features/layersSelector/search/slice'
+import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { DateRangePicker, type DateAsStringRange } from '@mtes-mct/monitor-ui'
+import { type DateAsStringRange, DateRangePicker } from '@mtes-mct/monitor-ui'
 
 export function SpecificPeriodFilter() {
   const dispatch = useAppDispatch()
 
-  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
-  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
-
-  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
-  const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
-
-  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
-  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
-
-  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
-
-  const debouncedSearchLayers = useSearchLayers()
+  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.vigilanceAreaFilters.specificPeriod)
 
   const updateDateRangeFilter = (dateRange: DateAsStringRange | undefined) => {
-    dispatch(setVigilanceAreaSpecificPeriodFilter(dateRange))
-    debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryTags: filteredRegulatoryTags,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter: dateRange
-    })
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'specificPeriod', value: dateRange }))
   }
 
   return (
