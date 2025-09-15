@@ -28,7 +28,7 @@ export enum MissionFiltersEnum {
 }
 
 type MissionFilterValues = {
-  nbOfFilters: boolean
+  nbOfFiltersSetted: boolean
   searchQuery: string | undefined
   selectedAdministrationNames: string[] | undefined
   selectedCompletionStatus: string[] | undefined
@@ -67,7 +67,7 @@ export const INITIAL_STATE: MissionFiltersState = {
   startedBefore: undefined
 }
 const migrations = {
-  2: (state: any) => missionFiltersMigrations.v2(state)
+  4: (state: any) => missionFiltersMigrations.v2(state)
 }
 
 const persistConfig = {
@@ -75,7 +75,7 @@ const persistConfig = {
   key: 'missionFilters',
   migrate: createMigrate(migrations),
   storage,
-  version: 2
+  version: 4
 }
 
 const missionFiltersSlice = createSlice({

@@ -233,5 +233,9 @@ export function useSearchLayers() {
 
   useEffect(() => {
     debouncedSearchLayers()
+
+    return () => {
+      debouncedSearchLayers.cancel()
+    }
   }, [debouncedSearchLayers])
 }

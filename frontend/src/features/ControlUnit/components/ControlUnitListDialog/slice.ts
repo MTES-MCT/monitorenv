@@ -22,14 +22,15 @@ export const INITIAL_STATE: ControlUnitListDialogState = {
   numberOfFiltersSetted: 0
 }
 const migrations = {
-  2: (state: any) => controlUnitsFiltersMigrations.v2(state)
+  // Start at 4 because test platform and migrations cant downgrade
+  4: (state: any) => controlUnitsFiltersMigrations.v2(state)
 }
 
 const persistConfig = {
   key: 'controlUnitListDialog',
   migrate: createMigrate(migrations),
   storage,
-  version: 2
+  version: 4
 }
 
 const controlUnitListDialogSlice = createSlice({

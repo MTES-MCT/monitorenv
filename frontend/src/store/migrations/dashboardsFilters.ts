@@ -1,18 +1,16 @@
-import { INITIAL_DASHBOARD_FILTERS } from '@features/Dashboard/components/DashboardForm/slice'
+import { INITIAL_LIST_FILTERS_STATE } from '@features/Dashboard/components/DashboardForm/slice'
 import isEqual from 'lodash/isEqual'
 
 export const dashboardsFiltersMigrations = {
-  // State is HomeRootState but add it as type creates a circular reference
   v2: (state: any) => {
-    if (!state.dashboardFilters) {
+    if (!state) {
       return state
     }
 
-    const keysToCheck = Object.keys(INITIAL_DASHBOARD_FILTERS.filters)
+    const keysToCheck = Object.keys(INITIAL_LIST_FILTERS_STATE)
 
     const nbOfFiltersSetted = keysToCheck.reduce(
-      (count, key) =>
-        isEqual(state.dashboardFilters.filters[key], INITIAL_DASHBOARD_FILTERS.filters[key]) ? count : count + 1,
+      (count, key) => (isEqual(state.filters[key], INITIAL_LIST_FILTERS_STATE[key]) ? count : count + 1),
       0
     )
 

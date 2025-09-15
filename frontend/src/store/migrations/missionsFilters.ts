@@ -2,9 +2,8 @@ import { INITIAL_STATE } from 'domain/shared_slices/MissionFilters'
 import isEqual from 'lodash/isEqual'
 
 export const missionFiltersMigrations = {
-  // State is HomeRootState but add it as type creates a circular reference
   v2: (state: any) => {
-    if (!state.missionFilters) {
+    if (!state) {
       return state
     }
 

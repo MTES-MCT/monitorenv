@@ -13,14 +13,15 @@ import type { OverlayItem } from 'domain/types/map'
 import type { Coordinate } from 'ol/coordinate'
 
 const migrations = {
-  2: (state: any) => recentActivitiesFiltersMigrations.v2(state)
+  // Start at 4 because test platform and migrations cant downgrade
+  4: (state: any) => recentActivitiesFiltersMigrations.v2(state)
 }
 const persistConfig = {
   blacklist: ['drawedGeometry', 'isDrawing', 'isGeometryValid', 'isLegendOpen', 'initialGeometry', 'layersAndOverlays'],
   key: 'recentActivity',
   migrate: createMigrate(migrations),
   storage,
-  version: 2
+  version: 4
 }
 
 export enum RecentActivityFiltersEnum {

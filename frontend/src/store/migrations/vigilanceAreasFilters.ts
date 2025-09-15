@@ -1,19 +1,13 @@
-import {
-  INITIAL_STATE,
-  type VigilanceAreaSliceState
-} from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
+import { INITIAL_STATE } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import isEqual from 'lodash/isEqual'
 
-export const vigilanceAreassFiltersMigrations = {
-  // State is HomeRootState but add it as type creates a circular reference
+export const vigilanceAreasFiltersMigrations = {
   v2: (state: any) => {
-    if (!state.vigilanceAreaFilters) {
+    if (!state) {
       return state
     }
 
-    const keysToCheck = Object.keys(INITIAL_STATE).filter(
-      key => !['nbOfFiltersSetted', 'specificPeriod'].includes(key)
-    ) as (keyof VigilanceAreaSliceState)[]
+    const keysToCheck = Object.keys(INITIAL_STATE).filter(key => !['nbOfFiltersSetted', 'specificPeriod'].includes(key))
 
     const nbOfFiltersSetted = keysToCheck.reduce(
       (count, key) => (isEqual(state[key], INITIAL_STATE[key]) ? count : count + 1),

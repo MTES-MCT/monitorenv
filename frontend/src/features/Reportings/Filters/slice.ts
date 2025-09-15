@@ -13,7 +13,8 @@ import type { ThemeOption } from 'domain/entities/themes'
 export const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
 
 const migrations = {
-  2: (state: any) => reportingsFiltersMigrations.v2(state)
+  // Start at 4 because test platform and migrations cant downgrade
+  4: (state: any) => reportingsFiltersMigrations.v2(state)
 }
 
 export type SourceFilterProps = {
@@ -82,7 +83,7 @@ const persistConfig = {
   key: 'reportingFilters',
   migrate: createMigrate(migrations),
   storage,
-  version: 2
+  version: 4
 }
 
 const reportingFiltersSlice = createSlice({
