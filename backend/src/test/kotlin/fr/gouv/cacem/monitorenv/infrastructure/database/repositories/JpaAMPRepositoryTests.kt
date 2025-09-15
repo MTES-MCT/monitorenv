@@ -15,7 +15,7 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return all amps`() {
         // When
-        val amps = jpaAMPRepository.findAll()
+        val amps = jpaAMPRepository.findAll(false)
         assertThat(amps).hasSize(20)
     }
 

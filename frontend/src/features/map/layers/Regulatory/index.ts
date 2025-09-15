@@ -18,12 +18,18 @@ import type { Geometry } from 'ol/geom'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLayerVisible = !isLinkingAMPToVigilanceArea
+  const { bbox, zoom } = useAppSelector(state => state.map.mapView)
+
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery({
+    bbox,
+    withGeometry: showedRegulatoryLayerIds.length > 0 && isLayerVisible,
+    zoom
+  })
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 

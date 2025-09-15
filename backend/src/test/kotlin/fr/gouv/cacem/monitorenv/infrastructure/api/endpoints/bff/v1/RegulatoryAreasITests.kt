@@ -74,11 +74,11 @@ class RegulatoryAreasITests {
                 dateFin = "2035-07-01",
                 temporalite = "temporaire",
             )
-        given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
+        given(getAllRegulatoryAreas.execute(false)).willReturn(listOf(regulatoryArea))
 
         // When
         mockMvc
-            .perform(get("/bff/v1/regulatory"))
+            .perform(get("/bff/v1/regulatory?withGeometry=false"))
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

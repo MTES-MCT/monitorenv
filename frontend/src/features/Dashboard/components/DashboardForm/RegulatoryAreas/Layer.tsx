@@ -3,7 +3,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, THEME, WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -24,14 +24,18 @@ type RegulatoryLayerProps = {
 export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
+  const { bbox, zoom } = useAppSelector(state => state.map.mapView)
 
   const ref = createRef<HTMLSpanElement>()
 
-  const { layer } = useGetRegulatoryLayersQuery(undefined, {
-    selectFromResult: result => ({
-      layer: result?.currentData?.entities[layerId]
-    })
-  })
+  const { layer } = useGetRegulatoryLayersQuery(
+    { bbox, withGeometry: true, zoom },
+    {
+      selectFromResult: result => ({
+        layer: result?.currentData?.entities[layerId]
+      })
+    }
+  )
 
   const handleSelectZone = e => {
     e.stopPropagation()

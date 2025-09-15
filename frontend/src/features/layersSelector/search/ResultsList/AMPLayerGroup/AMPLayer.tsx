@@ -5,7 +5,7 @@ import {
   openAMPMetadataPanel
 } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { Accent, Icon, IconButton, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -28,11 +28,14 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const ampsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
 
-  const { layer } = useGetAMPsQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      layer: data?.entities[layerId]
-    })
-  })
+  const { layer } = useGetAMPsQuery(
+    { withGeometry: true },
+    {
+      selectFromResult: ({ data }) => ({
+        layer: data?.entities[layerId]
+      })
+    }
+  )
   const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
   const isZoneSelected = selectedAmpLayerIds.includes(layerId)

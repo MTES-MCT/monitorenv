@@ -24,11 +24,14 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
   const ref = createRef<HTMLSpanElement>()
 
-  const { layer } = useGetAMPsQuery(undefined, {
-    selectFromResult: result => ({
-      layer: result?.currentData?.entities[layerId]
-    })
-  })
+  const { layer } = useGetAMPsQuery(
+    { withGeometry: true },
+    {
+      selectFromResult: result => ({
+        layer: result?.currentData?.entities[layerId]
+      })
+    }
+  )
 
   const handleSelectZone = e => {
     e.stopPropagation()
