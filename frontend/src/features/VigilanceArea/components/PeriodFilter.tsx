@@ -1,11 +1,8 @@
-import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
-import {
-  setFilteredVigilanceAreaPeriod,
-  setVigilanceAreaSpecificPeriodFilter
-} from '@features/layersSelector/search/slice'
+import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Select, type Option } from '@mtes-mct/monitor-ui'
+import { type Option, Select } from '@mtes-mct/monitor-ui'
+import React from 'react'
 
 import { VigilanceArea } from '../types'
 
@@ -15,19 +12,7 @@ export function PeriodFilter({ style }: { style?: React.CSSProperties }) {
     ([value, label]) => ({ label, value })
   ) as Option<VigilanceArea.VigilanceAreaFilterPeriod>[]
 
-  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
-  const vigilanceAreaSpecificPeriodFilter = useAppSelector(state => state.layerSearch.vigilanceAreaSpecificPeriodFilter)
-
-  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
-  const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
-
-  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
-  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
-
-  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
-
-  const debouncedSearchLayers = useSearchLayers()
+  const filteredVigilanceAreaPeriod = useAppSelector(state => state.vigilanceAreaFilters.period)
 
   const handleSetFilteredVigilancePeriod = (
     nextVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod | undefined
@@ -36,27 +21,11 @@ export function PeriodFilter({ style }: { style?: React.CSSProperties }) {
       return
     }
 
-    dispatch(setFilteredVigilanceAreaPeriod(nextVigilanceAreaPeriod))
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'period', value: nextVigilanceAreaPeriod }))
 
     if (nextVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD) {
-      dispatch(setVigilanceAreaSpecificPeriodFilter(undefined))
+      dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'specificPeriod', value: undefined }))
     }
-
-    const nextVigilanceAreaSpecificPeriodFilter =
-      nextVigilanceAreaPeriod === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
-        ? vigilanceAreaSpecificPeriodFilter
-        : undefined
-
-    debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: searchExtent,
-      regulatoryTags: filteredRegulatoryTags,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: nextVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter: nextVigilanceAreaSpecificPeriodFilter
-    })
   }
 
   return (

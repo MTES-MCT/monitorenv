@@ -6,7 +6,7 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)
     cy.clickButton('Zones de vigilance')
-    cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
+    cy.wait(['@getVigilanceAreas'])
   })
 
   afterEach(() => {

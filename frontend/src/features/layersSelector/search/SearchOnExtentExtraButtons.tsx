@@ -1,3 +1,4 @@
+import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -18,30 +19,17 @@ import {
 } from './slice'
 import { closeMetadataPanel } from '../metadataPanel/slice'
 
-import type { SearchProps } from './hooks/useSearchLayers'
-
 type SearchOnExtentExtraButtonsProps = {
   allowResetResults: boolean
-  debouncedSearchLayers: (args: SearchProps) => void
 }
-export function SearchOnExtentExtraButtons({
-  allowResetResults,
-  debouncedSearchLayers
-}: SearchOnExtentExtraButtonsProps) {
+
+export function SearchOnExtentExtraButtons({ allowResetResults }: SearchOnExtentExtraButtonsProps) {
   const dispatch = useAppDispatch()
 
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const displayLayersSidebar = useAppSelector(state => state.global.menus.displayLayersSidebar)
   const currentMapExtentTracker = useAppSelector(state => state.map.currentMapExtentTracker)
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
-  const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
-  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
-  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
-  const filteredVigilanceAreaPeriod = useAppSelector(state => state.layerSearch.filteredVigilanceAreaPeriod)
-  const filteredVigilanceAreaSpecificPeriod = useAppSelector(
-    state => state.layerSearch.vigilanceAreaSpecificPeriodFilter
-  )
 
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
@@ -60,16 +48,6 @@ export function SearchOnExtentExtraButtons({
   const handleReloadSearch = () => {
     setShouldReloadSearchOnExtent(false)
     if (currentMapExtentTracker) {
-      debouncedSearchLayers({
-        ampTypes: filteredAmpTypes,
-        extent: currentMapExtentTracker,
-        regulatoryTags: filteredRegulatoryTags,
-        regulatoryThemes: filteredRegulatoryThemes,
-        searchedText: globalSearchText,
-        shouldSearchByExtent: shouldFilterSearchOnMapExtent,
-        vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-        vigilanceAreaSpecificPeriodFilter: filteredVigilanceAreaSpecificPeriod
-      })
       dispatch(setSearchExtent(currentMapExtentTracker))
       dispatch(setFitToExtent(currentMapExtentTracker))
     }
@@ -78,6 +56,7 @@ export function SearchOnExtentExtraButtons({
   const handleResetSearch = () => {
     setShouldReloadSearchOnExtent(false)
     dispatch(resetSearch())
+    dispatch(vigilanceAreaFiltersActions.resetFilters())
     dispatch(closeMetadataPanel())
     dispatch(closeAreaOverlay())
     dispatch(layerSidebarActions.closeAllResultsList())
@@ -96,17 +75,6 @@ export function SearchOnExtentExtraButtons({
       dispatch(setSearchExtent(currentMapExtentTracker))
       dispatch(setFitToExtent(currentMapExtentTracker))
     }
-
-    debouncedSearchLayers({
-      ampTypes: filteredAmpTypes,
-      extent: currentMapExtentTracker,
-      regulatoryTags: filteredRegulatoryTags,
-      regulatoryThemes: filteredRegulatoryThemes,
-      searchedText: globalSearchText,
-      shouldSearchByExtent: !shouldFilterSearchOnMapExtent,
-      vigilanceAreaPeriodFilter: filteredVigilanceAreaPeriod,
-      vigilanceAreaSpecificPeriodFilter: filteredVigilanceAreaSpecificPeriod
-    })
   }
 
   return (
@@ -177,5 +145,5 @@ const ExtraButtonsWrapper = styled.div<{
     }
 
     return '-400px'
-  }}};
+  }};
 `

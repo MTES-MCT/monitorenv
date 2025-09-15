@@ -1,7 +1,5 @@
-import { VigilanceArea } from '@features/VigilanceArea/types'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
@@ -10,7 +8,6 @@ type LayerSearchState = {
   filteredAmpTypes: string[]
   filteredRegulatoryTags: TagOption[]
   filteredRegulatoryThemes: ThemeOption[]
-  filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod
   globalSearchText: string
   isAmpSearchResultsVisible: boolean
   isRegulatorySearchResultsVisible: boolean
@@ -19,14 +16,12 @@ type LayerSearchState = {
   searchExtent: number[] | undefined
   shouldFilterSearchOnMapExtent: boolean
   vigilanceAreaSearchResult: number[] | undefined
-  vigilanceAreaSpecificPeriodFilter: DateAsStringRange | undefined
 }
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
   filteredAmpTypes: [],
   filteredRegulatoryTags: [],
   filteredRegulatoryThemes: [],
-  filteredVigilanceAreaPeriod: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
   globalSearchText: '',
   isAmpSearchResultsVisible: false,
   isRegulatorySearchResultsVisible: false,
@@ -34,8 +29,7 @@ const initialState: LayerSearchState = {
   regulatoryLayersSearchResult: undefined,
   searchExtent: undefined,
   shouldFilterSearchOnMapExtent: false,
-  vigilanceAreaSearchResult: undefined,
-  vigilanceAreaSpecificPeriodFilter: undefined
+  vigilanceAreaSearchResult: undefined
 }
 
 const layerSearchSlice = createSlice({
@@ -48,35 +42,11 @@ const layerSearchSlice = createSlice({
       state.isRegulatorySearchResultsVisible = false
       state.filteredAmpTypes = []
       state.isAmpSearchResultsVisible = false
-      state.filteredVigilanceAreaPeriod = VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
-      state.vigilanceAreaSpecificPeriodFilter = undefined
       state.isVigilanceAreaSearchResultsVisible = false
     },
     resetSearch(state) {
-      state.regulatoryLayersSearchResult = undefined
-      state.isRegulatorySearchResultsVisible = false
-      state.filteredRegulatoryTags = []
-      state.filteredRegulatoryThemes = []
-      state.ampsSearchResult = undefined
-      state.isAmpSearchResultsVisible = false
-      state.filteredAmpTypes = []
-      state.vigilanceAreaSearchResult = undefined
-      state.isVigilanceAreaSearchResultsVisible = false
-      state.vigilanceAreaSpecificPeriodFilter = undefined
-      state.filteredVigilanceAreaPeriod = VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS
-      state.shouldFilterSearchOnMapExtent = false
-      state.globalSearchText = ''
-      state.searchExtent = undefined
+      return { state, ...initialState }
     },
-
-    /**
-     * Set the selected zone to filter regulations
-     * @param {Object=} state
-     */
-    resetSearchExtent(state) {
-      state.searchExtent = undefined
-    },
-
     setAMPsSearchResult(state, action: PayloadAction<number[] | undefined>) {
       state.ampsSearchResult = action.payload
     },
@@ -91,10 +61,6 @@ const layerSearchSlice = createSlice({
 
     setFilteredRegulatoryThemes(state, action: PayloadAction<ThemeOption[]>) {
       state.filteredRegulatoryThemes = action.payload
-    },
-
-    setFilteredVigilanceAreaPeriod(state, action: PayloadAction<VigilanceArea.VigilanceAreaFilterPeriod>) {
-      state.filteredVigilanceAreaPeriod = action.payload
     },
 
     setGlobalSearchText(state, action: PayloadAction<string>) {
@@ -124,9 +90,6 @@ const layerSearchSlice = createSlice({
       state.shouldFilterSearchOnMapExtent = action.payload
     },
 
-    setVigilanceAreaSpecificPeriodFilter(state, action: PayloadAction<DateAsStringRange | undefined>) {
-      state.vigilanceAreaSpecificPeriodFilter = action.payload
-    },
     setVigilanceAreasSearchResult(state, action: PayloadAction<number[] | undefined>) {
       state.vigilanceAreaSearchResult = action.payload
     }
@@ -136,12 +99,10 @@ const layerSearchSlice = createSlice({
 export const {
   resetFilters,
   resetSearch,
-  resetSearchExtent,
   setAMPsSearchResult,
   setFilteredAmpTypes,
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
-  setFilteredVigilanceAreaPeriod,
   setGlobalSearchText,
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
@@ -149,7 +110,6 @@ export const {
   setRegulatoryLayersSearchResult,
   setSearchExtent,
   setShouldFilterSearchOnMapExtent,
-  setVigilanceAreaSpecificPeriodFilter,
   setVigilanceAreasSearchResult
 } = layerSearchSlice.actions
 

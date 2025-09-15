@@ -51,7 +51,7 @@ const controlUnitListDialogSlice = createSlice({
         [action.payload.key]: action.payload.value
       }
       state.filtersState = nextState
-      const keysToCheck = Object.keys(INITIAL_STATE.filtersState).filter(key => !['query'].includes(key))
+      const keysToCheck = Object.keys(INITIAL_STATE.filtersState)
 
       state.numberOfFiltersSetted = keysToCheck.reduce(
         (count, key) => (isEqual(nextState[key], INITIAL_STATE.filtersState[key]) ? count : count + 1),

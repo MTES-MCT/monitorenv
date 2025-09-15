@@ -1,43 +1,37 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
-import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
+import { useGetFilteredVigilanceAreasForMapQuery } from '@features/layersSelector/search/hooks/useGetFilteredVigilanceAreasForMapQuery'
 import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import Fuse, { type Expression } from 'fuse.js'
 import { debounce } from 'lodash'
-import { useMemo } from 'react'
+import { useCallback, useEffect } from 'react'
 
-import { getFilterVigilanceAreasPerPeriod } from '../../utils/getFilteredVigilanceAreasPerPeriod'
 import { setAMPsSearchResult, setRegulatoryLayersSearchResult, setVigilanceAreasSearchResult } from '../slice'
 import { filterByTags, filterByThemes, filterTagsByText, filterThemesByText } from './utils'
 
 import type { AMP } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
-import type { TagOption } from 'domain/entities/tags'
-import type { ThemeOption } from 'domain/entities/themes'
 
-export type SearchProps = {
-  ampTypes: string[]
-  extent: number[] | undefined
-  regulatoryTags: TagOption[]
-  regulatoryThemes: ThemeOption[]
-  searchedText: string
-  shouldSearchByExtent: boolean
-  vigilanceAreaPeriodFilter: VigilanceArea.VigilanceAreaFilterPeriod
-  vigilanceAreaSpecificPeriodFilter: string[] | undefined
-}
 export function useSearchLayers() {
   const dispatch = useAppDispatch()
-  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { data: vigilanceAreaLayers } = useGetVigilanceAreasQuery()
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasForMapQuery()
+  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
+  const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
-  const debouncedSearchLayers = useMemo(() => {
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+
+  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
+
+  const search = useCallback(() => {
     const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
       ignoreLocation: true,
       includeScore: false,
@@ -62,58 +56,40 @@ export function useSearchLayers() {
       threshold: 0.2
     })
 
-    const fuseVigilanceAreas = new Fuse(
-      (vigilanceAreaLayers?.entities && Object.values(vigilanceAreaLayers?.entities)) || [],
-      {
-        ignoreLocation: true,
-        includeScore: false,
-        keys: ['name', 'comments', 'themes', 'tags.name', 'tags.subTags.name', 'themes.name', 'themes.subThemes.name'],
-        minMatchCharLength: 2,
-        threshold: 0.2
-      }
-    )
+    const fuseVigilanceAreas = new Fuse((vigilanceAreas?.entities && Object.values(vigilanceAreas?.entities)) || [], {
+      ignoreLocation: true,
+      includeScore: false,
+      keys: ['name', 'comments', 'themes', 'tags.name', 'tags.subTags.name', 'themes.name', 'themes.subThemes.name'],
+      minMatchCharLength: 2,
+      threshold: 0.2
+    })
 
-    const searchFunction = async ({
-      ampTypes,
-      extent,
-      regulatoryTags,
-      regulatoryThemes,
-      searchedText,
-      shouldSearchByExtent,
-      vigilanceAreaPeriodFilter,
-      vigilanceAreaSpecificPeriodFilter
-    }: SearchProps) => {
-      const shouldSearchByText = searchedText?.length > 2
-      const shouldSearchThroughAMPTypes = ampTypes?.length > 0
-      const shouldSearchThroughRegulatoryTags = regulatoryTags?.length > 0
-      const shouldSearchThroughRegulatoryThemes = regulatoryThemes?.length > 0
-      const vigilanceAreasPerPeriod = getFilterVigilanceAreasPerPeriod(
-        vigilanceAreaLayers?.entities ? Object.values(vigilanceAreaLayers.entities) : [],
-        vigilanceAreaPeriodFilter,
-        vigilanceAreaSpecificPeriodFilter,
-        isSuperUser
-      )
+    const searchFunction = () => {
+      const shouldSearchByText = globalSearchText?.length > 2
+      const shouldSearchThroughAMPTypes = filteredAmpTypes?.length > 0
+      const shouldSearchThroughRegulatoryTags = filteredRegulatoryTags?.length > 0
+      const shouldSearchThroughRegulatoryThemes = filteredRegulatoryThemes?.length > 0
 
-      const filteredVigilancesAreas = [...vigilanceAreasPerPeriod]
+      const filteredVigilancesAreas = vigilanceAreas?.entities ? Object.values(vigilanceAreas.entities) : []
       const filteredVigilancesAreaIds = filteredVigilancesAreas
         .filter(vigilanceArea => !!vigilanceArea.id)
         .map(({ id }) => id)
 
-      if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldSearchByExtent) {
+      if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldFilterSearchOnMapExtent) {
         let searchedAMPS
         let itemSchema
         if (shouldSearchByText || shouldSearchThroughAMPTypes) {
           const filterWithTextExpression = shouldSearchByText
             ? {
                 $or: [
-                  { $path: ['name'], $val: searchedText },
-                  { $path: ['type'], $val: searchedText }
+                  { $path: ['name'], $val: globalSearchText },
+                  { $path: ['type'], $val: globalSearchText }
                 ],
-                $val: searchedText
+                $val: globalSearchText
               }
             : undefined
           const filterWithType = shouldSearchThroughAMPTypes
-            ? { $or: ampTypes.map(type => ({ $path: 'type', $val: type })) }
+            ? { $or: filteredAmpTypes.map(type => ({ $path: 'type', $val: type })) }
             : undefined
 
           const filterExpression = [filterWithTextExpression, filterWithType].filter(f => !!f) as Expression[]
@@ -127,9 +103,9 @@ export function useSearchLayers() {
           itemSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
         const searchedAMPsInExtent = getIntersectingLayerIds<AMP>(
-          shouldSearchByExtent,
+          shouldFilterSearchOnMapExtent,
           searchedAMPS,
-          extent,
+          searchExtent,
           itemSchema
         )
         dispatch(setAMPsSearchResult(searchedAMPsInExtent))
@@ -140,7 +116,7 @@ export function useSearchLayers() {
       if (
         shouldSearchByText ||
         shouldSearchThroughRegulatoryTags ||
-        shouldSearchByExtent ||
+        shouldFilterSearchOnMapExtent ||
         shouldSearchThroughRegulatoryThemes
       ) {
         // Regulatory layers
@@ -150,19 +126,21 @@ export function useSearchLayers() {
           const filterWithTextExpression = shouldSearchByText
             ? {
                 $or: [
-                  { $path: ['layerName'], $val: searchedText },
-                  { $path: ['entityName'], $val: searchedText },
-                  { $path: ['refReg'], $val: searchedText },
-                  { $path: ['type'], $val: searchedText },
-                  ...filterThemesByText(searchedText),
-                  ...filterTagsByText(searchedText)
+                  { $path: ['layerName'], $val: globalSearchText },
+                  { $path: ['entityName'], $val: globalSearchText },
+                  { $path: ['refReg'], $val: globalSearchText },
+                  { $path: ['type'], $val: globalSearchText },
+                  ...filterThemesByText(globalSearchText),
+                  ...filterTagsByText(globalSearchText)
                 ]
               }
             : undefined
 
-          const filterWithTags = shouldSearchThroughRegulatoryTags ? filterByTags(regulatoryTags) : undefined
+          const filterWithTags = shouldSearchThroughRegulatoryTags ? filterByTags(filteredRegulatoryTags) : undefined
 
-          const filterWithThemes = shouldSearchThroughRegulatoryThemes ? filterByThemes(regulatoryThemes) : undefined
+          const filterWithThemes = shouldSearchThroughRegulatoryThemes
+            ? filterByThemes(filteredRegulatoryThemes)
+            : undefined
 
           const filterExpression = [filterWithTextExpression, filterWithTags, filterWithThemes].filter(
             f => !!f
@@ -178,9 +156,9 @@ export function useSearchLayers() {
         }
 
         const searchedRegulatoryInExtent = getIntersectingLayerIds<RegulatoryLayerCompact>(
-          shouldSearchByExtent,
+          shouldFilterSearchOnMapExtent,
           searchedRegulatory,
-          extent,
+          searchExtent,
           itemSchema
         )
         dispatch(setRegulatoryLayersSearchResult(searchedRegulatoryInExtent))
@@ -192,17 +170,19 @@ export function useSearchLayers() {
           const filterVigilanceAreaWithTextExpression = shouldSearchByText
             ? {
                 $or: [
-                  { $path: ['name'], $val: searchedText },
-                  { $path: ['comments'], $val: searchedText },
-                  ...filterThemesByText(searchedText),
-                  ...filterTagsByText(searchedText)
+                  { $path: ['name'], $val: globalSearchText },
+                  { $path: ['comments'], $val: globalSearchText },
+                  ...filterThemesByText(globalSearchText),
+                  ...filterTagsByText(globalSearchText)
                 ]
               }
             : undefined
 
-          const filterWithTags = shouldSearchThroughRegulatoryTags ? filterByTags(regulatoryTags) : undefined
+          const filterWithTags = shouldSearchThroughRegulatoryTags ? filterByTags(filteredRegulatoryTags) : undefined
 
-          const filterWithThemes = shouldSearchThroughRegulatoryThemes ? filterByThemes(regulatoryThemes) : undefined
+          const filterWithThemes = shouldSearchThroughRegulatoryThemes
+            ? filterByThemes(filteredRegulatoryThemes)
+            : undefined
 
           const filterExpression = [filterVigilanceAreaWithTextExpression, filterWithTags, filterWithThemes].filter(
             f => !!f
@@ -222,9 +202,9 @@ export function useSearchLayers() {
         }
 
         const searchedVigilanceAreasInExtent = getIntersectingLayerIds<VigilanceArea.VigilanceAreaLayer>(
-          shouldSearchByExtent,
+          shouldFilterSearchOnMapExtent,
           searchedVigilanceArea,
-          extent,
+          searchExtent,
           vigilanceAreaSchema
         )
         dispatch(setVigilanceAreasSearchResult(searchedVigilanceAreasInExtent))
@@ -234,11 +214,24 @@ export function useSearchLayers() {
       }
     }
 
-    return (args: SearchProps) => {
-      dispatch(closeMetadataPanel())
-      debounce(searchFunction, 300, { trailing: true })(args)
-    }
-  }, [regulatoryLayers?.entities, amps?.entities, vigilanceAreaLayers?.entities, isSuperUser, dispatch])
+    dispatch(closeMetadataPanel())
+    searchFunction()
+  }, [
+    amps,
+    dispatch,
+    filteredAmpTypes,
+    filteredRegulatoryTags,
+    filteredRegulatoryThemes,
+    globalSearchText,
+    regulatoryLayers,
+    searchExtent,
+    shouldFilterSearchOnMapExtent,
+    vigilanceAreas
+  ])
 
-  return debouncedSearchLayers
+  const debouncedSearchLayers = debounce(search, 300)
+
+  useEffect(() => {
+    debouncedSearchLayers()
+  }, [debouncedSearchLayers])
 }

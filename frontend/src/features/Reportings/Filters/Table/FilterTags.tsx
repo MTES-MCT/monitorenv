@@ -57,7 +57,7 @@ export function FilterTags() {
     )
   }
 
-  if (nbOfFiltersSetted < 0) {
+  if (nbOfFiltersSetted === 0) {
     return null
   }
 

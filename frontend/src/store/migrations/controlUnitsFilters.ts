@@ -8,7 +8,7 @@ export const controlUnitsFiltersMigrations = {
       return state
     }
 
-    const keysToCheck = Object.keys(INITIAL_STATE.filtersState).filter(key => !['query'].includes(key))
+    const keysToCheck = Object.keys(INITIAL_STATE.filtersState)
 
     const nbOfFiltersSetted = keysToCheck.reduce(
       (count, key) => (isEqual(state.mapControlUnitListDialog[key], INITIAL_STATE[key]) ? count : count + 1),
