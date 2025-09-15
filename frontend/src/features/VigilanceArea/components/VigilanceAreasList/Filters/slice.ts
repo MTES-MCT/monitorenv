@@ -1,6 +1,6 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { vigilanceAreassFiltersMigrations } from '@store/migrations/vigilanceAreasFilters'
+import { vigilanceAreasFiltersMigrations } from '@store/migrations/vigilanceAreasFilters'
 import { isEqual } from 'lodash'
 import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -8,14 +8,15 @@ import storage from 'redux-persist/lib/storage'
 import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
 
 const migrations = {
-  2: (state: any) => vigilanceAreassFiltersMigrations.v2(state)
+  // Start at 4 because test platform and migrations cant downgrade
+  4: (state: any) => vigilanceAreasFiltersMigrations.v2(state)
 }
 
 const persistConfig = {
   key: 'vigilanceAreaFilters',
   migrate: createMigrate(migrations),
   storage,
-  version: 2
+  version: 4
 }
 
 export type VigilanceAreaSliceState = {

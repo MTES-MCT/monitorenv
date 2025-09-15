@@ -15,13 +15,14 @@ import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
 const migrations = {
-  2: (state: any) => dashboardsFiltersMigrations.v2(state)
+  // Start at 4 because test platform and migrations cant downgrade
+  4: (state: any) => dashboardsFiltersMigrations.v2(state)
 }
 const persistConfig = {
   key: 'dashboardFilters_V2',
   migrate: createMigrate(migrations),
   storage,
-  version: 2
+  version: 4
 }
 
 export const INITIAL_DASHBOARD_FILTERS: DashboardFiltersType = {
