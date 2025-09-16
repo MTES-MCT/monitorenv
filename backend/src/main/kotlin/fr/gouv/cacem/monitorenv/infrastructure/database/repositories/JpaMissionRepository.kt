@@ -58,7 +58,12 @@ class JpaMissionRepository(
         startedBefore: Instant?,
         searchQuery: String?,
     ): List<MissionListDTO> {
-        val pageable = PageRequest.of(pageNumber ?: 0, pageSize ?: 5000)
+        val pageable =
+            if (pageNumber != null && pageSize != null) {
+                PageRequest.of(pageNumber, pageSize)
+            } else {
+                Pageable.unpaged()
+            }
         return dbMissionRepository
             .findAll(
                 controlUnitIds = controlUnitIds,

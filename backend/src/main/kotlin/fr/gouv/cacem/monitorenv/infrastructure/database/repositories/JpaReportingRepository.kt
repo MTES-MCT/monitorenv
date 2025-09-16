@@ -26,6 +26,7 @@ import org.locationtech.jts.geom.Geometry
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
@@ -90,7 +91,12 @@ class JpaReportingRepository(
         isAttachedToMission: Boolean?,
         searchQuery: String?,
     ): List<ReportingListDTO> {
-        val pageable = PageRequest.of(pageNumber ?: 0, pageSize ?: 5000)
+        val pageable =
+            if (pageNumber != null && pageSize != null) {
+                PageRequest.of(pageNumber, pageSize)
+            } else {
+                Pageable.unpaged()
+            }
         return dbReportingRepository
             .findAll(
                 pageable,
