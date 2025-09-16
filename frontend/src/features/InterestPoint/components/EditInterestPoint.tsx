@@ -3,6 +3,7 @@ import { SetCoordinates } from '@features/coordinates/SetCoordinates'
 import { addReporting } from '@features/Reportings/useCases/addReporting'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useTracking } from '@hooks/useTracking'
 import {
   Accent,
   Button,
@@ -37,6 +38,7 @@ type EditInterestPointProps = {
 }
 export function EditInterestPoint({ close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
+  const { trackEvent } = useTracking()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
@@ -113,6 +115,14 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     dispatch(saveInterestPoint())
     zoomIn()
     close()
+
+    if (!isSuperUser) {
+      trackEvent({
+        action: "Création d'un point d'intérêt",
+        category: 'MONITOR_EXT',
+        name: "Création d'un point d'intérêt"
+      })
+    }
   }
 
   const remove = () => {
