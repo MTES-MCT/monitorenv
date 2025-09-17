@@ -4,7 +4,7 @@ import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { groupBy, uniq } from 'lodash'
+import { groupBy } from 'lodash'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -64,8 +64,6 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
       [amps, selectedAmpIds]
     )
 
-    const uniqAmpsIds = uniq([...selectedAmpIds, ...amps.map(amp => amp.id)])
-
     return (
       <div>
         {openPanel && !!columnWidth && <StyledPanel $marginLeft={columnWidth} layerId={openPanel.id} />}
@@ -80,7 +78,7 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
                 <StyledToggleSelectAll
                   onSelection={() =>
                     handleSelection({
-                      allIds: uniqAmpsIds,
+                      allIds: amps.map(amp => amp.id),
                       onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
                       onSelect: payload => dispatch(dashboardActions.addItems(payload)),
                       selectedIds: selectedAmpIds,

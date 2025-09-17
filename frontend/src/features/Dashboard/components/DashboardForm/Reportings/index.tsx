@@ -3,7 +3,6 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { pluralize } from '@mtes-mct/monitor-ui'
-import { uniq } from 'lodash'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -46,8 +45,6 @@ export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
       [selectedReportingIds, reportings]
     )
 
-    const uniqReportingsIds = uniq([...selectedReportingIds, ...reportings.map(reporting => +reporting.id)])
-
     return (
       <div>
         <Accordion
@@ -62,7 +59,7 @@ export const Reportings = forwardRef<HTMLDivElement, ReportingsProps>(
                 <StyledToggleSelectAll
                   onSelection={() =>
                     handleSelection({
-                      allIds: uniqReportingsIds,
+                      allIds: reportings.map(reporting => +reporting.id),
                       onRemove: payload => dispatch(dashboardActions.removeItems(payload)),
                       onSelect: payload => dispatch(dashboardActions.addItems(payload)),
                       selectedIds: selectedReportingIds,

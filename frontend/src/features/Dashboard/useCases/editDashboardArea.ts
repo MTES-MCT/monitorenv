@@ -14,14 +14,31 @@ export const editDashboardArea =
   (geometry: GeoJSON.Geometry, dashboardKey: string): HomeAppThunk =>
   async (dispatch, getState) => {
     const { data, error } = await dispatch(dashboardsAPI.endpoints.getExtratedArea.initiate(geometry))
-
     if (data) {
       const dashboard = getState().dashboard.dashboards[dashboardKey]?.dashboard
+
       if (dashboard) {
         const extractedArea = await getPopulatedExtractedArea(data, dispatch)
 
+        const updatedAmpIds = dashboard.ampIds.filter(id => data.ampIds.includes(id))
+        const updatedRegulatoryAreaIds = dashboard.regulatoryAreaIds.filter(id => data.regulatoryAreaIds.includes(id))
+        const updatedVigilanceAreaIds = dashboard.vigilanceAreaIds.filter(id => data.vigilanceAreaIds.includes(id))
+        const updatedReportingIds = dashboard.reportingIds.filter(id => data.reportingIds.includes(id))
+        const updatedDashboard = {
+          ...dashboard,
+          ampIds: updatedAmpIds,
+          geom: geometry,
+          regulatoryAreaIds: updatedRegulatoryAreaIds,
+          reportingIds: updatedReportingIds,
+          vigilanceAreaIds: updatedVigilanceAreaIds
+        }
+
         dispatch(
-          dashboardActions.updateArea({ dashboard: { ...dashboard, geom: geometry }, dashboardKey, extractedArea })
+          dashboardActions.updateArea({
+            dashboard: { ...updatedDashboard, geom: geometry },
+            dashboardKey,
+            extractedArea
+          })
         )
       }
     }
