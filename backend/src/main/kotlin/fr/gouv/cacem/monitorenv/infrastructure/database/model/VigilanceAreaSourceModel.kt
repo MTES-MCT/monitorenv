@@ -37,11 +37,11 @@ class VigilanceAreaSourceModel(
     @Column(name = "phone") val phone: String?,
     @Column(name = "comments") val comments: String?,
     @Column(name = "link") val link: String?,
-    @Column(name = "is_anonymous", nullable = false) val isAnonymous: Boolean = false,
+    @Column(name = "is_anonymous") val isAnonymous: Boolean?,
     @Column(name = "type", columnDefinition = "vigilance_area_source_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
-    val type: SourceTypeEnum = SourceTypeEnum.OTHER,
+    val type: SourceTypeEnum?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -90,7 +90,7 @@ class VigilanceAreaSourceModel(
                                 email = null,
                                 link = null,
                                 comments = sources.firstOrNull { it.comments != null }?.comments,
-                                isAnonymous = sources.any { it.isAnonymous },
+                                isAnonymous = sources.any { it.isAnonymous == true },
                                 type = SourceTypeEnum.CONTROL_UNIT,
                             ),
                         )
