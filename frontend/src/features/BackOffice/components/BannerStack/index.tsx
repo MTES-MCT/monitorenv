@@ -10,6 +10,10 @@ export function BannerStack() {
   const dispatch = useAppDispatch()
   const bannerStack = useAppSelector(state => state.backOffice.bannerStack)
   const remove = (bannerStackRank: number) => {
+    const bannerToRemove = bannerStack.entities[bannerStackRank]
+    if (bannerToRemove?.props.isCollapsible) {
+      return
+    }
     dispatch(backOfficeActions.removeBanner(bannerStackRank))
   }
 

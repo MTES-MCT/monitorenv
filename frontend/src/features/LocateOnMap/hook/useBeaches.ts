@@ -17,9 +17,9 @@ export const useBeaches = () => {
         setBeaches(values)
         setOptions(
           values.map(value => {
-            const label = `${value.properties.name}, ${
-              value.properties.official_name && `, ${value.properties.official_name}`
-            }${value.properties.postcode && `, ${value.properties.postcode}`}`
+            const label = `${value.properties.name} ${
+              value.properties.official_name ? `, ${value.properties.official_name}` : ''
+            }${value.properties.postcode ? `, ${value.properties.postcode}` : ''}`
 
             return {
               label,

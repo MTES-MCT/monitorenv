@@ -20,6 +20,7 @@ import {
   isMissionPage,
   isReportingsPage
 } from '@utils/routes'
+import { shouldDisplayEnvBanner } from '@utils/shouldDisplayEnvBanner'
 import { omit } from 'lodash'
 import { useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
 import { generatePath } from 'react-router'
@@ -36,11 +37,18 @@ import { BannerStack } from './components/BannerStack'
 import { Route } from './Route'
 import { sideWindowActions } from './slice'
 import { StyledRouteContainer, Wrapper } from './style'
+import { addSideWindowBanner } from './useCases/addSideWindowBanner'
+
+import type { Environment } from 'types'
+
+const environment = import.meta.env.FRONTEND_SENTRY_ENV as Environment
 
 export function SideWindow() {
   const dispatch = useAppDispatch()
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
+  const bannerStack = useAppSelector(state => state.sideWindow.bannerStack)
+
   const [isMounted, setIsMounted] = useState(false)
   const missionEvent = useListenMissionEventUpdates()
   const reportingEvent = useListenReportingEventUpdates()
@@ -87,6 +95,16 @@ export function SideWindow() {
       dispatch(dashboardActions.setMapFocus(false))
       dispatch(restorePreviousDisplayedItems())
     }
+    if (environment === 'integration' || environment === 'preprod') {
+      const bannerProps = shouldDisplayEnvBanner(bannerStack)
+
+      if (!bannerProps) {
+        return
+      }
+      dispatch(addSideWindowBanner(bannerProps))
+    }
+    // we want to trigger this effect only when the currentPath change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPath, dispatch])
 
   const navigate = (nextPath: string) => {
