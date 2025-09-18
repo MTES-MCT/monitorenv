@@ -12,7 +12,11 @@ import { isVigilanceAreaPartOfTag } from '../useCases/filters/isVigilanceAreaPar
 import { isVigilanceAreaPartOfTheme } from '../useCases/filters/isVigilanceAreaPartOfTheme'
 import { isVigilanceAreaPartOfVisibility } from '../useCases/filters/isVigilanceAreaPartOfVisibility'
 
-export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
+export const useGetFilteredVigilanceAreasQuery = ({
+  withSearchQueryFilter = false
+}: {
+  withSearchQueryFilter?: boolean
+}) => {
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const { createdBy, seaFronts, searchQuery, status, visibility } = useAppSelector(state => state.vigilanceAreaFilters)
@@ -26,7 +30,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
     isLoading,
     vigilanceAreas,
     vigilanceAreaSpecificPeriodFilter
-  } = useGetVigilanceAreasWithFilters(skip)
+  } = useGetVigilanceAreasWithFilters()
 
   const tempVigilanceAreas = useMemo(
     () =>
@@ -67,19 +71,6 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
       return { entities: {}, ids: [] }
     }
 
-    const customSearch = new CustomSearch(
-      vigilanceAreasByPeriod,
-      [
-        { name: 'comments', weight: 0.1 },
-        { name: 'name', weight: 0.9 }
-      ],
-      {
-        cacheKey: 'VIGILANCE_AREAS_LIST_SEARCH',
-        isStrict: true,
-        withCacheInvalidation: true
-      }
-    )
-
     let vigilanceAreasFilteredByUserType = vigilanceAreasByPeriod
     if (!isSuperUser) {
       vigilanceAreasFilteredByUserType = tempVigilanceAreas.filter(
@@ -87,7 +78,19 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
       )
     }
 
-    if (searchQuery && searchQuery.trim().length > 0) {
+    if (withSearchQueryFilter && searchQuery && searchQuery.trim().length > 0) {
+      const customSearch = new CustomSearch(
+        vigilanceAreasFilteredByUserType,
+        [
+          { name: 'comments', weight: 0.1 },
+          { name: 'name', weight: 0.9 }
+        ],
+        {
+          cacheKey: 'VIGILANCE_AREAS_LIST_SEARCH',
+          isStrict: true,
+          withCacheInvalidation: true
+        }
+      )
       vigilanceAreasFilteredByUserType = customSearch.find(searchQuery)
     }
 
@@ -102,7 +105,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
       entities: vigilanceAreasEntities,
       ids: vigilanceAreasFilteredByUserType.map(vigilanceArea => vigilanceArea.id)
     }
-  }, [vigilanceAreas, vigilanceAreasByPeriod, isSuperUser, searchQuery, tempVigilanceAreas])
+  }, [vigilanceAreas, vigilanceAreasByPeriod, isSuperUser, searchQuery, tempVigilanceAreas, withSearchQueryFilter])
 
   return { isError, isFetching, isLoading, vigilanceAreas: filteredVigilanceAreas }
 }

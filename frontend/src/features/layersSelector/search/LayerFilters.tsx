@@ -1,3 +1,4 @@
+import { useGetAMPsQuery } from '@api/ampsAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
@@ -25,39 +26,23 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
 import { deleteThemeTag } from '@utils/deleteThemeTag'
+import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { setIsAmpSearchResultsVisible, setIsRegulatorySearchResultsVisible } from './slice'
+import {
+  resetFilters,
+  setFilteredAmpTypes,
+  setFilteredRegulatoryTags,
+  setFilteredRegulatoryThemes,
+  setIsAmpSearchResultsVisible,
+  setIsRegulatorySearchResultsVisible
+} from './slice'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
-type LayerFiltersProps = {
-  ampTypes: Option[]
-  filteredAmpTypes: string[]
-  filteredRegulatoryTags: TagOption[]
-  filteredRegulatoryThemes: ThemeOption[]
-  filteredVigilanceAreaPeriod: string | undefined
-  handleResetFilters: () => void
-  setFilteredAmpTypes: (filteredAmpTypes: string[]) => void
-  setFilteredRegulatoryTags: (filteredRegulatoryTags: TagOption[]) => void
-  setFilteredRegulatoryThemes: (filteredRegulatoryThemes: ThemeOption[]) => void
-  updateDateRangeFilter: (dateRange: DateAsStringRange | undefined) => void
-}
-
-export function LayerFilters({
-  ampTypes,
-  filteredAmpTypes,
-  filteredRegulatoryTags,
-  filteredRegulatoryThemes,
-  filteredVigilanceAreaPeriod,
-  handleResetFilters,
-  setFilteredAmpTypes,
-  setFilteredRegulatoryTags,
-  setFilteredRegulatoryThemes,
-  updateDateRangeFilter
-}: LayerFiltersProps) {
+export function LayerFilters() {
   const dispatch = useAppDispatch()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
@@ -65,57 +50,63 @@ export function LayerFilters({
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+  const filteredVigilanceAreaPeriod = useAppSelector(state => state.vigilanceAreaFilters.period)
+
+  const { data: amps } = useGetAMPsQuery()
+  const ampTypes = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
+  const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
+
   const {
+    createdBy,
+    nbOfFiltersSetted: numberOfVigilanceAreaFiltersSetted,
+    seaFronts,
     specificPeriod: vigilanceAreaSpecificPeriodFilter,
     status,
     visibility
   } = useAppSelector(state => state.vigilanceAreaFilters)
 
-  const handleSetFilteredAmpTypes = nextAmpThemes => {
-    setFilteredAmpTypes(nextAmpThemes ?? [])
+  const updateFilteredAmpTypes = nextAmpThemes => {
+    dispatch(setFilteredAmpTypes(nextAmpThemes ?? []))
   }
-  const handleDeleteAmpType = (ampThemeToDelete: string) => () => {
+  const deleteAmpType = (ampThemeToDelete: string) => () => {
     if (filteredAmpTypes.length === 1) {
       dispatch(setIsAmpSearchResultsVisible(false))
     }
-    setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete))
+
+    dispatch(setFilteredAmpTypes(filteredAmpTypes.filter(theme => theme !== ampThemeToDelete)))
   }
 
-  const handleDeleteRegulatoryTag = (regulatoryTagToDelete: TagOption) => () => {
+  const deleteRegulatoryTag = (regulatoryTagToDelete: TagOption) => () => {
     if (filteredRegulatoryTags.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
     const updatedFilter = deleteTagTag(filteredRegulatoryTags, regulatoryTagToDelete)
-
-    setFilteredRegulatoryTags(updatedFilter)
+    dispatch(setFilteredRegulatoryTags(updatedFilter))
   }
 
-  const handleDeleteRegulatoryTheme = (regulatoryThemeToDelete: ThemeOption) => () => {
+  const deleteRegulatoryTheme = (regulatoryThemeToDelete: ThemeOption) => () => {
     if (filteredRegulatoryThemes.length === 1) {
       dispatch(setIsRegulatorySearchResultsVisible(false))
     }
     const updatedFilter = deleteThemeTag(filteredRegulatoryThemes, regulatoryThemeToDelete)
 
-    setFilteredRegulatoryThemes(updatedFilter)
+    dispatch(setFilteredRegulatoryThemes(updatedFilter))
   }
 
-  const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
-
-  const deleteVisibilityFilter = () => {
-    dispatch(
-      vigilanceAreaFiltersActions.updateFilters({
-        key: 'visibility',
-        value: INITIAL_STATE.visibility
-      })
-    )
+  const updateDateRangeFilter = (dateRange: DateAsStringRange | undefined) => {
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'specificPeriod', value: dateRange }))
   }
-  const deleteStatusFilter = () => {
-    dispatch(
-      vigilanceAreaFiltersActions.updateFilters({
-        key: 'status',
-        value: INITIAL_STATE.status
-      })
-    )
+
+  const updateVigilanceAreaFilters = <K extends keyof typeof INITIAL_STATE>(key: K, value: typeof INITIAL_STATE[K]) => {
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key, value }))
+  }
+
+  const handleResetFilters = () => {
+    dispatch(resetFilters())
+    dispatch(vigilanceAreaFiltersActions.resetFilters())
   }
 
   return (
@@ -145,7 +136,7 @@ export function LayerFilters({
             isTransparent
             label="Type d'AMP"
             name="ampTypes"
-            onChange={handleSetFilteredAmpTypes}
+            onChange={updateFilteredAmpTypes}
             options={ampTypes}
             placeholder="Type d'AMP"
             renderValue={() =>
@@ -181,19 +172,18 @@ export function LayerFilters({
       {(filteredRegulatoryTags.length > 0 ||
         filteredAmpTypes?.length > 0 ||
         filteredRegulatoryThemes.length > 0 ||
-        visibility.length !== 2 ||
-        status.length !== 2) && (
+        numberOfVigilanceAreaFiltersSetted > 0) && (
         <TagWrapper>
           {filteredRegulatoryThemes?.map(theme => (
             <Fragment key={`filteredRegulatoryThemes-${theme.id}`}>
-              <SingleTag accent={Accent.SECONDARY} onDelete={handleDeleteRegulatoryTheme(theme)} title={theme.name}>
+              <SingleTag accent={Accent.SECONDARY} onDelete={deleteRegulatoryTheme(theme)} title={theme.name}>
                 {theme.name}
               </SingleTag>
               {theme.subThemes?.map(subTheme => (
                 <SingleTag
                   key={subTheme.id}
                   accent={Accent.SECONDARY}
-                  onDelete={handleDeleteRegulatoryTheme(subTheme)}
+                  onDelete={deleteRegulatoryTheme(subTheme)}
                   title={subTheme.name}
                 >
                   {subTheme.name}
@@ -203,14 +193,14 @@ export function LayerFilters({
           ))}
           {filteredRegulatoryTags?.map(tag => (
             <Fragment key={`filteredRegulatoryTags-${tag.id}`}>
-              <SingleTag accent={Accent.SECONDARY} onDelete={handleDeleteRegulatoryTag(tag)} title={tag.name}>
+              <SingleTag accent={Accent.SECONDARY} onDelete={deleteRegulatoryTag(tag)} title={tag.name}>
                 {tag.name}
               </SingleTag>
               {tag.subTags?.map(subTag => (
                 <SingleTag
                   key={subTag.id}
                   accent={Accent.SECONDARY}
-                  onDelete={handleDeleteRegulatoryTag(subTag)}
+                  onDelete={deleteRegulatoryTag(subTag)}
                   title={subTag.name}
                 >
                   {subTag.name}
@@ -220,29 +210,67 @@ export function LayerFilters({
           ))}
 
           {filteredAmpTypes?.map(type => (
-            <SingleTag key={type} accent={Accent.SECONDARY} onDelete={handleDeleteAmpType(type)} title={type}>
+            <SingleTag key={type} accent={Accent.SECONDARY} onDelete={deleteAmpType(type)} title={type}>
               {type}
             </SingleTag>
           ))}
           {visibility.length === 1 && visibility[0] && (
-            <SingleTag accent={Accent.SECONDARY} onDelete={deleteVisibilityFilter} title={visibility[0]}>
+            <SingleTag
+              accent={Accent.SECONDARY}
+              onDelete={() => updateVigilanceAreaFilters('visibility', INITIAL_STATE.visibility)}
+              title={visibility[0]}
+            >
               {VigilanceArea.VisibilityLabel[visibility[0]]}
             </SingleTag>
           )}
           {status.length === 1 && status[0] && (
-            <SingleTag accent={Accent.SECONDARY} onDelete={deleteStatusFilter} title={status[0]}>
+            <SingleTag
+              accent={Accent.SECONDARY}
+              onDelete={() => updateVigilanceAreaFilters('status', INITIAL_STATE.status)}
+              title={status[0]}
+            >
               {VigilanceArea.StatusLabel[status[0]]}
             </SingleTag>
           )}
+          {createdBy.map(creator => (
+            <SingleTag
+              key={creator}
+              accent={Accent.SECONDARY}
+              onDelete={() =>
+                updateVigilanceAreaFilters(
+                  'createdBy',
+                  createdBy.filter(c => c !== creator)
+                )
+              }
+              title={creator}
+            >
+              {creator}
+            </SingleTag>
+          ))}
+          {seaFronts.map(seaFront => (
+            <SingleTag
+              key={seaFront}
+              accent={Accent.SECONDARY}
+              onDelete={() =>
+                updateVigilanceAreaFilters(
+                  'seaFronts',
+                  seaFronts.filter(s => s !== seaFront)
+                )
+              }
+              title={seaFront}
+            >
+              {seaFront}
+            </SingleTag>
+          ))}
         </TagWrapper>
       )}
 
       {(filteredRegulatoryTags.length > 0 ||
         filteredRegulatoryThemes.length > 0 ||
         filteredAmpTypes?.length > 0 ||
-        filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS ||
-        status.length !== 2 ||
-        visibility.length !== 2) && <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>}
+        numberOfVigilanceAreaFiltersSetted > 0) && (
+        <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>
+      )}
     </FiltersWrapper>
   )
 }
