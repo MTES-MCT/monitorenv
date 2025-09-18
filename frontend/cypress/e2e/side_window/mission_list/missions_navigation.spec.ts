@@ -1,6 +1,6 @@
 context('Mission', () => {
   beforeEach(() => {
-    cy.viewport(1280, 1024)
+    cy.login('superuser')
   })
 
   it('Missions should be created and saved in store When auto-save is not enabled', () => {

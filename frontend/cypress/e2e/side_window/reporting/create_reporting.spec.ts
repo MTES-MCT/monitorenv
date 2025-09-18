@@ -1,6 +1,7 @@
 import { setGeometry } from '../../../../src/domain/shared_slices/Draw'
 import { FAKE_API_PUT_RESPONSE } from '../../constants'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+import { visitSideWindow } from '../../utils/visitSideWindow'
 
 import type { GeoJSON } from '../../../../src/domain/types/GeoJSON'
 
@@ -8,13 +9,8 @@ const dispatch = action => cy.window().its('store').invoke('dispatch', action)
 
 context('Reportings', () => {
   beforeEach(() => {
-    cy.viewport(1280, 1024)
-    cy.visit(`/side_window`, {
-      onBeforeLoad() {
-        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
-      }
-    })
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
+    visitSideWindow()
     cy.clickButton('Signalements')
     cy.wait('@getReportings')
   })
