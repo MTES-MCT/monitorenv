@@ -1,4 +1,4 @@
-import { useGetFilteredVigilanceAreasForMapQuery } from '@features/layersSelector/search/hooks/useGetFilteredVigilanceAreasForMapQuery'
+import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
@@ -29,7 +29,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasForMapQuery()
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery({})
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
