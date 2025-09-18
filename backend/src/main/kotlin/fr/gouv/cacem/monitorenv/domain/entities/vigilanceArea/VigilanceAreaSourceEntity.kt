@@ -11,6 +11,6 @@ data class VigilanceAreaSourceEntity(
     val email: String?,
     val link: String?,
     val phone: String?,
-    val type: SourceTypeEnum?,
-    val isAnonymous: Boolean?,
+    val type: SourceTypeEnum,
+    val isAnonymous: Boolean,
 )

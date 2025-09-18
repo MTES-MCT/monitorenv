@@ -13,5 +13,5 @@ WHERE control_unit_contacts_id IS NOT NULL;
 
 UPDATE public.vigilance_areas_source
 SET type = 'OTHER'::vigilance_area_source_type
-WHERE control_unit_contacts_id IS NULL AND (name IS NOT NULL OR email IS NOT NULL OR phone IS NOT NULL);
+WHERE control_unit_contacts_id IS NULL;
 

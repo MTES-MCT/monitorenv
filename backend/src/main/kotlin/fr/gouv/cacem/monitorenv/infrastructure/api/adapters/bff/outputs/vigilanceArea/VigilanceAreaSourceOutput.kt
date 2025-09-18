@@ -13,8 +13,8 @@ data class VigilanceAreaSourceOutput(
     val link: String?,
     val email: String?,
     val phone: String?,
-    val type: SourceTypeEnum?,
-    val isAnonymous: Boolean?,
+    val type: SourceTypeEnum,
+    val isAnonymous: Boolean,
 ) {
     companion object {
         fun fromVigilanceAreaSourceEntity(vigilanceAreaSource: VigilanceAreaSourceEntity): VigilanceAreaSourceOutput =
