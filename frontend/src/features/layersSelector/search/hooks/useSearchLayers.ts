@@ -1,8 +1,8 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
-import { useGetFilteredVigilanceAreasForMapQuery } from '@features/layersSelector/search/hooks/useGetFilteredVigilanceAreasForMapQuery'
 import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
+import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -21,7 +21,7 @@ export function useSearchLayers() {
 
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasForMapQuery()
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery({})
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
