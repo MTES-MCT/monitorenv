@@ -1,4 +1,9 @@
 import { BannerStack } from '@features/BackOffice/components/BannerStack'
+import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { shouldDisplayEnvBanner } from '@utils/shouldDisplayEnvBanner'
+import { useEffect } from 'react'
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
 
@@ -11,7 +16,27 @@ import { ControlUnitTable } from '../features/ControlUnit/components/ControlUnit
 import { StationForm } from '../features/Station/components/StationForm'
 import { BaseTable } from '../features/Station/components/StationTable'
 
+import type { Environment } from 'types'
+
+const environment = import.meta.env.FRONTEND_SENTRY_ENV as Environment
+
 export function BackOfficePage() {
+  const dispatch = useAppDispatch()
+  const bannerStack = useAppSelector(state => state.backOffice.bannerStack)
+
+  useEffect(() => {
+    if (environment === 'integration' || environment === 'preprod') {
+      const bannerProps = shouldDisplayEnvBanner(bannerStack)
+
+      if (!bannerProps) {
+        return
+      }
+      dispatch(addBackOfficeBanner(bannerProps))
+    }
+    // just want to run this once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <Wrapper>
       <BackOfficeMenu />

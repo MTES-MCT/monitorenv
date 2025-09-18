@@ -3,7 +3,6 @@ import { StyledButton, ButtonWithWiteBg, StyledDeleteButton, StyledFooter } from
 import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
 import { reopenReporting } from '@features/Reportings/useCases/reopenReporting'
 import { getTimeLeft, isNewReporting } from '@features/Reportings/utils'
-import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Level, THEME, customDayjs, getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
@@ -166,9 +165,7 @@ export function Footer({
           withAutomaticClosing: true
         }
 
-        return reportingContext === ReportingContext.MAP
-          ? dispatch(addMainWindowBanner(bannerProps))
-          : dispatch(addSideWindowBanner(bannerProps))
+        return dispatch(addMainWindowBanner(bannerProps))
       })
       .catch(() => {
         const errorBannerProps = {
@@ -179,9 +176,7 @@ export function Footer({
           withAutomaticClosing: true
         }
 
-        return reportingContext === ReportingContext.MAP
-          ? dispatch(addMainWindowBanner(errorBannerProps))
-          : dispatch(addSideWindowBanner(errorBannerProps))
+        return dispatch(addMainWindowBanner(errorBannerProps))
       })
   }
 

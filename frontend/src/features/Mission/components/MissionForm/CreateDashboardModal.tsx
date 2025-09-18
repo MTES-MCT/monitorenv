@@ -77,7 +77,7 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
   const geomSourceOptions: Option<'MISSION' | 'ACTION'>[] = [
     {
       isDisabled: !missionGeom,
-      label: 'De la mission (calculée automatiquement ou manuelle)',
+      label: 'De la mission (calculée automatiquement ou manuellement)',
       value: 'MISSION'
     },
     {

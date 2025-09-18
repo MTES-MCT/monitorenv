@@ -15,6 +15,10 @@ export function BannerStack() {
   const isCurrentPathIsMissionPage = isMissionPage(currentPath)
 
   const remove = (bannerStackRank: number) => {
+    const bannerToRemove = bannerStack.entities[bannerStackRank]
+    if (bannerToRemove?.props.isCollapsible) {
+      return
+    }
     dispatch(sideWindowActions.removeBanner(bannerStackRank))
   }
 

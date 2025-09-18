@@ -13,3 +13,5 @@ export type BannerStackItemProps = Omit<BannerProps, 'children' | 'onAutoClose' 
 }
 
 export type WindowContext = 'map' | 'sideWindow' | 'backoffice'
+
+export type Environment = 'dev' | 'integration' | 'preprod' | 'prod'

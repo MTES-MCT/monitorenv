@@ -13,6 +13,11 @@ export function BannerStack() {
   const bannerStack = useAppSelector(state => state.mainWindow.bannerStack)
 
   const remove = (bannerStackRank: number) => {
+    const bannerToRemove = bannerStack.entities[bannerStackRank]
+    if (bannerToRemove?.props.isCollapsible) {
+      return
+    }
+
     dispatch(mainWindowActions.removeBanner(bannerStackRank))
   }
 
