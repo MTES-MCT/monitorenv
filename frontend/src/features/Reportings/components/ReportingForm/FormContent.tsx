@@ -59,7 +59,7 @@ import {
   updateMapInteractionListeners
 } from 'domain/use_cases/map/updateMapInteractionListeners'
 import { FieldArray, useFormikContext } from 'formik'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useDebouncedCallback } from 'use-debounce'

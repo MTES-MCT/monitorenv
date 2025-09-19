@@ -2,7 +2,7 @@ import { browserTracingIntegration } from '@sentry/browser'
 import { init } from '@sentry/react'
 import { isCypress } from '@utils/isCypress'
 import { measureScrollbarWidth } from '@utils/styleHelpers'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 

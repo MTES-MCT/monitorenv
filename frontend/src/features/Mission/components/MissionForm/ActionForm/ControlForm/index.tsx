@@ -22,7 +22,7 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { displayThemes } from '@utils/getThemesAsOptions'
 import { FieldArray, type FormikErrors, useFormikContext } from 'formik'
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 

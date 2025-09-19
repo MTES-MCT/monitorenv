@@ -200,7 +200,7 @@ export function MissionForm({
   }
 
   const validateBeforeOnChange = useDebouncedCallback(async (nextValues, forceSave) => {
-    if (!isAutoSaveEnabled || engagedControlUnit || !isMissionFormValid) {
+    if ((!isAutoSaveEnabled || engagedControlUnit) ?? !isMissionFormValid) {
       return
     }
 

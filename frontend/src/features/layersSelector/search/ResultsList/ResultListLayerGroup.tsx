@@ -8,7 +8,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import { difference, includes, intersection } from 'lodash'
+import { difference, includes, intersection } from 'lodash-es'
 import { useCallback, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 
