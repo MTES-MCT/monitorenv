@@ -14,7 +14,7 @@ import type { Coordinate } from 'ol/coordinate'
 let lastEventForPointerMove
 let timeoutForPointerMove
 
-const COORDINATES_OPTIONS = getOptionsFromLabelledEnum(CoordinatesFormatLabel)
+export const COORDINATES_OPTIONS = getOptionsFromLabelledEnum(CoordinatesFormatLabel)
 
 export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
   const [coordinates, setCursorCoordinates] = useState<Coordinate>()
