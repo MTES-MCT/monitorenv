@@ -1,5 +1,5 @@
 import { StyledMapMenuDialogContainer } from '@components/style'
-import { SetCoordinates } from '@features/coordinates/SetCoordinates'
+import { COORDINATES_OPTIONS } from '@features/map/controls/MapCoordinatesBox'
 import { addReporting } from '@features/Reportings/useCases/addReporting'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -14,10 +14,12 @@ import {
   WSG84_PROJECTION,
   TextInput,
   Textarea,
-  getCoordinates
+  getCoordinates,
+  MultiRadio,
+  CoordinatesInput
 } from '@mtes-mct/monitor-ui'
 import { globalActions, ReportingContext, setDisplayedItems } from 'domain/shared_slices/Global'
-import { setFitToExtent } from 'domain/shared_slices/Map'
+import { setCoordinatesFormat, setFitToExtent } from 'domain/shared_slices/Map'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { boundingExtent } from 'ol/extent'
 import { toLonLat, transformExtent } from 'ol/proj'
@@ -40,6 +42,8 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
   const dispatch = useAppDispatch()
   const { trackEvent } = useTracking()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
+  const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat) as CoordinatesFormat
 
   const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
 
@@ -151,6 +155,13 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
     dispatch(globalActions.setIsMapToolVisible(undefined))
   }
 
+  const selectCordinatesFormat = value => {
+    if (!value) {
+      return
+    }
+    dispatch(setCoordinatesFormat(value))
+  }
+
   return (
     <StyledMapMenuDialogContainer data-cy="save-interest-point">
       <MapMenuDialog.Header>
@@ -168,7 +179,23 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
         />
       </MapMenuDialog.Header>
       <StyledDialogBody>
-        <SetCoordinates coordinates={coordinates} updateCoordinates={updateCoordinates} />
+        <CoordinatesContainer>
+          <MultiRadio
+            isInline
+            label="Unités des coordonnées"
+            name="interestPointCoordinatesUnits"
+            onChange={selectCordinatesFormat}
+            options={COORDINATES_OPTIONS}
+            value={coordinatesFormat}
+          />
+          <CoordinatesInput
+            coordinatesFormat={coordinatesFormat}
+            defaultValue={coordinates}
+            label="Coordonnées"
+            name="interestpointCoordinates"
+            onChange={updateCoordinates}
+          />
+        </CoordinatesContainer>
 
         <TextInput
           data-cy="interest-point-name-input"
@@ -183,6 +210,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
           label="Observations"
           name="observations"
           onChange={updateObservations}
+          rows={2}
           value={currentInterestPoint?.observations ?? ''}
         />
       </StyledDialogBody>
@@ -214,4 +242,9 @@ const StyledDialogBody = styled(MapMenuDialog.Body)`
 const Separator = styled.div`
   border-top: 1px solid ${p => p.theme.color.lightGray};
   margin: 8px 0px;
+`
+const CoordinatesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `

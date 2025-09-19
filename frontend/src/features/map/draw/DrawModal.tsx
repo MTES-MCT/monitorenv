@@ -6,7 +6,8 @@ import {
   IconButton,
   usePrevious,
   OPENLAYERS_PROJECTION,
-  WSG84_PROJECTION
+  WSG84_PROJECTION,
+  MultiRadio
 } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import Feature from 'ol/Feature'
@@ -17,7 +18,7 @@ import styled from 'styled-components'
 
 import { InteractionListener, InteractionType, OLGeometryType } from '../../../domain/entities/map/constants'
 import { setGeometry, setInteractionType } from '../../../domain/shared_slices/Draw'
-import { setFitToExtent } from '../../../domain/shared_slices/Map'
+import { setCoordinatesFormat, setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
 import {
@@ -28,7 +29,9 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../../utils/routes'
 import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
+import { COORDINATES_OPTIONS } from '../controls/MapCoordinatesBox'
 
+import type { Coordinate } from 'ol/coordinate'
 import type { MultiPoint, MultiPolygon } from 'ol/geom'
 
 const titlePlaceholder = {
@@ -115,6 +118,7 @@ export function DrawModal() {
   const handleSelectInteraction = nextInteraction => () => {
     dispatch(setInteractionType(nextInteraction))
   }
+
   const handleCancel = () => {
     handleReset()
 
@@ -169,6 +173,13 @@ export function DrawModal() {
     [dispatch]
   )
 
+  const selectCordinatesFormat = value => {
+    if (!value) {
+      return
+    }
+    dispatch(setCoordinatesFormat(value))
+  }
+
   const hasCustomTools = useMemo(
     () =>
       listener === InteractionListener.MISSION_ZONE ||
@@ -177,6 +188,28 @@ export function DrawModal() {
       listener === InteractionListener.DASHBOARD_ZONE,
     [listener]
   )
+
+  const coordinates = useMemo(() => {
+    if (!geometry || geometry.type !== 'MultiPoint') {
+      return undefined
+    }
+    const coords = geometry?.coordinates[0]
+    if (!coords) {
+      return undefined
+    }
+
+    return [coords[1], coords[0]] as Coordinate
+  }, [geometry])
+
+  const hasGeometryWithNoCoordinates = useMemo(
+    () =>
+      geometry &&
+      (geometry.type === 'MultiPoint' || geometry.type === 'MultiPolygon') &&
+      Array.isArray(geometry.coordinates) &&
+      geometry.coordinates.length === 0,
+    [geometry]
+  )
+
   if (!listener) {
     return null
   }
@@ -204,7 +237,7 @@ export function DrawModal() {
           </IconGroup>
         )
       }
-      isValidatedButtonDisabled={!isGeometryValid}
+      isValidatedButtonDisabled={!isGeometryValid || hasGeometryWithNoCoordinates}
       onCancel={handleCancel}
       onDelete={listener === InteractionListener.DASHBOARD_ZONE ? handleDelete : undefined}
       onReset={handleReset}
@@ -214,11 +247,17 @@ export function DrawModal() {
     >
       {(listener === InteractionListener.CONTROL_POINT || listener === InteractionListener.REPORTING_POINT) && (
         <CoordinatesInputWrapper>
+          <MultiRadio
+            isInline
+            label="Unités des coordonnées"
+            name="interestPointCoordinatesUnits"
+            onChange={selectCordinatesFormat}
+            options={COORDINATES_OPTIONS}
+            value={coordinatesFormat}
+          />
           <CoordinatesInput
             coordinatesFormat={coordinatesFormat}
-            defaultValue={undefined}
-            isLabelHidden
-            isLight
+            defaultValue={coordinates}
             label="Coordonnées"
             name="coordinates"
             onChange={handleSelectCoordinates}
@@ -230,10 +269,11 @@ export function DrawModal() {
 }
 
 const CoordinatesInputWrapper = styled.div`
-  margin-bottom: 8px;
-  margin-left: auto;
-  margin-right: auto !important;
-  width: 280px;
+  align-items: center;
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-bottom: 24px;
 `
 
 const IconGroup = styled.div`
