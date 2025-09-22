@@ -2,27 +2,33 @@ import { getNauticalMilesFromMeters } from '../../../utils/utils'
 import { DistanceUnit } from '../../entities/map/constants'
 import { setMeasurementDrawedDistanceUnit } from '../../shared_slices/Measurement'
 
-export const updateMeasurementsWithNewDistanceUnit = () => (dispatch, getState) => {
-  const {
-    map: { distanceUnit: globalDistanceUnit },
-    measurement: { measurementsDrawed }
-  } = getState()
+import type { HomeAppThunk } from '@store/index'
 
-  const metersForOneNauticalMile = 1852
+export const updateMeasurementsWithNewDistanceUnit =
+  (newDistanceUnit: DistanceUnit): HomeAppThunk =>
+  (dispatch, getState) => {
+    const { measurementsDrawed } = getState().measurement
 
-  const newDrawedMeasurements = measurementsDrawed.map(drawedMeasurement => {
-    const { distanceUnit = DistanceUnit.NAUTICAL, measurement } = drawedMeasurement
+    const metersForOneNauticalMile = 1852
 
-    if (globalDistanceUnit === DistanceUnit.NAUTICAL) {
-      const newMeasurement =
-        distanceUnit === DistanceUnit.METRIC ? getNauticalMilesFromMeters(measurement) : measurement
+    const newDrawedMeasurements = measurementsDrawed.map(drawedMeasurement => {
+      const { distanceUnit, measurement } = drawedMeasurement
 
-      return { ...drawedMeasurement, distanceUnit: globalDistanceUnit, measurement: newMeasurement }
-    }
+      if (newDistanceUnit === DistanceUnit.NAUTICAL) {
+        const newMeasurement =
+          distanceUnit === DistanceUnit.METRIC ? getNauticalMilesFromMeters(measurement) : measurement
 
-    const newMeasurement = distanceUnit === DistanceUnit.NAUTICAL ? measurement * metersForOneNauticalMile : measurement
+        return { ...drawedMeasurement, distanceUnit: newDistanceUnit, measurement: newMeasurement }
+      }
 
-    return { ...drawedMeasurement, distanceUnit: globalDistanceUnit, measurement: newMeasurement }
-  })
-  dispatch(setMeasurementDrawedDistanceUnit(newDrawedMeasurements))
-}
+      if (newDistanceUnit === DistanceUnit.METRIC) {
+        const newMeasurement =
+          distanceUnit === DistanceUnit.NAUTICAL ? measurement * metersForOneNauticalMile : measurement
+
+        return { ...drawedMeasurement, distanceUnit: newDistanceUnit, measurement: newMeasurement }
+      }
+
+      return drawedMeasurement
+    })
+    dispatch(setMeasurementDrawedDistanceUnit(newDrawedMeasurements))
+  }

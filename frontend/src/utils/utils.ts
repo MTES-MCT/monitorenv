@@ -102,5 +102,5 @@ export const getColorWithAlpha = (color: string, alpha: number) => {
 }
 
 export function getNauticalMilesFromMeters(length: number): number {
-  return Math.round((length / 1000) * 100 * 0.539957) / 100
+  return length * 0.000539957
 }

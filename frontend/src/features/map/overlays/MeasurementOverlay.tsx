@@ -49,7 +49,10 @@ export function MeasurementOverlay({
 
   const measurementWithUnitDistance = useMemo(() => {
     const prefixe = type === 'Circle' || type === 'Polygon' ? 'r = ' : ''
-    if (distanceUnit === DistanceUnit.METRIC && measurement) {
+    if (!measurement) {
+      return 'Pas de mesure'
+    }
+    if (distanceUnit === DistanceUnit.METRIC) {
       if (measurement < 1000) {
         return `${prefixe}${Math.round(measurement * 100) / 100} mètres`
       }
@@ -60,7 +63,7 @@ export function MeasurementOverlay({
       )}`
     }
 
-    return `${prefixe}${measurement} nm`
+    return `${prefixe}${Math.round(measurement * 100) / 100} nm`
   }, [distanceUnit, measurement, type])
 
   useEffect(() => {
