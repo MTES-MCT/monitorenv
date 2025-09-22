@@ -234,7 +234,7 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
     }
     control?.current?.setUnits(value)
     dispatch(setDistanceUnit(value))
-    dispatch(updateMeasurementsWithNewDistanceUnit())
+    dispatch(updateMeasurementsWithNewDistanceUnit(value))
   }
 
   useEffect(() => {
@@ -342,6 +342,7 @@ const DistanceUnitsTypeSelection = styled.div<{ $isOpen: boolean }>`
   visibility: ${props => (props.$isOpen ? 'visible' : 'hidden')};
   height: ${props => (props.$isOpen ? 69 : 0)}px;
   transition: all 0.5s;
+
   > fieldset {
     flex-grow: 2;
     justify-content: center;

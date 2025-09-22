@@ -45,7 +45,7 @@ const getNauticalMilesOfLine = (line: LineString, distanceUnit: DistanceUnit) =>
   const length = getLength(line)
 
   if (distanceUnit === DistanceUnit.METRIC) {
-    return Math.round(length)
+    return length
   }
 
   return getNauticalMilesFromMeters(length)
@@ -56,7 +56,7 @@ function getNauticalMilesRadiusOfCircularPolygon(polygon: Geometry, distanceUnit
   const radius = length / (2 * Math.PI)
 
   if (distanceUnit === DistanceUnit.METRIC) {
-    return Math.round(radius)
+    return radius
   }
 
   return getNauticalMilesFromMeters(radius)
