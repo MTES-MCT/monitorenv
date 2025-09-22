@@ -1,4 +1,5 @@
-import { useEffect, useState, useMemo, useRef, type MutableRefObject } from 'react'
+import { debounce } from 'lodash'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const GOOGLEMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json'
 const GOOGLEMAPS_SCRIPT_BASEURL = `https://places.googleapis.com/v1/places:autocomplete`
@@ -37,19 +38,13 @@ type Options = {
   }
 }
 
-export const useGooglePlacesAPI = search => {
+export const useGooglePlacesAPI = (search: string | undefined) => {
   const [results, setResults] = useState<Options[]>([])
-  const abortControlerRef = useRef() as MutableRefObject<AbortController>
 
-  const throttledSearch = useMemo(() => {
-    const onSearch = async query => {
-      if (abortControlerRef.current) {
-        abortControlerRef.current.abort()
-      }
-      abortControlerRef.current = new AbortController()
-
+  const runSearch = useCallback((query: string | undefined) => {
+    const onSearch = () => {
       if (query) {
-        const setResultsCallback = (suggestions: any[]) => {
+        const setResultsAsOptions = (suggestions: any[]) => {
           if (!suggestions) {
             return
           }
@@ -69,7 +64,10 @@ export const useGooglePlacesAPI = search => {
           )
         }
         fetch(GOOGLEMAPS_SCRIPT_BASEURL, {
-          body: JSON.stringify({ input: query }),
+          body: JSON.stringify({
+            includedRegionCodes: ['fr', 'gf', 'pf', 'tf', 'nc', 'bl', 're', 'mf', 'pm', 'wf'],
+            input: query
+          }),
           headers: {
             'Content-Type': 'application/json',
             'X-Goog-Api-Key': import.meta.env.FRONTEND_GOOGLEMAPS_API_KEY
@@ -91,7 +89,7 @@ export const useGooglePlacesAPI = search => {
             }
 
             const { suggestions } = data
-            setResultsCallback(suggestions)
+            setResultsAsOptions(suggestions)
           })
 
         return
@@ -99,16 +97,18 @@ export const useGooglePlacesAPI = search => {
       setResults([])
     }
 
-    return searchQuery => onSearch(searchQuery)
+    onSearch()
   }, [])
 
+  const debouncedSearch = useMemo(() => debounce(runSearch, 300), [runSearch])
+
   useEffect(() => {
-    throttledSearch(search)
+    debouncedSearch(search)
 
     return () => {
-      abortControlerRef.current.abort()
+      debouncedSearch.cancel()
     }
-  }, [search, throttledSearch])
+  }, [debouncedSearch, search])
 
   return results
 }

@@ -1,13 +1,13 @@
 import { useBeaches } from '@features/LocateOnMap/hook/useBeaches'
 import {
   Accent,
+  CustomSearch,
   Icon,
   IconButton,
   OPENLAYERS_PROJECTION,
-  Size,
-  WSG84_PROJECTION,
   Search,
-  CustomSearch
+  Size,
+  WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
 import { getColorWithAlpha } from '@utils/utils'
 import { transformExtent } from 'ol/proj'
@@ -18,6 +18,8 @@ import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesA
 import { setFitToExtent, setLocateOnMap } from '../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
+
+import type { Extent } from 'ol/extent'
 
 export function LocateOnMap() {
   const dispatch = useAppDispatch()
@@ -34,7 +36,7 @@ export function LocateOnMap() {
 
       return
     }
-    let extent
+    let extent: Extent | undefined
 
     if (location.id.startsWith('beaches')) {
       const selectedBeach = beaches.find(beach => beach.id === location.id)
@@ -47,18 +49,19 @@ export function LocateOnMap() {
         extent = transformExtent(place.bbox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)
       }
     }
-
-    dispatch(setLocateOnMap({ extent, location }))
-    dispatch(setFitToExtent(extent))
+    if (extent) {
+      dispatch(setLocateOnMap({ extent, location }))
+      dispatch(setFitToExtent(extent))
+    }
   }
 
   const onQuery = (searchQuery: string | undefined) => {
     setSearchedLocation(searchQuery)
   }
+
   const options = [...results, ...beachesResults]
-  const locateOnMapCustomSearch = new CustomSearch(options ?? [], ['label'], {
-    isStrict: true
-  })
+
+  const locateOnMapCustomSearch = new CustomSearch(options ?? [], ['label'])
 
   return (
     <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
