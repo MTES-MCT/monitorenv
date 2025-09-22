@@ -52,9 +52,6 @@ const measurementSlice = createSlice({
       state.customCircleMesurement = action.payload
     },
 
-    setMeasurementDrawedDistanceUnit(state, action: PayloadAction<Measurement[]>) {
-      state.measurementsDrawed = action.payload
-    },
     setMeasurementTypeToAdd(state, action) {
       state.measurementTypeToAdd = action.payload
     }
@@ -67,7 +64,6 @@ export const {
   resetCircleMeasurementInDrawing,
   resetMeasurementTypeToAdd,
   setCustomCircleMesurement,
-  setMeasurementDrawedDistanceUnit,
   setMeasurementTypeToAdd
 } = measurementSlice.actions
 

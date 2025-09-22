@@ -37,7 +37,6 @@ import {
 } from '../../domain/entities/layers/constants'
 import { DistanceUnit } from '../../domain/entities/map/constants'
 import { setDistanceUnit } from '../../domain/shared_slices/Map'
-import { updateMeasurementsWithNewDistanceUnit } from '../../domain/use_cases/map/updateMeasurementsWithNewDistanceUnit'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened'
@@ -234,7 +233,6 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
     }
     control?.current?.setUnits(value)
     dispatch(setDistanceUnit(value))
-    dispatch(updateMeasurementsWithNewDistanceUnit(value))
   }
 
   useEffect(() => {

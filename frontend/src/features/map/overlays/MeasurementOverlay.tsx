@@ -1,4 +1,5 @@
 import { Accent, Icon, IconButton, pluralize, Size, THEME } from '@mtes-mct/monitor-ui'
+import { getNauticalMilesFromMeters } from '@utils/utils'
 import Overlay from 'ol/Overlay'
 import { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
@@ -52,6 +53,7 @@ export function MeasurementOverlay({
     if (!measurement) {
       return 'Pas de mesure'
     }
+
     if (distanceUnit === DistanceUnit.METRIC) {
       if (measurement < 1000) {
         return `${prefixe}${Math.round(measurement * 100) / 100} mètres`
@@ -63,7 +65,7 @@ export function MeasurementOverlay({
       )}`
     }
 
-    return `${prefixe}${Math.round(measurement * 100) / 100} nm`
+    return `${prefixe}${Math.round(getNauticalMilesFromMeters(measurement) * 100) / 100} nm`
   }, [distanceUnit, measurement, type])
 
   useEffect(() => {

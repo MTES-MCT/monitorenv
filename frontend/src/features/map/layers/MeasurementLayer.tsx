@@ -13,7 +13,6 @@ import React, { useCallback, useEffect, useRef } from 'react'
 
 import { measurementStyle, measurementStyleWithCenter } from './styles/measurement.style'
 import { Layers } from '../../../domain/entities/layers/constants'
-import { DistanceUnit } from '../../../domain/entities/map/constants'
 import {
   removeMeasurementDrawed,
   resetMeasurementTypeToAdd,
@@ -22,7 +21,6 @@ import {
 import { saveMeasurement } from '../../../domain/use_cases/measurement/saveMeasurement'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
-import { getNauticalMilesFromMeters } from '../../../utils/utils'
 import { MeasurementOverlay } from '../overlays/MeasurementOverlay'
 
 import type { BaseMapChildrenProps } from '../BaseMap'
@@ -34,33 +32,6 @@ import type { Geometry } from 'ol/geom'
 const DRAW_START_EVENT = 'drawstart'
 const DRAW_ABORT_EVENT = 'drawabort'
 const DRAW_END_EVENT = 'drawend'
-
-const getNauticalMilesRadiusOfCircle = (circle: Circle, distanceUnit: DistanceUnit) => {
-  const polygon = fromCircle(circle)
-
-  return getNauticalMilesRadiusOfCircularPolygon(polygon, distanceUnit)
-}
-
-const getNauticalMilesOfLine = (line: LineString, distanceUnit: DistanceUnit) => {
-  const length = getLength(line)
-
-  if (distanceUnit === DistanceUnit.METRIC) {
-    return length
-  }
-
-  return getNauticalMilesFromMeters(length)
-}
-
-function getNauticalMilesRadiusOfCircularPolygon(polygon: Geometry, distanceUnit: DistanceUnit) {
-  const length = getLength(polygon)
-  const radius = length / (2 * Math.PI)
-
-  if (distanceUnit === DistanceUnit.METRIC) {
-    return radius
-  }
-
-  return getNauticalMilesFromMeters(radius)
-}
 
 export function MeasurementLayer({ map }: BaseMapChildrenProps) {
   const dispatch = useAppDispatch()
@@ -142,21 +113,21 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
           const geom = e.target
           let coordinates = tooltipCoordinates
           if (geom instanceof LineString) {
-            const nextMeasurementOutput = getNauticalMilesOfLine(geom, distanceUnit)
             coordinates = geom.getLastCoordinate()
             setMeasurementInProgress({
               coordinates,
               distanceUnit,
-              measurement: nextMeasurementOutput
+              measurement: getLength(geom)
             })
           } else if (geom instanceof Circle) {
-            const nextMeasurementOutput = getNauticalMilesRadiusOfCircle(geom, distanceUnit)
+            const radius = getLength(fromCircle(geom)) / (2 * Math.PI)
+
             coordinates = geom.getLastCoordinate()
 
             dispatch(
               setCustomCircleMesurement({
                 center: getCenter(geom.getExtent()),
-                radius: nextMeasurementOutput
+                radius
               })
             )
 
@@ -164,7 +135,7 @@ export function MeasurementLayer({ map }: BaseMapChildrenProps) {
               center: getCenter(geom.getExtent()),
               coordinates,
               distanceUnit,
-              measurement: nextMeasurementOutput
+              measurement: radius
             })
           }
         }
