@@ -13,11 +13,11 @@ import { getFeature } from '@utils/getFeature'
 import Feature from 'ol/Feature'
 import Point from 'ol/geom/Point'
 import { transform } from 'ol/proj'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { InteractionListener, InteractionType, OLGeometryType } from '../../../domain/entities/map/constants'
-import { setGeometry, setInteractionType } from '../../../domain/shared_slices/Draw'
+import { setGeometry, setInteractionType, setIsGeometryDrawOnMap } from '../../../domain/shared_slices/Draw'
 import { setCoordinatesFormat, setFitToExtent } from '../../../domain/shared_slices/Map'
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { eraseDrawedGeometries } from '../../../domain/use_cases/draw/eraseDrawedGeometries'
@@ -58,6 +58,7 @@ export function DrawModal() {
   const initialGeometry = useAppSelector(state => state.draw.initialGeometry)
   const interactionType = useAppSelector(state => state.draw.interactionType)
   const isGeometryValid = useAppSelector(state => state.draw.isGeometryValid)
+  const isGeometryDrawOnMap = useAppSelector(state => state.draw.isGeometryDrawOnMap)
 
   const listener = useAppSelector(state => state.draw.listener)
 
@@ -69,6 +70,31 @@ export function DrawModal() {
   const routeParams = getMissionPageRoute(sideWindow.currentPath)
 
   const previousMissionId = usePrevious(routeParams?.params?.id)
+
+  const coordinates = useMemo(() => {
+    if (!geometry || geometry.type !== 'MultiPoint') {
+      return undefined
+    }
+    const coords = geometry?.coordinates[0]
+    if (!coords) {
+      return undefined
+    }
+
+    return [coords[1], coords[0]] as Coordinate
+  }, [geometry])
+
+  const [inputCoordinates, setInputCoordinates] = useState<Coordinate | undefined>(coordinates)
+  const isEditingInInputRef = useRef(!isGeometryDrawOnMap)
+
+  useEffect(() => {
+    isEditingInInputRef.current = !isGeometryDrawOnMap
+  }, [isGeometryDrawOnMap])
+
+  useEffect(() => {
+    if (!isEditingInInputRef.current) {
+      setInputCoordinates(coordinates)
+    }
+  }, [coordinates])
 
   const feature = useMemo(() => {
     if (!geometry) {
@@ -150,11 +176,21 @@ export function DrawModal() {
 
   const handleSelectCoordinates = useCallback(
     (nextCoordinates: Coordinates | undefined) => {
+      if (!isEditingInInputRef.current) {
+        isEditingInInputRef.current = true
+        dispatch(setIsGeometryDrawOnMap(false))
+
+        return
+      }
+
+      isEditingInInputRef.current = true
+      setInputCoordinates(nextCoordinates)
       if (!nextCoordinates) {
         return
       }
 
       const [latitude, longitude] = nextCoordinates
+
       if (!latitude || !longitude) {
         return
       }
@@ -178,6 +214,7 @@ export function DrawModal() {
       return
     }
     dispatch(setCoordinatesFormat(value))
+    isEditingInInputRef.current = false
   }
 
   const hasCustomTools = useMemo(
@@ -188,18 +225,6 @@ export function DrawModal() {
       listener === InteractionListener.DASHBOARD_ZONE,
     [listener]
   )
-
-  const coordinates = useMemo(() => {
-    if (!geometry || geometry.type !== 'MultiPoint') {
-      return undefined
-    }
-    const coords = geometry?.coordinates[0]
-    if (!coords) {
-      return undefined
-    }
-
-    return [coords[1], coords[0]] as Coordinate
-  }, [geometry])
 
   const hasGeometryWithNoCoordinates = useMemo(
     () =>
@@ -257,7 +282,7 @@ export function DrawModal() {
           />
           <CoordinatesInput
             coordinatesFormat={coordinatesFormat}
-            defaultValue={coordinates}
+            defaultValue={inputCoordinates}
             label="Coordonnées"
             name="coordinates"
             onChange={handleSelectCoordinates}
@@ -272,7 +297,6 @@ const CoordinatesInputWrapper = styled.div`
   align-items: center;
   display: flex;
   gap: 24px;
-  justify-content: center;
   margin-bottom: 24px;
 `
 
