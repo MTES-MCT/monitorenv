@@ -8,7 +8,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import Fuse, { type Expression } from 'fuse.js'
 import { debounce } from 'lodash'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import { setAMPsSearchResult, setRegulatoryLayersSearchResult, setVigilanceAreasSearchResult } from '../slice'
 import { filterByTags, filterByThemes, filterTagsByText, filterThemesByText } from './utils'
@@ -229,7 +229,7 @@ export function useSearchLayers() {
     vigilanceAreas
   ])
 
-  const debouncedSearchLayers = debounce(search, 300)
+  const debouncedSearchLayers = useMemo(() => debounce(search, 300), [search])
 
   useEffect(() => {
     debouncedSearchLayers()
