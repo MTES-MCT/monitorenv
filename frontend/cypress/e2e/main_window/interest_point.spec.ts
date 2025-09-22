@@ -28,47 +28,38 @@ context('InterestPoint', () => {
 
     it('should be created from input when DD coordinates are selected', () => {
       // When
-      cy.getDataCy('coordinates-selection').click({ force: true })
-      cy.get('#root').click(159, 1000)
-      cy.fill('Unités des coordonnées', 'DD')
       cy.getDataCy('interest-point').click()
-
+      cy.fill('Unités des coordonnées', 'DD')
       // Then
       cy.getDataCy('coordinates-dd-input-lat').eq(1).type('47.5525')
-      cy.getDataCy('coordinates-dd-input-lon').eq(1).type('-007.5563')
+      cy.getDataCy('coordinates-dd-input-lon').eq(1).type('-7.6565', { delay: 500 })
 
       cy.getDataCy('interest-point-name').first().contains('Aucun Libellé')
       cy.getDataCy('interest-point-observations').first().contains('Aucune observation')
-      cy.getDataCy('interest-point-coordinates').first().contains('47.5525° -007.5563°')
+      cy.getDataCy('interest-point-coordinates').first().contains('47.5525° -007.6565°')
 
       cy.getDataCy('interest-point-save').click()
       // Then
-      cy.getDataCy('interest-point-coordinates').contains('47.5525° -007.5563°')
+      cy.getDataCy('interest-point-coordinates').contains('47.5525° -007.6565°')
     })
 
-    // FIXME understand why coordinate are diffents on CI ('47° 42.11′ N 007° 34.500′ W')
-    // it('An interest should be edited When DMD coordinates are selected', () => {
-    //   // When
-    //   cy.getDataCy('coordinates-selection').click({ force: true })
-    //   cy.get('#root').click(159, 1000)
-    //   cy.fill('Unités des coordonnées', 'DMD')
-    //   cy.getDataCy('interest-point').click()
-    //   cy.get('#root').click(590, 580)
-    //   cy.getDataCy('interest-point-name-input').type('Phénomène')
-    //   cy.getDataCy('interest-point-save').click()
+    it('An interest should be edited When DMD coordinates are selected', () => {
+      cy.getDataCy('interest-point').click()
+      cy.fill('Unités des coordonnées', 'DMD')
+      cy.get('#root').click(590, 580)
+      cy.getDataCy('interest-point-name-input').type('Phénomène')
+      cy.getDataCy('interest-point-save').click()
 
-    //   cy.getDataCy('interest-point-edit').click({ force: true })
-    //   cy.getDataCy('dmd-coordinates-input').eq(1).type('{backspace}{backspace}{backspace}{backspace}{backspace}500W')
+      cy.getDataCy('interest-point-edit').click({ force: true })
+      cy.getDataCy('dmd-coordinates-input').eq(1).type('{backspace}{backspace}{backspace}{backspace}{backspace}500W')
 
-    //   // Then
-    //   cy.getDataCy('interest-point-coordinates').contains('47° 42.043′ N 007° 34.500′ W')
-    // })
+      cy.getDataCy('interest-point-coordinates').contains('47° 42.111′ N 007° 34.500′ W')
+    })
 
     it('should be edited with East value when DMS coordinates are selected', () => {
-      // When
-      cy.getDataCy('coordinates-selection').click({ force: true })
-      cy.get('#root').click(159, 1000)
       cy.getDataCy('interest-point').click()
+      cy.fill('Unités des coordonnées', 'DMS')
+
       cy.get('#root').click(490, 580)
       cy.getDataCy('interest-point-save').click()
       cy.getDataCy('interest-point-edit').click()

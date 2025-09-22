@@ -10,6 +10,7 @@ type DrawState = {
   geometry: GeoJSON.Geometry | undefined
   initialGeometry: GeoJSON.Geometry | undefined
   interactionType: InteractionType | undefined
+  isGeometryDrawOnMap?: boolean
   isGeometryValid: boolean | undefined
   listener: InteractionListener | undefined
 }
@@ -17,6 +18,7 @@ const INITIAL_STATE: DrawState = {
   geometry: undefined,
   initialGeometry: undefined,
   interactionType: undefined,
+  isGeometryDrawOnMap: false,
   isGeometryValid: undefined,
   listener: undefined
 }
@@ -65,6 +67,10 @@ const drawReducerSlice = createSlice({
     setInteractionTypeAndListener(state, action: PayloadAction<InteractionTypeAndListener>) {
       state.interactionType = action.payload.type
       state.listener = action.payload.listener
+    },
+
+    setIsGeometryDrawOnMap(state, action: PayloadAction<boolean>) {
+      state.isGeometryDrawOnMap = action.payload
     }
   }
 })
@@ -75,7 +81,8 @@ export const {
   setGeometry,
   setInitialGeometry,
   setInteractionType,
-  setInteractionTypeAndListener
+  setInteractionTypeAndListener,
+  setIsGeometryDrawOnMap
 } = drawReducerSlice.actions
 
 export const drawReducer = drawReducerSlice.reducer
