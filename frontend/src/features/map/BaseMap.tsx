@@ -243,8 +243,7 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
 
   // Only expose helpers when running under Cypress
   if (isCypress()) {
-    // @ts-ignore
-    window.olTestUtils = {
+    globalThis.olTestUtils = {
       getFeaturesFromLayer: (name: string, layerPixel: [number, number]) => {
         const layer = initialMap.getFeaturesAtPixel(layerPixel, {
           hitTolerance: HIT_PIXEL_TO_TOLERANCE * 2,
