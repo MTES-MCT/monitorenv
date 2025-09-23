@@ -30,7 +30,7 @@ import { type MutableRefObject, useCallback, useEffect, useMemo, useRef, useStat
 
 import { getDashboardStyle } from '../components/Layers/style'
 
-const resolution = { height: '480px', width: '720px' }
+const resolution = { height: '720px', width: '1280px' }
 
 const getBaseSource = (backgroundMap: BaseLayer | undefined) => {
   switch (backgroundMap) {
@@ -211,6 +211,7 @@ export function useExportImages() {
       )
     })
   }
+
   const exportImages = useCallback(
     async (
       features: Feature[],
