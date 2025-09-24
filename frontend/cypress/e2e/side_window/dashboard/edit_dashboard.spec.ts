@@ -115,16 +115,14 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.fill('Tag', ['Mixte'])
     cy.get('h2').contains('Zones réglementaires').click()
     cy.wait(250)
-    // because result list have a separator so we need to multiply the results by 2
-    cy.getDataCy('dashboard-regulatory-areas-list').children().should('have.length', 4)
+    cy.getDataCy('dashboard-regulatory-areas-list').children().should('have.length', 2)
     cy.getDataCy('dashboard-filter-tags').find('.Component-SingleTag > span').contains('Mixte')
     cy.fill('Tag', undefined)
 
     cy.fill('Thématique', ['Pêche à pied'])
     cy.get('h2').contains('Zones réglementaires').click()
     cy.wait(250)
-    // because result list have a separator so we need to multiply the results by 2
-    cy.getDataCy('dashboard-regulatory-areas-list').children().should('have.length', 2)
+    cy.getDataCy('dashboard-regulatory-areas-list').children().should('have.length', 1)
     cy.getDataCy('dashboard-filter-tags').find('.Component-SingleTag > span').contains('Pêche à pied')
     cy.fill('Thématique', undefined)
 
@@ -188,13 +186,28 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.wait(250)
 
     // from partially selection to fully selected
-    cy.get('h2').contains('Zones réglementaires').parent().clickButton('Tout sélectionner', { withoutScroll: true })
+    cy.get('h2')
+      .contains('Zones réglementaires')
+      .parent()
+      .parent()
+      .parent()
+      .clickButton('Tout sélectionner', { withoutScroll: true })
     // no button if there is no area
-    cy.get('h2').contains('Zones AMP').parent().get('Tout sélectionner').should('not.exist')
-    cy.get('h2').contains('Zones de vigilance').parent().clickButton('Tout désélectionner', { withoutScroll: true })
+    cy.get('h2').contains('Zones AMP').parent().parent().parent().get('Tout sélectionner').should('not.exist')
+    cy.get('h2')
+      .contains('Zones de vigilance')
+      .parent()
+      .parent()
+      .parent()
+      .clickButton('Tout désélectionner', { withoutScroll: true })
     cy.getDataCy('accordion-reportings-toggle').click({ force: true })
     cy.fill('Type de signalement', undefined)
-    cy.get('h2').contains('Signalements').parent().clickButton('Tout sélectionner', { withoutScroll: true })
+    cy.get('h2')
+      .contains('Signalements')
+      .parent()
+      .parent()
+      .parent()
+      .clickButton('Tout sélectionner', { withoutScroll: true })
 
     cy.clickButton('Prévisualiser la sélection', { withoutScroll: true })
     cy.wait(250)
