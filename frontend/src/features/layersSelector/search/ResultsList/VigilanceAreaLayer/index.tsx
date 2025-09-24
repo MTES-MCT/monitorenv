@@ -94,9 +94,8 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
       $metadataIsShown={metadataIsShown}
       $withBorderBottom
       data-cy="vigilance-area-result-zone"
-      onClick={toggleZoneMetadata}
     >
-      <StyledTransparentButton>
+      <StyledTransparentButton onClick={toggleZoneMetadata}>
         <LayerLegend
           isDisabled={layer?.isArchived}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}

@@ -117,7 +117,6 @@ const LayerList = styled.ul<{
   overflow-y: ${p => (p.$withoutScroll ? 'hidden' : 'auto')};
   overflow-x: hidden;
   color: ${p => p.theme.color.slateGray};
-  // height: ${p => (p.$showBaseLayers && p.$baseLayersLength ? 36 * p.$baseLayersLength : 0)}px;
   transition: 0.5s all;
 `
 
