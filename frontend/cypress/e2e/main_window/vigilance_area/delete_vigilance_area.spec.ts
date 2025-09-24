@@ -32,6 +32,7 @@ describe('Create Vigilance Area', () => {
       cy.clickButton('Fermer la zone de vigilance')
       cy.clickButton('Filtrer par type de zones')
       cy.fill('Période de vigilance', 'En ce moment')
+      cy.getDataCy('vigilance-area-results-list-button').click()
       cy.getDataCy('vigilance-area-result-zone').contains('Ma zone de vigilance à supprimer')
       cy.clickButton('Sélectionner la zone')
 
