@@ -35,15 +35,15 @@ context('InterestPoint', () => {
 
       // Then
       cy.getDataCy('coordinates-dd-input-lat').type('47.5525')
-      cy.getDataCy('coordinates-dd-input-lon').type('-007.5563')
+      cy.getDataCy('coordinates-dd-input-lon').type('-7.6565', { delay: 500 })
 
       cy.getDataCy('interest-point-name').first().contains('Aucun Libellé')
       cy.getDataCy('interest-point-observations').first().contains('Aucune observation')
-      cy.getDataCy('interest-point-coordinates').first().contains('47.5525° -007.5563°')
+      cy.getDataCy('interest-point-coordinates').first().contains('47.5525° -007.6565°')
 
       cy.getDataCy('interest-point-save').click()
       // Then
-      cy.getDataCy('interest-point-coordinates').contains('47.5525° -007.5563°')
+      cy.getDataCy('interest-point-coordinates').contains('47.5525° -007.6565°')
     })
 
     // FIXME understand why coordinate are diffents on CI ('47° 42.11′ N 007° 34.500′ W')
