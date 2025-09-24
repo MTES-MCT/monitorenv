@@ -43,7 +43,7 @@ export function EditInterestPoint({ close }: EditInterestPointProps) {
   const { trackEvent } = useTracking()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
-  const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat) as CoordinatesFormat
+  const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
 
   const currentInterestPoint = useAppSelector(state => state.interestPoint.currentInterestPoint)
 
