@@ -80,8 +80,8 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   }, [ampMetadataLayerId, ref, layerId])
 
   return (
-    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} onClick={toggleZoneMetadata}>
-      <StyledTransparentButton>
+    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown}>
+      <StyledTransparentButton onClick={toggleZoneMetadata}>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
         <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type ?? 'aucun'}>
           <Highlighter
