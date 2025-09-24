@@ -5,6 +5,7 @@ import {
   getIsLinkingRegulatoryToVigilanceArea,
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
+import { useMountTransition } from '@hooks/useMountTransition'
 import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { groupBy } from 'lodash'
@@ -155,6 +156,10 @@ export function ResultList({ searchedText }: ResultListProps) {
     dispatch(setIsVigilanceAreaSearchResultsVisible(!!isChecked))
   }
 
+  const hasTransitionReg = useMountTransition(areRegulatoryResultsOpen, 500)
+  const hasTransitionAmp = useMountTransition(areAmpsResultsOpen, 500)
+  const hasTransitionVigilanceArea = useMountTransition(areMyVigilanceAreasOpen, 500)
+
   return (
     <List>
       {!isLinkingAmpToVigilanceArea && (
@@ -174,16 +179,18 @@ export function ResultList({ searchedText }: ResultListProps) {
               onChange={toggleRegulatoryVisibility}
             />
           </Header>
-          <SubList $isExpanded={areRegulatoryResultsOpen} data-cy="regulatory-result-list">
-            {Object.entries(sortedRegulatoryResultsByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
-              <RegulatoryLayerGroup
-                key={layerGroupName}
-                groupName={layerGroupName}
-                layerIds={layerIdsInGroup}
-                searchedText={searchedText}
-              />
-            ))}
-          </SubList>
+          {(hasTransitionReg || areRegulatoryResultsOpen) && (
+            <SubList $isExpanded={areRegulatoryResultsOpen} data-cy="regulatory-result-list">
+              {Object.entries(sortedRegulatoryResultsByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
+                <RegulatoryLayerGroup
+                  key={layerGroupName}
+                  groupName={layerGroupName}
+                  layerIds={layerIdsInGroup}
+                  searchedText={searchedText}
+                />
+              ))}
+            </SubList>
+          )}
         </>
       )}
 
@@ -204,11 +211,13 @@ export function ResultList({ searchedText }: ResultListProps) {
               onChange={toggleAMPVisibility}
             />
           </HeaderAMP>
-          <SubListAMP $isExpanded={areAmpsResultsOpen} data-cy="amp-result-list">
-            {Object.entries(sortedAmpResultsByName).map(([ampName, ampIdsInGroup]) => (
-              <AMPLayerGroup key={ampName} groupName={ampName} layerIds={ampIdsInGroup} searchedText={searchedText} />
-            ))}
-          </SubListAMP>
+          {(hasTransitionAmp || areAmpsResultsOpen) && (
+            <SubListAMP $isExpanded={hasTransitionAmp && areAmpsResultsOpen} data-cy="amp-result-list">
+              {Object.entries(sortedAmpResultsByName).map(([ampName, ampIdsInGroup]) => (
+                <AMPLayerGroup key={ampName} groupName={ampName} layerIds={ampIdsInGroup} searchedText={searchedText} />
+              ))}
+            </SubListAMP>
+          )}
         </>
       )}
 
@@ -229,11 +238,16 @@ export function ResultList({ searchedText }: ResultListProps) {
               onChange={toggleVigilanceAreaVisibility}
             />
           </Header>
-          <SubList $isExpanded={areMyVigilanceAreasOpen} data-cy="vigilance-area-result-list">
-            {sortedVigilanceAreasResultsByName?.map(vigilanceArea => (
-              <VigilanceAreaLayer key={vigilanceArea.id} layer={vigilanceArea} searchedText={searchedText} />
-            ))}
-          </SubList>
+          {(hasTransitionVigilanceArea || areMyVigilanceAreasOpen) && (
+            <SubList
+              $isExpanded={hasTransitionVigilanceArea && areMyVigilanceAreasOpen}
+              data-cy="vigilance-area-result-list"
+            >
+              {sortedVigilanceAreasResultsByName?.map(vigilanceArea => (
+                <VigilanceAreaLayer key={vigilanceArea.id} layer={vigilanceArea} searchedText={searchedText} />
+              ))}
+            </SubList>
+          )}
         </>
       )}
     </List>
@@ -268,8 +282,8 @@ const NumberOfResults = styled.span`
 const SubList = styled.ul<{ $isExpanded: boolean }>`
   padding: 0;
   margin: 0;
-  display: ${({ $isExpanded }) => ($isExpanded ? 'block' : 'none')};
-  max-height: calc(50vh - 110px);
+  max-height: ${({ $isExpanded }) => ($isExpanded ? 'calc(50vh - 110px)' : 0)};
+  transition: all 0.5s;
   overflow-y: auto;
   background: ${p => p.theme.color.white};
 `

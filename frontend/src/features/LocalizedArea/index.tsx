@@ -3,6 +3,7 @@ import { InlineTransparentButton } from '@components/style'
 import { ChevronIconButton } from '@features/commonStyles/icons/ChevronIconButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMountTransition } from '@hooks/useMountTransition'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { useMemo } from 'react'
@@ -56,6 +57,8 @@ export function LocalizedAreas() {
 
   const totalLocalizedAreas = Object.keys(groupedLocalizedAreas || {}).length
 
+  const hasTransition = useMountTransition(localizedAreasIsOpen, 500)
+
   return (
     <>
       <LayerSelector.Wrapper data-cy="loacalizes-areas-open">
@@ -64,8 +67,8 @@ export function LocalizedAreas() {
         </InlineTransparentButton>
         <ChevronIconButton $isOpen={localizedAreasIsOpen} onClick={onSectionTitleClicked} />
       </LayerSelector.Wrapper>
-      {groupedLocalizedAreas && totalLocalizedAreas > 0 ? (
-        <ZonesList $showZones={localizedAreasIsOpen} $zonesLength={totalLocalizedAreas}>
+      {groupedLocalizedAreas && (totalLocalizedAreas > 0 || hasTransition) ? (
+        <ZonesList $showZones={hasTransition && localizedAreasIsOpen} $zonesLength={totalLocalizedAreas}>
           {Object.entries(groupedLocalizedAreas).map(([groupName, localizedAreasByGroup]) => (
             <ListItem key={groupName}>
               <LocalizedAreasItem groupName={groupName} localizedAreas={localizedAreasByGroup} />

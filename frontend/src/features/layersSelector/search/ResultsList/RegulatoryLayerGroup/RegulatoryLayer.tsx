@@ -99,13 +99,8 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
   }, [layerId, regulatoryMetadataLayerId, ref])
 
   return (
-    <LayerSelector.Layer
-      ref={ref}
-      $metadataIsShown={metadataIsShown}
-      data-cy="regulatory-result-zone"
-      onClick={toggleZoneMetadata}
-    >
-      <StyledTransparentButton>
+    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} data-cy="regulatory-result-zone">
+      <StyledTransparentButton onClick={toggleZoneMetadata}>
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layer?.entityName ?? 'aucun'}

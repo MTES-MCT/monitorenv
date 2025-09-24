@@ -1,5 +1,6 @@
 import { InlineTransparentButton } from '@components/style'
 import { ChevronIconButton } from '@features/commonStyles/icons/ChevronIconButton'
+import { useMountTransition } from '@hooks/useMountTransition'
 import { getOptionsFromLabelledEnum, MultiRadio } from '@mtes-mct/monitor-ui'
 import { BaseLayerLabel } from 'domain/entities/layers/BaseLayer'
 import styled from 'styled-components'
@@ -23,6 +24,7 @@ export function BaseLayerList() {
   const handleSelectBaseLayer = layercode => {
     dispatch(selectBaseLayer(layercode))
   }
+  const hasTransition = useMountTransition(baselayerIsOpen, 500)
 
   return (
     <>
@@ -32,16 +34,21 @@ export function BaseLayerList() {
         </InlineTransparentButton>
         <ChevronIconButton $isOpen={baselayerIsOpen} onClick={onSectionTitleClicked} />
       </LayerSelector.Wrapper>
-      <BaseLayersContainer $baseLayersLength={baseLayersKeys.length} $showBaseLayers={baselayerIsOpen}>
-        <StyledMultiRadio
-          isLabelHidden
-          label="Fonds de carte"
-          name="baseLayer"
-          onChange={handleSelectBaseLayer}
-          options={baseLayersKeys}
-          value={selectedBaseLayer}
-        />
-      </BaseLayersContainer>
+      {(hasTransition || baselayerIsOpen) && (
+        <BaseLayersContainer
+          $baseLayersLength={baseLayersKeys.length}
+          $showBaseLayers={hasTransition && baselayerIsOpen}
+        >
+          <StyledMultiRadio
+            isLabelHidden
+            label="Fonds de carte"
+            name="baseLayer"
+            onChange={handleSelectBaseLayer}
+            options={baseLayersKeys}
+            value={selectedBaseLayer}
+          />
+        </BaseLayersContainer>
+      )}
     </>
   )
 }
