@@ -209,7 +209,7 @@ export function DrawModal() {
     [dispatch]
   )
 
-  const selectCordinatesFormat = value => {
+  const selectCoordinatesFormat = value => {
     if (!value) {
       return
     }
@@ -276,7 +276,7 @@ export function DrawModal() {
             isInline
             label="Unités des coordonnées"
             name="interestPointCoordinatesUnits"
-            onChange={selectCordinatesFormat}
+            onChange={selectCoordinatesFormat}
             options={COORDINATES_OPTIONS}
             value={coordinatesFormat}
           />
