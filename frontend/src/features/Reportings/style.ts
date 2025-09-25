@@ -8,13 +8,14 @@ export const StyledFormContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+
   > * {
     text-align: start;
   }
 `
 export const StyledForm = styled.div<{ $totalReducedReportings: number }>`
   padding: 16px 32px 32px 31px;
-  padding-right: calc(32px - var(--scrollbar-width || 0px));
+  padding-right: calc(32px - var(--scrollbar-width||0px));
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -71,6 +72,7 @@ export const ReportingInfos = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
   > span {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -91,6 +93,7 @@ export const ReportingChevronIcon = styled(IconButton)<{ $isExpanded: boolean }>
 export const ReportingHeaderButtons = styled.div`
   display: flex;
   flex-direction: row;
+
   > button {
     color: ${p => p.theme.color.white};
   }
@@ -105,6 +108,7 @@ export const StyledInlineContainer = styled.div`
   flex-direction: row;
   flex: 1;
   gap: 32px;
+
   > div {
     flex: 1;
   }
@@ -136,6 +140,7 @@ export const StyledEmptyTarget = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
   > span {
     color: ${p => p.theme.color.lightGray};
     font-style: italic;
@@ -147,6 +152,7 @@ export const StyledVesselForm = styled.div`
   flex-direction: row;
   justify-content: space-between;
   gap: 16px;
+
   > .Field-TextInput,
   .Field-NumberInput {
     flex: 1;
@@ -164,6 +170,7 @@ export const ReportTypeMultiRadio = styled(MultiRadio)`
     color: ${({ theme }) => theme.color.maximumRed};
     content: ' ●';
   }
+
   > div > div > div:last-child label::after {
     color: ${({ theme }) => theme.color.blueGray};
     content: ' ●';
@@ -201,6 +208,7 @@ export const StyledFooter = styled.div<{ $justify?: string | undefined }>`
   display: flex;
   justify-content: ${p => p.$justify ?? 'space-between'};
   gap: 4px;
+
   > div {
     display: flex;
   }

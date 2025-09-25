@@ -1,4 +1,5 @@
 import { getNumberOfRegulatoryLayerZonesByGroupName } from '@api/regulatoryLayersAPI'
+import { StyledTransparentButton } from '@components/style'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
@@ -19,6 +20,7 @@ type ResultListLayerGroupProps = {
   layerIds: number[]
   selectedRegulatoryAreaIds: number[]
 }
+
 export function ListLayerGroup({
   groupName,
   isSelected = false,
@@ -54,20 +56,21 @@ export function ListLayerGroup({
   }
 
   return (
-    <>
+    <li>
       <StyledGroupWrapper $isOpen={zonesAreOpen} $isSelected={isSelected} onClick={clickOnGroupZones}>
-        <LayerSelector.GroupName
-          data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-result-group`}
-          title={groupName}
-        >
-          {getTitle(groupName)}
-        </LayerSelector.GroupName>
+        <StyledTransparentButton>
+          <LayerSelector.GroupName
+            data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-result-group`}
+            title={groupName}
+          >
+            {getTitle(groupName)}
+          </LayerSelector.GroupName>
+        </StyledTransparentButton>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
           {isSelected ? (
             <IconButton
               accent={Accent.TERTIARY}
-              aria-label="Supprimer la/les zone(s)"
               color={THEME.color.slateGray}
               Icon={Icon.Close}
               onClick={removeAllZones}
@@ -88,7 +91,7 @@ export function ListLayerGroup({
           />
         ))}
       </LayerSelector.SubGroup>
-    </>
+    </li>
   )
 }
 

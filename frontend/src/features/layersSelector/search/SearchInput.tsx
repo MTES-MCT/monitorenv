@@ -23,6 +23,7 @@ export function SearchInput({ children, globalSearchText, placeholder, setGlobal
 const SearchHeader = styled.div`
   display: flex;
   width: 400px;
+  align-items: center;
 `
 const StyledTextInput = styled(TextInput)`
   width: 310px;

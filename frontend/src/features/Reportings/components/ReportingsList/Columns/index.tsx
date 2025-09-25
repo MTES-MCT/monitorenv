@@ -19,12 +19,14 @@ import type { Row } from '@tanstack/react-table'
 export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = false) => [
   {
     accessorFn: row => row.reportingId,
-    cell: ({ row }) => (
+    cell: ({ getValue, row }) => (
       <TableWithSelectableRows.RowCheckbox
         checked={row.getIsSelected()}
         disabled={!row.getCanSelect()}
         onChange={row.getToggleSelectedHandler(row)}
-      />
+      >
+        <HiddenLabel>{`Sélectionner le signalement ${getValue()}`}</HiddenLabel>
+      </TableWithSelectableRows.RowCheckbox>
     ),
     enableSorting: false,
     header: ({ table }) => (
@@ -32,9 +34,10 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
         checked={table.getIsAllRowsSelected()}
         indeterminate={table.getIsSomeRowsSelected()}
         onChange={table.getToggleAllRowsSelectedHandler()}
-      />
+      >
+        <HiddenLabel>Sélectionner tous les signalements</HiddenLabel>
+      </TableWithSelectableRows.RowCheckbox>
     ),
-
     id: 'select',
     size: 43 + legacyFirefoxOffset
   },
@@ -192,3 +195,11 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
 ]
 
 const Cell = styled.span``
+const HiddenLabel = styled.span`
+  display: block;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+`

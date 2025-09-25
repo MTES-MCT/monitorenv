@@ -31,6 +31,7 @@ import { InteractionListener } from 'domain/entities/map/constants'
 import { useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
 import { AddAMPs } from './AddAMPs'
@@ -145,23 +146,33 @@ export function Form() {
 
   return (
     <FormContainer>
-      <CancelEditDialog
-        onCancel={onCancelEditModal}
-        onConfirm={onConfirmEditModal}
-        open={isCancelModalOpen}
-        subText="Voulez-vous enregistrer les modifications avant de quitter ?"
-        text={`Vous êtes en train d'abandonner l'édition de la zone de vigilance: ${values.name}`}
-        title="Enregistrer les modifications"
-      />
-      <DeleteModal
-        context="vigilance-area"
-        isAbsolute={false}
-        onCancel={cancelDeleteModal}
-        onConfirm={onConfirmDeleteModal}
-        open={isDeleteModalOpen}
-        subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
-        title="Supprimer la zone de vigilance&nbsp;?"
-      />
+      {isCancelModalOpen &&
+        createPortal(
+          <CancelEditDialog
+            onCancel={onCancelEditModal}
+            onConfirm={onConfirmEditModal}
+            open={isCancelModalOpen}
+            subText="Voulez-vous enregistrer les modifications avant de quitter ?"
+            text={`Vous êtes en train d'abandonner l'édition de la zone de vigilance: ${values.name}`}
+            title="Enregistrer les modifications"
+          />,
+          document.body
+        )}
+
+      {isDeleteModalOpen &&
+        createPortal(
+          <DeleteModal
+            context="vigilance-area"
+            isAbsolute={false}
+            onCancel={cancelDeleteModal}
+            onConfirm={onConfirmDeleteModal}
+            open={isDeleteModalOpen}
+            subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
+            title="Supprimer la zone de vigilance&nbsp;?"
+          />,
+          document.body
+        )}
+
       <StyledForm>
         <FormikTextInput
           isErrorMessageHidden

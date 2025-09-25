@@ -12,7 +12,7 @@ export function TabMenu() {
   }
 
   return (
-    <BackOfficeTabBar>
+    <BackOfficeTabBar role="tablist">
       <BackOfficeTabBar.Tab
         $isActive={!controlUnitTable.filtersState.isArchived}
         onClick={() => filterArchivedControlUnits(false)}

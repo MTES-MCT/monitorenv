@@ -15,7 +15,7 @@ export function ControlInfractionsTags({ actionNumberOfControls, infractions }) 
   } = getControlInfractionsTags(actionNumberOfControls, infractions)
 
   return (
-    <TagGroup data-cy="mission-timeline-infractions-tags">
+    <TagGroup data-cy="mission-timeline-infractions-tags" style={{ flex: 1 }}>
       {ras > 0 && <Tag accent={Accent.PRIMARY}>{ras} RAS</Tag>}
       {infractionsWithReport > 0 && <Tag accent={Accent.PRIMARY}>{infractionsWithReport} PV</Tag>}
       {infractionsWithoutReport > 0 && <Tag accent={Accent.PRIMARY}>{infractionsWithoutReport} INF SANS PV</Tag>}

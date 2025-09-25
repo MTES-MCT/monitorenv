@@ -86,16 +86,20 @@ export function SurveillanceZonePicker({ actionIndex }: SurveillanceZonePickerPr
               onCenterOnMap={() => handleCenterOnMap(polygonCoordinates)}
             />
 
-            <>
-              <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
-              <IconButton
-                accent={Accent.SECONDARY}
-                aria-label="Supprimer cette zone"
-                disabled={isEditingZone}
-                Icon={Icon.Delete}
-                onClick={() => deleteZone(index)}
-              />
-            </>
+            <IconButton
+              accent={Accent.SECONDARY}
+              disabled={isEditingZone}
+              Icon={Icon.Edit}
+              onClick={handleAddZone}
+              title="Modifier cette zone"
+            />
+            <IconButton
+              accent={Accent.SECONDARY}
+              disabled={isEditingZone}
+              Icon={Icon.Delete}
+              onClick={() => deleteZone(index)}
+              title="Supprimer cette zone"
+            />
           </Row>
         ))}
       </>

@@ -34,10 +34,10 @@ export function EditCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: number
   return (
     <StyledIconButton
       accent={Accent.TERTIARY}
-      aria-label="Editer"
       data-cy={`edit-mission-${id}`}
       Icon={Icon.Edit}
       onClick={editVigilanceArea}
+      title="Editer"
     />
   )
 }

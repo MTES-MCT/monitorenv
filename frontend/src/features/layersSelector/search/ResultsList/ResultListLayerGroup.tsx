@@ -1,3 +1,4 @@
+import { StyledTransparentButton } from '@components/style'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingZonesToVigilanceArea,
@@ -5,6 +6,7 @@ import {
 } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { useMountTransition } from '@hooks/useMountTransition'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { setFitToExtent } from 'domain/shared_slices/Map'
@@ -29,6 +31,7 @@ type ResultListLayerGroupProps = {
   selectedLayerIds: number[]
   totalNumberOfZones: number
 }
+
 export function ResultListLayerGroup({
   addLayers,
   groupExtent,
@@ -87,17 +90,21 @@ export function ResultListLayerGroup({
     dispatch(vigilanceAreaActions.addRegulatoryAreasToVigilanceArea(layerIds))
   }, [dispatch, isLinkingAMPToVigilanceArea, layerIds])
 
+  const hasTransition = useMountTransition(forceZonesAreOpen || zonesAreOpen, 500)
+
   return (
     <>
-      <LayerSelector.GroupWrapper $isOpen={forceZonesAreOpen || zonesAreOpen} onClick={clickOnGroupZones}>
-        <LayerSelector.GroupName data-cy="result-group" title={groupName}>
-          <Highlighter
-            autoEscape
-            highlightClassName="highlight"
-            searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-            textToHighlight={getTitle(groupName) ?? ''}
-          />
-        </LayerSelector.GroupName>
+      <LayerSelector.GroupWrapper $isOpen={forceZonesAreOpen || zonesAreOpen}>
+        <StyledTransparentButton onClick={clickOnGroupZones}>
+          <LayerSelector.GroupName data-cy="result-group" title={groupName}>
+            <Highlighter
+              autoEscape
+              highlightClassName="highlight"
+              searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
+              textToHighlight={getTitle(groupName) ?? ''}
+            />
+          </LayerSelector.GroupName>
+        </StyledTransparentButton>
         <LayerSelector.IconGroup>
           <LayerSelector.ZonesNumber>{`${layerIds.length}/${totalNumberOfZones}`}</LayerSelector.ZonesNumber>
           {isLinkingZonesToVigilanceArea ? (
@@ -119,12 +126,17 @@ export function ResultListLayerGroup({
           )}
         </LayerSelector.IconGroup>
       </LayerSelector.GroupWrapper>
-      <LayerSelector.SubGroup $isOpen={forceZonesAreOpen || zonesAreOpen} $length={layerIds?.length}>
-        {layerType === MonitorEnvLayers.REGULATORY_ENV &&
-          layerIds?.map(layerId => <RegulatoryLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
-        {layerType === MonitorEnvLayers.AMP &&
-          layerIds?.map(layerId => <AMPLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
-      </LayerSelector.SubGroup>
+      {(hasTransition || forceZonesAreOpen || zonesAreOpen) && (
+        <LayerSelector.SubGroup
+          $isOpen={hasTransition && (forceZonesAreOpen || zonesAreOpen)}
+          $length={layerIds?.length}
+        >
+          {layerType === MonitorEnvLayers.REGULATORY_ENV &&
+            layerIds?.map(layerId => <RegulatoryLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
+          {layerType === MonitorEnvLayers.AMP &&
+            layerIds?.map(layerId => <AMPLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
+        </LayerSelector.SubGroup>
+      )}
     </>
   )
 }
