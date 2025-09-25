@@ -1,4 +1,4 @@
-import { useGetFilteredVigilanceAreasForMapQuery } from '@features/layersSelector/search/hooks/useGetFilteredVigilanceAreasForMapQuery'
+import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
@@ -17,7 +17,6 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
   const displayVigilanceAreaLayer = useAppSelector(state => state.global.layers.displayVigilanceAreaLayer)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
-  const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
   const isVigilanceAreaSearchResultsVisible = useAppSelector(
     state => state.layerSearch.isVigilanceAreaSearchResultsVisible
   )
@@ -29,7 +28,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasForMapQuery()
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(
@@ -45,8 +44,8 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
 
   const vigilanceAreasFeatures = useMemo(() => {
     let features: Feature[] = []
-    if (vigilanceAreaSearchResult ?? vigilanceAreas) {
-      const vigilanceAreasToDisplay = vigilanceAreaSearchResult ?? vigilanceAreas?.ids ?? []
+    if (vigilanceAreas) {
+      const vigilanceAreasToDisplay = vigilanceAreas?.ids ?? []
 
       features = vigilanceAreasToDisplay.reduce((layers, id) => {
         if (id === editingVigilanceAreaId) {
@@ -65,7 +64,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
     }
 
     return features
-  }, [isolatedLayer, vigilanceAreaSearchResult, vigilanceAreas, editingVigilanceAreaId])
+  }, [isolatedLayer, vigilanceAreas, editingVigilanceAreaId])
 
   useEffect(() => {
     vectorSourceRef.current?.clear(true)

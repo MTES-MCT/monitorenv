@@ -6,8 +6,12 @@ import { ReinitializeFiltersButton } from '@features/commonComponents/Reinitiali
 import {
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
+  setGlobalSearchText,
+  setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
-  setIsVigilanceAreaSearchResultsVisible
+  setIsVigilanceAreaSearchResultsVisible,
+  setSearchExtent,
+  setShouldFilterSearchOnMapExtent
 } from '@features/layersSelector/search/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -30,6 +34,8 @@ export function VigilanceAreasFilters() {
 
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
+  const searchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
   const {
     createdBy: createdByFilter,
@@ -44,11 +50,11 @@ export function VigilanceAreasFilters() {
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
 
   const updateSeaFrontFilter = (selectedSeaFronts: string[] | undefined) => {
-    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'seaFronts', value: selectedSeaFronts }))
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'seaFronts', value: selectedSeaFronts ?? [] }))
   }
 
   const updateCreatedByFilter = (selectedCreatedBy: string[] | undefined) => {
-    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'createdBy', value: selectedCreatedBy }))
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'createdBy', value: selectedCreatedBy ?? [] }))
   }
 
   const updateStatusFilter = (checked: boolean | undefined, status: VigilanceArea.Status) => {
@@ -65,11 +71,17 @@ export function VigilanceAreasFilters() {
 
   const resetFilters = () => {
     dispatch(vigilanceAreaFiltersActions.resetFilters())
-
     dispatch(setFilteredRegulatoryTags([]))
     dispatch(setFilteredRegulatoryThemes([]))
-    dispatch(setIsRegulatorySearchResultsVisible(false))
     dispatch(setIsVigilanceAreaSearchResultsVisible(false))
+    dispatch(setGlobalSearchText(''))
+
+    if (searchExtent) {
+      dispatch(setSearchExtent(undefined))
+      dispatch(setIsAmpSearchResultsVisible(false))
+      dispatch(setIsRegulatorySearchResultsVisible(false))
+      dispatch(setShouldFilterSearchOnMapExtent(false))
+    }
   }
 
   const updateVisibilityFilter = (visibilityOption: Option, isChecked: boolean | undefined) => {
@@ -89,6 +101,8 @@ export function VigilanceAreasFilters() {
   const nbOfFilters = nbOfVigilanceAreaFilters + filteredRegulatoryTags.length + filteredRegulatoryThemes.length
 
   const hasCustomPeriodFilter = periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
+
+  const hasFilters = nbOfFilters > 0 || hasCustomPeriodFilter || searchExtent || !!searchText
 
   return (
     <Wrapper>
@@ -155,7 +169,7 @@ export function VigilanceAreasFilters() {
           value={seaFrontFilter}
         />
       </FilterContainer>
-      {(hasCustomPeriodFilter || nbOfFilters > 0) && (
+      {hasFilters && (
         <TagsContainer>
           {hasCustomPeriodFilter && (
             <CustomPeriodContainer>
@@ -166,7 +180,7 @@ export function VigilanceAreasFilters() {
 
           <FilterTags />
 
-          {(nbOfFilters > 0 || hasCustomPeriodFilter) && <ReinitializeFiltersButton onClick={resetFilters} />}
+          <ReinitializeFiltersButton onClick={resetFilters} />
         </TagsContainer>
       )}
     </Wrapper>

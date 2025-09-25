@@ -1,4 +1,5 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
+import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -17,7 +18,6 @@ import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { useGetFilteredVigilanceAreasForMapQuery } from '../hooks/useGetFilteredVigilanceAreasForMapQuery'
 import {
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
@@ -42,7 +42,6 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isVigilanceAreaSearchResultsVisible = useAppSelector(
     state => state.layerSearch.isVigilanceAreaSearchResultsVisible
   )
-  const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
   const areMyVigilanceAreasOpen = useAppSelector(state => state.layerSidebar.areMyVigilanceAreasOpen)
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
@@ -81,6 +80,7 @@ export function ResultList({ searchedText }: ResultListProps) {
       ),
     [ampsSearchResult, areAmpsResultsOpen, amps]
   )
+
   const sortedAmpResultsByName = useMemo(
     () =>
       Object.fromEntries(Object.entries(ampResultsByAMPName).sort(([nameA], [nameB]) => nameA.localeCompare(nameB))),
@@ -89,12 +89,8 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasForMapQuery()
-  const vigilanceAreasResults = useMemo(
-    () =>
-      !vigilanceAreaSearchResult && areMyVigilanceAreasOpen ? vigilanceAreas?.ids : vigilanceAreaSearchResult ?? [],
-    [vigilanceAreaSearchResult, areMyVigilanceAreasOpen, vigilanceAreas]
-  )
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
+  const vigilanceAreasResults = useMemo(() => vigilanceAreas?.ids ?? [], [vigilanceAreas])
 
   const sortedVigilanceAreasResultsByName = useMemo(
     () =>
@@ -107,10 +103,7 @@ export function ResultList({ searchedText }: ResultListProps) {
     [vigilanceAreasResults, vigilanceAreas]
   )
 
-  const totalVigilanceAreas =
-    sortedVigilanceAreasResultsByName.length > 0
-      ? sortedVigilanceAreasResultsByName.length
-      : vigilanceAreaSearchResult?.length ?? vigilanceAreas?.ids.length ?? 0
+  const totalVigilanceAreas = vigilanceAreas?.ids.length ?? 0
 
   const toggleRegulatory = () => {
     if (!isRegulatorySearchResultsVisible) {

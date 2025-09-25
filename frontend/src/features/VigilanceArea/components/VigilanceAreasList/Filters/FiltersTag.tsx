@@ -1,4 +1,12 @@
-import { setFilteredRegulatoryTags, setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
+import {
+  setFilteredRegulatoryTags,
+  setFilteredRegulatoryThemes,
+  setIsAmpSearchResultsVisible,
+  setIsRegulatorySearchResultsVisible,
+  setIsVigilanceAreaSearchResultsVisible,
+  setSearchExtent,
+  setShouldFilterSearchOnMapExtent
+} from '@features/layersSelector/search/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
@@ -14,7 +22,7 @@ import type { ThemeOption } from 'domain/entities/themes'
 export function FilterTags() {
   const dispatch = useAppDispatch()
   const { createdBy, nbOfFiltersSetted, seaFronts } = useAppSelector(state => state.vigilanceAreaFilters)
-  const { filteredRegulatoryTags, filteredRegulatoryThemes } = useAppSelector(state => state.layerSearch)
+  const { filteredRegulatoryTags, filteredRegulatoryThemes, searchExtent } = useAppSelector(state => state.layerSearch)
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: keyof VigilanceAreaSliceState, filter) => {
     const updatedFilter = filter.filter(unit => unit !== valueToDelete)
@@ -37,7 +45,16 @@ export function FilterTags() {
     dispatch(setFilteredRegulatoryThemes(updatedFilter))
   }
 
-  const hasFilters = nbOfFiltersSetted > 0 || filteredRegulatoryTags?.length > 0 || filteredRegulatoryThemes?.length > 0
+  const onDeleteSearchZone = () => {
+    dispatch(setSearchExtent(undefined))
+    dispatch(setIsAmpSearchResultsVisible(false))
+    dispatch(setShouldFilterSearchOnMapExtent(false))
+    dispatch(setIsRegulatorySearchResultsVisible(false))
+    dispatch(setIsVigilanceAreaSearchResultsVisible(false))
+  }
+
+  const hasFilters =
+    nbOfFiltersSetted > 0 || filteredRegulatoryTags?.length > 0 || filteredRegulatoryThemes?.length > 0 || searchExtent
 
   if (!hasFilters) {
     return null
@@ -99,6 +116,16 @@ export function FilterTags() {
           ))}
         </>
       ))}
+      {searchExtent && (
+        <SingleTag
+          key="searchExtent"
+          accent={Accent.SECONDARY}
+          onDelete={onDeleteSearchZone}
+          title="Zone de filtre manuelle"
+        >
+          Zone de filtre manuelle
+        </SingleTag>
+      )}
     </StyledContainer>
   )
 }

@@ -1,34 +1,20 @@
+import { setGlobalSearchText } from '@features/layersSelector/search/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { TextInput, usePrevious } from '@mtes-mct/monitor-ui'
-import { debounce } from 'lodash'
-import { useCallback, useEffect, useState } from 'react'
+import { TextInput } from '@mtes-mct/monitor-ui'
+import { useCallback } from 'react'
 import styled from 'styled-components'
-
-import { vigilanceAreaFiltersActions } from './slice'
 
 export function SearchFilter() {
   const dispatch = useAppDispatch()
-  const searchQueryFilter = useAppSelector(state => state.vigilanceAreaFilters.searchQuery)
-  const previousSearchQueryFilter = usePrevious(searchQueryFilter)
-  const [searchText, setSearchText] = useState(searchQueryFilter)
+  const searchQueryFilter = useAppSelector(state => state.layerSearch.globalSearchText)
 
   const onQuery = useCallback(
     (value: string | undefined) => {
-      dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'searchQuery', value }))
+      dispatch(setGlobalSearchText(value ?? ''))
     },
     [dispatch]
   )
-
-  // when filters are reinitialzed, reset search text
-  useEffect(() => {
-    if (previousSearchQueryFilter && !searchQueryFilter) {
-      setSearchText(undefined)
-    }
-  }, [searchQueryFilter, previousSearchQueryFilter])
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedHandleChange = useCallback(debounce(onQuery, 500), [])
 
   return (
     <StyledSearch
@@ -37,12 +23,9 @@ export function SearchFilter() {
       isSearchInput
       label="Rechercher dans les zones de vigilance"
       name="vigilance-area-search"
-      onChange={value => {
-        setSearchText(value)
-        debouncedHandleChange(value)
-      }}
+      onChange={onQuery}
       placeholder="Rechercher dans les zones de vigilance"
-      value={searchText}
+      value={searchQueryFilter}
     />
   )
 }
