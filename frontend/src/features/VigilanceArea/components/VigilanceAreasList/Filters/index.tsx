@@ -6,8 +6,11 @@ import { ReinitializeFiltersButton } from '@features/commonComponents/Reinitiali
 import {
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
+  setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
-  setIsVigilanceAreaSearchResultsVisible
+  setIsVigilanceAreaSearchResultsVisible,
+  setSearchExtent,
+  setShouldFilterSearchOnMapExtent
 } from '@features/layersSelector/search/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -30,6 +33,7 @@ export function VigilanceAreasFilters() {
 
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
 
   const {
     createdBy: createdByFilter,
@@ -65,11 +69,16 @@ export function VigilanceAreasFilters() {
 
   const resetFilters = () => {
     dispatch(vigilanceAreaFiltersActions.resetFilters())
-
     dispatch(setFilteredRegulatoryTags([]))
     dispatch(setFilteredRegulatoryThemes([]))
-    dispatch(setIsRegulatorySearchResultsVisible(false))
     dispatch(setIsVigilanceAreaSearchResultsVisible(false))
+
+    if (searchExtent) {
+      dispatch(setSearchExtent(undefined))
+      dispatch(setIsAmpSearchResultsVisible(false))
+      dispatch(setIsRegulatorySearchResultsVisible(false))
+      dispatch(setShouldFilterSearchOnMapExtent(false))
+    }
   }
 
   const updateVisibilityFilter = (visibilityOption: Option, isChecked: boolean | undefined) => {
@@ -155,7 +164,7 @@ export function VigilanceAreasFilters() {
           value={seaFrontFilter}
         />
       </FilterContainer>
-      {(hasCustomPeriodFilter || nbOfFilters > 0) && (
+      {(hasCustomPeriodFilter || nbOfFilters > 0 || searchExtent) && (
         <TagsContainer>
           {hasCustomPeriodFilter && (
             <CustomPeriodContainer>
@@ -166,7 +175,9 @@ export function VigilanceAreasFilters() {
 
           <FilterTags />
 
-          {(nbOfFilters > 0 || hasCustomPeriodFilter) && <ReinitializeFiltersButton onClick={resetFilters} />}
+          {(nbOfFilters > 0 || hasCustomPeriodFilter || searchExtent) && (
+            <ReinitializeFiltersButton onClick={resetFilters} />
+          )}
         </TagsContainer>
       )}
     </Wrapper>

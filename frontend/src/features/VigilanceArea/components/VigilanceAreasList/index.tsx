@@ -8,9 +8,7 @@ import { VigilanceAreasFilters } from './Filters'
 import { VigilanceAreasTable } from './VigilanceAreasTable'
 
 export function VigilancesAreasList() {
-  const { isError, isFetching, isLoading, vigilanceAreas } = useGetFilteredVigilanceAreasQuery({
-    withSearchQueryFilter: true
-  })
+  const { isError, isFetching, isLoading, vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
   const vigilanceAreasResults = Object.values(vigilanceAreas?.entities ?? {})
 

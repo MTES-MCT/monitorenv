@@ -1,5 +1,5 @@
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import _ from 'lodash'
+import { get } from 'lodash'
 import { type Extent, intersects } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
 
@@ -13,16 +13,40 @@ export const getIntersectingLayerIds = <T>(
     return []
   }
   if (!shouldFilter || !extent) {
-    return layers.map(layer => _.get(layer, idPath))
+    return layers.map(layer => get(layer, idPath))
   }
   const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
 
   return layers.reduce((layerIds, layer) => {
-    const bbox = _.get(layer, bboxPath)
+    const bbox = get(layer, bboxPath)
     if (bbox && intersects(bbox, currentExtent)) {
-      return layerIds.concat(_.get(layer, idPath))
+      return layerIds.concat(get(layer, idPath))
     }
 
     return layerIds
   }, [] as number[])
+}
+
+export const getIntersectingLayers = <T>(
+  shouldFilter: Boolean,
+  layers: T[] | undefined,
+  extent: Extent | undefined,
+  { bboxPath = 'bbox' }: { bboxPath?: string } = {}
+): T[] => {
+  if (!layers) {
+    return []
+  }
+  if (!shouldFilter || !extent) {
+    return layers
+  }
+  const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+
+  return layers.reduce((intersectLayers, layer) => {
+    const bbox = get(layer, bboxPath)
+    if (bbox && intersects(bbox, currentExtent)) {
+      return intersectLayers.concat(layer)
+    }
+
+    return intersectLayers
+  }, [] as T[])
 }
