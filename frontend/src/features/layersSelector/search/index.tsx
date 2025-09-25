@@ -1,4 +1,5 @@
 import { NumberOfFilters } from '@features/map/shared/style'
+import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -19,7 +20,7 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
 
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
-  const vigilanceAreaSearchResult = useAppSelector(state => state.layerSearch.vigilanceAreaSearchResult)
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
@@ -42,7 +43,7 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
   const allowResetResults =
     !isEmpty(regulatoryLayersSearchResult) ||
     !isEmpty(ampsSearchResult) ||
-    (!isEmpty(vigilanceAreaSearchResult) &&
+    (!isEmpty(vigilanceAreas.ids) &&
       filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS)
 
   return (
