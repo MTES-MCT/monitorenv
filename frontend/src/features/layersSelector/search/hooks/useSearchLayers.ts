@@ -2,15 +2,13 @@ import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
-import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
-import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import Fuse, { type Expression } from 'fuse.js'
 import { debounce } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
 
-import { setAMPsSearchResult, setRegulatoryLayersSearchResult, setVigilanceAreasSearchResult } from '../slice'
+import { setAMPsSearchResult, setRegulatoryLayersSearchResult } from '../slice'
 import { filterByTags, filterByThemes, filterTagsByText, filterThemesByText } from './utils'
 
 import type { AMP } from 'domain/entities/AMPs'
@@ -21,7 +19,6 @@ export function useSearchLayers() {
 
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
@@ -61,11 +58,6 @@ export function useSearchLayers() {
       const shouldSearchThroughAMPTypes = filteredAmpTypes?.length > 0
       const shouldSearchThroughRegulatoryTags = filteredRegulatoryTags?.length > 0
       const shouldSearchThroughRegulatoryThemes = filteredRegulatoryThemes?.length > 0
-
-      const filteredVigilancesAreas = vigilanceAreas?.entities ? Object.values(vigilanceAreas.entities) : []
-      const filteredVigilancesAreaIds = filteredVigilancesAreas
-        .filter(vigilanceArea => !!vigilanceArea.id)
-        .map(({ id }) => id)
 
       if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldFilterSearchOnMapExtent) {
         let searchedAMPS
@@ -154,18 +146,7 @@ export function useSearchLayers() {
           itemSchema
         )
         dispatch(setRegulatoryLayersSearchResult(searchedRegulatoryInExtent))
-
-        // Vigilance area layers
-        const vigilanceAreaSchema = { bboxPath: 'bbox', idPath: 'id' }
-        const searchedVigilanceAreasInExtent = getIntersectingLayerIds<VigilanceArea.VigilanceAreaLayer>(
-          shouldFilterSearchOnMapExtent,
-          filteredVigilancesAreas,
-          searchExtent,
-          vigilanceAreaSchema
-        )
-        dispatch(setVigilanceAreasSearchResult(searchedVigilanceAreasInExtent))
       } else {
-        dispatch(setVigilanceAreasSearchResult(filteredVigilancesAreaIds))
         dispatch(setRegulatoryLayersSearchResult(undefined))
       }
     }
@@ -181,8 +162,7 @@ export function useSearchLayers() {
     globalSearchText,
     regulatoryLayers,
     searchExtent,
-    shouldFilterSearchOnMapExtent,
-    vigilanceAreas
+    shouldFilterSearchOnMapExtent
   ])
 
   const debouncedSearchLayers = useMemo(() => debounce(search, 300), [search])
