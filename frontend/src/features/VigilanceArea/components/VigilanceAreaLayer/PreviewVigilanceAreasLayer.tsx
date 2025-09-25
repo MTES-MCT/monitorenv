@@ -29,7 +29,7 @@ export function PreviewVigilanceAreasLayer({ map }: BaseMapChildrenProps) {
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery({})
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
   const vectorLayerRef = useRef(

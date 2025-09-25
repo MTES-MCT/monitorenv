@@ -89,7 +89,7 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery({})
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
   const vigilanceAreasResults = useMemo(
     () =>
       !vigilanceAreaSearchResult && areMyVigilanceAreasOpen ? vigilanceAreas?.ids : vigilanceAreaSearchResult ?? [],

@@ -21,7 +21,7 @@ export function useSearchLayers() {
 
   const { data: amps } = useGetAMPsQuery()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery({})
+  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
@@ -52,14 +52,6 @@ export function useSearchLayers() {
       ignoreLocation: true,
       includeScore: false,
       keys: ['name', 'type'],
-      minMatchCharLength: 2,
-      threshold: 0.2
-    })
-
-    const fuseVigilanceAreas = new Fuse((vigilanceAreas?.entities && Object.values(vigilanceAreas?.entities)) || [], {
-      ignoreLocation: true,
-      includeScore: false,
-      keys: ['name', 'comments', 'themes', 'tags.name', 'tags.subTags.name', 'themes.name', 'themes.subThemes.name'],
       minMatchCharLength: 2,
       threshold: 0.2
     })
@@ -164,46 +156,10 @@ export function useSearchLayers() {
         dispatch(setRegulatoryLayersSearchResult(searchedRegulatoryInExtent))
 
         // Vigilance area layers
-        let searchedVigilanceArea
-        let vigilanceAreaSchema
-        if (shouldSearchByText || shouldSearchThroughRegulatoryTags || shouldSearchThroughRegulatoryThemes) {
-          const filterVigilanceAreaWithTextExpression = shouldSearchByText
-            ? {
-                $or: [
-                  { $path: ['name'], $val: globalSearchText },
-                  { $path: ['comments'], $val: globalSearchText },
-                  ...filterThemesByText(globalSearchText),
-                  ...filterTagsByText(globalSearchText)
-                ]
-              }
-            : undefined
-
-          const filterWithTags = shouldSearchThroughRegulatoryTags ? filterByTags(filteredRegulatoryTags) : undefined
-
-          const filterWithThemes = shouldSearchThroughRegulatoryThemes
-            ? filterByThemes(filteredRegulatoryThemes)
-            : undefined
-
-          const filterExpression = [filterVigilanceAreaWithTextExpression, filterWithTags, filterWithThemes].filter(
-            f => !!f
-          ) as Expression[]
-          const resultSearchVigilanceAreas = fuseVigilanceAreas.search<VigilanceArea.VigilanceAreaLayer>({
-            $and: filterExpression
-          })
-
-          searchedVigilanceArea =
-            filteredVigilancesAreas.length > 0
-              ? resultSearchVigilanceAreas.filter(({ item }) => item.id && filteredVigilancesAreaIds.includes(item.id))
-              : resultSearchVigilanceAreas
-          vigilanceAreaSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
-        } else {
-          searchedVigilanceArea = filteredVigilancesAreas
-          vigilanceAreaSchema = { bboxPath: 'bbox', idPath: 'id' }
-        }
-
+        const vigilanceAreaSchema = { bboxPath: 'bbox', idPath: 'id' }
         const searchedVigilanceAreasInExtent = getIntersectingLayerIds<VigilanceArea.VigilanceAreaLayer>(
           shouldFilterSearchOnMapExtent,
-          searchedVigilanceArea,
+          filteredVigilancesAreas,
           searchExtent,
           vigilanceAreaSchema
         )
