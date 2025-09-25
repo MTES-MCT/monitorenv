@@ -72,8 +72,8 @@ export function LayersSidebar() {
     (filteredRegulatoryTags.length > 0 ? 1 : 0) +
     (filteredRegulatoryThemes.length > 0 ? 1 : 0) +
     (filteredAmpTypes?.length > 0 ? 1 : 0) +
-    (!globalSearchText ? 0 : 1) +
-    (!searchExtent ? 0 : 1)
+    (globalSearchText ? 1 : 0) +
+    (searchExtent ? 1 : 0)
 
   const numberOfFilters = nbOfFiltersSetted + numberOfMapFilters
 
