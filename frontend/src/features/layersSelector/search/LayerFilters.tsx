@@ -232,7 +232,7 @@ export function LayerFilters() {
               {VigilanceArea.StatusLabel[status[0]]}
             </SingleTag>
           )}
-          {createdBy.map(creator => (
+          {createdBy?.map(creator => (
             <SingleTag
               key={creator}
               accent={Accent.SECONDARY}
@@ -247,7 +247,7 @@ export function LayerFilters() {
               {creator}
             </SingleTag>
           ))}
-          {seaFronts.map(seaFront => (
+          {seaFronts?.map(seaFront => (
             <SingleTag
               key={seaFront}
               accent={Accent.SECONDARY}

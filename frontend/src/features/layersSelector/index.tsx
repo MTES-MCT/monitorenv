@@ -65,14 +65,15 @@ export function LayersSidebar() {
     dispatch(setDisplayedItems({ visibility: { isLayersSidebarVisible: !isLayersSidebarVisible } }))
   }
 
-  const { filteredAmpTypes, filteredRegulatoryTags, filteredRegulatoryThemes, globalSearchText } = useAppSelector(
-    state => state.layerSearch
-  )
+  const { filteredAmpTypes, filteredRegulatoryTags, filteredRegulatoryThemes, globalSearchText, searchExtent } =
+    useAppSelector(state => state.layerSearch)
+
   const numberOfMapFilters =
     (filteredRegulatoryTags.length > 0 ? 1 : 0) +
     (filteredRegulatoryThemes.length > 0 ? 1 : 0) +
     (filteredAmpTypes?.length > 0 ? 1 : 0) +
-    (!globalSearchText ? 0 : 1)
+    (!globalSearchText ? 0 : 1) +
+    (!searchExtent ? 0 : 1)
 
   const numberOfFilters = nbOfFiltersSetted + numberOfMapFilters
 
