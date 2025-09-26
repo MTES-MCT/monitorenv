@@ -99,7 +99,7 @@ export function LayerFilters({
     setFilteredRegulatoryThemes(updatedFilter)
   }
 
-  const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
+  const AMPCustomSearch = useMemo(() => new CustomSearch(structuredClone(ampTypes), ['label']), [ampTypes])
 
   const deleteVisibilityFilter = () => {
     dispatch(

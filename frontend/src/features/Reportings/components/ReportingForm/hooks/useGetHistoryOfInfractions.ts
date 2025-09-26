@@ -1,7 +1,7 @@
 import { useLazyGetEnvActionsByMmsiQuery, useLazyGetSuspicionOfInfractionsQuery } from '@api/infractionsAPI'
 import { getAllThemes, getTotalInfraction, getTotalPV } from '@features/Mission/utils'
 import { isNewReporting } from '@features/Reportings/utils'
-import { uniq } from 'lodash'
+import { uniq } from 'lodash-es'
 
 type UseGetHistoryOfInfractionsProps = {
   canSearch: boolean

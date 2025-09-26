@@ -10,7 +10,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, type DateAsStringRange, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { getAmpsAsOptions } from '@utils/getAmpsAsOptions'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 

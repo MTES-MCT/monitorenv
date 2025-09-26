@@ -8,8 +8,8 @@ import type { CellContext, ColumnDef } from '@tanstack/react-table'
 import type { Promisable } from 'type-fest'
 
 export function getAdministrationTableColumns(
-  askForArchivingConfirmation: (cellContext: CellContext<Administration.Administration, unknown>) => Promisable<void>,
-  askForDeletionConfirmation: (cellContext: CellContext<Administration.Administration, unknown>) => Promisable<void>,
+  askForArchivingConfirmation: (cellContext: CellContext<Administration.Administration, any>) => Promisable<void>,
+  askForDeletionConfirmation: (cellContext: CellContext<Administration.Administration, any>) => Promisable<void>,
   isArchived: boolean = false
 ): Array<ColumnDef<Administration.Administration>> {
   const archiveColumn: ColumnDef<Administration.Administration> = {
@@ -53,7 +53,7 @@ export function getFilters(
   data: Administration.Administration[],
   filtersState: FiltersState
 ): Filter<Administration.Administration>[] {
-  const customSearch = new CustomSearch(data, ['name'], {
+  const customSearch = new CustomSearch(structuredClone(data), ['name'], {
     cacheKey: 'BACK_OFFICE_ADMINISTRATION_LIST',
     isStrict: true,
     withCacheInvalidation: true

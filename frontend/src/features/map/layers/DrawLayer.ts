@@ -1,11 +1,11 @@
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { useDrawLayer } from '@hooks/useDrawLayer'
 import { Layers } from 'domain/entities/layers/constants'
 import { DrawEvent } from 'ol/interaction/Draw'
 
 import { addFeatureToDrawedFeature } from '../../../domain/use_cases/draw/addFeatureToDrawedFeature'
 import { setGeometry } from '../../../domain/use_cases/draw/setGeometry'
-import { useAppDispatch } from '../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from '../BaseMap'
 import type { GeoJSON as GeoJSONType } from 'domain/types/GeoJSON'

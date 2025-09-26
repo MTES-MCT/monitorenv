@@ -8,7 +8,7 @@ import type { CellContext, ColumnDef } from '@tanstack/react-table'
 import type { Promisable } from 'type-fest'
 
 export function getStationTableColumns(
-  askForDeletionConfirmation: (cellContext: CellContext<Station.Station, unknown>) => Promisable<void>
+  askForDeletionConfirmation: (cellContext: CellContext<Station.Station, any>) => Promisable<void>
 ): Array<ColumnDef<Station.Station>> {
   const deleteColumn: ColumnDef<Station.Station> = {
     accessorFn: row => row,
@@ -30,7 +30,7 @@ export function getStationTableColumns(
 }
 
 export function getFilters(data: Station.Station[], filtersState: FiltersState): Filter<Station.Station>[] {
-  const customSearch = new CustomSearch(data, ['name'], {
+  const customSearch = new CustomSearch(structuredClone(data), ['name'], {
     cacheKey: 'BACK_OFFICE_STATION_LIST',
     isStrict: true,
     withCacheInvalidation: true

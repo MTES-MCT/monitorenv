@@ -1,23 +1,33 @@
 /* eslint-disable import/no-extraneous-dependencies, sort-keys-fix/sort-keys-fix */
 import importMetaEnv from '@import-meta-env/unplugin'
-import { sentryVitePlugin } from '@sentry/vite-plugin'
 import react from '@vitejs/plugin-react'
-import { defineConfig, loadEnv } from 'vite'
+import { visualizer } from 'rollup-plugin-visualizer'
+import { defineConfig, type PluginOption } from 'vite'
 import svgr from 'vite-plugin-svgr'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 
 // https://vitejs.dev/config/
 // eslint-disable-next-line import/no-default-export
-export default defineConfig(({ mode }) => {
+export default defineConfig(
   // @see https://vite.dev/config/#using-environment-variables-in-config
-  const env = loadEnv(mode, process.cwd(), '')
-
-  return {
+  {
     build: {
+      minify: true,
       outDir: './build',
-      sourcemap: true
+      sourcemap: true,
+      rollupOptions: {
+        treeshake: true,
+        input: {
+          index: './index.html'
+        },
+        output: {
+          manualChunks: {
+            'monitor-ui': ['@mtes-mct/monitor-ui']
+          }
+        }
+      },
+      target: 'esnext'
     },
-
     plugins: [
       react(),
       viteTsconfigPaths(),
@@ -26,12 +36,11 @@ export default defineConfig(({ mode }) => {
         env: './.env',
         example: './.env.frontend.example'
       }),
-      sentryVitePlugin({
-        org: 'betagouv',
-        project: 'monitorenv',
-        url: 'https://sentry.incubateur.net/',
-        authToken: env.FRONTEND_SENTRY_AUTH_TOKEN
-      })
+      visualizer({
+        emitFile: true,
+        filename: 'bundle_size.html',
+        open: true
+      }) as PluginOption
     ],
 
     server: {
@@ -59,4 +68,4 @@ export default defineConfig(({ mode }) => {
       }
     }
   }
-})
+)

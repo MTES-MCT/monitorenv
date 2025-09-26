@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import _ from 'lodash'
+import { concat, difference, union, uniq, without } from 'lodash-es'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -31,8 +31,8 @@ const regulatorySlice = createSlice({
     addRegulatoryZonesToMyLayers(state, action: PayloadAction<number[]>) {
       return {
         ...state,
-        selectedRegulatoryLayerIds: _.union(state.selectedRegulatoryLayerIds, action.payload),
-        showedRegulatoryLayerIds: _.union(state.showedRegulatoryLayerIds, action.payload)
+        selectedRegulatoryLayerIds: union(state.selectedRegulatoryLayerIds, action.payload),
+        showedRegulatoryLayerIds: union(state.showedRegulatoryLayerIds, action.payload)
       }
     },
 
@@ -43,10 +43,10 @@ const regulatorySlice = createSlice({
      * @param {number} action.payload - The regulatory zone id
      */
     hideRegulatoryLayer(state, action: PayloadAction<number>) {
-      state.showedRegulatoryLayerIds = _.without(state.showedRegulatoryLayerIds, action.payload)
+      state.showedRegulatoryLayerIds = without(state.showedRegulatoryLayerIds, action.payload)
     },
     hideRegulatoryLayers(state, action: PayloadAction<number[]>) {
-      state.showedRegulatoryLayerIds = _.without(state.showedRegulatoryLayerIds, ...action.payload)
+      state.showedRegulatoryLayerIds = without(state.showedRegulatoryLayerIds, ...action.payload)
     },
 
     /**
@@ -59,13 +59,13 @@ const regulatorySlice = createSlice({
     removeRegulatoryZonesFromMyLayers(state, action: PayloadAction<number[]>) {
       return {
         ...state,
-        selectedRegulatoryLayerIds: _.difference(state.selectedRegulatoryLayerIds, action.payload),
-        showedRegulatoryLayerIds: _.difference(state.showedRegulatoryLayerIds, action.payload)
+        selectedRegulatoryLayerIds: difference(state.selectedRegulatoryLayerIds, action.payload),
+        showedRegulatoryLayerIds: difference(state.showedRegulatoryLayerIds, action.payload)
       }
     },
 
     showRegulatoryLayer(state, action: PayloadAction<number | number[]>) {
-      state.showedRegulatoryLayerIds = _.uniq(_.concat(state.showedRegulatoryLayerIds, action.payload))
+      state.showedRegulatoryLayerIds = uniq(concat(state.showedRegulatoryLayerIds, action.payload))
     }
   }
 })

@@ -9,7 +9,7 @@ import {
   usePrevious,
   OPENLAYERS_PROJECTION
 } from '@mtes-mct/monitor-ui'
-import { noop } from 'lodash/fp'
+import { noop } from 'lodash-es'
 import LineString from 'ol/geom/LineString'
 import Overlay from 'ol/Overlay'
 import { getLength } from 'ol/sphere'

@@ -61,11 +61,11 @@ export function TableMissionsFiltersWithRef(
   const { administrations, completion, controlUnits, dates, seaFronts, status, tags, themes, types } = optionsList
 
   const controlUnitCustomSearch = useMemo(
-    () => new CustomSearch(controlUnits ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
+    () => new CustomSearch(structuredClone(controlUnits ?? []), ['label'], { isStrict: true, threshold: 0.2 }),
     [controlUnits]
   )
 
-  const themeCustomSearch = useMemo(() => new CustomSearch(themes ?? [], ['label']), [themes])
+  const themeCustomSearch = useMemo(() => new CustomSearch(structuredClone(themes ?? []), ['label']), [themes])
 
   return (
     <>

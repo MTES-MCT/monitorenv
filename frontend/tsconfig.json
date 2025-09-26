@@ -14,8 +14,8 @@
     "incremental": true,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     // https://github.com/cypress-io/cypress/issues/26308#issuecomment-1666236726
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "module": "esnext",
+    "moduleResolution": "node",
     "paths": {
       "@api/*": ["api/*"],
       "@components/*": ["components/*"],
@@ -26,6 +26,7 @@
       "@store/*": ["store/*"],
       "@utils/*": ["utils/*"]
     },
+    "erasableSyntaxOnly": false,
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,

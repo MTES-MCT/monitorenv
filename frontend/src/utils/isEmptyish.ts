@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash/fp'
+import { isEmpty } from 'lodash-es'
 
 export function isEmptyish(value: any) {
   if (typeof value === 'string') {

@@ -46,7 +46,7 @@ export function AdministrationTable() {
   }, [administrationTable.filtersState, administrations])
 
   const askForArchivingConfirmation = useCallback(
-    async (cellContext: CellContext<Administration.Administration, unknown>) => {
+    async (cellContext: CellContext<Administration.Administration, any>) => {
       const administration = cellContext.getValue<Administration.Administration>()
 
       const { data: canArchiveAdministration } = await dispatch(
@@ -65,7 +65,7 @@ export function AdministrationTable() {
   )
 
   const askForDeletionConfirmation = useCallback(
-    async (cellContext: CellContext<Administration.Administration, unknown>) => {
+    async (cellContext: CellContext<Administration.Administration, any>) => {
       const administration = cellContext.getValue<Administration.Administration>()
 
       const { data: canDeleteAdministration } = await dispatch(

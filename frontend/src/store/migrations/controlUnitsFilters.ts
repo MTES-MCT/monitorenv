@@ -1,5 +1,5 @@
 import { INITIAL_STATE } from '@features/ControlUnit/components/ControlUnitListDialog/slice'
-import isEqual from 'lodash/isEqual'
+import { isEqual } from 'lodash-es'
 
 export const controlUnitsFiltersMigrations = {
   v2: (state: any) => {

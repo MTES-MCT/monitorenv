@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import _ from 'lodash'
+import { concat, uniq, without } from 'lodash-es'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -22,7 +22,7 @@ const administrativeSlice = createSlice({
      * @param {AdministrativeZone} action.payload - The regulatory zone
      */
     hideAdministrativeLayer(state, action) {
-      state.showedAdministrativeLayerIds = _.without(state.showedAdministrativeLayerIds, action.payload)
+      state.showedAdministrativeLayerIds = without(state.showedAdministrativeLayerIds, action.payload)
     },
 
     /**
@@ -33,7 +33,7 @@ const administrativeSlice = createSlice({
      * @param {AdministrativeZone} action.payload - The regulatory zone
      */
     showAdministrativeLayer(state, action) {
-      state.showedAdministrativeLayerIds = _.uniq(_.concat(state.showedAdministrativeLayerIds, action.payload))
+      state.showedAdministrativeLayerIds = uniq(concat(state.showedAdministrativeLayerIds, action.payload))
     }
   }
 })

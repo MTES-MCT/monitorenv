@@ -39,11 +39,14 @@ export function RecentActivityFilters() {
   const { administrations, controlUnits } = filtersOptions
 
   const controlUnitCustomSearch = useMemo(
-    () => new CustomSearch(controlUnitsAsOptions ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
+    () => new CustomSearch(structuredClone(controlUnitsAsOptions ?? []), ['label'], { isStrict: true, threshold: 0.2 }),
     [controlUnitsAsOptions]
   )
 
-  const themeCustomSearch = useMemo(() => new CustomSearch(themesOptions ?? [], ['label']), [themesOptions])
+  const themeCustomSearch = useMemo(
+    () => new CustomSearch(structuredClone(themesOptions ?? []), ['label']),
+    [themesOptions]
+  )
 
   const updatePeriodFilter = period => {
     dispatch(recentActivityActions.updateFilters({ key: RecentActivityFiltersEnum.PERIOD_FILTER, value: period }))

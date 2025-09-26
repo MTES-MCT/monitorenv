@@ -6,7 +6,7 @@ import { DateRangeEnum } from 'domain/entities/dateRange'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { Formik } from 'formik'
-import { noop } from 'lodash/fp'
+import { noop } from 'lodash-es'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 

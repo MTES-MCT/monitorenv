@@ -28,7 +28,7 @@ import { setDisplayedItems } from 'domain/shared_slices/Global'
 import { setZoomToCenter } from 'domain/shared_slices/Map'
 import { setIsSemaphoreHighlighted, setSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { useFormikContext } from 'formik'
-import { reduce } from 'lodash'
+import { reduce } from 'lodash-es'
 import { GeoJSON } from 'ol/format'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -69,7 +69,7 @@ export function Source({ index, push, remove }: SourceProps) {
 
   const customSearchSemaphore = useMemo(
     () =>
-      new CustomSearch(semaphoresOptions, ['label'], {
+      new CustomSearch(structuredClone(semaphoresOptions), ['label'], {
         isStrict: true
       }),
     [semaphoresOptions]
@@ -87,7 +87,7 @@ export function Source({ index, push, remove }: SourceProps) {
 
   const customSearchControlUnits = useMemo(
     () =>
-      new CustomSearch(controlUnitsOptions || [], ['label'], {
+      new CustomSearch(structuredClone(controlUnitsOptions || []), ['label'], {
         isStrict: true,
         threshold: 0.5
       }),

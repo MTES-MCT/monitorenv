@@ -68,7 +68,7 @@ export const useGetFilteredVigilanceAreasQuery = (skip = false) => {
     }
 
     const customSearch = new CustomSearch(
-      vigilanceAreasByPeriod,
+      structuredClone(vigilanceAreasByPeriod),
       [
         { name: 'comments', weight: 0.1 },
         { name: 'name', weight: 0.9 }

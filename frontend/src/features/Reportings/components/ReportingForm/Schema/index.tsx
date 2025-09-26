@@ -6,7 +6,7 @@ import {
   type TargetDetails
 } from 'domain/entities/reporting'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 
 import type { ThemeFromAPI } from 'domain/entities/themes'

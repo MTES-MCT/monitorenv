@@ -8,7 +8,7 @@ import { InteractionListener, OLGeometryType } from 'domain/entities/map/constan
 import { drawPoint } from 'domain/use_cases/draw/drawGeometry'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
-import _ from 'lodash'
+import { isEqual } from 'lodash-es'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -27,7 +27,7 @@ export function PointPicker() {
   const isAddingAPoint = useMemo(() => listener === InteractionListener.REPORTING_POINT, [listener])
 
   useEffect(() => {
-    if (geometry?.type === OLGeometryType.MULTIPOINT && !_.isEqual(geometry, value)) {
+    if (geometry?.type === OLGeometryType.MULTIPOINT && !isEqual(geometry, value)) {
       setValue(geometry)
     }
   }, [geometry, setValue, value])

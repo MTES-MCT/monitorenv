@@ -1,5 +1,5 @@
 import { INITIAL_STATE } from '@features/Reportings/Filters/slice'
-import isEqual from 'lodash/isEqual'
+import { isEqual } from 'lodash-es'
 
 export const reportingsFiltersMigrations = {
   v2: (state: any) => {

@@ -17,6 +17,7 @@ describe('Create Vigilance Area', () => {
 
     cy.viewport(1580, 1024)
     cy.visit('/')
+
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas').as('createVigilanceArea')

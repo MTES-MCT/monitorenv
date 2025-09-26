@@ -5,7 +5,7 @@ import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
-import { groupBy } from 'lodash'
+import { groupBy } from 'lodash-es'
 
 import { layoutStyle } from '../style'
 

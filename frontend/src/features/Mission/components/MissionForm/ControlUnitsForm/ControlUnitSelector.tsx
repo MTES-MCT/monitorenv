@@ -15,7 +15,7 @@ import {
   Size
 } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
-import { uniq, uniqBy } from 'lodash'
+import { uniq, uniqBy } from 'lodash-es'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -95,7 +95,7 @@ export function ControlUnitSelector({
   const unitListAsOption = useMemo(() => getOptionsFromIdAndName(unitList), [unitList])
   const controlUnitCustomSearch = useMemo(
     () =>
-      new CustomSearch(unitListAsOption ?? [], ['label'], {
+      new CustomSearch(structuredClone(unitListAsOption ?? []), ['label'], {
         isStrict: true,
         threshold: 0.2
       }),

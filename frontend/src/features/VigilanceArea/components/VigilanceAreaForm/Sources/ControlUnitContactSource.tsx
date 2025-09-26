@@ -36,7 +36,7 @@ export function ControlUnitContactSource({
   )
   const controlUnitCustomSearch = useMemo(
     () =>
-      new CustomSearch(unitsWithContactAsOption, ['label'], {
+      new CustomSearch(structuredClone(unitsWithContactAsOption), ['label'], {
         isStrict: true,
         threshold: 0.2
       }),

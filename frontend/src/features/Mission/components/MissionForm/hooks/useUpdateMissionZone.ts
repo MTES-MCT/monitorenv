@@ -11,7 +11,7 @@ import {
   type Mission
 } from 'domain/entities/missions'
 import { useFormikContext } from 'formik'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { Feature } from 'ol'
 import { MultiPolygon } from 'ol/geom'
 import Polygon, { circular } from 'ol/geom/Polygon'

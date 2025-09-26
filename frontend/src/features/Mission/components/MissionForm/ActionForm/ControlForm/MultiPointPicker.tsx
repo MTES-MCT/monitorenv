@@ -3,7 +3,7 @@ import { Accent, Button, Icon, IconButton, Label, Message } from '@mtes-mct/moni
 import { formatCoordinates } from '@utils/coordinates'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { remove } from 'ramda'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'

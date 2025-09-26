@@ -73,19 +73,19 @@ export function FilterBar() {
     [dispatch]
   )
 
-  const administrationCustomSearch = new CustomSearch(administrationsAsOptions ?? [], ['label'], {
+  const administrationCustomSearch = new CustomSearch(structuredClone(administrationsAsOptions ?? []), ['label'], {
     cacheKey: 'CONTROL_UNIT_FILTERS_ADMINISTRATIONS',
     isStrict: true,
     withCacheInvalidation: true
   })
 
-  const typeCustomSearch = new CustomSearch(typesAsOptions ?? [], ['label'], {
+  const typeCustomSearch = new CustomSearch(structuredClone(typesAsOptions ?? []), ['label'], {
     cacheKey: 'CONTROL_UNIT_FILTERS_TYPES',
     isStrict: true,
     withCacheInvalidation: true
   })
 
-  const baseCustomSearch = new CustomSearch(basesAsOptions ?? [], ['label'], {
+  const baseCustomSearch = new CustomSearch(structuredClone(basesAsOptions ?? []), ['label'], {
     cacheKey: 'CONTROL_UNIT_FILTERS_BASES',
     isStrict: true,
     withCacheInvalidation: true

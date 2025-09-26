@@ -6,7 +6,7 @@ import {
   pluralize,
   getControlUnitResourceCategoryFromType
 } from '@mtes-mct/monitor-ui'
-import { isEmpty, uniq } from 'lodash/fp'
+import { isEmpty, uniq } from 'lodash-es'
 
 import { isNotArchived } from '../../utils/isNotArchived'
 
@@ -69,7 +69,7 @@ export function getFilters(
   cacheKey: string
 ): Filter<ControlUnit.ControlUnit>[] {
   const customSearch = new CustomSearch(
-    data,
+    structuredClone(data),
     [
       { name: 'administration.name', weight: 0.1 },
       { name: 'name', weight: 0.9 },

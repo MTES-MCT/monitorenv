@@ -7,8 +7,8 @@ import type { CellContext, ColumnDef } from '@tanstack/react-table'
 import type { Promisable } from 'type-fest'
 
 export function getControlUnitTableColumns(
-  askForArchivingConfirmation: (cellContext: CellContext<ControlUnit.ControlUnit, unknown>) => Promisable<void>,
-  askForDeletionConfirmation: (cellContext: CellContext<ControlUnit.ControlUnit, unknown>) => Promisable<void>,
+  askForArchivingConfirmation: (cellContext: CellContext<ControlUnit.ControlUnit, any>) => Promisable<void>,
+  askForDeletionConfirmation: (cellContext: CellContext<ControlUnit.ControlUnit, any>) => Promisable<void>,
   isArchived: boolean = false
 ): Array<ColumnDef<ControlUnit.ControlUnit>> {
   const archiveColumn: ColumnDef<ControlUnit.ControlUnit> = {
@@ -52,7 +52,7 @@ export function getFilters(
   data: ControlUnit.ControlUnit[],
   filtersState: FiltersState
 ): Filter<ControlUnit.ControlUnit>[] {
-  const customSearch = new CustomSearch(data, ['administration.name', 'name'], {
+  const customSearch = new CustomSearch(structuredClone(data), ['administration.name', 'name'], {
     cacheKey: 'BACK_OFFICE_CONTROL_UNIT_LIST',
     isStrict: true,
     withCacheInvalidation: true

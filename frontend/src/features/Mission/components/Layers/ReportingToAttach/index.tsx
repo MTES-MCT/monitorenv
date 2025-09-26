@@ -3,7 +3,7 @@ import { reportingPinStyleFn } from '@features/Reportings/components/ReportingLa
 import { Layers } from 'domain/entities/layers/constants'
 import { StatusFilterEnum } from 'domain/entities/reporting'
 import { convertToFeature } from 'domain/types/map'
-import { reduce } from 'lodash'
+import { reduce } from 'lodash-es'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef } from 'react'

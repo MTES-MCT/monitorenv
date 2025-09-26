@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { recentActivitiesFiltersMigrations } from '@store/migrations/recentActivitiesFilters'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { InteractionType } from 'domain/entities/map/constants'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 

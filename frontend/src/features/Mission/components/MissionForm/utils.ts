@@ -1,4 +1,4 @@
-import { isEqual, omit } from 'lodash'
+import { isEqual, omit } from 'lodash-es'
 
 import { MISSION_EVENT_UNSYNCHRONIZED_PROPERTIES_IN_FORM } from './constants'
 import { NewMissionSchema } from './Schemas'
