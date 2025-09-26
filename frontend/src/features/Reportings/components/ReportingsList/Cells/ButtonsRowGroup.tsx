@@ -87,7 +87,7 @@ export function ButtonsGroupRow({ id }) {
           title="Editer"
         />
 
-        <Dropdown
+        <StyledDropdown
           accent={Accent.TERTIARY}
           data-cy={`more-actions-reporting-${id}`}
           Icon={Icon.More}
@@ -107,7 +107,7 @@ export function ButtonsGroupRow({ id }) {
             Icon={Icon.Delete}
             title="Supprimer"
           />
-        </Dropdown>
+        </StyledDropdown>
       </ButtonsGroup>
       <DeleteModal
         cancelButtonText="Annuler"
@@ -145,5 +145,11 @@ const ButtonsGroup = styled.div`
   }
   > button {
     padding: 0px;
+  }
+`
+
+const StyledDropdown = styled(Dropdown)`
+  > button {
+    z-index: 0 !important;
   }
 `
