@@ -69,7 +69,7 @@ export function getFilters(
   cacheKey: string
 ): Filter<ControlUnit.ControlUnit>[] {
   const customSearch = new CustomSearch(
-    data,
+    structuredClone(data),
     [
       { name: 'administration.name', weight: 0.1 },
       { name: 'name', weight: 0.9 },

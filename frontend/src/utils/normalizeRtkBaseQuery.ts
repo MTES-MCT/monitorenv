@@ -2,7 +2,7 @@ import { isObject, nullify, undefine } from '@mtes-mct/monitor-ui'
 
 import { FrontendError } from '../libs/FrontendError'
 
-import type { BaseQueryEnhancer, FetchArgs } from '@reduxjs/toolkit/dist/query'
+import type { BaseQueryEnhancer, FetchArgs } from '@reduxjs/toolkit/query'
 
 export const normalizeRtkBaseQuery: BaseQueryEnhancer<unknown, {}, {} | void> =
   baseQuery => async (args: string | FetchArgs, api) => {

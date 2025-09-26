@@ -34,7 +34,10 @@ export function NatinfSelector({ infractionPath }) {
     natinfHelpers.setValue(nextValue)
   }
 
-  const customSearch = useMemo(() => new CustomSearch(sortedNatinfs, ['label', 'value']), [sortedNatinfs])
+  const customSearch = useMemo(
+    () => new CustomSearch(structuredClone(sortedNatinfs), ['label', 'value']),
+    [sortedNatinfs]
+  )
 
   if (isError) {
     return <div>Erreur</div>

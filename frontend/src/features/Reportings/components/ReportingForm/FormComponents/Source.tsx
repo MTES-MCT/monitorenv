@@ -69,7 +69,7 @@ export function Source({ index, push, remove }: SourceProps) {
 
   const customSearchSemaphore = useMemo(
     () =>
-      new CustomSearch(semaphoresOptions, ['label'], {
+      new CustomSearch(structuredClone(semaphoresOptions), ['label'], {
         isStrict: true
       }),
     [semaphoresOptions]
@@ -87,7 +87,7 @@ export function Source({ index, push, remove }: SourceProps) {
 
   const customSearchControlUnits = useMemo(
     () =>
-      new CustomSearch(controlUnitsOptions || [], ['label'], {
+      new CustomSearch(structuredClone(controlUnitsOptions || []), ['label'], {
         isStrict: true,
         threshold: 0.5
       }),

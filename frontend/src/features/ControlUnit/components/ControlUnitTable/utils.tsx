@@ -52,7 +52,7 @@ export function getFilters(
   data: ControlUnit.ControlUnit[],
   filtersState: FiltersState
 ): Filter<ControlUnit.ControlUnit>[] {
-  const customSearch = new CustomSearch(data, ['administration.name', 'name'], {
+  const customSearch = new CustomSearch(structuredClone(data), ['administration.name', 'name'], {
     cacheKey: 'BACK_OFFICE_CONTROL_UNIT_LIST',
     isStrict: true,
     withCacheInvalidation: true

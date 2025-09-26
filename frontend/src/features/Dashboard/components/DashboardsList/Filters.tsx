@@ -61,7 +61,8 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     dispatch(dashboardFiltersActions.updateFilters({ key: 'specificPeriod', value: nextValue ?? [] }))
   }
   const controlUnitCustomSearch = useMemo(
-    () => new CustomSearch(activeControlUnitsOptions ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
+    () =>
+      new CustomSearch(structuredClone(activeControlUnitsOptions ?? []), ['label'], { isStrict: true, threshold: 0.2 }),
     [activeControlUnitsOptions]
   )
 
@@ -70,7 +71,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
   const regulatoryTagsAsOptions = getTagsAsOptionsLegacy(Object.values(tags ?? []))
 
   const regulatoryTagsCustomSearch = useMemo(
-    () => new CustomSearch(regulatoryTagsAsOptions, ['label']),
+    () => new CustomSearch(structuredClone(regulatoryTagsAsOptions), ['label']),
     [regulatoryTagsAsOptions]
   )
 

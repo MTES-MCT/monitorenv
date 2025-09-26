@@ -68,11 +68,11 @@ function MapMissionsFiltersWithRef(
   const themesAPI: ThemeFromAPI[] = Object.values(data ?? [])
 
   const controlUnitCustomSearch = useMemo(
-    () => new CustomSearch(controlUnits ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
+    () => new CustomSearch(structuredClone(controlUnits ?? []), ['label'], { isStrict: true, threshold: 0.2 }),
     [controlUnits]
   )
 
-  const themeCustomSearch = useMemo(() => new CustomSearch(themes ?? [], ['label']), [themes])
+  const themeCustomSearch = useMemo(() => new CustomSearch(structuredClone(themes ?? []), ['label']), [themes])
 
   const udpateStatusFilter = (isChecked: boolean | undefined, value: string) => {
     if (!isChecked && selectedStatuses?.includes(String(value))) {

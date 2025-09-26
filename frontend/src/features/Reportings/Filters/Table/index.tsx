@@ -82,7 +82,7 @@ export function TableReportingsFiltersWithRef(
 
   const sourceCustomSearch = useMemo(
     () =>
-      new CustomSearch<Option<SourceFilterProps>>(sourceOptions, ['label'], {
+      new CustomSearch<Option<SourceFilterProps>>(structuredClone(sourceOptions), ['label'], {
         cacheKey: 'REPORTINGS_LIST',
         withCacheInvalidation: true
       }),

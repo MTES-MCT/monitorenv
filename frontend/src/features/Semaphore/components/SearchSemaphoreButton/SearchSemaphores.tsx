@@ -35,7 +35,7 @@ export function SearchSemaphores({ onVisibiltyChange }: { onVisibiltyChange: (la
     ).sort((a, b) => a.label.localeCompare(b.label))
   )
   const customSearchRef = useRef(
-    new CustomSearch(optionsRef.current || [], ['value.name', 'value.unit'], { isStrict: true })
+    new CustomSearch(structuredClone(optionsRef.current || []), ['value.name', 'value.unit'], { isStrict: true })
   )
 
   const setSemaphoreVisibilityOnMap = () => {

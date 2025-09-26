@@ -30,7 +30,7 @@ export function getStationTableColumns(
 }
 
 export function getFilters(data: Station.Station[], filtersState: FiltersState): Filter<Station.Station>[] {
-  const customSearch = new CustomSearch(data, ['name'], {
+  const customSearch = new CustomSearch(structuredClone(data), ['name'], {
     cacheKey: 'BACK_OFFICE_STATION_LIST',
     isStrict: true,
     withCacheInvalidation: true

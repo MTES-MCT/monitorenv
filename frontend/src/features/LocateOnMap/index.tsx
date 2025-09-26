@@ -1,4 +1,4 @@
-import { useBeaches } from '@features/LocateOnMap/hook/useBeaches'
+import { useAppSelector } from '@hooks/useAppSelector.ts'
 import {
   Accent,
   CustomSearch,
@@ -14,10 +14,10 @@ import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
 import styled from 'styled-components'
 
+import { useBeaches } from './hook/useBeaches'
 import { getPlaceCoordinates, useGooglePlacesAPI } from '../../api/googlePlacesAPI/googlePlacesAPI'
 import { setFitToExtent, setLocateOnMap } from '../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
-import { useAppSelector } from '../../hooks/useAppSelector'
 
 import type { Extent } from 'ol/extent'
 
@@ -61,7 +61,7 @@ export function LocateOnMap() {
 
   const options = [...results, ...beachesResults]
 
-  const locateOnMapCustomSearch = new CustomSearch(options ?? [], ['label'])
+  const locateOnMapCustomSearch = new CustomSearch(structuredClone(options) ?? [], ['label'])
 
   return (
     <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>

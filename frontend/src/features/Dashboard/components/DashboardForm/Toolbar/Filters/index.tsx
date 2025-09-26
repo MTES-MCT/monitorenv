@@ -42,7 +42,7 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
   const themesAsOptions = getThemesAsOptions(Object.values(themes))
 
   const ampsAsOptions = useMemo(() => getAmpsAsOptions(extractedArea?.amps ?? []), [extractedArea?.amps])
-  const ampCustomSearch = useMemo(() => new CustomSearch(ampsAsOptions, ['label']), [ampsAsOptions])
+  const ampCustomSearch = useMemo(() => new CustomSearch(structuredClone(ampsAsOptions), ['label']), [ampsAsOptions])
 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 

@@ -4,7 +4,7 @@ import { ErrorBoundary } from '@components/ErrorBoundary'
 import { RequireAuth } from '@components/RequireAuth'
 import { SideWindow } from '@features/SideWindow'
 import { useMatomo } from '@hooks/useMatomo'
-import { OnlyFontGlobalStyle, THEME, ThemeProvider } from '@mtes-mct/monitor-ui'
+import { GlobalStyle, THEME, ThemeProvider } from '@mtes-mct/monitor-ui'
 import { BackOfficePage } from '@pages/BackOfficePage'
 import { HomePage } from '@pages/HomePage'
 import { Login } from '@pages/Login'
@@ -37,7 +37,7 @@ export function App() {
 
   return (
     <ThemeProvider theme={THEME}>
-      <OnlyFontGlobalStyle />
+      <GlobalStyle />
       <CustomGlobalStyle />
 
       <RsuiteCustomProvider disableRipple locale={frFR}>

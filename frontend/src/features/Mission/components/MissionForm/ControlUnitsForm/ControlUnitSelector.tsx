@@ -95,7 +95,7 @@ export function ControlUnitSelector({
   const unitListAsOption = useMemo(() => getOptionsFromIdAndName(unitList), [unitList])
   const controlUnitCustomSearch = useMemo(
     () =>
-      new CustomSearch(unitListAsOption ?? [], ['label'], {
+      new CustomSearch(structuredClone(unitListAsOption ?? []), ['label'], {
         isStrict: true,
         threshold: 0.2
       }),

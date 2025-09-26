@@ -85,19 +85,19 @@ export const ControlUnits = forwardRef<HTMLDivElement, ControlUnitsProps>(
       dispatch(dashboardFiltersActions.setControlUnitsFilters({ id: activeDashboardId, key: 'type', value: nextValue }))
     }
 
-    const administrationCustomSearch = new CustomSearch(administrationsAsOptions ?? [], ['label'], {
+    const administrationCustomSearch = new CustomSearch(structuredClone(administrationsAsOptions ?? []), ['label'], {
       cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_ADMINISTRATIONS',
       isStrict: true,
       withCacheInvalidation: true
     })
 
-    const typeCustomSearch = new CustomSearch(typesAsOptions ?? [], ['label'], {
+    const typeCustomSearch = new CustomSearch(structuredClone(typesAsOptions ?? []), ['label'], {
       cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_TYPES',
       isStrict: true,
       withCacheInvalidation: true
     })
 
-    const baseCustomSearch = new CustomSearch(basesAsOptions ?? [], ['label'], {
+    const baseCustomSearch = new CustomSearch(structuredClone(basesAsOptions ?? []), ['label'], {
       cacheKey: 'DASHBOARD_CONTROL_UNIT_FILTERS_BASES',
       isStrict: true,
       withCacheInvalidation: true
