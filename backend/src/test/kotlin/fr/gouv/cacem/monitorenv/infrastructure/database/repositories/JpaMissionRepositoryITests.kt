@@ -23,6 +23,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurve
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
+import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.BeforeEach
@@ -53,6 +54,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Autowired
     private lateinit var jpaControlUnitResourceRepository: JpaControlUnitResourceRepository
+
+    @Autowired
+    private lateinit var jpaEnvActionRepository: JpaEnvActionRepository
+
+    @Autowired
+    private lateinit var entityManager: EntityManager
 
     @BeforeEach
     fun setUp() {
@@ -124,7 +131,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 searchQuery = null,
             )
         assertThat(missionsList).hasSize(21)
-
+        println("missionsList: $missionsList")
         // When
         customQueryCountListener!!.resetQueryCount()
         jpaMissionRepository.delete(3)
@@ -143,6 +150,40 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 searchQuery = null,
             )
         assertThat(nextMissionList).hasSize(20)
+    }
+
+    @Test
+    @Transactional
+    fun `delete Should set the deleted flag as true and delete envActions`() {
+        // Given
+        val id = 49
+        val envActionId1 = UUID.fromString("475d2887-5344-46cd-903b-8cb5e42f9a9c")
+        val envActionId2 = UUID.fromString("16eeb9e8-f30c-430e-b36b-32b4673f81ce")
+        val envActionId3 = UUID.fromString("6d4b7d0a-79ce-47cf-ac26-2024d2b27f28")
+
+        val envAction1 = jpaEnvActionRepository.findById(envActionId1)
+        val envAction2 = jpaEnvActionRepository.findById(envActionId2)
+        val envAction3 = jpaEnvActionRepository.findById(envActionId3)
+
+        assertThat(envAction1).isNotNull()
+        assertThat(envAction2).isNotNull()
+        assertThat(envAction3).isNotNull()
+
+        jpaMissionRepository.delete(id)
+        // Then
+        entityManager.flush()
+        entityManager.clear()
+
+        val missionDeleted = jpaMissionRepository.findById(id)
+
+        assertThat(missionDeleted?.isDeleted).isTrue()
+        val deletedEnvAction1 = jpaEnvActionRepository.findById(envActionId1)
+        val deletedEnvAction2 = jpaEnvActionRepository.findById(envActionId2)
+        val deletedEnvAction3 = jpaEnvActionRepository.findById(envActionId3)
+
+        assertThat(deletedEnvAction1).isNull()
+        assertThat(deletedEnvAction2).isNull()
+        assertThat(deletedEnvAction3).isNull()
     }
 
     @Test

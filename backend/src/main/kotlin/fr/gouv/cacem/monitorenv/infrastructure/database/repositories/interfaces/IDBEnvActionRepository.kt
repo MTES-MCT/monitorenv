@@ -78,9 +78,11 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
       FROM jsonb_array_elements(envAction.value->'infractions') AS infractions
       WHERE infractions ->> 'mmsi' = :mmsi
     )
-    
+
     """,
         nativeQuery = true,
     )
     fun findAllEnvActionByMmsi(mmsi: String): List<EnvActionModel>
+
+    fun deleteAllByMissionId(missiondId: Int)
 }
