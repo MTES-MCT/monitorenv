@@ -43,6 +43,7 @@ class JpaMissionRepository(
     @Transactional
     override fun delete(missionId: Int) {
         dbMissionRepository.delete(missionId)
+        dbEnvActionRepository.deleteAllByMissionId(missionId)
     }
 
     @Transactional
