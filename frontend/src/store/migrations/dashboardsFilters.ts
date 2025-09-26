@@ -1,5 +1,5 @@
 import { INITIAL_LIST_FILTERS_STATE } from '@features/Dashboard/components/DashboardForm/slice'
-import isEqual from 'lodash/isEqual'
+import { isEqual } from 'lodash-es'
 
 export const dashboardsFiltersMigrations = {
   v2: (state: any) => {

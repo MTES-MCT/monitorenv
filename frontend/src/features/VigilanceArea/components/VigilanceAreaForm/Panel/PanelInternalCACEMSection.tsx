@@ -5,7 +5,7 @@ import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { THEME } from '@mtes-mct/monitor-ui'
-import { groupBy } from 'lodash'
+import { groupBy } from 'lodash-es'
 import { Fragment } from 'react/jsx-runtime'
 import styled from 'styled-components'
 

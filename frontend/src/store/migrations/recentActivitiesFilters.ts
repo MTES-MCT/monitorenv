@@ -1,5 +1,5 @@
 import { INITIAL_STATE, RecentActivityFiltersEnum } from '@features/RecentActivity/slice'
-import isEqual from 'lodash/isEqual'
+import { isEqual } from 'lodash-es'
 
 export const recentActivitiesFiltersMigrations = {
   v2: (state: any) => {

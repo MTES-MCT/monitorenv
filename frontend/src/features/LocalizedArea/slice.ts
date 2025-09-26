@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { concat, uniq, without } from 'lodash'
+import { concat, uniq, without } from 'lodash-es'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 

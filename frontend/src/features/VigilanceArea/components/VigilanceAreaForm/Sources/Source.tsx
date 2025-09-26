@@ -5,7 +5,7 @@ import { ValidateButton } from '@features/VigilanceArea/components/VigilanceArea
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import { groupBy, omit } from 'lodash'
+import { groupBy, omit } from 'lodash-es'
 import { useState } from 'react'
 import styled from 'styled-components'
 

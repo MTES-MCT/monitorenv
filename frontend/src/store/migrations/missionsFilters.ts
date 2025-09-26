@@ -1,5 +1,5 @@
 import { INITIAL_STATE } from 'domain/shared_slices/MissionFilters'
-import isEqual from 'lodash/isEqual'
+import { isEqual } from 'lodash-es'
 
 export const missionFiltersMigrations = {
   v2: (state: any) => {

@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 const GOOGLEMAPS_GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json'

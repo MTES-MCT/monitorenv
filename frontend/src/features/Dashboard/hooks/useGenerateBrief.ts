@@ -13,7 +13,7 @@ import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { getDatesFromFilters } from '@features/RecentActivity/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { uniq } from 'lodash'
+import { uniq } from 'lodash-es'
 import { useMemo, useState } from 'react'
 
 import { getRecentActivityFilters } from '../components/DashboardForm/slice'

@@ -1,7 +1,7 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { vigilanceAreasFiltersMigrations } from '@store/migrations/vigilanceAreasFilters'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
