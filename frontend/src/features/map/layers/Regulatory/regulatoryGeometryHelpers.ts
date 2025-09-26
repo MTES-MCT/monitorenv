@@ -32,3 +32,36 @@ export function getRegulatoryFeature({ code, isolatedLayer, layer }: RegulatoryF
 
   return feature
 }
+
+type RegulatoryFeatureFromLayerType = {
+  code: string
+  color: string
+  isolatedLayer: IsolatedLayerType | undefined
+  layer: any
+}
+
+export function getRegulatoryFeatureFromLayer({ code, color, isolatedLayer, layer }: RegulatoryFeatureFromLayerType) {
+  const feature = getFeature(layer.geom)
+  if (!feature) {
+    return undefined
+  }
+  const geometry = feature.getGeometry()
+  const area = geometry && getArea(geometry)
+  feature.setId(`${code}:${layer.id}`)
+
+  const isolatedLayerTypeIsRegulatory = isolatedLayer?.type.includes('REGULATORY') ?? false
+  const isLayerFilled = isolatedLayer
+    ? isolatedLayerTypeIsRegulatory && isolatedLayer?.id === layer.id && isolatedLayer?.isFilled
+    : true
+
+  feature.setProperties({
+    area,
+    color,
+    isFilled: isLayerFilled,
+    layerId: layer.id,
+    ...layer,
+    geom: null
+  })
+
+  return feature
+}

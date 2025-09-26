@@ -1,18 +1,19 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
+import { displayTags } from '@utils/getTagsAsOptions'
 import { Feature } from 'ol'
-import VectorLayer from 'ol/layer/Vector'
+import WebGLVectorLayer from 'ol/layer/WebGLVector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
-import { getRegulatoryFeature } from './regulatoryGeometryHelpers'
+import { getRegulatoryFeatureFromLayer } from './regulatoryGeometryHelpers'
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
+import { getRegulatoryEnvColorWithAlpha, regulatoryStyle } from '../styles/administrativeAndRegulatoryLayers.style'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
-import type { VectorLayerWithName } from 'domain/types/layer'
+import type { WebGLVectorLayerWithName } from 'domain/types/layer'
 import type { Geometry } from 'ol/geom'
 
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
@@ -34,13 +35,13 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     VectorSource<Feature<Geometry>>
   >
   const regulatoryPreviewVectorLayerRef = useRef(
-    new VectorLayer({
-      renderBuffer: 4,
-      renderOrder: (a, b) => b.get('area') - a.get('area'),
+    new WebGLVectorLayer({
+      // renderBuffer: 4,
+      // renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: regulatoryPreviewVectorSourceRef.current,
-      style: getRegulatoryLayerStyle
+      style: regulatoryStyle
     })
-  ) as MutableRefObject<VectorLayerWithName>
+  ) as MutableRefObject<WebGLVectorLayerWithName>
   regulatoryPreviewVectorLayerRef.current.name = Layers.REGULATORY_ENV_PREVIEW.code
 
   const regulatoryLayersFeatures = useMemo(() => {
@@ -52,8 +53,9 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
         const layer = regulatoryLayers?.entities[id]
 
         if (layer && layer.geom) {
-          const feature = getRegulatoryFeature({
+          const feature = getRegulatoryFeatureFromLayer({
             code: Layers.REGULATORY_ENV_PREVIEW.code,
+            color: getRegulatoryEnvColorWithAlpha(displayTags(layer.tags), layer.entityName),
             isolatedLayer,
             layer
           })

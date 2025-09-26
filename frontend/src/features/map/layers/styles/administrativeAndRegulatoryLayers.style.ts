@@ -13,6 +13,8 @@ import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils
 const blueMarine = '#7B9FCC'
 const darkPeriwinkle = '#767AB2'
 
+const featureHas = (key: string) => ['==', ['get', key], 1]
+
 export const getAdministrativeLayersStyle = (code: String) => {
   switch (code) {
     case Layers.FAO.code:
@@ -186,6 +188,30 @@ export const getAdministrativeLayersStyle = (code: String) => {
   }
 }
 
+export const getRegulatoryEnvColorWithAlpha = (
+  type: string | null = '',
+  name: string | null = '',
+  isDisabled = false
+) => {
+  if (isDisabled) {
+    return THEME.color.white
+  }
+
+  return getColorWithAlpha(stringToColorInGroup(`${type}`, `${name}`), 0.6)
+}
+
+export const regulatoryStyle = [
+  {
+    'fill-color': ['case', featureHas('isFilled'), ['get', 'color'], 'rgba(0,0,0,0)'],
+    'stroke-color': [
+      'case',
+      featureHas('metadataIsShowed'),
+      getColorWithAlpha('#85FBFD', 0.7),
+      getColorWithAlpha(THEME.color.charcoal, 0.7)
+    ],
+    'stroke-width': ['case', featureHas('metadataIsShowed'), 3, featureHas('asMinimap'), 3, 1]
+  }
+]
 export const getRegulatoryLayerStyle = feature => {
   const colorWithAlpha = getRegulatoryEnvColorWithAlpha(displayTags(feature.get('tags')), feature.get('entityName'))
 
@@ -210,16 +236,4 @@ const getStyle = (color: string, metadataIsShowed: boolean, isLayerFilled: boole
       width: metadataIsShowed || asMinimap ? 3 : 1
     })
   })
-}
-
-export const getRegulatoryEnvColorWithAlpha = (
-  type: string | null = '',
-  name: string | null = '',
-  isDisabled = false
-) => {
-  if (isDisabled) {
-    return THEME.color.white
-  }
-
-  return getColorWithAlpha(stringToColorInGroup(`${type}`, `${name}`), 0.6)
 }
