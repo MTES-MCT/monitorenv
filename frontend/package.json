@@ -5,8 +5,8 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "20",
-    "npm": "10"
+    "node": ">=24.0.0",
+    "npm": ">=11"
   },
   "scripts": {
     "build": "vite build",
