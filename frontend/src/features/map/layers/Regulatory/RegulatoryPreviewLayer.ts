@@ -2,8 +2,10 @@ import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { Feature } from 'ol'
+import { GeoJSON } from 'ol/format'
 import VectorLayer from 'ol/layer/Vector'
 import WebGLVectorLayer from 'ol/layer/WebGLVector'
+import { bbox } from 'ol/loadingstrategy'
 import VectorSource from 'ol/source/Vector'
 import { Fill, Style } from 'ol/style'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
@@ -33,9 +35,18 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
 
-  const regulatoryPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
+  /*   const regulatoryPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
     VectorSource<Feature<Geometry>>
-  >
+  > */
+
+  const regulatoryPreviewVectorSourceRef = useRef(
+    new VectorSource({
+      format: new GeoJSON(),
+      strategy: bbox,
+      url: () => `/v1/regulatory`
+    })
+  ) as MutableRefObject<VectorSource<Feature<Geometry>>>
+
   const regulatoryPreviewVectorLayerRef = useRef(
     new WebGLVectorLayer({
       source: regulatoryPreviewVectorSourceRef.current,
