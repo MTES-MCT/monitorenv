@@ -1,6 +1,7 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { THEME } from '@mtes-mct/monitor-ui'
+import { useMapContext } from 'context/map/MapContext'
 import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
 import { type Geometry } from 'ol/geom'
@@ -8,12 +9,12 @@ import { fromExtent } from 'ol/geom/Polygon'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { Fill, Stroke, Style } from 'ol/style'
-import { useEffect, useRef, type MutableRefObject } from 'react'
+import { memo, useEffect, useRef, type MutableRefObject } from 'react'
 
-import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
 
-export function LocateOnMapLayer({ map }: BaseMapChildrenProps) {
+export const LocateOnMapLayer = memo(() => {
+  const { map } = useMapContext()
   const dispatch = useAppDispatch()
   const locateOnMap = useAppSelector(state => state.map.locateOnMap)
   const locateOnMapVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
@@ -60,4 +61,4 @@ export function LocateOnMapLayer({ map }: BaseMapChildrenProps) {
   }, [dispatch, locateOnMap])
 
   return null
-}
+})

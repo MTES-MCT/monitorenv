@@ -81,9 +81,9 @@ export function Map() {
       <MapAttributionsBox key="MapAttributionsBox" />,
       <MapCoordinatesBox key="MapCoordinatesBox" />,
       <MapLayer key="MapLayer" />,
+      <InterestPointLayer key="InterestPointLayer" />,
 
       // ZONE
-
       <AMPLayers key="AMPLayers" />,
       <AMPPreviewLayer key="AMPPreviewLayer" />,
       <RegulatoryLayers key="RegulatoryLayers" />,
@@ -137,7 +137,7 @@ export function Map() {
 
     return [
       <MeasurementLayer key="MeasurementLayer" />,
-      <InterestPointLayer key="InterestPointLayer" />,
+
       <DrawLayer key="DrawLayer" />,
 
       <MissionsLayer key="MissionsLayer" />,
