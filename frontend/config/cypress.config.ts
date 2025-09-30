@@ -2,12 +2,11 @@
 import { defineConfig } from 'cypress'
 
 const IS_CI = Boolean(process.env.CI)
-const WEBAPP_PORT = IS_CI ? 8880 : 3000
-const WEBAPP_HOST = 'localhost'
 
 export default defineConfig({
+  chromeWebSecurity: false,
   e2e: {
-    baseUrl: `http://${WEBAPP_HOST}:${WEBAPP_PORT}`,
+    baseUrl: `http://${IS_CI ? '0.0.0.0:8880' : 'localhost:3000'}`,
     specPattern: ['cypress/e2e/**/*.spec.ts']
   },
   pageLoadTimeout: 120000,

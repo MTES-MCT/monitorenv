@@ -1,6 +1,7 @@
 import EventSource, { sources } from 'eventsourcemock'
 
 export function visitSideWindow(isAutoSaveEnabled = 'true') {
+  cy.login('superuser')
   cy.visit(`/side_window`, {
     onBeforeLoad(window: Cypress.AUTWindow & { env: { [key: string]: string } }) {
       Object.defineProperty(window, 'EventSource', { value: EventSource })

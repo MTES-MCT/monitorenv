@@ -1,13 +1,13 @@
 import { ReportingSourceLabels } from '../../../../src/domain/entities/reporting'
 import { SeaFrontLabel } from '../../../../src/domain/entities/seaFrontType'
+import { visitSideWindow } from '../../utils/visitSideWindow'
 
 context('Reportings', () => {
   beforeEach(() => {
-    cy.viewport(1280, 1024)
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.intercept('GET', '/api/v2/control_units').as('getControlUnits')
     cy.intercept('GET', '/api/v1/themes*').as('getThemes')
-    cy.visit(`/side_window`)
+    visitSideWindow()
 
     cy.clickButton('Signalements')
     cy.wait(['@getReportings', '@getControlUnits', '@getThemes'])
