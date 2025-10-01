@@ -138,7 +138,7 @@ describe('filterVigilanceAreas', () => {
     endingOccurrenceDate: `${customDayjs().subtract(1, 'month').format('YYYY-MM-DD')} 23:59:59.00000`,
     endingOccurrencesNumber: undefined,
     frequency: VigilanceArea.Frequency.ALL_MONTHS,
-    id: 2,
+    id: 8,
     isArchived: false,
     isAtAllTimes: false,
     isDraft: false,
@@ -156,7 +156,7 @@ describe('filterVigilanceAreas', () => {
     endingOccurrenceDate: `${customDayjs().subtract(11, 'months').format('YYYY-MM-DD')} 23:59:59.00000`,
     endingOccurrencesNumber: undefined,
     frequency: VigilanceArea.Frequency.ALL_MONTHS,
-    id: 2,
+    id: 9,
     isArchived: false,
     isAtAllTimes: false,
     isDraft: false,
@@ -175,7 +175,7 @@ describe('filterVigilanceAreas', () => {
 
   it('filters areas within current quarter', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER)
-    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite, last3Months])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
   })
 
   it('filters areas within current year', () => {
@@ -190,12 +190,12 @@ describe('filterVigilanceAreas', () => {
 
   it('filters areas within last three months', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.LAST_THREE_MONTHS)
-    expect(result).toEqual([todayMin2Days, quarter, year, allYear, infinite, last3Months])
+    expect(result).toEqual([todayMin2Days, year, allYear, infinite, last3Months])
   })
 
   it('filters areas within last twelve months', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.LAST_TWELVE_MONTHS)
-    expect(result).toEqual([todayMin2Days, quarter, year, allYear, infinite, last3Months, last12Months])
+    expect(result).toEqual([todayMin2Days, year, allYear, infinite, last3Months, last12Months])
   })
   it('filters areas with vigilance area one complete year', () => {
     const vigilanceAreaOneCompleteYear = {
@@ -206,7 +206,7 @@ describe('filterVigilanceAreas', () => {
       endingOccurrenceDate: undefined,
       endingOccurrencesNumber: undefined,
       frequency: VigilanceArea.Frequency.ALL_YEARS,
-      id: 1,
+      id: 10,
       isArchived: false,
       isAtAllTimes: false,
       isDraft: false,
