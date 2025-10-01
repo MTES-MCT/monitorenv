@@ -10,6 +10,7 @@ type ControlCardProps = {
   action: EnvActionControl
   attachedReportingId: string
 }
+
 export function ControlCard({ action, attachedReportingId }: ControlCardProps) {
   return (
     <>
@@ -59,7 +60,7 @@ const TagContainer = styled.div`
 `
 
 const ReportingTag = styled(StyledTag)`
-  align-self: end;
-  flex: 1;
+  margin-top: auto;
   max-width: 50%;
+  justify-content: center;
 `

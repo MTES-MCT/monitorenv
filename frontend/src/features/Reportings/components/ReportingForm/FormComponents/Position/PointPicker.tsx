@@ -66,7 +66,7 @@ export function PointPicker() {
             disabled={isAddingAPoint}
             Icon={Icon.Edit}
             onClick={handleAddPoint}
-            title="Ajouter une point"
+            title="Ajouter un point"
           />
           <IconButton
             accent={Accent.SECONDARY}

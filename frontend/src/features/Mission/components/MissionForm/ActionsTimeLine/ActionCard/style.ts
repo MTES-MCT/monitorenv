@@ -72,8 +72,15 @@ export const ActionSummaryWrapper = styled(TransparentButton)<{
   flex-direction: column;
   gap: 8px;
   border-color: ${p => getBorderColor(p)};
-  border-size: ${p => (p.$selected ? `3px` : `1px`)};
+  border-width: ${p => (p.$selected ? `3px` : `1px`)};
   border-style: solid;
+
+  &:hover {
+    border-color: ${p => getBorderColor(p)};
+    border-style: solid;
+    border-width: ${p => (p.$selected ? `3px` : `1px`)};
+  }
+
   padding: 16px;
   background: ${p => getBackgroundColor(p)} !important;
 `
@@ -129,6 +136,7 @@ export const ActionButtons = styled.div`
   display: flex;
   flex-direction: row;
   gap: 4px;
+
   > button {
     padding: 0px;
   }

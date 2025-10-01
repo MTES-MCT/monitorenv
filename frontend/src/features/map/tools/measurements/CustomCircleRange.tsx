@@ -1,6 +1,9 @@
+import { StyledMapMenuDialogContainer } from '@components/style'
 import {
+  Button,
   coordinatesAreDistinct,
   CoordinatesInput,
+  MapMenuDialog,
   NumberInput,
   OPENLAYERS_PROJECTION,
   WSG84_PROJECTION
@@ -22,12 +25,10 @@ import {
 import { saveMeasurement } from '../../../../domain/use_cases/measurement/saveMeasurement'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { MapToolBox } from '../MapToolBox'
 
 export function CustomCircleRange() {
   const dispatch = useAppDispatch()
   const { customCircleMesurement, measurementTypeToAdd } = useAppSelector(state => state.measurement)
-  const { healthcheckTextWarning } = useAppSelector(state => state.global)
   const { coordinatesFormat, distanceUnit } = useAppSelector(state => state.map)
 
   const circleCenterCoordinates = useMemo(() => {
@@ -119,11 +120,10 @@ export function CustomCircleRange() {
 
   return (
     measurementTypeToAdd === MeasurementType.CIRCLE_RANGE && (
-      <Wrapper
-        $healthcheckTextWarning={!!healthcheckTextWarning}
-        $isOpen={measurementTypeToAdd === MeasurementType.CIRCLE_RANGE}
-      >
-        <Header>Définir une valeur</Header>
+      <StyledMapMenuDialogContainer>
+        <MapMenuDialog.Header>
+          <MapMenuDialog.Title>Définir une valeur</MapMenuDialog.Title>
+        </MapMenuDialog.Header>
         <Body>
           <CoordinatesInput
             coordinatesFormat={coordinatesFormat}
@@ -143,94 +143,36 @@ export function CustomCircleRange() {
             />
             <span>{distanceUnit === DistanceUnit.METRIC ? '(Mètres)' : '(Nm)'}</span>
           </RadiusWrapper>
-          <OkButton
+        </Body>
+        <Footer>
+          <Button
             data-cy="measurement-circle-add"
             disabled={!circleCenterCoordinates?.length || !circleRadius}
             onClick={() => addCustomCircleRange()}
           >
             OK
-          </OkButton>
-          <CancelButton onClick={cancelAddCircleRange}>Annuler</CancelButton>
-        </Body>
-      </Wrapper>
+          </Button>
+          <Button onClick={cancelAddCircleRange}>Annuler</Button>
+        </Footer>
+      </StyledMapMenuDialogContainer>
     )
   )
 }
-
-const CancelButton = styled.button`
-  border: 1px solid ${p => p.theme.color.charcoal};
-  color: ${p => p.theme.color.gunMetal};
-  font-size: 13px;
-  margin: 15px 0 0 15px;
-  padding: 5px 12px;
-  width: 130px;
-
-  &:disabled {
-    border: 1px solid ${p => p.theme.color.lightGray};
-    color: ${p => p.theme.color.lightGray};
-  }
-`
-
-const OkButton = styled.button`
-  background: ${p => p.theme.color.charcoal};
-  color: ${p => p.theme.color.gainsboro};
-  font-size: 13px;
-  margin: 15px 0 0;
-  padding: 5px 12px;
-  width: 130px;
-
-  &:hover,
-  &:focus {
-    background: ${p => p.theme.color.charcoal};
-  }
-`
-
-const Body = styled.div`
-  color: ${p => p.theme.color.slateGray};
-  font-size: 13px;
-  margin: 10px 15px;
-  text-align: left;
-
-  p {
-    font-size: 13px;
-    margin: 0;
-  }
-
-  p:nth-of-type(2) {
-    font-size: 13px;
-    margin-top: 15px;
-  }
-
-  span {
-    margin-left: 7px;
-  }
-
-  input {
-    background: ${p => p.theme.color.gainsboro};
-    border: none;
-    color: ${p => p.theme.color.gunMetal};
-    height: 27px;
-    margin-top: 7px;
-    padding-left: 8px;
-  }
-`
-
-const Header = styled.div`
-  background: ${p => p.theme.color.charcoal};
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
-  color: ${p => p.theme.color.gainsboro};
-  font-size: 16px;
-  padding: 9px 0 7px 15px;
-  text-align: left;
-`
-
-const Wrapper = styled(MapToolBox)`
-  width: 306px;
-`
 
 const RadiusWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: last baseline;
+`
+
+const Body = styled(MapMenuDialog.Body)`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`
+
+const Footer = styled(MapMenuDialog.Footer)`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 `
