@@ -3,14 +3,13 @@ import styled from 'styled-components'
 
 export const LAYER_SELECTOR_ROW_HEIGHT = 36
 
-const IconGroup = styled.span`
+const IconGroup = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: stretch;
-  flex: 0;
 `
 
-const Layer = styled.span<{ $metadataIsShown?: boolean; $withBorderBottom?: boolean }>`
+const Layer = styled.li<{ $metadataIsShown?: boolean; $withBorderBottom?: boolean }>`
   align-items: center;
   background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : 'transparent')};
   border-bottom: ${p => (p.$withBorderBottom ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
@@ -21,6 +20,8 @@ const Layer = styled.span<{ $metadataIsShown?: boolean; $withBorderBottom?: bool
   padding-left: 18px;
   text-align: left;
   user-select: none;
+  justify-content: space-between;
+
   &:hover {
     background: ${p => p.theme.color.blueYonder25};
   }
@@ -33,7 +34,6 @@ const Name = styled.span`
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 280px;
 `
 
 const ZonesNumber = styled.span`
@@ -43,11 +43,10 @@ const ZonesNumber = styled.span`
   margin-right: 8px;
   line-height: 34px;
   font-weight: 400;
-  flex: 1;
   max-width: 50px;
 `
 
-const GroupWrapper = styled.li<{ $isOpen: boolean; $isPadded?: boolean }>`
+const GroupWrapper = styled.div<{ $isOpen: boolean; $isPadded?: boolean }>`
   align-items: center;
   border-bottom: ${p => (p.$isOpen ? 0 : 1)}px solid ${p => p.theme.color.lightGray};
   color: ${p => p.theme.color.gunMetal};
@@ -88,33 +87,36 @@ const GroupName = styled.span`
   color: ${p => p.theme.color.gunMetal};
   line-height: 33px;
   flex: 1;
-  padding-right: 8px;
 `
 
-const GroupList = styled.li<{ $isOpen: boolean; $length: number }>`
+const GroupList = styled.ul<{ $isOpen: boolean; $length: number }>`
   height: ${p => (p.$isOpen && p.$length ? p.$length * LAYER_SELECTOR_ROW_HEIGHT : 0)}px;
   overflow: hidden;
   transition: 0.5s all;
   border-bottom: ${p => (p.$isOpen ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
 `
 
-const SubGroup = styled.div<{ $isOpen: boolean; $length: number }>`
+const SubGroup = styled.ul<{ $isOpen: boolean; $length: number }>`
   height: ${props => (props.$isOpen && props.$length ? props.$length * LAYER_SELECTOR_ROW_HEIGHT : 0)}px;
   overflow: hidden;
   transition: 0.5s all;
   border-bottom: ${p => (p.$isOpen ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
 `
 
-const LayerList = styled.ul<{ $baseLayersLength: number; $maxHeight?: number; $showBaseLayers: boolean }>`
+const LayerList = styled.ul<{
+  $baseLayersLength: number
+  $maxHeight?: number
+  $showBaseLayers: boolean
+  $withoutScroll?: boolean
+}>`
   margin: 0;
   background: ${p => p.theme.color.white};
   border-radius: 0;
   padding: 0;
-  max-height: ${p => p.$maxHeight ?? 50}vh;
-  overflow-y: auto;
+  max-height: ${p => (p.$showBaseLayers ? '100vh' : '0')};
+  overflow-y: ${p => (p.$withoutScroll ? 'hidden' : 'auto')};
   overflow-x: hidden;
   color: ${p => p.theme.color.slateGray};
-  height: ${p => (p.$showBaseLayers && p.$baseLayersLength ? 36 * p.$baseLayersLength : 0)}px;
   transition: 0.5s all;
 `
 
@@ -131,20 +133,18 @@ const NumberOfZones = styled.span`
   padding-right: 3px;
 `
 
-const Wrapper = styled.div<{ $hasPinnedLayers?: boolean; $isExpanded: boolean }>`
-  height: 38px;
+const Wrapper = styled.div<{ $hasPinnedLayers?: boolean }>`
   font-size: 16px;
   line-height: 22px;
-  padding: 6px 4px 0 16px;
+  padding: 8px 8px 8px 16px;
   color: ${p => p.theme.color.gainsboro};
   display: flex;
-  cursor: pointer;
   text-align: left;
   user-select: none;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   background: ${p => p.theme.color.charcoal};
 
-  ${props => props.$hasPinnedLayers && `.Element-IconBox:first-of-type svg { color: ${props.theme.color.blueGray}; }`}
+  ${props => props.$hasPinnedLayers && `button:first-of-type svg { color: ${props.theme.color.blueGray}; }`}
 `
 const Title = styled.span`
   flex: 1;

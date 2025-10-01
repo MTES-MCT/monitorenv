@@ -1,3 +1,4 @@
+import { StyledTransparentButton } from '@components/style'
 import {
   closeMetadataPanel,
   getDisplayedMetadataAMPLayerId,
@@ -5,7 +6,7 @@ import {
   openAMPMetadataPanel
 } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { Accent, Icon, IconButton, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -22,7 +23,7 @@ import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
   const dispatch = useAppDispatch()
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
@@ -79,17 +80,19 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   }, [ampMetadataLayerId, ref, layerId])
 
   return (
-    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} onClick={toggleZoneMetadata}>
-      <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
-      <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type ?? 'aucun'}>
-        <Highlighter
-          autoEscape
-          highlightClassName="highlight"
-          searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-          textToHighlight={layer?.type ?? ''}
-        />
-        {!layer?.type && 'AUCUN NOM'}
-      </LayerSelector.Name>
+    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown}>
+      <StyledTransparentButton onClick={toggleZoneMetadata}>
+        <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
+        <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type ?? 'aucun'}>
+          <Highlighter
+            autoEscape
+            highlightClassName="highlight"
+            searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
+            textToHighlight={layer?.type ?? ''}
+          />
+          {!layer?.type && 'AUCUN NOM'}
+        </LayerSelector.Name>
+      </StyledTransparentButton>
       <LayerSelector.IconGroup>
         {isLinkingAMPToVigilanceArea ? (
           <IconButton

@@ -267,9 +267,9 @@ export function RecentActivityFilters() {
                 <IconButton accent={Accent.SECONDARY} Icon={Icon.Edit} onClick={updateZone} />
                 <IconButton
                   accent={Accent.SECONDARY}
-                  aria-label="Supprimer cette zone"
                   Icon={Icon.Delete}
                   onClick={() => deleteZone(index)}
+                  title="Supprimer cette zone"
                 />
               </>
             </Row>

@@ -1,3 +1,4 @@
+import { StyledTransparentButton } from '@components/style'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
@@ -12,7 +13,7 @@ import styled from 'styled-components'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { LayerName, LayerNameContainer } from '../style'
+import { LayerName } from '../style'
 
 type VigilanceAreaLayerProps = {
   isPinned?: boolean
@@ -24,7 +25,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.VIGILANCE_AREAS))
 
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const handleSelectZone = e => {
     e.stopPropagation()
@@ -67,7 +68,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
       $withBorderBottom
       onClick={toggleZoneMetadata}
     >
-      <LayerNameContainer>
+      <StyledTransparentButton>
         <LayerLegend
           isDisabled={vigilanceArea?.isArchived}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
@@ -80,7 +81,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
         >
           {vigilanceArea?.name}
         </LayerName>
-      </LayerNameContainer>
+      </StyledTransparentButton>
       <TagAndButtons data-cy={`dashboard-vigilance-area-zone-tags-and-buttons-${vigilanceArea.id}`}>
         {vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE && (
           <StyledTag accent={Accent.PRIMARY} title="Zone de vigilance interne au CACEM">
@@ -91,7 +92,6 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
         {isSelected ? (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Supprimer la zone"
             color={THEME.color.slateGray}
             Icon={Icon.Close}
             onClick={removeZone}
@@ -100,11 +100,11 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
         ) : (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Sélectionner la zone"
             color={isPinned ? THEME.color.blueGray : THEME.color.slateGray}
             data-cy={`dashboard-vigilance-area-zone-check-${vigilanceArea.id}`}
             Icon={isPinned ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
+            title="Sélectionner la zone"
           />
         )}
       </TagAndButtons>

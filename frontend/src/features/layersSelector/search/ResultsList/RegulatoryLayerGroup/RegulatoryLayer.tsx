@@ -1,5 +1,6 @@
+import { StyledTransparentButton } from '@components/style'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { Accent, Icon, IconButton, THEME, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -30,7 +31,7 @@ type RegulatoryLayerProps = {
 
 export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
-  const ref = createRef<HTMLSpanElement>()
+  const ref = createRef<HTMLLIElement>()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
 
@@ -98,44 +99,41 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
   }, [layerId, regulatoryMetadataLayerId, ref])
 
   return (
-    <LayerSelector.Layer
-      ref={ref}
-      $metadataIsShown={metadataIsShown}
-      data-cy="regulatory-result-zone"
-      onClick={toggleZoneMetadata}
-    >
-      <LayerLegend
-        layerType={MonitorEnvLayers.REGULATORY_ENV}
-        legendKey={layer?.entityName ?? 'aucun'}
-        type={layer?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
-      />
-      <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.entityName}>
-        <Highlighter
-          autoEscape
-          highlightClassName="highlight"
-          searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-          textToHighlight={layer?.entityName ?? ''}
+    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} data-cy="regulatory-result-zone">
+      <StyledTransparentButton onClick={toggleZoneMetadata}>
+        <LayerLegend
+          layerType={MonitorEnvLayers.REGULATORY_ENV}
+          legendKey={layer?.entityName ?? 'aucun'}
+          type={layer?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
         />
-        {!layer?.entityName && 'AUCUN NOM'}
-      </LayerSelector.Name>
+        <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.entityName}>
+          <Highlighter
+            autoEscape
+            highlightClassName="highlight"
+            searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
+            textToHighlight={layer?.entityName ?? ''}
+          />
+          {!layer?.entityName && 'AUCUN NOM'}
+        </LayerSelector.Name>
+      </StyledTransparentButton>
       <LayerSelector.IconGroup>
         {isLinkingRegulatoryToVigilanceArea ? (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Ajouter la zone réglementaire à la zone de vigilance"
             data-cy="regulatory-zone-add"
             disabled={regulatoryAreasLinkedToVigilanceAreaForm.includes(layerId)}
             Icon={Icon.Plus}
             onClick={addRegulatoryToVigilanceArea}
+            title="Ajouter la zone réglementaire à la zone de vigilance"
           />
         ) : (
           <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Sélectionner la zone"
             color={isZoneSelected ? THEME.color.blueGray : THEME.color.gunMetal}
             data-cy="regulatory-zone-check"
             Icon={isZoneSelected ? Icon.PinFilled : Icon.Pin}
             onClick={handleSelectZone}
+            title="Sélectionner la zone"
           />
         )}
       </LayerSelector.IconGroup>

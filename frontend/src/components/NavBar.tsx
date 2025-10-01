@@ -1,6 +1,6 @@
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon } from '@mtes-mct/monitor-ui'
-import React, { useRef, type ReactNode } from 'react'
+import React, { type ReactNode, useRef } from 'react'
 import { Nav, Navbar as RsuiteNavBar } from 'rsuite'
 import styled from 'styled-components'
 
@@ -147,4 +147,10 @@ const StyledNavMenu = styled(Nav.Menu)`
     width: auto !important;
     height: 100% !important;
   }
+`
+
+export const TabTitle = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `

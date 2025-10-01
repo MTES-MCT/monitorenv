@@ -1,7 +1,8 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { InlineTransparentButton } from '@components/style'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { IconButton, Accent, Size, Icon, THEME, WSG84_PROJECTION, OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Size, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import styled from 'styled-components'
@@ -73,20 +74,17 @@ export function MyVigilanceAreaLayerZone({
 
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown} $withBorderBottom>
-      <LayerLegend
-        isDisabled={layer?.isArchived}
-        layerType={MonitorEnvLayers.VIGILANCE_AREA}
-        legendKey={layer?.comments}
-        type={layer?.name ?? 'aucun nom'}
-      />
-      <LayerSelector.Name
-        data-cy={`vigilance-area-zone-${layer?.name}`}
-        onClick={zoomToLayerExtent}
-        title={layer?.name}
-      >
-        {layer?.name}
-      </LayerSelector.Name>
-
+      <InlineTransparentButton onClick={zoomToLayerExtent}>
+        <LayerLegend
+          isDisabled={layer?.isArchived}
+          layerType={MonitorEnvLayers.VIGILANCE_AREA}
+          legendKey={layer?.comments}
+          type={layer?.name ?? 'aucun nom'}
+        />
+        <LayerSelector.Name data-cy={`vigilance-area-zone-${layer?.name}`} title={layer?.name}>
+          {layer?.name}
+        </LayerSelector.Name>
+      </InlineTransparentButton>
       <LayerSelector.IconGroup>
         <StyledSummaryButton
           $withMargin={pinnedVigilanceArea}

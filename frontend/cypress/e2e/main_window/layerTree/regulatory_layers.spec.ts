@@ -22,8 +22,8 @@ context('LayerTree > Regulatory Layers', () => {
     cy.getDataCy('regulatory-result-list-button').contains('2 résultats').click()
 
     cy.log("zoom on the regulation's zone and show metadata")
-    cy.getDataCy('result-group').contains('ZMEL Cale Querlen').click()
-    cy.getDataCy('regulatory-result-zone').contains('Zone au sud de la cale').click()
+    cy.clickButton('ZMEL Cale Querlen')
+    cy.clickButton('Zone au sud de la cale')
     cy.getDataCy('regulatory-metadata-header').contains('ZMEL Cale Querlen').click()
     cy.wait(1000) // let OL do the rendering
 
@@ -42,6 +42,7 @@ context('LayerTree > Regulatory Layers', () => {
     cy.clickButton('Effacer les résultats de la recherche')
     cy.wait(250)
 
+    cy.clickButton('Mes zones réglementaires')
     cy.clickButton('Cacher la/les zone(s)')
     cy.wait(250)
     cy.getFeaturesFromLayer(Layers.REGULATORY_ENV.code, PAGE_CENTER_PIXELS).should(features => {
@@ -69,7 +70,7 @@ context('LayerTree > Regulatory Layers', () => {
     cy.clickButton('Supprimer la zone de ma sélection')
     cy.wait(250)
 
-    cy.getDataCy('my-regulatory-layers-list').contains('Aucune zone sélectionnée')
+    cy.contains('Aucune zone sélectionnée').should('be.visible')
   })
 
   it('Result list should be displayed by default but not checked and total should be visible', () => {
@@ -77,9 +78,7 @@ context('LayerTree > Regulatory Layers', () => {
 
     cy.get('#isRegulatorySearchResultsVisible').should('not.be.checked')
     cy.getDataCy('regulatory-result-list-button').click()
-    // we have 13 results but 9 groups of regulatory layers areas
-    // because result list have a separator so we need to multiply the results by 2
-    cy.getDataCy('regulatory-result-list').children().should('have.length', 18)
+    cy.getDataCy('regulatory-result-list').children().should('have.length', 9)
     cy.get('#isRegulatorySearchResultsVisible').should('be.checked')
   })
 })

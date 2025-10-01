@@ -82,7 +82,8 @@ describe('Edit Vigilance Area', () => {
       // add regulatory area to "Mes zones réglementaires"
       cy.clickButton('Ajouter la zone à Mes zones réglementaires')
       // check if the regulatory area is added
-      cy.getDataCy('regulatory-layer-topic').contains('Interdiction VNM Molene').click({ force: true })
+      cy.clickButton('Mes zones réglementaires')
+      cy.clickButton('Interdiction VNM Molene')
       cy.getDataCy('my-zone-Article 1').should('exist')
 
       // Reset data
@@ -131,7 +132,8 @@ describe('Edit Vigilance Area', () => {
       // add AMP to "Mes AMP"
       cy.clickButton('Ajouter la zone à Mes AMP').first()
       // check if the AMP is added
-      cy.getDataCy('amp-layer-topic').contains("dunes, forêt et marais d'Olonne").click({ force: true })
+      cy.clickButton('Mes AMP')
+      cy.clickButton("dunes, forêt et marais d'Olonne")
       cy.getDataCy('my-zone-Natura 2000').should('exist')
 
       // Reset data

@@ -22,6 +22,7 @@ type ZonePickerProps = {
   listener: InteractionListener
   name: string
 }
+
 export function ZonePicker({
   addLabel,
   deleteZone,
@@ -63,10 +64,10 @@ export function ZonePicker({
 
       <Button
         accent={meta.error ? Accent.ERROR : Accent.SECONDARY}
-        aria-label={addLabel}
         Icon={Icon.Plus}
         isFullWidth
         onClick={handleAddZone}
+        title={addLabel}
       >
         {addLabel}
       </Button>
@@ -80,13 +81,19 @@ export function ZonePicker({
             />
 
             <>
-              <IconButton accent={Accent.SECONDARY} disabled={isEditingZone} Icon={Icon.Edit} onClick={handleAddZone} />
               <IconButton
                 accent={Accent.SECONDARY}
-                aria-label="Supprimer cette zone"
+                disabled={isEditingZone}
+                Icon={Icon.Edit}
+                onClick={handleAddZone}
+                title="Modifier cette zone"
+              />
+              <IconButton
+                accent={Accent.SECONDARY}
                 disabled={isEditingZone}
                 Icon={Icon.Delete}
                 onClick={() => deleteZone(index)}
+                title="Supprimer cette zone"
               />
             </>
           </Row>
@@ -95,6 +102,7 @@ export function ZonePicker({
     </Field>
   )
 }
+
 const Field = styled.div`
   align-items: flex-start;
   display: flex;

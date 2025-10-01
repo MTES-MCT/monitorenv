@@ -6,7 +6,6 @@ type DeleteModalProps = {
   isAbsolute?: boolean
   onCancel: () => void
   onConfirm: () => void
-  open: boolean
   subTitle: string
   title: string
 }
@@ -17,14 +16,9 @@ export function DeleteModal({
   isAbsolute = true,
   onCancel,
   onConfirm,
-  open,
   subTitle,
   title
 }: DeleteModalProps) {
-  if (!open) {
-    return null
-  }
-
   return (
     <Dialog isAbsolute={isAbsolute}>
       <Dialog.Title>{title}</Dialog.Title>
