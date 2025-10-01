@@ -44,10 +44,12 @@ export function ReportingCard({ action }: { action: ReportingForTimeline }) {
     return ControlStatusEnum.CONTROL_TO_BE_DONE
   }, [action.attachedEnvActionId, values?.envActions])
 
+  const canAddAControl = !action.attachedEnvActionId || controlStatus === ControlStatusEnum.CONTROL_TO_BE_DONE
+
   return (
     <>
       <Icon.Report color={THEME.color.charcoal} size={20} />
-      <SummaryContent>
+      <SummaryContent style={canAddAControl ? { marginBottom: '34px' } : {}}>
         <SummaryContentFirstPart>
           <span>{`Signalement ${getFormattedReportingId(action.reportingId)}`}</span>
           <Accented>{targetText}</Accented>

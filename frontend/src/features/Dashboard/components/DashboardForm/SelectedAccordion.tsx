@@ -81,10 +81,6 @@ const TitleButton = styled(TransparentButton)`
   font-size: 13px;
   font-weight: 500;
   text-align: start;
-  background: transparent;
-  &:hover {
-    background: transparent;
-  }
 `
 
 const AccordionContent = styled.div<{ $isExpanded: boolean }>`

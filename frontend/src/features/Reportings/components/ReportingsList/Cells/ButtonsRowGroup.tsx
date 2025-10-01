@@ -115,16 +115,17 @@ export function ButtonsGroupRow({ id }) {
           </StyledDropdown>
         </li>
       </ButtonsGroup>
-      <DeleteModal
-        cancelButtonText="Annuler"
-        context="reportings-table"
-        isAbsolute={false}
-        onCancel={cancelDeleteReporting}
-        onConfirm={confirmDeleteReporting}
-        open={isDeleteModalOpen}
-        subTitle="Êtes-vous sûr de vouloir supprimer le signalement&nbsp;?"
-        title="Supprimer le signalement&nbsp;?"
-      />
+      {isDeleteModalOpen && (
+        <DeleteModal
+          cancelButtonText="Annuler"
+          context="reportings-table"
+          isAbsolute={false}
+          onCancel={cancelDeleteReporting}
+          onConfirm={confirmDeleteReporting}
+          subTitle="Êtes-vous sûr de vouloir supprimer le signalement&nbsp;?"
+          title="Supprimer le signalement&nbsp;?"
+        />
+      )}
       <ArchiveModal
         context="reportings-table"
         isAbsolute={false}
@@ -150,6 +151,7 @@ const ButtonsGroup = styled.ul`
         padding-left: 0px !important;
       }
     }
+
     > button {
       padding: 0px;
     }
