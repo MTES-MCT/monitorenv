@@ -17,7 +17,7 @@ export function ChevronIconButton({ $isOpen, onClick }: ChevronProps) {
   )
 }
 
-export const StyledChevronButton = styled(IconButton)<ChevronProps>`
+export const StyledChevronButton = styled(IconButton)<{ $isOpen: boolean }>`
   width: 16px;
   height: 16px;
   margin-top: 3px;
@@ -33,7 +33,7 @@ export const StyledChevronButton = styled(IconButton)<ChevronProps>`
   }
 `
 
-export const StyledChevronIcon = styled(Icon.Chevron)<ChevronProps>`
+export const StyledChevronIcon = styled(Icon.Chevron)<{ $isOpen: boolean }>`
   width: 16px;
   height: 16px;
   transform: ${props => (!props.$isOpen ? 'rotate(0deg)' : 'rotate(-180deg)')};

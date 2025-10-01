@@ -347,16 +347,18 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         onConfirm={confirmCloseReporting}
         open={isConfirmCancelDialogVisible}
       />
-      <DeleteModal
-        key={`delete-modal-${selectedReporting.id}`}
-        context="reporting"
-        isAbsolute={false}
-        onCancel={cancelDeleteReporting}
-        onConfirm={confirmDeleteReporting}
-        open={isDeleteModalOpen}
-        subTitle="Êtes-vous sûr de vouloir supprimer le signalement&nbsp;?"
-        title="Supprimer le signalement&nbsp;?"
-      />
+      {isDeleteModalOpen && (
+        <DeleteModal
+          key={`delete-modal-${selectedReporting.id}`}
+          context="reporting"
+          isAbsolute={false}
+          onCancel={cancelDeleteReporting}
+          onConfirm={confirmDeleteReporting}
+          subTitle="Êtes-vous sûr de vouloir supprimer le signalement&nbsp;?"
+          title="Supprimer le signalement&nbsp;?"
+        />
+      )}
+
       <Header
         isExpanded={
           reportingFormVisibility.context === reportingContext &&

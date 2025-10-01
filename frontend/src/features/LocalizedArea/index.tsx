@@ -67,7 +67,7 @@ export function LocalizedAreas() {
         </InlineTransparentButton>
         <ChevronIconButton $isOpen={localizedAreasIsOpen} onClick={onSectionTitleClicked} />
       </LayerSelector.Wrapper>
-      {groupedLocalizedAreas && (totalLocalizedAreas > 0 || hasTransition) ? (
+      {groupedLocalizedAreas && totalLocalizedAreas > 0 && (localizedAreasIsOpen || hasTransition) ? (
         <ZonesList $showZones={hasTransition && localizedAreasIsOpen} $zonesLength={totalLocalizedAreas}>
           {Object.entries(groupedLocalizedAreas).map(([groupName, localizedAreasByGroup]) => (
             <ListItem key={groupName}>

@@ -166,7 +166,6 @@ export function Form() {
             isAbsolute={false}
             onCancel={cancelDeleteModal}
             onConfirm={onConfirmDeleteModal}
-            open={isDeleteModalOpen}
             subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
             title="Supprimer la zone de vigilance&nbsp;?"
           />,

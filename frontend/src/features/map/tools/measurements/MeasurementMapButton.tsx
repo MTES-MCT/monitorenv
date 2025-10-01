@@ -1,4 +1,5 @@
 import { dashboardActions } from '@features/Dashboard/slice'
+import { CustomCircleRange } from '@features/map/tools/measurements/CustomCircleRange'
 import { useClickOutside } from '@hooks/useClickOutside'
 import { useMountTransition } from '@hooks/useMountTransition'
 import { Icon, IconButton } from '@mtes-mct/monitor-ui'
@@ -6,7 +7,6 @@ import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
-import { CustomCircleRange } from './CustomCircleRange'
 import { MapToolType, MeasurementType } from '../../../../domain/entities/map/constants'
 import { globalActions } from '../../../../domain/shared_slices/Global'
 import { setMeasurementTypeToAdd } from '../../../../domain/shared_slices/Measurement'
@@ -78,41 +78,42 @@ export function MeasurementMapButton() {
   }, [dispatch, measurementTypeToAdd])
 
   return (
-    <Wrapper>
-      <MapToolButton
-        dataCy="measurement"
-        icon={measurementIcon}
-        isHidden={!displayMeasurement}
-        isOpen={isOpen || !!measurementTypeToAdd}
-        onClick={openOrCloseMeasurementMenu}
-        title="Mesurer une distance"
-      />
+    <>
+      <Wrapper>
+        <MapToolButton
+          dataCy="measurement"
+          icon={measurementIcon}
+          isHidden={!displayMeasurement}
+          isOpen={isOpen || !!measurementTypeToAdd}
+          onClick={openOrCloseMeasurementMenu}
+          title="Mesurer une distance"
+        />
 
-      {(isOpen || hasTransition) && (
-        <MeasurementOptions
-          ref={wrapperRef}
-          $healthcheckTextWarning={!!healthcheckTextWarning}
-          $isOpen={isOpen && hasTransition}
-        >
-          <MeasurementItem
-            className="_active"
-            data-cy="measurement-multiline"
-            Icon={() => Icon.MeasureBrokenLine({ size: 28 })}
-            onClick={() => makeMeasurement(MeasurementType.MULTILINE)}
-            title="Mesure d'une distance avec lignes brisées"
-          />
-          <MeasurementItem
-            className="_active"
-            data-cy="measurement-circle-range"
-            Icon={() => Icon.MeasureCircle({ size: 28 })}
-            onClick={() => makeMeasurement(MeasurementType.CIRCLE_RANGE)}
-            title="Rayon d'action"
-          />
-        </MeasurementOptions>
-      )}
-
-      <CustomCircleRange />
-    </Wrapper>
+        {(isOpen || hasTransition) && (
+          <MeasurementOptions
+            ref={wrapperRef}
+            $healthcheckTextWarning={!!healthcheckTextWarning}
+            $isOpen={isOpen && hasTransition}
+          >
+            <MeasurementItem
+              className="_active"
+              data-cy="measurement-multiline"
+              Icon={() => Icon.MeasureBrokenLine({ size: 28 })}
+              onClick={() => makeMeasurement(MeasurementType.MULTILINE)}
+              title="Mesure d'une distance avec lignes brisées"
+            />
+            <MeasurementItem
+              className="_active"
+              data-cy="measurement-circle-range"
+              Icon={() => Icon.MeasureCircle({ size: 28 })}
+              onClick={() => makeMeasurement(MeasurementType.CIRCLE_RANGE)}
+              title="Rayon d'action"
+            />
+          </MeasurementOptions>
+        )}
+        <CustomCircleRange />
+      </Wrapper>
+    </>
   )
 }
 
