@@ -16,12 +16,12 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-name-input').type('Phénomène')
       cy.getDataCy('interest-point-observations-input').type('Est dans la bergerie')
 
-      cy.getDataCy('interest-point-name').first().contains('Phénomène')
-      cy.getDataCy('interest-point-observations').first().contains('Est dans la bergerie')
-      cy.getDataCy('interest-point-coordinates').first().contains('47° 4')
-      cy.getDataCy('interest-point-coordinates').first().contains('N')
-      cy.getDataCy('interest-point-coordinates').first().contains('007° 5')
-      cy.getDataCy('interest-point-coordinates').first().contains('W')
+      cy.getDataCy('interest-point-name').contains('Phénomène')
+      cy.getDataCy('interest-point-observations').contains('Est dans la bergerie')
+      cy.getDataCy('interest-point-coordinates').contains('47° 4')
+      cy.getDataCy('interest-point-coordinates').contains('N')
+      cy.getDataCy('interest-point-coordinates').contains('007° 5')
+      cy.getDataCy('interest-point-coordinates').contains('W')
 
       cy.getDataCy('interest-point-save').click()
     })
@@ -31,12 +31,12 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point').click()
       cy.fill('Unités des coordonnées', 'DD')
       // Then
-      cy.getDataCy('coordinates-dd-input-lat').eq(1).type('47.5525')
-      cy.getDataCy('coordinates-dd-input-lon').eq(1).type('-7.6565', { delay: 500 })
+      cy.getDataCy('coordinates-dd-input-lat').type('47.5525')
+      cy.getDataCy('coordinates-dd-input-lon').type('-7.6565', { delay: 500 })
 
-      cy.getDataCy('interest-point-name').first().contains('Aucun Libellé')
-      cy.getDataCy('interest-point-observations').first().contains('Aucune observation')
-      cy.getDataCy('interest-point-coordinates').first().contains('47.5525° -007.6565°')
+      cy.getDataCy('interest-point-name').contains('Aucun Libellé')
+      cy.getDataCy('interest-point-observations').contains('Aucune observation')
+      cy.getDataCy('interest-point-coordinates').contains('47.5525° -007.6565°')
 
       cy.getDataCy('interest-point-save').click()
       // Then
@@ -51,7 +51,7 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-save').click()
 
       cy.getDataCy('interest-point-edit').click({ force: true })
-      cy.getDataCy('dmd-coordinates-input').eq(1).type('{backspace}{backspace}{backspace}{backspace}{backspace}500W')
+      cy.getDataCy('dmd-coordinates-input').type('{backspace}{backspace}{backspace}{backspace}{backspace}500W')
 
       cy.getDataCy('interest-point-coordinates').contains('47° 42.111′ N 007° 34.500′ W')
     })
@@ -76,13 +76,13 @@ context('InterestPoint', () => {
       // Force because the interest point is not in the DOM anymore
       cy.getDataCy('interest-point-edit').click({ force: true })
       cy.getDataCy('dms-coordinates-input').should('have.value', '47° 42′ 07″ N 007° 54′ 51″ E')
-      cy.get('.rs-radio').first().should('have.class', 'rs-radio-checked')
+      cy.get('.rs-radio').should('have.class', 'rs-radio-checked')
       cy.getDataCy('interest-point-save').click()
 
-      cy.getDataCy('interest-point-coordinates').first().contains('47° 42′')
-      cy.getDataCy('interest-point-coordinates').first().contains('N')
-      cy.getDataCy('interest-point-coordinates').first().contains('007° 54′')
-      cy.getDataCy('interest-point-coordinates').first().contains('E')
+      cy.getDataCy('interest-point-coordinates').contains('47° 42′')
+      cy.getDataCy('interest-point-coordinates').contains('N')
+      cy.getDataCy('interest-point-coordinates').contains('007° 54′')
+      cy.getDataCy('interest-point-coordinates').contains('E')
     })
 
     it('should be deleted when it is in edit mode', () => {
@@ -233,7 +233,7 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-name-input').type('Phénomène')
       cy.getDataCy('interest-point-observations-input').type('Est dans la bergerie')
       cy.getDataCy('interest-point-save').click()
-      cy.getDataCy('interest-point-observations').eq(0).contains('Est dans la bergerie')
+      cy.getDataCy('interest-point-observations').contains('Est dans la bergerie')
       cy.getDataCy('interest-point-observations').should('have.length', 1)
 
       cy.getDataCy('interest-point').click()
