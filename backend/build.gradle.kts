@@ -5,15 +5,15 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "3.5.6"
+    id("org.springframework.boot") version "3.5.5"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
-    kotlin("jvm") version "2.2.20"
-    kotlin("plugin.spring") version "2.2.20"
-    kotlin("plugin.allopen") version "2.2.20"
-    kotlin("plugin.noarg") version "2.2.20"
-    kotlin("plugin.jpa") version "2.2.20"
-    kotlin("plugin.serialization") version "2.2.20"
+    id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
+    kotlin("jvm") version "2.2.10"
+    kotlin("plugin.spring") version "2.2.10"
+    kotlin("plugin.allopen") version "2.2.10"
+    kotlin("plugin.noarg") version "2.2.10"
+    kotlin("plugin.jpa") version "2.2.10"
+    kotlin("plugin.serialization") version "2.2.10"
 }
 
 repositories {
@@ -54,13 +54,13 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.3.0"
+val ktorVersion = "3.2.3"
 val testcontainersVersion = "1.21.3"
-val sentryVersion = "8.23.0"
-val flywayVersion = "11.13.2"
+val sentryVersion = "8.20.0"
+val flywayVersion = "11.11.2"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.6"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.5"))
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -80,7 +80,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.hibernate.orm:hibernate-spatial:6.6.13.Final")
     implementation("org.hibernate.validator:hibernate-validator:9.0.1.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.11.0")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.10.3")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -105,7 +105,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.2")
 
     // API Documentation
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.12")
 
     // JodConverter
     implementation("org.jodconverter:jodconverter-local-lo:4.4.11")
@@ -126,7 +126,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.5")
-    testImplementation("org.assertj:assertj-core:3.27.6")
+    testImplementation("org.assertj:assertj-core:3.27.4")
     testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
@@ -134,7 +134,7 @@ dependencies {
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:5.1.0")
     testImplementation("net.ttddyy:datasource-proxy:1.11.0")
-    testImplementation("io.mockk:mockk:1.14.6")
+    testImplementation("io.mockk:mockk:1.14.5")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
