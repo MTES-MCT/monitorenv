@@ -1,7 +1,9 @@
+import { EnvBannerStack } from '@components/BannerStack/EnvBannerStack'
 import { Menu } from '@components/Menu'
 import { MapFocusForDashboardBanner } from '@features/Dashboard/components/MapFocusForDashboardBanner'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import { BannerStack } from '@features/MainWindow/components/BannerStack'
+import { mainWindowActions } from '@features/MainWindow/slice'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { AttachMissionToReportingModal } from '@features/Reportings/components/ReportingForm/AttachMission/AttachMissionToReportingModal'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
@@ -9,7 +11,6 @@ import { useListenReportingEventUpdates } from '@features/Reportings/components/
 import { reportingActions } from '@features/Reportings/slice'
 import { SideWindowStatus } from '@features/SideWindow/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { shouldDisplayEnvBanner } from '@utils/shouldDisplayEnvBanner'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router'
@@ -34,7 +35,6 @@ const environment = import.meta.env.FRONTEND_SENTRY_ENV as Environment
 
 export function HomePage() {
   const dispatch = useAppDispatch()
-  const bannerStack = useAppSelector(state => state.mainWindow.bannerStack)
 
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const sideWindowStatus = useAppSelector(state => state.sideWindow.status)
@@ -96,17 +96,17 @@ export function HomePage() {
   }, [dispatch, reportingEvent])
 
   useEffect(() => {
+    let bannerId: number
     if (environment === 'integration' || environment === 'preprod') {
-      const bannerProps = shouldDisplayEnvBanner(bannerStack)
-
-      if (!bannerProps) {
-        return
-      }
-      dispatch(addMainWindowBanner(bannerProps))
+      bannerId = dispatch(addMainWindowBanner(EnvBannerStack.Props))
     }
-    // just want to run this once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+
+    return () => {
+      if (bannerId) {
+        dispatch(mainWindowActions.removeBanner(bannerId))
+      }
+    }
+  }, [dispatch])
 
   useSearchLayers()
 
