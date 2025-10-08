@@ -1,8 +1,8 @@
+import { EnvBannerStack } from '@components/BannerStack/EnvBannerStack'
 import { BannerStack } from '@features/BackOffice/components/BannerStack'
+import { backOfficeActions } from '@features/BackOffice/slice'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
-import { shouldDisplayEnvBanner } from '@utils/shouldDisplayEnvBanner'
 import { useEffect } from 'react'
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
@@ -22,20 +22,19 @@ const environment = import.meta.env.FRONTEND_SENTRY_ENV as Environment
 
 export function BackOfficePage() {
   const dispatch = useAppDispatch()
-  const bannerStack = useAppSelector(state => state.backOffice.bannerStack)
 
   useEffect(() => {
+    let bannerId: number
     if (environment === 'integration' || environment === 'preprod') {
-      const bannerProps = shouldDisplayEnvBanner(bannerStack)
-
-      if (!bannerProps) {
-        return
-      }
-      dispatch(addBackOfficeBanner(bannerProps))
+      bannerId = dispatch(addBackOfficeBanner(EnvBannerStack.Props))
     }
-    // just want to run this once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+
+    return () => {
+      if (bannerId) {
+        dispatch(backOfficeActions.removeBanner(bannerId))
+      }
+    }
+  }, [dispatch])
 
   return (
     <Wrapper>

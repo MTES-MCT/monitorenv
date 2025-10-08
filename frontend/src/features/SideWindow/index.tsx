@@ -1,3 +1,4 @@
+import { EnvBannerStack } from '@components/BannerStack/EnvBannerStack'
 import { DashboardForms } from '@features/Dashboard/components/DashboardForm'
 import { DashboardsList } from '@features/Dashboard/components/DashboardsList'
 import { DashboardsNavBar } from '@features/Dashboard/components/DashboardsNavBar'
@@ -12,7 +13,7 @@ import { reportingActions } from '@features/Reportings/slice'
 import { VigilancesAreasList } from '@features/VigilanceArea/components/VigilanceAreasList'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Icon, NewWindowContext, SideMenu, type NewWindowContextValue } from '@mtes-mct/monitor-ui'
+import { Icon, NewWindowContext, type NewWindowContextValue, SideMenu } from '@mtes-mct/monitor-ui'
 import {
   isDashboardPage,
   isDashboardsPage,
@@ -20,9 +21,8 @@ import {
   isMissionPage,
   isReportingsPage
 } from '@utils/routes'
-import { shouldDisplayEnvBanner } from '@utils/shouldDisplayEnvBanner'
 import { omit } from 'lodash'
-import { useEffect, useMemo, useRef, useState, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { generatePath } from 'react-router'
 import { StyleSheetManager } from 'styled-components'
 
@@ -47,7 +47,6 @@ export function SideWindow() {
   const dispatch = useAppDispatch()
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const currentPath = useAppSelector(state => state.sideWindow.currentPath)
-  const bannerStack = useAppSelector(state => state.sideWindow.bannerStack)
 
   const [isMounted, setIsMounted] = useState(false)
   const missionEvent = useListenMissionEventUpdates()
@@ -95,16 +94,16 @@ export function SideWindow() {
       dispatch(dashboardActions.setMapFocus(false))
       dispatch(restorePreviousDisplayedItems())
     }
+    let bannerId: number
     if (environment === 'integration' || environment === 'preprod') {
-      const bannerProps = shouldDisplayEnvBanner(bannerStack)
-
-      if (!bannerProps) {
-        return
-      }
-      dispatch(addSideWindowBanner(bannerProps))
+      bannerId = dispatch(addSideWindowBanner(EnvBannerStack.Props))
     }
-    // we want to trigger this effect only when the currentPath change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    return () => {
+      if (bannerId) {
+        dispatch(sideWindowActions.removeBanner(bannerId))
+      }
+    }
   }, [currentPath, dispatch])
 
   const navigate = (nextPath: string) => {
