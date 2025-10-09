@@ -1,217 +1,105 @@
-import tempfile
 from pathlib import Path
-
-from src.pipeline.flows.vessel_repository import delete_file, parse_to_gdf
 import pandas as pd
-from pandas.testing import assert_frame_equal
-import xml.etree.ElementTree as ET
+from src.read_query import read_query
+
+from src.pipeline.flows.vessel_repository import delete_file, parse_xml, get_xsd_schema, load_vessels_batch
+
+from config import (
+    TEST_DATA_LOCATION,
+)
 
 
-def test_delete_file():
-    tmp = Path(tempfile.mkstemp()[1])
-    assert tmp.exists()
+def test_delete_file(tmp_path):
+    tmp_file = tmp_path / "dummy.txt"
+    tmp_file.write_text("data")
 
-    delete_file.run(str(tmp))
+    assert tmp_file.exists()
 
-    assert not tmp.exists()
+    delete_file.run(str(tmp_file))
+
+    assert not tmp_file.exists()
+
 
 def test_parse_to_df():
-    xml_str = """
-    <?xml version="1.0" encoding="UTF-8"?>
-    <racine>
-      <Header>
-        <Version>001</Version>
-        <LARefId>001</LARefId>
-        <SentAt>2025-09-22T16:00:00</SentAt>
-        <NumberOfLines>999</NumberOfLines>
-      </Header>
-      <Body>
-        <ShipDescription>
-          <ShipId>0000000001</ShipId>
-          <Status>A</Status>
-          <Category>PRO</Category>
-          <IsBanned>No</IsBanned>
-        </ShipDescription>
-        <Identification>
-          <DateOfInformation>2025-09-22T16:00:00</DateOfInformation>
-          <IMONumber>9876543</IMONumber>
-          <MMSINumber>987654321</MMSINumber>
-          <CallSign>+33</CallSign>
-          <ShipName>Test</ShipName>
-          <VisualIdentification>MONITOR</VisualIdentification>
-          <Flag>FRA</Flag>
-          <PortOfRegistry>ETEL</PortOfRegistry>
-          <Immatriculation>0123456789</Immatriculation>
-          <DateImmat>0123456789</DateImmat>  
-        </Identification>
-        <FrenchRegistry>
-          <Francisation>0123456789</Francisation>
-          <DateFrancisation>2025-09-22</DateFrancisation>
-        </FrenchRegistry>
-        <Characteristics>
-          <DateOfInformation>2025-09-22T16:00:00</DateOfInformation>
-          <ProfessionalType>Type de véhicule pro</ProfessionalType>
-          <LeisureType>Type de véhicule de plaisance</LeisureType>
-          <CommercialName>MONITOR</CommercialName>
-          <YearOfBuild>2025</YearOfBuild>
-          <UMSGrossTonnage>1.23</UMSGrossTonnage>
-          <TonsGrossTonnage>4.56</TonsGrossTonnage>
-          <NetTonnage>7.89</NetTonnage>
-          <VolumeOfHold>100000</VolumeOfHold>
-          <Deadweight>200000</Deadweight>
-          <Length>50000.23</Length>
-          <LengthBetweenPerpendiculars>0123456789</LengthBetweenPerpendiculars>
-          <Breadth>0123456789</Breadth>
-          <MaximumDraught>0123456789</MaximumDraught>
-          <HullType>0123456789</HullType>
-          <HullColor>0123456789</HullColor>
-          <PropulsivePower>0123456789</PropulsivePower>
-          <MaxCrewNumber>0123456789</MaxCrewNumber>
-          <MaxPassagersNumber>0123456789</MaxPassagersNumber>
-        </Characteristics>
-        <Communication>
-          <DateOfInformation>2025-09-22T16:00:00</DateOfInformation>
-          <Email>0123456789</Email>
-          <VHF>0123456789</VHF>
-          <MF>0123456789</MF>
-          <HF>0123456789</HF>
-        </Communication>
-        <SatellitePhone>
-          <PhoneNumber>0123456789</PhoneNumber>
-          <PhoneOwner>0123456789</PhoneOwner>
-        </SatellitePhone>
-        <ShipOwner>
-          <DateOfInformation>2025-09-22T16:00:00</DateOfInformation>
-          <NameOfCompany>0123456789</NameOfCompany>
-          <PostalAddress>0123456789</PostalAddress>
-          <Phone>0123456789</Phone>
-          <Email>0123456789</Email>
-        </ShipOwner>
-        <ShipOwnerFAL>
-          <DateOfInformation>2025-09-22T16:00:00</DateOfInformation>
-          <NameOfCompany>0123456789</NameOfCompany>
-          <IMOCompanyNumber>0123456789</IMOCompanyNumber>
-          <Phone>0123456789</Phone>
-          <Email>0123456789</Email>
-        </ShipOwnerFAL>
-        <CSO>
-          <DateOfInformation>2025-09-22T16:00:00</DateOfInformation>
-          <Phone>0123456789</Phone>
-          <Email>0123456789</Email>
-        </CSO>
-        <Owner>
-          <DateOfInformation>2025-09-22T16:00:00</DateOfInformation>
-          <SourceOfInformation>0123456789</SourceOfInformation>
-          <Phone>0123456789</Phone>
-          <Email>0123456789</Email>
-          <Nationality>0123456789</Nationality>
-          <CompanyName>0123456789</CompanyName>
-          <BusinessSegment>0123456789</BusinessSegment>
-          <LegalStatus>0123456789</LegalStatus>
-          <StartDate>0123456789</StartDate>
-        </Owner>
-        <LicenceHolder>
-          <DateOfInformation>2025-09-22T16:00:00</DateOfInformation>
-          <HomePhone>0123456789</HomePhone>
-          <WorkPhone>0323456789</WorkPhone>
-          <MobilePhone>0623456789</MobilePhone>
-          <Email>licenceHolder@gmail.com</Email>
-        </LicenceHolder>
-      </Body>
-    </racine>
-    """
-    root = ET.fromstring(xml_str)
+    xml_path = TEST_DATA_LOCATION /  "vessel_xml" / "vessel_repository.xml"
+    xsd_path = TEST_DATA_LOCATION /  "vessel_xml" / "vessel_repository.xsd"
+    schema = get_xsd_schema.run(xsd_path)
 
-    df = parse_to_gdf.run(root)
+    df_batches = list(parse_xml.run(xml_path, schema, batch_size=1))
 
-    expected = {
-        # Header
-        "header_Version": "001",
-        "header_LARefId": "001",
-        "header_SentAt": "2025-09-22T16:00:00",
-        "header_NumberOfLines": "999",
-        # ShipDescription
-        "shipDescription_ShipId": "0000000001",
-        "shipDescription_Status": "A",
-        "shipDescription_Category": "PRO",
-        "shipDescription_IsBanned": "No",
-        # Identification
-        "identification_DateOfInformation": "2025-09-22T16:00:00",
-        "identification_IMONumber": "9876543",
-        "identification_MMSINumber": "987654321",
-        "identification_CallSign": "+33",
-        "identification_ShipName": "Test",
-        "identification_VisualIdentification": "MONITOR",
-        "identification_Flag": "FRA",
-        "identification_PortOfRegistry": "ETEL",
-        "identification_Immatriculation": "0123456789",
-        "identification_DateImmat": "0123456789",
-        # FrenchRegistry
-        "frenchRegistry_Francisation": "0123456789",
-        "frenchRegistry_DateFrancisation": "2025-09-22",
-        # Characteristics
-        "characteristics_DateOfInformation": "2025-09-22T16:00:00",
-        "characteristics_ProfessionalType": "Type de véhicule pro",
-        "characteristics_LeisureType": "Type de véhicule de plaisance",
-        "characteristics_CommercialName": "MONITOR",
-        "characteristics_YearOfBuild": "2025",
-        "characteristics_UMSGrossTonnage": "1.23",
-        "characteristics_TonsGrossTonnage": "4.56",
-        "characteristics_NetTonnage": "7.89",
-        "characteristics_VolumeOfHold": "100000",
-        "characteristics_Deadweight": "200000",
-        "characteristics_Length": "50000.23",
-        "characteristics_LengthBetweenPerpendiculars": "0123456789",
-        "characteristics_Breadth": "0123456789",
-        "characteristics_MaximumDraught": "0123456789",
-        "characteristics_HullType": "0123456789",
-        "characteristics_HullColor": "0123456789",
-        "characteristics_PropulsivePower": "0123456789",
-        "characteristics_MaxCrewNumber": "0123456789",
-        "characteristics_MaxPassagersNumber": "0123456789",
-        # Communication
-        "communication_DateOfInformation": "2025-09-22T16:00:00",
-        "communication_Email": "communication@gmail.com",
-        "communication_VHF": "0123456789",
-        "communication_MF": "0123456789",
-        "communication_HF": "0123456789",
-        # SatellitePhone
-        "satellitePhone_PhoneNumber": "0123456789",
-        "satellitePhone_PhoneOwner": "0123456789",
-        # ShipOwner
-        "shipOwner_DateOfInformation": "2025-09-22T16:00:00",
-        "shipOwner_NameOfCompany": "0123456789",
-        "shipOwner_PostalAddress": "0123456789",
-        "shipOwner_Phone": "0123456789",
-        "shipOwner_Email": "shipOwner@gmail.com",
-        # ShipOwnerFAL
-        "shipOwnerFAL_NameOfCompany": "0123456789",
-        "shipOwnerFAL_IMOCompanyNumber": "0123456789",
-        "shipOwnerFAL_Phone": "0123456789",
-        "shipOwnerFAL_Email": "shipownerFAL@gmail.com",
-        # CSO
-        "cso_DateOfInformation": "2025-09-22T16:00:00",
-        "cso_Phone": "0123456789",
-        "cso_Email": "cso@gmail.com",
-        # Owner
-        "owner_DateOfInformation": "2025-09-22T16:00:00",
-        "owner_SourceOfInformation": "0123456789",
-        "owner_Phone": "0123456789",
-        "owner_Email": "owner@gmail.com",
-        "owner_Nationality": "0123456789",
-        "owner_CompanyName": "0123456789",
-        "owner_BusinessSegment": "0123456789",
-        "owner_LegalStatus": "0123456789",
-        "owner_StartDate": "0123456789",
-        # LicenceHolder
-        "licenceHolder_DateOfInformation": "2025-09-22T16:00:00",
-        "licenceHolder_HomePhone": "0123456789",
-        "licenceHolder_WorkPhone": "0323456789",
-        "licenceHolder_MobilePhone": "0623456789",
-        "licenceHolder_Email": "licenceHolder@gmail.com",
-    }
+    assert len(df_batches) == 2
 
-    expected_df = pd.DataFrame([expected])
+    df1 = df_batches[0]
+    assert df1.iloc[0]["ship_id"] == "1111111"
+    assert df1.iloc[0]["status"] == "A"
+    assert df1.iloc[0]["category"] == "PRO"
+    assert df1.iloc[0]["is_banned"] == "No"
+    assert df1.iloc[0]["imo_number"] == "1234567"
+    assert df1.iloc[0]["mmsi_number"] == "123456789"
+    assert df1.iloc[0]["immatriculation"] == "999999"
+    assert df1.iloc[0]["ship_name"] == "ShipName1"
+    assert df1.iloc[0]["flag"] == "FRA"
+    assert df1.iloc[0]["port_of_registry"] == "CHERBOURG"
+    assert df1.iloc[0]["category"] == "PRO"
+    assert df1.iloc[0]["professional_type"] == "Navire a passagers"
+    assert df1.iloc[0]["commercial_name"] == "COMMERCIAL_NAME"
+    assert df1.iloc[0]["length"] == "32"
+    assert df1.iloc[0]["owner_last_name"] == "NOM 1"
+    assert df1.iloc[0]["owner_first_name"] == "PRENOM 1"
+    assert df1.iloc[0]["owner_date_of_birth"] == "1977-08-19"
+    assert df1.iloc[0]["owner_postal_address"] == "17 AVENUE DESAVENUES 14000 CAEN"
+    assert df1.iloc[0]["owner_phone"] == "0987654321"
+    assert df1.iloc[0]["owner_email"] == "email1@gmail.com"
+    assert df1.iloc[0]["owner_nationality"] == "FRA"
+    assert df1.iloc[0]["owner_company_name"] == "COMPANY 1"
+    assert df1.iloc[0]["owner_business_segment"] == "93.29Z"
+    assert df1.iloc[0]["owner_legal_status"] == "1234"
+    assert df1.iloc[0]["owner_start_date"] == "2019-05-29"
 
-    # check_like=True ignores column order
-    assert_frame_equal(df, expected_df, check_like=True)
+    df2 = df_batches[1]
+    assert df2.iloc[0]["ship_id"] == "2222222"
+    assert df2.iloc[0]["status"] == "A"
+    assert df2.iloc[0]["category"] == "PLA"
+    assert df2.iloc[0]["is_banned"] == "No"
+    assert df2.iloc[0]["imo_number"] == "7654321"
+    assert df2.iloc[0]["mmsi_number"] == "987654321"
+    assert df2.iloc[0]["immatriculation"] == "888888"
+    assert df2.iloc[0]["ship_name"] == "ShipName2"
+    assert df2.iloc[0]["flag"] == "FRA"
+    assert df2.iloc[0]["port_of_registry"] == "DZAOUDZI"
+    assert df2.iloc[0]["length"] == "9.6"
+    assert df2.iloc[0]["owner_last_name"] == "NOM 2"
+    assert df2.iloc[0]["owner_first_name"] == "PRENOM 2"
+    assert df2.iloc[0]["owner_date_of_birth"] == "1977-08-19"
+    assert df2.iloc[0]["owner_postal_address"] == "17 RUE DESRUES 14000 CAEN"
+    assert df2.iloc[0]["owner_phone"] == "0123456789"
+    assert df2.iloc[0]["owner_email"] == "email2@gmail.com"
+    assert df2.iloc[0]["owner_nationality"] == "FRA"
+    assert df2.iloc[0]["owner_company_name"] == "COMPANY 2"
+    assert df2.iloc[0]["owner_business_segment"] == "93.87Z"
+    assert df2.iloc[0]["owner_legal_status"] == "5678"
+    assert df2.iloc[0]["owner_start_date"] == "2019-05-29"
+
+def test_load(create_cacem_tables, reset_test_data):
+    xml_path = TEST_DATA_LOCATION /  "vessel_xml" / "vessel_repository.xml"
+    xsd_path = TEST_DATA_LOCATION /  "vessel_xml" / "vessel_repository.xsd"
+    schema = get_xsd_schema.run(xsd_path)
+
+    df_batches = list(parse_xml.run(xml_path, schema, batch_size=1))
+    df = pd.concat(df_batches, ignore_index=True)
+    load_vessels_batch.run(df)
+
+    imported_vessels = read_query(
+        "monitorenv_remote",
+        # Cast boolean is_banned to Yes / No
+        """SELECT ship_id, status, category, CASE WHEN is_banned IS TRUE THEN 'Yes' ELSE 'No' END as is_banned, imo_number, mmsi_number, ship_name, flag, port_of_registry, immatriculation,
+        professional_type, commercial_name, length::float as length, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
+        owner_phone, owner_email, owner_nationality, owner_company_name, owner_business_segment, owner_legal_status, owner_start_date 
+        FROM vessels"""
+    )
+
+    # Cast length to numeric to compare it
+    df["length"] = df["length"].apply(pd.to_numeric, errors="coerce")
+    imported_vessels["length"] = imported_vessels["length"].apply(pd.to_numeric, errors="coerce")
+
+    pd.testing.assert_frame_equal(df, imported_vessels)
