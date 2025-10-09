@@ -1,0 +1,27 @@
+CREATE TABLE public.vessels
+(
+    ship_id                VARCHAR(50) PRIMARY KEY,
+    status                 VARCHAR(1),
+    category               VARCHAR(3),
+    is_banned              BOOLEAN DEFAULT FALSE,
+    imo_number             VARCHAR(7),
+    mmsi_number            VARCHAR(9),
+    immatriculation        VARCHAR(6),
+    ship_name              VARCHAR(255),
+    flag                   VARCHAR(10),
+    port_of_registry       VARCHAR(255),
+    professional_type      VARCHAR(255),
+    commercial_name        VARCHAR(255),
+    length                 NUMERIC(5, 2),
+    owner_last_name        VARCHAR(255),
+    owner_first_name       VARCHAR(255),
+    owner_date_of_birth    VARCHAR(255),
+    owner_postal_address   VARCHAR(255),
+    owner_phone            VARCHAR(20),
+    owner_email            VARCHAR(100),
+    owner_company_name     VARCHAR(100),
+    owner_nationality      VARCHAR(50),
+    owner_business_segment VARCHAR(50),
+    owner_legal_status     VARCHAR(50),
+    owner_start_date       VARCHAR(255)
+);
