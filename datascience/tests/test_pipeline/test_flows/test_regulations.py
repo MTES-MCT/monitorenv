@@ -8,9 +8,6 @@ from src.pipeline.flows.themes_and_tags import load_new_tags, load_new_themes
 from src.pipeline.generic_tasks import load
 from src.read_query import read_query
 
-import pandas as pd
-import pytest
-
 from tests.test_pipeline.test_flows.test_themes_and_tags import generate_tags_data, generate_themes_data
 
 """ Thèmes """
