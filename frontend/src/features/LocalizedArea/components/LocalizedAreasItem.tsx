@@ -1,5 +1,5 @@
 import { getExtentOfLocalizedAreasGroupByGroupName } from '@api/localizedAreasAPI'
-import { InlineTransparentButton } from '@components/style'
+import { StyledTransparentButton } from '@components/style'
 import { closeMetadataPanel, openLocalizedAreasMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
@@ -59,7 +59,7 @@ export function LocalizedAreasItem({
 
   return (
     <Wrapper>
-      <InlineTransparentButton data-cy="localized-areas-layer-toggle" onClick={toggleLayer}>
+      <StyledTransparentButton data-cy="localized-areas-layer-toggle" onClick={toggleLayer}>
         <NameContainer>
           <LayerLegend
             layerType={MonitorEnvLayers.LOCALIZED_AREAS}
@@ -68,7 +68,7 @@ export function LocalizedAreasItem({
           />
           <LayerName title={firstLocalizedArea.groupName}>{firstLocalizedArea.groupName}</LayerName>
         </NameContainer>
-      </InlineTransparentButton>
+      </StyledTransparentButton>
       <ButtonsContainer>
         {hasAmpIdsOrControlUnitIds && (
           <IconButton

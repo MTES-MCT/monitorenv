@@ -39,7 +39,6 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const areRegulatoryResultsOpen = useAppSelector(state => state.layerSidebar.areRegulatoryResultsOpen)
-
   const isVigilanceAreaSearchResultsVisible = useAppSelector(
     state => state.layerSearch.isVigilanceAreaSearchResultsVisible
   )
@@ -132,28 +131,22 @@ export function ResultList({ searchedText }: ResultListProps) {
     dispatch(layerSidebarActions.toggleVigilanceAreaResults())
   }
 
-  const toggleAMPVisibility = (isChecked: boolean | undefined) => {
-    if (!isChecked) {
-      dispatch(layerSidebarActions.toggleAmpResults(false))
-    }
-    dispatch(closeMetadataPanel())
-    dispatch(setIsAmpSearchResultsVisible(!!isChecked))
-  }
-
   const toggleRegulatoryVisibility = (isChecked: boolean | undefined) => {
-    if (!isChecked) {
-      dispatch(layerSidebarActions.toggleRegulatoryResults(false))
-    }
     dispatch(closeMetadataPanel())
     dispatch(setIsRegulatorySearchResultsVisible(!!isChecked))
+    dispatch(layerSidebarActions.toggleRegulatoryResults(!!isChecked))
+  }
+
+  const toggleAMPVisibility = (isChecked: boolean | undefined) => {
+    dispatch(closeMetadataPanel())
+    dispatch(setIsAmpSearchResultsVisible(!!isChecked))
+    dispatch(layerSidebarActions.toggleAmpResults(!!isChecked))
   }
 
   const toggleVigilanceAreaVisibility = (isChecked: boolean | undefined) => {
-    if (!isChecked) {
-      dispatch(layerSidebarActions.toggleVigilanceAreaResults(false))
-    }
     dispatch(closeMetadataPanel())
     dispatch(setIsVigilanceAreaSearchResultsVisible(!!isChecked))
+    dispatch(layerSidebarActions.toggleVigilanceAreaResults(!!isChecked))
   }
 
   const hasTransitionReg = useMountTransition(areRegulatoryResultsOpen, 500)

@@ -4,9 +4,9 @@ import { Accent, Button, FormikMultiRadio, FormikNumberInput, FormikTextarea, Ic
 import {
   administrativeResponseOptions,
   formalNoticeLabels,
+  type Infraction,
   infractionSeizureLabels,
-  infractionTypeLabels,
-  type Infraction
+  infractionTypeLabels
 } from 'domain/entities/missions'
 import { TargetTypeEnum } from 'domain/entities/targetType'
 import { useField } from 'formik'
@@ -118,7 +118,7 @@ export function InfractionForm({
           min={1}
           name={`${infractionPath}.nbTarget`}
         />
-        <StyledTooltip Icon={Icon.AttentionFilled} isSideWindow>
+        <StyledTooltip Icon={Icon.AttentionFilled} isSideWindow orientation="TOP_LEFT">
           Ne déclarez plusieurs cibles dans une infraction que dans le cas où les unités n&apos;ont pas transmis de
           données permettant de les identifier (nom, immatriculation…)
         </StyledTooltip>
@@ -157,8 +157,6 @@ const NbTargetWrapper = styled.div`
 const StyledTooltip = styled(Tooltip)`
   display: flex;
   width: 50%;
-  position: relative;
-  margin-bottom: 6px;
 `
 const NbTargetInput = styled(FormikNumberInput)`
   width: 48.5%;

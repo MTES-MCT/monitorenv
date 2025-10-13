@@ -100,7 +100,9 @@ export const TitleAndButtonsContainer = styled.div`
   padding-right: 52px;
 `
 export const Title = styled.span`
+  display: block;
   font: normal normal normal 14px/20px Marianne;
+  max-width: 80%;
 `
 
 export const ControlSummary = styled.div`
