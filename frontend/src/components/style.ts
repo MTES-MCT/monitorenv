@@ -70,10 +70,10 @@ export const TransparentButton = styled.button.attrs(() => ({
   padding: 0;
 `
 
-export const StyledTransparentButton = styled(TransparentButton)`
+export const StyledTransparentButton = styled(TransparentButton)<{ $width?: string }>`
   display: flex;
   align-items: center;
-  width: 70%;
+  width: ${p => p.$width || '80%'};
 `
 
 export const InlineTransparentButton = styled(TransparentButton)`

@@ -1,5 +1,5 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
-import { InlineTransparentButton } from '@components/style'
+import { StyledTransparentButton } from '@components/style'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Size, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -74,7 +74,7 @@ export function MyVigilanceAreaLayerZone({
 
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown} $withBorderBottom>
-      <InlineTransparentButton onClick={zoomToLayerExtent}>
+      <StyledTransparentButton onClick={zoomToLayerExtent}>
         <LayerLegend
           isDisabled={layer?.isArchived}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
@@ -84,7 +84,7 @@ export function MyVigilanceAreaLayerZone({
         <LayerSelector.Name data-cy={`vigilance-area-zone-${layer?.name}`} title={layer?.name}>
           {layer?.name}
         </LayerSelector.Name>
-      </InlineTransparentButton>
+      </StyledTransparentButton>
       <LayerSelector.IconGroup>
         <StyledSummaryButton
           $withMargin={pinnedVigilanceArea}

@@ -1,6 +1,7 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
+import { TransparentButton } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
 import {
@@ -291,11 +292,9 @@ const TagWrapper = styled.div`
   gap: 4px;
   margin-top: 8px;
 `
-const ResetFilters = styled.div`
+const ResetFilters = styled(TransparentButton)`
   color: ${p => p.theme.color.slateGray};
-  cursor: pointer;
   display: flex;
-  padding: 0;
   text-decoration: underline;
 `
 

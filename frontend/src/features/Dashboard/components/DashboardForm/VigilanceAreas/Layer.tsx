@@ -68,7 +68,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
       $withBorderBottom
       onClick={toggleZoneMetadata}
     >
-      <StyledTransparentButton>
+      <StyledTransparentButton $width="70%">
         <LayerLegend
           isDisabled={vigilanceArea?.isArchived}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
@@ -132,6 +132,7 @@ const StyledLayer = styled(LayerSelector.Layer)<{ $isSelected: boolean; $metadat
 const TagAndButtons = styled.div`
   display: flex;
   gap: 10px;
+  flex-grow: 0;
 `
 const StyledTag = styled(Tag)`
   align-self: center;

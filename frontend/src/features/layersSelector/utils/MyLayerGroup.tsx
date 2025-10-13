@@ -69,7 +69,7 @@ export function MyLayerGroup({
   return (
     <li>
       <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
-        <StyledTransparentButton onClick={handleClickOnGroupName}>
+        <StyledTransparentButton $width="70%" onClick={handleClickOnGroupName}>
           <LayerSelector.GroupName data-cy={`${name}-layer-topic`} title={groupName}>
             {groupName}
           </LayerSelector.GroupName>
