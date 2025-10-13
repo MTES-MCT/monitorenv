@@ -1,5 +1,4 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
-import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
@@ -43,25 +42,13 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     })
   ) as MutableRefObject<VectorLayerWithName>
   regulatoryPreviewVectorLayerRef.current.name = Layers.REGULATORY_ENV_PREVIEW.code
-  const extent = map.getView().calculateExtent(map.getSize())
 
   const regulatoryLayersFeatures = useMemo(() => {
     let regulatoryFeatures: Feature[] = []
-    const regulatoryAreasIds = regulatoryLayersSearchResult ?? regulatoryLayers?.ids ?? []
-    const filteredByIntersectionRegulatoryAreaIds = getIntersectingLayerIds(
-      true,
-      regulatoryLayers?.entities ? Object.values(regulatoryLayers.entities) : undefined,
-      extent,
-      { bboxPath: 'bbox', idPath: 'id' }
-    )
-    const filteredegulatoryAreaIds = filteredByIntersectionRegulatoryAreaIds.filter(id =>
-      regulatoryAreasIds.includes(id)
-    )
+    if (regulatoryLayersSearchResult || regulatoryLayers?.ids) {
+      const regulatoryAreasToDisplay = regulatoryLayersSearchResult ?? regulatoryLayers?.ids ?? []
 
-    // If the search returned results, we display only these results
-    // Otherwise, we display all the regulatory layers (filtered or not by the isolatedLayer)
-    if (filteredegulatoryAreaIds && filteredegulatoryAreaIds.length > 0) {
-      regulatoryFeatures = filteredegulatoryAreaIds?.reduce((regulatorylayers, id) => {
+      regulatoryFeatures = regulatoryAreasToDisplay?.reduce((regulatorylayers, id) => {
         const layer = regulatoryLayers?.entities[id]
 
         if (layer && layer.geom) {
@@ -85,7 +72,6 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
 
     return regulatoryFeatures
   }, [
-    extent,
     regulatoryLayersSearchResult,
     regulatoryLayers?.ids,
     regulatoryLayers?.entities,
