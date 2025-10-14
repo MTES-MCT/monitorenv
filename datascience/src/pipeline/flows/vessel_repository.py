@@ -2,8 +2,6 @@ from pathlib import Path
 from typing import List
 from lxml import etree
 import pandas as pd
-import pdb
-from shapely.geometry import Point
 from prefect import Flow, task, context
 from src.pipeline.generic_tasks import load
 from src.pipeline.helpers.strings import to_snake_case
@@ -39,7 +37,7 @@ OWNER_TAGS_TO_INCLUDE = {
 }
 
 @task(checkpoint=False)
-def get_xsd_file(directory: str):
+def get_xsd_file(directory: str) -> Path: 
     directory = Path(directory)
     if not directory.exists():
         raise FileNotFoundError(f"Le dossier {directory} n'existe pas")
@@ -73,8 +71,7 @@ def get_xsd_schema(xsd_file_path: str):
     schema = etree.XMLSchema(xsd_doc)
     return schema
 
-@task(checkpoint=False)
-def parse_xml(xml_file_path: str, schema=None, batch_size: int = 1000):
+def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 1000):
     xml_path = Path(xml_file_path)
     if not xml_path.exists():
         raise FileNotFoundError(f"Fichier XML non trouvé : {xml_file_path}")
@@ -122,7 +119,6 @@ def parse_xml(xml_file_path: str, schema=None, batch_size: int = 1000):
                     if child.tag in TAGS_TO_INCLUDE:
                         record[f"{to_snake_case(child.tag)}"] = child.text
 
-                # --- Owner
                 owner = characteristics.find(".//Owner")
                 if owner is not None:
                     for child in owner:
@@ -133,8 +129,7 @@ def parse_xml(xml_file_path: str, schema=None, batch_size: int = 1000):
 
         # --- Envoi d’un batch complet
         if len(batch) >= batch_size:
-            gdf = pd.DataFrame(batch)
-            yield gdf
+            load_vessels_batch(pd.DataFrame(batch))
             batch.clear()
 
         # --- Libération mémoire
@@ -144,10 +139,10 @@ def parse_xml(xml_file_path: str, schema=None, batch_size: int = 1000):
 
     # --- Dernier batch partiel
     if batch:
-        yield pd.DataFrame(batch)
+        load_vessels_batch(pd.DataFrame(batch))
 
 
-@task(checkpoint=False)
+
 def load_vessels_batch(vessels):
     logger = context.get("logger")
     load(
@@ -162,26 +157,21 @@ def load_vessels_batch(vessels):
     )
 
 @task(checkpoint=False)
-def parse_and_load(xml_file, schema, batch_size=500):
-    for gdf_batch in parse_xml.run(xml_file, schema, batch_size):
-        load_vessels_batch.run(gdf_batch)
-
-@task(checkpoint=False)
-def parse_all_xml_file_and_delete(xml_files, xsd_schema):
+def parse_all_xml_files(xml_files, xsd_schema, batch_size=500):
     for xml_file in xml_files:
-        parse_and_load.run(xml_file, xsd_schema)
-        delete_file.run(xml_file)
+        parse_xml_and_load(xml_file, xsd_schema, batch_size)
 
 
 @task(checkpoint=False)
-def delete_file(file_path: str):
-        remove_file(file_path)
+def delete_files(xml_files: List[Path]):
+    for xml_file in xml_files:
+        remove_file(xml_file)
 
 with Flow("Vessel repository") as flow:
     xsd_file = get_xsd_file("/data/vessel_repository/")
     xsd_schema = get_xsd_schema(xsd_file)
     xml_files = get_xml_files("/data/vessel_repository/")
-    parse_all_xml_file_and_delete(xml_files, xsd_schema)
-    delete_file(xsd_file)
+    parse_all_xml_files(xml_files, xsd_schema)
+    delete_files(xml_files)
 
 flow.file_name = Path(__file__).name
