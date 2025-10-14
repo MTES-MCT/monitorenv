@@ -1,7 +1,7 @@
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
-from typing import Union
+from typing import List, Union
 from unittest.mock import MagicMock, patch
 
 import pandas as pd
@@ -11,6 +11,9 @@ import requests
 from src.pipeline.generic_tasks import extract
 from src.pipeline.shared_tasks.datagouv import update_resource
 
+from config import (
+    TEST_DATA_LOCATION,
+)
 
 def mock_extract_side_effect(
     db_name: str,
@@ -84,3 +87,15 @@ def mock_update_resource(
             resource=resource,
             mock_update=mock_update,
         )
+
+@task(checkpoint=False)
+def mock_get_xml_files():
+    return [Path(TEST_DATA_LOCATION /  "vessel_xml" / "vessel_repository.xml")]
+
+@task(checkpoint=False)
+def mock_get_xsd_file():
+    return Path(TEST_DATA_LOCATION /  "vessel_xml" / "vessel_repository.xsd")
+
+@task(checkpoint=False)
+def mock_delete_files(xml_files: List[Path]) -> None:
+    pass
