@@ -13,6 +13,7 @@ from config import (
     MONITORENV_VERSION,
     ROOT_DIRECTORY,
     TEST_MODE,
+    VESSEL_FILES_DIRECTORY,
 )
 from src.pipeline.flows import (
     admin_areas,
@@ -140,6 +141,16 @@ for flow in flows_to_register:
                 Mount(
                     target="/home/monitorenv-pipeline/datascience/src/pipeline/data",
                     source="/opt/data",
+                    type="bind",
+                )
+            ],
+        }
+    if flow.name in ("Vessel repository",):
+        host_config = {
+            "mounts": [
+                Mount(
+                    target="/home/monitorenv-pipeline/datascience/src/pipeline/data",
+                    source=VESSEL_FILES_DIRECTORY,
                     type="bind",
                 )
             ],
