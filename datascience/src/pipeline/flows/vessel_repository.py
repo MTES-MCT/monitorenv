@@ -2,7 +2,8 @@ from pathlib import Path
 from typing import List
 from lxml import etree
 import pandas as pd
-from prefect import Flow, task, context
+from config import LIBRARY_LOCATION
+from prefect import Flow, task, context, case
 from src.pipeline.generic_tasks import load
 from src.pipeline.helpers.strings import to_snake_case
 from src.pipeline.utils import remove_file
@@ -160,6 +161,7 @@ def load_vessels_batch(vessels):
 def parse_all_xml_files(xml_files, xsd_schema, batch_size=500):
     for xml_file in xml_files:
         parse_xml_and_load(xml_file, xsd_schema, batch_size)
+    return True
 
 
 @task(checkpoint=False)
@@ -168,10 +170,11 @@ def delete_files(xml_files: List[Path]):
         remove_file(xml_file)
 
 with Flow("Vessel repository") as flow:
-    xsd_file = get_xsd_file("/data/vessel_repository/")
+    xsd_file = get_xsd_file(LIBRARY_LOCATION / f"pipeline/data/")
     xsd_schema = get_xsd_schema(xsd_file)
-    xml_files = get_xml_files("/data/vessel_repository/")
-    parse_all_xml_files(xml_files, xsd_schema)
-    delete_files(xml_files)
+    xml_files = get_xml_files(LIBRARY_LOCATION / f"pipeline/data/")
+    xml_parsed = parse_all_xml_files(xml_files, xsd_schema)
+    with case(xml_parsed, True):
+        delete_files(xml_files)
 
 flow.file_name = Path(__file__).name
