@@ -14,6 +14,7 @@ from config import (
     ROOT_DIRECTORY,
     TEST_MODE,
     VESSEL_FILES_DIRECTORY,
+    VESSEL_FILES_GID,
 )
 from src.pipeline.flows import (
     admin_areas,
@@ -147,6 +148,7 @@ for flow in flows_to_register:
         }
     if flow.name in ("Vessel repository",):
         host_config = {
+            "group_add": [VESSEL_FILES_GID],
             "mounts": [
                 Mount(
                     target="/home/monitorenv-pipeline/datascience/src/pipeline/data",
