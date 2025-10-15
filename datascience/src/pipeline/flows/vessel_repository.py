@@ -158,7 +158,7 @@ def load_vessels_batch(vessels):
     )
 
 @task(checkpoint=False)
-def parse_all_xml_files(xml_files, xsd_schema, batch_size=500):
+def parse_all_xml_files(xml_files, xsd_schema, batch_size=1000):
     for xml_file in xml_files:
         parse_xml_and_load(xml_file, xsd_schema, batch_size)
     return True
