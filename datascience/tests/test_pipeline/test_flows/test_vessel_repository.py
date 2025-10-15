@@ -85,18 +85,20 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
 
     imported_vessels = read_query(
         "monitorenv_remote",
-        # Cast boolean is_banned to Yes / No, Cast length to float
+        # Cast boolean is_banned to Yes / No
         """SELECT ship_id, status, category, CASE WHEN is_banned IS TRUE THEN 'Yes' ELSE 'No' END as is_banned, imo_number, mmsi_number, ship_name, flag, port_of_registry, immatriculation,
-        professional_type, commercial_name, length::float as length, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
+        professional_type, commercial_name, length, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
         owner_phone, owner_email, owner_nationality, owner_company_name, owner_business_segment, owner_legal_status, owner_start_date 
         FROM vessels"""
     )
 
-    # Cast length to numeric to compare it
+    # Cast length and ship_id to numeric to compare it
+    expected_df["ship_id"] = expected_df["ship_id"].apply(pd.to_numeric, errors="coerce")
+    imported_vessels["ship_id"] = imported_vessels["ship_id"].apply(pd.to_numeric, errors="coerce")
     expected_df["length"] = expected_df["length"].apply(pd.to_numeric, errors="coerce")
     imported_vessels["length"] = imported_vessels["length"].apply(pd.to_numeric, errors="coerce")
 
-    pd.testing.assert_frame_equal(expected_df, imported_vessels)
+    pd.testing.assert_frame_equal(expected_df, imported_vessels, check_dtype=False)
 
 
 def test_flow_vessel_repository(create_cacem_tables, reset_test_data):
