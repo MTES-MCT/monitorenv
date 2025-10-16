@@ -1,3 +1,4 @@
+from copy import deepcopy
 from pathlib import Path
 from typing import List
 from lxml import etree
@@ -59,6 +60,8 @@ def get_xml_files(directory: str) -> List[Path]:
         raise FileNotFoundError(f"Le dossier {directory} n'existe pas")
 
     xml_files = list(directory.glob("*.xml"))
+    logger = context.get("logger")
+    logger.info(f"{len(xml_files)} fichiers XML trouvés")
     return xml_files
 
 
@@ -72,13 +75,12 @@ def get_xsd_schema(xsd_file_path: str):
     schema = etree.XMLSchema(xsd_doc)
     return schema
 
+@task(checkpoint=False)
 def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 1000):
     xml_path = Path(xml_file_path)
     if not xml_path.exists():
         raise FileNotFoundError(f"Fichier XML non trouvé : {xml_file_path}")
-
     logger = context.get("logger")
-
     header_elem = None  # variable pour stocker le header
     context_iter = etree.iterparse(str(xml_path), events=("end",), tag=("Header","ShipDescription"))
 
@@ -90,7 +92,7 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 1000):
             continue
 
         fake_root = etree.Element("racine")
-        fake_header = header_elem
+        fake_header = deepcopy(header_elem)
         fake_body = etree.Element("Body")
         fake_root.append(fake_header)
         fake_root.append(fake_body)
@@ -141,6 +143,7 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 1000):
     # --- Dernier batch partiel
     if batch:
         load_vessels_batch(pd.DataFrame(batch))
+    logger.info(f"File parsed : {xml_file_path}")
 
 
 
@@ -160,14 +163,16 @@ def load_vessels_batch(vessels):
 @task(checkpoint=False)
 def parse_all_xml_files(xml_files, xsd_schema, batch_size=1000):
     for xml_file in xml_files:
-        parse_xml_and_load(xml_file, xsd_schema, batch_size)
+        logger = context.get("logger")
+        logger.info(f"Parsing file {xml_file}")
+        parse_xml_and_load.run(xml_file, xsd_schema, batch_size)
     return True
 
 
 @task(checkpoint=False)
 def delete_files(xml_files: List[Path]):
     for xml_file in xml_files:
-        remove_file(xml_file)
+        remove_file(xml_file, ignore_errors=False)
 
 with Flow("Vessel repository") as flow:
     xsd_file = get_xsd_file(LIBRARY_LOCATION / f"pipeline/data/")
