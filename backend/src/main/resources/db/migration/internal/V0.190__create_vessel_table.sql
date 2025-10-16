@@ -1,7 +1,7 @@
 CREATE TABLE public.vessels
 (
     id                     SERIAL PRIMARY KEY,
-    ship_id                NUMERIC NOT NULL,
+    ship_id                INT NOT NULL,
     status                 VARCHAR(1),
     category               VARCHAR(3),
     is_banned              BOOLEAN DEFAULT FALSE,
@@ -23,6 +23,6 @@ CREATE TABLE public.vessels
     owner_company_name     VARCHAR(100),
     owner_nationality      VARCHAR(50),
     owner_business_segment VARCHAR(50),
-    owner_legal_status     VARCHAR(50),
+    owner_legal_status     VARCHAR(255),
     owner_start_date       VARCHAR(255)
 );

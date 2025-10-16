@@ -26,7 +26,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
     xsd_path = TEST_DATA_LOCATION /  "vessel_xml" / "vessel_repository.xsd"
     schema = get_xsd_schema.run(xsd_path)
 
-    parse_xml_and_load(xml_path, schema, batch_size=1)
+    parse_xml_and_load.run(xml_path, schema, batch_size=1)
 
     expected_df = pd.DataFrame(
         [{
