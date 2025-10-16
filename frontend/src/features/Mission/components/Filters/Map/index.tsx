@@ -270,7 +270,7 @@ function MapMissionsFiltersWithRef(
       </StyledBloc>
       <StyledBloc>
         <CheckPicker
-          key={`theme${themes?.length}${JSON.stringify(selectedThemes)}`}
+          key={`theme${themes?.length}`}
           customSearch={themeCustomSearch}
           isLabelHidden
           isTransparent
