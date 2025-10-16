@@ -78,7 +78,7 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 1000):
         raise FileNotFoundError(f"Fichier XML non trouvé : {xml_file_path}")
 
     logger = context.get("logger")
-
+    logger.debug("Parsing file {xml_file_path}")
     header_elem = None  # variable pour stocker le header
     context_iter = etree.iterparse(str(xml_path), events=("end",), tag=("Header","ShipDescription"))
 
@@ -167,7 +167,7 @@ def parse_all_xml_files(xml_files, xsd_schema, batch_size=1000):
 @task(checkpoint=False)
 def delete_files(xml_files: List[Path]):
     for xml_file in xml_files:
-        remove_file(xml_file)
+        remove_file(xml_file, ignore_errors=False)
 
 with Flow("Vessel repository") as flow:
     xsd_file = get_xsd_file(LIBRARY_LOCATION / f"pipeline/data/")
