@@ -36,7 +36,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Récurrence',
     id: 'frequency',
-    size: 110 + legacyFirefoxOffset,
+    size: 106 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => {
       const labelA = VigilanceArea.FrequencyLabelForList[rowA.original.frequency] ?? ''
       const labelB = VigilanceArea.FrequencyLabelForList[rowB.original.frequency] ?? ''
@@ -48,9 +48,9 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     accessorFn: row => row.validatedAt,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <ValidationDateCell date={info.getValue()} />),
     enableSorting: true,
-    header: () => 'Validité',
+    header: () => 'Validée le',
     id: 'validatedAt',
-    size: 90 + legacyFirefoxOffset
+    size: 96 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.name,
@@ -58,7 +58,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Nom de la zone',
     id: 'name',
-    size: 272 + legacyFirefoxOffset
+    size: 270 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.tags,

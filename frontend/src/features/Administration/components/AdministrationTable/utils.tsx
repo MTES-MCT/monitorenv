@@ -53,7 +53,7 @@ export function getFilters(
   data: Administration.Administration[],
   filtersState: FiltersState
 ): Filter<Administration.Administration>[] {
-  const customSearch = new CustomSearch(data, ['name'], {
+  const customSearch = new CustomSearch(structuredClone(data), ['name'], {
     cacheKey: 'BACK_OFFICE_ADMINISTRATION_LIST',
     isStrict: true,
     withCacheInvalidation: true

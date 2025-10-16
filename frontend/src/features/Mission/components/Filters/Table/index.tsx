@@ -154,7 +154,7 @@ export function TableMissionsFiltersWithRef(
             value={selectedMissionTypes}
           />
           <CheckPicker
-            key={`theme${themes?.length}${JSON.stringify(selectedThemes)}`}
+            key={`theme${themes?.length}`}
             customSearch={themeCustomSearch}
             data-cy="mission-theme-filter"
             isLabelHidden
