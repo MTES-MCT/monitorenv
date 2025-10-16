@@ -43,7 +43,9 @@ context('Reporting', () => {
     cy.get('div[role="option"]').contains('Personne morale').click()
 
     cy.clickButton('Ajouter un point')
-    cy.get('#root').click(250, 690, { timeout: 10000 })
+    cy.fill('Unités des coordonnées', 'DMD')
+    cy.getDataCy('dmd-coordinates-input').type('46° 51.203′ N 002° 17.134′ W')
+
     cy.clickButton('Valider le point')
 
     cy.get('.rs-radio').find('label').contains('Observation').click()
