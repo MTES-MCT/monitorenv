@@ -91,11 +91,8 @@ export function DrawModal() {
   }, [isGeometryDrawOnMap])
 
   useEffect(() => {
-    if (!isEditingInInputRef.current) {
+    if (!isEditingInInputRef.current || !coordinates) {
       setInputCoordinates(coordinates)
-    }
-    if (!coordinates) {
-      setInputCoordinates(undefined)
     }
   }, [coordinates])
 
