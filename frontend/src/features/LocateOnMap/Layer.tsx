@@ -8,7 +8,7 @@ import { fromExtent } from 'ol/geom/Polygon'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { Fill, Stroke, Style } from 'ol/style'
-import { useEffect, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useRef } from 'react'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
