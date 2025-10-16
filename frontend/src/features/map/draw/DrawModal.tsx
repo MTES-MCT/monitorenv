@@ -94,6 +94,9 @@ export function DrawModal() {
     if (!isEditingInInputRef.current) {
       setInputCoordinates(coordinates)
     }
+    if (!coordinates) {
+      setInputCoordinates(undefined)
+    }
   }, [coordinates])
 
   const feature = useMemo(() => {
@@ -214,7 +217,6 @@ export function DrawModal() {
       return
     }
     dispatch(setCoordinatesFormat(value))
-    isEditingInInputRef.current = false
   }
 
   const hasCustomTools = useMemo(
