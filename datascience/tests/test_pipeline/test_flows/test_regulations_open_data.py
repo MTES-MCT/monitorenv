@@ -305,7 +305,7 @@ def test_flow(create_cacem_tables, reset_test_data, regulations_for_csv, regulat
     ].result
     assert isinstance(geopackage_file_object, BytesIO)
 
-    layers = ["layer_name1", "layer_name2"]
+    layers = ["MED", "NAMO"]
     gdfs = []
     for layer in layers:
         geopackage_file_object.seek(0)
