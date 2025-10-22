@@ -113,7 +113,7 @@ with Flow("Regulations open data", executor=LocalDaskExecutor()) as flow:
         regulations_for_geopackage = get_regulations_for_geopackage(regulations)
 
         csv_file = get_csv_file_object(regulations_for_csv)
-        geopackage_file = get_geopackage_file_object(regulations_for_geopackage, layers="layer_name")
+        geopackage_file = get_geopackage_file_object(regulations_for_geopackage, layers="facade")
 
         update_resource(
             dataset_id=dataset_id,
