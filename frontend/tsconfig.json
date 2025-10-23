@@ -16,6 +16,7 @@
     // https://github.com/cypress-io/cypress/issues/26308#issuecomment-1666236726
     "module": "ESNext",
     "moduleResolution": "Node",
+    "resolveJsonModule": true,
     "paths": {
       "@api/*": ["api/*"],
       "@components/*": ["components/*"],
