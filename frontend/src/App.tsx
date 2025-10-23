@@ -14,6 +14,8 @@ import { isBrowserSupported } from '@utils/isBrowserSupported'
 import { isCypress } from '@utils/isCypress'
 import { MissionEventProvider } from 'context/mission/MissionEventContext'
 import { ReportingEventProvider } from 'context/reporting/ReportingEventContext'
+import countries from 'i18n-iso-countries'
+import COUNTRIES_FR from 'i18n-iso-countries/langs/fr.json'
 import { paths } from 'paths'
 import { Provider as ReduxProvider } from 'react-redux'
 import { BrowserRouter, Route, Routes } from 'react-router'
@@ -21,6 +23,8 @@ import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import { CustomProvider as RsuiteCustomProvider } from 'rsuite'
 import frFR from 'rsuite/locales/fr_FR'
+
+countries.registerLocale(COUNTRIES_FR)
 
 export function App() {
   useMatomo()

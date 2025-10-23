@@ -1,16 +1,21 @@
-import { useVessels } from '@features/LocateOnMap/hook/useVessels'
-import { VesselSearchItem } from '@features/LocateOnMap/VesselSearchItem'
+import { useVessels } from '@features/Vessel/hooks/useVessels'
+import { vesselAction } from '@features/Vessel/slice'
+import { VesselSearchItem } from '@features/Vessel/VesselSearchItem'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { CustomSearch, Search, Size } from '@mtes-mct/monitor-ui'
 import { getColorWithAlpha } from '@utils/utils'
 import { useState } from 'react'
 import styled from 'styled-components'
+import { useDebounce } from 'use-debounce'
 
-import type { Vessel } from '@api/vesselsAPI'
+import type { Vessel } from '@features/Vessel/types'
 import type { RsuiteDataItem } from '@mtes-mct/monitor-ui/types/internals'
 
 export function SearchVessel() {
+  const dispatch = useAppDispatch()
   const [query, setQuery] = useState<string | undefined>()
-  const { options } = useVessels(query)
+  const [debouncedQuery] = useDebounce(query, 300)
+  const { options } = useVessels(debouncedQuery)
 
   const vesselCustomSearch = new CustomSearch(options ?? [], ['label'])
 
@@ -24,8 +29,8 @@ export function SearchVessel() {
       isSearchIconHidden
       label="Rechercher un navire"
       name="search-vessel"
-      onChange={() => {
-        // TODO: SELECT VESSEL HERE
+      onChange={(item: Vessel.Identity) => {
+        dispatch(vesselAction.setSelectedVesselId(item.id))
       }}
       onQuery={nextQuery => {
         setQuery(nextQuery)
@@ -36,7 +41,7 @@ export function SearchVessel() {
       renderMenu={node => <StyledMenu>{node}</StyledMenu>}
       renderMenuItem={(_, item) => {
         const rsuiteItem = item as RsuiteDataItem
-        const vessel = rsuiteItem.optionValue as unknown as Vessel
+        const vessel = rsuiteItem.optionValue as unknown as Vessel.Identity
 
         return (
           <VesselSearchItem

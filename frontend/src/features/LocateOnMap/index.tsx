@@ -1,6 +1,6 @@
 import { SearchLocation } from '@features/LocateOnMap/SearchLocation'
 import { SearchSwitcher, SearchType } from '@features/LocateOnMap/SearchSwitcher'
-import { SearchVessel } from '@features/LocateOnMap/SearchVessels'
+import { SearchVessel } from '@features/Vessel/SearchVessels'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
