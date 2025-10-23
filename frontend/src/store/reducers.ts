@@ -7,6 +7,7 @@ import { recentActivityPersitedReducer } from '@features/RecentActivity/slice'
 import { attachMissionToReportingSliceReducer } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingFiltersPersistedReducer } from '@features/Reportings/Filters/slice'
 import { reportingSliceReducer } from '@features/Reportings/slice'
+import { vesselReducer } from '@features/Vessel/slice'
 import { vigilanceAreaFiltersPersistedReducer } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { vigilanceAreaPersistedReducer } from '@features/VigilanceArea/slice'
 
@@ -73,6 +74,7 @@ export const homeReducers = {
   sideWindow: sideWindowReducer,
   station: stationReducer,
   stationTable: stationTablePersistedReducer,
+  vessel: vesselReducer,
   vigilanceArea: vigilanceAreaPersistedReducer,
   vigilanceAreaFilters: vigilanceAreaFiltersPersistedReducer
 }

@@ -10,6 +10,7 @@ import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
 import { reportingActions } from '@features/Reportings/slice'
 import { SideWindowStatus } from '@features/SideWindow/slice'
+import { VesselResume } from '@features/Vessel/VesselResume'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -52,6 +53,7 @@ export function HomePage() {
   const reportingEvent = useListenReportingEventUpdates()
 
   const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
+  const selectedVesselId = useAppSelector(state => state.vessel.selectedVesselId)
 
   const hasAtLeastOneMissionFormDirty = useMemo(
     () => Object.values(selectedMissions).some(mission => mission.isFormDirty),
@@ -128,6 +130,7 @@ export function HomePage() {
         {isControlUnitDialogVisible && isSuperUser && <ControlUnitDialog />}
 
         <Menu />
+        {selectedVesselId && <VesselResume vesselId={selectedVesselId} />}
 
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
       </Wrapper>
