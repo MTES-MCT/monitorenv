@@ -20,6 +20,7 @@ interface ImportMetaEnv {
   readonly FRONTEND_SENTRY_ENV: string
   readonly FRONTEND_SENTRY_TRACING_ORIGIN: string
   readonly FRONTEND_SHOM_KEY: string
+  readonly FRONTEND_VESSELS_ENABLED: string
   readonly MONITORENV_EXT_ID: string
   readonly MONITORENV_EXT_PASSWORD: string
   readonly MONITORENV_LEGICEM_ID: string
