@@ -15,18 +15,16 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
   return (
     <Wrapper>
       <Name $isUnknown={!vesselName}>
-        {!!flag && (
-          <Flag
-            rel="preload"
-            src={`/flags/${flag.substring(0, 2).toLowerCase()}.svg`}
-            title={countries.getName(flag, 'fr')}
-          />
-        )}
+        <Flag
+          rel="preload"
+          src={`/flags/${flag ? `${flag.substring(0, 2).toLowerCase()}.svg` : 'unknown.png'}`}
+          title={flag ? countries.getName(flag, 'fr') : 'Inconnu'}
+        />
         <Highlighter
           autoEscape
           highlightClassName="highlight"
           searchWords={searchQuery ? [searchQuery] : []}
-          textToHighlight={vesselName ?? 'SANS NOM'}
+          textToHighlight={vesselName ?? 'NOM INCONNU'}
         />
       </Name>
       <Identities>
@@ -65,12 +63,11 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
   )
 }
 
-const Flag = styled.img<{
+export const Flag = styled.img<{
   rel?: 'preload'
 }>`
   font-size: 25px;
   width: 26px;
-  border: 1px solid ${p => p.theme.color.lightGray};
 `
 
 const Name = styled.span<{ $isUnknown?: boolean }>`
