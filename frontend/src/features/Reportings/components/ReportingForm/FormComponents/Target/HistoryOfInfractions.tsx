@@ -1,7 +1,7 @@
 import { Bold, Italic } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { customDayjs, Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useDebounce } from 'use-debounce'
@@ -115,16 +115,24 @@ export function HistoryOfInfractions({
             )}
           </InfractionsAndPV>
 
-          {history.themes.length > 0 && (
+          {history.suspicionOfInfractions.length > 0 && (
             <StyledTooltip
               isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
               linkText="En savoir plus"
               orientation="TOP_LEFT"
             >
-              <Header as="header">Thématiques&nbsp;: </Header>
+              {history.suspicionOfInfractions.length > 0 && <Header as="header">Signalements </Header>}
               <ul>
-                {history.themes.map(theme => (
-                  <li key={theme}>{theme}</li>
+                {history.suspicionOfInfractions.map(infraction => (
+                  <ul key={infraction.id}>
+                    <ReportingDate>Le {customDayjs(infraction.createdAt).format('DD/MM/YYYY')}</ReportingDate>
+                    <li>
+                      {infraction.reportingSources.length > 0 && (
+                        <li>{infraction.reportingSources.map(source => source.displayedSource).join(', ')}</li>
+                      )}
+                    </li>
+                    <li>{infraction.theme.name}</li>
+                  </ul>
                 ))}
               </ul>
             </StyledTooltip>
@@ -168,6 +176,9 @@ const HistoryText = styled(Italic)`
   align-items: center;
   display: flex;
   gap: 2px;
+`
+const ReportingDate = styled.li`
+  font-weight: bold;
 `
 
 const LoadingIcon = styled(Icon.Reset)`

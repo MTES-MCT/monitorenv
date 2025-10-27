@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfInfractions
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.GetEnvActionsByMmsi
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetSuspicionOfInfractionsByMmsi
-import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -65,7 +64,7 @@ class InfractionsITest {
 
         given(getSuspicionOfInfractionsByMmsi.execute(mmsi, null))
             .willReturn(
-                SuspicionOfInfractions(ids = arrayOf(1, 2), themes = arrayOf(aTheme().name)),
+                listOf(ReportingFixture.aSupicionOfInfraction(id = 1), ReportingFixture.aSupicionOfInfraction(id = 2)),
             )
 
         // When
@@ -76,7 +75,6 @@ class InfractionsITest {
             )
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.ids.size()", equalTo(2)))
-            .andExpect(jsonPath("$.themes.size()", equalTo(1)))
+            .andExpect(jsonPath("$.size()", equalTo(2)))
     }
 }

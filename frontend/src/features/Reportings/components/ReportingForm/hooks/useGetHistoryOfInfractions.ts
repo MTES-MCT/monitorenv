@@ -1,7 +1,8 @@
 import { useLazyGetEnvActionsByMmsiQuery, useLazyGetSuspicionOfInfractionsQuery } from '@api/infractionsAPI'
-import { getAllThemes, getTotalInfraction, getTotalPV } from '@features/Mission/utils'
+import { getTotalInfraction, getTotalPV } from '@features/Mission/utils'
 import { isNewReporting } from '@features/Reportings/utils'
-import { uniq } from 'lodash'
+
+import type { SuspicionOfInfractions } from 'domain/entities/reporting'
 
 type UseGetHistoryOfInfractionsProps = {
   canSearch: boolean
@@ -11,8 +12,7 @@ type UseGetHistoryOfInfractionsProps = {
 
 export type HistoryOfInfractionsProps = {
   isLoading: boolean
-  suspicionOfInfractions: any
-  themes: string[]
+  suspicionOfInfractions: SuspicionOfInfractions[]
   totalInfraction: number
   totalPV: number
 }
@@ -20,7 +20,6 @@ export type HistoryOfInfractionsProps = {
 export const initialHistory: HistoryOfInfractionsProps = {
   isLoading: true,
   suspicionOfInfractions: [],
-  themes: [],
   totalInfraction: 0,
   totalPV: 0
 }
@@ -51,15 +50,9 @@ export const useGetHistoryOfInfractions = () => {
 
     const totalPV = getTotalPV(envActionsByMmsi ?? [])
 
-    const themes = uniq([
-      ...getAllThemes(envActionsByMmsi ?? []).map(theme => theme.name),
-      ...(suspicionOfInfractionsByMmsi?.themes ?? [])
-    ])
-
     return {
       isLoading: isLoadingLazyEnvActions || isLoadingLazySuspicions,
-      suspicionOfInfractions: suspicionOfInfractionsByMmsi.ids,
-      themes: themes ?? [],
+      suspicionOfInfractions: suspicionOfInfractionsByMmsi,
       totalInfraction: totalInfraction ?? 0,
       totalPV: totalPV ?? 0
     }

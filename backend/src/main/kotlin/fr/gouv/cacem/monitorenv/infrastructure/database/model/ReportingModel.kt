@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfInfractions
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
@@ -206,6 +207,17 @@ class ReportingModel(
                 },
         )
     }
+
+    fun toReportingHistoryOfInfraction(): SuspicionOfInfractions =
+        SuspicionOfInfractions(
+            id = id,
+            reportingId = reportingId,
+            reportingSources = reportingSources.map { it.toReportingSourceDTO() },
+            reportType = reportType,
+            createdAt = createdAt.atZone(UTC),
+            tags = toTagEntities(tags.toList()),
+            theme = toThemeEntities(themes.toList()).first(),
+        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

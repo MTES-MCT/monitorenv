@@ -195,6 +195,11 @@ export const getReportingStatus = ({
 }
 
 export type SuspicionOfInfractions = {
-  ids: number[]
-  themes: string[]
+  createdAt: string
+  id: number
+  reportType: ReportingTypeEnum
+  reportingId: number
+  reportingSources: ReportingSource[]
+  tags: TagFromAPI[]
+  theme: ThemeFromAPI
 }

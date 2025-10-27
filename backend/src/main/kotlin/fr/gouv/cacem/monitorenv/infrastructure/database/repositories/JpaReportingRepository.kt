@@ -236,10 +236,14 @@ class JpaReportingRepository(
     override fun findAllIdsByGeometry(geometry: Geometry): List<Int> =
         dbReportingRepository.findAllIdsByGeom(geometry = geometry)
 
+    @Transactional
     override fun findSuspicionOfInfractionsByMmsi(
         mmsi: String,
         idToExclude: Int?,
-    ): SuspicionOfInfractions = dbReportingRepository.findAllSuspicionOfInfractionsByMmsi(mmsi, idToExclude)
+    ): List<SuspicionOfInfractions>? =
+        dbReportingRepository.findAllSuspicionOfInfractionsByMmsi(mmsi, idToExclude).map {
+            it.toReportingHistoryOfInfraction()
+        }
 
     @Transactional
     override fun delete(reportingId: Int) {

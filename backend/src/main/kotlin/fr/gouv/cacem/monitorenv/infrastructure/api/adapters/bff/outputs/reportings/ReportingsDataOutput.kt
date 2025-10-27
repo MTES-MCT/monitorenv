@@ -15,7 +15,6 @@ import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.*
 
-// TODO(25/07/2024) : to delete ?
 data class ReportingsDataOutput(
     val id: Int,
     val reportingId: Long? = null,

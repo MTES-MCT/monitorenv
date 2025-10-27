@@ -62,5 +62,5 @@ interface IReportingRepository {
     fun findSuspicionOfInfractionsByMmsi(
         mmsi: String,
         idToExclude: Int?,
-    ): SuspicionOfInfractions
+    ): List<SuspicionOfInfractions>?
 }
