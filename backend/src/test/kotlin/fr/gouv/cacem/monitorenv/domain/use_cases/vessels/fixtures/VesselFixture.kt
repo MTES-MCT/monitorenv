@@ -29,7 +29,9 @@ class VesselFixture {
                 ownerCompanyName = null,
                 ownerNationality = null,
                 ownerBusinessSegment = null,
+                ownerBusinessSegmentLabel = null,
                 ownerLegalStatus = null,
+                ownerLegalStatusLabel = null,
                 ownerStartDate = null,
             )
     }

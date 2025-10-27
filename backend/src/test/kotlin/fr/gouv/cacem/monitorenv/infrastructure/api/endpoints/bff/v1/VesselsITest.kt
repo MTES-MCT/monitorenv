@@ -52,7 +52,6 @@ class VesselsITest {
             .andExpect(jsonPath("$[0].mmsi", equalTo(vessel.mmsi)))
             .andExpect(jsonPath("$[0].imo", equalTo(vessel.imo)))
             .andExpect(jsonPath("$[0].immatriculation", equalTo(vessel.immatriculation)))
-            .andExpect(jsonPath("$[0].shipId", equalTo(vessel.shipId)))
             .andExpect(jsonPath("$[0].shipName", equalTo(vessel.shipName)))
 
         Mockito.verify(searchVessels).execute("VESSEL")
@@ -90,8 +89,8 @@ class VesselsITest {
             .andExpect(jsonPath("$.ownerEmail", equalTo(vessel.ownerEmail)))
             .andExpect(jsonPath("$.ownerCompanyName", equalTo(vessel.ownerCompanyName)))
             .andExpect(jsonPath("$.ownerNationality", equalTo(vessel.ownerNationality)))
-            .andExpect(jsonPath("$.ownerBusinessSegment", equalTo(vessel.ownerBusinessSegment)))
-            .andExpect(jsonPath("$.ownerLegalStatus", equalTo(vessel.ownerLegalStatus)))
+            .andExpect(jsonPath("$.ownerBusinessSegmentLabel", equalTo(vessel.ownerBusinessSegmentLabel)))
+            .andExpect(jsonPath("$.ownerLegalStatusLabel", equalTo(vessel.ownerLegalStatusLabel)))
             .andExpect(jsonPath("$.ownerStartDate", equalTo(vessel.ownerStartDate)))
     }
 
