@@ -89,6 +89,7 @@ export function MissionsNavBar() {
         <TabWrapper key={item.nextPath} className={`rs-navbar-item ${item.isActive ? 'rs-navbar-item-active' : ''}`}>
           {item.icon}
           <Tab
+            $width={index === 0 ? '100%' : undefined}
             data-cy={`mission-${index}`}
             onClick={() => selectTab(item.nextPath)}
             onKeyDown={e => {

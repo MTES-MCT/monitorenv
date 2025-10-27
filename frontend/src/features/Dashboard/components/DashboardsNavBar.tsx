@@ -78,7 +78,7 @@ export function DashboardsNavBar() {
         <TabWrapper key={item.nextPath} className={`rs-navbar-item ${item.isActive ? 'rs-navbar-item-active' : ''}`}>
           {item.icon}
           <Tab
-            $width="70%"
+            $width={index === 0 ? '100%' : '75%'}
             data-cy={`dashboard-${index}`}
             onClick={() => selectDashboard(item.nextPath)}
             onKeyDown={e => {
@@ -109,7 +109,7 @@ const TabWrapper = styled.div`
 `
 
 const Tab = styled(StyledTransparentButton)`
-  text-align: start;
+  margin-right: auto;
 `
 
 const Controls = styled.div`
