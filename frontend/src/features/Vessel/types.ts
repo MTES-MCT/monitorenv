@@ -12,13 +12,13 @@ export namespace Vessel {
     category?: string
     commercialName?: string
     length?: number
-    ownerBusinessSegment?: string
+    ownerBusinessSegmentLabel?: string
     ownerCompanyName?: string
     ownerDateOfBirth?: string
     ownerEmail?: string
     ownerFirstName?: string
     ownerLastName?: string
-    ownerLegalStatus?: string
+    ownerLegalStatusLabel?: string
     ownerNationality?: string
     ownerPhone?: string
     ownerPostalAddress?: string

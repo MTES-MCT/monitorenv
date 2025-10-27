@@ -24,8 +24,8 @@ data class VesselDataOutput(
     val ownerEmail: String?,
     val ownerCompanyName: String?,
     val ownerNationality: String?,
-    val ownerBusinessSegment: String?,
-    val ownerLegalStatus: String?,
+    val ownerBusinessSegmentLabel: String?,
+    val ownerLegalStatusLabel: String?,
     val ownerStartDate: String?,
 ) {
     companion object {
@@ -51,8 +51,8 @@ data class VesselDataOutput(
                 ownerEmail = vessel.ownerEmail,
                 ownerCompanyName = vessel.ownerCompanyName,
                 ownerNationality = vessel.ownerNationality,
-                ownerBusinessSegment = vessel.ownerBusinessSegment,
-                ownerLegalStatus = vessel.ownerLegalStatus,
+                ownerBusinessSegmentLabel = vessel.ownerBusinessSegmentLabel,
+                ownerLegalStatusLabel = vessel.ownerLegalStatusLabel,
                 ownerStartDate = vessel.ownerStartDate,
             )
     }

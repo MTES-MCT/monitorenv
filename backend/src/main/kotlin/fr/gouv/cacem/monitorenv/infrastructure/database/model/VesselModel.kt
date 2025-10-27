@@ -5,6 +5,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import org.hibernate.annotations.Formula
 import java.math.BigDecimal
 
 @Entity
@@ -35,8 +36,12 @@ data class VesselModel(
     val ownerPhone: String?,
     val ownerEmail: String?,
     val ownerCompanyName: String?,
+    @Formula("(SELECT naf.label FROM naf WHERE naf.code = owner_business_segment)")
+    val ownerBusinessSegmentLabel: String? = null,
     val ownerNationality: String?,
     val ownerBusinessSegment: String?,
+    @Formula("(SELECT legal_status.label FROM legal_status WHERE legal_status.code = owner_legal_status)")
+    val ownerLegalStatusLabel: String? = null,
     val ownerLegalStatus: String?,
     val ownerStartDate: String?,
 ) {
@@ -64,7 +69,9 @@ data class VesselModel(
             ownerEmail = ownerEmail,
             ownerCompanyName = ownerCompanyName,
             ownerNationality = ownerNationality,
+            ownerBusinessSegmentLabel = ownerBusinessSegmentLabel,
             ownerBusinessSegment = ownerBusinessSegment,
+            ownerLegalStatusLabel = ownerLegalStatusLabel,
             ownerLegalStatus = ownerLegalStatus,
             ownerStartDate = ownerStartDate,
         )
