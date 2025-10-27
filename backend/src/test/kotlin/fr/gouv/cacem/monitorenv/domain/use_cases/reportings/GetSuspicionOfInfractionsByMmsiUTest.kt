@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfInfractions
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,7 +21,13 @@ class GetSuspicionOfInfractionsByMmsiUTest {
         // Given
         val mmsi = "0123456789"
         val idToExclude = 1
-        val expectedSuspicionOfInfractions = SuspicionOfInfractions(arrayOf(1, 2), arrayOf("themes"))
+        val expectedSuspicionOfInfractions =
+            listOf(
+                ReportingFixture.aSupicionOfInfraction(
+                    id = 1,
+                ),
+                ReportingFixture.aSupicionOfInfraction(id = 2),
+            )
         given(reportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idToExclude)).willReturn(
             expectedSuspicionOfInfractions,
         )

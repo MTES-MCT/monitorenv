@@ -784,8 +784,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, null)
 
         // Then
-        assertThat(suspicionOfInfractions.ids).hasSize(1)
-        assertThat(suspicionOfInfractions.themes).hasSize(1)
+        assertThat(suspicionOfInfractions).hasSize(1)
     }
 
     @Test
@@ -798,8 +797,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idsToExclude)
 
         // Then
-        assertThat(suspicionOfInfractions.ids).isNull()
-        assertThat(suspicionOfInfractions.themes).isNull()
+        assertThat(suspicionOfInfractions).isEmpty()
     }
 
     @Test
@@ -811,7 +809,6 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         val suspicionOfInfractions = jpaReportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, null)
 
         // Then
-        assertThat(suspicionOfInfractions.ids).isNull()
-        assertThat(suspicionOfInfractions.themes).isNull()
+        assertThat(suspicionOfInfractions).isEmpty()
     }
 }

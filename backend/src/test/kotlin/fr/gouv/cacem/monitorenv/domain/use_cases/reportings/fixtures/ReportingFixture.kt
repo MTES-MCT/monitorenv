@@ -129,5 +129,22 @@ class ReportingFixture {
                 controlUnitId = null,
                 sourceName = sourceName,
             )
+
+        fun aSupicionOfInfraction(
+            id: Int? = null,
+            validityTime: Int = 10,
+            targetType: TargetTypeEnum? = TargetTypeEnum.VEHICLE,
+            reportingSources: List<ReportingSourceEntity> = listOf(aReportingSourceSemaphore()),
+        ): SuspicionOfInfractions =
+            SuspicionOfInfractions(
+                id = id,
+                targetType = targetType,
+                reportingSources = reportingSources.map { ReportingSourceDTO(it, null, null) },
+                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                validityTime = validityTime,
+                tags = emptyList(),
+                theme = aTheme(),
+            )
     }
 }

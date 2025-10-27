@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfInfractions
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import org.locationtech.jts.geom.Geometry
@@ -203,7 +202,8 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
 
     @Query(
         """
-    SELECT ARRAY_AGG(DISTINCT reporting.id) AS ids, ARRAY_AGG(DISTINCT themes.name) AS themes
+    SELECT DISTINCT reporting.*,
+       reporting.created_at + INTERVAL '1 hour' * reporting.validity_time AS validityEndTime
     FROM reportings reporting
     LEFT JOIN themes_reportings ON reporting.id = themes_reportings.reportings_id
     INNER JOIN themes ON themes.id = themes_reportings.themes_id AND themes.parent_id IS NULL
@@ -222,5 +222,5 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     fun findAllSuspicionOfInfractionsByMmsi(
         mmsi: String,
         idToExclude: Int?,
-    ): SuspicionOfInfractions
+    ): List<ReportingModel>
 }
