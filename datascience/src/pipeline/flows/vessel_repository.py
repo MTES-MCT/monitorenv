@@ -155,9 +155,7 @@ def load_vessels_batch(vessels):
         schema="public",
         db_name="monitorenv_remote",
         logger=logger,
-        how="upsert",
-        df_id_column="ship_id",
-        table_id_column="ship_id"
+        how="append",
     )
 
 @task(checkpoint=False)
