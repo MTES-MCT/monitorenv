@@ -26,6 +26,8 @@ data class Vessel(
     val ownerCompanyName: String?,
     val ownerNationality: String?,
     val ownerBusinessSegment: String?,
+    val ownerBusinessSegmentLabel: String?,
     val ownerLegalStatus: String?,
+    val ownerLegalStatusLabel: String?,
     val ownerStartDate: String?,
 )

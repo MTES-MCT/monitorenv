@@ -39,7 +39,9 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
         assertThat(vessel?.ownerEmail).isEqualTo("email@gmail.com")
         assertThat(vessel?.ownerCompanyName).isEqualTo("COMPANY NAME 1")
         assertThat(vessel?.ownerNationality).isEqualTo("FRANCE")
+        assertThat(vessel?.ownerBusinessSegmentLabel).isEqualTo("Commerce et réparation de motocycles")
         assertThat(vessel?.ownerBusinessSegment).isEqualTo("45.40Z")
+        assertThat(vessel?.ownerLegalStatusLabel).isEqualTo("Société commerciale étrangère immatriculée au RCS")
         assertThat(vessel?.ownerLegalStatus).isEqualTo("3120")
         assertThat(vessel?.ownerStartDate).isEqualTo("2000-01-01")
     }

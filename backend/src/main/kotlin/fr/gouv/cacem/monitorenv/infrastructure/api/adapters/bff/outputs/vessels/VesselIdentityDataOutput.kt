@@ -8,14 +8,12 @@ data class VesselIdentityDataOutput(
     val mmsi: String?,
     val imo: String?,
     val immatriculation: String?,
-    val shipId: Int,
     val shipName: String?,
 ) {
     companion object {
         fun fromVessel(vessel: Vessel): VesselIdentityDataOutput =
             VesselIdentityDataOutput(
                 id = vessel.id,
-                shipId = vessel.shipId,
                 flag = vessel.flag,
                 mmsi = vessel.mmsi,
                 imo = vessel.imo,

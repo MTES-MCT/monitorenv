@@ -94,9 +94,9 @@ export function VesselResume({ vesselId }: VesselResumeProps) {
             <dt>Raison sociale</dt>
             <dd>{vessel.ownerCompanyName ?? UNKNOWN}</dd>
             <dt>Secteur d&apos;activité</dt>
-            <dd>{vessel.ownerBusinessSegment ?? UNKNOWN}</dd>
+            <dd>{vessel.ownerBusinessSegmentLabel ?? UNKNOWN}</dd>
             <dt>Statut juridique</dt>
-            <dd>{vessel.ownerLegalStatus ?? UNKNOWN}</dd>
+            <dd>{vessel.ownerLegalStatusLabel ?? UNKNOWN}</dd>
             <dt>Début de la propriété</dt>
             <dd>{vessel.ownerStartDate ?? UNKNOWN}</dd>
           </OwnerIdentity>
