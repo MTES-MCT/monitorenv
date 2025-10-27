@@ -62,7 +62,7 @@ export function DashboardTab({ name, tabKey }: { name: string; tabKey: string })
 
 const Container = styled.div`
   display: flex;
-  width: 89%;
+  width: 100%;
 `
 
 const StyledTextInput = styled(TextInput)`
