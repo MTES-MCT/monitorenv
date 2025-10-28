@@ -25,6 +25,7 @@ TAGS_TO_INCLUDE = {
 "Length",
 }
 OWNER_TAGS_TO_INCLUDE = {
+"DateOfInformation",
 "LastName",
 "FirstName",
 "DateOfBirth",
@@ -76,7 +77,7 @@ def get_xsd_schema(xsd_file_path: str):
     return schema
 
 @task(checkpoint=False)
-def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 1000):
+def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 100000):
     xml_path = Path(xml_file_path)
     if not xml_path.exists():
         raise FileNotFoundError(f"Fichier XML non trouvé : {xml_file_path}")
@@ -92,7 +93,7 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 1000):
             continue
 
         fake_root = etree.Element("racine")
-        fake_header = deepcopy(header_elem)
+        fake_header = header_elem
         fake_body = etree.Element("Body")
         fake_root.append(fake_header)
         fake_root.append(fake_body)
@@ -159,7 +160,7 @@ def load_vessels_batch(vessels):
     )
 
 @task(checkpoint=False)
-def parse_all_xml_files(xml_files, xsd_schema, batch_size=1000):
+def parse_all_xml_files(xml_files, xsd_schema, batch_size=100000):
     for xml_file in xml_files:
         logger = context.get("logger")
         logger.info(f"Parsing file {xml_file}")
