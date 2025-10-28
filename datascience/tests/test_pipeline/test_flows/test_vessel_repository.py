@@ -43,6 +43,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "professional_type": "Navire a passagers",
                 "commercial_name": "COMMERCIAL_NAME",
                 "length": "32",
+                "owner_date_of_information": "2019-05-29T00:00:00.000",
                 "owner_last_name": "NOM 1",
                 "owner_first_name": "PRENOM 1",
                 "owner_date_of_birth": "1977-08-19",
@@ -69,6 +70,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "professional_type": None,
                 "commercial_name": None,
                 "length": "9.6",
+                "owner_date_of_information": "2019-05-29T00:00:00.000",
                 "owner_last_name": "NOM 2",
                 "owner_first_name": "PRENOM 2",
                 "owner_date_of_birth": "1977-08-19",
@@ -87,12 +89,16 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
         "monitorenv_remote",
         # Cast boolean is_banned to Yes / No
         """SELECT ship_id, status, category, CASE WHEN is_banned IS TRUE THEN 'Yes' ELSE 'No' END as is_banned, imo_number, mmsi_number, ship_name, flag, port_of_registry, immatriculation,
-        professional_type, commercial_name, length, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
+        professional_type, commercial_name, length, owner_date_of_information, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
         owner_phone, owner_email, owner_nationality, owner_company_name, owner_business_segment, owner_legal_status, owner_start_date 
         FROM vessels"""
     )
 
+    # Cast owner_date_of_information to datetime to compare it
+    imported_vessels["owner_date_of_information"] = imported_vessels["owner_date_of_information"].apply(pd.to_datetime, errors="coerce")
+    expected_df["owner_date_of_information"] = expected_df["owner_date_of_information"].apply(pd.to_datetime, errors="coerce")
     # Cast length and ship_id to numeric to compare it
+    imported_vessels["ship_id"] = imported_vessels["ship_id"].apply(pd.to_numeric, errors="coerce")
     expected_df["ship_id"] = expected_df["ship_id"].apply(pd.to_numeric, errors="coerce")
     imported_vessels["ship_id"] = imported_vessels["ship_id"].apply(pd.to_numeric, errors="coerce")
     expected_df["length"] = expected_df["length"].apply(pd.to_numeric, errors="coerce")
