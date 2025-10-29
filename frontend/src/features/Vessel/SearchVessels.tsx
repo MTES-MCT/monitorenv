@@ -17,7 +17,12 @@ export function SearchVessel() {
   const [debouncedQuery] = useDebounce(query, 300)
   const { options } = useVessels(debouncedQuery)
 
-  const vesselCustomSearch = new CustomSearch(options ?? [], ['label'])
+  const vesselCustomSearch = new CustomSearch(options ?? [], [
+    'label',
+    'value.imo',
+    'value.mmsi',
+    'value.immatriculation'
+  ])
 
   return (
     <StyledSearch
