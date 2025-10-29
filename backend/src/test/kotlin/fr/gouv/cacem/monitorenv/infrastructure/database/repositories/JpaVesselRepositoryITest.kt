@@ -19,7 +19,7 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
         // Then
         assertThat(vessel?.id).isEqualTo(1)
         assertThat(vessel?.shipId).isEqualTo(11)
-        assertThat(vessel?.status).isEqualTo("D")
+        assertThat(vessel?.status).isEqualTo("A")
         assertThat(vessel?.category).isEqualTo("PRO")
         assertThat(vessel?.isBanned).isEqualTo(false)
         assertThat(vessel?.imo).isEqualTo("IMO1111")
@@ -61,7 +61,19 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
     @Test
     fun `search should not return vessels that is banned`() {
         // Given
-        val searched = "SHIPNAME 4"
+        val searched = "BANNED SHIP"
+
+        // When
+        val vessels = jpaVesselRepository.search(searched)
+
+        // Then
+        assertThat(vessels).hasSize(0)
+    }
+
+    @Test
+    fun `search should not return vessels that is destroyed`() {
+        // Given
+        val searched = "DESTROYED SHIP"
 
         // When
         val vessels = jpaVesselRepository.search(searched)
@@ -92,7 +104,7 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
         val vessels = jpaVesselRepository.search(searched)
 
         // Then
-        assertThat(vessels).hasSize(3)
+        assertThat(vessels).hasSize(2)
         assertThat(vessels).allMatch { it.imo?.contains(searched, ignoreCase = true) == true }
     }
 
@@ -105,7 +117,7 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
         val vessels = jpaVesselRepository.search(searched)
 
         // Then
-        assertThat(vessels).hasSize(3)
+        assertThat(vessels).hasSize(2)
         assertThat(vessels).allMatch { it.mmsi?.contains(searched, ignoreCase = true) == true }
     }
 
@@ -118,7 +130,7 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
         val vessels = jpaVesselRepository.search(searched)
 
         // Then
-        assertThat(vessels).hasSize(3)
+        assertThat(vessels).hasSize(2)
         assertThat(vessels).allMatch { it.immatriculation?.contains(searched, ignoreCase = true) == true }
     }
 }
