@@ -46,8 +46,8 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
 
   const isMissionDuringOneDay = !endDateTimeUtc || (endDateTimeUtc && endDate.diff(startDate, 'day') === 0)
 
-  const formattedStartDate = startDate.isValid() && startDate.format('D MMM YYYY')
-  const formattedEndDate = endDateTimeUtc && endDate.isValid() && endDate.format('D MMM YYYY')
+  const formattedStartDate = startDate.isValid() && startDate.format('DD/MM/YYYY')
+  const formattedEndDate = endDateTimeUtc && endDate.isValid() && endDate.format('DD/MM/YYYY')
   const missionDurationText = isMissionDuringOneDay
     ? formattedStartDate
     : `du ${formattedStartDate} au ${formattedEndDate}`
@@ -95,6 +95,16 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
 
     return null
   }, [envActions, fishActions])
+
+  const controlUnitsResources = useMemo(
+    () =>
+      controlUnits?.reduce((acc: string[], controlUnit) => {
+        const allresources = controlUnit.resources.map(resource => resource.name)
+
+        return acc.concat(allresources)
+      }, []),
+    [controlUnits]
+  )
 
   if (!displayMissionsLayer || listener || isReportingAttachmentInProgress) {
     return null
@@ -146,6 +156,9 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
           Mission {humanizeMissionTypes(missionTypes)} – {missionDurationText}
         </div>
         <div>
+          {controlUnitsResources && controlUnitsResources.length > 0 && <>{controlUnitsResources.join(', ')}</>}
+        </div>
+        <div>
           {numberOfControls} {pluralize('contrôle', numberOfControls)} et {numberOfSurveillance}{' '}
           {pluralize('surveillance', numberOfSurveillance)}
         </div>
@@ -174,7 +187,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  flex: 0 0 260px;
+  flex: 0 0 290px;
 `
 
 const Header = styled.div`
@@ -206,7 +219,6 @@ const CloseButton = styled(IconButton)<{ $isVisible: boolean }>`
 const Details = styled.div`
   > div {
     color: ${p => p.theme.color.slateGray};
-    white-space: nowrap;
   }
 `
 
