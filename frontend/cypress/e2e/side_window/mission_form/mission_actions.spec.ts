@@ -133,7 +133,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     cy.fill('La surveillance a donné lieu à des actions de prévention', true)
 
-    cy.getDataCy('surveillance-awareness-select').click({ force: true })
+    cy.getDataCy('surveillance-awareness-select-0').click({ force: true })
 
     cy.getDataCy('surveillance-awareness-fields').within(() => {
       cy.get('div[role="option"]').then(options => {
@@ -143,11 +143,28 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.get('div[role="option"]').contains('Épave').click() // id 105
       cy.fill('Nb de personnes informées', 5)
     })
-
+    cy.clickButton('Ajouter une thématique de surveillance')
+    cy.getDataCy('surveillance-awareness-nb-person-1').type('3')
+    cy.getDataCy('surveillance-awareness-select-1').click()
+    cy.get('div[role="option"]').contains('Rejet').click() // id 102
     // Then
     cy.waitForLastRequest(
       '@updateMission',
-      { body: { envActions: [{ awareness: { isRisingAwareness: true, nbPerson: 5, themeId: 105 } }] } },
+      {
+        body: {
+          envActions: [
+            {
+              awareness: {
+                details: [
+                  { nbPerson: 5, themeId: 105 },
+                  { nbPerson: 3, themeId: 102 }
+                ],
+                isRisingAwareness: true
+              }
+            }
+          ]
+        }
+      },
       10,
       0,
       response => {
@@ -156,8 +173,10 @@ context('Side Window > Mission Form > Mission actions', () => {
         const { awareness }: EnvActionSurveillance =
           response && response.body.envActions.find(a => a.id === 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7')
         expect(awareness?.isRisingAwareness).equal(true)
-        expect(awareness?.nbPerson).equal(5)
-        expect(awareness?.themeId).equal(105)
+        expect(awareness?.details?.[0]?.nbPerson).equal(5)
+        expect(awareness?.details?.[0]?.themeId).equal(105)
+        expect(awareness?.details?.[1]?.nbPerson).equal(3)
+        expect(awareness?.details?.[1]?.themeId).equal(102)
       }
     )
   })

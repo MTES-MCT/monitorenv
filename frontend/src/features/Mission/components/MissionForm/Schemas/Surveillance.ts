@@ -14,9 +14,19 @@ export const getNewEnvActionSurveillanceSchema = (
       actionEndDateTimeUtc: actionEndDateValidation(ctx),
       actionStartDateTimeUtc: actionStartDateValidation(ctx),
       awareness: Yup.object<Awareness>().shape({
-        isRisingAwareness: Yup.boolean().optional(),
-        nbPerson: Yup.number().optional(),
-        themeId: Yup.number().optional()
+        details: Yup.array()
+          .of(
+            Yup.object().shape({
+              nbPerson: Yup.number().required('Le nombre de personnes informées est requis'),
+              themeId: Yup.number().required('Le thème est obligatoire')
+            })
+          )
+          .when('isRisingAwareness', {
+            is: (value: boolean) => value === true,
+            otherwise: schema => schema.min(0),
+            then: schema => schema.min(1, 'Les informations sont requises')
+          }),
+        isRisingAwareness: Yup.boolean().optional()
       }),
       completedBy: Yup.string()
         .min(3, 'Minimum 3 lettres pour le trigramme')
