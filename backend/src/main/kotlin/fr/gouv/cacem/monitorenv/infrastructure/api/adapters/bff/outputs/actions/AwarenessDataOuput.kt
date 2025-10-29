@@ -4,15 +4,13 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurve
 
 class AwarenessDataOuput(
     val isRisingAwareness: Boolean?,
-    val themeId: Int?,
-    val nbPerson: Int?,
+    val details: List<AwarenessDetailsDataOutput>? = emptyList(),
 ) {
     companion object {
         fun fromAwarenessEntity(awarenessEntity: AwarenessEntity): AwarenessDataOuput =
             AwarenessDataOuput(
                 isRisingAwareness = awarenessEntity.isRisingAwareness,
-                themeId = awarenessEntity.themeId,
-                nbPerson = awarenessEntity.nbPerson,
+                details = awarenessEntity.details?.map { AwarenessDetailsDataOutput.fromAwarenessDetailsEntity(it) },
             )
     }
 }

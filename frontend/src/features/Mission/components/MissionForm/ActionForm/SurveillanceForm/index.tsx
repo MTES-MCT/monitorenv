@@ -95,7 +95,13 @@ export function SurveillanceForm({ currentActionId, remove }) {
 
   const awarenessOptions = themesOptions
     .filter(theme => currentAction?.themes?.map(({ id }) => id).includes(theme.id))
-    .map(({ id, name }) => ({ label: name, value: id }))
+    .map(({ id, name }) => {
+      const awarenessSelectedThemes = currentAction?.awareness?.details?.map(
+        awarenessDetails => awarenessDetails.themeId
+      )
+
+      return { isDisabled: awarenessSelectedThemes?.includes(id), label: name, value: id }
+    })
 
   const reportingAsOptions = useMemo(
     () =>

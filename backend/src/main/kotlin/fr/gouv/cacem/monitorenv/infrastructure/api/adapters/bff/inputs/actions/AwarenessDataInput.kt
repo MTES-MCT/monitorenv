@@ -4,9 +4,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurve
 
 class AwarenessDataInput(
     private val isRisingAwareness: Boolean,
-    val themeId: Int?,
-    private val nbPerson: Int?,
+    val details: List<AwarenessDetailsInput>?,
 ) {
     fun toAwarenessEntity(): AwarenessEntity =
-        AwarenessEntity(isRisingAwareness = isRisingAwareness, themeId = themeId, nbPerson = nbPerson)
+        AwarenessEntity(isRisingAwareness = isRisingAwareness, details = details?.map { it.toAwarenessDetailsEntity() })
 }

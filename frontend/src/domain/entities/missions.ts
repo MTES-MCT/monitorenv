@@ -311,9 +311,11 @@ export type EnvActionSurveillance = EnvActionCommonProperties & {
 }
 
 export type Awareness = {
+  details?: {
+    nbPerson: number
+    themeId: number
+  }[]
   isRisingAwareness?: boolean
-  nbPerson?: number
-  themeId?: number
 }
 
 export type ControlOrSurveillance = EnvActionControl | NewEnvActionControl | EnvActionSurveillance
