@@ -64,7 +64,7 @@ export function VesselResume({ vesselId }: VesselResumeProps) {
         </VesselIdentity>
         <VesselIdentity>
           <dt>Longueur</dt>
-          <dd>{vessel.length ?? UNKNOWN}</dd>
+          <dd>{vessel.length ? `${vessel.length}m` : UNKNOWN}</dd>
           <dt>Pavillon</dt>
           <dd>{vessel.flag ? `${countryName} (${vessel.flag})` : UNKNOWN}</dd>
         </VesselIdentity>
@@ -81,7 +81,9 @@ export function VesselResume({ vesselId }: VesselResumeProps) {
           <OwnerIdentity>
             <dt>Identité de la personne</dt>
             <dd>
-              {vessel.ownerFirstName} {vessel.ownerLastName}
+              {!vessel.ownerFirstName && !vessel.ownerLastName
+                ? UNKNOWN
+                : `${vessel.ownerFirstName} ${vessel.ownerLastName}`}
             </dd>
             <dt>Coordonnées</dt>
             <dd>
@@ -120,11 +122,13 @@ const VesselIdentity = styled.dl`
   dt {
     color: ${p => p.theme.color.slateGray};
     font-weight: 400;
+    margin: 0 0 auto 0;
   }
 
   dd {
     color: ${p => p.theme.color.gunMetal};
     font-weight: 500;
+    margin: 0 0 auto 0;
   }
 `
 
@@ -135,16 +139,18 @@ const VesselType = styled(VesselIdentity)`
 const TitleWrapper = styled.span`
   display: flex;
   gap: 8px;
+  font-size: 22px;
 `
 
 const StyledMapMenuDialogContainer = styled(MapMenuDialog.Container)`
   display: flex;
   margin-left: -6px;
   position: absolute;
-  top: 82px;
+  top: 55px;
   right: 50px;
   width: 500px;
-  max-height: unset;
+  max-height: calc(100% - 64px);
+  overflow: auto;
   background-color: ${p => p.theme.color.gainsboro};
 `
 const OwnerSection = styled.section`
