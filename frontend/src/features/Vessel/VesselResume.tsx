@@ -11,7 +11,12 @@ type VesselResumeProps = {
   vesselId: number
 }
 
-const UNKNOWN = 'Inconnu'
+enum VesselCategoryLabel {
+  PLA = 'Plaisance',
+  PRO = 'Professionnel'
+}
+
+const UNKNOWN = '-'
 
 export function VesselResume({ vesselId }: VesselResumeProps) {
   const dispatch = useAppDispatch()
@@ -61,13 +66,11 @@ export function VesselResume({ vesselId }: VesselResumeProps) {
           <dt>Longueur</dt>
           <dd>{vessel.length ?? UNKNOWN}</dd>
           <dt>Pavillon</dt>
-          <dd>
-            {countryName} ({vessel.flag ?? UNKNOWN})
-          </dd>
+          <dd>{vessel.flag ? `${countryName} (${vessel.flag})` : UNKNOWN}</dd>
         </VesselIdentity>
         <VesselType>
           <dt>Catégorie</dt>
-          <dd>{vessel.category ?? UNKNOWN}</dd>
+          <dd>{vessel.category ? VesselCategoryLabel[vessel.category] : UNKNOWN}</dd>
           <dt>Type</dt>
           <dd>{vessel.professionalType ?? UNKNOWN}</dd>
           <dt>Désignation commerciale</dt>

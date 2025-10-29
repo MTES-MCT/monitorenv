@@ -11,6 +11,8 @@ type VesselSearchItemProps = {
   vesselName?: string
 }
 
+const UNKNOWN = 'Inconnu'
+
 export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery, vesselName }: VesselSearchItemProps) {
   return (
     <Wrapper>
@@ -34,7 +36,7 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
             autoEscape
             highlightClassName="highlight"
             searchWords={searchQuery ? [searchQuery] : []}
-            textToHighlight={mmsi || 'Inconnu'}
+            textToHighlight={mmsi || UNKNOWN}
           />{' '}
           (MMSI)
         </span>
@@ -44,7 +46,7 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
             autoEscape
             highlightClassName="highlight"
             searchWords={searchQuery ? [searchQuery] : []}
-            textToHighlight={immatriculation || 'Inconnu'}
+            textToHighlight={immatriculation || UNKNOWN}
           />{' '}
           (Immat.)
         </span>
@@ -54,7 +56,7 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
             autoEscape
             highlightClassName="highlight"
             searchWords={searchQuery ? [searchQuery] : []}
-            textToHighlight={imo || 'Inconnu'}
+            textToHighlight={imo || UNKNOWN}
           />{' '}
           (IMO)
         </span>
