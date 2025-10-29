@@ -134,19 +134,19 @@ export function LayersSidebar() {
             )}
           </MetadataPanelShifter>
 
-        <VigilanceAreaPanelShifter
-          $isLayersSidebarVisible={isLayersSidebarVisible}
-          $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
-        >
-          {mainVigilanceAreaFormOpen && (
-            <VigilanceAreaForm
-              key={editingVigilanceAreaId}
-              isOpen={mainVigilanceAreaFormOpen}
-              vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
-            />
-          )}
-        </VigilanceAreaPanelShifter>
-      </Sidebar>
+          <VigilanceAreaPanelShifter
+            $isLayersSidebarVisible={isLayersSidebarVisible}
+            $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
+          >
+            {mainVigilanceAreaFormOpen && (
+              <VigilanceAreaForm
+                key={editingVigilanceAreaId}
+                isOpen={mainVigilanceAreaFormOpen}
+                vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
+              />
+            )}
+          </VigilanceAreaPanelShifter>
+        </Sidebar>
       )}
       {/* {(regulatoryAreas.isLoading || amps.isLoading) && ( */}
       {/*   <SpinnerWrapper $isLayersSidebarVisible={isLayersSidebarVisible}> */}
