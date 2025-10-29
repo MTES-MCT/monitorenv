@@ -136,7 +136,8 @@ class JpaEnvActionRepository(
                 val infractions: List<InfractionEntity> =
                     objectMapper.readValue(infractionsJson, Array<InfractionEntity>::class.java).toList()
                 val actionStartDateTimeUtc =
-                    row.getActionStartDatetimeUtc()
+                    row
+                        .getActionStartDatetimeUtc()
                         ?.toInstant()
                         ?.atZone(ZoneOffset.UTC)
 
