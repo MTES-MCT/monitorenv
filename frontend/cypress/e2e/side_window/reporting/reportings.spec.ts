@@ -119,10 +119,14 @@ context('Reportings', () => {
   })
 
   it('Reporting with MMSI should retrieve repeated infractions from previous envActions and suspicions of infraction', () => {
-    cy.getDataCy('status-filter-Archivés').click()
+    cy.intercept('GET', '/bff/v1/reportings/5').as('getReporting')
     cy.intercept('GET', '/bff/v1/infractions/actions/987654321').as('getRepeatedInfractions')
     cy.intercept('GET', '/bff/v1/infractions/reportings/987654321?idToExclude=5').as('getSuspicionOfInfraction')
+
+    cy.getDataCy('status-filter-Archivés').click()
     cy.getDataCy('edit-reporting-5').click({ force: true })
+    cy.wait(['@getReporting'])
+
     cy.wait(['@getRepeatedInfractions', '@getSuspicionOfInfraction'])
     cy.contains("Pas d'antécédent")
     createPendingMission().then(({ body }) => {

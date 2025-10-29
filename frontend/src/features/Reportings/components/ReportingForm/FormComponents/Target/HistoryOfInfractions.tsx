@@ -136,7 +136,7 @@ export function HistoryOfInfractions({
                 ))}
               </>
               {history.envActions.length > 0 && (
-                <Header $withMargin as="header">
+                <Header $withMargin={history.suspicionOfInfractions.length > 0} as="header">
                   Contrôles
                 </Header>
               )}
