@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.GetEnvActionsByMmsi
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetSuspicionOfInfractionsByMmsi
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionControlWithInfractionsDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingHistoryOfInfractionDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -19,9 +19,9 @@ class Infractions(
     @Operation(summary = "get infractions by mmsi")
     fun getInfractions(
         @PathVariable(name = "mmsi") mmsi: String,
-    ): List<EnvActionDataOutput> =
+    ): List<EnvActionControlWithInfractionsDataOutput> =
         getEnvActionsByMmsi.execute(mmsi).map {
-            EnvActionDataOutput.fromEnvActionEntity(it, null)
+            EnvActionControlWithInfractionsDataOutput.fromEnvActionControlWithInfractionsEntity(it)
         }
 
     @GetMapping("/reportings/{mmsi}")

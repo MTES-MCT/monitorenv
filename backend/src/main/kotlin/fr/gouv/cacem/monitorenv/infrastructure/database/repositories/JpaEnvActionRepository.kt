@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlWithInfractionsEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.recentActivity.RecentControlActivityProperties
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
@@ -11,6 +13,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.projections.EnvActionControlWithInfractions
 import org.geolatte.geom.MultiPoint
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.sql.Timestamp
 import java.time.Instant
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -123,6 +127,31 @@ class JpaEnvActionRepository(
             }
 
     @Transactional
-    override fun findAllByMmsi(mmsi: String): List<EnvActionEntity> =
-        idbEnvActionRepository.findAllEnvActionByMmsi(mmsi).map { it.toActionEntity(objectMapper) }
+    override fun findAllByMmsi(mmsi: String): List<EnvActionControlWithInfractionsEntity> {
+        val envActions = idbEnvActionRepository.findAllEnvActionByMmsi(mmsi)
+
+        return envActions.map { row: EnvActionControlWithInfractions ->
+            try {
+                val infractionsJson = row.getInfractions()
+                val infractions: List<InfractionEntity> =
+                    objectMapper.readValue(infractionsJson, Array<InfractionEntity>::class.java).toList()
+                val actionStartDateTimeUtc =
+                    row
+                        .getActionStartDatetimeUtc()
+                        .toInstant()
+                        ?.atZone(ZoneOffset.UTC)
+
+                EnvActionControlWithInfractionsEntity(
+                    id = row.getId(),
+                    actionStartDateTimeUtc = actionStartDateTimeUtc,
+                    themes = row.getThemes().toList(),
+                    controlUnits = row.getControlUnits().toList(),
+                    infractions = infractions,
+                )
+            } catch (e: Exception) {
+                println("Error parsing infractions for envAction: ${e.message}")
+                throw e
+            }
+        }
+    }
 }
