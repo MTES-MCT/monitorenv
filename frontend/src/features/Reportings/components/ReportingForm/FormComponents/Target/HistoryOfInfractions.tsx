@@ -115,26 +115,44 @@ export function HistoryOfInfractions({
             )}
           </InfractionsAndPV>
 
-          {history.suspicionOfInfractions.length > 0 && (
+          {(history.suspicionOfInfractions.length > 0 || history.envActions.length > 0) && (
             <StyledTooltip
               isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
               linkText="En savoir plus"
               orientation="TOP_LEFT"
             >
               {history.suspicionOfInfractions.length > 0 && <Header as="header">Signalements </Header>}
-              <ul>
+              <>
                 {history.suspicionOfInfractions.map(infraction => (
                   <ul key={infraction.id}>
                     <ReportingDate>Le {customDayjs(infraction.createdAt).format('DD/MM/YYYY')}</ReportingDate>
                     <li>
                       {infraction.reportingSources.length > 0 && (
-                        <li>{infraction.reportingSources.map(source => source.displayedSource).join(', ')}</li>
+                        <span>{infraction.reportingSources.map(source => source.displayedSource).join(', ')}</span>
                       )}
                     </li>
                     <li>{infraction.theme.name}</li>
                   </ul>
                 ))}
-              </ul>
+              </>
+              {history.envActions.length > 0 && (
+                <Header $withMargin as="header">
+                  Contrôles
+                </Header>
+              )}
+              <>
+                {history.envActions.map(action => (
+                  <ul key={action.id}>
+                    <ReportingDate>Le {customDayjs(action.actionStartDateTimeUtc).format('DD/MM/YYYY')}</ReportingDate>
+                    <li>
+                      {action.controlUnits && action.controlUnits.length > 0 && (
+                        <span>{action.controlUnits.join(', ')}</span>
+                      )}
+                    </li>
+                    <li>{action.themes && action.themes.length > 0 && <span>{action.themes.join(', ')}</span>}</li>
+                  </ul>
+                ))}
+              </>
             </StyledTooltip>
           )}
         </>
@@ -169,8 +187,9 @@ const StyledTooltip = styled(Tooltip)`
   padding: 8px;
   z-index: 101 !important;
 `
-const Header = styled(Bold)`
+const Header = styled(Bold)<{ $withMargin?: boolean }>`
   margin-bottom: 4px;
+  ${p => (p.$withMargin ? 'margin-top: 8px;' : '')}
 `
 const HistoryText = styled(Italic)`
   align-items: center;

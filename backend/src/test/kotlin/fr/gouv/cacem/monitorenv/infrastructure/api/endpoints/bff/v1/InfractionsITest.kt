@@ -1,11 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.GetEnvActionsByMmsi
-import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
+import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvActionControlWithInfractions
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetSuspicionOfInfractionsByMmsi
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFixture
 import org.hamcrest.Matchers.equalTo
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.util.*
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -35,15 +33,12 @@ class InfractionsITest {
     @MockitoBean
     private lateinit var getEnvActionsByMmsi: GetEnvActionsByMmsi
 
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
     @Test
     fun `getAll should return all envActions with given mmsi`() {
         // Given
         val mmsi = "0123456789"
         given(getEnvActionsByMmsi.execute(mmsi)).willReturn(
-            listOf(anEnvAction(objectMapper, UUID.randomUUID())),
+            listOf(anEnvActionControlWithInfractions()),
         )
 
         // When

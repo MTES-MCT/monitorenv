@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlWithInfractionsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
@@ -128,6 +129,20 @@ class EnvActionFixture {
                 completion = ActionCompletionEnum.COMPLETED,
                 missionId = missionId,
                 numberOfVesselsFlownOver = null,
+            )
+
+        fun anEnvActionControlWithInfractions(
+            startTime: ZonedDateTime? = null,
+            infractions: List<InfractionEntity> = listOf(),
+            themes: List<String> = listOf(),
+            controlUnits: List<String> = listOf(),
+        ): EnvActionControlWithInfractionsEntity =
+            EnvActionControlWithInfractionsEntity(
+                id = UUID.randomUUID(),
+                actionStartDateTimeUtc = startTime,
+                infractions = infractions,
+                themes = themes,
+                controlUnits = controlUnits,
             )
     }
 }

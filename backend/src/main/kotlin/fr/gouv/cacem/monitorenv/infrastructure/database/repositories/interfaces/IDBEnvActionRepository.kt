@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.projections.EnvActionControlWithInfractions
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -70,19 +71,28 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
 
     @Query(
         """
-    SELECT envAction.*
+    SELECT
+        envAction.id,
+        envAction.action_start_datetime_utc,
+        envAction.action_type,
+        jsonb_agg(DISTINCT infractions)::text AS infractions,
+        COALESCE(ARRAY_AGG(DISTINCT control_units.name), '{}') AS control_units,
+        COALESCE(ARRAY_AGG(DISTINCT themes.name), '{}') AS themes
     FROM env_actions envAction
     INNER JOIN missions ON envAction.mission_id = missions.id AND missions.deleted IS FALSE
-    WHERE EXISTS (
-      SELECT 1
-      FROM jsonb_array_elements(envAction.value->'infractions') AS infractions
-      WHERE infractions ->> 'mmsi' = :mmsi
-    )
-
+    LEFT JOIN themes_env_actions themes_env_action ON themes_env_action.env_actions_id = envAction.id
+    LEFT JOIN themes ON themes_env_action.themes_id = themes.id
+    LEFT JOIN themes_env_actions subThemes_env_action ON subThemes_env_action.env_actions_id = envAction.id
+    LEFT JOIN themes subThemes ON subThemes_env_action.themes_id = subThemes.id
+	LEFT JOIN missions_control_units ON envAction.mission_id = missions_control_units.mission_id
+    LEFT JOIN control_units ON missions_control_units.control_unit_id = control_units.id
+    LEFT JOIN LATERAL jsonb_array_elements(envAction.value->'infractions') AS infractions ON TRUE
+    WHERE infractions ->> 'mmsi' = :mmsi
+	GROUP BY envAction.id
     """,
         nativeQuery = true,
     )
-    fun findAllEnvActionByMmsi(mmsi: String): List<EnvActionModel>
+    fun findAllEnvActionByMmsi(mmsi: String): List<EnvActionControlWithInfractions>
 
     fun deleteAllByMissionId(missiondId: Int)
 }

@@ -1,7 +1,7 @@
 import { monitorenvPrivateApi } from './api'
 
 import type { SuspicionOfInfractions } from '../domain/entities/reporting'
-import type { EnvAction } from 'domain/entities/missions'
+import type { EnvActionControlWithControlUnit } from 'domain/entities/missions'
 
 type SuspicionOfInfractionsQuery = {
   idToExclude?: number
@@ -9,7 +9,7 @@ type SuspicionOfInfractionsQuery = {
 }
 export const infractionsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: build => ({
-    getEnvActionsByMmsi: build.query<EnvAction[], string>({
+    getEnvActionsByMmsi: build.query<EnvActionControlWithControlUnit[], string>({
       providesTags: () => ['Infractions'],
       query: mmsi => `/v1/infractions/actions/${mmsi}`
     }),

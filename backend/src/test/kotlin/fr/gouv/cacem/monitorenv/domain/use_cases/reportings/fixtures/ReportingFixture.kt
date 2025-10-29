@@ -142,7 +142,6 @@ class ReportingFixture {
                 reportingSources = reportingSources.map { ReportingSourceDTO(it, null, null) },
                 reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
                 createdAt = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                validityTime = validityTime,
                 tags = emptyList(),
                 theme = aTheme(),
             )

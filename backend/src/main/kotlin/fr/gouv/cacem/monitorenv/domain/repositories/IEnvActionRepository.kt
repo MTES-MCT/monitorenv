@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlWithInfractionsEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
 import org.locationtech.jts.geom.Geometry
 import java.time.Instant
@@ -20,5 +21,5 @@ interface IEnvActionRepository {
         startedBefore: Instant,
     ): List<RecentControlsActivityListDTO>
 
-    fun findAllByMmsi(mmsi: String): List<EnvActionEntity>
+    fun findAllByMmsi(mmsi: String): List<EnvActionControlWithInfractionsEntity>
 }

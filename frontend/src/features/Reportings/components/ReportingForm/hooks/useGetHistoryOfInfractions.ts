@@ -2,6 +2,7 @@ import { useLazyGetEnvActionsByMmsiQuery, useLazyGetSuspicionOfInfractionsQuery 
 import { getTotalInfraction, getTotalPV } from '@features/Mission/utils'
 import { isNewReporting } from '@features/Reportings/utils'
 
+import type { EnvActionControlWithInfractions } from 'domain/entities/missions'
 import type { SuspicionOfInfractions } from 'domain/entities/reporting'
 
 type UseGetHistoryOfInfractionsProps = {
@@ -11,6 +12,7 @@ type UseGetHistoryOfInfractionsProps = {
 }
 
 export type HistoryOfInfractionsProps = {
+  envActions: EnvActionControlWithInfractions[]
   isLoading: boolean
   suspicionOfInfractions: SuspicionOfInfractions[]
   totalInfraction: number
@@ -18,6 +20,7 @@ export type HistoryOfInfractionsProps = {
 }
 
 export const initialHistory: HistoryOfInfractionsProps = {
+  envActions: [],
   isLoading: true,
   suspicionOfInfractions: [],
   totalInfraction: 0,
@@ -51,6 +54,7 @@ export const useGetHistoryOfInfractions = () => {
     const totalPV = getTotalPV(envActionsByMmsi ?? [])
 
     return {
+      envActions: envActionsByMmsi ?? [],
       isLoading: isLoadingLazyEnvActions || isLoadingLazySuspicions,
       suspicionOfInfractions: suspicionOfInfractionsByMmsi,
       totalInfraction: totalInfraction ?? 0,
