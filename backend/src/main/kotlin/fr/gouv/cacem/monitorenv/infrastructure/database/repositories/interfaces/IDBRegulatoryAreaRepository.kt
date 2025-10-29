@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query
 interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> {
     @Query(
         value = """
-        SELECT 
+        SELECT
           r.id,
           r.date,
           r.date_fin,
@@ -18,17 +18,23 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
           r.entity_name,
           r.facade,
           CASE
-            WHEN :withGeometry = true AND (:zoom IS NULL OR :zoom >= 14) THEN
+            WHEN :withGeometry IS FALSE THEN NULL
+            WHEN :withGeometry IS TRUE AND (:zoom IS NULL OR :zoom >= 14) THEN
             r.geom
-            WHEN :withGeometry = true AND :zoom < 14 THEN
-              ST_Simplify(
-                r.geom,
-                CASE
-                  WHEN :zoom <= 5 THEN 0.05
-                  WHEN :zoom <= 7 THEN 0.01
-                  WHEN :zoom <= 12 THEN 0.001
-                  ELSE 0.0001
-                END
+            WHEN :withGeometry IS TRUE AND :zoom < 14 THEN
+            ST_Multi(
+                ST_CollectionExtract(
+                    ST_MakeValid(
+                        ST_SimplifyPreserveTopology(
+                            r.geom,
+                            CASE
+                              WHEN :zoom <= 5 THEN 0.01
+                              WHEN :zoom <= 7 THEN 0.05
+                              WHEN :zoom <= 11 THEN 0.001
+                              ELSE 0.0001
+                            END
+                          )
+                    ), 3)
               )
             END as geom,
           r.layer_name,
@@ -39,7 +45,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
           r.type,
           r.url
         FROM regulations_cacem r
-        WHERE 
+        WHERE
             (:withGeometry IS FALSE OR :minX IS NULL OR :minY IS NULL OR :maxX IS NULL OR :maxY IS NULL)
             OR ST_Intersects(r.geom, ST_MakeEnvelope(:minX, :minY, :maxX, :maxY, 4326))
             ORDER BY r.layer_name
