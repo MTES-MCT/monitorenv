@@ -121,8 +121,8 @@ export function HistoryOfInfractions({
               linkText="En savoir plus"
               orientation="TOP_LEFT"
             >
-              {history.suspicionOfInfractions.length > 0 && <Header as="header">Signalements </Header>}
-              <>
+              <div>
+                {history.suspicionOfInfractions.length > 0 && <Header as="header">Signalements </Header>}
                 {history.suspicionOfInfractions.map(infraction => (
                   <ul key={infraction.id}>
                     <ReportingDate>Le {customDayjs(infraction.createdAt).format('DD/MM/YYYY')}</ReportingDate>
@@ -134,13 +134,10 @@ export function HistoryOfInfractions({
                     <li>{infraction.theme.name}</li>
                   </ul>
                 ))}
-              </>
-              {history.envActions.length > 0 && (
-                <Header $withMargin={history.suspicionOfInfractions.length > 0} as="header">
-                  Contrôles
-                </Header>
-              )}
-              <>
+              </div>
+
+              <div>
+                {history.envActions.length > 0 && <Header as="header">Contrôles</Header>}
                 {history.envActions.map(action => (
                   <ul key={action.id}>
                     <ReportingDate>Le {customDayjs(action.actionStartDateTimeUtc).format('DD/MM/YYYY')}</ReportingDate>
@@ -152,7 +149,7 @@ export function HistoryOfInfractions({
                     <li>{action.themes && action.themes.length > 0 && <span>{action.themes.join(', ')}</span>}</li>
                   </ul>
                 ))}
-              </>
+              </div>
             </StyledTooltip>
           )}
         </>
@@ -183,13 +180,15 @@ const BoldOrNormalText = styled.span<{ $isBold: boolean }>`
 `
 
 const StyledTooltip = styled(Tooltip)`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   max-width: 215px;
   padding: 8px;
   z-index: 101 !important;
 `
-const Header = styled(Bold)<{ $withMargin?: boolean }>`
+const Header = styled(Bold)`
   margin-bottom: 4px;
-  ${p => (p.$withMargin ? 'margin-top: 8px;' : '')}
 `
 const HistoryText = styled(Italic)`
   align-items: center;

@@ -240,7 +240,7 @@ class JpaReportingRepository(
     override fun findSuspicionOfInfractionsByMmsi(
         mmsi: String,
         idToExclude: Int?,
-    ): List<SuspicionOfInfractions>? =
+    ): List<SuspicionOfInfractions> =
         dbReportingRepository.findAllSuspicionOfInfractionsByMmsi(mmsi, idToExclude).map {
             it.toReportingHistoryOfInfraction()
         }

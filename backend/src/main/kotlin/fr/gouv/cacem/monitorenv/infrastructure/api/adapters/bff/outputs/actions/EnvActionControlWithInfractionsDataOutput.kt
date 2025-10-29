@@ -12,7 +12,7 @@ data class EnvActionControlWithInfractionsDataOutput(
     val actionType: ActionTypeEnum = ActionTypeEnum.CONTROL,
     val infractions: List<InfractionEntity>? = listOf(),
     val themes: List<String>? = listOf(),
-    val controlUnits: List<String>,
+    val controlUnits: List<String>? = listOf(),
 ) {
     companion object {
         fun fromEnvActionControlWithInfractionsEntity(
