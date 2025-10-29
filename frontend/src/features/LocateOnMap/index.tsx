@@ -16,12 +16,14 @@ export function LocateOnMap() {
 
   return (
     <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
-      {searchType === SearchType.PLACES && <SearchLocation />}
-      {searchType === SearchType.VESSELS && <SearchVessel />}
+      <SearchWrapper>
+        {searchType === SearchType.PLACES && <SearchLocation />}
+        {searchType === SearchType.VESSELS && <SearchVessel />}
 
-      {isVesselsEnabled() && (
-        <SearchSwitcher onChange={nextSearchType => setSearchType(nextSearchType)} searchType={searchType} />
-      )}
+        {isVesselsEnabled() && (
+          <SearchSwitcher onChange={nextSearchType => setSearchType(nextSearchType)} searchType={searchType} />
+        )}
+      </SearchWrapper>
       <StyledIconButton accent={Accent.PRIMARY} Icon={Icon.Search} size={Size.LARGE} tabIndex={-1} title="Rechercher" />
     </Wrapper>
   )
@@ -38,6 +40,11 @@ const Wrapper = styled.div<{
     p.$hasFullHeightRightDialogOpen ? (p.$isRightMenuOpened ? 560 : 512) : 10}px;
   top: 10px;
   transition: right 0.5s ease-out;
+`
+
+const SearchWrapper = styled.div`
+  display: flex;
+  width: 500px;
 `
 
 // TODO delete padding when Monitor-ui component have good padding
