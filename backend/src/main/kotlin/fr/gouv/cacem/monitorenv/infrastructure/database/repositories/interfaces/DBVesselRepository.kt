@@ -9,10 +9,14 @@ interface DBVesselRepository : CrudRepository<VesselModel, Int> {
     @Query(
         value =
             """
-                SELECT vessel FROM VesselModel vessel WHERE vessel.isBanned IS FALSE AND UPPER(vessel.shipName) LIKE CONCAT('%', UPPER(:searched), '%')
-                    OR UPPER(vessel.imo) LIKE CONCAT('%', UPPER(:searched), '%')
-                    OR UPPER(vessel.immatriculation) LIKE CONCAT('%', UPPER(:searched), '%')
-                    OR UPPER(vessel.mmsi) LIKE CONCAT('%', UPPER(:searched), '%')
+                SELECT vessel FROM VesselModel vessel 
+                WHERE vessel.isBanned IS FALSE AND vessel.status = 'A' 
+                    AND (
+                        UPPER(vessel.shipName) LIKE CONCAT('%', UPPER(:searched), '%')
+                        OR UPPER(vessel.imo) LIKE CONCAT('%', UPPER(:searched), '%')
+                        OR UPPER(vessel.immatriculation) LIKE CONCAT('%', UPPER(:searched), '%')
+                        OR UPPER(vessel.mmsi) LIKE CONCAT('%', UPPER(:searched), '%')
+                    )
                     """,
     )
     fun searchBy(
