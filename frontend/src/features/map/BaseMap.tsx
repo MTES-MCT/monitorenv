@@ -1,3 +1,4 @@
+import { useSyncMapViewToRedux } from '@features/map/hook/useSyncMapView'
 import { MultiRadio, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { isCypress } from '@utils/isCypress'
 import {
@@ -258,6 +259,8 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
       }
     }
   }
+
+  useSyncMapViewToRedux(initialMap)
 
   return (
     <MapWrapper>

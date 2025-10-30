@@ -3,7 +3,7 @@ import type { Extent } from 'ol/extent'
 
 export type AMPFromAPI = {
   designation: string
-  geom: GeoJSON.MultiPolygon
+  geom: GeoJSON.MultiPolygon | undefined
   id: number
   name: string
   refReg: string | undefined

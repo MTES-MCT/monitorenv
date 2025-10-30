@@ -10,7 +10,7 @@ import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef } from 'react'
 
-import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayersAPI'
+import { useGetRegulatoryLayerByIdQuery } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
@@ -28,11 +28,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
 
   const ref = createRef<HTMLLIElement>()
 
-  const { layer } = useGetRegulatoryLayersQuery(undefined, {
-    selectFromResult: result => ({
-      layer: result?.currentData?.entities[layerId]
-    })
-  })
+  const { data: layer } = useGetRegulatoryLayerByIdQuery(layerId)
 
   const handleSelectZone = e => {
     e.stopPropagation()

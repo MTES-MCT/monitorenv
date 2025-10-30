@@ -18,11 +18,14 @@ export function LocalizedAreaPanel({ localizedArea }: { localizedArea?: Localize
   const dispatch = useAppDispatch()
   const { metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
-  const { amps } = useGetAMPsQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      amps: Object.values(data?.entities ?? []).filter(amp => localizedArea?.ampIds?.includes(amp.id))
-    })
-  })
+  const { amps } = useGetAMPsQuery(
+    { withGeometry: false },
+    {
+      selectFromResult: ({ data }) => ({
+        amps: Object.values(data?.entities ?? []).filter(amp => localizedArea?.ampIds?.includes(amp.id))
+      })
+    }
+  )
   const { controlUnits } = useGetControlUnitsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       controlUnits: data?.filter(controlUnit => localizedArea?.controlUnitIds?.includes(controlUnit.id))
@@ -61,6 +64,7 @@ export function LocalizedAreaPanel({ localizedArea }: { localizedArea?: Localize
     </Wrapper>
   )
 }
+
 const Wrapper = styled.div<{ $regulatoryMetadataPanelIsOpen: boolean }>`
   border-radius: 2px;
   width: 400px;

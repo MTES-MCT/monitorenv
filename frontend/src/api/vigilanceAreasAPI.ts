@@ -52,7 +52,7 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
           })
         )
     }),
-    getVigilanceAreasByIds: build.query<VigilanceArea.VigilanceArea[], number[]>({
+    getVigilanceAreasByIds: build.query<VigilanceArea.VigilanceAreaLayer[], number[]>({
       providesTags: result =>
         result
           ? [
@@ -60,7 +60,18 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
               { id: 'LIST', type: 'VigilanceAreas' }
             ]
           : [{ id: 'LIST', type: 'VigilanceAreas' }],
-      query: ids => ({ body: ids, method: 'POST', url: '/v1/vigilance_areas' })
+      query: ids => ({ body: ids, method: 'POST', url: '/v1/vigilance_areas' }),
+      transformResponse: (response: VigilanceArea.VigilanceAreaLayer[]) =>
+        response.map(vigilanceAreaLayer => {
+          const bbox = vigilanceAreaLayer.geom?.coordinates
+            ? boundingExtent(vigilanceAreaLayer.geom?.coordinates?.flat().flat() as Coordinate[])
+            : []
+
+          return {
+            ...vigilanceAreaLayer,
+            bbox
+          }
+        })
     }),
 
     updateVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({

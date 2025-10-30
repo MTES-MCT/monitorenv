@@ -47,16 +47,20 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
       regulatory => regulatory.layerName
     )
 
-    const { selectedRegulatoryAreasByLayerName } = useGetRegulatoryLayersQuery(undefined, {
-      selectFromResult: ({ data }) => ({
-        selectedRegulatoryAreasByLayerName: groupBy(
-          Object.values(data?.entities ?? [])
-            .filter(regulatory => selectedRegulatoryAreaIds.includes(regulatory.id))
-            .sort((a, b) => a.layerName.localeCompare(b.layerName)),
-          regulatory => regulatory.layerName
-        )
-      })
-    })
+    // FIXME: replace with endpoint findByIds/groupName
+    const { selectedRegulatoryAreasByLayerName } = useGetRegulatoryLayersQuery(
+      { withGeometry: false },
+      {
+        selectFromResult: ({ data }) => ({
+          selectedRegulatoryAreasByLayerName: groupBy(
+            Object.values(data?.entities ?? [])
+              .filter(regulatory => selectedRegulatoryAreaIds.includes(regulatory.id))
+              .sort((a, b) => a.layerName.localeCompare(b.layerName)),
+            regulatory => regulatory.layerName
+          )
+        })
+      }
+    )
 
     useEffect(() => {
       if (isSelectedAccordionOpen) {

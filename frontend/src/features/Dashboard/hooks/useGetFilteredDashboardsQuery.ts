@@ -13,7 +13,7 @@ export const useGetFilteredDashboardsQuery = (skip = false) => {
   const { controlUnits, regulatoryTags, seaFronts, specificPeriod, updatedAt } = useAppSelector(
     state => state.dashboardFilters.filters
   )
-  const { data: regulatoryAreas } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryAreas } = useGetRegulatoryLayersQuery({ withGeometry: false })
 
   const {
     data: dashboards,
