@@ -110,8 +110,8 @@ export function useExportImages() {
   const activeDashboard = dashboard?.dashboard
   const backgroundMap = dashboard?.backgroundMap
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(undefined, { skip: !dashboard })
-  const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery({ withGeometry: true }, { skip: !dashboard })
+  const { data: ampLayers } = useGetAMPsQuery({ withGeometry: true }, { skip: !dashboard })
   const { data: allVigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
   const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery(activeDashboard?.vigilanceAreaIds ?? [], {
     skip: !activeDashboard?.vigilanceAreaIds

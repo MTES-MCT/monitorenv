@@ -27,9 +27,9 @@ export async function populateExtractAreaFromApi(
   extractedAreaFromApi: Dashboard.ExtractedAreaFromApi
 ): Promise<Dashboard.ExtractedArea> {
   const { data: regulatoryLayers } = await dispatch(
-    regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate({ withGeometry: true })
+    regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate({ withGeometry: false })
   )
-  const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate({ withGeometry: true }))
+  const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate({ withGeometry: false }))
   const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
   const { data: reportings } = await dispatch(
     reportingsAPI.endpoints.getReportingsByIds.initiate(extractedAreaFromApi.reportingIds)

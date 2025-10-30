@@ -7,7 +7,7 @@ import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
 
-import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayersAPI'
+import { useGetRegulatoryLayerByIdQuery } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import {
@@ -39,14 +39,8 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
-  const { layer } = useGetRegulatoryLayersQuery(
-    { withGeometry: true },
-    {
-      selectFromResult: result => ({
-        layer: result?.currentData?.entities[layerId]
-      })
-    }
-  )
+  const { data: layer } = useGetRegulatoryLayerByIdQuery(layerId)
+
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
   const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)

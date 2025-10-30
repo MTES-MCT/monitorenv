@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.hamcrest.Matchers.equalTo
@@ -38,6 +39,9 @@ class RegulatoryAreasITests {
 
     @MockitoBean
     private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
+
+    @MockitoBean
+    private lateinit var getRegulatoryAreasByIds: GetRegulatoryAreasByIds
 
     private val wktReader = WKTReader()
 

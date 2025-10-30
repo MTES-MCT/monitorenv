@@ -15,34 +15,31 @@ export const selectDashboardOnMap =
   async dispatch => {
     // get dashboard datas
     try {
-      const { data: reportings } = await dispatch(
-        reportingsAPI.endpoints.getReportingsByIds.initiate(dashboard.reportingIds)
-      )
+      const { data: reportings } =
+        dashboard.reportingIds.length > 0
+          ? await dispatch(reportingsAPI.endpoints.getReportingsByIds.initiate(dashboard.reportingIds))
+          : { data: { entities: [] } }
 
-      const { data: amps } = await dispatch(ampsAPI.endpoints.getAMPs.initiate({ withGeometry: true }))
+      const { data: amps } =
+        dashboard.ampIds.length > 0
+          ? await dispatch(ampsAPI.endpoints.getAmpsByIds.initiate(dashboard.ampIds))
+          : { data: [] }
 
-      const { data: regulatoryAreas } = await dispatch(
-        regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate({ withGeometry: true })
-      )
-      const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
-
-      const filteredAmps = Object.values(amps?.entities ?? []).filter(amp => dashboard.ampIds.includes(amp.id))
-      const filteredRegulatoryAreas = Object.values(regulatoryAreas?.entities ?? []).filter(regulatoryArea =>
-        dashboard.regulatoryAreaIds.includes(regulatoryArea.id)
-      )
-      const filteredReportings = Object.values(reportings?.entities ?? []).filter(reporting =>
-        dashboard.reportingIds.includes(+reporting.id)
-      )
-      const filteredVigilanceAreas = Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
-        dashboard.vigilanceAreaIds.includes(vigilanceArea.id)
-      )
+      const { data: regulatoryAreas } =
+        dashboard.regulatoryAreaIds.length > 0
+          ? await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryAreasByIds.initiate(dashboard.regulatoryAreaIds))
+          : { data: [] }
+      const { data: vigilanceAreas } =
+        dashboard.vigilanceAreaIds.length > 0
+          ? await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreasByIds.initiate(dashboard.vigilanceAreaIds))
+          : { data: [] }
       dispatch(
         dashboardActions.setSelectedDashboardOnMap({
           ...dashboard,
-          amps: filteredAmps,
-          regulatoryAreas: filteredRegulatoryAreas,
-          reportings: filteredReportings,
-          vigilanceAreas: filteredVigilanceAreas
+          amps: amps ?? [],
+          regulatoryAreas: regulatoryAreas ?? [],
+          reportings: Object.values(reportings?.entities ?? []),
+          vigilanceAreas: vigilanceAreas ?? []
         })
       )
     } catch (error) {

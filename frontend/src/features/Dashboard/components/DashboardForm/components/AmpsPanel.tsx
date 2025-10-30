@@ -14,16 +14,19 @@ import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
-import { forwardRef, type ComponentProps } from 'react'
+import { type ComponentProps, forwardRef } from 'react'
 import styled from 'styled-components'
 
 export const AmpsPanel = forwardRef<HTMLDivElement, { layerId: number; onClose: () => void } & ComponentProps<'div'>>(
   ({ layerId, onClose, ...props }, ref) => {
-    const { layer: ampMetadata } = useGetAMPsQuery(undefined, {
-      selectFromResult: result => ({
-        layer: result?.currentData?.entities[layerId]
-      })
-    })
+    const { layer: ampMetadata } = useGetAMPsQuery(
+      { withGeometry: false },
+      {
+        selectFromResult: result => ({
+          layer: result?.currentData?.entities[layerId]
+        })
+      }
+    )
 
     return (
       // eslint-disable-next-line react/jsx-props-no-spreading

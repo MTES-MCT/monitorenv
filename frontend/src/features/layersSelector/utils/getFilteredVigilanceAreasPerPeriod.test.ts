@@ -205,7 +205,7 @@ describe('filterVigilanceAreas', () => {
 
   it('filters areas within current quarter', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER)
-    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite, last3Months])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
   })
 
   it('filters areas within current year', () => {

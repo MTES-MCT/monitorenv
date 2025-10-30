@@ -10,12 +10,12 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         value = """
         SELECT
           r.id,
+          r.plan,
           r.date,
           r.date_fin,
           r.duree_validite,
           r.editeur,
           r.edition,
-          r.entity_name,
           r.facade,
           CASE
             WHEN :withGeometry IS FALSE THEN NULL
@@ -39,9 +39,11 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
             END as geom,
           r.layer_name,
           r.observation,
+          r.poly_name,
           r.ref_reg,
           r.source,
           r.temporalite,
+          r.resume,
           r.type,
           r.url
         FROM regulations_cacem r

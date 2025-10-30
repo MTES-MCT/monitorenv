@@ -2,7 +2,7 @@ import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { SubThemesOrSubTagsContainer, ThemesOrTagsContainer } from '@components/Table/style'
 
 export function RegulatoryAreasTagsCell({ regulatoryAreaIds }: { regulatoryAreaIds: number[] }) {
-  const { data: regulatoryAreas } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryAreas } = useGetRegulatoryLayersQuery({ withGeometry: false })
   if (!regulatoryAreas) {
     return null
   }

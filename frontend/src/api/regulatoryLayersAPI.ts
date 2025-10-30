@@ -28,6 +28,18 @@ type RegulatoryAreaQueryOption = {
 }
 export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
+    getRegulatoryAreasByIds: builder.query<RegulatoryLayerWithMetadata[], number[]>({
+      query: ids => ({ body: ids, method: 'POST', url: '/v1/regulatory' }),
+      transformResponse: (response: RegulatoryLayerWithMetadataFromAPI[]) =>
+        response.map(regulatoryArea => {
+          const bbox = boundingExtent((regulatoryArea.geom?.coordinates ?? []).flat().flat() as Coordinate[])
+
+          return {
+            ...regulatoryArea,
+            bbox
+          }
+        })
+    }),
     getRegulatoryLayerById: builder.query<RegulatoryLayerWithMetadata, number>({
       query: id => `/v1/regulatory/${id}`,
       transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_LAYER_ERROR_MESSAGE, response),
@@ -40,10 +52,7 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
         }
       }
     }),
-    getRegulatoryLayers: builder.query<
-      EntityState<RegulatoryLayerWithMetadata, number>,
-      RegulatoryAreaQueryOption | void
-    >({
+    getRegulatoryLayers: builder.query<EntityState<RegulatoryLayerWithMetadata, number>, RegulatoryAreaQueryOption>({
       query: ({ bbox, withGeometry, zoom } = { bbox: undefined, withGeometry: false, zoom: undefined }) =>
         `/v1/regulatory?withGeometry=${withGeometry}${withGeometry && bbox ? `&bbox=${bbox}` : ''}${
           withGeometry && zoom ? `&zoom=${zoom}` : ''
@@ -65,11 +74,12 @@ export const regulatoryLayersAPI = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-export const { useGetRegulatoryLayerByIdQuery, useGetRegulatoryLayersQuery } = regulatoryLayersAPI
+export const { useGetRegulatoryAreasByIdsQuery, useGetRegulatoryLayerByIdQuery, useGetRegulatoryLayersQuery } =
+  regulatoryLayersAPI
 
 export const getSelectedRegulatoryLayers = createSelector(
   [
-    regulatoryLayersAPI.endpoints.getRegulatoryLayers.select(),
+    regulatoryLayersAPI.endpoints.getRegulatoryLayers.select({ withGeometry: false }),
     (state: HomeRootState) => state.regulatory.selectedRegulatoryLayerIds
   ],
   (regulatoryLayers, selectedRegulatoryLayerIds) => {
@@ -84,7 +94,7 @@ export const getSelectedRegulatoryLayers = createSelector(
 )
 
 export const getRegulatoryLayersIdsGroupedByName = createSelector(
-  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select()],
+  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select({ withGeometry: false })],
   regulatoryLayers => {
     const regulatoryLayersIdsByName = {}
     const regulatoryLayersEntities = regulatoryLayers?.data?.entities
@@ -115,12 +125,16 @@ export const getNumberOfRegulatoryLayerZonesByGroupName = createCachedSelector(
 )((_, name) => name)
 
 export const getRegulatoryAreasByIds = createSelector(
-  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select({ withGeometry: true }), (_, ids: number[]) => ids],
+  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select({ withGeometry: false }), (_, ids: number[]) => ids],
   ({ data }, ids) => Object.values(data?.entities ?? []).filter(regulatoryArea => ids.includes(regulatoryArea.id))
 )
 
 export const getExtentOfRegulatoryLayersGroupByGroupName = createCachedSelector(
-  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select({ withGeometry: true }), getRegulatoryLayersIdsByGroupName],
+  // FIXME: replace with endpoint findByIds/groupName
+  [
+    regulatoryLayersAPI.endpoints.getRegulatoryLayers.select({ withGeometry: false }),
+    getRegulatoryLayersIdsByGroupName
+  ],
   (regulatoryLayersQuery, regulatoryLayerIdsByName) => {
     const amps = regulatoryLayerIdsByName
       ?.map(id => regulatoryLayersQuery.data?.entities[id])
