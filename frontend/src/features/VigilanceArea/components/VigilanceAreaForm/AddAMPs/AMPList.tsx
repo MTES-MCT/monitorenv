@@ -6,8 +6,9 @@ type AMPListProps = {
   isReadOnly?: boolean
   linkedAMPs: number[]
 }
+
 export function AMPList({ isReadOnly = false, linkedAMPs }: AMPListProps) {
-  const { data: AMPLayers } = useGetAMPsQuery()
+  const { data: AMPLayers } = useGetAMPsQuery({ withGeometry: false })
   const linkAMPLayers = linkedAMPs
     .map(ampId => AMPLayers?.entities[ampId])
     .filter(amp => !!amp)

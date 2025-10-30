@@ -1,4 +1,4 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPQuery } from '@api/ampsAPI'
 import { StyledTransparentButton } from '@components/style'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
@@ -25,14 +25,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
   const ref = createRef<HTMLLIElement>()
 
-  const { layer } = useGetAMPsQuery(
-    { withGeometry: true },
-    {
-      selectFromResult: result => ({
-        layer: result?.currentData?.entities[layerId]
-      })
-    }
-  )
+  const { data: layer } = useGetAMPQuery(layerId)
 
   const handleSelectZone = e => {
     e.stopPropagation()

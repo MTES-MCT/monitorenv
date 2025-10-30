@@ -6,6 +6,8 @@ import org.locationtech.jts.geom.Geometry
 interface IRegulatoryAreaRepository {
     fun findById(id: Int): RegulatoryAreaEntity?
 
+    fun findAllByIds(ids: List<Int>): List<RegulatoryAreaEntity>
+
     fun findAll(
         withGeometry: Boolean,
         zoom: Int? = null,

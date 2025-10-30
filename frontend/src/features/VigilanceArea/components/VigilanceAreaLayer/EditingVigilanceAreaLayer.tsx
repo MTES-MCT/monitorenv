@@ -10,7 +10,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
 import { getFormattedGeomForFeature, getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
@@ -27,6 +27,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const vigilanceAreaGeom = useAppSelector(state => state.vigilanceArea.geometry)
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const { bbox, zoom } = useAppSelector(state => state.map.mapView)
 
   const isLayerVisible = !!editingVigilanceAreaId
 
@@ -63,7 +64,14 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   vectorLayerRef.current.name = Layers.VIGILANCE_AREA.code
 
   // Regulatory Areas Layers
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(
+    {
+      bbox,
+      withGeometry: true,
+      zoom
+    },
+    { skip: !isLayerVisible || !(bbox || zoom) }
+  )
   const regulatoryAreasFeatures = useMemo(() => {
     if (!regulatoryLayers || regulatoryAreasToAdd.length === 0) {
       return []
@@ -100,7 +108,14 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   regulatoryAreasVectorLayerRef.current.name = Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code
 
   // AMP Layer
-  const { data: ampLayers } = useGetAMPsQuery()
+  const { data: ampLayers } = useGetAMPsQuery(
+    {
+      bbox,
+      withGeometry: true,
+      zoom
+    },
+    { skip: !isLayerVisible || !(bbox || zoom) }
+  )
   const ampFeatures = useMemo(() => {
     if (!ampLayers || ampToAdd.length === 0) {
       return []

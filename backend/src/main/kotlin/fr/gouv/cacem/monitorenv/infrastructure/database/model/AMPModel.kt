@@ -26,10 +26,10 @@ data class AMPModel(
     @Column(name = "url_legicem")
     val urlLegicem: String? = null,
 ) {
-    fun toAMP(withGeometry: Boolean) =
+    fun toAMP() =
         AMPEntity(
             id = id,
-            geom = if (withGeometry) geom else null,
+            geom = geom,
             name = name,
             designation = designation,
             refReg = refReg,

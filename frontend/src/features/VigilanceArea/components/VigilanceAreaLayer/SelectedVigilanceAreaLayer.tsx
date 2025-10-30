@@ -9,7 +9,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getVigilanceAreaLayerStyle } from './style'
 import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
@@ -22,6 +22,7 @@ import type { Geometry } from 'ol/geom'
 export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const selectedVigilanceAreaId = useAppSelector(state => state.vigilanceArea.selectedVigilanceAreaId)
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
+  const { bbox, zoom } = useAppSelector(state => state.map.mapView)
 
   const { selectedVigilanceArea } = useGetVigilanceAreasQuery(undefined, {
     selectFromResult: ({ data }) => ({
@@ -64,7 +65,14 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     !!selectedVigilanceAreaId &&
     isLayerVisible
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(
+    {
+      bbox,
+      withGeometry: true,
+      zoom
+    },
+    { skip: !isRegulatoryLayerVisible || !(bbox || zoom) }
+  )
 
   const regulatoryAreasFeatures = useMemo(() => {
     const linkedRegulatoryAreas = selectedVigilanceArea?.linkedRegulatoryAreas ?? []
@@ -118,7 +126,15 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
   const isAMPLayerVisible =
     !!(ampIdsToBeDisplayed && ampIdsToBeDisplayed?.length > 0) && !!selectedVigilanceAreaId && isLayerVisible
-  const { data: ampLayers } = useGetAMPsQuery()
+
+  const { data: ampLayers } = useGetAMPsQuery(
+    {
+      bbox,
+      withGeometry: true,
+      zoom
+    },
+    { skip: !isAMPLayerVisible || !(bbox || zoom) }
+  )
   const ampFeatures = useMemo(() => {
     const linkedAMPs = selectedVigilanceArea?.linkedAMPs ?? []
     if (!ampLayers || linkedAMPs.length === 0) {
