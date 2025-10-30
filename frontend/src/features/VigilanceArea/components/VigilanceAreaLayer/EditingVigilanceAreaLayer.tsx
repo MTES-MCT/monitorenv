@@ -28,6 +28,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   const vigilanceAreaGeom = useAppSelector(state => state.vigilanceArea.geometry)
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const { bbox, zoom } = useAppSelector(state => state.map.mapView)
 
   const isLayerVisible = !!editingVigilanceAreaId
 
@@ -103,7 +104,14 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   regulatoryAreasVectorLayerRef.current.name = Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code
 
   // AMP Layer
-  const { data: ampLayers } = useGetAMPsQuery()
+  const { data: ampLayers } = useGetAMPsQuery(
+    {
+      bbox,
+      withGeometry: true,
+      zoom
+    },
+    { skip: !isLayerVisible || !(bbox || zoom) }
+  )
   const ampFeatures = useMemo(() => {
     if (!ampLayers || ampToAdd.length === 0) {
       return []

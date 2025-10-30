@@ -18,12 +18,15 @@ export function AmpMetadata() {
   const dispatch = useAppDispatch()
   const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
-  const { ampMetadata } = useGetAMPsQuery(undefined, {
-    pollingInterval: FOUR_HOURS,
-    selectFromResult: result => ({
-      ampMetadata: metadataLayerId && result?.data?.entities[metadataLayerId]
-    })
-  })
+  const { ampMetadata } = useGetAMPsQuery(
+    { withGeometry: false },
+    {
+      pollingInterval: FOUR_HOURS,
+      selectFromResult: result => ({
+        ampMetadata: metadataLayerId && result?.data?.entities[metadataLayerId]
+      })
+    }
+  )
 
   const onCloseIconClicked = useCallback(() => {
     dispatch(closeMetadataPanel())

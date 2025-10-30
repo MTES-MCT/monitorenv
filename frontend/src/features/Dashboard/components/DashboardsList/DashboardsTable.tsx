@@ -26,7 +26,7 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
   const { pathname } = useLocation()
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -25 : 0
 
-  const { data: regulatoryAreas } = useGetRegulatoryAreasQuery()
+  const { data: regulatoryAreas } = useGetRegulatoryAreasQuery({ withGeometry: false })
   const { data: controlUnits } = useGetControlUnitsQuery()
 
   const flattenRegulatoryAreas = useMemo(

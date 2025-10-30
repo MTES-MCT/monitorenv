@@ -12,7 +12,7 @@ import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
 
-import { useGetAMPsQuery } from '../../../../../api/ampsAPI'
+import { useGetAMPQuery } from '../../../../../api/ampsAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/Amp'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
@@ -29,14 +29,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const ampsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
 
-  const { layer } = useGetAMPsQuery(
-    { withGeometry: true },
-    {
-      selectFromResult: ({ data }) => ({
-        layer: data?.entities[layerId]
-      })
-    }
-  )
+  const { data: layer } = useGetAMPQuery(layerId)
   const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
   const isZoneSelected = selectedAmpLayerIds.includes(layerId)

@@ -92,58 +92,57 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
       )}
       <PanelSubPart>
         <PanelInlineItemLabel>Réglementations en lien</PanelInlineItemLabel>
-        {regulatoryAreas &&
-          regulatoryAreas.map(regulatoryArea => {
-            const layerTitle = getRegulatoryAreaTitle(regulatoryArea?.polyName, regulatoryArea?.resume)
+        {regulatoryAreas?.map(regulatoryArea => {
+          const layerTitle = getRegulatoryAreaTitle(regulatoryArea?.polyName, regulatoryArea?.resume)
 
-            return (
-              <Container key={regulatoryArea?.id}>
-                <Name>
-                  <LayerLegend
-                    layerType={MonitorEnvLayers.REGULATORY_ENV}
-                    legendKey={layerTitle ?? 'aucun'}
-                    plan={regulatoryArea?.plan}
-                    type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
-                  />
-                  <span title={layerTitle}>{layerTitle}</span>
-                </Name>
+          return (
+            <Container key={regulatoryArea?.id}>
+              <Name>
+                <LayerLegend
+                  layerType={MonitorEnvLayers.REGULATORY_ENV}
+                  legendKey={layerTitle ?? 'aucun'}
+                  plan={regulatoryArea?.plan}
+                  type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
+                />
+                <span title={layerTitle}>{layerTitle}</span>
+              </Name>
 
-                <ButtonsContainer>
-                  <StyledButton
-                    accent={Accent.TERTIARY}
-                    color={
-                      isSubPanelOpened && openPanel.subPanel?.id === regulatoryArea?.id
-                        ? THEME.color.charcoal
-                        : THEME.color.lightGray
-                    }
-                    Icon={Icon.Summary}
-                    onClick={e => toggleMetadata(e, regulatoryArea?.id)}
-                    title={
-                      isSubPanelOpened && openPanel.subPanel?.id === regulatoryArea?.id
-                        ? 'Fermer la réglementation de la zone'
-                        : 'Afficher la réglementation de la zone'
-                    }
-                  />
+              <ButtonsContainer>
+                <StyledButton
+                  accent={Accent.TERTIARY}
+                  color={
+                    isSubPanelOpened && openPanel.subPanel?.id === regulatoryArea?.id
+                      ? THEME.color.charcoal
+                      : THEME.color.lightGray
+                  }
+                  Icon={Icon.Summary}
+                  onClick={e => toggleMetadata(e, regulatoryArea?.id)}
+                  title={
+                    isSubPanelOpened && openPanel.subPanel?.id === regulatoryArea?.id
+                      ? 'Fermer la réglementation de la zone'
+                      : 'Afficher la réglementation de la zone'
+                  }
+                />
 
-                  <StyledButton
-                    accent={Accent.TERTIARY}
-                    color={
-                      regulatoryArea?.id && regulatoryIdsToDisplay?.includes(regulatoryArea?.id)
-                        ? THEME.color.charcoal
-                        : THEME.color.lightGray
-                    }
-                    Icon={Icon.Display}
-                    onClick={e => showRegulatoryAreaLayer(e, regulatoryArea)}
-                    title={
-                      regulatoryArea?.id && regulatoryIdsToDisplay?.includes(regulatoryArea?.id)
-                        ? 'Cacher la zone'
-                        : 'Afficher la zone'
-                    }
-                  />
-                </ButtonsContainer>
-              </Container>
-            )
-          })}
+                <StyledButton
+                  accent={Accent.TERTIARY}
+                  color={
+                    regulatoryArea?.id && regulatoryIdsToDisplay?.includes(regulatoryArea?.id)
+                      ? THEME.color.charcoal
+                      : THEME.color.lightGray
+                  }
+                  Icon={Icon.Display}
+                  onClick={e => showRegulatoryAreaLayer(e, regulatoryArea)}
+                  title={
+                    regulatoryArea?.id && regulatoryIdsToDisplay?.includes(regulatoryArea?.id)
+                      ? 'Cacher la zone'
+                      : 'Afficher la zone'
+                  }
+                />
+              </ButtonsContainer>
+            </Container>
+          )
+        })}
       </PanelSubPart>
     </>
   )

@@ -5,6 +5,8 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAMPById
+import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAMPsByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPs
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPsByIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.amps.AmpByIdsDataInput

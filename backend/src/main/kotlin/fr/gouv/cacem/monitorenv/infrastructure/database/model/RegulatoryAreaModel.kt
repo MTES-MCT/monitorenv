@@ -50,7 +50,7 @@ data class RegulatoryAreaModel(
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
-    fun toRegulatoryArea(withGeometry: Boolean) =
+    fun toRegulatoryArea() =
         RegulatoryAreaEntity(
             id = id,
             plan = plan,
@@ -60,7 +60,7 @@ data class RegulatoryAreaModel(
             editeur = editeur,
             edition = edition,
             facade = facade,
-            geom = if (withGeometry) geom else null,
+            geom = geom,
             layerName = layerName,
             polyName = polyName,
             observation = observation,

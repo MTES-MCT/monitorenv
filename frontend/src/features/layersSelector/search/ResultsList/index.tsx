@@ -55,7 +55,7 @@ export function ResultList({ searchedText }: ResultListProps) {
     totalCount
   } = useGetFilteredRegulatoryAreas()
 
-  const { data: amps, isFetching: isFetchingAmps, isLoading: isLoadingAmps } = useGetAMPsQuery()
+  const { data: amps, isFetching: isFetchingAmps, isLoading: isLoadingAmps } = useGetAMPsQuery({ withGeometry: false })
   const ampResultsByAMPName = useMemo(
     () =>
       groupBy(

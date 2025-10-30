@@ -15,8 +15,8 @@ export function AMPLayersList() {
   const myAmpsIsOpen = useAppSelector(state => state.layerSidebar.myAmpsIsOpen)
 
   const [totalNumberOfZones, setTotalNumberOfZones] = useState(0)
-
-  const { currentData: amps, isLoading } = useGetAMPsQuery()
+  // TODO: either send extend of layer OR findById
+  const { currentData: amps, isLoading } = useGetAMPsQuery({ withGeometry: false })
   const selectedAmps = useMemo(
     () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter((layer): layer is AMP => !!layer),
     [amps, selectedAmpLayerIds]
