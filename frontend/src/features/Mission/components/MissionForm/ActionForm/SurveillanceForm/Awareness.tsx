@@ -24,15 +24,20 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
   const { setFieldValue } = useFormikContext<Mission<EnvActionSurveillance>>()
 
   const [{ value: awareness }] = useField(`${formPath}.awareness`)
-  // eslint-disable-next-line no-console
-  console.log('values in Awareness', awareness)
   const [themes] = useField<ThemeFromAPI[] | undefined>(`${formPath}.themes`)
 
   useEffect(() => {
-    if (themes?.value?.length === 1 && awareness?.isRisingAwareness) {
-      setFieldValue(`${formPath}.awareness.details`, [{ themeId: themes.value[0]?.id }])
+    if (themes?.value?.length === 1 && awareness?.isRisingAwareness && !awareness?.details[0]?.themeId) {
+      setFieldValue(`${formPath}.awareness.details`, [{ nbPerson: undefined, themeId: themes.value[0]?.id }])
     }
-  }, [themes.value, formPath, awareness?.isRisingAwareness, setFieldValue])
+  }, [
+    themes.value,
+    formPath,
+    awareness?.isRisingAwareness,
+    setFieldValue,
+    awareness?.details.length,
+    awareness?.details
+  ])
 
   const updateIsRisingAwareness = (isChecked: boolean | undefined) => {
     if (isChecked) {
