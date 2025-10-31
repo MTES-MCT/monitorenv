@@ -24,7 +24,8 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
   const { setFieldValue } = useFormikContext<Mission<EnvActionSurveillance>>()
 
   const [{ value: awareness }] = useField(`${formPath}.awareness`)
-
+  // eslint-disable-next-line no-console
+  console.log('values in Awareness', awareness)
   const [themes] = useField<ThemeFromAPI[] | undefined>(`${formPath}.themes`)
 
   useEffect(() => {
@@ -81,6 +82,7 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
                     isErrorMessageHidden
                     isLight
                     label="Nb de personnes informées"
+                    min={0}
                     name={`${formPath}.awareness.details[${index}].nbPerson`}
                   />
                   <AwarenessTheme

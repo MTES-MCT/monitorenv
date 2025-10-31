@@ -153,6 +153,9 @@ export const missionFactory = (
     }
   }
 
+  // eslint-disable-next-line no-console
+  console.log('formattedMission', formattedMission)
+
   return formattedMission as Mission
 }
 
