@@ -13,6 +13,8 @@ from config import (
     MONITORENV_VERSION,
     ROOT_DIRECTORY,
     TEST_MODE,
+    VESSEL_FILES_DIRECTORY,
+    VESSEL_FILES_GID,
 )
 from src.pipeline.flows import (
     admin_areas,
@@ -37,7 +39,8 @@ from src.pipeline.flows import (
     themes_and_tags,
     three_hundred_meters_areas,
     update_departments_and_facades,
-    regulatory_areas_open_data
+    regulatory_areas_open_data,
+    vessel_repository
 )
 
 ################################ Define flow schedules ################################
@@ -111,7 +114,8 @@ flows_to_register = [
     themes_and_tags.flow,
     three_hundred_meters_areas.flow,
     update_departments_and_facades.flow,
-    regulatory_areas_open_data.flow
+    regulatory_areas_open_data.flow,
+    vessel_repository.flow
 ]
 
 ################################ Define flows' executor ###############################
@@ -138,6 +142,17 @@ for flow in flows_to_register:
                 Mount(
                     target="/home/monitorenv-pipeline/datascience/src/pipeline/data",
                     source="/opt/data",
+                    type="bind",
+                )
+            ],
+        }
+    if flow.name in ("Vessel repository",):
+        host_config = {
+            "group_add": [VESSEL_FILES_GID],
+            "mounts": [
+                Mount(
+                    target="/home/monitorenv-pipeline/datascience/src/pipeline/data",
+                    source=VESSEL_FILES_DIRECTORY,
                     type="bind",
                 )
             ],
