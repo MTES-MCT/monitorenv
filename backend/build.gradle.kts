@@ -5,15 +5,15 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "3.5.6"
+    id("org.springframework.boot") version "3.5.7"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
-    kotlin("jvm") version "2.2.20"
-    kotlin("plugin.spring") version "2.2.20"
-    kotlin("plugin.allopen") version "2.2.20"
-    kotlin("plugin.noarg") version "2.2.20"
-    kotlin("plugin.jpa") version "2.2.20"
-    kotlin("plugin.serialization") version "2.2.20"
+    kotlin("jvm") version "2.2.21"
+    kotlin("plugin.spring") version "2.2.21"
+    kotlin("plugin.allopen") version "2.2.21"
+    kotlin("plugin.noarg") version "2.2.21"
+    kotlin("plugin.jpa") version "2.2.21"
+    kotlin("plugin.serialization") version "2.2.21"
 }
 
 repositories {
@@ -54,13 +54,13 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.3.0"
+val ktorVersion = "3.3.1"
 val testcontainersVersion = "1.21.3"
-val sentryVersion = "8.23.0"
-val flywayVersion = "11.13.2"
+val sentryVersion = "8.25.0"
+val flywayVersion = "11.15.0"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.6"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.7"))
 
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -88,7 +88,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.1")
     implementation("org.n52.jackson:jackson-datatype-jts:2.0.0")
 
     // HTTP Clients (Ktor)
@@ -102,7 +102,7 @@ dependencies {
     implementation("io.sentry:sentry-log4j2:$sentryVersion")
 
     // Cache
-    implementation("com.github.ben-manes.caffeine:caffeine:3.2.2")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
 
     // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
@@ -132,7 +132,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:5.1.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.3.0")
     testImplementation("net.ttddyy:datasource-proxy:1.11.0")
     testImplementation("io.mockk:mockk:1.14.6")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
