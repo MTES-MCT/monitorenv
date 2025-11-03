@@ -39,6 +39,12 @@ ktlint {
     version.set("1.4.1")
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2024.0.1")
+    }
+}
+
 noArg {
     invokeInitializers = true
 }
@@ -73,7 +79,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-oauth2-resource-server")
     implementation("org.springframework.security:spring-security-oauth2-jose")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
-
+    implementation("org.springframework.cloud:spring-cloud-gateway-mvc:4.2.1")
     // Database & Migration
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
