@@ -19,15 +19,22 @@ monitorenv:
     environment: ${ENVIRONMENT}
     dsn: ${SENTRY_DSN}
   oidc:
-    enabled: ${MONITORENV_OIDC_ENABLED}
-    clientId: ${MONITORENV_OIDC_CLIENT_ID:}
-    clientSecret: ${MONITORENV_OIDC_CLIENT_SECRET:}
-    redirectUri: ${MONITORENV_OIDC_REDIRECT_URI:}
-    loginUrl: ${MONITORENV_OIDC_LOGIN_URL}
-    successUrl: ${MONITORENV_OIDC_SUCCESS_URL}
-    errorUrl: ${MONITORENV_OIDC_ERROR_URL}
-    authorizedSirets: ${MONITORENV_OIDC_AUTHORIZED_SIRETS}
-    issuerUri: ${MONITORENV_OIDC_ISSUER_URI:}
+      enabled: ${MONITORENV_OIDC_ENABLED}
+      bypassSiretFilter: ${MONITORENV_OIDC_BYPASS_SIRET_FILTER}
+      clientId: ${MONITORENV_OIDC_CLIENT_ID:}
+      clientSecret: ${MONITORENV_OIDC_CLIENT_SECRET:}
+      redirectUri: ${MONITORENV_OIDC_REDIRECT_URI:}
+      loginUrl: ${MONITORENV_OIDC_LOGIN_URL}
+      successUrl: ${MONITORENV_OIDC_SUCCESS_URL}
+      errorUrl: ${MONITORENV_OIDC_ERROR_URL}
+      authorizedSirets: ${MONITORENV_OIDC_AUTHORIZED_SIRETS}
+      issuerUri: ${MONITORENV_OIDC_ISSUER_URI:}
+      issuerUriExternal: ${MONITORENV_OIDC_ISSUER_URI_EXTERNAL}
+      authorizationUri: ${MONITORENV_OIDC_AUTHORIZATION_URI:}
+      tokenUri: ${MONITORENV_OIDC_TOKEN_URI:}
+      userInfoUri: ${MONITORENV_OIDC_USER_INFO_URI:}
+      jwkSetUri: ${MONITORENV_OIDC_JWK_SET_URI:}
+      proxyUrl: ${MONITORENV_OIDC_PROXY_URL:}
   api:
     protected:
       paths: /bff/v1/*
@@ -47,7 +54,7 @@ monitorenv:
 
 spring:
   jmx:
-    enabled: true
+    enabled: false
   mvc:
     static-path-pattern: "/**"
   web:

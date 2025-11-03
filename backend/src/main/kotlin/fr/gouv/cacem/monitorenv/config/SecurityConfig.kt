@@ -44,6 +44,12 @@ class SecurityConfig(
             override fun loadUser(userRequest: OidcUserRequest): OidcUser {
                 try {
                     val oidcUser = super.loadUser(userRequest)
+                    if (oidcProperties.bypassSiretFilter == "true") {
+                        logger.info("OIDC is with Cerbère, bypassing the SIRET checks.")
+
+                        return oidcUser
+                    }
+
                     val siretsClaimRaw = oidcUser.claims["SIRET"]
 
                     val tokenSirets: Set<String> =
@@ -57,6 +63,7 @@ class SecurityConfig(
                     if (!isAuthorized) {
                         throw OAuth2AuthenticationException("User not authorized for the requested SIRET(s)")
                     }
+
                     return oidcUser
                 } catch (e: Exception) {
                     logger.error("⛔ Exception in loadUser", e)
@@ -81,8 +88,8 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .csrf { it.disable() }
             .cors { it.configurationSource(corsConfigurationSource()) }
+            .csrf { it.disable() }
             .authorizeHttpRequests { authorize ->
                 if (oidcProperties.enabled == null || oidcProperties.enabled == false) {
                     logger.warn(
@@ -122,6 +129,9 @@ class SecurityConfig(
                             "/api/**",
                             "/version",
                             "/actuator/**",
+                            "/proxy/**",
+                            "/realms/**",
+                            "/resources/**",
                             // TODO: secure SSE endpoints
                             "/bff/reportings/sse/**",
                         ).permitAll()
