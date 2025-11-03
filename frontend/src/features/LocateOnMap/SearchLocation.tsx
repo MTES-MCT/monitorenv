@@ -2,7 +2,7 @@ import { getPlaceCoordinates, useGooglePlacesAPI } from '@api/googlePlacesAPI/go
 import { useBeaches } from '@features/LocateOnMap/hook/useBeaches'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CustomSearch, OPENLAYERS_PROJECTION, Search, Size, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { CustomSearch, OPENLAYERS_PROJECTION, Search, Size, WSG84_PROJECTION } from '@mtes-mct/monitor-ui__root'
 import { getColorWithAlpha } from '@utils/utils'
 import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
@@ -38,7 +38,7 @@ export function SearchLocation() {
         extent = transformExtent(place.bbox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)
       }
     }
-    if (extent) {
+    if (extent && location?.id !== locateOnMap?.location.id) {
       dispatch(setLocateOnMap({ extent, location }))
       dispatch(setFitToExtent(extent))
     }
