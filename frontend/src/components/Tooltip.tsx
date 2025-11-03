@@ -11,7 +11,7 @@ type TooltipType = {
   iconSize?: number
   isSideWindow?: boolean
   linkText?: string
-  orientation?: 'BOTTOM_RIGHT' | 'TOP_LEFT'
+  orientation?: 'BOTTOM_RIGHT' | 'TOP_LEFT' | 'BOTTOM_LEFT'
 }
 
 export function Tooltip({
@@ -81,7 +81,11 @@ export function Tooltip({
   )
 }
 
-const StyledTooltip = styled.div<{ $left: number; $orientation: 'BOTTOM_RIGHT' | 'TOP_LEFT'; $top: number }>`
+const StyledTooltip = styled.div<{
+  $left: number
+  $orientation: 'BOTTOM_RIGHT' | 'TOP_LEFT' | 'BOTTOM_LEFT'
+  $top: number
+}>`
   background: ${p => p.theme.color.cultured};
   border: ${p => p.theme.color.lightGray} 1px solid;
   box-shadow: 0 3px 6px ${p => p.theme.color.slateGray};
@@ -89,10 +93,18 @@ const StyledTooltip = styled.div<{ $left: number; $orientation: 'BOTTOM_RIGHT' |
   font-weight: normal;
   padding: 4px 8px;
   position: fixed;
-  ${p =>
-    p.$orientation === 'TOP_LEFT'
-      ? `transform: translate(-100%, -100%);left: ${p.$left}px;`
-      : `left: calc(${p.$left}px + 24px);`}
+  ${p => {
+    switch (p.$orientation) {
+      case 'BOTTOM_RIGHT':
+        return `transform: translate(-100%, 24px); left: calc(${p.$left}px + 24px);`
+      case 'BOTTOM_LEFT':
+        return `transform: translate(-100%, 24px); left: ${p.$left}px;`
+      case 'TOP_LEFT':
+        return `transform: translate(-100%, -100%); left: ${p.$left}px;`
+      default:
+        return `transform: translate(-100%, 24px); left: calc(${p.$left}px + 24px);`
+    }
+  }}
   top: ${p => p.$top}px;
   max-width: 310px;
   width: 100%;

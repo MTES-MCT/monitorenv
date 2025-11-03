@@ -82,6 +82,8 @@ export function HistoryOfInfractions({
     )
   }
 
+  const totalInfractions = history.totalInfraction + history.totalPV
+
   return (
     <Wrapper $align={!history.isLoading}>
       <HistoryText>Antécédents:</HistoryText>
@@ -119,37 +121,43 @@ export function HistoryOfInfractions({
             <StyledTooltip
               isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
               linkText="En savoir plus"
-              orientation="TOP_LEFT"
+              orientation={totalInfractions < 8 ? 'TOP_LEFT' : 'BOTTOM_LEFT'}
             >
-              <div>
-                {history.suspicionOfInfractions.length > 0 && <Header as="header">Signalements </Header>}
-                {history.suspicionOfInfractions.map(infraction => (
-                  <ul key={infraction.id}>
-                    <ReportingDate>Le {customDayjs(infraction.createdAt).format('DD/MM/YYYY')}</ReportingDate>
-                    <li>
-                      {infraction.reportingSources.length > 0 && (
-                        <span>{infraction.reportingSources.map(source => source.displayedSource).join(', ')}</span>
-                      )}
-                    </li>
-                    <li>{infraction.theme.name}</li>
-                  </ul>
-                ))}
-              </div>
+              {history.suspicionOfInfractions.length > 0 && (
+                <div>
+                  <Header as="header">Signalements </Header>
+                  {history.suspicionOfInfractions.map(infraction => (
+                    <ul key={infraction.id}>
+                      <ReportingDate>Le {customDayjs(infraction.createdAt).format('DD/MM/YYYY')}</ReportingDate>
+                      <li>
+                        {infraction.reportingSources.length > 0 && (
+                          <span>{infraction.reportingSources.map(source => source.displayedSource).join(', ')}</span>
+                        )}
+                      </li>
+                      <li>{infraction.theme.name}</li>
+                    </ul>
+                  ))}
+                </div>
+              )}
 
-              <div>
-                {history.envActions.length > 0 && <Header as="header">Contrôles</Header>}
-                {history.envActions.map(action => (
-                  <ul key={action.id}>
-                    <ReportingDate>Le {customDayjs(action.actionStartDateTimeUtc).format('DD/MM/YYYY')}</ReportingDate>
-                    <li>
-                      {action.controlUnits && action.controlUnits.length > 0 && (
-                        <span>{action.controlUnits.join(', ')}</span>
-                      )}
-                    </li>
-                    <li>{action.themes && action.themes.length > 0 && <span>{action.themes.join(', ')}</span>}</li>
-                  </ul>
-                ))}
-              </div>
+              {history.envActions.length > 0 && (
+                <div>
+                  <Header as="header">Contrôles</Header>
+                  {history.envActions.map(action => (
+                    <ul key={action.id}>
+                      <ReportingDate>
+                        Le {customDayjs(action.actionStartDateTimeUtc).format('DD/MM/YYYY')}
+                      </ReportingDate>
+                      <li>
+                        {action.controlUnits && action.controlUnits.length > 0 && (
+                          <span>{action.controlUnits.join(', ')}</span>
+                        )}
+                      </li>
+                      <li>{action.themes && action.themes.length > 0 && <span>{action.themes.join(', ')}</span>}</li>
+                    </ul>
+                  ))}
+                </div>
+              )}
             </StyledTooltip>
           )}
         </>
@@ -182,7 +190,7 @@ const BoldOrNormalText = styled.span<{ $isBold: boolean }>`
 const StyledTooltip = styled(Tooltip)`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   max-width: 215px;
   padding: 8px;
   z-index: 101 !important;
