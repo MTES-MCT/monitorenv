@@ -8,6 +8,10 @@
       </Header>
       <Body>
         <ShipDescription>
+            <Metadata>
+                <BatchId>1</BatchId>
+                <RowNumber>1</RowNumber>
+            </Metadata>
             <ShipId>1111111</ShipId>
             <Status>A</Status>
             <Category>PRO</Category>
@@ -44,6 +48,10 @@
             </Identification>
         </ShipDescription>
         <ShipDescription>
+            <Metadata>
+                <BatchId>1</BatchId>
+                <RowNumber>1</RowNumber>
+            </Metadata>
             <ShipId>2222222</ShipId>
             <Status>A</Status>
             <Category>PLA</Category>

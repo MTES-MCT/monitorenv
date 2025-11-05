@@ -54,7 +54,9 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "owner_company_name": "COMPANY 1",
                 "owner_business_segment": "93.29Z",
                 "owner_legal_status": "1234",
-                "owner_start_date": "2019-05-29"
+                "owner_start_date": "2019-05-29",
+                "batch_id": "1",
+                "row_number": "1"
             },
             {
                 "ship_id": "2222222",
@@ -81,7 +83,9 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "owner_company_name": "COMPANY 2",
                 "owner_business_segment": "93.87Z",
                 "owner_legal_status": "5678",
-                "owner_start_date": "2019-05-29"
+                "owner_start_date": "2019-05-29",
+                "batch_id": "1",
+                "row_number": "1"
             }])
     
 
@@ -90,19 +94,24 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
         # Cast boolean is_banned to Yes / No
         """SELECT ship_id, status, category, CASE WHEN is_banned IS TRUE THEN 'Yes' ELSE 'No' END as is_banned, imo_number, mmsi_number, ship_name, flag, port_of_registry, immatriculation,
         professional_type, commercial_name, length, owner_date_of_information, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
-        owner_phone, owner_email, owner_nationality, owner_company_name, owner_business_segment, owner_legal_status, owner_start_date 
+        owner_phone, owner_email, owner_nationality, owner_company_name, owner_business_segment, owner_legal_status, owner_start_date, batch_id, row_number 
         FROM vessels"""
     )
 
     # Cast owner_date_of_information to datetime to compare it
     imported_vessels["owner_date_of_information"] = imported_vessels["owner_date_of_information"].apply(pd.to_datetime, errors="coerce")
     expected_df["owner_date_of_information"] = expected_df["owner_date_of_information"].apply(pd.to_datetime, errors="coerce")
-    # Cast length and ship_id to numeric to compare it
+    # Cast batch_id, row_number, length and ship_id to numeric to compare it
+    expected_df["batch_id"] = expected_df["batch_id"].apply(pd.to_numeric, errors="coerce")
+    imported_vessels["batch_id"] = imported_vessels["batch_id"].apply(pd.to_numeric, errors="coerce")
+    expected_df["row_number"] = expected_df["row_number"].apply(pd.to_numeric, errors="coerce")
+    imported_vessels["row_number"] = imported_vessels["row_number"].apply(pd.to_numeric, errors="coerce")
     imported_vessels["ship_id"] = imported_vessels["ship_id"].apply(pd.to_numeric, errors="coerce")
     expected_df["ship_id"] = expected_df["ship_id"].apply(pd.to_numeric, errors="coerce")
     imported_vessels["ship_id"] = imported_vessels["ship_id"].apply(pd.to_numeric, errors="coerce")
     expected_df["length"] = expected_df["length"].apply(pd.to_numeric, errors="coerce")
     imported_vessels["length"] = imported_vessels["length"].apply(pd.to_numeric, errors="coerce")
+
 
     pd.testing.assert_frame_equal(expected_df, imported_vessels, check_dtype=False)
 

@@ -25,5 +25,7 @@ CREATE TABLE public.vessels
     owner_nationality         VARCHAR(50),
     owner_business_segment    VARCHAR(50),
     owner_legal_status        VARCHAR(255),
-    owner_start_date          VARCHAR(255)
+    owner_start_date          VARCHAR(255),
+    batch_id                  INT,
+    row_number                INT
 );
