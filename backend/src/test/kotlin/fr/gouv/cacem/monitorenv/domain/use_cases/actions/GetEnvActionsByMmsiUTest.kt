@@ -20,10 +20,10 @@ class GetEnvActionsByMmsiUTest {
     fun `execute should return envAction with given MMSI`(log: CapturedOutput) {
         // Given
         val mmsi = "0123456789"
-        given(envActionRepository.findAllByMmsi(mmsi)).willReturn(listOf(anEnvActionControlWithInfractions()))
+        given(envActionRepository.findAllByMmsi(mmsi, null)).willReturn(listOf(anEnvActionControlWithInfractions()))
 
         // When
-        val envActions = getEnvActionByMmsi.execute(mmsi)
+        val envActions = getEnvActionByMmsi.execute(mmsi, null)
 
         // Then
         assertThat(envActions).hasSize(1)

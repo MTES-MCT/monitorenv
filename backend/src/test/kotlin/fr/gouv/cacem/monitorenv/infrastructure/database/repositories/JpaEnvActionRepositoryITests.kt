@@ -215,7 +215,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
         val mmsi = "123456789"
 
         // When
-        val envActions = jpaEnvActionRepository.findAllByMmsi(mmsi)
+        val envActions = jpaEnvActionRepository.findAllByMmsi(mmsi, null)
 
         // Then
         assertThat(envActions).hasSize(1)
@@ -227,7 +227,20 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
         val mmsi = "987654321"
 
         // When
-        val envActions = jpaEnvActionRepository.findAllByMmsi(mmsi)
+        val envActions = jpaEnvActionRepository.findAllByMmsi(mmsi, null)
+
+        // Then
+        assertThat(envActions).hasSize(0)
+    }
+
+    @Test
+    fun `findAllByMmsi should return empty when there envActions without the given id`() {
+        // Given
+        val mmsi = "123456789"
+
+        // When
+        val envActions =
+            jpaEnvActionRepository.findAllByMmsi(mmsi, UUID.fromString("b8007c8a-5135-4bc3-816f-c69c7b75d807"))
 
         // Then
         assertThat(envActions).hasSize(0)

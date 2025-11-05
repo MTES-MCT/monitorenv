@@ -21,5 +21,8 @@ interface IEnvActionRepository {
         startedBefore: Instant,
     ): List<RecentControlsActivityListDTO>
 
-    fun findAllByMmsi(mmsi: String): List<EnvActionControlWithInfractionsEntity>
+    fun findAllByMmsi(
+        mmsi: String,
+        idToExclude: UUID?,
+    ): List<EnvActionControlWithInfractionsEntity>
 }

@@ -87,12 +87,15 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
 	LEFT JOIN missions_control_units ON envAction.mission_id = missions_control_units.mission_id
     LEFT JOIN control_units ON missions_control_units.control_unit_id = control_units.id
     LEFT JOIN LATERAL jsonb_array_elements(envAction.value->'infractions') AS infractions ON TRUE
-    WHERE infractions ->> 'mmsi' = :mmsi
+    WHERE infractions ->> 'mmsi' = :mmsi AND (:idToExclude IS NULL OR envAction.id <> :idToExclude)
 	GROUP BY envAction.id
     """,
         nativeQuery = true,
     )
-    fun findAllEnvActionByMmsi(mmsi: String): List<EnvActionControlWithInfractions>
+    fun findAllEnvActionByMmsi(
+        mmsi: String,
+        idToExclude: UUID?,
+    ): List<EnvActionControlWithInfractions>
 
     fun deleteAllByMissionId(missiondId: Int)
 }

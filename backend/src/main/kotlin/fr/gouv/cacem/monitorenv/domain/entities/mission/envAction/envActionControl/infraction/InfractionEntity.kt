@@ -1,7 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction
 
-import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
-
 data class InfractionEntity(
     val id: String,
     val administrativeResponse: AdministrativeResponseEnum?,
@@ -17,7 +15,8 @@ data class InfractionEntity(
     val nbTarget: Int = 1,
     val controlledPersonIdentity: String? = null,
     val seizure: SeizureTypeEnum,
+    val vesselId: Int? = null,
     val vesselName: String? = null,
     val vesselSize: Number? = null,
-    val vesselType: VesselTypeEnum? = null,
+    val vesselType: String? = null,
 )
