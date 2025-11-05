@@ -1,4 +1,4 @@
-import { Bold, Italic } from '@components/style'
+import { Bold, Italic, LoadingIcon } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { customDayjs, Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
@@ -8,21 +8,23 @@ import { useDebounce } from 'use-debounce'
 
 import { ReportingContext } from '../../../../../../domain/shared_slices/Global'
 import {
+  type HistoryOfInfractionsProps,
   initialHistory,
-  useGetHistoryOfInfractions,
-  type HistoryOfInfractionsProps
+  useGetHistoryOfInfractions
 } from '../../hooks/useGetHistoryOfInfractions'
 
 const NB_CHAR_MMSI = 9
 
 export function HistoryOfInfractions({
+  envActionId,
   isReadOnly = false,
   mmsi,
   reportingId
 }: {
+  envActionId?: string
   isReadOnly?: boolean
   mmsi: string | undefined
-  reportingId: string | number
+  reportingId?: string | number
 }) {
   const reportingContext =
     useAppSelector(state => (reportingId ? state.reporting.reportings[reportingId]?.context : undefined)) ??
@@ -30,7 +32,7 @@ export function HistoryOfInfractions({
 
   const [debouncedMmsi] = useDebounce(mmsi, 300)
 
-  const canSearch = !!(reportingId && debouncedMmsi && debouncedMmsi.length === NB_CHAR_MMSI)
+  const canSearch = !!((reportingId || envActionId) && debouncedMmsi && debouncedMmsi.length === NB_CHAR_MMSI)
 
   const getHistoryByMmsi = useGetHistoryOfInfractions()
 
@@ -45,6 +47,7 @@ export function HistoryOfInfractions({
       }
       const result = await getHistoryByMmsi({
         canSearch,
+        envActionId,
         mmsi: debouncedMmsi,
         reportingId
       })
@@ -205,15 +208,4 @@ const HistoryText = styled(Italic)`
 `
 const ReportingDate = styled.li`
   font-weight: bold;
-`
-
-const LoadingIcon = styled(Icon.Reset)`
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  animation: spin 2s linear infinite;
-  color: ${p => p.theme.color.charcoal};
-  transform-origin: center;
 `

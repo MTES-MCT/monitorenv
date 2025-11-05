@@ -788,7 +788,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfInfraction with given mmsi without the given id`() {
+    fun `findAllSuspicionOfInfractionsByMmsi should return empty with given mmsi without the given id`() {
         // Given
         val mmsi = "012314231"
         val idsToExclude = 3
@@ -801,7 +801,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findAllSuspicionOfInfractionsByMmsi should return a SuspicionOfInfraction when there is no reporting for given mmsi `() {
+    fun `findAllSuspicionOfInfractionsByMmsi should return empty when there is no reporting for given mmsi `() {
         // Given
         val mmsi = "unknown mmsi"
 

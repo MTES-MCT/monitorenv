@@ -1,7 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
 
-import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.*
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.AdministrativeResponseEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.FormalNoticeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.SeizureTypeEnum
 
 data class MissionEnvActionControlInfractionDataInput(
     val id: String,
@@ -17,8 +20,9 @@ data class MissionEnvActionControlInfractionDataInput(
     val observations: String? = null,
     val registrationNumber: String? = null,
     val seizure: SeizureTypeEnum,
+    val vesselId: Int? = null,
     val vesselName: String? = null,
-    val vesselType: VesselTypeEnum? = null,
+    val vesselType: String? = null,
     val vesselSize: Number? = null,
 ) {
     fun toInfractionEntity() =
@@ -36,6 +40,7 @@ data class MissionEnvActionControlInfractionDataInput(
             observations = observations,
             registrationNumber = registrationNumber,
             seizure = seizure,
+            vesselId = vesselId,
             vesselName = vesselName,
             vesselType = vesselType,
             vesselSize = vesselSize,

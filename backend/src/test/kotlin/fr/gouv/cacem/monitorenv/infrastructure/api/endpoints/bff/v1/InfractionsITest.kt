@@ -37,7 +37,7 @@ class InfractionsITest {
     fun `getAll should return all envActions with given mmsi`() {
         // Given
         val mmsi = "0123456789"
-        given(getEnvActionsByMmsi.execute(mmsi)).willReturn(
+        given(getEnvActionsByMmsi.execute(mmsi, null)).willReturn(
             listOf(anEnvActionControlWithInfractions()),
         )
 

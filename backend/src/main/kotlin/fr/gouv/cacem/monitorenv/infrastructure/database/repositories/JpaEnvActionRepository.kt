@@ -127,8 +127,11 @@ class JpaEnvActionRepository(
             }
 
     @Transactional
-    override fun findAllByMmsi(mmsi: String): List<EnvActionControlWithInfractionsEntity> {
-        val envActions = idbEnvActionRepository.findAllEnvActionByMmsi(mmsi)
+    override fun findAllByMmsi(
+        mmsi: String,
+        idToExclude: UUID?,
+    ): List<EnvActionControlWithInfractionsEntity> {
+        val envActions = idbEnvActionRepository.findAllEnvActionByMmsi(mmsi, idToExclude)
 
         return envActions.map { row: EnvActionControlWithInfractions ->
             try {
