@@ -1,4 +1,4 @@
-import { Button, MapMenuDialog } from '@mtes-mct/monitor-ui'
+import { Button, Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export const Italic = styled.div`
@@ -80,4 +80,15 @@ export const InlineTransparentButton = styled(TransparentButton)`
   display: flex;
   text-align: start;
   align-items: center;
+`
+
+export const LoadingIcon = styled(Icon.Reset)`
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  animation: spin 2s linear infinite;
+  color: ${p => p.theme.color.charcoal};
+  transform-origin: center;
 `

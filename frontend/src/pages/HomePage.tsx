@@ -128,9 +128,9 @@ export function HomePage() {
         <AttachReportingToMissionModal />
         {displayLocateOnMap && <LocateOnMap />}
         {isControlUnitDialogVisible && isSuperUser && <ControlUnitDialog />}
+        {selectedVesselId && <VesselResume vesselId={selectedVesselId} />}
 
         <Menu />
-        {selectedVesselId && <VesselResume vesselId={selectedVesselId} />}
 
         <Reportings key="reportings-on-map" context={ReportingContext.MAP} />
       </Wrapper>

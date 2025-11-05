@@ -45,6 +45,7 @@ export function SearchLocation() {
   }
 
   const onQuery = (searchQuery: string | undefined) => {
+    dispatch(setLocateOnMap(undefined))
     setSearchedLocation(searchQuery)
   }
 

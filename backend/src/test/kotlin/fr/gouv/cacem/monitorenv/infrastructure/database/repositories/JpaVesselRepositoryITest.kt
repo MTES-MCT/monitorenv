@@ -23,7 +23,7 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
         assertThat(vessel?.category).isEqualTo("PRO")
         assertThat(vessel?.isBanned).isEqualTo(false)
         assertThat(vessel?.imo).isEqualTo("IMO1111")
-        assertThat(vessel?.mmsi).isEqualTo("MMSI11111")
+        assertThat(vessel?.mmsi).isEqualTo("123456789")
         assertThat(vessel?.immatriculation).isEqualTo("IMMAT111111")
         assertThat(vessel?.shipName).isEqualTo("SHIPNAME 1")
         assertThat(vessel?.flag).isEqualTo("DZA")

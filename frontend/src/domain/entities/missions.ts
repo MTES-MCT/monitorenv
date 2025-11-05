@@ -104,6 +104,7 @@ export const infractionSeizureLabels = {
     libelle: 'En attente'
   }
 }
+
 export enum InfractionSeizureEnum {
   NO = 'NO',
   PENDING = 'PENDING',
@@ -357,6 +358,7 @@ export type NewInfraction = {
   observations?: string
   registrationNumber?: string
   seizure?: InfractionSeizureEnum
+  vesselId?: number
   vesselName?: string
   vesselSize?: number
   vesselType?: VesselTypeEnum

@@ -1,15 +1,17 @@
 import { SearchLocation } from '@features/LocateOnMap/SearchLocation'
 import { SearchSwitcher, SearchType } from '@features/LocateOnMap/SearchSwitcher'
 import { SearchVessel } from '@features/Vessel/SearchVessels'
+import { vesselAction } from '@features/Vessel/slice'
+import { isVesselsEnabled } from '@features/Vessel/utils'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
 
 import { useAppSelector } from '../../hooks/useAppSelector'
 
-export const isVesselsEnabled = () => import.meta.env.FRONTEND_VESSELS_ENABLED === 'true'
-
 export function LocateOnMap() {
+  const dispatch = useAppDispatch()
   const [searchType, setSearchType] = useState<SearchType>(SearchType.PLACES)
   const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
@@ -18,7 +20,15 @@ export function LocateOnMap() {
     <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
       <SearchWrapper>
         {searchType === SearchType.PLACES && <SearchLocation />}
-        {searchType === SearchType.VESSELS && <SearchVessel />}
+        {searchType === SearchType.VESSELS && (
+          <SearchVessel
+            onChange={item => {
+              if (item) {
+                dispatch(vesselAction.setSelectedVesselId(item?.id))
+              }
+            }}
+          />
+        )}
 
         {isVesselsEnabled() && (
           <SearchSwitcher onChange={nextSearchType => setSearchType(nextSearchType)} searchType={searchType} />

@@ -1,5 +1,5 @@
-import { VesselTypeSelector } from '@features/commonComponents/VesselTypeSelector'
-import { FormikNumberInput, FormikTextInput } from '@mtes-mct/monitor-ui'
+import { VesselForm } from '@features/Vessel/VesselForm'
+import { FormikTextInput, LinkButton } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import styled from 'styled-components'
 
@@ -12,6 +12,7 @@ type InfractionHeaderType = {
   infractionPath: string
   isDisabled: boolean
 }
+
 export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, isDisabled }: InfractionHeaderType) {
   const [vehicleTypeField] = useField<EnvActionControl['vehicleType']>(`envActions.${envActionIndex}.vehicleType`)
 
@@ -40,67 +41,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
       )}
 
       {vehicleTypeField?.value === VehicleTypeEnum.VESSEL && (
-        <>
-          <StyledVesselForm>
-            <FormikTextInput
-              disabled={isDisabled}
-              isErrorMessageHidden
-              isUndefinedWhenDisabled
-              label="MMSI"
-              name={`${infractionPath}.mmsi`}
-            />
-            <FormikTextInput
-              data-cy="infraction-form-vesselName"
-              disabled={isDisabled}
-              isErrorMessageHidden
-              isUndefinedWhenDisabled
-              label="Nom du navire"
-              name={`${infractionPath}.vesselName`}
-            />
-          </StyledVesselForm>
-          <StyledVesselForm>
-            <FormikTextInput
-              disabled={isDisabled}
-              isErrorMessageHidden
-              isUndefinedWhenDisabled
-              label="IMO"
-              name={`${infractionPath}.imo`}
-            />
-            <FormikTextInput
-              data-cy="infraction-form-controlledPersonIdentity"
-              disabled={isDisabled}
-              isErrorMessageHidden
-              isUndefinedWhenDisabled
-              label="Nom du capitaine"
-              name={`${infractionPath}.controlledPersonIdentity`}
-            />
-          </StyledVesselForm>
-          <StyledVesselForm>
-            <FormikTextInput
-              data-cy="infraction-form-registrationNumber"
-              disabled={isDisabled}
-              isErrorMessageHidden
-              isUndefinedWhenDisabled
-              label="Immatriculation"
-              name={`${infractionPath}.registrationNumber`}
-            />
-            <FormikNumberInput
-              data-cy="infraction-form-vessel-size"
-              disabled={isDisabled}
-              isErrorMessageHidden
-              isUndefinedWhenDisabled
-              label="Taille"
-              name={`${infractionPath}.vesselSize`}
-            />
-          </StyledVesselForm>
-          <StyledVesselForm>
-            <VesselTypeSelector
-              disabled={isDisabled}
-              name={`${infractionPath}.vesselType`}
-              style={{ flex: '0 1 48.5%' }}
-            />
-          </StyledVesselForm>
-        </>
+        <VesselForm envActionIndex={envActionIndex} isDisabled={isDisabled} path={infractionPath} />
       )}
     </FormGroup>
   )
@@ -117,8 +58,26 @@ export const StyledVesselForm = styled.div`
   flex-direction: row;
   justify-content: space-between;
   gap: 16px;
+
   > .Field-TextInput,
   .Field-NumberInput {
     flex: 1;
   }
+`
+
+export const VesselSearchInputWrapper = styled.div`
+  display: flex;
+  position: relative;
+`
+
+export const VesselSearchWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`
+
+export const StyledLinkButton = styled(LinkButton)`
+  position: absolute;
+  right: 32px;
+  transform: translateY(50%);
 `

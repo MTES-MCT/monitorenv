@@ -7,8 +7,9 @@ import type { SuspicionOfInfractions } from 'domain/entities/reporting'
 
 type UseGetHistoryOfInfractionsProps = {
   canSearch: boolean
+  envActionId?: string | number
   mmsi: string
-  reportingId: string | number
+  reportingId?: string | number
 }
 
 export type HistoryOfInfractionsProps = {
@@ -32,6 +33,7 @@ export const useGetHistoryOfInfractions = () => {
   const [getSuspicionOfInfractions, { isLoading: isLoadingLazySuspicions }] = useLazyGetSuspicionOfInfractionsQuery()
 
   const getHistoryByMmsi = async ({
+    envActionId,
     mmsi,
     reportingId
   }: UseGetHistoryOfInfractionsProps): Promise<HistoryOfInfractionsProps | undefined> => {
@@ -42,9 +44,12 @@ export const useGetHistoryOfInfractions = () => {
     let envActionsByMmsi
     let suspicionOfInfractionsByMmsi
     if (mmsi) {
-      envActionsByMmsi = await getEnvActionsByMmsi(mmsi).unwrap()
+      envActionsByMmsi = await getEnvActionsByMmsi({
+        idToExclude: envActionId ? `${envActionId}` : undefined,
+        mmsi
+      }).unwrap()
       suspicionOfInfractionsByMmsi = await getSuspicionOfInfractions({
-        idToExclude: isNewReporting(reportingId) ? undefined : +reportingId,
+        idToExclude: !reportingId || isNewReporting(reportingId) ? undefined : +reportingId,
         mmsi
       }).unwrap()
     }

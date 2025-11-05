@@ -511,7 +511,9 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Type de véhicule', 'Navire')
 
       cy.clickButton('+ Ajouter un contrôle avec infraction')
+      cy.fill('Navire absent de la base de données', true)
       cy.fill('MMSI', '123456789')
+      cy.contains("Pas d'antécédents")
       cy.fill('Nom du navire', 'BALTIK')
       cy.fill('IMO', 'IMO123')
       cy.fill('Nom du capitaine', 'John Doe')
@@ -555,11 +557,85 @@ context('Side Window > Mission Form > Mission actions', () => {
         expect(responseInfraction.registrationNumber).equal('ABC123')
         expect(responseInfraction.vesselSize).equal(45)
         expect(responseInfraction.vesselType).equal('COMMERCIAL')
+        expect(responseInfraction.infractionType).equal('WITH_REPORT')
+        expect(responseInfraction.administrativeResponse).equal('SANCTION')
+        expect(responseInfraction.formalNotice).equal('YES')
+        expect(responseInfraction.natinf).to.deep.equal(['1508'])
+        expect(responseInfraction.nbTarget).equal(1)
+
+        // clean
+        cy.wait(250)
+        cy.clickButton('Fermer')
+        cy.getDataCy(`edit-mission-${mission.id}`).click({ force: true })
+        cy.clickButton('Supprimer la mission')
+        cy.clickButton('Confirmer la suppression')
+      })
+    })
+  })
+
+  it('Should save infraction with vessel type is "VESSEL" using vessel search', () => {
+    createPendingMission().then(({ body }) => {
+      const mission = body
+
+      cy.intercept('PUT', `/bff/v1/missions/${mission.id}`).as('updateMission')
+
+      // Add a control
+      cy.clickButton('Ajouter')
+      cy.clickButton('Ajouter des contrôles')
+      cy.wait(500)
+
+      cy.fill('Nb total de contrôles', 2)
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Navire')
+
+      cy.clickButton('+ Ajouter un contrôle avec infraction')
+      cy.fill('Rechercher un navire', '123456789')
+      cy.contains("Pas d'antécédents")
+
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Réponse administrative', 'Sanction')
+      cy.fill('Appréhension/saisie', 'Oui')
+      cy.fill('Mise en demeure', 'Oui')
+      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('Nb de cibles avec cette infraction', 1)
+
+      cy.getDataCy('control-open-by').type('ABC')
+      cy.wait(250)
+
+      cy.wait('@updateMission').then(({ request, response }) => {
+        // check request
+        const requestInfraction: Infraction = request.body.envActions[0].infractions[0]
+        expect(requestInfraction.vesselId).equal(1)
+        expect(requestInfraction.mmsi).equal('123456789')
+        expect(requestInfraction.vesselName).equal('SHIPNAME 1')
+        expect(requestInfraction.imo).equal('IMO1111')
+        expect(requestInfraction.controlledPersonIdentity).equal('DURAND MICHEL')
+        expect(requestInfraction.registrationNumber).equal('IMMAT111111')
+        expect(requestInfraction.vesselSize).equal(12.12)
+        expect(requestInfraction.vesselType).equal('Porte-conteneur')
         expect(requestInfraction.infractionType).equal('WITH_REPORT')
         expect(requestInfraction.administrativeResponse).equal('SANCTION')
+        expect(requestInfraction.seizure).equal('YES')
         expect(requestInfraction.formalNotice).equal('YES')
         expect(requestInfraction.natinf).to.deep.equal(['1508'])
         expect(requestInfraction.nbTarget).equal(1)
+
+        // check response
+        const responseInfraction = response?.body.envActions[0].infractions[0]
+        expect(responseInfraction.vesselId).equal(1)
+        expect(responseInfraction.mmsi).equal('123456789')
+        expect(responseInfraction.vesselName).equal('SHIPNAME 1')
+        expect(responseInfraction.imo).equal('IMO1111')
+        expect(responseInfraction.controlledPersonIdentity).equal('DURAND MICHEL')
+        expect(responseInfraction.registrationNumber).equal('IMMAT111111')
+        expect(responseInfraction.vesselSize).equal(12.12)
+        expect(responseInfraction.vesselType).equal('Porte-conteneur')
+        expect(responseInfraction.infractionType).equal('WITH_REPORT')
+        expect(responseInfraction.administrativeResponse).equal('SANCTION')
+        expect(responseInfraction.seizure).equal('YES')
+        expect(responseInfraction.formalNotice).equal('YES')
+        expect(responseInfraction.natinf).to.deep.equal(['1508'])
+        expect(responseInfraction.nbTarget).equal(1)
 
         // clean
         cy.wait(250)
@@ -742,6 +818,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Type de véhicule', 'Navire')
 
       cy.clickButton('+ Ajouter un contrôle avec infraction')
+      cy.fill('Navire absent de la base de données', true)
       cy.fill('MMSI', '123456789')
       cy.fill('Nom du navire', 'BALTIK')
       cy.fill('IMO', 'IMO123')
