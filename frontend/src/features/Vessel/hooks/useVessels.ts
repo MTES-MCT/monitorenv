@@ -1,4 +1,5 @@
 import { useSearchVesselsQuery } from '@api/vesselApi'
+import { toOptions } from '@features/Vessel/utils'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { useEffect, useState } from 'react'
 
@@ -14,16 +15,7 @@ export const useVessels = (query: string | undefined) => {
   const { data: vesselsFound } = useSearchVesselsQuery(query && query?.length > 0 ? { searched: query } : skipToken)
 
   useEffect(() => {
-    setOptions(
-      (vesselsFound ?? []).map(value => {
-        const label = value.shipName ?? 'NOM INCONNU'
-
-        return {
-          label,
-          value
-        }
-      })
-    )
+    setOptions(toOptions(vesselsFound))
   }, [vesselsFound])
 
   return { options }

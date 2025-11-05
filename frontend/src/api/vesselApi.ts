@@ -19,4 +19,4 @@ export const vesselApi = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-export const { useGetVesselQuery, useSearchVesselsQuery } = vesselApi
+export const { useGetVesselQuery, useLazyGetVesselQuery, useSearchVesselsQuery } = vesselApi

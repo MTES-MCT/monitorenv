@@ -1104,7 +1104,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 infractionType = InfractionTypeEnum.WITHOUT_REPORT,
                 formalNotice = FormalNoticeEnum.NO,
                 controlledPersonIdentity = "Dick Hoover",
-                vesselType = VesselTypeEnum.FISHING,
+                vesselType = VesselTypeEnum.FISHING.name,
                 vesselSize = 23,
                 vesselName = "Vessel Name",
                 mmsi = "123456789",

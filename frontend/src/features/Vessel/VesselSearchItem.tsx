@@ -19,7 +19,7 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
       <Name $isUnknown={!vesselName}>
         <Flag
           rel="preload"
-          src={`/flags/${flag ? `${flag.substring(0, 2).toLowerCase()}.svg` : 'unknown.png'}`}
+          src={`${window.location.origin}/flags/${flag ? `${flag.substring(0, 2).toLowerCase()}.svg` : 'unknown.png'}`}
           title={flag ? countries.getName(flag, 'fr') : 'Inconnu'}
         />
         <Highlighter

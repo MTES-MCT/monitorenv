@@ -1,21 +1,28 @@
 import { useVessels } from '@features/Vessel/hooks/useVessels'
-import { vesselAction } from '@features/Vessel/slice'
+import { toOptions } from '@features/Vessel/utils'
 import { VesselSearchItem } from '@features/Vessel/VesselSearchItem'
-import { useAppDispatch } from '@hooks/useAppDispatch'
-import { CustomSearch, Search, Size } from '@mtes-mct/monitor-ui'
+import { CustomSearch, Search, Size } from '@mtes-mct/monitor-ui__root'
 import { getColorWithAlpha } from '@utils/utils'
-import { useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useDebounce } from 'use-debounce'
 
 import type { Vessel } from '@features/Vessel/types'
 import type { RsuiteDataItem } from '@mtes-mct/monitor-ui/types/internals'
 
-export function SearchVessel() {
-  const dispatch = useAppDispatch()
+type SearchVesselsProps = {
+  disabled?: boolean
+  isLight?: boolean
+  onChange?: (vessel: Vessel.Identity | undefined) => void
+  value?: Vessel.Identity | undefined
+}
+
+export function SearchVessel({ disabled, isLight = true, onChange, value }: SearchVesselsProps) {
+  const isSelecting = useRef(false)
   const [query, setQuery] = useState<string | undefined>()
   const [debouncedQuery] = useDebounce(query, 300)
   const { options } = useVessels(debouncedQuery)
+  const optionsOnDefaultValue = useMemo(() => (value ? toOptions([value]) : undefined), [value])
 
   const vesselCustomSearch = new CustomSearch(options ?? [], [
     'label',
@@ -29,18 +36,26 @@ export function SearchVessel() {
       key="vessel-search"
       customSearch={vesselCustomSearch}
       data-cy="vessel-search-input"
+      disabled={disabled}
       isLabelHidden
-      isLight
+      isLight={isLight}
       isSearchIconHidden
+      isUndefinedWhenDisabled
       label="Rechercher un navire"
       name="search-vessel"
       onChange={(item: Vessel.Identity) => {
-        dispatch(vesselAction.setSelectedVesselId(item.id))
+        isSelecting.current = true
+        if (onChange) {
+          onChange(item)
+        }
       }}
       onQuery={nextQuery => {
         setQuery(nextQuery)
+        if (isSelecting.current && onChange && value) {
+          onChange(undefined)
+        }
       }}
-      options={options}
+      options={options.length === 0 && value ? optionsOnDefaultValue : options}
       optionValueKey="id"
       placeholder="Rechercher un navire"
       renderMenu={node => <StyledMenu>{node}</StyledMenu>}
@@ -61,6 +76,7 @@ export function SearchVessel() {
         )
       }}
       size={Size.LARGE}
+      value={value}
     />
   )
 }
