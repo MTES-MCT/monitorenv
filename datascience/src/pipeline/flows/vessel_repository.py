@@ -23,6 +23,8 @@ TAGS_TO_INCLUDE = {
 "ProfessionalType",
 "CommercialName",
 "Length",
+"BatchId",
+"RowNumber",
 }
 OWNER_TAGS_TO_INCLUDE = {
 "DateOfInformation",
@@ -109,6 +111,12 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 100000
         for child in elem:
             if child.tag in TAGS_TO_INCLUDE:
                 record[f"{to_snake_case(child.tag)}"] = child.text
+
+        metadata = elem.find(".//Metadata")
+        if metadata is not None:
+            for child in metadata:
+                if child.tag in TAGS_TO_INCLUDE:
+                    record[f"{to_snake_case(child.tag)}"] = child.text
 
         identification = elem.find(".//Identification")
         if identification is not None:

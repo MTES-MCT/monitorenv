@@ -19,6 +19,24 @@
               <xs:element name="ShipDescription" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
+                    <xs:element name="Metadata" minOccurs="1" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="BatchId" minOccurs="1" maxOccurs="1">
+                            <xs:simpleType>
+                              <xs:restriction base="xs:int">
+                              </xs:restriction>
+                            </xs:simpleType>
+                          </xs:element>
+                          <xs:element name="RowNumber" minOccurs="1" maxOccurs="1">
+                            <xs:simpleType>
+                              <xs:restriction base="xs:int">
+                              </xs:restriction>
+                            </xs:simpleType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
                     <xs:element name="ShipId" minOccurs="1" maxOccurs="1">
                       <xs:simpleType>
                         <xs:restriction base="xs:int">
