@@ -1,7 +1,7 @@
 import { useVessels } from '@features/Vessel/hooks/useVessels'
 import { toOptions } from '@features/Vessel/utils'
 import { VesselSearchItem } from '@features/Vessel/VesselSearchItem'
-import { CustomSearch, Search, Size } from '@mtes-mct/monitor-ui__root'
+import { CustomSearch, Search, Size } from '@mtes-mct/monitor-ui'
 import { getColorWithAlpha } from '@utils/utils'
 import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
