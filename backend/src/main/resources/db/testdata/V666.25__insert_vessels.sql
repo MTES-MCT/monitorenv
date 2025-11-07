@@ -1,6 +1,7 @@
 INSERT INTO public.vessels
 VALUES (nextval('vessels_id_seq'), '11', 'A', 'PRO', false, 'IMO1111', 'MMSI11111',
-        'IMMAT111111', 'SHIPNAME 1', 'DZA', 'ALGER', 'Porte-conteneur', 'COMMERCIAL NAME', 12.12, 'DURAND', 'MICHEL',
+        'IMMAT111111', 'SHIPNAME 1', 'DZA', 'ALGER', null, 'Porte-conteneur', 'COMMERCIAL NAME', 12.12, null, 'DURAND',
+        'MICHEL',
         '1998-07-12', '82 STADE DE FRANCE', '0102030405', 'email@gmail.com', 'COMPANY NAME 1', 'FRANCE', '45.40Z',
         '3120', '2000-01-01');
 INSERT INTO public.vessels
