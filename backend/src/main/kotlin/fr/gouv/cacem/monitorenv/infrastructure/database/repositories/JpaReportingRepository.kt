@@ -75,7 +75,7 @@ class JpaReportingRepository(
 
     @Transactional
     override fun findAllById(reportingId: List<Int>): List<ReportingDetailsDTO> =
-        dbReportingRepository.findAllById(reportingId).map { it.toReportingDetailsDTO(mapper) }
+        dbReportingRepository.findNotDeletedByIds(reportingId).map { it.toReportingDetailsDTO(mapper) }
 
     @Transactional
     override fun findAll(

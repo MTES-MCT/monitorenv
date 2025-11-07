@@ -223,4 +223,14 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
         mmsi: String,
         idToExclude: Int?,
     ): List<ReportingModel>
+
+    @Query(
+        value = """
+        SELECT reporting
+        FROM ReportingModel reporting
+        WHERE reporting.isDeleted = false
+            AND reporting.id IN :ids
+        """,
+    )
+    fun findNotDeletedByIds(ids: List<Int>): List<ReportingModel>
 }
