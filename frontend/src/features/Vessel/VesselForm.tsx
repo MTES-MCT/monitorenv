@@ -5,6 +5,8 @@ import { FormikNumberInput, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useState } from 'react'
 
+import type { Infraction } from '../../domain/entities/missions'
+
 type VesselFormProps = {
   envActionIndex: number
   isDisabled: boolean
@@ -13,21 +15,17 @@ type VesselFormProps = {
 
 export function VesselForm({ envActionIndex, isDisabled, path }: VesselFormProps) {
   const [envActionId] = useField(`envActions.${envActionIndex}.id`)
-  const [vesselId] = useField(`${path}.vesselId`)
-  const [mmsi] = useField(`${path}.mmsi`)
-  const [imo] = useField(`${path}.imo`)
-  const [registrationNumber] = useField(`${path}.registrationNumber`)
-  const [length] = useField(`${path}.length`)
-  const [vesselType] = useField(`${path}.vesselType`)
-  const [controlledPersonIdentity] = useField(`${path}.controlledPersonIdentity`)
+  const [{ value: infraction }] = useField<Infraction>(path)
   const isUnknown =
-    !vesselId.value &&
-    (mmsi.value ||
-      imo.value ||
-      registrationNumber.value ||
-      length.value ||
-      vesselType.value ||
-      controlledPersonIdentity.value)
+    !infraction.vesselId &&
+    !!(
+      infraction.mmsi ||
+      infraction.imo ||
+      infraction.registrationNumber ||
+      infraction.vesselSize ||
+      infraction.vesselType ||
+      infraction.controlledPersonIdentity
+    )
   const [isUnknownVessel, setIsUnknownVessel] = useState(isUnknown)
 
   return (
@@ -37,7 +35,7 @@ export function VesselForm({ envActionIndex, isDisabled, path }: VesselFormProps
         isUnknown={isUnknownVessel}
         onIsUnknown={isChecked => setIsUnknownVessel(!!isChecked)}
         path={path}
-        vesselId={vesselId.value}
+        vesselId={infraction.vesselId}
       />
       {isUnknownVessel && (
         <>

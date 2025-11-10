@@ -26,6 +26,7 @@ data class VesselModel(
     val flag: String?,
     val portOfRegistry: String?,
     val professionalType: String?,
+    val leisureType: String?,
     val commercialName: String?,
     @Column(precision = 5, scale = 2)
     val length: BigDecimal?,
@@ -44,6 +45,8 @@ data class VesselModel(
     val ownerLegalStatusLabel: String? = null,
     val ownerLegalStatus: String?,
     val ownerStartDate: String?,
+    val batchId: Int?,
+    val rowNumber: Int?,
 ) {
     fun toVessel(): Vessel =
         Vessel(
@@ -58,6 +61,7 @@ data class VesselModel(
             shipName = shipName,
             flag = flag,
             portOfRegistry = portOfRegistry,
+            leisureType = leisureType,
             professionalType = professionalType,
             commercialName = commercialName,
             length = length,

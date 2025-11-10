@@ -514,7 +514,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.clickButton('+ Ajouter un contrôle avec infraction')
       cy.fill('Navire absent de la base de données', true)
       cy.fill('MMSI', '123456789')
-      cy.contains("Pas d'antécédents")
+      cy.contains("Pas d'antécédent")
       cy.fill('Nom du navire', 'BALTIK')
       cy.fill('IMO', 'IMO123')
       cy.fill('Nom du capitaine', 'John Doe')
@@ -591,7 +591,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
       cy.clickButton('+ Ajouter un contrôle avec infraction')
       cy.fill('Rechercher un navire', '123456789')
-      cy.contains("Pas d'antécédents")
+      cy.contains("Pas d'antécédent")
 
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Réponse administrative', 'Sanction')

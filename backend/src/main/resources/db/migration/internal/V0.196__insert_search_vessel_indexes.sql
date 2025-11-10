@@ -18,3 +18,4 @@ CREATE INDEX idx_vessel_mmsi_trgm
 
 CREATE INDEX idx_vessel_not_banned_catA ON vessels (id)
     WHERE is_banned IS FALSE AND status = 'A';
+
