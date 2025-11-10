@@ -21,6 +21,7 @@ TAGS_TO_INCLUDE = {
 "Flag",
 "PortOfRegistry",
 "ProfessionalType",
+"LeisureType",
 "CommercialName",
 "Length",
 "BatchId",
