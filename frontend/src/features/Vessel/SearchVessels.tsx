@@ -30,10 +30,16 @@ export function SearchVessel({ disabled, isLight = true, onChange, value }: Sear
     'value.mmsi',
     'value.immatriculation'
   ])
+  const flagUrl =
+    value &&
+    `${window.location.origin}/flags/${
+      value?.flag ? `${value?.flag.substring(0, 2).toLowerCase()}.svg` : 'unknown.png'
+    }`
 
   return (
     <StyledSearch
       key="vessel-search"
+      backgroundImageUrl={flagUrl}
       customSearch={vesselCustomSearch}
       data-cy="vessel-search-input"
       disabled={disabled}
@@ -81,10 +87,22 @@ export function SearchVessel({ disabled, isLight = true, onChange, value }: Sear
   )
 }
 
-const StyledSearch = styled(Search)`
+const StyledSearch = styled(Search)<{ backgroundImageUrl?: string }>`
   box-shadow: 0px 3px 6px ${p => getColorWithAlpha(p.theme.color.slateGray, 0.25)};
   flex-grow: 1;
   width: 400px;
+  background-color: ${p => p.theme.color.gainsboro};
+
+  input {
+    ${p =>
+      p.backgroundImageUrl
+        ? `background-image: url(${p.backgroundImageUrl});
+    background-repeat: no-repeat;
+    background-position: 16px center;
+    background-size: 26px;
+    padding-left: 50px !important;`
+        : ''}
+  }
 `
 
 const StyledMenu = styled.div`

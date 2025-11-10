@@ -17,6 +17,7 @@ class VesselFixture {
                 shipName = null,
                 flag = null,
                 portOfRegistry = null,
+                leisureType = null,
                 professionalType = null,
                 commercialName = null,
                 length = null,

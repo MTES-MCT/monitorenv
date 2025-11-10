@@ -142,6 +142,7 @@ context('Reportings', () => {
       cy.fill('Type de véhicule', 'Navire')
 
       cy.clickButton('+ Ajouter un contrôle avec infraction')
+      cy.fill('Navire absent de la base de données', true)
       cy.fill('MMSI', '987654321')
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Réponse administrative', 'Sanction')

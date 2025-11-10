@@ -15,6 +15,7 @@ data class Vessel(
     val flag: String?,
     val portOfRegistry: String?,
     val professionalType: String?,
+    val leisureType: String?,
     val commercialName: String?,
     val length: BigDecimal?,
     val ownerLastName: String?,

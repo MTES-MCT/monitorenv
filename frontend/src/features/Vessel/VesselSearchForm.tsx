@@ -52,32 +52,33 @@ export function VesselSearchForm({ envActionId, isUnknown, onIsUnknown, path, ve
     setFieldValue(`${path}.controlledPersonIdentity`, undefined)
   }, [setFieldValue, path])
 
-  const handleVesselChange = useCallback(
-    async (vesselIdentity: Vessel.Identity | undefined) => {
-      setSelectedVessel(vesselIdentity)
-      if (vesselIdentity) {
-        await getVessel(vesselIdentity.id)
-          .unwrap()
-          .then(vesselFound => {
-            setFieldValue(`${path}.vesselId`, vesselFound.id)
-            setFieldValue(`${path}.mmsi`, vesselFound.mmsi)
-            setFieldValue(`${path}.imo`, vesselFound.imo)
-            setFieldValue(`${path}.vesselName`, vesselFound.shipName)
-            setFieldValue(`${path}.registrationNumber`, vesselFound.immatriculation)
-            setFieldValue(`${path}.vesselSize`, vesselFound.length)
-            setFieldValue(`${path}.vesselType`, vesselFound.professionalType)
-            setFieldValue(
-              `${path}.controlledPersonIdentity`,
-              [vesselFound.ownerLastName, vesselFound.ownerFirstName].filter(Boolean).join(' ')
-            )
-          })
-      }
-      if (!vesselIdentity && vesselId) {
-        clear()
-      }
-    },
-    [clear, getVessel, path, setFieldValue, vesselId]
-  )
+  const handleVesselChange = async (vesselIdentity: Vessel.Identity | undefined) => {
+    setSelectedVessel(vesselIdentity)
+    if (vesselIdentity) {
+      await getVessel(vesselIdentity.id)
+        .unwrap()
+        .then(vesselFound => {
+          const controlledPersonIdentity = [vesselFound.ownerLastName, vesselFound.ownerFirstName].filter(Boolean)
+          setFieldValue(`${path}.vesselId`, vesselFound.id)
+          setFieldValue(`${path}.mmsi`, vesselFound.mmsi)
+          setFieldValue(`${path}.imo`, vesselFound.imo)
+          setFieldValue(`${path}.vesselName`, vesselFound.shipName)
+          setFieldValue(`${path}.registrationNumber`, vesselFound.immatriculation)
+          setFieldValue(`${path}.vesselSize`, vesselFound.length)
+          setFieldValue(
+            `${path}.vesselType`,
+            vessel?.category === 'PLA' ? vesselFound.leisureType : vesselFound.professionalType
+          )
+          setFieldValue(
+            `${path}.controlledPersonIdentity`,
+            controlledPersonIdentity.length > 0 ? controlledPersonIdentity.join(' ') : undefined
+          )
+        })
+    }
+    if (!vesselIdentity && vesselId) {
+      clear()
+    }
+  }
 
   const handleUnknownShip = (isChecked: boolean | undefined) => {
     onIsUnknown(isChecked)

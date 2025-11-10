@@ -1,6 +1,8 @@
 import { useField } from 'formik'
 import styled from 'styled-components'
 
+import type { Infraction } from '../../domain/entities/missions'
+
 type VesselSearchDescriptionProps = {
   path: string
 }
@@ -8,33 +10,28 @@ type VesselSearchDescriptionProps = {
 const UNKNOWN = 'Inconnu'
 
 export function VesselSearchDescription({ path }: VesselSearchDescriptionProps) {
-  const [mmsi] = useField(`${path}.mmsi`)
-  const [imo] = useField(`${path}.imo`)
-  const [registrationNumber] = useField(`${path}.registrationNumber`)
-  const [length] = useField(`${path}.length`)
-  const [vesselType] = useField(`${path}.vesselType`)
-  const [controlledPersonIdentity] = useField(`${path}.controlledPersonIdentity`)
+  const [{ value: infraction }] = useField<Infraction>(path)
 
   return (
     <Wrapper>
       <Value>
-        {imo.value ?? UNKNOWN} <Description>(IMO)</Description>
+        {infraction.imo ?? UNKNOWN} <Description>(IMO)</Description>
       </Value>
       <Value>
-        {mmsi.value ?? UNKNOWN} <Description>(MMSI)</Description>
+        {infraction.mmsi ?? UNKNOWN} <Description>(MMSI)</Description>
       </Value>
       <Value>
-        {registrationNumber.value ?? UNKNOWN} <Description>(Immat.)</Description>
+        {infraction.registrationNumber ?? UNKNOWN} <Description>(Immat.)</Description>
       </Value>
       <Value>
-        {length.value ? `${length.value}m` : UNKNOWN}
+        {infraction.vesselSize ? `${infraction.vesselSize}m` : UNKNOWN}
         <Description>(Taille)</Description>
       </Value>
       <Value>
-        {vesselType.value ?? UNKNOWN} <Description>(Type)</Description>
+        {infraction.vesselType ?? UNKNOWN} <Description>(Type)</Description>
       </Value>
       <Value>
-        {controlledPersonIdentity.value ?? UNKNOWN}
+        {infraction.controlledPersonIdentity ?? UNKNOWN}
         <Description>(Nom du capitaine)</Description>
       </Value>
     </Wrapper>

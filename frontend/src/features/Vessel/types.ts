@@ -11,6 +11,7 @@ export namespace Vessel {
   export interface Vessel extends Identity {
     category?: string
     commercialName?: string
+    leisureType?: string
     length?: number
     ownerBusinessSegmentLabel?: string
     ownerCompanyName?: string

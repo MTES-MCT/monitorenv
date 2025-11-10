@@ -72,7 +72,7 @@ export function VesselResume({ vesselId }: VesselResumeProps) {
           <dt>Catégorie</dt>
           <dd>{vessel.category ? VesselCategoryLabel[vessel.category] : UNKNOWN}</dd>
           <dt>Type</dt>
-          <dd>{vessel.professionalType ?? UNKNOWN}</dd>
+          <dd>{(vessel.category === 'PLA' ? vessel.leisureType : vessel.professionalType) ?? UNKNOWN}</dd>
           <dt>Désignation commerciale</dt>
           <dd>{vessel.commercialName ?? UNKNOWN}</dd>
         </VesselType>
