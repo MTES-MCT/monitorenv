@@ -40,7 +40,8 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "flag": "FRA",
                 "port_of_registry": "CHERBOURG",
                 "immatriculation": "999999",
-                "professional_type": "Navire a passagers",
+                "professional_type": "Porte-Conteneur",
+                "leisure_type": None,
                 "commercial_name": "COMMERCIAL_NAME",
                 "length": "32",
                 "owner_date_of_information": "2019-05-29T00:00:00.000",
@@ -70,6 +71,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "port_of_registry": "DZAOUDZI",
                 "immatriculation": "888888",
                 "professional_type": None,
+                "leisure_type": "Navire a passagers",
                 "commercial_name": None,
                 "length": "9.6",
                 "owner_date_of_information": "2019-05-29T00:00:00.000",
@@ -93,7 +95,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
         "monitorenv_remote",
         # Cast boolean is_banned to Yes / No
         """SELECT ship_id, status, category, CASE WHEN is_banned IS TRUE THEN 'Yes' ELSE 'No' END as is_banned, imo_number, mmsi_number, ship_name, flag, port_of_registry, immatriculation,
-        professional_type, commercial_name, length, owner_date_of_information, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
+        professional_type, leisure_type, commercial_name, length, owner_date_of_information, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
         owner_phone, owner_email, owner_nationality, owner_company_name, owner_business_segment, owner_legal_status, owner_start_date, batch_id, row_number 
         FROM vessels"""
     )

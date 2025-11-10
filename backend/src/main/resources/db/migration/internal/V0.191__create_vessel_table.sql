@@ -11,6 +11,7 @@ CREATE TABLE public.vessels
     ship_name                 VARCHAR(50),
     flag                      VARCHAR(3),
     port_of_registry          VARCHAR(50),
+    leisure_type              VARCHAR(100),
     professional_type         VARCHAR(100),
     commercial_name           VARCHAR(30),
     length                    NUMERIC(5, 2),

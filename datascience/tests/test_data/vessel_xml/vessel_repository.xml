@@ -26,7 +26,7 @@
                 <Immatriculation>999999</Immatriculation>
                 <Characteristics>
                     <DateOfInformation>2019-05-29T00:00:00.000</DateOfInformation>
-                    <ProfessionalType>Navire a passagers</ProfessionalType>
+                    <ProfessionalType>Porte-Conteneur</ProfessionalType>
                     <CommercialName>COMMERCIAL_NAME</CommercialName>
                     <Length>32</Length>
                     <Owner>
@@ -66,6 +66,7 @@
                 <Immatriculation>888888</Immatriculation>
                 <Characteristics>
                     <DateOfInformation>2019-05-29T00:00:00.000</DateOfInformation>
+                    <LeisureType>Navire a passagers</LeisureType>
                     <Length>9.6</Length>
                     <Owner>
                         <DateOfInformation>2019-05-29T00:00:00.000</DateOfInformation>
