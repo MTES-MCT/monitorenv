@@ -2,6 +2,8 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
 
+const today = encodeURIComponent(customDayjs().utc().endOf('day').toISOString())
+
 context('Side Window > Mission List > Filter Bar', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
@@ -14,8 +16,10 @@ context('Side Window > Mission List > Filter Bar', () => {
 
   it('Should filter missions for the current week', () => {
     const currentWeek = encodeURIComponent(customDayjs().utc().startOf('day').utc().subtract(7, 'day').toISOString())
-    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentWeek}`).as('getMissionsForCurrentWeek')
-    cy.fill('Période', 'Une semaine')
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentWeek}&startedBeforeDateTime=${today}`).as(
+      'getMissionsForCurrentWeek'
+    )
+    cy.fill('Période', '7 derniers jours')
     cy.wait('@getMissionsForCurrentWeek')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
@@ -23,8 +27,10 @@ context('Side Window > Mission List > Filter Bar', () => {
 
   it('Should filter missions for the current month', () => {
     const currentMonth = encodeURIComponent(customDayjs().utc().startOf('day').subtract(30, 'day').toISOString())
-    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentMonth}`).as('getMissionsForCurrentMonth')
-    cy.fill('Période', 'Un mois')
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentMonth}&startedBeforeDateTime=${today}`).as(
+      'getMissionsForCurrentMonth'
+    )
+    cy.fill('Période', '30 derniers jours')
     cy.wait('@getMissionsForCurrentMonth')
 
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
@@ -236,6 +242,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions with env actions', () => {
+    cy.fill('Période', 'Année en cours')
     cy.fill('Missions avec actions CACEM', true)
 
     cy.getDataCy('edit-mission-53').should('exist')

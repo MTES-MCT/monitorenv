@@ -506,7 +506,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
   it('Should display missing fields banner if mission is ended and has missing fields', () => {
     visitSideWindow()
-    cy.fill('Période', 'Un mois')
+    cy.fill('Période', '30 derniers jours')
     cy.wait(500)
     cy.get('.missions-table').scrollTo('bottom')
     cy.getDataCy('edit-mission-27').click({ force: true })

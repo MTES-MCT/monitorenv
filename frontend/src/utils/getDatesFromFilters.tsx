@@ -15,7 +15,7 @@ export function getDatesFromFilters({
   withLast24Hours = false
 }: GetDatesFromFiltersProps) {
   let startedAfterDate = startedAfter ?? undefined
-  const startedBeforeDate = startedBefore ?? undefined
+  let startedBeforeDate = startedBefore ?? undefined
   switch (periodFilter) {
     case DateRangeEnum.DAY:
       if (withLast24Hours) {
@@ -23,18 +23,25 @@ export function getDatesFromFilters({
         startedAfterDate = `${customDayjs().utc().subtract(24, 'hour').format('YYYY-MM-DDTHH:mm')}:00.000Z`
       } else {
         startedAfterDate = customDayjs().utc().startOf('day').toISOString()
+        startedBeforeDate = customDayjs().utc().endOf('day').toISOString()
       }
       break
 
     case DateRangeEnum.WEEK:
       startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(7, 'day').toISOString()
+      startedBeforeDate = customDayjs().utc().endOf('day').toISOString()
       break
 
     case DateRangeEnum.MONTH:
       startedAfterDate = customDayjs().utc().startOf('day').utc().subtract(30, 'day').toISOString()
+      startedBeforeDate = customDayjs().utc().endOf('day').toISOString()
       break
 
     case DateRangeEnum.YEAR:
+      startedAfterDate = customDayjs().utc().startOf('year').toISOString()
+      break
+
+    case DateRangeEnum.UPCOMING:
       startedAfterDate = customDayjs().utc().startOf('year').toISOString()
       break
 

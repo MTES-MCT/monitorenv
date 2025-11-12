@@ -23,9 +23,9 @@ context('Missions', () => {
     cy.getDataCy('SideWindowHeader-title').contains('Missions et contrôles')
 
     cy.log('A default period filter should be set')
-    cy.fill('Période', 'Une semaine')
+    cy.fill('Période', '7 derniers jours')
     cy.getDataCy('edit-mission-47').should('not.exist')
-    cy.fill('Période', 'Un mois')
+    cy.fill('Période', '30 derniers jours')
     cy.getDataCy('edit-mission-47').scrollIntoView().should('exist')
 
     cy.log('Administrations should be filtered')

@@ -16,7 +16,7 @@ import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { getThemesAsOptionsCheckPicker } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
-import { type DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
+import { type DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, MissionStatusLabel, MissionTypeLabel } from 'domain/entities/missions'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
@@ -24,6 +24,7 @@ import { type MutableRefObject, useCallback, useMemo, useRef } from 'react'
 
 import { MapMissionsFilters } from './Map'
 import { TableMissionsFilters } from './Table'
+import { missionDateRangeOptions } from '../MissionsList/type'
 
 import type { TagOption } from '../../../../domain/entities/tags'
 
@@ -102,7 +103,7 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
       administrations: activeAdministrations,
       completion: completionStatusAsOptions,
       controlUnits: controlUnitsAsOptions,
-      dates: dateRangeOptions,
+      dates: missionDateRangeOptions,
       seaFronts: seaFrontsAsOptions,
       status: missionStatusesAsOptions,
       tags: tagsAsOptions,
