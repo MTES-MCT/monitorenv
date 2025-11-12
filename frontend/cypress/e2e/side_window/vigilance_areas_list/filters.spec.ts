@@ -38,7 +38,7 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
     cy.fill('Filtre tags et sous-tags', ['subtagMouillage1'])
     cy.getDataCy('vigilance-areas-filter-tags').find('.Component-SingleTag > span').contains('subtagMouillage1')
     cy.getDataCy('vigilance-area-row').should('have.length', 1)
-    verifyVigilanceAreaRows('Mouillage')
+    verifyVigilanceAreaRows('subtagMouillage1')
   })
 
   it('Should filter vigilance areas by themes filter', () => {
