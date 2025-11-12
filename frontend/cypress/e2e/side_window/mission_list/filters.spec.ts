@@ -252,6 +252,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   })
 
   it('Should filter missions by search query', () => {
+    cy.fill('Période', 'Année en cours')
     cy.fill('Rechercher dans un contrôle (navire, personne...)', 'BALTIK')
 
     cy.get('.Table-SimpleTable tr').should('have.length', 2)

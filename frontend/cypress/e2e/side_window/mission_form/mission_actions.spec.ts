@@ -35,6 +35,7 @@ context('Side Window > Mission Form > Mission actions', () => {
         Cypress.env('CYPRESS_REPORTING_FORM_AUTO_UPDATE', 'true')
       }
     })
+    cy.fill('Période', 'Année en cours')
     cy.wait('@getMissions')
   })
 
@@ -76,7 +77,6 @@ context('Side Window > Mission Form > Mission actions', () => {
   })
 
   it('Save observations in control Actions', () => {
-    cy.wait(250)
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
     cy.getDataCy('action-card').eq(1).click()
 
@@ -485,7 +485,6 @@ context('Side Window > Mission Form > Mission actions', () => {
   })
 
   it("Should display warning banner if fish api doesn't respond", () => {
-    cy.fill('Période', '30 derniers jours')
     cy.wait('@getMissions')
     cy.get('.Table-SimpleTable').scrollIntoView({ offset: { left: 0, top: 800 } })
     cy.getDataCy('edit-mission-27')

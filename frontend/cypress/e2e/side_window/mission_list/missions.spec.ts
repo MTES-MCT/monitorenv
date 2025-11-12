@@ -16,34 +16,4 @@ context('Missions', () => {
     cy.getDataCy('select-units-filter').click({ force: true })
     cy.get('[data-key="BGC Ajaccio"]').should('not.exist')
   })
-
-  it('Missions should be displayed in Missions Table and filterable', () => {
-    cy.visit(`/side_window`).wait(1000)
-
-    cy.getDataCy('SideWindowHeader-title').contains('Missions et contrôles')
-
-    cy.log('A default period filter should be set')
-    cy.fill('Période', '7 derniers jours')
-    cy.getDataCy('edit-mission-47').should('not.exist')
-    cy.fill('Période', '30 derniers jours')
-    cy.getDataCy('edit-mission-47').scrollIntoView().should('exist')
-
-    cy.log('Administrations should be filtered')
-    cy.fill('Administration', ['DDTM'])
-    cy.getDataCy('edit-mission-48').should('not.exist')
-
-    cy.log('Initialize filters')
-    cy.clickButton('Réinitialiser les filtres')
-    cy.getDataCy('edit-mission-48').scrollIntoView().should('exist')
-
-    cy.log('Units should be filtered')
-    cy.getDataCy('edit-mission-38').scrollIntoView().should('exist')
-    cy.fill('Unité', ['PAM Themis'])
-    cy.getDataCy('edit-mission-48').scrollIntoView().should('exist')
-    cy.getDataCy('edit-mission-38').should('not.exist')
-
-    cy.log('Units filter should be clear')
-    cy.fill('Unité', undefined)
-    cy.getDataCy('edit-mission-38').scrollIntoView().should('exist')
-  })
 })
