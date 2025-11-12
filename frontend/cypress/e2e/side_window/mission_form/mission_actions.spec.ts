@@ -485,7 +485,7 @@ context('Side Window > Mission Form > Mission actions', () => {
   })
 
   it("Should display warning banner if fish api doesn't respond", () => {
-    cy.fill('Période', 'Un mois')
+    cy.fill('Période', '30 derniers jours')
     cy.wait('@getMissions')
     cy.get('.Table-SimpleTable').scrollIntoView({ offset: { left: 0, top: 800 } })
     cy.getDataCy('edit-mission-27')

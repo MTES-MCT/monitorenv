@@ -4,14 +4,8 @@ export enum DateRangeEnum {
   DAY = 'DAY',
   MONTH = 'MONTH',
   WEEK = 'WEEK',
-  YEAR = 'YEAR'
-}
-
-export type DateRangeLabel = {
-  [K in DateRangeEnum]: {
-    label: string
-    value: K
-  }
+  YEAR = 'YEAR',
+  UPCOMING = 'UPCOMING'
 }
 
 export const DAY_OPTION = {

@@ -42,7 +42,7 @@ describe('getDatesFromFilters', () => {
       startedBefore: undefined
     })
     expect(result.startedAfterDate).toBe('2024-05-13T00:00:00.000Z')
-    expect(result.startedBeforeDate).toBeUndefined()
+    expect(result.startedBeforeDate).toBe('2024-05-13T23:59:59.999Z')
   })
 
   it('should calculate WEEK range', () => {
@@ -52,7 +52,7 @@ describe('getDatesFromFilters', () => {
       startedBefore: undefined
     })
     expect(result.startedAfterDate).toBe('2024-05-06T00:00:00.000Z')
-    expect(result.startedBeforeDate).toBeUndefined()
+    expect(result.startedBeforeDate).toBe('2024-05-13T23:59:59.999Z')
   })
 
   it('should calculate MONTH range', () => {
@@ -62,7 +62,7 @@ describe('getDatesFromFilters', () => {
       startedBefore: undefined
     })
     expect(result.startedAfterDate).toBe('2024-04-13T00:00:00.000Z')
-    expect(result.startedBeforeDate).toBeUndefined()
+    expect(result.startedBeforeDate).toBe('2024-05-13T23:59:59.999Z')
   })
 
   it('should calculate YEAR range', () => {
