@@ -166,6 +166,7 @@ context('Side Window > Mission Form > Main Form', () => {
   it('A mission tab should be closed', () => {
     // Given
     visitSideWindow()
+    cy.fill('Période', 'Année en cours')
     cy.get('[data-cy="edit-mission-25"]').click({ force: true })
     cy.wait(500)
 
@@ -191,8 +192,7 @@ context('Side Window > Mission Form > Main Form', () => {
     visitSideWindow()
     cy.wait(200)
 
-    cy.getDataCy('select-period-filter').click()
-    cy.get('div[data-key="MONTH"]').click()
+    cy.fill('Période', '30 derniers jours')
 
     cy.getDataCy('edit-mission-50').scrollIntoView().click({ force: true })
 
@@ -300,6 +300,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // Given
     visitSideWindow()
     cy.wait(200)
+    cy.fill('Période', 'Année en cours')
     cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
     // When
@@ -506,7 +507,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
   it('Should display missing fields banner if mission is ended and has missing fields', () => {
     visitSideWindow()
-    cy.fill('Période', '30 derniers jours')
+    cy.fill('Période', 'Année en cours')
     cy.wait(500)
     cy.get('.missions-table').scrollTo('bottom')
     cy.getDataCy('edit-mission-27').click({ force: true })
@@ -515,6 +516,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
   it('Should display text in timeline if data has been added to the mission by the control unit in RapportNav. ', () => {
     visitSideWindow()
+    cy.fill('Période', 'Année en cours')
     cy.getDataCy('edit-mission-53').scrollIntoView().click({ force: true }).wait(500)
     cy.getDataCy('rapportNav-actions-text').should('be.visible')
   })

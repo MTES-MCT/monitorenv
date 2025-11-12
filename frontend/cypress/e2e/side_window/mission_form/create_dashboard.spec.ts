@@ -10,6 +10,7 @@ context('Side Window > Mission Form > Create dashboard from mission', () => {
     cy.intercept('POST', '/bff/v1/reportings').as('getReportings')
     cy.intercept('GET', '/bff/v1/control_units/nearby*').as('getNearbyControlUnits')
 
+    cy.fill('Période', 'Année en cours')
     cy.get('[data-cy="edit-mission-38"]').click({ force: true })
     cy.clickButton('Créer un tableau de bord')
 

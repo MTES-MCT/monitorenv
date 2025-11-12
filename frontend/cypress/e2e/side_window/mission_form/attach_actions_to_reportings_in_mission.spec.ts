@@ -18,6 +18,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
         Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
       }
     })
+    cy.fill('Période', 'Année en cours')
     cy.wait('@getMissions')
   })
 

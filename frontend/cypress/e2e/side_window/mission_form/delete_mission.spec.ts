@@ -7,19 +7,18 @@ import type { Mission } from 'domain/entities/missions'
 context('Side Window > Mission Form > Delete Mission', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
+    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
+    visitSideWindow()
+    cy.fill('Période', 'Année en cours')
+    cy.wait('@getMissions')
   })
 
   it('A mission should be deleted if no action created in MonitorFish', () => {
     // Given
-    cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
-    visitSideWindow()
-    cy.wait('@getMissions')
-    cy.wait(600) // a first render with 0 missions is likely to happen
     cy.getDataCy('Missions-numberOfDisplayedMissions').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
       cy.wrap(numberOfMissions).as('numberOfMissions')
     })
-
     const missionId = 49
     cy.get(`*[data-cy="edit-mission-${missionId}"]`).scrollIntoView().click({ force: true })
     cy.wait(250)
@@ -58,7 +57,6 @@ context('Side Window > Mission Form > Delete Mission', () => {
   })
 
   it('A mission should not be deleted if actions have been created in MonitorFish or RapportNav', () => {
-    visitSideWindow()
     cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
 
     cy.intercept(
