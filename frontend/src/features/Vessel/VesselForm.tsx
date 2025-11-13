@@ -1,5 +1,6 @@
 import { VesselTypeSelector } from '@features/commonComponents/VesselTypeSelector'
 import { StyledVesselForm } from '@features/Mission/components/MissionForm/ActionForm/ControlForm/InfractionForm/InfractionFormHeaderVehicle'
+import { isVesselsEnabled } from '@features/Vessel/utils'
 import { VesselSearchForm } from '@features/Vessel/VesselSearchForm'
 import { FormikNumberInput, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
@@ -37,7 +38,7 @@ export function VesselForm({ envActionIndex, isDisabled, path }: VesselFormProps
         path={path}
         vesselId={infraction.vesselId}
       />
-      {isUnknownVessel && (
+      {(isUnknownVessel || !isVesselsEnabled()) && (
         <>
           <StyledVesselForm>
             <FormikTextInput
