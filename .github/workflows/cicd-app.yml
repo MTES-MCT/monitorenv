@@ -335,6 +335,8 @@ jobs:
 
       - name: Generate and upload source maps to Sentry
         uses: getsentry/action-release@v3
+        # 13/11/2025: allow continuing if fail because of sentry issue
+        continue-on-error: true
         with:
           environment: ${{ needs.version.outputs.ENV_PROFILE }}
           release: ${{ env.VERSION }}
