@@ -48,7 +48,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery({ withGeometry: false })
   const regulatoryLayersByLayerName = useMemo(
     () =>
       groupBy(
@@ -71,7 +71,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   )
   const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
 
-  const { data: amps } = useGetAMPsQuery()
+  const { data: amps } = useGetAMPsQuery({ withGeometry: false })
   const ampResultsByAMPName = useMemo(
     () =>
       groupBy(

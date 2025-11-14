@@ -16,7 +16,7 @@ data class AMPModel(
     @Column(name = "des_desigfr")
     val designation: String,
     @Column(name = "geom")
-    val geom: MultiPolygon,
+    val geom: MultiPolygon?,
     @Column(name = "mpa_oriname")
     val name: String,
     @Column(name = "ref_reg")

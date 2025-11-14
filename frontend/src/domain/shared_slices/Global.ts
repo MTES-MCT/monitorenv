@@ -212,8 +212,7 @@ const globalSlice = createSlice({
       state.visibility.isMapToolVisible = action.payload
     },
     setOpenedOverlay(state, action: PayloadAction<string>) {
-      const featureId = action.payload
-      state.openedOverlayId = featureId
+      state.openedOverlayId = action.payload
     },
     setOverlayCoordinates(state, action: PayloadAction<OverlayCoordinates>) {
       const { name } = action.payload

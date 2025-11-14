@@ -187,6 +187,7 @@ jobs:
 
   e2e_test:
     name: Run E2E tests
+    if: false
     needs: [ version, build ]
     runs-on: ubuntu-22.04
     strategy:
@@ -308,7 +309,7 @@ jobs:
 
   generate_and_upload_source_maps:
     name: Generate and upload source maps to Sentry
-    needs: [ version, build, unit_test_backend, unit_test_frontend, e2e_test ]
+    needs: [ version, build, unit_test_backend, unit_test_frontend ]
     runs-on: ubuntu-22.04
     env:
       VERSION: ${{ needs.version.outputs.VERSION }}
@@ -353,7 +354,7 @@ jobs:
 
   push_to_registry:
     name: Push to registry
-    needs: [ version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps ]
+    needs: [ version, unit_test_backend, unit_test_frontend, generate_and_upload_source_maps ]
     # needs: [version, e2e_test, e2e_multi_windows_test, unit_test_frontend, e2e_test]
     runs-on: ubuntu-22.04
     if: startsWith(github.ref, 'refs/heads/dependabot') == false

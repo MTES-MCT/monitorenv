@@ -4,6 +4,8 @@ import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAMPById
+import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAMPsByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPs
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -29,6 +31,12 @@ class AmpsITests {
     @MockitoBean
     private lateinit var getAllAMPs: GetAllAMPs
 
+    @MockitoBean
+    private lateinit var getAMPsByIds: GetAMPsByIds
+
+    @MockitoBean
+    private lateinit var getAMPById: GetAMPById
+
     @Test
     fun `should return AMPs as json`() {
         // Given
@@ -46,11 +54,11 @@ class AmpsITests {
                 type = "mon type",
                 urlLegicem = "mon url legicem",
             )
-        given(getAllAMPs.execute()).willReturn(listOf(amp))
+        given(getAllAMPs.execute(false)).willReturn(listOf(amp))
 
         // When
         mockMvc
-            .perform(get("/bff/v1/amps"))
+            .perform(get("/bff/v1/amps?withGeometry=false"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(amp.id)))
