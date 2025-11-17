@@ -45,6 +45,15 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
   })
 
+  it('Should filter missions for future missions', () => {
+    const currentEndOfDay = encodeURIComponent(customDayjs().utc().endOf('day').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentEndOfDay}`).as('getMissionsForCurrentYear')
+    cy.fill('Période', 'A venir')
+    cy.wait('@getMissionsForCurrentYear')
+
+    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+  })
+
   it('Should filter missions by completion status', () => {
     cy.fill('État des données', ['Complétées'])
 

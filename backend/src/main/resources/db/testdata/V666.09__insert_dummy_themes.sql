@@ -15,7 +15,7 @@ FROM control_plan_sub_themes
 where year = 2024;
 
 INSERT INTO themes (name, parent_id, started_at, ended_at, control_plan_sub_themes_id)
-SELECT DISTINCT subtheme, theme_id, '2025-01-01 00:00:00'::timestamp, '2025-12-31 23:59:59'::timestamp, id
+SELECT DISTINCT subtheme, theme_id, '2025-01-01 00:00:00'::timestamp, '2099-12-31 23:59:59'::timestamp, id
 FROM control_plan_sub_themes
 where year = 2025;
 

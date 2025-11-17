@@ -78,9 +78,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return all missions when only required startedAfter is set to a very old date`() {
         // When
+        val startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z")
         val missions =
             jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2022-01-01T00:01:00Z").toInstant(),
+                startedAfter = startedAfter.toInstant(),
                 startedBefore = null,
                 missionTypes = null,
                 missionStatuses = null,
@@ -91,7 +92,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
-        assertThat(missions).hasSize(54)
+        assertThat(missions).allMatch { it.mission.startDateTimeUtc.isAfter(startedAfter) }
+        assertThat(missions).hasSize(42)
     }
 
     @Test
@@ -112,7 +114,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
-        assertThat(missions).hasSize(26)
+        assertThat(missions).hasSize(19)
     }
 
     @Test
@@ -130,7 +132,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
                 searchQuery = null,
             )
-        assertThat(missionsList).hasSize(21)
+        assertThat(missionsList).hasSize(16)
         println("missionsList: $missionsList")
         // When
         customQueryCountListener!!.resetQueryCount()
@@ -149,7 +151,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
                 searchQuery = null,
             )
-        assertThat(nextMissionList).hasSize(20)
+        assertThat(nextMissionList).hasSize(15)
     }
 
     @Test
@@ -190,10 +192,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when startedAfter & startedBefore are set`() {
         // When
+        val startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z")
+        val startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z")
         val missions =
             jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
-                startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
+                startedAfter = startedAfter.toInstant(),
+                startedBefore = startedBefore.toInstant(),
                 missionTypes = null,
                 missionStatuses = null,
                 seaFronts = null,
@@ -201,7 +205,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
                 searchQuery = null,
             )
-        assertThat(missions).hasSize(21)
+        assertThat(missions).hasSize(16)
+        assertThat(missions).allMatch {
+            it.mission.startDateTimeUtc.isAfter(startedAfter) ||
+                it.mission.endDateTimeUtc?.isBefore(
+                    startedBefore,
+                ) == true
+        }
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -211,19 +221,20 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when missionTypes is set`() {
         // When
+        val missionTypes = listOf(MissionTypeEnum.SEA)
         val missions =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
-                missionTypes = listOf(MissionTypeEnum.SEA),
+                missionTypes = missionTypes,
                 missionStatuses = null,
                 seaFronts = null,
                 pageNumber = null,
                 pageSize = null,
                 searchQuery = null,
             )
-        println(missions)
-        assertThat(missions).hasSize(22)
+        assertThat(missions).allMatch { it.mission.missionTypes.any { missionType -> missionType in missionTypes } }
+        assertThat(missions).hasSize(18)
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -234,11 +245,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     fun `findAll Should return filtered missions when multiple missionTypes are set`() {
         // When
 
+        val missionTypes = listOf(MissionTypeEnum.SEA, MissionTypeEnum.LAND)
         val missions =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
-                missionTypes = listOf(MissionTypeEnum.SEA, MissionTypeEnum.LAND),
+                missionTypes = missionTypes,
                 missionStatuses = null,
                 seaFronts = null,
                 pageNumber = null,
@@ -252,7 +264,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(MissionTypeEnum.SEA.name).isEqualTo("SEA")
         assertThat(MissionTypeEnum.LAND.name).isEqualTo("LAND")
         assertThat(MissionTypeEnum.AIR.name).isEqualTo("AIR")
-        assertThat(missions).hasSize(45)
+        assertThat(missions).allMatch { it.mission.missionTypes.any { missionType -> missionType in missionTypes } }
+        assertThat(missions).hasSize(35)
 
         val queryCount = customQueryCountListener!!.getQueryCount()
         println("Number of Queries Executed: $queryCount")
@@ -262,64 +275,74 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return filtered missions when seaFront is set to MEMN`() {
         // When
+        val seaFronts = listOf("MEMN")
         val missions =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
                 missionTypes = null,
                 missionStatuses = null,
-                seaFronts = listOf("MEMN"),
+                seaFronts = seaFronts,
                 pageNumber = null,
                 pageSize = null,
                 searchQuery = null,
             )
         // Then
         assertThat(missions).hasSize(9)
+        assertThat(missions).allMatch { seaFronts.contains(it.mission.facade) }
     }
 
     @Test
     @Transactional
     fun `findAll Should return filtered missions when seaFront is set to MEMN and NAMO`() {
         // When
+        val seaFronts = listOf("MEMN", "NAMO")
         val missions =
             jpaMissionRepository.findAllFullMissions(
                 startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
                 startedBefore = null,
                 missionTypes = null,
                 missionStatuses = null,
-                seaFronts = listOf("MEMN", "NAMO"),
+                seaFronts = seaFronts,
                 pageNumber = null,
                 pageSize = null,
                 searchQuery = null,
             )
-        assertThat(missions).hasSize(27)
+        assertThat(missions).hasSize(21)
+        assertThat(missions).allMatch { seaFronts.contains(it.mission.facade) }
     }
 
     @Test
     @Transactional
     fun `findAll Should return filtered missions when status is set to UPCOMING`() {
         // When
+        val missionStatuses = listOf("UPCOMING")
+        val startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z")
         val missions =
             jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+                startedAfter = startedAfter.toInstant(),
                 startedBefore = null,
                 missionTypes = null,
                 seaFronts = null,
-                missionStatuses = listOf("UPCOMING"),
+                missionStatuses = missionStatuses,
                 pageNumber = null,
                 pageSize = null,
                 searchQuery = null,
             )
-        assertThat(missions).hasSize(10)
+        assertThat(missions).hasSize(9)
+        assertThat(missions).allMatch {
+            it.mission.startDateTimeUtc.isAfter(startedAfter)
+        }
     }
 
     @Test
     @Transactional
     fun `findAll Should return filtered missions when status is set to PENDING`() {
         // When
+        val startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z")
         val missions =
             jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2000-01-01T00:01:00Z").toInstant(),
+                startedAfter = startedAfter.toInstant(),
                 startedBefore = null,
                 missionTypes = null,
                 seaFronts = null,
@@ -328,7 +351,12 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 pageSize = null,
                 searchQuery = null,
             )
-        assertThat(missions).hasSize(14)
+        assertThat(missions).allMatch { it.mission.startDateTimeUtc.isBefore(ZonedDateTime.now()) }
+        assertThat(missions).allMatch {
+            it.mission.endDateTimeUtc == null ||
+                it.mission.endDateTimeUtc?.isAfter(ZonedDateTime.now()) == true
+        }
+        assertThat(missions).hasSize(3)
     }
 
     @Test
@@ -580,7 +608,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 searchQuery = null,
             )
 
-        assertThat(existingMissions).hasSize(21)
+        assertThat(existingMissions).hasSize(16)
 
         val noteObservations = "Quelqu'un aurait vu quelque chose quelque part à un certain moment."
         val noteObservationsByUnit =
@@ -634,8 +662,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             vehicleType = VehicleTypeEnum.VEHICLE_LAND,
                             isAdministrativeControl = true,
                             isComplianceWithWaterRegulationsControl = true,
-                            isSafetyEquipmentAndStandardsComplianceControl =
-                            true,
+                            isSafetyEquipmentAndStandardsComplianceControl = true,
                             isSeafarersControl = true,
                             tags = tags,
                             themes = themes,
