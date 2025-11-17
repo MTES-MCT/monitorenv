@@ -128,37 +128,45 @@ export function HistoryOfInfractions({
             >
               {history.suspicionOfInfractions.length > 0 && (
                 <div>
-                  <Header as="header">Signalements </Header>
-                  {history.suspicionOfInfractions.map(infraction => (
-                    <ul key={infraction.id}>
-                      <ReportingDate>Le {customDayjs(infraction.createdAt).format('DD/MM/YYYY')}</ReportingDate>
-                      <li>
-                        {infraction.reportingSources.length > 0 && (
-                          <span>{infraction.reportingSources.map(source => source.displayedSource).join(', ')}</span>
-                        )}
-                      </li>
-                      <li>{infraction.theme.name}</li>
-                    </ul>
-                  ))}
+                  <Header as="header">Signalements</Header>
+                  <InfractionWrapper>
+                    {history.suspicionOfInfractions.map(infraction => (
+                      <ul key={infraction.id}>
+                        <ReportingDate>Le {customDayjs(infraction.createdAt).format('DD/MM/YYYY')}</ReportingDate>
+                        <li>
+                          {infraction.reportingSources.length > 0 && (
+                            <span>{infraction.reportingSources.map(source => source.displayedSource).join(', ')}</span>
+                          )}
+                        </li>
+                        <li>{infraction.theme.name}</li>
+                      </ul>
+                    ))}
+                  </InfractionWrapper>
                 </div>
               )}
 
               {history.envActions.length > 0 && (
                 <div>
                   <Header as="header">Contrôles</Header>
-                  {history.envActions.map(action => (
-                    <ul key={action.id}>
-                      <ReportingDate>
-                        Le {customDayjs(action.actionStartDateTimeUtc).format('DD/MM/YYYY')}
-                      </ReportingDate>
-                      <li>
-                        {action.controlUnits && action.controlUnits.length > 0 && (
-                          <span>{action.controlUnits.join(', ')}</span>
-                        )}
-                      </li>
-                      <li>{action.themes && action.themes.length > 0 && <span>{action.themes.join(', ')}</span>}</li>
-                    </ul>
-                  ))}
+                  <InfractionWrapper>
+                    {history.envActions.map(action => (
+                      <ul key={action.id}>
+                        <li>
+                          <ReportingDate>
+                            Le {customDayjs(action.actionStartDateTimeUtc).format('DD/MM/YYYY')}
+                          </ReportingDate>
+                          <div>
+                            {action.controlUnits && action.controlUnits.length > 0 && (
+                              <span>{action.controlUnits.join(', ')}</span>
+                            )}
+                          </div>
+                          <span>
+                            {action.themes && action.themes.length > 0 && <span>{action.themes.join(', ')}</span>}
+                          </span>
+                        </li>
+                      </ul>
+                    ))}
+                  </InfractionWrapper>
                 </div>
               )}
             </StyledTooltip>
@@ -206,6 +214,11 @@ const HistoryText = styled(Italic)`
   display: flex;
   gap: 2px;
 `
-const ReportingDate = styled.li`
+const ReportingDate = styled.span`
   font-weight: bold;
+`
+const InfractionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 `
