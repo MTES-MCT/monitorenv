@@ -17,7 +17,7 @@ export function SearchLocation() {
   const locateOnMap = useAppSelector(state => state.map.locateOnMap)
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>(undefined)
   const results = useGooglePlacesAPI(searchedLocation)
-  const { beaches, error, options: beachesOptions } = useBeaches()
+  const { beaches, options: beachesOptions } = useBeaches()
 
   const handleSelectLocation = async (location: { id: string; name: string } | undefined) => {
     if (!location || !location?.id) {
@@ -58,7 +58,6 @@ export function SearchLocation() {
       key="location-search"
       customSearch={locateOnMapCustomSearch}
       data-cy="location-search-input"
-      error={error}
       isLabelHidden
       isLight
       isSearchIconHidden
