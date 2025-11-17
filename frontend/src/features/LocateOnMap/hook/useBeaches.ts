@@ -9,7 +9,6 @@ type Options = {
 export const useBeaches = () => {
   const [options, setOptions] = useState<Options[]>([])
   const [beaches, setBeaches] = useState<any[]>([])
-  const [error, setError] = useState<string | undefined>()
 
   useEffect(() => {
     getBeachesFromAPI()
@@ -32,9 +31,9 @@ export const useBeaches = () => {
         )
       })
       .catch(() => {
-        setError('Erreur lors de la récupération des plages')
+        setOptions([])
       })
   }, [])
 
-  return { beaches, error, options }
+  return { beaches, options }
 }
