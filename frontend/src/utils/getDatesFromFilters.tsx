@@ -8,6 +8,7 @@ type GetDatesFromFiltersProps = {
   startedBefore?: string
   withLast24Hours?: boolean
 }
+
 export function getDatesFromFilters({
   periodFilter,
   startedAfter,
@@ -42,7 +43,7 @@ export function getDatesFromFilters({
       break
 
     case DateRangeEnum.UPCOMING:
-      startedAfterDate = customDayjs().utc().startOf('year').toISOString()
+      startedAfterDate = customDayjs().utc().endOf('day').toISOString()
       break
 
     case DateRangeEnum.CUSTOM:

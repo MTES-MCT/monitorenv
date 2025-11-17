@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 
 @DynamicUpdate
 interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
@@ -41,21 +41,10 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                 OR
                 (:missionTypeSEA = TRUE AND (CAST(mission.missionTypes as String) like '%SEA%'))
             ))
-            AND
-             (
-                (mission.startDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
-                    AND (
-                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
-                        OR mission.startDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
-                    )
-                )
-                OR (
-                    mission.endDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp)
-                    AND (
-                        CAST(CAST(:startedBefore AS text) AS timestamp) IS NULL
-                        OR mission.endDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp)
-                    )
-                )
+            AND (
+                    (CAST(:startedAfter AS text) IS NULL OR mission.endDateTimeUtc >= CAST(CAST(:startedAfter AS text) AS timestamp))
+                AND 
+                    (CAST(:startedBefore as text) IS NULL OR mission.startDateTimeUtc <= CAST(CAST(:startedBefore AS text) AS timestamp))
             )
             AND (:seaFronts IS NULL OR mission.facade IN :seaFronts)
             AND (
