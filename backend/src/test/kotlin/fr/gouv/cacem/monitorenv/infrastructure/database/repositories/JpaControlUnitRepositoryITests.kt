@@ -529,14 +529,14 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
             WKTReader().read(
                 "MULTIPOLYGON (((-0.627871351299246 49.39331585788091, -0.15993305232445923 49.39331585788091, -0.15993305232445923 49.613595287389444, -0.627871351299246 49.613595287389444, -0.627871351299246 49.39331585788091)))",
             )
-        val from = ZonedDateTime.parse("2025-01-01T00:00:00Z")
-        val to = ZonedDateTime.parse("2026-01-01T00:00:00Z")
+        val from = ZonedDateTime.parse("2026-01-01T00:00:00Z")
+        val to = ZonedDateTime.parse("2027-01-01T00:00:00Z")
 
         // When
         val nearbyUnits = jpaControlUnitRepository.findNearbyUnits(geom, from, to)
 
         // Then
-        assertThat(nearbyUnits).hasSize(3)
+        assertThat(nearbyUnits).hasSize(4)
         nearbyUnits.forEach { nearbyUnit ->
             nearbyUnit.missions.forEach { mission ->
                 mission.envActions?.forEach { envAction ->
