@@ -27,6 +27,7 @@ type VigilanceAreaFormProps = {
   isReadOnly?: boolean
   vigilanceAreaId: number
 }
+
 export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId }: VigilanceAreaFormProps) {
   const dispatch = useAppDispatch()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
