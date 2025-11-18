@@ -204,7 +204,8 @@ const StyledTooltip = styled(Tooltip)`
   gap: 16px;
   max-width: 215px;
   padding: 8px;
-  z-index: 101 !important;
+  // NOTE: Is above bannerstack
+  z-index: 1001 !important;
 `
 const Header = styled(Bold)`
   margin-bottom: 4px;
