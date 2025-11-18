@@ -201,7 +201,7 @@ const BoldOrNormalText = styled.span<{ $isBold: boolean }>`
 const StyledTooltip = styled(Tooltip)`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   max-width: 215px;
   padding: 8px;
   // NOTE: Is above bannerstack
