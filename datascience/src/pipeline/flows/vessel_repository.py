@@ -95,7 +95,7 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 100000
         raise FileNotFoundError(f"Fichier XML non trouvé : {xml_file_path}")
     logger = context.get("logger")
     header_elem = None  # variable pour stocker le header
-    context_iter = etree.iterparse(str(xml_path), events=("end",), tag=("Header","ShipDescription"))
+    context_iter = etree.iterparse(str(xml_path), events=("end",), tag=("Header","ShipDescription"), recover=True)
 
     batch = []
     for event, elem in context_iter:
