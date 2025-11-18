@@ -1,4 +1,3 @@
-import re
 from copy import deepcopy
 from pathlib import Path
 from typing import List
@@ -43,14 +42,6 @@ OWNER_TAGS_TO_INCLUDE = {
 "StartDate"
 }
 
-
-# Regex pour les caractères invalides XML 1.0
-INVALID_XML_CHARS_RE = re.compile(r'[\x00-\x08\x0B\x0C\x0E-\x1F]')
-
-def clean_text(text):
-    if text:
-        return INVALID_XML_CHARS_RE.sub('', text)
-    return text
 
 @task(checkpoint=False)
 def get_xsd_file(directory: str) -> Path: 
@@ -133,10 +124,7 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 100000
         if identification is not None:
             for child in identification:
                 if child.tag in TAGS_TO_INCLUDE:
-                    text_value = child.text
-                    if child.tag == "ShipName":
-                        text_value = clean_text(text_value)
-                    record[f"{to_snake_case(child.tag)}"] = text_value
+                    record[f"{to_snake_case(child.tag)}"] = child.text
 
             characteristics = identification.find(".//Characteristics")
             if characteristics is not None:
