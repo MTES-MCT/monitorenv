@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List
 from lxml import etree
 import pandas as pd
+from src.db_config import create_engine
 from config import LIBRARY_LOCATION
 from prefect import Flow, task, context, case
 from src.pipeline.generic_tasks import load
@@ -80,7 +81,7 @@ def get_xsd_schema(xsd_file_path: str):
     schema = etree.XMLSchema(xsd_doc)
     return schema
 
-def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 100000):
+def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 100000, connection = None):
     xml_path = Path(xml_file_path)
     if not xml_path.exists():
         raise FileNotFoundError(f"Fichier XML non trouvé : {xml_file_path}")
@@ -109,7 +110,25 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 100000
             continue
 
         record = {}
+        parse_xml_nodes(elem, record)
+        batch.append(record)
 
+        # --- Envoi d’un batch complet
+        if len(batch) >= batch_size:
+            load_vessels_batch(pd.DataFrame(batch), connection)
+            batch.clear()
+
+        # --- Libération mémoire
+        elem.clear()
+        while elem.getprevious() is not None:
+            del elem.getparent()[0]
+
+    # --- Dernier batch partiel
+    if batch:
+        load_vessels_batch(pd.DataFrame(batch), connection)
+    logger.info(f"File parsed : {xml_file_path}")
+
+def parse_xml_nodes(elem, record):
         for child in elem:
             if child.tag in TAGS_TO_INCLUDE:
                 record[f"{to_snake_case(child.tag)}"] = child.text
@@ -138,26 +157,7 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 100000
                         if child.tag in OWNER_TAGS_TO_INCLUDE:
                             record[f"owner_{to_snake_case(child.tag)}"] = child.text
 
-        batch.append(record)
-
-        # --- Envoi d’un batch complet
-        if len(batch) >= batch_size:
-            load_vessels_batch(pd.DataFrame(batch))
-            batch.clear()
-
-        # --- Libération mémoire
-        elem.clear()
-        while elem.getprevious() is not None:
-            del elem.getparent()[0]
-
-    # --- Dernier batch partiel
-    if batch:
-        load_vessels_batch(pd.DataFrame(batch))
-    logger.info(f"File parsed : {xml_file_path}")
-
-
-
-def load_vessels_batch(vessels):
+def load_vessels_batch(vessels, connection):
     logger = context.get("logger")
     load(
         vessels,
@@ -166,15 +166,23 @@ def load_vessels_batch(vessels):
         db_name="monitorenv_remote",
         logger=logger,
         how="append",
+        connection=connection
     )
 
 @task(checkpoint=False)
 def parse_all_xml_files(xml_files, xsd_schema, batch_size=100000):
-    for xml_file in xml_files:
-        logger = context.get("logger")
-        logger.info(f"Parsing file {xml_file}")
-        parse_xml_and_load(xml_file, xsd_schema, batch_size)
-    return True
+    engine = create_engine("monitorenv_remote")
+    try:
+        with engine.begin() as connection:   
+            for xml_file in xml_files:
+                logger = context.get("logger")
+                logger.info(f"Parsing file {xml_file}")
+                parse_xml_and_load(xml_file, xsd_schema, batch_size, connection)
+        return True
+
+    except Exception as e:
+        logger.error(f"Error: {e}, rollback")
+        raise
 
 
 @task(checkpoint=False)
