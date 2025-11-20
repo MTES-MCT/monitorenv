@@ -1,19 +1,43 @@
 import { useGetVigilanceAreaQuery } from '@api/vigilanceAreasAPI'
+import { computeOccurenceWithinCurrentYear } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { Header, PanelBody, PanelContainer, Title, TitleContainer } from '../style'
+import { MonthBox } from './MonthBox'
 
 type VigilanceAreaPlanningProps = {
   vigilanceAreaId: number
 }
 
+const MonthPlanner = [
+  { index: 0, label: 'Janvier' },
+  { index: 1, label: 'Février' },
+  { index: 2, label: 'Mars' },
+  { index: 3, label: 'Avril' },
+  { index: 4, label: 'Mai' },
+  { index: 5, label: 'Juin' },
+  { index: 6, label: 'Juillet' },
+  { index: 7, label: 'Août' },
+  { index: 8, label: 'Sept.' },
+  { index: 9, label: 'Oct.' },
+  { index: 10, label: 'Nov.' },
+  { index: 11, label: 'Déc.' }
+]
+
 export function VigilanceAreaPlanning({ vigilanceAreaId }: VigilanceAreaPlanningProps) {
   const { data: vigilanceArea } = useGetVigilanceAreaQuery(vigilanceAreaId)
   const [isOpen, setIsOpen] = React.useState(true)
 
-  // compute all occurence of the current year
+  const occurences = useMemo(
+    () => (vigilanceArea ? computeOccurenceWithinCurrentYear(vigilanceArea) : []),
+    [vigilanceArea]
+  )
+
+  if (!vigilanceArea) {
+    return null
+  }
 
   return (
     isOpen && (
@@ -32,54 +56,18 @@ export function VigilanceAreaPlanning({ vigilanceAreaId }: VigilanceAreaPlanning
         </Header>
         <StyledPanelBody>
           <PlanningWrapper>
-            <li>
-              <PlanningBox />
-              Janvier
-            </li>
-            <li>
-              <PlanningBox />
-              Février
-            </li>
-            <li>
-              <PlanningBox />
-              Mars
-            </li>
-            <li>
-              <PlanningBox />
-              Avril
-            </li>
-            <li>
-              <PlanningBox />
-              Mai
-            </li>
-            <li>
-              <PlanningBox />
-              Juin
-            </li>
-            <li>
-              <PlanningBox />
-              Juillet
-            </li>
-            <li>
-              <PlanningBox />
-              Août
-            </li>
-            <li>
-              <PlanningBox />
-              Sept.
-            </li>
-            <li>
-              <PlanningBox />
-              Oct.
-            </li>
-            <li>
-              <PlanningBox />
-              Nov
-            </li>
-            <li>
-              <PlanningBox />
-              Déc.
-            </li>
+            {MonthPlanner.map(({ index, label }) => {
+              const occurencesOfTheMonth = occurences.filter(
+                ({ end, start }) => start.month() === index || end.month() === index
+              )
+
+              return (
+                <li key={index}>
+                  <MonthBox dateRanges={occurencesOfTheMonth} monthIndex={index} />
+                  {label}
+                </li>
+              )
+            })}
           </PlanningWrapper>
         </StyledPanelBody>
       </StyledPanelContainer>
@@ -89,7 +77,7 @@ export function VigilanceAreaPlanning({ vigilanceAreaId }: VigilanceAreaPlanning
 
 const PlanningWrapper = styled.ol`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(6, 1fr);
   gap: 10px 4px;
 
   font-size: 11px;
@@ -101,12 +89,6 @@ const PlanningWrapper = styled.ol`
 
 const StyledPanelBody = styled(PanelBody)`
   padding: 16px;
-`
-
-const PlanningBox = styled.div`
-  border: 1px solid ${p => p.theme.color.gainsboro};
-  width: 52px;
-  height: 26px;
 `
 
 const StyledTitleContainer = styled(TitleContainer)`
