@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List
 from lxml import etree
 import pandas as pd
+from src.db_config import create_engine
 from config import LIBRARY_LOCATION
 from prefect import Flow, task, context, case
 from src.pipeline.generic_tasks import load
@@ -154,8 +155,6 @@ def parse_xml_and_load(xml_file_path: str, schema=None, batch_size: int = 100000
         load_vessels_batch(pd.DataFrame(batch))
     logger.info(f"File parsed : {xml_file_path}")
 
-
-
 def load_vessels_batch(vessels):
     logger = context.get("logger")
     load(
@@ -169,11 +168,18 @@ def load_vessels_batch(vessels):
 
 @task(checkpoint=False)
 def parse_all_xml_files(xml_files, xsd_schema, batch_size=100000):
-    for xml_file in xml_files:
-        logger = context.get("logger")
-        logger.info(f"Parsing file {xml_file}")
-        parse_xml_and_load(xml_file, xsd_schema, batch_size)
-    return True
+    engine = create_engine("monitorenv_remote")
+    try:
+        with engine.begin() as connection:   
+            for xml_file in xml_files:
+                logger = context.get("logger")
+                logger.info(f"Parsing file {xml_file}")
+                parse_xml_and_load(xml_file, xsd_schema, batch_size)
+        return True
+
+    except Exception as e:
+        logger.error(f"Error: {e}, rollback")
+        raise
 
 
 @task(checkpoint=False)
