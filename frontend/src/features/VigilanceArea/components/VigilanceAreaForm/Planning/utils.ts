@@ -1,75 +1,94 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 
-import EndingCondition = VigilanceArea.EndingCondition
-import Frequency = VigilanceArea.Frequency
+import type { Dayjs } from 'dayjs'
 
-export const computeOccurenceWithinCurrentYear = (vigilanceArea: VigilanceArea.VigilanceArea) => {
-  const endOfYear = customDayjs().utc().endOf('year')
-  const endDate = customDayjs(vigilanceArea.endDatePeriod)
-  if (vigilanceArea.isAtAllTimes) {
-    return [{ end: endOfYear, start: customDayjs().utc().startOf('year') }]
+export type DateRange = {
+  end: Dayjs
+  start: Dayjs
+}
+
+export function computeOccurenceWithinCurrentYear(area: VigilanceArea.VigilanceArea): DateRange[] {
+  const now = customDayjs().utc()
+  const startOfYear = now.startOf('year').utc()
+  const endOfYear = now.endOf('year').utc()
+
+  // 1. isAtAllTimes → toute l'année
+  if (area.isAtAllTimes) {
+    return [
+      {
+        end: endOfYear,
+        start: startOfYear
+      }
+    ]
   }
-  if (!vigilanceArea?.startDatePeriod) {
+
+  // 2. Pas de startDatePeriod → aucune occurrence
+  if (!area.startDatePeriod) {
     return []
   }
-  switch (vigilanceArea?.frequency) {
-    case Frequency.NONE:
-      return [
-        {
-          end: customDayjs(vigilanceArea.endDatePeriod),
-          start: customDayjs(vigilanceArea.startDatePeriod)
-        }
-      ]
-    case Frequency.ALL_WEEKS:
-      switch (vigilanceArea?.endingCondition) {
-        case EndingCondition.NEVER:
-          return [{ end: endOfYear, start: customDayjs().utc().startOf('year') }]
-        case EndingCondition.END_DATE:
-          return []
-        case EndingCondition.OCCURENCES_NUMBER:
-          return []
-        default:
-          return []
-      }
-    case Frequency.ALL_MONTHS:
-      return [
-        {
-          end: customDayjs(vigilanceArea.endDatePeriod),
-          start: customDayjs(vigilanceArea.startDatePeriod)
-        }
-      ]
-    case Frequency.ALL_YEARS:
-      switch (vigilanceArea?.endingCondition) {
-        case EndingCondition.NEVER:
-          return [
-            {
-              end: customDayjs(vigilanceArea.endDatePeriod),
-              start: customDayjs(vigilanceArea.startDatePeriod)
-            }
-          ]
-        case EndingCondition.END_DATE:
-          if (endDate.isAfter(endOfYear)) {
-            return [
-              {
-                end: endOfYear,
-                start: customDayjs(vigilanceArea.startDatePeriod)
-              }
-            ]
-          }
 
-          return [
-            {
-              end: customDayjs(vigilanceArea.endDatePeriod),
-              start: customDayjs(vigilanceArea.startDatePeriod)
-            }
-          ]
-        case EndingCondition.OCCURENCES_NUMBER:
-          return []
-        default:
-          return []
+  const startDate = customDayjs(area.startDatePeriod).utc()
+  const endDate = customDayjs(area.endDatePeriod).utc()
+
+  // 3. Frequency NONE → période unique
+  if (area.frequency === VigilanceArea.Frequency.NONE) {
+    return [
+      {
+        end: endDate.isAfter(endOfYear) ? endOfYear : endDate,
+        start: startDate
       }
-    default:
-      return []
+    ]
   }
+
+  // 4. Fonction pour générer les récurrences
+  const generateRecurring = (unit: 'week' | 'month' | 'year'): DateRange[] => {
+    const results: DateRange[] = []
+
+    // Trouver la première occurrence dans l'année courante
+    let shift = 0
+    while (endDate.add(shift, unit).isBefore(startOfYear)) {
+      shift += 1
+    }
+
+    let occStart = startDate.add(shift, unit)
+    let occEnd = endDate.add(shift, unit)
+
+    // Si la première occurrence est après la fin de l'année, retourner vide
+    if (occStart.isAfter(endOfYear)) {
+      return []
+    }
+
+    // Générer les occurrences tant qu'on reste dans l'année
+    while (occStart.isBefore(endOfYear) || occStart.isSame(endOfYear, 'day')) {
+      // Clipper les dates aux bornes de l'année courante
+      const clippedStart = occStart.isBefore(startOfYear) ? startOfYear : occStart
+      const clippedEnd = occEnd.isAfter(endOfYear) ? endOfYear : occEnd
+
+      results.push({
+        end: clippedEnd.clone().utc(),
+        start: clippedStart.clone().utc()
+      })
+
+      occStart = occStart.add(1, unit)
+      occEnd = occEnd.add(1, unit)
+    }
+
+    return results
+  }
+
+  // 5. Fréquences récurrentes
+  if (area.frequency === VigilanceArea.Frequency.ALL_WEEKS) {
+    return generateRecurring('week')
+  }
+
+  if (area.frequency === VigilanceArea.Frequency.ALL_MONTHS) {
+    return generateRecurring('month')
+  }
+
+  if (area.frequency === VigilanceArea.Frequency.ALL_YEARS) {
+    return generateRecurring('year')
+  }
+
+  return []
 }
