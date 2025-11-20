@@ -1,7 +1,7 @@
 import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
 import { FrontendApiError } from '@libs/FrontendApiError'
-import { type EntityState, createEntityAdapter, createSelector, type EntityId } from '@reduxjs/toolkit'
-import { boundingExtent, createEmpty } from 'ol/extent'
+import { createEntityAdapter, createSelector, type EntityId, type EntityState } from '@reduxjs/toolkit'
+import { boundingExtent, createEmpty, type Extent } from 'ol/extent'
 import { createCachedSelector } from 're-reselect'
 
 import { monitorenvPrivateApi } from './api'
@@ -15,13 +15,19 @@ const initialState = AMPAdapter.getInitialState()
 
 const GET_AMP_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les Zones AMP"
 
+type AmpQueryOption = {
+  bbox?: Extent | undefined
+  withGeometry?: boolean
+  zoom?: number | undefined
+}
+
 export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     getAMP: builder.query<AMP, number>({
       query: id => `/v1/amps/${id}`,
       transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response),
       transformResponse: (response: AMPFromAPI) => {
-        const bbox = boundingExtent(response.geom.coordinates.flat().flat() as Coordinate[])
+        const bbox = boundingExtent((response.geom?.coordinates ?? []).flat().flat() as Coordinate[])
 
         return {
           ...response,
@@ -29,14 +35,17 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
         }
       }
     }),
-    getAMPs: builder.query<EntityState<AMP, number>, void>({
-      query: () => `/v1/amps`,
+    getAMPs: builder.query<EntityState<AMP, number>, AmpQueryOption>({
+      query: ({ bbox, withGeometry, zoom } = { bbox: undefined, withGeometry: false, zoom: undefined }) =>
+        `/v1/amps?withGeometry=${withGeometry}${withGeometry && bbox ? `&bbox=${bbox}` : ''}${
+          withGeometry && zoom ? `&zoom=${zoom}` : ''
+        }`,
       transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response),
       transformResponse: (response: AMPFromAPI[]) =>
         AMPAdapter.setAll(
           initialState,
           response.map(amp => {
-            const bbox = boundingExtent(amp.geom.coordinates.flat().flat() as Coordinate[])
+            const bbox = boundingExtent((amp.geom?.coordinates ?? []).flat().flat() as Coordinate[])
 
             return {
               ...amp,
@@ -44,24 +53,39 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
             }
           })
         )
+    }),
+    getAmpsByIds: builder.query<AMP[], number[]>({
+      query: ids => ({ body: ids, method: 'POST', url: '/v1/amps' }),
+      transformResponse: (response: AMP[]) =>
+        response.map(amp => {
+          const bbox = boundingExtent((amp.geom?.coordinates ?? []).flat().flat() as Coordinate[])
+
+          return {
+            ...amp,
+            bbox
+          }
+        })
     })
   })
 })
 
-export const { useGetAMPQuery, useGetAMPsQuery } = ampsAPI
+export const { useGetAMPQuery, useGetAmpsByIdsQuery, useGetAMPsQuery } = ampsAPI
 
-export const getAMPsIdsGroupedByName = createSelector([ampsAPI.endpoints.getAMPs.select()], ampsQuery => {
-  const ampIdsByName = ampsQuery.data?.ids.reduce((acc, id) => {
-    const amp = ampsQuery.data?.entities[id]
-    if (amp) {
-      acc[amp.name] = [...(acc[amp.name] ?? []), id]
-    }
+export const getAMPsIdsGroupedByName = createSelector(
+  [ampsAPI.endpoints.getAMPs.select({ withGeometry: false })],
+  ampsQuery => {
+    const ampIdsByName = ampsQuery.data?.ids.reduce((acc, id) => {
+      const amp = ampsQuery.data?.entities[id]
+      if (amp) {
+        acc[amp.name] = [...(acc[amp.name] ?? []), id]
+      }
 
-    return acc
-  }, {} as Record<string, EntityId[]>)
+      return acc
+    }, {} as Record<string, EntityId[]>)
 
-  return ampIdsByName
-})
+    return ampIdsByName
+  }
+)
 
 export const getAMPsIdsByGroupName = createCachedSelector(
   [getAMPsIdsGroupedByName, (_, groupName: string) => groupName],
@@ -74,12 +98,14 @@ export const getNumberOfAMPByGroupName = createCachedSelector(
 )((_, groupName: string) => groupName)
 
 export const getAmpsByIds = createSelector(
-  [ampsAPI.endpoints.getAMPs.select(), (_, ids: number[]) => ids],
+  // FIXME: replace with endpoint findByIds
+  [ampsAPI.endpoints.getAMPs.select({ withGeometry: false }), (_, ids: number[]) => ids],
   ({ data }, ids) => Object.values(data?.entities ?? []).filter(amp => ids.includes(amp.id))
 )
 
 export const getExtentOfAMPLayersGroupByGroupName = createCachedSelector(
-  [ampsAPI.endpoints.getAMPs.select(), getAMPsIdsByGroupName],
+  // FIXME: replace with endpoint findByIds
+  [ampsAPI.endpoints.getAMPs.select({ withGeometry: false }), getAMPsIdsByGroupName],
   (ampsQuery, ampIdsByName) => {
     const amps = ampIdsByName?.map(id => ampsQuery.data?.entities[id]).filter((amp): amp is AMP => !!amp)
     if (amps) {

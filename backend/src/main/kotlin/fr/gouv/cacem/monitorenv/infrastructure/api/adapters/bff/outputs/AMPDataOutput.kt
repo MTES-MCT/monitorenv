@@ -6,7 +6,7 @@ import org.locationtech.jts.geom.MultiPolygon
 data class AMPDataOutput(
     val id: Int,
     val designation: String,
-    val geom: MultiPolygon,
+    val geom: MultiPolygon?,
     val name: String,
     val refReg: String? = null,
     val type: String? = null,
