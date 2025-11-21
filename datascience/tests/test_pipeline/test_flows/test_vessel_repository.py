@@ -42,7 +42,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "immatriculation": "999999",
                 "professional_type": "Porte-Conteneur",
                 "leisure_type": None,
-                "commercial_name": "COMMERCIAL_NAME",
+                "commercial_name": "UICKSILVER",
                 "length": "32",
                 "owner_date_of_information": "2019-05-29T00:00:00.000",
                 "owner_last_name": "NOM 1",

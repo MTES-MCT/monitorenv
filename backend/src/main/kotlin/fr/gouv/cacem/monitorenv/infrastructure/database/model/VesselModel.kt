@@ -5,11 +5,10 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import org.hibernate.annotations.Formula
 import java.math.BigDecimal
 
 @Entity
-@Table(name = "vessels")
+@Table(name = "latest_vessels")
 data class VesselModel(
     @Id
     val id: Int,
@@ -37,18 +36,17 @@ data class VesselModel(
     val ownerPhone: String?,
     val ownerEmail: String?,
     val ownerCompanyName: String?,
-    @Formula("(SELECT naf.label FROM naf WHERE naf.code = owner_business_segment)")
-    val ownerBusinessSegmentLabel: String? = null,
     val ownerNationality: String?,
     val ownerBusinessSegment: String?,
-    @Formula("(SELECT legal_status.label FROM legal_status WHERE legal_status.code = owner_legal_status)")
-    val ownerLegalStatusLabel: String? = null,
     val ownerLegalStatus: String?,
     val ownerStartDate: String?,
     val batchId: Int?,
     val rowNumber: Int?,
 ) {
-    fun toVessel(): Vessel =
+    fun toVessel(
+        nafLabel: String? = null,
+        legalStatusLabel: String? = null,
+    ): Vessel =
         Vessel(
             id = id,
             shipId = shipId,
@@ -73,9 +71,9 @@ data class VesselModel(
             ownerEmail = ownerEmail,
             ownerCompanyName = ownerCompanyName,
             ownerNationality = ownerNationality,
-            ownerBusinessSegmentLabel = ownerBusinessSegmentLabel,
+            ownerBusinessSegmentLabel = nafLabel,
             ownerBusinessSegment = ownerBusinessSegment,
-            ownerLegalStatusLabel = ownerLegalStatusLabel,
+            ownerLegalStatusLabel = legalStatusLabel,
             ownerLegalStatus = ownerLegalStatus,
             ownerStartDate = ownerStartDate,
         )
