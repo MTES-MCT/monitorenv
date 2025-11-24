@@ -38,7 +38,7 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
             searchWords={searchQuery ? [searchQuery] : []}
             textToHighlight={mmsi || UNKNOWN}
           />{' '}
-          (MMSI)
+          <FieldDescription>(MMSI)</FieldDescription>
         </span>
         <span>
           <Identity
@@ -48,7 +48,7 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
             searchWords={searchQuery ? [searchQuery] : []}
             textToHighlight={immatriculation || UNKNOWN}
           />{' '}
-          (Immat.)
+          <FieldDescription>(Immat.)</FieldDescription>
         </span>
         <span>
           <Identity
@@ -58,7 +58,7 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
             searchWords={searchQuery ? [searchQuery] : []}
             textToHighlight={imo || UNKNOWN}
           />{' '}
-          (IMO)
+          <FieldDescription>(IMO)</FieldDescription>
         </span>
       </Identities>
     </Wrapper>
@@ -88,6 +88,7 @@ const Identities = styled.span`
 
 const Identity = styled(Highlighter)<{ $isUnknown?: boolean }>`
   ${p => p.$isUnknown && `font-style: italic;`}
+  font-weight: 400;
 `
 
 const Wrapper = styled.div`
@@ -95,4 +96,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   row-gap: 5px;
+`
+const FieldDescription = styled.span`
+  font-weight: 300;
 `

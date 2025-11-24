@@ -15,10 +15,19 @@ export function LocateOnMap() {
   const [searchType, setSearchType] = useState<SearchType>(SearchType.PLACES)
   const hasFullHeightRightDialogOpen = useAppSelector(state => state.mainWindow.hasFullHeightRightDialogOpen)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
+  const [shouldExpand, setIsExpand] = useState(false)
+
+  const handleClickExpand = (nextExpandState: boolean) => {
+    setIsExpand(nextExpandState)
+  }
 
   return (
     <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
-      <SearchWrapper>
+      <SearchWrapper
+        $shouldExpand={searchType === SearchType.VESSELS && shouldExpand}
+        onClick={() => handleClickExpand(true)}
+        onFocus={() => handleClickExpand(true)}
+      >
         {searchType === SearchType.PLACES && <SearchLocation />}
         {searchType === SearchType.VESSELS && (
           <SearchVessel
@@ -27,6 +36,7 @@ export function LocateOnMap() {
                 dispatch(vesselAction.setSelectedVesselId(item?.id))
               }
             }}
+            optionsWidth="500px"
           />
         )}
 
@@ -52,9 +62,10 @@ const Wrapper = styled.div<{
   transition: right 0.5s ease-out;
 `
 
-const SearchWrapper = styled.div`
+const SearchWrapper = styled.div<{ $shouldExpand: boolean }>`
   display: flex;
-  width: 500px;
+  width: ${p => (p.$shouldExpand ? '500px' : '400px')};
+  transition: width 0.2s ease-in-out;
 `
 
 // TODO delete padding when Monitor-ui component have good padding
