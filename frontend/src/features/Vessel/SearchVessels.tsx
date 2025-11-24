@@ -14,10 +14,11 @@ type SearchVesselsProps = {
   disabled?: boolean
   isLight?: boolean
   onChange?: (vessel: Vessel.Identity | undefined) => void
+  optionsWidth?: string
   value?: Vessel.Identity | undefined
 }
 
-export function SearchVessel({ disabled, isLight = true, onChange, value }: SearchVesselsProps) {
+export function SearchVessel({ disabled, isLight = true, onChange, optionsWidth, value }: SearchVesselsProps) {
   const isSelecting = useRef(false)
   const [query, setQuery] = useState<string | undefined>()
   const [debouncedQuery] = useDebounce(query, 300)
@@ -39,7 +40,8 @@ export function SearchVessel({ disabled, isLight = true, onChange, value }: Sear
   return (
     <StyledSearch
       key="vessel-search"
-      backgroundImageUrl={flagUrl}
+      $backgroundImageUrl={flagUrl}
+      $optionsWidth={optionsWidth}
       customSearch={vesselCustomSearch}
       data-cy="vessel-search-input"
       disabled={disabled}
@@ -87,22 +89,28 @@ export function SearchVessel({ disabled, isLight = true, onChange, value }: Sear
   )
 }
 
-const StyledSearch = styled(Search)<{ backgroundImageUrl?: string }>`
-  box-shadow: 0px 3px 6px ${p => getColorWithAlpha(p.theme.color.slateGray, 0.25)};
+const StyledSearch = styled(Search)<{ $backgroundImageUrl?: string; $optionsWidth?: string; isLight: boolean }>`
   flex-grow: 1;
-  width: 400px;
+  ${p => p.isLight && `box-shadow: 0 3px 6px ${getColorWithAlpha(p.theme.color.slateGray, 0.25)}`};
   background-color: ${p => p.theme.color.gainsboro};
 
   input {
     ${p =>
-      p.backgroundImageUrl
-        ? `background-image: url(${p.backgroundImageUrl});
+      p.$backgroundImageUrl
+        ? `background-image: url(${p.$backgroundImageUrl});
     background-repeat: no-repeat;
     background-position: 16px center;
     background-size: 26px;
     padding-left: 50px !important;`
         : ''}
   }
+
+  ${p =>
+    p.$optionsWidth &&
+    `
+    :nth-child(3) > div {
+    width: ${p.$optionsWidth};
+  }`}
 `
 
 const StyledMenu = styled.div`

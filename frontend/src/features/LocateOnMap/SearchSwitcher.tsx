@@ -1,4 +1,5 @@
 import { Accent, Dropdown, Icon } from '@mtes-mct/monitor-ui'
+import { getColorWithAlpha } from '@utils/utils'
 import styled from 'styled-components'
 
 export enum SearchType {
@@ -33,9 +34,14 @@ export function SearchSwitcher({ onChange, searchType }: SearchSwitcherProps) {
 
 const StyledDropdown = styled(Dropdown)`
   background: ${p => p.theme.color.white};
+  box-shadow: 6px 3px 6px ${p => getColorWithAlpha(p.theme.color.slateGray, 0.25)};
 
   button {
     height: 40px;
+
+    > span {
+      color: ${p => p.theme.color.slateGray};
+    }
   }
 
   ul {
