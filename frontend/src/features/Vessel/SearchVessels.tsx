@@ -2,7 +2,6 @@ import { useVessels } from '@features/Vessel/hooks/useVessels'
 import { toOptions } from '@features/Vessel/utils'
 import { VesselSearchItem } from '@features/Vessel/VesselSearchItem'
 import { CustomSearch, Search, Size } from '@mtes-mct/monitor-ui'
-import { getColorWithAlpha } from '@utils/utils'
 import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useDebounce } from 'use-debounce'
@@ -89,10 +88,8 @@ export function SearchVessel({ disabled, isLight = true, onChange, optionsWidth,
   )
 }
 
-const StyledSearch = styled(Search)<{ $backgroundImageUrl?: string; $optionsWidth?: string; isLight: boolean }>`
+const StyledSearch = styled(Search)<{ $backgroundImageUrl?: string; $optionsWidth?: string }>`
   flex-grow: 1;
-  ${p => p.isLight && `box-shadow: 0 3px 6px ${getColorWithAlpha(p.theme.color.slateGray, 0.25)}`};
-  background-color: ${p => p.theme.color.gainsboro};
 
   input {
     ${p =>

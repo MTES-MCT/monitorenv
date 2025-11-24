@@ -46,12 +46,12 @@ const Wrapper = styled.div`
 `
 
 const Description = styled.span`
-  font-weight: 400;
+  font-weight: 300;
 `
 
 const Value = styled.span`
   display: flex;
   flex-direction: row;
   gap: 4px;
-  font-weight: 500;
+  font-weight: 400;
 `
