@@ -3,7 +3,6 @@ import { useBeaches } from '@features/LocateOnMap/hook/useBeaches'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { CustomSearch, OPENLAYERS_PROJECTION, Search, Size, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { getColorWithAlpha } from '@utils/utils'
 import { transformExtent } from 'ol/proj'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -75,7 +74,6 @@ export function SearchLocation() {
 }
 
 const StyledSearch = styled(Search)`
-  box-shadow: 0px 3px 6px ${p => getColorWithAlpha(p.theme.color.slateGray, 0.25)};
   flex-grow: 1;
   width: 400px;
 `

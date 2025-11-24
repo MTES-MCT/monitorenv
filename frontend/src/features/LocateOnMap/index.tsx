@@ -5,6 +5,7 @@ import { vesselAction } from '@features/Vessel/slice'
 import { isVesselsEnabled } from '@features/Vessel/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
+import { getColorWithAlpha } from '@utils/utils'
 import { useState } from 'react'
 import styled from 'styled-components'
 
@@ -66,6 +67,8 @@ const SearchWrapper = styled.div<{ $shouldExpand: boolean }>`
   display: flex;
   width: ${p => (p.$shouldExpand ? '500px' : '400px')};
   transition: width 0.2s ease-in-out;
+  background-color: ${p => p.theme.color.white};
+  ${p => `box-shadow: 0 3px 6px ${getColorWithAlpha(p.theme.color.slateGray, 0.25)}`};
 `
 
 // TODO delete padding when Monitor-ui component have good padding
