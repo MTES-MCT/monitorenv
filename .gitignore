@@ -5,15 +5,21 @@ github_token.txt
 
 # Notebooks
 /datascience/notebooks
+/pipeline/notebooks
 /datascience/.local
+/pipeline/.local
 /datascience/.ipython
+/pipeline/.ipython
 /datascience/.cache
+/pipeline/.cache
 .ipynb_checkpoints/
 .jupyter/
 
 # Coverage reports
 datascience/htmlcov/
+pipeline/htmlcov/
 datascience/.coverage
+pipeline/.coverage
 frontend/cypress/screenshots/
 frontend/cypress/videos/
 
@@ -21,6 +27,7 @@ frontend/cypress/videos/
 /.backups
 /data
 /datascience/data
+/pipeline/data/**/*
 /datascience/src/pipeline/data/control_objectives.csv
 /datascience/src/pipeline/data/control_unit_resources.csv
 /datascience/src/pipeline/data/control_unit_contacts.csv
@@ -39,6 +46,7 @@ frontend/cypress/videos/
 # Doc
 docs/redmine_wiki/*
 datascience/docs/build
+pipeline/docs/build
 
 # TypeScript cache
 *.tsbuildinfo
