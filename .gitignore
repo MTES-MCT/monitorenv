@@ -27,7 +27,8 @@ frontend/cypress/videos/
 /.backups
 /data
 /datascience/data
-/pipeline/data/**/*
+/pipeline/src/data/**/*
+!/pipeline/src/data/**/dummy_control_objectives.csv
 /datascience/src/pipeline/data/control_objectives.csv
 /datascience/src/pipeline/data/control_unit_resources.csv
 /datascience/src/pipeline/data/control_unit_contacts.csv
