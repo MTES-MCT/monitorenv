@@ -1,0 +1,85 @@
+[tool.poetry]
+name = "src"
+version = "0.1.0"
+description = ""
+authors = ["Thomas Brosset <thomas.brosset@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "3.13.9"
+geopandas = "^1.1.1"
+python-dotenv = "^1.2.1"
+pandas = "^2.3.3"
+geoalchemy2 = "^0.18.1"
+cx-oracle = "^8.3.0"
+simplejson = "^3.20.2"
+pytz = "^2025.2"
+prefect = "^3.6.4"
+coverage = "^7.12.0"
+pytest = "^9.0.1"
+sqlalchemy = "^2.0.44"
+psycopg2-binary = "^2.9.11"
+css-inline = "^0.18.0"
+lxml = "^6.0.2"
+
+
+[tool.poetry.group.dev.dependencies]
+# Linting
+## Type Checking and Data Validation
+mypy = "^1.18.2"
+## Code formatting
+black = "^25.11.0"
+## Code quality
+isort = "^7.0.0"
+pylint = "^4.0.3"
+## Automation and management
+pre-commit = "^4.5.0"
+ipython = "^9.7.0"
+
+[tool.poetry.scripts]
+cli = "bin.cli:cli"
+
+#################################################################################
+# Tooling configs                                                               #
+#################################################################################
+[tool.black]
+line-length = 79
+
+[tool.coverage.run]
+source = ["."]
+omit = ['src/utils/', 'tests/']
+
+[tool.isort]
+profile = "black"
+atomic = "true"
+combine_as_imports = "true"
+line_length = 79
+
+[tool.pylint.basic]
+good-names-rgxs = ["^Test_.*$", "logger"]
+
+[tool.pylint.messages_control]
+disable = [
+  # Explicitly document only as needed
+  "missing-module-docstring",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  # Black & Flake8 purview
+  "line-too-long",
+  "bad-continuation",
+  "c-extension-no-member",
+  # Ignore errors resulting from Jupyter notebook-style programming
+  "invalid-name",
+  "redefined-outer-name",
+  "reimported",
+  "ungrouped-imports",
+  "wrong-import-order",
+  "wrong-import-position",
+]
+
+[tool.pylint.similarities]
+# Ignore imports when computing similarities.
+ignore-imports = "yes"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
