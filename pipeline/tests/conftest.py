@@ -124,9 +124,6 @@ def set_environment_variables(monkeysession):
     ]:
         os.environ.pop(proxy_env, None)
 
-    # for k, v in dotenv_values(ROOT_DIRECTORY / ".env.test").items():
-    #     monkeysession.setenv(k, v)
-
 
 @pytest.fixture(autouse=True, scope="session")
 def prefect_test_fixture(set_environment_variables):
