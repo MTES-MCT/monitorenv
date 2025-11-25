@@ -75,7 +75,7 @@ RUN apt-get update && apt-get install -y \
     # pango is required by weasyprint
     pango1.0-tools \
     # libaio1 is required by Oracle Instant Client
-    libaio1 \
+    libaio1t64 \
     && rm -rf /var/lib/apt/lists/*
 
 # copy in our built venv
