@@ -78,6 +78,11 @@ spring:
         driver-class-name: org.postgresql.Driver
         hikari:
             maxLifetime: 60000
+    kafka:
+        bootstrap-servers: ${MONITORENV_KAFKA_AIS_SERVERS}
+        consumer:
+            group-id: ${MONITORENV_KAFKA_AIS_GROUP_ID:test}
+            auto-offset-reset: latest
 
 management:
     endpoints:

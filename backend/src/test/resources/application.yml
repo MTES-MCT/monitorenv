@@ -1,4 +1,3 @@
-
 monitorenv:
   oidc:
     enabled: false
@@ -18,3 +17,6 @@ spring:
     show-sql: true
   flyway:
     locations: classpath:/db/migration,classpath:/db/testdata
+  kafka:
+    consumer:
+      group-id: test

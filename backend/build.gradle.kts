@@ -76,6 +76,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springframework.security:spring-security-oauth2-resource-server")
     implementation("org.springframework.security:spring-security-oauth2-jose")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
@@ -142,6 +143,10 @@ dependencies {
     testImplementation("net.ttddyy:datasource-proxy:1.11.0")
     testImplementation("io.mockk:mockk:1.14.6")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testImplementation("org.springframework.kafka:spring-kafka-test") {
+        exclude(group = "ch.qos.logback", module = "logback-classic")
+    }
+    testImplementation("org.awaitility:awaitility:4.3.0")
 }
 
 springBoot {

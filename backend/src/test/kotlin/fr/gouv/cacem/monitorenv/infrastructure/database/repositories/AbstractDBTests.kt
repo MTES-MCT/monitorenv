@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.MonitorEnvApplication
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.GenericContainer
@@ -13,6 +14,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 
+@EmbeddedKafka(topics = ["ais"])
 @Testcontainers
 @SpringBootTest(
     classes = [MonitorEnvApplication::class],
