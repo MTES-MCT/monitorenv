@@ -15,7 +15,7 @@ interface IDBVesselRepository : CrudRepository<VesselModel, Int> {
                      OR UPPER(vessel.imo) LIKE CONCAT('%', UPPER(:searched), '%')
                      OR UPPER(vessel.immatriculation) LIKE CONCAT('%', UPPER(:searched), '%')
                      OR UPPER(vessel.mmsi) LIKE CONCAT('%', UPPER(:searched), '%')
-                ORDER BY vessel.shipName, vessel.mmsi, vessel.immatriculation, vessel.imo ASC""",
+                ORDER BY vessel.shipName, vessel.mmsi, vessel.immatriculation, vessel.imo ASC LIMIT 50""",
     )
     fun searchBy(
         @Param("searched") searched: String,
