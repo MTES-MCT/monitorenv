@@ -66,9 +66,9 @@ PROXIES = {
 
 # URLs to fetch data from
 FAO_AREAS_URL = (
-    "http://www.fao.org/fishery/geoserver/fifao/ows?"
+    "https://www.fao.org/fishery/geoserver/fifao/ows?"
     "service=WFS&request=GetFeature&version=1.0.0&"
-    "typeName=fifao:FAO_AREAS_CWP&outputFormat=SHAPE-ZIP"
+    "typeName=FAO_AREAS_ERASE&outputFormat=SHAPE-ZIP"
 )
 
 AMP_AREAS_URL = (
