@@ -76,6 +76,7 @@ export const ValidateButton = styled(Button)`
   background: ${p => p.theme.color.mediumSeaGreen};
   border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
   color: ${p => p.theme.color.white};
+
   &:hover &:not(disabled) {
     background: ${p => p.theme.color.mediumSeaGreen};
     border: 1px ${p => p.theme.color.mediumSeaGreen} solid;
@@ -96,6 +97,7 @@ export const PanelContainer = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  z-index: 2;
 `
 
 export const PanelBody = styled.div`
@@ -117,6 +119,7 @@ export const PanelImageContainer = styled.div`
   gap: 4px;
   padding: 16px;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
+
   > button > img {
     object-fit: cover;
   }
@@ -159,6 +162,7 @@ export const PanelDateItem = styled.div`
 export const PanelLinkContainer = styled.div`
   display: flex;
   flex-direction: column;
+
   &:not(:last-child) {
     margin-bottom: 4px;
   }

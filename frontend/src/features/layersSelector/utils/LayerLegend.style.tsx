@@ -46,7 +46,7 @@ export function LayerLegend({
   }
 }
 
-const Rectangle = styled.div<{ $size: Size; $vectorLayerColor?: string }>`
+export const Rectangle = styled.div<{ $size: Size; $vectorLayerColor?: string }>`
   width: ${p => (p.$size === Size.SMALL ? '14px' : '16px')};
   height: ${p => (p.$size === Size.SMALL ? '14px' : '16px')};
   background: ${p => p.$vectorLayerColor ?? p.theme.color.gainsboro};
