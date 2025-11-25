@@ -1,5 +1,6 @@
 BACKEND_CONFIGURATION_FOLDER=$(shell pwd)/infra/configurations/backend/
 HOST_MIGRATIONS_FOLDER=$(shell pwd)/backend/src/main/resources/db/migration
+PIPELINE_TEST_ENV_FILE=$(shell pwd)/pipeline/.env.test
 
 ifneq (,$(wildcard .env))
 		include .env
@@ -152,6 +153,23 @@ docker-tag-pipeline:
 	docker tag monitorenv-pipeline:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
 docker-push-pipeline:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
+
+.PHONY: docker-build-pipeline-prefect3 docker-test-pipeline-prefect3 docker-tag-pipeline-prefect3 docker-push-pipeline-prefect3
+docker-build-pipeline-prefect3:
+	docker build -f "infra/docker/datapipeline/prefect3.Dockerfile" . -t monitorenv-pipeline-prefect3:$(VERSION)
+docker-test-pipeline-prefect3:
+	docker run \
+		--network host \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-u monitorenv-pipeline:$(DOCKER_GROUP) \
+		-v $(PIPELINE_TEST_ENV_FILE):/home/monitorenv-pipeline/pipeline/.env.test \
+		--env HOST_MIGRATIONS_FOLDER=$(HOST_MIGRATIONS_FOLDER) \
+		monitorenv-pipeline-prefect3:$(VERSION) \
+		coverage run -m pytest --pdb tests
+docker-tag-pipeline-prefect3:
+	docker tag monitorenv-pipeline-prefect3:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline-prefect3:$(VERSION)
+docker-push-pipeline-prefect3:
+	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline-prefect3:$(VERSION)
 
 # ENV setup
 .PHONY: init-environment
