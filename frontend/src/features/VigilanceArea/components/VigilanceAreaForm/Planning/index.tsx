@@ -1,14 +1,10 @@
-import { useGetVigilanceAreaQuery } from '@api/vigilanceAreasAPI'
-import { computeOccurenceWithinCurrentYear } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
-import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
-import React, { useMemo } from 'react'
+import { type DateRange } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import styled from 'styled-components'
 
-import { Header, PanelBody, PanelContainer, Title, TitleContainer } from '../style'
 import { MonthBox } from './MonthBox'
 
-type VigilanceAreaPlanningProps = {
-  vigilanceAreaId: number
+type PlanningProps = {
+  occurences: DateRange[]
 }
 
 const MonthPlanner = [
@@ -26,52 +22,15 @@ const MonthPlanner = [
   { index: 11, label: 'Déc.' }
 ]
 
-export function VigilanceAreaPlanning({ vigilanceAreaId }: VigilanceAreaPlanningProps) {
-  const { data: vigilanceArea } = useGetVigilanceAreaQuery(vigilanceAreaId)
-  const [isOpen, setIsOpen] = React.useState(true)
-
-  const occurences = useMemo(
-    () => (vigilanceArea ? computeOccurenceWithinCurrentYear(vigilanceArea) : []),
-    [vigilanceArea]
-  )
-
-  if (!vigilanceArea) {
-    return null
-  }
-
+export function Planning({ occurences }: PlanningProps) {
   return (
-    isOpen && (
-      <StyledPanelContainer>
-        <Header $isEditing>
-          <StyledTitleContainer>
-            <Title>Planning de vigilance</Title>
-            <IconButton
-              accent={Accent.TERTIARY}
-              Icon={Icon.Close}
-              onClick={() => setIsOpen(false)}
-              size={Size.SMALL}
-              title="Fermer la zone de vigilance"
-            />
-          </StyledTitleContainer>
-        </Header>
-        <StyledPanelBody>
-          <PlanningWrapper>
-            {MonthPlanner.map(({ index, label }) => {
-              const occurencesOfTheMonth = occurences.filter(
-                ({ end, start }) => start.month() === index || end.month() === index
-              )
-
-              return (
-                <li key={index}>
-                  <MonthBox dateRanges={occurencesOfTheMonth} monthIndex={index} />
-                  {label}
-                </li>
-              )
-            })}
-          </PlanningWrapper>
-        </StyledPanelBody>
-      </StyledPanelContainer>
-    )
+    <PlanningWrapper>
+      {MonthPlanner.map(({ index, label }) => (
+        <li key={index}>
+          <MonthBox dateRanges={occurences} label={label} monthIndex={index} />
+        </li>
+      ))}
+    </PlanningWrapper>
   )
 }
 
@@ -85,17 +44,8 @@ const PlanningWrapper = styled.ol`
 
   padding-bottom: 10px;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
-`
 
-const StyledPanelBody = styled(PanelBody)`
-  padding: 16px;
-`
-
-const StyledTitleContainer = styled(TitleContainer)`
-  justify-content: space-between;
-  width: 100%;
-`
-const StyledPanelContainer = styled(PanelContainer)`
-  height: 100%;
-  max-height: none;
+  > li {
+    width: fit-content;
+  }
 `

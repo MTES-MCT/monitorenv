@@ -4,7 +4,6 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { LocalizedAreas } from '@features/LocalizedArea'
 import { NumberOfFilters } from '@features/map/shared/style'
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
-import { VigilanceAreaPlanning } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -138,14 +137,11 @@ export function LayersSidebar() {
             $isVigilanceAreaFormOpen={mainVigilanceAreaFormOpen}
           >
             {mainVigilanceAreaFormOpen && (
-              <PanelWrapper>
-                <VigilanceAreaForm
-                  key={editingVigilanceAreaId}
-                  isOpen={mainVigilanceAreaFormOpen}
-                  vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
-                />
-                <VigilanceAreaPlanning vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId} />
-              </PanelWrapper>
+              <VigilanceAreaForm
+                key={editingVigilanceAreaId}
+                isOpen={mainVigilanceAreaFormOpen}
+                vigilanceAreaId={editingVigilanceAreaId ?? selectedVigilanceAreaId}
+              />
             )}
           </VigilanceAreaPanelShifter>
         </Sidebar>
@@ -199,7 +195,8 @@ const MetadataPanelShifter = styled.div<{
   opacity: ${props => (props.$metadataPanelIsOpen ? 1 : 0)};
   background: ${p => p.theme.color.gainsboro};
   transition: 0.5s all;
-  z-index: -1;
+  height: 0;
+  z-index: 1;
 `
 
 const VigilanceAreaPanelShifter = styled.div<{
@@ -220,7 +217,6 @@ const VigilanceAreaPanelShifter = styled.div<{
   }}px;
   top: 45px;
   opacity: ${p => (p.$isVigilanceAreaFormOpen ? 1 : 0)};
-  // background: ${p => p.theme.color.gainsboro};
   transition: 0.5s all;
   z-index: -1;
 `
@@ -257,9 +253,4 @@ const Message = styled.div`
   font-weight: 900;
   white-space: nowrap;
   padding: 4px 4px 4px 8px;
-`
-const PanelWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 6px;
 `

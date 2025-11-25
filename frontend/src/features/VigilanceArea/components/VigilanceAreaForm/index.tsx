@@ -1,5 +1,6 @@
 import { useGetVigilanceAreaQuery } from '@api/vigilanceAreasAPI'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
+import { PlanningPanel } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/PlanningPanel'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -84,62 +85,65 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
   }, [editingVigilanceAreaId])
 
   return (
-    <Wrapper $isMainFormOpen={isFormOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM} $isOpen={isOpen}>
-      <Header $isEditing={!!vigilanceAreaId}>
-        <TitleContainer>
-          <LayerLegend
-            isDisabled={vigilanceArea?.isArchived}
-            layerType={MonitorEnvLayers.VIGILANCE_AREA}
-            legendKey={vigilanceArea?.comments ?? 'aucun nom'}
-            size={Size.NORMAL}
-            type={vigilanceArea?.name ?? 'aucun nom'}
-          />
-          <Title data-cy="vigilance-area-title" title={title}>
-            {title}
-          </Title>
-        </TitleContainer>
-        {isPanelOpen && (
-          <SubHeaderContainer>
-            {isSuperUser && (
-              <>
-                {vigilanceArea?.isDraft ? (
-                  <Tag backgroundColor={THEME.color.slateGray} color={THEME.color.white}>
-                    Brouillon
-                  </Tag>
-                ) : (
-                  <Tag backgroundColor={THEME.color.mediumSeaGreen} color={THEME.color.white}>
-                    Publiée
-                  </Tag>
+    <Formik enableReinitialize initialValues={initialValues} onSubmit={noop} validationSchema={VigilanceAreaSchema}>
+      <PanelWrapper>
+        <Wrapper $isMainFormOpen={isFormOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM} $isOpen={isOpen}>
+          <Header $isEditing={!!vigilanceAreaId}>
+            <TitleContainer>
+              <LayerLegend
+                isDisabled={vigilanceArea?.isArchived}
+                layerType={MonitorEnvLayers.VIGILANCE_AREA}
+                legendKey={vigilanceArea?.comments ?? 'aucun nom'}
+                size={Size.NORMAL}
+                type={vigilanceArea?.name ?? 'aucun nom'}
+              />
+              <Title data-cy="vigilance-area-title" title={title}>
+                {title}
+              </Title>
+            </TitleContainer>
+            {isPanelOpen && (
+              <SubHeaderContainer>
+                {isSuperUser && (
+                  <>
+                    {vigilanceArea?.isDraft ? (
+                      <Tag backgroundColor={THEME.color.slateGray} color={THEME.color.white}>
+                        Brouillon
+                      </Tag>
+                    ) : (
+                      <Tag backgroundColor={THEME.color.mediumSeaGreen} color={THEME.color.white}>
+                        Publiée
+                      </Tag>
+                    )}
+                  </>
                 )}
+                <IconButton
+                  accent={Accent.TERTIARY}
+                  Icon={Icon.Close}
+                  onClick={close}
+                  size={Size.SMALL}
+                  title="Fermer la zone de vigilance"
+                />
+              </SubHeaderContainer>
+            )}
+          </Header>
+
+          <>
+            {isPanelOpen && <VigilanceAreaPanel vigilanceArea={vigilanceArea} />}
+            {isFormOpen && (
+              <>
+                {formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <Form />}
+                {formTypeOpen === VigilanceAreaFormTypeOpen.DRAW && <DrawVigilanceArea onCancel={onCancelSubForm} />}
+                {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY && (
+                  <SelectRegulatoryAreas onCancel={onCancelSubForm} />
+                )}
+                {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP && <SelectAMP onCancel={onCancelSubForm} />}
               </>
             )}
-            <IconButton
-              accent={Accent.TERTIARY}
-              Icon={Icon.Close}
-              onClick={close}
-              size={Size.SMALL}
-              title="Fermer la zone de vigilance"
-            />
-          </SubHeaderContainer>
-        )}
-      </Header>
-
-      <Formik enableReinitialize initialValues={initialValues} onSubmit={noop} validationSchema={VigilanceAreaSchema}>
-        <>
-          {isPanelOpen && <VigilanceAreaPanel vigilanceArea={vigilanceArea} />}
-          {isFormOpen && (
-            <>
-              {formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <Form />}
-              {formTypeOpen === VigilanceAreaFormTypeOpen.DRAW && <DrawVigilanceArea onCancel={onCancelSubForm} />}
-              {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_REGULATORY && (
-                <SelectRegulatoryAreas onCancel={onCancelSubForm} />
-              )}
-              {formTypeOpen === VigilanceAreaFormTypeOpen.ADD_AMP && <SelectAMP onCancel={onCancelSubForm} />}
-            </>
-          )}
-        </>
-      </Formik>
-    </Wrapper>
+          </>
+        </Wrapper>
+        {isFormOpen && formTypeOpen === VigilanceAreaFormTypeOpen.FORM && <PlanningPanel />}
+      </PanelWrapper>
+    </Formik>
   )
 }
 
@@ -152,4 +156,10 @@ const Wrapper = styled.div<{ $isMainFormOpen: boolean; $isOpen: boolean }>`
   padding: 0;
   transition: all 0.5s;
   height: ${p => (p.$isMainFormOpen ? 'calc(100vh - 65px)' : 'auto')};
+`
+const PanelWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  height: 0;
 `

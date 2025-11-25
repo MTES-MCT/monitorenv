@@ -5,11 +5,10 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useCallback } from 'react'
-import styled from 'styled-components'
 
 import { MonitorEnvLayers } from '../../../../domain/entities/layers/constants'
 import { LayerLegend } from '../../utils/LayerLegend.style'
-import { Key, Value, Fields, Field, Zone, Body, NoValue } from '../MetadataPanel.style'
+import { Body, Content, Field, Fields, Header, Key, Name, NoValue, Value, Wrapper, Zone } from '../MetadataPanel.style'
 import { RegulatorySummary } from '../RegulatorySummary'
 import { closeMetadataPanel } from '../slice'
 
@@ -34,7 +33,7 @@ export function AmpMetadata() {
     <Wrapper $regulatoryMetadataPanelIsOpen={metadataPanelIsOpen}>
       {ampMetadata ? (
         <>
-          <Header data-cy="regulatory-metadata-header">
+          <Header data-cy="amp-metadata-header">
             <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={ampMetadata?.name} type={ampMetadata?.type} />
             <Name title={getTitle(ampMetadata?.name)}>{getTitle(ampMetadata?.name)}</Name>
             <IconButton
@@ -64,45 +63,3 @@ export function AmpMetadata() {
     </Wrapper>
   )
 }
-
-const Wrapper = styled.div<{ $regulatoryMetadataPanelIsOpen: boolean }>`
-  border-radius: 2px;
-  width: 400px;
-  display: block;
-  color: ${p => p.theme.color.charcoal};
-  opacity: ${p => (p.$regulatoryMetadataPanelIsOpen ? 1 : 0)};
-  padding: 0;
-  transition: all 0.5s;
-`
-
-const Name = styled.span`
-  flex: 1;
-  line-height: initial;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 15px;
-  margin-left: 5px;
-  margin-right: 5px;
-`
-
-const Header = styled.div`
-  color: ${p => p.theme.color.gunMetal};
-  margin-left: 6px;
-  text-align: left;
-  height: 40px;
-  display: flex;
-  font-weight: 500;
-  font-size: 15px;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-`
-
-const Content = styled.div`
-  border-radius: 2px;
-  color: ${p => p.theme.color.lightGray};
-  background: ${p => p.theme.color.white};
-  overflow-y: auto;
-  max-height: 72vh;
-`

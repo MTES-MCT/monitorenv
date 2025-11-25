@@ -1,5 +1,6 @@
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelDates'
+import { PlanningForm } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/PlanningForm'
 import { isFormValid } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -118,6 +119,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
 
         <PanelDates onValidate={validate} vigilanceArea={vigilanceArea} />
         <PanelPeriodAndThemes vigilanceArea={vigilanceArea} />
+        <PlanningForm vigilanceArea={vigilanceArea} />
         <PanelComments comments={vigilanceArea?.comments} />
         {values?.linkedRegulatoryAreas && values?.linkedRegulatoryAreas.length > 0 && (
           <PanelSubPart>
