@@ -151,10 +151,11 @@ docker-build-pipeline-prefect3:
 docker-test-pipeline-prefect3:
 	docker run \
 		--network host \
+		-e HOST_MIGRATIONS_FOLDER=$(HOST_MIGRATIONS_FOLDER) \
+		-e TEST=True \
+		-v $(PIPELINE_TEST_ENV_FILE):/home/monitorenv-pipeline/pipeline/.env.test \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-u monitorenv-pipeline:$(DOCKER_GROUP) \
-		-v $(PIPELINE_TEST_ENV_FILE):/home/monitorenv-pipeline/pipeline/.env.test \
-		--env HOST_MIGRATIONS_FOLDER=$(HOST_MIGRATIONS_FOLDER) \
 		monitorenv-pipeline-prefect3:$(VERSION) \
 		coverage run -m pytest --pdb tests
 docker-tag-pipeline-prefect3:
