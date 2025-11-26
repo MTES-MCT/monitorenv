@@ -34,6 +34,7 @@ services:
       - MONITORENV_LEGICEM_PASSWORD=${MONITORENV_LEGICEM_PASSWORD}
       - MONITORENV_EXT_ID=${MONITORENV_EXT_ID}
       - MONITORENV_EXT_PASSWORD=${MONITORENV_EXT_PASSWORD}
+      - MONITORENV_KAFKA_AIS_ENABLED=${MONITORENV_KAFKA_AIS_ENABLED}
       - MONITORENV_KAFKA_AIS_SERVERS=${MONITORENV_KAFKA_AIS_SERVERS}
       - MONITORENV_KAFKA_AIS_GROUP_ID=${MONITORENV_KAFKA_AIS_GROUP_ID}
       - MONITORENV_OIDC_ENABLED=${MONITORENV_OIDC_ENABLED}
@@ -193,6 +194,42 @@ services:
       interval: 1s
       timeout: 1s
       retries: 30
+
+  kafka:
+    profiles: [ dev, test ]
+    image: confluentinc/cp-kafka:8.1.0
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_NUM_PARTITIONS: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_BROKER_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    command: >
+      bash -c "
+        /etc/confluent/docker/run &
+
+        echo 'Attente du broker Kafka...';
+        until kafka-topics --bootstrap-server localhost:9092 --list >/dev/null 2>&1; do
+          sleep 2;
+        done;
+
+        echo 'Kafka est prêt — début envoi.';
+        i=0;
+        while true; do
+          echo \"auto message $i\" | kafka-console-producer --bootstrap-server localhost:9092 --topic ais;
+          echo \"Message envoyé: auto message $i\";
+          i=\$((i+1));
+          sleep 15;
+        done
+      "
 
 networks:
   backend_network:
