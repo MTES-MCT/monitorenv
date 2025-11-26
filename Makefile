@@ -110,11 +110,6 @@ load-sig-data:
 init-geoserver:
 	./infra/init/geoserver_init_layers.sh
 
-.PHONY: register-pipeline-flows
-register-pipeline-flows:
-	docker pull ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(MONITORENV_VERSION) && \
-	infra/data-pipeline/register-flows.sh
-
 # DATA commands
 .PHONY: install-pipeline run-notebook test-pipeline update-python-dependencies
 install-pipeline:
@@ -125,10 +120,6 @@ test-pipeline:
 	cd datascience && export TEST_LOCAL=True && poetry run coverage run -m pytest --pdb tests/ && poetry run coverage report && poetry run coverage html
 test-pipeline-prefect3:
 	cd pipeline && export TEST=True && poetry run coverage run -m pytest -s --pdb tests/ && poetry run coverage report && poetry run coverage html
-
-update-python-dependencies:
-	cd datascience && poetry export --without-hashes -o requirements.txt && poetry export --without-hashes --with dev -o requirements-dev.txt
-
 
 # CI commands - app
 .PHONY: docker-tag-app docker-push-app test-run-infra-for-frontend test-init-infra-env
@@ -186,6 +177,17 @@ endif
 .PHONY: restart-app
 restart-app:
 	docker compose --profile production up -d --build --pull always
+
+.PHONY: register-pipeline-flows
+register-pipeline-flows:
+	docker pull ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(MONITORENV_VERSION) && \
+	infra/data-pipeline/register-flows.sh
+
+.PHONY: deploy-pipeline-flows
+deploy-pipeline-flows:
+	docker pull docker.pkg.github.com/mtes-mct/monitorenv/monitorenv-pipeline-prefect3:$(MONITORENV_VERSION) && \
+	infra/data-pipeline-prefect3/deploy-flows.sh
+
 
 ################################################################################
 # Database upgrade

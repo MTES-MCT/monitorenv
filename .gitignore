@@ -1,7 +1,9 @@
 # Env variables
 .env
+pipeline/.monitorenv
 .env.local
 github_token.txt
+/infra/data-pipeline-prefect3/.prefect-worker
 
 # Notebooks
 /datascience/notebooks
