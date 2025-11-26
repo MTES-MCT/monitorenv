@@ -1,4 +1,7 @@
 monitorenv:
+  kafka:
+    ais:
+      enabled: true
   oidc:
     enabled: false
   brief:

@@ -1,16 +1,19 @@
 server:
-    port: 8880
-    forward-headers-strategy: framework
-    compression:
-        enabled: true
-        excluded-user-agents: ""
-        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
-        min-response-size: 2048
+  port: 8880
+  forward-headers-strategy: framework
+  compression:
+    enabled: true
+    excluded-user-agents: ""
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
+    min-response-size: 2048
 
 host:
-    ip: ${MONITORENV_URL}
+  ip: ${MONITORENV_URL}
 
 monitorenv:
+    kafka:
+        ais:
+            enabled: ${MONITORENV_KAFKA_AIS_ENABLED}
     ajp:
         port: 8000
     version: ${VERSION}
@@ -53,52 +56,52 @@ monitorenv:
         password: ${MONITORENV_LEGICEM_PASSWORD}
 
 spring:
-    jmx:
-        enabled: false
-    mvc:
-        static-path-pattern: "/**"
-    web:
-        resources:
-            static-locations: file:${STATIC_FILES_PATH}
-    flyway:
-        locations: ${FLYWAY_MIGRATION_PATH}
-    jpa:
-        hibernate:
-            ddl-auto: validate
-        properties:
-            hibernate:
-                temp:
-                    use_jdbc_metadata_defaults: false
-                dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
-                jdbc:
-                    time_zone: UTC
-                default_batch_fetch_size: ${MONITORENV_BATCH_SIZE:50}
-    datasource:
-        url: ${ENV_DB_URL}
-        driver-class-name: org.postgresql.Driver
-        hikari:
-            maxLifetime: 60000
-    kafka:
-        bootstrap-servers: ${MONITORENV_KAFKA_AIS_SERVERS}
-        consumer:
-            group-id: ${MONITORENV_KAFKA_AIS_GROUP_ID:test}
-            auto-offset-reset: latest
+  jmx:
+    enabled: false
+  mvc:
+    static-path-pattern: "/**"
+  web:
+    resources:
+      static-locations: file:${STATIC_FILES_PATH}
+  flyway:
+    locations: ${FLYWAY_MIGRATION_PATH}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+        jdbc:
+          time_zone: UTC
+        default_batch_fetch_size: ${MONITORENV_BATCH_SIZE:50}
+  datasource:
+    url: ${ENV_DB_URL}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maxLifetime: 60000
+  kafka:
+    bootstrap-servers: ${MONITORENV_KAFKA_AIS_SERVERS}
+    consumer:
+      group-id: ${MONITORENV_KAFKA_AIS_GROUP_ID:test}
+      auto-offset-reset: latest
 
 management:
-    endpoints:
-        web:
-            exposure:
-                include: health
-    endpoint:
-        health:
-            show-details: always
-        metrics:
-            enable: false
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enable: false
 
 monitorfish:
-    url: ${MONITORFISH_URL}
-    xApiKey: ${MONITORFISH_API_KEY}
+  url: ${MONITORFISH_URL}
+  xApiKey: ${MONITORFISH_API_KEY}
 
 rapportnav:
-    url: ${RAPPORTNAV_URL}
-    timeout: 3000
+  url: ${RAPPORTNAV_URL}
+  timeout: 3000
