@@ -130,14 +130,8 @@ USER monitorenv
 
 ENTRYPOINT ["/home/monitorenv/env.sh"]
 
-CMD ["sh", "-c", "exec java \
-    ${MONITORENV_JVM_OPTIONS} \
-    -Dhttp.proxyHost=${MONITORENV_HTTP_PROXY_HOST} \
-    -Dhttp.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
-    -Dhttps.proxyHost=${MONITORENV_HTTP_PROXY_HOST} \
-    -Dhttps.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
-    -Dhttp.nonProxyHosts=${MONITORENV_HTTP_NON_PROXY_HOSTS} \
-    -Dhttps.nonProxyHosts=${MONITORENV_HTTP_NON_PROXY_HOSTS} \
-    -Dspring.config.additional-location=\"/home/monitorenv/configurations/\" \
-    -jar \"monitorenv-${VERSION}.jar\""]
+CMD exec java ${MONITORENV_JVM_OPTIONS} -Dhttp.proxyHost=${MONITORENV_HTTP_PROXY_HOST} -Dhttp.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
+              -Dhttps.proxyHost=${MONITORENV_HTTP_PROXY_HOST} -Dhttps.proxyPort=${MONITORENV_HTTP_PROXY_PORT} \
+              -Dhttp.nonProxyHosts=${MONITORENV_HTTP_NON_PROXY_HOSTS} -Dhttps.nonProxyHosts=${MONITORENV_HTTP_NON_PROXY_HOSTS} \
+              -Dspring.config.additional-location="/home/monitorenv/configurations/" -jar "monitorenv-${VERSION}.jar"
 
