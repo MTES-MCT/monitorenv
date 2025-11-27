@@ -73,6 +73,7 @@ export function SearchVessel({ disabled, isLight = true, onChange, optionsWidth,
         return (
           <VesselSearchItem
             key={vessel.id}
+            category={vessel.category}
             flag={vessel.flag}
             immatriculation={vessel.immatriculation}
             imo={vessel.imo}

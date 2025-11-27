@@ -114,7 +114,7 @@ export function VesselSearchForm({ envActionId, isUnknown, onIsUnknown, path, ve
         </>
       )}
 
-      {selectedVessel && <VesselSearchDescription path={path} />}
+      {selectedVessel && <VesselSearchDescription category={selectedVessel.category} path={path} />}
     </>
   )
 }

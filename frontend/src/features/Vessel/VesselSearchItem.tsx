@@ -1,8 +1,10 @@
+import { Vessel } from '@features/Vessel/types'
 import countries from 'i18n-iso-countries'
 import Highlighter from 'react-highlight-words'
 import styled from 'styled-components'
 
 type VesselSearchItemProps = {
+  category?: string
   flag?: string
   immatriculation?: string
   imo?: string
@@ -13,7 +15,15 @@ type VesselSearchItemProps = {
 
 const UNKNOWN = 'Inconnu'
 
-export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery, vesselName }: VesselSearchItemProps) {
+export function VesselSearchItem({
+  category,
+  flag,
+  immatriculation,
+  imo,
+  mmsi,
+  searchQuery,
+  vesselName
+}: VesselSearchItemProps) {
   return (
     <Wrapper>
       <Name $isUnknown={!vesselName}>
@@ -59,6 +69,12 @@ export function VesselSearchItem({ flag, immatriculation, imo, mmsi, searchQuery
             textToHighlight={imo || UNKNOWN}
           />{' '}
           <Description>(IMO)</Description>
+        </span>
+        <span>
+          <Identity $isUnknown={!category} as="span">
+            {category ? Vessel.ShortCategoryLabel[category] : UNKNOWN}
+          </Identity>{' '}
+          <Description>(Cat.)</Description>
         </span>
       </Identities>
     </Wrapper>

@@ -1,5 +1,6 @@
 import { useGetVesselQuery } from '@api/vesselApi'
 import { vesselAction } from '@features/Vessel/slice'
+import { Vessel } from '@features/Vessel/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Icon, MapMenuDialog } from '@mtes-mct/monitor-ui'
 import countries from 'i18n-iso-countries'
@@ -9,11 +10,6 @@ import { Flag } from './VesselSearchItem'
 
 type VesselResumeProps = {
   vesselId: number
-}
-
-enum VesselCategoryLabel {
-  PLA = 'Plaisance',
-  PRO = 'Professionnel'
 }
 
 const UNKNOWN = '-'
@@ -66,15 +62,19 @@ export function VesselResume({ vesselId }: VesselResumeProps) {
           <dt>Longueur</dt>
           <dd>{vessel.length ? `${vessel.length}m` : UNKNOWN}</dd>
           <dt>Pavillon</dt>
-          <dd>{vessel.flag ? `${countryName} (${vessel.flag})` : UNKNOWN}</dd>
+          <dd>{countryName || UNKNOWN}</dd>
         </VesselIdentity>
         <VesselType>
           <dt>Catégorie</dt>
-          <dd>{vessel.category ? VesselCategoryLabel[vessel.category] : UNKNOWN}</dd>
+          <dd>{vessel.category ? Vessel.CategoryLabel[vessel.category] : UNKNOWN}</dd>
           <dt>Type</dt>
           <dd>{(vessel.category === 'PLA' ? vessel.leisureType : vessel.professionalType) ?? UNKNOWN}</dd>
-          <dt>Désignation commerciale</dt>
-          <dd>{vessel.commercialName ?? UNKNOWN}</dd>
+          {vessel.commercialName && (
+            <>
+              <dt>Désignation commerciale</dt>
+              <dd>{vessel.commercialName}</dd>
+            </>
+          )}
         </VesselType>
         <OwnerSection>
           <header>Informations propriétaire</header>
@@ -86,10 +86,14 @@ export function VesselResume({ vesselId }: VesselResumeProps) {
                 : `${vessel.ownerFirstName} ${vessel.ownerLastName}`}
             </dd>
             <dt>Coordonnées</dt>
-            <dd>
-              <p>{vessel.ownerPhone ?? UNKNOWN}</p>
-              <p>{vessel.ownerEmail ?? UNKNOWN}</p>
-            </dd>
+            {vessel.ownerPhone || vessel.ownerEmail ? (
+              <dd>
+                {vessel.ownerPhone && <p>{vessel.ownerPhone}</p>}
+                {vessel.ownerEmail && <p>{vessel.ownerEmail}</p>}
+              </dd>
+            ) : (
+              <dd>{UNKNOWN}</dd>
+            )}
             <dt>Date de naissance</dt>
             <dd>{vessel.ownerDateOfBirth ?? UNKNOWN}</dd>
             <dt>Adresse postale</dt>

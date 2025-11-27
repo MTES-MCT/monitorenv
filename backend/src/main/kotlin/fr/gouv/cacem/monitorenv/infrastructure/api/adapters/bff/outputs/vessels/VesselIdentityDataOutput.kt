@@ -9,6 +9,7 @@ data class VesselIdentityDataOutput(
     val imo: String?,
     val immatriculation: String?,
     val shipName: String?,
+    val category: String?,
 ) {
     companion object {
         fun fromVessel(vessel: Vessel): VesselIdentityDataOutput =
@@ -19,6 +20,7 @@ data class VesselIdentityDataOutput(
                 imo = vessel.imo,
                 immatriculation = vessel.immatriculation,
                 shipName = vessel.shipName,
+                category = vessel.category,
             )
     }
 }

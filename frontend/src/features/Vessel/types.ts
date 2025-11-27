@@ -1,5 +1,6 @@
 export namespace Vessel {
   export interface Identity {
+    category?: string
     flag?: string
     id: number
     immatriculation?: string
@@ -9,7 +10,6 @@ export namespace Vessel {
   }
 
   export interface Vessel extends Identity {
-    category?: string
     commercialName?: string
     leisureType?: string
     length?: number
@@ -32,5 +32,15 @@ export namespace Vessel {
 
   export interface ApiSearchFilter {
     searched: string
+  }
+
+  export enum CategoryLabel {
+    PLA = 'Plaisance',
+    PRO = 'Professionnel'
+  }
+
+  export enum ShortCategoryLabel {
+    PLA = 'Plaisance',
+    PRO = 'Pro'
   }
 }
