@@ -1,0 +1,41 @@
+services:
+  app:
+    environment:
+      - MONITORENV_OIDC_PROXY_URL=${MONITORENV_OIDC_PROXY_URL}
+      - MONITORENV_KEYCLOAK_PROXY_ENABLED=${MONITORENV_KEYCLOAK_PROXY_ENABLED}
+      - SPRING_CLOUD_GATEWAY_MVC_FORM_FILTER_ENABLED=false
+    depends_on:
+      keycloak:
+        condition: service_healthy
+  keycloak:
+    container_name: monitorenv_keycloak
+    profiles: [ test ]
+    image: quay.io/keycloak/keycloak:23.0.0
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HOSTNAME_STRICT=false # See https://www.keycloak.org/server/reverseproxy for vars below
+      - KC_HOSTNAME=keycloak:8080
+      - KC_HTTP_ENABLED=true
+      - PROXY_ADDRESS_FORWARDING=true
+      - KC_PROXY=edge
+      - KC_PROXY_HEADERS=forwarded
+      - KC_HEALTH_ENABLED=true
+      - KC_FRONTEND_URL=http://localhost:8880/
+    healthcheck:
+      test: [ "CMD-SHELL",
+              "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'" ]
+      interval: 30s
+      timeout: 5s
+      retries: 20
+    networks:
+      - backend_network
+    ports:
+      - "8085:8080"
+    volumes:
+      - ./infra/configurations/keycloack:/opt/keycloak/data/import
+    command:
+      - start-dev
+      - --import-realm
+
+  

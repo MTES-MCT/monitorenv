@@ -2,6 +2,7 @@ import { FAKE_MAPBOX_RESPONSE } from '../constants'
 
 context('MonitorExt', () => {
   beforeEach(() => {
+    cy.login('monitorenv')
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
 
     cy.intercept('GET', '/bff/v1/semaphores').as('getSemaphores')

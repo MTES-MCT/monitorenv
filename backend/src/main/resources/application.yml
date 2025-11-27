@@ -1,5 +1,6 @@
 server:
   port: 8880
+  use-forward-headers: true
   forward-headers-strategy: framework
   compression:
     enabled: true
@@ -51,6 +52,9 @@ monitorenv:
   legicem:
     id: ${MONITORENV_LEGICEM_ID}
     password: ${MONITORENV_LEGICEM_PASSWORD}
+  keycloak:
+    proxy:
+        enabled: ${MONITORENV_KEYCLOAK_PROXY_ENABLED:false}
 
 spring:
   jmx:

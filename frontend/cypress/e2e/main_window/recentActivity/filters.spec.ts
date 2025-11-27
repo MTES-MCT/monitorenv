@@ -1,7 +1,7 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 
-import { FAKE_MAPBOX_RESPONSE } from '../../constants'
 import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFormats'
+import { goToMainWindow } from '../utils'
 
 function setDateRangeWithControlsFilter(): {
   endDateFilter: string
@@ -19,9 +19,8 @@ function setDateRangeWithControlsFilter(): {
 context('Recent Activity -> Filters', () => {
   beforeEach(() => {
     cy.intercept('GET', '/api/v1/themes').as('getThemes')
-    cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('POST', `/bff/v1/recent-activity/controls`).as('postRecentActivityControls')
-    cy.visit('/#@57126.60,5961745.35,6.50')
+    goToMainWindow()
 
     cy.clickButton("Voir l'activité récente")
     cy.wait('@getThemes')

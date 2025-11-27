@@ -90,8 +90,6 @@ context('Side Window > Mission Form > Delete Mission', () => {
   })
 
   it('A mission should be deleted and attached reportings should be detached', () => {
-    visitSideWindow()
-
     createMissionWithAttachedReportingAndAttachedAction().then(response => {
       const missionId = response.body.id
       cy.intercept('PUT', `/bff/v1/missions/${missionId}`).as('updateMission')

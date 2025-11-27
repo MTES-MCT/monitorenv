@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets
  * ⚠️ DEVELOPMENT ONLY - Keycloak Authentication Proxy
  *
  * This controller is ONLY used for local development and E2E testing.
- * It provides a proxy between the monitorenv application and a Keycloak server
+ * It provides a proxy between the MonitorEnv application and a Keycloak server
  * to handle authentication flows during development.
  *
  * ❌ This controller is NEVER enabled in production environments.
