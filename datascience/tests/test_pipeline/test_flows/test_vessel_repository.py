@@ -36,6 +36,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "is_banned": "No",
                 "imo_number": "1234567",
                 "mmsi_number": "123456789",
+                "call_sign": "0000001",
                 "ship_name": "ShipName1",
                 "flag": "FRA",
                 "port_of_registry": "CHERBOURG",
@@ -66,6 +67,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "is_banned": "No",
                 "imo_number": "7654321",
                 "mmsi_number": "987654321",
+                "call_sign": "0000002",
                 "ship_name": "ShipName2",
                 "flag": "FRA",
                 "port_of_registry": "DZAOUDZI",
@@ -94,8 +96,8 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
     imported_vessels = read_query(
         "monitorenv_remote",
         # Cast boolean is_banned to Yes / No
-        """SELECT ship_id, status, category, CASE WHEN is_banned IS TRUE THEN 'Yes' ELSE 'No' END as is_banned, imo_number, mmsi_number, ship_name, flag, port_of_registry, immatriculation,
-        professional_type, leisure_type, commercial_name, length, owner_date_of_information, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
+        """SELECT ship_id, status, category, CASE WHEN is_banned IS TRUE THEN 'Yes' ELSE 'No' END as is_banned, imo_number, mmsi_number, call_sign, ship_name, flag, port_of_registry,
+        immatriculation,professional_type, leisure_type, commercial_name, length, owner_date_of_information, owner_last_name, owner_first_name, owner_date_of_birth, owner_postal_address,
         owner_phone, owner_email, owner_nationality, owner_company_name, owner_business_segment, owner_legal_status, owner_start_date, batch_id, row_number 
         FROM vessels"""
     )

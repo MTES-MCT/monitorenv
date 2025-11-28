@@ -17,6 +17,7 @@ TAGS_TO_INCLUDE = {
 "IsBanned",
 "IMONumber",
 "MMSINumber",
+"CallSign",
 "Immatriculation",
 "ShipName",
 "Flag",
