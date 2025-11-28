@@ -20,6 +20,7 @@
                 <DateOfInformation>2019-05-29T00:00:00.000</DateOfInformation>
                 <IMONumber>1234567</IMONumber>
                 <MMSINumber>123456789</MMSINumber>
+                <CallSign>0000001</CallSign>
                 <ShipName>ShipName1</ShipName>
                 <Flag>FRA</Flag>
                 <PortOfRegistry>CHERBOURG</PortOfRegistry>
@@ -60,6 +61,7 @@
                 <DateOfInformation>2019-05-29T00:00:00.000</DateOfInformation>
                 <IMONumber>7654321</IMONumber>
                 <MMSINumber>987654321</MMSINumber>
+                <CallSign>0000002</CallSign>
                 <ShipName>ShipName2</ShipName>
                 <Flag>FRA</Flag>
                 <PortOfRegistry>DZAOUDZI</PortOfRegistry>
