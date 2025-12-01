@@ -92,7 +92,13 @@ export function VesselSearchForm({ envActionId, isUnknown, onIsUnknown, path, ve
           <VesselSearchWrapper>
             <HistoryOfInfractions envActionId={envActionId} isReadOnly mmsi={mmsi.value} />
             <VesselSearchInputWrapper>
-              <SearchVessel disabled={isUnknown} isLight={false} onChange={handleVesselChange} value={selectedVessel} />
+              <SearchVessel
+                disabled={isUnknown}
+                isLight={false}
+                isSideWindow
+                onChange={handleVesselChange}
+                value={selectedVessel}
+              />
               {selectedVessel && (
                 <StyledLinkButton onClick={() => dispatch(vesselAction.setSelectedVesselId(selectedVessel?.id))}>
                   Voir la fiche navire
