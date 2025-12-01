@@ -16,6 +16,7 @@ from config import (
     VESSEL_FILES_GID,
 )
 from src.flows.admin_areas import administrative_areas_flow
+from src.flows.amp_cacem import import_amp_cacem_flow
 from src.flows.control_objectives import control_objectives_flow
 
 ################################# List flows to deploy ################################
@@ -39,6 +40,9 @@ class FlowAndSchedules:
 flows_to_deploy = [
     FlowAndSchedules(flow=administrative_areas_flow),
     FlowAndSchedules(flow=control_objectives_flow),
+    FlowAndSchedules(
+        flow=import_amp_cacem_flow, schedules=[Schedule(cron="22 0 * * *")]
+    ),
 ]
 
 
