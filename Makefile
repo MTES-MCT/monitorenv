@@ -186,7 +186,7 @@ register-pipeline-flows:
 
 .PHONY: deploy-pipeline-flows
 deploy-pipeline-flows:
-	docker pull docker.pkg.github.com/mtes-mct/monitorenv/monitorenv-pipeline-prefect3:$(MONITORENV_VERSION) && \
+	docker pull ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline-prefect3:$(MONITORENV_VERSION) && \
 	infra/data-pipeline-prefect3/deploy-flows.sh
 
 
