@@ -14,7 +14,7 @@ env_file = ".env.test" if TEST else ".env"
 ROOT_DIRECTORY = Path(__file__).parent
 DOTENV_PATH = ROOT_DIRECTORY / env_file
 LIBRARY_LOCATION = ROOT_DIRECTORY / Path("src")
-QUERIES_LOCATION = LIBRARY_LOCATION / Path("pipeline/queries")
+QUERIES_LOCATION = LIBRARY_LOCATION / Path("queries")
 TEST_DATA_LOCATION = ROOT_DIRECTORY / Path("tests/test_data")
 
 LOCAL_MIGRATIONS_FOLDER = str(
