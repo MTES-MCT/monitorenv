@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Bilan hebdomadaire contrôle de l'environnement marin</title>
+        <meta charset="UTF-8">
+        <style>
+            {% include "splendid.css" %}
+            {% include "email_to_control_units.css" %}
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Bilan hebdomadaire contrôle de l'environnement marin</h1>
+        </header>
+        <hr />
+        <main>
+            <section>
+                <p>Bonjour,</p>
+                <p>Vous trouverez ci-dessous les données des <strong>contrôles</strong> et des <strong>surveillances de l'environnement marin</strong> effectués par votre unité
+                (<strong>{{ control_unit_name }}</strong>) <strong>entre le {{ from_date }} et le {{ to_date }}</strong> que vous avez rapportés au Centre d'Appui au Contrôle de l'Environnement Marin (CACEM),
+                ainsi que les éventuels contrôles et surveillances de l'environnement marin réalisés antérieurement et ayant été rapportés ou mis à jour pendant cette période.</p>
+                <p>Seuls les contrôles et surveillances dont les données sont complètes sont transmis dans ce bilan hebdomadaire. Si certaines données n'ont pas encore été transmises (par ex. l'établissement d'un PV ou non),
+                il est normal que le contrôle ne figure pas encore dans le rapport.</p>
+                <p>Si des données sont manquantes, incorrectes ou incomplètes, ou pour toute remarque concernant ce bilan, n'hésitez pas à <strong>contacter le CACEM : <a href="mailto:{{ cacem_email_address }}">{{ cacem_email_address }}</a></strong>.</p>
+            </section>
+            <hr />
+            <section>
+                <h2>Contrôles et surveillances réalisés la semaine passée</h2>
+                <h3>Contrôles</h3>
+                {{ controls }}
+
+                <h3>Surveillances</h3>
+                {{ surveillances }}
+            </section>
+            <hr />
+            <section>
+                <h2>Contrôles et surveillances antérieurs rapportés ou mis à jour la semaine passée</h2>
+                <h3>Contrôles</h3>
+                {{ late_controls }}
+
+                <h3>Surveillances</h3>
+                {{ late_surveillances }}
+            </section>
+            <hr />
+            <section>
+                <p>
+                    Pour réaliser vos bilans, ces données sont stockées, mises en forme en tableaux de bord et accessibles en temps réel sur 
+                    l'interface <a href="{{ metabase_url }}">Metabase</a> : pour obtenir vos accès nominatifs, veuillez vous rapprocher de 
+                    {{ cacem_analyst_name }} (<a href="mailto:{{ cacem_analyst_email }}">{{ cacem_analyst_email }}</a>), analyste de données pour le CACEM et administrateur Metabase.
+                </p>
+            </section>
+        </main>
+        <footer class="no-vertical-margin">
+            <hr/>
+            <p>Centre d'Appui au Contrôle de l'Environnement Marin - Tél : +33 2 90 74 32 55</p>
+        </footer>
+    </body>
+</html>

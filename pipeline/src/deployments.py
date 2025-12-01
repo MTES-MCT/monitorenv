@@ -10,8 +10,11 @@ from prefect.runner.storage import LocalStorage
 from prefect.schedules import Schedule
 
 from config import (
+    EMAIL_ALL_UNITS,
     HOST_ENV_FILE_LOCATION,
+    IS_INTEGRATION,
     PREFECT_API_URL,
+    TEST_MODE,
     VESSEL_FILES_DIRECTORY,
     VESSEL_FILES_GID,
 )
@@ -21,6 +24,7 @@ from src.flows.amp_ofb import update_amp_from_ofb_flow
 from src.flows.beaches import beaches_flow
 from src.flows.competence_cross_areas import competence_cross_areas_flow
 from src.flows.control_objectives import control_objectives_flow
+from src.flows.email_actions_to_units import email_actions_to_units_flow
 
 ################################# List flows to deploy ################################
 
@@ -45,6 +49,21 @@ flows_to_deploy = [
     FlowAndSchedules(flow=beaches_flow),
     FlowAndSchedules(flow=competence_cross_areas_flow),
     FlowAndSchedules(flow=control_objectives_flow),
+    FlowAndSchedules(
+        flow=email_actions_to_units_flow,
+        schedules=[
+            Schedule(
+                cron="0 5 * * 1",
+                parameters={
+                    "start_days_ago": 7,
+                    "end_days_ago": 1,
+                    "test_mode": TEST_MODE,
+                    "is_integration": IS_INTEGRATION,
+                    "email_all_units": EMAIL_ALL_UNITS,
+                },
+            ),
+        ],
+    ),
     FlowAndSchedules(
         flow=import_amp_cacem_flow, schedules=[Schedule(cron="22 0 * * *")]
     ),
