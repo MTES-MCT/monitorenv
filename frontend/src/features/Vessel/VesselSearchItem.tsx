@@ -1,4 +1,7 @@
+import { Bold } from '@components/style'
+import { Tooltip } from '@components/Tooltip'
 import { Vessel } from '@features/Vessel/types'
+import { Icon } from '@mtes-mct/monitor-ui'
 import countries from 'i18n-iso-countries'
 import Highlighter from 'react-highlight-words'
 import styled from 'styled-components'
@@ -8,6 +11,7 @@ type VesselSearchItemProps = {
   flag?: string
   immatriculation?: string
   imo?: string
+  isSideWindow: boolean
   mmsi?: string
   searchQuery?: string
   vesselName?: string
@@ -20,25 +24,42 @@ export function VesselSearchItem({
   flag,
   immatriculation,
   imo,
+  isSideWindow,
   mmsi,
   searchQuery,
   vesselName
 }: VesselSearchItemProps) {
   return (
     <Wrapper>
-      <Name $isUnknown={!vesselName}>
-        <Flag
-          rel="preload"
-          src={`${window.location.origin}/flags/${flag ? `${flag.substring(0, 2).toLowerCase()}.svg` : 'unknown.png'}`}
-          title={flag ? countries.getName(flag, 'fr') : 'Inconnu'}
-        />
-        <Highlighter
-          autoEscape
-          highlightClassName="highlight"
-          searchWords={searchQuery ? [searchQuery] : []}
-          textToHighlight={vesselName ?? 'NOM INCONNU'}
-        />
-      </Name>
+      <Header>
+        <Name $isUnknown={!vesselName}>
+          <Flag
+            rel="preload"
+            src={`${window.location.origin}/flags/${
+              flag ? `${flag.substring(0, 2).toLowerCase()}.svg` : 'unknown.png'
+            }`}
+            title={flag ? countries.getName(flag, 'fr') : 'Inconnu'}
+          />
+          <Highlighter
+            autoEscape
+            highlightClassName="highlight"
+            searchWords={searchQuery ? [searchQuery] : []}
+            textToHighlight={vesselName ?? 'NOM INCONNU'}
+          />
+        </Name>
+
+        {category && (
+          <Category
+            Icon={category === 'PRO' ? Icon.VesselPro : Icon.VesselLeisure}
+            isSideWindow={isSideWindow}
+            orientation="BOTTOM_LEFT"
+          >
+            <span>
+              <Bold>Catégorie</Bold> : {Vessel.CategoryLabel[category]}
+            </span>
+          </Category>
+        )}
+      </Header>
       <Identities>
         <span>
           <Identity
@@ -70,12 +91,6 @@ export function VesselSearchItem({
           />{' '}
           <Description>(IMO)</Description>
         </span>
-        <span>
-          <Identity $isUnknown={!category} as="span">
-            {category ? Vessel.ShortCategoryLabel[category] : UNKNOWN}
-          </Identity>{' '}
-          <Description>(Cat.)</Description>
-        </span>
       </Identities>
     </Wrapper>
   )
@@ -86,6 +101,11 @@ export const Flag = styled.img<{
 }>`
   font-size: 25px;
   width: 26px;
+`
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
 `
 
 const Name = styled.span<{ $isUnknown?: boolean }>`
@@ -115,4 +135,10 @@ const Wrapper = styled.div`
 `
 const Description = styled.span`
   font-weight: 300;
+`
+
+const Category = styled(Tooltip)`
+  white-space: nowrap;
+  z-index: 99999;
+  font-size: 12px;
 `

@@ -107,7 +107,6 @@ const StyledTooltip = styled.div<{
   }}
   top: ${p => p.$top}px;
   max-width: 310px;
-  width: 100%;
   pointer-events: none;
   z-index: 5;
 `

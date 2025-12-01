@@ -12,12 +12,20 @@ import type { RsuiteDataItem } from '@mtes-mct/monitor-ui/types/internals'
 type SearchVesselsProps = {
   disabled?: boolean
   isLight?: boolean
+  isSideWindow?: boolean
   onChange?: (vessel: Vessel.Identity | undefined) => void
   optionsWidth?: string
   value?: Vessel.Identity | undefined
 }
 
-export function SearchVessel({ disabled, isLight = true, onChange, optionsWidth, value }: SearchVesselsProps) {
+export function SearchVessel({
+  disabled,
+  isLight = true,
+  isSideWindow = false,
+  onChange,
+  optionsWidth,
+  value
+}: SearchVesselsProps) {
   const isSelecting = useRef(false)
   const [query, setQuery] = useState<string | undefined>()
   const [debouncedQuery] = useDebounce(query, 300)
@@ -77,6 +85,7 @@ export function SearchVessel({ disabled, isLight = true, onChange, optionsWidth,
             flag={vessel.flag}
             immatriculation={vessel.immatriculation}
             imo={vessel.imo}
+            isSideWindow={isSideWindow}
             mmsi={vessel.mmsi}
             searchQuery={query}
             vesselName={vessel.shipName}

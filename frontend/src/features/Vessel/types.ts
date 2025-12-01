@@ -38,9 +38,4 @@ export namespace Vessel {
     PLA = 'Plaisance',
     PRO = 'Professionnel'
   }
-
-  export enum ShortCategoryLabel {
-    PLA = 'Plaisance',
-    PRO = 'Pro'
-  }
 }
