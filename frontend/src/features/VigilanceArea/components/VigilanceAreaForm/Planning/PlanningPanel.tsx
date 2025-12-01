@@ -22,7 +22,7 @@ export function PlanningPanel() {
     <StyledPanelContainer>
       <Header $isEditing>
         <StyledTitleContainer>
-          <Title>Planning de vigilance</Title>
+          <Title>Planning de vigilance (année en cours)</Title>
           <IconButton
             accent={Accent.TERTIARY}
             Icon={Icon.Close}
