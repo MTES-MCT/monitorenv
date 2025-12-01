@@ -44,8 +44,9 @@ export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
               <Chevron $isOpen={isSummaryOpen} color={THEME.color.slateGray} size={16} />
             </Summary>
             <PeriodList>
-              {occurences.map(({ end, start }) => (
-                <li>
+              {occurences.map(({ end, start }, index) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <li key={index}>
                   Du {getDateAsLocalizedStringVeryCompact(start.toISOString(), true)} au{' '}
                   {getDateAsLocalizedStringVeryCompact(end.toISOString(), true)}
                 </li>

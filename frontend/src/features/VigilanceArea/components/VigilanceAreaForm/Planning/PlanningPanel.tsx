@@ -18,26 +18,32 @@ export function PlanningPanel() {
     return null
   }
 
-  return (
-    isOpen && (
-      <StyledPanelContainer>
-        <Header $isEditing>
-          <StyledTitleContainer>
-            <Title>Planning de vigilance</Title>
-            <IconButton
-              accent={Accent.TERTIARY}
-              Icon={Icon.Close}
-              onClick={() => setIsOpen(false)}
-              size={Size.SMALL}
-              title="Fermer le planning"
-            />
-          </StyledTitleContainer>
-        </Header>
-        <StyledPanelBody>
-          <PlanningBody vigilanceArea={vigilanceArea} />
-        </StyledPanelBody>
-      </StyledPanelContainer>
-    )
+  return isOpen ? (
+    <StyledPanelContainer>
+      <Header $isEditing>
+        <StyledTitleContainer>
+          <Title>Planning de vigilance</Title>
+          <IconButton
+            accent={Accent.TERTIARY}
+            Icon={Icon.Close}
+            onClick={() => setIsOpen(false)}
+            size={Size.SMALL}
+            title="Fermer le planning"
+          />
+        </StyledTitleContainer>
+      </Header>
+      <StyledPanelBody>
+        <PlanningBody vigilanceArea={vigilanceArea} />
+      </StyledPanelBody>
+    </StyledPanelContainer>
+  ) : (
+    <ShowPlanningPanel
+      accent={Accent.PRIMARY}
+      Icon={Icon.Calendar}
+      onClick={() => setIsOpen(true)}
+      size={Size.LARGE}
+      title="Ouvrir le planning"
+    />
   )
 }
 
@@ -52,4 +58,9 @@ const StyledPanelContainer = styled(PanelContainer)`
 
 const StyledPanelBody = styled(PanelBody)`
   padding: 16px;
+`
+
+const ShowPlanningPanel = styled(IconButton)`
+  height: 40px;
+  width: 40px;
 `
