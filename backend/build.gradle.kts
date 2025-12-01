@@ -131,7 +131,7 @@ dependencies {
     // Testing
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.5")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:4.0.0")
     testImplementation("org.assertj:assertj-core:3.27.6")
     testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
