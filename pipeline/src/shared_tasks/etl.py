@@ -1,8 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
-import prefect
-from prefect import task
+from prefect import get_run_logger, task
 from sqlalchemy import text
 
 from config import LIBRARY_LOCATION
@@ -12,7 +11,7 @@ from src.db_config import create_engine
 @task
 def run_sql_script(sql_filepath: Path) -> pd.DataFrame:
 
-    logger = prefect.context.get("logger")
+    logger = get_run_logger()
     with open(sql_filepath, "r") as sql_file:
         query = text(sql_file.read())
 

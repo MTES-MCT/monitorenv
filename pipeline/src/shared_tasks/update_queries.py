@@ -1,11 +1,10 @@
 import pandas as pd
-import prefect
-from prefect import task
+from prefect import get_run_logger, task
 
 
 @task
 def update_required(ids_to_update: set) -> bool:
-    logger = prefect.context.get("logger")
+    logger = get_run_logger()
     n = len(ids_to_update)
     if n > 0:
         logger.info(f"Found {n} row(s) to update.")
@@ -48,7 +47,7 @@ def select_ids_to_insert(hashes: pd.DataFrame) -> set:
 
 @task
 def insert_required(ids_to_insert: set) -> bool:
-    logger = prefect.context.get("logger")
+    logger = get_run_logger()
     n = len(ids_to_insert)
     if n > 0:
         logger.info(f"Found {n} row(s) to add.")
@@ -59,9 +58,9 @@ def insert_required(ids_to_insert: set) -> bool:
     return res
 
 
-@prefect.task
+@task
 def delete_required(ids_to_delete: set) -> bool:
-    logger = prefect.context.get("logger")
+    logger = get_run_logger()
     n = len(ids_to_delete)
     if n > 0:
         logger.info(f"Found {n} row(s) to delete.")
