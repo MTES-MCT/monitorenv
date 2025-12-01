@@ -17,6 +17,9 @@ from config import (
 )
 from src.flows.admin_areas import administrative_areas_flow
 from src.flows.amp_cacem import import_amp_cacem_flow
+from src.flows.amp_ofb import update_amp_from_ofb_flow
+from src.flows.beaches import beaches_flow
+from src.flows.competence_cross_areas import competence_cross_areas_flow
 from src.flows.control_objectives import control_objectives_flow
 
 ################################# List flows to deploy ################################
@@ -39,9 +42,14 @@ class FlowAndSchedules:
 
 flows_to_deploy = [
     FlowAndSchedules(flow=administrative_areas_flow),
+    FlowAndSchedules(flow=beaches_flow),
+    FlowAndSchedules(flow=competence_cross_areas_flow),
     FlowAndSchedules(flow=control_objectives_flow),
     FlowAndSchedules(
         flow=import_amp_cacem_flow, schedules=[Schedule(cron="22 0 * * *")]
+    ),
+    FlowAndSchedules(
+        flow=update_amp_from_ofb_flow, schedules=[Schedule(cron="2 0 * * *")]
     ),
 ]
 
