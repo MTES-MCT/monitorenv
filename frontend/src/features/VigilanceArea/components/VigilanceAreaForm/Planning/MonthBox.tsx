@@ -51,11 +51,7 @@ export function MonthBox({ dateRanges, label, monthIndex }: MonthBoxProps) {
               $isStart={isStart(day) || (isDayInPeriod(day) && day === 1)}
             />
           ))}
-          {isCurrentMonth && (
-            <>
-              <BackgroundBox />
-            </>
-          )}
+          {isCurrentMonth && <BackgroundBox />}
         </Box>
         {isCurrentMonth && <StyledIcon />}
       </Wrapper>
@@ -87,11 +83,11 @@ const DayBox = styled.div<{ $isEnd: boolean; $isHighlighted: boolean; $isStart: 
   ${({ $isHighlighted }) =>
     $isHighlighted &&
     `background-color: #C2514180;
-    border-top: 1px solid #E1000F;
-  border-bottom: 1px solid #e1000f;`};
+    border-top: 1px solid #933F20;
+  border-bottom: 1px solid #933F20;`};
   background-color: ${({ $isHighlighted }) => ($isHighlighted ? '#C2514180' : `white`)};
-  ${p => p.$isStart && 'border-left: 1px solid #E1000F;'}
-  ${p => p.$isEnd && 'border-right: 1px solid #E1000F;'}
+  ${p => p.$isStart && 'border-left: 1px solid #933F20;'}
+  ${p => p.$isEnd && 'border-right: 1px solid #933F20;'}
 `
 
 const BackgroundBox = styled.div`
