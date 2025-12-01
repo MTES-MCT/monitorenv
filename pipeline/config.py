@@ -29,10 +29,8 @@ HOST_MIGRATIONS_FOLDER = os.getenv(
 )
 HOST_ENV_FILE_LOCATION = os.getenv("HOST_ENV_FILE_LOCATION")
 
-EMAIL_TEMPLATES_LOCATION = LIBRARY_LOCATION / Path("pipeline/emails/templates")
-EMAIL_STYLESHEETS_LOCATION = LIBRARY_LOCATION / Path(
-    "pipeline/emails/stylesheets"
-)
+EMAIL_TEMPLATES_LOCATION = LIBRARY_LOCATION / Path("emails/templates")
+EMAIL_STYLESHEETS_LOCATION = LIBRARY_LOCATION / Path("emails/stylesheets")
 
 # Must be set to true to avoid external side effects (emails, data.gouv uploads...) in
 # integration
