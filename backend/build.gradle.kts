@@ -60,10 +60,10 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.3.2"
+val ktorVersion = "3.3.3"
 val testcontainersVersion = "1.21.3"
-val sentryVersion = "8.26.0"
-val flywayVersion = "11.17.0"
+val sentryVersion = "8.27.1"
+val flywayVersion = "11.18.0"
 
 dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.7"))
@@ -86,7 +86,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.hibernate.orm:hibernate-spatial:6.6.13.Final")
     implementation("org.hibernate.validator:hibernate-validator:9.1.0.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.12.0")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.13.1")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -116,8 +116,8 @@ dependencies {
     // JodConverter
     implementation("org.jodconverter:jodconverter-local-lo:4.4.11")
     // the two following apoche poi dependencies should have the same version
-    implementation("org.apache.poi:poi:5.4.1")
-    implementation("org.apache.poi:poi-ooxml:5.4.1")
+    implementation("org.apache.poi:poi:5.5.1")
+    implementation("org.apache.poi:poi-ooxml:5.5.1")
     // Scalr (image resizer with better quality)
     implementation("org.imgscalr:imgscalr-lib:4.2")
 
@@ -138,7 +138,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:5.3.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.3.2")
     testImplementation("net.ttddyy:datasource-proxy:1.11.0")
     testImplementation("io.mockk:mockk:1.14.6")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
