@@ -45,6 +45,7 @@ from src.flows.three_hundred_meters_areas import three_hunder_meters_areas_flow
 from src.flows.update_departments_and_facades import (
     update_departments_and_facades_flow,
 )
+from src.flows.vessel_repository import vessel_repository_flow
 
 ################################# List flows to deploy ################################
 
@@ -130,6 +131,7 @@ flows_to_deploy = [
         flow=update_amp_from_ofb_flow, schedules=[Schedule(cron="2 0 * * *")]
     ),
     FlowAndSchedules(flow=update_departments_and_facades_flow),
+    FlowAndSchedules(flow=vessel_repository_flow),
 ]
 
 
@@ -155,7 +157,7 @@ for deployment in deployments:
     deployment.work_pool_name = "monitorenv"
     deployment.storage = LocalStorage("/home/monitorenv-pipeline/pipeline")
 
-    if deployment.name in ("Control objectives",):
+    if deployment.name in ("Vessel repository",):
         deployment.job_variables["container_create_kwargs"] = {
             "group_add": [VESSEL_FILES_GID]
         }

@@ -83,12 +83,12 @@ def mock_update_resource(
 
 
 @task
-def mock_get_xml_files():
+def mock_get_xml_files(dummy: str):
     return [Path(TEST_DATA_LOCATION / "vessel_xml" / "vessel_repository.xml")]
 
 
 @task
-def mock_get_xsd_file():
+def mock_get_xsd_file(dummy: str):
     return Path(TEST_DATA_LOCATION / "vessel_xml" / "vessel_repository.xsd")
 
 
