@@ -2,22 +2,14 @@ import type { TagFromAPI } from './tags'
 import type { ThemeFromAPI } from './themes'
 import type { GeoJSON } from '../types/GeoJSON'
 
-export type RegulatoryLayerWithMetadataFromAPI = {
-  entityName: string
+export type RegulatoryLayerWithMetadataFromAPI = RegulatoryLayerCompactFromAPI & {
   facade: string
-  geom: GeoJSON.MultiPolygon
-  id: number
-  layerName: string
-  refReg: string
-  tags: TagFromAPI[]
-  themes: ThemeFromAPI[]
-  type: string
   url: string
 }
 
 export type RegulatoryLayerCompactFromAPI = {
   entityName: string
-  geom: GeoJSON.MultiPolygon
+  geom: GeoJSON.MultiPolygon | undefined
   id: number
   layerName: string
   refReg: string

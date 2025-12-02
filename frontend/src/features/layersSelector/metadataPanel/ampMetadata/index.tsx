@@ -9,7 +9,7 @@ import styled from 'styled-components'
 
 import { MonitorEnvLayers } from '../../../../domain/entities/layers/constants'
 import { LayerLegend } from '../../utils/LayerLegend.style'
-import { Key, Value, Fields, Field, Zone, Body, NoValue } from '../MetadataPanel.style'
+import { Body, Field, Fields, Key, NoValue, Value, Zone } from '../MetadataPanel.style'
 import { RegulatorySummary } from '../RegulatorySummary'
 import { closeMetadataPanel } from '../slice'
 
@@ -19,12 +19,15 @@ export function AmpMetadata() {
   const dispatch = useAppDispatch()
   const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
-  const { ampMetadata } = useGetAMPsQuery(undefined, {
-    pollingInterval: FOUR_HOURS,
-    selectFromResult: result => ({
-      ampMetadata: metadataLayerId && result?.data?.entities[metadataLayerId]
-    })
-  })
+  const { ampMetadata } = useGetAMPsQuery(
+    { withGeometry: false },
+    {
+      pollingInterval: FOUR_HOURS,
+      selectFromResult: result => ({
+        ampMetadata: metadataLayerId && result?.data?.entities[metadataLayerId]
+      })
+    }
+  )
 
   const onCloseIconClicked = useCallback(() => {
     dispatch(closeMetadataPanel())

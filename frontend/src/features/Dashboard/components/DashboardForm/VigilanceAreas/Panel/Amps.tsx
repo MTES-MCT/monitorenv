@@ -19,7 +19,8 @@ import type { AMP } from 'domain/entities/AMPs'
 export function Amps({ ampIds }: { ampIds: number[] }) {
   const dispatch = useAppDispatch()
 
-  const { data: ampLayers } = useGetAMPsQuery()
+  // TODO: either send extend of layer OR findById
+  const { data: ampLayers } = useGetAMPsQuery({ withGeometry: false })
 
   const amps = ampIds.map(amp => ampLayers?.entities[amp])
 
