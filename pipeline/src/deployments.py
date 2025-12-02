@@ -35,6 +35,7 @@ from src.flows.localized_areas import localized_areas_flow
 from src.flows.marpol import marpol_flow
 from src.flows.refresh_materialized_view import refresh_materialized_view_flow
 from src.flows.regulations import regulations_flow
+from src.flows.regulations_open_data import regulations_open_data_flow
 from src.flows.themes_and_tags import themes_and_tags_flow
 
 ################################# List flows to deploy ################################
@@ -102,6 +103,10 @@ flows_to_deploy = [
     FlowAndSchedules(
         flow=regulations_flow,
         schedules=[Schedule(cron="6,16,26,36,46,56 * * * *")],
+    ),
+    FlowAndSchedules(
+        flow=regulations_open_data_flow,
+        schedules=[Schedule(cron="0 20 * * 5")],
     ),
     FlowAndSchedules(
         flow=themes_and_tags_flow,
