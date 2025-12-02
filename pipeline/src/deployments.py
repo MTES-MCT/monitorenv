@@ -41,6 +41,7 @@ from src.flows.remove_broken_missions_resources_links import (
 )
 from src.flows.semaphores import semaphores_flow
 from src.flows.themes_and_tags import themes_and_tags_flow
+from src.flows.three_hundred_meters_areas import three_hunder_meters_areas_flow
 
 ################################# List flows to deploy ################################
 
@@ -121,6 +122,7 @@ flows_to_deploy = [
         flow=themes_and_tags_flow,
         schedules=[Schedule(cron="2,12,22,32,42,52 * * * *")],
     ),
+    FlowAndSchedules(flow=three_hunder_meters_areas_flow),
     FlowAndSchedules(
         flow=update_amp_from_ofb_flow, schedules=[Schedule(cron="2 0 * * *")]
     ),
