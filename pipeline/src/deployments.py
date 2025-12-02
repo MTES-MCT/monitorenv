@@ -25,6 +25,7 @@ from src.flows.beaches import beaches_flow
 from src.flows.competence_cross_areas import competence_cross_areas_flow
 from src.flows.control_objectives import control_objectives_flow
 from src.flows.email_actions_to_units import email_actions_to_units_flow
+from src.flows.facade_areas import facade_areas_flow
 from src.flows.facade_areas_unextended import facade_areas_unextended_flow
 
 ################################# List flows to deploy ################################
@@ -65,6 +66,7 @@ flows_to_deploy = [
             ),
         ],
     ),
+    FlowAndSchedules(flow=facade_areas_flow),
     FlowAndSchedules(flow=facade_areas_unextended_flow),
     FlowAndSchedules(
         flow=import_amp_cacem_flow, schedules=[Schedule(cron="22 0 * * *")]
