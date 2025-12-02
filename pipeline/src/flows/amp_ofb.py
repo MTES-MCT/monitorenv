@@ -11,7 +11,7 @@ from src.helpers.spatial import to_multipolygon
 from src.processing import prepare_df_for_loading
 from src.utils import psql_insert_copy
 
-AMP_AREAS_FILE_PATH = LIBRARY_LOCATION / "pipeline/data/amp_areas.zip"
+AMP_AREAS_FILE_PATH = LIBRARY_LOCATION / "data/amp_areas.zip"
 
 AMP_AREAS_COLUMNS = [
     "mpa_id",
