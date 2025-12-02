@@ -57,7 +57,7 @@ DOCKER_IMAGE = "ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline-prefect3"
 MONITORENV_VERSION = os.getenv("MONITORENV_VERSION")
 FLOWS_LOCATION = Path("src/flows")  # relative to the WORKDIR in the image
 
-# Proxies for pipeline flows requiring Internet access
+# Proxies for flows requiring Internet access
 PROXIES = {
     "http": get_key(DOTENV_PATH, "HTTP_PROXY_"),
     "https": get_key(DOTENV_PATH, "HTTPS_PROXY_"),
