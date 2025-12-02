@@ -91,7 +91,9 @@ flows_to_deploy = [
     FlowAndSchedules(
         flow=import_amp_cacem_flow, schedules=[Schedule(cron="22 0 * * *")]
     ),
-    FlowAndSchedules(flow=infractions_flow, cron="2 8,14 * * *"),
+    FlowAndSchedules(
+        flow=infractions_flow, schedules=[Schedule(cron="2 8,14 * * *")]
+    ),
     FlowAndSchedules(flow=localized_areas_flow),
     FlowAndSchedules(flow=marpol_flow),
     FlowAndSchedules(
