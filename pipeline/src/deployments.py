@@ -33,6 +33,7 @@ from src.flows.historic_controls import historic_controls_flow
 from src.flows.infractions import infractions_flow
 from src.flows.localized_areas import localized_areas_flow
 from src.flows.marpol import marpol_flow
+from src.flows.refresh_materialized_view import refresh_materialized_view_flow
 
 ################################# List flows to deploy ################################
 
@@ -83,6 +84,19 @@ flows_to_deploy = [
     FlowAndSchedules(flow=infractions_flow, cron="2 8,14 * * *"),
     FlowAndSchedules(flow=localized_areas_flow),
     FlowAndSchedules(flow=marpol_flow),
+    FlowAndSchedules(
+        flow=refresh_materialized_view_flow,
+        schedules=[
+            Schedule(
+                cron="30 * * * *",
+                parameters={"view_name": "analytics_actions"},
+            ),
+            Schedule(
+                cron="35 12 * * *",
+                parameters={"view_name": "analytics_surveillance_density_map"},
+            ),
+        ],
+    ),
     FlowAndSchedules(
         flow=update_amp_from_ofb_flow, schedules=[Schedule(cron="2 0 * * *")]
     ),
