@@ -32,6 +32,7 @@ from src.flows.historic_control_units import historic_control_units_flow
 from src.flows.historic_controls import historic_controls_flow
 from src.flows.infractions import infractions_flow
 from src.flows.localized_areas import localized_areas_flow
+from src.flows.marpol import marpol_flow
 
 ################################# List flows to deploy ################################
 
@@ -81,6 +82,7 @@ flows_to_deploy = [
     ),
     FlowAndSchedules(flow=infractions_flow, cron="2 8,14 * * *"),
     FlowAndSchedules(flow=localized_areas_flow),
+    FlowAndSchedules(flow=marpol_flow),
     FlowAndSchedules(
         flow=update_amp_from_ofb_flow, schedules=[Schedule(cron="2 0 * * *")]
     ),
