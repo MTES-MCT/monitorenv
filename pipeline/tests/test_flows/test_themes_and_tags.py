@@ -1,6 +1,7 @@
+from logging import Logger
+
 import pandas as pd
 import pytest
-from prefect import get_run_logger
 
 from src.flows.themes_and_tags import (
     load_new_tags,
@@ -98,8 +99,8 @@ def test_load_new_themes(reset_test_data, old_themes):
         """SELECT
                 id,
                 name,
-                parent_i
-                , started_at,
+                parent_id,
+                started_at,
                 ended_at,
                 control_plan_themes_id,
                 control_plan_sub_themes_id,
@@ -120,7 +121,7 @@ def test_update_new_themes(reset_test_data, new_themes, old_themes):
         table_name="themes",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger(),
+        logger=Logger("Test logger"),
         how="append",
     )
     update_themes(new_themes)
@@ -231,7 +232,7 @@ def test_update_new_tags(reset_test_data, new_tags, old_tags):
         table_name="tags",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger(),
+        logger=Logger("Test logger"),
         how="append",
     )
     update_tags(new_tags)
