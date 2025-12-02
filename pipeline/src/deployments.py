@@ -34,6 +34,8 @@ from src.flows.infractions import infractions_flow
 from src.flows.localized_areas import localized_areas_flow
 from src.flows.marpol import marpol_flow
 from src.flows.refresh_materialized_view import refresh_materialized_view_flow
+from src.flows.regulations import regulations_flow
+from src.flows.themes_and_tags import themes_and_tags_flow
 
 ################################# List flows to deploy ################################
 
@@ -96,6 +98,14 @@ flows_to_deploy = [
                 parameters={"view_name": "analytics_surveillance_density_map"},
             ),
         ],
+    ),
+    FlowAndSchedules(
+        flow=regulations_flow,
+        schedules=[Schedule(cron="6,16,26,36,46,56 * * * *")],
+    ),
+    FlowAndSchedules(
+        flow=themes_and_tags_flow,
+        schedules=[Schedule(cron="2,12,22,32,42,52 * * * *")],
     ),
     FlowAndSchedules(
         flow=update_amp_from_ofb_flow, schedules=[Schedule(cron="2 0 * * *")]
