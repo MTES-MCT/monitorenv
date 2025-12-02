@@ -30,6 +30,7 @@ from src.flows.facade_areas_unextended import facade_areas_unextended_flow
 from src.flows.fao_areas import fao_areas_flow
 from src.flows.historic_control_units import historic_control_units_flow
 from src.flows.historic_controls import historic_controls_flow
+from src.flows.infractions import infractions_flow
 
 ################################# List flows to deploy ################################
 
@@ -77,6 +78,7 @@ flows_to_deploy = [
     FlowAndSchedules(
         flow=import_amp_cacem_flow, schedules=[Schedule(cron="22 0 * * *")]
     ),
+    FlowAndSchedules(flow=infractions_flow, cron="2 8,14 * * *"),
     FlowAndSchedules(
         flow=update_amp_from_ofb_flow, schedules=[Schedule(cron="2 0 * * *")]
     ),
