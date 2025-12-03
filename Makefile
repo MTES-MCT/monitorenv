@@ -1,6 +1,7 @@
 BACKEND_CONFIGURATION_FOLDER=$(shell pwd)/infra/configurations/backend/
 HOST_MIGRATIONS_FOLDER=$(shell pwd)/backend/src/main/resources/db/migration
 PIPELINE_TEST_ENV_FILE=$(shell pwd)/pipeline/.env.test
+PWD=$(shell pwd)
 
 ifneq (,$(wildcard .env))
 		include .env
