@@ -1,3 +1,4 @@
+import tempfile
 from io import BytesIO
 
 import geopandas as gpd
@@ -5,13 +6,7 @@ import pandas as pd
 import requests
 from prefect import get_run_logger, task
 
-from config import (
-    DATAGOUV_API_ENDPOINT,
-    DATAGOUV_API_KEY,
-    PROXIES,
-    ROOT_DIRECTORY,
-)
-from src.utils import remove_file
+from config import DATAGOUV_API_ENDPOINT, DATAGOUV_API_KEY, PROXIES
 
 HEADERS = {
     "X-API-KEY": DATAGOUV_API_KEY,
@@ -143,24 +138,16 @@ def get_geopackage_file_object(
     buf = BytesIO()
 
     if layers:
-        # Tried using tempfile.TemporaryFile without success.
-        # Try again at your own risk :)
-        temp_file_path = ROOT_DIRECTORY / "src/data/tmp_geopackage.gpkg"
-        remove_file(temp_file_path, ignore_errors=True)
-
-        try:
+        with tempfile.NamedTemporaryFile(
+            mode="w+b", delete_on_close=False
+        ) as fp:
             for layer in gdf[layers].dropna().unique():
-
                 gdf[gdf[layers] == layer].to_file(
-                    temp_file_path, driver="GPKG", layer=layer
+                    fp.name, driver="GPKG", layer=layer
                 )
-
-            with open(temp_file_path, "rb") as f:
+            fp.close()
+            with open(fp.name, "rb") as f:
                 buf.write(f.read())
-
-        finally:
-            remove_file(temp_file_path, ignore_errors=True)
-
     else:
         gdf.to_file(buf, driver="GPKG")
 
