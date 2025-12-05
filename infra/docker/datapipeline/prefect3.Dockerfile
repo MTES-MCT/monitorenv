@@ -1,4 +1,4 @@
-FROM python:3.13.9-slim-trixie AS base
+FROM python:3.13.9-slim-bookworm AS base
 
 ENV VIRTUAL_ENV="/opt/venv" \
     # paths
@@ -75,7 +75,7 @@ RUN apt-get update && apt-get install -y \
     # pango is required by weasyprint
     pango1.0-tools \
     # libaio1 is required by Oracle Instant Client
-    libaio1t64 \
+    libaio1 \
     && rm -rf /var/lib/apt/lists/*
 
 # copy in our built venv
