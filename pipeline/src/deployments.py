@@ -134,18 +134,18 @@ flows_to_deploy = [
     FlowAndSchedules(flow=vessel_repository_flow),
 ]
 
+deployments = []
 
-deployments = [
-    flow_to_deploy.flow.to_deployment(
+for flow_to_deploy in flows_to_deploy:
+    flow_to_deploy.flow.name = "Monitorenv - " + flow_to_deploy.flow.name
+
+    deployment = flow_to_deploy.flow.to_deployment(
         name=flow_to_deploy.flow.name,
         schedules=flow_to_deploy.schedules,
         concurrency_limit=flow_to_deploy.concurrency_limit,
+        tags=["monitorenv"],
     )
-    for flow_to_deploy in flows_to_deploy
-]
 
-################### Define flows' run config ####################
-for deployment in deployments:
     deployment.job_variables = {
         "env": {"PREFECT_API_URL": PREFECT_API_URL},
         "volumes": [
@@ -164,3 +164,5 @@ for deployment in deployments:
         deployment.job_variables["volumes"].append(
             f"{VESSEL_FILES_DIRECTORY}:/home/monitorenv-pipeline/pipeline/src/data"
         )
+
+    deployments.append(deployment)
