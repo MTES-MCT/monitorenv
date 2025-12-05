@@ -28,7 +28,7 @@ def load_localized_areas(localized_areas: gpd.GeoDataFrame):
     )
 
 
-@flow(name="Localized Areas")
+@flow(name="Monitorenv - Localized Areas")
 def localized_areas_flow():
     localized_areas = extract_localized_areas()
     load_localized_areas(localized_areas)

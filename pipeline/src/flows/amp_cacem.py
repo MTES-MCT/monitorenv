@@ -150,7 +150,7 @@ def load_new_amps(new_amp: pd.DataFrame):
     )
 
 
-@flow(name="import amp cacem")
+@flow(name="Monitorenv - import amp cacem")
 def import_amp_cacem_flow():
     local_hashes = extract_local_hashes()
     remote_hashes = extract_remote_hashes()

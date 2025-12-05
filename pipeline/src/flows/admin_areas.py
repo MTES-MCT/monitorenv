@@ -204,7 +204,7 @@ def load_low_water_line(low_water_line: pd.DataFrame):
     )
 
 
-@flow(name="Administrative areas")
+@flow(name="Monitorenv - Administrative areas")
 def administrative_areas_flow():
 
     three_miles_areas = extract_3_miles_areas()

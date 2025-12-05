@@ -137,7 +137,8 @@ flows_to_deploy = [
 deployments = []
 
 for flow_to_deploy in flows_to_deploy:
-    flow_to_deploy.flow.name = "Monitorenv - " + flow_to_deploy.flow.name
+    # Ensure flow name unicity among all projects orchestrated by Prefect 3
+    assert flow_to_deploy.flow.name[:13] == "Monitorenv - "
 
     deployment = flow_to_deploy.flow.to_deployment(
         name=flow_to_deploy.flow.name,
@@ -157,7 +158,7 @@ for flow_to_deploy in flows_to_deploy:
     deployment.work_pool_name = "monitorenv"
     deployment.storage = LocalStorage("/home/monitorenv-pipeline/pipeline")
 
-    if deployment.name in ("Vessel repository",):
+    if deployment.name in ("Monitorenv - Vessel repository",):
         deployment.job_variables["container_create_kwargs"] = {
             "group_add": [VESSEL_FILES_GID]
         }

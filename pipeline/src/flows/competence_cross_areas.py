@@ -27,7 +27,7 @@ def load_competence_cross_areas(competence_cross_areas: gpd.GeoDataFrame):
     )
 
 
-@flow(name="Competence cross areas")
+@flow(name="Monitorenv - Competence cross areas")
 def competence_cross_areas_flow():
     competence_cross_areas = extract_competence_cross_areas()
     load_competence_cross_areas(competence_cross_areas)

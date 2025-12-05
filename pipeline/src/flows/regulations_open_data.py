@@ -85,7 +85,7 @@ def get_regulations_for_geopackage(
     return regulations[columns].copy(deep=True)
 
 
-@flow(name="Regulations open data")
+@flow(name="Monitorenv - Regulations open data")
 def regulations_open_data_flow(
     dataset_id: str = REGULATORY_AREAS_DATASET_ID,
     csv_resource_id: str = REGULATORY_AREAS_CSV_RESOURCE_ID,

@@ -49,7 +49,7 @@ def load_semaphores(semaphores: pd.DataFrame):
     )
 
 
-@flow(name="Semaphores")
+@flow(name="Monitorenv - Semaphores")
 def semaphores_flow():
     semaphores = extract_semaphores()
     load_semaphores(semaphores)

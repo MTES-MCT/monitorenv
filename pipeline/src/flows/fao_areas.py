@@ -72,7 +72,7 @@ def load_fao_areas(fao_areas: gpd.GeoDataFrame):
     )
 
 
-@flow(name="FAO areas")
+@flow(name="Monitorenv - FAO areas")
 def fao_areas_flow():
     fao_areas = extract_fao_areas(url=FAO_AREAS_URL, proxies=PROXIES)
     fao_areas = transform_fao_areas(fao_areas)

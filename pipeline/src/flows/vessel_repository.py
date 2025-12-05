@@ -214,7 +214,7 @@ def delete_files(xml_files: List[Path]):
         remove_file(xml_file, ignore_errors=False)
 
 
-@flow(name="Vessel repository")
+@flow(name="Monitorenv - Vessel repository")
 def vessel_repository_flow():
     xsd_file = get_xsd_file(LIBRARY_LOCATION / "data/")
     xsd_schema = get_xsd_schema(xsd_file)
