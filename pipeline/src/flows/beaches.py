@@ -27,7 +27,7 @@ def load_beaches(beaches: gpd.GeoDataFrame):
     )
 
 
-@flow(name="Beaches")
+@flow(name="Monitorenv - Beaches")
 def beaches_flow():
     beaches = extract_beaches()
     load_beaches(beaches)

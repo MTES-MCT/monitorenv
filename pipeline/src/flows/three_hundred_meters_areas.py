@@ -29,7 +29,7 @@ def load_three_hundred_meters_areas(
     )
 
 
-@flow(name="300 meters areas")
+@flow(name="Monitorenv - 300 meters areas")
 def three_hunder_meters_areas_flow():
     three_hundred_meters_areas = extract_three_hundred_meters_areas()
     load_three_hundred_meters_areas(three_hundred_meters_areas)

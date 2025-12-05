@@ -17,7 +17,7 @@ def refresh_view(view: Table) -> pd.DataFrame:
         connection.execute(query)
 
 
-@flow(name="Refresh materialized view")
+@flow(name="Monitorenv - Refresh materialized view")
 def refresh_materialized_view_flow(view_name: str, schema: str = "public"):
     view = get_table(table_name=view_name, schema=schema)
     refresh_view(view)

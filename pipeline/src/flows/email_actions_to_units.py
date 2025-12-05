@@ -457,7 +457,7 @@ def load_emails_sent_to_control_units(
     )
 
 
-@flow(name="Email actions to units")
+@flow(name="Monitorenv - Email actions to units")
 def email_actions_to_units_flow(
     test_mode: bool,
     is_integration: bool,

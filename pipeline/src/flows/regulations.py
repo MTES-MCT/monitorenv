@@ -222,7 +222,7 @@ def load_tags_regulatory_areas(tags_regulatory_areas: pd.DataFrame):
     )
 
 
-@flow(name="Regulations")
+@flow(name="Monitorenv - Regulations")
 def regulations_flow():
     local_hashes = extract_local_hashes()
     remote_hashes = extract_remote_hashes()

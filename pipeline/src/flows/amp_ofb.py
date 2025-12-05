@@ -260,7 +260,7 @@ def load_amp_areas(amp_areas: gpd.GeoDataFrame):
         logger.info(f"Number of rows inserted: {inserted_rows.rowcount}")
 
 
-@flow(name="update amp from ofb")
+@flow(name="Monitorenv - update amp from ofb")
 def update_amp_from_ofb_flow():
     amp_areas = extract_amp_areas(url=AMP_AREAS_URL, proxies=PROXIES)
     amp_areas = transform_amp_areas(amp_areas)

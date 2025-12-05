@@ -118,7 +118,7 @@ def load_historic_control_units(control_units: pd.DataFrame):
     )
 
 
-@flow(name="Historic control units")
+@flow(name="Monitorenv - Historic control units")
 def historic_control_units_flow(max_id: int = HISTORIC_CONTROL_UNITS_MAX_ID):
     control_units = extract_historic_control_units()
     control_units = transform_control_units(control_units)

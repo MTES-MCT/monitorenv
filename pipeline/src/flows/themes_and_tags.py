@@ -281,7 +281,7 @@ def load_new_tags(new_tags: pd.DataFrame):
     )
 
 
-@flow(name="Themes and Tags")
+@flow(name="Monitorenv - Themes and Tags")
 def themes_and_tags_flow():
     """ Thèmes """
     local_themes = extract_local_themes()

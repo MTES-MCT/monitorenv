@@ -389,7 +389,7 @@ def load_missions_and_missions_control_units(
         )
 
 
-@flow(name="Historic controls")
+@flow(name="Monitorenv - Historic controls")
 def historic_controls_flow():
     # Extract
     controls = extract_historic_controls()

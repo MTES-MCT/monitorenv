@@ -34,7 +34,7 @@ def load_facade_areas_unextended(facade_areas_unextended: pd.DataFrame):
     )
 
 
-@flow(name="Facade areas unextended")
+@flow(name="Monitorenv - Facade areas unextended")
 def facade_areas_unextended_flow():
     facade_areas_unextended = extract_facade_areas_unextended()
     load_facade_areas_unextended(facade_areas_unextended)

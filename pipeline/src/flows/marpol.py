@@ -27,7 +27,7 @@ def load_marpol(marpol: gpd.GeoDataFrame):
     )
 
 
-@flow(name="Marpol")
+@flow(name="Monitorenv - Marpol")
 def marpol_flow():
     marpol = extract_marpol()
     load_marpol(marpol)

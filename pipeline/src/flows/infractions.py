@@ -28,7 +28,7 @@ def load_infractions(infractions):
     )
 
 
-@flow(name="infractions")
+@flow(name="Monitorenv - infractions")
 def infractions_flow():
     infractions = extract_infractions()
     infractions = clean_infractions(infractions)
