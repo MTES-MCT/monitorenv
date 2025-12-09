@@ -233,30 +233,7 @@ services:
       KAFKA_SSL_KEYSTORE_CREDENTIALS: kafka.keypass
       KAFKA_SSL_TRUSTSTORE_CREDENTIALS: kafka.keypass
       KAFKA_SSL_CLIENT_AUTH: required
-    #      KAFKA_OPTS: "-Djavax.net.debug=ssl,handshake,certpath"
-    command: >
-      bash -c "
-        /etc/confluent/docker/run &
-
-        echo 'Attente du broker Kafka SSL...';
-
-        # On attend que le broker SSL soit prêt
-        until kafka-topics --bootstrap-server localhost:9093 --command-config /etc/kafka/secrets/client.properties --list >/dev/null 2>&1; do
-            sleep 2;
-        done;
-
-        echo 'Kafka SSL est prêt — début envoi.';
-        i=0;
-
-        while true; do
-          echo \"auto message $i\" | kafka-console-producer --bootstrap-server localhost:9093 --topic ais --producer.config /etc/kafka/secrets/client.properties
-
-          echo \"Message envoyé: auto message $i\";
-          i=$((i+1));
-          sleep 15;
-        done
-      "
-
+      
 networks:
   backend_network:
 

@@ -2,6 +2,8 @@ monitorenv:
   kafka:
     ais:
       enabled: true
+      producer:
+        enabled: true
   oidc:
     enabled: false
   brief:
@@ -21,5 +23,7 @@ spring:
   flyway:
     locations: classpath:/db/migration,classpath:/db/testdata
   kafka:
+    bootstrap-servers: localhost:9092
     consumer:
       group-id: test
+      auto-offset-reset: latest

@@ -133,7 +133,6 @@ class SecurityConfig(
             }
 
             private fun validateAndProcessUser(oidcUser: OidcUser): OidcUser {
-
                 if (oidcProperties.bypassEmailDomainsFilter == "true") {
                     logger.info("✅ OIDC is bypassing email domain checks.")
                     return oidcUser

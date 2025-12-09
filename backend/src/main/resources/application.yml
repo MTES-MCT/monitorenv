@@ -8,12 +8,14 @@ server:
         min-response-size: 2048
 
 host:
-  ip: ${MONITORENV_URL}
+    ip: ${MONITORENV_URL}
 
 monitorenv:
     kafka:
         ais:
             enabled: ${MONITORENV_KAFKA_AIS_ENABLED}
+        producer:
+            enabled: ${MONITORENV_KAFKA_AIS_PRODUCER_ENABLED}
     ajp:
         port: 8000
     version: ${VERSION}
@@ -86,6 +88,7 @@ spring:
         consumer:
             group-id: ${MONITORENV_KAFKA_AIS_GROUP_ID:test}
             auto-offset-reset: latest
+
         properties:
             security.protocol: SSL
 
