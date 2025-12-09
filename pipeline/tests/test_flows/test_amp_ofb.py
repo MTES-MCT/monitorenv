@@ -1,9 +1,13 @@
+from unittest.mock import MagicMock, patch
+
 import geopandas as gpd
 import pytest
 from geopandas.testing import assert_geodataframe_equal
 
+from config import AMP_AREAS_URL, PROXIES
 from src.flows.amp_ofb import (
     AMP_AREAS_COLUMNS,
+    extract_amp_areas,
     load_amp_areas,
     transform_amp_areas,
 )
@@ -250,6 +254,21 @@ def amp_areas_after_upsert() -> gpd.GeoDataFrame:
         crs="EPSG:4326",
         geometry="geom",
     )
+
+
+@patch("src.flows.amp_ofb.requests.get")
+def test_extract_amp_areas(mock_get):
+    response = MagicMock()
+    content = MagicMock()
+
+    with open("tests/test_data/zip_files/amp_areas.zip", "rb") as f:
+        content.content = f.read()
+
+    response.return_value = content
+    mock_get.side_effect = response
+    areas = extract_amp_areas.fn(AMP_AREAS_URL, PROXIES)
+    assert isinstance(areas, gpd.GeoDataFrame)
+    assert len(areas) == 1
 
 
 def test_transform_amp_areas(amp_areas_from_ofb):
