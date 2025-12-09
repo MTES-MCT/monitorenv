@@ -62,10 +62,13 @@ jobs:
         include:
           - pg_major: "11"
             postgis_version: "3.3.2"
+            timescaledb_version: "1.7.4"
           - pg_major: "15"
             postgis_version: "3.5.1"
+            timescaledb_version: "1.7.4"
           - pg_major: "17"
             postgis_version: "3.5.1"
+            timescaledb_version: "2.24.0"
     permissions:
       contents: read
       packages: write
@@ -92,6 +95,8 @@ jobs:
           build-args: |
             PG_MAJOR=${{ matrix.pg_major }}
             POSTGIS_VERSION=${{ matrix.postgis_version }}
+            TIMESCALEDB_VERSION=${{ matrix.timescaledb_version }}
+
 
       - name: Push docker image to registry
         run: |
@@ -107,9 +112,11 @@ jobs:
           - from_pg_major: "11"
             to_pg_major: "15"
             postgis_version: "3.3.2"
+            timescaledb_version: "1.7.4"
           - from_pg_major: "15"
             to_pg_major: "17"
             postgis_version: "3.5.1"
+            timescaledb_version: "2.24.0"
 
     permissions:
       contents: read
@@ -138,6 +145,7 @@ jobs:
             FROM_PG_MAJOR=${{ matrix.from_pg_major }}
             TO_PG_MAJOR=${{ matrix.to_pg_major }}
             POSTGIS_VERSION=${{ matrix.postgis_version }}
+            TIMESCALEDB_VERSION=${{ matrix.timescaledb_version }}
 
       - name: Push docker image to registry
         run: |
