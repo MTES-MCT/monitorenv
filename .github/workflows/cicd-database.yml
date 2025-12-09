@@ -4,55 +4,55 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-legacy-database-image:
-    name: Build Postgresq 11 TimescaleDB 1.7.4 PostGIS 3.3.2 database image
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Set IMAGE_TAG
-        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2" >> $GITHUB_ENV
-
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@master
-
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache-database
-          key: ${{ runner.os }}-single-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-single-buildx
-
-      - name: Build image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          load: true
-          builder: ${{ steps.buildx.outputs.name }}
-          file: infra/docker/database/ts_postgis.Dockerfile
-          push: false
-          tags: ${{ env.IMAGE_TAG }}
-          cache-from: type=local,src=/tmp/.buildx-cache-database
-          cache-to: type=local,dest=/tmp/.buildx-cache-database-new
-
-        # Temp fix
-        # https://github.com/docker/build-push-action/issues/252
-        # https://github.com/moby/buildkit/issues/1896
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache-database
-          mv /tmp/.buildx-cache-database-new /tmp/.buildx-cache-database
-
-      - name: Push docker image to registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
-          docker push ${{ env.IMAGE_TAG }}
+  #  build-legacy-database-image:
+  #    name: Build Postgresq 11 TimescaleDB 1.7.4 PostGIS 3.3.2 database image
+  #    runs-on: ubuntu-22.04
+  #    permissions:
+  #      contents: read
+  #      packages: write
+  #    steps:
+  #      - name: Checkout
+  #        uses: actions/checkout@v5
+  #
+  #      - name: Set IMAGE_TAG
+  #        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2" >> $GITHUB_ENV
+  #
+  #      - name: Set up Docker Buildx
+  #        id: buildx
+  #        uses: docker/setup-buildx-action@master
+  #
+  #      - name: Cache Docker layers
+  #        uses: actions/cache@v4
+  #        with:
+  #          path: /tmp/.buildx-cache-database
+  #          key: ${{ runner.os }}-single-buildx-${{ github.sha }}
+  #          restore-keys: |
+  #            ${{ runner.os }}-single-buildx
+  #
+  #      - name: Build image
+  #        uses: docker/build-push-action@v6
+  #        with:
+  #          context: .
+  #          load: true
+  #          builder: ${{ steps.buildx.outputs.name }}
+  #          file: infra/docker/database/ts_postgis.Dockerfile
+  #          push: false
+  #          tags: ${{ env.IMAGE_TAG }}
+  #          cache-from: type=local,src=/tmp/.buildx-cache-database
+  #          cache-to: type=local,dest=/tmp/.buildx-cache-database-new
+  #
+  #        # Temp fix
+  #        # https://github.com/docker/build-push-action/issues/252
+  #        # https://github.com/moby/buildkit/issues/1896
+  #      - name: Move cache
+  #        run: |
+  #          rm -rf /tmp/.buildx-cache-database
+  #          mv /tmp/.buildx-cache-database-new /tmp/.buildx-cache-database
+  #
+  #      - name: Push docker image to registry
+  #        run: |
+  #          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+  #          docker push ${{ env.IMAGE_TAG }}
 
   build-database-image:
     name: Build database image
@@ -60,12 +60,12 @@ jobs:
     strategy:
       matrix:
         include:
-          - pg_major: "11"
-            postgis_version: "3.3.2"
-            timescaledb_version: "1.7.4"
-          - pg_major: "15"
-            postgis_version: "3.5.1"
-            timescaledb_version: "1.7.4"
+          #          - pg_major: "11"
+          #            postgis_version: "3.3.2"
+          #            timescaledb_version: "1.7.4"
+          #          - pg_major: "15"
+          #            postgis_version: "3.5.1"
+          #            timescaledb_version: "1.7.4"
           - pg_major: "17"
             postgis_version: "3.5.1"
             timescaledb_version: "2.24.0"
@@ -77,7 +77,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Set IMAGE_TAG
-        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg${{ matrix.pg_major }}-postgis${{ matrix.postgis_version }}" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg${{ matrix.pg_major }}-postgis${{ matrix.postgis_version }}-timescale${{ matrix.timescaledb_version }}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         id: buildx
@@ -97,57 +97,56 @@ jobs:
             POSTGIS_VERSION=${{ matrix.postgis_version }}
             TIMESCALEDB_VERSION=${{ matrix.timescaledb_version }}
 
-
       - name: Push docker image to registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
           docker push ${{ env.IMAGE_TAG }}
 
-  build-database-upgrade-image:
-    name: Build database upgrade image
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        include:
-          - from_pg_major: "11"
-            to_pg_major: "15"
-            postgis_version: "3.3.2"
-            timescaledb_version: "1.7.4"
-          - from_pg_major: "15"
-            to_pg_major: "17"
-            postgis_version: "3.5.1"
-            timescaledb_version: "2.24.0"
-
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Set IMAGE_TAG
-        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database-upgrade:pg${{ matrix.from_pg_major }}_to_pg${{ matrix.to_pg_major }}-postgis${{ matrix.postgis_version }}" >> $GITHUB_ENV
-
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@master
-
-      - name: Build image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          load: true
-          builder: ${{ steps.buildx.outputs.name }}
-          file: infra/docker/database/upgrade_pg.Dockerfile
-          push: false
-          tags: ${{ env.IMAGE_TAG }}
-          build-args: |
-            FROM_PG_MAJOR=${{ matrix.from_pg_major }}
-            TO_PG_MAJOR=${{ matrix.to_pg_major }}
-            POSTGIS_VERSION=${{ matrix.postgis_version }}
-            TIMESCALEDB_VERSION=${{ matrix.timescaledb_version }}
-
-      - name: Push docker image to registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
-          docker push ${{ env.IMAGE_TAG }}
+#  build-database-upgrade-image:
+#    name: Build database upgrade image
+#    runs-on: ubuntu-22.04
+#    strategy:
+#      matrix:
+#        include:
+#          - from_pg_major: "11"
+#            to_pg_major: "15"
+#            postgis_version: "3.3.2"
+#            timescaledb_version: "1.7.4"
+#          - from_pg_major: "15"
+#            to_pg_major: "17"
+#            postgis_version: "3.5.1"
+#            timescaledb_version: "2.24.0"
+#
+#    permissions:
+#      contents: read
+#      packages: write
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v5
+#
+#      - name: Set IMAGE_TAG
+#        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database-upgrade:pg${{ matrix.from_pg_major }}_to_pg${{ matrix.to_pg_major }}-postgis${{ matrix.postgis_version }}" >> $GITHUB_ENV
+#
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@master
+#
+#      - name: Build image
+#        uses: docker/build-push-action@v6
+#        with:
+#          context: .
+#          load: true
+#          builder: ${{ steps.buildx.outputs.name }}
+#          file: infra/docker/database/upgrade_pg.Dockerfile
+#          push: false
+#          tags: ${{ env.IMAGE_TAG }}
+#          build-args: |
+#            FROM_PG_MAJOR=${{ matrix.from_pg_major }}
+#            TO_PG_MAJOR=${{ matrix.to_pg_major }}
+#            POSTGIS_VERSION=${{ matrix.postgis_version }}
+#            TIMESCALEDB_VERSION=${{ matrix.timescaledb_version }}
+#
+#      - name: Push docker image to registry
+#        run: |
+#          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+#          docker push ${{ env.IMAGE_TAG }}
