@@ -1,5 +1,3 @@
-from io import BytesIO
-
 import geopandas as gpd
 import requests
 from prefect import flow, get_run_logger, task
@@ -66,8 +64,9 @@ def extract_amp_areas(url: str, proxies: dict) -> gpd.GeoDataFrame:
     # fiona using an incorrect encoding that cannot be enforced in `gpd.read_file` :
     # passing `encoding` as keyword argument to `gpd.read_file` results in a conflict
     # in fiona when the input is an bytes stream.
+    AMP_AREAS_FILE_PATH.parent.mkdir(exist_ok=True, parents=True)
     with open(AMP_AREAS_FILE_PATH, "wb") as f:
-        f.write(BytesIO(r.content).read())
+        f.write(r.content)
 
     amp_areas = gpd.read_file(AMP_AREAS_FILE_PATH)
 
