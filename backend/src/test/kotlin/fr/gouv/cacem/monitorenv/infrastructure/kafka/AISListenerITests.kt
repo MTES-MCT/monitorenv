@@ -13,11 +13,9 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.kafka.core.KafkaTemplate
-import org.springframework.test.annotation.DirtiesContext
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
-@DirtiesContext
 class AISListenerITests : AbstractKafkaTests() {
     @Autowired
     lateinit var kafkaTemplate: KafkaTemplate<String, AISPayload>
@@ -41,14 +39,13 @@ class AISListenerITests : AbstractKafkaTests() {
                 speed = 10.12,
                 ts = ZonedDateTime.now(),
             )
-        Thread.sleep(1000)
 
-        kafkaTemplate.send("ais", AISPayload(positions = listOf(aisPosition)))
+        kafkaTemplate.send("ais", AISPayload(positions = listOf(aisPosition))).get(10, TimeUnit.SECONDS)
 
         Awaitility
             .await()
-            .atMost(5, TimeUnit.SECONDS)
             .pollInterval(1, TimeUnit.SECONDS)
+            .atMost(30, TimeUnit.SECONDS)
             .untilAsserted {
                 val saved = dbAISPositionRepository.findByIdOrNull(1)
                 assertThat(saved).isNotNull()
