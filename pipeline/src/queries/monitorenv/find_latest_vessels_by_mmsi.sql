@@ -1,0 +1,1 @@
+SELECT id as vessel_id, mmsi_number as mmsi FROM latest_vessels WHERE mmsi_number IN (:mmsi);
