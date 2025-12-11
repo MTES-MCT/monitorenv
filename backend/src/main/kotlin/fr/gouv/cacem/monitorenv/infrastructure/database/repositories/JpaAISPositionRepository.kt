@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AISPositionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAISPositionRepository
-import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPositionEntity
+import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPayload
 import jakarta.transaction.Transactional
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -15,7 +15,7 @@ class JpaAISPositionRepository(
     private val logger: Logger = LoggerFactory.getLogger(JpaAISPositionRepository::class.java)
 
     @Transactional
-    fun saveAll(aisPositions: List<AISPositionEntity>) {
-        dbAISPositionRepository.saveAll(aisPositions.map { AISPositionModel.toAISPositionModel(it) })
+    fun save(aisPosition: AISPayload) {
+        dbAISPositionRepository.save(AISPositionModel.toAISPositionModel(aisPosition))
     }
 }

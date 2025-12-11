@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.kafka
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.AbstractKafkaTests
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAISPositionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.kafka.AISListener.Companion.TOPIC
 import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPayload
-import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPositionEntity
 import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Awaitility
@@ -29,7 +29,7 @@ class AISListenerITests : AbstractKafkaTests() {
         // Given
         val coord = "POINT(-2.7335 47.6078)"
         val aisPosition =
-            AISPositionEntity(
+            AISPayload(
                 id = null,
                 mmsi = 1234567890,
                 coord = coord,
@@ -40,12 +40,12 @@ class AISListenerITests : AbstractKafkaTests() {
                 ts = ZonedDateTime.now(),
             )
 
-        kafkaTemplate.send("ais", AISPayload(positions = listOf(aisPosition))).get(10, TimeUnit.SECONDS)
+        kafkaTemplate.send(TOPIC, aisPosition).get(10, TimeUnit.SECONDS)
 
         Awaitility
             .await()
             .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(30, TimeUnit.SECONDS)
+            .atMost(5, TimeUnit.SECONDS)
             .untilAsserted {
                 val saved = dbAISPositionRepository.findByIdOrNull(1)
                 assertThat(saved).isNotNull()

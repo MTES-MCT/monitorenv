@@ -2,12 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPositionEntity
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPayload
+import jakarta.persistence.*
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.io.WKTReader
 import org.n52.jackson.datatype.jts.GeometryDeserializer
@@ -31,7 +27,7 @@ data class AISPositionModel(
     val ts: ZonedDateTime?,
 ) {
     companion object {
-        fun toAISPositionModel(aisPosition: AISPositionEntity): AISPositionModel =
+        fun toAISPositionModel(aisPosition: AISPayload): AISPositionModel =
             AISPositionModel(
                 id = aisPosition.id,
                 mmsi = aisPosition.mmsi,
