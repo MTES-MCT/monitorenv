@@ -22,6 +22,8 @@ export function LocateOnMap() {
     setIsExpand(nextExpandState)
   }
 
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
   return (
     <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
       <SearchWrapper
@@ -41,7 +43,7 @@ export function LocateOnMap() {
           />
         )}
 
-        {isVesselsEnabled() && (
+        {isSuperUser && isVesselsEnabled() && (
           <SearchSwitcher onChange={nextSearchType => setSearchType(nextSearchType)} searchType={searchType} />
         )}
       </SearchWrapper>
