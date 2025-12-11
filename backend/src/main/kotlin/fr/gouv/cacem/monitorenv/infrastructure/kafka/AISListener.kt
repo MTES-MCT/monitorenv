@@ -15,16 +15,15 @@ class AISListener(
     private val logger = LoggerFactory.getLogger(AISListener::class.java)
 
     companion object {
-        const val TOPIC = "ais"
+        const val TOPIC = "monitorenv.ais.position"
     }
 
     @KafkaListener(topics = [TOPIC])
     fun listenAIS(payload: AISPayload) {
         try {
-            logger.info("${payload.positions.size} AIS positions received")
-            jpaAISPositionRepository.saveAll(payload.positions)
+            jpaAISPositionRepository.save(payload)
         } catch (ex: Exception) {
-            logger.error(ex.message)
+            logger.error("Could not save ais position:  ${ex.message}")
             throw ex
         }
     }
