@@ -672,7 +672,8 @@ def left_isin_right_by_decreasing_priority(
     isin_right_col = get_unused_col_name("isin_right", right)
     right[isin_right_col] = True
 
-    res = join_on_multiple_keys(left, right, on=cols, how="left")
+    res = join_on_multiple_keys(left, right, or_join_keys=cols, how="left")
+
     res = (
         res.drop_duplicates(subset=[id_col])
         .sort_values(id_col)[isin_right_col]

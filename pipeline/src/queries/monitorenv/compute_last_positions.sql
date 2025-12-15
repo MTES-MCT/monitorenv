@@ -21,13 +21,14 @@ last_positions AS (
     SELECT *
     FROM last_n_minutes_positions
     WHERE rk = 1
-),
+)
 
 SELECT
     -- The DISTINCT ON clause is required to remove possible duplicates due to vessels
     -- for which we receive each position multiple times
     DISTINCT ON (mmsi)
     id,
+    mmsi,
     coord,
     status,
     course,

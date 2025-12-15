@@ -1,6 +1,7 @@
 SELECT
     pos.id,
-    pos.mmsi
+    pos.mmsi,
+    pos.vessel_id,
     pos.coord,
     pos.status,
     pos.course,
