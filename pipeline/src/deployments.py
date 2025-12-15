@@ -45,6 +45,7 @@ from src.flows.update_departments_and_facades import (
     update_departments_and_facades_flow,
 )
 from src.flows.vessel_repository import vessel_repository_flow
+from src.flows.last_positions import last_positions_flow
 
 ################################# List flows to deploy ################################
 
@@ -132,6 +133,7 @@ flows_to_deploy = [
     ),
     FlowAndSchedules(flow=update_departments_and_facades_flow),
     FlowAndSchedules(flow=vessel_repository_flow),
+    FlowAndSchedules(flow=last_positions_flow),
 ]
 
 deployments = []
