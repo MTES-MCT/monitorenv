@@ -28,7 +28,7 @@ dev-lint-frontend:
 	cd frontend && npm run test:lint
 
 test-back: check-clean-archi
-	cd backend && ./gradlew clean test --info
+	cd backend && ./gradlew clean test
 
 test-front:
 	cd frontend && npm run test:unit

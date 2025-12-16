@@ -37,7 +37,7 @@ class AISListenerITests : AbstractKafkaTests() {
                 course = 12.12,
                 heading = 10.12,
                 speed = 10.12,
-                ts = ZonedDateTime.now(),
+                ts = ZonedDateTime.parse("2025-01-01T00:00:00.00Z"),
             )
 
         kafkaTemplate.send(TOPIC, aisPosition).get(10, TimeUnit.SECONDS)
