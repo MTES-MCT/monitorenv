@@ -67,7 +67,7 @@ jobs:
           #            postgis_version: "3.5.1"
           #            timescaledb_version: "1.7.4"
           - pg_major: "17"
-            postgis_version: "3.5.1"
+            postgis_version: "3.6.1"
             timescaledb_version: "2.24.0"
     permissions:
       contents: read
