@@ -39,7 +39,6 @@ class AISProducer(
             kafkaTemplate.send(
                 TOPIC,
                 AISPayload(
-                    id = null,
                     mmsi = Random.nextInt(0, 999999999),
                     coord = generateRandomPoint(),
                     status = UUID.randomUUID().toString(),

@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters
 import java.time.ZonedDateTime
 
 class AISPayload(
-    val id: Int? = null,
     val mmsi: Int?,
     val coord: String?,
     val status: String?,

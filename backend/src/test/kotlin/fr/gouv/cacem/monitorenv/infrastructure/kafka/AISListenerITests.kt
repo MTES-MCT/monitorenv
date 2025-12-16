@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.kafka
 
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.AISPositionPK
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.AbstractKafkaTests
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAISPositionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.kafka.AISListener.Companion.TOPIC
@@ -28,16 +29,17 @@ class AISListenerITests : AbstractKafkaTests() {
     fun `listenAIS should save AISPosition that comes from AIS topic`() {
         // Given
         val coord = "POINT(-2.7335 47.6078)"
+        val mmsi = 1234567890
+        val ts = ZonedDateTime.parse("2025-01-01T00:00:00.00Z")
         val aisPosition =
             AISPayload(
-                id = null,
-                mmsi = 1234567890,
+                mmsi = mmsi,
                 coord = coord,
                 status = "status",
                 course = 12.12,
                 heading = 10.12,
                 speed = 10.12,
-                ts = ZonedDateTime.parse("2025-01-01T00:00:00.00Z"),
+                ts = ts,
             )
 
         kafkaTemplate.send(TOPIC, aisPosition).get(10, TimeUnit.SECONDS)
@@ -47,15 +49,15 @@ class AISListenerITests : AbstractKafkaTests() {
             .pollInterval(1, TimeUnit.SECONDS)
             .atMost(5, TimeUnit.SECONDS)
             .untilAsserted {
-                val saved = dbAISPositionRepository.findByIdOrNull(1)
+                val saved = dbAISPositionRepository.findByIdOrNull(AISPositionPK(mmsi = mmsi, ts = ts))
                 assertThat(saved).isNotNull()
-                assertThat(saved?.mmsi).isEqualTo(aisPosition.mmsi)
+                assertThat(saved?.id?.mmsi).isEqualTo(aisPosition.mmsi)
+                assertThat(saved?.id?.ts).isEqualTo(aisPosition.ts)
                 assertThat(saved?.coord).isEqualTo(WKTReader().read(coord) as Point)
                 assertThat(saved?.status).isEqualTo(aisPosition.status)
                 assertThat(saved?.course).isEqualTo(aisPosition.course)
                 assertThat(saved?.heading).isEqualTo(aisPosition.heading)
                 assertThat(saved?.speed).isEqualTo(aisPosition.speed)
-                assertThat(saved?.ts).isEqualTo(aisPosition.ts)
             }
     }
 }
