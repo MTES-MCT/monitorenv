@@ -12,7 +12,7 @@ jobs:
   #      packages: write
   #    steps:
   #      - name: Checkout
-  #        uses: actions/checkout@v5
+  #        uses: actions/checkout@v6
   #
   #      - name: Set IMAGE_TAG
   #        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg11-ts1.7.4-postgis3.3.2" >> $GITHUB_ENV
@@ -74,7 +74,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set IMAGE_TAG
         run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg${{ matrix.pg_major }}-postgis${{ matrix.postgis_version }}-timescale${{ matrix.timescaledb_version }}" >> $GITHUB_ENV
@@ -122,7 +122,7 @@ jobs:
 #      packages: write
 #    steps:
 #      - name: Checkout
-#        uses: actions/checkout@v5
+#        uses: actions/checkout@v6
 #
 #      - name: Set IMAGE_TAG
 #        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database-upgrade:pg${{ matrix.from_pg_major }}_to_pg${{ matrix.to_pg_major }}-postgis${{ matrix.postgis_version }}" >> $GITHUB_ENV
