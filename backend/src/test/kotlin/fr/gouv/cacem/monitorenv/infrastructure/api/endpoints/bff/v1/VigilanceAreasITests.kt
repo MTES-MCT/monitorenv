@@ -9,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaPeriodEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.CreateOrUpdateVigilanceArea
@@ -22,6 +23,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.Vigilanc
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataPeriodInput
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.Test
@@ -91,11 +93,20 @@ class VigilanceAreasITests {
             isDraft = false,
             comments = "Commentaires sur la zone de vigilance",
             createdBy = "ABC",
-            endingCondition = EndingConditionEnum.OCCURENCES_NUMBER,
-            endingOccurrenceDate = null,
-            endingOccurrencesNumber = 2,
-            frequency = FrequencyEnum.ALL_WEEKS,
-            endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
+            periods =
+                listOf(
+                    VigilanceAreaPeriodEntity(
+                        endingCondition = EndingConditionEnum.OCCURENCES_NUMBER,
+                        endingOccurrenceDate = null,
+                        endingOccurrencesNumber = 2,
+                        frequency = FrequencyEnum.ALL_WEEKS,
+                        endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
+                        startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
+                        isAtAllTimes = false,
+                        computedEndDate = null,
+                        id = null,
+                    ),
+                ),
             geom = polygon,
             images =
                 listOf(
@@ -122,12 +133,10 @@ class VigilanceAreasITests {
                         comments = "Commentaires sur la source",
                     ),
                 ),
-            startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
             themes = listOf(),
             visibility = VisibilityEnum.PRIVATE,
             createdAt = ZonedDateTime.parse(createdAt),
             updatedAt = ZonedDateTime.parse(updatedAt),
-            isAtAllTimes = false,
             tags =
                 listOf(
                     aTag(
@@ -158,11 +167,6 @@ class VigilanceAreasITests {
             isDraft = true,
             comments = null,
             createdBy = "DEF",
-            endingCondition = EndingConditionEnum.NEVER,
-            endingOccurrenceDate = null,
-            endingOccurrencesNumber = null,
-            frequency = FrequencyEnum.ALL_WEEKS,
-            endDatePeriod = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
             geom = polygon,
             images = listOf(),
             links = null,
@@ -175,14 +179,26 @@ class VigilanceAreasITests {
                         type = SourceTypeEnum.INTERNAL,
                     ),
                 ),
-            startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
             themes = listOf(),
             visibility = VisibilityEnum.PUBLIC,
             createdAt = ZonedDateTime.parse(createdAt),
             updatedAt = ZonedDateTime.parse(updatedAt),
-            isAtAllTimes = true,
             tags = listOf(),
             validatedAt = ZonedDateTime.parse("2025-01-01T00:00:00Z"),
+            periods =
+                listOf(
+                    VigilanceAreaPeriodEntity(
+                        endingCondition = EndingConditionEnum.NEVER,
+                        endingOccurrenceDate = null,
+                        endingOccurrencesNumber = null,
+                        frequency = FrequencyEnum.ALL_WEEKS,
+                        endDatePeriod = ZonedDateTime.parse("2024-12-31T23:59:59Z"),
+                        startDatePeriod = ZonedDateTime.parse("2024-12-01T00:00:00Z"),
+                        isAtAllTimes = true,
+                        computedEndDate = null,
+                        id = null,
+                    ),
+                ),
         )
 
     @Test
@@ -201,11 +217,13 @@ class VigilanceAreasITests {
             .andExpect(
                 jsonPath("$[0].comments", equalTo("Commentaires sur la zone de vigilance")),
             ).andExpect(jsonPath("$[0].createdBy", equalTo("ABC")))
-            .andExpect(jsonPath("$[0].endingCondition", equalTo("OCCURENCES_NUMBER")))
-            .andExpect(jsonPath("$[0].endingOccurrenceDate").doesNotExist())
-            .andExpect(jsonPath("$[0].endingOccurrencesNumber", equalTo(2)))
-            .andExpect(jsonPath("$[0].frequency", equalTo("ALL_WEEKS")))
-            .andExpect(jsonPath("$[0].endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
+            .andExpect(jsonPath("$[0].periods[0].endingCondition", equalTo("OCCURENCES_NUMBER")))
+            .andExpect(jsonPath("$[0].periods[0].endingOccurrenceDate").doesNotExist())
+            .andExpect(jsonPath("$[0].periods[0].endingOccurrencesNumber", equalTo(2)))
+            .andExpect(jsonPath("$[0].periods[0].frequency", equalTo("ALL_WEEKS")))
+            .andExpect(jsonPath("$[0].periods[0].endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
+            .andExpect(jsonPath("$[0].periods[0].isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$[0].periods[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
@@ -213,21 +231,21 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[0].sources[0].isAnonymous", equalTo(true)))
             .andExpect(jsonPath("$[0].sources[0].comments", equalTo("Commentaires sur la source")))
             .andExpect(jsonPath("$[0].sources[0].type", equalTo("OTHER")))
-            .andExpect(jsonPath("$[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$[0].themes").isEmpty())
             .andExpect(jsonPath("$[0].visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$[0].validatedAt").doesNotExist())
-            .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
             .andExpect(jsonPath("$[1].id", equalTo(2)))
             .andExpect(jsonPath("$[1].name", equalTo("Vigilance Area 2")))
             .andExpect(jsonPath("$[1].isDraft", equalTo(true)))
             .andExpect(jsonPath("$[1].comments").doesNotExist())
             .andExpect(jsonPath("$[1].createdBy", equalTo("DEF")))
-            .andExpect(jsonPath("$[1].endingCondition", equalTo("NEVER")))
-            .andExpect(jsonPath("$[1].endingOccurrenceDate").doesNotExist())
-            .andExpect(jsonPath("$[1].endingOccurrencesNumber").doesNotExist())
-            .andExpect(jsonPath("$[1].frequency", equalTo("ALL_WEEKS")))
-            .andExpect(jsonPath("$[1].endDatePeriod", equalTo("2024-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$[1].periods[0].endingCondition", equalTo("NEVER")))
+            .andExpect(jsonPath("$[1].periods[0].endingOccurrenceDate").doesNotExist())
+            .andExpect(jsonPath("$[1].periods[0].endingOccurrencesNumber").doesNotExist())
+            .andExpect(jsonPath("$[1].periods[0].frequency", equalTo("ALL_WEEKS")))
+            .andExpect(jsonPath("$[1].periods[0].endDatePeriod", equalTo("2024-12-31T23:59:59Z")))
+            .andExpect(jsonPath("$[1].periods[0].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
+            .andExpect(jsonPath("$[1].periods[0].isAtAllTimes", equalTo(true)))
             .andExpect(jsonPath("$[1].geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
@@ -235,10 +253,8 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[1].sources[0].isAnonymous", equalTo(false)))
             .andExpect(jsonPath("$[1].sources[0].link", equalTo("https://example.com")))
             .andExpect(jsonPath("$[1].sources[0].type", equalTo("INTERNAL")))
-            .andExpect(jsonPath("$[1].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
             .andExpect(jsonPath("$[1].themes").isEmpty())
             .andExpect(jsonPath("$[1].visibility", equalTo("PUBLIC")))
-            .andExpect(jsonPath("$[1].isAtAllTimes", equalTo(true)))
             .andExpect(jsonPath("$[1].validatedAt", equalTo("2025-01-01T00:00:00Z")))
     }
 
@@ -256,11 +272,13 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.isDraft", equalTo(false)))
             .andExpect(jsonPath("$.comments", equalTo("Commentaires sur la zone de vigilance")))
             .andExpect(jsonPath("$.createdBy", equalTo("ABC")))
-            .andExpect(jsonPath("$.endingCondition", equalTo("OCCURENCES_NUMBER")))
-            .andExpect(jsonPath("$.endingOccurrenceDate").doesNotExist())
-            .andExpect(jsonPath("$.endingOccurrencesNumber", equalTo(2)))
-            .andExpect(jsonPath("$.frequency", equalTo("ALL_WEEKS")))
-            .andExpect(jsonPath("$.endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
+            .andExpect(jsonPath("$.periods[0].endingCondition", equalTo("OCCURENCES_NUMBER")))
+            .andExpect(jsonPath("$.periods[0].endingOccurrenceDate").doesNotExist())
+            .andExpect(jsonPath("$.periods[0].endingOccurrencesNumber", equalTo(2)))
+            .andExpect(jsonPath("$.periods[0].frequency", equalTo("ALL_WEEKS")))
+            .andExpect(jsonPath("$.periods[0].endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
+            .andExpect(jsonPath("$.periods[0].isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$.periods[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
@@ -268,7 +286,6 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.sources[0].isAnonymous", equalTo(true)))
             .andExpect(jsonPath("$.sources[0].comments", equalTo("Commentaires sur la source")))
             .andExpect(jsonPath("$.sources[0].type", equalTo("OTHER")))
-            .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$.images[0].name", equalTo("image1.jpg")))
@@ -294,11 +311,6 @@ class VigilanceAreasITests {
                 isDraft = false,
                 comments = "Commentaires sur la zone de vigilance",
                 createdBy = "ABC",
-                endingCondition = EndingConditionEnum.OCCURENCES_NUMBER,
-                endingOccurrenceDate = null,
-                endingOccurrencesNumber = 2,
-                frequency = FrequencyEnum.ALL_WEEKS,
-                endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                 geom = polygon,
                 images =
                     listOf(
@@ -326,12 +338,10 @@ class VigilanceAreasITests {
                             comments = "Commentaires sur la source",
                         ),
                     ),
-                startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
-                isAtAllTimes = false,
                 tags =
                     listOf(
                         TagInput(
@@ -351,6 +361,20 @@ class VigilanceAreasITests {
                                 ),
                         ),
                     ),
+                periods =
+                    listOf(
+                        VigilanceAreaDataPeriodInput(
+                            endingCondition = EndingConditionEnum.OCCURENCES_NUMBER,
+                            endingOccurrenceDate = null,
+                            endingOccurrencesNumber = 2,
+                            frequency = FrequencyEnum.ALL_WEEKS,
+                            endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
+                            startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
+                            isAtAllTimes = false,
+                            computedEndDate = null,
+                            id = null,
+                        ),
+                    ),
             )
         given(createOrUpdateVigilanceArea.execute(any())).willReturn(vigilanceArea1)
 
@@ -368,11 +392,13 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.isDraft", equalTo(false)))
             .andExpect(jsonPath("$.comments", equalTo("Commentaires sur la zone de vigilance")))
             .andExpect(jsonPath("$.createdBy", equalTo("ABC")))
-            .andExpect(jsonPath("$.endingCondition", equalTo("OCCURENCES_NUMBER")))
-            .andExpect(jsonPath("$.endingOccurrenceDate").doesNotExist())
-            .andExpect(jsonPath("$.endingOccurrencesNumber", equalTo(2)))
-            .andExpect(jsonPath("$.frequency", equalTo("ALL_WEEKS")))
-            .andExpect(jsonPath("$.endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
+            .andExpect(jsonPath("$.periods[0].endingCondition", equalTo("OCCURENCES_NUMBER")))
+            .andExpect(jsonPath("$.periods[0].endingOccurrenceDate").doesNotExist())
+            .andExpect(jsonPath("$.periods[0].endingOccurrencesNumber", equalTo(2)))
+            .andExpect(jsonPath("$.periods[0].frequency", equalTo("ALL_WEEKS")))
+            .andExpect(jsonPath("$.periods[0].endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
+            .andExpect(jsonPath("$.periods[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
+            .andExpect(jsonPath("$.periods[0].isAtAllTimes", equalTo(false)))
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
@@ -380,7 +406,6 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.sources[0].type", equalTo("OTHER")))
             .andExpect(jsonPath("$.sources[0].comments", equalTo("Commentaires sur la source")))
             .andExpect(jsonPath("$.sources[0].isAnonymous", equalTo(true)))
-            .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$.images[0].name", equalTo("image1.jpg")))
@@ -393,7 +418,6 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.images[1].content", equalTo("BAUG")))
             .andExpect(jsonPath("$.createdAt", equalTo(createdAt)))
             .andExpect(jsonPath("$.updatedAt", equalTo(updatedAt)))
-            .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
             .andExpect(jsonPath("$.tags[0].id", equalTo(1)))
             .andExpect(jsonPath("$.tags[0].name", equalTo("tag1")))
             .andExpect(jsonPath("$.tags[0].startedAt", equalTo("2024-01-01T00:00:00Z")))
@@ -415,11 +439,6 @@ class VigilanceAreasITests {
                 isDraft = false,
                 comments = "Commentaires sur la zone de vigilance",
                 createdBy = "ABC",
-                endingCondition = EndingConditionEnum.OCCURENCES_NUMBER,
-                endingOccurrenceDate = null,
-                endingOccurrencesNumber = 2,
-                frequency = FrequencyEnum.ALL_WEEKS,
-                endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                 geom = polygon,
                 images = emptyList(),
                 links = null,
@@ -433,13 +452,25 @@ class VigilanceAreasITests {
                             comments = "Commentaires sur la source",
                         ),
                     ),
-                startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                 themes = listOf(),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = ZonedDateTime.parse(createdAt),
                 updatedAt = ZonedDateTime.parse(updatedAt),
-                isAtAllTimes = false,
                 tags = listOf(),
+                periods =
+                    listOf(
+                        VigilanceAreaDataPeriodInput(
+                            endingCondition = EndingConditionEnum.OCCURENCES_NUMBER,
+                            endingOccurrenceDate = null,
+                            endingOccurrencesNumber = 2,
+                            frequency = FrequencyEnum.ALL_WEEKS,
+                            endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
+                            startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
+                            isAtAllTimes = false,
+                            computedEndDate = null,
+                            id = null,
+                        ),
+                    ),
             )
 
         val updatedVigilanceArea =
@@ -463,21 +494,21 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.isDraft", equalTo(false)))
             .andExpect(jsonPath("$.comments", equalTo("Commentaires sur la zone de vigilance")))
             .andExpect(jsonPath("$.createdBy", equalTo("ABC")))
-            .andExpect(jsonPath("$.endingCondition", equalTo("OCCURENCES_NUMBER")))
-            .andExpect(jsonPath("$.endingOccurrenceDate").doesNotExist())
-            .andExpect(jsonPath("$.endingOccurrencesNumber", equalTo(2)))
-            .andExpect(jsonPath("$.frequency", equalTo("ALL_WEEKS")))
-            .andExpect(jsonPath("$.endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
+            .andExpect(jsonPath("$.periods[0].endingCondition", equalTo("OCCURENCES_NUMBER")))
+            .andExpect(jsonPath("$.periods[0].endingOccurrenceDate").doesNotExist())
+            .andExpect(jsonPath("$.periods[0].endingOccurrencesNumber", equalTo(2)))
+            .andExpect(jsonPath("$.periods[0].frequency", equalTo("ALL_WEEKS")))
+            .andExpect(jsonPath("$.periods[0].endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
+            .andExpect(jsonPath("$.periods[0].isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$.periods[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
             ).andExpect(jsonPath("$.sources[0].name", equalTo("Source de la zone de vigilance")))
-            .andExpect(jsonPath("$.startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.themes").isEmpty())
             .andExpect(jsonPath("$.visibility", equalTo("PRIVATE")))
             .andExpect(jsonPath("$.createdAt", equalTo(createdAt)))
             .andExpect(jsonPath("$.updatedAt", equalTo(updatedAt)))
-            .andExpect(jsonPath("$.isAtAllTimes", equalTo(false)))
             .andExpect(jsonPath("$.images").isEmpty())
             .andExpect(jsonPath("$.tags").isEmpty())
     }

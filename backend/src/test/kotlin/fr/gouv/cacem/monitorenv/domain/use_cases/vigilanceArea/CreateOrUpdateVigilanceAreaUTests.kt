@@ -1,7 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
-import java.time.ZonedDateTime
 
 @ExtendWith(OutputCaptureExtension::class)
 class CreateOrUpdateVigilanceAreaUTests {
@@ -49,12 +46,12 @@ class CreateOrUpdateVigilanceAreaUTests {
                 images = listOf(image),
                 createdAt = null,
                 updatedAt = null,
-                isAtAllTimes = false,
                 name = "test_name",
                 tags = emptyList(),
                 themes = emptyList(),
                 sources = listOf(aVigilanceAreaSource(name = "test")),
                 validatedAt = null,
+                periods = emptyList(),
             )
 
         val expectedVigilanceArea = newVigilanceArea.copy(id = 0)
@@ -67,64 +64,5 @@ class CreateOrUpdateVigilanceAreaUTests {
         assertThat(result).isEqualTo(expectedVigilanceArea)
         assertThat(log.out).contains("Attempt to CREATE or UPDATE vigilance area ${newVigilanceArea.id}")
         assertThat(log.out).contains("Vigilance area ${result.id} created or updated")
-    }
-
-    @Test
-    fun `execute should set archive to false then save vigilance area when it is archived and computedEndDate is in the future`() {
-        val isArchived = true
-        val computedEndDate = ZonedDateTime.now().plusHours(1)
-        val archivedVigilanceArea =
-            VigilanceAreaEntity(
-                id = 0,
-                comments = "Comments",
-                isArchived = isArchived,
-                isDeleted = false,
-                isDraft = true,
-                computedEndDate = computedEndDate,
-                images = listOf(),
-                createdAt = null,
-                updatedAt = null,
-                isAtAllTimes = false,
-                name = "test_name",
-                tags = emptyList(),
-                themes = emptyList(),
-                sources = emptyList(),
-                validatedAt = null,
-            )
-
-        given(vigilanceAreaRepository.save(any())).willReturn(archivedVigilanceArea)
-
-        createOrUpdateVigilanceArea.execute(archivedVigilanceArea)
-
-        verify(vigilanceAreaRepository, times(1)).save(argThat { vigilanceArea -> !vigilanceArea.isArchived })
-    }
-
-    @Test
-    fun `execute should set archive to false then save vigilance area when it is archived and is at all times`() {
-        val isArchived = true
-        val isAtAllTimes = true
-        val archivedVigilanceArea =
-            VigilanceAreaEntity(
-                id = 0,
-                comments = "Comments",
-                isArchived = isArchived,
-                isDeleted = false,
-                isDraft = true,
-                images = listOf(),
-                createdAt = null,
-                updatedAt = null,
-                isAtAllTimes = isAtAllTimes,
-                name = "test_name",
-                tags = emptyList(),
-                themes = emptyList(),
-                sources = emptyList(),
-                validatedAt = null,
-            )
-
-        given(vigilanceAreaRepository.save(any())).willReturn(archivedVigilanceArea)
-
-        createOrUpdateVigilanceArea.execute(archivedVigilanceArea)
-
-        verify(vigilanceAreaRepository, times(1)).save(argThat { vigilanceArea -> !vigilanceArea.isArchived })
     }
 }

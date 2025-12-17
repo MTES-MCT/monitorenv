@@ -7,9 +7,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaPeriodEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
+import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaPeriodFixture.Companion.aVigilanceAreaPeriodEntity
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
@@ -37,18 +39,24 @@ class VigilanceAreaFixture {
             isAtAllTimes: Boolean = false,
             geom: MultiPolygon? = polygon,
             comments: String? = "Basic area comments",
+            periods: List<VigilanceAreaPeriodEntity> =
+                listOf(
+                    aVigilanceAreaPeriodEntity(
+                        startDate = startDate,
+                        endDate = endDate,
+                        frequency = frequency,
+                        endingOccurrencesNumber = endingOccurrencesNumber,
+                        endCondition = endCondition,
+                        endingOccurenceDate = endingOccurenceDate,
+                        isAtAllTimes = isAtAllTimes,
+                    ),
+                ),
         ): VigilanceAreaEntity =
             VigilanceAreaEntity(
                 id = id,
                 comments = comments,
-                computedEndDate = ZonedDateTime.parse("2024-01-25T00:00:00Z"),
                 createdBy = createdBy,
-                endDatePeriod = endDate,
-                endingCondition = endCondition,
-                endingOccurrenceDate = endingOccurenceDate,
-                endingOccurrencesNumber = endingOccurrencesNumber,
                 images = null,
-                frequency = frequency,
                 geom = geom,
                 isArchived = false,
                 isDeleted = false,
@@ -58,26 +66,20 @@ class VigilanceAreaFixture {
                 linkedRegulatoryAreas = listOf(1, 2),
                 name = "Basic Area",
                 sources = emptyList(),
-                startDatePeriod = startDate,
                 themes = themes,
                 visibility = VisibilityEnum.PUBLIC,
                 createdAt = null,
                 updatedAt = null,
-                isAtAllTimes = isAtAllTimes,
                 tags = tags,
                 validatedAt = null,
+                periods = periods,
             )
 
         fun aVigilanceAreaEntityWithImagesAndLink(): VigilanceAreaEntity =
             VigilanceAreaEntity(
                 id = 2,
                 comments = "Basic area comments",
-                computedEndDate = null,
                 createdBy = "ABC",
-                endDatePeriod = ZonedDateTime.parse("2024-01-15T23:59:59Z"),
-                endingCondition = null,
-                endingOccurrenceDate = null,
-                endingOccurrencesNumber = 2,
                 images =
                     listOf(
                         ImageEntity(
@@ -93,7 +95,6 @@ class VigilanceAreaFixture {
                             size = 2048,
                         ),
                     ),
-                frequency = FrequencyEnum.NONE,
                 geom = null,
                 isArchived = false,
                 isDeleted = false,
@@ -113,28 +114,21 @@ class VigilanceAreaFixture {
                 linkedRegulatoryAreas = listOf(1, 2),
                 name = "Basic Area",
                 sources = emptyList(),
-                startDatePeriod = ZonedDateTime.parse("2024-01-15T00:00:00Z"),
                 themes = listOf(aTheme(id = 1, name = "AMP")),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = null,
                 updatedAt = null,
-                isAtAllTimes = false,
                 tags = listOf(aTag(name = "AMP")),
                 validatedAt = null,
+                periods = listOf(aVigilanceAreaPeriodEntity()),
             )
 
         fun anArchivedVigilanceAreaEntity(): VigilanceAreaEntity =
             VigilanceAreaEntity(
                 id = 3,
                 comments = "Basic area comments",
-                computedEndDate = null,
                 createdBy = "ABC",
-                endDatePeriod = ZonedDateTime.parse("2024-01-15T23:59:59Z"),
-                endingCondition = null,
-                endingOccurrenceDate = null,
-                endingOccurrencesNumber = 2,
                 images = listOf(),
-                frequency = FrequencyEnum.NONE,
                 geom = null,
                 isArchived = true,
                 isDeleted = false,
@@ -144,14 +138,13 @@ class VigilanceAreaFixture {
                 linkedRegulatoryAreas = listOf(1, 2),
                 name = "Basic Area",
                 sources = emptyList(),
-                startDatePeriod = ZonedDateTime.parse("2024-01-15T00:00:00Z"),
                 themes = listOf(aTheme(id = 1, name = "AMP")),
                 visibility = VisibilityEnum.PRIVATE,
                 createdAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
                 updatedAt = ZonedDateTime.parse("2024-01-01T12:00:00Z"),
-                isAtAllTimes = false,
                 tags = listOf(aTag(name = "AMP")),
                 validatedAt = null,
+                periods = listOf(aVigilanceAreaPeriodEntity()),
             )
     }
 }
