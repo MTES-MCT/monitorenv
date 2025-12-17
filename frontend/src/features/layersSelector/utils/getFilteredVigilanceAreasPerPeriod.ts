@@ -113,45 +113,50 @@ export const getFilterVigilanceAreasPerPeriod = (
     if (!isSuperUser && (vigilanceArea.isDraft || vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE)) {
       return false
     }
-    if (vigilanceArea.isAtAllTimes) {
+    if (!vigilanceArea.periods || !vigilanceArea) {
+      return false
+    }
+    if (vigilanceArea.periods.some(period => period.isAtAllTimes)) {
       return true
     }
 
-    if (!vigilanceArea || !vigilanceArea.startDatePeriod || !vigilanceArea.endDatePeriod) {
+    if (vigilanceArea.periods.every(period => !period.startDatePeriod || !period.endDatePeriod)) {
       return false
     }
 
-    const startDate = customDayjs(vigilanceArea.startDatePeriod).utc()
-    const endDate = customDayjs(vigilanceArea.endDatePeriod).utc()
+    return vigilanceArea.periods.some(period => {
+      const startDate = customDayjs(period.startDatePeriod).utc()
+      const endDate = customDayjs(period.endDatePeriod).utc()
 
-    // in case there is no end of recurrence (because endingCondition is NEVER) we set a default end date to the end of the period filter
-    const loopStopDate = vigilanceArea.computedEndDate
-      ? customDayjs(vigilanceArea.computedEndDate)
-      : customDayjs(endDate).add(5, 'year')
+      // in case there is no end of recurrence (because endingCondition is NEVER) we set a default end date to the end of the period filter
+      const loopStopDate = period.computedEndDate
+        ? customDayjs(period.computedEndDate)
+        : customDayjs(endDate).add(5, 'year')
 
-    if (vigilanceArea.frequency === VigilanceArea.Frequency.NONE) {
-      return isMatchForSingleOccurrence(startDate, endDate, startDateFilter, endDateFilter)
-    }
+      if (period.frequency === VigilanceArea.Frequency.NONE) {
+        return isMatchForSingleOccurrence(startDate, endDate, startDateFilter, endDateFilter)
+      }
 
-    if (
-      !!startDateFilter &&
-      !!endDateFilter &&
-      (startDateFilter?.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
-    ) {
-      return true
-    }
+      if (
+        !!startDateFilter &&
+        !!endDateFilter &&
+        (startDateFilter?.isBetween(startDate, endDate) || endDateFilter.isBetween(startDate, endDate))
+      ) {
+        return true
+      }
 
-    if (vigilanceArea.frequency) {
-      return isMatchForRecurringOccurrence(
-        startDate,
-        endDate,
-        startDateFilter,
-        endDateFilter,
-        vigilanceArea.frequency,
-        loopStopDate
-      )
-    }
+      if (period.frequency) {
+        return isMatchForRecurringOccurrence(
+          startDate,
+          endDate,
+          startDateFilter,
+          endDateFilter,
+          period.frequency,
+          loopStopDate
+        )
+      }
 
-    return false
+      return false
+    })
   })
 }

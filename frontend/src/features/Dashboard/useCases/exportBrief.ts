@@ -126,19 +126,19 @@ export const exportBrief =
       return {
         color: getVigilanceAreaColorWithAlpha(vigilanceArea.name, vigilanceArea.comments),
         comments: vigilanceArea.comments,
-        endDatePeriod: vigilanceArea.endDatePeriod,
-        endingOccurenceDate: endingOccurenceText(vigilanceArea.endingCondition, vigilanceArea.computedEndDate),
-        frequency: frequencyText(vigilanceArea.frequency),
         id: vigilanceArea.id as number,
         image,
         imagesAttachments,
-        isAtAllTimes: vigilanceArea.isAtAllTimes,
         linkedAMPs: filteredAmps,
         linkedRegulatoryAreas: filteredRegulatoryAreas,
         links: vigilanceArea.links,
         minimap,
         name: vigilanceArea.name as string,
-        startDatePeriod: vigilanceArea.startDatePeriod,
+        periods: vigilanceArea.periods?.map(period => ({
+          ...period,
+          endingOccurenceDate: endingOccurenceText(period.endingCondition, period.computedEndDate),
+          frequency: frequencyText(period.frequency)
+        })),
         themes: displayThemes(vigilanceArea.themes),
         visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
       }

@@ -8,26 +8,26 @@ export type DateRange = {
   start: Dayjs
 }
 
-export function computeOccurenceWithinCurrentYear(area: VigilanceArea.VigilanceArea): DateRange[] {
+export function computeOccurenceWithinCurrentYear(period: VigilanceArea.VigilanceAreaPeriod): DateRange[] {
   const now = customDayjs().utc()
   const startOfYear = now.startOf('year')
   const endOfYear = now.endOf('year')
 
   // Cas 1: Toute l'année
-  if (area.isAtAllTimes) {
+  if (period.isAtAllTimes) {
     return [{ end: endOfYear, start: startOfYear }]
   }
 
   // Cas 2: Pas de date de début
-  if (!area.startDatePeriod) {
+  if (!period.startDatePeriod) {
     return []
   }
 
-  const startDate = customDayjs(area.startDatePeriod).utc()
-  const endDate = customDayjs(area.endDatePeriod).utc()
+  const startDate = customDayjs(period.startDatePeriod).utc()
+  const endDate = customDayjs(period.endDatePeriod).utc()
 
   // Cas 3: Pas de récurrence
-  if (area.frequency === VigilanceArea.Frequency.NONE) {
+  if (period.frequency === VigilanceArea.Frequency.NONE) {
     // Vérifier si la période intersecte avec l'année courante
     if (endDate.isBefore(startOfYear) || startDate.isAfter(endOfYear)) {
       return []
@@ -42,13 +42,13 @@ export function computeOccurenceWithinCurrentYear(area: VigilanceArea.VigilanceA
 
     // Limites
     const maxOccurrences =
-      area.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && area.endingOccurrencesNumber
-        ? area.endingOccurrencesNumber
+      period.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && period.endingOccurrencesNumber
+        ? period.endingOccurrencesNumber
         : Infinity
 
     const endingDate =
-      area.endingCondition === VigilanceArea.EndingCondition.END_DATE && area.endingOccurrenceDate
-        ? customDayjs(area.endingOccurrenceDate).utc()
+      period.endingCondition === VigilanceArea.EndingCondition.END_DATE && period.endingOccurrenceDate
+        ? customDayjs(period.endingOccurrenceDate).utc()
         : null
 
     // Trouver la première occurrence dans l'année
@@ -95,13 +95,13 @@ export function computeOccurenceWithinCurrentYear(area: VigilanceArea.VigilanceA
     return results
   }
 
-  if (area.frequency === VigilanceArea.Frequency.ALL_WEEKS) {
+  if (period.frequency === VigilanceArea.Frequency.ALL_WEEKS) {
     return generateRecurring('week')
   }
-  if (area.frequency === VigilanceArea.Frequency.ALL_MONTHS) {
+  if (period.frequency === VigilanceArea.Frequency.ALL_MONTHS) {
     return generateRecurring('month')
   }
-  if (area.frequency === VigilanceArea.Frequency.ALL_YEARS) {
+  if (period.frequency === VigilanceArea.Frequency.ALL_YEARS) {
     return generateRecurring('year')
   }
 

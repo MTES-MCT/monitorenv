@@ -9,27 +9,20 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 export namespace VigilanceArea {
   export interface VigilanceArea {
     comments?: string
-    computedEndDate?: string
     createdAt?: string
     createdBy?: string
-    endDatePeriod?: string
-    endingCondition?: EndingCondition
-    endingOccurrenceDate?: string
-    endingOccurrencesNumber?: number
-    frequency?: Frequency
     geom?: GeoJSON.MultiPolygon
     id?: number
     images?: ImageApi[]
     isArchived: boolean
-    isAtAllTimes: boolean
     isDraft: boolean
     linkedAMPs?: number[]
     linkedRegulatoryAreas?: number[]
     links?: Link[]
     name: string | undefined
+    periods?: VigilanceAreaPeriod[]
     seaFront: string | undefined
     sources?: VigilanceAreaSource[]
-    startDatePeriod?: string
     tags?: TagFromAPI[]
     themes?: ThemeFromAPI[]
     updatedAt?: string
@@ -39,27 +32,20 @@ export namespace VigilanceArea {
 
   export interface VigilanceAreaFromApi {
     comments?: string
-    computedEndDate?: string
     createdAt?: string
     createdBy?: string
-    endDatePeriod?: string
-    endingCondition?: EndingCondition
-    endingOccurrenceDate?: string
-    endingOccurrencesNumber?: number
-    frequency: Frequency | undefined
     geom?: GeoJSON.MultiPolygon
     id: number
     images?: ImageApi[]
     isArchived: boolean
-    isAtAllTimes: boolean
     isDraft: boolean
     linkedAMPs?: number[]
     linkedRegulatoryAreas?: number[]
     links?: Link[]
     name: string
+    periods?: VigilanceAreaPeriod[]
     seaFront: string | undefined
     sources?: VigilanceAreaSource[]
-    startDatePeriod?: string
     tags?: TagFromAPI[]
     themes?: ThemeFromAPI[]
     updatedAt?: string
@@ -77,6 +63,18 @@ export namespace VigilanceArea {
     name?: string
     phone?: string
     type: VigilanceAreaSourceType
+  }
+
+  export interface VigilanceAreaPeriod {
+    computedEndDate?: string
+    endDatePeriod?: string
+    endingCondition?: EndingCondition
+    endingOccurrenceDate?: string
+    endingOccurrencesNumber?: number
+    frequency?: Frequency
+    id?: string
+    isAtAllTimes: boolean
+    startDatePeriod?: string
   }
 
   export enum Frequency {

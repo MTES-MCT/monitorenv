@@ -1,4 +1,4 @@
-import { Orientation, type ImageFront } from '@components/Form/types'
+import { type ImageFront, Orientation } from '@components/Form/types'
 import { Dashboard } from '@features/Dashboard/types'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
@@ -93,12 +93,10 @@ export function VigilanceAreas({
       </View>
       <View style={layoutStyle.cardWrapper}>
         {vigilanceAreas.map(vigilanceArea => {
-          const formattedStartPeriod = vigilanceArea.startDatePeriod
-            ? customDayjs(vigilanceArea.startDatePeriod).utc().format('DD/MM/YYYY')
-            : undefined
-          const formattedEndPeriod = vigilanceArea.endDatePeriod
-            ? customDayjs(vigilanceArea.endDatePeriod).utc().format('DD/MM/YYYY')
-            : undefined
+          const formattedStartPeriod = (startDatePeriod?: string) =>
+            startDatePeriod ? customDayjs(startDatePeriod).utc().format('DD/MM/YYYY') : undefined
+          const formattedEndPeriod = (endDatePeriod?: string) =>
+            endDatePeriod ? customDayjs(endDatePeriod).utc().format('DD/MM/YYYY') : undefined
 
           const amps = linkedAMPs.filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
           const regulatoryAreas = linkedRegulatoryAreas.filter(regulatoryArea =>
@@ -127,17 +125,21 @@ export function VigilanceAreas({
                   <View style={[areaStyle.content, { rowGap: 3 }]}>
                     <View>
                       <View style={areaStyle.description}>
-                        <Text>Période</Text>
+                        <Text>Périodes</Text>
                       </View>
-                      <View style={areaStyle.details}>
-                        <Text>
-                          {formattedStartPeriod ? `Du ${formattedStartPeriod} au ${formattedEndPeriod}` : EMPTY_VALUE}
-                        </Text>
-                        <Text>{frequencyText(vigilanceArea?.frequency)}</Text>
-                        <Text>
-                          {endingOccurenceText(vigilanceArea?.endingCondition, vigilanceArea?.computedEndDate)}
-                        </Text>
-                      </View>
+                      {vigilanceArea.periods?.map(period => (
+                        <View style={areaStyle.details}>
+                          <Text>
+                            {formattedStartPeriod(period.startDatePeriod)
+                              ? `Du ${formattedStartPeriod(period.startDatePeriod)} au ${formattedEndPeriod(
+                                  period.endDatePeriod
+                                )}`
+                              : EMPTY_VALUE}
+                          </Text>
+                          <Text>{frequencyText(period?.frequency)}</Text>
+                          <Text>{endingOccurenceText(period?.endingCondition, period?.computedEndDate)}</Text>
+                        </View>
+                      ))}
                     </View>
                     <View>
                       <View style={areaStyle.description}>

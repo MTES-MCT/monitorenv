@@ -9,12 +9,16 @@ describe('computeOccurenceWithinCurrentYear should return all occurences that ma
 
     const vigilanceArea: VigilanceArea.VigilanceArea = {
       isArchived: false,
-      isAtAllTimes: true,
       isDraft: false,
       name: undefined,
+      periods: [
+        {
+          isAtAllTimes: true
+        }
+      ],
       seaFront: undefined
     }
-    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea)
+    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea.periods![0]!)
     jest.useRealTimers()
     expect(occurenceDates).toEqual([
       { end: customDayjs('2024-12-31T23:59:59.999Z').utc(), start: customDayjs('2024-01-01T00:00:00.000Z').utc() }
@@ -23,48 +27,60 @@ describe('computeOccurenceWithinCurrentYear should return all occurences that ma
   it('it should return empty when there is no starting date', () => {
     const vigilanceArea: VigilanceArea.VigilanceArea = {
       isArchived: false,
-      isAtAllTimes: false,
       isDraft: false,
       name: undefined,
+      periods: [
+        {
+          isAtAllTimes: false
+        }
+      ],
       seaFront: undefined
     }
-    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea)
+    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea.periods![0]!)
     expect(occurenceDates).toEqual([])
   })
 
   it('it should return startDatePeriod and endDatePeriod when frequency is NONE', () => {
     const vigilanceArea: VigilanceArea.VigilanceArea = {
-      endDatePeriod: '2025-04-19T00:00:00.000Z',
-      frequency: VigilanceArea.Frequency.NONE,
       isArchived: false,
-      isAtAllTimes: false,
       isDraft: false,
       name: undefined,
-      seaFront: undefined,
-      startDatePeriod: '2025-01-01T00:00:00.000Z'
+      periods: [
+        {
+          endDatePeriod: '2025-04-19T00:00:00.000Z',
+          frequency: VigilanceArea.Frequency.NONE,
+          isAtAllTimes: false,
+          startDatePeriod: '2025-01-01T00:00:00.000Z'
+        }
+      ],
+      seaFront: undefined
     }
-    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea)
+    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea.periods![0]!)
     expect(occurenceDates).toEqual([
       {
-        end: customDayjs(vigilanceArea.endDatePeriod).utc(),
-        start: customDayjs(vigilanceArea.startDatePeriod).utc()
+        end: customDayjs('2025-04-19T00:00:00.000Z').utc(),
+        start: customDayjs('2025-01-01T00:00:00.000Z').utc()
       }
     ])
   })
   it('it should return date range of the current year when frequency is ALL_YEARS', () => {
     jest.useFakeTimers().setSystemTime(new Date('2025-01-01T12:00:00.000Z'))
     const vigilanceArea: VigilanceArea.VigilanceArea = {
-      endDatePeriod: '2023-04-19T00:00:00.000Z',
-      endingCondition: VigilanceArea.EndingCondition.NEVER,
-      frequency: VigilanceArea.Frequency.ALL_YEARS,
       isArchived: false,
-      isAtAllTimes: false,
       isDraft: false,
       name: undefined,
-      seaFront: undefined,
-      startDatePeriod: '2023-01-01T00:00:00.000Z'
+      periods: [
+        {
+          endDatePeriod: '2023-04-19T00:00:00.000Z',
+          endingCondition: VigilanceArea.EndingCondition.NEVER,
+          frequency: VigilanceArea.Frequency.ALL_YEARS,
+          isAtAllTimes: false,
+          startDatePeriod: '2023-01-01T00:00:00.000Z'
+        }
+      ],
+      seaFront: undefined
     }
-    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea)
+    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea.periods![0]!)
     jest.useRealTimers()
     expect(occurenceDates).toEqual([
       {
@@ -76,18 +92,22 @@ describe('computeOccurenceWithinCurrentYear should return all occurences that ma
   it('it should return date range of the current year when frequency is ALL_WEEKS with occurences number', () => {
     jest.useFakeTimers().setSystemTime(new Date('2025-01-01T12:00:00.000Z'))
     const vigilanceArea: VigilanceArea.VigilanceArea = {
-      endDatePeriod: '2023-11-13T00:00:00.000Z',
-      endingCondition: VigilanceArea.EndingCondition.OCCURENCES_NUMBER,
-      endingOccurrencesNumber: 66,
-      frequency: VigilanceArea.Frequency.ALL_WEEKS,
       isArchived: false,
-      isAtAllTimes: false,
       isDraft: false,
       name: undefined,
-      seaFront: undefined,
-      startDatePeriod: '2023-11-12T00:00:00.000Z'
+      periods: [
+        {
+          endDatePeriod: '2023-11-13T00:00:00.000Z',
+          endingCondition: VigilanceArea.EndingCondition.OCCURENCES_NUMBER,
+          endingOccurrencesNumber: 66,
+          frequency: VigilanceArea.Frequency.ALL_WEEKS,
+          isAtAllTimes: false,
+          startDatePeriod: '2023-11-12T00:00:00.000Z'
+        }
+      ],
+      seaFront: undefined
     }
-    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea)
+    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea.periods![0]!)
     jest.useRealTimers()
     expect(occurenceDates).toEqual([
       {
@@ -120,17 +140,21 @@ describe('computeOccurenceWithinCurrentYear should return all occurences that ma
   it('it should return empty when frequency is ALL_WEEKS out of the current year', () => {
     jest.useFakeTimers().setSystemTime(new Date('2025-01-01T12:00:00.000Z'))
     const vigilanceArea: VigilanceArea.VigilanceArea = {
-      endDatePeriod: '2023-11-13T00:00:00.000Z',
-      endingCondition: VigilanceArea.EndingCondition.OCCURENCES_NUMBER,
-      frequency: VigilanceArea.Frequency.NONE,
       isArchived: false,
-      isAtAllTimes: false,
       isDraft: false,
       name: undefined,
-      seaFront: undefined,
-      startDatePeriod: '2023-11-12T00:00:00.000Z'
+      periods: [
+        {
+          endDatePeriod: '2023-11-13T00:00:00.000Z',
+          endingCondition: VigilanceArea.EndingCondition.OCCURENCES_NUMBER,
+          frequency: VigilanceArea.Frequency.NONE,
+          isAtAllTimes: false,
+          startDatePeriod: '2023-11-12T00:00:00.000Z'
+        }
+      ],
+      seaFront: undefined
     }
-    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea)
+    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea.periods![0]!)
     jest.useRealTimers()
     expect(occurenceDates).toEqual([])
   })
@@ -138,18 +162,22 @@ describe('computeOccurenceWithinCurrentYear should return all occurences that ma
   it('it should return date range until the given date when frequency is ALL_WEEKS and ending is a date', () => {
     jest.useFakeTimers().setSystemTime(new Date('2025-01-01T12:00:00.000Z'))
     const vigilanceArea: VigilanceArea.VigilanceArea = {
-      endDatePeriod: '2023-11-13T00:00:00.000Z',
-      endingCondition: VigilanceArea.EndingCondition.END_DATE,
-      endingOccurrenceDate: '2025-01-10T12:00:00.000Z',
-      frequency: VigilanceArea.Frequency.ALL_WEEKS,
       isArchived: false,
-      isAtAllTimes: false,
       isDraft: false,
       name: undefined,
-      seaFront: undefined,
-      startDatePeriod: '2023-11-12T00:00:00.000Z'
+      periods: [
+        {
+          endDatePeriod: '2023-11-13T00:00:00.000Z',
+          endingCondition: VigilanceArea.EndingCondition.END_DATE,
+          endingOccurrenceDate: '2025-01-10T12:00:00.000Z',
+          frequency: VigilanceArea.Frequency.ALL_WEEKS,
+          isAtAllTimes: false,
+          startDatePeriod: '2023-11-12T00:00:00.000Z'
+        }
+      ],
+      seaFront: undefined
     }
-    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea)
+    const occurenceDates = computeOccurenceWithinCurrentYear(vigilanceArea.periods![0]!)
     jest.useRealTimers()
     expect(occurenceDates).toEqual([
       {

@@ -140,8 +140,8 @@ export function Form() {
   }
 
   const setPeriod = (period: DateAsStringRange | undefined) => {
-    setFieldValue('startDatePeriod', period ? period[0] : undefined)
-    setFieldValue('endDatePeriod', period ? period[1] : undefined)
+    setFieldValue('periods[0].startDatePeriod', period ? period[0] : undefined)
+    setFieldValue('periods[0].endDatePeriod', period ? period[1] : undefined)
   }
 
   return (
@@ -183,12 +183,12 @@ export function Form() {
         <DateWrapper>
           <DateRangePicker
             defaultValue={
-              values?.startDatePeriod && values?.endDatePeriod
-                ? [new Date(values?.startDatePeriod), new Date(values?.endDatePeriod)]
+              values?.periods && values?.periods[0]?.startDatePeriod && values?.periods[0]?.endDatePeriod
+                ? [new Date(values?.periods[0]?.startDatePeriod), new Date(values?.periods[0]?.endDatePeriod)]
                 : undefined
             }
-            disabled={values.isAtAllTimes}
-            error={formErrors.startDatePeriod ?? formErrors.endDatePeriod}
+            disabled={values?.periods && values?.periods[0]?.isAtAllTimes}
+            error={formErrors?.periods}
             hasSingleCalendar
             isCompact
             isErrorMessageHidden
@@ -199,7 +199,7 @@ export function Form() {
             name="period"
             onChange={setPeriod}
           />
-          <FormikCheckbox label="En tout temps" name="isAtAllTimes" />
+          <FormikCheckbox label="En tout temps" name="periods[0].isAtAllTimes" />
         </DateWrapper>
         <Frequency />
         <ThemesAndTags>

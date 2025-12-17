@@ -65,15 +65,22 @@ function isVigilanceAreaLayer(type: RegulatoryOrAMPOrViglanceAreaLayerType) {
 }
 
 function computeVigilanceAreaPeriod(properties: VigilanceArea.VigilanceAreaProperties) {
-  if (properties.isAtAllTimes) {
+  const { periods } = properties
+  if (!periods || periods.length === 0) {
+    return ''
+  }
+  const firstPeriod = periods[0]
+  if (firstPeriod?.isAtAllTimes) {
     return 'En tout temps'
   }
-  if (properties.startDatePeriod) {
+  if (firstPeriod?.startDatePeriod) {
     return `${[
-      `${properties.startDatePeriod ? `Du ${customDayjs(properties.startDatePeriod).utc().format('DD/MM/YYYY')}` : ''}
-      ${properties?.endDatePeriod ? `au ${customDayjs(properties.endDatePeriod).utc().format('DD/MM/YYYY')}` : ''}`,
-      frequencyText(properties.frequency, false),
-      endingOccurenceText(properties.endingCondition, properties.computedEndDate, false)
+      `${
+        firstPeriod?.startDatePeriod ? `Du ${customDayjs(firstPeriod?.startDatePeriod).utc().format('DD/MM/YYYY')}` : ''
+      }
+      ${firstPeriod?.endDatePeriod ? `au ${customDayjs(firstPeriod?.endDatePeriod).utc().format('DD/MM/YYYY')}` : ''}`,
+      frequencyText(firstPeriod?.frequency, false),
+      endingOccurenceText(firstPeriod?.endingCondition, firstPeriod?.computedEndDate, false)
     ]
       .filter(Boolean)
       .join(', ')}`
@@ -344,6 +351,7 @@ const Period = styled.span`
 
 const StyledIconButton = styled(IconButton)`
   padding: 6px;
+
   > span {
     > svg {
       height: 18px;

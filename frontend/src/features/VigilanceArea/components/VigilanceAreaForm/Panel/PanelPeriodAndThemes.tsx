@@ -15,12 +15,14 @@ import {
 } from '../style'
 
 export function PanelPeriodAndThemes({ vigilanceArea }: { vigilanceArea: VigilanceArea.VigilanceArea | undefined }) {
-  const formattedStartPeriod = vigilanceArea?.startDatePeriod
-    ? customDayjs(vigilanceArea?.startDatePeriod).utc().format('DD/MM/YYYY')
-    : undefined
-  const formattedEndPeriod = vigilanceArea?.endDatePeriod
-    ? customDayjs(vigilanceArea?.endDatePeriod).utc().format('DD/MM/YYYY')
-    : undefined
+  const formattedStartPeriod =
+    vigilanceArea?.periods && vigilanceArea?.periods[0]?.startDatePeriod
+      ? customDayjs(vigilanceArea?.periods[0]?.startDatePeriod).utc().format('DD/MM/YYYY')
+      : undefined
+  const formattedEndPeriod =
+    vigilanceArea?.periods && vigilanceArea?.periods[0]?.endDatePeriod
+      ? customDayjs(vigilanceArea?.periods[0]?.endDatePeriod).utc().format('DD/MM/YYYY')
+      : undefined
 
   const subThemes = displaySubThemes(vigilanceArea?.themes)
   const subTags = displaySubTags(vigilanceArea?.tags)
@@ -31,16 +33,21 @@ export function PanelPeriodAndThemes({ vigilanceArea }: { vigilanceArea: Vigilan
         <PanelInlineItem>
           <PanelInlineItemLabel $isInline>Période</PanelInlineItemLabel>
           <PanelDateItem>
-            {vigilanceArea?.isAtAllTimes ? (
+            {vigilanceArea?.periods && vigilanceArea?.periods[0]?.isAtAllTimes ? (
               <PanelInlineItemValue>En tout temps</PanelInlineItemValue>
             ) : (
               <>
                 <PanelInlineItemValue>
                   {formattedStartPeriod ? `Du ${formattedStartPeriod} au ${formattedEndPeriod}` : EMPTY_VALUE}
                 </PanelInlineItemValue>
-                <PanelInlineItemValue>{frequencyText(vigilanceArea?.frequency)}</PanelInlineItemValue>
+                <PanelInlineItemValue>
+                  {frequencyText(vigilanceArea?.periods && vigilanceArea?.periods[0]?.frequency)}
+                </PanelInlineItemValue>
                 <StyledPanelInlineItemValue>
-                  {endingOccurenceText(vigilanceArea?.endingCondition, vigilanceArea?.computedEndDate)}
+                  {endingOccurenceText(
+                    vigilanceArea?.periods && vigilanceArea?.periods[0]?.endingCondition,
+                    vigilanceArea?.periods && vigilanceArea?.periods[0]?.computedEndDate
+                  )}
                 </StyledPanelInlineItemValue>
               </>
             )}

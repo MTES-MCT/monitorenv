@@ -30,6 +30,7 @@ export namespace Dashboard {
     themes: ThemeFromAPI[]
     vigilanceAreas: VigilanceArea.VigilanceAreaFromApi[] | VigilanceArea.VigilanceAreaLayer[]
   }
+
   export interface ExtractedAreaFromApi {
     ampIds: number[]
     inseeCode: string
@@ -39,6 +40,7 @@ export namespace Dashboard {
     themes: ThemeFromAPI[]
     vigilanceAreaIds: number[]
   }
+
   export type Dashboard = {
     ampIds: number[]
     comments?: string
@@ -199,9 +201,6 @@ export namespace Dashboard {
   type VigilanceAreaForEditableBrief = {
     color: string
     comments?: string
-    endDatePeriod?: string
-    endingOccurenceDate: string
-    frequency: string
     id: number
     image?: string
     imagesAttachments?: ImageApi[]
@@ -210,10 +209,17 @@ export namespace Dashboard {
     links?: Link[]
     minimap?: string
     name: string
-    startDatePeriod?: string
+    periods?: VigilanceAreaPeriodForEditableBrief[]
     themes?: string
     visibility?: string
   }
+
+  type VigilanceAreaPeriodForEditableBrief = {
+    endDatePeriod?: string
+    endingOccurenceDate: string
+    frequency: string
+  }
+
   type RecentActivityForEditableBrief = {
     image?: string
     period: string
