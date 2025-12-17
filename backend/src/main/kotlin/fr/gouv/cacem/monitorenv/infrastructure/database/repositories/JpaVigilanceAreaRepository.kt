@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaPeriodEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaSourceEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagVigilanceAreaModel
@@ -14,10 +15,13 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeVigilanceArea
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeVigilanceAreaModel.Companion.fromThemeEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaImageModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaPeriodModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaPeriodModel.Companion.fromVigilanceAreaPeriod
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaSourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeVigilanceAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaPeriodRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaSourceRepository
 import org.locationtech.jts.geom.Geometry
@@ -29,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional
 class JpaVigilanceAreaRepository(
     private val dbVigilanceAreaRepository: IDBVigilanceAreaRepository,
     private val dbVigilanceAreaSourceRepository: IDBVigilanceAreaSourceRepository,
+    private val dbVigilanceAreaPeriodRepository: IDBVigilanceAreaPeriodRepository,
     private val controlUnitContactRepository: IDBControlUnitContactRepository,
     private val dbTagVigilanceAreaRepository: IDBTagVigilanceAreaRepository,
     private val dbThemeVigilanceAreaRepository: IDBThemeVigilanceAreaRepository,
@@ -45,9 +50,10 @@ class JpaVigilanceAreaRepository(
         val savedTags = saveTags(savedVigilanceArea, vigilanceArea.tags)
         val savedThemes = saveThemes(savedVigilanceArea, vigilanceArea.themes)
         val savedSources = saveSources(savedVigilanceArea, vigilanceArea.sources)
+        val savedPeriods = savePeriods(savedVigilanceArea, vigilanceArea.periods)
 
         return savedVigilanceArea
-            .copy(tags = savedTags, themes = savedThemes, sources = savedSources)
+            .copy(tags = savedTags, themes = savedThemes, sources = savedSources, periods = savedPeriods)
             .toVigilanceAreaEntity()
     }
 
@@ -78,6 +84,19 @@ class JpaVigilanceAreaRepository(
         return dbVigilanceAreaSourceRepository.saveAll(vigilanceAreaSourceModels)
     }
 
+    private fun savePeriods(
+        vigilanceAreaModel: VigilanceAreaModel,
+        periods: List<VigilanceAreaPeriodEntity>,
+    ): List<VigilanceAreaPeriodModel> {
+        vigilanceAreaModel.id?.let {
+            dbVigilanceAreaSourceRepository.deleteAllByVigilanceAreaId(it)
+        }
+        val vigilanceAreaPeriodModels =
+            periods.map { fromVigilanceAreaPeriod(vigilanceArea = vigilanceAreaModel, vigilanceAreaPeriod = it) }
+
+        return dbVigilanceAreaPeriodRepository.saveAll(vigilanceAreaPeriodModels)
+    }
+
     private fun fromVigilanceAreaSources(
         vigilanceAreaModel: VigilanceAreaModel,
         sources: List<VigilanceAreaSourceEntity>,
@@ -105,6 +124,7 @@ class JpaVigilanceAreaRepository(
                             vigilanceAreaModel,
                         ),
                     )
+
                 else -> emptyList()
             }
         }

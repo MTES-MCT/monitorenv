@@ -48,46 +48,48 @@ class VigilanceAreaValidator : Validator<VigilanceAreaEntity> {
                 data = "Un tag ou un thème est obligatoire",
             )
         }
-        if (!vigilanceArea.isAtAllTimes) {
-            if (vigilanceArea.startDatePeriod === null) {
-                throw BackendUsageException(
-                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
-                    data = "La date de début est obligatoire",
-                )
-            }
-            if (vigilanceArea.endDatePeriod === null) {
-                throw BackendUsageException(
-                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
-                    data = "La date de fin est obligatoire",
-                )
-            }
-            if (vigilanceArea.frequency === null) {
-                throw BackendUsageException(
-                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
-                    data = "La fréquence est obligatoire",
-                )
-            }
-            if (vigilanceArea.frequency !== FrequencyEnum.NONE && vigilanceArea.endingCondition === null) {
-                throw BackendUsageException(
-                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
-                    data = "La condition de fin est obligatoire",
-                )
-            }
-            if (vigilanceArea.endingCondition === EndingConditionEnum.END_DATE &&
-                vigilanceArea.endingOccurrenceDate === null
-            ) {
-                throw BackendUsageException(
-                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
-                    data = "La date de fin de l'occurence est obligatoire",
-                )
-            }
-            if (vigilanceArea.endingCondition === EndingConditionEnum.OCCURENCES_NUMBER &&
-                (vigilanceArea.endingOccurrencesNumber === null || vigilanceArea.endingOccurrencesNumber == 0)
-            ) {
-                throw BackendUsageException(
-                    code = BackendUsageErrorCode.UNVALID_PROPERTY,
-                    data = "Le nombre d'occurence est obligatoire",
-                )
+        vigilanceArea.periods.forEach { period ->
+            if (!period.isAtAllTimes) {
+                if (period.startDatePeriod === null) {
+                    throw BackendUsageException(
+                        code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                        data = "La date de début est obligatoire",
+                    )
+                }
+                if (period.endDatePeriod === null) {
+                    throw BackendUsageException(
+                        code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                        data = "La date de fin est obligatoire",
+                    )
+                }
+                if (period.frequency === null) {
+                    throw BackendUsageException(
+                        code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                        data = "La fréquence est obligatoire",
+                    )
+                }
+                if (period.frequency !== FrequencyEnum.NONE && period.endingCondition === null) {
+                    throw BackendUsageException(
+                        code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                        data = "La condition de fin est obligatoire",
+                    )
+                }
+                if (period.endingCondition === EndingConditionEnum.END_DATE &&
+                    period.endingOccurrenceDate === null
+                ) {
+                    throw BackendUsageException(
+                        code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                        data = "La date de fin de l'occurence est obligatoire",
+                    )
+                }
+                if (period.endingCondition === EndingConditionEnum.OCCURENCES_NUMBER &&
+                    (period.endingOccurrencesNumber === null || period.endingOccurrencesNumber == 0)
+                ) {
+                    throw BackendUsageException(
+                        code = BackendUsageErrorCode.UNVALID_PROPERTY,
+                        data = "Le nombre d'occurence est obligatoire",
+                    )
+                }
             }
         }
     }
