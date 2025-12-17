@@ -105,8 +105,6 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
       - "${MONITORENV_BACKUPS_FOLDER}:/opt/monitorenv_backups"
-      # TODO: this was in docker-compose.override.yml
-      - "${MONITORENV_DATA_FOLDER}:/opt/data"
     ports:
       - ${POSTGRES_PORT}:5432
     healthcheck:
