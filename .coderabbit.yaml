@@ -24,4 +24,4 @@ reviews:
         - Avoid general concepts and focus on the current code.
         - Suggest code changes with concrete code rather than explanations.
   path_filters:
-    - "!datascience/**"
+    - "!pipeline/**"
