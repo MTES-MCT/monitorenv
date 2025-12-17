@@ -101,12 +101,14 @@ describe('Create Vigilance Area', () => {
       const endDateDay = endDate[2] < 10 ? `0${endDate[2]}` : endDate[2]
       // Check the response
       expect(createdVigilanceArea.name).equal('Nouvelle zone de vigilance')
-      expect(createdVigilanceArea.startDatePeriod).equal(
+      expect(createdVigilanceArea.periods[0].startDatePeriod).equal(
         `${startDate[0]}-${startDateMonth}-${startDateDay}T00:00:00.000Z`
       )
-      expect(createdVigilanceArea.endDatePeriod).equal(`${endDate[0]}-${endDateMonth}-${endDateDay}T23:59:59.000Z`)
-      expect(createdVigilanceArea.frequency).equal(VigilanceArea.Frequency.ALL_WEEKS)
-      expect(createdVigilanceArea.endingCondition).equal(VigilanceArea.EndingCondition.NEVER)
+      expect(createdVigilanceArea.periods[0].endDatePeriod).equal(
+        `${endDate[0]}-${endDateMonth}-${endDateDay}T23:59:59.000Z`
+      )
+      expect(createdVigilanceArea.periods[0].frequency).equal(VigilanceArea.Frequency.ALL_WEEKS)
+      expect(createdVigilanceArea.periods[0].endingCondition).equal(VigilanceArea.EndingCondition.NEVER)
       expect(createdVigilanceArea.geom.type).equal('MultiPolygon')
       expect(createdVigilanceArea.themes[0].id).equal(9)
       expect(createdVigilanceArea.themes[0].name).equal('Pêche à pied')

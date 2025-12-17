@@ -16,11 +16,13 @@ export const saveVigilanceArea =
       ? vigilanceAreasAPI.endpoints.createVigilanceArea
       : vigilanceAreasAPI.endpoints.updateVigilanceArea
 
-    const realEndDate = computeRealEndDate(values)
+    const realEndDate = values.periods && values.periods[0] ? computeRealEndDate(values.periods[0]) : ''
     const computedEndDate = realEndDate ?? undefined
+    const periods = values.periods?.map(period => ({ ...period, computedEndDate })) ?? []
+    const vigilanceAreaToSave = { ...values, periods }
 
     try {
-      const response = await dispatch(vigilanceAreaEnpoint.initiate({ ...values, computedEndDate }))
+      const response = await dispatch(vigilanceAreaEnpoint.initiate(vigilanceAreaToSave))
 
       if ('data' in response) {
         const vigilanceAreaResponse = response.data as VigilanceArea.VigilanceArea
@@ -79,31 +81,28 @@ export const saveVigilanceArea =
     }
   }
 
-const computeRealEndDate = (vigilanceArea: VigilanceArea.VigilanceArea): string | undefined => {
-  let currentOccurrence = customDayjs(vigilanceArea.startDatePeriod)
+const computeRealEndDate = (period: VigilanceArea.VigilanceAreaPeriod): string | undefined => {
+  let currentOccurrence = customDayjs(period.startDatePeriod)
 
-  const endDate = vigilanceArea.endDatePeriod ? customDayjs(vigilanceArea.endDatePeriod) : undefined
+  const endDate = period.endDatePeriod ? customDayjs(period.endDatePeriod) : undefined
   const vigilanceAreaDurationInDays =
-    vigilanceArea.startDatePeriod && vigilanceArea.endDatePeriod
-      ? customDayjs(vigilanceArea.endDatePeriod).diff(vigilanceArea.startDatePeriod, 'days')
+    period.startDatePeriod && period.endDatePeriod
+      ? customDayjs(period.endDatePeriod).diff(period.startDatePeriod, 'days')
       : 0
 
-  if (vigilanceArea.endingCondition === VigilanceArea.EndingCondition.NEVER) {
+  if (period.endingCondition === VigilanceArea.EndingCondition.NEVER) {
     return undefined
   }
 
-  if (vigilanceArea.endingCondition === VigilanceArea.EndingCondition.END_DATE && vigilanceArea.endingOccurrenceDate) {
-    const endingDate = customDayjs(vigilanceArea.endingOccurrenceDate)
+  if (period.endingCondition === VigilanceArea.EndingCondition.END_DATE && period.endingOccurrenceDate) {
+    const endingDate = customDayjs(period.endingOccurrenceDate)
 
     return endingDate.isAfter(endDate) ? endingDate.toISOString() : endDate?.toISOString()
   }
 
-  if (
-    vigilanceArea.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER &&
-    vigilanceArea.endingOccurrencesNumber
-  ) {
-    for (let i = 1; i < vigilanceArea.endingOccurrencesNumber; i += 1) {
-      switch (vigilanceArea.frequency) {
+  if (period.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && period.endingOccurrencesNumber) {
+    for (let i = 1; i < period.endingOccurrencesNumber; i += 1) {
+      switch (period.frequency) {
         case VigilanceArea.Frequency.ALL_WEEKS:
           currentOccurrence = currentOccurrence.add(7, 'days')
           break
@@ -114,7 +113,7 @@ const computeRealEndDate = (vigilanceArea: VigilanceArea.VigilanceArea): string 
           currentOccurrence = currentOccurrence.add(1, 'year')
           break
         case VigilanceArea.Frequency.NONE:
-          currentOccurrence = customDayjs(vigilanceArea.endDatePeriod)
+          currentOccurrence = customDayjs(period.endDatePeriod)
           break
         default:
           return undefined // No recurrence

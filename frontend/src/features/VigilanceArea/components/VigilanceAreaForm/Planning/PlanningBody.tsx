@@ -18,7 +18,10 @@ type PlanningBodyProps = {
 export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
   const [isSummaryOpen, setIsSummaryOpen] = useState(false)
   const occurences = useMemo(
-    () => (vigilanceArea ? computeOccurenceWithinCurrentYear(vigilanceArea) : []),
+    () =>
+      vigilanceArea.periods && vigilanceArea.periods[0]
+        ? computeOccurenceWithinCurrentYear(vigilanceArea.periods[0])
+        : [],
     [vigilanceArea]
   )
 
@@ -26,7 +29,7 @@ export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
     <>
       <Planning occurences={occurences} />
       <Periods>
-        {!vigilanceArea.isAtAllTimes && !vigilanceArea.startDatePeriod ? (
+        {vigilanceArea.periods && vigilanceArea.periods.length === 0 ? (
           <PeriodDescription>Aucune période de vigilance définie</PeriodDescription>
         ) : (
           <Details

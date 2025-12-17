@@ -10,82 +10,85 @@ export function Frequency() {
   const endingConditionOptions = getOptionsFromLabelledEnum(VigilanceArea.EndingConditionLabel)
 
   const updateFrequency = (nextFrequency: string | undefined) => {
-    setFieldValue('frequency', nextFrequency)
+    setFieldValue('periods[0].frequency', nextFrequency)
     if (nextFrequency === VigilanceArea.Frequency.NONE) {
-      setFieldValue('endingCondition', undefined)
-      setFieldValue('endingOccurrenceDate', undefined)
-      setFieldValue('endingOccurrencesNumber', undefined)
+      setFieldValue('periods[0].endingCondition', undefined)
+      setFieldValue('periods[0].endingOccurrenceDate', undefined)
+      setFieldValue('periods[0].endingOccurrencesNumber', undefined)
     }
   }
 
   const updateEndingCondition = (nextEndingCondition: string | undefined) => {
-    setFieldValue('endingCondition', nextEndingCondition)
+    setFieldValue('periods[0].endingCondition', nextEndingCondition)
     if (nextEndingCondition === VigilanceArea.EndingCondition.NEVER) {
-      setFieldValue('endingOccurrenceDate', undefined)
-      setFieldValue('endingOccurrencesNumber', undefined)
+      setFieldValue('periods[0].endingOccurrenceDate', undefined)
+      setFieldValue('periods[0].endingOccurrencesNumber', undefined)
     }
   }
 
   return (
     <>
       <Select
-        disabled={values.isAtAllTimes}
-        error={errors.frequency}
+        disabled={values?.periods && values?.periods[0]?.isAtAllTimes}
+        error={errors.periods}
         isErrorMessageHidden
         isRequired
         isUndefinedWhenDisabled
         label="Récurrence"
-        name="frequency"
+        name="periods[0].frequency"
         onChange={updateFrequency}
         options={frequencyOptions}
         style={{ width: '180px' }}
-        value={values.frequency}
+        value={values?.periods && values.periods[0]?.frequency}
       />
 
-      {values.frequency && values.frequency !== VigilanceArea.Frequency.NONE && (
-        <FrequencyContainer>
-          <Select
-            data-cy="vigilance-area-ending-condition"
-            disabled={values.isAtAllTimes}
-            isErrorMessageHidden
-            isRequired
-            isUndefinedWhenDisabled
-            label="Fin récurrence"
-            name="endingCondition"
-            onChange={updateEndingCondition}
-            options={endingConditionOptions}
-            style={{ width: '180px' }}
-            value={values.endingCondition}
-          />
-          {values.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && (
-            <FormikNumberInput
-              data-cy="vigilance-area-ending-occurence-number"
-              disabled={values.isAtAllTimes}
+      {values?.periods &&
+        values.periods[0]?.frequency &&
+        values.periods[0]?.frequency !== VigilanceArea.Frequency.NONE && (
+          <FrequencyContainer>
+            <Select
+              data-cy="vigilance-area-ending-condition"
+              disabled={values?.periods && values.periods[0]?.isAtAllTimes}
               isErrorMessageHidden
-              isLabelHidden
               isRequired
               isUndefinedWhenDisabled
-              label="Nombre de fois"
-              name="endingOccurrencesNumber"
-              style={{ width: '115px' }}
+              label="Fin récurrence"
+              name="periods[0].endingCondition"
+              onChange={updateEndingCondition}
+              options={endingConditionOptions}
+              style={{ width: '180px' }}
+              value={values?.periods && values.periods[0]?.endingCondition}
             />
-          )}
-          {values.endingCondition === VigilanceArea.EndingCondition.END_DATE && (
-            <StyledFormikDatePicker
-              data-cy="vigilance-area-ending-occurence-date"
-              disabled={values.isAtAllTimes}
-              isErrorMessageHidden
-              isLabelHidden
-              isRequired
-              isRightAligned
-              isStringDate
-              isUndefinedWhenDisabled
-              label="Date de fin de récurrence"
-              name="endingOccurrenceDate"
-            />
-          )}
-        </FrequencyContainer>
-      )}
+            {values?.periods &&
+              values.periods[0]?.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && (
+                <FormikNumberInput
+                  data-cy="vigilance-area-ending-occurence-number"
+                  disabled={values?.periods && values.periods[0]?.isAtAllTimes}
+                  isErrorMessageHidden
+                  isLabelHidden
+                  isRequired
+                  isUndefinedWhenDisabled
+                  label="Nombre de fois"
+                  name="periods[0].endingOccurrencesNumber"
+                  style={{ width: '115px' }}
+                />
+              )}
+            {values?.periods && values.periods[0]?.endingCondition === VigilanceArea.EndingCondition.END_DATE && (
+              <StyledFormikDatePicker
+                data-cy="vigilance-area-ending-occurence-date"
+                disabled={values?.periods && values.periods[0]?.isAtAllTimes}
+                isErrorMessageHidden
+                isLabelHidden
+                isRequired
+                isRightAligned
+                isStringDate
+                isUndefinedWhenDisabled
+                label="Date de fin de récurrence"
+                name="periods[0].endingOccurrenceDate"
+              />
+            )}
+          </FrequencyContainer>
+        )}
     </>
   )
 }
