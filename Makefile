@@ -134,16 +134,6 @@ test: test-back
 	cd frontend && CI=true npm run test:unit
 
 # CI commands - pipeline
-.PHONY: docker-build-pipeline docker-test-pipeline docker-tag-pipeline docker-push-pipeline
-docker-build-pipeline:
-	docker build -f "infra/docker/datapipeline/Dockerfile" . -t monitorenv-pipeline:$(VERSION)
-docker-test-pipeline:
-	docker run --network host -v /var/run/docker.sock:/var/run/docker.sock -u monitorenv-pipeline:$(DOCKER_GROUP) --env-file datascience/.env.test --env HOST_MIGRATIONS_FOLDER=$(HOST_MIGRATIONS_FOLDER) monitorenv-pipeline:$(VERSION) coverage run -m pytest --pdb tests
-docker-tag-pipeline:
-	docker tag monitorenv-pipeline:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
-docker-push-pipeline:
-	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-pipeline:$(VERSION)
-
 .PHONY: docker-build-pipeline-prefect3 docker-test-pipeline-prefect3 docker-tag-pipeline-prefect3 docker-push-pipeline-prefect3
 docker-build-pipeline-prefect3:
 	docker build -f "infra/docker/datapipeline/prefect3.Dockerfile" . -t monitorenv-pipeline-prefect3:$(VERSION)
