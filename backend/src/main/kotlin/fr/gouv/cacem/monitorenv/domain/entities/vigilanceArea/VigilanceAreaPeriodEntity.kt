@@ -12,5 +12,6 @@ data class VigilanceAreaPeriodEntity(
     val endingOccurrencesNumber: Int?,
     val frequency: FrequencyEnum?,
     val isAtAllTimes: Boolean,
+    val isCritical: Boolean?,
     val startDatePeriod: ZonedDateTime?,
 )

@@ -99,8 +99,8 @@ export const DraftSchema: Yup.Schema<
     linkedRegulatoryAreas: Yup.array().optional(),
     links: Yup.array().optional(),
     name: Yup.string().required(),
-    periods: Yup.array().of(DraftVigilanceAreaPeriodSchema).optional(),
-    sources: Yup.array().of(VigilanceAreaSourceSchema).ensure(),
+    periods: Yup.array().ensure().of(DraftVigilanceAreaPeriodSchema).optional(),
+    sources: Yup.array().ensure().of(VigilanceAreaSourceSchema).ensure(),
     tags: Yup.array().ensure().optional(),
     themes: Yup.array().ensure().optional(),
     visibility: Yup.mixed<VigilanceArea.Visibility>().optional()
@@ -131,8 +131,8 @@ export const PublishedSchema: Yup.Schema<
     linkedRegulatoryAreas: Yup.array().optional(),
     links: Yup.array().optional(),
     name: Yup.string().required(),
-    periods: Yup.array().of(PublishedVigilanceAreaPeriodSchema).optional(),
-    sources: Yup.array().of(VigilanceAreaSourceSchema).optional(),
+    periods: Yup.array().ensure().of(PublishedVigilanceAreaPeriodSchema).optional(),
+    sources: Yup.array().ensure().of(VigilanceAreaSourceSchema).optional(),
     tags: Yup.array()
       .ensure()
       .test('required-if-no-themes', 'Renseignez au moins un thème ou un tag', (tags, context) => {

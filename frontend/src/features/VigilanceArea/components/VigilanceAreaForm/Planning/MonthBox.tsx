@@ -26,6 +26,18 @@ export function MonthBox({ dateRanges, label, monthIndex }: MonthBoxProps) {
     )
   }
 
+  const isDayInCriticalPeriod = (dayNum: number) => {
+    const dayToCompare = month.set('date', dayNum)
+
+    return dateRanges.some(
+      dateRange =>
+        dateRange.isCritical &&
+        (dayToCompare.isSame(dateRange.start, 'day') ||
+          dayToCompare.isSame(dateRange.end, 'day') ||
+          (dayToCompare.isAfter(dateRange.start) && dayToCompare.isBefore(dateRange.end)))
+    )
+  }
+
   const isStart = (dayNum: number) => {
     const dayToCompare = month.set('date', dayNum)
 
@@ -46,6 +58,7 @@ export function MonthBox({ dateRanges, label, monthIndex }: MonthBoxProps) {
           {days.map(day => (
             <DayBox
               key={day}
+              $isCritical={isDayInCriticalPeriod(day)}
               $isEnd={isEnd(day) || (isDayInPeriod(day) && day === daysInMonth)}
               $isHighlighted={isDayInPeriod(day)}
               $isStart={isStart(day) || (isDayInPeriod(day) && day === 1)}
@@ -77,17 +90,16 @@ const Box = styled.div<{ $dayInMonth: number }>`
   margin-top: 4px;
 `
 
-const DayBox = styled.div<{ $isEnd: boolean; $isHighlighted: boolean; $isStart: boolean }>`
+const DayBox = styled.div<{ $isCritical: boolean; $isEnd: boolean; $isHighlighted: boolean; $isStart: boolean }>`
   width: 100%;
   height: 100%;
-  ${({ $isHighlighted }) =>
+  ${({ $isCritical, $isHighlighted }) =>
     $isHighlighted &&
-    `background-color: #C2514180;
-    border-top: 1px solid #933F20;
-  border-bottom: 1px solid #933F20;`};
-  background-color: ${({ $isHighlighted }) => ($isHighlighted ? '#C2514180' : `white`)};
-  ${p => p.$isStart && 'border-left: 1px solid #933F20;'}
-  ${p => p.$isEnd && 'border-right: 1px solid #933F20;'}
+    `background-color: ${$isCritical ? '#C25141BF' : '#C2514180'};
+    border-top: ${$isCritical ? '2px solid rgba(194, 81, 65, 0.75)' : '1px solid #933F20'};
+  border-bottom: ${$isCritical ? '2px solid rgba(194, 81, 65, 0.75)' : '1px solid #933F20'};`};
+  ${p => p.$isStart && `border-left: ${p.$isCritical ? '2px solid rgba(194, 81, 65, 0.75)' : '1px solid #933F20'}`}
+  ${p => p.$isEnd && `border-right: ${p.$isCritical ? '2px solid rgba(194, 81, 65, 0.75)' : '1px solid #933F20'}`}
 `
 
 const BackgroundBox = styled.div`

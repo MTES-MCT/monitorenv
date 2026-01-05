@@ -89,7 +89,7 @@ class JpaVigilanceAreaRepository(
         periods: List<VigilanceAreaPeriodEntity>,
     ): List<VigilanceAreaPeriodModel> {
         vigilanceAreaModel.id?.let {
-            dbVigilanceAreaSourceRepository.deleteAllByVigilanceAreaId(it)
+            dbVigilanceAreaPeriodRepository.deleteAllByVigilanceAreaId(it)
         }
         val vigilanceAreaPeriodModels =
             periods.map { fromVigilanceAreaPeriod(vigilanceArea = vigilanceAreaModel, vigilanceAreaPeriod = it) }

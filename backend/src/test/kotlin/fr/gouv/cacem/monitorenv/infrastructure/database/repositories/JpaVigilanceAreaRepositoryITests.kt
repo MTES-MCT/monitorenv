@@ -150,6 +150,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                             endingOccurrencesNumber = 2,
                             frequency = FrequencyEnum.ALL_WEEKS,
                             isAtAllTimes = false,
+                            isCritical = false,
                             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                         ),
                     ),
@@ -181,6 +182,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
             .isEqualTo(ZonedDateTime.parse("2025-01-01T00:00:00Z"))
         assertThat(savedVigilanceArea.periods).hasSize(1)
         assertThat(savedVigilanceArea.periods[0].isAtAllTimes).isFalse()
+        assertThat(savedVigilanceArea.periods[0].isCritical).isFalse()
         assertThat(savedVigilanceArea.periods[0].startDatePeriod).isEqualTo(ZonedDateTime.parse("2024-08-18T00:00:00Z"))
         assertThat(savedVigilanceArea.periods[0].endingCondition).isEqualTo(EndingConditionEnum.OCCURENCES_NUMBER)
         assertThat(savedVigilanceArea.periods[0].frequency).isEqualTo(FrequencyEnum.ALL_WEEKS)
@@ -232,6 +234,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
                             frequency = FrequencyEnum.ALL_WEEKS,
                             isAtAllTimes = false,
                             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
+                            isCritical = false,
                         ),
                     ),
             )
@@ -258,6 +261,7 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         assertThat(savedVigilanceArea.updatedAt).isNotNull()
         assertThat(savedVigilanceArea.periods).hasSize(1)
         assertThat(savedVigilanceArea.periods[0].isAtAllTimes).isFalse()
+        assertThat(savedVigilanceArea.periods[0].isCritical).isFalse()
         assertThat(savedVigilanceArea.periods[0].startDatePeriod).isEqualTo(ZonedDateTime.parse("2024-08-18T00:00:00Z"))
         assertThat(savedVigilanceArea.periods[0].endingCondition).isEqualTo(EndingConditionEnum.OCCURENCES_NUMBER)
         assertThat(savedVigilanceArea.periods[0].frequency).isEqualTo(FrequencyEnum.ALL_WEEKS)

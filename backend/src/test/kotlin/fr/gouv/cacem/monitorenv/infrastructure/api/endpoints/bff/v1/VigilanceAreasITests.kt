@@ -103,6 +103,7 @@ class VigilanceAreasITests {
                         endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                         startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                         isAtAllTimes = false,
+                        isCritical = true,
                         computedEndDate = null,
                         id = null,
                     ),
@@ -197,6 +198,7 @@ class VigilanceAreasITests {
                         isAtAllTimes = true,
                         computedEndDate = null,
                         id = null,
+                        isCritical = false,
                     ),
                 ),
         )
@@ -246,6 +248,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$[1].periods[0].endDatePeriod", equalTo("2024-12-31T23:59:59Z")))
             .andExpect(jsonPath("$[1].periods[0].startDatePeriod", equalTo("2024-12-01T00:00:00Z")))
             .andExpect(jsonPath("$[1].periods[0].isAtAllTimes", equalTo(true)))
+            .andExpect(jsonPath("$[1].periods[0].isCritical", equalTo(false)))
             .andExpect(jsonPath("$[1].geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
@@ -278,6 +281,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.periods[0].frequency", equalTo("ALL_WEEKS")))
             .andExpect(jsonPath("$.periods[0].endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
             .andExpect(jsonPath("$.periods[0].isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$.periods[0].isCritical", equalTo(true)))
             .andExpect(jsonPath("$.periods[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
@@ -373,6 +377,7 @@ class VigilanceAreasITests {
                             isAtAllTimes = false,
                             computedEndDate = null,
                             id = null,
+                            isCritical = true,
                         ),
                     ),
             )
@@ -399,6 +404,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.periods[0].endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
             .andExpect(jsonPath("$.periods[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.periods[0].isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$.periods[0].isCritical", equalTo(true)))
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(
                 jsonPath("$[0].links").doesNotExist(),
@@ -467,6 +473,7 @@ class VigilanceAreasITests {
                             endDatePeriod = ZonedDateTime.parse("2024-08-08T23:59:59Z"),
                             startDatePeriod = ZonedDateTime.parse("2024-08-18T00:00:00Z"),
                             isAtAllTimes = false,
+                            isCritical = true,
                             computedEndDate = null,
                             id = null,
                         ),
@@ -500,6 +507,7 @@ class VigilanceAreasITests {
             .andExpect(jsonPath("$.periods[0].frequency", equalTo("ALL_WEEKS")))
             .andExpect(jsonPath("$.periods[0].endDatePeriod", equalTo("2024-08-08T23:59:59Z")))
             .andExpect(jsonPath("$.periods[0].isAtAllTimes", equalTo(false)))
+            .andExpect(jsonPath("$.periods[0].isCritical", equalTo(true)))
             .andExpect(jsonPath("$.periods[0].startDatePeriod", equalTo("2024-08-18T00:00:00Z")))
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(

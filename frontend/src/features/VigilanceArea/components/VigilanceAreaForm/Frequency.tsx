@@ -32,13 +32,13 @@ export function Frequency() {
         disabled={values?.periods && values?.periods[0]?.isAtAllTimes}
         error={errors.periods}
         isErrorMessageHidden
+        isLight
         isRequired
         isUndefinedWhenDisabled
         label="Récurrence"
         name="periods[0].frequency"
         onChange={updateFrequency}
         options={frequencyOptions}
-        style={{ width: '180px' }}
         value={values?.periods && values.periods[0]?.frequency}
       />
 
@@ -50,6 +50,7 @@ export function Frequency() {
               data-cy="vigilance-area-ending-condition"
               disabled={values?.periods && values.periods[0]?.isAtAllTimes}
               isErrorMessageHidden
+              isLight
               isRequired
               isUndefinedWhenDisabled
               label="Fin récurrence"
@@ -66,6 +67,7 @@ export function Frequency() {
                   disabled={values?.periods && values.periods[0]?.isAtAllTimes}
                   isErrorMessageHidden
                   isLabelHidden
+                  isLight
                   isRequired
                   isUndefinedWhenDisabled
                   label="Nombre de fois"
@@ -79,6 +81,7 @@ export function Frequency() {
                 disabled={values?.periods && values.periods[0]?.isAtAllTimes}
                 isErrorMessageHidden
                 isLabelHidden
+                isLight
                 isRequired
                 isRightAligned
                 isStringDate

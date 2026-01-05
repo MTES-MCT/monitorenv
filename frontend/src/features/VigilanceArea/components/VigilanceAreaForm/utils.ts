@@ -23,6 +23,20 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
   }
 }
 
+export function getVigilanceAreaPeriodInitialValues(): Omit<VigilanceArea.VigilanceAreaPeriod, 'id'> {
+  return {
+    computedEndDate: undefined,
+    endDatePeriod: undefined,
+    endingCondition: undefined,
+    endingOccurrenceDate: undefined,
+    endingOccurrencesNumber: undefined,
+    frequency: undefined,
+    isAtAllTimes: false,
+    isCritical: undefined,
+    startDatePeriod: undefined
+  }
+}
+
 export const isFormValid = (vigilanceArea: VigilanceArea.VigilanceArea | undefined, againstDraftSchema: boolean) => {
   const SchemaToValidate = againstDraftSchema ? DraftSchema : PublishedSchema
 

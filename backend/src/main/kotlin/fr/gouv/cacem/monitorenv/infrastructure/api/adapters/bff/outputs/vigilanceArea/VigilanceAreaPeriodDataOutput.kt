@@ -15,6 +15,7 @@ data class VigilanceAreaPeriodDataOutput(
     val endingOccurrencesNumber: Int?,
     val frequency: FrequencyEnum?,
     val isAtAllTimes: Boolean,
+    val isCritical: Boolean?,
     val startDatePeriod: ZonedDateTime?,
 ) {
     companion object {
@@ -28,6 +29,7 @@ data class VigilanceAreaPeriodDataOutput(
                 endingOccurrencesNumber = vigilanceArea.endingOccurrencesNumber,
                 frequency = vigilanceArea.frequency,
                 isAtAllTimes = vigilanceArea.isAtAllTimes,
+                isCritical = vigilanceArea.isCritical,
                 startDatePeriod = vigilanceArea.startDatePeriod,
             )
     }

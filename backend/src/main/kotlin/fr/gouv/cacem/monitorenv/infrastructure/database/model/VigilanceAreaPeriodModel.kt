@@ -41,6 +41,7 @@ data class VigilanceAreaPeriodModel(
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val frequency: FrequencyEnum?,
     @Column(name = "is_at_all_times", nullable = false) val isAtAllTimes: Boolean,
+    @Column(name = "is_critical", nullable = false) val isCritical: Boolean?,
     @Column(name = "start_date_period") val startDatePeriod: Instant?,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vigilance_areas_id", nullable = false)
@@ -53,7 +54,7 @@ data class VigilanceAreaPeriodModel(
         ): VigilanceAreaPeriodModel {
             val vigilanceAreaModel =
                 VigilanceAreaPeriodModel(
-                    id = vigilanceAreaPeriod.id,
+                    id = null,
                     vigilanceArea = vigilanceArea,
                     computedEndDate = vigilanceAreaPeriod.computedEndDate?.toInstant(),
                     endingCondition = vigilanceAreaPeriod.endingCondition,
@@ -62,6 +63,7 @@ data class VigilanceAreaPeriodModel(
                     frequency = vigilanceAreaPeriod.frequency,
                     endDatePeriod = vigilanceAreaPeriod.endDatePeriod?.toInstant(),
                     isAtAllTimes = vigilanceAreaPeriod.isAtAllTimes,
+                    isCritical = vigilanceAreaPeriod.isCritical,
                     startDatePeriod = vigilanceAreaPeriod.startDatePeriod?.toInstant(),
                 )
 
@@ -79,6 +81,7 @@ data class VigilanceAreaPeriodModel(
             frequency = frequency,
             endDatePeriod = endDatePeriod?.atZone(UTC),
             isAtAllTimes = isAtAllTimes,
+            isCritical = isCritical,
             startDatePeriod = startDatePeriod?.atZone(UTC),
         )
 

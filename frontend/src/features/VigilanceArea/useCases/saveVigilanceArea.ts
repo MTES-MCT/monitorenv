@@ -20,7 +20,6 @@ export const saveVigilanceArea =
     const computedEndDate = realEndDate ?? undefined
     const periods = values.periods?.map(period => ({ ...period, computedEndDate })) ?? []
     const vigilanceAreaToSave = { ...values, periods }
-
     try {
       const response = await dispatch(vigilanceAreaEnpoint.initiate(vigilanceAreaToSave))
 

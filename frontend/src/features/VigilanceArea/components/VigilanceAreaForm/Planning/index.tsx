@@ -42,7 +42,7 @@ const PlanningWrapper = styled.ol`
   font-size: 11px;
   color: ${p => p.theme.color.slateGray};
 
-  padding-bottom: 10px;
+  padding-bottom: 16px;
   border-bottom: 1px solid ${p => p.theme.color.lightGray};
 
   > li {

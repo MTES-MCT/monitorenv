@@ -28,7 +28,7 @@ export function Sources() {
             return (
               <Source
                 key={source.id ?? index}
-                hasError={meta.error}
+                hasError={meta.error && meta.error[1]}
                 index={index}
                 initialSource={source}
                 onValidate={vigilanceAreaSource => {
@@ -42,14 +42,30 @@ export function Sources() {
           <Button
             accent={Accent.SECONDARY}
             Icon={Icon.Plus}
-            onClick={() => push({ isAnonymous: false, type: VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT })}
+            onClick={() =>
+              push({
+                comments: undefined,
+                controlUnitContacts: [],
+                isAnonymous: false,
+                type: VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT
+              })
+            }
           >
             Ajouter une unité
           </Button>
           <Button
             accent={Accent.SECONDARY}
             Icon={Icon.Plus}
-            onClick={() => push({ isAnonymous: false, type: VigilanceArea.VigilanceAreaSourceType.OTHER })}
+            onClick={() =>
+              push({
+                comments: undefined,
+                email: undefined,
+                isAnonymous: false,
+                name: undefined,
+                phone: undefined,
+                type: VigilanceArea.VigilanceAreaSourceType.OTHER
+              })
+            }
           >
             Ajouter une autre source externe
           </Button>
@@ -61,7 +77,7 @@ export function Sources() {
             return (
               <Source
                 key={source.id ?? index}
-                hasError={meta.error}
+                hasError={meta.error && meta.error[1]}
                 index={index}
                 initialSource={source}
                 onValidate={vigilanceAreaSource => {
@@ -75,7 +91,14 @@ export function Sources() {
           <Button
             accent={Accent.SECONDARY}
             Icon={Icon.Plus}
-            onClick={() => push({ isAnonymous: false, type: VigilanceArea.VigilanceAreaSourceType.INTERNAL })}
+            onClick={() =>
+              push({
+                isAnonymous: false,
+                link: undefined,
+                name: undefined,
+                type: VigilanceArea.VigilanceAreaSourceType.INTERNAL
+              })
+            }
           >
             Ajouter une source CACEM
           </Button>

@@ -15,6 +15,7 @@ class VigilanceAreaPeriodFixture {
             endCondition: EndingConditionEnum = EndingConditionEnum.OCCURENCES_NUMBER,
             endingOccurrencesNumber: Int? = 2,
             isAtAllTimes: Boolean = false,
+            isCritical: Boolean = false,
         ): VigilanceAreaPeriodEntity =
             VigilanceAreaPeriodEntity(
                 id = null,
@@ -26,6 +27,7 @@ class VigilanceAreaPeriodFixture {
                 frequency = frequency,
                 startDatePeriod = startDate,
                 isAtAllTimes = isAtAllTimes,
+                isCritical = isCritical,
             )
     }
 }
