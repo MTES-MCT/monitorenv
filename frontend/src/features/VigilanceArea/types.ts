@@ -74,6 +74,7 @@ export namespace VigilanceArea {
     frequency?: Frequency
     id?: string
     isAtAllTimes: boolean
+    isCritical?: boolean
     startDatePeriod?: string
   }
 

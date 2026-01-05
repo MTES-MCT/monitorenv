@@ -15,6 +15,7 @@ data class VigilanceAreaDataPeriodInput(
     val endingOccurrencesNumber: Int? = null,
     val frequency: FrequencyEnum? = null,
     val isAtAllTimes: Boolean,
+    val isCritical: Boolean?,
     val startDatePeriod: ZonedDateTime? = null,
 ) {
     fun toVigilanceAreaPeriodEntity(): VigilanceAreaPeriodEntity =
@@ -27,6 +28,7 @@ data class VigilanceAreaDataPeriodInput(
             endingOccurrencesNumber = this.endingOccurrencesNumber,
             frequency = this.frequency,
             isAtAllTimes = this.isAtAllTimes,
+            isCritical = this.isCritical,
             startDatePeriod = this.startDatePeriod,
         )
 }

@@ -4,6 +4,7 @@ import { Tooltip } from '@components/Tooltip'
 import { ZonePicker } from '@components/ZonePicker'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
+import { Periods } from '@features/VigilanceArea/components/VigilanceAreaForm/Periods'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -16,9 +17,6 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CheckTreePicker,
-  type DateAsStringRange,
-  DateRangePicker,
-  FormikCheckbox,
   FormikMultiRadio,
   FormikTextarea,
   FormikTextInput,
@@ -37,7 +35,6 @@ import styled from 'styled-components'
 import { AddAMPs } from './AddAMPs'
 import { AddRegulatoryAreas } from './AddRegulatoryAreas'
 import { Footer } from './Footer'
-import { Frequency } from './Frequency'
 import { Links } from './Links'
 import { PhotoUploader } from './PhotoUploader'
 import { Sources } from './Sources'
@@ -99,7 +96,7 @@ export function Form() {
   }
 
   const onSave = () => {
-    validateForm({ ...values }).then(errors => {
+    validateForm().then(errors => {
       if (isEmpty(errors)) {
         dispatch(saveVigilanceArea(values))
       }
@@ -139,11 +136,6 @@ export function Form() {
     dispatch(hideLayers({ keepInterestPoint: true }))
   }
 
-  const setPeriod = (period: DateAsStringRange | undefined) => {
-    setFieldValue('periods[0].startDatePeriod', period ? period[0] : undefined)
-    setFieldValue('periods[0].endDatePeriod', period ? period[1] : undefined)
-  }
-
   return (
     <FormContainer>
       {isCancelModalOpen &&
@@ -180,28 +172,16 @@ export function Form() {
           name="name"
           placeholder="Nom de la zone"
         />
-        <DateWrapper>
-          <DateRangePicker
-            defaultValue={
-              values?.periods && values?.periods[0]?.startDatePeriod && values?.periods[0]?.endDatePeriod
-                ? [new Date(values?.periods[0]?.startDatePeriod), new Date(values?.periods[0]?.endDatePeriod)]
-                : undefined
-            }
-            disabled={values?.periods && values?.periods[0]?.isAtAllTimes}
-            error={formErrors?.periods}
-            hasSingleCalendar
-            isCompact
-            isErrorMessageHidden
-            isRequired
-            isStringDate
-            isUndefinedWhenDisabled
-            label="Période de validité"
-            name="period"
-            onChange={setPeriod}
-          />
-          <FormikCheckbox label="En tout temps" name="periods[0].isAtAllTimes" />
-        </DateWrapper>
-        <Frequency />
+        <ZonePicker
+          addLabel="Définir un tracé pour la zone de vigilance"
+          deleteZone={deleteZone}
+          handleAddZone={addZone}
+          isRequired
+          label="Localisation"
+          listener={InteractionListener.VIGILANCE_ZONE}
+          name="geom"
+        />
+        <Periods />
         <ThemesAndTags>
           <CheckTreePicker
             childrenKey="subThemes"
@@ -254,15 +234,6 @@ export function Form() {
           name="comments"
           placeholder="Description de la zone de vigilance"
           rows={8}
-        />
-        <ZonePicker
-          addLabel="Définir un tracé pour la zone de vigilance"
-          deleteZone={deleteZone}
-          handleAddZone={addZone}
-          isRequired
-          label="Localisation"
-          listener={InteractionListener.VIGILANCE_ZONE}
-          name="geom"
         />
         <AddRegulatoryAreas />
         <AddAMPs />
@@ -320,12 +291,6 @@ const StyledTrigramInput = styled(FormikTextInput)`
 
 const Wrapper = styled.div`
   display: flex;
-  gap: 8px;
-`
-
-const DateWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   gap: 8px;
 `
 

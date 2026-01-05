@@ -46,11 +46,11 @@ export function LayerLegend({
   }
 }
 
-export const Rectangle = styled.div<{ $size: Size; $vectorLayerColor?: string }>`
+export const Rectangle = styled.div<{ $border?: string; $size: Size; $vectorLayerColor?: string }>`
   width: ${p => (p.$size === Size.SMALL ? '14px' : '16px')};
   height: ${p => (p.$size === Size.SMALL ? '14px' : '16px')};
   background: ${p => p.$vectorLayerColor ?? p.theme.color.gainsboro};
-  border: 1px solid ${p => p.theme.color.slateGray};
+  border: ${p => p.$border ?? `1px solid ${p.theme.color.slateGray}`};
   display: inline-block;
   flex-shrink: 0;
 `

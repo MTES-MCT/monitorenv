@@ -5,6 +5,7 @@ import type { Dayjs } from 'dayjs'
 
 export type DateRange = {
   end: Dayjs
+  isCritical: boolean | undefined
   start: Dayjs
 }
 
@@ -15,7 +16,7 @@ export function computeOccurenceWithinCurrentYear(period: VigilanceArea.Vigilanc
 
   // Cas 1: Toute l'année
   if (period.isAtAllTimes) {
-    return [{ end: endOfYear, start: startOfYear }]
+    return [{ end: endOfYear, isCritical: period.isCritical, start: startOfYear }]
   }
 
   // Cas 2: Pas de date de début
@@ -33,7 +34,7 @@ export function computeOccurenceWithinCurrentYear(period: VigilanceArea.Vigilanc
       return []
     }
 
-    return [{ end: endDate.utc(), start: startDate.utc() }]
+    return [{ end: endDate.utc(), isCritical: period.isCritical, start: startDate.utc() }]
   }
 
   // Cas 4: Récurrences (week/month/year)
@@ -80,7 +81,11 @@ export function computeOccurenceWithinCurrentYear(period: VigilanceArea.Vigilanc
       const clippedEnd = occEnd.isAfter(endOfYear) ? endOfYear : occEnd
 
       if (clippedEnd.isAfter(startOfYear) || clippedEnd.isSame(startOfYear)) {
-        results.push({ end: clippedEnd.clone().utc(), start: clippedStart.clone().utc() })
+        results.push({
+          end: clippedEnd.clone().utc(),
+          isCritical: period.isCritical,
+          start: clippedStart.clone().utc()
+        })
       }
 
       if (unit === 'year') {
@@ -108,6 +113,7 @@ export function computeOccurenceWithinCurrentYear(period: VigilanceArea.Vigilanc
   return [
     {
       end: endDate.isAfter(endOfYear) ? endOfYear : endDate,
+      isCritical: period.isCritical,
       start: startDate
     }
   ]

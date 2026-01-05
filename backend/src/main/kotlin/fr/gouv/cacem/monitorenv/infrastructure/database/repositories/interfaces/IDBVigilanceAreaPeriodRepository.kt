@@ -4,4 +4,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.VigilanceAreaPerio
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
-interface IDBVigilanceAreaPeriodRepository : JpaRepository<VigilanceAreaPeriodModel, UUID>
+interface IDBVigilanceAreaPeriodRepository : JpaRepository<VigilanceAreaPeriodModel, UUID> {
+    fun deleteAllByVigilanceAreaId(vigilanceAreaId: Int)
+}
