@@ -1,7 +1,7 @@
 import { Period } from '@features/VigilanceArea/components/VigilanceAreaForm/Period'
 import { getVigilanceAreaPeriodInitialValues } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { Accent, Button, Checkbox, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Checkbox, Icon, Legend } from '@mtes-mct/monitor-ui'
 import { FieldArray, useField } from 'formik'
 import styled from 'styled-components'
 
@@ -47,8 +47,9 @@ export function Periods() {
           return (
             <Wrapper>
               <CheckboxesWrapper>
+                <HiddenLegend>Type de période de vigilance en tout temps</HiddenLegend>
                 <CheckboxWrapper>
-                  <StyledCircle />
+                  <PeriodCircle />
                   <CriticalCheckbox
                     checked={hasSimpleIsAtAllTimesPeriod}
                     isLight
@@ -58,7 +59,7 @@ export function Periods() {
                   />
                 </CheckboxWrapper>
                 <CheckboxWrapper>
-                  <StyledCircle $isCritical />
+                  <PeriodCircle $isCritical />
                   <CriticalCheckbox
                     checked={hasCriticalIsAtAllTimesPeriod}
                     isLight
@@ -140,23 +141,37 @@ export const CheckboxWrapper = styled.div`
   position: relative;
 `
 
-export const CheckboxesWrapper = styled.div`
+export const CheckboxesWrapper = styled.fieldset`
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 8px 0;
+  border: none;
 `
 
-export const StyledCircle = styled.div<{ $isCritical?: boolean }>`
+export const BasePeriodCircle = styled.div<{ $isCritical?: boolean }>`
   height: 10px;
   width: 10px;
-  margin-right: 6px;
   background-color: ${p => (p.$isCritical ? 'rgba(194, 81, 65, 0.75)' : 'rgba(194, 81, 65, 0.5)')};
   border: ${p => (p.$isCritical ? '2px solid #E1000F' : '1px solid rgba(147, 63, 32, 0.75)')};
   border-radius: 50%;
   display: inline-block;
+`
+
+export const PeriodCircle = styled(BasePeriodCircle)`
+  margin-right: 6px;
   position: absolute;
   left: 22px;
   top: 0;
   transform: translateY(50%);
 `
+
+const HiddenLegend = styled(Legend)`
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  position: absolute;
+  left: -10000px;
+}`
