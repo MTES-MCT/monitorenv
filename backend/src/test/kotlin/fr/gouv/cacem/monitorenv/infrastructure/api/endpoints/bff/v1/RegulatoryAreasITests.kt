@@ -73,6 +73,7 @@ class RegulatoryAreasITests {
                 dureeValidite = "15 ans",
                 dateFin = "2035-07-01",
                 temporalite = "temporaire",
+                plan = "PIRC",
             )
         given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
 
@@ -90,6 +91,7 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$[0].type", equalTo(regulatoryArea.type)))
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
             .andExpect(jsonPath("$[0].themes[0].name", equalTo("AMP")))
+            .andExpect(jsonPath("$[0].plan", equalTo("PIRC")))
     }
 
     @Test
@@ -114,6 +116,7 @@ class RegulatoryAreasITests {
                 dureeValidite = "15 ans",
                 dateFin = "2035-07-01",
                 temporalite = "temporaire",
+                plan = "PSCEM",
             )
 
         given(getRegulatoryAreaById.execute(17)).willReturn(regulatoryArea)
@@ -133,5 +136,6 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$.themes[0].name", equalTo("AMP")))
             .andExpect(jsonPath("$.type", equalTo(regulatoryArea.type)))
             .andExpect(jsonPath("$.url", equalTo(regulatoryArea.url)))
+            .andExpect(jsonPath("$.plan", equalTo(regulatoryArea.plan)))
     }
 }

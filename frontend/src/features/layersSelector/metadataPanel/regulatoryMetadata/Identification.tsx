@@ -9,12 +9,14 @@ import type { ThemeFromAPI } from 'domain/entities/themes'
 export function Identification({
   entityName,
   facade,
+  plan,
   tags,
   themes,
   type
 }: {
   entityName: string
   facade: string
+  plan: string
   tags: TagFromAPI[]
   themes: ThemeFromAPI[]
   type: string
@@ -33,6 +35,10 @@ export function Identification({
           <Field>
             <Key>Ensemble reg.</Key>
             <Value data-cy="regulatory-layers-metadata-type">{type || <NoValue>-</NoValue>}</Value>
+          </Field>
+          <Field>
+            <Key>Plan de contrôle</Key>
+            <Value data-cy="regulatory-layers-metadata-plan">{plan || <NoValue>-</NoValue>}</Value>
           </Field>
           <Field>
             <Key>Thématiques</Key>

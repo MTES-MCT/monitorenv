@@ -54,6 +54,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 dateFin = "2035-07-01",
                 temporalite = "temporaire",
                 themes = listOf(),
+                plan = "PIRC",
             )
         val themes =
             listOf(
@@ -94,6 +95,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea.dureeValidite).isEqualTo(searchedRegulatoryArea.dureeValidite)
         assertThat(requestedRegulatoryArea.dateFin).isEqualTo(searchedRegulatoryArea.dateFin)
         assertThat(requestedRegulatoryArea.temporalite).isEqualTo(searchedRegulatoryArea.temporalite)
+        assertThat(requestedRegulatoryArea.plan).isEqualTo(searchedRegulatoryArea.plan)
     }
 
     @Test

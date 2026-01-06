@@ -8,6 +8,7 @@ export type RegulatoryLayerWithMetadataFromAPI = {
   geom: GeoJSON.MultiPolygon
   id: number
   layerName: string
+  plan: string
   refReg: string
   tags: TagFromAPI[]
   themes: ThemeFromAPI[]
@@ -20,6 +21,7 @@ export type RegulatoryLayerCompactFromAPI = {
   geom: GeoJSON.MultiPolygon
   id: number
   layerName: string
+  plan: string
   refReg: string
   tags: TagFromAPI[]
   themes: ThemeFromAPI[]
