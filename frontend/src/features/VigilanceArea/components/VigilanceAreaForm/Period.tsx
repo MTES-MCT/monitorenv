@@ -148,7 +148,7 @@ export function Period({ hasError, index, initialPeriod, onValidate, remove }: P
         {editedPeriod.frequency && editedPeriod.frequency !== VigilanceArea.Frequency.NONE && (
           <FrequencyContainer>
             <Select
-              data-cy="vigilance-area-ending-condition"
+              data-cy={`vigilance-area-${index}-ending-condition`}
               disabled={editedPeriod.isAtAllTimes}
               isErrorMessageHidden
               isLight
@@ -163,7 +163,7 @@ export function Period({ hasError, index, initialPeriod, onValidate, remove }: P
             />
             {editedPeriod.endingCondition === VigilanceArea.EndingCondition.OCCURENCES_NUMBER && (
               <NumberInput
-                data-cy="vigilance-area-ending-occurence-number"
+                data-cy={`vigilance-area-${index}-ending-occurence-number`}
                 disabled={editedPeriod.isAtAllTimes}
                 isErrorMessageHidden
                 isLabelHidden
@@ -179,7 +179,7 @@ export function Period({ hasError, index, initialPeriod, onValidate, remove }: P
             )}
             {editedPeriod.endingCondition === VigilanceArea.EndingCondition.END_DATE && (
               <StyledDatePicker
-                data-cy="vigilance-area-ending-occurence-date"
+                data-cy={`vigilance-area-${index}-ending-occurence-date`}
                 defaultValue={editedPeriod.endingOccurrenceDate}
                 disabled={editedPeriod.isAtAllTimes}
                 isErrorMessageHidden

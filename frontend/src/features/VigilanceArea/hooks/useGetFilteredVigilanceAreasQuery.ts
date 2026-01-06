@@ -1,6 +1,7 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getFilterVigilanceAreasPerPeriod } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { getIntersectingLayers } from '@features/layersSelector/utils/getIntersectingLayerIds'
+import { isVigilanceAreaPartOfType } from '@features/VigilanceArea/useCases/filters/isVigilanceAreaPartOfType'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { CustomSearch } from '@mtes-mct/monitor-ui'
 import { useMemo } from 'react'
@@ -17,7 +18,7 @@ import { isVigilanceAreaPartOfVisibility } from '../useCases/filters/isVigilance
 export const useGetFilteredVigilanceAreasQuery = () => {
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
-  const { createdBy, period, seaFronts, specificPeriod, status, visibility } = useAppSelector(
+  const { createdBy, period, seaFronts, specificPeriod, status, type, visibility } = useAppSelector(
     state => state.vigilanceAreaFilters
   )
 
@@ -43,7 +44,8 @@ export const useGetFilteredVigilanceAreasQuery = () => {
           isVigilanceAreaPartOfStatus(vigilanceArea, isSuperUser ? status : [VigilanceArea.Status.PUBLISHED]) &&
           isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
           isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes) &&
-          isVigilanceAreaPartOfVisibility(vigilanceArea, visibility)
+          isVigilanceAreaPartOfVisibility(vigilanceArea, visibility) &&
+          isVigilanceAreaPartOfType(vigilanceArea, type)
       ),
     [
       vigilanceAreas,
@@ -53,13 +55,14 @@ export const useGetFilteredVigilanceAreasQuery = () => {
       status,
       filteredRegulatoryTags,
       filteredRegulatoryThemes,
-      visibility
+      visibility,
+      type
     ]
   )
 
   const vigilanceAreasByPeriod = useMemo(
-    () => getFilterVigilanceAreasPerPeriod(tempVigilanceAreas, period, specificPeriod, isSuperUser),
-    [tempVigilanceAreas, period, specificPeriod, isSuperUser]
+    () => getFilterVigilanceAreasPerPeriod(tempVigilanceAreas, period, specificPeriod, type, isSuperUser),
+    [tempVigilanceAreas, period, specificPeriod, type, isSuperUser]
   )
 
   const filteredVigilanceAreas = useMemo(() => {

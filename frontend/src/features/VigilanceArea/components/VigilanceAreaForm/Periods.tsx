@@ -1,29 +1,36 @@
 import { Period } from '@features/VigilanceArea/components/VigilanceAreaForm/Period'
 import { getVigilanceAreaPeriodInitialValues } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { Accent, Button, Checkbox, Icon, Label } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Checkbox, Icon } from '@mtes-mct/monitor-ui'
 import { FieldArray, useField } from 'formik'
 import styled from 'styled-components'
 
 export function Periods() {
-  const [field, meta] = useField<VigilanceArea.VigilanceAreaPeriod[]>('periods')
+  const [field, meta, helper] = useField<VigilanceArea.VigilanceAreaPeriod[]>('periods')
   const periods = field.value
 
-  const setIsAtAllTimes = (
+  const setIsAtAllTimes = async (
     isChecked: boolean | undefined,
     isCritical: boolean,
     push: (vigilanceArea: VigilanceArea.VigilanceAreaPeriod) => void,
     remove: (index: number) => void
   ) => {
+    async function removeRemainingPeriod() {
+      await helper.setValue(field.value.filter(period => period.isCritical !== isCritical))
+    }
+
     const vigilanceAreaPeriod: VigilanceArea.VigilanceAreaPeriod = {
       ...getVigilanceAreaPeriodInitialValues(),
       isAtAllTimes: true,
       isCritical
     }
     const index = field.value.findIndex(period => period.isAtAllTimes && period.isCritical === isCritical)
+
     if (isChecked && index === -1) {
+      await removeRemainingPeriod()
       push(vigilanceAreaPeriod)
     }
+
     if (!isChecked && index !== -1) {
       remove(index)
     }
@@ -39,27 +46,28 @@ export function Periods() {
 
           return (
             <Wrapper>
-              <Label>Périodes</Label>
-              <CheckboxWrapper>
-                <StyledCircle />
-                <CriticalCheckbox
-                  checked={hasSimpleIsAtAllTimesPeriod}
-                  isLight
-                  label="Vigilance simple en tout temps"
-                  name="isSimpleAtAllTimes"
-                  onChange={isChecked => setIsAtAllTimes(isChecked, false, push, remove)}
-                />
-              </CheckboxWrapper>
-              <CheckboxWrapper>
-                <StyledCircle $isCritical />
-                <CriticalCheckbox
-                  checked={hasCriticalIsAtAllTimesPeriod}
-                  isLight
-                  label="Vigilance critique en tout temps"
-                  name="isCriticalAtAllTimes"
-                  onChange={isChecked => setIsAtAllTimes(isChecked, true, push, remove)}
-                />
-              </CheckboxWrapper>
+              <CheckboxesWrapper>
+                <CheckboxWrapper>
+                  <StyledCircle />
+                  <CriticalCheckbox
+                    checked={hasSimpleIsAtAllTimesPeriod}
+                    isLight
+                    label="Vigilance simple en tout temps"
+                    name="isSimpleAtAllTimes"
+                    onChange={isChecked => setIsAtAllTimes(isChecked, false, push, remove)}
+                  />
+                </CheckboxWrapper>
+                <CheckboxWrapper>
+                  <StyledCircle $isCritical />
+                  <CriticalCheckbox
+                    checked={hasCriticalIsAtAllTimesPeriod}
+                    isLight
+                    label="Vigilance critique en tout temps"
+                    name="isCriticalAtAllTimes"
+                    onChange={isChecked => setIsAtAllTimes(isChecked, true, push, remove)}
+                  />
+                </CheckboxWrapper>
+              </CheckboxesWrapper>
               {periods
                 .filter((period: VigilanceArea.VigilanceAreaPeriod) => !period.isAtAllTimes)
                 .map((period: VigilanceArea.VigilanceAreaPeriod) => {
@@ -118,6 +126,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  border-top: 1px solid ${p => p.theme.color.lightGray};
+  padding-top: 8px;
 `
 
 export const CriticalCheckbox = styled(Checkbox)`
@@ -128,6 +138,13 @@ export const CriticalCheckbox = styled(Checkbox)`
 
 export const CheckboxWrapper = styled.div`
   position: relative;
+`
+
+export const CheckboxesWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
 `
 
 export const StyledCircle = styled.div<{ $isCritical?: boolean }>`

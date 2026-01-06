@@ -146,12 +146,17 @@ export namespace VigilanceArea {
     SPECIFIC_PERIOD = 'Période spécifique'
   }
 
-  export type VigilanceAreaFilterPeriodType =
-    | 'AT_THE_MOMENT'
-    | 'NEXT_THREE_MONTHS'
-    | 'CURRENT_QUARTER'
-    | 'CURRENT_YEAR'
-    | 'SPECIFIC_PERIOD'
+  export enum VigilanceAreaFilterType {
+    SIMPLE = 'SIMPLE',
+    CRITICAL = 'CRITICAL',
+    NONE = 'NONE'
+  }
+
+  export enum VigilanceAreaFilterTypeLabel {
+    SIMPLE = 'Période de vigilance simple en cours',
+    CRITICAL = 'Période de vigilance critique en cours',
+    NONE = 'Aucune période de vigilance en cours'
+  }
 
   export type VigilanceAreaProperties = Omit<VigilanceArea.VigilanceArea, 'geom'> & {
     id: number
@@ -160,8 +165,6 @@ export namespace VigilanceArea {
   }
 
   export type VigilanceAreaLayer = VigilanceArea.VigilanceAreaFromApi & { bbox: number[] }
-
-  export type StatusType = 'DRAFT' | 'PUBLISHED'
 
   export enum Status {
     DRAFT = 'DRAFT',
@@ -177,11 +180,5 @@ export namespace VigilanceArea {
     CONTROL_UNIT = 'CONTROL_UNIT',
     OTHER = 'OTHER',
     INTERNAL = 'INTERNAL'
-  }
-
-  export enum VigilanceAreaSourceTypeLabel {
-    CONTROL_UNIT = 'Unité',
-    OTHER = 'Autre',
-    INTERNAL = 'Interne CACEM'
   }
 }

@@ -1,13 +1,24 @@
+import { isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { THEME } from '@mtes-mct/monitor-ui'
+import { getColorWithAlpha, stringToColorInGroup } from '@utils/utils'
 import { Fill, Stroke, Style } from 'ol/style'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 
-const getStyle = (color: string, isSelected: boolean | undefined, asMinimap: boolean, isFilled: boolean = true) => {
+const getStyle = (
+  color: string,
+  isSelected: boolean | undefined,
+  asMinimap: boolean,
+  isFilled: boolean = true,
+  isWithinCriticalPeriod: boolean = false
+) => {
   const strokeColor = () => {
     if (asMinimap) {
       return getColorWithAlpha(THEME.color.charcoal, 1)
+    }
+    if (isWithinCriticalPeriod) {
+      return getColorWithAlpha(THEME.color.maximumRed, 1)
     }
 
     return isSelected ? getColorWithAlpha('#FF4433', 1) : getColorWithAlpha(THEME.color.rufous, 1)
@@ -19,7 +30,7 @@ const getStyle = (color: string, isSelected: boolean | undefined, asMinimap: boo
     }),
     stroke: new Stroke({
       color: strokeColor(),
-      width: isSelected || asMinimap ? 3 : 1
+      width: isSelected || asMinimap || isWithinCriticalPeriod ? 3 : 1
     })
   })
 }
@@ -27,9 +38,9 @@ const getStyle = (color: string, isSelected: boolean | undefined, asMinimap: boo
 export const getVigilanceAreaColorWithAlpha = (
   name: string | null = '',
   comments: string | null = '',
-  isArchived = false
+  withoutPeriod = false
 ) => {
-  if (isArchived) {
+  if (withoutPeriod) {
     return THEME.color.white
   }
 
@@ -37,9 +48,20 @@ export const getVigilanceAreaColorWithAlpha = (
 }
 
 export const getVigilanceAreaLayerStyle = feature => {
-  const isArchived = feature.get('isArchived')
+  const periods = feature.get('periods') as Array<VigilanceArea.VigilanceAreaPeriod> | undefined
+  const isWithinCriticalPeriod = isWithinPeriod(periods, true)
 
-  const colorWithAlpha = getVigilanceAreaColorWithAlpha(feature.get('name'), feature.get('comments'), isArchived)
+  const colorWithAlpha = getVigilanceAreaColorWithAlpha(
+    feature.get('name'),
+    feature.get('comments'),
+    periods?.length === 0
+  )
 
-  return getStyle(colorWithAlpha, feature.get('isSelected'), feature.get('asMinimap'), feature.get('isFilled'))
+  return getStyle(
+    colorWithAlpha,
+    feature.get('isSelected'),
+    feature.get('asMinimap'),
+    feature.get('isFilled'),
+    isWithinCriticalPeriod
+  )
 }

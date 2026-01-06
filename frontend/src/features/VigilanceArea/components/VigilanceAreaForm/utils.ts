@@ -1,5 +1,8 @@
+import { computeOccurenceWithinCurrentYear } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import { DraftSchema, PublishedSchema } from '@features/VigilanceArea/components/VigilanceAreaForm/Schema'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+
+import { customDayjs } from '../../../../../cypress/e2e/utils/customDayjs'
 
 export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceArea, 'id'> {
   return {
@@ -41,4 +44,17 @@ export const isFormValid = (vigilanceArea: VigilanceArea.VigilanceArea | undefin
   const SchemaToValidate = againstDraftSchema ? DraftSchema : PublishedSchema
 
   return SchemaToValidate.isValidSync(vigilanceArea, { abortEarly: false })
+}
+
+export function isWithinPeriod(
+  periods: VigilanceArea.VigilanceAreaPeriod[] | undefined,
+  isCritical: boolean | undefined
+) {
+  return !!periods?.some(period => {
+    const dateRanges = computeOccurenceWithinCurrentYear(period)
+
+    return dateRanges.some(
+      dateRange => dateRange.isCritical === isCritical && customDayjs.utc().isBetween(dateRange.start, dateRange.end)
+    )
+  })
 }
