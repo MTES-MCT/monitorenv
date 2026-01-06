@@ -10,7 +10,6 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
     createdBy: undefined,
     geom: undefined,
     images: [],
-    isArchived: false,
     isDraft: true,
     linkedAMPs: [],
     linkedRegulatoryAreas: [],

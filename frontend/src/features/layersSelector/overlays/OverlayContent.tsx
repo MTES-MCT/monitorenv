@@ -191,7 +191,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
               )
             : []
 
-          const isArchived = (item.properties as VigilanceArea.VigilanceAreaProperties)?.isArchived ?? false
+          const isInformative = (item.properties as VigilanceArea.VigilanceAreaProperties)?.periods?.length === 0
 
           const isIsolatedLayerFilled = isolatedLayer?.id === id && isolatedLayer?.isFilled
 
@@ -204,7 +204,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
             >
               <Wrapper>
                 <LayerLegend
-                  isDisabled={isArchived || isDisabled}
+                  isDisabled={isInformative || isDisabled}
                   layerType={item.layerType}
                   legendKey={legendKey}
                   size={Size.NORMAL}

@@ -57,7 +57,6 @@ data class VigilanceAreaModel(
     )
     @OrderBy("id")
     var images: MutableList<VigilanceAreaImageModel> = mutableListOf(),
-    @Column(name = "is_archived", nullable = false) val isArchived: Boolean,
     @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
     @Column(name = "is_draft") val isDraft: Boolean,
     @Column(name = "links", columnDefinition = "jsonb")
@@ -97,7 +96,6 @@ data class VigilanceAreaModel(
                     comments = vigilanceArea.comments,
                     createdBy = vigilanceArea.createdBy,
                     geom = vigilanceArea.geom,
-                    isArchived = vigilanceArea.isArchived,
                     isDeleted = vigilanceArea.isDeleted,
                     isDraft = vigilanceArea.isDraft,
                     links = vigilanceArea.links,
@@ -125,7 +123,6 @@ data class VigilanceAreaModel(
             comments = comments,
             createdBy = createdBy,
             geom = geom,
-            isArchived = isArchived,
             isDeleted = isDeleted,
             isDraft = isDraft,
             images = images.map { it.toVigilanceAreaImage() },
