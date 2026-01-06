@@ -8,6 +8,7 @@ import {
   INITIAL_STATE,
   vigilanceAreaFiltersActions
 } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
+import { VigilanceAreaTypeFilter } from '@features/VigilanceArea/components/VigilanceAreaTypeFilter'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -169,6 +170,11 @@ export function LayerFilters() {
           onChange={updateDateRangeFilter}
         />
       )}
+      <SelectContainer>
+        <VigilanceAreaTypeFilter style={{ flex: 1 }} />
+
+        <Tooltip>Ce champ est utilisé uniquement comme critère de recherche pour les zones de vigilance.</Tooltip>
+      </SelectContainer>
 
       {(filteredRegulatoryTags.length > 0 ||
         filteredAmpTypes?.length > 0 ||

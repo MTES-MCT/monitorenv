@@ -1,4 +1,5 @@
 import { StyledTransparentButton } from '@components/style'
+import { isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useTracking } from '@hooks/useTracking'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -97,7 +98,8 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
     >
       <StyledTransparentButton onClick={toggleZoneMetadata}>
         <LayerLegend
-          isDisabled={layer?.isArchived}
+          border={isWithinPeriod(layer?.periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
+          isDisabled={layer?.periods?.length === 0}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
           legendKey={layer?.comments}
           type={layer?.name ?? 'aucun'}

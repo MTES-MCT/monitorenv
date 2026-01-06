@@ -21,7 +21,7 @@ import { Form } from './Form'
 import { VigilanceAreaPanel } from './Panel'
 import { VigilanceAreaSchema } from './Schema'
 import { Header, SubHeaderContainer, Title, TitleContainer } from './style'
-import { getVigilanceAreaInitialValues } from './utils'
+import { getVigilanceAreaInitialValues, isWithinPeriod } from './utils'
 
 type VigilanceAreaFormProps = {
   isOpen: boolean
@@ -91,7 +91,10 @@ export function VigilanceAreaForm({ isOpen, isReadOnly = false, vigilanceAreaId 
           <Header $isEditing={!!vigilanceAreaId}>
             <TitleContainer>
               <LayerLegend
-                isDisabled={vigilanceArea?.isArchived}
+                border={
+                  isWithinPeriod(vigilanceArea?.periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined
+                }
+                isDisabled={vigilanceArea?.periods?.length === 0}
                 layerType={MonitorEnvLayers.VIGILANCE_AREA}
                 legendKey={vigilanceArea?.comments ?? 'aucun nom'}
                 size={Size.NORMAL}

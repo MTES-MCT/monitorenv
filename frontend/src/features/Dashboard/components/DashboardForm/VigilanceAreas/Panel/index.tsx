@@ -15,6 +15,7 @@ import {
   Title,
   TitleContainer
 } from '@features/VigilanceArea/components/VigilanceAreaForm/style'
+import { isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
@@ -43,7 +44,8 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
       <Header $isEditing>
         <TitleContainer>
           <LayerLegend
-            isDisabled={vigilanceArea?.isArchived}
+            border={isWithinPeriod(vigilanceArea?.periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
+            isDisabled={vigilanceArea?.periods?.length === 0}
             layerType={MonitorEnvLayers.VIGILANCE_AREA}
             legendKey={vigilanceArea?.comments ?? 'aucun nom'}
             size={Size.NORMAL}

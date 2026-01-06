@@ -3,6 +3,7 @@ import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
+import { isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Tag, THEME } from '@mtes-mct/monitor-ui'
@@ -70,7 +71,8 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
     >
       <StyledTransparentButton $width="70%">
         <LayerLegend
-          isDisabled={vigilanceArea?.isArchived}
+          border={isWithinPeriod(vigilanceArea?.periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
+          isDisabled={vigilanceArea?.periods?.length === 0}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
           legendKey={vigilanceArea?.comments ?? 'aucun nom'}
           type={vigilanceArea?.name ?? 'aucun nom'}

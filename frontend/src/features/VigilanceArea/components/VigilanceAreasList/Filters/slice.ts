@@ -26,8 +26,10 @@ export type VigilanceAreaSliceState = {
   seaFronts: string[]
   specificPeriod: DateAsStringRange | undefined
   status: VigilanceArea.Status[]
+  type: VigilanceArea.VigilanceAreaFilterType[]
   visibility: VigilanceArea.Visibility[]
 }
+
 export const INITIAL_STATE: VigilanceAreaSliceState = {
   createdBy: [],
   nbOfFiltersSetted: 0,
@@ -35,8 +37,10 @@ export const INITIAL_STATE: VigilanceAreaSliceState = {
   seaFronts: [],
   specificPeriod: undefined,
   status: [VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED],
+  type: [],
   visibility: [VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE]
 }
+
 export const vigilanceAreaFiltersSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'vigilanceAreaFilters',

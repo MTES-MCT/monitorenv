@@ -1,4 +1,5 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { getFilterInformativeVigilanceArea } from '@features/VigilanceArea/useCases/filters/isVigilanceAreaPartOfType'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 
 import type { Dayjs } from 'dayjs'
@@ -98,6 +99,7 @@ export const getFilterVigilanceAreasPerPeriod = (
   vigilanceAreas: (VigilanceArea.VigilanceAreaLayer | VigilanceArea.VigilanceAreaFromApi)[],
   periodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined,
   vigilanceAreaSpecificPeriodFilter?: string[],
+  vigilanceAreaTypeFilter?: VigilanceArea.VigilanceAreaFilterType[],
   isSuperUser: boolean = true
 ): VigilanceArea.VigilanceAreaLayer[] => {
   const { endDate: endDateFilter, startDate: startDateFilter } = calculatePeriodBounds(
@@ -113,18 +115,22 @@ export const getFilterVigilanceAreasPerPeriod = (
     if (!isSuperUser && (vigilanceArea.isDraft || vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE)) {
       return false
     }
-    if (!vigilanceArea.periods || !vigilanceArea) {
+    if (!vigilanceArea) {
       return false
     }
-    if (vigilanceArea.periods.some(period => period.isAtAllTimes)) {
+    if (getFilterInformativeVigilanceArea(vigilanceAreaTypeFilter, vigilanceArea)) {
       return true
     }
 
-    if (vigilanceArea.periods.every(period => !period.startDatePeriod || !period.endDatePeriod)) {
+    if (vigilanceArea.periods?.some(period => period.isAtAllTimes)) {
+      return true
+    }
+
+    if (vigilanceArea.periods?.every(period => !period.startDatePeriod || !period.endDatePeriod)) {
       return false
     }
 
-    return vigilanceArea.periods.some(period => {
+    return vigilanceArea.periods?.some(period => {
       const startDate = customDayjs(period.startDatePeriod).utc()
       const endDate = customDayjs(period.endDatePeriod).utc()
 

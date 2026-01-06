@@ -8,6 +8,9 @@ import { getUtcDateInMultipleFormats } from '../../utils/getUtcDateInMultipleFor
 const startDate = getFutureDate(7, 'day')
 const endDate = getFutureDate(31, 'day')
 
+const startDateCritical = getFutureDate(7, 'day')
+const endDateCritical = getFutureDate(10, 'day')
+
 describe('Create Vigilance Area', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
@@ -29,12 +32,19 @@ describe('Create Vigilance Area', () => {
   it('Should successfully create a vigilance area', () => {
     cy.fill('Nom de la zone de vigilance', 'Nouvelle zone de vigilance')
 
-    cy.fill('Période de validité', [startDate, endDate])
+    cy.clickButton('Ajouter une période de vigilance simple')
+    cy.fill('Période de vigilance', [startDate, endDate])
 
-    cy.getDataCy('vigilance-area-ending-condition').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-condition').should('not.exist')
     cy.fill('Récurrence', 'Toutes les semaines')
-    cy.getDataCy('vigilance-area-ending-condition').should('be.visible')
+    cy.getDataCy('vigilance-area-0-ending-condition').should('be.visible')
     cy.fill('Fin récurrence', 'Jamais')
+    cy.clickButton('Valider')
+
+    cy.clickButton('Ajouter une période de vigilance critique')
+    cy.fill('Période critique', [startDateCritical, endDateCritical])
+    cy.fill('Récurrence', 'Aucune')
+    cy.clickButton('Valider')
 
     cy.fill('Thématiques et sous-thématiques', ['Pêche à pied de loisir'])
     cy.fill('Tags et sous-tags', ['AMP'])
@@ -71,7 +81,7 @@ describe('Create Vigilance Area', () => {
     })
 
     cy.clickButton('Ajouter une unité')
-    cy.fill("Nom de l'unité", 'Cultures marines – DDTM 40')
+    cy.fill("Nom de l'unité", 'Cultures marines – DDTM 40', { force: true })
     cy.get('label').contains('Contact 2 06 02 xx xx xx').click()
     cy.clickButton('Valider')
 
@@ -107,8 +117,22 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.periods[0].endDatePeriod).equal(
         `${endDate[0]}-${endDateMonth}-${endDateDay}T23:59:59.000Z`
       )
+      expect(createdVigilanceArea.periods[0].isCritical).equal(false)
       expect(createdVigilanceArea.periods[0].frequency).equal(VigilanceArea.Frequency.ALL_WEEKS)
       expect(createdVigilanceArea.periods[0].endingCondition).equal(VigilanceArea.EndingCondition.NEVER)
+      const startDateMonthCritical = startDateCritical[1] < 10 ? `0${startDateCritical[1]}` : startDateCritical[1]
+      const startDateDayCritical = startDateCritical[2] < 10 ? `0${startDateCritical[2]}` : startDateCritical[2]
+      const endDateMonthCritical = endDateCritical[1] < 10 ? `0${endDateCritical[1]}` : endDateCritical[1]
+      const endDateDayCritical = endDateCritical[2] < 10 ? `0${endDateCritical[2]}` : endDateCritical[2]
+      expect(createdVigilanceArea.periods[1].startDatePeriod).equal(
+        `${startDateCritical[0]}-${startDateMonthCritical}-${startDateDayCritical}T00:00:00.000Z`
+      )
+      expect(createdVigilanceArea.periods[1].endDatePeriod).equal(
+        `${endDateCritical[0]}-${endDateMonthCritical}-${endDateDayCritical}T23:59:59.000Z`
+      )
+      expect(createdVigilanceArea.periods[1].isCritical).equal(true)
+      expect(createdVigilanceArea.periods[1].frequency).equal(VigilanceArea.Frequency.NONE)
+
       expect(createdVigilanceArea.geom.type).equal('MultiPolygon')
       expect(createdVigilanceArea.themes[0].id).equal(9)
       expect(createdVigilanceArea.themes[0].name).equal('Pêche à pied')
@@ -154,29 +178,30 @@ describe('Create Vigilance Area', () => {
 
   it('Must be able to manage frequency and display appropriate fields', () => {
     cy.fill('Nom de la zone de vigilance', 'Nouvelle zone de vigilance')
-    cy.fill('Période de validité', [startDate, endDate])
+    cy.clickButton('Ajouter une période de vigilance simple')
+    cy.fill('Période de vigilance', [startDate, endDate])
 
-    cy.getDataCy('vigilance-area-ending-condition').should('not.exist')
-    cy.getDataCy('vigilance-area-ending-occurence-number').should('not.exist')
-    cy.getDataCy('vigilance-area-ending-occurence-date').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-condition').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-occurence-number').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-occurence-date').should('not.exist')
     cy.fill('Récurrence', 'Aucune')
-    cy.getDataCy('vigilance-area-ending-condition').should('not.exist')
-    cy.getDataCy('vigilance-area-ending-occurence-number').should('not.exist')
-    cy.getDataCy('vigilance-area-ending-occurence-date').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-condition').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-occurence-number').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-occurence-date').should('not.exist')
 
     cy.fill('Récurrence', 'Toutes les semaines')
-    cy.getDataCy('vigilance-area-ending-condition').should('be.visible')
+    cy.getDataCy('vigilance-area-0-ending-condition').should('be.visible')
     cy.fill('Fin récurrence', 'Jamais')
-    cy.getDataCy('vigilance-area-ending-occurence-number').should('not.exist')
-    cy.getDataCy('vigilance-area-ending-occurence-date').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-occurence-number').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-occurence-date').should('not.exist')
 
     cy.fill('Fin récurrence', 'Le…')
-    cy.getDataCy('vigilance-area-ending-occurence-number').should('not.exist')
-    cy.getDataCy('vigilance-area-ending-occurence-date').should('be.visible')
+    cy.getDataCy('vigilance-area-0-ending-occurence-number').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-occurence-date').should('be.visible')
 
     cy.fill('Fin récurrence', 'Après… x fois')
-    cy.getDataCy('vigilance-area-ending-occurence-number').should('be.visible')
-    cy.getDataCy('vigilance-area-ending-occurence-date').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-occurence-number').should('be.visible')
+    cy.getDataCy('vigilance-area-0-ending-occurence-date').should('not.exist')
   })
 
   it('Should create an ongoing vigilance area and find it with period filter', () => {
@@ -185,12 +210,14 @@ describe('Create Vigilance Area', () => {
 
     const { asDatePickerDateTime } = getUtcDateInMultipleFormats()
     const vigilanceAreaEndDate = getFutureDate(5, 'day')
-    cy.fill('Période de validité', [asDatePickerDateTime, vigilanceAreaEndDate])
+    cy.clickButton('Ajouter une période de vigilance simple')
+    cy.fill('Période de vigilance', [asDatePickerDateTime, vigilanceAreaEndDate])
 
-    cy.getDataCy('vigilance-area-ending-condition').should('not.exist')
+    cy.getDataCy('vigilance-area-0-ending-condition').should('not.exist')
     cy.fill('Récurrence', 'Toutes les semaines')
-    cy.getDataCy('vigilance-area-ending-condition').should('be.visible')
+    cy.getDataCy('vigilance-area-0-ending-condition').should('be.visible')
     cy.fill('Fin récurrence', 'Jamais')
+    cy.clickButton('Valider')
 
     cy.fill('Thématiques et sous-thématiques', ['Pêche à pied de loisir'])
     cy.clickOutside()
@@ -221,8 +248,10 @@ describe('Create Vigilance Area', () => {
 
     const { asDatePickerDateTime } = getUtcDateInMultipleFormats()
     const vigilanceAreaEndDate = getFutureDate(5, 'day')
-    cy.fill('Période de validité', [asDatePickerDateTime, vigilanceAreaEndDate])
+    cy.clickButton('Ajouter une période de vigilance simple')
+    cy.fill('Période de vigilance', [asDatePickerDateTime, vigilanceAreaEndDate])
     cy.fill('Récurrence', 'Aucune')
+    cy.clickButton('Valider')
 
     // Submit the form
     cy.clickButton('Enregistrer')
@@ -235,7 +264,7 @@ describe('Create Vigilance Area', () => {
     // Fill in the form fields
     cy.fill('Nom de la zone de vigilance', 'Nouvelle zone de vigilance infini')
 
-    cy.fill('En tout temps', true)
+    cy.fill('Vigilance simple en tout temps', true)
 
     // Submit the form
     cy.clickButton('Enregistrer')

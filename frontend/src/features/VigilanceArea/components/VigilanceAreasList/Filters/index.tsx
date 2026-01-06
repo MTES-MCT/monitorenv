@@ -13,6 +13,7 @@ import {
   setSearchExtent,
   setShouldFilterSearchOnMapExtent
 } from '@features/layersSelector/search/slice'
+import { VigilanceAreaTypeFilter } from '@features/VigilanceArea/components/VigilanceAreaTypeFilter'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -140,6 +141,7 @@ export function VigilanceAreasFilters() {
 
       <FilterContainer>
         <PeriodFilter style={{ width: 320 }} />
+        <VigilanceAreaTypeFilter style={{ width: 320 }} />
         <RegulatoryThemesFilter style={{ width: 320 }} />
         <RegulatoryTagsFilter style={{ width: 320 }} />
 

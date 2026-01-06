@@ -45,7 +45,7 @@ export function Sources() {
             onClick={() =>
               push({
                 comments: undefined,
-                controlUnitContacts: [],
+                controlUnitContacts: undefined,
                 isAnonymous: false,
                 type: VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT
               })

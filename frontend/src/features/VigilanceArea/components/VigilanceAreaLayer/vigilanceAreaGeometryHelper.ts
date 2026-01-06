@@ -20,9 +20,7 @@ export const getVigilanceAreaZoneFeature = (
   })
   const area = geometry && getArea(geometry)
 
-  const feature = new Feature({
-    geometry
-  })
+  const feature = new Feature({ geometry })
 
   const isolatedLayerIsVigilanceArea = isolatedLayer?.type.includes('VIGILANCE_AREA') ?? false
   const isLayerFilled = isolatedLayer

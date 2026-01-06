@@ -12,12 +12,14 @@ import { getAMPColorWithAlpha } from '../../map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '../../map/layers/styles/administrativeAndRegulatoryLayers.style'
 
 export function LayerLegend({
+  border,
   isDisabled = false,
   layerType,
   legendKey,
   size = Size.SMALL,
   type
 }: {
+  border?: string
   isDisabled?: boolean
   layerType: RegulatoryOrAMPOrViglanceAreaLayerType | MonitorEnvLayers.LOCALIZED_AREAS
   legendKey?: string
@@ -38,7 +40,13 @@ export function LayerLegend({
     case MonitorEnvLayers.VIGILANCE_AREA:
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
     case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:
-      return <Rectangle $size={size} $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey, isDisabled)} />
+      return (
+        <Rectangle
+          $border={border}
+          $size={size}
+          $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey, isDisabled)}
+        />
+      )
     case MonitorEnvLayers.LOCALIZED_AREAS:
       return <Rectangle $size={size} $vectorLayerColor={getLocalizedAreaColorWithAlpha(type)} />
     default:
