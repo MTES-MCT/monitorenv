@@ -44,9 +44,10 @@ $$
 
         INSERT INTO vigilance_area_period(id, vigilance_areas_id, end_date_period, ending_condition,
                                           ending_occurrence_date,
-                                          ending_occurrence_number, frequency, start_date_period, computed_end_date)
+                                          ending_occurrence_number, frequency, start_date_period, computed_end_date,
+                                          is_critical)
         VALUES (uuid_generate_v4(), 1, today + INTERVAL '1 day', NULL, NULL, NULL, 'NONE', today - INTERVAL '1 day',
-                today + INTERVAL '1 day');
+                today + INTERVAL '1 day', true);
 
         INSERT INTO vigilance_areas_source (id, vigilance_areas_id, control_unit_contacts_id, type, comments,
                                             is_anonymous)
