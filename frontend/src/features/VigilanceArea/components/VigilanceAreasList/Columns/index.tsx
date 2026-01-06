@@ -24,7 +24,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Période(s) de vigilance',
     id: 'periods',
-    size: 220 + legacyFirefoxOffset
+    size: 250 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.tags,
@@ -72,7 +72,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Créée par',
     id: 'createdBy',
-    size: 95 + legacyFirefoxOffset
+    size: 97 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.visibility,

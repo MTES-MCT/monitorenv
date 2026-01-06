@@ -37,7 +37,7 @@ export function Planning({ occurences }: PlanningProps) {
 const PlanningWrapper = styled.ol`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 10px 4px;
+  column-gap: 10px;
 
   font-size: 11px;
   color: ${p => p.theme.color.slateGray};

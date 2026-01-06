@@ -20,7 +20,7 @@ import { PanelComments } from './PanelComments'
 import { PanelImages } from './PanelImages'
 import { PanelInternalCACEMSection } from './PanelInternalCACEMSection'
 import { PanelLinks } from './PanelLinks'
-import { PanelPeriodAndThemes } from './PanelPeriodAndThemes'
+import { PanelThemesAndTags } from './PanelThemesAndTags'
 import { AMPList } from '../AddAMPs/AMPList'
 import { RegulatoryAreas } from '../AddRegulatoryAreas/RegulatoryAreas'
 import {
@@ -118,7 +118,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
           )}
 
         <PanelDates onValidate={validate} vigilanceArea={vigilanceArea} />
-        <PanelPeriodAndThemes vigilanceArea={vigilanceArea} />
+        <PanelThemesAndTags vigilanceArea={vigilanceArea} />
         <PlanningForm vigilanceArea={vigilanceArea} />
         <PanelComments comments={vigilanceArea?.comments} />
         {values?.linkedRegulatoryAreas && values?.linkedRegulatoryAreas.length > 0 && (

@@ -37,89 +37,87 @@ export function Periods() {
   }
 
   return (
-    <>
-      <FieldArray
-        name="periods"
-        render={({ push, remove }) => {
-          const hasSimpleIsAtAllTimesPeriod = periods.some(period => period.isAtAllTimes && !period.isCritical)
-          const hasCriticalIsAtAllTimesPeriod = periods.some(period => period.isAtAllTimes && period.isCritical)
+    <FieldArray
+      name="periods"
+      render={({ push, remove }) => {
+        const hasSimpleIsAtAllTimesPeriod = periods.some(period => period.isAtAllTimes && !period.isCritical)
+        const hasCriticalIsAtAllTimesPeriod = periods.some(period => period.isAtAllTimes && period.isCritical)
 
-          return (
-            <Wrapper>
-              <CheckboxesWrapper>
-                <HiddenLegend>Type de période de vigilance en tout temps</HiddenLegend>
-                <CheckboxWrapper>
-                  <PeriodCircle />
-                  <CriticalCheckbox
-                    checked={hasSimpleIsAtAllTimesPeriod}
-                    isLight
-                    label="Vigilance simple en tout temps"
-                    name="isSimpleAtAllTimes"
-                    onChange={isChecked => setIsAtAllTimes(isChecked, false, push, remove)}
-                  />
-                </CheckboxWrapper>
-                <CheckboxWrapper>
-                  <PeriodCircle $isCritical />
-                  <CriticalCheckbox
-                    checked={hasCriticalIsAtAllTimesPeriod}
-                    isLight
-                    label="Vigilance critique en tout temps"
-                    name="isCriticalAtAllTimes"
-                    onChange={isChecked => setIsAtAllTimes(isChecked, true, push, remove)}
-                  />
-                </CheckboxWrapper>
-              </CheckboxesWrapper>
-              {periods
-                .filter((period: VigilanceArea.VigilanceAreaPeriod) => !period.isAtAllTimes)
-                .map((period: VigilanceArea.VigilanceAreaPeriod) => {
-                  const index = field.value.indexOf(period)
+        return (
+          <Wrapper>
+            <CheckboxesWrapper>
+              <HiddenLegend>Type de période de vigilance en tout temps</HiddenLegend>
+              <CheckboxWrapper>
+                <PeriodCircle />
+                <CriticalCheckbox
+                  checked={hasSimpleIsAtAllTimesPeriod}
+                  isLight
+                  label="Vigilance simple en tout temps"
+                  name="isSimpleAtAllTimes"
+                  onChange={isChecked => setIsAtAllTimes(isChecked, false, push, remove)}
+                />
+              </CheckboxWrapper>
+              <CheckboxWrapper>
+                <PeriodCircle $isCritical />
+                <CriticalCheckbox
+                  checked={hasCriticalIsAtAllTimesPeriod}
+                  isLight
+                  label="Vigilance critique en tout temps"
+                  name="isCriticalAtAllTimes"
+                  onChange={isChecked => setIsAtAllTimes(isChecked, true, push, remove)}
+                />
+              </CheckboxWrapper>
+            </CheckboxesWrapper>
+            {periods
+              .filter((period: VigilanceArea.VigilanceAreaPeriod) => !period.isAtAllTimes)
+              .map((period: VigilanceArea.VigilanceAreaPeriod) => {
+                const index = field.value.indexOf(period)
 
-                  return (
-                    <Period
-                      key={period.id ?? index}
-                      hasError={meta.error}
-                      index={index}
-                      initialPeriod={period}
-                      onValidate={vigilanceAreaPeriod => {
-                        remove(index)
-                        push(vigilanceAreaPeriod)
-                      }}
-                      remove={remove}
-                    />
-                  )
-                })}
-              <Button
-                accent={Accent.SECONDARY}
-                disabled={hasSimpleIsAtAllTimesPeriod || hasCriticalIsAtAllTimesPeriod}
-                Icon={Icon.Plus}
-                onClick={() =>
-                  push({
-                    isAtAllTimes: false,
-                    isCritical: false
-                  })
-                }
-              >
-                Ajouter une période de vigilance simple
-              </Button>
-              <Button
-                accent={Accent.ERROR}
-                disabled={hasCriticalIsAtAllTimesPeriod}
-                Icon={Icon.Plus}
-                onClick={() =>
-                  push({
-                    isAtAllTimes: false,
-                    isCritical: true
-                  })
-                }
-              >
-                Ajouter une période de vigilance critique
-              </Button>
-            </Wrapper>
-          )
-        }}
-        validateOnChange={false}
-      />
-    </>
+                return (
+                  <Period
+                    key={period.id ?? index}
+                    hasError={meta.error}
+                    index={index}
+                    initialPeriod={period}
+                    onValidate={vigilanceAreaPeriod => {
+                      remove(index)
+                      push(vigilanceAreaPeriod)
+                    }}
+                    remove={remove}
+                  />
+                )
+              })}
+            <Button
+              accent={Accent.SECONDARY}
+              disabled={hasSimpleIsAtAllTimesPeriod || hasCriticalIsAtAllTimesPeriod}
+              Icon={Icon.Plus}
+              onClick={() =>
+                push({
+                  isAtAllTimes: false,
+                  isCritical: false
+                })
+              }
+            >
+              Ajouter une période de vigilance simple
+            </Button>
+            <Button
+              accent={Accent.ERROR}
+              disabled={hasCriticalIsAtAllTimesPeriod}
+              Icon={Icon.Plus}
+              onClick={() =>
+                push({
+                  isAtAllTimes: false,
+                  isCritical: true
+                })
+              }
+            >
+              Ajouter une période de vigilance critique
+            </Button>
+          </Wrapper>
+        )
+      }}
+      validateOnChange={false}
+    />
   )
 }
 
@@ -174,4 +172,4 @@ const HiddenLegend = styled(Legend)`
   overflow: hidden;
   position: absolute;
   left: -10000px;
-}`
+`
