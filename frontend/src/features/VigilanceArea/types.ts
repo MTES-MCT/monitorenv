@@ -14,7 +14,6 @@ export namespace VigilanceArea {
     geom?: GeoJSON.MultiPolygon
     id?: number
     images?: ImageApi[]
-    isArchived: boolean
     isDraft: boolean
     linkedAMPs?: number[]
     linkedRegulatoryAreas?: number[]
@@ -37,7 +36,6 @@ export namespace VigilanceArea {
     geom?: GeoJSON.MultiPolygon
     id: number
     images?: ImageApi[]
-    isArchived: boolean
     isDraft: boolean
     linkedAMPs?: number[]
     linkedRegulatoryAreas?: number[]

@@ -8,7 +8,6 @@ describe('filterVigilanceAreas', () => {
   const todayMin2Days = {
     createdAt: undefined,
     id: 1,
-    isArchived: false,
     isAtAllTimes: false,
     isDraft: false,
     name: 'todayMin2Days',
@@ -30,7 +29,6 @@ describe('filterVigilanceAreas', () => {
   const today = {
     createdAt: undefined,
     id: 2,
-    isArchived: false,
     isAtAllTimes: false,
     isDraft: false,
     name: 'Today',
@@ -52,7 +50,6 @@ describe('filterVigilanceAreas', () => {
   const quarter = {
     createdAt: undefined,
     id: 3,
-    isArchived: false,
     isDraft: false,
     name: 'Quarter',
     periods: [
@@ -73,7 +70,6 @@ describe('filterVigilanceAreas', () => {
   const outsideFilteredDate = {
     createdAt: undefined,
     id: 4,
-    isArchived: false,
     isDraft: false,
     name: 'OutsideFilteredDate',
     periods: [
@@ -98,7 +94,6 @@ describe('filterVigilanceAreas', () => {
   const year = {
     createdAt: undefined,
     id: 5,
-    isArchived: false,
     isDraft: false,
     name: 'Year',
     periods: [
@@ -119,7 +114,6 @@ describe('filterVigilanceAreas', () => {
     createdAt: undefined,
 
     id: 6,
-    isArchived: false,
     isDraft: false,
     name: 'allYear',
     periods: [
@@ -141,7 +135,6 @@ describe('filterVigilanceAreas', () => {
   const infinite = {
     createdAt: undefined,
     id: 7,
-    isArchived: false,
     isDraft: false,
     name: 'Infinite',
     periods: [
@@ -163,7 +156,6 @@ describe('filterVigilanceAreas', () => {
   const last3Months = {
     createdAt: undefined,
     id: 8,
-    isArchived: false,
     isDraft: false,
     name: 'Last 3 months',
     periods: [
@@ -185,7 +177,6 @@ describe('filterVigilanceAreas', () => {
   const last12Months = {
     createdAt: undefined,
     id: 9,
-    isArchived: false,
     isAtAllTimes: false,
     isDraft: false,
     name: 'Last 12 months',
@@ -214,12 +205,12 @@ describe('filterVigilanceAreas', () => {
 
   it('filters areas within current quarter', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER)
-    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite, last3Months])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
   })
 
   it('filters areas within current year', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_YEAR)
-    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite, last3Months, last12Months])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
   })
 
   it('filters areas within next three months', () => {

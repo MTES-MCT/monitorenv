@@ -11,7 +11,6 @@ data class VigilanceAreaEntity(
     val createdBy: String? = null,
     val geom: MultiPolygon? = null,
     val images: List<ImageEntity>? = listOf(),
-    val isArchived: Boolean,
     val isDeleted: Boolean,
     val isDraft: Boolean,
     val links: List<LinkEntity>? = null,

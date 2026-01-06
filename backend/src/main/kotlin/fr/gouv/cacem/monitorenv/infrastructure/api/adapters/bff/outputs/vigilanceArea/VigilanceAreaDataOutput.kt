@@ -15,7 +15,6 @@ data class VigilanceAreaDataOutput(
     val comments: String? = null,
     val createdBy: String? = null,
     val geom: MultiPolygon? = null,
-    val isArchived: Boolean,
     val isDraft: Boolean,
     val images: List<VigilanceAreaImageDataOutput> = mutableListOf(),
     val links: List<LinkEntity>? = null,
@@ -39,7 +38,6 @@ data class VigilanceAreaDataOutput(
                 comments = vigilanceArea.comments,
                 createdBy = vigilanceArea.createdBy,
                 geom = vigilanceArea.geom,
-                isArchived = vigilanceArea.isArchived,
                 isDraft = vigilanceArea.isDraft,
                 images =
                     vigilanceArea.images?.map { VigilanceAreaImageDataOutput.fromVigilanceAreaImage(it) }
