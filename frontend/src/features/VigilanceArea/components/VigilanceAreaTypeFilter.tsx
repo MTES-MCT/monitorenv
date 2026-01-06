@@ -27,7 +27,7 @@ export function VigilanceAreaTypeFilter({ style }: { style?: React.CSSProperties
       isCleanable
       isLabelHidden
       isTransparent
-      label="Période de vigilance"
+      label="Type de zone de vigilance"
       name="periodOfVigilanceArea"
       onChange={handleSetFilteredVigilanceType}
       options={vigilanceAreaTypeOptions}
