@@ -125,19 +125,25 @@ export function VigilanceAreas({
                   <View style={[areaStyle.content, { rowGap: 3 }]}>
                     <View>
                       <View style={areaStyle.description}>
-                        <Text>Périodes</Text>
+                        <Text>Période(s)</Text>
                       </View>
                       {vigilanceArea.periods?.map(period => (
-                        <View style={areaStyle.details}>
-                          <Text>
-                            {formattedStartPeriod(period.startDatePeriod)
-                              ? `Du ${formattedStartPeriod(period.startDatePeriod)} au ${formattedEndPeriod(
-                                  period.endDatePeriod
-                                )}`
-                              : EMPTY_VALUE}
-                          </Text>
-                          <Text>{frequencyText(period?.frequency)}</Text>
-                          <Text>{endingOccurenceText(period?.endingCondition, period?.computedEndDate)}</Text>
+                        <View key={period.id} style={areaStyle.details}>
+                          {period.isAtAllTimes ? (
+                            <Text>En tout temps</Text>
+                          ) : (
+                            <>
+                              <Text>
+                                {formattedStartPeriod(period.startDatePeriod)
+                                  ? `Du ${formattedStartPeriod(period.startDatePeriod)} au ${formattedEndPeriod(
+                                      period.endDatePeriod
+                                    )}`
+                                  : EMPTY_VALUE}
+                              </Text>
+                              <Text>{frequencyText(period?.frequency)}</Text>
+                              <Text>{endingOccurenceText(period?.endingCondition, period?.computedEndDate)}</Text>
+                            </>
+                          )}
                         </View>
                       ))}
                     </View>

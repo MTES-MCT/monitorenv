@@ -29,7 +29,7 @@ export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
 
           return acc
         }, [])
-        .flatMap(items => items),
+        .flat(),
     [vigilanceArea]
   )
   const hasSimplePeriods = useMemo(() => occurences.some(occ => !occ.isCritical), [occurences])

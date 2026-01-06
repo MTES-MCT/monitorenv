@@ -28,7 +28,7 @@ export function Sources() {
             return (
               <Source
                 key={source.id ?? index}
-                hasError={meta.error && meta.error[1]}
+                hasError={meta.error}
                 index={index}
                 initialSource={source}
                 onValidate={vigilanceAreaSource => {
@@ -77,7 +77,7 @@ export function Sources() {
             return (
               <Source
                 key={source.id ?? index}
-                hasError={meta.error && meta.error[1]}
+                hasError={meta.error}
                 index={index}
                 initialSource={source}
                 onValidate={vigilanceAreaSource => {

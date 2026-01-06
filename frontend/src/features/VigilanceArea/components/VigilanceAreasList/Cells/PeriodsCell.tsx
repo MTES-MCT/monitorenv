@@ -22,7 +22,7 @@ export function PeriodsCell({ periods }: { periods: VigilanceArea.VigilanceAreaP
           Périodes multiples{' '}
           <StyledTooltip isSideWindow>
             {periods.map(period => (
-              <PeriodCell period={period} />
+              <PeriodCell key={period.id} period={period} />
             ))}
           </StyledTooltip>
         </StyledCell>

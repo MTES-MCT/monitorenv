@@ -16,10 +16,13 @@ export const saveVigilanceArea =
       ? vigilanceAreasAPI.endpoints.createVigilanceArea
       : vigilanceAreasAPI.endpoints.updateVigilanceArea
 
-    const realEndDate = values.periods && values.periods[0] ? computeRealEndDate(values.periods[0]) : ''
-    const computedEndDate = realEndDate ?? undefined
-    const periods = values.periods?.map(period => ({ ...period, computedEndDate })) ?? []
-    const vigilanceAreaToSave = { ...values, periods }
+    const periodsWithComputedEndDate: VigilanceArea.VigilanceAreaPeriod[] | undefined = values.periods?.map(period => {
+      const realEndDate = computeRealEndDate(period)
+      const computedEndDate = realEndDate ?? undefined
+
+      return { ...period, computedEndDate }
+    })
+    const vigilanceAreaToSave = { ...values, periods: periodsWithComputedEndDate }
     try {
       const response = await dispatch(vigilanceAreaEnpoint.initiate(vigilanceAreaToSave))
 

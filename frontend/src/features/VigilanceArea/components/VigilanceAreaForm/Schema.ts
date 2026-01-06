@@ -81,34 +81,32 @@ export const DraftVigilanceAreaPeriodSchema: Yup.Schema<Omit<VigilanceArea.Vigil
     startDatePeriod: Yup.string().optional()
   })
 
-export const DraftSchema: Yup.Schema<
-  Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'isArchived' | 'seaFront'>
-> = Yup.object()
-  .shape({
-    comments: Yup.string().optional(),
-    createdBy: Yup.string()
-      .min(3, 'Minimum 3 lettres pour le trigramme')
-      .max(3, 'Maximum 3 lettres pour le trigramme')
-      .optional(),
-    geom: Yup.mixed<GeoJSON.MultiPolygon>().optional(),
-    id: Yup.number().optional(),
-    images: Yup.array<ImageApi>().optional(),
-    isArchived: Yup.boolean().required(),
-    isDraft: Yup.boolean().required(),
-    linkedAMPs: Yup.array().optional(),
-    linkedRegulatoryAreas: Yup.array().optional(),
-    links: Yup.array().optional(),
-    name: Yup.string().required(),
-    periods: Yup.array().ensure().of(DraftVigilanceAreaPeriodSchema).optional(),
-    sources: Yup.array().ensure().of(VigilanceAreaSourceSchema).ensure(),
-    tags: Yup.array().ensure().optional(),
-    themes: Yup.array().ensure().optional(),
-    visibility: Yup.mixed<VigilanceArea.Visibility>().optional()
-  })
-  .required()
+export const DraftSchema: Yup.Schema<Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'seaFront'>> =
+  Yup.object()
+    .shape({
+      comments: Yup.string().optional(),
+      createdBy: Yup.string()
+        .min(3, 'Minimum 3 lettres pour le trigramme')
+        .max(3, 'Maximum 3 lettres pour le trigramme')
+        .optional(),
+      geom: Yup.mixed<GeoJSON.MultiPolygon>().optional(),
+      id: Yup.number().optional(),
+      images: Yup.array<ImageApi>().optional(),
+      isDraft: Yup.boolean().required(),
+      linkedAMPs: Yup.array().optional(),
+      linkedRegulatoryAreas: Yup.array().optional(),
+      links: Yup.array().optional(),
+      name: Yup.string().required(),
+      periods: Yup.array().ensure().of(DraftVigilanceAreaPeriodSchema).optional(),
+      sources: Yup.array().ensure().of(VigilanceAreaSourceSchema).ensure(),
+      tags: Yup.array().ensure().optional(),
+      themes: Yup.array().ensure().optional(),
+      visibility: Yup.mixed<VigilanceArea.Visibility>().optional()
+    })
+    .required()
 
 export const PublishedSchema: Yup.Schema<
-  Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'isArchived' | 'seaFront'>
+  Omit<VigilanceArea.VigilanceArea, 'computedEndDate' | 'isDraft' | 'seaFront'>
 > = Yup.object()
   .shape({
     comments: Yup.string().required(),
@@ -125,7 +123,6 @@ export const PublishedSchema: Yup.Schema<
       .required(),
     id: Yup.number().optional(),
     images: Yup.array<ImageApi>().optional(),
-    isArchived: Yup.boolean().required(),
     isDraft: Yup.boolean().required(),
     linkedAMPs: Yup.array().optional(),
     linkedRegulatoryAreas: Yup.array().optional(),

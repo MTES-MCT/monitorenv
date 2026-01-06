@@ -261,7 +261,9 @@ export function OverlayContent({ items }: OverlayContentProps) {
                   )}
                 </ButtonContainer>
               </Wrapper>
-              {items.length === 1 && isVigilanceArea && vigilanceAreaPeriod?.map(period => <Period>{period}</Period>)}
+              {items.length === 1 &&
+                isVigilanceArea &&
+                vigilanceAreaPeriod?.map(period => <Period key={period}>{period}</Period>)}
             </LayerItem>
           )
         })}

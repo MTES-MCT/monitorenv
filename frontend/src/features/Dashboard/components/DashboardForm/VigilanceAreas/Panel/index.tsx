@@ -6,7 +6,8 @@ import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm
 import { PanelImages } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelImages'
 import { PanelInternalCACEMSection } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelInternalCACEMSection'
 import { PanelLinks } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelLinks'
-import { PanelPeriodAndThemes } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelPeriodAndThemes'
+import { PanelThemesAndTags } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelThemesAndTags'
+import { PlanningBody } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/PlanningBody'
 import {
   Header,
   PanelBody,
@@ -38,24 +39,28 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
     dispatch(dashboardActions.setDashboardPanel())
   }
 
+  if (!vigilanceArea) {
+    return null
+  }
+
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <Wrapper ref={ref} {...props}>
       <Header $isEditing>
         <TitleContainer>
           <LayerLegend
-            border={isWithinPeriod(vigilanceArea?.periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
-            isDisabled={vigilanceArea?.periods?.length === 0}
+            border={isWithinPeriod(vigilanceArea.periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
+            isDisabled={vigilanceArea.periods?.length === 0}
             layerType={MonitorEnvLayers.VIGILANCE_AREA}
-            legendKey={vigilanceArea?.comments ?? 'aucun nom'}
+            legendKey={vigilanceArea.comments ?? 'aucun nom'}
             size={Size.NORMAL}
-            type={vigilanceArea?.name ?? 'aucun nom'}
+            type={vigilanceArea.name ?? 'aucun nom'}
           />
-          <StyledTitle>{vigilanceArea?.name}</StyledTitle>
+          <StyledTitle>{vigilanceArea.name}</StyledTitle>
         </TitleContainer>
 
         <SubHeaderContainer>
-          {vigilanceArea?.isDraft ? (
+          {vigilanceArea.isDraft ? (
             <Tag backgroundColor={THEME.color.slateGray} color={THEME.color.white}>
               Brouillon
             </Tag>
@@ -76,21 +81,24 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
       <PanelContainer>
         <PanelBody>
           <PanelDates readOnly vigilanceArea={vigilanceArea} />
-          <PanelPeriodAndThemes vigilanceArea={vigilanceArea} />
-          <PanelComments comments={vigilanceArea?.comments} />
+          <PanelThemesAndTags vigilanceArea={vigilanceArea} />
+          <PlanningWrapper>
+            <PlanningBody vigilanceArea={vigilanceArea} />
+          </PlanningWrapper>
+          <PanelComments comments={vigilanceArea.comments} />
 
-          {vigilanceArea?.linkedRegulatoryAreas && vigilanceArea?.linkedRegulatoryAreas.length > 0 && (
+          {vigilanceArea.linkedRegulatoryAreas && vigilanceArea.linkedRegulatoryAreas.length > 0 && (
             <RegulatoryAreas regulatoryAreaIds={vigilanceArea.linkedRegulatoryAreas} />
           )}
-          {vigilanceArea?.linkedAMPs && vigilanceArea?.linkedAMPs.length > 0 && (
+          {vigilanceArea.linkedAMPs && vigilanceArea.linkedAMPs.length > 0 && (
             <Amps ampIds={vigilanceArea.linkedAMPs} />
           )}
-          {vigilanceArea?.images && vigilanceArea?.images.length > 0 && (
-            <PanelImages images={vigilanceArea?.images} isSideWindow vigilanceAreaName={vigilanceArea?.name} />
+          {vigilanceArea.images && vigilanceArea?.images.length > 0 && (
+            <PanelImages images={vigilanceArea.images} isSideWindow vigilanceAreaName={vigilanceArea.name} />
           )}
 
-          {vigilanceArea?.links && vigilanceArea?.links.length > 0 && <PanelLinks links={vigilanceArea.links} />}
-          <PanelInternalCACEMSection createdBy={vigilanceArea?.createdBy} sources={vigilanceArea?.sources} />
+          {vigilanceArea.links && vigilanceArea.links.length > 0 && <PanelLinks links={vigilanceArea.links} />}
+          <PanelInternalCACEMSection createdBy={vigilanceArea.createdBy} sources={vigilanceArea.sources} />
         </PanelBody>
       </PanelContainer>
     </Wrapper>
@@ -107,4 +115,9 @@ const Wrapper = styled.div`
 `
 const StyledTitle = styled(Title)`
   max-width: 215px;
+`
+
+const PlanningWrapper = styled.div`
+  padding: 16px;
+  border-bottom: 1px solid ${THEME.color.lightGray};
 `

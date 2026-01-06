@@ -66,7 +66,11 @@ export function MonthBox({ dateRanges, label, monthIndex }: MonthBoxProps) {
           ))}
           {isCurrentMonth && <BackgroundBox />}
         </Box>
-        {isCurrentMonth && <StyledIcon />}
+        {isCurrentMonth && (
+          <IconWrapper>
+            <StyledIcon />
+          </IconWrapper>
+        )}
       </Wrapper>
     </>
   )
@@ -74,6 +78,12 @@ export function MonthBox({ dateRanges, label, monthIndex }: MonthBoxProps) {
 
 const Wrapper = styled.div`
   position: relative;
+`
+
+const IconWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
 `
 
 const Label = styled.span<{ $isBold: boolean }>`
@@ -111,8 +121,6 @@ const BackgroundBox = styled.div`
 `
 
 const StyledIcon = styled(Icon.FilledArrow)`
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%) rotate(-90deg);
+  margin: 0 auto;
+  transform: rotate(-90deg);
 `
