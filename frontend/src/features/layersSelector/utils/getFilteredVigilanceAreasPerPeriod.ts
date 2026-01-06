@@ -112,17 +112,16 @@ export const getFilterVigilanceAreasPerPeriod = (
   }
 
   return Object.values((vigilanceAreas as Array<VigilanceArea.VigilanceAreaLayer>) ?? []).filter(vigilanceArea => {
-    if (!isSuperUser && (vigilanceArea.isDraft || vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE)) {
+    if (
+      !vigilanceArea ||
+      (!isSuperUser && (vigilanceArea.isDraft || vigilanceArea.visibility === VigilanceArea.Visibility.PRIVATE))
+    ) {
       return false
     }
-    if (!vigilanceArea) {
-      return false
-    }
-    if (getFilterInformativeVigilanceArea(vigilanceAreaTypeFilter, vigilanceArea)) {
-      return true
-    }
-
-    if (vigilanceArea.periods?.some(period => period.isAtAllTimes)) {
+    if (
+      getFilterInformativeVigilanceArea(vigilanceAreaTypeFilter, vigilanceArea) ||
+      vigilanceArea.periods?.some(period => period.isAtAllTimes)
+    ) {
       return true
     }
 

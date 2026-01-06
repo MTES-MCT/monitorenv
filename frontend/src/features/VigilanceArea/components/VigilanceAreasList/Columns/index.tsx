@@ -1,9 +1,7 @@
-import { DateCell } from '@components/Table/DateCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
-import { VigilanceArea } from '@features/VigilanceArea/types'
+import { PeriodsCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/PeriodsCell'
 
 import { EditCell } from '../Cells/EditCell'
-import { FrequencyCell } from '../Cells/FrequencyCell'
 import { HighlightCell } from '../Cells/HighlightCell'
 import { LocalizeCell } from '../Cells/LocalizeCell'
 import { StatusCell } from '../Cells/StatusCell'
@@ -11,62 +9,30 @@ import { TagsCell } from '../Cells/TagsCell'
 import { ValidationDateCell } from '../Cells/ValidationDateCell'
 import { VisibilityCell } from '../Cells/VisibilityCell'
 
-import type { Row } from '@tanstack/react-table'
-
 export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = false) => [
-  {
-    accessorFn: row => row.startDatePeriod,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} withoutTime />),
-    enableSorting: true,
-    header: () => 'Début',
-    id: 'startDatePeriod',
-    size: 90 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.endDatePeriod,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} withoutTime />),
-    enableSorting: true,
-    header: () => 'Fin',
-    id: 'endDatePeriod',
-    size: 90 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.frequency,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <FrequencyCell frequency={info.getValue()} />),
-    enableSorting: true,
-    header: () => 'Récurrence',
-    id: 'frequency',
-    size: 106 + legacyFirefoxOffset,
-    sortingFn: (rowA: Row<any>, rowB: Row<any>) => {
-      const labelA = VigilanceArea.FrequencyLabelForList[rowA.original.frequency] ?? ''
-      const labelB = VigilanceArea.FrequencyLabelForList[rowB.original.frequency] ?? ''
-
-      return labelA.localeCompare(labelB)
-    }
-  },
-  {
-    accessorFn: row => row.validatedAt,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <ValidationDateCell date={info.getValue()} />),
-    enableSorting: true,
-    header: () => 'Validée le',
-    id: 'validatedAt',
-    size: 96 + legacyFirefoxOffset
-  },
   {
     accessorFn: row => row.name,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <HighlightCell text={info.getValue()} />),
     enableSorting: true,
     header: () => 'Nom de la zone',
     id: 'name',
-    size: 270 + legacyFirefoxOffset
+    size: 250 + legacyFirefoxOffset
+  },
+  {
+    accessorFn: row => row.periods,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <PeriodsCell periods={info.getValue()} />),
+    enableSorting: true,
+    header: () => 'Période(s) de vigilance',
+    id: 'periods',
+    size: 220 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.tags,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <TagsCell tags={info.getValue()} />),
     enableSorting: true,
     header: () => 'Tags',
-    id: 'themes',
-    size: 260 + legacyFirefoxOffset
+    id: 'tags',
+    size: 230 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.comments,
@@ -74,7 +40,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Commentaire',
     id: 'comments',
-    size: 310 + legacyFirefoxOffset
+    size: 330 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.seaFront,
@@ -85,11 +51,11 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     size: 100 + legacyFirefoxOffset
   },
   {
-    accessorFn: row => row.visibility,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <VisibilityCell visibility={info.getValue()} />),
+    accessorFn: row => row.validatedAt,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <ValidationDateCell date={info.getValue()} />),
     enableSorting: true,
-    header: () => 'Visibilité',
-    id: 'visibility',
+    header: () => 'Validée le',
+    id: 'validatedAt',
     size: 100 + legacyFirefoxOffset
   },
   {
@@ -106,7 +72,15 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Créée par',
     id: 'createdBy',
-    size: 97 + legacyFirefoxOffset
+    size: 95 + legacyFirefoxOffset
+  },
+  {
+    accessorFn: row => row.visibility,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <VisibilityCell visibility={info.getValue()} />),
+    enableSorting: true,
+    header: () => 'Visibilité',
+    id: 'visibility',
+    size: 105 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,

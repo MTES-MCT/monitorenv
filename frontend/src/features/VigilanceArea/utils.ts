@@ -50,3 +50,24 @@ export const frequencyText = (frequency?: VigilanceArea.Frequency, capitalize = 
 }
 
 const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
+
+export function computeVigilanceAreaPeriod(
+  period: VigilanceArea.VigilanceAreaPeriod | undefined,
+  withReccurenceText = true
+) {
+  if (period?.isAtAllTimes) {
+    return 'En tout temps'
+  }
+  if (period?.startDatePeriod) {
+    return `${[
+      `${period?.startDatePeriod ? `Du ${customDayjs(period?.startDatePeriod).utc().format('DD/MM/YYYY')}` : ''}
+      ${period?.endDatePeriod ? `au ${customDayjs(period?.endDatePeriod).utc().format('DD/MM/YYYY')}` : ''}`,
+      withReccurenceText ? frequencyText(period?.frequency, false) : '',
+      withReccurenceText ? endingOccurenceText(period?.endingCondition, period?.computedEndDate, false) : ''
+    ]
+      .filter(Boolean)
+      .join(', ')}`
+  }
+
+  return ''
+}

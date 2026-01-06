@@ -1,7 +1,7 @@
 import {
   CheckboxWrapper,
   CriticalCheckbox,
-  StyledCircle
+  PeriodCircle
 } from '@features/VigilanceArea/components/VigilanceAreaForm/Periods'
 import { PublishedVigilanceAreaPeriodSchema } from '@features/VigilanceArea/components/VigilanceAreaForm/Schema'
 import { ValidateButton } from '@features/VigilanceArea/components/VigilanceAreaForm/style'
@@ -120,7 +120,7 @@ export function Period({ hasError, index, initialPeriod, onValidate, remove }: P
           onChange={setPeriod}
         />
         <CheckboxWrapper>
-          <StyledCircle $isCritical />
+          <PeriodCircle $isCritical />
           <CriticalCheckbox
             checked={editedPeriod.isCritical}
             isLight

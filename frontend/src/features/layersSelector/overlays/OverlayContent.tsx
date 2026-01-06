@@ -7,10 +7,10 @@ import {
   vigilanceAreaActions
 } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
+import { computeVigilanceAreaPeriod } from '@features/VigilanceArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, customDayjs, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { type RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
@@ -62,31 +62,6 @@ function isVigilanceAreaLayer(type: RegulatoryOrAMPOrViglanceAreaLayerType) {
     type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW ||
     type === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
   )
-}
-
-function computeVigilanceAreaPeriod(properties: VigilanceArea.VigilanceAreaProperties) {
-  const { periods } = properties
-  if (!periods || periods.length === 0) {
-    return ''
-  }
-  const firstPeriod = periods[0]
-  if (firstPeriod?.isAtAllTimes) {
-    return 'En tout temps'
-  }
-  if (firstPeriod?.startDatePeriod) {
-    return `${[
-      `${
-        firstPeriod?.startDatePeriod ? `Du ${customDayjs(firstPeriod?.startDatePeriod).utc().format('DD/MM/YYYY')}` : ''
-      }
-      ${firstPeriod?.endDatePeriod ? `au ${customDayjs(firstPeriod?.endDatePeriod).utc().format('DD/MM/YYYY')}` : ''}`,
-      frequencyText(firstPeriod?.frequency, false),
-      endingOccurenceText(firstPeriod?.endingCondition, firstPeriod?.computedEndDate, false)
-    ]
-      .filter(Boolean)
-      .join(', ')}`
-  }
-
-  return ''
 }
 
 export function OverlayContent({ items }: OverlayContentProps) {
@@ -211,8 +186,10 @@ export function OverlayContent({ items }: OverlayContentProps) {
           const isDisabled = id !== isolatedLayer?.id && !!isolatedLayer?.id
 
           const vigilanceAreaPeriod = isVigilanceArea
-            ? computeVigilanceAreaPeriod(item.properties as VigilanceArea.VigilanceAreaProperties)
-            : ''
+            ? (item.properties as VigilanceArea.VigilanceAreaProperties).periods?.map(period =>
+                computeVigilanceAreaPeriod(period)
+              )
+            : []
 
           const isArchived = (item.properties as VigilanceArea.VigilanceAreaProperties)?.isArchived ?? false
 
@@ -284,7 +261,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
                   )}
                 </ButtonContainer>
               </Wrapper>
-              {items.length === 1 && isVigilanceArea && <Period>{vigilanceAreaPeriod}</Period>}
+              {items.length === 1 && isVigilanceArea && vigilanceAreaPeriod?.map(period => <Period>{period}</Period>)}
             </LayerItem>
           )
         })}
