@@ -82,6 +82,7 @@ def generate_regulatory_area_data(
     duree_validites,
     temporalites,
     types,
+    plans,
 ):
     return pd.DataFrame(
         {
@@ -102,6 +103,7 @@ def generate_regulatory_area_data(
             "duree_validite": duree_validites,
             "temporalite": temporalites,
             "type": types,
+            "plan": plans,
         }
     )
 
@@ -177,6 +179,7 @@ def new_regulatory_areas() -> pd.DataFrame:
             "Arrêté inter-préfectoral",
             None,
         ],
+        plans=["PIRC", "PSCEM", "PIRC", "PIRC"],
     )
 
 
@@ -212,6 +215,7 @@ def regulatory_areas_to_update() -> pd.DataFrame:
         duree_validites=["permanent", "permanent"],
         temporalites=["permanent", "permanent"],
         types=["Arrêté préfectoral", "Décret"],
+        plans=["PIRC", "PSCEM"],
     )
 
 
@@ -236,7 +240,7 @@ def test_load_new_regulatory_areas(reset_test_data, new_regulatory_areas):
             id, geom, entity_name, layer_name, facade,
             ref_reg, url, row_hash, edition, editeur,
             source, observation, thematique, date,
-            duree_validite, temporalite, type
+            duree_validite, temporalite, type, plan
             FROM public.regulations_cacem
             ORDER BY id""",
     )
@@ -250,7 +254,7 @@ def test_load_new_regulatory_areas(reset_test_data, new_regulatory_areas):
             id, geom, entity_name, layer_name, facade,
             ref_reg, url, row_hash, edition, editeur,
             source, observation, thematique, date,
-            duree_validite, temporalite, type
+            duree_validite, temporalite, type, plan
             FROM public.regulations_cacem
             ORDER BY id""",
     )
@@ -265,7 +269,7 @@ def test_update_new_regulations(reset_test_data, regulatory_areas_to_update):
             id, geom, entity_name, layer_name, facade,
             ref_reg, url, row_hash, edition, editeur,
             source, observation, thematique, date,
-            duree_validite, temporalite, type
+            duree_validite, temporalite, type, plan
             FROM public.regulations_cacem
             ORDER BY id""",
     )

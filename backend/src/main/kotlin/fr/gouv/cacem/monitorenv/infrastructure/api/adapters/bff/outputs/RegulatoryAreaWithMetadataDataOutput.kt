@@ -7,6 +7,7 @@ import org.locationtech.jts.geom.MultiPolygon
 
 data class RegulatoryAreaWithMetadataDataOutput(
     val id: Int,
+    val plan: String? = null,
     val entityName: String? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
@@ -21,6 +22,7 @@ data class RegulatoryAreaWithMetadataDataOutput(
         fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) =
             RegulatoryAreaWithMetadataDataOutput(
                 id = regulatoryArea.id,
+                plan = regulatoryArea.plan,
                 entityName = regulatoryArea.entityName,
                 facade = regulatoryArea.facade,
                 geom = regulatoryArea.geom,

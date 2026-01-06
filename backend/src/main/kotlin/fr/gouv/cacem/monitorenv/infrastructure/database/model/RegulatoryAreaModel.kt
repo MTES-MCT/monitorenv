@@ -19,6 +19,7 @@ import org.n52.jackson.datatype.jts.GeometrySerializer
 @Table(name = "regulations_cacem")
 data class RegulatoryAreaModel(
     @Id @Column(name = "id") val id: Int,
+    @Column(name = "plan") val plan: String?,
     @Column(name = "date") val date: String?,
     @Column(name = "date_fin") val dateFin: String?,
     @Column(name = "duree_validite") val dureeValidite: String?,
@@ -51,6 +52,7 @@ data class RegulatoryAreaModel(
     fun toRegulatoryArea() =
         RegulatoryAreaEntity(
             id = id,
+            plan = plan,
             date = date,
             dateFin = dateFin,
             dureeValidite = dureeValidite,
@@ -71,5 +73,5 @@ data class RegulatoryAreaModel(
         )
 
     override fun toString(): String =
-        "RegulatoryAreaModel(id=$id, date=$date, dateFin=$dateFin, dureeValidite=$dureeValidite, editeur=$editeur, edition=$edition, entityName=$entityName, facade=$facade, geom=$geom, layerName=$layerName, observation=$observation, refReg=$refReg, source=$source, temporalite=$temporalite, type=$type, url=$url)"
+        "RegulatoryAreaModel(id=$id, plan=$plan, date=$date, dateFin=$dateFin, dureeValidite=$dureeValidite, editeur=$editeur, edition=$edition, entityName=$entityName, facade=$facade, geom=$geom, layerName=$layerName, observation=$observation, refReg=$refReg, source=$source, temporalite=$temporalite, type=$type, url=$url)"
 }

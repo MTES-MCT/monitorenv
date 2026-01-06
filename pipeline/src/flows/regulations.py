@@ -99,6 +99,7 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                 date_fin character varying,
                 temporalite character varying,
                 type character varying,
+                plan character varying,
                 row_hash text)
                 ON COMMIT DROP;"""
             )
@@ -121,6 +122,7 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
             "duree_validite",
             "temporalite",
             "type",
+            "plan",
             "row_hash",
         ]
 
@@ -155,6 +157,7 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                 duree_validite = tmp.duree_validite,
                 temporalite = tmp.temporalite,
                 type = tmp.type,
+                plan = tmp.plan,
                 row_hash = tmp.row_hash
                 FROM tmp_regulations_cacem tmp
                 WHERE reg.id = tmp.id;

@@ -16,6 +16,7 @@ SELECT
   date,
   date_fin,
   edition,
+  plan,
   md5(
         COALESCE(geom::text, '') ||
         COALESCE(ent_name::text, '') ||
@@ -32,7 +33,8 @@ SELECT
         COALESCE(type::text, '') ||
         COALESCE(date::text, '') ||
         COALESCE(date_fin::text, '') ||
-        COALESCE(edition::text, '') 
+        COALESCE(edition::text, '') ||
+        COALESCE(plan::text, '')
   ) as row_hash
 FROM prod."REG_ENV_V3"
 WHERE 
