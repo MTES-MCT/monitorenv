@@ -40,7 +40,6 @@ class CreateOrUpdateVigilanceAreaUTests {
         val newVigilanceArea =
             VigilanceAreaEntity(
                 comments = "Comments",
-                isArchived = false,
                 isDeleted = false,
                 isDraft = true,
                 images = listOf(image),

@@ -103,7 +103,6 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         val vigilanceArea =
             VigilanceAreaEntity(
                 name = "Nouvelle zone de vigilance",
-                isArchived = false,
                 isDeleted = false,
                 isDraft = true,
                 comments = "Commentaires sur la zone de vigilance",
