@@ -1,24 +1,27 @@
 monitorenv:
-    oidc:
-        enabled: false
-    brief:
-        templatePath: /template_export_brief.docx
-        tmpDocxPath: tmp_brief.docx
-        tmpOdtPath: tmp_brief.odt
+  oidc:
+    enabled: false
+  brief:
+    templatePath: /template_export_brief.docx
+    tmpDocxPath: tmp_brief.docx
+    tmpOdtPath: tmp_brief.odt
+  kafka:
+    ais:
+      batch-size: 1
 
 logging:
-    level:
-        org.springframework.security.web.authentication.logout: DEBUG
-        org.hybernate.SQL: DEBUG
-        org.hybernate.type.descriptor.sql.BasicBinder: TRACE
+  level:
+    org.springframework.security.web.authentication.logout: DEBUG
+    org.hybernate.SQL: DEBUG
+    org.hybernate.type.descriptor.sql.BasicBinder: TRACE
 
 spring:
-    jpa:
-        show-sql: true
-    flyway:
-        locations: classpath:/db/migration,classpath:/db/testdata
-    kafka:
-        bootstrap-servers: localhost:9092
-        consumer:
-            group-id: test
-            auto-offset-reset: latest
+  jpa:
+    show-sql: true
+  flyway:
+    locations: classpath:/db/migration,classpath:/db/testdata
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: test
+      auto-offset-reset: latest

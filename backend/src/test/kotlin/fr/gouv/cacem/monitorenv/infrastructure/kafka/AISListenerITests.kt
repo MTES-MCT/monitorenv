@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.kafka
 
+import fr.gouv.cacem.monitorenv.config.KafkaAISProperties
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.AISPositionPK
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.AbstractKafkaTests
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAISPositionRepository
-import fr.gouv.cacem.monitorenv.infrastructure.kafka.AISListener.Companion.TOPIC
 import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPayload
 import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions.assertThat
@@ -24,6 +24,9 @@ class AISListenerITests : AbstractKafkaTests() {
     @Autowired
     lateinit var dbAISPositionRepository: IDBAISPositionRepository
 
+    @Autowired
+    lateinit var kafkaAISProperties: KafkaAISProperties
+
     @Transactional
     @Test
     fun `listenAIS should save AISPosition that comes from AIS topic`() {
@@ -42,12 +45,12 @@ class AISListenerITests : AbstractKafkaTests() {
                 ts = ts,
             )
 
-        kafkaTemplate.send(TOPIC, aisPosition).get(10, TimeUnit.SECONDS)
+        kafkaTemplate.send(kafkaAISProperties.topic, aisPosition).get(10, TimeUnit.SECONDS)
 
         Awaitility
             .await()
             .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(5, TimeUnit.SECONDS)
+            .atMost(kafkaAISProperties.timeout, TimeUnit.SECONDS)
             .untilAsserted {
                 val saved = dbAISPositionRepository.findByIdOrNull(AISPositionPK(mmsi = mmsi, ts = ts))
                 assertThat(saved).isNotNull()
