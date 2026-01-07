@@ -23,14 +23,18 @@ describe('Create Vigilance Area', () => {
 
     const { asDatePickerDateTime } = getUtcDateInMultipleFormats()
     const vigilanceAreaEndDate = getFutureDate(5, 'day')
-    cy.fill('Période de validité', [asDatePickerDateTime, vigilanceAreaEndDate])
+
+    cy.clickButton('Ajouter une période de vigilance simple')
+    cy.fill('Période de vigilance', [asDatePickerDateTime, vigilanceAreaEndDate])
     cy.fill('Récurrence', 'Aucune')
+    cy.clickButton('Valider')
 
     // Submit the form
     cy.clickButton('Enregistrer')
     cy.wait('@createVigilanceArea').then(() => {
       cy.clickButton('Fermer la zone de vigilance')
       cy.clickButton('Filtrer par type de zones')
+
       cy.fill('Période de vigilance', 'En ce moment')
       cy.getDataCy('vigilance-area-results-list-button').click()
       cy.getDataCy('vigilance-area-result-zone').contains('Ma zone de vigilance à supprimer')
