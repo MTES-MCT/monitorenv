@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.kafka
 
-import fr.gouv.cacem.monitorenv.infrastructure.kafka.AISListener.Companion.TOPIC
+import fr.gouv.cacem.monitorenv.config.KafkaAISProperties
 import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPayload
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -21,6 +21,7 @@ import kotlin.random.Random
 )
 class AISProducer(
     private val kafkaTemplate: KafkaTemplate<String, AISPayload>,
+    private val kafkaAISProperties: KafkaAISProperties,
 ) {
     private val logger = LoggerFactory.getLogger(AISProducer::class.java)
 
@@ -37,7 +38,7 @@ class AISProducer(
         try {
             logger.info("Sending AIS positions...")
             kafkaTemplate.send(
-                TOPIC,
+                kafkaAISProperties.topic,
                 AISPayload(
                     mmsi = Random.nextInt(0, 999999999),
                     coord = generateRandomPoint(),

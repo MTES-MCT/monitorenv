@@ -13,9 +13,13 @@ host:
 monitorenv:
   kafka:
     ais:
+      batch-size: ${MONITORENV_KAFKA_AIS_BATCH_SIZE}
+      topic: ${MONITORENV_KAFKA_AIS_TOPIC}
+      timeout: ${MONITORENV_KAFKA_AIS_TIMEOUT}
       enabled: ${MONITORENV_KAFKA_AIS_ENABLED}
       producer:
-        enabled: ${MONITORENV_KAFKA_AIS_PRODUCER_ENABLED}
+        enabled: ${MONITORENV_KAFKA_AIS_PRODUCER_ENABLED:false}
+
   ajp:
     port: 8000
   version: ${VERSION}
@@ -88,15 +92,15 @@ spring:
     consumer:
       group-id: ${MONITORENV_KAFKA_AIS_GROUP_ID:test}
       auto-offset-reset: latest
-    
+
     properties:
       security.protocol: SSL
-      
+
       ssl.keystore.location: ${MONITORENV_KAFKA_AIS_KEYSTORE}
       ssl.keystore.password: ${MONITORENV_KAFKA_AIS_KEYSTORE_PASSWORD}
       ssl.key.password: ${MONITORENV_KAFKA_AIS_KEY_PASSWORD}
       ssl.keystore.type: PKCS12
-      
+
       ssl.truststore.location: ${MONITORENV_KAFKA_AIS_TRUSTSTORE}
       ssl.truststore.password: ${MONITORENV_KAFKA_AIS_TRUSTSTORE_PASSWORD}
       ssl.truststore.type: JKS

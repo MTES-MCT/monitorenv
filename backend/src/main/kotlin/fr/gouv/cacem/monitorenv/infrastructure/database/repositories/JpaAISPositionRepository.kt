@@ -18,4 +18,9 @@ class JpaAISPositionRepository(
     fun save(aisPosition: AISPayload) {
         dbAISPositionRepository.save(AISPositionModel.toAISPositionModel(aisPosition))
     }
+
+    @Transactional
+    fun saveAll(aisPositions: List<AISPayload>) {
+        dbAISPositionRepository.saveAll(aisPositions.map { AISPositionModel.toAISPositionModel(it) })
+    }
 }
