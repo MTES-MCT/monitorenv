@@ -4,18 +4,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
 import fr.gouv.cacem.monitorenv.utils.WordUtils
 import org.apache.poi.xwpf.usermodel.XWPFDocument
 import org.apache.poi.xwpf.usermodel.XWPFTableCell
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 data class EditableBriefVigilanceAreaEntity(
     val color: String,
     val comments: String? = null,
-    val endDatePeriod: ZonedDateTime? = null,
-    val endingOccurenceDate: String,
-    val frequency: String,
     val id: Int,
-    val isAtAllTimes: Boolean,
     override val image: String?,
     val imagesAttachments: List<ImageEntity>? = null,
     override val minimap: String?,
@@ -23,9 +16,9 @@ data class EditableBriefVigilanceAreaEntity(
     val linkedRegulatoryAreas: String? = null,
     val links: List<LinkEntity>? = null,
     val name: String,
-    val startDatePeriod: ZonedDateTime? = null,
     val themes: String? = null,
     val visibility: String? = null,
+    val periods: List<EditableBriefVigilanceAreaPeriodEntity>? = null,
 ) : DetailWithImagesRenderable {
     override val title = name
 
@@ -34,12 +27,19 @@ data class EditableBriefVigilanceAreaEntity(
         private const val LINK_ROW_INDEX = 6
     }
 
-    override fun buildDetailsRows(): List<List<String>> {
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.FRENCH)
-        val periodDate = "Du ${startDatePeriod?.format(formatter)} au ${endDatePeriod?.format(formatter)}"
-
-        return listOf(
-            listOf("Période", if (isAtAllTimes) "En tout temps" else periodDate),
+    override fun buildDetailsRows(): List<List<String>> =
+        listOf(
+            listOf(
+                "Période(s)",
+                periods?.joinToString("\n") { period ->
+                    listOf(
+                        period.getPeriodText(),
+                        period.frequency,
+                        period.endingOccurenceDate,
+                    ).filter { it.isNotEmpty() }.joinToString(", ")
+                }
+                    ?: "",
+            ),
             listOf("Thématique", themes ?: ""),
             listOf("Visibilité", visibility ?: ""),
             listOf("Commentaires", comments ?: ""),
@@ -47,7 +47,6 @@ data class EditableBriefVigilanceAreaEntity(
             listOf("Amps en lien", linkedAMPs ?: ""),
             listOf("Liens utiles", ""),
         )
-    }
 
     override fun customizeValueCell(
         rowIndex: Int,
@@ -62,11 +61,14 @@ data class EditableBriefVigilanceAreaEntity(
                 val cellRun = cell.addParagraph().createRun()
                 cellRun.fontFamily = "Arial"
                 cellRun.fontSize = 10
-                cellRun.setText(buildDetailsRows()[0][1])
-                cellRun.addBreak()
-                cellRun.setText(frequency)
-                cellRun.addBreak()
-                cellRun.setText(endingOccurenceDate)
+                val periodsText = buildDetailsRows()[0][1]
+                val lines = periodsText.split("\n")
+                lines.forEachIndexed { index, period ->
+                    cellRun.setText(period)
+                    if (index < lines.size - 1) {
+                        cellRun.addBreak()
+                    }
+                }
             }
 
             LINK_ROW_INDEX -> {

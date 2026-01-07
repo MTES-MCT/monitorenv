@@ -17,7 +17,7 @@ class GetVigilanceAreaByIdUTests {
     @Test
     fun `execute should return vigilance area entity`(log: CapturedOutput) {
         val vigilanceAreaId = 3
-        val expectedEntity = VigilanceAreaFixture.anArchivedVigilanceAreaEntity()
+        val expectedEntity = VigilanceAreaFixture.aVigilanceAreaEntity()
 
         given(vigilanceAreaRepository.findById(vigilanceAreaId)).willReturn(expectedEntity)
 
