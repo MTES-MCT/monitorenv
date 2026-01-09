@@ -36,9 +36,9 @@ export function Period({ hasError, index, initialPeriod, onValidate, remove }: P
   const frequencyOptions = getOptionsFromLabelledEnum(VigilanceArea.FrequencyLabel)
   const endingConditionOptions = getOptionsFromLabelledEnum(VigilanceArea.EndingConditionLabel)
 
-  const isNewlyCreatedPeriod = Object.values(omit(initialPeriod, ['isCritical'])).every(
-    value => value === undefined || value === false
-  )
+  const isNewlyCreatedPeriod = Object.values(
+    omit(initialPeriod, ['isCritical', 'id', 'frequency', 'endingCondition'])
+  ).every(value => value === undefined || value === false)
   const [isEditing, setIsEditing] = useState(isNewlyCreatedPeriod)
   const [editedPeriod, setEditedPeriod] = useState(initialPeriod)
   const isValid = (value: VigilanceArea.VigilanceAreaPeriod) => PublishedVigilanceAreaPeriodSchema.isValidSync(value)
@@ -208,7 +208,7 @@ export function Period({ hasError, index, initialPeriod, onValidate, remove }: P
   ) : (
     <PanelWrapper $isCritical={editedPeriod.isCritical}>
       <div>
-        <Label>Période de vigilance</Label>
+        <Label>{editedPeriod.isCritical ? 'Période critique' : 'Période de vigilance'}</Label>
         <span>
           <Medium>{getDateAsLocalizedStringVeryCompact(initialPeriod.startDatePeriod, true)}</Medium> au{' '}
           <Medium>{getDateAsLocalizedStringVeryCompact(initialPeriod.endDatePeriod, true)}</Medium>

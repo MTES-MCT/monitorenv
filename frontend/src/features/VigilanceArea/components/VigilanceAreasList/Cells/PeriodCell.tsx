@@ -11,7 +11,7 @@ export function PeriodCell({ period }: { period: VigilanceArea.VigilanceAreaPeri
       {!period?.isCritical && <StyledPeriodCircle $isCritical={false} />}
       {period?.isCritical && <StyledPeriodCircle $isCritical />}
       {computeVigilanceAreaPeriod(period, false)}
-      {period?.frequency && (
+      {period?.frequency && period.frequency !== VigilanceArea.Frequency.NONE && (
         <Tooltip Icon={Icon.Reset} isSideWindow>
           {[
             frequencyText(period?.frequency, false),

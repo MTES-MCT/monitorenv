@@ -1,47 +1,40 @@
 import { Period } from '@features/VigilanceArea/components/VigilanceAreaForm/Period'
 import { getVigilanceAreaPeriodInitialValues } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { Accent, Button, Checkbox, Icon, Legend } from '@mtes-mct/monitor-ui'
-import { FieldArray, useField } from 'formik'
+import { Accent, Button, Checkbox, customDayjs, Icon, Legend } from '@mtes-mct/monitor-ui'
+import { FieldArray, useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 export function Periods() {
-  const [field, meta, helper] = useField<VigilanceArea.VigilanceAreaPeriod[]>('periods')
-  const periods = field.value
+  const { errors, setFieldValue, values } = useFormikContext<VigilanceArea.VigilanceArea>()
 
-  const setIsAtAllTimes = async (
-    isChecked: boolean | undefined,
-    isCritical: boolean,
-    push: (vigilanceArea: VigilanceArea.VigilanceAreaPeriod) => void,
-    remove: (index: number) => void
-  ) => {
-    async function removeRemainingPeriod() {
-      await helper.setValue(field.value.filter(period => period.isCritical !== isCritical))
-    }
+  const { periods } = values
+  const setIsAtAllTimes = (isChecked: boolean | undefined, isCritical: boolean) => {
+    const filtered = periods?.filter(period => period.isCritical !== isCritical)
 
-    const vigilanceAreaPeriod: VigilanceArea.VigilanceAreaPeriod = {
-      ...getVigilanceAreaPeriodInitialValues(),
-      isAtAllTimes: true,
-      isCritical
-    }
-    const index = field.value.findIndex(period => period.isAtAllTimes && period.isCritical === isCritical)
+    const index = periods?.findIndex(period => period.isAtAllTimes && period.isCritical === isCritical) ?? -1
 
     if (isChecked && index === -1) {
-      await removeRemainingPeriod()
-      push(vigilanceAreaPeriod)
+      const vigilanceAreaPeriod: VigilanceArea.VigilanceAreaPeriod = {
+        ...getVigilanceAreaPeriodInitialValues(),
+        isAtAllTimes: true,
+        isCritical
+      }
+      const newVigilanceAreaperiods = [...(filtered ?? []), vigilanceAreaPeriod]
+      setFieldValue('periods', newVigilanceAreaperiods)
     }
 
     if (!isChecked && index !== -1) {
-      remove(index)
+      setFieldValue('periods', filtered)
     }
   }
 
   return (
     <FieldArray
       name="periods"
-      render={({ push, remove }) => {
-        const hasSimpleIsAtAllTimesPeriod = periods.some(period => period.isAtAllTimes && !period.isCritical)
-        const hasCriticalIsAtAllTimesPeriod = periods.some(period => period.isAtAllTimes && period.isCritical)
+      render={({ push, remove, replace }) => {
+        const hasSimpleIsAtAllTimesPeriod = periods?.some(period => period.isAtAllTimes && !period.isCritical)
+        const hasCriticalIsAtAllTimesPeriod = periods?.some(period => period.isAtAllTimes && period.isCritical)
 
         return (
           <Wrapper>
@@ -54,7 +47,7 @@ export function Periods() {
                   isLight
                   label="Vigilance simple en tout temps"
                   name="isSimpleAtAllTimes"
-                  onChange={isChecked => setIsAtAllTimes(isChecked, false, push, remove)}
+                  onChange={isChecked => setIsAtAllTimes(isChecked, false)}
                 />
               </CheckboxWrapper>
               <CheckboxWrapper>
@@ -64,24 +57,33 @@ export function Periods() {
                   isLight
                   label="Vigilance critique en tout temps"
                   name="isCriticalAtAllTimes"
-                  onChange={isChecked => setIsAtAllTimes(isChecked, true, push, remove)}
+                  onChange={isChecked => setIsAtAllTimes(isChecked, true)}
                 />
               </CheckboxWrapper>
             </CheckboxesWrapper>
             {periods
-              .filter((period: VigilanceArea.VigilanceAreaPeriod) => !period.isAtAllTimes)
+              ?.filter((period: VigilanceArea.VigilanceAreaPeriod) => !period.isAtAllTimes)
+              .sort((a, b) => {
+                if (!a.startDatePeriod) {
+                  return -1
+                }
+                if (!b.startDatePeriod) {
+                  return 1
+                }
+
+                return customDayjs(a.startDatePeriod).valueOf() - customDayjs(b.startDatePeriod).valueOf()
+              })
               .map((period: VigilanceArea.VigilanceAreaPeriod) => {
-                const index = field.value.indexOf(period)
+                const index = periods?.indexOf(period)
 
                 return (
                   <Period
                     key={period.id ?? index}
-                    hasError={meta.error}
+                    hasError={errors.periods}
                     index={index}
                     initialPeriod={period}
                     onValidate={vigilanceAreaPeriod => {
-                      remove(index)
-                      push(vigilanceAreaPeriod)
+                      replace(index, vigilanceAreaPeriod)
                     }}
                     remove={remove}
                   />
@@ -93,6 +95,7 @@ export function Periods() {
               Icon={Icon.Plus}
               onClick={() =>
                 push({
+                  ...getVigilanceAreaPeriodInitialValues(),
                   isAtAllTimes: false,
                   isCritical: false
                 })
@@ -106,6 +109,7 @@ export function Periods() {
               Icon={Icon.Plus}
               onClick={() =>
                 push({
+                  ...getVigilanceAreaPeriodInitialValues(),
                   isAtAllTimes: false,
                   isCritical: true
                 })

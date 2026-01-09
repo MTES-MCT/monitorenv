@@ -1,4 +1,4 @@
-import { isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
+import { isOutOfPeriod, isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 
 export function getFilterInformativeVigilanceArea(
@@ -6,8 +6,8 @@ export function getFilterInformativeVigilanceArea(
   vigilanceArea: VigilanceArea.VigilanceArea
 ) {
   return (
-    (typeFilter?.includes(VigilanceArea.VigilanceAreaFilterType.NONE) && (vigilanceArea.periods ?? []).length === 0) ===
-    true
+    (typeFilter?.includes(VigilanceArea.VigilanceAreaFilterType.INFORMATIVE) &&
+      (vigilanceArea.periods ?? []).length === 0) === true
   )
 }
 
@@ -22,7 +22,8 @@ export function isVigilanceAreaPartOfType(
   const filterSimpleVigilanceArea =
     typeFilter.includes(VigilanceArea.VigilanceAreaFilterType.SIMPLE) && isWithinPeriod(vigilanceArea.periods, false)
 
-  const filterInformativeVigilanceArea = getFilterInformativeVigilanceArea(typeFilter, vigilanceArea)
+  const filterInformativeVigilanceArea =
+    typeFilter.includes(VigilanceArea.VigilanceAreaFilterType.INFORMATIVE) && isOutOfPeriod(vigilanceArea.periods)
 
   const filterCriticalVigilanceArea =
     typeFilter.includes(VigilanceArea.VigilanceAreaFilterType.CRITICAL) && isWithinPeriod(vigilanceArea.periods, true)

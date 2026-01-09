@@ -147,13 +147,13 @@ export namespace VigilanceArea {
   export enum VigilanceAreaFilterType {
     SIMPLE = 'SIMPLE',
     CRITICAL = 'CRITICAL',
-    NONE = 'NONE'
+    INFORMATIVE = 'INFORMATIVE'
   }
 
   export enum VigilanceAreaFilterTypeLabel {
     SIMPLE = 'Période de vigilance simple en cours',
     CRITICAL = 'Période de vigilance critique en cours',
-    NONE = 'Aucune période de vigilance en cours'
+    INFORMATIVE = 'Aucune période de vigilance en cours'
   }
 
   export type VigilanceAreaProperties = Omit<VigilanceArea.VigilanceArea, 'geom'> & {

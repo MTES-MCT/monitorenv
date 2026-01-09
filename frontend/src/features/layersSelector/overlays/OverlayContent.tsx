@@ -1,5 +1,6 @@
 import { Tooltip } from '@components/Tooltip'
 import { Dashboard } from '@features/Dashboard/types'
+import { isOutOfPeriod, isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -191,7 +192,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
               )
             : []
 
-          const isInformative = (item.properties as VigilanceArea.VigilanceAreaProperties)?.periods?.length === 0
+          const { periods } = item.properties as VigilanceArea.VigilanceAreaProperties
 
           const isIsolatedLayerFilled = isolatedLayer?.id === id && isolatedLayer?.isFilled
 
@@ -204,7 +205,8 @@ export function OverlayContent({ items }: OverlayContentProps) {
             >
               <Wrapper>
                 <LayerLegend
-                  isDisabled={isInformative || isDisabled}
+                  border={isWithinPeriod(periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
+                  isDisabled={isOutOfPeriod(periods) || isDisabled}
                   layerType={item.layerType}
                   legendKey={legendKey}
                   size={Size.NORMAL}
