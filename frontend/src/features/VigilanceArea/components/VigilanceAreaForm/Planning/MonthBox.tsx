@@ -106,10 +106,10 @@ const DayBox = styled.div<{ $isCritical: boolean; $isEnd: boolean; $isHighlighte
   ${({ $isCritical, $isHighlighted }) =>
     $isHighlighted &&
     `background-color: ${$isCritical ? '#C25141BF' : '#C2514180'};
-    border-top: ${$isCritical ? '2px solid rgba(194, 81, 65, 0.75)' : '1px solid #933F20'};
-  border-bottom: ${$isCritical ? '2px solid rgba(194, 81, 65, 0.75)' : '1px solid #933F20'};`};
-  ${p => p.$isStart && `border-left: ${p.$isCritical ? '2px solid rgba(194, 81, 65, 0.75)' : '1px solid #933F20'}`}
-  ${p => p.$isEnd && `border-right: ${p.$isCritical ? '2px solid rgba(194, 81, 65, 0.75)' : '1px solid #933F20'}`}
+    border-top: ${$isCritical ? '2px solid #E1000F' : '1px solid #933F20'};
+  border-bottom: ${$isCritical ? '2px solid #E1000F' : '1px solid #933F20'};`};
+  ${p => p.$isStart && `border-left: ${p.$isCritical ? '2px solid #E1000F' : '1px solid #933F20'}`}
+  ${p => p.$isEnd && `border-right: ${p.$isCritical ? '2px solid #E1000F' : '1px solid #933F20'}`}
 `
 
 const BackgroundBox = styled.div`

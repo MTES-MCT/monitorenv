@@ -1,14 +1,15 @@
 /* eslint-disable react/destructuring-assignment */
 
 import { Bold } from '@components/style'
+import { Tooltip } from '@components/Tooltip'
 import { Rectangle } from '@features/layersSelector/utils/LayerLegend.style'
 import {
   computeOccurenceWithinCurrentYear,
   type DateRange
 } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { computeVigilanceAreaPeriod, endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { Icon, Size, THEME } from '@mtes-mct/monitor-ui'
-import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -59,14 +60,23 @@ export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
                   <Chevron $isOpen={isSummaryOpen} color={THEME.color.slateGray} size={16} />
                 </Summary>
                 <PeriodList>
-                  {occurences
-                    .filter(occ => !occ.isCritical)
-                    .map(({ end, start }, index) => (
+                  {vigilanceArea.periods
+                    ?.filter(period => !period.isCritical)
+                    .map(period => (
                       // eslint-disable-next-line react/no-array-index-key
-                      <li key={index}>
-                        Du {getDateAsLocalizedStringVeryCompact(start.toISOString(), true)} au{' '}
-                        {getDateAsLocalizedStringVeryCompact(end.toISOString(), true)}
-                      </li>
+                      <PeriodItem key={period.id}>
+                        <span>{computeVigilanceAreaPeriod(period, false)}</span>
+                        {period?.frequency && period.frequency !== VigilanceArea.Frequency.NONE && (
+                          <Tooltip Icon={Icon.Reset}>
+                            {[
+                              frequencyText(period.frequency, false),
+                              endingOccurenceText(period?.endingCondition, period?.computedEndDate, false)
+                            ]
+                              .filter(value => !!value)
+                              .join(', ')}
+                          </Tooltip>
+                        )}
+                      </PeriodItem>
                     ))}
                 </PeriodList>
               </Details>
@@ -87,14 +97,23 @@ export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
                   <Chevron $isOpen={isCriticalSummaryOpen} color={THEME.color.slateGray} size={16} />
                 </Summary>
                 <PeriodList>
-                  {occurences
-                    .filter(occ => occ.isCritical)
-                    .map(({ end, start }, index) => (
+                  {vigilanceArea.periods
+                    ?.filter(occ => occ.isCritical)
+                    .map(period => (
                       // eslint-disable-next-line react/no-array-index-key
-                      <li key={index}>
-                        Du {getDateAsLocalizedStringVeryCompact(start.toISOString(), true)} au{' '}
-                        {getDateAsLocalizedStringVeryCompact(end.toISOString(), true)}
-                      </li>
+                      <PeriodItem key={period.id}>
+                        <span>{computeVigilanceAreaPeriod(period, false)}</span>
+                        {period?.frequency && period.frequency !== VigilanceArea.Frequency.NONE && (
+                          <Tooltip Icon={Icon.Reset}>
+                            {[
+                              frequencyText(period?.frequency, false),
+                              endingOccurenceText(period?.endingCondition, period?.computedEndDate, false)
+                            ]
+                              .filter(value => !!value)
+                              .join(', ')}
+                          </Tooltip>
+                        )}
+                      </PeriodItem>
                     ))}
                 </PeriodList>
               </Details>
@@ -138,6 +157,12 @@ const PeriodList = styled.ol`
   margin-bottom: 8px;
   margin-left: 24px;
   flex-wrap: wrap;
+`
+
+const PeriodItem = styled.li`
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `
 
 const PeriodDescription = styled.p`

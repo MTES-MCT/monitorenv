@@ -1,4 +1,4 @@
-import { isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
+import { isOutOfPeriod, isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { getColorWithAlpha, stringToColorInGroup } from '@utils/utils'
@@ -51,11 +51,8 @@ export const getVigilanceAreaLayerStyle = feature => {
   const periods = feature.get('periods') as Array<VigilanceArea.VigilanceAreaPeriod> | undefined
   const isWithinCriticalPeriod = isWithinPeriod(periods, true)
 
-  const colorWithAlpha = getVigilanceAreaColorWithAlpha(
-    feature.get('name'),
-    feature.get('comments'),
-    periods?.length === 0
-  )
+  const isInformative = isOutOfPeriod(periods)
+  const colorWithAlpha = getVigilanceAreaColorWithAlpha(feature.get('name'), feature.get('comments'), isInformative)
 
   return getStyle(
     colorWithAlpha,

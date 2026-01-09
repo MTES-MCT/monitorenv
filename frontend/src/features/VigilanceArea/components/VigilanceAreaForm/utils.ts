@@ -1,6 +1,7 @@
 import { computeOccurenceWithinCurrentYear } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import { DraftSchema, PublishedSchema } from '@features/VigilanceArea/components/VigilanceAreaForm/Schema'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { v4 as uuidv4 } from 'uuid'
 
 import { customDayjs } from '../../../../../cypress/e2e/utils/customDayjs'
 
@@ -25,14 +26,15 @@ export function getVigilanceAreaInitialValues(): Omit<VigilanceArea.VigilanceAre
   }
 }
 
-export function getVigilanceAreaPeriodInitialValues(): Omit<VigilanceArea.VigilanceAreaPeriod, 'id'> {
+export function getVigilanceAreaPeriodInitialValues(): VigilanceArea.VigilanceAreaPeriod {
   return {
     computedEndDate: undefined,
     endDatePeriod: undefined,
-    endingCondition: undefined,
+    endingCondition: VigilanceArea.EndingCondition.NEVER,
     endingOccurrenceDate: undefined,
     endingOccurrencesNumber: undefined,
-    frequency: undefined,
+    frequency: VigilanceArea.Frequency.NONE,
+    id: uuidv4(),
     isAtAllTimes: false,
     isCritical: undefined,
     startDatePeriod: undefined
@@ -55,5 +57,13 @@ export function isWithinPeriod(
     return dateRanges.some(
       dateRange => dateRange.isCritical === isCritical && customDayjs.utc().isBetween(dateRange.start, dateRange.end)
     )
+  })
+}
+
+export function isOutOfPeriod(periods: VigilanceArea.VigilanceAreaPeriod[] | undefined) {
+  return !!periods?.every(period => {
+    const dateRanges = computeOccurenceWithinCurrentYear(period)
+
+    return dateRanges.every(dateRange => !customDayjs.utc().isBetween(dateRange.start, dateRange.end))
   })
 }
