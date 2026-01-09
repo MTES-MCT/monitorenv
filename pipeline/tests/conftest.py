@@ -1,25 +1,23 @@
+import docker
 import itertools
 import os
-import re
-from dataclasses import dataclass, field
-from pathlib import Path
-from time import sleep
-from typing import List
-
-import docker
 import pytest
-from dotenv import get_key
-from prefect.testing.utilities import prefect_test_harness
-from pytest import MonkeyPatch
-from sqlalchemy import text
-
+import re
 from config import (
     DOTENV_PATH,
     HOST_MIGRATIONS_FOLDER,
     LOCAL_MIGRATIONS_FOLDER,
     TEST_DATA_LOCATION,
 )
+from dataclasses import dataclass, field
+from dotenv import get_key
+from pathlib import Path
+from prefect.testing.utilities import prefect_test_harness
+from pytest import MonkeyPatch
+from sqlalchemy import text
 from src.db_config import create_engine
+from time import sleep
+from typing import List
 
 local_migrations_folders = [
     Path(LOCAL_MIGRATIONS_FOLDER) / "internal",
@@ -45,6 +43,7 @@ migrations_folders_mounts = [
 ]
 
 test_data_scripts_folder = TEST_DATA_LOCATION / Path("remote_database")
+
 
 ################################## Handle migrations ##################################
 
@@ -144,7 +143,7 @@ def start_remote_database_container(
     client = create_docker_client
     print("Starting database container")
     remote_database_container = client.containers.run(
-        "ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg17-postgis3.5.1",
+        "ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg17-postgis3.6.1-timescale2.24.0",
         environment={
             "POSTGRES_PASSWORD": get_key(
                 DOTENV_PATH, "MONITORENV_REMOTE_DB_PWD"
