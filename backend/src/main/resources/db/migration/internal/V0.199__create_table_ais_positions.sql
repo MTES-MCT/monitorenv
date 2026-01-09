@@ -1,4 +1,4 @@
--- CREATE EXTENSION IF NOT EXISTS timescaledb;
+CREATE EXTENSION IF NOT EXISTS timescaledb;
 
 CREATE TABLE public.ais_positions
 (
