@@ -250,7 +250,7 @@ class SummaryFile(
                 styleCell(colorCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
 
                 val entityCell = row.getCell(2) ?: row.createCell()
-                entityCell.text = area.entityName
+                entityCell.text = area.polyName ?: area.resume ?: ""
                 setCellWidth(entityCell, 6750)
                 styleCell(entityCell, bold = false, fontSize = 8, alignment = ParagraphAlignment.LEFT)
             }

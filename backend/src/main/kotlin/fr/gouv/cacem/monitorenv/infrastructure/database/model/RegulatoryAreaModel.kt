@@ -25,7 +25,6 @@ data class RegulatoryAreaModel(
     @Column(name = "duree_validite") val dureeValidite: String?,
     @Column(name = "editeur") val editeur: String?,
     @Column(name = "edition") val edition: String?,
-    @Column(name = "entity_name") val entityName: String?,
     @Column(name = "facade") val facade: String?,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
@@ -60,7 +59,6 @@ data class RegulatoryAreaModel(
             dureeValidite = dureeValidite,
             editeur = editeur,
             edition = edition,
-            entityName = entityName,
             facade = facade,
             geom = geom,
             layerName = layerName,
@@ -77,5 +75,5 @@ data class RegulatoryAreaModel(
         )
 
     override fun toString(): String =
-        "RegulatoryAreaModel(id=$id, plan=$plan, date=$date, dateFin=$dateFin, dureeValidite=$dureeValidite, editeur=$editeur, edition=$edition, entityName=$entityName, facade=$facade, geom=$geom, layerName=$layerName, observation=$observation, polyName=$polyName, refReg=$refReg, resume=$resume, source=$source, temporalite=$temporalite, type=$type, url=$url)"
+        "RegulatoryAreaModel(id=$id, plan=$plan, date=$date, dateFin=$dateFin, dureeValidite=$dureeValidite, editeur=$editeur, edition=$edition, facade=$facade, geom=$geom, layerName=$layerName, observation=$observation, polyName=$polyName, refReg=$refReg, resume=$resume, source=$source, temporalite=$temporalite, type=$type, url=$url)"
 }

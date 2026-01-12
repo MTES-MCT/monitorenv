@@ -58,7 +58,6 @@ class RegulatoryAreasITests {
             RegulatoryAreaEntity(
                 id = 17,
                 geom = polygon,
-                entityName = "Zone au sud de la cale",
                 url = url,
                 layerName = "ZMEL_Cale_Querlen",
                 facade = "NAMO",
@@ -86,7 +85,6 @@ class RegulatoryAreasITests {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(regulatoryArea.id)))
-            .andExpect(jsonPath("$[0].entityName", equalTo(regulatoryArea.entityName)))
             .andExpect(jsonPath("$[0].layerName", equalTo(regulatoryArea.layerName)))
             .andExpect(jsonPath("$[0].refReg", equalTo(regulatoryArea.refReg)))
             .andExpect(jsonPath("$[0].tags[0].name", equalTo("Mouillage")))
@@ -95,7 +93,7 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$[0].themes[0].name", equalTo("AMP")))
             .andExpect(jsonPath("$[0].plan", equalTo("PIRC")))
             .andExpect(jsonPath("$[0].polyName", equalTo("Zone au sud de la cale")))
-            .andExpect(jsonPath("$[0].plan", equalTo("Descriptif de la zone réglementaire")))
+            .andExpect(jsonPath("$[0].resume", equalTo("Descriptif de la zone réglementaire")))
     }
 
     @Test
@@ -105,7 +103,6 @@ class RegulatoryAreasITests {
             RegulatoryAreaEntity(
                 id = 17,
                 geom = polygon,
-                entityName = "Zone au sud de la cale",
                 url = url,
                 layerName = "ZMEL_Cale_Querlen",
                 facade = "NAMO",
@@ -133,7 +130,6 @@ class RegulatoryAreasITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(regulatoryArea.id)))
-            .andExpect(jsonPath("$.entityName", equalTo(regulatoryArea.entityName)))
             .andExpect(jsonPath("$.facade", equalTo(regulatoryArea.facade)))
             .andExpect(jsonPath("$.geom.type", equalTo("MultiPolygon")))
             .andExpect(jsonPath("$.layerName", equalTo(regulatoryArea.layerName)))

@@ -151,6 +151,7 @@ export const exportBrief =
       facade: regulatoryArea.facade,
       id: regulatoryArea.id,
       layerName: getTitle(regulatoryArea.layerName),
+      polyName: getTitle(regulatoryArea.polyName),
       refReg: regulatoryArea.refReg,
       resume: getTitle(regulatoryArea.resume),
       themes: displayThemes(regulatoryArea.themes),

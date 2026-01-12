@@ -36,7 +36,6 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
             RegulatoryAreaModel(
                 id = 17,
                 geom = polygon,
-                entityName = "Zone au sud de la cale",
                 url =
                     "http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098",
                 layerName = "ZMEL_Cale_Querlen",
@@ -54,9 +53,9 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 dateFin = "2035-07-01",
                 temporalite = "temporaire",
                 themes = listOf(),
-                plan = "PIRC",
-                polyName = "Zone au sud de la cale",
-                resume = "Descriptif de la zone réglementaire",
+                plan = "PIRC, PSCEM",
+                polyName = "",
+                resume = "Zone au sud de la cale",
             )
         val themes =
             listOf(
@@ -79,7 +78,6 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         require(requestedRegulatoryArea !== null)
         assertThat(requestedRegulatoryArea.id).isEqualTo(searchedRegulatoryArea.id)
         assertThat(requestedRegulatoryArea.geom).isEqualTo(searchedRegulatoryArea.geom)
-        assertThat(requestedRegulatoryArea.entityName).isEqualTo(searchedRegulatoryArea.entityName)
         assertThat(requestedRegulatoryArea.url).isEqualTo(searchedRegulatoryArea.url)
         assertThat(requestedRegulatoryArea.layerName).isEqualTo(searchedRegulatoryArea.layerName)
         assertThat(requestedRegulatoryArea.facade).isEqualTo(searchedRegulatoryArea.facade)
