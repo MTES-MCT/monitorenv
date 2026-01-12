@@ -272,7 +272,9 @@ export namespace Dashboard {
     image?: string
     layerName: string
     minimap?: string
+    polyName?: string
     refReg: string
+    resume?: string
     themes?: string
     type: string
     url: string

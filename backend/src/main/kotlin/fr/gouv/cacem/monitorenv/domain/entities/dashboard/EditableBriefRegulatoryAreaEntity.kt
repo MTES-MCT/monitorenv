@@ -7,12 +7,13 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell
 data class EditableBriefRegulatoryAreaEntity(
     val id: Int,
     val color: String,
-    val entityName: String,
     val facade: String? = null,
     override val image: String?,
     override val minimap: String?,
     val layerName: String,
+    val polyName: String? = null,
     val refReg: String? = null,
+    val resume: String? = null,
     val themes: String? = null,
     val type: String? = null,
     val url: String? = null,
@@ -25,7 +26,8 @@ data class EditableBriefRegulatoryAreaEntity(
 
     override fun buildDetailsRows(): List<List<String>> =
         listOf(
-            listOf("Entité", entityName),
+            listOf("Titre de la zone", polyName ?: ""),
+            listOf("Résumé", resume ?: ""),
             listOf("Ensemble reg", type ?: ""),
             listOf("Thématique", themes ?: ""),
             listOf("Facade", facade ?: ""),

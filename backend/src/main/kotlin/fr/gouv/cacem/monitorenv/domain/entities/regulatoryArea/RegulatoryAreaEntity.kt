@@ -12,7 +12,6 @@ data class RegulatoryAreaEntity(
     val dureeValidite: String? = null,
     val editeur: String? = null,
     val edition: String? = null,
-    val entityName: String? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
     val layerName: String? = null,
