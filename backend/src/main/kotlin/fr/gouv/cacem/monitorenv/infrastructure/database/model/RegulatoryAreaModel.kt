@@ -33,6 +33,7 @@ data class RegulatoryAreaModel(
     val geom: MultiPolygon?,
     @Column(name = "layer_name") val layerName: String?,
     @Column(name = "observation") val observation: String?,
+    @Column(name = "poly_name") val polyName: String?,
     @Column(name = "ref_reg") val refReg: String?,
     @Column(name = "source") val source: String?,
     @Column(name = "temporalite") val temporalite: String?,
@@ -46,6 +47,7 @@ data class RegulatoryAreaModel(
         fetch = FetchType.LAZY,
     )
     var themes: List<ThemeRegulatoryAreaModel>,
+    @Column(name = "resume") val resume: String?,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
@@ -62,8 +64,10 @@ data class RegulatoryAreaModel(
             facade = facade,
             geom = geom,
             layerName = layerName,
+            polyName = polyName,
             observation = observation,
             refReg = refReg,
+            resume = resume,
             source = source,
             temporalite = temporalite,
             tags = toTagEntities(tags),
@@ -73,5 +77,5 @@ data class RegulatoryAreaModel(
         )
 
     override fun toString(): String =
-        "RegulatoryAreaModel(id=$id, plan=$plan, date=$date, dateFin=$dateFin, dureeValidite=$dureeValidite, editeur=$editeur, edition=$edition, entityName=$entityName, facade=$facade, geom=$geom, layerName=$layerName, observation=$observation, refReg=$refReg, source=$source, temporalite=$temporalite, type=$type, url=$url)"
+        "RegulatoryAreaModel(id=$id, plan=$plan, date=$date, dateFin=$dateFin, dureeValidite=$dureeValidite, editeur=$editeur, edition=$edition, entityName=$entityName, facade=$facade, geom=$geom, layerName=$layerName, observation=$observation, polyName=$polyName, refReg=$refReg, resume=$resume, source=$source, temporalite=$temporalite, type=$type, url=$url)"
 }

@@ -3,6 +3,7 @@ import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/admi
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { groupBy } from 'lodash'
@@ -117,25 +118,29 @@ export function AreaTable({
               <Text>{getTitle(groupName)}</Text>
             </View>
             <View style={{ flex: 0.8 }}>
-              {layers.map(layer => (
-                <View
-                  key={layer.id}
-                  style={[
-                    styles.cell,
-                    layers.length === 1 && getTitle(groupName).length > 30 ? { height: '100%' } : {}
-                  ]}
-                >
+              {layers.map(layer => {
+                const layerTitle = getRegulatoryAreaTitle(layer.polyName, layer.resume)
+
+                return (
                   <View
+                    key={layer.id}
                     style={[
-                      styles.layerLegend,
-                      {
-                        backgroundColor: getRegulatoryEnvColorWithAlpha(displayTags(layer.tags), layer.entityName)
-                      }
+                      styles.cell,
+                      layers.length === 1 && getTitle(groupName).length > 30 ? { height: '100%' } : {}
                     ]}
-                  />
-                  <Text style={styles.cellText}>{layer.entityName || 'AUCUN NOM'}</Text>
-                </View>
-              ))}
+                  >
+                    <View
+                      style={[
+                        styles.layerLegend,
+                        {
+                          backgroundColor: getRegulatoryEnvColorWithAlpha(displayTags(layer.tags), layerTitle)
+                        }
+                      ]}
+                    />
+                    <Text style={styles.cellText}>{layerTitle || 'AUCUN NOM'}</Text>
+                  </View>
+                )
+              })}
             </View>
           </View>
         ))}

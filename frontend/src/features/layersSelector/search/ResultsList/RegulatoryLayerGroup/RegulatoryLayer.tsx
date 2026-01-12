@@ -1,6 +1,7 @@
 import { StyledTransparentButton } from '@components/style'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -98,22 +99,24 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
     }
   }, [layerId, regulatoryMetadataLayerId, ref])
 
+  const layerTitle = getRegulatoryAreaTitle(layer?.polyName, layer?.resume)
+
   return (
     <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown} data-cy="regulatory-result-zone">
       <StyledTransparentButton onClick={toggleZoneMetadata}>
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
-          legendKey={layer?.entityName ?? 'aucun'}
+          legendKey={layerTitle ?? 'aucun'}
           type={layer?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
         />
-        <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layer?.entityName}>
+        <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layerTitle}>
           <Highlighter
             autoEscape
             highlightClassName="highlight"
             searchWords={searchedText && searchedText.length > 0 ? searchedText.split(' ') : []}
-            textToHighlight={layer?.entityName ?? ''}
+            textToHighlight={layerTitle ?? ''}
           />
-          {!layer?.entityName && 'AUCUN NOM'}
+          {!layerTitle && 'AUCUN NOM'}
         </LayerSelector.Name>
       </StyledTransparentButton>
       <LayerSelector.IconGroup>

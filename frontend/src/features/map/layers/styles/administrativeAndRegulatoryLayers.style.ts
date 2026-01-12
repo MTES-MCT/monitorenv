@@ -1,4 +1,5 @@
 import { THEME } from '@mtes-mct/monitor-ui'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { getCenter } from 'ol/extent'
 import { Point } from 'ol/geom'
@@ -187,7 +188,8 @@ export const getAdministrativeLayersStyle = (code: String) => {
 }
 
 export const getRegulatoryLayerStyle = feature => {
-  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(displayTags(feature.get('tags')), feature.get('entityName'))
+  const layerTitle = getRegulatoryAreaTitle(feature.get('polyName'), feature.get('resume'))
+  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(displayTags(feature.get('tags')), layerTitle)
 
   return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('isFilled'), feature.get('asMinimap'))
 }

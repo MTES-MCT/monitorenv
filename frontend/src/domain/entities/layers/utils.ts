@@ -1,4 +1,5 @@
 import { Dashboard } from '@features/Dashboard/types'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 
@@ -43,7 +44,10 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
       return displayTags((layer as VigilanceArea.VigilanceAreaProperties)?.tags)
 
     default:
-      return (layer as RegulatoryLayerCompactProperties).entityName
+      return getRegulatoryAreaTitle(
+        (layer as RegulatoryLayerCompactProperties)?.polyName,
+        (layer as RegulatoryLayerCompactProperties)?.resume
+      )
   }
 }
 
@@ -61,7 +65,10 @@ export const getLegendKey = (layer: GenericLayerType, layerType: RegulatoryOrAMP
       return (layer as VigilanceArea.VigilanceAreaProperties).comments
 
     default:
-      return (layer as RegulatoryLayerCompactProperties).entityName
+      return getRegulatoryAreaTitle(
+        (layer as RegulatoryLayerCompactProperties)?.polyName,
+        (layer as RegulatoryLayerCompactProperties)?.resume
+      )
   }
 }
 

@@ -4,6 +4,7 @@ import { Identification } from '@features/layersSelector/metadataPanel/regulator
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
@@ -23,6 +24,8 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
       pollingInterval: FOUR_HOURS
     })
 
+    const layerTitle = getRegulatoryAreaTitle(regulatoryMetadata?.polyName, regulatoryMetadata?.resume)
+
     return (
       // eslint-disable-next-line react/jsx-props-no-spreading
       <Wrapper ref={ref} {...props}>
@@ -31,7 +34,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
             <Header>
               <LayerLegend
                 layerType={MonitorEnvLayers.REGULATORY_ENV}
-                legendKey={regulatoryMetadata.entityName}
+                legendKey={layerTitle}
                 type={displayTags(regulatoryMetadata.tags)}
               />
               <RegulatoryZoneName title={getTitle(regulatoryMetadata.layerName)}>
@@ -41,9 +44,10 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
             </Header>
             <Content>
               <Identification
-                entityName={regulatoryMetadata.entityName}
                 facade={regulatoryMetadata.facade}
                 plan={regulatoryMetadata.plan}
+                polyName={regulatoryMetadata.polyName}
+                resume={getTitle(regulatoryMetadata.resume)}
                 tags={regulatoryMetadata.tags}
                 themes={regulatoryMetadata.themes}
                 type={regulatoryMetadata.type}

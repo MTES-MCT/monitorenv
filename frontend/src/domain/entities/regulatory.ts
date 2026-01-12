@@ -3,13 +3,14 @@ import type { ThemeFromAPI } from './themes'
 import type { GeoJSON } from '../types/GeoJSON'
 
 export type RegulatoryLayerWithMetadataFromAPI = {
-  entityName: string
   facade: string
   geom: GeoJSON.MultiPolygon
   id: number
   layerName: string
   plan: string
+  polyName: string
   refReg: string
+  resume: string
   tags: TagFromAPI[]
   themes: ThemeFromAPI[]
   type: string
@@ -17,12 +18,13 @@ export type RegulatoryLayerWithMetadataFromAPI = {
 }
 
 export type RegulatoryLayerCompactFromAPI = {
-  entityName: string
   geom: GeoJSON.MultiPolygon
   id: number
   layerName: string
   plan: string
+  polyName: string
   refReg: string
+  resume: string
   tags: TagFromAPI[]
   themes: ThemeFromAPI[]
   type: string

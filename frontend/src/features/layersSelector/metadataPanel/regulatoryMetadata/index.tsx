@@ -4,6 +4,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useCallback } from 'react'
 
@@ -38,7 +39,7 @@ export function RegulatoryMetadata() {
           <Header data-cy="regulatory-metadata-header">
             <LayerLegend
               layerType={MonitorEnvLayers.REGULATORY_ENV}
-              legendKey={regulatoryMetadata.entityName}
+              legendKey={getRegulatoryAreaTitle(regulatoryMetadata.polyName, regulatoryMetadata.resume)}
               type={regulatoryMetadata.tags.map(({ name }) => name).join(', ')}
             />
             <Name title={getTitle(regulatoryMetadata.layerName)}>{getTitle(regulatoryMetadata.layerName)}</Name>
@@ -52,9 +53,10 @@ export function RegulatoryMetadata() {
           </Header>
           <Content>
             <Identification
-              entityName={regulatoryMetadata.entityName}
               facade={regulatoryMetadata.facade}
               plan={regulatoryMetadata.plan}
+              polyName={regulatoryMetadata.polyName}
+              resume={regulatoryMetadata.resume}
               tags={regulatoryMetadata.tags}
               themes={regulatoryMetadata.themes}
               type={regulatoryMetadata.type}

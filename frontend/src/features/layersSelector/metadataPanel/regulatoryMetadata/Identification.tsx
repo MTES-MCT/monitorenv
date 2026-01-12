@@ -7,16 +7,18 @@ import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
 export function Identification({
-  entityName,
   facade,
   plan,
+  polyName,
+  resume,
   tags,
   themes,
   type
 }: {
-  entityName: string
   facade: string
   plan: string
+  polyName: string
+  resume: string
   tags: TagFromAPI[]
   themes: ThemeFromAPI[]
   type: string
@@ -28,9 +30,15 @@ export function Identification({
     <Zone>
       <Fields>
         <Body>
+          {polyName.length > 0 && (
+            <Field>
+              <Key>Titre de la zone</Key>
+              <Value data-cy="regulatory-layers-metadata-polyName">{polyName}</Value>
+            </Field>
+          )}
           <Field>
-            <Key>Entité</Key>
-            <Value data-cy="regulatory-layers-metadata-entityName">{entityName || <NoValue>-</NoValue>}</Value>
+            <Key>Résumé</Key>
+            <Value data-cy="regulatory-layers-metadata-resume">{resume || <NoValue>-</NoValue>}</Value>
           </Field>
           <Field>
             <Key>Ensemble reg.</Key>

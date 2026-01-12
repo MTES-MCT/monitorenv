@@ -17,6 +17,8 @@ SELECT
   date_fin,
   edition,
   plan,
+  poly_name,
+  resume,
   md5(
         COALESCE(geom::text, '') ||
         COALESCE(ent_name::text, '') ||
@@ -34,7 +36,9 @@ SELECT
         COALESCE(date::text, '') ||
         COALESCE(date_fin::text, '') ||
         COALESCE(edition::text, '') ||
-        COALESCE(plan::text, '')
+        COALESCE(plan::text, '') ||
+        COALESCE(poly_name::text, '') ||
+        COALESCE(resume::text, '')
   ) as row_hash
 FROM prod."REG_ENV_V3"
 WHERE 

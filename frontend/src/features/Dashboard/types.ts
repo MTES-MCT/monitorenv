@@ -267,7 +267,6 @@ export namespace Dashboard {
 
   type RegulatoryAreaForEditableBrief = {
     color: string
-    entityName: string
     facade: string
     id: number
     image?: string

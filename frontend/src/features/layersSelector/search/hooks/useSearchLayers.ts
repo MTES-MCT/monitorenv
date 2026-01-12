@@ -34,7 +34,8 @@ export function useSearchLayers() {
       includeScore: false,
       keys: [
         'layerName',
-        'entityName',
+        'resume',
+        'polyName',
         'refReg',
         'type',
         'tags.name',
@@ -111,7 +112,8 @@ export function useSearchLayers() {
             ? {
                 $or: [
                   { $path: ['layerName'], $val: globalSearchText },
-                  { $path: ['entityName'], $val: globalSearchText },
+                  { $path: ['resume'], $val: globalSearchText },
+                  { $path: ['polyName'], $val: globalSearchText },
                   { $path: ['refReg'], $val: globalSearchText },
                   { $path: ['type'], $val: globalSearchText },
                   ...filterThemesByText(globalSearchText),

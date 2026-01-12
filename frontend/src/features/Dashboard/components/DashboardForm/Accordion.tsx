@@ -27,7 +27,7 @@ export function Accordion({
   return (
     <AccordionContainer className={className}>
       <AccordionHeader ref={titleRef} onClick={setExpandedAccordion}>
-        <TransparentButton aria-controls={`${name}-accordion`} aria-expanded={isExpanded}>
+        <TransparentButton aria-controls={`${name ?? title}-accordion`} aria-expanded={isExpanded}>
           {title}
         </TransparentButton>
         {controls}
@@ -59,6 +59,7 @@ export const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`
 export const AccordionHeader = styled.header`
   cursor: pointer;
   display: grid;
+  font-size: 13px;
   grid-template-columns: 1fr auto auto;
   justify-content: space-between;
   padding: 21px 24px;

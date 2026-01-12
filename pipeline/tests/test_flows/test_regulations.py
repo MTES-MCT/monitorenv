@@ -83,6 +83,8 @@ def generate_regulatory_area_data(
     temporalites,
     types,
     plans,
+    poly_names,
+    resumes,
 ):
     return pd.DataFrame(
         {
@@ -104,6 +106,8 @@ def generate_regulatory_area_data(
             "temporalite": temporalites,
             "type": types,
             "plan": plans,
+            "poly_name": poly_names,
+            "resume": resumes,
         }
     )
 
@@ -180,6 +184,18 @@ def new_regulatory_areas() -> pd.DataFrame:
             None,
         ],
         plans=["PIRC", "PSCEM", "PIRC", "PIRC"],
+        poly_names=[
+            "poly_name1",
+            "poly_name2",
+            "poly_name3",
+            "poly_name4",
+        ],
+        resumes=[
+            "resume1",
+            "resume2",
+            "resume3",
+            "resume4",
+        ],
     )
 
 
@@ -216,6 +232,14 @@ def regulatory_areas_to_update() -> pd.DataFrame:
         temporalites=["permanent", "permanent"],
         types=["Arrêté préfectoral", "Décret"],
         plans=["PIRC", "PSCEM"],
+        poly_names=[
+            "poly_name5",
+            "poly_name6",
+        ],
+        resumes=[
+            "resume5",
+            "resume6",
+        ],
     )
 
 
@@ -240,7 +264,8 @@ def test_load_new_regulatory_areas(reset_test_data, new_regulatory_areas):
             id, geom, entity_name, layer_name, facade,
             ref_reg, url, row_hash, edition, editeur,
             source, observation, thematique, date,
-            duree_validite, temporalite, type, plan
+            duree_validite, temporalite, type, plan,
+            poly_name, resume
             FROM public.regulations_cacem
             ORDER BY id""",
     )
@@ -254,7 +279,8 @@ def test_load_new_regulatory_areas(reset_test_data, new_regulatory_areas):
             id, geom, entity_name, layer_name, facade,
             ref_reg, url, row_hash, edition, editeur,
             source, observation, thematique, date,
-            duree_validite, temporalite, type, plan
+            duree_validite, temporalite, type, plan,
+            poly_name, resume
             FROM public.regulations_cacem
             ORDER BY id""",
     )
@@ -269,7 +295,8 @@ def test_update_new_regulations(reset_test_data, regulatory_areas_to_update):
             id, geom, entity_name, layer_name, facade,
             ref_reg, url, row_hash, edition, editeur,
             source, observation, thematique, date,
-            duree_validite, temporalite, type, plan
+            duree_validite, temporalite, type, plan,
+            poly_name, resume
             FROM public.regulations_cacem
             ORDER BY id""",
     )
