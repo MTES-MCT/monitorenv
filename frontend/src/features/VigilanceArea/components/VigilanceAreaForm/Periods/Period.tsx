@@ -2,7 +2,7 @@ import {
   CheckboxWrapper,
   CriticalCheckbox,
   PeriodCircle
-} from '@features/VigilanceArea/components/VigilanceAreaForm/Periods'
+} from '@features/VigilanceArea/components/VigilanceAreaForm/Periods/Periods'
 import { PublishedVigilanceAreaPeriodSchema } from '@features/VigilanceArea/components/VigilanceAreaForm/Schema'
 import { ValidateButton } from '@features/VigilanceArea/components/VigilanceAreaForm/style'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -24,25 +24,25 @@ import { omit } from 'lodash'
 import { useState } from 'react'
 import styled from 'styled-components'
 
+import type { FormikErrors } from 'formik'
+
 type PeriodProps = {
-  hasError: string | undefined
+  error: FormikErrors<VigilanceArea.VigilanceAreaPeriod> | undefined
   index: number
   initialPeriod: VigilanceArea.VigilanceAreaPeriod
   onValidate: (vigilanceAreaSource: VigilanceArea.VigilanceAreaPeriod) => void
   remove: (index: number) => void
 }
 
-export function Period({ hasError, index, initialPeriod, onValidate, remove }: PeriodProps) {
+export function Period({ error, index, initialPeriod, onValidate, remove }: PeriodProps) {
   const frequencyOptions = getOptionsFromLabelledEnum(VigilanceArea.FrequencyLabel)
   const endingConditionOptions = getOptionsFromLabelledEnum(VigilanceArea.EndingConditionLabel)
-
   const isNewlyCreatedPeriod = Object.values(
     omit(initialPeriod, ['isCritical', 'id', 'frequency', 'endingCondition'])
   ).every(value => value === undefined || value === false)
   const [isEditing, setIsEditing] = useState(isNewlyCreatedPeriod)
   const [editedPeriod, setEditedPeriod] = useState(initialPeriod)
   const isValid = (value: VigilanceArea.VigilanceAreaPeriod) => PublishedVigilanceAreaPeriodSchema.isValidSync(value)
-
   const cancel = () => {
     if (isNewlyCreatedPeriod) {
       remove(index)
@@ -107,7 +107,7 @@ export function Period({ hasError, index, initialPeriod, onValidate, remove }: P
               : undefined
           }
           disabled={editedPeriod.isAtAllTimes}
-          error={hasError}
+          error={error?.startDatePeriod || error?.endDatePeriod}
           hasSingleCalendar
           isCompact
           isErrorMessageHidden
@@ -133,7 +133,7 @@ export function Period({ hasError, index, initialPeriod, onValidate, remove }: P
       <>
         <Select
           disabled={editedPeriod.isAtAllTimes}
-          error={hasError}
+          error={error?.frequency}
           isErrorMessageHidden
           isLight
           isRequired
