@@ -31,7 +31,7 @@ updates:
         update-types: ["minor", "patch"]
 
   - package-ecosystem: "pip"
-    directory: "/datascience"
+    directory: "/pipeline"
     assignees:
       - "VincentAntoine"
     schedule:
@@ -39,10 +39,6 @@ updates:
     commit-message:
       prefix: "[Tech] "
     labels: ["tech. enhancement", "dependencies"]
-    # Disable all dependencies update
-    # TODO Re-enable once Env is migrated to Poetry-only.
-    # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#open-pull-requests-limit
-    open-pull-requests-limit: 0
     groups:
       non-major-dependencies:
         applies-to: version-updates

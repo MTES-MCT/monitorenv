@@ -1,24 +1,26 @@
 # Contributing
 
-- [Getting Started: Backend \& Frontend](#getting-started-backend--frontend)
-  - [Requirements](#requirements)
-  - [First Setup](#first-setup)
-  - [Local Development](#local-development)
-- [Getting Started: Data Pipeline](#getting-started-data-pipeline)
-  - [Requirements](#requirements-1)
-  - [First Setup](#first-setup-1)
-  - [Local Development](#local-development-1)
-- [Technical Stack](#technical-stack)
-- [Legacy Instructions](#legacy-instructions)
-  - [Technical Stack (Main Components)](#technical-stack-main-components)
-  - [Development Environment Setup](#development-environment-setup)
-    - [Prerequisites](#prerequisites)
-    - [Configuration](#configuration)
-      - [Sentry](#sentry)
-    - [Frontend](#frontend)
-      - [Linting](#linting)
-      - [Environment Variables](#environment-variables)
-    - [Backend](#backend)
+- [Contributing](#contributing)
+  - [Getting Started: Backend \& Frontend](#getting-started-backend--frontend)
+    - [Requirements](#requirements)
+    - [First Setup](#first-setup)
+    - [Local Development](#local-development)
+  - [Getting Started: Data Pipeline](#getting-started-data-pipeline)
+    - [Requirements](#requirements-1)
+    - [First Setup](#first-setup-1)
+    - [Local Development](#local-development-1)
+      - [Running a test](#running-a-test)
+  - [Technical Stack](#technical-stack)
+  - [Legacy Instructions](#legacy-instructions)
+    - [Technical Stack (Main Components)](#technical-stack-main-components)
+    - [Development Environment Setup](#development-environment-setup)
+      - [Prerequisites](#prerequisites)
+      - [Configuration](#configuration)
+        - [Sentry](#sentry)
+      - [Frontend](#frontend)
+        - [Linting](#linting)
+        - [Environment Variables](#environment-variables)
+      - [Backend](#backend)
 
 ---
 
@@ -60,15 +62,16 @@ make dev-run-front
 
 - Debian-based Linux or macOS
 - Docker v25 (with Docker Compose v2)
-- Python v3.10 (with Poetry)
+- Python 3 (with pyenv and Poetry)
 
 if you have a mac with apple chipset please check the checkbox in docker dashboard
 `Allow the default Docker socket to be used (requires password)` in `settings/advanced`
 
 ### First Setup
 
-- install Peotry (follow online documentation, it changes really often)
-- run ```cd datascience``` and ```poetry install```
+- install pyenv and Poetry (follow online documentation, it changes really often)
+- install the correct python version using ```pyenv install <VERSION>``` (use version defined in pipeline/.python-version)
+- run ```make install-pipeline```
 
 ### Local Development
 
@@ -121,7 +124,7 @@ For example :
   - OpenLayers
   - Rsuite
 - Data pipeline:
-  - Python 3.10
+  - Python 3
   - Poetry
   - Prefect
 
@@ -133,7 +136,7 @@ For example :
 - openjdk (osx: `brew install openjdk`)
 - postgres (only `psql` is required. osx: `brew install libpq`)
 - docker + docker-compose
-- python 3.10 + poetry
+- python 3 + poetry
 
 #### Configuration
 
