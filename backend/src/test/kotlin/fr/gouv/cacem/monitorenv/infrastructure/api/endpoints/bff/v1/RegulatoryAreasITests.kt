@@ -74,6 +74,8 @@ class RegulatoryAreasITests {
                 dateFin = "2035-07-01",
                 temporalite = "temporaire",
                 plan = "PIRC",
+                polyName = "Zone au sud de la cale",
+                resume = "Descriptif de la zone réglementaire",
             )
         given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
 
@@ -92,6 +94,8 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$[0].geom.type", equalTo("MultiPolygon")))
             .andExpect(jsonPath("$[0].themes[0].name", equalTo("AMP")))
             .andExpect(jsonPath("$[0].plan", equalTo("PIRC")))
+            .andExpect(jsonPath("$[0].polyName", equalTo("Zone au sud de la cale")))
+            .andExpect(jsonPath("$[0].plan", equalTo("Descriptif de la zone réglementaire")))
     }
 
     @Test
@@ -117,6 +121,8 @@ class RegulatoryAreasITests {
                 dateFin = "2035-07-01",
                 temporalite = "temporaire",
                 plan = "PSCEM",
+                polyName = "Zone au sud de la cale",
+                resume = "Descriptif de la zone réglementaire",
             )
 
         given(getRegulatoryAreaById.execute(17)).willReturn(regulatoryArea)
@@ -137,5 +143,7 @@ class RegulatoryAreasITests {
             .andExpect(jsonPath("$.type", equalTo(regulatoryArea.type)))
             .andExpect(jsonPath("$.url", equalTo(regulatoryArea.url)))
             .andExpect(jsonPath("$.plan", equalTo(regulatoryArea.plan)))
+            .andExpect(jsonPath("$.polyName", equalTo(regulatoryArea.polyName)))
+            .andExpect(jsonPath("$.resume", equalTo(regulatoryArea.resume)))
     }
 }

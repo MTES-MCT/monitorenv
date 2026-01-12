@@ -1,6 +1,7 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { Text, View } from '@react-pdf/renderer'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
@@ -42,7 +43,7 @@ export function RegulatoryAreas({
                       {
                         backgroundColor: getRegulatoryEnvColorWithAlpha(
                           displayTags(regulatoryArea.tags),
-                          regulatoryArea.entityName
+                          getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume)
                         )
                       }
                     ]}
@@ -50,12 +51,22 @@ export function RegulatoryAreas({
                   <Text> {getTitle(regulatoryArea.layerName)}</Text>
                 </View>
                 <View style={[areaStyle.content, { rowGap: 3 }]}>
+                  {regulatoryArea.polyName.length > 0 && (
+                    <View>
+                      <View style={areaStyle.description}>
+                        <Text>Titre de la zone</Text>
+                      </View>
+                      <View style={areaStyle.details}>
+                        <Text>{regulatoryArea.polyName}</Text>
+                      </View>
+                    </View>
+                  )}
                   <View>
                     <View style={areaStyle.description}>
-                      <Text>Entité</Text>
+                      <Text>Résumé</Text>
                     </View>
                     <View style={areaStyle.details}>
-                      <Text>{regulatoryArea.entityName || 'AUCUN NOM'}</Text>
+                      <Text>{regulatoryArea.resume || 'AUCUN NOM'}</Text>
                     </View>
                   </View>
                   <View>

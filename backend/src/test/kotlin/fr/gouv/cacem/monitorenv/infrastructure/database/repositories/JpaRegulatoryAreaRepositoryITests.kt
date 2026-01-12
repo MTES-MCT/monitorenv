@@ -55,6 +55,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 temporalite = "temporaire",
                 themes = listOf(),
                 plan = "PIRC",
+                polyName = "Zone au sud de la cale",
+                resume = "Descriptif de la zone réglementaire",
             )
         val themes =
             listOf(
@@ -96,6 +98,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea.dateFin).isEqualTo(searchedRegulatoryArea.dateFin)
         assertThat(requestedRegulatoryArea.temporalite).isEqualTo(searchedRegulatoryArea.temporalite)
         assertThat(requestedRegulatoryArea.plan).isEqualTo(searchedRegulatoryArea.plan)
+        assertThat(requestedRegulatoryArea.polyName).isEqualTo(searchedRegulatoryArea.polyName)
+        assertThat(requestedRegulatoryArea.resume).isEqualTo(searchedRegulatoryArea.resume)
     }
 
     @Test

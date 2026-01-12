@@ -96,7 +96,7 @@ export const exportBrief =
 
       const filteredRegulatoryAreas = allLinkedRegulatoryAreas
         .filter(regulatoryArea => vigilanceArea.linkedRegulatoryAreas?.includes(regulatoryArea.id))
-        .map(regulatoryArea => regulatoryArea.entityName)
+        .map(regulatoryArea => regulatoryArea.resume)
         .join(', ')
 
       return { filteredAmps, filteredRegulatoryAreas }
@@ -147,12 +147,12 @@ export const exportBrief =
     /* REGULATORY AREAS */
     const regulatoryAreas = getRegulatoryAreasByIds(getState(), dashboard.regulatoryAreaIds)
     const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => ({
-      color: getRegulatoryEnvColorWithAlpha(displayTags(regulatoryArea.tags), regulatoryArea.entityName),
-      entityName: getTitle(regulatoryArea.entityName),
+      color: getRegulatoryEnvColorWithAlpha(displayTags(regulatoryArea.tags), regulatoryArea.resume),
       facade: regulatoryArea.facade,
       id: regulatoryArea.id,
       layerName: getTitle(regulatoryArea.layerName),
       refReg: regulatoryArea.refReg,
+      resume: getTitle(regulatoryArea.resume),
       themes: displayThemes(regulatoryArea.themes),
       type: regulatoryArea.type,
       url: regulatoryArea.url

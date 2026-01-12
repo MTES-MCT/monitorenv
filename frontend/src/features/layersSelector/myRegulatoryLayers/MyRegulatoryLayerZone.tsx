@@ -1,3 +1,4 @@
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { getTitle } from 'domain/entities/layers/utils'
 
 import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
@@ -28,7 +29,9 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
 
   const handleRemoveZone = () => dispatch(removeRegulatoryZonesFromMyLayers([regulatoryZone.id]))
 
-  const displayedName = getTitle(regulatoryZone?.entityName) || 'AUCUN NOM'
+  const layerTitle = getRegulatoryAreaTitle(regulatoryZone.polyName, regulatoryZone.resume)
+
+  const displayedName = getTitle(layerTitle) || 'AUCUN NOM'
 
   const toggleRegulatoryZoneMetadata = () => {
     if (metadataIsShown) {
@@ -42,13 +45,13 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
     <MyLayerZone
       bbox={regulatoryZone.bbox}
       displayedName={displayedName}
-      hasMetadata={!!regulatoryZone?.entityName}
+      hasMetadata={!!layerTitle}
       hideLayer={() => dispatch(hideRegulatoryLayer(regulatoryZone.id))}
       id={regulatoryZone.id}
       layerType={MonitorEnvLayers.REGULATORY_ENV}
       layerZoneIsShowed={regulatoryZoneIsShowed}
       metadataIsShown={metadataIsShown}
-      name={regulatoryZone.entityName}
+      name={layerTitle ?? 'AUCUN NOM'}
       removeZone={handleRemoveZone}
       showLayer={() => dispatch(showRegulatoryLayer(regulatoryZone.id))}
       toggleZoneMetadata={toggleRegulatoryZoneMetadata}

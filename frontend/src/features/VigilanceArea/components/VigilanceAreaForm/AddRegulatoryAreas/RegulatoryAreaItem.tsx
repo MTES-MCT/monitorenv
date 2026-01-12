@@ -8,6 +8,7 @@ import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import {
@@ -111,6 +112,8 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
     }
   }
 
+  const layerTitle = getRegulatoryAreaTitle(regulatoryArea?.polyName, regulatoryArea?.resume)
+
   return (
     <RegulatoryAreaContainer
       $isReadOnly={isReadOnly}
@@ -120,10 +123,10 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
       <RegulatoryAreaName>
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
-          legendKey={regulatoryArea?.entityName ?? 'aucun'}
+          legendKey={layerTitle ?? 'aucun'}
           type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
         />
-        <span title={regulatoryArea?.entityName}>{regulatoryArea?.entityName}</span>
+        <span title={layerTitle}>{layerTitle}</span>
       </RegulatoryAreaName>
       {isReadOnly ? (
         <ButtonsContainer>

@@ -5,6 +5,7 @@ import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
@@ -75,6 +76,8 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
     dispatch(setFitToExtent(extent))
   }
 
+  const layerTitle = getRegulatoryAreaTitle(layer?.polyName, layer?.resume)
+
   return (
     <StyledLayer
       ref={ref}
@@ -85,14 +88,14 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
       <StyledTransparentButton>
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
-          legendKey={layer?.entityName ?? 'aucun'}
+          legendKey={layerTitle ?? 'aucun'}
           type={displayTags(layer?.tags) ?? 'aucun'}
         />
         <LayerName
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-area-zone-${layer?.id}`}
-          title={layer?.entityName}
+          title={layerTitle}
         >
-          {layer?.entityName ?? 'AUCUN NOM'}
+          {layerTitle ?? 'AUCUN NOM'}
         </LayerName>
       </StyledTransparentButton>
       <LayerSelector.IconGroup>

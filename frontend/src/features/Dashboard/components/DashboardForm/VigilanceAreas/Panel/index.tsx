@@ -108,6 +108,7 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(({ layerId, ...props
 const Wrapper = styled.div`
   background-color: ${p => p.theme.color.white};
   box-shadow: 0px 3px 5px #70778540;
+  font-size: 13px;
   position: absolute;
   width: 400px;
   max-height: calc(100vh - 500px);

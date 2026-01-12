@@ -85,6 +85,7 @@ const MailButton = styled.a<{ $disabled: boolean }>`
   border: 1px solid ${p => p.theme.color.charcoal};
   color: ${p => p.theme.color.gainsboro};
   display: flex;
+  font-size: 13px;
   padding: 6px 12px;
   text-decoration: none;
   > span {

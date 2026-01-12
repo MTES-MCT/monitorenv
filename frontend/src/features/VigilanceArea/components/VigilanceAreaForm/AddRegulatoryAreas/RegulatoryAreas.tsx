@@ -1,4 +1,5 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 
 import { RegulatoryAreaItem } from './RegulatoryAreaItem'
 
@@ -11,7 +12,11 @@ export function RegulatoryAreas({ isReadOnly = false, linkedRegulatoryAreas }: R
   const regulatoryAreas = linkedRegulatoryAreas
     ?.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
     .filter(regulatoryArea => !!regulatoryArea)
-    .sort((a, b) => a?.entityName.localeCompare(b?.entityName))
+    .sort((a, b) =>
+      (getRegulatoryAreaTitle(a?.polyName, a?.resume) ?? '').localeCompare(
+        getRegulatoryAreaTitle(b?.polyName, b?.resume) ?? ''
+      )
+    )
 
   return (
     <>
