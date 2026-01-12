@@ -16,6 +16,7 @@ export function LayerLegend({
   isDisabled = false,
   layerType,
   legendKey,
+  plan = undefined,
   size = Size.SMALL,
   type
 }: {
@@ -23,6 +24,7 @@ export function LayerLegend({
   isDisabled?: boolean
   layerType: RegulatoryOrAMPOrViglanceAreaLayerType | MonitorEnvLayers.LOCALIZED_AREAS
   legendKey?: string
+  plan?: string
   size?: Size
   type?: string
 }) {
@@ -36,7 +38,9 @@ export function LayerLegend({
     case MonitorEnvLayers.REGULATORY_ENV_PREVIEW:
     case MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA:
     case Dashboard.Layer.DASHBOARD_REGULATORY_AREAS:
-      return <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, legendKey, isDisabled)} />
+      return (
+        <Rectangle $size={size} $vectorLayerColor={getRegulatoryEnvColorWithAlpha(type, legendKey, plan, isDisabled)} />
+      )
     case MonitorEnvLayers.VIGILANCE_AREA:
     case MonitorEnvLayers.VIGILANCE_AREA_PREVIEW:
     case Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS:

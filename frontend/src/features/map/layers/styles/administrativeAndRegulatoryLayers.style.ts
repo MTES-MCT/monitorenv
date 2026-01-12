@@ -11,6 +11,8 @@ import Text from 'ol/style/Text'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 
+import type { Feature } from 'ol'
+
 const blueMarine = '#7B9FCC'
 const darkPeriwinkle = '#767AB2'
 
@@ -191,16 +193,34 @@ export const getRegulatoryLayerStyle = feature => {
   const layerTitle = getRegulatoryAreaTitle(feature.get('polyName'), feature.get('resume'))
   const colorWithAlpha = getRegulatoryEnvColorWithAlpha(displayTags(feature.get('tags')), layerTitle)
 
-  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('isFilled'), feature.get('asMinimap'))
+  return getStyle(colorWithAlpha, feature)
 }
 
-const getStyle = (color: string, metadataIsShowed: boolean, isLayerFilled: boolean, asMinimap: boolean) => {
+const getStyle = (color: string, feature: Feature) => {
+  const metadataIsShowed = feature.get('metadataIsShowed')
+  const isLayerFilled = feature.get('isFilled')
+  const asMinimap = feature.get('asMinimap')
+  const plan = feature.get('plan')
+
   const strokeColor = () => {
     if (asMinimap) {
       return getColorWithAlpha(THEME.color.charcoal, 1)
     }
+    if (plan === 'PIRC') {
+      return metadataIsShowed
+        ? getColorWithAlpha(THEME.color.yaleBlue, 0.7)
+        : getColorWithAlpha(THEME.color.brightBlue, 0.7)
+    }
 
-    return metadataIsShowed ? getColorWithAlpha('#85FBFD', 0.7) : getColorWithAlpha(THEME.color.charcoal, 0.7)
+    if (plan === 'PSCEM') {
+      return metadataIsShowed
+        ? getColorWithAlpha(THEME.color.darkPaoloVeroneseGreen, 0.7)
+        : getColorWithAlpha(THEME.color.brightGreen, 0.7)
+    }
+
+    return metadataIsShowed
+      ? getColorWithAlpha(THEME.color.petrol, 0.7)
+      : getColorWithAlpha(THEME.color.brightTurquoise, 0.7)
   }
 
   return new Style({
@@ -208,6 +228,7 @@ const getStyle = (color: string, metadataIsShowed: boolean, isLayerFilled: boole
       color: isLayerFilled ? color : 'transparent'
     }),
     stroke: new Stroke({
+      // contour
       color: strokeColor(),
       width: metadataIsShowed || asMinimap ? 3 : 1
     })
@@ -215,13 +236,16 @@ const getStyle = (color: string, metadataIsShowed: boolean, isLayerFilled: boole
 }
 
 export const getRegulatoryEnvColorWithAlpha = (
-  type: string | null = '',
-  name: string | null = '',
+  type: string = '',
+  name: string = '',
+  plan: string = '',
   isDisabled = false
 ) => {
   if (isDisabled) {
     return THEME.color.white
   }
 
-  return getColorWithAlpha(stringToColorInGroup(`${type}`, `${name}`), 0.6)
+  const color = stringToColorInGroup(`${type}`, `${name}`, Layers.REGULATORY_ENV.code, plan)
+
+  return getColorWithAlpha(color, 0.6)
 }

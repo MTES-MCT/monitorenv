@@ -27,6 +27,7 @@ type MyLayerZoneProps = {
   layerZoneIsShowed: boolean
   metadataIsShown?: boolean
   name: string
+  plan?: string
   removeZone: () => void
   showLayer: () => void
   toggleZoneMetadata?: () => void
@@ -43,6 +44,7 @@ export function MyLayerZone({
   layerZoneIsShowed,
   metadataIsShown,
   name,
+  plan,
   removeZone,
   showLayer,
   toggleZoneMetadata,
@@ -105,7 +107,7 @@ export function MyLayerZone({
   return (
     <LayerSelector.Layer $metadataIsShown={metadataIsShown}>
       <StyledTransparentButton $width="70%" onClick={handleClickOnLayerName}>
-        <LayerLegend layerType={layerType} legendKey={name} type={type} />
+        <LayerLegend layerType={layerType} legendKey={name} plan={plan} type={type} />
         <LayerSelector.Name data-cy={`my-zone-${displayedName}`} title={displayedName}>
           {displayedName}
         </LayerSelector.Name>

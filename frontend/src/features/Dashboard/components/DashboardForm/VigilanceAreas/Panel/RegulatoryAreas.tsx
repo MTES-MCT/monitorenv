@@ -91,6 +91,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
                   <LayerLegend
                     layerType={MonitorEnvLayers.REGULATORY_ENV}
                     legendKey={layerTitle ?? 'aucun'}
+                    plan={regulatoryArea?.plan}
                     type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
                   />
                   <span title={layerTitle}>{layerTitle}</span>

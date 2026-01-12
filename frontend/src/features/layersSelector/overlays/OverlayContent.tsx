@@ -209,6 +209,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
                   isDisabled={isOutOfPeriod(periods) || isDisabled}
                   layerType={item.layerType}
                   legendKey={legendKey}
+                  plan={(item.properties as any)?.plan}
                   size={Size.NORMAL}
                   type={legendType}
                 />

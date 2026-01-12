@@ -133,7 +133,11 @@ export function AreaTable({
                       style={[
                         styles.layerLegend,
                         {
-                          backgroundColor: getRegulatoryEnvColorWithAlpha(displayTags(layer.tags), layerTitle)
+                          backgroundColor: getRegulatoryEnvColorWithAlpha(
+                            displayTags(layer.tags),
+                            layerTitle,
+                            layer.plan
+                          )
                         }
                       ]}
                     />

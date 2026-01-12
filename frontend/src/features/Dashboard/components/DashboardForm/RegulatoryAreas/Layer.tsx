@@ -89,6 +89,7 @@ export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayer
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layerTitle ?? 'aucun'}
+          plan={layer?.plan}
           type={displayTags(layer?.tags) ?? 'aucun'}
         />
         <LayerName
