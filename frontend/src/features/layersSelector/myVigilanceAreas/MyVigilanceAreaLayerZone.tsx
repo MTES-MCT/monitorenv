@@ -1,6 +1,6 @@
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { StyledTransparentButton } from '@components/style'
-import { isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
+import { isOutOfPeriod, isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Size, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -78,7 +78,7 @@ export function MyVigilanceAreaLayerZone({
       <StyledTransparentButton onClick={zoomToLayerExtent}>
         <LayerLegend
           border={isWithinPeriod(layer?.periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
-          isDisabled={layer?.periods?.length === 0}
+          isDisabled={isOutOfPeriod(layer?.periods)}
           layerType={MonitorEnvLayers.VIGILANCE_AREA}
           legendKey={layer?.comments}
           type={layer?.name ?? 'aucun nom'}

@@ -103,13 +103,13 @@ const Box = styled.div<{ $dayInMonth: number }>`
 const DayBox = styled.div<{ $isCritical: boolean; $isEnd: boolean; $isHighlighted: boolean; $isStart: boolean }>`
   width: 100%;
   height: 100%;
-  ${({ $isCritical, $isHighlighted }) =>
+  ${({ $isCritical, $isHighlighted, theme }) =>
     $isHighlighted &&
     `background-color: ${$isCritical ? '#C25141BF' : '#C2514180'};
-    border-top: ${$isCritical ? '2px solid #E1000F' : '1px solid #933F20'};
-  border-bottom: ${$isCritical ? '2px solid #E1000F' : '1px solid #933F20'};`};
-  ${p => p.$isStart && `border-left: ${p.$isCritical ? '2px solid #E1000F' : '1px solid #933F20'}`}
-  ${p => p.$isEnd && `border-right: ${p.$isCritical ? '2px solid #E1000F' : '1px solid #933F20'}`}
+    border-top: ${$isCritical ? `2px solid ${theme.color.maximumRed}` : '1px solid #933F20'};
+  border-bottom: ${$isCritical ? `2px solid ${theme.color.maximumRed}` : '1px solid #933F20'};`};
+  ${p => p.$isStart && `border-left: ${p.$isCritical ? `2px solid ${p.theme.color.maximumRed}` : '1px solid #933F20'}`}
+  ${p => p.$isEnd && `border-right: ${p.$isCritical ? `2px solid ${p.theme.color.maximumRed}` : '1px solid #933F20'}`}
 `
 
 const BackgroundBox = styled.div`

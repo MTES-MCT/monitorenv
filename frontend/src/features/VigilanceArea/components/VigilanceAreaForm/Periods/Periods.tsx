@@ -1,16 +1,23 @@
-import { Period } from '@features/VigilanceArea/components/VigilanceAreaForm/Period'
+import { Period } from '@features/VigilanceArea/components/VigilanceAreaForm/Periods/Period'
 import { getVigilanceAreaPeriodInitialValues } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { Accent, Button, Checkbox, customDayjs, Icon, Legend } from '@mtes-mct/monitor-ui'
-import { FieldArray, useFormikContext } from 'formik'
+import { FieldArray, type FormikErrors, useFormikContext } from 'formik'
 import styled from 'styled-components'
 
 export function Periods() {
   const { errors, setFieldValue, values } = useFormikContext<VigilanceArea.VigilanceArea>()
 
+  function isArrayOfErrors(
+    periodErrors: string | FormikErrors<VigilanceArea.VigilanceAreaPeriod>[] | undefined
+  ): periodErrors is FormikErrors<VigilanceArea.VigilanceAreaPeriod>[] {
+    return Array.isArray(periodErrors)
+  }
+
   const { periods } = values
   const setIsAtAllTimes = (isChecked: boolean | undefined, isCritical: boolean) => {
-    const filtered = periods?.filter(period => period.isCritical !== isCritical)
+    // Clean all periods if user set period to all times and critical
+    const filtered = isCritical ? [] : periods?.filter(period => period.isCritical !== isCritical)
 
     const index = periods?.findIndex(period => period.isAtAllTimes && period.isCritical === isCritical) ?? -1
 
@@ -20,8 +27,8 @@ export function Periods() {
         isAtAllTimes: true,
         isCritical
       }
-      const newVigilanceAreaperiods = [...(filtered ?? []), vigilanceAreaPeriod]
-      setFieldValue('periods', newVigilanceAreaperiods)
+      const newVigilanceAreaPeriods = [...(filtered ?? []), vigilanceAreaPeriod]
+      setFieldValue('periods', newVigilanceAreaPeriods)
     }
 
     if (!isChecked && index !== -1) {
@@ -44,6 +51,7 @@ export function Periods() {
                 <PeriodCircle />
                 <CriticalCheckbox
                   checked={hasSimpleIsAtAllTimesPeriod}
+                  disabled={hasCriticalIsAtAllTimesPeriod}
                   isLight
                   label="Vigilance simple en tout temps"
                   name="isSimpleAtAllTimes"
@@ -79,7 +87,7 @@ export function Periods() {
                 return (
                   <Period
                     key={period.id ?? index}
-                    hasError={errors.periods}
+                    error={isArrayOfErrors(errors.periods) ? errors.periods[index] : undefined}
                     index={index}
                     initialPeriod={period}
                     onValidate={vigilanceAreaPeriod => {
@@ -155,7 +163,7 @@ export const BasePeriodCircle = styled.div<{ $isCritical?: boolean }>`
   height: 10px;
   width: 10px;
   background-color: ${p => (p.$isCritical ? 'rgba(194, 81, 65, 0.75)' : 'rgba(194, 81, 65, 0.5)')};
-  border: ${p => (p.$isCritical ? '2px solid #E1000F' : '1px solid rgba(147, 63, 32, 0.75)')};
+  border: ${p => (p.$isCritical ? `2px solid ${p.theme.color.maximumRed}` : '1px solid rgba(147, 63, 32, 0.75)')};
   border-radius: 50%;
   display: inline-block;
 `

@@ -1,5 +1,5 @@
 import { Tooltip } from '@components/Tooltip'
-import { BasePeriodCircle } from '@features/VigilanceArea/components/VigilanceAreaForm/Periods'
+import { BasePeriodCircle } from '@features/VigilanceArea/components/VigilanceAreaForm/Periods/Periods'
 import { PeriodCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/PeriodCell'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import styled from 'styled-components'

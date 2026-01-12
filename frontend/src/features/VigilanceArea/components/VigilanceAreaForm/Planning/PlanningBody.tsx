@@ -63,7 +63,6 @@ export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
                   {vigilanceArea.periods
                     ?.filter(period => !period.isCritical)
                     .map(period => (
-                      // eslint-disable-next-line react/no-array-index-key
                       <PeriodItem key={period.id}>
                         <span>{computeVigilanceAreaPeriod(period, false)}</span>
                         {period?.frequency && period.frequency !== VigilanceArea.Frequency.NONE && (
@@ -100,7 +99,6 @@ export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
                   {vigilanceArea.periods
                     ?.filter(occ => occ.isCritical)
                     .map(period => (
-                      // eslint-disable-next-line react/no-array-index-key
                       <PeriodItem key={period.id}>
                         <span>{computeVigilanceAreaPeriod(period, false)}</span>
                         {period?.frequency && period.frequency !== VigilanceArea.Frequency.NONE && (
