@@ -6,24 +6,35 @@ import { asArray, asString } from 'ol/color'
 
 import { Layers, LayerType } from '../domain/entities/layers/constants'
 
-const regulatoryColorsBlues = [
-  THEME.color.yaleBlue,
+const regulatoryFishColors = [
+  THEME.color.queenBlue,
   THEME.color.glaucous,
   THEME.color.blueNcs,
   THEME.color.iceberg,
   THEME.color.lightSteelBlue,
-  THEME.color.lightPeriwinkle
-]
-const regulatoryColorsGreens = [
+  THEME.color.lightPeriwinkle,
   THEME.color.aliceBlue,
+  THEME.color.lightBlue,
+  THEME.color.skyBlue,
+  THEME.color.frenchBlue,
+  THEME.color.prussianBlue
+]
+const regulatoryEnvAndFishColors = [
+  THEME.color.turquoise,
   THEME.color.lightCyan,
-  THEME.color.middleBlueGreen,
-  THEME.color.verdigris,
+  THEME.color.middleBlueGreen2,
+  THEME.color.verdigris2,
   THEME.color.viridianGreen,
-  THEME.color.paoloVeroneseGreen,
-  THEME.color.skobeloff,
-  THEME.color.blueSapphire,
   THEME.color.indigoDye
+]
+
+const regulatoryEnvColors = [
+  THEME.color.blueSapphire,
+  THEME.color.skobeloff,
+  THEME.color.basicGreen,
+  THEME.color.opal,
+  THEME.color.slateGray,
+  THEME.color.lightGreen
 ]
 
 const ampColors = [
@@ -77,19 +88,39 @@ function stringToArrayItem(str: string, arr) {
   return arr[hash]
 }
 
-export function stringToColorInGroup(group: string, name: string, layerType?: string) {
-  let colors = [regulatoryColorsBlues, regulatoryColorsGreens]
+export function stringToColorInGroup(group: string, name: string, layerType?: string, plan?: string) {
+  let colors
 
-  if (layerType === Layers.AMP.code) {
-    colors = [ampColors]
+  switch (layerType) {
+    case Layers.AMP.code:
+      colors = [ampColors]
+      break
+    case Layers.VIGILANCE_AREA.code:
+      colors = [vigilanceAreaColors]
+      break
+    case LayerType.LOCALIZED_AREAS:
+      colors = [localizedAreasColors]
+      break
+    case Layers.REGULATORY_ENV.code:
+      if (plan === 'PIRC') {
+        colors = [regulatoryFishColors]
+      } else if (plan === 'PSCEM') {
+        colors = [regulatoryEnvColors]
+      } else {
+        colors = [regulatoryEnvAndFishColors]
+      }
+      break
+    default:
+      colors = [
+        ampColors,
+        vigilanceAreaColors,
+        localizedAreasColors,
+        regulatoryFishColors,
+        regulatoryEnvColors,
+        regulatoryEnvAndFishColors
+      ]
   }
 
-  if (layerType === Layers.VIGILANCE_AREA.code) {
-    colors = [vigilanceAreaColors]
-  }
-  if (layerType === LayerType.LOCALIZED_AREAS) {
-    colors = [localizedAreasColors]
-  }
   const colorSet = stringToArrayItem(group, colors)
 
   return stringToArrayItem(name, colorSet)

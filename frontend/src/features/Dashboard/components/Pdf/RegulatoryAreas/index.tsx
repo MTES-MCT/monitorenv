@@ -43,7 +43,8 @@ export function RegulatoryAreas({
                       {
                         backgroundColor: getRegulatoryEnvColorWithAlpha(
                           displayTags(regulatoryArea.tags),
-                          getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume)
+                          getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume),
+                          regulatoryArea.plan
                         )
                       }
                     ]}

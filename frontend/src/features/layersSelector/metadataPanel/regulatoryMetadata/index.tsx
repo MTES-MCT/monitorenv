@@ -40,6 +40,7 @@ export function RegulatoryMetadata() {
             <LayerLegend
               layerType={MonitorEnvLayers.REGULATORY_ENV}
               legendKey={getRegulatoryAreaTitle(regulatoryMetadata.polyName, regulatoryMetadata.resume)}
+              plan={regulatoryMetadata.plan}
               type={regulatoryMetadata.tags.map(({ name }) => name).join(', ')}
             />
             <Name title={getTitle(regulatoryMetadata.layerName)}>{getTitle(regulatoryMetadata.layerName)}</Name>

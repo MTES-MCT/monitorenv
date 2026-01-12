@@ -52,6 +52,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
       layerZoneIsShowed={regulatoryZoneIsShowed}
       metadataIsShown={metadataIsShown}
       name={layerTitle ?? 'AUCUN NOM'}
+      plan={regulatoryZone.plan}
       removeZone={handleRemoveZone}
       showLayer={() => dispatch(showRegulatoryLayer(regulatoryZone.id))}
       toggleZoneMetadata={toggleRegulatoryZoneMetadata}

@@ -22,6 +22,7 @@ import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/util
 import { CoordinatesFormat, customDayjs, getLocalizedDayjs, Level, THEME } from '@mtes-mct/monitor-ui'
 import { formatCoordinates } from '@utils/coordinates'
 import { formatDateLabel } from '@utils/getDateAsLocalizedString'
+import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes, displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
@@ -146,18 +147,22 @@ export const exportBrief =
 
     /* REGULATORY AREAS */
     const regulatoryAreas = getRegulatoryAreasByIds(getState(), dashboard.regulatoryAreaIds)
-    const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => ({
-      color: getRegulatoryEnvColorWithAlpha(displayTags(regulatoryArea.tags), regulatoryArea.resume),
-      facade: regulatoryArea.facade,
-      id: regulatoryArea.id,
-      layerName: getTitle(regulatoryArea.layerName),
-      polyName: getTitle(regulatoryArea.polyName),
-      refReg: regulatoryArea.refReg,
-      resume: getTitle(regulatoryArea.resume),
-      themes: displayThemes(regulatoryArea.themes),
-      type: regulatoryArea.type,
-      url: regulatoryArea.url
-    }))
+    const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => {
+      const layerTitle = getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume)
+
+      return {
+        color: getRegulatoryEnvColorWithAlpha(displayTags(regulatoryArea.tags), layerTitle, regulatoryArea.plan),
+        facade: regulatoryArea.facade,
+        id: regulatoryArea.id,
+        layerName: getTitle(regulatoryArea.layerName),
+        polyName: getTitle(regulatoryArea.polyName),
+        refReg: regulatoryArea.refReg,
+        resume: getTitle(regulatoryArea.resume),
+        themes: displayThemes(regulatoryArea.themes),
+        type: regulatoryArea.type,
+        url: regulatoryArea.url
+      }
+    })
     const regulatoryAreasWithImages = formattedRegulatoryAreas.map(regulatoryArea => {
       const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_REGULATORY_AREAS, regulatoryArea.id)
       const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_REGULATORY_AREAS, regulatoryArea.id)
