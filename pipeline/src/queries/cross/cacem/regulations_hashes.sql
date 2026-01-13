@@ -2,7 +2,6 @@ SELECT
     id,
     md5(
         COALESCE(geom::text, '') ||
-        COALESCE(ent_name::text, '') ||
         COALESCE(url::text, '') ||
         COALESCE(layer_name::text, '') ||
         COALESCE(facade::text, '') ||
@@ -16,7 +15,10 @@ SELECT
         COALESCE(type::text, '') ||
         COALESCE(date::text, '') ||
         COALESCE(date_fin::text, '') ||
-        COALESCE(edition::text, '') 
+        COALESCE(edition::text, '') || 
+        COALESCE(plan::text, '') ||
+        COALESCE(poly_name::text, '') ||
+        COALESCE(resume::text, '')
   ) AS cacem_row_hash
 FROM prod."REG_ENV_V3"
 WHERE 
