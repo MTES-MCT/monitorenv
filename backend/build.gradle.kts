@@ -61,7 +61,7 @@ tasks.withType<KotlinCompile> {
 }
 
 val ktorVersion = "3.3.2"
-val testcontainersVersion = "1.21.3"
+val testcontainersVersion = "1.21.4"
 val sentryVersion = "8.26.0"
 val flywayVersion = "11.17.0"
 
