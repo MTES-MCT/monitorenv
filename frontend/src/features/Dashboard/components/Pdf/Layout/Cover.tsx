@@ -106,10 +106,8 @@ export function Cover({ brief }: { brief: Dashboard.Brief }) {
                 ) : (
                   <Text style={{ fontStyle: 'italic' }}>Aucune zone réglementaire</Text>
                 )}
-                {brief.amps.length > 0 ? (
+                {brief.amps.length > 0 && (
                   <Text style={{ fontWeight: 'bold' }}>{brief.amps.length} aires marines protégées</Text>
-                ) : (
-                  <Text style={{ fontStyle: 'italic' }}>Aucune aire marine protégée</Text>
                 )}
               </View>
             </View>
