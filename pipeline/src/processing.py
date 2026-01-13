@@ -491,135 +491,85 @@ def prepare_df_for_loading(
 
     return df_
 
+
 def join_on_multiple_keys(
-    left: pd.DataFrame,
-    right: pd.DataFrame,
-    or_join_keys: list,
-    how: str = "inner",
-    and_join_keys: list = None,
-    coalesce_common_columns: bool = True,
+    left: pd.DataFrame, right: pd.DataFrame, on: list, how: str = "inner"
 ):
-    """
-    Join two pandas DataFrames, attempting to match rows on several keys by
+    """Join two pandas DataFrames, attempting to match rows on several keys by
     decreasing order of priority.
 
-    Joins are performed successively with each of the keys listed in `or_join_keys`,
-    and results are then concatenated to form the final result. This is different from
-    joining on a composite key where all keys must match simultaneously : here, rows of
-    left and right DataFrames are joined if at least one of the keys match.
+    Joins are performed successively with each of the keys listed in `on`, and results
+    are then concatenated to form the final result. This is different from joining on a
+    composite key where all keys must match simultaneously : here, rows of left and
+    right DataFrames are joined if at least one of the keys match.
 
-    Joins are performed on the keys listed in `or_join_keys` by "decreasing order of
-    priority" in the sense that, in order to be matched, rows of left and
-    right MUST match on their highest priority non null key (which come first in the
-    list) but MIGHT not match on lower priority keys (which come later in the list).
+    Joins are performed on the keys listed in `on` by "decreasing order or priority" in
+    the sense that rows of left and right that have been matched on one key are removed
+    from ulterior joins performed on the next keys.
 
     During each of the joins on the individual keys, non-joining key pairs and, if any,
     columns common to both left and right DataFrames, are coalesced (from left to
-    right) if `coalesce_common_columns` is `True` (the default).
-
-    Optionally, the join condition can contain an additional equality clause on keys
-    listed in `and_join_keys`.
-
-    If `or_join_keys` is `['A', 'B']` and `and_join_keys` is `['C', 'D']`, the SQL
-    equivalent of the join condition is :
-
-    .. code-block:: SQL
-
-      ON
-          (
-              left.A = right.A AND
-              left.C = right.C AND
-              left.D = right.D
-          ) OR
-          (
-              (
-                  left.A IS NULL OR
-                  right.A IS NULL
-              ) AND
-              left.B = right.B AND
-              left.C = right.C AND
-              left.D = right.D
-          )
+    right).
 
     Args:
         left (pd.DataFrame): pandas DataFrame
         right (pd.DataFrame): pandas DataFrame
-        or_join_keys (list): list of column names to use as join keys
-        how (str, optional): 'inner', 'left', 'right' or 'outer'. Defaults to 'inner'.
-        and_join_keys (list, optional): list of column names to use as additional join
-          keys
-        coalesce_common_columns (bool, optional): whether to coalesce values in the
-          columns that are present in both DataFrames. Defaults to `True`.
+        on (list): list of column names to use as join keys
+        how (str): 'inner', 'left', 'right' or 'outer'. Defaults to 'inner'.
 
     Returns:
         pd.DataFrame: result of join operation
     """
 
     joins = []
-    left = left.copy(deep=True)
-    right = right.copy(deep=True)
     common_columns = set.intersection(set(left.columns), set(right.columns))
     keys_already_joined = set()
-    and_join_keys = [] if and_join_keys is None else and_join_keys
-    left_cols = list(left)
-    right_cols = list(right)
-
-    # Number rows for future use
-    if how in ("left", "outer"):
-        left_id = get_unused_col_name("left_row_number", left)
-        left[left_id] = range(len(left))
-
-    if how in ("right", "outer"):
-        right_id = get_unused_col_name("right_row_number", right)
-        right[right_id] = range(len(right))
 
     # Attempt to perform the join successively on each key
-    for or_join_key in or_join_keys:
-        join_keys = and_join_keys + [or_join_key]
+    for key in on:
 
-        right_with_keys = right.dropna(subset=join_keys)
-        left_with_keys = left.dropna(subset=join_keys)
+        right_with_key = right.dropna(subset=[key])
+        left_with_key = left.dropna(subset=[key])
 
         join = pd.merge(
-            left_with_keys,
-            right_with_keys,
-            on=join_keys,
+            left_with_key,
+            right_with_key,
+            on=key,
             how="inner",
             suffixes=("_left", "_right"),
         )
 
-        columns_to_merge = common_columns - set(join_keys)
+        columns_to_merge = common_columns - {key}
 
         for column_to_merge in columns_to_merge:
+
             [l, r] = [f"{column_to_merge}_left", f"{column_to_merge}_right"]
 
             if column_to_merge in keys_already_joined:
                 join = join[(join[r].isna()) | (join[l].isna())]
 
-            if coalesce_common_columns:
-                join[column_to_merge] = coalesce(join[[l, r]])
-            else:
-                join[column_to_merge] = join[l]
+            join[column_to_merge] = coalesce(join[[l, r]])
 
             join = join.drop(columns=[l, r])
 
-        keys_already_joined.add(or_join_key)
+        left = left[~left[key].isin(join[key])]
+        right = right[~right[key].isin(join[key])]
 
+        keys_already_joined.add(key)
         joins.append(join)
-
-    # Concatenate all join results
-    res = pd.concat(joins, axis=0)
 
     # Add unmatched rows if performing left, right or outer joins
     if how in ("left", "outer"):
-        res = pd.concat([res, left.loc[~left[left_id].isin(res[left_id])]], axis=0)
+        joins.append(left)
 
     if how in ("right", "outer"):
-        res = pd.concat([res, right.loc[~right[right_id].isin(res[right_id])]], axis=0)
+        joins.append(right)
 
+    # Concatenate all join results
+    res = pd.concat(joins, axis=0)
     res.index = np.arange(0, len(res))
 
-    columns_order = left_cols + [col for col in right_cols if col not in left_cols]
+    columns_order = list(left) + [col for col in right if col not in left]
     res = res[columns_order]
 
     return res
@@ -672,8 +622,7 @@ def left_isin_right_by_decreasing_priority(
     isin_right_col = get_unused_col_name("isin_right", right)
     right[isin_right_col] = True
 
-    res = join_on_multiple_keys(left, right, or_join_keys=cols, how="left")
-
+    res = join_on_multiple_keys(left, right, on=cols, how="left")
     res = (
         res.drop_duplicates(subset=[id_col])
         .sort_values(id_col)[isin_right_col]
