@@ -26,13 +26,16 @@ last_positions AS (
 SELECT
     -- The DISTINCT ON clause is required to remove possible duplicates due to vessels
     -- for which we receive each position multiple times
-    DISTINCT ON (mmsi)
-    id,
-    mmsi,
-    coord,
-    status,
-    course,
-    heading,
-    speed,
-    ts
-FROM last_positions
+    DISTINCT ON (lp.mmsi)
+    lp.id,
+    lv.ship_id as vessel_id,
+    lp.mmsi,
+    lp.coord,
+    lp.status,
+    lp.course,
+    lp.heading,
+    lp.speed,
+    lp.ts
+FROM last_positions lp
+LEFT JOIN latest_vessels lv 
+ON lp.mmsi = lv.mmsi_number::integer;
