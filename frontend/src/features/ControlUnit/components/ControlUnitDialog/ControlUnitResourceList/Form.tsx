@@ -1,6 +1,7 @@
 import {
   Accent,
   Button,
+  CustomSearch,
   FormikSelect,
   FormikTextInput,
   FormikTextarea,
@@ -38,6 +39,18 @@ export function Form({ className, initialValues, onArchive, onCancel, onDelete, 
 
   const stationsAsOptions = getOptionsFromIdAndName(stations)?.filter(stationAsOption => stationAsOption.value !== 0)
 
+  const typeCustomSearch = new CustomSearch(CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS ?? [], ['label'], {
+    cacheKey: 'CONTROL_UNIT_ADD_RESOURCE_TYPE',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
+  const baseCustomSearch = new CustomSearch(stationsAsOptions ?? [], ['label'], {
+    cacheKey: 'CONTROL_UNIT_ADD_STATION_BASE',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
   if (!stationsAsOptions) {
     return <div>Chargement en cours...</div>
   }
@@ -55,9 +68,21 @@ export function Form({ className, initialValues, onArchive, onCancel, onDelete, 
         <div className={className} style={style}>
           <Title>{isNew ? 'Ajouter un moyen' : 'Éditer un moyen'}</Title>
           <StyledForm onSubmit={handleSubmit}>
-            <FormikSelect isLight label="Type de moyen" name="type" options={CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS} />
+            <FormikSelect
+              customSearch={typeCustomSearch}
+              isLight
+              label="Type de moyen"
+              name="type"
+              options={CONTROL_UNIT_RESOURCE_TYPES_AS_OPTIONS}
+            />
             <FormikTextInput isLight label="Nom du moyen" name="name" />
-            <FormikSelect isLight label="Base du moyen" name="stationId" options={stationsAsOptions} />
+            <FormikSelect
+              customSearch={baseCustomSearch}
+              isLight
+              label="Base du moyen"
+              name="stationId"
+              options={stationsAsOptions}
+            />
             <FormikTextarea isLight label="Commentaire" name="note" />
 
             <ActionBar>
