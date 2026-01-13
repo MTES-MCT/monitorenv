@@ -63,8 +63,8 @@ describe('Edit Vigilance Area', () => {
     cy.fill('Filtre tags et sous-tags', ['AMP', 'Dragage', 'Mixte'])
     cy.get('#root').click(1030, 490)
 
-    cy.clickButton("Ajouter la zone réglementaire Partie marine (plus basses eaux) RNN d'Iroise")
-    cy.clickButton('Ajouter la zone réglementaire Article 1')
+    cy.clickButton("Ajouter la zone réglementaire Réglementation dans la réserve naturelle nationale d'Iroise")
+    cy.clickButton('Ajouter la zone réglementaire Interdiction aux engins à moteur')
     cy.getDataCy('regulatory-area-item').should('have.length', 2)
 
     cy.clickButton('Valider la sélection')
@@ -84,7 +84,7 @@ describe('Edit Vigilance Area', () => {
       // check if the regulatory area is added
       cy.clickButton('Mes zones réglementaires')
       cy.clickButton('Interdiction VNM Molene')
-      cy.getDataCy('my-zone-Article 1').should('exist')
+      cy.getDataCy('my-zone-Interdiction aux engins à moteur').should('exist')
 
       // Reset data
       cy.clickButton('Editer')
