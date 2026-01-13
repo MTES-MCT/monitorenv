@@ -141,30 +141,38 @@ class SummaryFile(
             } else {
                 ""
             }
-        return mapOf(
-            "\${editedAt}" to formattedDate,
-            "\${briefName}" to dashboard.name,
-            "\${comments}" to (dashboard.comments ?: "Aucun commentaire"),
-            "\${controlUnits}" to controlUnitsName,
-            "\${totalRegulatoryAreasText}" to buildCountText("zones réglementaires", regulatoryCount, true),
-            "\${totalRegulatoryAreas}" to regulatoryCount.toString(),
-            "\${totalAmpsText}" to buildCountText("aires marines protégées", ampCount, true),
-            "\${totalAmps}" to ampCount.toString(),
-            "\${totalVigilanceAreasText}" to buildCountText("zones de vigilance", vigilanceCount, true),
-            "\${totalVigilanceAreas}" to vigilanceCount.toString(),
-            "\${totalReportingsText}" to buildCountText("signalements", reportingCount, false),
-            "\${totalReportings}" to reportingCount.toString(),
-            "\${totalZones}" to totalZones.toString(),
-            "\${legicemId}" to legicemProperties.id,
-            "\${legicemPassword}" to legicemProperties.password,
-            "\${monitorExtId}" to monitorExtProperties.id,
-            "\${monitorExtPassword}" to monitorExtProperties.password,
-            "\${recentActivityPeriod}" to
-                recentActivityDateRange +
-                if (brief.recentActivity.period.isEmpty()) "" else " - ${brief.recentActivity.period}",
-            "\${nearbyUnitsDateRange}" to
-                nearbyUnitDateRange,
-        )
+
+        val placeholders = linkedMapOf<String, String?>()
+
+        placeholders["\${editedAt}"] = formattedDate
+        placeholders["\${briefName}"] = dashboard.name
+        placeholders["\${comments}"] = dashboard.comments ?: "Aucun commentaire"
+        placeholders["\${controlUnits}"] = controlUnitsName
+        placeholders["\${totalRegulatoryAreasText}"] = buildCountText("zones réglementaires", regulatoryCount, true)
+        placeholders["\${totalRegulatoryAreas}"] = regulatoryCount.toString()
+
+        if (ampCount > 0) {
+            placeholders["\${totalAmpsText}"] = buildCountText("aires marines protégées", ampCount, true)
+            placeholders["\${totalAmps}"] = ampCount.toString()
+        } else {
+            placeholders["\${totalAmpsText}"] = ""
+        }
+
+        placeholders["\${totalVigilanceAreasText}"] = buildCountText("zones de vigilance", vigilanceCount, true)
+        placeholders["\${totalVigilanceAreas}"] = vigilanceCount.toString()
+        placeholders["\${totalReportingsText}"] = buildCountText("signalements", reportingCount, false)
+        placeholders["\${totalReportings}"] = reportingCount.toString()
+        placeholders["\${totalZones}"] = totalZones.toString()
+        placeholders["\${legicemId}"] = legicemProperties.id
+        placeholders["\${legicemPassword}"] = legicemProperties.password
+        placeholders["\${monitorExtId}"] = monitorExtProperties.id
+        placeholders["\${monitorExtPassword}"] = monitorExtProperties.password
+        placeholders["\${recentActivityPeriod}"] =
+            recentActivityDateRange +
+            if (brief.recentActivity.period.isEmpty()) "" else " - ${brief.recentActivity.period}"
+        placeholders["\${nearbyUnitsDateRange}"] = nearbyUnitDateRange
+
+        return placeholders
     }
 
     private fun applyGlobalMapInsertion(
