@@ -13,6 +13,7 @@ import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.io.Serializable
 import java.time.ZonedDateTime
+import kotlin.math.roundToInt
 
 @Entity
 @Table(name = "ais_positions")
@@ -23,9 +24,9 @@ data class AISPositionModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     val coord: Geometry?,
     val status: String?,
-    val course: Double?,
-    val heading: Double?,
-    val speed: Double?,
+    val course: Short?,
+    val heading: Short?,
+    val speed: Short?,
 ) {
     companion object {
         fun toAISPositionModel(aisPosition: AISPayload): AISPositionModel =
@@ -33,9 +34,9 @@ data class AISPositionModel(
                 id = AISPositionPK(mmsi = aisPosition.mmsi, ts = aisPosition.ts),
                 coord = aisPosition.coord.let { WKTReader().read(it) },
                 status = aisPosition.status,
-                course = aisPosition.course,
-                speed = aisPosition.speed,
-                heading = aisPosition.heading,
+                course = aisPosition.course?.let { (it * 100).roundToInt().toShort() },
+                speed = aisPosition.speed?.let { (it * 100).roundToInt().toShort() },
+                heading = aisPosition.heading?.let { (it * 100).roundToInt().toShort() },
             )
     }
 }

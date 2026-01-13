@@ -8,6 +8,7 @@ monitorenv:
   kafka:
     ais:
       batch-size: 1
+      timeout: 5000
 
 logging:
   level:

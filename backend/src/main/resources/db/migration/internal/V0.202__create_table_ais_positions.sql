@@ -2,12 +2,13 @@ CREATE EXTENSION IF NOT EXISTS timescaledb;
 
 CREATE TABLE public.ais_positions
 (
+    id      SERIAL,
     mmsi    INT,
     coord   GEOMETRY,
     status  TEXT,
-    course  DOUBLE PRECISION,
-    heading DOUBLE PRECISION,
-    speed   DOUBLE PRECISION,
+    course  SMALLINT,
+    heading SMALLINT,
+    speed   SMALLINT,
     ts      TIMESTAMPTZ,
     PRIMARY KEY (mmsi, ts)
 );

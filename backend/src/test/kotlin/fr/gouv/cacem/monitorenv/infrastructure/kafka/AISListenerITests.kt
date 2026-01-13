@@ -58,9 +58,9 @@ class AISListenerITests : AbstractKafkaTests() {
                 assertThat(saved?.id?.ts).isEqualTo(aisPosition.ts)
                 assertThat(saved?.coord).isEqualTo(WKTReader().read(coord) as Point)
                 assertThat(saved?.status).isEqualTo(aisPosition.status)
-                assertThat(saved?.course).isEqualTo(aisPosition.course)
-                assertThat(saved?.heading).isEqualTo(aisPosition.heading)
-                assertThat(saved?.speed).isEqualTo(aisPosition.speed)
+                assertThat(saved?.course).isEqualTo(1212)
+                assertThat(saved?.heading).isEqualTo(1012)
+                assertThat(saved?.speed).isEqualTo(1012)
             }
     }
 }
