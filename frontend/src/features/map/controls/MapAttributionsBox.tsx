@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 
-export function MapAttributionsBox() {
+export function MapAttributionsBox({ position = 'left' }: { position?: 'right' | 'left' }) {
   const [isVisible, setIsVisible] = useState(false)
 
   return (
-    <Wrapper className="ol-unselectable ol-control">
+    <Wrapper $position={position} className="ol-unselectable ol-control">
       <List className={isVisible ? '' : 'collapsed'}>
         <ListItem>
           <Link data-bcup-haslogintext="no" href="https://www.openstreetmap.org/copyright" target="_blank">
@@ -20,9 +20,9 @@ export function MapAttributionsBox() {
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $position: 'right' | 'left' }>`
   bottom: 8px;
-  left: 0.5em;
+  ${p => (p.$position === 'left' ? 'left: 0.5em;' : 'right: 0.5em;')}
   max-width: calc(100% - 1.3em);
   background: none;
   position: fixed;
