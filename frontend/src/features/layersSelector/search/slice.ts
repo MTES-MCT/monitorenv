@@ -5,6 +5,7 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 type LayerSearchState = {
   ampsSearchResult: number[] | undefined
+  controlPlan: string | undefined
   filteredAmpTypes: string[]
   filteredRegulatoryTags: TagOption[]
   filteredRegulatoryThemes: ThemeOption[]
@@ -18,6 +19,7 @@ type LayerSearchState = {
 }
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
+  controlPlan: undefined,
   filteredAmpTypes: [],
   filteredRegulatoryTags: [],
   filteredRegulatoryThemes: [],
@@ -35,6 +37,7 @@ const layerSearchSlice = createSlice({
   name: 'layerSearch',
   reducers: {
     resetFilters(state) {
+      state.controlPlan = undefined
       state.filteredRegulatoryTags = []
       state.filteredRegulatoryThemes = []
       state.isRegulatorySearchResultsVisible = false
@@ -47,6 +50,10 @@ const layerSearchSlice = createSlice({
     },
     setAMPsSearchResult(state, action: PayloadAction<number[] | undefined>) {
       state.ampsSearchResult = action.payload
+    },
+
+    setControlPlan(state, action: PayloadAction<string | undefined>) {
+      state.controlPlan = action.payload
     },
 
     setFilteredAmpTypes(state, action: PayloadAction<string[]>) {
@@ -94,6 +101,7 @@ export const {
   resetFilters,
   resetSearch,
   setAMPsSearchResult,
+  setControlPlan,
   setFilteredAmpTypes,
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,

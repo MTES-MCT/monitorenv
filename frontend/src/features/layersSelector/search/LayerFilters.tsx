@@ -24,6 +24,7 @@ import {
   type DateAsStringRange,
   DateRangePicker,
   type Option,
+  Select,
   SingleTag
 } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
@@ -34,6 +35,7 @@ import styled from 'styled-components'
 
 import {
   resetFilters,
+  setControlPlan,
   setFilteredAmpTypes,
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
@@ -44,6 +46,16 @@ import {
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
+const CONTROL_PLAN_AS_OPTIONS = [
+  {
+    label: 'PIRC',
+    value: 'PIRC'
+  },
+  {
+    label: 'PSCEM',
+    value: 'PSCEM'
+  }
+]
 export function LayerFilters() {
   const dispatch = useAppDispatch()
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
@@ -55,6 +67,7 @@ export function LayerFilters() {
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+  const controlPlan = useAppSelector(state => state.layerSearch.controlPlan)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.vigilanceAreaFilters.period)
 
   const { data: amps } = useGetAMPsQuery()
@@ -105,6 +118,9 @@ export function LayerFilters() {
   const updateVigilanceAreaFilters = <K extends keyof typeof INITIAL_STATE>(key: K, value: typeof INITIAL_STATE[K]) => {
     dispatch(vigilanceAreaFiltersActions.updateFilters({ key, value }))
   }
+  const updateControlPlanFilter = (nextControlPlan: string | undefined) => {
+    dispatch(setControlPlan(nextControlPlan))
+  }
 
   const handleResetFilters = () => {
     dispatch(resetFilters())
@@ -121,6 +137,22 @@ export function LayerFilters() {
               Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
             </Tooltip>
           </SelectContainer>
+
+          <SelectContainer>
+            <Select
+              isLabelHidden
+              isTransparent
+              label="Plan de contrôle"
+              name="controlPlan"
+              onChange={updateControlPlanFilter}
+              options={CONTROL_PLAN_AS_OPTIONS}
+              placeholder="Plan de contrôle"
+              style={{ flex: 1 }}
+              value={controlPlan}
+            />
+            <Tooltip>Ce champ est utilisé comme critère de recherche dans les zones réglementaire.</Tooltip>
+          </SelectContainer>
+
           <SelectContainer>
             <RegulatoryTagsFilter style={{ flex: 1 }} />
             <Tooltip>
@@ -129,6 +161,7 @@ export function LayerFilters() {
           </SelectContainer>
         </>
       )}
+
       {!isLinkingRegulatoryToVigilanceArea && (
         <SelectContainer>
           <StyledCheckPicker
@@ -170,11 +203,13 @@ export function LayerFilters() {
           onChange={updateDateRangeFilter}
         />
       )}
-      <SelectContainer>
-        <VigilanceAreaTypeFilter style={{ flex: 1 }} />
+      {!isLinkingZonesToVigilanceArea && (
+        <SelectContainer>
+          <VigilanceAreaTypeFilter style={{ flex: 1 }} />
 
-        <Tooltip>Ce champ est utilisé uniquement comme critère de recherche pour les zones de vigilance.</Tooltip>
-      </SelectContainer>
+          <Tooltip>Ce champ est utilisé uniquement comme critère de recherche pour les zones de vigilance.</Tooltip>
+        </SelectContainer>
+      )}
 
       {(filteredRegulatoryTags.length > 0 ||
         filteredAmpTypes?.length > 0 ||
@@ -275,6 +310,7 @@ export function LayerFilters() {
       {(filteredRegulatoryTags.length > 0 ||
         filteredRegulatoryThemes.length > 0 ||
         filteredAmpTypes?.length > 0 ||
+        !!controlPlan ||
         numberOfVigilanceAreaFiltersSetted > 0) && (
         <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>
       )}

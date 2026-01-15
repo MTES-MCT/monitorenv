@@ -24,6 +24,7 @@ export function useSearchLayers() {
 
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const controlPlan = useAppSelector(state => state.layerSearch.controlPlan)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
 
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
@@ -35,6 +36,7 @@ export function useSearchLayers() {
       keys: [
         'layerName',
         'resume',
+        'plan',
         'polyName',
         'refReg',
         'type',
@@ -59,6 +61,7 @@ export function useSearchLayers() {
       const shouldSearchThroughAMPTypes = filteredAmpTypes?.length > 0
       const shouldSearchThroughRegulatoryTags = filteredRegulatoryTags?.length > 0
       const shouldSearchThroughRegulatoryThemes = filteredRegulatoryThemes?.length > 0
+      const shouldSearchThroughControlPlan = !!controlPlan
 
       if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldFilterSearchOnMapExtent) {
         let searchedAMPS
@@ -102,12 +105,18 @@ export function useSearchLayers() {
         shouldSearchByText ||
         shouldSearchThroughRegulatoryTags ||
         shouldFilterSearchOnMapExtent ||
-        shouldSearchThroughRegulatoryThemes
+        shouldSearchThroughRegulatoryThemes ||
+        shouldSearchThroughControlPlan
       ) {
         // Regulatory layers
         let searchedRegulatory
         let itemSchema
-        if (shouldSearchByText || shouldSearchThroughRegulatoryTags || shouldSearchThroughRegulatoryThemes) {
+        if (
+          shouldSearchByText ||
+          shouldSearchThroughRegulatoryTags ||
+          shouldSearchThroughRegulatoryThemes ||
+          shouldSearchThroughControlPlan
+        ) {
           const filterWithTextExpression = shouldSearchByText
             ? {
                 $or: [
@@ -127,10 +136,17 @@ export function useSearchLayers() {
           const filterWithThemes = shouldSearchThroughRegulatoryThemes
             ? filterByThemes(filteredRegulatoryThemes)
             : undefined
+          const filterWithControlPlan = shouldSearchThroughControlPlan
+            ? { $or: [{ $path: ['plan'], $val: controlPlan }] }
+            : undefined
 
-          const filterExpression = [filterWithTextExpression, filterWithTags, filterWithThemes].filter(
-            f => !!f
-          ) as Expression[]
+          const filterExpression = [
+            filterWithTextExpression,
+            filterWithTags,
+            filterWithThemes,
+            filterWithControlPlan
+          ].filter(f => !!f) as Expression[]
+
           searchedRegulatory = fuseRegulatory.search<RegulatoryLayerCompact>({
             $and: filterExpression
           })
@@ -164,6 +180,7 @@ export function useSearchLayers() {
     globalSearchText,
     regulatoryLayers,
     searchExtent,
+    controlPlan,
     shouldFilterSearchOnMapExtent
   ])
 
