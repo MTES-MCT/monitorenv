@@ -127,12 +127,24 @@ export function LayerFilters() {
     dispatch(vigilanceAreaFiltersActions.resetFilters())
   }
 
+  const handleSetFilteredRegulatoryThemes = (nextThemes: ThemeOption[] | undefined = []) => {
+    dispatch(setFilteredRegulatoryThemes(nextThemes))
+  }
+
+  const handleSetFilteredRegulatoryTags = (nextTags: TagOption[] | undefined = []) => {
+    dispatch(setFilteredRegulatoryTags(nextTags))
+  }
+
   return (
     <FiltersWrapper>
       {!isLinkingAmpToVigilanceArea && (
         <>
           <SelectContainer>
-            <RegulatoryThemesFilter style={{ flex: 1 }} />
+            <RegulatoryThemesFilter
+              onChange={handleSetFilteredRegulatoryThemes}
+              style={{ flex: 1 }}
+              value={filteredRegulatoryThemes}
+            />
             <Tooltip>
               Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
             </Tooltip>
@@ -154,7 +166,11 @@ export function LayerFilters() {
           </SelectContainer>
 
           <SelectContainer>
-            <RegulatoryTagsFilter style={{ flex: 1 }} />
+            <RegulatoryTagsFilter
+              onChange={handleSetFilteredRegulatoryTags}
+              style={{ flex: 1 }}
+              value={filteredRegulatoryTags}
+            />
             <Tooltip>
               Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
             </Tooltip>
