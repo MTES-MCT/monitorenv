@@ -1,3 +1,4 @@
+import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
 import {
   Accent,
@@ -90,7 +91,7 @@ export function StationForm() {
   )
 
   return (
-    <div>
+    <BackofficeWrapper>
       <Title>{`${isNew ? 'Création' : 'Édition'} d’une base`}</Title>
 
       {!initialValues && <p>Chargement en cours...</p>}
@@ -129,15 +130,9 @@ export function StationForm() {
           />
         </>
       )}
-    </div>
+    </BackofficeWrapper>
   )
 }
-
-const Title = styled.h1`
-  line-height: 1;
-  font-size: 24px;
-  margin: 0 0 24px;
-`
 
 const Form = styled.form`
   > div:not(:first-child, :last-child) {
