@@ -17,7 +17,7 @@ export function Identification({
 }: {
   facade: string
   plan: string
-  polyName: string
+  polyName?: string
   resume: string
   tags: TagFromAPI[]
   themes: ThemeFromAPI[]
@@ -30,7 +30,7 @@ export function Identification({
     <Zone>
       <Fields>
         <Body>
-          {polyName.length > 0 && (
+          {polyName && polyName.length > 0 && (
             <Field>
               <Key>Titre de la zone</Key>
               <Value data-cy="regulatory-layers-metadata-polyName">{polyName}</Value>
