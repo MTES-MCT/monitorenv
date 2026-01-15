@@ -16,6 +16,7 @@ import { attachReportingToMissionsSliceReducer } from '@features/Mission/compone
 import { missionFormsSliceReducer } from '@features/Mission/components/MissionForm/slice'
 import { missionSliceReducer } from '@features/Mission/slice'
 import { recentActivityPersitedReducer } from '@features/RecentActivity/slice'
+import { regulatoryAreaTablePersistedReducer } from '@features/RegulatoryArea/components/RegulatoryAreaList/slice'
 import { attachMissionToReportingSliceReducer } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingFiltersPersistedReducer } from '@features/Reportings/Filters/slice'
 import { reportingSliceReducer } from '@features/Reportings/slice'
@@ -68,6 +69,7 @@ export const homeReducers = {
   missionForms: missionFormsSliceReducer,
   recentActivity: recentActivityPersitedReducer,
   regulatory: regulatorySlicePersistedReducer,
+  regulatoryAreaTable: regulatoryAreaTablePersistedReducer,
   reporting: reportingSliceReducer,
   reportingFilters: reportingFiltersPersistedReducer,
   semaphoresSlice: semaphoresPersistedReducer,

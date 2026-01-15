@@ -41,7 +41,7 @@ export function BackOfficePage() {
     <Wrapper>
       <BackOfficeMenu />
 
-      <Body>
+      <>
         <BannerStack />
         <Routes>
           <Route element={<RegulatoryAreaList />} path="/" />
@@ -72,7 +72,7 @@ export function BackOfficePage() {
             path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}/:stationId`}
           />
         </Routes>
-      </Body>
+      </>
     </Wrapper>
   )
 }
@@ -80,13 +80,4 @@ export function BackOfficePage() {
 const Wrapper = styled.div`
   display: flex;
   height: 100%;
-`
-
-const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  height: 100%;
-  padding: 24px;
-  overflow-y: auto;
 `
