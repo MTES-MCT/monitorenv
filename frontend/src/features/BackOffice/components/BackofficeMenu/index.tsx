@@ -1,3 +1,9 @@
+import {
+  isAdministrationPage,
+  isControlUnitPage,
+  isRegulatoryAreaPage,
+  isStationPage
+} from '@features/BackOffice/utils'
 import { Icon } from '@mtes-mct/monitor-ui'
 import { NavLink, useLocation } from 'react-router'
 import styled from 'styled-components'
@@ -10,31 +16,28 @@ export function BackOfficeMenu() {
   return (
     <Wrapper>
       <StyledNavLink
-        $isActive={
-          locationPath === `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}` ||
-          locationPath === '/backoffice'
-        }
+        $isActive={isRegulatoryAreaPage(locationPath)}
         to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`}
       >
         <Icon.MapLayers />
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.REGULATORY_AREA_LIST]}
       </StyledNavLink>
       <StyledNavLink
-        $isActive={locationPath === `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`}
+        $isActive={isAdministrationPage(locationPath)}
         to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`}
       >
         <Icon.GroupPerson />
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.ADMINISTRATION_LIST]}
       </StyledNavLink>
       <StyledNavLink
-        $isActive={locationPath === `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`}
+        $isActive={isControlUnitPage(locationPath)}
         to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`}
       >
         <Icon.ControlUnit />
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_LIST]}
       </StyledNavLink>
       <StyledNavLink
-        $isActive={locationPath === `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}`}
+        $isActive={isStationPage(locationPath)}
         to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}`}
       >
         <Icon.Pinpoint />

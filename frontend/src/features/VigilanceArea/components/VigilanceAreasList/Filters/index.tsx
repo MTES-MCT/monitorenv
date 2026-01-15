@@ -27,6 +27,9 @@ import { vigilanceAreaFiltersActions } from './slice'
 import { PeriodFilter } from '../../PeriodFilter'
 import { SpecificPeriodFilter } from '../../SpecificPeriodFilter'
 
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
+
 export function VigilanceAreasFilters() {
   const dispatch = useAppDispatch()
 
@@ -99,6 +102,14 @@ export function VigilanceAreasFilters() {
     dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'visibility', value: newVisibilityFilter }))
   }
 
+  const handleSetFilteredRegulatoryThemes = (nextThemes: ThemeOption[] | undefined = []) => {
+    dispatch(setFilteredRegulatoryThemes(nextThemes))
+  }
+
+  const handleSetFilteredRegulatoryTags = (nextTags: TagOption[] | undefined = []) => {
+    dispatch(setFilteredRegulatoryTags(nextTags))
+  }
+
   const nbOfFilters = nbOfVigilanceAreaFilters + filteredRegulatoryTags.length + filteredRegulatoryThemes.length
 
   const hasCustomPeriodFilter = periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
@@ -142,8 +153,16 @@ export function VigilanceAreasFilters() {
       <FilterContainer>
         <PeriodFilter style={{ width: 320 }} />
         <VigilanceAreaTypeFilter style={{ width: 320 }} />
-        <RegulatoryThemesFilter style={{ width: 320 }} />
-        <RegulatoryTagsFilter style={{ width: 320 }} />
+        <RegulatoryThemesFilter
+          onChange={handleSetFilteredRegulatoryThemes}
+          style={{ width: 320 }}
+          value={filteredRegulatoryThemes}
+        />
+        <RegulatoryTagsFilter
+          onChange={handleSetFilteredRegulatoryTags}
+          style={{ width: 320 }}
+          value={filteredRegulatoryTags}
+        />
 
         <CheckPicker
           isLabelHidden
