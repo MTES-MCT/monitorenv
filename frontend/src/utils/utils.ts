@@ -33,7 +33,7 @@ const regulatoryEnvColors = [
   THEME.color.skobeloff,
   THEME.color.basicGreen,
   THEME.color.opal,
-  THEME.color.slateGray,
+  THEME.color.sage,
   THEME.color.lightGreen
 ]
 
