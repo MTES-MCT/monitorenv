@@ -81,4 +81,16 @@ context('LayerTree > Regulatory Layers', () => {
     cy.getDataCy('regulatory-result-list').children().should('have.length', 9)
     cy.get('#isRegulatorySearchResultsVisible').should('be.checked')
   })
+
+  it('Should filter regulatory areas by control plan', () => {
+    cy.getDataCy('regulatory-result-list-button').contains('13 résultats')
+
+    cy.fill('Plan de contrôle', 'PIRC')
+    cy.getDataCy('regulatory-result-list-button').contains('9 résultats')
+
+    cy.fill('Plan de contrôle', 'PSCEM')
+    cy.getDataCy('regulatory-result-list-button').contains('8 résultats')
+
+    cy.clickButton('Réinitialiser les filtres')
+  })
 })

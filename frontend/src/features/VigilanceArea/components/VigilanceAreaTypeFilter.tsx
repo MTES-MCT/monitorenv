@@ -24,7 +24,7 @@ export function VigilanceAreaTypeFilter({ style }: { style?: React.CSSProperties
 
   return (
     <CheckPicker
-      isCleanable
+      cleanable
       isLabelHidden
       isTransparent
       label="Type de zone de vigilance"

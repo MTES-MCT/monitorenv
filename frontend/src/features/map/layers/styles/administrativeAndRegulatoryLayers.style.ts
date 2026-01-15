@@ -212,19 +212,19 @@ const getStyle = (color: string, feature: Feature) => {
     }
     if (plan === 'PIRC') {
       return metadataIsShowed
-        ? getColorWithAlpha(THEME.color.yaleBlue, 0.7)
-        : getColorWithAlpha(THEME.color.brightBlue, 0.7)
+        ? getColorWithAlpha(THEME.color.brightBlue, 0.7)
+        : getColorWithAlpha(THEME.color.yaleBlue, 0.7)
     }
 
     if (plan === 'PSCEM') {
       return metadataIsShowed
-        ? getColorWithAlpha(THEME.color.darkPaoloVeroneseGreen, 0.7)
-        : getColorWithAlpha(THEME.color.brightGreen, 0.7)
+        ? getColorWithAlpha(THEME.color.brightGreen, 0.7)
+        : getColorWithAlpha(THEME.color.darkPaoloVeroneseGreen, 0.7)
     }
 
     return metadataIsShowed
-      ? getColorWithAlpha(THEME.color.petrol, 0.7)
-      : getColorWithAlpha(THEME.color.brightTurquoise, 0.7)
+      ? getColorWithAlpha(THEME.color.brightTurquoise, 0.7)
+      : getColorWithAlpha(THEME.color.petrol, 0.7)
   }
 
   return new Style({
