@@ -1,3 +1,4 @@
+import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
 import { DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
@@ -82,7 +83,7 @@ export function BaseTable() {
   )
 
   return (
-    <>
+    <BackofficeWrapper>
       <Title>Gestion des bases</Title>
 
       <FilterBar />
@@ -114,15 +115,9 @@ export function BaseTable() {
           titleBackgroundColor={THEME.color.maximumRed}
         />
       )}
-    </>
+    </BackofficeWrapper>
   )
 }
-
-const Title = styled.h1`
-  line-height: 1;
-  font-size: 24px;
-  margin: 0 0 24px;
-`
 
 const ActionGroup = styled.div`
   display: flex;
