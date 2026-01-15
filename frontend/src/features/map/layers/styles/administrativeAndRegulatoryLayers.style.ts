@@ -191,7 +191,11 @@ export const getAdministrativeLayersStyle = (code: String) => {
 
 export const getRegulatoryLayerStyle = feature => {
   const layerTitle = getRegulatoryAreaTitle(feature.get('polyName'), feature.get('resume'))
-  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(displayTags(feature.get('tags')), layerTitle)
+  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(
+    displayTags(feature.get('tags')),
+    layerTitle,
+    feature.get('plan')
+  )
 
   return getStyle(colorWithAlpha, feature)
 }
@@ -228,7 +232,6 @@ const getStyle = (color: string, feature: Feature) => {
       color: isLayerFilled ? color : 'transparent'
     }),
     stroke: new Stroke({
-      // contour
       color: strokeColor(),
       width: metadataIsShowed || asMinimap ? 3 : 1
     })
