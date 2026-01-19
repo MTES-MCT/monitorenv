@@ -3,16 +3,24 @@ import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 
-import type { ThemeOption } from '../domain/entities/themes'
+import type { ThemeFromAPI, ThemeOption } from '../domain/entities/themes'
 
 export function RegulatoryThemesFilter({
+  isLabelHidden = true,
+  isRequired = false,
+  isTransparent = true,
+  label,
   onChange,
   style,
   value
 }: {
-  onChange: (nextThemes: ThemeOption[] | undefined) => void
+  isLabelHidden?: boolean
+  isRequired?: boolean
+  isTransparent?: boolean
+  label?: string
+  onChange: (nextThemes: ThemeOption[] | ThemeFromAPI[] | undefined) => void
   style?: React.CSSProperties
-  value: ThemeOption[]
+  value: ThemeOption[] | ThemeFromAPI[]
 }) {
   const { data: themes } = useGetThemesQuery()
 
@@ -22,9 +30,10 @@ export function RegulatoryThemesFilter({
     <CheckTreePicker
       key={`regulatory-themes-${themesOptions.length}`}
       childrenKey="subThemes"
-      isLabelHidden
-      isTransparent
-      label="Filtre thématiques et sous-thématiques"
+      isLabelHidden={isLabelHidden}
+      isRequired={isRequired}
+      isTransparent={isTransparent}
+      label={label ?? 'Filtre thématiques et sous-thématiques'}
       labelKey="name"
       name="regulatoryThemes"
       onChange={onChange}
