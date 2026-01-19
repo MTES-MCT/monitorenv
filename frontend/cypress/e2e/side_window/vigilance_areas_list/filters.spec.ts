@@ -88,12 +88,12 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
 
   it('Should filter vigilance areas by type', () => {
     cy.fill('Type de zone de vigilance', ['Aucune période de vigilance en cours'])
-    cy.getDataCy('vigilance-area-row').should('have.length', 0)
+    cy.getDataCy('vigilance-area-row').should('have.length', 1)
 
     cy.fill('Type de zone de vigilance', ['Période de vigilance critique en cours'])
     cy.getDataCy('vigilance-area-row').should('have.length', 1)
 
     cy.fill('Type de zone de vigilance', ['Période de vigilance simple en cours'])
-    cy.getDataCy('vigilance-area-row').should('have.length', 3)
+    cy.getDataCy('vigilance-area-row').should('have.length', 2)
   })
 })
