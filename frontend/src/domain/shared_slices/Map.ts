@@ -12,7 +12,7 @@ import type { Extent } from 'ol/extent'
 const persistConfig = {
   key: 'map',
   storage,
-  whitelist: ['selectedBaseLayer']
+  whitelist: ['coordinatesFormat', 'selectedBaseLayer']
 }
 
 export type IsolatedLayerType = {
@@ -41,7 +41,7 @@ type MapSliceStateType = {
   zoomToCenter?: Coordinate
 }
 const initialState: MapSliceStateType = {
-  coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_SECONDS,
+  coordinatesFormat: CoordinatesFormat.DEGREES_MINUTES_DECIMALS,
   currentMapExtentTracker: undefined,
   distanceUnit: DistanceUnit.NAUTICAL,
   fitToExtent: undefined,
