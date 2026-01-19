@@ -2,6 +2,7 @@ import { EnvBannerStack } from '@components/BannerStack/EnvBannerStack'
 import { BannerStack } from '@features/BackOffice/components/BannerStack'
 import { backOfficeActions } from '@features/BackOffice/slice'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { RegulatoryAreaForm } from '@features/RegulatoryArea/components/RegulatoryAreaForm'
 import { RegulatoryAreaList } from '@features/RegulatoryArea/components/RegulatoryAreaList'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useEffect } from 'react'
@@ -49,6 +50,10 @@ export function BackOfficePage() {
           <Route
             element={<RegulatoryAreaList />}
             path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}
+          />
+          <Route
+            element={<RegulatoryAreaForm />}
+            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/:regulatoryAreaId`}
           />
 
           <Route
