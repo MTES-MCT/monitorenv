@@ -2,8 +2,10 @@ from logging import Logger
 from unittest.mock import patch
 
 import pandas as pd
+from sqlalchemy import text
 
 from config import TEST_DATA_LOCATION
+from src.db_config import create_engine
 from src.flows.vessel_repository import (
     delete_files,
     get_xsd_schema,
@@ -30,6 +32,12 @@ def test_delete_file(tmp_path):
 
 
 def test_parse_and_load(create_cacem_tables, reset_test_data):
+
+    e = create_engine("monitorenv_remote")
+    with e.begin() as connection:
+        connection.execute(
+            text('TRUNCATE vessels;')
+        )
     xml_path = TEST_DATA_LOCATION / "vessel_xml" / "vessel_repository.xml"
     xsd_path = TEST_DATA_LOCATION / "vessel_xml" / "vessel_repository.xsd"
     schema = get_xsd_schema(xsd_path)
