@@ -3,16 +3,24 @@ import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
 import { useMemo } from 'react'
 
-import type { TagOption } from '../domain/entities/tags'
+import type { TagFromAPI, TagOption } from '../domain/entities/tags'
 
 export function RegulatoryTagsFilter({
+  isLabelHidden = true,
+  isRequired = false,
+  isTransparent = true,
+  label,
   onChange,
   style,
   value
 }: {
-  onChange: (nextTags: TagOption[] | undefined) => void
+  isLabelHidden?: boolean
+  isRequired?: boolean
+  isTransparent?: boolean
+  label?: string
+  onChange: (nextTags: TagOption[] | TagFromAPI[] | undefined) => void
   style?: React.CSSProperties
-  value: TagOption[]
+  value: TagOption[] | TagFromAPI[]
 }) {
   const { data: tags } = useGetTagsQuery()
 
@@ -22,9 +30,10 @@ export function RegulatoryTagsFilter({
     <CheckTreePicker
       key={`regulatory-tags-${tagsOptions.length}`}
       childrenKey="subTags"
-      isLabelHidden
-      isTransparent
-      label="Filtre tags et sous-tags"
+      isLabelHidden={isLabelHidden}
+      isRequired={isRequired}
+      isTransparent={isTransparent}
+      label={label ?? 'Filtre tags et sous-tags'}
       labelKey="name"
       name="regulatoryTags"
       onChange={onChange}
