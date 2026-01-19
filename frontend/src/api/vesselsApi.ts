@@ -6,7 +6,7 @@ import type { Vessel } from '@features/Vessel/types'
 const GET_VESSEL_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les informations de ce navire."
 const SEARCH_VESSELS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les navires correspondants à cette recherche."
 
-export const vesselApi = monitorenvPrivateApi.injectEndpoints({
+export const vesselsApi = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     getVessel: builder.query<Vessel.Vessel, number>({
       query: id => `/v1/vessels/${id}`,
@@ -19,4 +19,4 @@ export const vesselApi = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-export const { useGetVesselQuery, useLazyGetVesselQuery, useSearchVesselsQuery } = vesselApi
+export const { useGetVesselQuery, useLazyGetVesselQuery, useSearchVesselsQuery } = vesselsApi

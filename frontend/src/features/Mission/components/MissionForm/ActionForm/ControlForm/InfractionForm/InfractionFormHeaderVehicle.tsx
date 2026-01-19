@@ -1,4 +1,4 @@
-import { VesselForm } from '@features/Vessel/VesselForm'
+import { VesselForm } from '@features/Vessel/components/MissionVesselForm'
 import { FormikTextInput, LinkButton } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import styled from 'styled-components'

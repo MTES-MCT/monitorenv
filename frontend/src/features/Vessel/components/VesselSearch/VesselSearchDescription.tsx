@@ -1,9 +1,9 @@
 import { useField } from 'formik'
 import styled from 'styled-components'
 
-import { Vessel } from './types'
+import { Vessel } from '../../types'
 
-import type { Infraction } from '../../domain/entities/missions'
+import type { Infraction } from '../../../../domain/entities/missions'
 
 type VesselSearchDescriptionProps = {
   category?: string
@@ -45,10 +45,10 @@ export function VesselSearchDescription({ category, path }: VesselSearchDescript
 }
 
 const Wrapper = styled.div`
-  font-size: 13px;
   display: flex;
-  gap: 4px 8px;
   flex-wrap: wrap;
+  font-size: 13px;
+  gap: 4px 8px;
 `
 
 const Description = styled.span`
@@ -58,6 +58,6 @@ const Description = styled.span`
 const Value = styled.span`
   display: flex;
   flex-direction: row;
-  gap: 4px;
   font-weight: 400;
+  gap: 4px;
 `

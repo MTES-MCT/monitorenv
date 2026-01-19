@@ -1,13 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures
 
-import fr.gouv.cacem.monitorenv.domain.entities.vessels.Vessel
+import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselEntity
 
 class VesselFixture {
     companion object {
-        fun aVessel() =
-            Vessel(
+        fun aVessel(shipId: Int? = 1): VesselEntity =
+            VesselEntity(
                 id = 1,
-                shipId = 1,
+                shipId = shipId,
                 status = null,
                 category = null,
                 isBanned = false,
@@ -34,6 +34,7 @@ class VesselFixture {
                 ownerLegalStatus = null,
                 ownerLegalStatusLabel = null,
                 ownerStartDate = null,
+                lastPositions = mutableListOf(),
             )
     }
 }

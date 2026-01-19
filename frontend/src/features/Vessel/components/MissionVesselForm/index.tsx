@@ -1,12 +1,12 @@
 import { VesselTypeSelector } from '@features/commonComponents/VesselTypeSelector'
 import { StyledVesselForm } from '@features/Mission/components/MissionForm/ActionForm/ControlForm/InfractionForm/InfractionFormHeaderVehicle'
+import { VesselSearchForm } from '@features/Vessel/components/MissionVesselForm/VesselSearchForm'
 import { isVesselsEnabled } from '@features/Vessel/utils'
-import { VesselSearchForm } from '@features/Vessel/VesselSearchForm'
 import { FormikNumberInput, FormikTextInput } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import { useState } from 'react'
 
-import type { Infraction } from '../../domain/entities/missions'
+import type { Infraction } from '../../../../domain/entities/missions'
 
 type VesselFormProps = {
   envActionIndex: number
