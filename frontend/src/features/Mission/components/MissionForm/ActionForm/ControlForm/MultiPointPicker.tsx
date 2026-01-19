@@ -1,6 +1,6 @@
 import { ZoneWrapper } from '@components/ZonePicker/DrawedPolygonWithCenterButton'
 import { Accent, Button, Icon, IconButton, Label, Message } from '@mtes-mct/monitor-ui'
-import { formatCoordinates } from '@utils/coordinates'
+import { formatCoordinatesAsText } from '@utils/coordinates'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import { useField } from 'formik'
 import { isEqual } from 'lodash'
@@ -86,7 +86,7 @@ export function MultiPointPicker({ actionIndex, isGeomSameAsAttachedReportingGeo
             // eslint-disable-next-line react/no-array-index-key
             <Row key={`zone-${index}`}>
               <StyledZoneWrapper>
-                <span>{formatCoordinates(coordinates, coordinatesFormat)}</span>
+                <span>{formatCoordinatesAsText(coordinates, coordinatesFormat)}</span>
                 <IconButton
                   accent={Accent.TERTIARY}
                   Icon={Icon.FocusZones}

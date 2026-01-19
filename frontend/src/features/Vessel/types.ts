@@ -1,3 +1,5 @@
+import type { GeoJSON } from '../../domain/types/GeoJSON'
+
 export namespace Vessel {
   export interface Identity {
     category?: string
@@ -6,11 +8,13 @@ export namespace Vessel {
     immatriculation?: string
     imo?: string
     mmsi?: string
+    shipId?: number
     shipName?: string
   }
 
   export interface Vessel extends Identity {
     commercialName?: string
+    lastPositions?: LastPosition[]
     leisureType?: string
     length?: number
     ownerBusinessSegmentLabel?: string
@@ -37,5 +41,18 @@ export namespace Vessel {
   export enum CategoryLabel {
     PLA = 'Plaisance',
     PRO = 'Professionnel'
+  }
+
+  export interface LastPosition {
+    course?: number
+    destination?: string
+    geom?: GeoJSON.Point
+    heading?: number
+    id: number
+    mmsi?: number
+    shipName?: string
+    speed?: number
+    status?: string
+    timestamp?: string
   }
 }

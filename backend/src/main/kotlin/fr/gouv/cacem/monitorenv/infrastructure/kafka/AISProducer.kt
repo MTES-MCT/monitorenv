@@ -47,6 +47,7 @@ class AISProducer(
                     heading = Random.nextDouble(),
                     speed = Random.nextDouble(),
                     ts = ZonedDateTime.now(),
+                    features = null,
                 ),
             )
         } catch (ex: Exception) {

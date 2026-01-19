@@ -109,16 +109,16 @@ const Header = styled.header`
 `
 
 const Name = styled.span<{ $isUnknown?: boolean }>`
-  display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 500;
+  display: flex;
   ${p => p.$isUnknown && `font-style: italic;`}
+  font-weight: 500;
+  gap: 8px;
 `
 
 const Identities = styled.span`
-  display: flex;
   color: ${p => p.theme.color.slateGray};
+  display: flex;
   justify-content: space-between;
 `
 
@@ -138,7 +138,7 @@ const Description = styled.span`
 `
 
 const Category = styled(Tooltip)`
+  font-size: 12px;
   white-space: nowrap;
   z-index: 99999;
-  font-size: 12px;
 `

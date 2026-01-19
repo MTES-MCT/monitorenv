@@ -10,7 +10,7 @@ import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
 import { reportingActions } from '@features/Reportings/slice'
 import { SideWindowStatus } from '@features/SideWindow/slice'
-import { VesselResume } from '@features/Vessel/VesselResume'
+import { VesselResume } from '@features/Vessel/components/VesselResume'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
@@ -128,7 +128,7 @@ export function HomePage() {
         <AttachReportingToMissionModal />
         {displayLocateOnMap && <LocateOnMap />}
         {isControlUnitDialogVisible && isSuperUser && <ControlUnitDialog />}
-        {selectedVesselId && <VesselResume vesselId={selectedVesselId} />}
+        {selectedVesselId && <VesselResume id={selectedVesselId} />}
 
         <Menu />
 

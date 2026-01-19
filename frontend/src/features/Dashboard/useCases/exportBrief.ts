@@ -20,7 +20,7 @@ import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/componen
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { CoordinatesFormat, customDayjs, getLocalizedDayjs, Level, THEME } from '@mtes-mct/monitor-ui'
-import { formatCoordinates } from '@utils/coordinates'
+import { formatCoordinatesAsText } from '@utils/coordinates'
 import { formatDateLabel } from '@utils/getDateAsLocalizedString'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
@@ -224,7 +224,7 @@ export const exportBrief =
 
     const formattedReportings = dashboard.reportingIds
       ? (Object.values(reportings?.entities ?? []) as Reporting[]).map(reporting => {
-          const localization = formatCoordinates(
+          const localization = formatCoordinatesAsText(
             reporting?.geom?.coordinates[0] as Coordinate,
             CoordinatesFormat.DEGREES_MINUTES_SECONDS
           )

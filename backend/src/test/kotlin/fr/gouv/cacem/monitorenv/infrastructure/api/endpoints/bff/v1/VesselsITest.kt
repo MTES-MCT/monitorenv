@@ -48,6 +48,7 @@ class VesselsITest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.length()", equalTo(1)))
             .andExpect(jsonPath("$[0].id", equalTo(vessel.id)))
+            .andExpect(jsonPath("$[0].shipId", equalTo(vessel.shipId)))
             .andExpect(jsonPath("$[0].flag", equalTo(vessel.flag)))
             .andExpect(jsonPath("$[0].mmsi", equalTo(vessel.mmsi)))
             .andExpect(jsonPath("$[0].imo", equalTo(vessel.imo)))
@@ -98,7 +99,6 @@ class VesselsITest {
     fun `Should return 404 when vessel is not found`() {
         // Given
         val id = 1
-        val vessel = aVessel()
         given(getVesselById.execute(id)).willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND))
 
         // When
