@@ -16,6 +16,7 @@ type FiltersState = {
 
 interface RegulatoryAreaTableState {
   filtersState: FiltersState
+  openedRegulatoryAreaId: number | undefined
 }
 
 const INITIAL_STATE: RegulatoryAreaTableState = {
@@ -25,7 +26,8 @@ const INITIAL_STATE: RegulatoryAreaTableState = {
     seaFront: undefined,
     tags: undefined,
     themes: undefined
-  }
+  },
+  openedRegulatoryAreaId: undefined
 }
 
 const persistConfig = {
@@ -45,6 +47,9 @@ const regulatoryAreaTableSlice = createSlice({
       }>
     ) {
       state.filtersState = set(action.payload.key, action.payload.value, state.filtersState)
+    },
+    setOpenRegulatoryAreaId(state, action: PayloadAction<number | undefined>) {
+      state.openedRegulatoryAreaId = action.payload
     }
   }
 })
