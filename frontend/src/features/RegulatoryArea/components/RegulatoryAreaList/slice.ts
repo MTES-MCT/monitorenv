@@ -1,7 +1,5 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { set } from 'lodash/fp'
-import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
@@ -30,11 +28,6 @@ const INITIAL_STATE: RegulatoryAreaTableState = {
   openedRegulatoryAreaId: undefined
 }
 
-const persistConfig = {
-  key: 'regulatoryAreaTable',
-  storage
-}
-
 const regulatoryAreaTableSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'regulatoryAreaTable',
@@ -56,4 +49,4 @@ const regulatoryAreaTableSlice = createSlice({
 
 export const regulatoryAreaTableActions = regulatoryAreaTableSlice.actions
 
-export const regulatoryAreaTablePersistedReducer = persistReducer(persistConfig, regulatoryAreaTableSlice.reducer)
+export const regulatoryAreaTablePersistedReducer = regulatoryAreaTableSlice.reducer
