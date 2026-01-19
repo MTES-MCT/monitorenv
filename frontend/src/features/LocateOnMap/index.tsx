@@ -1,6 +1,6 @@
 import { SearchLocation } from '@features/LocateOnMap/SearchLocation'
 import { SearchSwitcher, SearchType } from '@features/LocateOnMap/SearchSwitcher'
-import { SearchVessel } from '@features/Vessel/SearchVessels'
+import { SearchVessel } from '@features/Vessel/components/VesselSearch'
 import { vesselAction } from '@features/Vessel/slice'
 import { isVesselsEnabled } from '@features/Vessel/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'

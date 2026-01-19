@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.vessels.Vessel
+import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -10,25 +10,21 @@ import java.math.BigDecimal
 @Entity
 @Table(name = "latest_vessels")
 data class VesselModel(
+    val batchId: Int?,
+    val category: String?,
+    val commercialName: String?,
+    val flag: String?,
     @Id
     val id: Int,
-    val shipId: Int,
-    val status: String?,
-    val category: String?,
     val isBanned: Boolean,
     @Column(name = "imo_number")
     val imo: String?,
-    @Column(name = "mmsi_number")
-    val mmsi: String?,
     val immatriculation: String?,
-    val shipName: String?,
-    val flag: String?,
-    val portOfRegistry: String?,
-    val professionalType: String?,
     val leisureType: String?,
-    val commercialName: String?,
     @Column(precision = 5, scale = 2)
     val length: BigDecimal?,
+    @Column(name = "mmsi_number")
+    val mmsi: String?,
     val ownerLastName: String?,
     val ownerFirstName: String?,
     val ownerDateOfBirth: String?,
@@ -40,14 +36,18 @@ data class VesselModel(
     val ownerBusinessSegment: String?,
     val ownerLegalStatus: String?,
     val ownerStartDate: String?,
-    val batchId: Int?,
+    val portOfRegistry: String?,
+    val professionalType: String?,
     val rowNumber: Int?,
+    val shipId: Int?,
+    val shipName: String?,
+    val status: String?,
 ) {
     fun toVessel(
         nafLabel: String? = null,
         legalStatusLabel: String? = null,
-    ): Vessel =
-        Vessel(
+    ): VesselEntity =
+        VesselEntity(
             id = id,
             shipId = shipId,
             status = status,
@@ -76,5 +76,6 @@ data class VesselModel(
             ownerLegalStatusLabel = legalStatusLabel,
             ownerLegalStatus = ownerLegalStatus,
             ownerStartDate = ownerStartDate,
+            lastPositions = mutableListOf(),
         )
 }

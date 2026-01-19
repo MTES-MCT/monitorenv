@@ -1,13 +1,13 @@
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
-import { StyledButton, ButtonWithWiteBg, StyledDeleteButton, StyledFooter } from '@features/Reportings/style'
+import { ButtonWithWiteBg, StyledButton, StyledDeleteButton, StyledFooter } from '@features/Reportings/style'
 import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
 import { reopenReporting } from '@features/Reportings/useCases/reopenReporting'
 import { getTimeLeft, isNewReporting } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, Level, THEME, customDayjs, getLocalizedDayjs, pluralize } from '@mtes-mct/monitor-ui'
-import { formatCoordinates } from '@utils/coordinates'
-import { ReportingStatusEnum, type Reporting, getReportingStatus } from 'domain/entities/reporting'
+import { Accent, customDayjs, getLocalizedDayjs, Icon, IconButton, Level, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { formatCoordinatesAsText } from '@utils/coordinates'
+import { getReportingStatus, type Reporting, ReportingStatusEnum } from 'domain/entities/reporting'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import { ReportingContext } from 'domain/shared_slices/Global'
@@ -29,6 +29,7 @@ type ReportingFooterProps = {
   onSave: () => void
   setMustIncreaseValidity: (value: boolean) => void
 }
+
 export function Footer({
   isAutoSaveEnabled,
   onClose,
@@ -96,15 +97,15 @@ export function Footer({
     const isMultiPolygon = values.geom?.type === 'MultiPolygon'
 
     const coordinates = values.geom?.coordinates
-    let formattedCoordinates
+    let formattedCoordinates: string | undefined
     if (isMultiPoint && coordinates) {
-      formattedCoordinates = formatCoordinates(coordinates[0] as Coordinate, coordinatesFormat)
+      formattedCoordinates = formatCoordinatesAsText(coordinates[0] as Coordinate, coordinatesFormat)
     }
 
     if (isMultiPolygon && coordinates && coordinates[0]) {
       const multiPolygon = new MultiPolygon(coordinates as Coordinate[][][])
       const centroid = getCenter(multiPolygon.getExtent())
-      formattedCoordinates = `${formatCoordinates(
+      formattedCoordinates = `${formatCoordinatesAsText(
         centroid as Coordinate,
         coordinatesFormat
       )} (calculées depuis le centroïde de la zone du signalement)`

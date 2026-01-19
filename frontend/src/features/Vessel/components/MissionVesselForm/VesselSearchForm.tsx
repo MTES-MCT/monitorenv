@@ -1,4 +1,4 @@
-import { useGetVesselQuery, useLazyGetVesselQuery } from '@api/vesselApi'
+import { useGetVesselQuery, useLazyGetVesselQuery } from '@api/vesselsApi'
 import { LoadingIcon } from '@components/style'
 import {
   StyledLinkButton,
@@ -6,18 +6,18 @@ import {
   VesselSearchWrapper
 } from '@features/Mission/components/MissionForm/ActionForm/ControlForm/InfractionForm/InfractionFormHeaderVehicle'
 import { HistoryOfInfractions } from '@features/Reportings/components/ReportingForm/FormComponents/Target/HistoryOfInfractions'
-import { SearchVessel } from '@features/Vessel/SearchVessels'
+import { SearchVessel } from '@features/Vessel/components/VesselSearch'
+import { VesselSearchDescription } from '@features/Vessel/components/VesselSearch/VesselSearchDescription'
 import { vesselAction } from '@features/Vessel/slice'
 import { isVesselsEnabled } from '@features/Vessel/utils'
-import { VesselSearchDescription } from '@features/Vessel/VesselSearchDescription'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Checkbox } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { useField, useFormikContext } from 'formik'
 import { useCallback, useEffect, useState } from 'react'
 
+import type { Mission } from '../../../../domain/entities/missions'
 import type { Vessel } from '@features/Vessel/types'
-import type { Mission } from 'domain/entities/missions'
 
 type VesselSearchFormProps = {
   envActionId: string | undefined
@@ -32,7 +32,7 @@ export function VesselSearchForm({ envActionId, isUnknown, onIsUnknown, path, ve
   const [mmsi] = useField(`${path}.mmsi`)
   const [selectedVessel, setSelectedVessel] = useState<Vessel.Vessel | undefined>()
   const [getVessel, { isLoading }] = useLazyGetVesselQuery()
-  const { data: vessel } = useGetVesselQuery(vesselId === undefined ? skipToken : vesselId)
+  const { data: vessel } = useGetVesselQuery(vesselId ?? skipToken)
   const { setFieldValue } = useFormikContext<Mission>()
 
   useEffect(() => {

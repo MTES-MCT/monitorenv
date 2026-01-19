@@ -43,6 +43,7 @@ export enum MonitorEnvLayers {
   FAO = 'FAO',
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
+  LAST_POSITIONS = 'LAST_POSITIONS',
   LOCALIZED_AREAS = 'LOCALIZED_AREAS',
   LOCATE_ON_MAP = 'LOCATE_ON_MAP',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
@@ -337,6 +338,10 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
   },
   [MonitorEnvLayers.LOCATE_ON_MAP]: {
     code: MonitorEnvLayers.LOCATE_ON_MAP,
+    zIndex: 1500
+  },
+  [MonitorEnvLayers.LAST_POSITIONS]: {
+    code: MonitorEnvLayers.LAST_POSITIONS,
     zIndex: 1500
   }
 }
