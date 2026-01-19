@@ -3,6 +3,7 @@ import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrat
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { useParams } from 'react-router'
 
 import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -13,9 +14,15 @@ import type { VectorLayerWithName } from 'domain/types/layer'
 import type { Feature } from 'ol'
 import type { Geometry } from 'ol/geom'
 
-export function BackofficeRegulatoryAreaListLayer({ map }: BaseMapChildrenProps) {
+export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
+  const { regulatoryAreaId } = useParams()
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
+
+  const layerId = useMemo(
+    () => regulatoryAreaId ?? openedRegulatoryAreaId ?? undefined,
+    [regulatoryAreaId, openedRegulatoryAreaId]
+  )
 
   const regulatoryVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const regulatoryVectorLayerRef = useRef(
@@ -27,9 +34,8 @@ export function BackofficeRegulatoryAreaListLayer({ map }: BaseMapChildrenProps)
     })
   ) as MutableRefObject<VectorLayerWithName>
   regulatoryVectorLayerRef.current.name = Layers.REGULATORY_ENV.code
-
   const regulatoryFeature = useMemo(() => {
-    if (!openedRegulatoryAreaId || !regulatoryLayers?.entities) {
+    if (!layerId || !regulatoryLayers?.entities) {
       return undefined
     }
 
@@ -37,11 +43,11 @@ export function BackofficeRegulatoryAreaListLayer({ map }: BaseMapChildrenProps)
       code: Layers.REGULATORY_ENV.code,
       isolatedLayer: undefined,
       layer: {
-        ...regulatoryLayers.entities[openedRegulatoryAreaId],
+        ...regulatoryLayers.entities[layerId],
         metadataIsShowed: true
       }
     })
-  }, [openedRegulatoryAreaId, regulatoryLayers?.entities])
+  }, [layerId, regulatoryLayers?.entities])
 
   useEffect(() => {
     regulatoryVectorSourceRef.current?.clear(true)
@@ -51,8 +57,8 @@ export function BackofficeRegulatoryAreaListLayer({ map }: BaseMapChildrenProps)
   }, [regulatoryFeature])
 
   useEffect(() => {
-    regulatoryVectorLayerRef.current?.setVisible(!!openedRegulatoryAreaId)
-  }, [openedRegulatoryAreaId])
+    regulatoryVectorLayerRef.current?.setVisible(!!layerId)
+  }, [layerId])
 
   useEffect(() => {
     if (map) {
