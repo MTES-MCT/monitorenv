@@ -65,8 +65,9 @@ export const useGooglePlacesAPI = (search: string | undefined) => {
         }
         fetch(GOOGLEMAPS_SCRIPT_BASEURL, {
           body: JSON.stringify({
-            includedRegionCodes: ['fr', 'gf', 'pf', 'tf', 'nc', 'bl', 're', 'mf', 'pm', 'wf'],
-            input: query
+            includedRegionCodes: ['fr', 'gf', 'pf', 'tf', 'gp', 'nc', 'bl', 're', 'mf', 'mq', 'pm', 'wf', 'yt'],
+            input: query,
+            regionCode: 'fr'
           }),
           headers: {
             'Content-Type': 'application/json',
