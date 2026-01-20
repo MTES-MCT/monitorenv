@@ -1,3 +1,8 @@
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { get } from 'lodash'
+import { transformExtent } from 'ol/proj'
+import RBush, { type BBox } from 'rbush'
+
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
@@ -20,6 +25,7 @@ export function filterByTags(tags: TagOption[]) {
     ]
   }
 }
+
 export function filterThemesByText(searchedText: string) {
   return [
     { $path: ['themes.name'], $val: searchedText },
@@ -32,4 +38,39 @@ export function filterTagsByText(searchedText: string) {
     { $path: ['tags.name'], $val: searchedText },
     { $path: ['tags.subTags.name'], $val: searchedText }
   ]
+}
+
+export interface BboxWithId extends BBox {
+  id: number
+}
+
+export function searchAreaIdsByExtent<T extends BboxWithId>(
+  searchExtent: number[] | undefined,
+  searchedObject: T[],
+  bboxPath: string,
+  idPath: string,
+  shouldFilter: boolean
+) {
+  const tree = new RBush<T>()
+
+  if (!shouldFilter) {
+    return searchedObject?.flatMap(item => get(item, idPath) as number)
+  }
+  if (searchExtent && searchExtent?.length > 0) {
+    const itemBbox = searchedObject.flatMap(item => {
+      const [minX, minY, maxX, maxY] = get(item, bboxPath)
+
+      return { id: get(item, idPath), maxX, maxY, minX, minY } as T
+    })
+
+    tree.load(itemBbox)
+
+    const extent = transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+    const [minX, minY, maxX, maxY] = extent
+    if (minX && minY && maxX && maxY) {
+      return tree.search({ maxX, maxY, minX, minY }).flatMap(item => item.id)
+    }
+  }
+
+  return []
 }

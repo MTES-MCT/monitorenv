@@ -1,7 +1,6 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
-import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import Fuse, { type Expression } from 'fuse.js'
@@ -9,7 +8,7 @@ import { debounce } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
 
 import { setAMPsSearchResult, setRegulatoryLayersSearchResult } from '../slice'
-import { filterByTags, filterByThemes, filterTagsByText, filterThemesByText } from './utils'
+import { filterByTags, filterByThemes, filterTagsByText, filterThemesByText, searchAreaIdsByExtent } from './utils'
 
 import type { AMP } from 'domain/entities/AMPs'
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
@@ -90,11 +89,13 @@ export function useSearchLayers() {
           searchedAMPS = amps?.entities && Object.values(amps?.entities)
           itemSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
-        const searchedAMPsInExtent = getIntersectingLayerIds<AMP>(
-          shouldFilterSearchOnMapExtent,
-          searchedAMPS,
+
+        const searchedAMPsInExtent = searchAreaIdsByExtent(
           searchExtent,
-          itemSchema
+          searchedAMPS,
+          itemSchema.bboxPath,
+          itemSchema.idPath,
+          shouldFilterSearchOnMapExtent
         )
         dispatch(setAMPsSearchResult(searchedAMPsInExtent))
       } else {
@@ -157,11 +158,12 @@ export function useSearchLayers() {
           itemSchema = { bboxPath: 'bbox', idPath: 'id' }
         }
 
-        const searchedRegulatoryInExtent = getIntersectingLayerIds<RegulatoryLayerCompact>(
-          shouldFilterSearchOnMapExtent,
-          searchedRegulatory,
+        const searchedRegulatoryInExtent = searchAreaIdsByExtent(
           searchExtent,
-          itemSchema
+          searchedRegulatory,
+          itemSchema.bboxPath,
+          itemSchema.idPath,
+          shouldFilterSearchOnMapExtent
         )
         dispatch(setRegulatoryLayersSearchResult(searchedRegulatoryInExtent))
       } else {
