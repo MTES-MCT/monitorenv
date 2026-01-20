@@ -16,7 +16,7 @@ export function SearchLocation() {
   const locateOnMap = useAppSelector(state => state.map.locateOnMap)
   const [searchedLocation, setSearchedLocation] = useState<string | undefined>(undefined)
   const results = useGooglePlacesAPI(searchedLocation)
-  const { beaches, options: beachesOptions } = useBeaches()
+  const { beaches, options: beachesOptions } = useBeaches(searchedLocation)
 
   const handleSelectLocation = async (location: { id: string; name: string } | undefined) => {
     if (!location || !location?.id) {
