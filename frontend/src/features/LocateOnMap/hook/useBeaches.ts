@@ -6,12 +6,12 @@ type Options = {
   value: string
 }
 
-export const useBeaches = () => {
+export const useBeaches = (query: string | undefined) => {
   const [options, setOptions] = useState<Options[]>([])
   const [beaches, setBeaches] = useState<any[]>([])
 
   useEffect(() => {
-    getBeachesFromAPI()
+    getBeachesFromAPI(query)
       .then(values => {
         setBeaches(values)
         setOptions(
@@ -33,7 +33,7 @@ export const useBeaches = () => {
       .catch(() => {
         setOptions([])
       })
-  }, [])
+  }, [query])
 
   return { beaches, options }
 }
