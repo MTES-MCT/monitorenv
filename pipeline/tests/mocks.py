@@ -95,3 +95,7 @@ def mock_get_xsd_file(dummy: str):
 @task
 def mock_delete_files(xml_files: List[Path]) -> None:
     pass
+
+@task
+def mock_get_csv_file(dummy: str):
+    return Path(TEST_DATA_LOCATION / "ref_natinfs_csv" / "ref_natinfs.csv")
