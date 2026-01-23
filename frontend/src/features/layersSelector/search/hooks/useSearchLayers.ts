@@ -29,33 +29,41 @@ export function useSearchLayers() {
 
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
 
-  const search = useCallback(() => {
-    const fuseRegulatory = new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
-      ignoreLocation: true,
-      includeScore: false,
-      keys: [
-        'layerName',
-        'resume',
-        'plan',
-        'polyName',
-        'refReg',
-        'type',
-        'tags.name',
-        'tags.subTags.name',
-        'themes.name',
-        'themes.subThemes.name'
-      ],
-      minMatchCharLength: 2,
-      threshold: 0.2
-    })
-    const fuseAMPs = new Fuse((amps?.entities && Object.values(amps?.entities)) || [], {
-      ignoreLocation: true,
-      includeScore: false,
-      keys: ['name', 'type'],
-      minMatchCharLength: 2,
-      threshold: 0.2
-    })
+  const fuseRegulatory = useMemo(
+    () =>
+      new Fuse((regulatoryLayers?.entities && Object.values(regulatoryLayers?.entities)) || [], {
+        ignoreLocation: true,
+        includeScore: false,
+        keys: [
+          'layerName',
+          'resume',
+          'plan',
+          'polyName',
+          'refReg',
+          'type',
+          'tags.name',
+          'tags.subTags.name',
+          'themes.name',
+          'themes.subThemes.name'
+        ],
+        minMatchCharLength: 2,
+        threshold: 0.2
+      }),
+    [regulatoryLayers?.entities]
+  )
+  const fuseAMPs = useMemo(
+    () =>
+      new Fuse((amps?.entities && Object.values(amps?.entities)) || [], {
+        ignoreLocation: true,
+        includeScore: false,
+        keys: ['name', 'type'],
+        minMatchCharLength: 2,
+        threshold: 0.2
+      }),
+    [amps?.entities]
+  )
 
+  const search = useCallback(() => {
     const searchFunction = () => {
       const shouldSearchByText = globalSearchText?.length > 2
       const shouldSearchThroughAMPTypes = filteredAmpTypes?.length > 0
@@ -172,16 +180,18 @@ export function useSearchLayers() {
     dispatch(closeMetadataPanel())
     searchFunction()
   }, [
-    amps,
     dispatch,
+    globalSearchText,
     filteredAmpTypes,
     filteredRegulatoryTags,
     filteredRegulatoryThemes,
-    globalSearchText,
-    regulatoryLayers,
-    searchExtent,
     controlPlan,
-    shouldFilterSearchOnMapExtent
+    shouldFilterSearchOnMapExtent,
+    searchExtent,
+    fuseAMPs,
+    amps?.entities,
+    fuseRegulatory,
+    regulatoryLayers?.entities
   ])
 
   const debouncedSearchLayers = useMemo(() => debounce(search, 300), [search])
