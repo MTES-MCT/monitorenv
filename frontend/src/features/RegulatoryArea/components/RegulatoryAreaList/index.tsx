@@ -53,7 +53,7 @@ export function RegulatoryAreaList() {
           {groupFilter === 'SEA_FRONT' ? <SeaFrontTable /> : <ControlPlanTable />}
         </RegulatoryWrapper>
 
-        <MapContainer>{childrensComponents}</MapContainer>
+        <MapContainer className="map-container">{childrensComponents}</MapContainer>
 
         {openedRegulatoryAreaId && <StyledRegulatoryAreasPanel layerId={openedRegulatoryAreaId} onClose={closePanel} />}
       </StyledBackofficeWrapper>

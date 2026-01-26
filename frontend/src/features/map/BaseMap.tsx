@@ -69,7 +69,13 @@ export const initialMap = new OpenLayerMap({
   })
 })
 
-function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
+function BaseMapNotMemoized({
+  children,
+  className
+}: {
+  children: Array<ReactElement<BaseMapChildrenProps> | null>
+  className?: string
+}) {
   const dispatch = useAppDispatch()
 
   const [mapClickEvent, setMapClickEvent] = useState<MapClickEvent>({
@@ -260,7 +266,7 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
   }
 
   return (
-    <MapWrapper>
+    <MapWrapper className={className}>
       <MapContainer ref={mapElement} />
       {Children.map(
         children,
