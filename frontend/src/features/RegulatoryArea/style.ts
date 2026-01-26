@@ -10,11 +10,9 @@ export const StyledBackofficeWrapper = styled(BackofficeWrapper)`
 `
 export const RegulatoryWrapper = styled.div`
   display: flex;
+  flex-basis: 50%;
   flex-direction: column;
   overflow-y: auto;
   padding: 24px 40px;
-  width: 50%;
 `
-export const MapContainer = styled(BaseMap)`
-  width: 50%;
-`
+export const MapContainer = styled(BaseMap)``
