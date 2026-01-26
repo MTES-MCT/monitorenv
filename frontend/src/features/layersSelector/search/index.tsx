@@ -5,8 +5,8 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
-import { isEmpty } from 'lodash'
-import { useCallback } from 'react'
+import { debounce, isEmpty } from 'lodash'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { LayerFilters } from './LayerFilters'
@@ -22,6 +22,7 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
   const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
 
+  const [query, setQuery] = useState<string | undefined>(undefined)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.vigilanceAreaFilters.period)
@@ -29,11 +30,14 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
   const displayRegFilters = useAppSelector(state => state.layerSidebar.areRegFiltersOpen)
   const displayLayersSidebar = useAppSelector(state => state.global.menus.displayLayersSidebar)
 
+  const debouncedSearch = useMemo(() => debounce(value => dispatch(setGlobalSearchText(value)), 300), [dispatch])
+
   const handleSearchInputChange = useCallback(
-    searchedText => {
-      dispatch(setGlobalSearchText(searchedText))
+    (searchedText: string | undefined) => {
+      setQuery(searchedText)
+      debouncedSearch(searchedText)
     },
-    [dispatch]
+    [debouncedSearch]
   )
 
   const openOrCloseRegFilters = useCallback(() => {
@@ -50,7 +54,7 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
     <SearchContainer>
       <Search>
         <SearchInput
-          globalSearchText={globalSearchText}
+          globalSearchText={query}
           placeholder="Rechercher une zone"
           setGlobalSearchText={handleSearchInputChange}
         >
