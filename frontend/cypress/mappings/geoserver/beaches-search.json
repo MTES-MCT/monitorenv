@@ -13,7 +13,7 @@
         "equalTo": "GetFeature"
       },
       "typename": {
-        "equalTo": "monitorenv:beaches"
+        "equalTo": "monitorenv:search_beaches"
       },
       "outputFormat": {
         "equalTo": "application/json"
@@ -33,6 +33,6 @@
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "*"
     },
-    "body": "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"id\":\"beaches.789\",\"geometry\":{\"type\":\"MultiPoint\",\"coordinates\":[[-3.2027,47.6536]]},\"geometry_name\":\"geom\",\"properties\":{\"id\":789,\"name\":\"Plan D'eau\",\"official_name\":\"Étel\",\"postcode\":\"56410\",\"insee\":\"56055\"},\"bbox\":[-3.2027,47.6536,-3.2027,47.6536]}],\"totalFeatures\":1,\"numberMatched\":1,\"numberReturned\":1,\"timeStamp\":\"2025-08-26T07:12:52.375Z\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"urn:ogc:def:crs:EPSG::4326\"}},\"bbox\":[-3.2027,47.6536,-3.2027,47.6536]}"
+    "body": "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"id\":\"search_beaches.789\",\"geometry\":{\"type\":\"MultiPoint\",\"coordinates\":[[-3.2027,47.6536]]},\"geometry_name\":\"geom\",\"properties\":{\"id\":789,\"name\":\"Plan D'eau\",\"official_name\":\"Étel\",\"postcode\":\"56410\",\"insee\":\"56055\"},\"bbox\":[-3.2027,47.6536,-3.2027,47.6536]}],\"totalFeatures\":1,\"numberMatched\":1,\"numberReturned\":1,\"timeStamp\":\"2025-08-26T07:12:52.375Z\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"urn:ogc:def:crs:EPSG::4326\"}},\"bbox\":[-3.2027,47.6536,-3.2027,47.6536]}"
   }
 }

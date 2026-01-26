@@ -26,7 +26,7 @@ export function SearchLocation() {
     }
     let extent: Extent | undefined
 
-    if (location.id.startsWith('beaches')) {
+    if (location.id.startsWith('search_beaches')) {
       const selectedBeach = beaches.find(beach => beach.id === location.id)
       if (selectedBeach) {
         extent = transformExtent(selectedBeach.bbox, WSG84_PROJECTION, OPENLAYERS_PROJECTION)

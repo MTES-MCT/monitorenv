@@ -25,7 +25,7 @@ export const getBeachesFromAPI = async (query: string | undefined) => {
   const conditions = searchQueries.map(searchQuery => {
     const sanitizedQuery = sanitizeQuery(searchQuery)
 
-    return `(name ILIKE '%${sanitizedQuery}%' OR official_name ILIKE '%${sanitizedQuery}%' OR postcode ILIKE '%${sanitizedQuery}%')`
+    return `(unaccent_name ILIKE '%${sanitizedQuery}%' OR unaccent_official_name ILIKE '%${sanitizedQuery}%' OR postcode ILIKE '%${sanitizedQuery}%')`
   })
   const cqlFilter = conditions.join(' AND ')
 
@@ -33,7 +33,9 @@ export const getBeachesFromAPI = async (query: string | undefined) => {
     `${geoserverURL}/geoserver/wfs?service=WFS&` +
       `version=1.1.0&request=GetFeature&typename=${
         import.meta.env.FRONTEND_GEOSERVER_NAMESPACE
-      }:beaches&outputFormat=application/json&srsname=${WSG84_PROJECTION}&CQL_FILTER=${encodeURIComponent(cqlFilter)}`
+      }:search_beaches&outputFormat=application/json&srsname=${WSG84_PROJECTION}&CQL_FILTER=${encodeURIComponent(
+        cqlFilter
+      )}`
   )
     .then(response => {
       if (response.status === OK) {
