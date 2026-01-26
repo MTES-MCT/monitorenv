@@ -25,7 +25,6 @@ const Wrapper = styled.div<{ $position: 'right' | 'left' }>`
   ${p => (p.$position === 'left' ? 'left: 0.5em;' : 'right: 0.5em;')}
   max-width: calc(100% - 1.3em);
   background: none;
-  position: fixed;
 `
 
 const Button = styled.button`
