@@ -24,6 +24,7 @@ const environment = import.meta.env.FRONTEND_SENTRY_ENV as Environment
 
 export function BackOfficePage() {
   const dispatch = useAppDispatch()
+  const isRegulatoryAreasBoEnabled = import.meta.env.FRONTEND_REGULATORY_AREAS_BO_ENABLED === 'true'
 
   useEffect(() => {
     let bannerId: number
@@ -45,16 +46,22 @@ export function BackOfficePage() {
       <>
         <BannerStack />
         <Routes>
-          <Route element={<RegulatoryAreaList />} path="/" />
+          {isRegulatoryAreasBoEnabled ? (
+            <>
+              <Route element={<RegulatoryAreaList />} path="/" />
 
-          <Route
-            element={<RegulatoryAreaList />}
-            path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}
-          />
-          <Route
-            element={<RegulatoryAreaForm />}
-            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/:regulatoryAreaId`}
-          />
+              <Route
+                element={<RegulatoryAreaList />}
+                path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}
+              />
+              <Route
+                element={<RegulatoryAreaForm />}
+                path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/:regulatoryAreaId`}
+              />
+            </>
+          ) : (
+            <Route element={<AdministrationTable />} path="/" />
+          )}
 
           <Route
             element={<AdministrationTable />}
