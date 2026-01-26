@@ -77,7 +77,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Set IMAGE_TAG
-        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg${{ matrix.pg_major }}-postgis${{ matrix.postgis_version }}-timescale${{ matrix.timescaledb_version }}" >> $GITHUB_ENV
+        run: echo "IMAGE_TAG=ghcr.io/mtes-mct/monitorenv/monitorenv-database:pg${{ matrix.pg_major }}-postgis${{ matrix.postgis_version }}-timescale${{ matrix.timescaledb_version }}-contrib" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         id: buildx
