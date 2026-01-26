@@ -2,11 +2,11 @@ import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadat
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getAMPFeature } from './AMPGeometryHelpers'
 import { getAMPLayerStyle } from './AMPLayers.style'
-import { useGetAMPsQuery } from '../../../../api/ampsAPI'
+import { useGetAmpsByIdsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -24,9 +24,8 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
-  const isLayerVisible = !isLinkingRegulatoryToVigilanceArea
-
-  const { data: ampLayers } = useGetAMPsQuery()
+  const isLayerVisible = showedAmpLayerIds.length > 0 && !isLinkingRegulatoryToVigilanceArea
+  const { data: ampLayers } = useGetAmpsByIdsQuery(showedAmpLayerIds, { skip: !isLayerVisible })
 
   const ampVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const ampVectorLayerRef = useRef(
@@ -42,17 +41,14 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
   const ampLayersFeatures = useMemo(() => {
     let ampFeatures: Feature[] = []
 
-    if (ampLayers?.entities) {
-      ampFeatures = showedAmpLayerIds.reduce((feats: Feature[], ampLayerId) => {
-        const ampLayer = ampLayers.entities[ampLayerId]
-        if (ampLayer) {
-          const feature = getAMPFeature({ code: Layers.AMP.code, isolatedLayer, layer: ampLayer })
-          if (feature) {
-            const metadataIsShowed = ampLayer.id === showedAmpMetadataLayerId
-            feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+    if (ampLayers) {
+      ampFeatures = ampLayers.reduce((feats: Feature[], ampLayer) => {
+        const feature = getAMPFeature({ code: Layers.AMP.code, isolatedLayer, layer: ampLayer })
+        if (feature) {
+          const metadataIsShowed = ampLayer.id === showedAmpMetadataLayerId
+          feature.set(metadataIsShowedPropertyName, metadataIsShowed)
 
-            feats.push(feature)
-          }
+          feats.push(feature)
         }
 
         return feats
@@ -60,7 +56,7 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
     }
 
     return ampFeatures
-  }, [ampLayers?.entities, isolatedLayer, showedAmpLayerIds, showedAmpMetadataLayerId])
+  }, [ampLayers, isolatedLayer, showedAmpMetadataLayerId])
 
   useEffect(() => {
     ampVectorSourceRef.current?.clear(true)

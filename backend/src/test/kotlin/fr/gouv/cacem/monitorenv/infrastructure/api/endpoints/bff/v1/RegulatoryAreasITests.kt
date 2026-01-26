@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.hamcrest.Matchers.equalTo
@@ -38,6 +39,9 @@ class RegulatoryAreasITests {
 
     @MockitoBean
     private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
+
+    @MockitoBean
+    private lateinit var getRegulatoryAreasByIds: GetRegulatoryAreasByIds
 
     private val wktReader = WKTReader()
 
@@ -76,11 +80,11 @@ class RegulatoryAreasITests {
                 polyName = "Zone au sud de la cale",
                 resume = "Descriptif de la zone réglementaire",
             )
-        given(getAllRegulatoryAreas.execute()).willReturn(listOf(regulatoryArea))
+        given(getAllRegulatoryAreas.execute(false)).willReturn(listOf(regulatoryArea))
 
         // When
         mockMvc
-            .perform(get("/bff/v1/regulatory"))
+            .perform(get("/bff/v1/regulatory?withGeometry=false"))
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)

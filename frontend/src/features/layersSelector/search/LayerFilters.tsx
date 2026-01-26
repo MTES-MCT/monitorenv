@@ -70,7 +70,7 @@ export function LayerFilters() {
   const controlPlan = useAppSelector(state => state.layerSearch.controlPlan)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.vigilanceAreaFilters.period)
 
-  const { data: amps } = useGetAMPsQuery()
+  const { data: amps } = useGetAMPsQuery({ withGeometry: false })
   const ampTypes = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
   const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
 

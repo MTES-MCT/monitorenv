@@ -11,9 +11,13 @@ class GetAllAMPs(
 ) {
     private val logger = LoggerFactory.getLogger(GetAllAMPs::class.java)
 
-    fun execute(): List<AMPEntity> {
+    fun execute(
+        withGeometry: Boolean,
+        zoom: Int? = null,
+        bbox: List<Double>? = null,
+    ): List<AMPEntity> {
         logger.info("Attempt to GET all AMPs")
-        val amps = ampRepository.findAll()
+        val amps = ampRepository.findAll(withGeometry, zoom, bbox)
         logger.info("Found ${amps.size} AMPs")
 
         return amps

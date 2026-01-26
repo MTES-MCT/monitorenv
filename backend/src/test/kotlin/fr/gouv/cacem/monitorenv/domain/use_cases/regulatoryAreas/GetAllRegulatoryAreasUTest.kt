@@ -19,10 +19,10 @@ class GetAllRegulatoryAreasUTest {
     fun `execute should return all regulatory areas`(log: CapturedOutput) {
         // Given
         val expectedRegulatoryAreas = listOf(RegulatoryAreaFixture.aRegulatoryArea())
-        given(regulatoryAreaRepository.findAll()).willReturn(expectedRegulatoryAreas)
+        given(regulatoryAreaRepository.findAll(false)).willReturn(expectedRegulatoryAreas)
 
         // When
-        val regulatoryAreas = getAllRegulatoryAreas.execute()
+        val regulatoryAreas = getAllRegulatoryAreas.execute(false)
 
         // Then
         assertThat(expectedRegulatoryAreas).isEqualTo(regulatoryAreas)

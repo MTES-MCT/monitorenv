@@ -18,7 +18,7 @@ export type RegulatoryLayerWithMetadataFromAPI = {
 }
 
 export type RegulatoryLayerCompactFromAPI = {
-  geom: GeoJSON.MultiPolygon
+  geom: GeoJSON.MultiPolygon | undefined
   id: number
   layerName: string
   plan: string

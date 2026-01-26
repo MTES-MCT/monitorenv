@@ -38,16 +38,20 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
       r => r.name
     )
 
-    const { selectedAmpByLayerName } = useGetAMPsQuery(undefined, {
-      selectFromResult: ({ data }) => ({
-        selectedAmpByLayerName: groupBy(
-          Object.values(data?.entities ?? [])
-            .filter(amp => selectedAmpIds.includes(amp.id))
-            .sort((a, b) => a.name.localeCompare(b.name)),
-          amp => amp.name
-        )
-      })
-    })
+    // TODO: either send extend of layer OR findById
+    const { selectedAmpByLayerName } = useGetAMPsQuery(
+      { withGeometry: false },
+      {
+        selectFromResult: ({ data }) => ({
+          selectedAmpByLayerName: groupBy(
+            Object.values(data?.entities ?? [])
+              .filter(amp => selectedAmpIds.includes(amp.id))
+              .sort((a, b) => a.name.localeCompare(b.name)),
+            amp => amp.name
+          )
+        })
+      }
+    )
 
     useEffect(() => {
       if (isSelectedAccordionOpen) {
