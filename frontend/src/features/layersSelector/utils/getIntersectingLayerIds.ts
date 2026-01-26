@@ -3,6 +3,24 @@ import { get } from 'lodash'
 import { type Extent, intersects } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
 
+const cache = new Map<string, number[]>()
+const MAX_CACHE_SIZE = 50
+
+function normalizeExtent(extent: Extent | undefined) {
+  if (!extent) {
+    return 'no-extent'
+  }
+
+  return extent.map(v => v.toFixed(4)).join(',')
+}
+
+function normalizeLayerIds<T>(layers: T[], idPath: string) {
+  return layers
+    .map(layer => get(layer, idPath))
+    .sort((a, b) => a - b)
+    .join(',')
+}
+
 export const getIntersectingLayerIds = <T>(
   shouldFilter: boolean,
   layers: T[] | undefined,
@@ -12,19 +30,41 @@ export const getIntersectingLayerIds = <T>(
   if (!layers) {
     return []
   }
+
   if (!shouldFilter || !extent) {
     return layers.map(layer => get(layer, idPath))
   }
+
+  const extentKey = normalizeExtent(extent)
+  const layersKey = normalizeLayerIds(layers, idPath)
+
+  const cacheKey = `${shouldFilter}|${bboxPath}|${idPath}|${extentKey}|${layersKey}`
+
+  const cached = cache.get(cacheKey)
+
+  if (cached) {
+    return cached
+  }
+
   const currentExtent = transformExtent(extent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
 
-  return layers.reduce((layerIds, layer) => {
+  const result = layers.reduce<number[]>((layerIds, layer) => {
     const bbox = get(layer, bboxPath)
     if (bbox && intersects(bbox, currentExtent)) {
-      return layerIds.concat(get(layer, idPath))
+      layerIds.push(get(layer, idPath))
     }
 
     return layerIds
-  }, [] as number[])
+  }, [])
+
+  cache.set(cacheKey, result)
+
+  if (cache.size > MAX_CACHE_SIZE) {
+    const firstKey = cache.keys().next().value as string
+    cache.delete(firstKey)
+  }
+
+  return result
 }
 
 export const getIntersectingLayers = <T>(
