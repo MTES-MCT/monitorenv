@@ -18,7 +18,7 @@ function applyRegulatoryAreasFilters(items, params) {
   const { controlPlan, filteredRegulatoryTags, filteredRegulatoryThemes } = params
 
   return items.filter(item => {
-    if (controlPlan && item.plan.includes(controlPlan) === false) {
+    if (controlPlan && item.plan?.includes(controlPlan) === false) {
       return false
     }
 
