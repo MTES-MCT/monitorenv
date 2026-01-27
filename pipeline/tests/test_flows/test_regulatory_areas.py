@@ -1,5 +1,5 @@
 import pandas as pd
-from pipeline.src.flows.regulatory_areas import load_new_regulatory_areas, update_regulatory_areas, flow
+from pipeline.src.flows.regulatory_areas import load_new_regulatory_areas, regulatory_areas_flow, update_regulatory_areas, flow
 import prefect
 import pytest
 from src.read_query import read_query
@@ -59,8 +59,9 @@ def test_load_new_regulatory_areas(reset_test_data, new_regulatory_areas):
             FROM public.regulatory_areas
             ORDER BY id"""
     )
+
     expectedRegulations = pd.concat([old_regulations, new_regulatory_areas], ignore_index=True)
-    load_new_regulatory_areas.run(new_regulatory_areas)
+    load_new_regulatory_areas(new_regulatory_areas)
     loaded_regulations = read_query(
         "monitorenv_remote", 
         """SELECT 
@@ -71,8 +72,8 @@ def test_load_new_regulatory_areas(reset_test_data, new_regulatory_areas):
     pd.testing.assert_frame_equal(loaded_regulations, expectedRegulations)
 
 
-def test_update_new_regulations(reset_test_data, regulatory_areas_to_update):
-    update_regulatory_areas.run(regulatory_areas_to_update)
+def test_update_new_regulatory_areas(reset_test_data, regulatory_areas_to_update):
+    update_regulatory_areas(regulatory_areas_to_update)
     updated_regulations = read_query(
         "monitorenv_remote", 
         """SELECT 
@@ -83,6 +84,6 @@ def test_update_new_regulations(reset_test_data, regulatory_areas_to_update):
     pd.testing.assert_frame_equal(updated_regulations, regulatory_areas_to_update)
 
 
-def test_flow_regulations(create_cacem_tables, reset_test_data):
-    state = flow.run()
-    assert state.is_successful()
+def test_flow_regulatory_areas(create_cacem_tables, reset_test_data):
+    state = regulatory_areas_flow(return_state=True)
+    assert state.is_completed()
