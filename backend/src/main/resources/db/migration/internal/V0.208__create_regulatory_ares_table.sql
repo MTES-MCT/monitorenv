@@ -1,3 +1,4 @@
+
 CREATE TABLE public.regulatory_areas (
     id serial,
     geom public.geometry(MultiPolygon,4326),
@@ -10,12 +11,12 @@ CREATE TABLE public.regulatory_areas (
     edition_cacem character varying,
     editeur character varying,
     source character varying,
-    obs character varying,
+    observation character varying,
     thematique character varying,
     date character varying,
-    validite character varying,
+    duree_validite character varying,
     date_fin character varying,
-    tempo character varying,
+    temporalite character varying,
     type character varying,
     resume text,
     poly_name text,
