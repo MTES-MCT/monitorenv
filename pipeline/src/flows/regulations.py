@@ -58,7 +58,7 @@ def delete(ids_to_delete: set):
 
 
 @task
-def extract_new_regulatory_areas(ids_to_update: set) -> pd.DataFrame:
+def extract_new_regulations(ids_to_update: set) -> pd.DataFrame:
     return extract(
         "cacem_local",
         "cross/cacem/regulations.sql",
@@ -67,7 +67,7 @@ def extract_new_regulatory_areas(ids_to_update: set) -> pd.DataFrame:
 
 
 @task
-def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
+def update_regulations(new_regulatory_areas: pd.DataFrame):
     """Load the output of ``extract_rows_to_update`` task into ``regulations``
     table.
 
@@ -249,11 +249,11 @@ def regulations_flow():
     ids_to_update = select_ids_to_update(inner_merged)
     cond_update = update_required(ids_to_update)
     if cond_update is True:
-        new_regulations = extract_new_regulatory_areas(ids_to_update)
-        update_regulatory_areas(new_regulations)
+        new_regulations = extract_new_regulations(ids_to_update)
+        update_regulations(new_regulations)
 
     ids_to_insert = select_ids_to_insert(outer_hashes)
     cond_insert = insert_required(ids_to_insert)
     if cond_insert is True:
-        new_regulations = extract_new_regulatory_areas(ids_to_insert)
+        new_regulations = extract_new_regulations(ids_to_insert)
         load_new_regulations(new_regulations)

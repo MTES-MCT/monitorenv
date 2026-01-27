@@ -35,6 +35,7 @@ from src.flows.marpol import marpol_flow
 from src.flows.refresh_materialized_view import refresh_materialized_view_flow
 from src.flows.regulations import regulations_flow
 from src.flows.regulations_open_data import regulations_open_data_flow
+from src.flows.regulatory_areas import regulatory_areas_flow
 from src.flows.remove_broken_missions_resources_links import (
     remove_broken_missions_resources_links_flow,
 )
@@ -117,6 +118,10 @@ flows_to_deploy = [
     FlowAndSchedules(
         flow=regulations_open_data_flow,
         schedules=[Schedule(cron="0 20 * * 5")],
+    ),
+     FlowAndSchedules(
+        flow=regulatory_areas_flow,
+        schedules=[Schedule(cron="6,16,26,36,46,56 * * * *")],
     ),
     FlowAndSchedules(flow=remove_broken_missions_resources_links_flow),
     FlowAndSchedules(
