@@ -20,7 +20,6 @@ SELECT
   resume,
   md5(
         COALESCE(geom::text, '') ||
-        COALESCE(ent_name::text, '') ||
         COALESCE(url::text, '') ||
         COALESCE(layer_name::text, '') ||
         COALESCE(facade::text, '') ||
@@ -42,7 +41,7 @@ SELECT
 FROM prod."REG_ENV_V3"
 WHERE 
   geom IS NOT NULL
-  AND ent_name IS NOT NULL
+  AND resume IS NOT NULL
   AND layer_name IS NOT NULL
   AND thematique IS NOT NULL
   AND id IN :ids

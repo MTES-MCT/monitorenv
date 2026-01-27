@@ -23,6 +23,6 @@ SELECT
 FROM prod."REG_ENV_V3"
 WHERE 
   geom IS NOT NULL
-  AND ent_name IS NOT NULL
+  AND resume IS NOT NULL
   AND layer_name IS NOT NULL
   AND thematique IS NOT NULL

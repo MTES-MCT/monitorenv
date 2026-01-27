@@ -34,7 +34,6 @@ def get_regulations_for_csv(regulations: gpd.GeoDataFrame) -> pd.DataFrame:
 
     columns = [
         "id",
-        "ent_name",
         "url",
         "layer_name",
         "facade",
@@ -63,7 +62,6 @@ def get_regulations_for_geopackage(
 
     columns = [
         "id",
-        "ent_name",
         "url",
         "layer_name",
         "facade",
