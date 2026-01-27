@@ -39,6 +39,7 @@ from src.pipeline.flows import (
     themes_and_tags,
     three_hundred_meters_areas,
     update_departments_and_facades,
+    regulatory_areas,
     regulatory_areas_open_data,
     vessel_repository
 )
@@ -114,6 +115,7 @@ flows_to_register = [
     themes_and_tags.flow,
     three_hundred_meters_areas.flow,
     update_departments_and_facades.flow,
+    regulatory_areas.flow,
     regulatory_areas_open_data.flow,
     vessel_repository.flow
 ]
