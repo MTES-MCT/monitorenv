@@ -6,10 +6,10 @@ UPDATE public.regulations_cacem SET row_hash = md5(
     COALESCE(ref_reg::text, '') ||
     COALESCE(editeur::text, '') ||
     COALESCE(source::text, '') ||
-    COALESCE(obs::text, '') ||
+    COALESCE(observation::text, '') ||
     COALESCE(thematique::text, '') ||
-    COALESCE(validite::text, '')||
-    COALESCE(tempo::text, '')||
+    COALESCE(duree_validite::text, '')||
+    COALESCE(temporalite::text, '')||
     COALESCE(type::text, '') ||
     COALESCE(date::text, '') ||
     COALESCE(date_fin::text, '') ||
