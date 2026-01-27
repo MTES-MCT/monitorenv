@@ -84,7 +84,6 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                 """CREATE TEMP TABLE tmp_regulations_cacem(
                 id serial,
                 geom public.geometry(MultiPolygon,4326),
-                entity_name character varying,
                 url character varying,
                 layer_name character varying,
                 facade character varying,
@@ -110,7 +109,6 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
         columns_to_load = [
             "id",
             "geom",
-            "entity_name",
             "url",
             "layer_name",
             "facade",
@@ -147,7 +145,6 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
             text(
                 """UPDATE regulations_cacem reg
                 SET geom = tmp.geom,
-                entity_name = tmp.entity_name,
                 url = tmp.url,
                 layer_name = tmp.layer_name,
                 facade = tmp.facade,

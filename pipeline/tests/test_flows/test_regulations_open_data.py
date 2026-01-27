@@ -22,10 +22,6 @@ def regulations_open_data():
                 1,
                 2,
             ],
-            "ent_name": [
-                "entity_name1",
-                "entity_name2",
-            ],
             "url": ["url1", "url2"],
             "layer_name": [
                 "layer_name1",
@@ -108,10 +104,6 @@ def regulations_for_csv():
                 1,
                 2,
             ],
-            "ent_name": [
-                "entity_name1",
-                "entity_name2",
-            ],
             "url": ["url1", "url2"],
             "layer_name": [
                 "layer_name1",
@@ -184,10 +176,6 @@ def regulations_for_geopackage():
             "id": [
                 1,
                 2,
-            ],
-            "ent_name": [
-                "entity_name1",
-                "entity_name2",
             ],
             "url": ["url1", "url2"],
             "layer_name": [

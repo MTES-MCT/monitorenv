@@ -67,7 +67,6 @@ def new_tags() -> pd.DataFrame:
 def generate_regulatory_area_data(
     ids,
     geom,
-    entity_names,
     layer_names,
     facades,
     ref_regs,
@@ -90,7 +89,6 @@ def generate_regulatory_area_data(
         {
             "id": ids,
             "geom": geom,
-            "entity_name": entity_names,
             "layer_name": layer_names,
             "facade": facades,
             "ref_reg": ref_regs,
@@ -148,7 +146,6 @@ def new_regulatory_areas() -> pd.DataFrame:
             "CD5455446407A715E737969F3BFEAD7CEDEB655464036ED5A29A137F4BF97F69352CC3446"
             "40F57994631533F2BFE2B98CD545544640",
         ],
-        entity_names=["Zone 1_new", "Zone 2", "Zone 3", "Zone 4"],
         layer_names=["Layer 1", "Layer 2_new", "Layer 3", "Layer 4"],
         facades=["NAMO", "NAMO", "MED_new", "MED"],
         ref_regs=["arrêté 1", "arrêté 2", "arrêté 3", "arrêté 4_new"],
@@ -207,10 +204,6 @@ def regulatory_areas_to_update() -> pd.DataFrame:
             None,
             None,
         ],
-        entity_names=[
-            "Zone 5",
-            "Zone 6",
-        ],
         layer_names=[
             "Layer 5",
             "Layer 6",
@@ -261,7 +254,7 @@ def test_load_new_regulatory_areas(reset_test_data, new_regulatory_areas):
     old_regulations = read_query(
         "monitorenv_remote",
         """SELECT
-            id, geom, entity_name, layer_name, facade,
+            id, geom, layer_name, facade,
             ref_reg, url, row_hash, edition, editeur,
             source, observation, thematique, date,
             duree_validite, temporalite, type, plan,
@@ -276,7 +269,7 @@ def test_load_new_regulatory_areas(reset_test_data, new_regulatory_areas):
     loaded_regulations = read_query(
         "monitorenv_remote",
         """SELECT
-            id, geom, entity_name, layer_name, facade,
+            id, geom, layer_name, facade,
             ref_reg, url, row_hash, edition, editeur,
             source, observation, thematique, date,
             duree_validite, temporalite, type, plan,
@@ -292,7 +285,7 @@ def test_update_new_regulations(reset_test_data, regulatory_areas_to_update):
     updated_regulations = read_query(
         "monitorenv_remote",
         """SELECT
-            id, geom, entity_name, layer_name, facade,
+            id, geom, layer_name, facade,
             ref_reg, url, row_hash, edition, editeur,
             source, observation, thematique, date,
             duree_validite, temporalite, type, plan,
