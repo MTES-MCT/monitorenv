@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS prod."REG_ENV_V3"
 (
     id             serial primary key,
     geom           geometry(MultiPolygon, 4326),
-    ent_name       varchar,
     url            varchar,
     layer_name     varchar,
     facade         varchar,

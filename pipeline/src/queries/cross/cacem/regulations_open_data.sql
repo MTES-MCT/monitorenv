@@ -1,6 +1,5 @@
 SELECT 
     id,
-    ent_name,
     url,
     layer_name,
     facade,
