@@ -1,7 +1,6 @@
 SELECT 
   id,
   st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001)) geom,
-  ent_name AS entity_name,
   url,
   layer_name,
   facade,
