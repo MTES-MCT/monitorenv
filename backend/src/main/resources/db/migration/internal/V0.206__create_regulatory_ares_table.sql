@@ -19,6 +19,7 @@ CREATE TABLE public.regulatory_areas (
     type character varying,
     resume text,
     poly_name text,
-    plan text
+    plan text,
+    row_hash text
 );
 

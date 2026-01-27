@@ -71,7 +71,7 @@ def update_amps(new_amps: pd.DataFrame):
     table.
 
     Args:
-        new_regulations (pd.DataFrame): output of ``extract_rows_to_update`` task.
+        new_amps (pd.DataFrame): output of ``extract_rows_to_update`` task.
     """
     e = create_engine("monitorenv_remote")
     logger = get_run_logger()
@@ -165,11 +165,11 @@ def import_amp_cacem_flow():
     ids_to_update = select_ids_to_update(inner_merged)
     cond_update = update_required(ids_to_update)
     if cond_update is True:
-        new_regulations = extract_new_amp(ids_to_update)
-        update_amps(new_regulations)
+        new_amps = extract_new_amp(ids_to_update)
+        update_amps(new_amps)
 
     ids_to_insert = select_ids_to_insert(outer_hashes)
     cond_insert = insert_required(ids_to_insert)
     if cond_insert is True:
-        new_regulations = extract_new_amp(ids_to_insert)
-        load_new_amps(new_regulations)
+        new_amps = extract_new_amp(ids_to_insert)
+        load_new_amps(new_amps)
