@@ -1,125 +1,136 @@
 server:
-  port: 8880
-  forward-headers-strategy: framework
-  compression:
-    enabled: true
-    excluded-user-agents: ""
-    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
-    min-response-size: 2048
+    port: 8880
+    forward-headers-strategy: framework
+    compression:
+        enabled: true
+        excluded-user-agents: ""
+        mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
+        min-response-size: 2048
 
 host:
-  ip: ${MONITORENV_URL}
+    ip: ${MONITORENV_URL}
 
 monitorenv:
-  kafka:
-    ais:
-      batch-size: ${MONITORENV_KAFKA_AIS_BATCH_SIZE}
-      topic: ${MONITORENV_KAFKA_AIS_TOPIC}
-      timeout: ${MONITORENV_KAFKA_AIS_TIMEOUT}
-      enabled: ${MONITORENV_KAFKA_AIS_ENABLED}
-      producer:
-        enabled: ${MONITORENV_KAFKA_AIS_PRODUCER_ENABLED:false}
+    kafka:
+        ais:
+            batch-size: ${MONITORENV_KAFKA_AIS_BATCH_SIZE}
+            topic: ${MONITORENV_KAFKA_AIS_TOPIC}
+            timeout: ${MONITORENV_KAFKA_AIS_TIMEOUT}
+            enabled: ${MONITORENV_KAFKA_AIS_ENABLED}
+            producer:
+                enabled: ${MONITORENV_KAFKA_AIS_PRODUCER_ENABLED:false}
 
-  ajp:
-    port: 8000
-  version: ${VERSION}
-  sentry:
-    enabled: ${MONITORENV_SENTRY_ENABLED}
-    environment: ${ENVIRONMENT}
-    dsn: ${SENTRY_DSN}
-  oidc:
-    enabled: ${MONITORENV_OIDC_ENABLED}
-    bypassEmailDomainsFilter: ${MONITORENV_OIDC_BYPASS_DOMAINS_FILTER:false}
-    clientId: ${MONITORENV_OIDC_CLIENT_ID:}
-    clientSecret: ${MONITORENV_OIDC_CLIENT_SECRET:}
-    redirectUri: ${MONITORENV_OIDC_REDIRECT_URI:}
-    loginUrl: ${MONITORENV_OIDC_LOGIN_URL}
-    successUrl: ${MONITORENV_OIDC_SUCCESS_URL}
-    errorUrl: ${MONITORENV_OIDC_ERROR_URL}
-    authorizedEmailDomains: ${MONITORENV_OIDC_AUTHORIZED_EMAIL_DOMAINS:}
-    issuerUri: ${MONITORENV_OIDC_ISSUER_URI:}
-    issuerUriExternal: ${MONITORENV_OIDC_ISSUER_URI_EXTERNAL}
-    authorizationUri: ${MONITORENV_OIDC_AUTHORIZATION_URI:}
-    tokenUri: ${MONITORENV_OIDC_TOKEN_URI:}
-    userInfoUri: ${MONITORENV_OIDC_USER_INFO_URI:}
-    jwkSetUri: ${MONITORENV_OIDC_JWK_SET_URI:}
-    proxyUrl: ${MONITORENV_OIDC_PROXY_URL:}
-  api:
-    protected:
-      paths: /bff/v1/*
-      super-user-paths: /bff/v1/missions/*,/bff/v1/reportings/*,/bff/v1/semaphores/*,/bff/v1/stations/*
-      public-paths: /api/v1/authorization/management/*
-      api-key: ${MONITORENV_API_KEY}
-  brief:
-    templatePath: /template_export_brief.docx
-    tmpDocxPath: tmp_brief.docx
-    tmpOdtPath: tmp_brief.odt
-  ext:
-    id: ${MONITORENV_EXT_ID}
-    password: ${MONITORENV_EXT_PASSWORD}
-  legicem:
-    id: ${MONITORENV_LEGICEM_ID}
-    password: ${MONITORENV_LEGICEM_PASSWORD}
+    ajp:
+        port: 8000
+    version: ${VERSION}
+    sentry:
+        enabled: ${MONITORENV_SENTRY_ENABLED}
+        environment: ${ENVIRONMENT}
+        dsn: ${SENTRY_DSN}
+    oidc:
+        enabled: ${MONITORENV_OIDC_ENABLED}
+        bypassEmailDomainsFilter: ${MONITORENV_OIDC_BYPASS_DOMAINS_FILTER:false}
+        clientId: ${MONITORENV_OIDC_CLIENT_ID:}
+        clientSecret: ${MONITORENV_OIDC_CLIENT_SECRET:}
+        redirectUri: ${MONITORENV_OIDC_REDIRECT_URI:}
+        loginUrl: ${MONITORENV_OIDC_LOGIN_URL}
+        successUrl: ${MONITORENV_OIDC_SUCCESS_URL}
+        errorUrl: ${MONITORENV_OIDC_ERROR_URL}
+        authorizedEmailDomains: ${MONITORENV_OIDC_AUTHORIZED_EMAIL_DOMAINS:}
+        issuerUri: ${MONITORENV_OIDC_ISSUER_URI:}
+        issuerUriExternal: ${MONITORENV_OIDC_ISSUER_URI_EXTERNAL}
+        authorizationUri: ${MONITORENV_OIDC_AUTHORIZATION_URI:}
+        tokenUri: ${MONITORENV_OIDC_TOKEN_URI:}
+        userInfoUri: ${MONITORENV_OIDC_USER_INFO_URI:}
+        jwkSetUri: ${MONITORENV_OIDC_JWK_SET_URI:}
+        proxyUrl: ${MONITORENV_OIDC_PROXY_URL:}
+    api:
+        protected:
+            paths: /bff/v1/*
+            super-user-paths: /bff/v1/missions/*,/bff/v1/reportings/*,/bff/v1/semaphores/*,/bff/v1/stations/*
+            public-paths: /api/v1/authorization/management/*
+            api-key: ${MONITORENV_API_KEY}
+    brief:
+        templatePath: /template_export_brief.docx
+        tmpDocxPath: tmp_brief.docx
+        tmpOdtPath: tmp_brief.odt
+    ext:
+        id: ${MONITORENV_EXT_ID}
+        password: ${MONITORENV_EXT_PASSWORD}
+    legicem:
+        id: ${MONITORENV_LEGICEM_ID}
+        password: ${MONITORENV_LEGICEM_PASSWORD}
 
 spring:
-  jmx:
-    enabled: false
-  mvc:
-    static-path-pattern: "/**"
-  web:
-    resources:
-      static-locations: file:${STATIC_FILES_PATH}
-  flyway:
-    locations: ${FLYWAY_MIGRATION_PATH}
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        temp:
-          use_jdbc_metadata_defaults: false
-        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
-        jdbc:
-          time_zone: UTC
-        default_batch_fetch_size: ${MONITORENV_BATCH_SIZE:50}
-  datasource:
-    url: ${ENV_DB_URL}
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maxLifetime: 60000
-  kafka:
-    bootstrap-servers: ${MONITORENV_KAFKA_AIS_SERVERS}
-    consumer:
-      group-id: ${MONITORENV_KAFKA_AIS_GROUP_ID:test}
-      auto-offset-reset: latest
+    jmx:
+        enabled: false
+    mvc:
+        static-path-pattern: "/**"
+    web:
+        resources:
+            static-locations: file:${STATIC_FILES_PATH}
+    flyway:
+        url: ${ENV_DB_URL}?user=${ENV_DB_USER}&password=${ENV_DB_PASSWORD}
+        locations: ${FLYWAY_MIGRATION_PATH}
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        properties:
+            hibernate:
+                temp:
+                    use_jdbc_metadata_defaults: false
+                dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+                jdbc:
+                    time_zone: UTC
+                default_batch_fetch_size: ${MONITORENV_BATCH_SIZE:50}
+        datasource:
+            primary:
+                url: ${ENV_DB_URL}
+                user: ${ENV_DB_USER}
+                password: ${ENV_DB_PASSWORD}
+                driver-class-name: org.postgresql.Driver
+                hikari:
+                    maxLifetime: 60000
+            cacem:
+                url: ${CACEM_DB_URL}
+                user: ${CACEM_DB_USER}
+                password: ${CACEM_DB_PASSWORD}
+                driver-class-name: org.postgresql.Driver
+                hikari:
+                    maxLifetime: 60000
+        kafka:
+            bootstrap-servers: ${MONITORENV_KAFKA_AIS_SERVERS}
+            consumer:
+                group-id: ${MONITORENV_KAFKA_AIS_GROUP_ID:test}
+                auto-offset-reset: latest
 
-    properties:
-      security.protocol: SSL
+            properties:
+                security.protocol: SSL
 
-      ssl.keystore.location: ${MONITORENV_KAFKA_AIS_KEYSTORE}
-      ssl.keystore.password: ${MONITORENV_KAFKA_AIS_KEYSTORE_PASSWORD}
-      ssl.key.password: ${MONITORENV_KAFKA_AIS_KEY_PASSWORD}
-      ssl.keystore.type: PKCS12
+                ssl.keystore.location: ${MONITORENV_KAFKA_AIS_KEYSTORE}
+                ssl.keystore.password: ${MONITORENV_KAFKA_AIS_KEYSTORE_PASSWORD}
+                ssl.key.password: ${MONITORENV_KAFKA_AIS_KEY_PASSWORD}
+                ssl.keystore.type: PKCS12
 
-      ssl.truststore.location: ${MONITORENV_KAFKA_AIS_TRUSTSTORE}
-      ssl.truststore.password: ${MONITORENV_KAFKA_AIS_TRUSTSTORE_PASSWORD}
-      ssl.truststore.type: JKS
+                ssl.truststore.location: ${MONITORENV_KAFKA_AIS_TRUSTSTORE}
+                ssl.truststore.password: ${MONITORENV_KAFKA_AIS_TRUSTSTORE_PASSWORD}
+                ssl.truststore.type: JKS
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: health
-  endpoint:
-    health:
-      show-details: always
-    metrics:
-      enable: false
+    endpoints:
+        web:
+            exposure:
+                include: health
+    endpoint:
+        health:
+            show-details: always
+        metrics:
+            enable: false
 
 monitorfish:
-  url: ${MONITORFISH_URL}
-  xApiKey: ${MONITORFISH_API_KEY}
+    url: ${MONITORFISH_URL}
+    xApiKey: ${MONITORFISH_API_KEY}
 
 rapportnav:
-  url: ${RAPPORTNAV_URL}
-  timeout: 3000
+    url: ${RAPPORTNAV_URL}
+    timeout: 3000

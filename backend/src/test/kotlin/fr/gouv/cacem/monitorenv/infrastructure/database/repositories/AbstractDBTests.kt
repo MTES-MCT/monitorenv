@@ -40,7 +40,7 @@ abstract class AbstractDBTests {
         @JvmStatic
         @DynamicPropertySource
         fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url") { getJdbcUrl() }
+            registry.add("spring.datasource.primary.url") { getJdbcUrl() }
         }
 
         private fun getJdbcUrl(): String {
