@@ -1,11 +1,11 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.VesselModel
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 
-interface IDBVesselRepository : CrudRepository<VesselModel, Int> {
+interface IDBVesselRepository : JpaRepository<VesselModel, Int> {
     @Query(
         value =
             """

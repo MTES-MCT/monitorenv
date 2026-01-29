@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.natinfs
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.natinf.NatinfEntity
+import fr.gouv.cacem.monitorenv.domain.entities.natinf.v1.NatinfEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.INatinfRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
