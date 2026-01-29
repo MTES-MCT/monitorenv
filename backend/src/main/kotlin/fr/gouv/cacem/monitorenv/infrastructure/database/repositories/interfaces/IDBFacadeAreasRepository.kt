@@ -2,10 +2,10 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.FacadeAreasModel
 import org.locationtech.jts.geom.Geometry
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 
-interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
+interface IDBFacadeAreasRepository : JpaRepository<FacadeAreasModel, Int> {
     @Query(
         """
         WITH geom AS (
