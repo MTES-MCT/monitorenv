@@ -77,6 +77,7 @@ services:
       - 5001:5001
     volumes:
       - "${MONITORENV_LOGS_FOLDER}:/home/monitorenv/logs"
+      - "${MONITORENV_KAFKA_CERTS_FOLDER}:/home/monitorenv/certs"
     networks:
       - backend_network
     depends_on:
