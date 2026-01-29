@@ -3,7 +3,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.natinfs
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.natinf.NatinfEntity
+import fr.gouv.cacem.monitorenv.domain.entities.natinf.v1.NatinfEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.INatinfRepository
 import org.slf4j.LoggerFactory
 
