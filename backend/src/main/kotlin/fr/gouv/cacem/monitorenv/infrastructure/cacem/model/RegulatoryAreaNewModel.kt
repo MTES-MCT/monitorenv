@@ -1,10 +1,10 @@
-package fr.gouv.cacem.monitorenv.infrastructure.database.model
+package fr.gouv.cacem.monitorenv.infrastructure.cacem.model
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaModel.Companion.toTagEntities
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaModel.Companion.toThemeEntities
+import fr.gouv.cacem.monitorenv.infrastructure.cacem.model.TagRegulatoryAreaNewModel.Companion.toTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.cacem.model.ThemeRegulatoryAreaNewModel.Companion.toThemeEntities
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -16,8 +16,8 @@ import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 
 @Entity
-@Table(name = "regulations_cacem")
-data class RegulatoryAreaModel(
+@Table(name = "reg_cacem", schema = "prod")
+data class RegulatoryAreaNewModel(
     @Id @Column(name = "id") val id: Int,
     @Column(name = "plan") val plan: String?,
     @Column(name = "date") val date: String?,
@@ -40,12 +40,12 @@ data class RegulatoryAreaModel(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    var tags: List<TagRegulatoryAreaModel>,
+    var tags: List<TagRegulatoryAreaNewModel>,
     @OneToMany(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    var themes: List<ThemeRegulatoryAreaModel>,
+    var themes: List<ThemeRegulatoryAreaNewModel>,
     @Column(name = "resume") val resume: String?,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,

@@ -5,7 +5,12 @@ services:
     container_name: monitorenv_backend
     user: "monitorenv:${MONITORENV_LOGS_AND_BACKUPS_GID}"
     environment:
-      - ENV_DB_URL=jdbc:postgresql://db:5432/$POSTGRES_DB?user=$POSTGRES_USER&password=$POSTGRES_PASSWORD
+      - ENV_DB_URL=jdbc:postgresql://db:5432/$POSTGRES_DB
+      - ENV_DB_USER=$POSTGRES_USER
+      - ENV_DB_PASSWORD=$POSTGRES_PASSWORD
+      - CACEM_DB_URL=jdbc:postgresql://db:5432/cacem
+      - CACEM_DB_USER=$CACEM_DB_USER
+      - CACEM_DB_PASSWORD=$CACEM_DB_PASSWORD
       - FLYWAY_MIGRATION_PATH=${FLYWAY_MIGRATION_PATH}
       - MONITORENV_HTTP_PROXY_HOST=${MONITORENV_HTTP_PROXY_HOST}
       - MONITORENV_HTTP_PROXY_PORT=${MONITORENV_HTTP_PROXY_PORT}

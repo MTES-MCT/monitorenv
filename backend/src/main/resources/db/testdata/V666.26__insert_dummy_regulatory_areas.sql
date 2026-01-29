@@ -1,4 +1,4 @@
-DO
+/* DO
 $$
     DECLARE
     permanent character varying = 'permanent';
@@ -606,4 +606,4 @@ INSERT INTO public.regulatory_areas (
 );
 
 END;
-$$
+$$ */

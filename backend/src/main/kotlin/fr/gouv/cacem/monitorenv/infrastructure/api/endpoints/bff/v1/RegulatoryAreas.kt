@@ -35,4 +35,11 @@ class RegulatoryAreas(
         val regulatoryAreas = getAllRegulatoryAreas.execute()
         return regulatoryAreas.map { RegulatoryAreaWithMetadataDataOutput.fromRegulatoryAreaEntity(it) }
     }
+
+    @GetMapping("/new")
+    @Operation(summary = "Get new regulatory Areas")
+    fun getAllNew(): List<RegulatoryAreaWithMetadataDataOutput> {
+        val regulatoryAreas = getAllRegulatoryAreas.execute()
+        return regulatoryAreas.map { RegulatoryAreaWithMetadataDataOutput.fromRegulatoryAreaEntity(it) }
+    }
 }
