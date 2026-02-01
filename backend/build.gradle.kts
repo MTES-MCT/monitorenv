@@ -8,12 +8,12 @@ plugins {
     id("org.springframework.boot") version "3.5.7"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
-    kotlin("plugin.allopen") version "2.2.21"
-    kotlin("plugin.noarg") version "2.2.21"
-    kotlin("plugin.jpa") version "2.2.21"
-    kotlin("plugin.serialization") version "2.2.21"
+    kotlin("jvm") version "2.3.0"
+    kotlin("plugin.spring") version "2.3.0"
+    kotlin("plugin.allopen") version "2.3.0"
+    kotlin("plugin.noarg") version "2.3.0"
+    kotlin("plugin.jpa") version "2.3.0"
+    kotlin("plugin.serialization") version "2.3.0"
 }
 
 repositories {
@@ -60,9 +60,9 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.3.2"
+val ktorVersion = "3.4.0"
 val testcontainersVersion = "1.21.4"
-val sentryVersion = "8.26.0"
+val sentryVersion = "8.31.0"
 val flywayVersion = "11.17.0"
 
 dependencies {
@@ -80,22 +80,22 @@ dependencies {
     implementation("org.springframework.security:spring-security-oauth2-resource-server")
     implementation("org.springframework.security:spring-security-oauth2-jose")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
-    implementation("org.springframework.cloud:spring-cloud-gateway-mvc:4.3.2")
+    implementation("org.springframework.cloud:spring-cloud-gateway-mvc:4.3.3")
     // Database & Migration
     implementation("org.postgresql:postgresql")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.hibernate.orm:hibernate-spatial:6.6.13.Final")
     implementation("org.hibernate.validator:hibernate-validator:9.1.0.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.12.0")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.15.1")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.20.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
     implementation("org.n52.jackson:jackson-datatype-jts:2.0.0")
 
     // HTTP Clients (Ktor)
@@ -117,8 +117,8 @@ dependencies {
     // JodConverter
     implementation("org.jodconverter:jodconverter-local-lo:4.4.11")
     // the two following apoche poi dependencies should have the same version
-    implementation("org.apache.poi:poi:5.4.1")
-    implementation("org.apache.poi:poi-ooxml:5.4.1")
+    implementation("org.apache.poi:poi:5.5.1")
+    implementation("org.apache.poi:poi-ooxml:5.5.1")
     // Scalr (image resizer with better quality)
     implementation("org.imgscalr:imgscalr-lib:4.2")
 
@@ -133,16 +133,16 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.5")
-    testImplementation("org.assertj:assertj-core:3.27.6")
+    testImplementation("org.assertj:assertj-core:3.27.7")
     testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     testImplementation("org.testcontainers:kafka:$testcontainersVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:5.3.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.3.2")
     testImplementation("net.ttddyy:datasource-proxy:1.11.0")
-    testImplementation("io.mockk:mockk:1.14.6")
+    testImplementation("io.mockk:mockk:1.14.9")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     testImplementation("org.springframework.kafka:spring-kafka-test") {
         exclude(group = "ch.qos.logback", module = "logback-classic")
