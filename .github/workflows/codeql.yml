@@ -2,16 +2,15 @@ name: Code QL
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-
   analyze:
     name: CodeQL
     runs-on: ubuntu-22.04
@@ -21,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'java-kotlin', 'python', 'javascript-typescript' ]
+        language: ["java-kotlin", "python", "javascript-typescript"]
 
     steps:
       - name: Checkout repository
@@ -34,7 +33,7 @@ jobs:
 
       - name: Setup Java JDK
         if: matrix.language == 'java-kotlin'
-        uses: actions/setup-java@v5.0.0
+        uses: actions/setup-java@v5.2.0
         with:
           distribution: zulu
           java-version: 21

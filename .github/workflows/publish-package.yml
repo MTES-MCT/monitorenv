@@ -1,11 +1,10 @@
-
 name: Publish monitor public API to GitHub Packages
 on:
   workflow_dispatch:
     version:
-      description: 'Version number'
+      description: "Version number"
       required: true
-      default: 'v1.0.0'
+      default: "v1.0.0"
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -14,14 +13,14 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-java@v5.0.0
+      - uses: actions/setup-java@v5.2.0
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: "17"
+          distribution: "temurin"
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v3
       - name: Replace the version number
-        run: sed -i -e "s/VERSION_TO_CHANGE/${{ github.event.inputs.version }}/g" backend/build.gradle.kts 
+        run: sed -i -e "s/VERSION_TO_CHANGE/${{ github.event.inputs.version }}/g" backend/build.gradle.kts
       - name: Publish package
         uses: gradle/gradle-build-action@v3
         with:
