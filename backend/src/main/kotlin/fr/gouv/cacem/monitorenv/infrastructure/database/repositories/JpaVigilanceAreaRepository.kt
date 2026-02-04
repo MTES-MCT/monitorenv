@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
@@ -37,14 +38,15 @@ class JpaVigilanceAreaRepository(
     private val controlUnitContactRepository: IDBControlUnitContactRepository,
     private val dbTagVigilanceAreaRepository: IDBTagVigilanceAreaRepository,
     private val dbThemeVigilanceAreaRepository: IDBThemeVigilanceAreaRepository,
+    private val mapper: ObjectMapper,
 ) : IVigilanceAreaRepository {
     @Transactional
     override fun findById(id: Int): VigilanceAreaEntity? =
-        dbVigilanceAreaRepository.findByIdOrNull(id)?.toVigilanceAreaEntity()
+        dbVigilanceAreaRepository.findByIdOrNull(id)?.toVigilanceAreaEntity(mapper)
 
     @Transactional
     override fun save(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity {
-        val vigilanceAreaModel: VigilanceAreaModel = VigilanceAreaModel.fromVigilanceArea(vigilanceArea)
+        val vigilanceAreaModel: VigilanceAreaModel = VigilanceAreaModel.fromVigilanceArea(vigilanceArea, mapper)
         addImages(vigilanceArea.images, vigilanceAreaModel)
         val savedVigilanceArea = dbVigilanceAreaRepository.saveAndFlush(vigilanceAreaModel)
         val savedTags = saveTags(savedVigilanceArea, vigilanceArea.tags)
@@ -54,7 +56,7 @@ class JpaVigilanceAreaRepository(
 
         return savedVigilanceArea
             .copy(tags = savedTags, themes = savedThemes, sources = savedSources, periods = savedPeriods)
-            .toVigilanceAreaEntity()
+            .toVigilanceAreaEntity(mapper)
     }
 
     private fun addImages(
@@ -124,8 +126,6 @@ class JpaVigilanceAreaRepository(
                             vigilanceAreaModel,
                         ),
                     )
-
-                else -> emptyList()
             }
         }
 
@@ -161,13 +161,13 @@ class JpaVigilanceAreaRepository(
     @Transactional
     override fun findAll(): List<VigilanceAreaEntity> =
         dbVigilanceAreaRepository.findAllByIsDeletedFalseOrderByName().map {
-            it.toVigilanceAreaEntity()
+            it.toVigilanceAreaEntity(mapper)
         }
 
     @Transactional
     override fun findAllById(ids: List<Int>): List<VigilanceAreaEntity> =
         dbVigilanceAreaRepository.findAllById(ids).map {
-            it.toVigilanceAreaEntity()
+            it.toVigilanceAreaEntity(mapper)
         }
 
     override fun findAllIdsByGeometryAndIsDraftIsFalse(geometry: Geometry): List<Int> =

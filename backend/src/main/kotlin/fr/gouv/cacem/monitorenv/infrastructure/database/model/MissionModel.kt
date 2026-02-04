@@ -199,7 +199,7 @@ class MissionModel(
             detachedReportings =
                 this.attachedReportings
                     ?.filter { it.detachedFromMissionAtUtc != null }
-                    ?.map { it.toReporting() }
+                    ?.map { it.toReporting(objectMapper) }
                     ?: listOf(),
             detachedReportingIds =
                 this.attachedReportings

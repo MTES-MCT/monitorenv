@@ -1,5 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
@@ -61,7 +64,7 @@ data class VigilanceAreaModel(
     @Column(name = "is_draft") val isDraft: Boolean,
     @Column(name = "links", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
-    val links: List<LinkEntity>? = listOf(),
+    val links: JsonNode? = null,
     @Column(name = "linked_amps", columnDefinition = "int[]")
     val linkedAMPs: List<Int>? = listOf(),
     @Column(name = "linked_regulatory_areas", columnDefinition = "int[]")
@@ -89,7 +92,10 @@ data class VigilanceAreaModel(
     @Column(name = "validated_at") var validatedAt: ZonedDateTime?,
 ) {
     companion object {
-        fun fromVigilanceArea(vigilanceArea: VigilanceAreaEntity): VigilanceAreaModel {
+        fun fromVigilanceArea(
+            vigilanceArea: VigilanceAreaEntity,
+            mapper: ObjectMapper,
+        ): VigilanceAreaModel {
             val vigilanceAreaModel =
                 VigilanceAreaModel(
                     id = vigilanceArea.id,
@@ -98,7 +104,7 @@ data class VigilanceAreaModel(
                     geom = vigilanceArea.geom,
                     isDeleted = vigilanceArea.isDeleted,
                     isDraft = vigilanceArea.isDraft,
-                    links = vigilanceArea.links,
+                    links = vigilanceArea.links?.let { mapper.valueToTree<JsonNode>(it) },
                     linkedAMPs = vigilanceArea.linkedAMPs,
                     linkedRegulatoryAreas = vigilanceArea.linkedRegulatoryAreas,
                     name = vigilanceArea.name,
@@ -117,7 +123,7 @@ data class VigilanceAreaModel(
         }
     }
 
-    fun toVigilanceAreaEntity(): VigilanceAreaEntity =
+    fun toVigilanceAreaEntity(mapper: ObjectMapper): VigilanceAreaEntity =
         VigilanceAreaEntity(
             id = id,
             comments = comments,
@@ -126,7 +132,13 @@ data class VigilanceAreaModel(
             isDeleted = isDeleted,
             isDraft = isDraft,
             images = images.map { it.toVigilanceAreaImage() },
-            links = links,
+            links =
+                links?.let {
+                    mapper.convertValue(
+                        it,
+                        object : TypeReference<List<LinkEntity>>() {},
+                    )
+                },
             linkedAMPs = linkedAMPs,
             linkedRegulatoryAreas = linkedRegulatoryAreas,
             name = name,

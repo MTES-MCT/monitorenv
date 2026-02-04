@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardDatasModel
@@ -28,6 +29,7 @@ class JpaDashboardRepository(
     private val regulatoryAreaRepository: IDBRegulatoryAreaRepository,
     private val reportingRepository: IDBReportingRepository,
     private val vigilanceAreaRepository: IDBVigilanceAreaRepository,
+    private val mapper: ObjectMapper,
 ) : IDashboardRepository {
     @Transactional
     override fun save(dashboard: DashboardEntity): DashboardEntity {
@@ -50,17 +52,19 @@ class JpaDashboardRepository(
                     dashboard,
                     dashboardDatasToSave,
                     dashboardImagesToSave,
+                    mapper,
                 ),
             )
-        return dashboardModel.toDashboardEntity()
+        return dashboardModel.toDashboardEntity(mapper)
     }
 
     override fun findAll(): List<DashboardEntity> =
         dashboardRepository.findAllByIsDeletedIsFalse().map {
-            it.toDashboardEntity()
+            it.toDashboardEntity(mapper)
         }
 
-    override fun findById(id: UUID): DashboardEntity? = dashboardRepository.findByIdOrNull(id)?.toDashboardEntity()
+    override fun findById(id: UUID): DashboardEntity? =
+        dashboardRepository.findByIdOrNull(id)?.toDashboardEntity(mapper)
 
     @Transactional
     override fun delete(id: UUID) {

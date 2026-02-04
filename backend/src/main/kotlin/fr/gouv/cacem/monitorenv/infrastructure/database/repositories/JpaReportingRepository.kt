@@ -140,7 +140,7 @@ class JpaReportingRepository(
 
     @Transactional
     override fun findByControlUnitId(controlUnitId: Int): List<ReportingEntity> =
-        dbReportingRepository.findByControlUnitId(controlUnitId).map { it.toReporting() }
+        dbReportingRepository.findByControlUnitId(controlUnitId).map { it.toReporting(mapper) }
 
     override fun findByMissionId(missionId: Int): List<ReportingDetailsDTO> =
         dbReportingRepository.findByMissionId(missionId).map {
@@ -182,6 +182,7 @@ class JpaReportingRepository(
                             reporting = reporting,
                             missionReference = missionReference,
                             envActionReference = envActionReference,
+                            mapper = mapper,
                         ),
                     )
             } else {
@@ -190,6 +191,7 @@ class JpaReportingRepository(
                         reporting = reporting,
                         missionReference = missionReference,
                         envActionReference = envActionReference,
+                        mapper = mapper,
                     )
             }
             reportingModel.themes = fromThemeEntity(reporting.theme, reportingModel)

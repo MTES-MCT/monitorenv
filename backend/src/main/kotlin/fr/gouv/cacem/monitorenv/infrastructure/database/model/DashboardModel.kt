@@ -1,5 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
@@ -49,9 +52,9 @@ data class DashboardModel(
     var images: MutableList<DashboardImageModel> = mutableListOf(),
     @Column(name = "links", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
-    val links: List<LinkEntity>?,
+    val links: JsonNode?,
 ) {
-    fun toDashboardEntity(): DashboardEntity {
+    fun toDashboardEntity(mapper: ObjectMapper): DashboardEntity {
         val amps: MutableList<Int> = mutableListOf()
         val regulatoryAreas: MutableList<Int> = mutableListOf()
         val vigilanceAreas: MutableList<Int> = mutableListOf()
@@ -104,7 +107,13 @@ data class DashboardModel(
             seaFront = seaFront,
             isDeleted = isDeleted,
             images = images.map { it.toDashboardImage() },
-            links = links,
+            links =
+                links?.let {
+                    mapper.convertValue(
+                        it,
+                        object : TypeReference<List<LinkEntity>>() {},
+                    )
+                },
         )
     }
 
@@ -133,6 +142,7 @@ data class DashboardModel(
             dashboardEntity: DashboardEntity,
             dashboardDatasModels: List<DashboardDatasModel>,
             dashboardImagesModels: List<DashboardImageModel>,
+            mapper: ObjectMapper,
         ): DashboardModel {
             val dashboardModel =
                 DashboardModel(
@@ -145,7 +155,7 @@ data class DashboardModel(
                     seaFront = dashboardEntity.seaFront,
                     dashboardDatas = mutableListOf(),
                     isDeleted = dashboardEntity.isDeleted,
-                    links = dashboardEntity.links,
+                    links = dashboardEntity.links?.let { mapper.valueToTree<JsonNode>(it) },
                 )
             dashboardDatasModels.forEach { dashboardModel.addDashboardDatas(it) }
             dashboardImagesModels.forEach { dashboardModel.addDashboardImages(it) }
