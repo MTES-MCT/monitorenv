@@ -52,7 +52,7 @@ export function RegulatoryAreas({
                   <Text> {getTitle(regulatoryArea.layerName)}</Text>
                 </View>
                 <View style={[areaStyle.content, { rowGap: 3 }]}>
-                  {regulatoryArea.polyName.length > 0 && (
+                  {regulatoryArea.polyName?.length > 0 && (
                     <View>
                       <View style={areaStyle.description}>
                         <Text>Titre de la zone</Text>
