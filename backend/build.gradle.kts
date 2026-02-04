@@ -112,7 +112,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
 
     // API Documentation
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0")
 
     // JodConverter
     implementation("org.jodconverter:jodconverter-local-lo:4.4.11")
