@@ -1,5 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
@@ -82,7 +84,7 @@ class ReportingModel(
     val vehicleType: VehicleTypeEnum? = null,
     @Column(name = "target_details", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
-    val targetDetails: List<TargetDetailsEntity>? = listOf(),
+    val targetDetails: JsonNode? = null,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
@@ -135,14 +137,20 @@ class ReportingModel(
     @Formula("created_at + INTERVAL '1 hour' * validity_time")
     val validityEndTime: Instant? = null,
 ) {
-    fun toReporting() =
+    fun toReporting(mapper: ObjectMapper) =
         ReportingEntity(
             id = id,
             reportingId = reportingId,
             reportingSources = reportingSources.map { it.toReportingSource() },
             targetType = targetType,
             vehicleType = vehicleType,
-            targetDetails = targetDetails,
+            targetDetails =
+                targetDetails?.let {
+                    mapper.convertValue(
+                        it,
+                        object : TypeReference<List<TargetDetailsEntity>>() {},
+                    )
+                } ?: emptyList(),
             geom = geom,
             seaFront = seaFront,
             description = description,
@@ -167,7 +175,7 @@ class ReportingModel(
         )
 
     fun toReportingListDTO(objectMapper: ObjectMapper): ReportingListDTO {
-        val reporting = this.toReporting()
+        val reporting = this.toReporting(objectMapper)
         return ReportingListDTO(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
@@ -184,7 +192,7 @@ class ReportingModel(
     }
 
     fun toReportingDetailsDTO(objectMapper: ObjectMapper): ReportingDetailsDTO {
-        val reporting = this.toReporting()
+        val reporting = this.toReporting(objectMapper)
         return ReportingDetailsDTO(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
@@ -234,13 +242,17 @@ class ReportingModel(
             reporting: ReportingEntity,
             missionReference: MissionModel?,
             envActionReference: EnvActionModel?,
+            mapper: ObjectMapper,
         ): ReportingModel =
             ReportingModel(
                 id = reporting.id,
                 reportingId = reporting.reportingId,
                 targetType = reporting.targetType,
                 vehicleType = reporting.vehicleType,
-                targetDetails = reporting.targetDetails,
+                targetDetails =
+                    reporting.targetDetails?.let {
+                        mapper.valueToTree(it)
+                    },
                 geom = reporting.geom,
                 seaFront = reporting.seaFront,
                 description = reporting.description,
