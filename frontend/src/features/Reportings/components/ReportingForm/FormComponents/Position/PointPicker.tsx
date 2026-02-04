@@ -3,7 +3,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useListenForDrawedGeometry } from '@hooks/useListenForDrawing'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
-import { formatCoordinates } from '@utils/coordinates'
+import { formatCoordinatesAsText } from '@utils/coordinates'
 import { InteractionListener, OLGeometryType } from 'domain/entities/map/constants'
 import { drawPoint } from 'domain/use_cases/draw/drawGeometry'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
@@ -52,7 +52,7 @@ export function PointPicker() {
       {value?.coordinates?.length > 0 && value.type === OLGeometryType.MULTIPOINT && (
         <Row>
           <ZoneWrapper>
-            <span>{formatCoordinates(value.coordinates[0] as Coordinate, coordinatesFormat)}</span>
+            <span>{formatCoordinatesAsText(value.coordinates[0] as Coordinate, coordinatesFormat)}</span>
             <IconButton
               accent={Accent.TERTIARY}
               Icon={Icon.FocusZones}

@@ -1,4 +1,4 @@
-import { useSearchVesselsQuery } from '@api/vesselApi'
+import { useSearchVesselsQuery } from '@api/vesselsApi'
 import { toOptions } from '@features/Vessel/utils'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { useEffect, useState } from 'react'

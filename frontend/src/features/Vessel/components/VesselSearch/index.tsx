@@ -1,6 +1,6 @@
+import { VesselSearchItem } from '@features/Vessel/components/VesselSearch/VesselSearchItem'
 import { useVessels } from '@features/Vessel/hooks/useVessels'
 import { toOptions } from '@features/Vessel/utils'
-import { VesselSearchItem } from '@features/Vessel/VesselSearchItem'
 import { CustomSearch, Search, Size } from '@mtes-mct/monitor-ui'
 import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -15,7 +15,7 @@ type SearchVesselsProps = {
   isSideWindow?: boolean
   onChange?: (vessel: Vessel.Identity | undefined) => void
   optionsWidth?: string
-  value?: Vessel.Identity | undefined
+  value?: Vessel.Identity
 }
 
 export function SearchVessel({

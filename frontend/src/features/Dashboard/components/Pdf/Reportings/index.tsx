@@ -1,11 +1,11 @@
 import { getFormattedReportingId } from '@features/Reportings/utils'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { G, Path, Rect, StyleSheet, Svg, Text, View } from '@react-pdf/renderer'
-import { formatCoordinates } from '@utils/coordinates'
+import { formatCoordinatesAsText } from '@utils/coordinates'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { CoordinatesFormat } from 'domain/entities/map/constants'
-import { getReportingStatus, ReportingStatusEnum, ReportingTypeEnum, type Reporting } from 'domain/entities/reporting'
+import { getReportingStatus, type Reporting, ReportingStatusEnum, ReportingTypeEnum } from 'domain/entities/reporting'
 import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
 import { vehicleTypeLabels } from 'domain/entities/vehicleType'
 import { vesselTypeLabel } from 'domain/entities/vesselType'
@@ -225,7 +225,7 @@ export function Reportings({ reportings }: { reportings: Reporting[] }) {
                 {reporting.geom?.coordinates && reporting.geom?.coordinates.length > 0 && (
                   <Text>
                     {
-                      formatCoordinates(
+                      formatCoordinatesAsText(
                         reporting.geom.coordinates[0] as Coordinate,
                         CoordinatesFormat.DEGREES_MINUTES_SECONDS
                       )

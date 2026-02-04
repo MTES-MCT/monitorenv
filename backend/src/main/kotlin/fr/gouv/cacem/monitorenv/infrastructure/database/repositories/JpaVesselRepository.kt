@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.vessels.Vessel
+import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IVesselRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBLegalStatusRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNafRepository
@@ -18,7 +18,7 @@ class JpaVesselRepository(
 ) : IVesselRepository {
     private val logger: Logger = LoggerFactory.getLogger(JpaVesselRepository::class.java)
 
-    override fun findVesselById(id: Int): Vessel? =
+    override fun findVesselById(id: Int): VesselEntity? =
         dbVesselRepository.findByIdOrNull(id)?.let {
             val nafLabel =
                 if (!it.ownerBusinessSegment.isNullOrBlank()) {
@@ -35,7 +35,7 @@ class JpaVesselRepository(
             return@let it.toVessel(nafLabel = nafLabel, legalStatusLabel = legalStatusLabel)
         }
 
-    override fun search(searched: String): List<Vessel> {
+    override fun search(searched: String): List<VesselEntity> {
         if (searched.isEmpty()) {
             return listOf()
         }

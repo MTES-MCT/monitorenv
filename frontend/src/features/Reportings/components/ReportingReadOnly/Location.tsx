@@ -4,7 +4,7 @@ import { Accent, Button, Icon, IconButton, Label, TextInput } from '@mtes-mct/mo
 import { OLGeometryType } from 'domain/entities/map/constants'
 import { centerOnMap } from 'domain/use_cases/map/centerOnMap'
 import styled from 'styled-components'
-import { formatCoordinates } from 'utils/coordinates'
+import { formatCoordinatesAsText } from 'utils/coordinates'
 
 import type { Coordinate } from 'ol/coordinate'
 
@@ -14,7 +14,7 @@ export function Location({ geom }) {
   const localizationText =
     geom.type === OLGeometryType.MULTIPOLYGON
       ? 'Polygone dessiné'
-      : formatCoordinates(geom.coordinates[0], coordinatesFormat)
+      : formatCoordinatesAsText(geom.coordinates[0], coordinatesFormat)
 
   const handleCenterOnMap = () => {
     const coordinatesToCenter: Coordinate[] =
