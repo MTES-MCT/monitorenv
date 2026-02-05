@@ -1,4 +1,4 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { RegulatoryAreasPanel } from '@components/RegulatoryArea/RegulatoryAreasPanel'
 import { Title } from '@features/BackOffice/components/style'
 import { MapAttributionsBox } from '@features/map/controls/MapAttributionsBox'
@@ -35,7 +35,7 @@ export function RegulatoryAreaList() {
   const groupFilter = useAppSelector(state => state.regulatoryAreaTable.filtersState.groupingType)
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
 
-  useGetRegulatoryLayersQuery()
+  useGetRegulatoryAreasQuery()
 
   const closePanel = () => {
     dispatch(regulatoryAreaTableActions.setOpenRegulatoryAreaId(undefined))
