@@ -1,0 +1,1 @@
+SELECT id, edition_bo FROM public.regulatory_areas;
