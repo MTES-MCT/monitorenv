@@ -1,15 +1,24 @@
 SELECT 
   id,
   st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001)) geom,
+  url,        
+  layer_name,
+  facade,
   ref_reg,
-  date_modif AS edition_cacem,
-  md5(
-        COALESCE(geom::text, '') ||
-        COALESCE(ref_reg::text, '') ||
-        COALESCE(date_modif::text, '')
-  ) as row_hash
+  editeur,
+  source,
+  obs,
+  thematique,
+  validite,
+  tempo,
+  type,
+  date,
+  date_fin,
+  edition,
+  resume,
+  poly_name,
+  plan
 FROM prod.reg_cacem
 WHERE 
   geom IS NOT NULL
-  AND ref_reg IS NOT NULL
-  AND id IN :ids
+  AND ref_reg IS NOT NULL;
