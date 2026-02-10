@@ -28,6 +28,12 @@ export namespace RegulatoryArea {
     url?: string
   }
 
+  export type RegulatoryAreaToCreate = {
+    geom: GeoJSON.MultiPolygon
+    id: number
+    refReg: string
+  }
+
   export type RegulatoryAreaWithBbox = RegulatoryAreaFromAPI & { bbox: number[] }
 
   export type RegulatoryAreasGroup = {

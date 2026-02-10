@@ -1,4 +1,4 @@
-import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
+import { useGetLayerNamesQuery, useGetRegulatoryAreasToCreateQuery } from '@api/regulatoryAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
@@ -24,37 +24,35 @@ import { useFormikContext } from 'formik'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-const geomOptions = [
-  {
-    label: '1',
-    value: {
-      id: 1,
-      refReg: 'Arrete 1'
-    }
-  },
-  {
-    label: '2',
-    value: {
-      id: 2,
-      refReg: 'Arrete 2'
-    }
-  }
-]
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
+import type { GeoJSON } from 'domain/types/GeoJSON'
 
-export function FormContent() {
-  const { values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
+export function FormContent({ isEditing }: { isEditing: boolean }) {
+  const { setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
   const [isEditingRefRegId, setIsEditingRefRegId] = useState<number | undefined>(undefined)
   const { data: layerNames } = useGetLayerNamesQuery()
+  const { data: regulatoryAreasToCreate } = useGetRegulatoryAreasToCreateQuery()
 
   const layerNamesOptions = layerNames
     ? layerNames.layerNames
-        .filter(layerName => layerName.trim() !== '')
+        .filter(layerName => layerName && layerName.trim() !== '')
         .map(layerName => ({
           label: getTitle(layerName),
           value: layerName
         }))
     : []
 
+  const geomOptions = regulatoryAreasToCreate
+    ? regulatoryAreasToCreate.map(regulatoryArea => ({
+        label: String(regulatoryArea.id),
+        value: {
+          geom: regulatoryArea.geom,
+          id: regulatoryArea.id,
+          refReg: regulatoryArea.refReg
+        }
+      }))
+    : []
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
   const regulatoryTypeOptions = getOptionsFromLabelledEnum(RegulatoryArea.RegulatoryAreaTypeLabel).sort((a, b) =>
     a.label.localeCompare(b.label)
@@ -98,13 +96,39 @@ export function FormContent() {
       </>
     )
   }
+  const renderMenuItem = (label, item) => (
+    <GeomContainer title={label}>
+      <p>{label}</p>
+      <GeomRefReg>{item.optionValue.refReg}</GeomRefReg>
+    </GeomContainer>
+  )
+
+  const setGeometryAndRefReg = (nextGeom: { geom: GeoJSON.MultiPolygon; id: number; refReg: string } | undefined) => {
+    setFieldValue('geom', nextGeom?.geom)
+    setFieldValue('id', nextGeom?.id)
+    setFieldValue('refReg', nextGeom?.refReg)
+  }
+
+  const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
+    setFieldValue('themes', nextThemes)
+  }
+
+  const setTags = (nextTags: TagOption[] | undefined = []) => {
+    setFieldValue('tags', nextTags)
+  }
 
   return (
     <>
       <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
       <IdentificationContainer>
         <FieldWithTooltip>
-          <FormikTextInput isRequired label="Titre de la zone réglementaire" name="polyName" style={{ flex: 1 }} />
+          <FormikTextInput
+            isErrorMessageHidden
+            isRequired
+            label="Titre de la zone réglementaire"
+            name="polyName"
+            style={{ flex: 1 }}
+          />
           <Tooltip>
             Le titre de la zone doit être le plus explicite possible que le rendre intelligible à tous, même à des
             utilisateurs non experts sur différents sujets (ex : biodiversité), tels que les utilisateurs de MonitorExt.
@@ -112,6 +136,7 @@ export function FormContent() {
         </FieldWithTooltip>
         <FieldWithTooltip>
           <FormikSelect
+            isErrorMessageHidden
             isRequired
             label="Titre du groupe de réglementation"
             name="layerName"
@@ -128,15 +153,28 @@ export function FormContent() {
         </FieldWithTooltip>
         <InlineFieldsContainer>
           <Select
+            disabled={isEditing}
             isRequired
             label="Géométrie"
             name="geom"
+            onChange={setGeometryAndRefReg}
             options={geomOptions}
             optionValueKey="id"
+            renderMenuItem={renderMenuItem}
             style={{ width: '30%' }}
+            value={
+              isEditing && values.geom && values.id && values.refReg
+                ? {
+                    geom: values.geom,
+                    id: values.id,
+                    refReg: values.refReg
+                  }
+                : geomOptions.find(option => option.value.id === values.id)?.value
+            }
           />
           <FormikSelect isRequired label="Façade" name="facade" options={seaFrontsAsOptions} style={{ width: '30%' }} />
           <FormikSelect
+            isErrorMessageHidden
             isRequired
             label="Ensemble réglementaire"
             name="type"
@@ -151,7 +189,7 @@ export function FormContent() {
               isRequired
               isTransparent={false}
               label="Thématiques et sous-thématiques"
-              onChange={() => {}}
+              onChange={setThemes}
               style={{ width: '50%' }}
               value={values?.themes ?? []}
             />
@@ -160,7 +198,7 @@ export function FormContent() {
               isRequired
               isTransparent={false}
               label="Tags et sous-tags"
-              onChange={() => {}}
+              onChange={setTags}
               style={{ width: '50%' }}
               value={values?.tags ?? []}
             />
@@ -261,6 +299,18 @@ const FieldWithTooltip = styled.div`
   display: flex;
   flex: 1;
   gap: 8px;
+`
+const GeomContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const GeomRefReg = styled.p`
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 const ExtraFooterContainer = styled.div`

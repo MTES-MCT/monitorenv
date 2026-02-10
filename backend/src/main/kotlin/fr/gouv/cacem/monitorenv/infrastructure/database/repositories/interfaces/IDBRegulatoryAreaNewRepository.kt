@@ -11,10 +11,13 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
             SELECT regulatoryArea
             FROM RegulatoryAreaNewModel regulatoryArea
             WHERE (:seaFronts IS NULL OR regulatoryArea.facade IN (:seaFronts))
+            AND regulatoryArea.creation IS NOT NULL
             ORDER BY regulatoryArea.layerName
         """,
     )
     fun findAll(seaFronts: List<String>? = emptyList()): List<RegulatoryAreaNewModel>
+
+    fun findAllByCreationIsNull(): List<RegulatoryAreaNewModel>
 
     @Query(
         value =

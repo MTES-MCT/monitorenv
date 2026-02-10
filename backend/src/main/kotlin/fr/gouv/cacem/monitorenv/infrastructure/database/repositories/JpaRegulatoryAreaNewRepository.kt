@@ -43,6 +43,11 @@ class JpaRegulatoryAreaNewRepository(
 
     override fun findAllLayerNames(): List<String> = dbRegulatoryAreaRepository.findAllLayerNames()
 
+    override fun findAllToCreate(): List<RegulatoryAreaNewEntity> =
+        dbRegulatoryAreaRepository
+            .findAllByCreationIsNull()
+            .map { it.toRegulatoryArea() }
+
     @Transactional
     override fun save(regulatoryArea: RegulatoryAreaNewEntity): RegulatoryAreaNewEntity {
         val model = RegulatoryAreaNewModel.fromRegulatoryAreaEntity(regulatoryArea)

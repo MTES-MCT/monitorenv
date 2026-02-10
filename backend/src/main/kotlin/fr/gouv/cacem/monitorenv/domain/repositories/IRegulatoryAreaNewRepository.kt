@@ -9,6 +9,8 @@ interface IRegulatoryAreaNewRepository {
         seaFronts: List<String>? = null,
     ): List<RegulatoryAreaNewEntity>
 
+    fun findAllToCreate(): List<RegulatoryAreaNewEntity>
+
     fun findById(id: Int): RegulatoryAreaNewEntity?
 
     fun findAllLayerNames(): List<String>

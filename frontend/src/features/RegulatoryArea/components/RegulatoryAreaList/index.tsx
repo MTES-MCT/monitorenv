@@ -1,5 +1,6 @@
 import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { RegulatoryAreasPanel } from '@components/RegulatoryArea/RegulatoryAreasPanel'
+import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { Title } from '@features/BackOffice/components/style'
 import { MapAttributionsBox } from '@features/map/controls/MapAttributionsBox'
 import { MapCoordinatesBox } from '@features/map/controls/MapCoordinatesBox'
@@ -10,6 +11,7 @@ import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@featu
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
+import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
 import { ControlPlanTable } from './ControlPlanTable'
@@ -32,6 +34,7 @@ const childrensComponents = [
 ]
 export function RegulatoryAreaList() {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const filters = useAppSelector(state => state.regulatoryAreaTable.filtersState)
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
 
@@ -46,6 +49,9 @@ export function RegulatoryAreaList() {
   const closePanel = () => {
     dispatch(regulatoryAreaTableActions.setOpenRegulatoryAreaId(undefined))
   }
+  const createRegulatoryArea = () => {
+    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new`)
+  }
 
   return (
     <>
@@ -53,7 +59,9 @@ export function RegulatoryAreaList() {
         <RegulatoryWrapper>
           <TitleContainer>
             <Title>Zones réglementaires</Title>
-            <Button Icon={Icon.Plus}> Saisir une nouvelle réglementation</Button>
+            <Button Icon={Icon.Plus} onClick={createRegulatoryArea}>
+              Saisir une nouvelle réglementation
+            </Button>
           </TitleContainer>
           <RegulatoryAreaFilters />
           {filters.groupBy === 'SEA_FRONT' ? <SeaFrontTable /> : <ControlPlanTable />}
