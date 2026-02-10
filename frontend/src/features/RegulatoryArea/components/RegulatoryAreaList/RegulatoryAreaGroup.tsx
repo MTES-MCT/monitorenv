@@ -1,26 +1,26 @@
-import { getNumberOfRegulatoryLayerZonesByGroupName } from '@api/regulatoryLayersAPI'
 import { StyledTransparentButton } from '@components/style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useState } from 'react'
 
 import { RegulatoryAreaItem } from './RegulatoryAreaItem'
 
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export function RegulatoryAreaGroup({
   groupName,
   regulatoryAreas
 }: {
   groupName: string
-  regulatoryAreas: RegulatoryLayerCompact[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
 }) {
-  const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
+  // TODO fix this
+  const totalNumberOfZones = 0
+
   const layerGroupName = getTitle(groupName)
   const [isGroupNameOpen, setIsGroupNameOpen] = useState(false)
 
-  const openGroupName = event => {
+  const openGroupName = (event: React.MouseEvent) => {
     event.stopPropagation()
     setIsGroupNameOpen(!isGroupNameOpen)
   }

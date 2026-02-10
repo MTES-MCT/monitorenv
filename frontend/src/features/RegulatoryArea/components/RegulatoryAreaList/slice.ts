@@ -5,9 +5,9 @@ import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
 type FiltersState = {
-  groupingType: 'CONTROL_PLAN' | 'SEA_FRONT'
-  query?: string
-  seaFront?: string[]
+  groupBy: 'CONTROL_PLAN' | 'SEA_FRONT'
+  seaFronts?: string[]
+  searchQuery?: string
   tags?: TagOption[]
   themes?: ThemeOption[]
 }
@@ -19,9 +19,9 @@ interface RegulatoryAreaTableState {
 
 const INITIAL_STATE: RegulatoryAreaTableState = {
   filtersState: {
-    groupingType: 'CONTROL_PLAN',
-    query: undefined,
-    seaFront: undefined,
+    groupBy: 'CONTROL_PLAN',
+    seaFronts: undefined,
+    searchQuery: undefined,
     tags: undefined,
     themes: undefined
   },

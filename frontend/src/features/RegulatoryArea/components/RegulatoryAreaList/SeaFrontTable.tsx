@@ -1,4 +1,4 @@
-import { getRegulatoryLayersBySeaFront } from '@api/regulatoryLayersAPI'
+import { getregulatoryAreasBySeaFront } from '@api/regulatoryAreasAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon } from '@mtes-mct/monitor-ui'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
@@ -7,13 +7,17 @@ import { Fragment, useState } from 'react'
 import { RegulatoryAreaGroup } from './RegulatoryAreaGroup'
 import { ControlPlanWrapper, GroupTitle, StyledIconButton, Title } from './style'
 
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export function SeaFrontTable() {
-  const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryLayersBySeaFront(state)) as Record<
-    string,
-    Record<string, RegulatoryLayerCompact[]>
-  >
+  const filters = useAppSelector(state => state.regulatoryAreaTable.filtersState)
+  const groupedRegulatoryAreas = useAppSelector(state =>
+    getregulatoryAreasBySeaFront(state, {
+      ...filters,
+      tags: filters.tags?.map(tag => tag.id),
+      themes: filters.themes?.map(theme => theme.id)
+    })
+  ) as Record<string, Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>
 
   const allSeaFronts = Object.values(SeaFrontLabels).map(seaFrontLabel => seaFrontLabel.label)
 
