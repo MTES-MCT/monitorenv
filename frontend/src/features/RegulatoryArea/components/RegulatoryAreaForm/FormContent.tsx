@@ -1,6 +1,8 @@
+import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import {
   Accent,
   Button,
@@ -8,24 +10,19 @@ import {
   FormikSelect,
   FormikTextarea,
   FormikTextInput,
+  getLocalizedDayjs,
+  getOptionsFromLabelledEnum,
   Icon,
   IconButton,
   Label,
   Select,
-  TextInput,
   THEME
 } from '@mtes-mct/monitor-ui'
+import { getTitle } from 'domain/entities/layers/utils'
+import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { useFormikContext } from 'formik'
 import { useState } from 'react'
 import styled from 'styled-components'
-
-import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
-
-const layernameOptions = [
-  { label: 'Zone de protection', value: 'zone_de_protection' },
-  { label: 'Zone de réglementation', value: 'zone_de_reglementation' },
-  { label: 'Zone de conservation', value: 'zone_de_conservation' }
-]
 
 const geomOptions = [
   {
@@ -44,15 +41,24 @@ const geomOptions = [
   }
 ]
 
-const regulatoryTypeOptions = [
-  { label: 'Arrêté préfectoral', value: 'arrete_prefectoral' },
-  { label: 'Zone de réglementation', value: 'zone_de_reglementation' },
-  { label: 'Zone de conservation', value: 'zone_de_conservation' }
-]
-
 export function FormContent() {
-  const { values } = useFormikContext<RegulatoryLayerWithMetadata>()
+  const { values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
   const [isEditingRefRegId, setIsEditingRefRegId] = useState<number | undefined>(undefined)
+  const { data: layerNames } = useGetLayerNamesQuery()
+
+  const layerNamesOptions = layerNames
+    ? layerNames.layerNames
+        .filter(layerName => layerName.trim() !== '')
+        .map(layerName => ({
+          label: getTitle(layerName),
+          value: layerName
+        }))
+    : []
+
+  const seaFrontsAsOptions = Object.values(SeaFrontLabels)
+  const regulatoryTypeOptions = getOptionsFromLabelledEnum(RegulatoryArea.RegulatoryAreaTypeLabel).sort((a, b) =>
+    a.label.localeCompare(b.label)
+  )
 
   const cancelEditRefReg = () => {
     setIsEditingRefRegId(undefined)
@@ -60,6 +66,37 @@ export function FormContent() {
 
   const validateRefReg = () => {
     setIsEditingRefRegId(undefined)
+  }
+
+  const getPeriodText = () => {
+    const startDate = values?.date ? getLocalizedDayjs(values.date).format('DD/MM/YYYY') : undefined
+    const endDate = values?.dateFin ? getLocalizedDayjs(values.dateFin).format('DD/MM/YYYY') : undefined
+
+    if (!startDate && !endDate) {
+      return undefined
+    }
+
+    if (startDate && !endDate) {
+      return (
+        <>
+          En vigueur depuis <span>{startDate}</span>
+        </>
+      )
+    }
+
+    if (!startDate && endDate) {
+      return (
+        <>
+          En vigueur jusqu&apos;au <span>{endDate}</span>
+        </>
+      )
+    }
+
+    return (
+      <>
+        En vigueur depuis <span>{startDate}</span> jusqu&apos;au <span>{endDate}</span>
+      </>
+    )
   }
 
   return (
@@ -78,7 +115,7 @@ export function FormContent() {
             isRequired
             label="Titre du groupe de réglementation"
             name="layerName"
-            options={layernameOptions}
+            options={layerNamesOptions}
             renderExtraFooter={() => (
               <ExtraFooterContainer>
                 <Icon.Plus />
@@ -98,7 +135,7 @@ export function FormContent() {
             optionValueKey="id"
             style={{ width: '30%' }}
           />
-          <TextInput isRequired label="Façade" name="facade" style={{ width: '30%' }} />
+          <FormikSelect isRequired label="Façade" name="facade" options={seaFrontsAsOptions} style={{ width: '30%' }} />
           <FormikSelect
             isRequired
             label="Ensemble réglementaire"
@@ -143,14 +180,11 @@ export function FormContent() {
 
       {!isEditingRefRegId ? (
         <RefRegContainer>
-          <div>
-            <RefRegText>{values?.refReg} </RefRegText>
+          <RefRegTextContainer>
+            <RefRegText title={values?.refReg}>{values?.refReg} </RefRegText>
             <Link href={values?.url}>{values?.url}</Link>
-            <PeriodText>
-              En vigueur depuis
-              <span> 01/01/2023</span>
-            </PeriodText>
-          </div>
+            <PeriodText>{getPeriodText()}</PeriodText>
+          </RefRegTextContainer>
           <IconButton accent={Accent.TERTIARY} Icon={Icon.Edit} onClick={() => setIsEditingRefRegId(values?.id)} />
         </RefRegContainer>
       ) : (
@@ -163,8 +197,8 @@ export function FormContent() {
           <RefRegSecondLine>
             <FormikTextInput isLight label="URL du lien" name="url" style={{ width: '65%' }} />
             <DateContainer>
-              <FormikDatePicker isLight isRequired label="Début de validité" name="startDate" />
-              <FormikDatePicker isLight isRequired label="Fin de validité" name="endDate" />
+              <FormikDatePicker isLight isRequired label="Début de validité" name="date" />
+              <FormikDatePicker isLight isRequired label="Fin de validité" name="dateFin" />
             </DateContainer>
           </RefRegSecondLine>
           <ButtonsWrapper>
@@ -246,9 +280,13 @@ const InformationMessage = styled.span`
 const RefRegContainer = styled.div`
   background-color: ${p => p.theme.color.gainsboro};
   display: flex;
-
   gap: 16px;
   padding: 8px;
+`
+const RefRegTextContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 const EditingRefRegContainer = styled(RefRegContainer)`
@@ -263,6 +301,7 @@ const RefRegSecondLine = styled.div`
 
 const RefRegText = styled.p`
   font-size: 13px;
+  white-space: wrap;
 `
 
 const ValidateButton = styled(Button)`
@@ -311,11 +350,15 @@ const Link = styled.a`
   color: ${p => p.theme.color.blueGray};
   font-size: 13px;
   text-decoration: underline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 const PeriodText = styled.p`
   font-size: 13px;
   color: ${p => p.theme.color.slateGray};
+  margin-top: 6px;
   > span {
     color: ${p => p.theme.color.gunMetal};
   }

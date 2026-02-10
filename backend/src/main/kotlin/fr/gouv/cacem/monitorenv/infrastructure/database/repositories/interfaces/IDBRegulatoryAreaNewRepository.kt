@@ -8,10 +8,21 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
     @Query(
         value =
             """
-            SELECT * FROM regulatory_areas r
-            ORDER BY r.plan
+            SELECT regulatoryArea
+            FROM RegulatoryAreaNewModel regulatoryArea
+            WHERE (:seaFronts IS NULL OR regulatoryArea.facade IN (:seaFronts))
+            ORDER BY regulatoryArea.layerName
         """,
-        nativeQuery = true,
     )
-    override fun findAll(): List<RegulatoryAreaNewModel>
+    fun findAll(seaFronts: List<String>? = emptyList()): List<RegulatoryAreaNewModel>
+
+    @Query(
+        value =
+            """
+            SELECT DISTINCT regulatoryArea.layerName
+            FROM RegulatoryAreaNewModel regulatoryArea
+            ORDER BY regulatoryArea.layerName
+        """,
+    )
+    fun findAllLayerNames(): List<String>
 }
