@@ -35,7 +35,8 @@ export const monitorenvPrivateApi = createApi({
     'ExtractArea',
     'NearbyUnits',
     'InfractionsSuspicions',
-    'Infractions'
+    'Infractions',
+    'RegulatoryAreas'
   ]
 })
 

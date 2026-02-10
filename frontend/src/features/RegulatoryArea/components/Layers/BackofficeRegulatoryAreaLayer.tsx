@@ -1,3 +1,4 @@
+import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import VectorLayer from 'ol/layer/Vector'
@@ -5,7 +6,6 @@ import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 import { useParams } from 'react-router'
 
-import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
@@ -16,7 +16,9 @@ import type { Geometry } from 'ol/geom'
 
 export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
   const { regulatoryAreaId } = useParams()
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryArea } = useGetRegulatoryAreaByIdQuery(Number(regulatoryAreaId), {
+    skip: !regulatoryAreaId
+  })
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
 
   const layerId = useMemo(
@@ -35,7 +37,7 @@ export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
   ) as MutableRefObject<VectorLayerWithName>
   regulatoryVectorLayerRef.current.name = Layers.REGULATORY_ENV.code
   const regulatoryFeature = useMemo(() => {
-    if (!layerId || !regulatoryLayers?.entities) {
+    if (!layerId || !regulatoryArea) {
       return undefined
     }
 
@@ -43,11 +45,11 @@ export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
       code: Layers.REGULATORY_ENV.code,
       isolatedLayer: undefined,
       layer: {
-        ...regulatoryLayers.entities[layerId],
+        ...regulatoryArea,
         metadataIsShowed: true
       }
     })
-  }, [layerId, regulatoryLayers?.entities])
+  }, [layerId, regulatoryArea])
 
   useEffect(() => {
     regulatoryVectorSourceRef.current?.clear(true)

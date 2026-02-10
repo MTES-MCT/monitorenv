@@ -15,7 +15,7 @@ import java.io.Serializable
 @Table(name = "themes_regulatory_areas_new")
 data class ThemeRegulatoryAreaNewModel(
     @EmbeddedId
-    val id: ThemeRegulatoryAreaNewPk,
+    var id: ThemeRegulatoryAreaNewPk,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "themes_id")
     @MapsId("themeId")
@@ -35,11 +35,35 @@ data class ThemeRegulatoryAreaNewModel(
                 return@map parent.toThemeEntity()
             }
         }
-    }
 
-    @Embeddable
-    data class ThemeRegulatoryAreaNewPk(
-        val themeId: Int,
-        val regulatoryAreaId: Int,
-    ) : Serializable
+        fun fromThemeEntity(
+            theme: ThemeEntity,
+            regulatoryAreaModel: RegulatoryAreaNewModel,
+        ): ThemeRegulatoryAreaNewModel =
+            ThemeRegulatoryAreaNewModel(
+                id = ThemeRegulatoryAreaNewPk(theme.id, regulatoryAreaModel.id),
+                theme = ThemeModel.fromThemeEntity(theme),
+                regulatoryArea = regulatoryAreaModel,
+            )
+
+        fun fromThemesEntities(
+            themes: List<ThemeEntity>,
+            regulatoryAreaModel: RegulatoryAreaNewModel,
+        ): List<ThemeRegulatoryAreaNewModel> =
+            themes
+                .map { theme -> fromThemeEntity(theme, regulatoryAreaModel) }
+                .plus(
+                    themes.flatMap { theme ->
+                        theme.subThemes.map { subTheme ->
+                            fromThemeEntity(subTheme, regulatoryAreaModel)
+                        }
+                    },
+                )
+    }
 }
+
+@Embeddable
+data class ThemeRegulatoryAreaNewPk(
+    val themeId: Int,
+    val regulatoryAreaId: Int,
+) : Serializable

@@ -20,14 +20,14 @@ export function RegulatoryAreaFilters() {
   const filters = useAppSelector(store => store.regulatoryAreaTable.filtersState)
 
   const updateQuery = (nextQuery: string | undefined) => {
-    dispatch(regulatoryAreaTableActions.setFilter({ key: 'query', value: nextQuery }))
+    dispatch(regulatoryAreaTableActions.setFilter({ key: 'searchQuery', value: nextQuery }))
   }
 
   const updateGroupFilter = (nextValue: 'CONTROL_PLAN' | 'SEA_FRONT' | undefined) => {
     if (!nextValue) {
       return
     }
-    dispatch(regulatoryAreaTableActions.setFilter({ key: 'groupingType', value: nextValue }))
+    dispatch(regulatoryAreaTableActions.setFilter({ key: 'groupBy', value: nextValue }))
   }
 
   const updateThemesFilter = (nextThemes: ThemeOption[] | undefined) => {
@@ -38,7 +38,7 @@ export function RegulatoryAreaFilters() {
   }
 
   const updateSeaFrontFilter = (nextSeaFronts: string[] | undefined) => {
-    dispatch(regulatoryAreaTableActions.setFilter({ key: 'seaFront', value: nextSeaFronts }))
+    dispatch(regulatoryAreaTableActions.setFilter({ key: 'seaFronts', value: nextSeaFronts }))
   }
 
   return (
@@ -53,7 +53,7 @@ export function RegulatoryAreaFilters() {
           onChange={updateQuery}
           placeholder="Rechercher dans les zones réglementaires"
           style={{ width: '500px' }}
-          value={filters.query}
+          value={filters.searchQuery}
         />
         <Select
           isCleanable={false}
@@ -68,7 +68,7 @@ export function RegulatoryAreaFilters() {
           ]}
           placeholder="Grouper les zones réglementaires"
           style={{ flex: 1 }}
-          value={filters.groupingType}
+          value={filters.groupBy}
         />
       </FiltersContainer>
       <FiltersContainer>
@@ -82,9 +82,9 @@ export function RegulatoryAreaFilters() {
           onChange={updateSeaFrontFilter}
           options={SEA_FRONT_OPTIONS ?? []}
           placeholder="Façade"
-          renderValue={() => filters.seaFront && <OptionValue>{`Façade (${filters.seaFront.length})`}</OptionValue>}
+          renderValue={() => filters.seaFronts && <OptionValue>{`Façade (${filters.seaFronts.length})`}</OptionValue>}
           style={{ flex: 1 }}
-          value={filters.seaFront}
+          value={filters.seaFronts}
         />
       </FiltersContainer>
     </Wrapper>
