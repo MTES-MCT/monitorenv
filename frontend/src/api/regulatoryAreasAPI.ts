@@ -62,13 +62,20 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
           }))
         }))
     }),
+    getRegulatoryAreasToCreate: builder.query<RegulatoryArea.RegulatoryAreaToCreate[], void>({
+      providesTags: () => [{ id: 'TO_CREATE', type: 'RegulatoryAreas' }],
+      query: () => '/regulatory-areas/to-create',
+      transformErrorResponse: response =>
+        new FrontendApiError("Nous n'avons pas pu récupérer les zones réglementaires à créer", response)
+    }),
     saveRegulatoryArea: builder.mutation<
       RegulatoryArea.RegulatoryAreaFromAPI,
       Partial<RegulatoryArea.RegulatoryAreaFromAPI>
     >({
       invalidatesTags: (_, __, { id }) => [
         { id, type: 'RegulatoryAreas' },
-        { id: 'LIST', type: 'RegulatoryAreas' }
+        { id: 'LIST', type: 'RegulatoryAreas' },
+        { id: 'TO_CREATE', type: 'RegulatoryAreas' }
       ],
       query: regulatoryArea => ({
         body: regulatoryArea,
@@ -79,7 +86,12 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-export const { useGetLayerNamesQuery, useGetRegulatoryAreaByIdQuery, useGetRegulatoryAreasQuery } = regulatoryAreasAPI
+export const {
+  useGetLayerNamesQuery,
+  useGetRegulatoryAreaByIdQuery,
+  useGetRegulatoryAreasQuery,
+  useGetRegulatoryAreasToCreateQuery
+} = regulatoryAreasAPI
 
 export const getregulatoryAreasByControlPlan = createSelector(
   [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],

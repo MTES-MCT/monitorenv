@@ -3,9 +3,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegulatoryAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToCreate
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaToCreateDataOuput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasLayerNamesDataOutput
 import io.swagger.v3.oas.annotations.Operation
@@ -22,12 +24,13 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/bff/regulatory-areas")
-@Tag(name = "BFF.RegulatoryAreas", description = "API regulatory layers")
+@Tag(name = "BFF.RegulatoryAreas", description = "API regulatory areas")
 class RegulatoryAreasNew(
     private val getAllNewRegulatoryAreas: GetAllNewRegulatoryAreas,
     private val getNewRegulatoryAreaById: GetNewRegulatoryAreaById,
     private val getAllLayerNames: GetAllLayerNames,
     private val createOrUpdateRegulatoryArea: CreateOrUpdateRegulatoryArea,
+    private val getAllRegulatoryAreasToCreate: GetAllRegulatoryAreasToCreate,
 ) {
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
@@ -71,10 +74,17 @@ class RegulatoryAreasNew(
             createOrUpdateRegulatoryArea.execute(regulatoryAreaDataInput.toRegulatoryAreaEntity()),
         )
 
-    @GetMapping("layer-names")
+    @GetMapping("/layer-names")
     @Operation(summary = "Get all regulatory areas group names")
-    fun get(): RegulatoryAreasLayerNamesDataOutput? =
+    fun getLayerNames(): RegulatoryAreasLayerNamesDataOutput? =
         getAllLayerNames.execute().let {
             RegulatoryAreasLayerNamesDataOutput.fromGroupNames(it)
+        }
+
+    @GetMapping("/to-create")
+    @Operation(summary = "Get all new regulatory areas")
+    fun getRegulatoryAreasToCreate(): List<RegulatoryAreaToCreateDataOuput> =
+        getAllRegulatoryAreasToCreate.execute().map {
+            RegulatoryAreaToCreateDataOuput.fromRegulatoryAreaToCreateEntity(it)
         }
 }
