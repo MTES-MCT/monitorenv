@@ -14,9 +14,9 @@ import { useNavigate } from 'react-router'
 
 import { regulatoryAreaTableActions } from './slice'
 
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
-export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: RegulatoryLayerCompact }) {
+export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox }) {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)

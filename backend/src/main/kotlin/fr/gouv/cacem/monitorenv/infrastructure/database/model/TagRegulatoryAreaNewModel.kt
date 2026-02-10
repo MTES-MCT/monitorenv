@@ -15,7 +15,7 @@ import java.io.Serializable
 @Table(name = "tags_regulatory_areas_new")
 data class TagRegulatoryAreaNewModel(
     @EmbeddedId
-    val id: TagRegulatoryAreaNewPk,
+    var id: TagRegulatoryAreaNewPk,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tags_id")
     @MapsId("tagId")
@@ -35,6 +35,30 @@ data class TagRegulatoryAreaNewModel(
                 return@map parent.toTagEntity()
             }
         }
+
+        fun fromTagEntity(
+            tag: TagEntity,
+            regulatoryAreaModel: RegulatoryAreaNewModel,
+        ): TagRegulatoryAreaNewModel =
+            TagRegulatoryAreaNewModel(
+                id = TagRegulatoryAreaNewPk(tag.id, regulatoryAreaModel.id),
+                tag = TagModel.fromTagEntity(tag),
+                regulatoryArea = regulatoryAreaModel,
+            )
+
+        fun fromTagEntities(
+            tags: List<TagEntity>,
+            regulatoryAreaModel: RegulatoryAreaNewModel,
+        ): List<TagRegulatoryAreaNewModel> =
+            tags
+                .map { tag -> fromTagEntity(tag, regulatoryAreaModel) }
+                .plus(
+                    tags.flatMap { tag ->
+                        tag.subTags.map { subTag ->
+                            fromTagEntity(subTag, regulatoryAreaModel)
+                        }
+                    },
+                )
     }
 }
 

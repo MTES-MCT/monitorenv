@@ -11,9 +11,19 @@ class GetAllNewRegulatoryAreas(
 ) {
     private val logger = LoggerFactory.getLogger(GetAllRegulatoryAreas::class.java)
 
-    fun execute(): List<RegulatoryAreaNewEntity> {
-        logger.info("Attempt to GET all regulatory areas")
-        val regulatoryAreas = regulatoryAreaRepository.findAll()
+    fun execute(
+        groupBy: String?,
+        searchQuery: String?,
+        seaFronts: List<String>?,
+    ): Map<String?, List<RegulatoryAreaNewEntity>> {
+        logger.info("Attempt to GET all regulatory areas: $groupBy, $searchQuery, $seaFronts")
+        val regulatoryAreas =
+            regulatoryAreaRepository
+                .findAll(
+                    groupBy = groupBy,
+                    query = searchQuery,
+                    seaFronts = seaFronts,
+                ).groupBy { it.layerName }
         logger.info("Found ${regulatoryAreas.size} regulatory areas")
 
         return regulatoryAreas

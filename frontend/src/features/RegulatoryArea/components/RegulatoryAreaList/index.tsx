@@ -32,10 +32,16 @@ const childrensComponents = [
 ]
 export function RegulatoryAreaList() {
   const dispatch = useAppDispatch()
-  const groupFilter = useAppSelector(state => state.regulatoryAreaTable.filtersState.groupingType)
+  const filters = useAppSelector(state => state.regulatoryAreaTable.filtersState)
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
 
-  useGetRegulatoryAreasQuery()
+  useGetRegulatoryAreasQuery({
+    groupBy: filters.groupBy,
+    seaFronts: filters.seaFronts,
+    searchQuery: filters.searchQuery,
+    tags: filters.tags?.map(tag => tag.id),
+    themes: filters.themes?.map(theme => theme.id)
+  })
 
   const closePanel = () => {
     dispatch(regulatoryAreaTableActions.setOpenRegulatoryAreaId(undefined))
@@ -50,7 +56,7 @@ export function RegulatoryAreaList() {
             <Button Icon={Icon.Plus}> Saisir une nouvelle réglementation</Button>
           </TitleContainer>
           <RegulatoryAreaFilters />
-          {groupFilter === 'SEA_FRONT' ? <SeaFrontTable /> : <ControlPlanTable />}
+          {filters.groupBy === 'SEA_FRONT' ? <SeaFrontTable /> : <ControlPlanTable />}
         </RegulatoryWrapper>
 
         <MapContainer className="map-container">{childrensComponents}</MapContainer>

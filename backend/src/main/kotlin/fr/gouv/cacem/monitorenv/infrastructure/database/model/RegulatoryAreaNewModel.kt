@@ -20,7 +20,9 @@ import java.time.ZoneOffset.UTC
 @Entity
 @Table(name = "regulatory_areas")
 data class RegulatoryAreaNewModel(
-    @Id @Column(name = "id") val id: Int,
+    @Id
+    @Column(name = "id", nullable = false, unique = true)
+    val id: Int,
     @Column(name = "creation") val creation: Instant?,
     @Column(name = "date") val date: Instant?,
     @Column(name = "date_fin") val dateFin: Instant?,
@@ -51,7 +53,6 @@ data class RegulatoryAreaNewModel(
         fetch = FetchType.LAZY,
     )
     var themes: List<ThemeRegulatoryAreaNewModel>,
-    @Column(name = "thematique") val thematique: String?,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
 ) {
@@ -80,6 +81,34 @@ data class RegulatoryAreaNewModel(
             type = type,
             url = url,
         )
+
+    companion object {
+        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaNewEntity): RegulatoryAreaNewModel =
+            RegulatoryAreaNewModel(
+                id = regulatoryArea.id,
+                creation = regulatoryArea.creation?.toInstant(),
+                plan = regulatoryArea.plan,
+                date = regulatoryArea.date?.toInstant(),
+                dateFin = regulatoryArea.dateFin?.toInstant(),
+                dureeValidite = regulatoryArea.dureeValidite,
+                editeur = regulatoryArea.editeur,
+                editionBo = regulatoryArea.editionBo?.toInstant(),
+                editionCacem = regulatoryArea.editionCacem?.toInstant(),
+                facade = regulatoryArea.facade,
+                geom = regulatoryArea.geom,
+                layerName = regulatoryArea.layerName,
+                observation = regulatoryArea.observation,
+                polyName = regulatoryArea.polyName,
+                refReg = regulatoryArea.refReg,
+                resume = regulatoryArea.resume,
+                source = regulatoryArea.source,
+                temporalite = regulatoryArea.temporalite,
+                type = regulatoryArea.type,
+                url = regulatoryArea.url,
+                tags = listOf(),
+                themes = listOf(),
+            )
+    }
 
     override fun toString(): String =
         "RegulatoryAreaModel(id=$id, plan=$plan, date=$date, dateFin=$dateFin, dureeValidite=$dureeValidite, editeur=$editeur, editionBo=$editionBo, editionCacem=$editionCacem facade=$facade, geom=$geom, layerName=$layerName, observation=$observation, polyName=$polyName, refReg=$refReg, resume=$resume, source=$source, temporalite=$temporalite, type=$type, url=$url)"

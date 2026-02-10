@@ -1,4 +1,4 @@
-import { getRegulatoryLayersByControlPlan } from '@api/regulatoryLayersAPI'
+import { getregulatoryAreasByControlPlan } from '@api/regulatoryAreasAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
@@ -6,13 +6,17 @@ import { useState } from 'react'
 import { RegulatoryAreaGroup } from './RegulatoryAreaGroup'
 import { ControlPlanWrapper, GroupTitle, StyledIconButton, Title } from './style'
 
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export function ControlPlanTable() {
-  const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryLayersByControlPlan(state)) as Record<
-    'PIRC' | 'PSCEM',
-    Record<string, RegulatoryLayerCompact[]>
-  >
+  const filters = useAppSelector(state => state.regulatoryAreaTable.filtersState)
+  const groupedRegulatoryAreas = useAppSelector(state =>
+    getregulatoryAreasByControlPlan(state, {
+      ...filters,
+      tags: filters.tags?.map(tag => tag.id),
+      themes: filters.themes?.map(theme => theme.id)
+    })
+  ) as Record<'PIRC' | 'PSCEM', Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>
 
   const [controlPlansExtented, setControlPlansExtented] = useState<string[]>([])
 
