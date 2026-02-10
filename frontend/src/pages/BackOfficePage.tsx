@@ -58,6 +58,10 @@ export function BackOfficePage() {
                 element={<RegulatoryAreaForm />}
                 path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/:regulatoryAreaId`}
               />
+              <Route
+                element={<RegulatoryAreaForm />}
+                path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new`}
+              />
             </>
           ) : (
             <Route element={<AdministrationTable />} path="/" />
