@@ -11,9 +11,7 @@ from src.flows.update_cacem_regulatory_areas import (
 
 def test_update_cacem_regulatory_areas_flow(
     reset_test_data,
-    create_cacem_tables,
-    cacem_regulatory_areas,
-    monitorenv_regulatory_areas,
+    create_cacem_tables
 ):
     state = update_cacem_regulatory_areas_flow(return_state=True)
 

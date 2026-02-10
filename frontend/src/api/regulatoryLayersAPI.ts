@@ -1,7 +1,6 @@
 import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { createEntityAdapter, createSelector, type EntityId, type EntityState } from '@reduxjs/toolkit'
-import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { boundingExtent, createEmpty } from 'ol/extent'
 import { createCachedSelector } from 're-reselect'
 
@@ -14,7 +13,6 @@ import type {
 } from '../domain/entities/regulatory'
 import type { HomeRootState } from '@store/index'
 import type { Coordinate } from 'ol/coordinate'
-import type { StringDigit } from 'type-fest/source/internal'
 
 const GET_REGULATORY_LAYER_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zones réglementaire"
 const GET_REGULATORY_LAYERS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/les zones réglementaires"
@@ -123,68 +121,3 @@ export const getExtentOfRegulatoryLayersGroupByGroupName = createCachedSelector(
     return createEmpty()
   }
 )((_, groupName: string) => groupName)
-
-export const getRegulatoryLayersByControlPlan = createSelector(
-  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select()],
-  regulatoryLayers => {
-    const entities = regulatoryLayers?.data?.entities
-    const ids = regulatoryLayers?.data?.ids
-
-    if (!ids || !entities) {
-      return {}
-    }
-
-    return ids.reduce((acc, layerId) => {
-      const entity = entities[layerId]
-      const layerName = entity?.layerName
-      const planRaw = entity?.plan
-
-      if (!layerName || !planRaw) {
-        return acc
-      }
-
-      const plans = planRaw.split(',').map(p => p.trim())
-
-      plans.forEach(plan => {
-        acc[plan] ??= {}
-        acc[plan][layerName] ??= []
-        acc[plan][layerName].push(entities[layerId])
-      })
-
-      return acc
-    }, {} as Record<'PIRC' | 'PSCEM', Record<string, RegulatoryLayerCompact[]>>)
-  }
-)
-
-export const getRegulatoryLayersBySeaFront = createSelector(
-  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select()],
-  regulatoryLayers => {
-    const entities = regulatoryLayers?.data?.entities
-    const ids = regulatoryLayers?.data?.ids
-
-    if (!ids || !entities) {
-      return {}
-    }
-
-    return ids.reduce((acc, layerId) => {
-      const entity = entities[layerId]
-      const layerName = entity?.layerName
-      const seaFront = entity?.facade
-
-      if (!layerName || !seaFront) {
-        return acc
-      }
-      const allSeaFronts = Object.values(SeaFrontLabels).map(seaFrontLabel => seaFrontLabel.label)
-
-      allSeaFronts.forEach(seaFrontLabel => {
-        if (seaFront === seaFrontLabel) {
-          acc[seaFrontLabel] ??= {}
-          acc[seaFrontLabel][layerName] ??= []
-          acc[seaFrontLabel][layerName].push(entities[layerId])
-        }
-      })
-
-      return acc
-    }, {} as Record<StringDigit, Record<string, RegulatoryLayerCompact[]>>)
-  }
-)
