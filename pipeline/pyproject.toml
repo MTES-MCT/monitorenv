@@ -10,7 +10,6 @@ geopandas = "^1.1.1"
 python-dotenv = "^1.2.1"
 pandas = "^2.3.3"
 geoalchemy2 = "^0.18.1"
-cx-oracle = "^8.3.0"
 simplejson = "^3.20.2"
 pytz = "^2025.2"
 prefect = "^3.6.4"
@@ -20,6 +19,7 @@ sqlalchemy = "^2.0.44"
 psycopg2-binary = "^2.9.11"
 css-inline = "^0.18.0"
 lxml = "^6.0.2"
+oracledb = "^3.4.2"
 
 
 [tool.poetry.group.dev.dependencies]
