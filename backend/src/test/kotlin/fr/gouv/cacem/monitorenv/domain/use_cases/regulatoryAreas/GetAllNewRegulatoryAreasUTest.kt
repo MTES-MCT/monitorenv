@@ -34,4 +34,31 @@ class GetAllNewRegulatoryAreasUTest {
         assertThat(log.out).contains("Attempt to GET all regulatory areas")
         assertThat(log.out).contains("Found ${regulatoryAreas.size} regulatory areas")
     }
+
+    @Test
+    fun `execute should group regulatory areas by control plan`(log: CapturedOutput) {
+        // Given
+        val regulatoryAreas =
+            listOf(
+                RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 1, layerName = "Layer1", plan = "PIRC"),
+                RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 2, layerName = "Layer2", plan = "PIRC"),
+                RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 3, layerName = "Layer1", plan = "PSCEM"),
+            )
+        given(regulatoryAreaRepository.findAll(groupBy = "CONTROL_PLAN")).willReturn(regulatoryAreas)
+
+        // When
+        val groupedRegulatoryAreas =
+            getAllRegulatoryAreas.execute(
+                groupBy = "CONTROL_PLAN",
+                searchQuery = null,
+                seaFronts = null,
+            )
+
+        // Then
+        assertThat(groupedRegulatoryAreas).hasSize(2)
+        assertThat(groupedRegulatoryAreas["Layer1"]).hasSize(2)
+        assertThat(groupedRegulatoryAreas["Layer2"]).hasSize(1)
+        assertThat(log.out).contains("Attempt to GET all regulatory areas")
+        assertThat(log.out).contains("Found ${groupedRegulatoryAreas.size} regulatory areas")
+    }
 }
