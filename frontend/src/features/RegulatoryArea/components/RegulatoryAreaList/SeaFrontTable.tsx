@@ -1,4 +1,4 @@
-import { getregulatoryAreasBySeaFront } from '@api/regulatoryAreasAPI'
+import { getRegulatoryAreasBySeaFront } from '@api/regulatoryAreasAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon } from '@mtes-mct/monitor-ui'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
@@ -12,7 +12,7 @@ import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 export function SeaFrontTable() {
   const filters = useAppSelector(state => state.regulatoryAreaTable.filtersState)
   const groupedRegulatoryAreas = useAppSelector(state =>
-    getregulatoryAreasBySeaFront(state, {
+    getRegulatoryAreasBySeaFront(state, {
       ...filters,
       tags: filters.tags?.map(tag => tag.id),
       themes: filters.themes?.map(theme => theme.id)
@@ -52,7 +52,7 @@ export function SeaFrontTable() {
               />
             </GroupTitle>
             {seaFrontsExtented.includes(seaFront) &&
-              Object.entries(groupedRegulatoryAreas?.[seaFront] ?? {}).map(([key, regulatoryAreas]) => (
+              Object.entries(groupedRegulatoryAreas[seaFront]).map(([key, regulatoryAreas]) => (
                 <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
               ))}
           </Fragment>
