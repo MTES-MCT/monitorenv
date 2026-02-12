@@ -1,12 +1,11 @@
 import { getregulatoryAreasByControlPlan } from '@api/regulatoryAreasAPI'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 
 import { RegulatoryAreaGroup } from './RegulatoryAreaGroup'
 import { ControlPlanWrapper, GroupTitle, StyledIconButton, Title } from './style'
-
-import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export function ControlPlanTable() {
   const filters = useAppSelector(state => state.regulatoryAreaTable.filtersState)
@@ -16,15 +15,18 @@ export function ControlPlanTable() {
       tags: filters.tags?.map(tag => tag.id),
       themes: filters.themes?.map(theme => theme.id)
     })
-  ) as Record<'PIRC' | 'PSCEM', Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>
+  ) as Record<
+    RegulatoryArea.RegulatoryAreaControlPlan.PSCEM | RegulatoryArea.RegulatoryAreaControlPlan.PIRC,
+    Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
+  >
 
   const [controlPlansExtented, setControlPlansExtented] = useState<string[]>([])
 
   const PIRCRegulatoryAreas = Object.entries(groupedRegulatoryAreas?.PIRC ?? [])
-  const isPIRCGroupOpen = controlPlansExtented.includes('PIRC')
+  const isPIRCGroupOpen = controlPlansExtented.includes(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)
 
   const PSCEMRegulatoryAreas = Object.entries(groupedRegulatoryAreas?.PSCEM ?? [])
-  const isPSCEMGroupOpen = controlPlansExtented.includes('PSCEM')
+  const isPSCEMGroupOpen = controlPlansExtented.includes(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)
 
   const openOrCloseGroup = (value: string | undefined) => {
     const isGroupOpen = controlPlansExtented.includes(value ?? '')
@@ -38,13 +40,13 @@ export function ControlPlanTable() {
   return (
     <>
       <ControlPlanWrapper>
-        <GroupTitle onClick={() => openOrCloseGroup('PIRC')}>
+        <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}>
           <Title>PIRC</Title>
           <StyledIconButton
             $isExpanded={isPIRCGroupOpen}
             accent={Accent.TERTIARY}
             Icon={Icon.Chevron}
-            onClick={() => openOrCloseGroup('PIRC')}
+            onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}
             title={isPIRCGroupOpen ? 'Replier le contenu' : 'Déplier le contenu'}
           />
         </GroupTitle>
@@ -53,13 +55,13 @@ export function ControlPlanTable() {
             <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
           ))}
 
-        <GroupTitle onClick={() => openOrCloseGroup('PSCEM')}>
+        <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}>
           <Title>PSCEM</Title>
           <StyledIconButton
             $isExpanded={isPSCEMGroupOpen}
             accent={Accent.TERTIARY}
             Icon={Icon.Chevron}
-            onClick={() => openOrCloseGroup('PSCEM')}
+            onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}
             title={isPSCEMGroupOpen ? 'Replier le contenu' : 'Déplier le contenu'}
           />
         </GroupTitle>

@@ -15,13 +15,13 @@ export function Identification({
   themes,
   type
 }: {
-  facade: string
-  plan: string
+  facade?: string
+  plan?: string
   polyName?: string
-  resume: string
-  tags: TagFromAPI[]
-  themes: ThemeFromAPI[]
-  type: string
+  resume?: string
+  tags?: TagFromAPI[]
+  themes?: ThemeFromAPI[]
+  type?: string
 }) {
   const subThemes = displaySubThemes(themes)
   const subTags = displaySubTags(tags)
@@ -51,7 +51,7 @@ export function Identification({
           <Field>
             <Key>Thématiques</Key>
             <Value data-cy="regulatory-layers-metadata-theme">
-              {themes.map(theme => theme.name).join(', ') || <NoValue>-</NoValue>}
+              {themes?.map(theme => theme.name).join(', ') || <NoValue>-</NoValue>}
             </Value>
           </Field>
           {subThemes && (
@@ -63,7 +63,7 @@ export function Identification({
           <Field>
             <Key>Tags</Key>
             <Value data-cy="regulatory-layers-metadata-tag">
-              {tags.map(tag => tag.name).join(', ') || <NoValue>-</NoValue>}
+              {tags?.map(tag => tag.name).join(', ') || <NoValue>-</NoValue>}
             </Value>
           </Field>
           {subTags && (
