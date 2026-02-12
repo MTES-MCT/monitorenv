@@ -7,6 +7,7 @@ import java.time.ZonedDateTime
 
 data class RegulatoryAreaNewEntity(
     val id: Int,
+    val authorizationPeriods: String? = null,
     val creation: ZonedDateTime? = null,
     val date: ZonedDateTime? = null,
     val dateFin: ZonedDateTime? = null,
@@ -18,8 +19,10 @@ data class RegulatoryAreaNewEntity(
     val geom: MultiPolygon? = null,
     val layerName: String? = null,
     val observation: String? = null,
+    val othersRefReg: List<OtherRefRegEntity>? = listOf(),
     val plan: String? = null,
     val polyName: String? = null,
+    val prohibitionPeriods: String? = null,
     val refReg: String? = null,
     val resume: String? = null,
     val source: String? = null,

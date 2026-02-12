@@ -1,16 +1,22 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.OtherRefRegEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaNewModel.Companion.toTagEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaNewModel.Companion.toThemeEntities
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -55,8 +61,13 @@ data class RegulatoryAreaNewModel(
     var themes: List<ThemeRegulatoryAreaNewModel>,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
+    @Type(JsonBinaryType::class)
+    @Column(name = "others_ref_reg", columnDefinition = "jsonb")
+    val othersRefReg: JsonNode?,
+    @Column(name = "authorization_periods") val authorizationPeriods: String?,
+    @Column(name = "prohibition_periods") val prohibitionPeriods: String?,
 ) {
-    fun toRegulatoryArea() =
+    fun toRegulatoryArea(mapper: ObjectMapper) =
         RegulatoryAreaNewEntity(
             id = id,
             creation = creation?.atZone(UTC),
@@ -80,10 +91,26 @@ data class RegulatoryAreaNewModel(
             themes = toThemeEntities(themes),
             type = type,
             url = url,
+            othersRefReg =
+                othersRefReg.let {
+                    mapper.convertValue(
+                        it,
+                        object : TypeReference<
+                            List<
+                                OtherRefRegEntity,
+                            >,
+                        >() {},
+                    )
+                },
+            authorizationPeriods = authorizationPeriods,
+            prohibitionPeriods = prohibitionPeriods,
         )
 
     companion object {
-        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaNewEntity): RegulatoryAreaNewModel =
+        fun fromRegulatoryAreaEntity(
+            regulatoryArea: RegulatoryAreaNewEntity,
+            mapper: ObjectMapper,
+        ): RegulatoryAreaNewModel =
             RegulatoryAreaNewModel(
                 id = regulatoryArea.id,
                 creation = regulatoryArea.creation?.toInstant(),
@@ -107,6 +134,9 @@ data class RegulatoryAreaNewModel(
                 url = regulatoryArea.url,
                 tags = listOf(),
                 themes = listOf(),
+                othersRefReg = regulatoryArea.othersRefReg.let { mapper.valueToTree<JsonNode>(it) },
+                authorizationPeriods = regulatoryArea.authorizationPeriods,
+                prohibitionPeriods = regulatoryArea.prohibitionPeriods,
             )
     }
 
