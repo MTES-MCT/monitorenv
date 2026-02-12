@@ -16,6 +16,7 @@ export namespace RegulatoryArea {
     id?: number
     layerName?: string
     observations?: string
+    othersRefReg?: OthersRegulatoryText[]
     plan?: string
     polyName?: string
     refReg?: string
@@ -36,9 +37,20 @@ export namespace RegulatoryArea {
 
   export type RegulatoryAreaWithBbox = RegulatoryAreaFromAPI & { bbox: number[] }
 
+  export type OthersRegulatoryText = {
+    endDate?: string
+    id: string
+    refReg?: string
+    startDate?: string
+  }
   export type RegulatoryAreasGroup = {
     group: string
     regulatoryAreas: RegulatoryAreaFromAPI[]
+  }
+
+  export enum RegulatoryAreaControlPlan {
+    PIRC = 'PIRC',
+    PSCEM = 'PSCEM'
   }
 
   export enum RegulatoryAreaType {

@@ -1,6 +1,7 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { createSelector } from '@reduxjs/toolkit'
 import { getQueryString } from '@utils/getQueryStringFormatted'
+import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { boundingExtent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
@@ -120,11 +121,11 @@ export const getregulatoryAreasByControlPlan = createSelector(
       })
 
       return acc
-    }, {} as Record<'PIRC' | 'PSCEM', Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>)
+    }, {} as Record<RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM, Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>)
   }
 )
 
-export const getregulatoryAreasBySeaFront = createSelector(
+export const getRegulatoryAreasBySeaFront = createSelector(
   [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],
 
   regulatoryAreas => {
@@ -136,19 +137,16 @@ export const getregulatoryAreasBySeaFront = createSelector(
 
     return groups.reduce((acc, group) => {
       group.regulatoryAreas.forEach(area => {
-        const { facade, plan } = area
+        const { facade, layerName } = area
 
-        if (!facade || !plan) {
+        if (!facade || !layerName) {
           return
         }
 
-        const plans = plan.split(',').map(p => p.trim())
-
-        plans.forEach(planRaw => {
-          acc[planRaw] ??= {}
-          acc[planRaw][facade] ??= []
-          acc[planRaw][facade].push(area)
-        })
+        const seaFront = SeaFrontLabels[facade]?.label
+        acc[seaFront] ??= {}
+        acc[seaFront][layerName] ??= []
+        acc[seaFront][layerName].push(area)
       })
 
       return acc

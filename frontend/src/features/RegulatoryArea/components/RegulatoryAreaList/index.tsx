@@ -69,7 +69,9 @@ export function RegulatoryAreaList() {
 
         <MapContainer className="map-container">{childrensComponents}</MapContainer>
 
-        {openedRegulatoryAreaId && <StyledRegulatoryAreasPanel layerId={openedRegulatoryAreaId} onClose={closePanel} />}
+        {openedRegulatoryAreaId && (
+          <StyledRegulatoryAreasPanel isNewRegulatoryArea layerId={openedRegulatoryAreaId} onClose={closePanel} />
+        )}
       </StyledBackofficeWrapper>
     </>
   )
