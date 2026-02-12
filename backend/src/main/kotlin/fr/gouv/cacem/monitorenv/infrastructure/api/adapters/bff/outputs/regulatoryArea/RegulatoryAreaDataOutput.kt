@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea
 
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.OtherRefRegEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
@@ -8,6 +9,7 @@ import java.time.ZonedDateTime
 
 data class RegulatoryAreaDataOutput(
     val id: Int,
+    val authorizationPeriods: String? = null,
     val creation: ZonedDateTime? = null,
     val date: ZonedDateTime? = null,
     val dateFin: ZonedDateTime? = null,
@@ -19,8 +21,10 @@ data class RegulatoryAreaDataOutput(
     val geom: MultiPolygon? = null,
     val layerName: String? = null,
     val observation: String? = null,
+    val othersRefReg: List<OtherRefRegEntity>? = listOf(),
     val plan: String? = null,
     val polyName: String? = null,
+    val prohibitionPeriods: String? = null,
     val refReg: String? = null,
     val resume: String? = null,
     val source: String? = null,
@@ -55,6 +59,9 @@ data class RegulatoryAreaDataOutput(
                 themes = regulatoryArea.themes.map { ThemeOutput.fromThemeEntity(it) },
                 type = regulatoryArea.type,
                 url = regulatoryArea.url,
+                othersRefReg = regulatoryArea.othersRefReg,
+                authorizationPeriods = regulatoryArea.authorizationPeriods,
+                prohibitionPeriods = regulatoryArea.prohibitionPeriods,
             )
     }
 }
