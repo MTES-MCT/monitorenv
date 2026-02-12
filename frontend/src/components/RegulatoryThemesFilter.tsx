@@ -6,6 +6,8 @@ import { useMemo } from 'react'
 import type { ThemeFromAPI, ThemeOption } from '../domain/entities/themes'
 
 export function RegulatoryThemesFilter({
+  error = undefined,
+  isErrorMessageHidden = false,
   isLabelHidden = true,
   isRequired = false,
   isTransparent = true,
@@ -14,6 +16,8 @@ export function RegulatoryThemesFilter({
   style,
   value
 }: {
+  error?: string
+  isErrorMessageHidden?: boolean
   isLabelHidden?: boolean
   isRequired?: boolean
   isTransparent?: boolean
@@ -30,6 +34,8 @@ export function RegulatoryThemesFilter({
     <CheckTreePicker
       key={`regulatory-themes-${themesOptions.length}`}
       childrenKey="subThemes"
+      error={error}
+      isErrorMessageHidden={isErrorMessageHidden}
       isLabelHidden={isLabelHidden}
       isRequired={isRequired}
       isTransparent={isTransparent}

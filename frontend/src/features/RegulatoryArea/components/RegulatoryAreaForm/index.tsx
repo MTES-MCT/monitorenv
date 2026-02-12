@@ -50,6 +50,7 @@ export function RegulatoryAreaForm() {
 
   const initialValues = useMemo(
     () => ({
+      authorizationPeriods: regulatoryArea?.authorizationPeriods,
       creation: regulatoryArea?.creation,
       date: regulatoryArea?.date,
       dateFin: regulatoryArea?.dateFin,
@@ -62,8 +63,10 @@ export function RegulatoryAreaForm() {
       id: regulatoryArea?.id,
       layerName: regulatoryArea?.layerName,
       observations: regulatoryArea?.observations,
+      othersRefReg: regulatoryArea?.othersRefReg ?? [],
       plan: regulatoryArea?.plan,
       polyName: regulatoryArea?.polyName,
+      prohibitionPeriods: regulatoryArea?.prohibitionPeriods,
       refReg: regulatoryArea?.refReg,
       resume: regulatoryArea?.resume,
       source: regulatoryArea?.source,

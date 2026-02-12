@@ -12,7 +12,7 @@ import {
   Label
 } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { useState } from 'react'
+import { useState, type SetStateAction, type Dispatch } from 'react'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -20,15 +20,20 @@ import { SubTitle } from './style'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
-type MainRefReg = {
+export type MainRefReg = {
   date?: string
   dateFin?: string
   refReg?: string
   url?: string
 }
-export function RegulatoryTexts() {
+export function RegulatoryTexts({
+  editingMainRefReg,
+  setEditingMainRefReg
+}: {
+  editingMainRefReg: MainRefReg | undefined
+  setEditingMainRefReg: Dispatch<SetStateAction<MainRefReg | undefined>>
+}) {
   const { setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
-  const [dditingMainRefReg, setEditingMainRefReg] = useState<MainRefReg | undefined>(undefined)
   const [editingOtherRefReg, setEditingOtherRefReg] = useState<RegulatoryArea.OthersRegulatoryText | undefined>(
     undefined
   )
@@ -38,10 +43,10 @@ export function RegulatoryTexts() {
   }
 
   const cancelEditRefReg = () => {
-    setFieldValue('date', dditingMainRefReg?.date)
-    setFieldValue('dateFin', dditingMainRefReg?.dateFin)
-    setFieldValue('refReg', dditingMainRefReg?.refReg)
-    setFieldValue('url', dditingMainRefReg?.url)
+    setFieldValue('date', editingMainRefReg?.date)
+    setFieldValue('dateFin', editingMainRefReg?.dateFin)
+    setFieldValue('refReg', editingMainRefReg?.refReg)
+    setFieldValue('url', editingMainRefReg?.url)
     setEditingMainRefReg(undefined)
   }
 
@@ -125,7 +130,7 @@ export function RegulatoryTexts() {
   }
 
   const renderMainRegulatoryText = () => {
-    if (dditingMainRefReg) {
+    if (editingMainRefReg) {
       return (
         <EditingRefRegContainer>
           <div>
@@ -133,10 +138,17 @@ export function RegulatoryTexts() {
             <RefRegText>{values.refReg} </RefRegText>
           </div>
           <RefRegSecondLine>
-            <FormikTextInput isLight label="URL du lien" name="url" style={{ width: '65%' }} />
+            <FormikTextInput isErrorMessageHidden isLight label="URL du lien" name="url" style={{ width: '65%' }} />
             <DateContainer>
-              <FormikDatePicker isLight isRequired isStringDate label="Début de validité" name="date" />
-              <FormikDatePicker isLight isRequired isStringDate label="Fin de validité" name="dateFin" />
+              <FormikDatePicker
+                isErrorMessageHidden
+                isLight
+                isRequired
+                isStringDate
+                label="Début de validité"
+                name="date"
+              />
+              <FormikDatePicker isErrorMessageHidden isLight isStringDate label="Fin de validité" name="dateFin" />
             </DateContainer>
           </RefRegSecondLine>
           <ButtonsWrapper>
@@ -149,7 +161,7 @@ export function RegulatoryTexts() {
       )
     }
 
-    if (values.refReg && !dditingMainRefReg) {
+    if (values.refReg && !editingMainRefReg) {
       const mainRefReg = {
         date: values.date,
         dateFin: values.dateFin,
@@ -209,7 +221,6 @@ export function RegulatoryTexts() {
                       />
                       <FormikDatePicker
                         isLight
-                        isRequired
                         isStringDate
                         label="Fin de validité"
                         name={`othersRefReg[${refRegindex}].endDate`}

@@ -1,15 +1,18 @@
 import { FormikTextarea, Icon, Label, THEME } from '@mtes-mct/monitor-ui'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 import { Identification } from './Identification'
-import { RegulatoryTexts } from './RegulatoryTexts'
+import { RegulatoryTexts, type MainRefReg } from './RegulatoryTexts'
 import { SubTitle } from './style'
 
 export function FormContent({ isEditing }: { isEditing: boolean }) {
+  const [editingMainRefReg, setEditingMainRefReg] = useState<MainRefReg | undefined>(undefined)
+
   return (
     <>
-      <Identification isEditing={isEditing} />
-      <RegulatoryTexts />
+      <Identification isEditing={isEditing} setEditingMainRefReg={setEditingMainRefReg} />
+      <RegulatoryTexts editingMainRefReg={editingMainRefReg} setEditingMainRefReg={setEditingMainRefReg} />
 
       <SubTitle>PÉRIODE(S)</SubTitle>
       <PeriodContainer>
@@ -21,7 +24,7 @@ export function FormContent({ isEditing }: { isEditing: boolean }) {
           <FormikTextarea
             isLabelHidden
             label="Période autorisée"
-            name="authorizePeriod"
+            name="authorizationPeriods"
             placeholder="Détail de la période d’autorisation"
           />
         </Period>
@@ -33,7 +36,7 @@ export function FormContent({ isEditing }: { isEditing: boolean }) {
           <FormikTextarea
             isLabelHidden
             label="Période d'interdiction"
-            name="forbidPeriod"
+            name="prohibitionPeriods"
             placeholder="Détail de la période d’interdiction"
           />
         </Period>
