@@ -50,7 +50,7 @@ data class ThemeModel(
             themeEntity: ThemeEntity,
             parent: ThemeModel? = null,
         ): ThemeModel {
-            val tagModel =
+            val themeModel =
                 ThemeModel(
                     id = themeEntity.id,
                     name = themeEntity.name,
@@ -59,8 +59,8 @@ data class ThemeModel(
                     endedAt = themeEntity.endedAt,
                     subThemes = listOf(),
                 )
-            tagModel.subThemes = themeEntity.subThemes.map { fromThemeEntity(it, tagModel) }
-            return tagModel
+            themeModel.subThemes = themeEntity.subThemes.map { fromThemeEntity(it, themeModel) }
+            return themeModel
         }
     }
 

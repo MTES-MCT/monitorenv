@@ -6,6 +6,8 @@ import { useMemo } from 'react'
 import type { TagFromAPI, TagOption } from '../domain/entities/tags'
 
 export function RegulatoryTagsFilter({
+  error = undefined,
+  isErrorMessageHidden = false,
   isLabelHidden = true,
   isRequired = false,
   isTransparent = true,
@@ -14,6 +16,8 @@ export function RegulatoryTagsFilter({
   style,
   value
 }: {
+  error?: string
+  isErrorMessageHidden?: boolean
   isLabelHidden?: boolean
   isRequired?: boolean
   isTransparent?: boolean
@@ -30,6 +34,8 @@ export function RegulatoryTagsFilter({
     <CheckTreePicker
       key={`regulatory-tags-${tagsOptions.length}`}
       childrenKey="subTags"
+      error={error}
+      isErrorMessageHidden={isErrorMessageHidden}
       isLabelHidden={isLabelHidden}
       isRequired={isRequired}
       isTransparent={isTransparent}

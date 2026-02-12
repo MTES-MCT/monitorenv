@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
@@ -24,9 +25,10 @@ class JpaRegulatoryAreaNewRepository(
     private val dbRegulatoryAreaRepository: IDBRegulatoryAreaNewRepository,
     private val dbTagVigilanceAreaRepository: IDBTagRegulatoryAreaRepository,
     private val dbThemeRegulatoryAreaRepository: IDBThemeRegulatoryAreaRepository,
+    private val mapper: ObjectMapper,
 ) : IRegulatoryAreaNewRepository {
     override fun findById(id: Int): RegulatoryAreaNewEntity? =
-        dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea()
+        dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea(mapper)
 
     override fun findAll(
         groupBy: String?,
@@ -37,7 +39,7 @@ class JpaRegulatoryAreaNewRepository(
 
         return dbRegulatoryAreaRepository
             .findAll(seaFronts = seaFronts)
-            .map { it.toRegulatoryArea() }
+            .map { it.toRegulatoryArea(mapper) }
             .filter { findBySearchQuery(it, query) }
     }
 
@@ -46,19 +48,19 @@ class JpaRegulatoryAreaNewRepository(
     override fun findAllToCreate(): List<RegulatoryAreaNewEntity> =
         dbRegulatoryAreaRepository
             .findAllByCreationIsNull()
-            .map { it.toRegulatoryArea() }
+            .map { it.toRegulatoryArea(mapper) }
 
     @Transactional
     override fun save(regulatoryArea: RegulatoryAreaNewEntity): RegulatoryAreaNewEntity {
-        val model = RegulatoryAreaNewModel.fromRegulatoryAreaEntity(regulatoryArea)
+        val model = RegulatoryAreaNewModel.fromRegulatoryAreaEntity(regulatoryArea, mapper)
         val savedModel = dbRegulatoryAreaRepository.saveAndFlush(model)
 
-        val savedTags = saveTags(model, regulatoryArea.tags)
+        val savedTags = saveTags(savedModel, regulatoryArea.tags)
         val savedThemes = saveThemes(savedModel, regulatoryArea.themes)
 
         return savedModel
             .copy(tags = savedTags, themes = savedThemes)
-            .toRegulatoryArea()
+            .toRegulatoryArea(mapper)
     }
 
     private fun findBySearchQuery(
