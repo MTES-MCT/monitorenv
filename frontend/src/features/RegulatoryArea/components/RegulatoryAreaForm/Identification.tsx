@@ -17,20 +17,29 @@ import {
   Select,
   TextInput
 } from '@mtes-mct/monitor-ui'
+import { parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { useFormikContext } from 'formik'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type Dispatch, type SetStateAction } from 'react'
 import styled from 'styled-components'
 
 import { SubTitle } from './style'
 
+import type { MainRefReg } from './RegulatoryTexts'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
-export function Identification({ isEditing }: { isEditing: boolean }) {
-  const { setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
+export function Identification({
+  isEditing,
+  setEditingMainRefReg
+}: {
+  isEditing: boolean
+  setEditingMainRefReg: Dispatch<SetStateAction<MainRefReg | undefined>>
+}) {
+  const { errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
 
   const { data: layerNames } = useGetLayerNamesQuery()
   const { data: regulatoryAreasToCreate } = useGetRegulatoryAreasToCreateQuery()
@@ -78,14 +87,15 @@ export function Identification({ isEditing }: { isEditing: boolean }) {
     setFieldValue('geom', nextGeom?.geom)
     setFieldValue('id', nextGeom?.id)
     setFieldValue('refReg', nextGeom?.refReg)
+    setEditingMainRefReg({ date: values.date, dateFin: values.dateFin, refReg: nextGeom?.refReg })
   }
 
   const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
-    setFieldValue('themes', nextThemes)
+    setFieldValue('themes', parseOptionsToThemes(nextThemes))
   }
 
   const setTags = (nextTags: TagOption[] | undefined = []) => {
-    setFieldValue('tags', nextTags)
+    setFieldValue('tags', parseOptionsToTags(nextTags))
   }
 
   const setControlPlan = (controlPlan: RegulatoryArea.RegulatoryAreaControlPlan, isChecked: boolean) => {
@@ -195,7 +205,14 @@ export function Identification({ isEditing }: { isEditing: boolean }) {
                 : geomOptions.find(option => option.value.id === values.id)?.value
             }
           />
-          <FormikSelect isRequired label="Façade" name="facade" options={seaFrontsAsOptions} style={{ width: '30%' }} />
+          <FormikSelect
+            isErrorMessageHidden
+            isRequired
+            label="Façade"
+            name="facade"
+            options={seaFrontsAsOptions}
+            style={{ width: '30%' }}
+          />
           <FormikSelect
             isErrorMessageHidden
             isRequired
@@ -208,6 +225,8 @@ export function Identification({ isEditing }: { isEditing: boolean }) {
         <div>
           <InlineFieldsContainer>
             <RegulatoryThemesFilter
+              error={errors.themes}
+              isErrorMessageHidden
               isLabelHidden={false}
               isRequired
               isTransparent={false}
@@ -217,6 +236,8 @@ export function Identification({ isEditing }: { isEditing: boolean }) {
               value={values?.themes ?? []}
             />
             <RegulatoryTagsFilter
+              error={errors.tags}
+              isErrorMessageHidden
               isLabelHidden={false}
               isRequired
               isTransparent={false}
@@ -241,12 +262,14 @@ export function Identification({ isEditing }: { isEditing: boolean }) {
           <ControlPlanContainer>
             <Checkbox
               checked={values?.plan?.includes(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}
+              hasError={!values.plan}
               label={RegulatoryArea.RegulatoryAreaControlPlan.PIRC}
               name="PIRCType"
               onChange={isChecked => setControlPlan(RegulatoryArea.RegulatoryAreaControlPlan.PIRC, isChecked ?? false)}
             />
             <Checkbox
               checked={values?.plan?.includes(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}
+              hasError={!values.plan}
               label={RegulatoryArea.RegulatoryAreaControlPlan.PSCEM}
               name="PSCEMType"
               onChange={isChecked => setControlPlan(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM, isChecked ?? false)}
