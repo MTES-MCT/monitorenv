@@ -7,7 +7,16 @@ class RegulatoryAreaNewFixture {
         fun aNewRegulatoryArea(
             id: Int = 1,
             facade: String = "NAMO",
+            layerName: String? = "Layername 1",
+            plan: String = "PIRC",
         ): RegulatoryAreaNewEntity =
-            RegulatoryAreaNewEntity(id = id, tags = listOf(), themes = listOf(), facade = facade)
+            RegulatoryAreaNewEntity(
+                id = id,
+                tags = listOf(),
+                themes = listOf(),
+                facade = facade,
+                layerName = layerName,
+                plan = plan,
+            )
     }
 }
