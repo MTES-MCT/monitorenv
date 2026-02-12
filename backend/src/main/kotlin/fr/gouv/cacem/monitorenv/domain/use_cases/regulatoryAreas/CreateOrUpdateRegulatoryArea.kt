@@ -18,10 +18,10 @@ class CreateOrUpdateRegulatoryArea(
 
         try {
             val regulatoryArea = regulatoryAreaRepository.save(regulatoryArea)
-            logger.info("RegulatoryArea ${regulatoryArea.id} created or updated")
+            logger.info("Regulatory Area ${regulatoryArea.id} created or updated")
             return regulatoryArea
         } catch (e: Exception) {
-            val errorMessage = "regulatoryArea ${regulatoryArea.id} couldn't be saved"
+            val errorMessage = "Regulatory Area ${regulatoryArea.id} couldn't be saved"
             logger.error(errorMessage, e)
             throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, message = errorMessage)
         }
