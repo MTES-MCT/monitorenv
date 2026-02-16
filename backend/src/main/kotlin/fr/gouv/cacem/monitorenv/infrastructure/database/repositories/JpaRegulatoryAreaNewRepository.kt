@@ -34,11 +34,10 @@ class JpaRegulatoryAreaNewRepository(
         query: String?,
         seaFronts: List<String>?,
     ): List<RegulatoryAreaNewEntity> =
-         dbRegulatoryAreaRepository
+        dbRegulatoryAreaRepository
             .findAll(seaFronts = seaFronts)
             .map { it.toRegulatoryArea(mapper) }
             .filter { findBySearchQuery(it, query) }
-
 
     override fun findAllLayerNames(): List<String> = dbRegulatoryAreaRepository.findAllLayerNames()
 

@@ -1,6 +1,6 @@
 import pandas as pd
-from pipeline.src.db_config import create_engine
-from pipeline.src.utils import psql_insert_copy
+from src.db_config import create_engine
+from src.utils import psql_insert_copy
 from prefect import flow, get_run_logger, task
 from sqlalchemy import text
 

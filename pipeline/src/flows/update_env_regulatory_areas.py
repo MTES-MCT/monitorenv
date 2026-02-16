@@ -1,5 +1,5 @@
 import pandas as pd
-from pipeline.src.utils import psql_insert_copy
+from src.utils import psql_insert_copy
 from prefect import flow, get_run_logger, task
 from sqlalchemy import text
 
