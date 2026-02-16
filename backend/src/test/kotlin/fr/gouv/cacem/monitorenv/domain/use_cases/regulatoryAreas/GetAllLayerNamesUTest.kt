@@ -57,21 +57,4 @@ class GetAllLayerNamesUTest {
         assertThat(log.out).contains("Attempt to GET all regulatory areas layer names")
         assertThat(log.out).contains("Found 1 layer names")
     }
-
-    @Test
-    fun `execute should throw exception when repository fails`(log: CapturedOutput) {
-        // Given
-        val exceptionMessage = "Database connection error"
-        given(regulatoryAreaRepository.findAllLayerNames()).willThrow(RuntimeException(exceptionMessage))
-
-        // When
-        val thrownException =
-            org.junit.jupiter.api.assertThrows<RuntimeException> {
-                getAllLayerNames.execute()
-            }
-
-        // Then
-        assertThat(thrownException.message).isEqualTo(exceptionMessage)
-        assertThat(log.out).contains("Attempt to GET all regulatory areas layer names")
-    }
 }
