@@ -88,18 +88,8 @@ data class RegulatoryAreaNewModel(
             resume = resume,
             source = source,
             temporalite = temporalite,
-            tags =
-                if (Hibernate.isInitialized(tags)) {
-                    toTagEntities(tags)
-                } else {
-                    emptyList()
-                },
-            themes =
-                if (Hibernate.isInitialized(themes)) {
-                    toThemeEntities(themes)
-                } else {
-                    emptyList()
-                },
+            tags = toTagEntities(tags),
+            themes = toThemeEntities(themes),
             type = type,
             url = url,
             othersRefReg =
