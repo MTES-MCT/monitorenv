@@ -50,7 +50,7 @@ INSERT INTO public.regulatory_areas (
     '2025-06-06', /* edition_cacem */
     '2025-01-10', /* edition_bo */
     'resume1',
-    'poly_name1',
+    'poly_name1 qui est différent du CACEM',
     'plan1'
 );
 
@@ -94,7 +94,7 @@ INSERT INTO public.regulatory_areas (
     '2025-01-13', /* edition_cacem */
     '2025-07-21', /* edition_bo */
     'resume2',
-    'poly_name2',
+    'poly_name2 qui est différent du CACEM',
     'plan2'
 );
 
