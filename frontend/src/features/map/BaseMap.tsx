@@ -297,17 +297,25 @@ function BaseMapNotMemoized({
           />
         </DistanceUnitsTypeSelection>
       </StyledDistanceUnitContainer>
-      <StyledScaleLine className="scale-line" id="scale-line" onClick={() => setUnitsSelectionIsOpen(true)} />
+      <StyledScaleLine
+        className="scale-line"
+        id="scale-line"
+        onClick={() => setUnitsSelectionIsOpen(true)}
+        type="button"
+      />
     </MapWrapper>
   )
 }
 
 export const BaseMap = memo(BaseMapNotMemoized)
 
-const StyledScaleLine = styled.div``
+const StyledScaleLine = styled.button`
+  height: 0px;
+`
 const MapWrapper = styled.div`
   display: flex;
   flex: 1;
+  position: relative;
 `
 
 const MapContainer = styled.div`
@@ -318,6 +326,9 @@ const MapContainer = styled.div`
 `
 
 const StyledDistanceUnitContainer = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
   z-index: 2;
 `
 
@@ -330,21 +341,18 @@ const Header = styled.div`
 `
 
 const DistanceUnitsTypeSelection = styled.div<{ $isOpen: boolean }>`
-  position: absolute;
-  bottom: 40px;
-  left: 283px;
-  margin: 1px;
+  align-items: center;
+  background-color: ${p => p.theme.color.white};
   color: ${p => p.theme.color.slateGray};
   display: flex;
   flex-direction: column;
-  align-items: center;
+  height: ${props => (props.$isOpen ? 69 : 0)}px;
+  margin: 1px;
   text-align: center;
-  background-color: ${p => p.theme.color.white};
-  width: 191px;
+  transition: all 0.5s;
   opacity: ${props => (props.$isOpen ? 1 : 0)};
   visibility: ${props => (props.$isOpen ? 'visible' : 'hidden')};
-  height: ${props => (props.$isOpen ? 69 : 0)}px;
-  transition: all 0.5s;
+  width: 191px;
 
   > fieldset {
     flex-grow: 2;
