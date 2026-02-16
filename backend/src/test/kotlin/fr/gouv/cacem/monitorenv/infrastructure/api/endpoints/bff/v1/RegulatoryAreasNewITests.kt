@@ -1,5 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.nhaarman.mockitokotlin2.argThat
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
@@ -10,6 +12,9 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulator
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,10 +25,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -51,6 +58,9 @@ class RegulatoryAreasNewITests {
 
     @MockitoBean
     private lateinit var getAllRegulatoryAreasToCreate: GetAllRegulatoryAreasToCreate
+
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
     private val wktReader = WKTReader()
 
@@ -412,5 +422,219 @@ class RegulatoryAreasNewITests {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].group", equalTo("PIRC")))
             .andExpect(jsonPath("$[1].group", equalTo("PSCEM")))
+    }
+
+    @Test
+    fun `Should create new regulatory area`() {
+        // Given
+        val regulatoryAreaToCreate =
+            RegulatoryAreaNewEntity(
+                id = 9999,
+                geom = polygon,
+                url = url,
+                creation = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                layerName = "New_Layer",
+                facade = "MED",
+                refReg = "New regulation reference",
+                editionBo = ZonedDateTime.parse("2024-01-02T00:00:00Z"),
+                editionCacem = null,
+                editeur = "Test Editor",
+                source = "Test Source",
+                observation = "Test observation",
+                tags = listOf(aTag(id = 5, name = "Mouillage")),
+                themes = listOf(aTheme(id = 9, name = "AMP")),
+                date = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                dureeValidite = "10 ans",
+                dateFin = ZonedDateTime.parse("2034-01-01T00:00:00Z"),
+                temporalite = "permanent",
+                plan = "PIRC",
+                polyName = "New Zone",
+                resume = "New zone description",
+                type = "ZPM",
+                authorizationPeriods = null,
+                prohibitionPeriods = null,
+                othersRefReg = null,
+            )
+
+        val requestBody =
+            RegulatoryAreaDataInput(
+                id = 9999,
+                layerName = "New_Layer",
+                facade = "MED",
+                refReg = "New regulation reference",
+                resume = "New zone description",
+                plan = "PIRC",
+                polyName = "New Zone",
+                type = "ZPM",
+                editeur = "Test Editor",
+                source = "Test Source",
+                observation = "Test observation",
+                date = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                dateFin = ZonedDateTime.parse("2034-01-01T00:00:00Z"),
+                dureeValidite = "10 ans",
+                temporalite = "permanent",
+                editionBo = ZonedDateTime.parse("2024-01-02T00:00:00Z"),
+                creation = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                url = url,
+                tags =
+                    listOf(
+                        TagInput(
+                            id = 5,
+                            name = "Mouillage",
+                            subTags = listOf(),
+                            startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                            endedAt = null,
+                        ),
+                    ),
+                themes =
+                    listOf(
+                        ThemeInput(
+                            id = 9,
+                            name = "AMP",
+                            subThemes = listOf(),
+                            startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                            endedAt = null,
+                        ),
+                    ),
+            )
+
+        given(
+            createOrUpdateRegulatoryArea.execute(
+                regulatoryArea = requestBody.toRegulatoryAreaEntity(),
+            ),
+        ).willReturn(regulatoryAreaToCreate)
+
+        // When
+        mockMvc
+            .perform(
+                put("/bff/regulatory-areas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody)),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", equalTo(9999)))
+            .andExpect(jsonPath("$.layerName", equalTo("New_Layer")))
+            .andExpect(jsonPath("$.facade", equalTo("MED")))
+            .andExpect(jsonPath("$.refReg", equalTo("New regulation reference")))
+            .andExpect(jsonPath("$.resume", equalTo("New zone description")))
+            .andExpect(jsonPath("$.plan", equalTo("PIRC")))
+            .andExpect(jsonPath("$.polyName", equalTo("New Zone")))
+            .andExpect(jsonPath("$.type", equalTo("ZPM")))
+            .andExpect(jsonPath("$.tags[0].name", equalTo("Mouillage")))
+            .andExpect(jsonPath("$.themes[0].name", equalTo("AMP")))
+    }
+
+    @Test
+    fun `Should update existing regulatory area`() {
+        // Given
+        val updatedRegulatoryArea =
+            RegulatoryAreaNewEntity(
+                id = 17,
+                geom = polygon,
+                url = url,
+                creation = ZonedDateTime.parse("2021-11-01T04:50:09Z"),
+                layerName = "ZMEL_Cale_Querlen_Updated",
+                facade = "NAMO",
+                refReg = refReg,
+                editionBo = ZonedDateTime.parse("2024-03-01T00:00:00Z"),
+                editionCacem = ZonedDateTime.parse("2024-03-02T00:00:00Z"),
+                editeur = "Updated Editor",
+                source = "Updated Source",
+                observation = "Updated observation",
+                tags = listOf(aTag(id = 5, name = "Mouillage"), aTag(id = 6, name = "Extraction granulats")),
+                themes = listOf(aTheme(id = 9, name = "AMP")),
+                date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
+                dureeValidite = "20 ans",
+                dateFin = ZonedDateTime.parse("2040-07-01T04:50:09Z"),
+                temporalite = "permanent",
+                plan = "PIRC",
+                polyName = "Zone mise à jour",
+                resume = "Description mise à jour",
+                type = "AMP",
+                authorizationPeriods = null,
+                prohibitionPeriods = null,
+                othersRefReg = null,
+            )
+
+        val requestBody =
+            RegulatoryAreaDataInput(
+                id = 17,
+                geom = polygon,
+                url = url,
+                creation = ZonedDateTime.parse("2021-11-01T04:50:09Z"),
+                layerName = "ZMEL_Cale_Querlen_Updated",
+                facade = "NAMO",
+                refReg = refReg,
+                editionBo = ZonedDateTime.parse("2024-03-01T00:00:00Z"),
+                editionCacem = ZonedDateTime.parse("2024-03-02T00:00:00Z"),
+                editeur = "Updated Editor",
+                source = "Updated Source",
+                observation = "Updated observation",
+                tags =
+                    listOf(
+                        TagInput(
+                            id = 5,
+                            name = "Mouillage",
+                            subTags = listOf(),
+                            startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                            endedAt = null,
+                        ),
+                        TagInput(
+                            id = 6,
+                            name = "Extraction granulats",
+                            subTags = listOf(),
+                            startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                            endedAt = null,
+                        ),
+                    ),
+                themes =
+                    listOf(
+                        ThemeInput(
+                            id = 9,
+                            name = "AMP",
+                            subThemes = listOf(),
+                            startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                            endedAt = null,
+                        ),
+                    ),
+                date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
+                dureeValidite = "20 ans",
+                dateFin = ZonedDateTime.parse("2040-07-01T04:50:09Z"),
+                temporalite = "permanent",
+                plan = "PIRC",
+                polyName = "Zone mise à jour",
+                resume = "Description mise à jour",
+                type = "AMP",
+                authorizationPeriods = null,
+                prohibitionPeriods = null,
+                othersRefReg = null,
+            )
+
+        given(
+            createOrUpdateRegulatoryArea.execute(
+                argThat {
+                    id == 17
+                },
+            ),
+        ).willReturn(updatedRegulatoryArea)
+
+        // When
+        mockMvc
+            .perform(
+                put("/bff/regulatory-areas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody)),
+            ).andDo(MockMvcResultHandlers.print())
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", equalTo(17)))
+            .andExpect(jsonPath("$.layerName", equalTo("ZMEL_Cale_Querlen_Updated")))
+            .andExpect(jsonPath("$.facade", equalTo("NAMO")))
+            .andExpect(jsonPath("$.resume", equalTo("Description mise à jour")))
+            .andExpect(jsonPath("$.polyName", equalTo("Zone mise à jour")))
+            .andExpect(jsonPath("$.type", equalTo("AMP")))
+            .andExpect(jsonPath("$.tags.length()", equalTo(2)))
+            .andExpect(jsonPath("$.themes.length()", equalTo(1)))
     }
 }
