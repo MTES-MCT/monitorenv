@@ -1,9 +1,15 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.locationtech.jts.geom.MultiPolygon
+import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.time.ZonedDateTime
 
 class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Autowired
@@ -68,5 +74,127 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea.plan).isEqualTo("PIRC")
         assertThat(requestedRegulatoryArea.polyName).isEqualTo("")
         assertThat(requestedRegulatoryArea.resume).isEqualTo("Partie terrestre RNN d'Iroise")
+    }
+
+    @Test
+    fun `findAllLayerNames should return all layer names`() {
+        // When
+        val layerNames = jpaRegulatoryAreaNewRepository.findAllLayerNames()
+
+        // Then
+        assertThat(layerNames).hasSize(10)
+        assertThat(layerNames).containsExactlyInAnyOrder(
+            "",
+            "Dragage_port_de_Brest",
+            "Interdiction_VNM_Molene",
+            "Mouillage_Conquet_Ile_de_bannec",
+            "Mouillage_interdiction_port_Camaret",
+            "RNN_Iroise",
+            "ZMEL_anse_illien_Ploumoguer",
+            "ZMEL_Cale_Querlen",
+            "ZMEL_maison_blanche",
+            null,
+        )
+    }
+
+    @Test
+    fun `findAllToCreate should return all regulatory areas to create`() {
+        // When
+        val regulatoryAreasToCreate = jpaRegulatoryAreaNewRepository.findAllToCreate()
+        println(regulatoryAreasToCreate[0])
+        // Then
+        assertThat(regulatoryAreasToCreate).hasSize(2)
+        assertThat(regulatoryAreasToCreate[0].id).isEqualTo(123)
+        assertThat(regulatoryAreasToCreate[0].geom).isNotNull()
+        assertThat(
+            regulatoryAreasToCreate[0].refReg,
+        ).isEqualTo(
+            "Arrêté inter-préfectoral N°2028118-0159 autorisant l'occupation temporaire du domaine public maritime vers Ajaccio",
+        )
+        assertThat(regulatoryAreasToCreate[0].creation).isNull()
+        assertThat(regulatoryAreasToCreate[1].id).isEqualTo(456)
+        assertThat(regulatoryAreasToCreate[1].geom).isNotNull()
+        assertThat(regulatoryAreasToCreate[1].refReg).isEqualTo("Délibération interdisant la pêche à pied")
+        assertThat(regulatoryAreasToCreate[1].creation).isNull()
+    }
+
+    @Test
+    @Transactional
+    fun `save should create regulatory area with tags and themes`() {
+        val wktReader = WKTReader()
+        val geom =
+            wktReader.read(
+                "MULTIPOLYGON (((-4.54877 48.305, -4.54727 48.305, -4.54727 48.304, -4.54877 48.304, -4.54877 48.305)))",
+            ) as MultiPolygon
+
+        val regulatoryArea =
+            RegulatoryAreaNewEntity(
+                id = 9999,
+                layerName = "Test_Area",
+                facade = "NAMO",
+                refReg = "Arrêté test pour création",
+                resume = "Zone de test",
+                geom = geom,
+                url = "https://example.com",
+                source = "Test Source",
+                editeur = "Test Editor",
+                observation = "Test observation",
+                date = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                dureeValidite = "permanent",
+                temporalite = "permanent",
+                plan = "TEST",
+                polyName = "Test Polygon",
+                tags = listOf(aTag(id = 5)),
+                themes = listOf(aTheme(id = 9)),
+                editionBo = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
+                creation = null,
+                dateFin = null,
+                editionCacem = null,
+                authorizationPeriods = null,
+                prohibitionPeriods = null,
+                type = null,
+                othersRefReg = null,
+            )
+
+        val savedRegulatoryArea = jpaRegulatoryAreaNewRepository.save(regulatoryArea)
+
+        assertThat(savedRegulatoryArea.id).isEqualTo(9999)
+        assertThat(savedRegulatoryArea.layerName).isEqualTo("Test_Area")
+        assertThat(savedRegulatoryArea.facade).isEqualTo("NAMO")
+        assertThat(savedRegulatoryArea.refReg).isEqualTo("Arrêté test pour création")
+        assertThat(savedRegulatoryArea.resume).isEqualTo("Zone de test")
+        assertThat(savedRegulatoryArea.geom).isNotNull()
+        assertThat(savedRegulatoryArea.tags).hasSize(1)
+        assertThat(savedRegulatoryArea.tags[0].id).isEqualTo(5)
+        assertThat(savedRegulatoryArea.tags[0].name).isEqualTo("Mouillage")
+        assertThat(savedRegulatoryArea.themes).hasSize(1)
+        assertThat(savedRegulatoryArea.themes[0].id).isEqualTo(9)
+        assertThat(savedRegulatoryArea.themes[0].name).isEqualTo("Pêche à pied")
+    }
+
+    @Test
+    @Transactional
+    fun `save should update regulatory area`() {
+        val existingRegulatoryArea = jpaRegulatoryAreaNewRepository.findById(300)
+        println("Existing regulatory area before update: $existingRegulatoryArea")
+        require(existingRegulatoryArea != null)
+
+        val updatedRegulatoryArea =
+            existingRegulatoryArea.copy(
+                layerName = "Updated_RNN_Iroise",
+                resume = "Mise à jour de la zone",
+                tags = listOf(aTag(id = 5), aTag(id = 6)),
+                themes = listOf(aTheme(id = 9)),
+            )
+
+        val savedRegulatoryArea = jpaRegulatoryAreaNewRepository.save(updatedRegulatoryArea)
+
+        assertThat(savedRegulatoryArea.id).isEqualTo(300)
+        assertThat(savedRegulatoryArea.layerName).isEqualTo("Updated_RNN_Iroise")
+        assertThat(savedRegulatoryArea.resume).isEqualTo("Mise à jour de la zone")
+        assertThat(savedRegulatoryArea.tags).hasSize(2)
+        assertThat(savedRegulatoryArea.tags.map { it.id }).containsExactlyInAnyOrder(5, 6)
+        assertThat(savedRegulatoryArea.themes).hasSize(1)
+        assertThat(savedRegulatoryArea.themes[0].id).isEqualTo(9)
     }
 }
