@@ -35,6 +35,7 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
         saveCoordinates(lastEventForPointerMove)
       }, 50)
     }
+
     function saveCoordinates(event) {
       if (event) {
         const clickedCoordinates = map?.getCoordinateFromPixel(event.pixel)
@@ -43,6 +44,7 @@ export function MapCoordinatesBox({ map }: BaseMapChildrenProps) {
         }
       }
     }
+
     if (map) {
       map.on('pointermove', event => throttleAndHandlePointerMove(event))
     }
@@ -115,42 +117,43 @@ const StyledMultiRadio = styled(MultiRadio)`
 
 const Header = styled.header`
   background-color: ${p => p.theme.color.charcoal};
-  color: ${p => p.theme.color.gainsboro};
-  padding: 5px 0;
-  width: 100%;
-  display: inline-block;
-  cursor: pointer;
-  border: none;
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
+  border: none;
+  color: ${p => p.theme.color.gainsboro};
+  cursor: pointer;
+  display: inline-block;
+  padding: 5px 0;
+  width: 100%;
 `
 
 const CoordinatesTypeSelection = styled.span<{ $isOpen: boolean }>`
-  position: fixed;
-  bottom: 40px;
-  left: 40px;
-  display: inline-block;
-  margin: 1px;
-  color: ${p => p.theme.color.slateGray};
-  text-align: center;
   background-color: ${p => p.theme.color.white};
-  width: 234px;
-  opacity: ${props => (props.$isOpen ? 1 : 0)};
-  visibility: ${props => (props.$isOpen ? 'visible' : 'hidden')};
+  bottom: 40px;
+  color: ${p => p.theme.color.slateGray};
+  display: inline-block;
   height: ${props => (props.$isOpen ? 69 : 0)}px;
+  left: 40px;
+  margin: 1px;
+  text-align: center;
   transition: all 0.5s;
+  opacity: ${props => (props.$isOpen ? 1 : 0)};
   overflow: hidden;
+  position: absolute;
+  visibility: ${props => (props.$isOpen ? 'visible' : 'hidden')};
+  width: 234px;
 `
 
 const Coordinates = styled.span`
-  position: fixed;
-  bottom: 9px;
-  left: 40px;
-  display: inline-block;
-  padding: 3px 0px 3px 2px;
-  color: ${p => p.theme.color.gainsboro};
-  text-align: center;
   background-color: ${p => p.theme.color.charcoal};
-  width: 235px;
+  bottom: 9px;
+  color: ${p => p.theme.color.gainsboro};
   cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  left: 40px;
+  padding: 3px 0 3px 2px;
+  position: absolute;
+  text-align: center;
+  width: 235px;
 `
