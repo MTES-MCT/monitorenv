@@ -1,26 +1,44 @@
+import { useGetReportingsByMmsiQuery } from '@api/reportingsAPI'
 import { useGetVesselQuery } from '@api/vesselsApi'
-import { LastPositionResume } from '@features/Vessel/components/VesselResume/LastPositionResume'
+import { Bold } from '@components/style'
+import {
+  type HistoryOfInfractionsProps,
+  initialHistory,
+  useGetHistoryOfInfractions
+} from '@features/Reportings/components/ReportingForm/hooks/useGetHistoryOfInfractions'
+import { History } from '@features/Vessel/components/VesselResume/History/History'
 import { Owner } from '@features/Vessel/components/VesselResume/Owner'
-import { Summary } from '@features/Vessel/components/VesselResume/Summary'
+import { LastPosition } from '@features/Vessel/components/VesselResume/Resume/LastPosition'
+import { Summary } from '@features/Vessel/components/VesselResume/Resume/Summary'
 import { Tabs } from '@features/Vessel/components/VesselResume/Tabs'
+import { UNKNOWN } from '@features/Vessel/components/VesselResume/utils'
 import { vesselAction } from '@features/Vessel/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { Icon, IconButton, MapMenuDialog, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { useAppSelector } from '@hooks/useAppSelector'
+import {
+  customDayjs,
+  Icon,
+  IconButton,
+  MapMenuDialog,
+  OPENLAYERS_PROJECTION,
+  pluralize,
+  WSG84_PROJECTION
+} from '@mtes-mct/monitor-ui'
+import { skipToken } from '@reduxjs/toolkit/query'
 import countries from 'i18n-iso-countries'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { VisibilityState } from '../../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { Flag } from '../VesselSearch/VesselSearchItem'
 
 import type { Vessel } from '@features/Vessel/types'
 import type { Coordinate } from 'ol/coordinate'
 
-export type VesselResumePages = 'RESUME' | 'OWNER'
-
-export const UNKNOWN = '-'
+export type VesselResumePages = 'RESUME' | 'OWNER' | 'HISTORY'
 
 type VesselResumeProps = {
   id: number
@@ -28,8 +46,27 @@ type VesselResumeProps = {
 
 export function VesselResume({ id }: VesselResumeProps) {
   const dispatch = useAppDispatch()
+  const { visibility } = useAppSelector(state => state.global.visibility.reportingFormVisibility)
+  const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const { data: vessel } = useGetVesselQuery(id)
   const [page, setPage] = useState<VesselResumePages>('RESUME')
+  const [allHistory, setAllHistory] = useState<HistoryOfInfractionsProps | undefined>(undefined)
+
+  const getHistory = useGetHistoryOfInfractions(false)
+  const { data: allReportings } = useGetReportingsByMmsiQuery(vessel?.mmsi || skipToken)
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      if (!vessel?.mmsi) {
+        return initialHistory
+      }
+
+      return getHistory({ mmsi: vessel?.mmsi })
+    }
+
+    fetchHistory().then(result => setAllHistory(result))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vessel?.mmsi])
 
   const focusVessel = useCallback(
     (lastPosition: Vessel.LastPosition | undefined) => {
@@ -48,13 +85,22 @@ export function VesselResume({ id }: VesselResumeProps) {
     focusVessel(vessel?.lastPositions?.[0])
   }, [focusVessel, vessel?.lastPositions])
 
+  const currentNbReportings = useMemo(
+    () =>
+      Object.values(allReportings?.entities ?? []).filter(
+        reporting => customDayjs(reporting.createdAt).isBefore(customDayjs()) && !reporting.isArchived
+      ).length,
+    [allReportings?.entities]
+  )
+
   if (!vessel) {
     return null
   }
+
   const countryName = vessel.flag ? countries.getName(vessel.flag.substring(0, 2).toLowerCase(), 'fr') : UNKNOWN
 
   return (
-    <DialogWrapper>
+    <DialogWrapper $isRightMenuOpened={isRightMenuOpened} $visibility={visibility}>
       {vessel.lastPositions && vessel.lastPositions.length > 0 && (
         <ButtonsWrapper>
           <li>
@@ -99,13 +145,29 @@ export function VesselResume({ id }: VesselResumeProps) {
             <MapMenuDialog.Body>
               {page === 'RESUME' && (
                 <>
+                  {currentNbReportings > 0 && (
+                    <CurrentReportingBanner>
+                      <Icon.AttentionFilled />
+                      <Bold>
+                        {currentNbReportings} {pluralize('signalement', currentNbReportings)} en cours
+                      </Bold>
+                    </CurrentReportingBanner>
+                  )}
+
                   {vessel.lastPositions && vessel.lastPositions.length > 0 && (
-                    <LastPositionResume lastPositions={vessel.lastPositions} />
+                    <LastPosition lastPositions={vessel.lastPositions} />
                   )}
                   <Summary vessel={vessel} />
                 </>
               )}
               {page === 'OWNER' && <Owner vessel={vessel} />}
+              {page === 'HISTORY' && (
+                <History
+                  envActions={allHistory?.envActions ?? []}
+                  mmsi={vessel.mmsi}
+                  reportings={Object.values(allReportings?.entities ?? [])}
+                />
+              )}
             </MapMenuDialog.Body>
           </>
         ) : (
@@ -129,11 +191,14 @@ const TitleWrapper = styled.span`
   gap: 8px;
 `
 
-const DialogWrapper = styled.div`
+const DialogWrapper = styled.div<{ $isRightMenuOpened: boolean; $visibility: VisibilityState }>`
   display: flex;
   position: absolute;
   right: 50px;
   top: 55px;
+  ${p => p.$visibility === VisibilityState.VISIBLE && `transform: translateX(-457px);`}
+  ${p => p.$isRightMenuOpened && `transform: translateX(calc(-100% + 42px));`}
+    transition: 0.3s transform;
 `
 
 const ButtonsWrapper = styled.ul`
@@ -149,7 +214,7 @@ const ButtonsWrapper = styled.ul`
 const StyledMapMenuDialogContainer = styled(MapMenuDialog.Container)`
   background-color: ${p => p.theme.color.gainsboro};
   display: flex;
-  max-height: calc(100% - 64px);
+  max-height: calc(100vh - 64px);
   overflow: auto;
   position: relative;
   right: 0;
@@ -167,4 +232,14 @@ export const AisInformationMessage = styled.div`
   gap: 8px;
   margin-bottom: 10px;
   padding: 16px 20px;
+`
+
+const CurrentReportingBanner = styled.div`
+  background-color: ${p => p.theme.color.maximumRed15};
+  border: 1px solid #ebacb0;
+  color: ${p => p.theme.color.maximumRed};
+  display: flex;
+  gap: 8px;
+  padding: 10px 20px;
+  margin-bottom: 10px;
 `

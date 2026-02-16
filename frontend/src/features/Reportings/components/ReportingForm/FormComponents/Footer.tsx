@@ -128,7 +128,6 @@ export function Footer({
           }
 
           const history = await getHistoryByMmsi({
-            canSearch: true,
             mmsi: target.mmsi,
             reportingId: values.id
           })

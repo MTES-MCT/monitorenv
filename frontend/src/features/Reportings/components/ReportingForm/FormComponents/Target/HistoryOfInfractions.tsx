@@ -17,11 +17,13 @@ const NB_CHAR_MMSI = 9
 
 export function HistoryOfInfractions({
   envActionId,
+  forceSearch = false,
   isReadOnly = false,
   mmsi,
   reportingId
 }: {
   envActionId?: string
+  forceSearch?: boolean
   isReadOnly?: boolean
   mmsi: string | undefined
   reportingId?: string | number
@@ -32,7 +34,11 @@ export function HistoryOfInfractions({
 
   const [debouncedMmsi] = useDebounce(mmsi, 300)
 
-  const canSearch = !!((reportingId || envActionId) && debouncedMmsi && debouncedMmsi.length === NB_CHAR_MMSI)
+  const canSearch = !!(
+    (forceSearch || reportingId || envActionId) &&
+    debouncedMmsi &&
+    debouncedMmsi.length === NB_CHAR_MMSI
+  )
 
   const getHistoryByMmsi = useGetHistoryOfInfractions()
 
@@ -46,7 +52,6 @@ export function HistoryOfInfractions({
         return
       }
       const result = await getHistoryByMmsi({
-        canSearch,
         envActionId,
         mmsi: debouncedMmsi,
         reportingId

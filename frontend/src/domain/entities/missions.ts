@@ -341,6 +341,7 @@ export type EnvActionControlWithInfractions = {
   controlUnits: string[]
   id: string
   infractions: Infraction[]
+  missionId: number
   themes: string[]
 }
 

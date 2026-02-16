@@ -45,11 +45,6 @@ import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
 import java.time.ZoneOffset.UTC
 
-/**
- *
- * For native queries prupose only
- * For JPQL queries you should use [ReportingModelJpa]
- */
 @Entity
 @Table(name = "reportings")
 class ReportingModel(
@@ -223,8 +218,8 @@ class ReportingModel(
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
             reportType = reportType,
             createdAt = createdAt.atZone(UTC),
-            tags = toTagEntities(tags.toList()),
-            theme = toThemeEntities(themes.toList()).first(),
+            tags = toTagEntities(tags),
+            theme = toThemeEntities(themes).first(),
         )
 
     override fun equals(other: Any?): Boolean {

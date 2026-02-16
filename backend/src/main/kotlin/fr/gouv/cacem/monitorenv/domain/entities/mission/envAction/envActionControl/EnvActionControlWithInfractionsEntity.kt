@@ -9,6 +9,7 @@ data class EnvActionControlWithInfractionsEntity(
     val id: UUID,
     val actionType: ActionTypeEnum = ActionTypeEnum.CONTROL,
     val actionStartDateTimeUtc: ZonedDateTime? = null,
+    val missionId: Int? = null,
     val infractions: List<InfractionEntity>?,
     val themes: List<String>?,
     val controlUnits: List<String>,

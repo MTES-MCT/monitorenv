@@ -6,6 +6,8 @@ import java.util.UUID
 interface EnvActionControlWithInfractions {
     fun getId(): UUID
 
+    fun getMissionId(): Int
+
     fun getActionStartDatetimeUtc(): Timestamp?
 
     fun getInfractions(): String

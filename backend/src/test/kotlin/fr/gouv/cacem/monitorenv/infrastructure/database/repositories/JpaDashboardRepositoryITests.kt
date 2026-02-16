@@ -3,7 +3,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
-import io.ktor.util.*
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
+import kotlin.io.encoding.Base64
 
 class JpaDashboardRepositoryITests : AbstractDBTests() {
     @Autowired
@@ -80,7 +80,7 @@ class JpaDashboardRepositoryITests : AbstractDBTests() {
                         ImageEntity(
                             id = null,
                             name = "image1",
-                            content = "content1".decodeBase64Bytes(),
+                            content = Base64.decode("content1"),
                             size = 1,
                             mimeType = MediaType.IMAGE_JPEG.toString(),
                         ),

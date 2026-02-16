@@ -20,8 +20,8 @@ class GetSuspicionOfInfractionsByMmsi(
 
         val suspicionOfInfractions = reportingRepository.findSuspicionOfInfractionsByMmsi(mmsi, idToExclude)
 
-        logger.info("Found ${suspicionOfInfractions?.size} suspicions of infraction.")
+        logger.info("Found ${suspicionOfInfractions.size} suspicions of infraction.")
 
-        return suspicionOfInfractions ?: emptyList()
+        return suspicionOfInfractions
     }
 }

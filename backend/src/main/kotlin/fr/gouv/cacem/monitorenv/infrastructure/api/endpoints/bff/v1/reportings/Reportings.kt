@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingsByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingsByMmsi
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingsDataOutput
@@ -41,6 +42,7 @@ class Reportings(
     private val createOrUpdateReporting: CreateOrUpdateReporting,
     private val getReportingById: GetReportingById,
     private val getReportingByIds: GetReportingsByIds,
+    private val getReportingsByMmsi: GetReportingsByMmsi,
     private val getReportings: GetReportings,
     private val deleteReporting: DeleteReporting,
     private val deleteReportings: DeleteReportings,
@@ -170,6 +172,16 @@ class Reportings(
                 reporting.toReportingEntity(),
             ).let { ReportingDataOutput.fromReportingDTO(it) }
     }
+
+    @GetMapping("/v1/reportings/mmsi/{mmsi}")
+    @Operation(summary = "Get all reportings by mmsi")
+    fun getSuspicionOfInfraction(
+        @PathVariable(name = "mmsi")
+        mmsi: String,
+    ): List<ReportingDataOutput> =
+        getReportingsByMmsi.execute(mmsi).map {
+            ReportingDataOutput.fromReportingDTO(it)
+        }
 
     /**
      * This method create the connexion to the frontend (with EventSource)

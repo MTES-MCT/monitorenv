@@ -219,6 +219,10 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(envActions).hasSize(1)
+        assertThat(envActions[0].missionId).isEqualTo(34)
+        assertThat(envActions[0].themes).hasSize(2)
+        assertThat(envActions[0].controlUnits).hasSize(3)
+        assertThat(envActions[0].infractions).hasSize(1)
     }
 
     @Test
