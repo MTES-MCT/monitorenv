@@ -3,27 +3,30 @@ DROP TABLE IF EXISTS prod.reg_cacem CASCADE;
 
 CREATE TABLE IF NOT EXISTS prod.reg_cacem
 (
-    id              serial primary key,
-    geom            geometry(MultiPolygon, 4326),
-    url             character varying,
-    layer_name      character varying,
-    facade          character varying,
-    ref_reg         character varying,
-    creation        character varying,
-    edition_bo      date,
-    edition_cacem   date,
-    editeur         character varying,
-    source          character varying,
-    obs             character varying,
-    thematique      character varying,
-    date            date,
-    validite        character varying,
-    date_fin        date,
-    tempo           character varying,
-    type            character varying,
-    resume          text,
-    poly_name       text,
-    plan            text
+    id                      serial primary key,
+    geom                    geometry(MultiPolygon, 4326),
+    url                     character varying,
+    layer_name              character varying,
+    facade                  character varying,
+    ref_reg                 character varying,
+    creation                character varying,
+    edition_bo              date,
+    edition_cacem           date,
+    editeur                 character varying,
+    source                  character varying,
+    observation             character varying,
+    thematique              character varying,
+    date                    date,
+    duree_validite          character varying,
+    date_fin                date,
+    temporalite             character varying,
+    type                    character varying,
+    resume                  text,
+    poly_name               text,
+    plan                    text,
+    authorization_periods   character varying,
+    prohibition_periods     character varying,
+    others_ref_reg          jsonb
 );
 
 INSERT INTO prod.reg_cacem (
@@ -35,10 +38,10 @@ INSERT INTO prod.reg_cacem (
     ref_reg,
     editeur,
     source,
-    obs,
+    observation,
     thematique,
-    validite,
-    tempo,
+    duree_validite,
+    temporalite,
     type,
     date,
     date_fin,
@@ -46,7 +49,10 @@ INSERT INTO prod.reg_cacem (
     edition_bo,
     resume,
     poly_name,
-    plan
+    plan,
+    authorization_periods,
+    prohibition_periods,
+    others_ref_reg
 ) VALUES (
     1,
     'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))',
@@ -67,7 +73,10 @@ INSERT INTO prod.reg_cacem (
     '2025-01-10', /* edition_bo */
     'resume1',
     'poly_name1',
-    'plan1'
+    'plan1',
+    'période d''autorisation1',
+    'période de prohibition1',
+    null
 );
 
 INSERT INTO prod.reg_cacem (
@@ -79,10 +88,10 @@ INSERT INTO prod.reg_cacem (
     ref_reg,
     editeur,
     source,
-    obs,
+    observation,
     thematique,
-    validite,
-    tempo,
+    duree_validite,
+    temporalite,
     type,
     date,
     date_fin,
@@ -90,7 +99,10 @@ INSERT INTO prod.reg_cacem (
     edition_bo,
     resume,
     poly_name,
-    plan    
+    plan,
+    authorization_periods,
+    prohibition_periods,
+    others_ref_reg
 ) VALUES (
     2,
     'MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))',
@@ -111,7 +123,10 @@ INSERT INTO prod.reg_cacem (
     '2025-07-01', /* edition_bo */
     'resume2',
     'poly_name2',
-    'plan2'
+    'plan2',
+    'période d''autorisation2',
+    'période de prohibition2',
+    null
 );
 
 
