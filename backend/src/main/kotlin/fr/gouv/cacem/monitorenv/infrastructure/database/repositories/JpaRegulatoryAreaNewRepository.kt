@@ -45,6 +45,7 @@ class JpaRegulatoryAreaNewRepository(
 
     override fun findAllLayerNames(): List<String> = dbRegulatoryAreaRepository.findAllLayerNames()
 
+    @Transactional
     override fun findAllToCreate(): List<RegulatoryAreaNewEntity> =
         dbRegulatoryAreaRepository
             .findAllByCreationIsNull()
