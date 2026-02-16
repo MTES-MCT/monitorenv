@@ -31,17 +31,14 @@ class JpaRegulatoryAreaNewRepository(
         dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea(mapper)
 
     override fun findAll(
-        groupBy: String?,
         query: String?,
         seaFronts: List<String>?,
-    ): List<RegulatoryAreaNewEntity> {
-        println("Querying regulatory areas with groupBy: $groupBy, searchQuery: $query, seaFronts: $seaFronts")
-
-        return dbRegulatoryAreaRepository
+    ): List<RegulatoryAreaNewEntity> =
+         dbRegulatoryAreaRepository
             .findAll(seaFronts = seaFronts)
             .map { it.toRegulatoryArea(mapper) }
             .filter { findBySearchQuery(it, query) }
-    }
+
 
     override fun findAllLayerNames(): List<String> = dbRegulatoryAreaRepository.findAllLayerNames()
 
