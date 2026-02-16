@@ -53,7 +53,7 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-edit').click({ force: true })
       cy.getDataCy('dmd-coordinates-input').type('{backspace}{backspace}{backspace}{backspace}{backspace}500W')
 
-      cy.getDataCy('interest-point-coordinates').contains('47° 42.111′ N 007° 34.500′ W')
+      cy.getDataCy('interest-point-coordinates').contains('47° 42.111′ N 007° 33.500′ W')
     })
 
     it('should be edited with East value when DMS coordinates are selected', () => {
@@ -75,7 +75,7 @@ context('InterestPoint', () => {
       cy.getDataCy('interest-point-edit').should('not.be.visible')
       // Force because the interest point is not in the DOM anymore
       cy.getDataCy('interest-point-edit').click({ force: true })
-      cy.getDataCy('dms-coordinates-input').should('have.value', '47° 42′ 07″ N 007° 54′ 51″ E')
+      cy.getDataCy('dms-coordinates-input').should('have.value', '47° 42′ 07″ N 007° 54′ 02″ E')
       cy.get('.rs-radio').should('have.class', 'rs-radio-checked')
       cy.getDataCy('interest-point-save').click()
 
@@ -222,7 +222,7 @@ context('InterestPoint', () => {
       cy.clickButton('Créer un signalement')
       // When
       cy.get('div').contains('Signalement non créé')
-      cy.get('span').contains('47° 42.111′ N 006° 53.982′ W')
+      cy.get('span').contains('47° 42.111′ N 006° 53.171′ W')
     })
   })
   describe('Multiple interest points ', () => {

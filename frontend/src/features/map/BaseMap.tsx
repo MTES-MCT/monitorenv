@@ -309,9 +309,7 @@ function BaseMapNotMemoized({
 
 export const BaseMap = memo(BaseMapNotMemoized)
 
-const StyledScaleLine = styled.button`
-  height: 0px;
-`
+const StyledScaleLine = styled.button``
 const MapWrapper = styled.div`
   display: flex;
   flex: 1;
@@ -326,9 +324,9 @@ const MapContainer = styled.div`
 `
 
 const StyledDistanceUnitContainer = styled.div`
-  position: absolute;
   bottom: 40px;
-  left: 40px;
+  left: 280px;
+  position: absolute;
   z-index: 2;
 `
 

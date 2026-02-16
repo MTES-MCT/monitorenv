@@ -65,7 +65,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
     }),
     getRegulatoryAreasToCreate: builder.query<RegulatoryArea.RegulatoryAreaToCreate[], void>({
       providesTags: () => [{ id: 'TO_CREATE', type: 'RegulatoryAreas' }],
-      query: () => '/regulatory-areas/to-create',
+      query: () => '/regulatory-areas/to-complete',
       transformErrorResponse: response =>
         new FrontendApiError("Nous n'avons pas pu récupérer les zones réglementaires à créer", response)
     }),

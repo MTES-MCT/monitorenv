@@ -4,7 +4,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNew
 
 interface IRegulatoryAreaNewRepository {
     fun findAll(
-        groupBy: String? = null,
         query: String? = null,
         seaFronts: List<String>? = null,
     ): List<RegulatoryAreaNewEntity>

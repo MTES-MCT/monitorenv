@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNew
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegulatoryAreas
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToCreate
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
@@ -57,7 +57,7 @@ class RegulatoryAreasNewITests {
     private lateinit var createOrUpdateRegulatoryArea: CreateOrUpdateRegulatoryArea
 
     @MockitoBean
-    private lateinit var getAllRegulatoryAreasToCreate: GetAllRegulatoryAreasToCreate
+    private lateinit var getAllRegulatoryAreasToComplete: GetAllRegulatoryAreasToComplete
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -103,7 +103,6 @@ class RegulatoryAreasNewITests {
             )
         given(
             getAllRegulatoryAreas.execute(
-                groupBy = null,
                 searchQuery = null,
                 seaFronts = null,
             ),
@@ -240,11 +239,11 @@ class RegulatoryAreasNewITests {
                 polyName = null,
                 resume = null,
             )
-        given(getAllRegulatoryAreasToCreate.execute()).willReturn(listOf(regulatoryArea))
+        given(getAllRegulatoryAreasToComplete.execute()).willReturn(listOf(regulatoryArea))
 
         // When
         mockMvc
-            .perform(get("/bff/regulatory-areas/to-create"))
+            .perform(get("/bff/regulatory-areas/to-complete"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(regulatoryArea.id)))
@@ -279,7 +278,6 @@ class RegulatoryAreasNewITests {
             )
         given(
             getAllRegulatoryAreas.execute(
-                groupBy = null,
                 searchQuery = null,
                 seaFronts = listOf("NAMO"),
             ),
@@ -323,7 +321,6 @@ class RegulatoryAreasNewITests {
             )
         given(
             getAllRegulatoryAreas.execute(
-                groupBy = null,
                 searchQuery = "Querlen",
                 seaFronts = null,
             ),
@@ -342,7 +339,6 @@ class RegulatoryAreasNewITests {
         // Given
         given(
             getAllRegulatoryAreas.execute(
-                groupBy = null,
                 searchQuery = "NonExistent",
                 seaFronts = null,
             ),
@@ -409,7 +405,6 @@ class RegulatoryAreasNewITests {
             )
         given(
             getAllRegulatoryAreas.execute(
-                groupBy = "CONTROL_PLAN",
                 searchQuery = null,
                 seaFronts = null,
             ),

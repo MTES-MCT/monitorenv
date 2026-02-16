@@ -24,7 +24,6 @@ class GetAllNewRegulatoryAreasUTest {
         // When
         val regulatoryAreas =
             getAllRegulatoryAreas.execute(
-                groupBy = null,
                 searchQuery = null,
                 seaFronts = null,
             )
@@ -44,12 +43,11 @@ class GetAllNewRegulatoryAreasUTest {
                 RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 2, layerName = "Layer2", plan = "PIRC"),
                 RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 3, layerName = "Layer1", plan = "PSCEM"),
             )
-        given(regulatoryAreaRepository.findAll(groupBy = "CONTROL_PLAN")).willReturn(regulatoryAreas)
+        given(regulatoryAreaRepository.findAll()).willReturn(regulatoryAreas)
 
         // When
         val groupedRegulatoryAreas =
             getAllRegulatoryAreas.execute(
-                groupBy = "CONTROL_PLAN",
                 searchQuery = null,
                 seaFronts = null,
             )
