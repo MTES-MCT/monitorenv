@@ -8,10 +8,10 @@ SELECT
         COALESCE(ref_reg::text, '') ||
         COALESCE(editeur::text, '') ||
         COALESCE(source::text, '') ||
-        COALESCE(obs::text, '') ||
+        COALESCE(observation::text, '') ||
         COALESCE(thematique::text, '') ||
-        COALESCE(validite::text, '')||
-        COALESCE(tempo::text, '')||
+        COALESCE(duree_validite::text, '')||
+        COALESCE(temporalite::text, '')||
         COALESCE(type::text, '') ||
         COALESCE(date::text, '') ||
         COALESCE(date_fin::text, '') ||
@@ -19,7 +19,11 @@ SELECT
         COALESCE(edition_bo::text, '') || 
         COALESCE(plan::text, '') ||
         COALESCE(poly_name::text, '') ||
-        COALESCE(resume::text, '')
+        COALESCE(resume::text, '') ||
+        COALESCE(authorization_periods::text, '') ||
+        COALESCE(prohibition_periods::text, '') ||
+        COALESCE(others_ref_reg::text, '') ||
+        COALESCE(creation::text, '')
   ) AS cacem_row_hash
 FROM prod.reg_cacem
 WHERE 

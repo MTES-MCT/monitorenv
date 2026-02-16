@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from pipeline.src.flows.new_regulatory_areas import new_regulatory_areas_flow
 from prefect import Flow
 from prefect.client.schemas.objects import (
     ConcurrencyLimitConfig,
@@ -36,6 +35,7 @@ from src.flows.marpol import marpol_flow
 from src.flows.refresh_materialized_view import refresh_materialized_view_flow
 from src.flows.regulations import regulations_flow
 from src.flows.regulations_open_data import regulations_open_data_flow
+from src.flows.update_env_regulatory_areas import update_env_regulatory_areas_flow
 from src.flows.update_cacem_regulatory_areas import update_cacem_regulatory_areas_flow
 from src.flows.remove_broken_missions_resources_links import (
     remove_broken_missions_resources_links_flow,
@@ -121,7 +121,7 @@ flows_to_deploy = [
         schedules=[Schedule(cron="0 20 * * 5")],
     ),
     FlowAndSchedules(
-        flow=new_regulatory_areas_flow,
+        flow=update_env_regulatory_areas_flow,
         schedules=[Schedule(cron="2,12,22,32,42,52 * * * *")],
     ),
     FlowAndSchedules(

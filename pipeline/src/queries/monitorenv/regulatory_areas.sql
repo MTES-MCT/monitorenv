@@ -1,4 +1,4 @@
-SELECT 
+SELECT
   id,
   st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001)) geom,
   url,        
@@ -23,8 +23,4 @@ SELECT
   authorization_periods,
   prohibition_periods,
   others_ref_reg
-FROM prod.reg_cacem
-WHERE 
-  geom IS NOT NULL
-  AND ref_reg IS NOT NULL
-  AND id IN :ids;
+FROM public.regulatory_areas;
