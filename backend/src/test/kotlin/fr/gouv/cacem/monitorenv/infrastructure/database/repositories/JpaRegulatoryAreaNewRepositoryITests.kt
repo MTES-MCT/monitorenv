@@ -101,7 +101,6 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     fun `findAllToCreate should return all regulatory areas to create`() {
         // When
         val regulatoryAreasToCreate = jpaRegulatoryAreaNewRepository.findAllToCreate()
-        println(regulatoryAreasToCreate[0])
         // Then
         assertThat(regulatoryAreasToCreate).hasSize(2)
         assertThat(regulatoryAreasToCreate[0].id).isEqualTo(123)
