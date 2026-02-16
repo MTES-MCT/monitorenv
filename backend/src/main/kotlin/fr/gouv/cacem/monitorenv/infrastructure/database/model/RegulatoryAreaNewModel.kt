@@ -16,6 +16,7 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
@@ -87,8 +88,18 @@ data class RegulatoryAreaNewModel(
             resume = resume,
             source = source,
             temporalite = temporalite,
-            tags = toTagEntities(tags),
-            themes = toThemeEntities(themes),
+            tags =
+                if (Hibernate.isInitialized(tags)) {
+                    toTagEntities(tags)
+                } else {
+                    emptyList()
+                },
+            themes =
+                if (Hibernate.isInitialized(themes)) {
+                    toThemeEntities(themes)
+                } else {
+                    emptyList()
+                },
             type = type,
             url = url,
             othersRefReg =
@@ -140,6 +151,13 @@ data class RegulatoryAreaNewModel(
             )
     }
 
-    override fun toString(): String =
-        "RegulatoryAreaModel(id=$id, plan=$plan, date=$date, dateFin=$dateFin, dureeValidite=$dureeValidite, editeur=$editeur, editionBo=$editionBo, editionCacem=$editionCacem facade=$facade, geom=$geom, layerName=$layerName, observation=$observation, polyName=$polyName, refReg=$refReg, resume=$resume, source=$source, temporalite=$temporalite, type=$type, url=$url)"
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as RegulatoryAreaNewModel
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
 }

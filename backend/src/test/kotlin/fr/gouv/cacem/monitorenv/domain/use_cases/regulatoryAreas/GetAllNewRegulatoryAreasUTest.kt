@@ -18,8 +18,8 @@ class GetAllNewRegulatoryAreasUTest {
     @Test
     fun `execute should return all regulatory areas`(log: CapturedOutput) {
         // Given
-        val expectedRegulatoryAreas = listOf(RegulatoryAreaNewFixture.aNewRegulatoryArea())
-        given(regulatoryAreaRepository.findAll()).willReturn(expectedRegulatoryAreas)
+        val expectedRegulatoryAreas = RegulatoryAreaNewFixture.aNewRegulatoryArea()
+        given(regulatoryAreaRepository.findAll()).willReturn(listOf(expectedRegulatoryAreas))
 
         // When
         val regulatoryAreas =
@@ -30,7 +30,7 @@ class GetAllNewRegulatoryAreasUTest {
             )
 
         // Then
-        assertThat(expectedRegulatoryAreas).isEqualTo(regulatoryAreas)
+        assertThat(mapOf("Layername 1" to listOf(expectedRegulatoryAreas))).isEqualTo(regulatoryAreas)
         assertThat(log.out).contains("Attempt to GET all regulatory areas")
         assertThat(log.out).contains("Found ${regulatoryAreas.size} regulatory areas")
     }
