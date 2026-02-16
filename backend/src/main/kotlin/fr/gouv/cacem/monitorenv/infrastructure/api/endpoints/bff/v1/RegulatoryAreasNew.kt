@@ -3,13 +3,13 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegulatoryAreas
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToCreate
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaToCreateDataOuput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasLayerNamesDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.LayerNamesDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -30,7 +30,7 @@ class RegulatoryAreasNew(
     private val getNewRegulatoryAreaById: GetNewRegulatoryAreaById,
     private val getAllLayerNames: GetAllLayerNames,
     private val createOrUpdateRegulatoryArea: CreateOrUpdateRegulatoryArea,
-    private val getAllRegulatoryAreasToCreate: GetAllRegulatoryAreasToCreate,
+    private val getAllRegulatoryAreasToComplete: GetAllRegulatoryAreasToComplete,
 ) {
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
@@ -47,7 +47,6 @@ class RegulatoryAreasNew(
     ): List<RegulatoryAreasDataOutput> {
         val regulatoryAreas =
             getAllNewRegulatoryAreas.execute(
-                groupBy = groupBy,
                 searchQuery = searchQuery,
                 seaFronts = seaFronts,
             )
@@ -76,15 +75,15 @@ class RegulatoryAreasNew(
 
     @GetMapping("/layer-names")
     @Operation(summary = "Get all regulatory areas group names")
-    fun getLayerNames(): RegulatoryAreasLayerNamesDataOutput? =
+    fun getLayerNames(): LayerNamesDataOutput? =
         getAllLayerNames.execute().let {
-            RegulatoryAreasLayerNamesDataOutput.fromGroupNames(it)
+            LayerNamesDataOutput.fromGroupNames(it)
         }
 
-    @GetMapping("/to-create")
+    @GetMapping("/to-complete")
     @Operation(summary = "Get all new regulatory areas")
     fun getRegulatoryAreasToCreate(): List<RegulatoryAreaToCreateDataOuput> =
-        getAllRegulatoryAreasToCreate.execute().map {
+        getAllRegulatoryAreasToComplete.execute().map {
             RegulatoryAreaToCreateDataOuput.fromRegulatoryAreaToCreateEntity(it)
         }
 }
