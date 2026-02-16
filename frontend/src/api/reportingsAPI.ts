@@ -85,6 +85,14 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       query: ids => ({ body: ids, method: 'POST', url: '/v1/reportings' }),
       transformResponse: (response: Reporting[]) => ReportingAdapter.setAll(initialState, response)
     }),
+    getReportingsByMmsi: build.query<EntityState<Reporting, number | string>, string>({
+      providesTags: result =>
+        result?.ids
+          ? [{ id: 'LIST', type: 'Reportings' }, ...result.ids.map(id => ({ id, type: 'Reportings' as const }))]
+          : [{ id: 'LIST', type: 'Reportings' }],
+      query: mmsi => `/v1/reportings/mmsi/${mmsi}`,
+      transformResponse: (response: Reporting[]) => ReportingAdapter.setAll(initialState, response)
+    }),
     updateReporting: build.mutation<Reporting, Partial<Reporting>>({
       invalidatesTags: (_, __, { id, missionId }) => [
         { id, type: 'Reportings' },
@@ -108,6 +116,7 @@ export const {
   useDeleteReportingMutation,
   useGetReportingQuery,
   useGetReportingsByIdsQuery,
+  useGetReportingsByMmsiQuery,
   useGetReportingsQuery,
   useUpdateReportingMutation
 } = reportingsAPI

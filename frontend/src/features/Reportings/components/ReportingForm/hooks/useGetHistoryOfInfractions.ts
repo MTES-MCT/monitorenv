@@ -6,7 +6,6 @@ import type { EnvActionControlWithInfractions } from 'domain/entities/missions'
 import type { SuspicionOfInfractions } from 'domain/entities/reporting'
 
 type UseGetHistoryOfInfractionsProps = {
-  canSearch: boolean
   envActionId?: string | number
   mmsi: string
   reportingId?: string | number
@@ -28,11 +27,11 @@ export const initialHistory: HistoryOfInfractionsProps = {
   totalPV: 0
 }
 
-export const useGetHistoryOfInfractions = () => {
+export const useGetHistoryOfInfractions = (withSuspicionOfInfractions = true) => {
   const [getEnvActionsByMmsi, { isLoading: isLoadingLazyEnvActions }] = useLazyGetEnvActionsByMmsiQuery()
   const [getSuspicionOfInfractions, { isLoading: isLoadingLazySuspicions }] = useLazyGetSuspicionOfInfractionsQuery()
 
-  const getHistoryByMmsi = async ({
+  return async ({
     envActionId,
     mmsi,
     reportingId
@@ -48,10 +47,12 @@ export const useGetHistoryOfInfractions = () => {
         idToExclude: envActionId ? `${envActionId}` : undefined,
         mmsi
       }).unwrap()
-      suspicionOfInfractionsByMmsi = await getSuspicionOfInfractions({
-        idToExclude: !reportingId || isNewReporting(reportingId) ? undefined : +reportingId,
-        mmsi
-      }).unwrap()
+      if (withSuspicionOfInfractions) {
+        suspicionOfInfractionsByMmsi = await getSuspicionOfInfractions({
+          idToExclude: !reportingId || isNewReporting(reportingId) ? undefined : +reportingId,
+          mmsi
+        }).unwrap()
+      }
     }
 
     const totalInfraction = getTotalInfraction(envActionsByMmsi ?? [])
@@ -66,6 +67,4 @@ export const useGetHistoryOfInfractions = () => {
       totalPV: totalPV ?? 0
     }
   }
-
-  return getHistoryByMmsi
 }

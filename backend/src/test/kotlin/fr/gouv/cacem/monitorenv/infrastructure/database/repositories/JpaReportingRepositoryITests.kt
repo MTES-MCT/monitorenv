@@ -164,14 +164,14 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `delete should soft delete reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(11)
+        assertThat(numberOfExistingReportings).isEqualTo(12)
 
         // When
         jpaReportingRepository.delete(1)
 
         // Then
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(11)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(12)
 
         val deletedReportingDTO = jpaReportingRepository.findById(1)!!
         assertThat(deletedReportingDTO.reporting.isDeleted).isEqualTo(true)
@@ -236,7 +236,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             )
         val queryCount = customQueryCountListener.getQueryCount()
         println("Number of Queries Executed: $queryCount")
-        assertThat(reportings.size).isEqualTo(11)
+        assertThat(reportings.size).isEqualTo(12)
     }
 
     @Test
@@ -256,7 +256,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 isAttachedToMission = null,
                 searchQuery = null,
             )
-        assertThat(reportings.size).isEqualTo(4)
+        assertThat(reportings.size).isEqualTo(5)
         val queryCount = customQueryCountListener.getQueryCount()
         println("Number of Queries Executed: $queryCount")
     }
@@ -390,7 +390,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `save should create a new Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(11)
+        assertThat(numberOfExistingReportings).isEqualTo(12)
 
         // When
         val wktReader = WKTReader()
@@ -459,10 +459,10 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         jpaReportingRepository.save(newReporting)
 
-        val reportingDTO = jpaReportingRepository.findById(12)!!
+        val reportingDTO = jpaReportingRepository.findById(13)!!
 
         // Then
-        assertThat(reportingDTO.reporting.id).isEqualTo(12)
+        assertThat(reportingDTO.reporting.id).isEqualTo(13)
 
         val currentYear = Year.now().value.toString()
         val reportingId = (currentYear.substring(currentYear.length - 2) + "00001").toLong()
@@ -493,7 +493,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
             assertThat(it?.name).isEqualTo("Contrôle dans une AMP sans réglementation particulière")
         }
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(12)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(13)
     }
 
     @Test
@@ -501,7 +501,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
     fun `save should update an existing Reporting`() {
         // Given
         val numberOfExistingReportings = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportings).isEqualTo(11)
+        assertThat(numberOfExistingReportings).isEqualTo(12)
 
         // When
         val existingReportingDTO = jpaReportingRepository.findById(1)!!
@@ -563,7 +563,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         }
 
         val numberOfExistingReportingsAfterSave = jpaReportingRepository.count()
-        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(11)
+        assertThat(numberOfExistingReportingsAfterSave).isEqualTo(12)
     }
 
     // Test of db constraints, not specific to repository implementations
@@ -810,5 +810,17 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
 
         // Then
         assertThat(suspicionOfInfractions).isEmpty()
+    }
+
+    @Test
+    fun `findAllByMmsi should return al reportings with given mmsi`() {
+        // Given
+        val mmsi = "123456789"
+
+        // When
+        val suspicionOfInfractions = jpaReportingRepository.findAllByMmsi(mmsi)
+
+        // Then
+        assertThat(suspicionOfInfractions).hasSize(1)
     }
 }

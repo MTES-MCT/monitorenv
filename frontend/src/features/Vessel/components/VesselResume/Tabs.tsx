@@ -22,9 +22,13 @@ export function Tabs({ onTabChange }: TabProps) {
         <Icon.Resume size={30} />
         Résumé
       </Tab>
-      <Tab $isActive={tabOpen === 'OWNER'} $isLast onClick={() => changeTab('OWNER')} role="tab">
+      <Tab $isActive={tabOpen === 'OWNER'} onClick={() => changeTab('OWNER')} role="tab">
         <Icon.Identity size={30} />
         Propriétaire(s)
+      </Tab>
+      <Tab $isActive={tabOpen === 'HISTORY'} onClick={() => changeTab('HISTORY')} role="tab">
+        <Icon.Control size={30} />
+        Antécédents
       </Tab>
     </TabList>
   )
@@ -36,7 +40,6 @@ const Tab = styled.button<{
 }>`
   align-items: center;
   background: ${p => (p.$isActive ? p.theme.color.blueGray : p.theme.color.charcoal)};
-  ${p => (p.$isLast ? null : `border-right: 1px solid ${p.theme.color.lightGray};`)}
   color: ${p => (p.$isActive ? p.theme.color.white : p.theme.color.lightGray)};
   display: flex;
   flex-direction: column;
@@ -62,5 +65,9 @@ const Tab = styled.button<{
 const TabList = styled.div`
   border-top: 1px solid ${p => p.theme.color.lightGray};
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  button:not(:last-child) {
+    ${p => `border-right: 1px solid ${p.theme.color.lightGray};`}
+  }
 `

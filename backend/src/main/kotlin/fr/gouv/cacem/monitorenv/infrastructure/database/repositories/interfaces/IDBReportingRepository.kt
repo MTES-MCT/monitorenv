@@ -225,6 +225,24 @@ interface IDBReportingRepository : JpaRepository<ReportingModel, Int> {
     ): List<ReportingModel>
 
     @Query(
+        """
+    SELECT DISTINCT reporting.*,
+       reporting.created_at + INTERVAL '1 hour' * reporting.validity_time AS validityEndTime
+    FROM reportings reporting
+    LEFT JOIN themes_reportings ON reporting.id = themes_reportings.reportings_id
+    INNER JOIN themes ON themes.id = themes_reportings.themes_id AND themes.parent_id IS NULL
+    WHERE EXISTS (
+      SELECT 1
+      FROM jsonb_array_elements(reporting.target_details) AS details
+      WHERE details ->> 'mmsi' = :mmsi
+      AND reporting.is_deleted IS FALSE
+    )
+    """,
+        nativeQuery = true,
+    )
+    fun findAllByMmsi(mmsi: String): List<ReportingModel>
+
+    @Query(
         value = """
         SELECT reporting
         FROM ReportingModel reporting

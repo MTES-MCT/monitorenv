@@ -248,6 +248,10 @@ class JpaReportingRepository(
         }
 
     @Transactional
+    override fun findAllByMmsi(mmsi: String): List<ReportingDetailsDTO> =
+        dbReportingRepository.findAllByMmsi(mmsi).map { it.toReportingDetailsDTO(mapper) }
+
+    @Transactional
     override fun delete(reportingId: Int) {
         dbReportingRepository.delete(reportingId)
     }

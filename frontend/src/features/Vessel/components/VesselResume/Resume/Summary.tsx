@@ -1,9 +1,8 @@
 import { VesselIdentity } from '@features/Vessel/components/VesselResume/styles'
+import { UNKNOWN } from '@features/Vessel/components/VesselResume/utils'
 import { Vessel } from '@features/Vessel/types'
 import countries from 'i18n-iso-countries'
 import styled from 'styled-components'
-
-import { UNKNOWN } from '.'
 
 type SummaryProps = {
   vessel: Vessel.Vessel

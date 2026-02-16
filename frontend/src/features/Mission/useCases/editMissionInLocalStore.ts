@@ -10,8 +10,11 @@ import { attachReportingToMissionSliceActions } from '../components/MissionForm/
 import { missionFormsActions } from '../components/MissionForm/slice'
 import { missionActions } from '../slice'
 
+import type { HomeAppThunk } from '@store/index'
+
 export const editMissionInLocalStore =
-  (missionId: number, context: 'map' | 'sideWindow') => async (dispatch, getState) => {
+  (missionId: number, context: 'map' | 'sideWindow'): HomeAppThunk =>
+  async (dispatch, getState) => {
     const { missions } = getState().missionForms
 
     const missionToEdit = missionsAPI.endpoints.getMission

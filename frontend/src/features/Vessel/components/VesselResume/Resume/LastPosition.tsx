@@ -1,5 +1,6 @@
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { VesselIdentity } from '@features/Vessel/components/VesselResume/styles'
+import { UNKNOWN } from '@features/Vessel/components/VesselResume/utils'
 import { Vessel } from '@features/Vessel/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -8,15 +9,13 @@ import { formatCoordinates, formatCoordinatesAsText } from '@utils/coordinates'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
-import { UNKNOWN } from '.'
-
 import type { Coordinate } from 'ol/coordinate'
 
-type SummaryProps = {
+type LastPositionProps = {
   lastPositions: Vessel.LastPosition[]
 }
 
-export function LastPositionResume({ lastPositions }: SummaryProps) {
+export function LastPosition({ lastPositions }: LastPositionProps) {
   const dispatch = useAppDispatch()
   const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
 

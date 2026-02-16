@@ -1,16 +1,15 @@
 import { VesselIdentity } from '@features/Vessel/components/VesselResume/styles'
+import { UNKNOWN } from '@features/Vessel/components/VesselResume/utils'
 import countries from 'i18n-iso-countries'
 import styled from 'styled-components'
 
-import { UNKNOWN } from '.'
-
 import type { Vessel } from '@features/Vessel/types'
 
-type OwnerResumeProps = {
+type OwnerProps = {
   vessel: Vessel.Vessel
 }
 
-export function Owner({ vessel }: OwnerResumeProps) {
+export function Owner({ vessel }: OwnerProps) {
   const nationalityName = vessel.ownerNationality
     ? countries.getName(vessel.ownerNationality.substring(0, 2).toLowerCase(), 'fr')
     : UNKNOWN

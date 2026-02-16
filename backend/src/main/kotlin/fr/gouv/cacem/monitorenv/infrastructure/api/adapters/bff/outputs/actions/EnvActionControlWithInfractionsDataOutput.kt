@@ -7,12 +7,13 @@ import java.time.ZonedDateTime
 import java.util.UUID
 
 data class EnvActionControlWithInfractionsDataOutput(
-    val id: UUID?,
     val actionStartDateTimeUtc: ZonedDateTime? = null,
     val actionType: ActionTypeEnum = ActionTypeEnum.CONTROL,
-    val infractions: List<InfractionEntity>? = listOf(),
-    val themes: List<String>? = listOf(),
     val controlUnits: List<String>? = listOf(),
+    val id: UUID?,
+    val infractions: List<InfractionEntity>? = listOf(),
+    val missionId: Int? = null,
+    val themes: List<String>? = listOf(),
 ) {
     companion object {
         fun fromEnvActionControlWithInfractionsEntity(
@@ -20,6 +21,7 @@ data class EnvActionControlWithInfractionsDataOutput(
         ) = EnvActionControlWithInfractionsDataOutput(
             id = envActionControlWithInfractionsEntity.id,
             actionStartDateTimeUtc = envActionControlWithInfractionsEntity.actionStartDateTimeUtc,
+            missionId = envActionControlWithInfractionsEntity.missionId,
             infractions = envActionControlWithInfractionsEntity.infractions,
             themes = envActionControlWithInfractionsEntity.themes,
             controlUnits = envActionControlWithInfractionsEntity.controlUnits,

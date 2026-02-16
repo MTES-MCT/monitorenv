@@ -134,27 +134,23 @@ class JpaEnvActionRepository(
         val envActions = idbEnvActionRepository.findAllEnvActionByMmsi(mmsi, idToExclude)
 
         return envActions.map { row: EnvActionControlWithInfractions ->
-            try {
-                val infractionsJson = row.getInfractions()
-                val infractions: List<InfractionEntity> =
-                    objectMapper.readValue(infractionsJson, Array<InfractionEntity>::class.java).toList()
-                val actionStartDateTimeUtc =
-                    row
-                        .getActionStartDatetimeUtc()
-                        ?.toInstant()
-                        ?.atZone(ZoneOffset.UTC)
+            val infractionsJson = row.getInfractions()
+            val infractions: List<InfractionEntity> =
+                objectMapper.readValue(infractionsJson, Array<InfractionEntity>::class.java).toList()
+            val actionStartDateTimeUtc =
+                row
+                    .getActionStartDatetimeUtc()
+                    ?.toInstant()
+                    ?.atZone(ZoneOffset.UTC)
 
-                EnvActionControlWithInfractionsEntity(
-                    id = row.getId(),
-                    actionStartDateTimeUtc = actionStartDateTimeUtc,
-                    themes = row.getThemes().toList(),
-                    controlUnits = row.getControlUnits().toList(),
-                    infractions = infractions,
-                )
-            } catch (e: Exception) {
-                println("Error parsing infractions for envAction: ${e.message}")
-                throw e
-            }
+            EnvActionControlWithInfractionsEntity(
+                actionStartDateTimeUtc = actionStartDateTimeUtc,
+                controlUnits = row.getControlUnits().toList(),
+                id = row.getId(),
+                infractions = infractions,
+                missionId = row.getMissionId(),
+                themes = row.getThemes().toList(),
+            )
         }
     }
 }

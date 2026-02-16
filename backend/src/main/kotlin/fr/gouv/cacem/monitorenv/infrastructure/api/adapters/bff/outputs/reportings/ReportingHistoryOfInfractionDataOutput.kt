@@ -10,11 +10,11 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.T
 import java.time.ZonedDateTime
 
 data class ReportingHistoryOfInfractionDataOutput(
+    val createdAt: ZonedDateTime,
     val id: Int,
     val reportingId: Long? = null,
     val reportingSources: List<ReportingSourceDataOutput>,
     val reportType: ReportingTypeEnum? = null,
-    val createdAt: ZonedDateTime,
     val theme: ThemeOutput,
     val tags: List<TagOutput>,
 ) {

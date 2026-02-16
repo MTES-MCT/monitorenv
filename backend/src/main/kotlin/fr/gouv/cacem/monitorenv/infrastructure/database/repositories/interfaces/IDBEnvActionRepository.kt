@@ -75,6 +75,7 @@ interface IDBEnvActionRepository : JpaRepository<EnvActionModel, UUID> {
         envAction.id,
         envAction.action_start_datetime_utc,
         envAction.action_type,
+        envAction.mission_id,
         jsonb_agg(DISTINCT infractions)::text AS infractions,
         COALESCE(ARRAY_AGG(DISTINCT control_units.name), '{}') AS control_units,
         COALESCE(ARRAY_AGG(DISTINCT themes.name), '{}') AS themes
