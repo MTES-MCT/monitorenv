@@ -16,15 +16,17 @@ import type { Geometry } from 'ol/geom'
 
 export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
   const { regulatoryAreaId } = useParams()
-  const { data: regulatoryArea } = useGetRegulatoryAreaByIdQuery(Number(regulatoryAreaId), {
-    skip: !regulatoryAreaId
-  })
+
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
 
   const layerId = useMemo(
     () => regulatoryAreaId ?? openedRegulatoryAreaId ?? undefined,
     [regulatoryAreaId, openedRegulatoryAreaId]
   )
+
+  const { data: regulatoryArea } = useGetRegulatoryAreaByIdQuery(Number(layerId), {
+    skip: !layerId
+  })
 
   const regulatoryVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const regulatoryVectorLayerRef = useRef(
