@@ -11,12 +11,12 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
-class GetAllRegulatoryAreasToCreateUTest {
+class GetAllRegulatoryAreasToCompleteUTest {
     private val regulatoryAreaRepository: IRegulatoryAreaNewRepository = mock()
-    private val getAllRegulatoryAreasToCreate = GetAllRegulatoryAreasToCreate(regulatoryAreaRepository)
+    private val getAllRegulatoryAreasToComplete = GetAllRegulatoryAreasToComplete(regulatoryAreaRepository)
 
     @Test
-    fun `execute should return all regulatory areas to create`(log: CapturedOutput) {
+    fun `execute should return all regulatory areas to complete`(log: CapturedOutput) {
         // Given
         val expectedRegulatoryAreas =
             listOf(
@@ -26,7 +26,7 @@ class GetAllRegulatoryAreasToCreateUTest {
         given(regulatoryAreaRepository.findAllToCreate()).willReturn(expectedRegulatoryAreas)
 
         // When
-        val regulatoryAreas = getAllRegulatoryAreasToCreate.execute()
+        val regulatoryAreas = getAllRegulatoryAreasToComplete.execute()
 
         // Then
         assertThat(regulatoryAreas).isEqualTo(expectedRegulatoryAreas)
@@ -35,12 +35,12 @@ class GetAllRegulatoryAreasToCreateUTest {
     }
 
     @Test
-    fun `execute should return empty list when no regulatory areas to create`(log: CapturedOutput) {
+    fun `execute should return empty list when no regulatory areas to complete`(log: CapturedOutput) {
         // Given
         given(regulatoryAreaRepository.findAllToCreate()).willReturn(emptyList())
 
         // When
-        val regulatoryAreas = getAllRegulatoryAreasToCreate.execute()
+        val regulatoryAreas = getAllRegulatoryAreasToComplete.execute()
 
         // Then
         assertThat(regulatoryAreas).isEmpty()
@@ -55,7 +55,7 @@ class GetAllRegulatoryAreasToCreateUTest {
         given(regulatoryAreaRepository.findAllToCreate()).willReturn(expectedRegulatoryAreas)
 
         // When
-        val regulatoryAreas = getAllRegulatoryAreasToCreate.execute()
+        val regulatoryAreas = getAllRegulatoryAreasToComplete.execute()
 
         // Then
         assertThat(regulatoryAreas).hasSize(1)
@@ -72,7 +72,7 @@ class GetAllRegulatoryAreasToCreateUTest {
         // When
         val thrownException =
             org.junit.jupiter.api.assertThrows<RuntimeException> {
-                getAllRegulatoryAreasToCreate.execute()
+                getAllRegulatoryAreasToComplete.execute()
             }
 
         // Then
