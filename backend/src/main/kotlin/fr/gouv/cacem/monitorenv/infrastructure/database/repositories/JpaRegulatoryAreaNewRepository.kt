@@ -18,7 +18,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
-@Repository()
+@Repository
 class JpaRegulatoryAreaNewRepository(
     private val dbRegulatoryAreaRepository: IDBRegulatoryAreaNewRepository,
     private val dbTagVigilanceAreaRepository: IDBTagRegulatoryAreaRepository,
