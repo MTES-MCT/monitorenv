@@ -80,7 +80,10 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                     plan                    text,
                     authorization_periods   character varying,
                     prohibition_periods     character varying,
-                    others_ref_reg          jsonb)
+                    others_ref_reg          jsonb,
+                    themes                  character varying,
+                    tags                    character varying
+                )
                 ON COMMIT DROP;"""
             )
         )

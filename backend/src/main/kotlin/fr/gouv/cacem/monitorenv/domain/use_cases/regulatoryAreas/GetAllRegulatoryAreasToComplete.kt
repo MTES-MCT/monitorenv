@@ -13,7 +13,7 @@ class GetAllRegulatoryAreasToComplete(
 
     fun execute(): List<RegulatoryAreaNewEntity> {
         logger.info("Attempt to GET all regulatory areas to create")
-        val regulatoryAreas = regulatoryAreaRepository.findAllToCreate()
+        val regulatoryAreas = regulatoryAreaRepository.findAllToComplete()
         logger.info("Found ${regulatoryAreas.size} regulatory areas to create")
 
         return regulatoryAreas
