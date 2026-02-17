@@ -52,7 +52,7 @@
   left: 0.5em;
   width: 25px;
   height: 53px;
-  position: fixed;
+  position: absolute;
 }
 
 .ol-control.zoom > button {
