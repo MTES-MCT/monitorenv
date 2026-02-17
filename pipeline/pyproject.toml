@@ -27,7 +27,7 @@ oracledb = "^3.4.2"
 ## Type Checking and Data Validation
 mypy = "^1.18.2"
 ## Code formatting
-black = "^25.11.0"
+black = "^26.1.0"
 ## Code quality
 isort = "^7.0.0"
 pylint = "^4.0.3"
