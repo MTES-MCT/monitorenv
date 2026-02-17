@@ -26,7 +26,9 @@ CREATE TABLE IF NOT EXISTS prod.reg_cacem
     plan                    text,
     authorization_periods   character varying,
     prohibition_periods     character varying,
-    others_ref_reg          jsonb
+    others_ref_reg          jsonb,
+    themes                  character varying,
+    tags                    character varying
 );
 
 INSERT INTO prod.reg_cacem (
@@ -52,7 +54,9 @@ INSERT INTO prod.reg_cacem (
     plan,
     authorization_periods,
     prohibition_periods,
-    others_ref_reg
+    others_ref_reg,
+    themes,
+    tags
 ) VALUES (
     1,
     'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))',
@@ -76,7 +80,9 @@ INSERT INTO prod.reg_cacem (
     'plan1',
     'période d''autorisation1',
     'période de prohibition1',
-    null
+    null,
+    'theme1,theme2',
+    'tag1,tag2'
 );
 
 INSERT INTO prod.reg_cacem (
@@ -102,7 +108,9 @@ INSERT INTO prod.reg_cacem (
     plan,
     authorization_periods,
     prohibition_periods,
-    others_ref_reg
+    others_ref_reg,
+    themes,
+    tags
 ) VALUES (
     2,
     'MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))',
@@ -126,7 +134,9 @@ INSERT INTO prod.reg_cacem (
     'plan2',
     'période d''autorisation2',
     'période de prohibition2',
-    null
+    null,
+    'theme3,theme4',
+    'tag3,tag4'
 );
 
 

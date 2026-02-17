@@ -5,14 +5,12 @@ import XYZ from 'ol/source/XYZ'
 import { useEffect, useState } from 'react'
 
 import { Layers } from '../../../domain/entities/layers/constants'
-import { useAppSelector } from '../../../hooks/useAppSelector'
 
 type MapLayerProps = {
   map?: any
+  selectedBaseLayer: string
 }
-export function MapLayer({ map }: MapLayerProps) {
-  const selectedBaseLayer = useAppSelector(state => state.map.selectedBaseLayer)
-
+export function MapLayer({ map, selectedBaseLayer }: MapLayerProps) {
   const [baseLayersObjects] = useState({
     LIGHT: () =>
       new TileLayer({

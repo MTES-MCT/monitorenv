@@ -23,7 +23,7 @@ class GetAllRegulatoryAreasToCompleteUTest {
                 RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 1),
                 RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 2),
             )
-        given(regulatoryAreaRepository.findAllToCreate()).willReturn(expectedRegulatoryAreas)
+        given(regulatoryAreaRepository.findAllToComplete()).willReturn(expectedRegulatoryAreas)
 
         // When
         val regulatoryAreas = getAllRegulatoryAreasToComplete.execute()
@@ -37,7 +37,7 @@ class GetAllRegulatoryAreasToCompleteUTest {
     @Test
     fun `execute should return empty list when no regulatory areas to complete`(log: CapturedOutput) {
         // Given
-        given(regulatoryAreaRepository.findAllToCreate()).willReturn(emptyList())
+        given(regulatoryAreaRepository.findAllToComplete()).willReturn(emptyList())
 
         // When
         val regulatoryAreas = getAllRegulatoryAreasToComplete.execute()
@@ -52,7 +52,7 @@ class GetAllRegulatoryAreasToCompleteUTest {
     fun `execute should return single regulatory area to create`(log: CapturedOutput) {
         // Given
         val expectedRegulatoryAreas = listOf(RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 1))
-        given(regulatoryAreaRepository.findAllToCreate()).willReturn(expectedRegulatoryAreas)
+        given(regulatoryAreaRepository.findAllToComplete()).willReturn(expectedRegulatoryAreas)
 
         // When
         val regulatoryAreas = getAllRegulatoryAreasToComplete.execute()
@@ -67,7 +67,7 @@ class GetAllRegulatoryAreasToCompleteUTest {
     fun `execute should throw exception when repository fails`(log: CapturedOutput) {
         // Given
         val exceptionMessage = "Database connection error"
-        given(regulatoryAreaRepository.findAllToCreate()).willThrow(RuntimeException(exceptionMessage))
+        given(regulatoryAreaRepository.findAllToComplete()).willThrow(RuntimeException(exceptionMessage))
 
         // When
         val thrownException =

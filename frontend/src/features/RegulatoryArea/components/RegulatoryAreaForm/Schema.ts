@@ -2,7 +2,9 @@ import * as Yup from 'yup'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
-export const RegulatoryAreaFormSchema: Yup.Schema<RegulatoryArea.RegulatoryAreaFromAPI> = Yup.object().shape({
+export const RegulatoryAreaFormSchema: Yup.Schema<
+  RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea
+> = Yup.object().shape({
   authorizationPeriods: Yup.string().optional(),
   creation: Yup.string().optional(),
   date: Yup.string().required(),
