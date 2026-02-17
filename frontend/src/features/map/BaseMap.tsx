@@ -221,7 +221,8 @@ function BaseMapNotMemoized({
 
   useEffect(() => {
     initialMap.setTarget(mapElement.current)
-    initialMap.addControl(updateScaleControl())
+    const scaleControl = updateScaleControl()
+    initialMap.addControl(scaleControl)
     initialMap.on('click', event => handleMapClick(event, initialMap))
     initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
     graticuleRef.current = new Graticule({
@@ -240,7 +241,7 @@ function BaseMapNotMemoized({
       initialMap.un('click', event => handleMapClick(event, initialMap))
       initialMap.un('pointermove', event => handleMouseOverFeature(event, initialMap))
       initialMap.setTarget(undefined)
-      initialMap.getControls().clear()
+      initialMap.removeControl(scaleControl)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
