@@ -21,12 +21,15 @@ export function MapFocusForDashboardBanner() {
 }
 
 const Container = styled.div`
-  display: flex;
   align-items: center;
-  justify-content: center;
   background-color: ${p => p.theme.color.gunMetal};
-  z-index: 10;
+  display: flex;
+  justify-content: center;
   height: 50px;
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+
   > * {
     color: ${p => p.theme.color.white};
     font-size: 16px;
