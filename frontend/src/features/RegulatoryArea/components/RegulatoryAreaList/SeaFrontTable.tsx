@@ -9,15 +9,11 @@ import { ControlPlanWrapper, GroupTitle, StyledIconButton, Title } from './style
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
-export function SeaFrontTable() {
-  const filters = useAppSelector(state => state.regulatoryAreaTable.filtersState)
-  const groupedRegulatoryAreas = useAppSelector(state =>
-    getRegulatoryAreasBySeaFront(state, {
-      ...filters,
-      tags: filters.tags?.map(tag => tag.id),
-      themes: filters.themes?.map(theme => theme.id)
-    })
-  ) as Record<string, Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>
+export function SeaFrontTable({ apiFilters }: { apiFilters: any }) {
+  const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasBySeaFront(state, apiFilters)) as Record<
+    string,
+    Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
+  >
 
   const allSeaFronts = Object.values(SeaFrontLabels).map(seaFrontLabel => seaFrontLabel.label)
 

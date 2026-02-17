@@ -14,7 +14,6 @@ const GET_REGULATORY_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/l
 const GET_REGULATORY_AREA_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zones réglementaire"
 const GET_LAYER_NAMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les noms de groupes de zones réglementaires"
 type Filters = {
-  groupBy?: 'CONTROL_PLAN' | 'SEA_FRONT'
   seaFronts?: string[]
   searchQuery?: string
   tags?: number[]
@@ -63,11 +62,11 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
           }))
         }))
     }),
-    getRegulatoryAreasToCreate: builder.query<RegulatoryArea.RegulatoryAreaToCreate[], void>({
-      providesTags: () => [{ id: 'TO_CREATE', type: 'RegulatoryAreas' }],
+    getRegulatoryAreasToComplete: builder.query<RegulatoryArea.RegulatoryAreaToComplete[], void>({
+      providesTags: () => [{ id: 'TO_COMPLETE', type: 'RegulatoryAreas' }],
       query: () => '/regulatory-areas/to-complete',
       transformErrorResponse: response =>
-        new FrontendApiError("Nous n'avons pas pu récupérer les zones réglementaires à créer", response)
+        new FrontendApiError("Nous n'avons pas pu récupérer les zones réglementaires à compléter", response)
     }),
     saveRegulatoryArea: builder.mutation<
       RegulatoryArea.RegulatoryAreaFromAPI,
@@ -76,7 +75,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       invalidatesTags: (_, __, { id }) => [
         { id, type: 'RegulatoryAreas' },
         { id: 'LIST', type: 'RegulatoryAreas' },
-        { id: 'TO_CREATE', type: 'RegulatoryAreas' }
+        { id: 'TO_COMPLETE', type: 'RegulatoryAreas' }
       ],
       query: regulatoryArea => ({
         body: regulatoryArea,
@@ -91,10 +90,10 @@ export const {
   useGetLayerNamesQuery,
   useGetRegulatoryAreaByIdQuery,
   useGetRegulatoryAreasQuery,
-  useGetRegulatoryAreasToCreateQuery
+  useGetRegulatoryAreasToCompleteQuery
 } = regulatoryAreasAPI
 
-export const getregulatoryAreasByControlPlan = createSelector(
+export const getRegulatoryAreasByControlPlan = createSelector(
   [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],
   regulatoryAreas => {
     const groups = regulatoryAreas?.data

@@ -33,16 +33,18 @@ class JpaRegulatoryAreaNewRepository(
     override fun findAll(
         query: String?,
         seaFronts: List<String>?,
+        tags: List<Int>?,
+        themes: List<Int>?,
     ): List<RegulatoryAreaNewEntity> =
         dbRegulatoryAreaRepository
-            .findAll(seaFronts = seaFronts)
+            .findAll(seaFronts = seaFronts, tags = tags, themes = themes)
             .map { it.toRegulatoryArea(mapper) }
             .filter { findBySearchQuery(it, query) }
 
     override fun findAllLayerNames(): List<String> = dbRegulatoryAreaRepository.findAllLayerNames()
 
     @Transactional
-    override fun findAllToCreate(): List<RegulatoryAreaNewEntity> =
+    override fun findAllToComplete(): List<RegulatoryAreaNewEntity> =
         dbRegulatoryAreaRepository
             .findAllByCreationIsNull()
             .map { it.toRegulatoryArea(mapper) }

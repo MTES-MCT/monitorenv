@@ -422,7 +422,7 @@ class RegulatoryAreasNewITests {
     @Test
     fun `Should create new regulatory area`() {
         // Given
-        val regulatoryAreaToCreate =
+        val regulatoryAreaToComplete =
             RegulatoryAreaNewEntity(
                 id = 9999,
                 geom = polygon,
@@ -497,7 +497,7 @@ class RegulatoryAreasNewITests {
             createOrUpdateRegulatoryArea.execute(
                 regulatoryArea = requestBody.toRegulatoryAreaEntity(),
             ),
-        ).willReturn(regulatoryAreaToCreate)
+        ).willReturn(regulatoryAreaToComplete)
 
         // When
         mockMvc

@@ -1,6 +1,7 @@
 import { Italic } from '@components/style'
 import { ValidateButton } from '@features/commonComponents/ValidateButton'
 import {
+  customDayjs,
   Accent,
   Button,
   FormikDatePicker,
@@ -12,7 +13,7 @@ import {
   Label
 } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { useState, type SetStateAction, type Dispatch } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -28,10 +29,10 @@ export type MainRefReg = {
 }
 export function RegulatoryTexts({
   editingMainRefReg,
-  setEditingMainRefReg
+  onChangeRefReg
 }: {
   editingMainRefReg: MainRefReg | undefined
-  setEditingMainRefReg: Dispatch<SetStateAction<MainRefReg | undefined>>
+  onChangeRefReg: (refReg?: MainRefReg) => void
 }) {
   const { setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
   const [editingOtherRefReg, setEditingOtherRefReg] = useState<RegulatoryArea.OthersRegulatoryText | undefined>(
@@ -39,7 +40,7 @@ export function RegulatoryTexts({
   )
 
   const validateRefReg = () => {
-    setEditingMainRefReg(undefined)
+    onChangeRefReg(undefined)
   }
 
   const cancelEditRefReg = () => {
@@ -47,7 +48,7 @@ export function RegulatoryTexts({
     setFieldValue('dateFin', editingMainRefReg?.dateFin)
     setFieldValue('refReg', editingMainRefReg?.refReg)
     setFieldValue('url', editingMainRefReg?.url)
-    setEditingMainRefReg(undefined)
+    onChangeRefReg(undefined)
   }
 
   const validateOtherRefReg = (index: number) => {
@@ -111,12 +112,12 @@ export function RegulatoryTexts({
   }
 
   const addOtherRefReg = () => {
-    setEditingMainRefReg(undefined)
+    onChangeRefReg(undefined)
     const newRefReg = {
       endDate: undefined,
       id: uuidv4(),
       refReg: undefined,
-      startDate: undefined
+      startDate: customDayjs().toISOString()
     }
     setFieldValue('othersRefReg', [...(values.othersRefReg ?? []), newRefReg])
     setEditingOtherRefReg(newRefReg)
@@ -180,7 +181,7 @@ export function RegulatoryTexts({
             <IconButton
               accent={Accent.TERTIARY}
               Icon={Icon.EditUnbordered}
-              onClick={() => setEditingMainRefReg(mainRefReg)}
+              onClick={() => onChangeRefReg(mainRefReg)}
             />
           </RefRegContainer>
         </>

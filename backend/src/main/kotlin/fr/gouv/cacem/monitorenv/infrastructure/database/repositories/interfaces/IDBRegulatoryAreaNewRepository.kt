@@ -8,14 +8,22 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
     @Query(
         value =
             """
-            SELECT regulatoryArea
+            SELECT DISTINCT regulatoryArea
             FROM RegulatoryAreaNewModel regulatoryArea
+            LEFT JOIN regulatoryArea.themes th
+            LEFT JOIN regulatoryArea.tags tg
             WHERE (:seaFronts IS NULL OR regulatoryArea.facade IN (:seaFronts))
+            AND (:themes IS NULL OR th.theme.id IN :themes)
+            AND (:tags IS NULL OR tg.tag.id IN :tags)
             AND regulatoryArea.creation IS NOT NULL
             ORDER BY regulatoryArea.layerName
         """,
     )
-    fun findAll(seaFronts: List<String>? = emptyList()): List<RegulatoryAreaNewModel>
+    fun findAll(
+        seaFronts: List<String>? = null,
+        tags: List<Int>? = null,
+        themes: List<Int>? = null,
+    ): List<RegulatoryAreaNewModel>
 
     fun findAllByCreationIsNull(): List<RegulatoryAreaNewModel>
 
