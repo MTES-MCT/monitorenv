@@ -12,26 +12,38 @@ export namespace RegulatoryArea {
     editeur?: string
     editionBo?: string
     editionCacem?: string
-    facade?: string
-    geom?: GeoJSON.MultiPolygon
-    id?: number
-    layerName?: string
+    facade: string
+    geom: GeoJSON.MultiPolygon
+    id: number
+    layerName: string
     observations?: string
     othersRefReg?: OthersRegulatoryText[]
-    plan?: string
-    polyName?: string
+    plan: string
+    polyName: string
     prohibitionPeriods?: string
-    refReg?: string
+    refReg: string
     resume?: string
     source?: string
     tags?: TagFromAPI[]
     temporalite?: string
     themes?: ThemeFromAPI[]
+    type: string
+    url: string
+  }
+
+  export type NewRegulatoryArea = RegulatoryArea.RegulatoryAreaFromAPI & {
+    facade?: string
+    geom?: GeoJSON.MultiPolygon
+    id?: number
+    layerName?: string
+    plan?: string
+    polyName?: string
+    refReg?: string
     type?: string
     url?: string
   }
 
-  export type RegulatoryAreaToCreate = {
+  export type RegulatoryAreaToComplete = {
     geom: GeoJSON.MultiPolygon
     id: number
     refReg: string

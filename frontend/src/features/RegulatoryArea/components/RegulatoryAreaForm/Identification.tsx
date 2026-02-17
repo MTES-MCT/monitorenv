@@ -1,4 +1,4 @@
-import { useGetLayerNamesQuery, useGetRegulatoryAreasToCreateQuery } from '@api/regulatoryAreasAPI'
+import { useGetLayerNamesQuery, useGetRegulatoryAreasToCompleteQuery } from '@api/regulatoryAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
@@ -22,7 +22,7 @@ import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { useFormikContext } from 'formik'
-import { useMemo, useState, type Dispatch, type SetStateAction } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { SubTitle } from './style'
@@ -34,15 +34,15 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export function Identification({
   isEditing,
-  setEditingMainRefReg
+  onChangeRefReg
 }: {
   isEditing: boolean
-  setEditingMainRefReg: Dispatch<SetStateAction<MainRefReg | undefined>>
+  onChangeRefReg: (refReg: MainRefReg) => void
 }) {
   const { errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
 
   const { data: layerNames } = useGetLayerNamesQuery()
-  const { data: regulatoryAreasToCreate } = useGetRegulatoryAreasToCreateQuery()
+  const { data: regulatoryAreasToComplete } = useGetRegulatoryAreasToCompleteQuery()
 
   const [isCreatingNewLayerName, setIsCreatingNewLayerName] = useState(false)
   const [newLayerNameType, setNewLayerNameType] = useState<string | undefined>(undefined)
@@ -65,18 +65,30 @@ export function Identification({
     return layersNamesFromApi.sort((a, b) => a.label.localeCompare(b.label))
   }, [layerNames, values.layerName])
 
-  const geomOptions = useMemo(
-    () =>
-      regulatoryAreasToCreate?.map(regulatoryArea => ({
+  const geomOptions = useMemo(() => {
+    const options =
+      regulatoryAreasToComplete?.map(regulatoryArea => ({
         label: String(regulatoryArea.id),
         value: {
           geom: regulatoryArea.geom,
           id: regulatoryArea.id,
           refReg: regulatoryArea.refReg
         }
-      })) ?? [],
-    [regulatoryAreasToCreate]
-  )
+      })) ?? []
+
+    if (isEditing && values.geom && values.id && values.refReg) {
+      options.push({
+        label: String(values.id),
+        value: {
+          geom: values.geom,
+          id: values.id,
+          refReg: values.refReg
+        }
+      })
+    }
+
+    return options
+  }, [regulatoryAreasToComplete, isEditing, values.geom, values.id, values.refReg])
 
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
   const regulatoryTypeOptions = getOptionsFromLabelledEnum(RegulatoryArea.RegulatoryAreaTypeLabel).sort((a, b) =>
@@ -87,7 +99,7 @@ export function Identification({
     setFieldValue('geom', nextGeom?.geom)
     setFieldValue('id', nextGeom?.id)
     setFieldValue('refReg', nextGeom?.refReg)
-    setEditingMainRefReg({ date: values.date, dateFin: values.dateFin, refReg: nextGeom?.refReg })
+    onChangeRefReg({ date: values.date, dateFin: values.dateFin, refReg: nextGeom?.refReg })
   }
 
   const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
@@ -106,7 +118,8 @@ export function Identification({
     } else {
       updatedControlPlans = currentControlPlans.filter(plan => plan !== controlPlan)
     }
-    setFieldValue('plan', updatedControlPlans.join(','))
+    const updatedControlPlansString = updatedControlPlans.length > 0 ? updatedControlPlans.join(',') : undefined
+    setFieldValue('plan', updatedControlPlansString)
   }
 
   const createNewLayerName = () => {
@@ -195,15 +208,7 @@ export function Identification({
             optionValueKey="id"
             renderMenuItem={renderMenuItem}
             style={{ width: '30%' }}
-            value={
-              isEditing && values.geom && values.id && values.refReg
-                ? {
-                    geom: values.geom,
-                    id: values.id,
-                    refReg: values.refReg
-                  }
-                : geomOptions.find(option => option.value.id === values.id)?.value
-            }
+            value={geomOptions.find(option => option.value.id === values.id)?.value}
           />
           <FormikSelect
             isErrorMessageHidden
@@ -262,14 +267,16 @@ export function Identification({
           <ControlPlanContainer>
             <Checkbox
               checked={values?.plan?.includes(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}
-              hasError={!values.plan}
+              error={errors.plan}
+              isErrorMessageHidden
               label={RegulatoryArea.RegulatoryAreaControlPlan.PIRC}
               name="PIRCType"
               onChange={isChecked => setControlPlan(RegulatoryArea.RegulatoryAreaControlPlan.PIRC, isChecked ?? false)}
             />
             <Checkbox
               checked={values?.plan?.includes(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}
-              hasError={!values.plan}
+              error={errors.plan}
+              isErrorMessageHidden
               label={RegulatoryArea.RegulatoryAreaControlPlan.PSCEM}
               name="PSCEMType"
               onChange={isChecked => setControlPlan(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM, isChecked ?? false)}

@@ -28,7 +28,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     fun `findAll should return all regulatoryAreas when seafront filter is set to NAMO`() {
         val regulatoryAreas =
             jpaRegulatoryAreaNewRepository.findAll(
-                seaFronts = listOf("NAMO"),
+                seaFronts = listOf("NAMO"),,
             )
         println("regulatoryAreas : $regulatoryAreas")
         assertThat(regulatoryAreas.size).isEqualTo(12)
@@ -40,7 +40,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         // When
         val regulatoryAreas =
             jpaRegulatoryAreaNewRepository.findAll(
-                seaFronts = listOf("MED"),
+                seaFronts = listOf("MED"),,
             )
 
         // Then
@@ -98,23 +98,23 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findAllToCreate should return all regulatory areas to create`() {
+    fun `findAllToComplete should return all regulatory areas to create`() {
         // When
-        val regulatoryAreasToCreate = jpaRegulatoryAreaNewRepository.findAllToCreate()
+        val regulatoryAreasToComplete = jpaRegulatoryAreaNewRepository.findAllToComplete()
         // Then
-        assertThat(regulatoryAreasToCreate).hasSize(2)
-        assertThat(regulatoryAreasToCreate[0].id).isEqualTo(123)
-        assertThat(regulatoryAreasToCreate[0].geom).isNotNull()
+        assertThat(regulatoryAreasToComplete).hasSize(2)
+        assertThat(regulatoryAreasToComplete[0].id).isEqualTo(123)
+        assertThat(regulatoryAreasToComplete[0].geom).isNotNull()
         assertThat(
-            regulatoryAreasToCreate[0].refReg,
+            regulatoryAreasToComplete[0].refReg,
         ).isEqualTo(
             "Arrêté inter-préfectoral N°2028118-0159 autorisant l'occupation temporaire du domaine public maritime vers Ajaccio",
         )
-        assertThat(regulatoryAreasToCreate[0].creation).isNull()
-        assertThat(regulatoryAreasToCreate[1].id).isEqualTo(456)
-        assertThat(regulatoryAreasToCreate[1].geom).isNotNull()
-        assertThat(regulatoryAreasToCreate[1].refReg).isEqualTo("Délibération interdisant la pêche à pied")
-        assertThat(regulatoryAreasToCreate[1].creation).isNull()
+        assertThat(regulatoryAreasToComplete[0].creation).isNull()
+        assertThat(regulatoryAreasToComplete[1].id).isEqualTo(456)
+        assertThat(regulatoryAreasToComplete[1].geom).isNotNull()
+        assertThat(regulatoryAreasToComplete[1].refReg).isEqualTo("Délibération interdisant la pêche à pied")
+        assertThat(regulatoryAreasToComplete[1].creation).isNull()
     }
 
     @Test

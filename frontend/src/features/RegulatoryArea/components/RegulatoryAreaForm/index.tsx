@@ -10,6 +10,7 @@ import { ZoomListener } from '@features/map/ZoomListener'
 import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@features/RegulatoryArea/style'
 import { createOrUpdateRegulatoryArea } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, customDayjs, Icon, LinkButton } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
@@ -19,11 +20,12 @@ import styled from 'styled-components'
 
 import { FormContent } from './FormContent'
 import { RegulatoryAreaFormSchema } from './Schema'
+import { BaseLayerSelector } from '../BaseLayerSelector'
 import { BackofficeRegulatoryAreaLayer } from '../Layers/BackofficeRegulatoryAreaLayer'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
-const childrensComponents = [
+const mapChildrensComponents = [
   // @ts-ignore
   <ZoomListener key="ZoomListener" />,
   <MapAttributionsBox key="MapAttributionsBox" />,
@@ -32,14 +34,15 @@ const childrensComponents = [
   // @ts-ignore
   <BackofficeRegulatoryAreaLayer key="BackofficeRegulatoryAreaLayer" />,
   // @ts-ignore
-  <MapExtentController key="MapExtentController" />,
-  <MapLayer key="MapLayer" />
+  <MapExtentController key="MapExtentController" />
 ]
 
 export function RegulatoryAreaForm() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { regulatoryAreaId } = useParams()
+
+  const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
   const [isCancelEditDialogOpen, setIsCancelEditDialogOpen] = useState(false)
 
@@ -49,33 +52,34 @@ export function RegulatoryAreaForm() {
   )
 
   const initialValues = useMemo(
-    () => ({
-      authorizationPeriods: regulatoryArea?.authorizationPeriods,
-      creation: regulatoryArea?.creation,
-      date: regulatoryArea?.date,
-      dateFin: regulatoryArea?.dateFin,
-      dureeValidite: regulatoryArea?.dureeValidite,
-      editeur: regulatoryArea?.editeur,
-      editionBo: regulatoryArea?.editionBo,
-      editionCacem: regulatoryArea?.editionCacem,
-      facade: regulatoryArea?.facade,
-      geom: regulatoryArea?.geom,
-      id: regulatoryArea?.id,
-      layerName: regulatoryArea?.layerName,
-      observations: regulatoryArea?.observations,
-      othersRefReg: regulatoryArea?.othersRefReg ?? [],
-      plan: regulatoryArea?.plan,
-      polyName: regulatoryArea?.polyName,
-      prohibitionPeriods: regulatoryArea?.prohibitionPeriods,
-      refReg: regulatoryArea?.refReg,
-      resume: regulatoryArea?.resume,
-      source: regulatoryArea?.source,
-      tags: regulatoryArea?.tags ?? [],
-      temporalite: regulatoryArea?.temporalite,
-      themes: regulatoryArea?.themes ?? [],
-      type: regulatoryArea?.type,
-      url: regulatoryArea?.url
-    }),
+    () =>
+      ({
+        authorizationPeriods: regulatoryArea?.authorizationPeriods,
+        creation: regulatoryArea?.creation,
+        date: regulatoryArea?.date ?? customDayjs().toISOString(),
+        dateFin: regulatoryArea?.dateFin,
+        dureeValidite: regulatoryArea?.dureeValidite,
+        editeur: regulatoryArea?.editeur,
+        editionBo: regulatoryArea?.editionBo,
+        editionCacem: regulatoryArea?.editionCacem,
+        facade: regulatoryArea?.facade,
+        geom: regulatoryArea?.geom,
+        id: regulatoryArea?.id,
+        layerName: regulatoryArea?.layerName,
+        observations: regulatoryArea?.observations,
+        othersRefReg: regulatoryArea?.othersRefReg ?? [],
+        plan: regulatoryArea?.plan ?? [],
+        polyName: regulatoryArea?.polyName,
+        prohibitionPeriods: regulatoryArea?.prohibitionPeriods,
+        refReg: regulatoryArea?.refReg,
+        resume: regulatoryArea?.resume,
+        source: regulatoryArea?.source,
+        tags: regulatoryArea?.tags ?? [],
+        temporalite: regulatoryArea?.temporalite,
+        themes: regulatoryArea?.themes ?? [],
+        type: regulatoryArea?.type,
+        url: regulatoryArea?.url
+      } as RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea),
     [regulatoryArea]
   )
 
@@ -145,7 +149,12 @@ export function RegulatoryAreaForm() {
           </Formik>
         </RegulatoryWrapper>
 
-        <MapContainer>{childrensComponents}</MapContainer>
+        <>
+          <BaseLayerSelector />
+          <MapContainer>
+            {[...mapChildrensComponents, <MapLayer key="MapLayer" selectedBaseLayer={selectedBaseLayer} />]}
+          </MapContainer>
+        </>
       </StyledBackofficeWrapper>
     </>
   )
