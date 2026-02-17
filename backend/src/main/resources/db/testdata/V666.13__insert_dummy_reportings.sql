@@ -136,9 +136,9 @@ VALUES (12, 2300012, 'VEHICLE', 'VESSEL', '[
     "vesselName": "Vessel 12"
   }
 ]',
-        '0106000020E610000001000000010300000001000000040000006E15B8857C090CC02C07754424784840552A202082FC09C0C0FD120D667A484025BF296025E00BC0805DC2889C7F48406E15B8857C090CC02C07754424784840',
+        ST_GeomFromText('MULTIPOINT((-4.76689484 48.52102012))', 4326),
         'NAMO', 'Description 3', 'OBSERVATION', 'Police des mouillages', '{ZMEL}', 'ACTION TAKEN', true, true,
-        now() - INTERVAL '1 hour', 1, false, false, 'DEF', NULL, NULL, NULL, NULL, 109, false,
+        now() - INTERVAL '1 hour', 24, false, false, 'DEF', NULL, NULL, NULL, NULL, 109, false,
         now() - INTERVAL '1 hour');
 INSERT INTO reportings_source (id, reportings_id, source_type, semaphore_id, control_unit_id, source_name)
 VALUES (uuid_generate_v4(), 1, 'SEMAPHORE', 21, NULL, NULL);

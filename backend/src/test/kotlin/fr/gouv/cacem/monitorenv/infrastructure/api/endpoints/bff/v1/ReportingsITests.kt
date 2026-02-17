@@ -18,6 +18,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.DeleteReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingById
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportings
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingsByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.GetReportingsByMmsi
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
@@ -77,6 +78,9 @@ class ReportingsITests {
 
     @MockitoBean
     private lateinit var getReportingsByIds: GetReportingsByIds
+
+    @MockitoBean
+    private lateinit var getReportingsByMmsi: GetReportingsByMmsi
 
     @MockitoBean
     private lateinit var deleteReporting: DeleteReporting
@@ -564,6 +568,25 @@ class ReportingsITests {
             .andExpect(jsonPath("$[0].id").value(1))
             .andExpect(jsonPath("$[1].id").value(2))
             .andExpect(jsonPath("$[2].id").value(3))
+    }
+
+    @Test
+    fun `Should retrieve reportings that match mmsi`() {
+        // Given
+        val mmsi = "0123456789"
+        given(getReportingsByMmsi.execute(mmsi)).willReturn(
+            listOf(
+                aReportingDetailsDTO(1),
+            ),
+        )
+        // When
+        mockedApi
+            .perform(
+                get("/bff/v1/reportings/mmsi/$mmsi")
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            // Then
+            .andExpect(status().isOk)
     }
 
     @Test

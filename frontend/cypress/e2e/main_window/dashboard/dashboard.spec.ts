@@ -34,7 +34,7 @@ context('Dashboard', () => {
         expect(body.inseeCode).equal('29')
         expect(body.regulatoryAreaIds.length).equal(13)
         expect(body.ampIds.length).equal(4)
-        expect(body.reportingIds.length).equal(6)
+        expect(body.reportingIds.length).equal(7)
         expect(body.vigilanceAreaIds.length).equal(1)
       })
     })
