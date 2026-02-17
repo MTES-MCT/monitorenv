@@ -44,7 +44,7 @@ export function YearTimeline({
     )
 
   return (
-    <YearListItem>
+    <YearListItem data-cy={`${year}-vessel-history`}>
       <Details
         onToggle={event => {
           if (event.target) {
@@ -62,7 +62,7 @@ export function YearTimeline({
             ) : (
               <>
                 {getTitle(suspicionOfInfractions.length, 'signalement')}
-                {', '} {getTitle(envActions.length, 'contrôle')}{' '}
+                {', '} {getTitle(envActions.length, 'contrôle')}
                 <Bold>
                   {totalInfractions !== 0 && `, ${totalInfractions} ${pluralize('infraction', totalInfractions)}`}
                 </Bold>

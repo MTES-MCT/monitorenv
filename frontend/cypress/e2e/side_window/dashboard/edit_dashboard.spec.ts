@@ -215,6 +215,6 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     cy.getDataCy('dashboard-selected-regulatory-result-group').should('have.length', 9)
     cy.getDataCy('dashboard-selected-amp-result-group').should('not.exist')
     cy.get('[data-cy^="dashboard-selected-vigilance-areas-zone-"]').should('not.exist')
-    cy.get('[data-cy^="dashboard-selected-reporting-"]').should('have.length', 3)
+    cy.get('[data-cy^="dashboard-selected-reporting-"]').should('have.length', 4)
   })
 })
