@@ -11,6 +11,7 @@ import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@featu
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
@@ -18,9 +19,10 @@ import { ControlPlanTable } from './ControlPlanTable'
 import { RegulatoryAreaFilters } from './RegulatoryAreaFilters'
 import { SeaFrontTable } from './SeaFrontTable'
 import { regulatoryAreaTableActions } from './slice'
+import { BaseLayerSelector } from '../BaseLayerSelector'
 import { BackofficeRegulatoryAreaLayer } from '../Layers/BackofficeRegulatoryAreaLayer'
 
-const childrensComponents = [
+const mapChildrensComponents = [
   // @ts-ignore
   <ZoomListener key="ZoomListener" />,
   <MapAttributionsBox key="MapAttributionsBox" />,
@@ -29,22 +31,37 @@ const childrensComponents = [
   // @ts-ignore
   <BackofficeRegulatoryAreaLayer key="BackofficeRegulatoryAreaLayer" />,
   // @ts-ignore
-  <MapExtentController key="MapExtentController" />,
-  <MapLayer key="MapLayer" />
+  <MapExtentController key="MapExtentController" />
 ]
+
 export function RegulatoryAreaList() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const filters = useAppSelector(state => state.regulatoryAreaTable.filtersState)
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
+  const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
-  useGetRegulatoryAreasQuery({
-    groupBy: filters.groupBy,
-    seaFronts: filters.seaFronts,
-    searchQuery: filters.searchQuery,
-    tags: filters.tags?.map(tag => tag.id),
-    themes: filters.themes?.map(theme => theme.id)
-  })
+  const formattedTagIds = useMemo(
+    () => filters.tags?.flatMap(tag => [tag.id, ...(tag.subTags?.map(subTag => subTag.id) ?? [])]),
+    [filters.tags]
+  )
+
+  const formattedThemeIds = useMemo(
+    () => filters.themes?.flatMap(theme => [theme.id, ...(theme.subThemes?.map(subTheme => subTheme.id) ?? [])]),
+    [filters.themes]
+  )
+
+  const apiFilters = useMemo(
+    () => ({
+      seaFronts: filters.seaFronts,
+      searchQuery: filters.searchQuery,
+      tags: formattedTagIds,
+
+      themes: formattedThemeIds
+    }),
+    [filters.seaFronts, filters.searchQuery, formattedTagIds, formattedThemeIds]
+  )
+  useGetRegulatoryAreasQuery(apiFilters)
 
   const closePanel = () => {
     dispatch(regulatoryAreaTableActions.setOpenRegulatoryAreaId(undefined))
@@ -64,10 +81,19 @@ export function RegulatoryAreaList() {
             </Button>
           </TitleContainer>
           <RegulatoryAreaFilters />
-          {filters.groupBy === 'SEA_FRONT' ? <SeaFrontTable /> : <ControlPlanTable />}
+          {filters.groupBy === 'SEA_FRONT' ? (
+            <SeaFrontTable apiFilters={apiFilters} />
+          ) : (
+            <ControlPlanTable apiFilters={apiFilters} />
+          )}
         </RegulatoryWrapper>
 
-        <MapContainer className="map-container">{childrensComponents}</MapContainer>
+        <>
+          <BaseLayerSelector />
+          <MapContainer>
+            {[...mapChildrensComponents, <MapLayer key="MapLayer" selectedBaseLayer={selectedBaseLayer} />]}
+          </MapContainer>
+        </>
 
         {openedRegulatoryAreaId && (
           <StyledRegulatoryAreasPanel isNewRegulatoryArea layerId={openedRegulatoryAreaId} onClose={closePanel} />

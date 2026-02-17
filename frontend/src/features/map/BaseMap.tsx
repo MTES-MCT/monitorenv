@@ -298,19 +298,16 @@ function BaseMapNotMemoized({
           />
         </DistanceUnitsTypeSelection>
       </StyledDistanceUnitContainer>
-      <StyledScaleLine
-        className="scale-line"
-        id="scale-line"
-        onClick={() => setUnitsSelectionIsOpen(true)}
-        type="button"
-      />
+      <StyledScaleLine className="scale-line" id="scale-line" onClick={() => setUnitsSelectionIsOpen(true)} />
     </MapWrapper>
   )
 }
 
 export const BaseMap = memo(BaseMapNotMemoized)
 
-const StyledScaleLine = styled.button``
+const StyledScaleLine = styled.div`
+  height: 0px;
+`
 const MapWrapper = styled.div`
   display: flex;
   flex: 1;

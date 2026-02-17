@@ -1,4 +1,4 @@
-import { getregulatoryAreasByControlPlan } from '@api/regulatoryAreasAPI'
+import { getRegulatoryAreasByControlPlan } from '@api/regulatoryAreasAPI'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon } from '@mtes-mct/monitor-ui'
@@ -7,15 +7,8 @@ import { useState } from 'react'
 import { RegulatoryAreaGroup } from './RegulatoryAreaGroup'
 import { ControlPlanWrapper, GroupTitle, StyledIconButton, Title } from './style'
 
-export function ControlPlanTable() {
-  const filters = useAppSelector(state => state.regulatoryAreaTable.filtersState)
-  const groupedRegulatoryAreas = useAppSelector(state =>
-    getregulatoryAreasByControlPlan(state, {
-      ...filters,
-      tags: filters.tags?.map(tag => tag.id),
-      themes: filters.themes?.map(theme => theme.id)
-    })
-  ) as Record<
+export function ControlPlanTable({ apiFilters }: { apiFilters: any }) {
+  const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasByControlPlan(state, apiFilters)) as Record<
     RegulatoryArea.RegulatoryAreaControlPlan.PSCEM | RegulatoryArea.RegulatoryAreaControlPlan.PIRC,
     Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
   >

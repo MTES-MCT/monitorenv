@@ -8,7 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulator
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.LayerNamesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaToCreateDataOuput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaToCompleteDataOuput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -35,9 +35,12 @@ class RegulatoryAreasNew(
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
     fun getAll(
-        @Parameter(description = "Group by")
-        @RequestParam(name = "groupBy", required = false)
-        groupBy: String?,
+        @Parameter(description = "Themes")
+        @RequestParam(name = "themes", required = false)
+        themes: List<Int>?,
+        @Parameter(description = "Tags")
+        @RequestParam(name = "tags", required = false)
+        tags: List<Int>?,
         @Parameter(description = "Search query")
         @RequestParam(name = "searchQuery", required = false)
         searchQuery: String?,
@@ -49,6 +52,8 @@ class RegulatoryAreasNew(
             getAllNewRegulatoryAreas.execute(
                 searchQuery = searchQuery,
                 seaFronts = seaFronts,
+                tags = tags,
+                themes = themes,
             )
         return regulatoryAreas.map { RegulatoryAreasDataOutput.fromRegulatoryAreaEntity(it) }
     }
@@ -81,9 +86,9 @@ class RegulatoryAreasNew(
         }
 
     @GetMapping("/to-complete")
-    @Operation(summary = "Get all new regulatory areas")
-    fun getRegulatoryAreasToCreate(): List<RegulatoryAreaToCreateDataOuput> =
+    @Operation(summary = "Get all regulatory areas to complete")
+    fun getRegulatoryAreasToComplete(): List<RegulatoryAreaToCompleteDataOuput> =
         getAllRegulatoryAreasToComplete.execute().map {
-            RegulatoryAreaToCreateDataOuput.fromRegulatoryAreaToCreateEntity(it)
+            RegulatoryAreaToCompleteDataOuput.fromRegulatoryAreaToCompleteEntity(it)
         }
 }

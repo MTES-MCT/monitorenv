@@ -14,6 +14,8 @@ class GetAllNewRegulatoryAreas(
     fun execute(
         searchQuery: String?,
         seaFronts: List<String>?,
+        tags: List<Int>?,
+        themes: List<Int>?,
     ): Map<String?, List<RegulatoryAreaNewEntity>> {
         logger.info("Attempt to GET all regulatory areas")
         val regulatoryAreas =
@@ -21,6 +23,8 @@ class GetAllNewRegulatoryAreas(
                 .findAll(
                     query = searchQuery,
                     seaFronts = seaFronts,
+                    tags = tags,
+                    themes = themes,
                 ).groupBy { it.layerName }
         logger.info("Found ${regulatoryAreas.size} regulatory areas")
 

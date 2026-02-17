@@ -6,9 +6,11 @@ interface IRegulatoryAreaNewRepository {
     fun findAll(
         query: String? = null,
         seaFronts: List<String>? = null,
+        tags: List<Int>? = null,
+        themes: List<Int>? = null,
     ): List<RegulatoryAreaNewEntity>
 
-    fun findAllToCreate(): List<RegulatoryAreaNewEntity>
+    fun findAllToComplete(): List<RegulatoryAreaNewEntity>
 
     fun findById(id: Int): RegulatoryAreaNewEntity?
 

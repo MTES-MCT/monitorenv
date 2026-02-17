@@ -11,8 +11,8 @@ export function FormContent({ isEditing }: { isEditing: boolean }) {
 
   return (
     <>
-      <Identification isEditing={isEditing} setEditingMainRefReg={setEditingMainRefReg} />
-      <RegulatoryTexts editingMainRefReg={editingMainRefReg} setEditingMainRefReg={setEditingMainRefReg} />
+      <Identification isEditing={isEditing} onChangeRefReg={setEditingMainRefReg} />
+      <RegulatoryTexts editingMainRefReg={editingMainRefReg} onChangeRefReg={setEditingMainRefReg} />
 
       <SubTitle>PÉRIODE(S)</SubTitle>
       <PeriodContainer>

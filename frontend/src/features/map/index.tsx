@@ -74,6 +74,7 @@ export function Map() {
 
   const displayRecentActivityLegend =
     (displayRecentActivityLayer || !!activeDashboardId) && !isRecentActivityDialogVisible
+  const selectedBaseLayer = useAppSelector(state => state.map.selectedBaseLayer)
 
   const baseChildren = [
     // @ts-ignore
@@ -83,7 +84,7 @@ export function Map() {
     // @ts-ignore
     <MapCoordinatesBox key="MapCoordinatesBox" />,
     // @ts-ignore
-    <MapLayer key="MapLayer" />,
+    <MapLayer key="MapLayer" selectedBaseLayer={selectedBaseLayer} />,
     // @ts-ignore
     <InterestPointLayer key="InterestPointLayer" />,
 
