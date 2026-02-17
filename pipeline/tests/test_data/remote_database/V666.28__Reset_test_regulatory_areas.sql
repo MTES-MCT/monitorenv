@@ -34,6 +34,8 @@ INSERT INTO public.regulatory_areas (
     authorization_periods,
     prohibition_periods,
     additional_ref_reg
+    themes,
+    tags
 ) VALUES (
     1,
     'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))',
@@ -57,7 +59,9 @@ INSERT INTO public.regulatory_areas (
     'plan1',
     'période d''autorisation1',
     'période de prohibition1',
-    null
+    null,
+    'theme1,theme2',
+    'tag1,tag2'
 );
 
 INSERT INTO public.regulatory_areas (
@@ -84,6 +88,8 @@ INSERT INTO public.regulatory_areas (
     authorization_periods,
     prohibition_periods,
     additional_ref_reg
+    themes,
+    tags  
 ) VALUES (
     2,
     'MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))',
@@ -107,7 +113,9 @@ INSERT INTO public.regulatory_areas (
     'plan2',
     'période d''autorisation2',
     'période de prohibition2',
-    null
+    null,
+    'theme3,theme4',
+    'tag3,tag4'
 );
 
 
