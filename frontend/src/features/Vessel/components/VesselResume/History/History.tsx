@@ -3,12 +3,14 @@ import { addReporting } from '@features/Reportings/useCases/addReporting'
 import { HistoryTimeline } from '@features/Vessel/components/VesselResume/History/HistoryTimeline'
 import { ReportingCard } from '@features/Vessel/components/VesselResume/History/ReportingCard'
 import { toEvent } from '@features/Vessel/components/VesselResume/utils'
+import { Vessel } from '@features/Vessel/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Button, customDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import { ReportingTargetTypeEnum } from '../../../../../domain/entities/targetType'
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
+import { VesselTypeEnum } from '../../../../../domain/entities/vesselType'
 import { ReportingContext } from '../../../../../domain/shared_slices/Global'
 
 import type { EnvActionControlWithInfractions } from '../../../../../domain/entities/missions'
@@ -16,22 +18,39 @@ import type { Reporting } from '../../../../../domain/entities/reporting'
 
 type SummaryProps = {
   envActions: EnvActionControlWithInfractions[]
-  mmsi: string | undefined
   reportings: Reporting[]
+  vessel: Vessel.Vessel
 }
 
-export function History({ envActions, mmsi, reportings }: SummaryProps) {
+export function History({ envActions, reportings, vessel }: SummaryProps) {
   const dispatch = useAppDispatch()
   const currentYear = customDayjs().year()
   const diff = currentYear - 2023
 
-  const currentReportings = reportings.filter(
-    reporting => customDayjs(reporting.createdAt).isBefore(customDayjs()) && !reporting.isArchived
+  const currentReportings = reportings.filter(reporting =>
+    customDayjs().isBefore(customDayjs(reporting.createdAt).add(reporting.validityTime, 'hours'))
   )
 
   const createReporting = () => {
+    let vesselType: VesselTypeEnum | undefined
+    if (vessel.category === 'PLA' && vessel.leisureType) {
+      vesselType = VesselTypeEnum[vessel.leisureType]
+    }
+
+    if (vessel.category === 'PRO' && vessel.professionalType) {
+      vesselType = VesselTypeEnum[vessel.professionalType]
+    }
     const reportingWithTarget: Partial<Reporting> = {
-      targetDetails: [{ mmsi }],
+      targetDetails: [
+        {
+          externalReferenceNumber: vessel.immatriculation,
+          imo: vessel.imo,
+          mmsi: vessel.mmsi,
+          size: vessel.length,
+          vesselName: vessel.shipName,
+          vesselType
+        }
+      ],
       targetType: ReportingTargetTypeEnum.VEHICLE,
       vehicleType: VehicleTypeEnum.VESSEL
     }
@@ -43,7 +62,7 @@ export function History({ envActions, mmsi, reportings }: SummaryProps) {
       <Section>
         <header>Derniers contrôles et signalements ({diff} dernières années)</header>
         <Body>
-          <HistoryOfInfractions forceSearch mmsi={mmsi} />
+          <HistoryOfInfractions forceSearch mmsi={vessel.mmsi} />
           <CurrentReportingWrapper>
             <Button isFullWidth onClick={createReporting}>
               Ajouter un signalement
