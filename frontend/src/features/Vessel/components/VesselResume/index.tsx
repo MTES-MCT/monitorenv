@@ -87,8 +87,8 @@ export function VesselResume({ id }: VesselResumeProps) {
 
   const currentNbReportings = useMemo(
     () =>
-      Object.values(allReportings?.entities ?? []).filter(
-        reporting => customDayjs(reporting.createdAt).isBefore(customDayjs()) && !reporting.isArchived
+      Object.values(allReportings?.entities ?? []).filter(reporting =>
+        customDayjs().isBefore(customDayjs(reporting.createdAt).add(reporting.validityTime, 'hours'))
       ).length,
     [allReportings?.entities]
   )
@@ -164,8 +164,8 @@ export function VesselResume({ id }: VesselResumeProps) {
               {page === 'HISTORY' && (
                 <History
                   envActions={allHistory?.envActions ?? []}
-                  mmsi={vessel.mmsi}
                   reportings={Object.values(allReportings?.entities ?? [])}
+                  vessel={vessel}
                 />
               )}
             </MapMenuDialog.Body>
@@ -198,7 +198,7 @@ const DialogWrapper = styled.div<{ $isRightMenuOpened: boolean; $visibility: Vis
   top: 55px;
   ${p => p.$visibility === VisibilityState.VISIBLE && `transform: translateX(-457px);`}
   ${p => p.$isRightMenuOpened && `transform: translateX(calc(-100% + 42px));`}
-    transition: 0.3s transform;
+  transition: 0.3s transform;
 `
 
 const ButtonsWrapper = styled.ul`

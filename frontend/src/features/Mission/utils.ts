@@ -1,5 +1,11 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
-import { InfractionTypeEnum, type Mission, missionTypeEnum, type NewMission } from 'domain/entities/missions'
+import {
+  type EnvActionControlWithInfractions,
+  InfractionTypeEnum,
+  type Mission,
+  missionTypeEnum,
+  type NewMission
+} from 'domain/entities/missions'
 import { sum, uniqBy } from 'lodash'
 
 import {
@@ -116,8 +122,11 @@ export function isMissionNew(id: string | number | undefined) {
   return id?.toString().includes('new') ?? false
 }
 
-export const getTotalInfraction = (envActions: EnvAction[]) => {
-  const controls = envActions.filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
+export const getTotalInfraction = (envActions: EnvAction[] | EnvActionControlWithInfractions[], year?: number) => {
+  let controls = envActions.filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
+  if (year) {
+    controls = controls.filter(envAction => customDayjs(envAction.actionStartDateTimeUtc).year() === year)
+  }
 
   return controls.reduce(
     (totalInfraction, control) =>
@@ -126,8 +135,11 @@ export const getTotalInfraction = (envActions: EnvAction[]) => {
   )
 }
 
-export const getTotalPV = (envActions: EnvAction[]) => {
-  const controls = envActions.filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
+export const getTotalPV = (envActions: EnvAction[] | EnvActionControlWithInfractions[], year?: number) => {
+  let controls = envActions.filter(envAction => envAction.actionType === ActionTypeEnum.CONTROL)
+  if (year) {
+    controls = controls.filter(envAction => customDayjs(envAction.actionStartDateTimeUtc).year() === year)
+  }
 
   return controls.reduce(
     (totalInfraction, control) =>
