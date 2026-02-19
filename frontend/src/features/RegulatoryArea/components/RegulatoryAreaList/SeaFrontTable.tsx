@@ -5,11 +5,11 @@ import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { Fragment, useState } from 'react'
 
 import { RegulatoryAreaGroup } from './RegulatoryAreaGroup'
-import { ControlPlanWrapper, GroupTitle, StyledIconButton, Title } from './style'
+import { ControlPlanWrapper, GroupTitle, StyledIconButton, StyledLoadingIcon, Title } from './style'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
-export function SeaFrontTable({ apiFilters }: { apiFilters: any }) {
+export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLoading: boolean }) {
   const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasBySeaFront(state, apiFilters)) as Record<
     string,
     Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
@@ -39,13 +39,17 @@ export function SeaFrontTable({ apiFilters }: { apiFilters: any }) {
           <Fragment key={seaFront}>
             <GroupTitle onClick={() => openOrCloseGroup(seaFront)}>
               <Title>{seaFront}</Title>
-              <StyledIconButton
-                $isExpanded={seaFrontsExtented.includes(seaFront)}
-                accent={Accent.TERTIARY}
-                Icon={Icon.Chevron}
-                onClick={() => openOrCloseGroup(seaFront)}
-                title={seaFrontsExtented.includes(seaFront) ? 'Replier le contenu' : 'Déplier le contenu'}
-              />
+              {isLoading ? (
+                <StyledLoadingIcon />
+              ) : (
+                <StyledIconButton
+                  $isExpanded={seaFrontsExtented.includes(seaFront)}
+                  accent={Accent.TERTIARY}
+                  Icon={Icon.Chevron}
+                  onClick={() => openOrCloseGroup(seaFront)}
+                  title={seaFrontsExtented.includes(seaFront) ? 'Replier le contenu' : 'Déplier le contenu'}
+                />
+              )}
             </GroupTitle>
             {seaFrontsExtented.includes(seaFront) &&
               Object.entries(groupedRegulatoryAreas[seaFront]).map(([key, regulatoryAreas]) => (
