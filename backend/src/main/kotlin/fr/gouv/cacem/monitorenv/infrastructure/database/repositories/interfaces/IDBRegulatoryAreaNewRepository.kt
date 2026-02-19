@@ -28,12 +28,13 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
     fun findAllByCreationIsNull(): List<RegulatoryAreaNewModel>
 
     @Query(
-        value =
-            """
-            SELECT DISTINCT regulatoryArea.layerName
-            FROM RegulatoryAreaNewModel regulatoryArea
-            ORDER BY regulatoryArea.layerName
-        """,
+        """
+        SELECT regulatoryArea.layerName, COUNT(regulatoryArea)
+        FROM RegulatoryAreaNewModel regulatoryArea
+        WHERE regulatoryArea.layerName IS NOT NULL
+        GROUP BY regulatoryArea.layerName
+        ORDER BY regulatoryArea.layerName
+    """,
     )
-    fun findAllLayerNames(): List<String>
+    fun findAllLayerNames(): List<Array<Any>>
 }

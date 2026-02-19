@@ -104,59 +104,57 @@ export function RegulatoryAreaForm() {
   }
 
   return (
-    <>
-      <StyledBackofficeWrapper>
-        <RegulatoryWrapper>
-          <Formik
-            key={regulatoryAreaId}
-            enableReinitialize
-            initialValues={initialValues}
-            onSubmit={saveRegulatoryArea}
-            validateOnChange={false}
-            validationSchema={RegulatoryAreaFormSchema}
-          >
-            {({ dirty, handleSubmit, values }) => (
-              <>
-                <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
-                  Revenir à la liste des zones réglementaires
-                </StyledLinkButton>
+    <StyledBackofficeWrapper>
+      <RegulatoryWrapper>
+        <Formik
+          key={regulatoryAreaId}
+          enableReinitialize
+          initialValues={initialValues}
+          onSubmit={saveRegulatoryArea}
+          validateOnChange={false}
+          validationSchema={RegulatoryAreaFormSchema}
+        >
+          {({ dirty, handleSubmit, values }) => (
+            <>
+              <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
+                Revenir à la liste des zones réglementaires
+              </StyledLinkButton>
 
-                <Title>Saisir une zone réglementaire</Title>
-                {isCancelEditDialogOpen && (
-                  <CancelEditDialog
-                    onCancel={() => setIsCancelEditDialogOpen(false)}
-                    onConfirm={backToList}
-                    open={isCancelEditDialogOpen}
-                    subText="Voulez-vous enregistrer les modifications avant de quitter ?"
-                    text={`Vous êtes en train d'abandonner l'édition de la zone réglementaire`}
-                    title="Enregistrer les modifications"
-                  />
-                )}
-                <form onSubmit={handleSubmit}>
-                  <FormContent isEditing={isEditing} />
+              <Title>Saisir une zone réglementaire</Title>
+              {isCancelEditDialogOpen && (
+                <CancelEditDialog
+                  onCancel={() => setIsCancelEditDialogOpen(false)}
+                  onConfirm={backToList}
+                  open={isCancelEditDialogOpen}
+                  subText="Voulez-vous enregistrer les modifications avant de quitter ?"
+                  text={`Vous êtes en train d'abandonner l'édition de la zone réglementaire`}
+                  title="Enregistrer les modifications"
+                />
+              )}
+              <form onSubmit={handleSubmit}>
+                <FormContent isEditing={isEditing} />
 
-                  <Footer>
-                    <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>
-                      Annuler
-                    </Button>
-                    <Button disabled={!dirty || !values?.geom} type="submit">
-                      {isEditing ? 'Enregistrer la réglementation' : 'Créer la réglementation'}
-                    </Button>
-                  </Footer>
-                </form>
-              </>
-            )}
-          </Formik>
-        </RegulatoryWrapper>
+                <Footer>
+                  <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>
+                    Annuler
+                  </Button>
+                  <Button disabled={!dirty || !values?.geom} type="submit">
+                    {isEditing ? 'Enregistrer la réglementation' : 'Créer la réglementation'}
+                  </Button>
+                </Footer>
+              </form>
+            </>
+          )}
+        </Formik>
+      </RegulatoryWrapper>
 
-        <>
-          <BaseLayerSelector />
-          <MapContainer>
-            {[...mapChildrensComponents, <MapLayer key="MapLayer" selectedBaseLayer={selectedBaseLayer} />]}
-          </MapContainer>
-        </>
-      </StyledBackofficeWrapper>
-    </>
+      <>
+        <BaseLayerSelector />
+        <MapContainer>
+          {[...mapChildrensComponents, <MapLayer key="MapLayer" selectedBaseLayer={selectedBaseLayer} />]}
+        </MapContainer>
+      </>
+    </StyledBackofficeWrapper>
   )
 }
 
