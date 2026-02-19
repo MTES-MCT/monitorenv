@@ -39,6 +39,7 @@ export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
     })
   ) as MutableRefObject<VectorLayerWithName>
   regulatoryVectorLayerRef.current.name = Layers.REGULATORY_ENV.code
+
   const regulatoryFeature = useMemo(() => {
     if (!layerId || !regulatoryArea) {
       return undefined
@@ -68,14 +69,14 @@ export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     if (map) {
       map.getLayers().push(regulatoryVectorLayerRef.current)
-    }
 
-    return () => {
-      if (map) {
+      return () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         map.removeLayer(regulatoryVectorLayerRef.current)
       }
     }
+
+    return () => {}
   }, [map])
 
   return null
