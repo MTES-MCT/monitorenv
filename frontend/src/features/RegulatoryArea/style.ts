@@ -5,7 +5,6 @@ import styled from 'styled-components'
 export const StyledBackofficeWrapper = styled(BackofficeWrapper)`
   display: flex;
   flex-direction: row;
-  overflow-y: unset;
   padding: 0;
   position: relative;
 `
