@@ -14,8 +14,8 @@ import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -39,7 +39,7 @@ class EnvActionITest {
     @MockitoBean
     private val patchEnvAction: PatchEnvAction = mock()
 
-    private val objectMapper = MapperConfiguration().objectMapper()
+    private val jsonMapper = MapperConfiguration().jsonMapper()
 
     @Test
     fun `patch() should call the usecase to patch the data then return the updated resources`() {
@@ -55,7 +55,7 @@ class EnvActionITest {
               "actionStartDateTimeUtc": "$today",
               "observationsByUnit": "$observationsByUnit"}
             """.trimIndent()
-        val patchedEnvAction = anEnvAction(objectMapper, id, yesterday, today, observationsByUnit)
+        val patchedEnvAction = anEnvAction(jsonMapper, id, yesterday, today, observationsByUnit)
         val patchableEnvActionEntity =
             PatchableEnvActionEntity(
                 actionStartDateTimeUtc = Optional.of(today),

@@ -3,8 +3,9 @@ package fr.gouv.cacem.monitorenv
 import io.sentry.Sentry
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.cloud.gateway.mvc.config.ProxyResponseAutoConfiguration
 
-@SpringBootApplication
+@SpringBootApplication(exclude = [ProxyResponseAutoConfiguration::class])
 class MonitorEnvApplication
 
 fun main(args: Array<String>) {

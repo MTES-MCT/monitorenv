@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
@@ -40,8 +39,8 @@ import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
@@ -55,6 +54,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 
 @Import(SentryConfig::class, MapperConfiguration::class)
@@ -65,7 +65,7 @@ class ReportingsITests {
     private lateinit var mockedApi: MockMvc
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var jsonMapper: JsonMapper
 
     @MockitoBean
     private lateinit var createOrUpdateReporting: CreateOrUpdateReporting
@@ -204,7 +204,7 @@ class ReportingsITests {
                     .contentType(
                         MediaType.APPLICATION_JSON,
                     ).content(
-                        objectMapper.writeValueAsString(
+                        jsonMapper.writeValueAsString(
                             request,
                         ),
                     ),
@@ -440,7 +440,7 @@ class ReportingsITests {
                     ),
             )
         val updateRequestBody =
-            objectMapper.writeValueAsString(
+            jsonMapper.writeValueAsString(
                 CreateOrUpdateReportingDataInput(
                     id = 1,
                     reportingSources = listOf(),
@@ -521,7 +521,7 @@ class ReportingsITests {
         mockedApi
             .perform(
                 put("/bff/v1/reportings/archive")
-                    .content(objectMapper.writeValueAsString(listOf(1, 2, 3)))
+                    .content(jsonMapper.writeValueAsString(listOf(1, 2, 3)))
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then
@@ -536,7 +536,7 @@ class ReportingsITests {
         mockedApi
             .perform(
                 put("/bff/v1/reportings/delete")
-                    .content(objectMapper.writeValueAsString(listOf(1, 2, 3)))
+                    .content(jsonMapper.writeValueAsString(listOf(1, 2, 3)))
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then
@@ -560,7 +560,7 @@ class ReportingsITests {
         mockedApi
             .perform(
                 post("/bff/v1/reportings")
-                    .content(objectMapper.writeValueAsString(ids))
+                    .content(jsonMapper.writeValueAsString(ids))
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then

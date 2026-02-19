@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
@@ -18,8 +17,8 @@ import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -31,6 +30,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import tools.jackson.databind.json.JsonMapper
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -40,7 +40,7 @@ class ControlUnitContactsITests {
     private lateinit var mockMvc: MockMvc
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var jsonMapper: JsonMapper
 
     @MockitoBean
     private val createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact = mock()
@@ -65,7 +65,7 @@ class ControlUnitContactsITests {
                 name = "Contact Name",
                 phone = "0033123456789",
             )
-        val requestDataAsJson = objectMapper.writeValueAsString(requestDataAsDataInput)
+        val requestDataAsJson = jsonMapper.writeValueAsString(requestDataAsDataInput)
 
         val useCaseInputExpectation =
             ControlUnitContactEntity(
@@ -110,7 +110,7 @@ class ControlUnitContactsITests {
                 name = "Contact Name",
                 phone = "0033123456789",
             )
-        val requestDataAsJson = objectMapper.writeValueAsString(newControlUnitContactData)
+        val requestDataAsJson = jsonMapper.writeValueAsString(newControlUnitContactData)
 
         val useCaseInputExpectation =
             ControlUnitContactEntity(
@@ -265,7 +265,7 @@ class ControlUnitContactsITests {
         // Given
         val requestedId = 1
         val requestDataAsJson =
-            objectMapper
+            jsonMapper
                 .createObjectNode()
                 .apply {
                     put("id", 1)
@@ -331,7 +331,7 @@ class ControlUnitContactsITests {
         // Given
         val requestedId = 1
         val requestDataAsJson =
-            objectMapper
+            jsonMapper
                 .createObjectNode()
                 .apply {
                     put("id", 1)

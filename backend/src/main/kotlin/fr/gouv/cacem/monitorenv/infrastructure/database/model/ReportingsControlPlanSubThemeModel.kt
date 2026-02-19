@@ -1,6 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.MapsId
+import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import java.io.Serializable
 
@@ -17,7 +25,7 @@ class ReportingsControlPlanSubThemeModel(
     @MapsId("subthemeId")
     @JoinColumn(name = "subtheme_id")
     val controlPlanSubTheme: ControlPlanSubThemeModel? = null,
-    @Column(name = "order_index", updatable = false, insertable = false)
+    @Column(name = "order_index", updatable = false, insertable = false, nullable = false)
     val orderIndex: Int? = null,
 ) {
     companion object {

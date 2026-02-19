@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.SpaController.Companion.FRONTEND_APP_ROUTES
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -31,12 +30,13 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import java.util.*
+import tools.jackson.databind.json.JsonMapper
+import java.util.Base64
 
 @Configuration
 @EnableWebSecurity
@@ -51,7 +51,7 @@ class SecurityConfig(
     fun customOidcUserService(): OidcUserService {
         return object : OidcUserService() {
             private val restTemplate = RestTemplate()
-            private val objectMapper = ObjectMapper()
+            private val jsonMapper = JsonMapper()
 
             override fun loadUser(userRequest: OidcUserRequest): OidcUser =
                 try {
@@ -129,7 +129,7 @@ class SecurityConfig(
                 val payloadJson = String(decodedBytes, Charsets.UTF_8)
 
                 @Suppress("UNCHECKED_CAST")
-                return objectMapper.readValue(payloadJson, LinkedHashMap::class.java) as Map<String, Any>
+                return jsonMapper.readValue(payloadJson, LinkedHashMap::class.java) as Map<String, Any>
             }
 
             private fun validateAndProcessUser(oidcUser: OidcUser): OidcUser {
@@ -245,8 +245,9 @@ class SecurityConfig(
                 }.logout { logout ->
                     logout
                         .logoutSuccessHandler(oidcLogoutSuccessHandler())
-                        .logoutRequestMatcher(AntPathRequestMatcher("/logout", "GET"))
-                        .invalidateHttpSession(true)
+                        .logoutRequestMatcher(
+                            PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.GET, "/logout"),
+                        ).invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                 }

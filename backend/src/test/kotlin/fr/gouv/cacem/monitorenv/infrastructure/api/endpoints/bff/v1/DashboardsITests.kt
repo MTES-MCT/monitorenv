@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
@@ -26,8 +25,8 @@ import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -38,6 +37,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -68,7 +68,7 @@ class DashboardsITests {
     private lateinit var createBrief: CreateBrief
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var jsonMapper: JsonMapper
 
     val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
 
@@ -242,7 +242,7 @@ class DashboardsITests {
         mockMvc
             .perform(
                 put("/bff/v1/dashboards")
-                    .content(objectMapper.writeValueAsString(input))
+                    .content(jsonMapper.writeValueAsString(input))
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then
@@ -396,7 +396,7 @@ class DashboardsITests {
         mockMvc
             .perform(
                 post("/bff/v1/dashboards/export-brief")
-                    .content(objectMapper.writeValueAsString(brief))
+                    .content(jsonMapper.writeValueAsString(brief))
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then

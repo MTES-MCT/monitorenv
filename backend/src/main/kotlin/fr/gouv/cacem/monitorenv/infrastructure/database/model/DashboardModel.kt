@@ -1,8 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
@@ -19,6 +16,9 @@ import jakarta.persistence.PreUpdate
 import jakarta.persistence.Table
 import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.Geometry
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -29,9 +29,12 @@ data class DashboardModel(
     @Column(name = "id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID?,
+    @Column(nullable = false)
     val name: String,
+    @Column(nullable = false)
     val geom: Geometry,
     val comments: String?,
+    @Column(nullable = false)
     var createdAt: ZonedDateTime?,
     var updatedAt: ZonedDateTime?,
     @Column(name = "deleted")
@@ -54,7 +57,7 @@ data class DashboardModel(
     @Type(JsonBinaryType::class)
     val links: JsonNode?,
 ) {
-    fun toDashboardEntity(mapper: ObjectMapper): DashboardEntity {
+    fun toDashboardEntity(mapper: JsonMapper): DashboardEntity {
         val amps: MutableList<Int> = mutableListOf()
         val regulatoryAreas: MutableList<Int> = mutableListOf()
         val vigilanceAreas: MutableList<Int> = mutableListOf()
@@ -142,7 +145,7 @@ data class DashboardModel(
             dashboardEntity: DashboardEntity,
             dashboardDatasModels: List<DashboardDatasModel>,
             dashboardImagesModels: List<DashboardImageModel>,
-            mapper: ObjectMapper,
+            mapper: JsonMapper,
         ): DashboardModel {
             val dashboardModel =
                 DashboardModel(
@@ -155,7 +158,7 @@ data class DashboardModel(
                     seaFront = dashboardEntity.seaFront,
                     dashboardDatas = mutableListOf(),
                     isDeleted = dashboardEntity.isDeleted,
-                    links = dashboardEntity.links?.let { mapper.valueToTree<JsonNode>(it) },
+                    links = dashboardEntity.links?.let { mapper.valueToTree(it) },
                 )
             dashboardDatasModels.forEach { dashboardModel.addDashboardDatas(it) }
             dashboardImagesModels.forEach { dashboardModel.addDashboardImages(it) }

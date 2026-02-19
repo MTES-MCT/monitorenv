@@ -13,8 +13,8 @@ monitorenv:
 logging:
   level:
     org.springframework.security.web.authentication.logout: DEBUG
-    org.hybernate.SQL: DEBUG
-    org.hybernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 spring:
   jpa:

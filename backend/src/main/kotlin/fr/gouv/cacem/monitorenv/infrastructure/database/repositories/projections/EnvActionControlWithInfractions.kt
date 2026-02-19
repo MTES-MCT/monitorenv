@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.projections
 
-import java.sql.Timestamp
+import java.time.LocalDateTime
 import java.util.UUID
 
 interface EnvActionControlWithInfractions {
@@ -8,7 +8,7 @@ interface EnvActionControlWithInfractions {
 
     fun getMissionId(): Int
 
-    fun getActionStartDatetimeUtc(): Timestamp?
+    fun getActionStartDatetimeUtc(): LocalDateTime?
 
     fun getInfractions(): String
 

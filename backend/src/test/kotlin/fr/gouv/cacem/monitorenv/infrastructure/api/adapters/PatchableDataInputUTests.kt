@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import tools.jackson.databind.json.JsonMapper
 
 data class FakeEntity(
     val id: Int,
@@ -46,7 +46,7 @@ data class FakeDataInput(
 @ExtendWith(SpringExtension::class)
 class PatchableDataInputUTests {
     private lateinit var existingFakeEntityFromDatabase: FakeEntity
-    private val objectMapper = ObjectMapper()
+    private val jsonMapper = JsonMapper()
 
     @BeforeEach
     fun setUp() {
@@ -78,7 +78,7 @@ class PatchableDataInputUTests {
         val result =
             FakeDataInput
                 .fromFakeEntity(existingFakeEntityFromDatabase)
-                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+                .patchFromRequestData(jsonMapper, fakeRequestDataAsJson)
 
         // Then
         assertThat(result).isEqualTo(
@@ -109,7 +109,7 @@ class PatchableDataInputUTests {
         val result =
             FakeDataInput
                 .fromFakeEntity(existingFakeEntityFromDatabase)
-                .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+                .patchFromRequestData(jsonMapper, fakeRequestDataAsJson)
 
         // Then
         assertThat(result).isEqualTo(
@@ -141,7 +141,7 @@ class PatchableDataInputUTests {
                 // When
                 FakeDataInput
                     .fromFakeEntity(existingFakeEntityFromDatabase)
-                    .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+                    .patchFromRequestData(jsonMapper, fakeRequestDataAsJson)
             }
         assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `isAwesome` is not of type `Boolean`.")
@@ -163,7 +163,7 @@ class PatchableDataInputUTests {
                 // When
                 FakeDataInput
                     .fromFakeEntity(existingFakeEntityFromDatabase)
-                    .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+                    .patchFromRequestData(jsonMapper, fakeRequestDataAsJson)
             }
         assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `rank` is not of type `Int`.")
@@ -185,7 +185,7 @@ class PatchableDataInputUTests {
                 // When
                 FakeDataInput
                     .fromFakeEntity(existingFakeEntityFromDatabase)
-                    .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+                    .patchFromRequestData(jsonMapper, fakeRequestDataAsJson)
             }
         assertThat(exception.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(exception).hasMessageContaining("FakeDataInput: Property `name` is not of type `String`.")
@@ -210,7 +210,7 @@ class PatchableDataInputUTests {
             assertThrows<BackendUsageException> {
                 // When
                 FakeDataInput(anUnsupportedTypedProp = "A value")
-                    .patchFromRequestData(objectMapper, fakeRequestDataAsJson)
+                    .patchFromRequestData(jsonMapper, fakeRequestDataAsJson)
             }
         assertThat(exception).hasMessageContaining(
             "FakeDataInput: Unsupported type `class kotlin.Any` for property `anUnsupportedTypedProp`.",

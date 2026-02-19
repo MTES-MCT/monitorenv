@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -20,7 +20,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaEnvActionRepository: JpaEnvActionRepository
 
-    private val objectMapper: ObjectMapper = ObjectMapper()
+    private val jsonMapper: JsonMapper = JsonMapper()
 
     @BeforeEach
     fun setUp() {
@@ -62,7 +62,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
 
         val anEnvAction =
             anEnvAction(
-                objectMapper,
+                jsonMapper,
                 id,
                 today,
                 tomorrow,

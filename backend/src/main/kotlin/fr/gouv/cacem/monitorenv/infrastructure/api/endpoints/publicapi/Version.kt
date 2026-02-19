@@ -9,7 +9,7 @@ class Version(
     val buildProperties: BuildProperties,
 ) {
     @GetMapping("/version")
-    fun version(): Map<String, String> =
+    fun version(): Map<String, String?> =
         mapOf(
             "version" to buildProperties.version,
             "commit" to buildProperties.get("commit.hash"),

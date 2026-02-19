@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
@@ -40,8 +39,8 @@ import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verify
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -52,6 +51,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import java.util.Optional
 import java.util.UUID
@@ -84,7 +84,7 @@ class MissionsITests {
     private lateinit var getEngagedControlUnits: GetEngagedControlUnits
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var jsonMapper: JsonMapper
 
     private val polygon =
         WKTReader()
@@ -131,7 +131,7 @@ class MissionsITests {
                 attachedReportingIds = listOf(),
                 isGeometryComputedFromControls = false,
             )
-        val requestbody = objectMapper.writeValueAsString(newMissionRequest)
+        val requestbody = jsonMapper.writeValueAsString(newMissionRequest)
         given(
             createOrUpdateMissionWithActionsAndAttachedReporting.execute(
                 mission = newMissionRequest.toMissionEntity(),
@@ -738,7 +738,7 @@ class MissionsITests {
         mockMvc
             .perform(
                 put("/bff/v1/missions/14")
-                    .content(objectMapper.writeValueAsString(requestBody))
+                    .content(jsonMapper.writeValueAsString(requestBody))
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then
