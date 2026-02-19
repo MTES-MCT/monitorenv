@@ -171,7 +171,7 @@ def update_cacem_regulatory_areas_flow():
     )
 
     different_ids = merged[
-        merged['edition_bo_cacem'] != merged['edition_bo_monitorenv']
+        merged['edition_bo_cacem'] > merged['edition_bo_monitorenv']
     ]['id'].tolist()
     
     cond_update = update_required(different_ids)
