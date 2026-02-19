@@ -115,9 +115,10 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         // When
         val layerNames = jpaRegulatoryAreaNewRepository.findAllLayerNames()
 
+        println("Layer names: $layerNames")
         // Then
-        assertThat(layerNames).hasSize(10)
-        assertThat(layerNames).containsExactlyInAnyOrder(
+        assertThat(layerNames).hasSize(9)
+        assertThat(layerNames.keys).containsExactlyInAnyOrder(
             "",
             "Dragage_port_de_Brest",
             "Interdiction_VNM_Molene",
@@ -127,7 +128,6 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
             "ZMEL_anse_illien_Ploumoguer",
             "ZMEL_Cale_Querlen",
             "ZMEL_maison_blanche",
-            null,
         )
     }
 

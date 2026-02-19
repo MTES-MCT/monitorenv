@@ -177,20 +177,14 @@ export function RegulatoryTexts({
       }
 
       return (
-        <>
-          <RefRegContainer>
-            <RefRegTextContainer>
-              <RefRegText title={values?.refReg}>{values?.refReg} </RefRegText>
-              <Link href={values?.url}>{values?.url}</Link>
-              <PeriodText>{getPeriodText(values.date, values.dateFin)}</PeriodText>
-            </RefRegTextContainer>
-            <IconButton
-              accent={Accent.TERTIARY}
-              Icon={Icon.EditUnbordered}
-              onClick={() => onChangeRefReg(mainRefReg)}
-            />
-          </RefRegContainer>
-        </>
+        <RefRegContainer>
+          <RefRegTextContainer>
+            <RefRegText title={values?.refReg}>{values?.refReg} </RefRegText>
+            <Link href={values?.url}>{values?.url}</Link>
+            <PeriodText>{getPeriodText(values.date, values.dateFin)}</PeriodText>
+          </RefRegTextContainer>
+          <IconButton accent={Accent.TERTIARY} Icon={Icon.EditUnbordered} onClick={() => onChangeRefReg(mainRefReg)} />
+        </RefRegContainer>
       )
     }
 
@@ -215,7 +209,7 @@ export function RegulatoryTexts({
 
             if (editingOtherRefReg?.id === otherRefReg.id) {
               return (
-                <EditingRefRegContainer>
+                <EditingRefRegContainer key={otherRefReg.id}>
                   <FormikTextarea isLight label="Titre du texte" name={`othersRefReg[${refRegindex}].refReg`} />
                   <RefRegSecondLine>
                     <DateContainer>

@@ -71,35 +71,33 @@ export function RegulatoryAreaList() {
   }
 
   return (
-    <>
-      <StyledBackofficeWrapper>
-        <RegulatoryWrapper>
-          <TitleContainer>
-            <Title>Zones réglementaires</Title>
-            <Button Icon={Icon.Plus} onClick={createRegulatoryArea}>
-              Saisir une nouvelle réglementation
-            </Button>
-          </TitleContainer>
-          <RegulatoryAreaFilters />
-          {filters.groupBy === 'SEA_FRONT' ? (
-            <SeaFrontTable apiFilters={apiFilters} isLoading={isLoading || isFetching} />
-          ) : (
-            <ControlPlanTable apiFilters={apiFilters} isLoading={isLoading || isFetching} />
-          )}
-        </RegulatoryWrapper>
-
-        <>
-          <BaseLayerSelector />
-          <MapContainer>
-            {[...mapChildrensComponents, <MapLayer key="MapLayer" selectedBaseLayer={selectedBaseLayer} />]}
-          </MapContainer>
-        </>
-
-        {openedRegulatoryAreaId && (
-          <StyledRegulatoryAreasPanel isNewRegulatoryArea layerId={openedRegulatoryAreaId} onClose={closePanel} />
+    <StyledBackofficeWrapper>
+      <RegulatoryWrapper>
+        <TitleContainer>
+          <Title>Zones réglementaires</Title>
+          <Button Icon={Icon.Plus} onClick={createRegulatoryArea}>
+            Saisir une nouvelle réglementation
+          </Button>
+        </TitleContainer>
+        <RegulatoryAreaFilters />
+        {filters.groupBy === 'SEA_FRONT' ? (
+          <SeaFrontTable apiFilters={apiFilters} isLoading={isLoading || isFetching} />
+        ) : (
+          <ControlPlanTable apiFilters={apiFilters} isLoading={isLoading || isFetching} />
         )}
-      </StyledBackofficeWrapper>
-    </>
+      </RegulatoryWrapper>
+
+      <>
+        <BaseLayerSelector />
+        <MapContainer>
+          {[...mapChildrensComponents, <MapLayer key="MapLayer" selectedBaseLayer={selectedBaseLayer} />]}
+        </MapContainer>
+      </>
+
+      {openedRegulatoryAreaId && (
+        <StyledRegulatoryAreasPanel isNewRegulatoryArea layerId={openedRegulatoryAreaId} onClose={closePanel} />
+      )}
+    </StyledBackofficeWrapper>
   )
 }
 

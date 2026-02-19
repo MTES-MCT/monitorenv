@@ -1,7 +1,8 @@
+import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { getTitle } from 'domain/entities/layers/utils'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { RegulatoryAreaItem } from './RegulatoryAreaItem'
 
@@ -14,8 +15,9 @@ export function RegulatoryAreaGroup({
   groupName: string
   regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
 }) {
-  // TODO fix this
-  const totalNumberOfZones = 0
+  const { data: layerNames } = useGetLayerNamesQuery()
+
+  const totalNumberOfZones = useMemo(() => layerNames?.layerNames[groupName] ?? 0, [layerNames, groupName])
 
   const layerGroupName = getTitle(groupName)
   const [isGroupNameOpen, setIsGroupNameOpen] = useState(false)

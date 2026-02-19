@@ -168,7 +168,7 @@ class RegulatoryAreasNewITests {
     @Test
     fun `Should get all layer names`() {
         // Given
-        val layerNames = listOf("ZMEL_Cale_Querlen", "AMP_Zone_1", "PIRC_Area_2")
+        val layerNames = mapOf("ZMEL_Cale_Querlen" to 1L, "AMP_Zone_1" to 1L, "PIRC_Area_2" to 1L)
         given(getAllLayerNames.execute()).willReturn(layerNames)
 
         // When
@@ -177,15 +177,15 @@ class RegulatoryAreasNewITests {
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.layerNames[0]", equalTo("ZMEL_Cale_Querlen")))
-            .andExpect(jsonPath("$.layerNames[1]", equalTo("AMP_Zone_1")))
-            .andExpect(jsonPath("$.layerNames[2]", equalTo("PIRC_Area_2")))
+            .andExpect(jsonPath("$.layerNames.ZMEL_Cale_Querlen").value(1))
+            .andExpect(jsonPath("$.layerNames.AMP_Zone_1").value(1))
+            .andExpect(jsonPath("$.layerNames.PIRC_Area_2").value(1))
     }
 
     @Test
     fun `Should get empty list when no layer names exist`() {
         // Given
-        given(getAllLayerNames.execute()).willReturn(emptyList())
+        given(getAllLayerNames.execute()).willReturn(mapOf())
 
         // When
         mockMvc
