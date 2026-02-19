@@ -74,39 +74,42 @@ class RegulatoryAreasNewITests {
     private val refReg =
         "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel"
 
+    private val regulatoryArea =
+        RegulatoryAreaNewEntity(
+            id = 17,
+            geom = polygon,
+            url = url,
+            creation = ZonedDateTime.parse("2021-11-01T04:50:09Z"),
+            layerName = "ZMEL_Cale_Querlen",
+            facade = "NAMO",
+            refReg = refReg,
+            editionBo = ZonedDateTime.parse("2021-11-02T04:50:09Z"),
+            editionCacem = null,
+            editeur = "Alexis Pré",
+            source = "",
+            observation = "",
+            tags = listOf(aTag(name = "Mouillage", id = 5)),
+            themes = listOf(aTheme(name = "Zone de mouillage et d'équipement léger (ZMEL)", id = 101)),
+            date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
+            dureeValidite = "15 ans",
+            dateFin = ZonedDateTime.parse("2035-07-01T04:50:09Z"),
+            temporalite = "temporaire",
+            plan = "PIRC",
+            polyName = "Zone au sud de la cale",
+            resume = "Descriptif de la zone réglementaire",
+        )
+
     @Test
     fun `Should get all regulatory Areas`() {
         // Given
-        val regulatoryArea =
-            RegulatoryAreaNewEntity(
-                id = 17,
-                geom = polygon,
-                url = url,
-                creation = ZonedDateTime.parse("2021-11-01T04:50:09Z"),
-                layerName = "ZMEL_Cale_Querlen",
-                facade = "NAMO",
-                refReg = refReg,
-                editionBo = ZonedDateTime.parse("2021-11-02T04:50:09Z"),
-                editionCacem = null,
-                editeur = "Alexis Pré",
-                source = "",
-                observation = "",
-                tags = listOf(aTag(name = "Mouillage")),
-                themes = listOf(aTheme(name = "AMP")),
-                date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
-                dureeValidite = "15 ans",
-                dateFin = ZonedDateTime.parse("2035-07-01T04:50:09Z"),
-                temporalite = "temporaire",
-                plan = "PIRC",
-                polyName = "Zone au sud de la cale",
-                resume = "Descriptif de la zone réglementaire",
-            )
         given(
             getAllRegulatoryAreas.execute(
                 searchQuery = null,
                 seaFronts = null,
+                tags = null,
+                themes = null,
             ),
-        ).willReturn(mapOf("PIRC" to listOf(regulatoryArea)))
+        ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
 
         // When
         mockMvc
@@ -114,13 +117,13 @@ class RegulatoryAreasNewITests {
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].group", equalTo("PIRC")))
+            .andExpect(jsonPath("$[0].group", equalTo("ZMEL_Cale_Querlen")))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].id", equalTo(regulatoryArea.id)))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].layerName", equalTo(regulatoryArea.layerName)))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].refReg", equalTo(regulatoryArea.refReg)))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].tags[0].name", equalTo("Mouillage")))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].type", equalTo(regulatoryArea.type)))
-            .andExpect(jsonPath("$[0].regulatoryAreas[0].themes[0].name", equalTo("AMP")))
+            .andExpect(jsonPath("$[0].regulatoryAreas[0].themes[0].name", equalTo("Zone de mouillage et d'équipement léger (ZMEL)")))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].plan", equalTo("PIRC")))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].polyName", equalTo("Zone au sud de la cale")))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].resume", equalTo("Descriptif de la zone réglementaire")))
@@ -129,30 +132,6 @@ class RegulatoryAreasNewITests {
     @Test
     fun `Should get regulatory area by id`() {
         // Given
-        val regulatoryArea =
-            RegulatoryAreaNewEntity(
-                id = 17,
-                geom = polygon,
-                url = url,
-                creation = ZonedDateTime.parse("2021-11-01T04:50:09Z"),
-                layerName = "ZMEL_Cale_Querlen",
-                facade = "NAMO",
-                refReg = refReg,
-                editionBo = ZonedDateTime.parse("2021-11-02T04:50:09Z"),
-                editionCacem = null,
-                editeur = "Alexis Pré",
-                source = "",
-                observation = "",
-                tags = listOf(aTag(name = "Mouillage")),
-                themes = listOf(aTheme(name = "AMP")),
-                date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
-                dureeValidite = "15 ans",
-                dateFin = ZonedDateTime.parse("2035-07-01T04:50:09Z"),
-                temporalite = "temporaire",
-                plan = "PIRC",
-                polyName = "Zone au sud de la cale",
-                resume = "Descriptif de la zone réglementaire",
-            )
         given(getRegulatoryAreaById.execute(17)).willReturn(regulatoryArea)
 
         // When
@@ -165,7 +144,7 @@ class RegulatoryAreasNewITests {
             .andExpect(jsonPath("$.layerName", equalTo(regulatoryArea.layerName)))
             .andExpect(jsonPath("$.refReg", equalTo(regulatoryArea.refReg)))
             .andExpect(jsonPath("$.tags[0].name", equalTo("Mouillage")))
-            .andExpect(jsonPath("$.themes[0].name", equalTo("AMP")))
+            .andExpect(jsonPath("$.themes[0].name", equalTo("Zone de mouillage et d'équipement léger (ZMEL)")))
             .andExpect(jsonPath("$.plan", equalTo("PIRC")))
     }
 
@@ -252,79 +231,35 @@ class RegulatoryAreasNewITests {
     @Test
     fun `Should filter regulatory areas by seaFronts`() {
         // Given
-        val regulatoryArea =
-            RegulatoryAreaNewEntity(
-                id = 17,
-                geom = polygon,
-                url = url,
-                creation = ZonedDateTime.parse("2021-11-01T04:50:09Z"),
-                layerName = "ZMEL_Cale_Querlen",
-                facade = "NAMO",
-                refReg = refReg,
-                editionBo = ZonedDateTime.parse("2021-11-02T04:50:09Z"),
-                editionCacem = null,
-                editeur = "Alexis Pré",
-                source = "",
-                observation = "",
-                tags = listOf(aTag(name = "Mouillage")),
-                themes = listOf(aTheme(name = "AMP")),
-                date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
-                dureeValidite = "15 ans",
-                dateFin = ZonedDateTime.parse("2035-07-01T04:50:09Z"),
-                temporalite = "temporaire",
-                plan = "PIRC",
-                polyName = "Zone au sud de la cale",
-                resume = "Descriptif de la zone réglementaire",
-            )
         given(
             getAllRegulatoryAreas.execute(
                 searchQuery = null,
                 seaFronts = listOf("NAMO"),
+                tags = null,
+                themes = null,
             ),
-        ).willReturn(mapOf("PIRC" to listOf(regulatoryArea)))
+        ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
 
         // When
         mockMvc
             .perform(get("/bff/regulatory-areas?seaFronts=NAMO"))
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].group", equalTo("PIRC")))
+            .andExpect(jsonPath("$[0].group", equalTo("ZMEL_Cale_Querlen")))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].facade", equalTo("NAMO")))
     }
 
     @Test
     fun `Should filter regulatory areas by searchQuery`() {
         // Given
-        val regulatoryArea =
-            RegulatoryAreaNewEntity(
-                id = 17,
-                geom = polygon,
-                url = url,
-                creation = ZonedDateTime.parse("2021-11-01T04:50:09Z"),
-                layerName = "ZMEL_Cale_Querlen",
-                facade = "NAMO",
-                refReg = refReg,
-                editionBo = ZonedDateTime.parse("2021-11-02T04:50:09Z"),
-                editionCacem = null,
-                editeur = "Alexis Pré",
-                source = "",
-                observation = "",
-                tags = listOf(aTag(name = "Mouillage")),
-                themes = listOf(aTheme(name = "AMP")),
-                date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
-                dureeValidite = "15 ans",
-                dateFin = ZonedDateTime.parse("2035-07-01T04:50:09Z"),
-                temporalite = "temporaire",
-                plan = "PIRC",
-                polyName = "Zone au sud de la cale",
-                resume = "Descriptif de la zone réglementaire",
-            )
         given(
             getAllRegulatoryAreas.execute(
                 searchQuery = "Querlen",
                 seaFronts = null,
+                tags = null,
+                themes = null,
             ),
-        ).willReturn(mapOf("PIRC" to listOf(regulatoryArea)))
+        ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
 
         // When
         mockMvc
@@ -341,6 +276,8 @@ class RegulatoryAreasNewITests {
             getAllRegulatoryAreas.execute(
                 searchQuery = "NonExistent",
                 seaFronts = null,
+                tags = null,
+                themes = null,
             ),
         ).willReturn(emptyMap())
 
@@ -353,70 +290,48 @@ class RegulatoryAreasNewITests {
     }
 
     @Test
-    fun `Should group regulatory areas by specified groupBy parameter`() {
+    fun `Should filter regulatory areas by tags`() {
         // Given
-        val regulatoryArea1 =
-            RegulatoryAreaNewEntity(
-                id = 17,
-                geom = polygon,
-                url = url,
-                creation = ZonedDateTime.parse("2021-11-01T04:50:09Z"),
-                layerName = "Layer1",
-                facade = "NAMO",
-                refReg = refReg,
-                editionBo = ZonedDateTime.parse("2021-11-02T04:50:09Z"),
-                editionCacem = null,
-                editeur = "Alexis Pré",
-                source = "",
-                observation = "",
-                tags = listOf(aTag(name = "Mouillage")),
-                themes = listOf(aTheme(name = "AMP")),
-                date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
-                dureeValidite = "15 ans",
-                dateFin = ZonedDateTime.parse("2035-07-01T04:50:09Z"),
-                temporalite = "temporaire",
-                plan = "PIRC",
-                polyName = "Zone 1",
-                resume = "Description 1",
-            )
-        val regulatoryArea2 =
-            RegulatoryAreaNewEntity(
-                id = 18,
-                geom = polygon,
-                url = url,
-                creation = ZonedDateTime.parse("2021-11-01T04:50:09Z"),
-                layerName = "Layer2",
-                facade = "NAMO",
-                refReg = refReg,
-                editionBo = ZonedDateTime.parse("2021-11-02T04:50:09Z"),
-                editionCacem = null,
-                editeur = "Jean Dupont",
-                source = "",
-                observation = "",
-                tags = listOf(aTag(name = "Navigation")),
-                themes = listOf(aTheme(name = "PIRC")),
-                date = ZonedDateTime.parse("2020-08-01T04:50:09Z"),
-                dureeValidite = "10 ans",
-                dateFin = ZonedDateTime.parse("2030-08-01T04:50:09Z"),
-                temporalite = "permanente",
-                plan = "PSCEM",
-                polyName = "Zone 2",
-                resume = "Description 2",
-            )
         given(
             getAllRegulatoryAreas.execute(
                 searchQuery = null,
                 seaFronts = null,
+                tags = listOf(5),
+                themes = null,
             ),
-        ).willReturn(mapOf("PIRC" to listOf(regulatoryArea1), "PSCEM" to listOf(regulatoryArea2)))
+        ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
 
         // When
         mockMvc
-            .perform(get("/bff/regulatory-areas?groupBy=CONTROL_PLAN"))
+            .perform(get("/bff/regulatory-areas?tags=5"))
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].group", equalTo("PIRC")))
-            .andExpect(jsonPath("$[1].group", equalTo("PSCEM")))
+            .andExpect(jsonPath("$[0].regulatoryAreas[0].tags[0].name", equalTo("Mouillage")))
+    }
+
+    @Test
+    fun `Should filter regulatory areas by themes`() {
+        // Given
+        given(
+            getAllRegulatoryAreas.execute(
+                searchQuery = null,
+                seaFronts = null,
+                tags = null,
+                themes = listOf(101),
+            ),
+        ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
+
+        // When
+        mockMvc
+            .perform(get("/bff/regulatory-areas?themes=101"))
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(
+                jsonPath(
+                    "$[0].regulatoryAreas[0].themes[0].name",
+                    equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
+                ),
+            )
     }
 
     @Test
