@@ -106,16 +106,8 @@ export function HistoryOfInfractions({
               <>
                 <>
                   <BoldOrNormalText $isBold={totalSuspicionOfInfractions > 0}>
-                    {totalSuspicionOfInfractions} {pluralize('signalement', totalSuspicionOfInfractions)}
+                    {totalSuspicionOfInfractions} susp. d&apos;infraction,
                   </BoldOrNormalText>
-                  <StyledTooltip
-                    iconSize={16}
-                    isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW || isReadOnly}
-                    orientation="TOP_LEFT"
-                  >
-                    <span>Seul les signalements avec suspicion d&apos;infraction sont comptabilisés ici</span>
-                  </StyledTooltip>
-                  ,
                 </>
                 <BoldOrNormalText $isBold={history.totalInfraction > 0}>
                   {history.totalInfraction} {pluralize('infraction', history.totalInfraction)},
