@@ -1,0 +1,367 @@
+import { useGetLayerNamesQuery, useGetRegulatoryAreasToCompleteQuery } from '@api/regulatoryAreasAPI'
+import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
+import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
+import { Tooltip } from '@components/Tooltip'
+import { ValidateButton } from '@features/commonComponents/ValidateButton'
+import { regulatoryAreaBoActions } from '@features/RegulatoryArea/slice'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import {
+  Accent,
+  Button,
+  Checkbox,
+  FormikSelect,
+  FormikTextarea,
+  FormikTextInput,
+  getOptionsFromLabelledEnum,
+  Icon,
+  Label,
+  OPENLAYERS_PROJECTION,
+  Select,
+  TextInput,
+  WSG84_PROJECTION
+} from '@mtes-mct/monitor-ui'
+import { parseOptionsToTags } from '@utils/getTagsAsOptions'
+import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
+import { getTitle } from 'domain/entities/layers/utils'
+import { SeaFrontLabels } from 'domain/entities/seaFrontType'
+import { setFitToExtent } from 'domain/shared_slices/Map'
+import { useFormikContext } from 'formik'
+import { boundingExtent } from 'ol/extent'
+import { transformExtent } from 'ol/proj'
+import { useMemo, useState } from 'react'
+import styled from 'styled-components'
+
+import { SubTitle } from './style'
+
+import type { MainRefReg } from './RegulatoryTexts'
+import type { TagOption } from 'domain/entities/tags'
+import type { ThemeOption } from 'domain/entities/themes'
+import type { GeoJSON } from 'domain/types/GeoJSON'
+import type { Coordinate } from 'ol/coordinate'
+
+export function Identification({
+  isEditing,
+  onChangeRefReg
+}: {
+  isEditing: boolean
+  onChangeRefReg: (refReg: MainRefReg) => void
+}) {
+  const dispatch = useAppDispatch()
+  const { errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
+
+  const { data: layerNames } = useGetLayerNamesQuery()
+  const { data: regulatoryAreasToComplete } = useGetRegulatoryAreasToCompleteQuery()
+
+  const [isCreatingNewLayerName, setIsCreatingNewLayerName] = useState(false)
+  const [newLayerNameType, setNewLayerNameType] = useState<string | undefined>(undefined)
+  const [newLayerNameLocation, setNewLayerNameLocation] = useState<string | undefined>(undefined)
+
+  const layerNamesOptions = useMemo(() => {
+    const layersNamesFromApi = Object.keys(layerNames?.layerNames || {})
+    const formattedLayerNames = layersNamesFromApi
+      .filter(layerName => layerName && layerName.trim() !== '')
+      .map(layerName => ({
+        label: getTitle(layerName),
+        value: layerName
+      }))
+
+    if (values.layerName && !formattedLayerNames?.some(layer => layer.value === values.layerName)) {
+      formattedLayerNames.push({ label: getTitle(values.layerName), value: values.layerName })
+    }
+
+    return formattedLayerNames.sort((a, b) => a.label.localeCompare(b.label))
+  }, [layerNames, values.layerName])
+
+  const geomOptions = useMemo(() => {
+    const options =
+      regulatoryAreasToComplete?.map(regulatoryArea => ({
+        label: String(regulatoryArea.id),
+        value: {
+          geom: regulatoryArea.geom,
+          id: regulatoryArea.id,
+          refReg: regulatoryArea.refReg
+        }
+      })) ?? []
+
+    if (isEditing && values.geom && values.id && values.refReg) {
+      options.push({
+        label: String(values.id),
+        value: {
+          geom: values.geom,
+          id: values.id,
+          refReg: values.refReg
+        }
+      })
+    }
+
+    return options
+  }, [regulatoryAreasToComplete, isEditing, values.geom, values.id, values.refReg])
+
+  const seaFrontsAsOptions = Object.values(SeaFrontLabels)
+  const regulatoryTypeOptions = getOptionsFromLabelledEnum(RegulatoryArea.RegulatoryAreaTypeLabel).sort((a, b) =>
+    a.label.localeCompare(b.label)
+  )
+
+  const setGeometryAndRefReg = (nextGeom: { geom: GeoJSON.MultiPolygon; id: number; refReg: string } | undefined) => {
+    if (!nextGeom || nextGeom.geom.coordinates.length === 0) {
+      return
+    }
+    setFieldValue('geom', nextGeom.geom)
+    setFieldValue('id', nextGeom.id)
+    setFieldValue('refReg', nextGeom.refReg)
+    onChangeRefReg({ date: values.date, dateFin: values.dateFin, refReg: nextGeom.refReg })
+    dispatch(regulatoryAreaBoActions.setNewRegulatoryAreaId(nextGeom?.id))
+    const extent = transformExtent(
+      boundingExtent(nextGeom.geom.coordinates.flat().flat() as Coordinate[]),
+      WSG84_PROJECTION,
+      OPENLAYERS_PROJECTION
+    )
+    dispatch(setFitToExtent(extent))
+  }
+
+  const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
+    setFieldValue('themes', parseOptionsToThemes(nextThemes))
+  }
+
+  const setTags = (nextTags: TagOption[] | undefined = []) => {
+    setFieldValue('tags', parseOptionsToTags(nextTags))
+  }
+
+  const setControlPlan = (controlPlan: RegulatoryArea.RegulatoryAreaControlPlan, isChecked: boolean) => {
+    const currentControlPlans = values?.plan && values.plan.length > 0 ? values.plan.split(',') : []
+    let updatedControlPlans: string[] = []
+    if (isChecked) {
+      updatedControlPlans = [...currentControlPlans, controlPlan]
+    } else {
+      updatedControlPlans = currentControlPlans.filter(plan => plan !== controlPlan)
+    }
+    const updatedControlPlansString = updatedControlPlans.length > 0 ? updatedControlPlans.join(',') : undefined
+    setFieldValue('plan', updatedControlPlansString)
+  }
+
+  const createNewLayerName = () => {
+    setNewLayerNameType(undefined)
+    setNewLayerNameLocation(undefined)
+    setIsCreatingNewLayerName(true)
+  }
+
+  const validateLayerName = () => {
+    if (newLayerNameType && newLayerNameLocation) {
+      setFieldValue('layerName', `${newLayerNameType} - ${newLayerNameLocation}`)
+      setIsCreatingNewLayerName(false)
+    }
+  }
+
+  const renderMenuItem = (label, item) => (
+    <GeomContainer title={label}>
+      <p>{label}</p>
+      <GeomRefReg>{item.optionValue.refReg}</GeomRefReg>
+    </GeomContainer>
+  )
+
+  return (
+    <>
+      <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
+      <IdentificationContainer>
+        <FieldWithTooltip>
+          <FormikTextInput
+            isErrorMessageHidden
+            isRequired
+            label="Titre de la zone réglementaire"
+            name="polyName"
+            style={{ flex: 1 }}
+          />
+          <Tooltip>
+            Le titre de la zone doit être le plus explicite possible que le rendre intelligible à tous, même à des
+            utilisateurs non experts sur différents sujets (ex : biodiversité), tels que les utilisateurs de MonitorExt.
+          </Tooltip>
+        </FieldWithTooltip>
+        <FieldWithTooltip>
+          <FormikSelect
+            disabled={isCreatingNewLayerName}
+            isErrorMessageHidden
+            isRequired
+            label="Titre du groupe de réglementation"
+            name="layerName"
+            options={layerNamesOptions}
+            renderExtraFooter={() => (
+              <ExtraFooterContainer onClick={createNewLayerName} type="button">
+                <Icon.Plus />
+                Ajouter un nouveau groupe
+              </ExtraFooterContainer>
+            )}
+            style={{ flex: 1 }}
+          />
+          <Tooltip>Le nom du groupe doit permettre de connaître le lieu et le sujet de la réglementation.</Tooltip>
+        </FieldWithTooltip>
+        {isCreatingNewLayerName && (
+          <CreateLayerNameContainer>
+            <TextInput
+              label="Type"
+              name="newLayerNameType"
+              onChange={nextValue => setNewLayerNameType(nextValue)}
+              value={newLayerNameType}
+            />
+            <TextInput
+              label="Lieu"
+              name="newLayerNameLocation"
+              onChange={nextValue => setNewLayerNameLocation(nextValue)}
+              value={newLayerNameLocation}
+            />
+            <Button accent={Accent.SECONDARY} onClick={() => setIsCreatingNewLayerName(false)}>
+              Annuler
+            </Button>
+            <ValidateButton onClick={validateLayerName}>Valider</ValidateButton>
+          </CreateLayerNameContainer>
+        )}
+        <InlineFieldsContainer>
+          <Select
+            disabled={isEditing}
+            isRequired
+            label="Géométrie"
+            name="geom"
+            onChange={setGeometryAndRefReg}
+            options={geomOptions}
+            optionValueKey="id"
+            renderMenuItem={renderMenuItem}
+            style={{ width: '30%' }}
+            value={geomOptions.find(option => option.value.id === values.id)?.value}
+          />
+          <FormikSelect
+            isErrorMessageHidden
+            isRequired
+            label="Façade"
+            name="facade"
+            options={seaFrontsAsOptions}
+            style={{ width: '30%' }}
+          />
+          <FormikSelect
+            isErrorMessageHidden
+            isRequired
+            label="Type d’acte administratif"
+            name="type"
+            options={regulatoryTypeOptions}
+            style={{ width: '40%' }}
+          />
+        </InlineFieldsContainer>
+        <div>
+          <InlineFieldsContainer>
+            <RegulatoryThemesFilter
+              error={errors.themes}
+              isErrorMessageHidden
+              isLabelHidden={false}
+              isRequired
+              isTransparent={false}
+              label="Thématiques et sous-thématiques"
+              onChange={setThemes}
+              style={{ width: '50%' }}
+              value={values?.themes ?? []}
+            />
+            <RegulatoryTagsFilter
+              error={errors.tags}
+              isErrorMessageHidden
+              isLabelHidden={false}
+              isRequired
+              isTransparent={false}
+              label="Tags et sous-tags"
+              onChange={setTags}
+              style={{ width: '50%' }}
+              value={values?.tags ?? []}
+            />
+          </InlineFieldsContainer>
+          <InformationMessage>
+            Sélectionner au moins une thématique/sous-thématique ou un tag/sous-tag
+          </InformationMessage>
+        </div>
+        <div>
+          <FormikTextarea label="Résumé" name="resume" rows={4} />
+          <InformationMessage>
+            Le résumé concerne tout ce qui n’est pas une période. Les périodes sont à renseigner plus bas.
+          </InformationMessage>
+        </div>
+        <div>
+          <Label $isRequired>Plan de contrôle</Label>
+          <ControlPlanContainer>
+            <Checkbox
+              checked={values?.plan?.includes(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}
+              error={errors.plan}
+              isErrorMessageHidden
+              label={RegulatoryArea.RegulatoryAreaControlPlan.PIRC}
+              name="PIRCType"
+              onChange={isChecked => setControlPlan(RegulatoryArea.RegulatoryAreaControlPlan.PIRC, isChecked ?? false)}
+            />
+            <Checkbox
+              checked={values?.plan?.includes(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}
+              error={errors.plan}
+              isErrorMessageHidden
+              label={RegulatoryArea.RegulatoryAreaControlPlan.PSCEM}
+              name="PSCEMType"
+              onChange={isChecked => setControlPlan(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM, isChecked ?? false)}
+            />
+          </ControlPlanContainer>
+        </div>
+      </IdentificationContainer>
+    </>
+  )
+}
+
+const IdentificationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`
+
+const InlineFieldsContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+`
+const FieldWithTooltip = styled.div`
+  align-items: end;
+  display: flex;
+  flex: 1;
+  gap: 8px;
+`
+const GeomContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const GeomRefReg = styled.p`
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const ExtraFooterContainer = styled.button`
+  align-items: center;
+  background-color: ${p => p.theme.color.white};
+  border-top: 1px solid ${p => p.theme.color.lightGray};
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+`
+
+const InformationMessage = styled.span`
+  color: ${p => p.theme.color.slateGray};
+  font-size: 13px;
+  font-style: italic;
+`
+
+const ControlPlanContainer = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 24px;
+`
+
+const CreateLayerNameContainer = styled.div`
+  align-items: end;
+  display: flex;
+  gap: 8px;
+  > .Field-TextInput {
+    flex: 1;
+  }
+`

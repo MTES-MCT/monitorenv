@@ -2,6 +2,8 @@ import { EnvBannerStack } from '@components/BannerStack/EnvBannerStack'
 import { BannerStack } from '@features/BackOffice/components/BannerStack'
 import { backOfficeActions } from '@features/BackOffice/slice'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { RegulatoryAreaForm } from '@features/RegulatoryArea/components/RegulatoryAreaForm'
+import { RegulatoryAreaList } from '@features/RegulatoryArea/components/RegulatoryAreaList'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useEffect } from 'react'
 import { Route, Routes } from 'react-router'
@@ -22,6 +24,7 @@ const environment = import.meta.env.FRONTEND_SENTRY_ENV as Environment
 
 export function BackOfficePage() {
   const dispatch = useAppDispatch()
+  const isRegulatoryAreasBoEnabled = import.meta.env.FRONTEND_REGULATORY_AREAS_BO_ENABLED === 'true'
 
   useEffect(() => {
     let bannerId: number
@@ -40,16 +43,29 @@ export function BackOfficePage() {
     <Wrapper>
       <BackOfficeMenu />
 
-      <Body>
+      <>
         <BannerStack />
         <Routes>
-          <Route element={<AdministrationTable />} path="/" />
+          {isRegulatoryAreasBoEnabled ? (
+            <>
+              <Route element={<RegulatoryAreaList />} path="/" />
 
-          <Route element={<BaseTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]} />
-          <Route
-            element={<StationForm />}
-            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}/:stationId`}
-          />
+              <Route
+                element={<RegulatoryAreaList />}
+                path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}
+              />
+              <Route
+                element={<RegulatoryAreaForm />}
+                path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/:regulatoryAreaId`}
+              />
+              <Route
+                element={<RegulatoryAreaForm />}
+                path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new`}
+              />
+            </>
+          ) : (
+            <Route element={<AdministrationTable />} path="/" />
+          )}
 
           <Route
             element={<AdministrationTable />}
@@ -65,8 +81,14 @@ export function BackOfficePage() {
             element={<ControlUnitForm />}
             path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}/:controlUnitId`}
           />
+
+          <Route element={<BaseTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]} />
+          <Route
+            element={<StationForm />}
+            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}/:stationId`}
+          />
         </Routes>
-      </Body>
+      </>
     </Wrapper>
   )
 }
@@ -74,13 +96,4 @@ export function BackOfficePage() {
 const Wrapper = styled.div`
   display: flex;
   height: 100%;
-`
-
-const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  height: 100%;
-  padding: 24px;
-  overflow-y: auto;
 `

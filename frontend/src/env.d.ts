@@ -13,6 +13,7 @@ interface ImportMetaEnv {
   readonly FRONTEND_MISSION_FORM_AUTO_UPDATE: string
   readonly FRONTEND_MONITORENV_VERSION: string
   readonly FRONTEND_OIDC_ENABLED: string
+  readonly FRONTEND_REGULATORY_AREAS_BO_ENABLED: string
   readonly FRONTEND_REPORTING_FORM_AUTO_SAVE_ENABLED: string
   readonly FRONTEND_REPORTING_FORM_AUTO_UPDATE: string
   readonly FRONTEND_SENTRY_AUTH_TOKEN: string

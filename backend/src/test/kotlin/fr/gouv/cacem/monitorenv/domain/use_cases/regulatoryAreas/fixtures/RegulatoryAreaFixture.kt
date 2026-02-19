@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryArea.fixtures
+package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 

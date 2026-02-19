@@ -1,3 +1,4 @@
+import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
 import { useGetRegulatoryLayerByIdQuery } from '@api/regulatoryLayersAPI'
 import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import { Identification } from '@features/layersSelector/metadataPanel/regulatoryMetadata/Identification'
@@ -14,21 +15,30 @@ import styled from 'styled-components'
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 type RegulatoryAreasPanelProps = {
+  isNewRegulatoryArea?: boolean
   layerId: number
   onClose: () => void
 }
 
 export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPanelProps>(
-  ({ layerId, onClose, ...props }, ref) => {
-    const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(layerId, {
-      pollingInterval: FOUR_HOURS
+  ({ isNewRegulatoryArea = false, layerId, onClose, ...props }, ref) => {
+    const { currentData: regulatoryLayer } = useGetRegulatoryLayerByIdQuery(layerId, {
+      pollingInterval: FOUR_HOURS,
+      skip: isNewRegulatoryArea
     })
+
+    const { data: regulatoryArea } = useGetRegulatoryAreaByIdQuery(layerId, {
+      pollingInterval: FOUR_HOURS,
+      skip: !isNewRegulatoryArea
+    })
+
+    const regulatoryMetadata = regulatoryArea ?? regulatoryLayer
 
     const layerTitle = getRegulatoryAreaTitle(regulatoryMetadata?.polyName, regulatoryMetadata?.resume)
 
     return (
       // eslint-disable-next-line react/jsx-props-no-spreading
-      <Wrapper ref={ref} {...props}>
+      <Wrapper ref={ref} {...props} data-cy="regulatory-area-panel">
         {regulatoryMetadata ? (
           <>
             <Header>

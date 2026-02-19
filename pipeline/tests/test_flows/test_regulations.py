@@ -6,7 +6,7 @@ from src.flows.regulations import (
     load_tags_regulatory_areas,
     load_themes_regulatory_areas,
     regulations_flow,
-    update_regulatory_areas,
+    update_regulations,
 )
 from src.flows.themes_and_tags import load_new_tags, load_new_themes
 from src.read_query import read_query
@@ -281,7 +281,7 @@ def test_load_new_regulatory_areas(reset_test_data, new_regulatory_areas):
 
 
 def test_update_new_regulations(reset_test_data, regulatory_areas_to_update):
-    update_regulatory_areas(regulatory_areas_to_update)
+    update_regulations(regulatory_areas_to_update)
     updated_regulations = read_query(
         "monitorenv_remote",
         """SELECT

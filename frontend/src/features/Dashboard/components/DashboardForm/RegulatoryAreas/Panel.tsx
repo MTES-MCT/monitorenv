@@ -1,8 +1,7 @@
+import { RegulatoryAreasPanel } from '@components/RegulatoryArea/RegulatoryAreasPanel'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { forwardRef, type ComponentProps } from 'react'
-
-import { RegulatoryAreasPanel } from '../components/RegulatoryAreasPanel'
 
 type PanelProps = {
   layerId: number

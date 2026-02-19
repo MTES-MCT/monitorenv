@@ -1,4 +1,5 @@
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { RegulatoryAreasPanel } from '@components/RegulatoryArea/RegulatoryAreasPanel'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
@@ -14,7 +15,6 @@ import { Projection, transformExtent } from 'ol/proj'
 import styled from 'styled-components'
 
 import { ButtonsContainer, Container, Name, StyledButton } from './style'
-import { RegulatoryAreasPanel } from '../../components/RegulatoryAreasPanel'
 
 import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 
