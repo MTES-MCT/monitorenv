@@ -14,7 +14,7 @@ interface IRegulatoryAreaNewRepository {
 
     fun findById(id: Int): RegulatoryAreaNewEntity?
 
-    fun findAllLayerNames(): List<String>
+    fun findAllLayerNames(): Map<String, Long>
 
     fun save(regulatoryArea: RegulatoryAreaNewEntity): RegulatoryAreaNewEntity
 }

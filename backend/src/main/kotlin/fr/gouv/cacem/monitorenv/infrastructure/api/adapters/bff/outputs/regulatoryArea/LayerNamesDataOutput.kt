@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea
 
 data class LayerNamesDataOutput(
-    val layerNames: List<String>,
+    val layerNames: Map<String, Long>,
 ) {
     companion object {
-        fun fromGroupNames(layerNames: List<String>) =
+        fun fromGroupNames(layerNames: Map<String, Long>) =
             LayerNamesDataOutput(
                 layerNames = layerNames,
             )

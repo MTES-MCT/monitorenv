@@ -10,7 +10,7 @@ class GetAllLayerNames(
 ) {
     private val logger = LoggerFactory.getLogger(GetAllLayerNames::class.java)
 
-    fun execute(): List<String> {
+    fun execute(): Map<String, Long> {
         logger.info("Attempt to GET all regulatory areas layer names")
         val layerNames = regulatoryAreaRepository.findAllLayerNames()
         logger.info("Found ${layerNames.size} layer names")

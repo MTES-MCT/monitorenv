@@ -41,7 +41,10 @@ class JpaRegulatoryAreaNewRepository(
             .map { it.toRegulatoryArea(mapper) }
             .filter { findBySearchQuery(it, query) }
 
-    override fun findAllLayerNames(): List<String> = dbRegulatoryAreaRepository.findAllLayerNames()
+    override fun findAllLayerNames(): Map<String, Long> =
+        dbRegulatoryAreaRepository.findAllLayerNames().associate { row ->
+            row[0] as String to row[1] as Long
+        }
 
     @Transactional
     override fun findAllToComplete(): List<RegulatoryAreaNewEntity> =

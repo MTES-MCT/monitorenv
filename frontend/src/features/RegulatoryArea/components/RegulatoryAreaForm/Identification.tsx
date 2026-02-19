@@ -58,20 +58,19 @@ export function Identification({
   const [newLayerNameLocation, setNewLayerNameLocation] = useState<string | undefined>(undefined)
 
   const layerNamesOptions = useMemo(() => {
-    const layersNamesFromApi = layerNames
-      ? layerNames.layerNames
-          .filter(layerName => layerName && layerName.trim() !== '')
-          .map(layerName => ({
-            label: getTitle(layerName),
-            value: layerName
-          }))
-      : []
+    const layersNamesFromApi = Object.keys(layerNames?.layerNames || {})
+    const formattedLayerNames = layersNamesFromApi
+      .filter(layerName => layerName && layerName.trim() !== '')
+      .map(layerName => ({
+        label: getTitle(layerName),
+        value: layerName
+      }))
 
-    if (values.layerName && !layersNamesFromApi?.some(layer => layer.value === values.layerName)) {
-      layersNamesFromApi?.push({ label: getTitle(values.layerName), value: values.layerName })
+    if (values.layerName && !formattedLayerNames?.some(layer => layer.value === values.layerName)) {
+      formattedLayerNames.push({ label: getTitle(values.layerName), value: values.layerName })
     }
 
-    return layersNamesFromApi.sort((a, b) => a.label.localeCompare(b.label))
+    return formattedLayerNames.sort((a, b) => a.label.localeCompare(b.label))
   }, [layerNames, values.layerName])
 
   const geomOptions = useMemo(() => {
