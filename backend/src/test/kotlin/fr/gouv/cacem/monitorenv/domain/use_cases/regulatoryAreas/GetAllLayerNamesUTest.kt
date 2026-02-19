@@ -16,7 +16,13 @@ class GetAllLayerNamesUTest {
     @Test
     fun `execute should return all layer names`(log: CapturedOutput) {
         // Given
-        val expectedLayerNames = listOf("Layer1", "Layer2", "Layer3")
+        val expectedLayerNames =
+            mapOf(
+                "Layer1" to 2L,
+                "Layer2" to 3L,
+                "Layer3" to 4L,
+            )
+
         given(regulatoryAreaRepository.findAllLayerNames()).willReturn(expectedLayerNames)
 
         // When
@@ -31,7 +37,7 @@ class GetAllLayerNamesUTest {
     @Test
     fun `execute should return empty list when no layer names exist`(log: CapturedOutput) {
         // Given
-        given(regulatoryAreaRepository.findAllLayerNames()).willReturn(emptyList())
+        given(regulatoryAreaRepository.findAllLayerNames()).willReturn(emptyMap())
 
         // When
         val layerNames = getAllLayerNames.execute()
@@ -45,7 +51,10 @@ class GetAllLayerNamesUTest {
     @Test
     fun `execute should return single layer name`(log: CapturedOutput) {
         // Given
-        val expectedLayerNames = listOf("SingleLayer")
+        val expectedLayerNames =
+            mapOf(
+                "SingleLayer" to 1L,
+            )
         given(regulatoryAreaRepository.findAllLayerNames()).willReturn(expectedLayerNames)
 
         // When
@@ -53,7 +62,7 @@ class GetAllLayerNamesUTest {
 
         // Then
         assertThat(layerNames).hasSize(1)
-        assertThat(layerNames).containsExactly("SingleLayer")
+        assertThat(layerNames).containsExactlyEntriesOf(expectedLayerNames)
         assertThat(log.out).contains("Attempt to GET all regulatory areas layer names")
         assertThat(log.out).contains("Found 1 layer names")
     }
