@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
@@ -29,6 +28,7 @@ import org.locationtech.jts.geom.Geometry
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.databind.json.JsonMapper
 
 @Repository
 class JpaVigilanceAreaRepository(
@@ -38,7 +38,7 @@ class JpaVigilanceAreaRepository(
     private val controlUnitContactRepository: IDBControlUnitContactRepository,
     private val dbTagVigilanceAreaRepository: IDBTagVigilanceAreaRepository,
     private val dbThemeVigilanceAreaRepository: IDBThemeVigilanceAreaRepository,
-    private val mapper: ObjectMapper,
+    private val mapper: JsonMapper,
 ) : IVigilanceAreaRepository {
     @Transactional
     override fun findById(id: Int): VigilanceAreaEntity? =

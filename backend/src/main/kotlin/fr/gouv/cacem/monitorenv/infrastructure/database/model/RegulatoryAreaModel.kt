@@ -1,7 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaModel.Companion.toTagEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaModel.Companion.toThemeEntities
@@ -14,6 +12,8 @@ import jakarta.persistence.Table
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
+import tools.jackson.databind.annotation.JsonDeserialize
+import tools.jackson.databind.annotation.JsonSerialize
 
 @Entity
 @Table(name = "regulations_cacem")

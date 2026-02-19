@@ -1,14 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.log
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import java.util.*
+import tools.jackson.databind.json.JsonMapper
+import java.util.Enumeration
 
 class LoggingFormatter {
     companion object {
         fun formatRequest(
-            mapper: ObjectMapper,
+            mapper: JsonMapper,
             httpServletRequest: HttpServletRequest?,
             body: Any? = null,
         ): String? {
@@ -37,7 +37,7 @@ class LoggingFormatter {
         }
 
         fun formatResponse(
-            mapper: ObjectMapper,
+            mapper: JsonMapper,
             httpServletRequest: HttpServletRequest,
             httpServletResponse: HttpServletResponse,
             body: Any?,

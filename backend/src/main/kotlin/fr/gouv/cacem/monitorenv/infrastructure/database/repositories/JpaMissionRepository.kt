@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -25,6 +24,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.databind.json.JsonMapper
 import java.time.Instant
 
 @Repository
@@ -36,7 +36,7 @@ class JpaMissionRepository(
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbMissionRepository: IDBMissionRepository,
     private val dbThemeRepository: JpaThemeRepository,
-    private val mapper: ObjectMapper,
+    private val mapper: JsonMapper,
 ) : IMissionRepository {
     override fun count(): Long = dbMissionRepository.count()
 

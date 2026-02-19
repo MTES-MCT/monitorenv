@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
@@ -21,6 +20,7 @@ import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.test.context.junit.jupiter.SpringExtension
+import tools.jackson.databind.json.JsonMapper
 import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
@@ -74,7 +74,7 @@ class CanDeleteMissionUTests {
                     envActions =
                         listOf(
                             anEnvAction(
-                                mapper = ObjectMapper(),
+                                mapper = JsonMapper(),
                                 id = UUID.randomUUID(),
                             ),
                         ),
@@ -110,7 +110,7 @@ class CanDeleteMissionUTests {
                     envActions =
                         listOf(
                             anEnvAction(
-                                mapper = ObjectMapper(),
+                                mapper = JsonMapper(),
                                 id = UUID.randomUUID(),
                             ),
                         ),

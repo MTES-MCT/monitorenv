@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
@@ -14,8 +13,8 @@ import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -24,18 +23,22 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(RecentActivity::class)])
 class RecentActivityITests {
-    @Autowired private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var mockMvc: MockMvc
 
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var jsonMapper: JsonMapper
 
-    @MockitoBean private lateinit var getRecentControlsActivity: GetRecentControlsActivity
+    @MockitoBean
+    private lateinit var getRecentControlsActivity: GetRecentControlsActivity
 
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
@@ -90,7 +93,7 @@ class RecentActivityITests {
                 post("/bff/v1/recent-activity/controls")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        objectMapper.writeValueAsString(
+                        jsonMapper.writeValueAsString(
                             request,
                         ),
                     ),

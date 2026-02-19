@@ -5,7 +5,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "3.5.7"
+    id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
     kotlin("jvm") version "2.2.21"
@@ -66,28 +66,27 @@ val sentryVersion = "8.31.0"
 val flywayVersion = "11.17.0"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.7"))
-
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.2"))
     // Spring Boot
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("org.springframework.kafka:spring-kafka")
-    implementation("org.springframework.security:spring-security-oauth2-resource-server")
-    implementation("org.springframework.security:spring-security-oauth2-jose")
-    implementation("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("org.springframework.boot:spring-boot-starter-restclient")
+    implementation("org.springframework.boot:spring-boot-starter-security-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
+    implementation("org.springframework.boot:spring-boot-starter-kafka")
     implementation("org.springframework.cloud:spring-cloud-gateway-mvc:4.3.3")
+    implementation("org.springframework.boot:spring-boot-configuration-processor")
     // Database & Migration
     implementation("org.postgresql:postgresql")
-    implementation("org.flywaydb:flyway-core:$flywayVersion")
+    implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.hibernate.orm:hibernate-spatial:6.6.13.Final")
-    implementation("org.hibernate.validator:hibernate-validator:9.1.0.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.15.1")
+    implementation("org.hibernate.orm:hibernate-spatial:7.2.1.Final")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-73:3.15.2")
+    implementation("org.geolatte:geolatte-geom:1.9.1")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -95,8 +94,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
-    implementation("org.n52.jackson:jackson-datatype-jts:2.0.0")
+    implementation("tools.jackson.module:jackson-module-kotlin")
+    implementation("org.n52.jackson:jackson-datatype-jts:3.0.1")
 
     // HTTP Clients (Ktor)
     implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -112,7 +111,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
 
     // API Documentation
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
 
     // JodConverter
     implementation("org.jodconverter:jodconverter-local-lo:4.4.11")
@@ -130,10 +129,13 @@ dependencies {
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
 
     // Testing
-    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:3.0.5")
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.assertj:assertj-core:3.27.7")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")

@@ -18,7 +18,7 @@ data class ControlPlanThemeModel(
     @Id
     @Column(name = "id")
     val id: Int,
-    @Column(name = "theme")
+    @Column(name = "theme", nullable = false)
     val theme: String,
 ) {
     fun toControlPlanThemeEntity() =

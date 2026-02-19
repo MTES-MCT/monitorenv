@@ -1,10 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
@@ -36,12 +31,17 @@ import org.hibernate.annotations.Generated
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
-import org.hibernate.dialect.PostgreSQLEnumJdbcType
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType
 import org.hibernate.generator.EventType
 import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
 import org.locationtech.jts.geom.Geometry
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.annotation.JsonDeserialize
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.databind.json.JsonMapper
 import java.time.Instant
 import java.time.ZoneOffset.UTC
 
@@ -114,7 +114,7 @@ class ReportingModel(
     val attachedEnvAction: EnvActionModel? = null,
     @Column(name = "updated_at_utc") @UpdateTimestamp val updatedAtUtc: Instant? = null,
     @Column(name = "with_vhf_answer") val withVHFAnswer: Boolean? = null,
-    @Column(name = "is_infraction_proven") val isInfractionProven: Boolean,
+    @Column(name = "is_infraction_proven", nullable = false) val isInfractionProven: Boolean,
     @OneToMany(
         mappedBy = "reporting",
         fetch = FetchType.LAZY,
@@ -132,7 +132,7 @@ class ReportingModel(
     @Formula("created_at + INTERVAL '1 hour' * validity_time")
     val validityEndTime: Instant? = null,
 ) {
-    fun toReporting(mapper: ObjectMapper) =
+    fun toReporting(mapper: JsonMapper) =
         ReportingEntity(
             id = id,
             reportingId = reportingId,
@@ -169,8 +169,8 @@ class ReportingModel(
             theme = toThemeEntities(themes.toList()).first(),
         )
 
-    fun toReportingListDTO(objectMapper: ObjectMapper): ReportingListDTO {
-        val reporting = this.toReporting(objectMapper)
+    fun toReportingListDTO(jsonMapper: JsonMapper): ReportingListDTO {
+        val reporting = this.toReporting(jsonMapper)
         return ReportingListDTO(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
@@ -178,7 +178,7 @@ class ReportingModel(
                 if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
                 ) {
                     mission?.toMissionEntityWithoutControlUnit(
-                        objectMapper,
+                        jsonMapper,
                     )
                 } else {
                     null
@@ -186,8 +186,8 @@ class ReportingModel(
         )
     }
 
-    fun toReportingDetailsDTO(objectMapper: ObjectMapper): ReportingDetailsDTO {
-        val reporting = this.toReporting(objectMapper)
+    fun toReportingDetailsDTO(jsonMapper: JsonMapper): ReportingDetailsDTO {
+        val reporting = this.toReporting(jsonMapper)
         return ReportingDetailsDTO(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
@@ -195,7 +195,7 @@ class ReportingModel(
                 if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
                 ) {
                     mission?.toMissionEntity(
-                        objectMapper,
+                        jsonMapper,
                     )
                 } else {
                     null
@@ -203,7 +203,7 @@ class ReportingModel(
             detachedMission =
                 if (detachedFromMissionAtUtc != null) {
                     mission?.toMissionEntity(
-                        objectMapper,
+                        jsonMapper,
                     )
                 } else {
                     null
@@ -237,7 +237,7 @@ class ReportingModel(
             reporting: ReportingEntity,
             missionReference: MissionModel?,
             envActionReference: EnvActionModel?,
-            mapper: ObjectMapper,
+            mapper: JsonMapper,
         ): ReportingModel =
             ReportingModel(
                 id = reporting.id,

@@ -9,7 +9,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagI
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class CreateOrUpdateReportingDataInput(
     val id: Int? = null,
@@ -26,7 +26,7 @@ data class CreateOrUpdateReportingDataInput(
     val hasNoUnitAvailable: Boolean? = null,
     val createdAt: ZonedDateTime,
     val validityTime: Int? = null,
-    val isArchived: Boolean,
+    val isArchived: Boolean = false,
     val openBy: String? = null,
     val missionId: Int? = null,
     val attachedToMissionAtUtc: ZonedDateTime? = null,
