@@ -53,7 +53,7 @@ export function HomePage() {
   const reportingEvent = useListenReportingEventUpdates()
 
   const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
-  const selectedVesselId = useAppSelector(state => state.vessel.selectedVesselId)
+  const { id: selectedVesselId } = useAppSelector(state => state.vessel.selectedVessel)
 
   const hasAtLeastOneMissionFormDirty = useMemo(
     () => Object.values(selectedMissions).some(mission => mission.isFormDirty),

@@ -92,12 +92,12 @@ context('Search Places', () => {
       .within(() => {
         cy.clickButton('Antécédents')
         cy.get('header').contains('Derniers contrôles et signalements')
-        cy.contains('0 signalement')
+        cy.contains("0 susp. d'infraction")
         cy.contains('1 infraction')
         cy.contains('1 PV')
         cy.get('header').contains('Historique des contrôles et signalements')
         cy.getDataCy('2026-vessel-history').within(() => {
-          cy.contains("1 susp. d'infraction, 1 contrôle, 1 infraction, 1 PV").click()
+          cy.contains('1 signalement, 1 contrôle, 1 infraction, 1 PV').click()
           cy.contains('Voir le signalement').click()
         })
       })

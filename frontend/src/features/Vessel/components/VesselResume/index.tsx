@@ -85,13 +85,14 @@ export function VesselResume({ id }: VesselResumeProps) {
     focusVessel(vessel?.lastPositions?.[0])
   }, [focusVessel, vessel?.lastPositions])
 
-  const currentNbReportings = useMemo(
-    () =>
-      Object.values(allReportings?.entities ?? []).filter(reporting =>
-        customDayjs().isBefore(customDayjs(reporting.createdAt).add(reporting.validityTime, 'hours'))
-      ).length,
-    [allReportings?.entities]
-  )
+  const currentNbReportings = useMemo(() => {
+    const currentReportingLength = Object.values(allReportings?.entities ?? []).filter(reporting =>
+      customDayjs().isBefore(customDayjs(reporting.createdAt).add(reporting.validityTime, 'hours'))
+    ).length
+    dispatch(vesselAction.setHasReportings(currentReportingLength > 0))
+
+    return currentReportingLength
+  }, [allReportings?.entities, dispatch])
 
   if (!vessel) {
     return null
@@ -135,51 +136,47 @@ export function VesselResume({ id }: VesselResumeProps) {
             title="Fermer la fiche navire"
           />
         </MapMenuDialog.Header>
-        {vessel.lastPositions && vessel.lastPositions.length > 0 ? (
-          <>
-            <Tabs
-              onTabChange={tab => {
-                setPage(tab)
-              }}
-            />
-            <MapMenuDialog.Body>
-              {page === 'RESUME' && (
-                <>
-                  {currentNbReportings > 0 && (
-                    <CurrentReportingBanner>
-                      <Icon.AttentionFilled />
-                      <Bold>
-                        {currentNbReportings} {pluralize('signalement', currentNbReportings)} en cours
-                      </Bold>
-                    </CurrentReportingBanner>
-                  )}
-
-                  {vessel.lastPositions && vessel.lastPositions.length > 0 && (
-                    <LastPosition lastPositions={vessel.lastPositions} />
-                  )}
-                  <Summary vessel={vessel} />
-                </>
-              )}
-              {page === 'OWNER' && <Owner vessel={vessel} />}
-              {page === 'HISTORY' && (
-                <History
-                  envActions={allHistory?.envActions ?? []}
-                  reportings={Object.values(allReportings?.entities ?? [])}
-                  vessel={vessel}
-                />
-              )}
-            </MapMenuDialog.Body>
-          </>
-        ) : (
+        <>
+          <Tabs
+            onTabChange={tab => {
+              setPage(tab)
+            }}
+          />
           <MapMenuDialog.Body>
-            <AisInformationMessage>
-              <Icon.AttentionFilled />
-              Navire non rattaché à l’AIS
-            </AisInformationMessage>
-            <Summary vessel={vessel} />
-            <Owner vessel={vessel} />
+            {page === 'RESUME' && (
+              <>
+                {currentNbReportings > 0 && (
+                  <CurrentReportingBanner>
+                    <Icon.AttentionFilled />
+                    <Bold>
+                      {currentNbReportings} {pluralize('signalement', currentNbReportings)} en cours
+                    </Bold>
+                  </CurrentReportingBanner>
+                )}
+
+                {vessel.lastPositions?.length === 0 && (
+                  <AisInformationMessage>
+                    <Icon.AttentionFilled />
+                    Navire non rattaché à l’AIS
+                  </AisInformationMessage>
+                )}
+
+                {vessel.lastPositions && vessel.lastPositions.length > 0 && (
+                  <LastPosition lastPositions={vessel.lastPositions} />
+                )}
+                <Summary vessel={vessel} />
+              </>
+            )}
+            {page === 'OWNER' && <Owner vessel={vessel} />}
+            {page === 'HISTORY' && (
+              <History
+                envActions={allHistory?.envActions ?? []}
+                reportings={Object.values(allReportings?.entities ?? [])}
+                vessel={vessel}
+              />
+            )}
           </MapMenuDialog.Body>
-        )}
+        </>
       </StyledMapMenuDialogContainer>
     </DialogWrapper>
   )

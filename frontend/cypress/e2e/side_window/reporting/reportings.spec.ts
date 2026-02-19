@@ -156,7 +156,7 @@ context('Reportings', () => {
       cy.wait('@updateMission').then(() => {
         cy.clickButton('Signalements')
         cy.wait('@getReportings')
-        cy.contains('0 signalement')
+        cy.contains("0 susp. d'infraction")
         cy.contains('1 infraction')
         cy.contains('1 PV')
         cy.clickButton('Fermer')

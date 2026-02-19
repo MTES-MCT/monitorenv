@@ -7,7 +7,7 @@ import { GeoJSON } from 'ol/format'
 import { type Geometry } from 'ol/geom'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { Icon, Style } from 'ol/style'
+import { Circle, Icon, Stroke, Style } from 'ol/style'
 import React, { useEffect, useRef } from 'react'
 
 import { Layers } from '../../../domain/entities/layers/constants'
@@ -17,7 +17,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { FeatureLike } from 'ol/Feature'
 
 export function LastPositionsLayer({ map }: BaseMapChildrenProps) {
-  const selectedVesselId = useAppSelector(state => state.vessel.selectedVesselId)
+  const { hasReportings, id: selectedVesselId } = useAppSelector(state => state.vessel.selectedVessel)
 
   const { data: vessel } = useGetVesselQuery(selectedVesselId || skipToken)
 
@@ -26,7 +26,7 @@ export function LastPositionsLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: vectorSourceRef.current,
-      style: getSelectedVesselStyle(),
+      style: (feature, resolution) => getSelectedVesselStyle(feature, resolution),
       zIndex: Layers.LAST_POSITIONS.zIndex
     })
   ) as React.MutableRefObject<VectorLayerWithName>
@@ -47,7 +47,8 @@ export function LastPositionsLayer({ map }: BaseMapChildrenProps) {
           feature.setId(`${Layers.LAST_POSITIONS.code}:${lastPosition.id}`)
           feature.setProperties({
             ...lastPosition,
-            geom: null
+            geom: null,
+            hasReportings
           })
 
           return feature
@@ -58,7 +59,7 @@ export function LastPositionsLayer({ map }: BaseMapChildrenProps) {
         }
       }
     }
-  }, [map, selectedVesselId, vessel?.lastPositions])
+  }, [hasReportings, map, selectedVesselId, vessel?.lastPositions])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)
@@ -74,9 +75,9 @@ export function LastPositionsLayer({ map }: BaseMapChildrenProps) {
   }, [])
 }
 
-export const getSelectedVesselStyle = () => (feature: FeatureLike) => {
+export const getSelectedVesselStyle = (feature: FeatureLike, resolution: number) => {
   const course = feature.get('course')
-
+  const hasReportings = feature.get('hasReportings')
   const vesselStyle = new Style({
     image: new Icon({
       color: THEME.color.charcoal,
@@ -88,6 +89,21 @@ export const getSelectedVesselStyle = () => (feature: FeatureLike) => {
       src: 'icons/boat.png'
     })
   })
+  if (hasReportings) {
+    const redCircle = new Style({
+      image: new Circle({
+        fill: undefined,
+        radius: 19,
+        scale: Math.min(1, 0.3 + Math.sqrt(200 / resolution)),
+        stroke: new Stroke({
+          color: THEME.color.maximumRed,
+          width: 2
+        })
+      })
+    })
+
+    return [vesselStyle, redCircle]
+  }
 
   return [vesselStyle]
 }
