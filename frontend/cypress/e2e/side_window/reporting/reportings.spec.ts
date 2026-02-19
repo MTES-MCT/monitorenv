@@ -168,7 +168,7 @@ context('Reportings', () => {
           cy.fill('Type de véhicule', 'Navire', { force: true })
           cy.wait(250)
           cy.fill('MMSI', '987654321', { force: true })
-          cy.contains('1 signalement')
+          cy.contains("1 susp. d'infraction")
           cy.contains('1 infraction')
           cy.contains('1 PV')
           // cleanup
