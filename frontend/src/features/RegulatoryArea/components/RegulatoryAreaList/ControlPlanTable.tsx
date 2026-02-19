@@ -46,46 +46,44 @@ export function ControlPlanTable({ apiFilters, isLoading }: { apiFilters: any; i
   }
 
   return (
-    <>
-      <ControlPlanWrapper>
-        {PIRCRegulatoryAreas.length > 0 && (
-          <>
-            <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}>
-              <Title>PIRC</Title>
-              <StyledIconButton
-                $isExpanded={isPIRCGroupOpen}
-                accent={Accent.TERTIARY}
-                Icon={Icon.Chevron}
-                onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}
-                title={isPIRCGroupOpen ? 'Replier le contenu des zones PIRC' : 'Déplier le contenu des zones PIRC'}
-              />
-            </GroupTitle>
-            {isPIRCGroupOpen &&
-              PIRCRegulatoryAreas?.map(([key, regulatoryAreas]) => (
-                <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
-              ))}
-          </>
-        )}
+    <ControlPlanWrapper>
+      {PIRCRegulatoryAreas.length > 0 && (
+        <>
+          <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}>
+            <Title>PIRC</Title>
+            <StyledIconButton
+              $isExpanded={isPIRCGroupOpen}
+              accent={Accent.TERTIARY}
+              Icon={Icon.Chevron}
+              onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}
+              title={isPIRCGroupOpen ? 'Replier le contenu des zones PIRC' : 'Déplier le contenu des zones PIRC'}
+            />
+          </GroupTitle>
+          {isPIRCGroupOpen &&
+            PIRCRegulatoryAreas?.map(([key, regulatoryAreas]) => (
+              <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
+            ))}
+        </>
+      )}
 
-        {PSCEMRegulatoryAreas.length > 0 && (
-          <>
-            <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}>
-              <Title>PSCEM</Title>
-              <StyledIconButton
-                $isExpanded={isPSCEMGroupOpen}
-                accent={Accent.TERTIARY}
-                Icon={Icon.Chevron}
-                onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}
-                title={isPSCEMGroupOpen ? 'Replier le contenu des zones PSCEM' : 'Déplier le contenu des zones PSCEM'}
-              />
-            </GroupTitle>
-            {isPSCEMGroupOpen &&
-              PSCEMRegulatoryAreas?.map(([key, regulatoryAreas]) => (
-                <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
-              ))}
-          </>
-        )}
-      </ControlPlanWrapper>
-    </>
+      {PSCEMRegulatoryAreas.length > 0 && (
+        <>
+          <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}>
+            <Title>PSCEM</Title>
+            <StyledIconButton
+              $isExpanded={isPSCEMGroupOpen}
+              accent={Accent.TERTIARY}
+              Icon={Icon.Chevron}
+              onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}
+              title={isPSCEMGroupOpen ? 'Replier le contenu des zones PSCEM' : 'Déplier le contenu des zones PSCEM'}
+            />
+          </GroupTitle>
+          {isPSCEMGroupOpen &&
+            PSCEMRegulatoryAreas?.map(([key, regulatoryAreas]) => (
+              <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
+            ))}
+        </>
+      )}
+    </ControlPlanWrapper>
   )
 }

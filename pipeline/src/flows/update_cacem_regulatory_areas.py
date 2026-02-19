@@ -157,9 +157,7 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
 
 
 @flow(name="Monitorenv - Update CACEM Regulatory Areas")
-def update_cacem_regulatory_areas_flow():
-    logger = get_run_logger()
-    
+def update_cacem_regulatory_areas_flow():    
     cacem_df = cacem_rows()
     monitorenv_df = monitorenv_rows()
 
