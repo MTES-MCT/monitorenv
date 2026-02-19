@@ -26,6 +26,8 @@ class GetAllNewRegulatoryAreasUTest {
             getAllRegulatoryAreas.execute(
                 searchQuery = null,
                 seaFronts = null,
+                tags = null,
+                themes = null,
             )
 
         // Then
@@ -50,6 +52,8 @@ class GetAllNewRegulatoryAreasUTest {
             getAllRegulatoryAreas.execute(
                 searchQuery = null,
                 seaFronts = null,
+                tags = null,
+                themes = null,
             )
 
         // Then
