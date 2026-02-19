@@ -65,7 +65,7 @@ export function ReportingCard({ reporting }: ReportingCardProps) {
   )
 }
 
-const Card = styled.li<{ $isInfraction: boolean }>`
+const Card = styled.div<{ $isInfraction: boolean }>`
   background-color: ${p => (p.$isInfraction ? p.theme.color.maximumRed15 : p.theme.color.gainsboro)};
   display: flex;
   flex-direction: column;

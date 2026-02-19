@@ -1,17 +1,24 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
+type SelectedVessel = {
+  hasReportings: boolean | undefined
+  id: number | undefined
+}
 type VesselState = {
-  selectedVesselId?: number
+  selectedVessel: SelectedVessel
 }
 const INITIAL_STATE: VesselState = {
-  selectedVesselId: undefined
+  selectedVessel: { hasReportings: undefined, id: undefined }
 }
 export const vesselSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'vessel',
   reducers: {
+    setHasReportings: (state, action: PayloadAction<boolean | undefined>): void => {
+      state.selectedVessel.hasReportings = action.payload
+    },
     setSelectedVesselId: (state, action: PayloadAction<number | undefined>): void => {
-      state.selectedVesselId = action.payload
+      state.selectedVessel.id = action.payload
     }
   }
 })

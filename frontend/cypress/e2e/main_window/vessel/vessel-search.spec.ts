@@ -92,7 +92,7 @@ context('Search Places', () => {
       .within(() => {
         cy.clickButton('Antécédents')
         cy.get('header').contains('Derniers contrôles et signalements')
-        cy.contains('0 signalement')
+        cy.contains("0 susp. d'infraction")
         cy.contains('1 infraction')
         cy.contains('1 PV')
         cy.get('header').contains('Historique des contrôles et signalements')
@@ -118,7 +118,7 @@ context('Search Places', () => {
       .within(() => {
         cy.clickButton('Antécédents')
         cy.get('header').contains('Derniers contrôles et signalements')
-        cy.contains('0 signalement')
+        cy.contains("0 susp. d'infraction")
         cy.contains('1 infraction')
         cy.contains('1 PV')
         cy.get('header').contains('Historique des contrôles et signalements')
