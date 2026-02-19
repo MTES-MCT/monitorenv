@@ -61,7 +61,7 @@ export function RegulatoryAreaList() {
     }),
     [filters.seaFronts, filters.searchQuery, formattedTagIds, formattedThemeIds]
   )
-  useGetRegulatoryAreasQuery(apiFilters)
+  const { isFetching, isLoading } = useGetRegulatoryAreasQuery(apiFilters)
 
   const closePanel = () => {
     dispatch(regulatoryAreaTableActions.setOpenRegulatoryAreaId(undefined))
@@ -82,9 +82,9 @@ export function RegulatoryAreaList() {
           </TitleContainer>
           <RegulatoryAreaFilters />
           {filters.groupBy === 'SEA_FRONT' ? (
-            <SeaFrontTable apiFilters={apiFilters} />
+            <SeaFrontTable apiFilters={apiFilters} isLoading={isLoading || isFetching} />
           ) : (
-            <ControlPlanTable apiFilters={apiFilters} />
+            <ControlPlanTable apiFilters={apiFilters} isLoading={isLoading || isFetching} />
           )}
         </RegulatoryWrapper>
 
@@ -104,15 +104,14 @@ export function RegulatoryAreaList() {
 }
 
 const TitleContainer = styled.div`
+  border-bottom: 1px solid ${p => p.theme.color.gainsboro};
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid ${p => p.theme.color.gainsboro};
-
   > Button {
     align-self: start;
   }
 `
 const StyledRegulatoryAreasPanel = styled(RegulatoryAreasPanel)`
-  left: 53%;
-  top: 24px;
+  left: 51%;
+  top: 12px;
 `

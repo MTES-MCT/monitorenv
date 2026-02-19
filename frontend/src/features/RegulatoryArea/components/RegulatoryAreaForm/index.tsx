@@ -7,6 +7,7 @@ import { MapCoordinatesBox } from '@features/map/controls/MapCoordinatesBox'
 import { MapLayer } from '@features/map/layers/MapLayer'
 import { MapExtentController } from '@features/map/MapExtentController'
 import { ZoomListener } from '@features/map/ZoomListener'
+import { regulatoryAreaBoActions } from '@features/RegulatoryArea/slice'
 import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@features/RegulatoryArea/style'
 import { createOrUpdateRegulatoryArea } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryArea'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -83,7 +84,8 @@ export function RegulatoryAreaForm() {
     [regulatoryArea]
   )
 
-  const onBackToList = () => {
+  const backToList = () => {
+    dispatch(regulatoryAreaBoActions.setNewRegulatoryAreaId(undefined))
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
   }
 
@@ -97,7 +99,7 @@ export function RegulatoryAreaForm() {
     if (isDirty) {
       setIsCancelEditDialogOpen(true)
     } else {
-      navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
+      backToList()
     }
   }
 
@@ -105,11 +107,6 @@ export function RegulatoryAreaForm() {
     <>
       <StyledBackofficeWrapper>
         <RegulatoryWrapper>
-          <StyledLinkButton Icon={Icon.Chevron} onClick={onBackToList}>
-            Revenir à la liste des zones réglementaires
-          </StyledLinkButton>
-
-          <Title>Saisir une zone réglementaire</Title>
           <Formik
             key={regulatoryAreaId}
             enableReinitialize
@@ -120,12 +117,15 @@ export function RegulatoryAreaForm() {
           >
             {({ dirty, handleSubmit, values }) => (
               <>
+                <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
+                  Revenir à la liste des zones réglementaires
+                </StyledLinkButton>
+
+                <Title>Saisir une zone réglementaire</Title>
                 {isCancelEditDialogOpen && (
                   <CancelEditDialog
                     onCancel={() => setIsCancelEditDialogOpen(false)}
-                    onConfirm={() =>
-                      navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
-                    }
+                    onConfirm={backToList}
                     open={isCancelEditDialogOpen}
                     subText="Voulez-vous enregistrer les modifications avant de quitter ?"
                     text={`Vous êtes en train d'abandonner l'édition de la zone réglementaire`}
