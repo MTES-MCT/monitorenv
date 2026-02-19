@@ -67,6 +67,13 @@ export namespace RegulatoryArea {
     PSCEM = 'PSCEM'
   }
 
+  export type MainRefReg = {
+    date?: string
+    dateFin?: string
+    refReg?: string
+    url?: string
+  }
+
   export enum RegulatoryAreaType {
     AGREEMENT = 'Convention',
     BROCHURE = 'Plaquette',
