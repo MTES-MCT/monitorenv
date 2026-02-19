@@ -3,8 +3,7 @@ package fr.gouv.cacem.monitorenv.config
 import org.apache.catalina.connector.Connector
 import org.apache.coyote.ajp.AbstractAjpProtocol
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory
-import org.springframework.boot.web.server.WebServerFactoryCustomizer
+import org.springframework.boot.tomcat.servlet.TomcatServletWebServerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.net.InetAddress
@@ -15,14 +14,13 @@ class AJPConfig {
     private val ajpProperties: AJPProperties? = null
 
     @Bean
-    fun servletContainer(): WebServerFactoryCustomizer<TomcatServletWebServerFactory?>? =
-        WebServerFactoryCustomizer { server: TomcatServletWebServerFactory? ->
-            if (server is TomcatServletWebServerFactory) {
-                server.addAdditionalTomcatConnectors(redirectConnector())
-            }
-        }
+    fun servletContainer(): TomcatServletWebServerFactory {
+        val factory = TomcatServletWebServerFactory()
+        factory.addAdditionalConnectors(redirectConnector())
+        return factory
+    }
 
-    private fun redirectConnector(): Connector? {
+    private fun redirectConnector(): Connector {
         val connector = Connector("AJP/1.3")
         connector.scheme = "http"
         connector.port = ajpProperties?.port?.toInt() ?: 8000

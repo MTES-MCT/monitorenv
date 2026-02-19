@@ -20,7 +20,7 @@ data class DashboardDatasModel(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID?,
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dashboard_id")
+    @JoinColumn(name = "dashboard_id", nullable = false)
     var dashboard: DashboardModel?,
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "amp_cacem_id")

@@ -1,16 +1,16 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.utils
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
+import tools.jackson.databind.json.JsonMapper
 
 fun validateId(
     requestDataAsJson: String,
     idPropName: String,
     idFromRequestPath: Int,
-    objectMapper: ObjectMapper,
+    jsonMapper: JsonMapper,
 ) {
-    val requestDataAsJsonNode = objectMapper.readTree(requestDataAsJson)
+    val requestDataAsJsonNode = jsonMapper.readTree(requestDataAsJson)
     val idAsJsonNode = requestDataAsJsonNode.get(idPropName)
 
     if (idAsJsonNode == null) {

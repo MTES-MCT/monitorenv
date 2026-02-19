@@ -8,7 +8,7 @@ ARG VERSION=NO_VERSION
 ########################################
 # Build monitorenv backend with maven #
 ########################################
-FROM gradle:8.5-jdk21 AS build-back
+FROM gradle:8.14.4-jdk21 AS build-back
 
 ARG GITHUB_SHA
 ARG VERSION

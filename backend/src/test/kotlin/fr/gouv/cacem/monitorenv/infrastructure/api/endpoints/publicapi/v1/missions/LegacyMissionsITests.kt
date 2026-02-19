@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.missions
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
@@ -30,8 +29,8 @@ import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
@@ -46,6 +45,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.request
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 
 @Import(SentryConfig::class, MapperConfiguration::class)
@@ -77,7 +77,7 @@ class LegacyMissionsITests {
     private val getEngagedControlUnits: GetEngagedControlUnits = mock()
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var jsonMapper: JsonMapper
 
     @Autowired
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
@@ -125,7 +125,7 @@ class LegacyMissionsITests {
                 createdAtUtc = null,
                 updatedAtUtc = null,
             )
-        val requestBody = objectMapper.writeValueAsString(newMissionRequest)
+        val requestBody = jsonMapper.writeValueAsString(newMissionRequest)
         given(
             createOrUpdateMission.execute(
                 mission = newMissionRequest.toMissionEntity(),
@@ -313,7 +313,7 @@ class LegacyMissionsITests {
         mockMvc
             .perform(
                 post("/api/v1/missions/14")
-                    .content(objectMapper.writeValueAsString(requestBody))
+                    .content(jsonMapper.writeValueAsString(requestBody))
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then

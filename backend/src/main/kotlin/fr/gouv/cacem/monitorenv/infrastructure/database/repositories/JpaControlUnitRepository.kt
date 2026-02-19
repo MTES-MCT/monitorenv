@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
@@ -17,6 +16,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 
 @Repository
@@ -25,7 +25,7 @@ class JpaControlUnitRepository(
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbDepartmentAreaRepository: IDBDepartmentAreaRepository,
     private val dbMissionRepository: IDBMissionRepository,
-    private val mapper: ObjectMapper,
+    private val mapper: JsonMapper,
 ) : IControlUnitRepository {
     private val logger = LoggerFactory.getLogger(JpaControlUnitRepository::class.java)
 

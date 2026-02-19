@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MonitorFishActionTypeEnum
@@ -21,6 +20,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.mappers.EnvActionMapper
 import org.locationtech.jts.geom.Geometry
 import org.locationtech.jts.io.WKTReader
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import java.util.UUID
 import kotlin.random.Random
@@ -34,7 +34,7 @@ private val polygon =
 class EnvActionFixture {
     companion object {
         fun anEnvAction(
-            mapper: ObjectMapper,
+            mapper: JsonMapper,
             id: UUID,
             startTime: ZonedDateTime? = null,
             endTime: ZonedDateTime? = null,

@@ -27,11 +27,11 @@ data class ControlUnitContactModel(
     val controlUnit: ControlUnitModel,
     @Column(name = "email")
     val email: String?,
-    @Column(name = "is_email_subscription_contact")
+    @Column(name = "is_email_subscription_contact", nullable = false)
     val isEmailSubscriptionContact: Boolean,
-    @Column(name = "is_sms_subscription_contact")
+    @Column(name = "is_sms_subscription_contact", nullable = false)
     val isSmsSubscriptionContact: Boolean,
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     val name: String,
     @Column(name = "phone")
     val phone: String?,

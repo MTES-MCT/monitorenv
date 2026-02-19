@@ -21,7 +21,9 @@ data class ThemeModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
+    @Column(nullable = false)
     val name: String,
+    @Column(nullable = false)
     val startedAt: ZonedDateTime?,
     val endedAt: ZonedDateTime?,
     @ManyToOne(fetch = FetchType.LAZY)

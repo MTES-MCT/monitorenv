@@ -1,10 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.LinkEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VisibilityEnum
@@ -29,10 +24,15 @@ import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
-import org.hibernate.dialect.PostgreSQLEnumJdbcType
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.annotation.JsonDeserialize
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 
 @Entity
@@ -61,7 +61,7 @@ data class VigilanceAreaModel(
     @OrderBy("id")
     var images: MutableList<VigilanceAreaImageModel> = mutableListOf(),
     @Column(name = "is_deleted", nullable = false) val isDeleted: Boolean,
-    @Column(name = "is_draft") val isDraft: Boolean,
+    @Column(name = "is_draft", nullable = false) val isDraft: Boolean,
     @Column(name = "links", columnDefinition = "jsonb")
     @Type(JsonBinaryType::class)
     val links: JsonNode? = null,
@@ -94,7 +94,7 @@ data class VigilanceAreaModel(
     companion object {
         fun fromVigilanceArea(
             vigilanceArea: VigilanceAreaEntity,
-            mapper: ObjectMapper,
+            mapper: JsonMapper,
         ): VigilanceAreaModel {
             val vigilanceAreaModel =
                 VigilanceAreaModel(
@@ -123,7 +123,7 @@ data class VigilanceAreaModel(
         }
     }
 
-    fun toVigilanceAreaEntity(mapper: ObjectMapper): VigilanceAreaEntity =
+    fun toVigilanceAreaEntity(mapper: JsonMapper): VigilanceAreaEntity =
         VigilanceAreaEntity(
             id = id,
             comments = comments,
