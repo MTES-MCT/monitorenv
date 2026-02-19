@@ -140,7 +140,7 @@ export function RegulatoryAreaForm() {
                       Annuler
                     </Button>
                     <Button disabled={!dirty || !values?.geom} type="submit">
-                      Créer la réglementation
+                      {isEditing ? 'Enregistrer la réglementation' : 'Créer la réglementation'}
                     </Button>
                   </Footer>
                 </form>

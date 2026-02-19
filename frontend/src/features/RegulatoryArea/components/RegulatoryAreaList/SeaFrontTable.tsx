@@ -28,6 +28,19 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
     setSeaFrontsExtented(updatedExtentedSeaFronts ?? [])
   }
 
+  if (isLoading) {
+    return (
+      <ControlPlanWrapper>
+        {allSeaFronts.map(seaFront => (
+          <GroupTitle key={seaFront}>
+            <Title>{seaFront}</Title>
+            <StyledLoadingIcon />
+          </GroupTitle>
+        ))}
+      </ControlPlanWrapper>
+    )
+  }
+
   return (
     <ControlPlanWrapper>
       {allSeaFronts.map(seaFront => {
@@ -39,17 +52,17 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
           <Fragment key={seaFront}>
             <GroupTitle onClick={() => openOrCloseGroup(seaFront)}>
               <Title>{seaFront}</Title>
-              {isLoading ? (
-                <StyledLoadingIcon />
-              ) : (
-                <StyledIconButton
-                  $isExpanded={seaFrontsExtented.includes(seaFront)}
-                  accent={Accent.TERTIARY}
-                  Icon={Icon.Chevron}
-                  onClick={() => openOrCloseGroup(seaFront)}
-                  title={seaFrontsExtented.includes(seaFront) ? 'Replier le contenu' : 'Déplier le contenu'}
-                />
-              )}
+              <StyledIconButton
+                $isExpanded={seaFrontsExtented.includes(seaFront)}
+                accent={Accent.TERTIARY}
+                Icon={Icon.Chevron}
+                onClick={() => openOrCloseGroup(seaFront)}
+                title={
+                  seaFrontsExtented.includes(seaFront)
+                    ? `Replier le contenu de la façade ${seaFront}`
+                    : `Déplier le contenu de la façade ${seaFront}`
+                }
+              />
             </GroupTitle>
             {seaFrontsExtented.includes(seaFront) &&
               Object.entries(groupedRegulatoryAreas[seaFront]).map(([key, regulatoryAreas]) => (
