@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.actions
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import java.util.Optional
 import java.util.UUID
@@ -25,7 +25,7 @@ class PatchEnvActionUTest {
     private val envActionRepository: IEnvActionRepository = mock()
     private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = PatchEntity()
     private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, patchEntity)
-    private val objectMapper: ObjectMapper = ObjectMapper()
+    private val jsonMapper: JsonMapper = JsonMapper()
 
     @Test
     fun `execute() should return the patched entity`(log: CapturedOutput) {
@@ -43,14 +43,14 @@ class PatchEnvActionUTest {
             )
         val envActionFromDatabase =
             anEnvAction(
-                objectMapper,
+                jsonMapper,
                 id,
                 ZonedDateTime.now(),
                 ZonedDateTime.now().plusDays(2),
                 observationsByUnit,
             )
         val envActionPatched =
-            anEnvAction(objectMapper, envActionFromDatabase.id, today, tomorrow, patchedObservationsByUnit)
+            anEnvAction(jsonMapper, envActionFromDatabase.id, today, tomorrow, patchedObservationsByUnit)
 
         given(envActionRepository.findById(id)).willReturn(envActionFromDatabase)
         patchEntity.execute(envActionFromDatabase, patchableEnvActionEntity)

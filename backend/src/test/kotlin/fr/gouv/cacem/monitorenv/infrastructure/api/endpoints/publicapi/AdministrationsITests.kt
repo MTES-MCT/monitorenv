@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
@@ -21,8 +20,8 @@ import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -34,6 +33,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -64,7 +64,7 @@ class AdministrationsITests {
     private val getAdministrations: GetAdministrations = mock()
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var jsonMapper: JsonMapper
 
     @Test
     fun `archive() should archive an administration`() {
@@ -121,7 +121,7 @@ class AdministrationsITests {
                 isArchived = false,
                 name = "Administration Name",
             )
-        val requestBody = objectMapper.writeValueAsString(newAdministrationData)
+        val requestBody = jsonMapper.writeValueAsString(newAdministrationData)
 
         given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedCreatedAdministration)
 
@@ -220,7 +220,7 @@ class AdministrationsITests {
                 isArchived = false,
                 name = "Updated Administration Name",
             )
-        val requestBody = objectMapper.writeValueAsString(nextAdministrationData)
+        val requestBody = jsonMapper.writeValueAsString(nextAdministrationData)
 
         given(createOrUpdateAdministration.execute(administration = any())).willReturn(expectedUpdatedAdministration)
 

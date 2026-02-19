@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.json.JsonMapper
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -12,10 +12,10 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(
     private val clazz: KClass<T>,
 ) {
     fun patchFromRequestData(
-        objectMapper: ObjectMapper,
+        jsonMapper: JsonMapper,
         requestDataJson: String,
     ): T {
-        val nextDataFromRequestAsJsonNode = objectMapper.readTree(requestDataJson)
+        val nextDataFromRequestAsJsonNode = jsonMapper.readTree(requestDataJson)
 
         val constructor = clazz.primaryConstructor!!
         val params =

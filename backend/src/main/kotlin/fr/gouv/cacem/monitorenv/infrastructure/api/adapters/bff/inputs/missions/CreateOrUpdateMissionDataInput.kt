@@ -27,7 +27,7 @@ data class CreateOrUpdateMissionDataInput(
     val openBy: String? = null,
     val startDateTimeUtc: ZonedDateTime,
     val endDateTimeUtc: ZonedDateTime? = null,
-    val isGeometryComputedFromControls: Boolean,
+    val isGeometryComputedFromControls: Boolean = false,
 ) {
     fun toMissionEntity(): MissionEntity {
         val hasMissionOrder = this.hasMissionOrder == true

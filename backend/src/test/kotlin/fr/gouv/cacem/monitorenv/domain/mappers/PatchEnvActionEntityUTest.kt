@@ -8,11 +8,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 
 class PatchEnvActionEntityUTest {
     private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = PatchEntity()
-    private val objectMapper = MapperConfiguration().objectMapper()
+    private val jsonMapper = MapperConfiguration().jsonMapper()
 
     @Test
     fun `execute() should return envAction with actionStartDateTimeUtc modified if its present`() {
@@ -25,7 +26,7 @@ class PatchEnvActionEntityUTest {
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val envAction =
             EnvActionFixture.anEnvAction(
-                objectMapper,
+                jsonMapper,
                 id,
                 startTime = yesterday,
                 endTime = tomorrow,
@@ -48,7 +49,7 @@ class PatchEnvActionEntityUTest {
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val envAction =
             EnvActionFixture.anEnvAction(
-                objectMapper,
+                jsonMapper,
                 id,
                 startTime = yesterday,
                 endTime = tomorrow,
@@ -73,7 +74,7 @@ class PatchEnvActionEntityUTest {
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val envAction =
             EnvActionFixture.anEnvAction(
-                objectMapper,
+                jsonMapper,
                 id,
                 startTime = yesterday,
                 endTime = tomorrow,
@@ -96,7 +97,7 @@ class PatchEnvActionEntityUTest {
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val envAction =
             EnvActionFixture.anEnvAction(
-                objectMapper,
+                jsonMapper,
                 id,
                 startTime = yesterday,
                 endTime = tomorrow,
@@ -121,7 +122,7 @@ class PatchEnvActionEntityUTest {
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val envAction =
             EnvActionFixture.anEnvAction(
-                objectMapper,
+                jsonMapper,
                 id,
                 startTime = yesterday,
                 endTime = tomorrow,
@@ -144,7 +145,7 @@ class PatchEnvActionEntityUTest {
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val envAction =
             EnvActionFixture.anEnvAction(
-                objectMapper,
+                jsonMapper,
                 id,
                 startTime = yesterday,
                 endTime = tomorrow,
@@ -168,7 +169,7 @@ class PatchEnvActionEntityUTest {
         val observationsByUnit = "oldValue"
         val envAction =
             EnvActionFixture.anEnvAction(
-                objectMapper,
+                jsonMapper,
                 id,
                 startTime = yesterday,
                 endTime = tomorrow,

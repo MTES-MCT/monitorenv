@@ -1,14 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.log
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpMethod.GET
 import org.springframework.web.servlet.HandlerInterceptor
+import tools.jackson.databind.json.JsonMapper
 
 class LogGETRequests(
-    val mapper: ObjectMapper,
+    val mapper: JsonMapper,
 ) : HandlerInterceptor {
     private val logger = LoggerFactory.getLogger(LogGETRequests::class.java)
 

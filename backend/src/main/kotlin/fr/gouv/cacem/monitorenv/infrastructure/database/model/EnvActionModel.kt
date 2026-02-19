@@ -1,8 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
@@ -29,11 +26,14 @@ import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
-import org.hibernate.dialect.PostgreSQLEnumJdbcType
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType
 import org.hibernate.type.descriptor.jdbc.UUIDJdbcType
 import org.locationtech.jts.geom.Geometry
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
+import tools.jackson.databind.annotation.JsonDeserialize
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.databind.json.JsonMapper
 import java.time.Instant
 import java.time.ZoneOffset.UTC
 import java.util.UUID
@@ -59,8 +59,8 @@ class EnvActionModel(
     @Column(name = "action_type")
     @Enumerated(EnumType.STRING)
     val actionType: ActionTypeEnum,
+    @Column(name = "value", columnDefinition = "jsonb", nullable = false)
     @Type(JsonBinaryType::class)
-    @Column(name = "value", columnDefinition = "jsonb")
     val value: String,
     @Column(name = "facade") val facade: String? = null,
     @Column(name = "department") val department: String? = null,
@@ -96,7 +96,7 @@ class EnvActionModel(
     )
     var tags: List<TagEnvActionModel>,
 ) {
-    fun toActionEntity(mapper: ObjectMapper): EnvActionEntity =
+    fun toActionEntity(mapper: JsonMapper): EnvActionEntity =
         EnvActionMapper.getEnvActionEntityFromJSON(
             mapper = mapper,
             id = id,
@@ -124,7 +124,7 @@ class EnvActionModel(
         fun fromEnvActionEntity(
             action: EnvActionEntity,
             mission: MissionModel,
-            mapper: ObjectMapper,
+            mapper: JsonMapper,
         ): EnvActionModel {
             val envActionModel =
                 EnvActionModel(

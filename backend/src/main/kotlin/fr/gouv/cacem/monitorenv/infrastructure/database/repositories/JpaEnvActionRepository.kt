@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlWithInfractionsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionEntity
@@ -21,8 +20,9 @@ import org.locationtech.jts.geom.GeometryFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.sql.Timestamp
+import tools.jackson.databind.json.JsonMapper
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -32,11 +32,11 @@ import java.util.UUID
 class JpaEnvActionRepository(
     private val idbEnvActionRepository: IDBEnvActionRepository,
     private val idbMissionRepository: IDBMissionRepository,
-    private val objectMapper: ObjectMapper,
+    private val jsonMapper: JsonMapper,
 ) : IEnvActionRepository {
     @Transactional
     override fun findById(id: UUID): EnvActionEntity? =
-        idbEnvActionRepository.findByIdOrNull(id)?.toActionEntity(objectMapper)
+        idbEnvActionRepository.findByIdOrNull(id)?.toActionEntity(jsonMapper)
 
     @Transactional
     override fun save(envAction: EnvActionEntity): EnvActionEntity {
@@ -47,9 +47,9 @@ class JpaEnvActionRepository(
                     EnvActionModel.fromEnvActionEntity(
                         envAction,
                         mission = mission,
-                        mapper = objectMapper,
+                        mapper = jsonMapper,
                     ),
-                ).toActionEntity(objectMapper)
+                ).toActionEntity(jsonMapper)
         }
 
         throw BackendUsageException(
@@ -95,14 +95,14 @@ class JpaEnvActionRepository(
                         else -> null
                     }
 
-                // convert timestamp to ZonedDateTime
-                val timestamp = row[3] as? Timestamp
-                val zonedDateTime = timestamp?.toLocalDateTime()?.atZone(ZoneId.of("UTC"))
+                // convert LocalDateTime to ZonedDateTime
+                val localDateTime = row[3] as? LocalDateTime
+                val zonedDateTime = localDateTime?.atZone(ZoneId.of("UTC"))
 
                 // convert valueJson to RecentControlActivityProperties
                 val valueJson = row[2] as String
                 val valueObject =
-                    objectMapper.readValue(
+                    jsonMapper.readValue(
                         valueJson,
                         RecentControlActivityProperties::class.java,
                     )
@@ -136,12 +136,8 @@ class JpaEnvActionRepository(
         return envActions.map { row: EnvActionControlWithInfractions ->
             val infractionsJson = row.getInfractions()
             val infractions: List<InfractionEntity> =
-                objectMapper.readValue(infractionsJson, Array<InfractionEntity>::class.java).toList()
-            val actionStartDateTimeUtc =
-                row
-                    .getActionStartDatetimeUtc()
-                    ?.toInstant()
-                    ?.atZone(ZoneOffset.UTC)
+                jsonMapper.readValue(infractionsJson, Array<InfractionEntity>::class.java).toList()
+            val actionStartDateTimeUtc = row.getActionStartDatetimeUtc()?.atZone(ZoneOffset.UTC)
 
             EnvActionControlWithInfractionsEntity(
                 actionStartDateTimeUtc = actionStartDateTimeUtc,

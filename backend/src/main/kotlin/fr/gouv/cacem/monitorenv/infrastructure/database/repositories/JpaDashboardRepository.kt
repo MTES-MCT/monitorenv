@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DashboardDatasModel
@@ -17,6 +16,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.databind.json.JsonMapper
 import java.util.UUID
 
 @Repository
@@ -29,7 +29,7 @@ class JpaDashboardRepository(
     private val regulatoryAreaRepository: IDBRegulatoryAreaRepository,
     private val reportingRepository: IDBReportingRepository,
     private val vigilanceAreaRepository: IDBVigilanceAreaRepository,
-    private val mapper: ObjectMapper,
+    private val mapper: JsonMapper,
 ) : IDashboardRepository {
     @Transactional
     override fun save(dashboard: DashboardEntity): DashboardEntity {

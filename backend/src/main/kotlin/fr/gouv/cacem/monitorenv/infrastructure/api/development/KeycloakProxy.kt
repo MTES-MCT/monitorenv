@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.development
 
 import fr.gouv.cacem.monitorenv.config.OIDCProperties
-import io.ktor.client.request.forms.*
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -201,14 +200,14 @@ class KeycloakProxy(
     private fun removeCorsHeader(response: ResponseEntity<*>): ResponseEntity<*> {
         // In Spring Boot 3.4+, headers are ReadOnlyHttpHeaders and cannot be modified
         // We need to create a new ResponseEntity with filtered headers
-        val newHeaders = response.headers.toMutableMap()
+        val newHeaders = response.headers.toSingleValueMap()
         newHeaders.remove("Access-Control-Allow-Origin")
 
         return ResponseEntity
             .status(response.statusCode)
             .headers { headers ->
-                newHeaders.forEach { (key, values) ->
-                    headers.addAll(key, values)
+                newHeaders.forEach { (key, value) ->
+                    headers.add(key, value)
                 }
             }.body(response.body)
     }
@@ -234,14 +233,14 @@ class KeycloakProxy(
             val rewrittenBody = rewrittenHtml.toByteArray(StandardCharsets.UTF_8)
 
             // Create new headers without Content-Length (Spring will set it automatically)
-            val newHeaders = response.headers.toMutableMap()
+            val newHeaders = response.headers.toSingleValueMap()
             newHeaders.remove("Content-Length")
 
             return ResponseEntity
                 .status(response.statusCode)
                 .headers { headers ->
-                    newHeaders.forEach { (key, values) ->
-                        headers.addAll(key, values)
+                    newHeaders.forEach { (key, value) ->
+                        headers.add(key, value)
                     }
                 }.body(rewrittenBody)
         } catch (e: Exception) {

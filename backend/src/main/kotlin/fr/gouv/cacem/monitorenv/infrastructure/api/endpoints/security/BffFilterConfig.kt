@@ -22,18 +22,19 @@ class BffFilterConfig(
 
     @Bean(name = ["userAuthorizationCheckFilter"])
     fun userAuthorizationCheckFilter(): FilterRegistrationBean<UserAuthorizationCheckFilter> {
-        val registrationBean = FilterRegistrationBean<UserAuthorizationCheckFilter>()
+        val registrationBean =
+            FilterRegistrationBean(
+                UserAuthorizationCheckFilter(
+                    oidcProperties,
+                    protectedPathsAPIProperties,
+                    getIsAuthorizedUser,
+                ),
+            )
 
         registrationBean.order = USER_AUTH_FILTER_PRECEDENCE
-        registrationBean.filter =
-            UserAuthorizationCheckFilter(
-                oidcProperties,
-                protectedPathsAPIProperties,
-                getIsAuthorizedUser,
-            )
         registrationBean.urlPatterns = protectedPathsAPIProperties.paths
 
-        if (registrationBean.urlPatterns == null) {
+        if (registrationBean.urlPatterns.isEmpty()) {
             logger.warn(
                 "WARNING: No user authentication path given." +
                     "See `monitorenv.api.protected.paths` application property.",
@@ -48,15 +49,11 @@ class BffFilterConfig(
 
     @Bean(name = ["publicPathsApiKeyCheckFilter"])
     fun publicPathsApiKeyCheckFilter(): FilterRegistrationBean<ApiKeyCheckFilter> {
-        val registrationBean = FilterRegistrationBean<ApiKeyCheckFilter>()
+        val registrationBean = FilterRegistrationBean(ApiKeyCheckFilter(protectedPathsAPIProperties))
 
         registrationBean.order = API_KEY_FILTER_PRECEDENCE
-        registrationBean.filter =
-            ApiKeyCheckFilter(
-                protectedPathsAPIProperties,
-            )
         registrationBean.urlPatterns = protectedPathsAPIProperties.publicPaths
-        if (registrationBean.urlPatterns == null) {
+        if (registrationBean.urlPatterns.isEmpty()) {
             logger.warn(
                 "WARNING: Public paths are not protected." +
                     "See `monitorenv.api.protected.public-paths` application property.",

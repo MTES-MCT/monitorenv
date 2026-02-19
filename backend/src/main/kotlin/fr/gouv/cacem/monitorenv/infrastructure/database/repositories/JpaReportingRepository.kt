@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
@@ -29,9 +28,10 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
+import org.springframework.orm.ObjectRetrievalFailureException
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.databind.json.JsonMapper
 import java.time.Instant
 import java.util.UUID
 
@@ -42,7 +42,7 @@ class JpaReportingRepository(
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbControlUnitRepository: IDBControlUnitRepository,
     private val dbSemaphoreRepository: IDBSemaphoreRepository,
-    private val mapper: ObjectMapper,
+    private val mapper: JsonMapper,
 ) : IReportingRepository {
     private val logger = LoggerFactory.getLogger(JpaReportingRepository::class.java)
 
@@ -221,7 +221,7 @@ class JpaReportingRepository(
             reportingModel.reportingSources.addAll(reportingsSourceModels)
 
             return dbReportingRepository.saveAndFlush(reportingModel).toReportingDetailsDTO(mapper)
-        } catch (e: JpaObjectRetrievalFailureException) {
+        } catch (e: ObjectRetrievalFailureException) {
             val errorMessage =
                 "Invalid reference to semaphore, control unit or mission: not found in referential"
             logger.error(errorMessage, e)

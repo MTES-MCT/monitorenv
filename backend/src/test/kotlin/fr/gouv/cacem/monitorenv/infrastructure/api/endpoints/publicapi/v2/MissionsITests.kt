@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
@@ -25,8 +24,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -36,6 +35,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import java.util.Optional
 import kotlin.random.Random
@@ -57,7 +57,7 @@ class MissionsITest {
     private val getMissionAndSourceAction: GetMissionAndSourceAction = mock()
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var jsonMapper: JsonMapper
 
     @Test
     fun `Should delete mission with api v2`() {
@@ -98,10 +98,10 @@ class MissionsITest {
         val partialMissionAsJson =
             """
             { "observationsByUnit": "$observationsByUnit", "startDateTimeUtc": "$startDateTimeUtc", "endDateTimeUtc": "$endDateTimeUtc", "controlUnits": ${
-                objectMapper.writeValueAsString(
+                jsonMapper.writeValueAsString(
                     controlUnit,
                 )
-            }, "missionTypes": ${objectMapper.writeValueAsString(missionTypes)},
+            }, "missionTypes": ${jsonMapper.writeValueAsString(missionTypes)},
              "isUnderJdp": "$isUnderJdp"}
             """.trimIndent()
 

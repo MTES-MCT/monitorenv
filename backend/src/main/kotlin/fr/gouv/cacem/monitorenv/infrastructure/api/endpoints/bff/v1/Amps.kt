@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPs
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.AMPDataOutput
 import io.swagger.v3.oas.annotations.Operation
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "BFF.AMP", description = "API des Aires Marines Protégées (AMP)")
 class Amps(
     private val getAllAMPs: GetAllAMPs,
-    private val objectMapper: ObjectMapper,
 ) {
     @GetMapping("")
     @Operation(summary = "Get AMPs")

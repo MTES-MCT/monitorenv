@@ -1,14 +1,14 @@
 package fr.gouv.cacem.monitorenv.domain.mappers
 
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvActionControl
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import tools.jackson.databind.json.JsonMapper
 
 class EnvActionMapperUTest {
-    private val objectMapper = MapperConfiguration().objectMapper()
+    private val jsonMapper = JsonMapper()
 
     @Test
     fun `getEnvActionEntityFromJSON should return a envActionControlEntity when actionType is Control`() {
@@ -45,7 +45,7 @@ class EnvActionMapperUTest {
 
         val envActionEntityFromJSON =
             EnvActionMapper.getEnvActionEntityFromJSON(
-                objectMapper,
+                jsonMapper,
                 envActionEntity.id,
                 envActionEntity.actionEndDateTimeUtc,
                 envActionEntity.actionType,
@@ -82,7 +82,7 @@ class EnvActionMapperUTest {
         val exception =
             assertThrows<BackendUsageException> {
                 EnvActionMapper.getEnvActionEntityFromJSON(
-                    objectMapper,
+                    jsonMapper,
                     envActionEntity.id,
                     envActionEntity.actionEndDateTimeUtc,
                     envActionEntity.actionType,
@@ -116,7 +116,7 @@ class EnvActionMapperUTest {
         val exception =
             assertThrows<BackendUsageException> {
                 EnvActionMapper.getEnvActionEntityFromJSON(
-                    objectMapper,
+                    jsonMapper,
                     envActionEntity.id,
                     envActionEntity.actionEndDateTimeUtc,
                     envActionEntity.actionType,

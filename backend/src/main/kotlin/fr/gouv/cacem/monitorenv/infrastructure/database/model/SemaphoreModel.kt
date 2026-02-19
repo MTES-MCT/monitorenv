@@ -13,8 +13,8 @@ data class SemaphoreModel(
     @Id
     @Column(name = "id")
     val id: Int,
-    @Column(name = "geom") val geom: Point,
-    @Column(name = "nom") val name: String,
+    @Column(name = "geom", nullable = false) val geom: Point,
+    @Column(name = "nom", nullable = false) val name: String,
     @Column(name = "dept") val department: String? = null,
     @Column(name = "facade") val facade: String? = null,
     @Column(name = "administration") val administration: String? = null,
