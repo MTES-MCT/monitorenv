@@ -108,6 +108,11 @@ context('Search Places', () => {
   })
 
   it('A user can search a vessel and show its historic and go to mission', () => {
+    // Avoid sidewindow from opening that makes the next test to crash
+    cy.window().then(window => {
+      cy.stub(window, 'open').callsFake(() => {})
+    })
+
     cy.getDataCy('vessel-resume-SHIPNAME 1')
       .should('be.visible')
       .within(() => {
