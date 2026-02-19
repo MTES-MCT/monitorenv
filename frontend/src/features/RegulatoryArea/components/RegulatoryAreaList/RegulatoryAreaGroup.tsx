@@ -28,7 +28,7 @@ export function RegulatoryAreaGroup({
   return (
     <>
       <LayerSelector.GroupWrapper $isOpen={isGroupNameOpen} $isPadded onClick={openGroupName}>
-        <StyledTransparentButton $width="70%" onClick={() => {}}>
+        <StyledTransparentButton $width="70%">
           <LayerSelector.GroupName title={layerGroupName}>{layerGroupName}</LayerSelector.GroupName>
         </StyledTransparentButton>
         <LayerSelector.IconGroup>

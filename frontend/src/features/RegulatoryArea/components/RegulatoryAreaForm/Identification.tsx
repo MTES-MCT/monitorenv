@@ -130,7 +130,7 @@ export function Identification({
   }
 
   const setControlPlan = (controlPlan: RegulatoryArea.RegulatoryAreaControlPlan, isChecked: boolean) => {
-    const currentControlPlans = values?.plan ? values.plan.split(',') : []
+    const currentControlPlans = values?.plan && values.plan.length > 0 ? values.plan.split(',') : []
     let updatedControlPlans: string[] = []
     if (isChecked) {
       updatedControlPlans = [...currentControlPlans, controlPlan]

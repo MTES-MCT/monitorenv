@@ -3,8 +3,10 @@ import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { OptionValue } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CheckPicker, Icon, Select, TextInput } from '@mtes-mct/monitor-ui'
+import { CheckPicker, Select, TextInput } from '@mtes-mct/monitor-ui'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
+import { debounce } from 'lodash'
+import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 import { regulatoryAreaTableActions } from './slice'
@@ -19,9 +21,14 @@ export function RegulatoryAreaFilters() {
 
   const filters = useAppSelector(store => store.regulatoryAreaTable.filtersState)
 
-  const updateQuery = (nextQuery: string | undefined) => {
+  const [searchQuery, setSearchQuery] = useState(filters.searchQuery)
+
+  const onQuery = (nextQuery: string | undefined) => {
     dispatch(regulatoryAreaTableActions.setFilter({ key: 'searchQuery', value: nextQuery }))
   }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedHandleChange = useCallback(debounce(onQuery, 500), [])
 
   const updateGroupFilter = (nextValue: 'CONTROL_PLAN' | 'SEA_FRONT' | undefined) => {
     if (!nextValue) {
@@ -45,15 +52,18 @@ export function RegulatoryAreaFilters() {
     <Wrapper>
       <FiltersContainer>
         <TextInput
-          Icon={Icon.Search}
           isLabelHidden
+          isSearchInput
           isTransparent
           label="Rechercher dans les zones réglementaires"
           name="query"
-          onChange={updateQuery}
+          onChange={nextQuery => {
+            setSearchQuery(nextQuery)
+            debouncedHandleChange(nextQuery)
+          }}
           placeholder="Rechercher dans les zones réglementaires"
           style={{ width: '500px' }}
-          value={filters.searchQuery}
+          value={searchQuery}
         />
         <Select
           isCleanable={false}

@@ -38,7 +38,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
 
     return (
       // eslint-disable-next-line react/jsx-props-no-spreading
-      <Wrapper ref={ref} {...props}>
+      <Wrapper ref={ref} {...props} data-cy="regulatory-area-panel">
         {regulatoryMetadata ? (
           <>
             <Header>
