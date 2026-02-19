@@ -3,7 +3,9 @@ import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
 import { ValidateButton } from '@features/commonComponents/ValidateButton'
+import { regulatoryAreaBoActions } from '@features/RegulatoryArea/slice'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import {
   Accent,
   Button,
@@ -14,14 +16,19 @@ import {
   getOptionsFromLabelledEnum,
   Icon,
   Label,
+  OPENLAYERS_PROJECTION,
   Select,
-  TextInput
+  TextInput,
+  WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
 import { parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
+import { setFitToExtent } from 'domain/shared_slices/Map'
 import { useFormikContext } from 'formik'
+import { boundingExtent } from 'ol/extent'
+import { transformExtent } from 'ol/proj'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -31,6 +38,7 @@ import type { MainRefReg } from './RegulatoryTexts'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
+import type { Coordinate } from 'ol/coordinate'
 
 export function Identification({
   isEditing,
@@ -39,6 +47,7 @@ export function Identification({
   isEditing: boolean
   onChangeRefReg: (refReg: MainRefReg) => void
 }) {
+  const dispatch = useAppDispatch()
   const { errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
 
   const { data: layerNames } = useGetLayerNamesQuery()
@@ -96,10 +105,20 @@ export function Identification({
   )
 
   const setGeometryAndRefReg = (nextGeom: { geom: GeoJSON.MultiPolygon; id: number; refReg: string } | undefined) => {
-    setFieldValue('geom', nextGeom?.geom)
-    setFieldValue('id', nextGeom?.id)
-    setFieldValue('refReg', nextGeom?.refReg)
-    onChangeRefReg({ date: values.date, dateFin: values.dateFin, refReg: nextGeom?.refReg })
+    if (!nextGeom || nextGeom.geom.coordinates.length === 0) {
+      return
+    }
+    setFieldValue('geom', nextGeom.geom)
+    setFieldValue('id', nextGeom.id)
+    setFieldValue('refReg', nextGeom.refReg)
+    onChangeRefReg({ date: values.date, dateFin: values.dateFin, refReg: nextGeom.refReg })
+    dispatch(regulatoryAreaBoActions.setNewRegulatoryAreaId(nextGeom?.id))
+    const extent = transformExtent(
+      boundingExtent(nextGeom.geom.coordinates.flat().flat() as Coordinate[]),
+      WSG84_PROJECTION,
+      OPENLAYERS_PROJECTION
+    )
+    dispatch(setFitToExtent(extent))
   }
 
   const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
