@@ -299,7 +299,7 @@ context('Reporting', () => {
       cy.fill('Type de cible', 'Véhicule')
       cy.fill('Type de véhicule', 'Navire')
       cy.fill('MMSI', '123456789')
-      cy.contains('0 signalement')
+      cy.contains("0 susp. d'infraction")
       cy.contains('1 infraction')
       cy.contains('1 PV')
       cy.fill('Nom du navire', 'BALTIK')
