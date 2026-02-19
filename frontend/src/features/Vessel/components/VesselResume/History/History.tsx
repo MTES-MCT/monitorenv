@@ -40,7 +40,14 @@ export function History({ envActions, reportings, vessel }: SummaryProps) {
     if (vessel.category === 'PRO' && vessel.professionalType) {
       vesselType = VesselTypeEnum[vessel.professionalType]
     }
+
     const reportingWithTarget: Partial<Reporting> = {
+      geom: vessel.lastPositions?.[0]?.geom
+        ? {
+            coordinates: [vessel.lastPositions?.[0]?.geom?.coordinates],
+            type: 'MultiPoint'
+          }
+        : undefined,
       targetDetails: [
         {
           externalReferenceNumber: vessel.immatriculation,
