@@ -5,9 +5,9 @@ import { Accent, Icon } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 
 import { RegulatoryAreaGroup } from './RegulatoryAreaGroup'
-import { ControlPlanWrapper, GroupTitle, StyledIconButton, Title } from './style'
+import { ControlPlanWrapper, GroupTitle, StyledIconButton, StyledLoadingIcon, Title } from './style'
 
-export function ControlPlanTable({ apiFilters }: { apiFilters: any }) {
+export function ControlPlanTable({ apiFilters, isLoading }: { apiFilters: any; isLoading: boolean }) {
   const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasByControlPlan(state, apiFilters)) as Record<
     RegulatoryArea.RegulatoryAreaControlPlan.PSCEM | RegulatoryArea.RegulatoryAreaControlPlan.PIRC,
     Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
@@ -35,13 +35,17 @@ export function ControlPlanTable({ apiFilters }: { apiFilters: any }) {
       <ControlPlanWrapper>
         <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}>
           <Title>PIRC</Title>
-          <StyledIconButton
-            $isExpanded={isPIRCGroupOpen}
-            accent={Accent.TERTIARY}
-            Icon={Icon.Chevron}
-            onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}
-            title={isPIRCGroupOpen ? 'Replier le contenu' : 'Déplier le contenu'}
-          />
+          {isLoading ? (
+            <StyledLoadingIcon />
+          ) : (
+            <StyledIconButton
+              $isExpanded={isPIRCGroupOpen}
+              accent={Accent.TERTIARY}
+              Icon={Icon.Chevron}
+              onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}
+              title={isPIRCGroupOpen ? 'Replier le contenu' : 'Déplier le contenu'}
+            />
+          )}
         </GroupTitle>
         {isPIRCGroupOpen &&
           PIRCRegulatoryAreas?.map(([key, regulatoryAreas]) => (
@@ -50,13 +54,17 @@ export function ControlPlanTable({ apiFilters }: { apiFilters: any }) {
 
         <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}>
           <Title>PSCEM</Title>
-          <StyledIconButton
-            $isExpanded={isPSCEMGroupOpen}
-            accent={Accent.TERTIARY}
-            Icon={Icon.Chevron}
-            onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}
-            title={isPSCEMGroupOpen ? 'Replier le contenu' : 'Déplier le contenu'}
-          />
+          {isLoading ? (
+            <StyledLoadingIcon />
+          ) : (
+            <StyledIconButton
+              $isExpanded={isPSCEMGroupOpen}
+              accent={Accent.TERTIARY}
+              Icon={Icon.Chevron}
+              onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}
+              title={isPSCEMGroupOpen ? 'Replier le contenu' : 'Déplier le contenu'}
+            />
+          )}
         </GroupTitle>
         {isPSCEMGroupOpen &&
           PSCEMRegulatoryAreas?.map(([key, regulatoryAreas]) => (

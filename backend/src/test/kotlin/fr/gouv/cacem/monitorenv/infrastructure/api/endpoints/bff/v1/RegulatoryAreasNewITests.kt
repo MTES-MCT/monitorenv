@@ -123,8 +123,12 @@ class RegulatoryAreasNewITests {
             .andExpect(jsonPath("$[0].regulatoryAreas[0].refReg", equalTo(regulatoryArea.refReg)))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].tags[0].name", equalTo("Mouillage")))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].type", equalTo(regulatoryArea.type)))
-            .andExpect(jsonPath("$[0].regulatoryAreas[0].themes[0].name", equalTo("Zone de mouillage et d'équipement léger (ZMEL)")))
-            .andExpect(jsonPath("$[0].regulatoryAreas[0].plan", equalTo("PIRC")))
+            .andExpect(
+                jsonPath(
+                    "$[0].regulatoryAreas[0].themes[0].name",
+                    equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
+                ),
+            ).andExpect(jsonPath("$[0].regulatoryAreas[0].plan", equalTo("PIRC")))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].polyName", equalTo("Zone au sud de la cale")))
             .andExpect(jsonPath("$[0].regulatoryAreas[0].resume", equalTo("Descriptif de la zone réglementaire")))
     }

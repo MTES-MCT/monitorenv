@@ -149,7 +149,13 @@ export function RegulatoryTexts({
                 label="Début de validité"
                 name="date"
               />
-              <FormikDatePicker isErrorMessageHidden isLight isStringDate label="Fin de validité" name="dateFin" />
+              <StyledFormikDatePicker
+                isErrorMessageHidden
+                isLight
+                isStringDate
+                label="Fin de validité"
+                name="dateFin"
+              />
             </DateContainer>
           </RefRegSecondLine>
           <ButtonsWrapper>
@@ -345,4 +351,13 @@ const OtherRefRegContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+`
+
+const StyledFormikDatePicker = styled(FormikDatePicker)`
+  .Field-DatePicker__CalendarPicker {
+    > .rs-picker-popup {
+      left: unset !important;
+      right: 0px;
+    }
+  }
 `
