@@ -1,16 +1,11 @@
-import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { createEntityAdapter, createSelector, type EntityId, type EntityState } from '@reduxjs/toolkit'
-import { boundingExtent, createEmpty } from 'ol/extent'
+import { boundingExtent } from 'ol/extent'
 import { createCachedSelector } from 're-reselect'
 
 import { monitorenvPrivateApi } from './api'
 
-import type {
-  RegulatoryLayerCompact,
-  RegulatoryLayerWithMetadata,
-  RegulatoryLayerWithMetadataFromAPI
-} from '../domain/entities/regulatory'
+import type { RegulatoryLayerWithMetadata, RegulatoryLayerWithMetadataFromAPI } from '../domain/entities/regulatory'
 import type { HomeRootState } from '@store/index'
 import type { Coordinate } from 'ol/coordinate'
 
@@ -107,17 +102,3 @@ export const getRegulatoryAreasByIds = createSelector(
   [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select(), (_, ids: number[]) => ids],
   ({ data }, ids) => Object.values(data?.entities ?? []).filter(regulatoryArea => ids.includes(regulatoryArea.id))
 )
-
-export const getExtentOfRegulatoryLayersGroupByGroupName = createCachedSelector(
-  [regulatoryLayersAPI.endpoints.getRegulatoryLayers.select(), getRegulatoryLayersIdsByGroupName],
-  (regulatoryLayersQuery, regulatoryLayerIdsByName) => {
-    const amps = regulatoryLayerIdsByName
-      ?.map(id => regulatoryLayersQuery.data?.entities[id])
-      .filter((amp): amp is RegulatoryLayerCompact => !!amp)
-    if (amps) {
-      return getExtentOfLayersGroup(amps)
-    }
-
-    return createEmpty()
-  }
-)((_, groupName: string) => groupName)

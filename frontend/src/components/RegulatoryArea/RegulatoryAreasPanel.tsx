@@ -1,5 +1,4 @@
 import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
-import { useGetRegulatoryLayerByIdQuery } from '@api/regulatoryLayersAPI'
 import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import { Identification } from '@features/layersSelector/metadataPanel/regulatoryMetadata/Identification'
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
@@ -15,24 +14,17 @@ import styled from 'styled-components'
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 type RegulatoryAreasPanelProps = {
-  isNewRegulatoryArea?: boolean
   layerId: number
   onClose: () => void
 }
 
 export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPanelProps>(
-  ({ isNewRegulatoryArea = false, layerId, onClose, ...props }, ref) => {
-    const { currentData: regulatoryLayer } = useGetRegulatoryLayerByIdQuery(layerId, {
-      pollingInterval: FOUR_HOURS,
-      skip: isNewRegulatoryArea
-    })
-
+  ({ layerId, onClose, ...props }, ref) => {
     const { data: regulatoryArea } = useGetRegulatoryAreaByIdQuery(layerId, {
-      pollingInterval: FOUR_HOURS,
-      skip: !isNewRegulatoryArea
+      pollingInterval: FOUR_HOURS
     })
 
-    const regulatoryMetadata = regulatoryArea ?? regulatoryLayer
+    const regulatoryMetadata = regulatoryArea
 
     const layerTitle = getRegulatoryAreaTitle(regulatoryMetadata?.polyName, regulatoryMetadata?.resume)
 

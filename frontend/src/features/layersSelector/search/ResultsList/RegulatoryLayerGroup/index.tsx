@@ -1,9 +1,9 @@
+import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
+import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
+import { createEmpty } from 'ol/extent'
+import { useMemo } from 'react'
 
-import {
-  getExtentOfRegulatoryLayersGroupByGroupName,
-  getNumberOfRegulatoryLayerZonesByGroupName
-} from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import {
   addRegulatoryZonesToMyLayers,
@@ -13,22 +13,29 @@ import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { ResultListLayerGroup } from '../ResultListLayerGroup'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
+
 export function RegulatoryLayerGroup({
   groupName,
-  layerIds,
+  layers,
   searchedText
 }: {
   groupName: string
-  layerIds: number[]
+  layers: RegulatoryArea.RegulatoryAreaWithBbox[]
   searchedText: string
 }) {
   const dispatch = useAppDispatch()
+  const { data: regulatoryAreasLayerNames } = useGetLayerNamesQuery()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
-  const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
 
-  const groupExtent = useAppSelector(state => getExtentOfRegulatoryLayersGroupByGroupName(state, groupName))
+  const totalNumberOfZones = useMemo(
+    () => regulatoryAreasLayerNames?.layerNames[groupName] ?? 0,
+    [regulatoryAreasLayerNames, groupName]
+  )
+  const groupExtent = useMemo(() => getExtentOfLayersGroup(layers) ?? createEmpty(), [layers])
+  const layerIds = useMemo(() => layers.map(layer => layer.id), [layers])
 
   const handleAddLayers = ids => dispatch(addRegulatoryZonesToMyLayers(ids))
   const handleRemoveLayers = ids => dispatch(removeRegulatoryZonesFromMyLayers(ids))

@@ -28,6 +28,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     fun `findAll should return all regulatoryAreas when seafront filter is set to NAMO`() {
         val regulatoryAreas =
             jpaRegulatoryAreaNewRepository.findAll(
+                controlPlan = null,
                 seaFronts = listOf("NAMO"),
                 tags = null,
                 themes = null,

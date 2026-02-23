@@ -66,3 +66,5 @@ export const displayTags = (tags?: TagFromAPI[]) => tags?.map(({ name }) => name
 
 export const displaySubTags = (tags?: TagFromAPI[]) =>
   tags?.flatMap(({ subTags }) => subTags.map(({ name }) => name)).join(', ')
+
+export const getTagIds = tags => tags?.flatMap(tag => [tag.id, ...(tag.subTags?.map(subTag => subTag.id) ?? [])])

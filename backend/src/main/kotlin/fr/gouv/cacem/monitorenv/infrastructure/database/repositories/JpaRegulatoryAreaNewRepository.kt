@@ -29,13 +29,14 @@ class JpaRegulatoryAreaNewRepository(
         dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea(mapper)
 
     override fun findAll(
+        controlPlan: String?,
         query: String?,
         seaFronts: List<String>?,
         tags: List<Int>?,
         themes: List<Int>?,
     ): List<RegulatoryAreaEntity> =
         dbRegulatoryAreaRepository
-            .findAll(seaFronts = seaFronts, tags = tags, themes = themes)
+            .findAll(controlPlan = controlPlan, seaFronts = seaFronts, tags = tags, themes = themes)
             .map { it.toRegulatoryArea(mapper) }
             .filter { findBySearchQuery(it, query) }
 
@@ -73,6 +74,7 @@ class JpaRegulatoryAreaNewRepository(
 
         return listOf(
             regulatoryArea.layerName,
+            regulatoryArea.refReg,
             regulatoryArea.resume,
             regulatoryArea.polyName,
         ).any { field ->

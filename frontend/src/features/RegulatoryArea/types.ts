@@ -57,9 +57,15 @@ export namespace RegulatoryArea {
     refReg?: string
     startDate?: string
   }
+
+  export type RegulatoryAreasFromApi = {
+    regulatoryAreasByLayer: RegulatoryAreasGroup[]
+    totalCount: number
+  }
+
   export type RegulatoryAreasGroup = {
     group: string
-    regulatoryAreas: RegulatoryAreaFromAPI[]
+    regulatoryAreas: RegulatoryAreaWithBbox[]
   }
 
   export enum RegulatoryAreaControlPlan {

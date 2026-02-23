@@ -1,4 +1,5 @@
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
+import { useGetFilteredRegulatoryAreas } from '@features/RegulatoryArea/hooks/useGetFilteredRegulatoryAreas'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -16,7 +17,6 @@ import { AMPLayerGroup } from './AMPLayerGroup'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 import { VigilanceAreaLayer } from './VigilanceAreaLayer'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '../../../../api/regulatoryLayersAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import {
@@ -37,7 +37,6 @@ export function ResultList({ searchedText }: ResultListProps) {
   const areAmpsResultsOpen = useAppSelector(state => state.layerSidebar.areAmpsResultsOpen)
 
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
-  const regulatoryLayersSearchResult = useAppSelector(state => state.layerSearch.regulatoryLayersSearchResult)
   const areRegulatoryResultsOpen = useAppSelector(state => state.layerSidebar.areRegulatoryResultsOpen)
   const isVigilanceAreaSearchResultsVisible = useAppSelector(
     state => state.layerSearch.isVigilanceAreaSearchResultsVisible
@@ -48,28 +47,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryLayersByLayerName = useMemo(
-    () =>
-      groupBy(
-        !regulatoryLayersSearchResult && areRegulatoryResultsOpen
-          ? regulatoryLayers?.ids
-          : regulatoryLayersSearchResult ?? [],
-        r => regulatoryLayers?.entities[r]?.layerName
-      ),
-    [regulatoryLayersSearchResult, areRegulatoryResultsOpen, regulatoryLayers]
-  )
-
-  const sortedRegulatoryResultsByLayerName = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(regulatoryLayersByLayerName).sort(([layerNameA], [layerNameB]) =>
-          layerNameA.localeCompare(layerNameB)
-        )
-      ),
-    [regulatoryLayersByLayerName]
-  )
-  const totalRegulatoryAreas = regulatoryLayersSearchResult?.length ?? regulatoryLayers?.ids?.length ?? 0
+  const { regulatoryAreas: groupedRegulatoryAreas, totalCount } = useGetFilteredRegulatoryAreas()
 
   const { data: amps } = useGetAMPsQuery()
   const ampResultsByAMPName = useMemo(
@@ -164,7 +142,7 @@ export function ResultList({ searchedText }: ResultListProps) {
                 <Title data-cy="regulatory-result-list-button" onClick={toggleRegulatory}>
                   ZONES RÉGLEMENTAIRES &nbsp;
                   <NumberOfResults>
-                    ({totalRegulatoryAreas} {pluralize('résultat', totalRegulatoryAreas)})
+                    ({totalCount} {pluralize('résultat', totalCount)})
                   </NumberOfResults>
                 </Title>
               }
@@ -174,11 +152,11 @@ export function ResultList({ searchedText }: ResultListProps) {
           </Header>
           {(hasTransitionReg || areRegulatoryResultsOpen) && (
             <SubList $isExpanded={areRegulatoryResultsOpen} data-cy="regulatory-result-list">
-              {Object.entries(sortedRegulatoryResultsByLayerName).map(([layerGroupName, layerIdsInGroup]) => (
+              {groupedRegulatoryAreas?.map(({ group, regulatoryAreas }) => (
                 <RegulatoryLayerGroup
-                  key={layerGroupName}
-                  groupName={layerGroupName}
-                  layerIds={layerIdsInGroup}
+                  key={group}
+                  groupName={group}
+                  layers={regulatoryAreas}
                   searchedText={searchedText}
                 />
               ))}
