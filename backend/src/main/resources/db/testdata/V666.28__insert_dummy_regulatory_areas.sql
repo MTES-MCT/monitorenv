@@ -79,7 +79,7 @@ INSERT INTO public.regulatory_areas (
     16,
     '0106000020E6100000010000000103000000010000000500000042273891C27512C0C63B4834EC2A4840C5EB7E1BE87412C0957184E5D02A48407CA3ED053A6D12C0333953D1222B4840FE2601CAE86D12C02DA055A9382B484042273891C27512C0C63B4834EC2A4840',
     'https://www.legifrance.gouv.fr/eli/decret/2011/7/8/EFIL1106625D/jo/texte',
-    '',
+    'Granulats_Marins_Le_Minou',
     'NAMO',
     'Décret du 8 juillet 2011 accordant la concession de sables coquilliers dite « Concession du Minou » au large des côtes du département du Finistère à la société Quemeneur',
     DATE '2011-07-08',
@@ -94,7 +94,7 @@ INSERT INTO public.regulatory_areas (
     temporary,
     'Décret',
     'PSCEM',
-    'Granulats_Marins_Le_Minou',
+    'Granulats Marins Le Minou',
     'Concession de sable coquilliers dite  « Concession du Minou »',
     CURRENT_DATE
 );

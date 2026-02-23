@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulato
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaToCompleteDataOuput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasWithTotalDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -35,6 +36,9 @@ class RegulatoryAreas(
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
     fun getAll(
+        @Parameter(description = "Control Plan")
+        @RequestParam(name = "controlPlan", required = false)
+        controlPlan: String?,
         @Parameter(description = "Themes")
         @RequestParam(name = "themes", required = false)
         themes: List<Int>?,
@@ -47,15 +51,23 @@ class RegulatoryAreas(
         @Parameter(description = "Façades")
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
-    ): List<RegulatoryAreasDataOutput> {
-        val regulatoryAreas =
+    ): RegulatoryAreasWithTotalDataOutput {
+        val (regulatoryAreasGrouped, totalCount) =
             getAllNewRegulatoryAreas.execute(
+                controlPlan = controlPlan,
                 searchQuery = searchQuery,
                 seaFronts = seaFronts,
                 tags = tags,
                 themes = themes,
             )
-        return regulatoryAreas.map { RegulatoryAreasDataOutput.Companion.fromRegulatoryAreaEntity(it) }
+
+        val groupedDto =
+            regulatoryAreasGrouped.map { RegulatoryAreasDataOutput.Companion.fromRegulatoryAreaEntity(it) }
+
+        return RegulatoryAreasWithTotalDataOutput(
+            totalCount = totalCount,
+            regulatoryAreasByLayer = groupedDto,
+        )
     }
 
     @GetMapping("/{regulatoryAreaId}")

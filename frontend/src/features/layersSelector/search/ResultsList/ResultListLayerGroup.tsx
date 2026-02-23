@@ -19,9 +19,11 @@ import { RegulatoryLayer } from './RegulatoryLayerGroup/RegulatoryLayer'
 import { MonitorEnvLayers } from '../../../../domain/entities/layers/constants'
 import { LayerSelector } from '../../utils/LayerSelector.style'
 
+import type { Extent } from 'ol/extent'
+
 type ResultListLayerGroupProps = {
   addLayers: (layerIds: number[]) => void
-  groupExtent: number[]
+  groupExtent: Extent
   groupName: string
   layerIdToDisplay: number | undefined
   layerIds: number[]
@@ -132,7 +134,9 @@ export function ResultListLayerGroup({
           $length={layerIds?.length}
         >
           {layerType === MonitorEnvLayers.REGULATORY_ENV &&
-            layerIds?.map(layerId => <RegulatoryLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
+            layerIds?.map(layerId => (
+              <RegulatoryLayer key={layerId} groupName={groupName} layerId={layerId} searchedText={searchedText} />
+            ))}
           {layerType === MonitorEnvLayers.AMP &&
             layerIds?.map(layerId => <AMPLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
         </LayerSelector.SubGroup>

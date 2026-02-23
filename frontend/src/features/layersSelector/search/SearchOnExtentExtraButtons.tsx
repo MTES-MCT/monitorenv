@@ -55,6 +55,7 @@ export function SearchOnExtentExtraButtons({ allowResetResults }: SearchOnExtent
   }
 
   const handleResetSearch = () => {
+    dispatch(setShouldFilterSearchOnMapExtent(false))
     setShouldReloadSearchOnExtent(false)
     dispatch(resetSearch())
     dispatch(vigilanceAreaFiltersActions.resetFilters())
@@ -69,7 +70,6 @@ export function SearchOnExtentExtraButtons({ allowResetResults }: SearchOnExtent
     dispatch(setIsRegulatorySearchResultsVisible(!shouldFilterSearchOnMapExtent))
     dispatch(setIsVigilanceAreaSearchResultsVisible(!shouldFilterSearchOnMapExtent))
     if (shouldFilterSearchOnMapExtent) {
-      dispatch(setShouldFilterSearchOnMapExtent(false))
       handleResetSearch()
     } else if (currentMapExtentTracker) {
       dispatch(setShouldFilterSearchOnMapExtent(true))
