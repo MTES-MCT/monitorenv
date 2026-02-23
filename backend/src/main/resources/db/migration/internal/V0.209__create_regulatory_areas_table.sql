@@ -23,7 +23,7 @@ CREATE TABLE public.regulatory_areas (
     plan                    text,
     authorization_periods   character varying,
     prohibition_periods     character varying,
-    others_ref_reg          jsonb
+    additional_ref_reg          jsonb
 );
 
 CREATE TABLE tags_regulatory_areas_new

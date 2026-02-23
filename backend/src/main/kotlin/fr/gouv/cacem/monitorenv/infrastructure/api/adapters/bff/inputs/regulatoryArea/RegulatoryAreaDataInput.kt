@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.OtherRefRegEntity
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.AdditionalRefRegEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import org.locationtech.jts.geom.MultiPolygon
@@ -21,7 +21,7 @@ data class RegulatoryAreaDataInput(
     val geom: MultiPolygon? = null,
     val layerName: String? = null,
     val observation: String? = null,
-    val othersRefReg: List<OtherRefRegEntity>? = listOf(),
+    val additionalRefReg: List<AdditionalRefRegEntity>? = listOf(),
     val plan: String? = null,
     val polyName: String? = null,
     val prohibitionPeriods: String? = null,
@@ -34,8 +34,8 @@ data class RegulatoryAreaDataInput(
     val type: String? = null,
     val url: String? = null,
 ) {
-    fun toRegulatoryAreaEntity(): RegulatoryAreaNewEntity =
-        RegulatoryAreaNewEntity(
+    fun toRegulatoryAreaEntity(): RegulatoryAreaEntity =
+        RegulatoryAreaEntity(
             id = this.id,
             authorizationPeriods = this.authorizationPeriods,
             creation = this.creation,
@@ -49,7 +49,7 @@ data class RegulatoryAreaDataInput(
             geom = this.geom,
             layerName = this.layerName,
             observation = this.observation,
-            othersRefReg = this.othersRefReg,
+            additionalRefReg = this.additionalRefReg,
             plan = this.plan,
             polyName = this.polyName,
             prohibitionPeriods = this.prohibitionPeriods,

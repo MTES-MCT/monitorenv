@@ -80,7 +80,7 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                     plan                    text,
                     authorization_periods   character varying,
                     prohibition_periods     character varying,
-                    others_ref_reg          jsonb,
+                    additional_ref_reg      jsonb,
                     themes                  character varying,
                     tags                    character varying
                 )
@@ -109,7 +109,7 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
            "plan",
            "authorization_periods",
            "prohibition_periods",
-           "others_ref_reg",
+           "additional_ref_reg",
         ]
 
         logger.info("Loading to temporary table")
@@ -147,7 +147,7 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                 plan = tmp.plan,
                 authorization_periods = tmp.authorization_periods,
                 prohibition_periods = tmp.prohibition_periods,
-                others_ref_reg = tmp.others_ref_reg
+                additional_ref_reg = tmp.additional_ref_reg
                 FROM tmp_regulatory_areas tmp
                 WHERE reg.id = tmp.id;
                 """

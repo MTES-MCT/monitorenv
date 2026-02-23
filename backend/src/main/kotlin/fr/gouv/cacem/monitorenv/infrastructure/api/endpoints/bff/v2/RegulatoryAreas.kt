@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v2
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@RestController
-@RequestMapping("/bff/regulatory-areas")
+@RestController("regulatoryAreasV2")
+@RequestMapping("/bff/v2/regulatory-areas")
 @Tag(name = "BFF.RegulatoryAreas", description = "API regulatory areas")
-class RegulatoryAreasNew(
+class RegulatoryAreas(
     private val getAllNewRegulatoryAreas: GetAllNewRegulatoryAreas,
     private val getNewRegulatoryAreaById: GetNewRegulatoryAreaById,
     private val getAllLayerNames: GetAllLayerNames,
@@ -55,7 +55,7 @@ class RegulatoryAreasNew(
                 tags = tags,
                 themes = themes,
             )
-        return regulatoryAreas.map { RegulatoryAreasDataOutput.fromRegulatoryAreaEntity(it) }
+        return regulatoryAreas.map { RegulatoryAreasDataOutput.Companion.fromRegulatoryAreaEntity(it) }
     }
 
     @GetMapping("/{regulatoryAreaId}")
@@ -66,7 +66,7 @@ class RegulatoryAreasNew(
         regulatoryAreaId: Int,
     ): RegulatoryAreaDataOutput? =
         getNewRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)?.let {
-            RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it)
+            RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it)
         }
 
     @PutMapping("", consumes = ["application/json"])
@@ -74,7 +74,7 @@ class RegulatoryAreasNew(
     fun put(
         @RequestBody regulatoryAreaDataInput: RegulatoryAreaDataInput,
     ): RegulatoryAreaDataOutput =
-        RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
+        RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(
             createOrUpdateRegulatoryArea.execute(regulatoryAreaDataInput.toRegulatoryAreaEntity()),
         )
 
@@ -82,13 +82,13 @@ class RegulatoryAreasNew(
     @Operation(summary = "Get all regulatory areas group names")
     fun getLayerNames(): LayerNamesDataOutput? =
         getAllLayerNames.execute().let {
-            LayerNamesDataOutput.fromGroupNames(it)
+            LayerNamesDataOutput.Companion.fromGroupNames(it)
         }
 
     @GetMapping("/to-complete")
     @Operation(summary = "Get all regulatory areas to complete")
     fun getRegulatoryAreasToComplete(): List<RegulatoryAreaToCompleteDataOuput> =
         getAllRegulatoryAreasToComplete.execute().map {
-            RegulatoryAreaToCompleteDataOuput.fromRegulatoryAreaToCompleteEntity(it)
+            RegulatoryAreaToCompleteDataOuput.Companion.fromRegulatoryAreaToCompleteEntity(it)
         }
 }

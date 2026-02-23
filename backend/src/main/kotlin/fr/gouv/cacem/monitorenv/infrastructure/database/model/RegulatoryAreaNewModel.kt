@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.OtherRefRegEntity
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaNewModel.Companion.toTagEntities
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaNewModel.Companion.toThemeEntities
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.AdditionalRefRegEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -22,7 +20,7 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import java.time.Instant
-import java.time.ZoneOffset.UTC
+import java.time.ZoneOffset
 
 @Entity
 @Table(name = "regulatory_areas")
@@ -63,22 +61,22 @@ data class RegulatoryAreaNewModel(
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
     @Type(JsonBinaryType::class)
-    @Column(name = "others_ref_reg", columnDefinition = "jsonb")
-    val othersRefReg: JsonNode?,
+    @Column(name = "additional_ref_reg", columnDefinition = "jsonb")
+    val additionalRefReg: JsonNode?,
     @Column(name = "authorization_periods") val authorizationPeriods: String?,
     @Column(name = "prohibition_periods") val prohibitionPeriods: String?,
 ) {
     fun toRegulatoryArea(mapper: ObjectMapper) =
-        RegulatoryAreaNewEntity(
+        RegulatoryAreaEntity(
             id = id,
-            creation = creation?.atZone(UTC),
+            creation = creation?.atZone(ZoneOffset.UTC),
             plan = plan,
-            date = date?.atZone(UTC),
-            dateFin = dateFin?.atZone(UTC),
+            date = date?.atZone(ZoneOffset.UTC),
+            dateFin = dateFin?.atZone(ZoneOffset.UTC),
             dureeValidite = dureeValidite,
             editeur = editeur,
-            editionBo = editionBo?.atZone(UTC),
-            editionCacem = editionCacem?.atZone(UTC),
+            editionBo = editionBo?.atZone(ZoneOffset.UTC),
+            editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
             facade = facade,
             geom = geom,
             layerName = layerName,
@@ -88,17 +86,17 @@ data class RegulatoryAreaNewModel(
             resume = resume,
             source = source,
             temporalite = temporalite,
-            tags = toTagEntities(tags),
-            themes = toThemeEntities(themes),
+            tags = TagRegulatoryAreaNewModel.Companion.toTagEntities(tags),
+            themes = ThemeRegulatoryAreaNewModel.Companion.toThemeEntities(themes),
             type = type,
             url = url,
-            othersRefReg =
-                othersRefReg.let {
+            additionalRefReg =
+                additionalRefReg.let {
                     mapper.convertValue(
                         it,
                         object : TypeReference<
                             List<
-                                OtherRefRegEntity,
+                                AdditionalRefRegEntity,
                             >,
                         >() {},
                     )
@@ -109,7 +107,7 @@ data class RegulatoryAreaNewModel(
 
     companion object {
         fun fromRegulatoryAreaEntity(
-            regulatoryArea: RegulatoryAreaNewEntity,
+            regulatoryArea: RegulatoryAreaEntity,
             mapper: ObjectMapper,
         ): RegulatoryAreaNewModel =
             RegulatoryAreaNewModel(
@@ -135,7 +133,7 @@ data class RegulatoryAreaNewModel(
                 url = regulatoryArea.url,
                 tags = listOf(),
                 themes = listOf(),
-                othersRefReg = regulatoryArea.othersRefReg.let { mapper.valueToTree<JsonNode>(it) },
+                additionalRefReg = regulatoryArea.additionalRefReg.let { mapper.valueToTree<JsonNode>(it) },
                 authorizationPeriods = regulatoryArea.authorizationPeriods,
                 prohibitionPeriods = regulatoryArea.prohibitionPeriods,
             )

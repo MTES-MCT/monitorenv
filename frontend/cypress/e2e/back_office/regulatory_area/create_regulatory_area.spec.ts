@@ -1,11 +1,11 @@
 context('Back Office > Regulatory Area > Create Regulatory Area', () => {
   beforeEach(() => {
-    cy.intercept('GET', `bff/regulatory-areas?*`).as('getRegulatoryAreas')
+    cy.intercept('GET', `bff/v2/regulatory-areas?*`).as('getRegulatoryAreas')
     cy.visit('/backoffice/regulatory_areas')
     cy.wait('@getRegulatoryAreas')
   })
   it('should create a regulatory area', () => {
-    cy.intercept('GET', `bff/regulatory-areas/*`).as('getRegulatoryArea')
+    cy.intercept('GET', `bff/v2/regulatory-areas/*`).as('getRegulatoryArea')
     cy.clickButton('Saisir une nouvelle réglementation')
 
     cy.fill('Titre de la zone réglementaire', 'Nouvelle zone réglementaire')
