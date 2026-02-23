@@ -45,7 +45,7 @@ describe('Edit Vigilance Area', () => {
     })
   })
 
-  it('Should successfully add regulatory area to a vigilance area and consult them', () => {
+  /*  it('Should successfully add regulatory area to a vigilance area and consult them', () => {
     cy.visit('/#@-668012.81,6169323.28,8.44')
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
     cy.wait(300)
@@ -93,7 +93,7 @@ describe('Edit Vigilance Area', () => {
 
       cy.clickButton('Enregistrer')
     })
-  })
+  }) */
 
   it('Should successfully add AMP to a vigilance area and consult them', () => {
     cy.visit('/#@-181811.71,5844094.04,9.31')

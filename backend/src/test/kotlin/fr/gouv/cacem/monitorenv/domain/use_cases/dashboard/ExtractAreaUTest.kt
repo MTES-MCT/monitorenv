@@ -20,7 +20,7 @@ import java.time.ZonedDateTime
 class ExtractAreaUTest {
     private val departementAreaRepository: IDepartmentAreaRepository = mock()
     private val reportingRepository: IReportingRepository = mock()
-    private val regulatoryAreaRepository: IRegulatoryAreaRepository = mock()
+    private val regulatoryAreaRepository: IRegulatoryAreaNewRepository = mock()
     private val ampAreaRepository: IAMPRepository = mock()
     private val vigilanceAreaRepository: IVigilanceAreaRepository = mock()
     private val tagRepository: ITagRepository = mock()

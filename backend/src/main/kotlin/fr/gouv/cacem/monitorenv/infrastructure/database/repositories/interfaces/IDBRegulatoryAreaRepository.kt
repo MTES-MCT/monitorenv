@@ -9,7 +9,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     @Query(
         value =
             """
-            SELECT r.id FROM RegulatoryAreaNewModel r
+            SELECT r.id FROM RegulatoryAreaModel r
             WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), ST_Buffer(st_setsrid(:geometry, 4326), 0))
         """,
     )
