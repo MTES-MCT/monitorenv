@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 
 interface IRegulatoryAreaNewRepository {
     fun findAll(
@@ -8,13 +8,13 @@ interface IRegulatoryAreaNewRepository {
         seaFronts: List<String>? = null,
         tags: List<Int>? = null,
         themes: List<Int>? = null,
-    ): List<RegulatoryAreaNewEntity>
+    ): List<RegulatoryAreaEntity>
 
-    fun findAllToComplete(): List<RegulatoryAreaNewEntity>
+    fun findAllToComplete(): List<RegulatoryAreaEntity>
 
-    fun findById(id: Int): RegulatoryAreaNewEntity?
+    fun findById(id: Int): RegulatoryAreaEntity?
 
     fun findAllLayerNames(): Map<String, Long>
 
-    fun save(regulatoryArea: RegulatoryAreaNewEntity): RegulatoryAreaNewEntity
+    fun save(regulatoryArea: RegulatoryAreaEntity): RegulatoryAreaEntity
 }

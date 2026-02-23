@@ -1,16 +1,14 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaNewModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaNewModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaNewModel.Companion.fromTagEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaNewPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaNewModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaNewModel.Companion.fromThemesEntities
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaNewPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaNewRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
@@ -20,14 +18,14 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
-@Repository
+@Repository()
 class JpaRegulatoryAreaNewRepository(
     private val dbRegulatoryAreaRepository: IDBRegulatoryAreaNewRepository,
     private val dbTagVigilanceAreaRepository: IDBTagRegulatoryAreaRepository,
     private val dbThemeRegulatoryAreaRepository: IDBThemeRegulatoryAreaRepository,
     private val mapper: ObjectMapper,
 ) : IRegulatoryAreaNewRepository {
-    override fun findById(id: Int): RegulatoryAreaNewEntity? =
+    override fun findById(id: Int): RegulatoryAreaEntity? =
         dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea(mapper)
 
     override fun findAll(
@@ -35,7 +33,7 @@ class JpaRegulatoryAreaNewRepository(
         seaFronts: List<String>?,
         tags: List<Int>?,
         themes: List<Int>?,
-    ): List<RegulatoryAreaNewEntity> =
+    ): List<RegulatoryAreaEntity> =
         dbRegulatoryAreaRepository
             .findAll(seaFronts = seaFronts, tags = tags, themes = themes)
             .map { it.toRegulatoryArea(mapper) }
@@ -47,14 +45,14 @@ class JpaRegulatoryAreaNewRepository(
         }
 
     @Transactional
-    override fun findAllToComplete(): List<RegulatoryAreaNewEntity> =
+    override fun findAllToComplete(): List<RegulatoryAreaEntity> =
         dbRegulatoryAreaRepository
             .findAllByCreationIsNull()
             .map { it.toRegulatoryArea(mapper) }
 
     @Transactional
-    override fun save(regulatoryArea: RegulatoryAreaNewEntity): RegulatoryAreaNewEntity {
-        val model = RegulatoryAreaNewModel.fromRegulatoryAreaEntity(regulatoryArea, mapper)
+    override fun save(regulatoryArea: RegulatoryAreaEntity): RegulatoryAreaEntity {
+        val model = RegulatoryAreaNewModel.Companion.fromRegulatoryAreaEntity(regulatoryArea, mapper)
         val savedModel = dbRegulatoryAreaRepository.saveAndFlush(model)
 
         val savedTags = saveTags(savedModel, regulatoryArea.tags)
@@ -66,7 +64,7 @@ class JpaRegulatoryAreaNewRepository(
     }
 
     private fun findBySearchQuery(
-        regulatoryArea: RegulatoryAreaNewEntity,
+        regulatoryArea: RegulatoryAreaEntity,
         searchQuery: String?,
     ): Boolean {
         if (searchQuery.isNullOrBlank()) {
@@ -85,29 +83,29 @@ class JpaRegulatoryAreaNewRepository(
     }
 
     private fun saveTags(
-        regulatoryAreaModel: RegulatoryAreaNewModel,
+        regulatoryAreaNewModel: RegulatoryAreaNewModel,
         tags: List<TagEntity>,
     ): List<TagRegulatoryAreaNewModel> {
-        regulatoryAreaModel.id.let {
+        regulatoryAreaNewModel.id.let {
             dbTagVigilanceAreaRepository.deleteAllByRegulatoryAreaId(it)
         }
-        val tagModels = fromTagEntities(tags, regulatoryAreaModel)
+        val tagModels = TagRegulatoryAreaNewModel.Companion.fromTagEntities(tags, regulatoryAreaNewModel)
         tagModels.forEach { regulatoryAreaTag ->
-            regulatoryAreaTag.id = TagRegulatoryAreaNewPk(regulatoryAreaTag.tag.id, regulatoryAreaModel.id)
+            regulatoryAreaTag.id = TagRegulatoryAreaNewPk(regulatoryAreaTag.tag.id, regulatoryAreaNewModel.id)
         }
         return dbTagVigilanceAreaRepository.saveAll(tagModels)
     }
 
     private fun saveThemes(
-        regulatoryAreaModel: RegulatoryAreaNewModel,
+        regulatoryAreaNewModel: RegulatoryAreaNewModel,
         themes: List<ThemeEntity>,
     ): List<ThemeRegulatoryAreaNewModel> {
-        regulatoryAreaModel.id.let {
+        regulatoryAreaNewModel.id.let {
             dbThemeRegulatoryAreaRepository.deleteAllByRegulatoryAreaId(it)
         }
-        val themeModels = fromThemesEntities(themes, regulatoryAreaModel)
+        val themeModels = ThemeRegulatoryAreaNewModel.Companion.fromThemesEntities(themes, regulatoryAreaNewModel)
         themeModels.forEach { regulatoryAreaTheme ->
-            regulatoryAreaTheme.id = ThemeRegulatoryAreaNewPk(regulatoryAreaTheme.theme.id, regulatoryAreaModel.id)
+            regulatoryAreaTheme.id = ThemeRegulatoryAreaNewPk(regulatoryAreaTheme.theme.id, regulatoryAreaNewModel.id)
         }
         return dbThemeRegulatoryAreaRepository.saveAll(themeModels)
     }

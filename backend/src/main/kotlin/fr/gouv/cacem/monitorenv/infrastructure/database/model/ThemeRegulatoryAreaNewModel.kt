@@ -38,24 +38,24 @@ data class ThemeRegulatoryAreaNewModel(
 
         fun fromThemeEntity(
             theme: ThemeEntity,
-            regulatoryAreaModel: RegulatoryAreaNewModel,
+            regulatoryAreaNewModel: RegulatoryAreaNewModel,
         ): ThemeRegulatoryAreaNewModel =
             ThemeRegulatoryAreaNewModel(
-                id = ThemeRegulatoryAreaNewPk(theme.id, regulatoryAreaModel.id),
-                theme = ThemeModel.fromThemeEntity(theme),
-                regulatoryArea = regulatoryAreaModel,
+                id = ThemeRegulatoryAreaNewPk(theme.id, regulatoryAreaNewModel.id),
+                theme = ThemeModel.Companion.fromThemeEntity(theme),
+                regulatoryArea = regulatoryAreaNewModel,
             )
 
         fun fromThemesEntities(
             themes: List<ThemeEntity>,
-            regulatoryAreaModel: RegulatoryAreaNewModel,
+            regulatoryAreaNewModel: RegulatoryAreaNewModel,
         ): List<ThemeRegulatoryAreaNewModel> =
             themes
-                .map { theme -> fromThemeEntity(theme, regulatoryAreaModel) }
+                .map { theme -> fromThemeEntity(theme, regulatoryAreaNewModel) }
                 .plus(
                     themes.flatMap { theme ->
                         theme.subThemes.map { subTheme ->
-                            fromThemeEntity(subTheme, regulatoryAreaModel)
+                            fromThemeEntity(subTheme, regulatoryAreaNewModel)
                         }
                     },
                 )

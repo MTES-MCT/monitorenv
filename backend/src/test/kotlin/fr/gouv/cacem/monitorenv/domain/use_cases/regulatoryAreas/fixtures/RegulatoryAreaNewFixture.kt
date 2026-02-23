@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 
 class RegulatoryAreaNewFixture {
     companion object {
@@ -9,8 +9,8 @@ class RegulatoryAreaNewFixture {
             facade: String = "NAMO",
             layerName: String? = "Layername 1",
             plan: String = "PIRC",
-        ): RegulatoryAreaNewEntity =
-            RegulatoryAreaNewEntity(
+        ): RegulatoryAreaEntity =
+            RegulatoryAreaEntity(
                 id = id,
                 tags = listOf(),
                 themes = listOf(),

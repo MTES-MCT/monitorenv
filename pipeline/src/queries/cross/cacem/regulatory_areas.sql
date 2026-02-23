@@ -22,7 +22,7 @@ SELECT
   plan,
   authorization_periods,
   prohibition_periods,
-  others_ref_reg
+  additional_ref_reg
 FROM prod.reg_cacem
 WHERE 
   geom IS NOT NULL

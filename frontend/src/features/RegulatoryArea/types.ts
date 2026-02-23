@@ -4,6 +4,7 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export namespace RegulatoryArea {
   export type RegulatoryAreaFromAPI = {
+    additionalRefReg?: AdditionalRegulatoryText[]
     authorizationPeriods?: string
     creation?: string
     date?: string
@@ -17,7 +18,6 @@ export namespace RegulatoryArea {
     id: number
     layerName: string
     observations?: string
-    othersRefReg?: OthersRegulatoryText[]
     plan: string
     polyName: string
     prohibitionPeriods?: string
@@ -51,7 +51,7 @@ export namespace RegulatoryArea {
 
   export type RegulatoryAreaWithBbox = RegulatoryAreaFromAPI & { bbox: number[] }
 
-  export type OthersRegulatoryText = {
+  export type AdditionalRegulatoryText = {
     endDate?: string
     id: string
     refReg?: string
