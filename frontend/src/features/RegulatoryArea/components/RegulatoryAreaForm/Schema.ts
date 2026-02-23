@@ -5,6 +5,14 @@ import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 export const RegulatoryAreaFormSchema: Yup.Schema<
   RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea
 > = Yup.object().shape({
+  additionalRefReg: Yup.array().of(
+    Yup.object().shape({
+      endDate: Yup.string().optional(),
+      id: Yup.string().required(),
+      refReg: Yup.string().required(),
+      startDate: Yup.string().optional()
+    })
+  ),
   authorizationPeriods: Yup.string().optional(),
   creation: Yup.string().optional(),
   date: Yup.string().required(),
@@ -23,14 +31,6 @@ export const RegulatoryAreaFormSchema: Yup.Schema<
   id: Yup.number().required(),
   layerName: Yup.string().required('Le nom de la zone réglementée est obligatoire'),
   observations: Yup.string().optional(),
-  othersRefReg: Yup.array().of(
-    Yup.object().shape({
-      endDate: Yup.string().optional(),
-      id: Yup.string().required(),
-      refReg: Yup.string().required(),
-      startDate: Yup.string().optional()
-    })
-  ),
   plan: Yup.string().required(),
   polyName: Yup.string().required('Le nom de la zone réglementée est obligatoire'),
   prohibitionPeriods: Yup.string().optional(),

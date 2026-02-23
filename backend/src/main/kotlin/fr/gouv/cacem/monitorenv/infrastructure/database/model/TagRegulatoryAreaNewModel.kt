@@ -38,24 +38,24 @@ data class TagRegulatoryAreaNewModel(
 
         fun fromTagEntity(
             tag: TagEntity,
-            regulatoryAreaModel: RegulatoryAreaNewModel,
+            regulatoryAreaNewModel: RegulatoryAreaNewModel,
         ): TagRegulatoryAreaNewModel =
             TagRegulatoryAreaNewModel(
-                id = TagRegulatoryAreaNewPk(tag.id, regulatoryAreaModel.id),
-                tag = TagModel.fromTagEntity(tag),
-                regulatoryArea = regulatoryAreaModel,
+                id = TagRegulatoryAreaNewPk(tag.id, regulatoryAreaNewModel.id),
+                tag = TagModel.Companion.fromTagEntity(tag),
+                regulatoryArea = regulatoryAreaNewModel,
             )
 
         fun fromTagEntities(
             tags: List<TagEntity>,
-            regulatoryAreaModel: RegulatoryAreaNewModel,
+            regulatoryAreaNewModel: RegulatoryAreaNewModel,
         ): List<TagRegulatoryAreaNewModel> =
             tags
-                .map { tag -> fromTagEntity(tag, regulatoryAreaModel) }
+                .map { tag -> fromTagEntity(tag, regulatoryAreaNewModel) }
                 .plus(
                     tags.flatMap { tag ->
                         tag.subTags.map { subTag ->
-                            fromTagEntity(subTag, regulatoryAreaModel)
+                            fromTagEntity(subTag, regulatoryAreaNewModel)
                         }
                     },
                 )

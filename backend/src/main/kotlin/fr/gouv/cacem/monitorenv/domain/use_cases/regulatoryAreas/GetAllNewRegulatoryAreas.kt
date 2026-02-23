@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
 import org.slf4j.LoggerFactory
 
@@ -16,7 +16,7 @@ class GetAllNewRegulatoryAreas(
         seaFronts: List<String>?,
         tags: List<Int>?,
         themes: List<Int>?,
-    ): Map<String?, List<RegulatoryAreaNewEntity>> {
+    ): Map<String?, List<RegulatoryAreaEntity>> {
         logger.info("Attempt to GET all regulatory areas")
         val regulatoryAreas =
             regulatoryAreaRepository

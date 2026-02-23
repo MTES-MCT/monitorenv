@@ -35,7 +35,7 @@ export function RegulatoryTexts({
   onChangeRefReg: (refReg?: MainRefReg) => void
 }) {
   const { setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
-  const [editingOtherRefReg, setEditingOtherRefReg] = useState<RegulatoryArea.OthersRegulatoryText | undefined>(
+  const [editingOtherRefReg, setEditingOtherRefReg] = useState<RegulatoryArea.AdditionalRegulatoryText | undefined>(
     undefined
   )
 
@@ -52,7 +52,7 @@ export function RegulatoryTexts({
   }
 
   const validateOtherRefReg = (index: number) => {
-    const updatedOtherRefReg = values.othersRefReg ? values.othersRefReg[index] : undefined
+    const updatedOtherRefReg = values.additionalRefReg ? values.additionalRefReg[index] : undefined
     const isOtherRefRegEmpty =
       !updatedOtherRefReg?.refReg && !updatedOtherRefReg?.startDate && !updatedOtherRefReg?.endDate
     if (isOtherRefRegEmpty) {
@@ -64,7 +64,7 @@ export function RegulatoryTexts({
   }
 
   const cancelEditOtherRefReg = (index: number) => {
-    const updatedOtherRefReg = values.othersRefReg ? values.othersRefReg[index] : undefined
+    const updatedOtherRefReg = values.additionalRefReg ? values.additionalRefReg[index] : undefined
     const isOtherRefRegEmpty =
       !editingOtherRefReg?.refReg && !editingOtherRefReg?.startDate && !editingOtherRefReg?.endDate
 
@@ -74,7 +74,7 @@ export function RegulatoryTexts({
       return
     }
     if (updatedOtherRefReg) {
-      setFieldValue(`othersRefReg[${index}]`, editingOtherRefReg)
+      setFieldValue(`additionalRefReg[${index}]`, editingOtherRefReg)
 
       setEditingOtherRefReg(undefined)
     }
@@ -119,14 +119,14 @@ export function RegulatoryTexts({
       refReg: undefined,
       startDate: customDayjs().toISOString()
     }
-    setFieldValue('othersRefReg', [...(values.othersRefReg ?? []), newRefReg])
+    setFieldValue('additionalRefReg', [...(values.additionalRefReg ?? []), newRefReg])
     setEditingOtherRefReg(newRefReg)
   }
 
   const deleteOtherRefReg = (index: number) => {
-    const updatedOthersRefReg = [...(values.othersRefReg ?? [])]
-    updatedOthersRefReg.splice(index, 1)
-    setFieldValue('othersRefReg', updatedOthersRefReg)
+    const updatedAdditionalRefReg = [...(values.additionalRefReg ?? [])]
+    updatedAdditionalRefReg.splice(index, 1)
+    setFieldValue('additionalRefReg', updatedAdditionalRefReg)
     setEditingOtherRefReg(undefined)
   }
 
@@ -200,17 +200,17 @@ export function RegulatoryTexts({
         </Button>
       </SubTitleContainer>
       {renderMainRegulatoryText()}
-      {(values?.othersRefReg?.length || editingOtherRefReg) && <Separator />}
+      {(values?.additionalRefReg?.length || editingOtherRefReg) && <Separator />}
       <OtherRefRegContainer>
-        {values?.othersRefReg &&
-          values?.othersRefReg.length > 0 &&
-          values.othersRefReg.map((otherRefReg, index) => {
-            const refRegindex = values.othersRefReg?.findIndex(refReg => refReg.id === otherRefReg.id)
+        {values?.additionalRefReg &&
+          values?.additionalRefReg.length > 0 &&
+          values.additionalRefReg.map((otherRefReg, index) => {
+            const refRegindex = values.additionalRefReg?.findIndex(refReg => refReg.id === otherRefReg.id)
 
             if (editingOtherRefReg?.id === otherRefReg.id) {
               return (
                 <EditingRefRegContainer key={otherRefReg.id}>
-                  <FormikTextarea isLight label="Titre du texte" name={`othersRefReg[${refRegindex}].refReg`} />
+                  <FormikTextarea isLight label="Titre du texte" name={`additionalRefReg[${refRegindex}].refReg`} />
                   <RefRegSecondLine>
                     <DateContainer>
                       <FormikDatePicker
@@ -218,13 +218,13 @@ export function RegulatoryTexts({
                         isRequired
                         isStringDate
                         label="Début de validité"
-                        name={`othersRefReg[${refRegindex}].startDate`}
+                        name={`additionalRefReg[${refRegindex}].startDate`}
                       />
                       <FormikDatePicker
                         isLight
                         isStringDate
                         label="Fin de validité"
-                        name={`othersRefReg[${refRegindex}].endDate`}
+                        name={`additionalRefReg[${refRegindex}].endDate`}
                       />
                     </DateContainer>
                   </RefRegSecondLine>

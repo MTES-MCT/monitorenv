@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS prod.reg_cacem
     plan                    text,
     authorization_periods   character varying,
     prohibition_periods     character varying,
-    others_ref_reg          jsonb,
+    additional_ref_reg      jsonb,
     themes                  character varying,
     tags                    character varying
 );
@@ -54,7 +54,7 @@ INSERT INTO prod.reg_cacem (
     plan,
     authorization_periods,
     prohibition_periods,
-    others_ref_reg,
+    additional_ref_reg,
     themes,
     tags
 ) VALUES (
@@ -108,7 +108,7 @@ INSERT INTO prod.reg_cacem (
     plan,
     authorization_periods,
     prohibition_periods,
-    others_ref_reg,
+    additional_ref_reg,
     themes,
     tags
 ) VALUES (

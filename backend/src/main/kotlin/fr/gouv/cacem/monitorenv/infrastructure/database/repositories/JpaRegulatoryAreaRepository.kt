@@ -7,7 +7,7 @@ import org.locationtech.jts.geom.Geometry
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
-@Repository
+@Repository()
 class JpaRegulatoryAreaRepository(
     private val dbRegulatoryAreaRepository: IDBRegulatoryAreaRepository,
 ) : IRegulatoryAreaRepository {
