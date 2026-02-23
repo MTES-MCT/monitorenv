@@ -109,12 +109,13 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
+                    controlPlan = null,
                     searchQuery = null,
                     seaFronts = null,
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
+            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
@@ -122,46 +123,54 @@ class RegulatoryAreasITests {
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].group", Matchers.equalTo("ZMEL_Cale_Querlen")))
             .andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].id",
+                    "regulatoryAreasByLayer.[0].group",
+                    Matchers.equalTo("ZMEL_Cale_Querlen"),
+                ),
+            ).andExpect(
+                MockMvcResultMatchers.jsonPath(
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].id",
                     Matchers.equalTo(regulatoryArea.id),
                 ),
             ).andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].layerName",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].layerName",
                     Matchers.equalTo(regulatoryArea.layerName),
                 ),
             ).andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].refReg",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].refReg",
                     Matchers.equalTo(regulatoryArea.refReg),
                 ),
             ).andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].tags[0].name",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].tags[0].name",
                     Matchers.equalTo("Mouillage"),
                 ),
             ).andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].type",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].type",
                     Matchers.equalTo(regulatoryArea.type),
                 ),
             ).andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].themes[0].name",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].themes[0].name",
                     Matchers.equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
                 ),
-            ).andExpect(MockMvcResultMatchers.jsonPath("$[0].regulatoryAreas[0].plan", Matchers.equalTo("PIRC")))
-            .andExpect(
+            ).andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].polyName",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].plan",
+                    Matchers.equalTo("PIRC"),
+                ),
+            ).andExpect(
+                MockMvcResultMatchers.jsonPath(
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].polyName",
                     Matchers.equalTo("Zone au sud de la cale"),
                 ),
             ).andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].resume",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].resume",
                     Matchers.equalTo("Descriptif de la zone réglementaire"),
                 ),
             )
@@ -276,20 +285,30 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
+                    controlPlan = null,
                     searchQuery = null,
                     seaFronts = listOf("NAMO"),
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
+            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
             .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas?seaFronts=NAMO"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].group", Matchers.equalTo("ZMEL_Cale_Querlen")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].regulatoryAreas[0].facade", Matchers.equalTo("NAMO")))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath(
+                    "regulatoryAreasByLayer[0].group",
+                    Matchers.equalTo("ZMEL_Cale_Querlen"),
+                ),
+            ).andExpect(
+                MockMvcResultMatchers.jsonPath(
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].facade",
+                    Matchers.equalTo("NAMO"),
+                ),
+            )
     }
 
     @Test
@@ -298,12 +317,13 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
+                    controlPlan = null,
                     searchQuery = "Querlen",
                     seaFronts = null,
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
+            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
@@ -312,7 +332,7 @@ class RegulatoryAreasITests {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].layerName",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].layerName",
                     Matchers.equalTo("ZMEL_Cale_Querlen"),
                 ),
             )
@@ -324,19 +344,20 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
+                    controlPlan = null,
                     searchQuery = "NonExistent",
                     seaFronts = null,
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(emptyMap())
+            ).willReturn(Pair(emptyMap(), 0L))
 
         // When
         mockMvc
             .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas?searchQuery=NonExistent"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("totalCount", Matchers.equalTo(0)))
     }
 
     @Test
@@ -345,12 +366,13 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
+                    controlPlan = null,
                     searchQuery = null,
                     seaFronts = null,
                     tags = listOf(5),
                     themes = null,
                 ),
-            ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
+            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
@@ -359,7 +381,7 @@ class RegulatoryAreasITests {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].tags[0].name",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].tags[0].name",
                     Matchers.equalTo("Mouillage"),
                 ),
             )
@@ -371,12 +393,13 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
+                    controlPlan = null,
                     searchQuery = null,
                     seaFronts = null,
                     tags = null,
                     themes = listOf(101),
                 ),
-            ).willReturn(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)))
+            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
@@ -385,7 +408,7 @@ class RegulatoryAreasITests {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "$[0].regulatoryAreas[0].themes[0].name",
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].themes[0].name",
                     Matchers.equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
                 ),
             )

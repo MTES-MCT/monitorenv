@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ExtractedAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IAMPRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ITagRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IThemeRepository
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory
 class ExtractArea(
     private val departmentAreaRepository: IDepartmentAreaRepository,
     private val reportingRepository: IReportingRepository,
-    private val regulatoryAreaRepository: IRegulatoryAreaRepository,
+    private val regulatoryAreaRepository: IRegulatoryAreaNewRepository,
     private val ampRepository: IAMPRepository,
     private val vigilanceAreaRepository: IVigilanceAreaRepository,
     private val tagRepository: ITagRepository,

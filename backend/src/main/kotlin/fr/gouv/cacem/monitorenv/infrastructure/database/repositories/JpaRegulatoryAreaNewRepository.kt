@@ -14,6 +14,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRegulatoryAreaRepository
 import org.apache.commons.lang3.StringUtils
+import org.locationtech.jts.geom.Geometry
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -50,6 +51,9 @@ class JpaRegulatoryAreaNewRepository(
         dbRegulatoryAreaRepository
             .findAllByCreationIsNull()
             .map { it.toRegulatoryArea(mapper) }
+
+    override fun findAllIdsByGeometry(geometry: Geometry): List<Int> =
+        dbRegulatoryAreaRepository.findAllIdsByGeom(geometry)
 
     @Transactional
     override fun save(regulatoryArea: RegulatoryAreaEntity): RegulatoryAreaEntity {
