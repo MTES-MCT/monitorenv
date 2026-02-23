@@ -33,7 +33,7 @@ INSERT INTO public.regulatory_areas (
     plan,
     authorization_periods,
     prohibition_periods,
-    others_ref_reg
+    additional_ref_reg
 ) VALUES (
     1,
     'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))',
@@ -83,7 +83,7 @@ INSERT INTO public.regulatory_areas (
     plan,
     authorization_periods,
     prohibition_periods,
-    others_ref_reg
+    additional_ref_reg
 ) VALUES (
     2,
     'MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))',

@@ -1,8 +1,8 @@
-package fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea
+package fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2
 
 import java.time.ZonedDateTime
 
-data class OtherRefRegEntity(
+data class AdditionalRefRegEntity(
     val id: String,
     val endDate: ZonedDateTime? = null,
     val refReg: String? = null,

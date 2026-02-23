@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
@@ -13,7 +13,7 @@ class CreateOrUpdateRegulatoryArea(
 ) {
     private val logger = LoggerFactory.getLogger(CreateOrUpdateRegulatoryArea::class.java)
 
-    fun execute(regulatoryArea: RegulatoryAreaNewEntity): RegulatoryAreaNewEntity {
+    fun execute(regulatoryArea: RegulatoryAreaEntity): RegulatoryAreaEntity {
         logger.info("Attempt to CREATE or UPDATE regulatory area ${regulatoryArea.id}")
 
         try {

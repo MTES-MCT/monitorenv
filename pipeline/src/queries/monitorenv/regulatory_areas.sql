@@ -22,7 +22,7 @@ SELECT
     ra.plan,
     ra.authorization_periods,
     ra.prohibition_periods,
-    ra.others_ref_reg,
+    ra.additional_ref_reg,
     STRING_AGG(DISTINCT t.name, ',') AS themes,
     STRING_AGG(DISTINCT tag.name, ',') AS tags
 FROM regulatory_areas ra

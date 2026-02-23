@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.OtherRefRegEntity
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.AdditionalRefRegEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
 import org.locationtech.jts.geom.MultiPolygon
@@ -21,7 +21,7 @@ data class RegulatoryAreaDataOutput(
     val geom: MultiPolygon? = null,
     val layerName: String? = null,
     val observation: String? = null,
-    val othersRefReg: List<OtherRefRegEntity>? = listOf(),
+    val additionalRefReg: List<AdditionalRefRegEntity>? = listOf(),
     val plan: String? = null,
     val polyName: String? = null,
     val prohibitionPeriods: String? = null,
@@ -35,7 +35,7 @@ data class RegulatoryAreaDataOutput(
     val url: String? = null,
 ) {
     companion object {
-        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaNewEntity) =
+        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) =
             RegulatoryAreaDataOutput(
                 id = regulatoryArea.id,
                 creation = regulatoryArea.creation,
@@ -59,7 +59,7 @@ data class RegulatoryAreaDataOutput(
                 themes = regulatoryArea.themes.map { ThemeOutput.fromThemeEntity(it) },
                 type = regulatoryArea.type,
                 url = regulatoryArea.url,
-                othersRefReg = regulatoryArea.othersRefReg,
+                additionalRefReg = regulatoryArea.additionalRefReg,
                 authorizationPeriods = regulatoryArea.authorizationPeriods,
                 prohibitionPeriods = regulatoryArea.prohibitionPeriods,
             )

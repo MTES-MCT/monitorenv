@@ -1,12 +1,13 @@
-package fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea
+package fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2
 
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
-data class RegulatoryAreaNewEntity(
+data class RegulatoryAreaEntity(
     val id: Int,
+    val additionalRefReg: List<AdditionalRefRegEntity>? = listOf(),
     val authorizationPeriods: String? = null,
     val creation: ZonedDateTime? = null,
     val date: ZonedDateTime? = null,
@@ -19,7 +20,6 @@ data class RegulatoryAreaNewEntity(
     val geom: MultiPolygon? = null,
     val layerName: String? = null,
     val observation: String? = null,
-    val othersRefReg: List<OtherRefRegEntity>? = listOf(),
     val plan: String? = null,
     val polyName: String? = null,
     val prohibitionPeriods: String? = null,

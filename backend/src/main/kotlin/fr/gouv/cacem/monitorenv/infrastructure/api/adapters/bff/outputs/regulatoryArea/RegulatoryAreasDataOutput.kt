@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 
 data class RegulatoryAreasDataOutput(
     val group: String,
@@ -8,7 +8,7 @@ data class RegulatoryAreasDataOutput(
 ) {
     companion object {
         fun fromRegulatoryAreaEntity(
-            entry: Map.Entry<String?, List<RegulatoryAreaNewEntity>>,
+            entry: Map.Entry<String?, List<RegulatoryAreaEntity>>,
         ): RegulatoryAreasDataOutput =
             RegulatoryAreasDataOutput(
                 group = entry.key ?: "UNKNOWN",

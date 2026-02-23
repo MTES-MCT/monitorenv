@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -11,7 +11,7 @@ class RegulatoryAreaToCompleteDataOuput(
     val refReg: String? = null,
 ) {
     companion object {
-        fun fromRegulatoryAreaToCompleteEntity(regulatoryArea: RegulatoryAreaNewEntity) =
+        fun fromRegulatoryAreaToCompleteEntity(regulatoryArea: RegulatoryAreaEntity) =
             RegulatoryAreaToCompleteDataOuput(
                 id = regulatoryArea.id,
                 editionCacem = regulatoryArea.editionCacem,

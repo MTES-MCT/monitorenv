@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaNewEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.assertj.core.api.Assertions.assertThat
@@ -161,7 +161,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
             ) as MultiPolygon
 
         val regulatoryArea =
-            RegulatoryAreaNewEntity(
+            RegulatoryAreaEntity(
                 id = 9999,
                 layerName = "Test_Area",
                 facade = "NAMO",
@@ -186,7 +186,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
                 authorizationPeriods = null,
                 prohibitionPeriods = null,
                 type = null,
-                othersRefReg = null,
+                additionalRefReg = null,
             )
 
         val savedRegulatoryArea = jpaRegulatoryAreaNewRepository.save(regulatoryArea)
