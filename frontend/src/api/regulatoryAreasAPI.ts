@@ -14,6 +14,7 @@ const GET_REGULATORY_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/l
 const GET_REGULATORY_AREA_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zones réglementaire"
 const GET_LAYER_NAMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les noms de groupes de zones réglementaires"
 type Filters = {
+  controlPlan?: string
   seaFronts?: string[]
   searchQuery?: string
   tags?: number[]
@@ -39,12 +40,12 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
         }
       }
     }),
-    getRegulatoryAreas: builder.query<RegulatoryArea.RegulatoryAreasGroup[], Filters | void>({
+    getRegulatoryAreas: builder.query<RegulatoryArea.RegulatoryAreasFromApi, Filters | void>({
       providesTags: result =>
-        result
+        result?.regulatoryAreasByLayer
           ? // successful query
             [
-              ...result.flatMap(({ regulatoryAreas }) =>
+              ...result.regulatoryAreasByLayer.flatMap(({ regulatoryAreas }) =>
                 regulatoryAreas.map(({ id }) => ({ id, type: 'RegulatoryAreas' as const }))
               ),
               { id: 'LIST', type: 'RegulatoryAreas' }
@@ -53,14 +54,16 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
             [{ id: 'LIST', type: 'RegulatoryAreas' }],
       query: filters => getQueryString('v2/regulatory-areas', filters),
       transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response),
-      transformResponse: (response: RegulatoryArea.RegulatoryAreasGroup[]): RegulatoryArea.RegulatoryAreasGroup[] =>
-        response.map(group => ({
+      transformResponse: (response: RegulatoryArea.RegulatoryAreasFromApi): RegulatoryArea.RegulatoryAreasFromApi => ({
+        regulatoryAreasByLayer: response.regulatoryAreasByLayer.map(group => ({
           group: group.group,
           regulatoryAreas: group.regulatoryAreas.map(area => ({
             ...area,
             bbox: boundingExtent(area.geom?.coordinates.flat().flat() as Coordinate[])
           }))
-        }))
+        })),
+        totalCount: response.totalCount
+      })
     }),
     getRegulatoryAreasToComplete: builder.query<RegulatoryArea.RegulatoryAreaToComplete[], void>({
       providesTags: () => [{ id: 'TO_COMPLETE', type: 'RegulatoryAreas' }],
@@ -96,7 +99,7 @@ export const {
 export const getRegulatoryAreasByControlPlan = createSelector(
   [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],
   regulatoryAreas => {
-    const groups = regulatoryAreas?.data
+    const groups = regulatoryAreas?.data?.regulatoryAreasByLayer
 
     if (!groups) {
       return {}
@@ -128,7 +131,7 @@ export const getRegulatoryAreasBySeaFront = createSelector(
   [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],
 
   regulatoryAreas => {
-    const groups = regulatoryAreas?.data
+    const groups = regulatoryAreas?.data?.regulatoryAreasByLayer
 
     if (!groups) {
       return {}

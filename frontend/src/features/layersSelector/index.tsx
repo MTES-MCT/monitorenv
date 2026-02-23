@@ -1,8 +1,8 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { LocalizedAreas } from '@features/LocalizedArea'
 import { NumberOfFilters } from '@features/map/shared/style'
+import { useGetFilteredRegulatoryAreas } from '@features/RegulatoryArea/hooks/useGetFilteredRegulatoryAreas'
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -48,7 +48,16 @@ export function LayersSidebar() {
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
   const nbOfFiltersSetted = useAppSelector(state => state.vigilanceAreaFilters.nbOfFiltersSetted)
 
-  const regulatoryAreas = useGetRegulatoryLayersQuery()
+  const {
+    controlPlan,
+    filteredAmpTypes,
+    filteredRegulatoryTags,
+    filteredRegulatoryThemes,
+    globalSearchText,
+    searchExtent
+  } = useAppSelector(state => state.layerSearch)
+
+  const regulatoryAreas = useGetFilteredRegulatoryAreas()
   const amps = useGetAMPsQuery()
 
   const dispatch = useAppDispatch()
@@ -65,15 +74,6 @@ export function LayersSidebar() {
     }
     dispatch(setDisplayedItems({ visibility: { isLayersSidebarVisible: !isLayersSidebarVisible } }))
   }
-
-  const {
-    controlPlan,
-    filteredAmpTypes,
-    filteredRegulatoryTags,
-    filteredRegulatoryThemes,
-    globalSearchText,
-    searchExtent
-  } = useAppSelector(state => state.layerSearch)
 
   const numberOfMapFilters =
     (filteredRegulatoryTags.length > 0 ? 1 : 0) +

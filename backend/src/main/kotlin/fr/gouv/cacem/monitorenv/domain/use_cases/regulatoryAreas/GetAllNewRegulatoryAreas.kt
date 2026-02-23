@@ -12,22 +12,28 @@ class GetAllNewRegulatoryAreas(
     private val logger = LoggerFactory.getLogger(GetAllRegulatoryAreas::class.java)
 
     fun execute(
+        controlPlan: String?,
         searchQuery: String?,
         seaFronts: List<String>?,
         tags: List<Int>?,
         themes: List<Int>?,
-    ): Map<String?, List<RegulatoryAreaEntity>> {
+    ): Pair<Map<String?, List<RegulatoryAreaEntity>>, Long> {
         logger.info("Attempt to GET all regulatory areas")
-        val regulatoryAreas =
-            regulatoryAreaRepository
-                .findAll(
-                    query = searchQuery,
-                    seaFronts = seaFronts,
-                    tags = tags,
-                    themes = themes,
-                ).groupBy { it.layerName }
-        logger.info("Found ${regulatoryAreas.size} regulatory areas")
 
-        return regulatoryAreas
+        val allAreas =
+            regulatoryAreaRepository.findAll(
+                controlPlan = controlPlan,
+                query = searchQuery,
+                seaFronts = seaFronts,
+                tags = tags,
+                themes = themes,
+            )
+
+        val totalCount = allAreas.size.toLong()
+        val groupedAreas = allAreas.groupBy { it.layerName }
+
+        logger.info("Found $totalCount regulatory areas across ${groupedAreas.size} layers")
+
+        return Pair(groupedAreas, totalCount)
     }
 }

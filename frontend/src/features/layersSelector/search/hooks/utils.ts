@@ -77,22 +77,3 @@ export function flattenThemes(themes: ThemeFromAPI[]): string[] {
     return names
   })
 }
-
-export function buildRegulatoryAreaSearchText(layer): string {
-  const tagNames = flattenTags(layer.tags)
-  const themeNames = flattenThemes(layer.themes)
-
-  return [
-    layer.layerName,
-    layer.resume,
-    layer.polyName,
-    layer.refReg,
-    layer.type,
-    layer.plan,
-    themeNames.join(' '),
-    tagNames.join(' ')
-  ]
-    .filter(Boolean)
-    .join(' ')
-    .toLowerCase()
-}

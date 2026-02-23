@@ -15,11 +15,13 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
             WHERE (:seaFronts IS NULL OR regulatoryArea.facade IN (:seaFronts))
             AND (:themes IS NULL OR th.theme.id IN :themes)
             AND (:tags IS NULL OR tg.tag.id IN :tags)
+            AND (:controlPlan IS NULL OR regulatoryArea.plan LIKE %:controlPlan%)
             AND regulatoryArea.creation IS NOT NULL
             ORDER BY regulatoryArea.layerName
         """,
     )
     fun findAll(
+        controlPlan: String? = null,
         seaFronts: List<String>? = null,
         tags: List<Int>? = null,
         themes: List<Int>? = null,
