@@ -11,6 +11,8 @@ import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@featu
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Button, Icon } from '@mtes-mct/monitor-ui'
+import { getTagIds } from '@utils/getTagsAsOptions'
+import { getThemeIds } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
@@ -41,25 +43,14 @@ export function RegulatoryAreaList() {
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
   const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
-  const formattedTagIds = useMemo(
-    () => filters.tags?.flatMap(tag => [tag.id, ...(tag.subTags?.map(subTag => subTag.id) ?? [])]),
-    [filters.tags]
-  )
-
-  const formattedThemeIds = useMemo(
-    () => filters.themes?.flatMap(theme => [theme.id, ...(theme.subThemes?.map(subTheme => subTheme.id) ?? [])]),
-    [filters.themes]
-  )
-
   const apiFilters = useMemo(
     () => ({
       seaFronts: filters.seaFronts,
       searchQuery: filters.searchQuery,
-      tags: formattedTagIds,
-
-      themes: formattedThemeIds
+      tags: getTagIds(filters.tags),
+      themes: getThemeIds(filters.themes)
     }),
-    [filters.seaFronts, filters.searchQuery, formattedTagIds, formattedThemeIds]
+    [filters.seaFronts, filters.searchQuery, filters.tags, filters.themes]
   )
   const { isFetching, isLoading } = useGetRegulatoryAreasQuery(apiFilters)
 
@@ -94,9 +85,7 @@ export function RegulatoryAreaList() {
         </MapContainer>
       </>
 
-      {openedRegulatoryAreaId && (
-        <StyledRegulatoryAreasPanel isNewRegulatoryArea layerId={openedRegulatoryAreaId} onClose={closePanel} />
-      )}
+      {openedRegulatoryAreaId && <StyledRegulatoryAreasPanel layerId={openedRegulatoryAreaId} onClose={closePanel} />}
     </StyledBackofficeWrapper>
   )
 }
