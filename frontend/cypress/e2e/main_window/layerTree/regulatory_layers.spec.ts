@@ -18,12 +18,12 @@ context('LayerTree > Regulatory Layers', () => {
     cy.getDataCy('regulatory-result-list-button').contains('13 résultats')
 
     cy.log('search a regulation by name')
-    cy.fill('Rechercher une zone', 'querlin') // "querlin" contains a typo to test fuzzy search ("querlen" in source)
+    cy.fill('Rechercher une zone', 'querlen')
     cy.getDataCy('regulatory-result-list-button').contains('2 résultats').click()
 
     cy.log("zoom on the regulation's zone and show metadata")
     cy.clickButton('ZMEL Cale Querlen')
-    cy.clickButton('Zone au sud de la cale')
+    cy.clickButton('Autorisation temporaire du domaine public')
     cy.getDataCy('regulatory-metadata-header').contains('ZMEL Cale Querlen').click()
     cy.wait(1000) // let OL do the rendering
 

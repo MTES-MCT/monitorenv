@@ -19,11 +19,19 @@ class GetAllNewRegulatoryAreasUTest {
     fun `execute should return all regulatory areas`(log: CapturedOutput) {
         // Given
         val expectedRegulatoryAreas = RegulatoryAreaNewFixture.aNewRegulatoryArea()
-        given(regulatoryAreaRepository.findAll()).willReturn(listOf(expectedRegulatoryAreas))
+        given(
+            regulatoryAreaRepository.findAll(
+                controlPlan = null,
+                seaFronts = null,
+                tags = null,
+                themes = null,
+            ),
+        ).willReturn(listOf(expectedRegulatoryAreas))
 
         // When
-        val regulatoryAreas =
+        val (regulatoryAreas, totalCount) =
             getAllRegulatoryAreas.execute(
+                controlPlan = null,
                 searchQuery = null,
                 seaFronts = null,
                 tags = null,
@@ -31,9 +39,11 @@ class GetAllNewRegulatoryAreasUTest {
             )
 
         // Then
-        assertThat(mapOf("Layername 1" to listOf(expectedRegulatoryAreas))).isEqualTo(regulatoryAreas)
+        assertThat(regulatoryAreas)
+            .isEqualTo(mapOf("Layername 1" to listOf(expectedRegulatoryAreas)))
+        assertThat(totalCount).isEqualTo(1)
         assertThat(log.out).contains("Attempt to GET all regulatory areas")
-        assertThat(log.out).contains("Found ${regulatoryAreas.size} regulatory areas")
+        assertThat(log.out).contains("Found $totalCount regulatory areas across ${regulatoryAreas.size} layers")
     }
 
     @Test
@@ -45,11 +55,19 @@ class GetAllNewRegulatoryAreasUTest {
                 RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 2, layerName = "Layer2", plan = "PIRC"),
                 RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 3, layerName = "Layer1", plan = "PSCEM"),
             )
-        given(regulatoryAreaRepository.findAll()).willReturn(regulatoryAreas)
+        given(
+            regulatoryAreaRepository.findAll(
+                controlPlan = null,
+                seaFronts = null,
+                tags = null,
+                themes = null,
+            ),
+        ).willReturn(regulatoryAreas)
 
         // When
-        val groupedRegulatoryAreas =
+        val (groupedRegulatoryAreas, totalCount) =
             getAllRegulatoryAreas.execute(
+                controlPlan = null,
                 searchQuery = null,
                 seaFronts = null,
                 tags = null,
@@ -60,7 +78,10 @@ class GetAllNewRegulatoryAreasUTest {
         assertThat(groupedRegulatoryAreas).hasSize(2)
         assertThat(groupedRegulatoryAreas["Layer1"]).hasSize(2)
         assertThat(groupedRegulatoryAreas["Layer2"]).hasSize(1)
+
+        assertThat(totalCount).isEqualTo(3)
+
         assertThat(log.out).contains("Attempt to GET all regulatory areas")
-        assertThat(log.out).contains("Found ${groupedRegulatoryAreas.size} regulatory areas")
+        assertThat(log.out).contains("Found 3 regulatory areas across 2 layers")
     }
 }
