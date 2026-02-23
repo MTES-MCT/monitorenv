@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
+import org.locationtech.jts.geom.Geometry
 
 interface IRegulatoryAreaNewRepository {
     fun findAll(
@@ -10,6 +11,8 @@ interface IRegulatoryAreaNewRepository {
         tags: List<Int>? = null,
         themes: List<Int>? = null,
     ): List<RegulatoryAreaEntity>
+
+    fun findAllIdsByGeometry(geometry: Geometry): List<Int>
 
     fun findAllToComplete(): List<RegulatoryAreaEntity>
 

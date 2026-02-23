@@ -43,6 +43,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         // When
         val regulatoryAreas =
             jpaRegulatoryAreaNewRepository.findAll(
+                controlPlan = null,
                 seaFronts = listOf("MED"),
                 tags = null,
                 themes = null,
@@ -58,6 +59,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         // When
         val regulatoryAreas =
             jpaRegulatoryAreaNewRepository.findAll(
+                controlPlan = null,
                 seaFronts = null,
                 tags = listOf(10),
                 themes = null,
@@ -73,6 +75,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         // When
         val regulatoryAreas =
             jpaRegulatoryAreaNewRepository.findAll(
+                controlPlan = null,
                 seaFronts = null,
                 tags = null,
                 themes = listOf(9),
@@ -120,8 +123,8 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(layerNames).hasSize(9)
         assertThat(layerNames.keys).containsExactlyInAnyOrder(
-            "",
             "Dragage_port_de_Brest",
+            "Granulats_Marins_Le_Minou",
             "Interdiction_VNM_Molene",
             "Mouillage_Conquet_Ile_de_bannec",
             "Mouillage_interdiction_port_Camaret",
@@ -230,5 +233,26 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         assertThat(savedRegulatoryArea.tags.map { it.id }).containsExactlyInAnyOrder(5, 6)
         assertThat(savedRegulatoryArea.themes).hasSize(1)
         assertThat(savedRegulatoryArea.themes[0].id).isEqualTo(9)
+    }
+
+    @Test
+    fun `findAllByGeometry should return all regulatory areas that intersect the geometry `() {
+        // Given
+        val wktReader = WKTReader()
+
+        val multipolygonString =
+            "MULTIPOLYGON(((-5.09960369 48.32482523, -4.88569684 48.32505046, -4.93672119 48.47387673, -5.12651574 48.45876889, -5.09960369 48.32482523)), \n" +
+                "((-3.57357208 48.97647554, -3.34729792 49.03663561, -3.31147549 48.82323819, -3.46975201 48.81968417, -3.57357208 48.97647554)))"
+        val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+        // When
+        val regulatoryAreas = jpaRegulatoryAreaNewRepository.findAllIdsByGeometry(polygon)
+
+        // Then
+        assertThat(regulatoryAreas).hasSize(4)
+        assertThat(regulatoryAreas[0]).isEqualTo(425)
+        assertThat(regulatoryAreas[1]).isEqualTo(134)
+        assertThat(regulatoryAreas[2]).isEqualTo(300)
+        assertThat(regulatoryAreas[3]).isEqualTo(625)
     }
 }
