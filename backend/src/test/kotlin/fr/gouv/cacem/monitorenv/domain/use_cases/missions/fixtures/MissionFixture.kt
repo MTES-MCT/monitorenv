@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aLegacyControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import java.time.ZonedDateTime
 import kotlin.random.Random
 
@@ -49,5 +50,10 @@ class MissionFixture {
             missionEntity: MissionEntity = aMissionEntity(),
             attachedReportingIds: List<Int> = listOf(),
         ): MissionDetailsDTO = MissionDetailsDTO(mission = missionEntity, attachedReportingIds = attachedReportingIds)
+
+        fun aMissionListDTO(
+            missionEntity: MissionEntity = aMissionEntity(),
+            attachedReportingIds: List<Int> = listOf(),
+        ): MissionListDTO = MissionListDTO(mission = missionEntity, attachedReportingIds = attachedReportingIds)
     }
 }
