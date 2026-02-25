@@ -32,6 +32,7 @@ class GetMissionsUTest {
                 listOf(
                     MissionSourceEnum.MONITORENV,
                     MissionSourceEnum.MONITORFISH,
+                    MissionSourceEnum.RAPPORT_NAV,
                 ),
                 null,
                 null,
@@ -67,6 +68,7 @@ class GetMissionsUTest {
                 listOf(
                     MissionSourceEnum.MONITORENV,
                     MissionSourceEnum.MONITORFISH,
+                    MissionSourceEnum.RAPPORT_NAV,
                 ),
                 null,
                 null,
