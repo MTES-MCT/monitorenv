@@ -39,6 +39,7 @@ class GetMissions(
                         ?: listOf(
                             MissionSourceEnum.MONITORENV,
                             MissionSourceEnum.MONITORFISH,
+                            MissionSourceEnum.RAPPORT_NAV,
                         ),
                 missionStatuses = missionStatuses,
                 missionTypes = missionTypes,
