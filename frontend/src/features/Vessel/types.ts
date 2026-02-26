@@ -1,3 +1,4 @@
+/* eslint-disable typescript-sort-keys/string-enum */
 import type { GeoJSON } from '../../domain/types/GeoJSON'
 
 export namespace Vessel {
@@ -14,7 +15,6 @@ export namespace Vessel {
 
   export interface Vessel extends Identity {
     commercialName?: string
-    lastPositions?: LastPosition[]
     leisureType?: string
     length?: number
     ownerBusinessSegmentLabel?: string
@@ -29,6 +29,7 @@ export namespace Vessel {
     ownerPostalAddress?: string
     ownerStartDate?: string
     portOfRegistry?: string
+    positions?: Position[]
     professionalType?: string
     shipName?: string
     status?: string
@@ -43,7 +44,21 @@ export namespace Vessel {
     PRO = 'Professionnel'
   }
 
-  export interface LastPosition {
+  export enum AisTrackSettingsEnum {
+    TWELVE_HOURS = 'TWELVE_HOURS',
+    TWENTY_FOUR_HOURS = 'TWENTY_FOUR_HOURS',
+    THREE_DAYS = 'THREE_DAYS',
+    SPECIFIC_PERIOD = 'SPECIFIC_PERIOD'
+  }
+
+  export enum AisTrackSettingsLabel {
+    TWELVE_HOURS = '12 heures',
+    TWENTY_FOUR_HOURS = '24 heures',
+    THREE_DAYS = '3 jours',
+    SPECIFIC_PERIOD = 'Période spécifique'
+  }
+
+  export interface Position {
     course?: number
     destination?: string
     geom?: GeoJSON.Point

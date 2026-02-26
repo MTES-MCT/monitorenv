@@ -76,6 +76,6 @@ data class VesselModel(
             ownerLegalStatusLabel = legalStatusLabel,
             ownerLegalStatus = ownerLegalStatus,
             ownerStartDate = ownerStartDate,
-            lastPositions = mutableListOf(),
+            positions = mutableListOf(),
         )
 }

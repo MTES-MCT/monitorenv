@@ -34,7 +34,11 @@ export function getDateAsLocalizedStringCompact(date: string | undefined, withUt
   )
 }
 
-export function getDateAsLocalizedStringVeryCompact(date: string | undefined | null, withoutTime = false) {
+export function getDateAsLocalizedStringVeryCompact(
+  date: string | undefined | null,
+  withoutTime = false,
+  withUtc = false
+) {
   if (!date || date.trim() === '') {
     return undefined
   }
@@ -46,7 +50,8 @@ export function getDateAsLocalizedStringVeryCompact(date: string | undefined | n
 
   return (
     <>
-      {formatDateLabel(dayJsDate.format('DD/MM/YY'))} à {dayJsDate.format('HH')}h{dayJsDate.format('mm')}
+      {formatDateLabel(dayJsDate.format('DD/MM/YY'))} à {dayJsDate.format('HH')}h{dayJsDate.format('mm')}{' '}
+      {withUtc && '(UTC)'}
     </>
   )
 }

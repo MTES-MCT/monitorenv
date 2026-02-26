@@ -5,7 +5,7 @@ import { Layers } from 'domain/entities/layers/constants'
 import { resetSelectedSemaphore } from 'domain/shared_slices/SemaphoresSlice'
 import { convertToFeature, type MapClickEvent } from 'domain/types/map'
 import { setOpenedOverlay } from 'domain/use_cases/map/setOpenedOverlay'
-import { getCenter, type Extent } from 'ol/extent'
+import { type Extent, getCenter } from 'ol/extent'
 import Overlay from 'ol/Overlay'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -50,6 +50,7 @@ type OverlayPositionOnCentroidProps = {
   }
   zIndex: number
 }
+
 export function OverlayPositionOnCentroid({
   appClassName,
   children,

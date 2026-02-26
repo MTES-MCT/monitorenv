@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-import { normalizeRtkBaseQuery } from '../utils/normalizeRtkBaseQuery'
+import { normalizeRtkBaseQuery } from '@utils/normalizeRtkBaseQuery'
 
 import type { BackendApiErrorResponse } from './types'
 

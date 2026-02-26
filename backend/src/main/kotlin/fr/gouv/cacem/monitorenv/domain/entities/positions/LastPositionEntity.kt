@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.lastPositions
+package fr.gouv.cacem.monitorenv.domain.entities.positions
 
 import org.locationtech.jts.geom.Point
 import java.time.ZonedDateTime

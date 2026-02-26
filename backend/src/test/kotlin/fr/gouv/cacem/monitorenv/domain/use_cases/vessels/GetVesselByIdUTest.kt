@@ -4,9 +4,9 @@ import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.mock
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.repositories.ILastPositionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IAISPositionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVesselRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.LastPositionFixture
+import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.AisPositionFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.VesselFixture.Companion.aVessel
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -15,29 +15,38 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.verifyNoInteractions
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
+import java.time.ZonedDateTime
 
 @ExtendWith(OutputCaptureExtension::class)
 class GetVesselByIdUTest {
     private val vesselRepository: IVesselRepository = mock()
-    private val lastPositionRepository: ILastPositionRepository = mock()
+    private val aisPositionRepository: IAISPositionRepository = mock()
 
-    val getVesselById = GetVesselById(vesselRepository, lastPositionRepository)
+    val getVesselById = GetVesselById(vesselRepository, aisPositionRepository)
 
     @Test
     fun `execute should retrieve a vessel by id and last positions by shipId`(log: CapturedOutput) {
         // Given
         val vesselId = 1
 
-        val expectedVessel = aVessel()
+        val expectedVessel = aVessel(mmsi = "1")
         given(vesselRepository.findVesselById(vesselId)).willReturn(expectedVessel)
-        val lastPositions = mutableListOf(LastPositionFixture.aLastPosition())
-        given(lastPositionRepository.findAll(expectedVessel.shipId!!)).willReturn(lastPositions)
+        val aisPositions = mutableListOf(AisPositionFixture.aPosition())
+        val from = ZonedDateTime.now().minusHours(12)
+        val to = ZonedDateTime.now()
+        given(
+            aisPositionRepository.findAllByMmsiBetweenDates(
+                expectedVessel.mmsi?.toInt()!!,
+                from = from,
+                to = to,
+            ),
+        ).willReturn(aisPositions)
 
         // When
-        val vessel = getVesselById.execute(vesselId)
+        val vessel = getVesselById.execute(vesselId, from, to)
 
         // Then
-        assertThat(vessel).isEqualTo(expectedVessel.copy(lastPositions = lastPositions))
+        assertThat(vessel).isEqualTo(expectedVessel.copy(positions = aisPositions))
         assertThat(log.out).contains("GET vessel $vesselId")
     }
 
@@ -46,14 +55,14 @@ class GetVesselByIdUTest {
         // Given
         val vesselId = 1
 
-        val expectedVessel = aVessel(shipId = null)
+        val expectedVessel = aVessel(mmsi = null)
         given(vesselRepository.findVesselById(vesselId)).willReturn(expectedVessel)
 
         // When
         val vessel = getVesselById.execute(vesselId)
 
         // Then
-        verifyNoInteractions(lastPositionRepository)
+        verifyNoInteractions(aisPositionRepository)
         assertThat(vessel).isEqualTo(expectedVessel)
         assertThat(log.out).contains("GET vessel $vesselId")
     }

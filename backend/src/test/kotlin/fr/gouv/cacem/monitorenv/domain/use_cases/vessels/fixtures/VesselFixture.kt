@@ -4,15 +4,15 @@ import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselEntity
 
 class VesselFixture {
     companion object {
-        fun aVessel(shipId: Int? = 1): VesselEntity =
+        fun aVessel(mmsi: String? = null): VesselEntity =
             VesselEntity(
                 id = 1,
-                shipId = shipId,
+                shipId = null,
                 status = null,
                 category = null,
                 isBanned = false,
                 imo = null,
-                mmsi = null,
+                mmsi = mmsi,
                 immatriculation = null,
                 shipName = null,
                 flag = null,
@@ -34,7 +34,7 @@ class VesselFixture {
                 ownerLegalStatus = null,
                 ownerLegalStatusLabel = null,
                 ownerStartDate = null,
-                lastPositions = mutableListOf(),
+                positions = mutableListOf(),
             )
     }
 }
