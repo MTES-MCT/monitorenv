@@ -111,7 +111,7 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
     @Test
     fun `search should return vessels that match the search term (mmsi)`() {
         // Given
-        val searched = "mMSi2222"
+        val searched = "2222"
 
         // When
         val vessels = jpaVesselRepository.search(searched)

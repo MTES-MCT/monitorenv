@@ -1,4 +1,4 @@
-import { useGetReportingsByMmsiQuery } from '@api/reportingsAPI'
+import { useLazyGetReportingsByMmsiQuery } from '@api/reportingsAPI'
 import { useGetVesselQuery } from '@api/vesselsApi'
 import { Bold } from '@components/style'
 import {
@@ -8,6 +8,7 @@ import {
 } from '@features/Reportings/components/ReportingForm/hooks/useGetHistoryOfInfractions'
 import { History } from '@features/Vessel/components/VesselResume/History/History'
 import { Owner } from '@features/Vessel/components/VesselResume/Owner'
+import { VesselSettings } from '@features/Vessel/components/VesselResume/Positions/VesselSettings'
 import { LastPosition } from '@features/Vessel/components/VesselResume/Resume/LastPosition'
 import { Summary } from '@features/Vessel/components/VesselResume/Resume/Summary'
 import { Tabs } from '@features/Vessel/components/VesselResume/Tabs'
@@ -24,7 +25,6 @@ import {
   pluralize,
   WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
-import { skipToken } from '@reduxjs/toolkit/query'
 import countries from 'i18n-iso-countries'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
@@ -35,41 +35,65 @@ import { VisibilityState } from '../../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { Flag } from '../VesselSearch/VesselSearchItem'
 
+import type { Reporting } from '../../../../domain/entities/reporting'
 import type { Vessel } from '@features/Vessel/types'
 import type { Coordinate } from 'ol/coordinate'
 
-export type VesselResumePages = 'RESUME' | 'OWNER' | 'HISTORY'
+export type ResumePages = 'RESUME' | 'OWNER' | 'HISTORY'
+export type ActiveButtons = 'TRACKING'
 
-type VesselResumeProps = {
+type ResumeProps = {
   id: number
+  onClose: () => void
 }
 
-export function VesselResume({ id }: VesselResumeProps) {
+export function Resume({ id, onClose }: ResumeProps) {
   const dispatch = useAppDispatch()
   const { visibility } = useAppSelector(state => state.global.visibility.reportingFormVisibility)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const { data: vessel } = useGetVesselQuery(id)
-  const [page, setPage] = useState<VesselResumePages>('RESUME')
+  const [page, setPage] = useState<ResumePages>('RESUME')
+  const [activeButton, setActiveButton] = useState<ActiveButtons | undefined>(undefined)
   const [allHistory, setAllHistory] = useState<HistoryOfInfractionsProps | undefined>(undefined)
-
+  const [reportings, setReportings] = useState<Reporting[]>([])
   const getHistory = useGetHistoryOfInfractions(false)
-  const { data: allReportings } = useGetReportingsByMmsiQuery(vessel?.mmsi || skipToken)
+  const [getReportings] = useLazyGetReportingsByMmsiQuery()
+  const [isTrackSettingsOpen, setIsTrackOpen] = useState(false)
 
   useEffect(() => {
     const fetchHistory = async () => {
       if (!vessel?.mmsi) {
-        return initialHistory
+        setAllHistory(initialHistory)
+
+        return
       }
 
-      return getHistory({ mmsi: vessel?.mmsi })
+      getHistory({ mmsi: vessel.mmsi }).then(setAllHistory)
     }
 
-    fetchHistory().then(result => setAllHistory(result))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vessel?.mmsi])
+    const fetchReportings = async () => {
+      if (!vessel?.mmsi) {
+        setReportings([])
 
-  const focusVessel = useCallback(
-    (lastPosition: Vessel.LastPosition | undefined) => {
+        return
+      }
+
+      getReportings(vessel.mmsi).then(({ data }) => setReportings(Object.values(data?.entities ?? [])))
+    }
+
+    fetchHistory()
+    fetchReportings()
+    dispatch(vesselAction.setDisplayedPositions(vessel?.positions))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, vessel?.mmsi, vessel?.positions])
+
+  const openTrackSettings = (isOpen: boolean) => {
+    setIsTrackOpen(!isOpen)
+    setActiveButton(isOpen ? undefined : 'TRACKING')
+  }
+
+  const focusLastPosition = useCallback(
+    (lastPosition: Vessel.Position | undefined) => {
       if (lastPosition?.geom) {
         const vesselCoordinates = [lastPosition.geom.coordinates[0], lastPosition.geom.coordinates[1]] as Coordinate
         if (vesselCoordinates) {
@@ -82,17 +106,20 @@ export function VesselResume({ id }: VesselResumeProps) {
   )
 
   useEffect(() => {
-    focusVessel(vessel?.lastPositions?.[0])
-  }, [focusVessel, vessel?.lastPositions])
+    focusLastPosition(vessel?.positions?.[0])
+  }, [focusLastPosition, vessel?.positions])
 
-  const currentNbReportings = useMemo(() => {
-    const currentReportingLength = Object.values(allReportings?.entities ?? []).filter(reporting =>
-      customDayjs().isBefore(customDayjs(reporting.createdAt).add(reporting.validityTime, 'hours'))
-    ).length
-    dispatch(vesselAction.setHasReportings(currentReportingLength > 0))
+  const currentNbReportings = useMemo(
+    () =>
+      reportings.filter(reporting =>
+        customDayjs().isBefore(customDayjs(reporting.createdAt).add(reporting.validityTime, 'hours'))
+      ).length,
+    [reportings]
+  )
 
-    return currentReportingLength
-  }, [allReportings?.entities, dispatch])
+  useEffect(() => {
+    dispatch(vesselAction.setHasReportings(currentNbReportings > 0))
+  }, [currentNbReportings, dispatch])
 
   if (!vessel) {
     return null
@@ -102,20 +129,31 @@ export function VesselResume({ id }: VesselResumeProps) {
 
   return (
     <DialogWrapper $isRightMenuOpened={isRightMenuOpened} $visibility={visibility}>
-      {vessel.lastPositions && vessel.lastPositions.length > 0 && (
+      {isTrackSettingsOpen && <VesselSettings vessel={vessel} />}
+
+      {vessel.positions && vessel.positions.length > 0 && (
         <ButtonsWrapper>
           <li>
-            <IconButton
+            <VesselButton
+              $isActive={activeButton === 'TRACKING'}
+              Icon={Icon.Vessel}
+              onClick={() => {
+                openTrackSettings(isTrackSettingsOpen)
+              }}
+              title={`${isTrackSettingsOpen ? 'Fermer' : 'Ouvrir'} le paramétrage de la piste AIS`}
+            />
+          </li>
+          <li>
+            <VesselButton
               Icon={Icon.FocusVessel}
               onClick={() => {
-                focusVessel(vessel.lastPositions?.[0])
+                focusLastPosition(vessel.positions?.[0])
               }}
               title="Centrer sur le navire"
             />
           </li>
         </ButtonsWrapper>
       )}
-
       <StyledMapMenuDialogContainer data-cy={`vessel-resume-${vessel.shipName}`}>
         <MapMenuDialog.Header>
           <MapMenuDialog.Title>
@@ -131,7 +169,7 @@ export function VesselResume({ id }: VesselResumeProps) {
           <MapMenuDialog.CloseButton
             Icon={Icon.Close}
             onClick={() => {
-              dispatch(vesselAction.setSelectedVesselId(undefined))
+              onClose()
             }}
             title="Fermer la fiche navire"
           />
@@ -142,7 +180,7 @@ export function VesselResume({ id }: VesselResumeProps) {
               setPage(tab)
             }}
           />
-          <MapMenuDialog.Body>
+          <Body>
             {page === 'RESUME' && (
               <>
                 {currentNbReportings > 0 && (
@@ -154,28 +192,24 @@ export function VesselResume({ id }: VesselResumeProps) {
                   </CurrentReportingBanner>
                 )}
 
-                {vessel.lastPositions?.length === 0 && (
+                {vessel.positions?.length === 0 && (
                   <AisInformationMessage>
                     <Icon.AttentionFilled />
                     Navire non rattaché à l’AIS
                   </AisInformationMessage>
                 )}
 
-                {vessel.lastPositions && vessel.lastPositions.length > 0 && (
-                  <LastPosition lastPositions={vessel.lastPositions} />
+                {vessel.positions && vessel.positions.length > 0 && vessel.positions[0] && (
+                  <LastPosition lastPosition={vessel.positions[0]} />
                 )}
                 <Summary vessel={vessel} />
               </>
             )}
             {page === 'OWNER' && <Owner vessel={vessel} />}
             {page === 'HISTORY' && (
-              <History
-                envActions={allHistory?.envActions ?? []}
-                reportings={Object.values(allReportings?.entities ?? [])}
-                vessel={vessel}
-              />
+              <History envActions={allHistory?.envActions ?? []} reportings={reportings} vessel={vessel} />
             )}
-          </MapMenuDialog.Body>
+          </Body>
         </>
       </StyledMapMenuDialogContainer>
     </DialogWrapper>
@@ -207,10 +241,19 @@ const ButtonsWrapper = styled.ul`
   position: relative;
   top: 110px;
 `
+const VesselButton = styled(IconButton)<{ $isActive?: boolean }>`
+  background: ${p => (p.$isActive ? p.theme.color.blueGray : p.theme.color.charcoal)};
+  color: ${p => p.theme.color.white};
+
+  &:hover {
+    background: ${p => p.theme.color.blueYonder};
+  }
+`
 
 const StyledMapMenuDialogContainer = styled(MapMenuDialog.Container)`
   background-color: ${p => p.theme.color.gainsboro};
   display: flex;
+  height: 100%;
   max-height: calc(100vh - 64px);
   overflow: auto;
   position: relative;
@@ -227,7 +270,6 @@ export const AisInformationMessage = styled.div`
   display: flex;
   font-weight: bold;
   gap: 8px;
-  margin-bottom: 10px;
   padding: 16px 20px;
 `
 
@@ -238,5 +280,10 @@ const CurrentReportingBanner = styled.div`
   display: flex;
   gap: 8px;
   padding: 10px 20px;
-  margin-bottom: 10px;
+`
+
+const Body = styled(MapMenuDialog.Body)`
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
 `

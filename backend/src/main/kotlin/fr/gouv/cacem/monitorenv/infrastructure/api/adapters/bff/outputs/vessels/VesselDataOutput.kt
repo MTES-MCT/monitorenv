@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vessels
 
 import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselEntity
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.lastPositions.LastPositionOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.positions.PositionOutput
 import java.math.BigDecimal
 
 data class VesselDataOutput(
@@ -29,7 +29,7 @@ data class VesselDataOutput(
     val ownerBusinessSegmentLabel: String?,
     val ownerLegalStatusLabel: String?,
     val ownerStartDate: String?,
-    val lastPositions: List<LastPositionOutput>,
+    val positions: List<PositionOutput>,
 ) {
     companion object {
         fun fromVessel(vessel: VesselEntity): VesselDataOutput =
@@ -46,7 +46,7 @@ data class VesselDataOutput(
                 leisureType = vessel.leisureType,
                 professionalType = vessel.professionalType,
                 commercialName = vessel.commercialName,
-                lastPositions = vessel.lastPositions.map { LastPositionOutput.toLastPositionOutput(it) },
+                positions = vessel.positions.map { PositionOutput.toLastPositionOutput(it) },
                 length = vessel.length,
                 ownerLastName = vessel.ownerLastName,
                 ownerFirstName = vessel.ownerFirstName,

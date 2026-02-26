@@ -2,12 +2,17 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import fr.gouv.cacem.monitorenv.domain.entities.positions.AISPositionEntity
 import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPayload
+import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EmbeddedId
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import org.hibernate.annotations.Generated
+import org.hibernate.generator.EventType
 import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -18,8 +23,11 @@ import kotlin.math.roundToInt
 @Entity
 @Table(name = "ais_positions")
 data class AISPositionModel(
+    @Column(insertable = false, updatable = false)
+    @Generated(event = [EventType.INSERT])
+    val id: Int?,
     @EmbeddedId
-    val id: AISPositionPK,
+    val pk: AISPositionPK,
     @JsonSerialize(using = GeometrySerializer::class)
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     val coord: Geometry?,
@@ -41,7 +49,7 @@ data class AISPositionModel(
     companion object {
         fun toAISPositionModel(aisPosition: AISPayload): AISPositionModel =
             AISPositionModel(
-                id = AISPositionPK(mmsi = aisPosition.mmsi, ts = aisPosition.features?.ais?.ts),
+                pk = AISPositionPK(mmsi = aisPosition.mmsi, ts = aisPosition.features?.ais?.ts),
                 coord = aisPosition.coord.let { WKTReader().read(it) },
                 status = aisPosition.status,
                 course = aisPosition.course?.let(toShort()),
@@ -77,10 +85,27 @@ data class AISPositionModel(
                         ?.draught
                         ?.let(toShort()),
                 destination = aisPosition.features?.ais?.destination,
+                id = null,
             )
 
         private fun toShort(): (Double) -> Short = { (it * 100).roundToInt().toShort() }
+
+        private fun toDouble(): (Short) -> Double = { (it.toDouble() / 100) }
     }
+
+    fun toAISPositionEntity(): AISPositionEntity =
+        AISPositionEntity(
+            course = course?.let(toDouble()),
+            destination = destination,
+            geom = coord as Point?,
+            heading = heading?.let(toDouble()),
+            id = id,
+            mmsi = pk.mmsi,
+            shipname = shipname,
+            status = status,
+            speed = speed?.let(toDouble()),
+            timestamp = pk.ts,
+        )
 }
 
 @Embeddable

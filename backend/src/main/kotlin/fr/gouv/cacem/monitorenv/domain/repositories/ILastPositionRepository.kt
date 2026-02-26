@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.lastPositions.LastPositionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.positions.LastPositionEntity
 
 interface ILastPositionRepository {
     fun findAll(shipId: Int): List<LastPositionEntity>

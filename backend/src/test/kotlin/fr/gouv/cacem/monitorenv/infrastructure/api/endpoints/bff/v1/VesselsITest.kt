@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
@@ -39,7 +40,7 @@ class VesselsITest {
     fun `Should search for a vessel`() {
         // Given
         val vessel = aVessel()
-        given(this.searchVessels.execute(any())).willReturn(listOf(vessel))
+        given(searchVessels.execute(any())).willReturn(listOf(vessel))
 
         // When
         api
@@ -63,7 +64,13 @@ class VesselsITest {
         // Given
         val id = 1
         val vessel = aVessel()
-        given(getVesselById.execute(id)).willReturn(vessel)
+        given(
+            getVesselById.execute(
+                eq(id),
+                any(),
+                any(),
+            ),
+        ).willReturn(vessel)
 
         // When
         api
@@ -99,7 +106,9 @@ class VesselsITest {
     fun `Should return 404 when vessel is not found`() {
         // Given
         val id = 1
-        given(getVesselById.execute(id)).willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND))
+        given(
+            getVesselById.execute(eq(id), any(), any()),
+        ).willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND))
 
         // When
         api

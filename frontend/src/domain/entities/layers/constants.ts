@@ -43,7 +43,6 @@ export enum MonitorEnvLayers {
   FAO = 'FAO',
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
-  LAST_POSITIONS = 'LAST_POSITIONS',
   LOCALIZED_AREAS = 'LOCALIZED_AREAS',
   LOCATE_ON_MAP = 'LOCATE_ON_MAP',
   LOW_WATER_LINE = 'LOW_WATER_LINE',
@@ -72,6 +71,7 @@ export enum MonitorEnvLayers {
   THREE_MILES = 'THREE_MILES',
   TRANSVERSAL_SEA_LIMIT_AREAS = 'TRANSVERSAL_SEA_LIMIT_AREAS',
   TWELVE_MILES = 'TWELVE_MILES',
+  VESSEL_POSITIONS = 'VESSEL_POSITIONS',
   VIGILANCE_AREA = 'VIGILANCE_AREA',
   VIGILANCE_AREA_PREVIEW = 'VIGILANCE_AREA_PREVIEW'
 }
@@ -340,8 +340,8 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     code: MonitorEnvLayers.LOCATE_ON_MAP,
     zIndex: 1500
   },
-  [MonitorEnvLayers.LAST_POSITIONS]: {
-    code: MonitorEnvLayers.LAST_POSITIONS,
+  [MonitorEnvLayers.VESSEL_POSITIONS]: {
+    code: MonitorEnvLayers.VESSEL_POSITIONS,
     zIndex: 1500
   }
 }
@@ -371,7 +371,8 @@ export const SelectableLayers0To7 = [
   [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW],
   [MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY],
-  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY],
+  [MonitorEnvLayers.VESSEL_POSITIONS]
 ]
 
 export const SelectableLayers7To26 = [
@@ -395,7 +396,8 @@ export const SelectableLayers7To26 = [
   [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW],
   [MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY],
-  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY],
+  [MonitorEnvLayers.VESSEL_POSITIONS]
 ]
 
 // Priority of hoverable items is determined by the order of the layers in this array
@@ -418,7 +420,8 @@ export const HoverableLayers0To7 = [
   [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW],
   [MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY],
-  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY],
+  [MonitorEnvLayers.VESSEL_POSITIONS]
 ]
 
 export const HoverableLayers7To26 = [
@@ -443,7 +446,8 @@ export const HoverableLayers7To26 = [
   [MonitorEnvLayers.DASHBOARDS],
   [MonitorEnvLayers.DASHBOARD_PREVIEW],
   [MonitorEnvLayers.DASHBOARD_RECENT_ACTIVITY],
-  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY]
+  [MonitorEnvLayers.RECENT_CONTROLS_ACTIVITY],
+  [MonitorEnvLayers.VESSEL_POSITIONS]
 ]
 
 export type RegulatoryOrAMPOrViglanceAreaLayerType =

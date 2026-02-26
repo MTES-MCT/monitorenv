@@ -118,6 +118,7 @@ export const {
   useGetReportingsByIdsQuery,
   useGetReportingsByMmsiQuery,
   useGetReportingsQuery,
+  useLazyGetReportingsByMmsiQuery,
   useUpdateReportingMutation
 } = reportingsAPI
 

@@ -1,11 +1,11 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures
 
-import fr.gouv.cacem.monitorenv.domain.entities.positions.LastPositionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.positions.AISPositionEntity
 
-class LastPositionFixture {
+class AisPositionFixture {
     companion object {
-        fun aLastPosition() =
-            LastPositionEntity(
+        fun aPosition() =
+            AISPositionEntity(
                 course = null,
                 destination = null,
                 geom = null,

@@ -6,22 +6,39 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, customDayjs, Icon, IconButton, Level } from '@mtes-mct/monitor-ui'
 import { formatCoordinates, formatCoordinatesAsText } from '@utils/coordinates'
-import { useCallback } from 'react'
+import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
+import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { Coordinate } from 'ol/coordinate'
 
+type PositionContext = 'HOVERED_OVERLAY' | 'RESUME' | 'CLICKED_OVERLAY'
 type LastPositionProps = {
-  lastPositions: Vessel.LastPosition[]
+  context?: PositionContext
+  lastPosition: Vessel.Position
 }
 
-export function LastPosition({ lastPositions }: LastPositionProps) {
+export function LastPosition({ context = 'RESUME', lastPosition }: LastPositionProps) {
   const dispatch = useAppDispatch()
   const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
 
-  const lastPosition = lastPositions[0]
+  const displayedDate = useMemo(() => {
+    if (!lastPosition?.timestamp) {
+      return UNKNOWN
+    }
 
-  const diff = customDayjs(lastPosition?.timestamp).fromNow(true)
+    const date =
+      context === 'RESUME'
+        ? customDayjs(lastPosition?.timestamp).fromNow(true)
+        : getDateAsLocalizedStringVeryCompact(lastPosition?.timestamp, false, true)
+
+    return (
+      <>
+        <dt>{context === 'RESUME' ? 'Dernier signal' : 'Signal'}</dt>
+        <dd>{date}</dd>
+      </>
+    )
+  }, [lastPosition?.timestamp, context])
 
   const [latitude, longitude] = formatCoordinates(lastPosition?.geom?.coordinates, coordinatesFormat)
 
@@ -57,38 +74,36 @@ export function LastPosition({ lastPositions }: LastPositionProps) {
   }, [coordinatesFormat, dispatch, lastPosition?.geom?.coordinates])
 
   return (
-    <Wrapper>
+    <Wrapper $context={context}>
       <LastPositionIdentity>
         <dt>Latitude</dt>
         <dd>{latitude ?? UNKNOWN}</dd>
         <dt>Longitude</dt>
         <dd>{longitude ?? UNKNOWN}</dd>
-        <CopyCoordinates
-          accent={Accent.TERTIARY}
-          Icon={Icon.Copy}
-          onClick={copyCoordinates}
-          title="Copier les coordonnées"
-        />
+        {context !== 'HOVERED_OVERLAY' && (
+          <CopyCoordinates
+            accent={Accent.TERTIARY}
+            Icon={Icon.Copy}
+            onClick={copyCoordinates}
+            title="Copier les coordonnées"
+          />
+        )}
       </LastPositionIdentity>
       <LastPositionIdentity>
         <dt>Vitesse</dt>
         <dd>{lastPosition?.speed ? `${lastPosition?.speed} Nds` : UNKNOWN}</dd>
-        <dt>Dernier signal</dt>
-        <dd>{lastPosition?.timestamp ? diff : UNKNOWN}</dd>
+        {displayedDate}
       </LastPositionIdentity>
-      <LastPositionIdentity>
-        <dt>Port d&apos;arrivée</dt>
-        <dd>{lastPosition?.destination ?? UNKNOWN}</dd>
-      </LastPositionIdentity>
+      {context === 'RESUME' && (
+        <LastPositionIdentity>
+          <dt>Port d&apos;arrivée</dt>
+          <dd>{lastPosition?.destination ?? UNKNOWN}</dd>
+        </LastPositionIdentity>
+      )}
     </Wrapper>
   )
 }
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 8fr 7fr 9fr;
-  gap: 10px;
-`
 const LastPositionIdentity = styled(VesselIdentity)`
   align-items: center;
   display: flex;
@@ -99,6 +114,16 @@ const LastPositionIdentity = styled(VesselIdentity)`
 
   dd:not(:last-of-type) {
     margin-bottom: 12px;
+  }
+`
+
+const Wrapper = styled.div<{ $context: PositionContext }>`
+  display: grid;
+  grid-template-columns: ${({ $context }) => ($context === 'RESUME' ? '8fr 7fr 9fr' : '4fr 5fr')};
+  gap: ${({ $context }) => ($context === 'RESUME' ? '8px' : '5px')};
+
+  ${LastPositionIdentity} {
+    padding: ${({ $context }) => ($context === 'RESUME' ? '16px 20px' : '10px')};
   }
 `
 

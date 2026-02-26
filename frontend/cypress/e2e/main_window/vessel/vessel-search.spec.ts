@@ -46,10 +46,14 @@ context('Search Places', () => {
         cy.contains('Désignation commerciale')
         cy.contains('COMMERCIAL NAME')
       })
-    cy.getFeaturesFromLayer(Layers.LAST_POSITIONS.code, PAGE_CENTER_PIXELS).should(features => {
-      expect(features).to.have.length(1)
+    cy.getFeaturesFromLayer(Layers.VESSEL_POSITIONS.code, PAGE_CENTER_PIXELS).should(features => {
+      expect(features).to.have.length(3)
       expect(features?.[0]?.get('shipname')).to.equal('SHIPNAME 1')
     })
+    cy.clickButton('Ouvrir le paramétrage de la piste AIS')
+    cy.get('.Table-SimpleTable tr').should('have.length', 8)
+    cy.fill('Afficher la piste AIS depuis', '3 jours')
+    cy.get('.Table-SimpleTable tr').should('have.length', 9)
 
     cy.clickButton('Fermer la fiche navire')
     cy.getDataCy('vessel-resume-SHIPNAME 1').should('not.exist')
@@ -145,6 +149,8 @@ context('Search Places', () => {
     cy.get('input[name="targetType"]').should('have.value', 'VEHICLE')
     cy.get('input[name="vehicleType"]').should('have.value', 'VESSEL')
     cy.get('input[name="targetDetails.0.mmsi"]').should('have.value', '123456789')
+    // Location
+    cy.contains('47° 38.400′ N 003° 13.176′ W')
 
     cy.clickButton('Fermer la fiche navire')
     cy.getDataCy('vessel-resume-SHIPNAME 1').should('not.exist')

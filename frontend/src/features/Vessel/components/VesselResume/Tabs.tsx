@@ -2,16 +2,16 @@ import { Icon } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import type { VesselResumePages } from '.'
+import type { ResumePages } from '.'
 
 type TabProps = {
-  onTabChange: (tab: VesselResumePages) => void
+  onTabChange: (tab: ResumePages) => void
 }
 
 export function Tabs({ onTabChange }: TabProps) {
-  const [tabOpen, setTabOpen] = useState<VesselResumePages>('RESUME')
+  const [tabOpen, setTabOpen] = useState<ResumePages>('RESUME')
 
-  const changeTab = (tab: VesselResumePages) => {
+  const changeTab = (tab: ResumePages) => {
     setTabOpen(tab)
     onTabChange(tab)
   }

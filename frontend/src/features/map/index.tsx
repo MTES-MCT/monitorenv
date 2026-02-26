@@ -22,7 +22,8 @@ import { RecentActivityLayerEvents } from '@features/RecentActivity/components/L
 import { RecentControlsActivityLayer } from '@features/RecentActivity/components/Layers/RecentControlsActivityLayer'
 import { RecentActvityOverlay } from '@features/RecentActivity/components/Overlays'
 import { RecentActivityLegend } from '@features/RecentActivity/components/RecentActivityLegend'
-import { LastPositionsLayer } from '@features/Vessel/layer'
+import { AISPositionsLayer } from '@features/Vessel/layer'
+import { PositionOverlay } from '@features/Vessel/overlay'
 import { VigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer'
 import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/DrawVigilanceAreaLayer'
 import { EditingVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/EditingVigilanceAreaLayer'
@@ -218,9 +219,11 @@ export function Map() {
         <SelectedDashboardLayer key="SelectedDashboardLayer" />,
         // @ts-ignore
         <DashboardRecentActivityLayer key="DashboardRecentActivityLayer" />,
-        // LAST POSITIONS
+        // AIS POSITIONS
         // @ts-ignore
-        <LastPositionsLayer key="LastPositionsLayer" />
+        <AISPositionsLayer key="PositionsLayer" />,
+        // @ts-ignore
+        <PositionOverlay key="PositionsOveraly" />
       ]
     : []
 

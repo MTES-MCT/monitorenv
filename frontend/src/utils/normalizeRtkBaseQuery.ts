@@ -1,6 +1,5 @@
+import { FrontendError } from '@libs/FrontendError'
 import { isObject, nullify, undefine } from '@mtes-mct/monitor-ui'
-
-import { FrontendError } from '../libs/FrontendError'
 
 import type { BaseQueryEnhancer, FetchArgs } from '@reduxjs/toolkit/dist/query'
 

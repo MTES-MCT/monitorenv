@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.entities.lastPositions.LastPositionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.positions.LastPositionEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.ILastPositionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBLastPositionRepository
 import org.slf4j.Logger

@@ -42,9 +42,9 @@ export function History({ envActions, reportings, vessel }: SummaryProps) {
     }
 
     const reportingWithTarget: Partial<Reporting> = {
-      geom: vessel.lastPositions?.[0]?.geom
+      geom: vessel.positions?.[0]?.geom
         ? {
-            coordinates: [vessel.lastPositions?.[0]?.geom?.coordinates],
+            coordinates: [vessel.positions?.[0]?.geom?.coordinates],
             type: 'MultiPoint'
           }
         : undefined,

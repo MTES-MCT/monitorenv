@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.vessels
 
-import fr.gouv.cacem.monitorenv.domain.entities.lastPositions.LastPositionEntity
+import fr.gouv.cacem.monitorenv.domain.entities.positions.AISPositionEntity
 import java.math.BigDecimal
 
 data class VesselEntity(
@@ -32,5 +32,5 @@ data class VesselEntity(
     val shipId: Int?,
     val shipName: String?,
     val status: String?,
-    val lastPositions: MutableList<LastPositionEntity>,
+    val positions: MutableList<AISPositionEntity>,
 )
