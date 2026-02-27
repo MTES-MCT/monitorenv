@@ -7,6 +7,7 @@ import { boundingExtent } from 'ol/extent'
 import { monitorenvPrivateApi } from './api'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
+import type { HomeRootState } from '@store/index'
 import type { Coordinate } from 'ol/coordinate'
 import type { StringDigit } from 'type-fest/source/internal'
 
@@ -65,6 +66,15 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
         totalCount: response.totalCount
       })
     }),
+    getRegulatoryAreasByIds: builder.query<RegulatoryArea.RegulatoryAreaWithBbox[], number[]>({
+      query: ids => ({ body: ids, method: 'POST', url: '/v2/regulatory-areas' }),
+      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response),
+      transformResponse: (response: RegulatoryArea.RegulatoryAreaFromAPI[]): RegulatoryArea.RegulatoryAreaWithBbox[] =>
+        response.map(area => ({
+          ...area,
+          bbox: boundingExtent(area.geom?.coordinates.flat().flat() as Coordinate[])
+        }))
+    }),
     getRegulatoryAreasToComplete: builder.query<RegulatoryArea.RegulatoryAreaToComplete[], void>({
       providesTags: () => [{ id: 'TO_COMPLETE', type: 'RegulatoryAreas' }],
       query: () => 'v2/regulatory-areas/to-complete',
@@ -92,6 +102,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
 export const {
   useGetLayerNamesQuery,
   useGetRegulatoryAreaByIdQuery,
+  useGetRegulatoryAreasByIdsQuery,
   useGetRegulatoryAreasQuery,
   useGetRegulatoryAreasToCompleteQuery
 } = regulatoryAreasAPI
@@ -129,7 +140,6 @@ export const getRegulatoryAreasByControlPlan = createSelector(
 
 export const getRegulatoryAreasBySeaFront = createSelector(
   [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],
-
   regulatoryAreas => {
     const groups = regulatoryAreas?.data?.regulatoryAreasByLayer
 
@@ -153,5 +163,24 @@ export const getRegulatoryAreasBySeaFront = createSelector(
 
       return acc
     }, {} as Record<StringDigit, Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>)
+  }
+)
+
+export const getSelectedRegulatoryAreas = createSelector(
+  [
+    regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(),
+    (state: HomeRootState) => state.regulatory.selectedRegulatoryLayerIds
+  ],
+  (regulatoryLayers, selectedRegulatoryLayerIds) => {
+    const emptyArray = []
+
+    const flattenedRegulatoryAreas =
+      regulatoryLayers?.data?.regulatoryAreasByLayer.flatMap(group => group.regulatoryAreas) ?? []
+
+    return (
+      selectedRegulatoryLayerIds
+        .map(id => flattenedRegulatoryAreas.find(area => area.id === id))
+        .filter((layer): layer is RegulatoryArea.RegulatoryAreaWithBbox => !!layer) ?? emptyArray
+    )
   }
 )

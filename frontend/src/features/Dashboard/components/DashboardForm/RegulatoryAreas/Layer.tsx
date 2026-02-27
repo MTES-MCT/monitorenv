@@ -11,30 +11,27 @@ import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef } from 'react'
 
-import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { LayerName, StyledLayer } from '../style'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
+
 type RegulatoryLayerProps = {
   isPinned?: boolean
   isSelected: boolean
   layerId: number
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
 }
 
-export function Layer({ isPinned = false, isSelected, layerId }: RegulatoryLayerProps) {
+export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
 
   const ref = createRef<HTMLLIElement>()
 
-  const { layer } = useGetRegulatoryLayersQuery(undefined, {
-    selectFromResult: result => ({
-      layer: result?.currentData?.entities[layerId]
-    })
-  })
-
+  const layer = regulatoryAreas.find(regulatoryArea => regulatoryArea.id === layerId)
   const handleSelectZone = e => {
     e.stopPropagation()
 

@@ -10,8 +10,8 @@ import React, { useMemo, useState } from 'react'
 import { getExtentOfLayersGroup } from './getExtentOfLayersGroup'
 import { LayerSelector } from './LayerSelector.style'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { AMP } from 'domain/entities/AMPs'
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 
 export function MyLayerGroup({
   addZonesToVigilanceArea,
@@ -29,7 +29,7 @@ export function MyLayerGroup({
   addZonesToVigilanceArea: () => void
   children: React.ReactNode
   groupName: string
-  layers: AMP[] | RegulatoryLayerCompact[]
+  layers: AMP[] | RegulatoryArea.RegulatoryAreaWithBbox[]
   name: string
   onRemoveZone: (event) => void
   setTotalNumberOfZones: (totalNumberOfZones: number) => void

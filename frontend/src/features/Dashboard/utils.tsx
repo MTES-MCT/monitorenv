@@ -1,5 +1,5 @@
 import { ampsAPI } from '@api/ampsAPI'
-import { regulatoryLayersAPI } from '@api/regulatoryLayersAPI'
+import { regulatoryAreasAPI } from '@api/regulatoryAreasAPI'
 import { reportingsAPI } from '@api/reportingsAPI'
 import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
@@ -8,11 +8,11 @@ import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/
 
 import { Dashboard } from './types'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { EntityState } from '@reduxjs/toolkit'
 import type { HomeRootState } from '@store/index'
 import type { AMP } from 'domain/entities/AMPs'
-import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 import type { Feature } from 'ol'
 import type { Action } from 'redux'
 import type { ThunkDispatch } from 'redux-thunk'
@@ -26,7 +26,9 @@ export async function populateExtractAreaFromApi(
   dispatch: ThunkDispatch<HomeRootState, void, Action>,
   extractedAreaFromApi: Dashboard.ExtractedAreaFromApi
 ): Promise<Dashboard.ExtractedArea> {
-  const { data: regulatoryLayers } = await dispatch(regulatoryLayersAPI.endpoints.getRegulatoryLayers.initiate())
+  const { data: regulatoryAreas } = await dispatch(
+    regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate(extractedAreaFromApi.regulatoryAreaIds)
+  )
   const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
   const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
   const { data: reportings } = await dispatch(
@@ -36,9 +38,7 @@ export async function populateExtractAreaFromApi(
   return {
     ...extractedAreaFromApi,
     amps: Object.values(ampLayers?.entities ?? []).filter(amp => extractedAreaFromApi.ampIds.includes(amp.id)),
-    regulatoryAreas: Object.values(regulatoryLayers?.entities ?? []).filter(reg =>
-      extractedAreaFromApi.regulatoryAreaIds.includes(reg.id)
-    ),
+    regulatoryAreas: regulatoryAreas ?? [],
     reportings: Object.values(reportings?.entities ?? []),
     vigilanceAreas: Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
       extractedAreaFromApi.vigilanceAreaIds.includes(vigilanceArea.id)
@@ -48,7 +48,7 @@ export async function populateExtractAreaFromApi(
 
 export const extractFeatures = (
   dashboard: Dashboard.Dashboard | undefined,
-  regulatoryLayers: EntityState<RegulatoryLayerWithMetadata, number> | undefined,
+  regulatoryLayers: RegulatoryArea.RegulatoryAreaWithBbox[] | undefined,
   ampLayers: EntityState<AMP, number> | undefined,
   vigilanceAreas: EntityState<VigilanceArea.VigilanceAreaLayer, number> | undefined
 ) => {

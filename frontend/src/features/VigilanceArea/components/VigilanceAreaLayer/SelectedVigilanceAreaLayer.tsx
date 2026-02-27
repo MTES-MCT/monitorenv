@@ -1,5 +1,5 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
@@ -64,42 +64,36 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     !!selectedVigilanceAreaId &&
     isLayerVisible
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
+    selectedVigilanceArea?.linkedRegulatoryAreas ?? [],
+    {
+      skip: !selectedVigilanceAreaId || selectedVigilanceArea?.linkedRegulatoryAreas?.length === 0
+    }
+  )
 
   const regulatoryAreasFeatures = useMemo(() => {
-    const linkedRegulatoryAreas = selectedVigilanceArea?.linkedRegulatoryAreas ?? []
-    if (!regulatoryLayers || linkedRegulatoryAreas.length === 0) {
+    if (!regulatoryAreas || regulatoryAreas.length === 0) {
       return []
     }
 
-    return linkedRegulatoryAreas.reduce((feats: Feature[], regulatorylayerId) => {
-      const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
-      const isRegulatoryAreaShouldBeDisplayed =
-        regulatoryAreaIdsToBeDisplayed?.includes(regulatorylayerId) &&
-        !showedPinnedRegulatoryLayerIds.includes(regulatorylayerId)
+    return regulatoryAreas
+      .map(regulatoryArea => {
+        const isRegulatoryAreaShouldBeDisplayed =
+          regulatoryAreaIdsToBeDisplayed?.includes(regulatoryArea.id) &&
+          !showedPinnedRegulatoryLayerIds.includes(regulatoryArea.id)
 
-      if (regulatorylayer && isRegulatoryAreaShouldBeDisplayed) {
-        const feature = getRegulatoryFeature({
-          code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
-          isolatedLayer,
-          layer: regulatorylayer
-        })
-
-        if (!feature) {
-          return feats
+        if (regulatoryArea && isRegulatoryAreaShouldBeDisplayed) {
+          return getRegulatoryFeature({
+            code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
+            isolatedLayer,
+            layer: regulatoryArea
+          })
         }
-        feats.push(feature)
-      }
 
-      return feats
-    }, [])
-  }, [
-    selectedVigilanceArea?.linkedRegulatoryAreas,
-    regulatoryLayers,
-    regulatoryAreaIdsToBeDisplayed,
-    showedPinnedRegulatoryLayerIds,
-    isolatedLayer
-  ])
+        return null
+      })
+      .filter(feature => !!feature) as Feature[]
+  }, [regulatoryAreas, regulatoryAreaIdsToBeDisplayed, showedPinnedRegulatoryLayerIds, isolatedLayer])
 
   const regulatoryAreasVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const regulatoryAreasVectorLayerRef = useRef(

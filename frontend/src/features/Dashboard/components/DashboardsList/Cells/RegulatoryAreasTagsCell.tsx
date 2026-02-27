@@ -1,16 +1,21 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { SubThemesOrSubTagsContainer, ThemesOrTagsContainer } from '@components/Table/style'
 
 export function RegulatoryAreasTagsCell({ regulatoryAreaIds }: { regulatoryAreaIds: number[] }) {
-  const { data: regulatoryAreas } = useGetRegulatoryLayersQuery()
-  if (!regulatoryAreas) {
+  const { data: regulatoryAreas } = useGetRegulatoryAreasQuery()
+
+  const flattenRegulatoryAreas = regulatoryAreas?.regulatoryAreasByLayer.flatMap(group => group.regulatoryAreas) ?? []
+
+  if (!flattenRegulatoryAreas || flattenRegulatoryAreas.length === 0) {
     return null
   }
   if (!regulatoryAreaIds || regulatoryAreaIds.length === 0) {
     return '-'
   }
 
-  const tags = regulatoryAreaIds.flatMap(regulatoryAreaId => regulatoryAreas.entities[regulatoryAreaId]?.tags || [])
+  const tags = regulatoryAreaIds.flatMap(
+    regulatoryAreaId => flattenRegulatoryAreas.find(area => area.id === regulatoryAreaId)?.tags ?? []
+  )
 
   const groupedTagsAndSubtags = tags.reduce((acc, tag) => {
     if (tag) {

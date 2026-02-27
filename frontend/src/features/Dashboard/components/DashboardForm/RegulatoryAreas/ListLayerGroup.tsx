@@ -1,23 +1,25 @@
-import { getNumberOfRegulatoryLayerZonesByGroupName } from '@api/regulatoryLayersAPI'
+import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import { intersection } from 'lodash'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Layer } from './Layer'
 import { getPinIcon, getSelectionState } from '../ToggleSelectAll/utils'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
+
 type ResultListLayerGroupProps = {
   groupName: string
   isSelected?: boolean
   layerIds: number[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
   selectedRegulatoryAreaIds: number[]
 }
 
@@ -25,12 +27,16 @@ export function ListLayerGroup({
   groupName,
   isSelected = false,
   layerIds,
+  regulatoryAreas,
   selectedRegulatoryAreaIds
 }: ResultListLayerGroupProps) {
   const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
-
-  const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
+  const { data: regulatoryAreasLayerNames } = useGetLayerNamesQuery()
+  const totalNumberOfZones = useMemo(
+    () => regulatoryAreasLayerNames?.layerNames[groupName] ?? 0,
+    [regulatoryAreasLayerNames, groupName]
+  )
   const zonesSelected = intersection(selectedRegulatoryAreaIds, layerIds)
   const topicSelectionState = getSelectionState(zonesSelected, layerIds)
 
@@ -88,6 +94,7 @@ export function ListLayerGroup({
             isPinned={selectedRegulatoryAreaIds.includes(layerId)}
             isSelected={isSelected}
             layerId={layerId}
+            regulatoryAreas={regulatoryAreas}
           />
         ))}
       </LayerSelector.SubGroup>

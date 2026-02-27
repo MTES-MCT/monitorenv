@@ -121,7 +121,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     <Fragment key={`dashboard-regulatoryTags-${orientation === 'row' ? 'row' : 'column'}`}>
       {regulatoryTags?.map(tag => (
         <SingleTag key={tag} onDelete={() => onDeleteTag(tag, 'regulatoryTags', regulatoryTags)}>
-          {String(`${orientation === 'row' ? 'Thématique ' : ''}${getTitle(tag)}`)}
+          {String(`${orientation === 'row' ? 'Tag ' : ''}${getTitle(tag)}`)}
         </SingleTag>
       ))}
     </Fragment>

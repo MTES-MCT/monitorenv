@@ -1,5 +1,5 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getDashboardById } from '@features/Dashboard/slice'
@@ -15,6 +15,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { BaseLayer } from 'domain/entities/layers/BaseLayer'
+import { uniq } from 'lodash'
 import { Feature, View } from 'ol'
 import { buffer, createEmpty, extend, type Extent, getHeight, getWidth } from 'ol/extent'
 import { type Geometry } from 'ol/geom'
@@ -110,9 +111,14 @@ export function useExportImages() {
   const activeDashboard = dashboard?.dashboard
   const backgroundMap = dashboard?.backgroundMap
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(undefined, { skip: !dashboard })
   const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
+
+  const allRegulatoryAreaIds = uniq([...(activeDashboard?.regulatoryAreaIds ?? []), ...allLinkedRegulatoryAreaIds])
+
+  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(allRegulatoryAreaIds, {
+    skip: !dashboard || allRegulatoryAreaIds.length === 0
+  })
 
   const layersVectorSourceRef = useRef(new VectorSource())
   const layersVectorLayerRef = useRef(

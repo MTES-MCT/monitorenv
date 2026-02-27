@@ -2,7 +2,7 @@ import { getAmpsByIds } from '@api/ampsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
-import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
 import { useGetVigilanceAreasByIdsQuery } from '@api/vigilanceAreasAPI'
@@ -29,7 +29,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const recentActivityFilters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, dashboard.id))
   const { data: allControlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const selectedControlUnits = allControlUnits?.filter(controlUnit => dashboard.controlUnitIds.includes(controlUnit.id))
-  const regulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, dashboard.regulatoryAreaIds))
+  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(dashboard.regulatoryAreaIds)
   const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
   const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery(dashboard.vigilanceAreaIds)
@@ -42,7 +42,9 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     [vigilanceAreas]
   )
 
-  const allLinkedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasByIds(state, allLinkedRegulatoryAreaIds))
+  const { data: allLinkedRegulatoryAreas } = useGetRegulatoryAreasByIdsQuery(allLinkedRegulatoryAreaIds, {
+    skip: allLinkedRegulatoryAreaIds.length === 0
+  })
   const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
