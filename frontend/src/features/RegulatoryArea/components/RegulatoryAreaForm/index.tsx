@@ -90,8 +90,12 @@ export function RegulatoryAreaForm() {
   }
 
   const saveRegulatoryArea = (values: RegulatoryArea.RegulatoryAreaFromAPI) => {
-    const currentDate = values.creation ? values.creation : customDayjs().toISOString()
-    const regulatoryAreaToSave = { ...values, creation: currentDate, editionBo: currentDate }
+    const currentDate = customDayjs().toISOString()
+    const regulatoryAreaToSave = {
+      ...values,
+      creation: values.creation ? values.creation : currentDate,
+      editionBo: currentDate
+    }
     dispatch(createOrUpdateRegulatoryArea(regulatoryAreaToSave, navigate))
   }
 

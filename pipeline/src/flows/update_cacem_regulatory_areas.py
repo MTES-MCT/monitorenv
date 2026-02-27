@@ -160,6 +160,8 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
 def update_cacem_regulatory_areas_flow():    
     cacem_df = cacem_rows()
     monitorenv_df = monitorenv_rows()
+    cacem_df["edition_bo"] = pd.to_datetime(cacem_df["edition_bo"], errors="coerce")
+    monitorenv_df["edition_bo"] = pd.to_datetime(monitorenv_df["edition_bo"], errors="coerce")
 
     merged = cacem_df.merge(
         monitorenv_df,
@@ -168,10 +170,14 @@ def update_cacem_regulatory_areas_flow():
         suffixes=("_cacem", "_monitorenv")
     )
 
-    different_ids = merged[
-        merged['edition_bo_cacem'] > merged['edition_bo_monitorenv']
-    ]['id'].tolist()
-    
+    mask = (
+        merged['edition_bo_cacem'].isna().astype(bool)
+        | (merged['edition_bo_monitorenv'] > merged['edition_bo_cacem'])
+    )   
+
+    different_ids = merged[mask]['id'].tolist()
+
+
     cond_update = update_required(different_ids)
     if cond_update is True:
         new_regulatory_areas = extract_env_regulatory_areas(different_ids)
