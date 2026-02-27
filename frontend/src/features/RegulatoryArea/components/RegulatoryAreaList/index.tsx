@@ -52,7 +52,12 @@ export function RegulatoryAreaList() {
     }),
     [filters.seaFronts, filters.searchQuery, filters.tags, filters.themes]
   )
-  const { isFetching, isLoading } = useGetRegulatoryAreasQuery(apiFilters)
+  const hasNoFilters = useMemo(
+    () => !apiFilters.searchQuery && apiFilters.tags.length === 0 && apiFilters.themes.length === 0,
+    [apiFilters]
+  )
+
+  const { isFetching, isLoading } = useGetRegulatoryAreasQuery(hasNoFilters ? undefined : apiFilters)
 
   const closePanel = () => {
     dispatch(regulatoryAreaTableActions.setOpenRegulatoryAreaId(undefined))

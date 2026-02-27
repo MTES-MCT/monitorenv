@@ -4,11 +4,8 @@ import { Projection, transformExtent } from 'ol/proj'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { AMP } from 'domain/entities/AMPs'
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 
-export const getExtentOfLayersGroup = (
-  layers: RegulatoryLayerCompact[] | RegulatoryArea.RegulatoryAreaWithBbox[] | AMP[]
-): Extent => {
+export const getExtentOfLayersGroup = (layers: RegulatoryArea.RegulatoryAreaWithBbox[] | AMP[]): Extent => {
   const extentOfLayersGroup = layers.reduce((accumulatedExtent, currentLayer) => {
     const extendedExtent = [...accumulatedExtent]
     extend(extendedExtent, currentLayer.bbox)

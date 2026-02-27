@@ -1,5 +1,4 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getDashboardById } from '@features/Dashboard/slice'
@@ -14,7 +13,7 @@ import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { dashboardIcon, getDashboardStyle } from './style'
 import { Dashboard } from '../../types'
@@ -33,17 +32,25 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   const mapFocus = useAppSelector(state => state.dashboard.mapFocus)
 
   const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
-  const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportingIds ?? [], {
-    skip: !dashboard
-  })
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(undefined, { skip: !dashboard })
-  const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
-  const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
   const openPanel = dashboard?.openPanel
   const activeDashboard = dashboard?.dashboard
 
   const isLayerVisible = !!dashboard
+
+  const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportingIds ?? [], {
+    skip: !dashboard
+  })
+  const allRegulatoryAreas = useMemo(() => dashboard?.extractedArea?.regulatoryAreas ?? [], [dashboard])
+  const regulatoryLayersIds = useMemo(() => activeDashboard?.regulatoryAreaIds ?? [], [activeDashboard])
+
+  const regulatoryAreas = useMemo(
+    () => allRegulatoryAreas.filter(regulatoryArea => regulatoryLayersIds.includes(regulatoryArea.id)),
+    [allRegulatoryAreas, regulatoryLayersIds]
+  )
+
+  const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
+  const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
   const metadataLayerId = useAppSelector(state => state.layersMetadata.metadataLayerId)
   const drawBorder = useCallback(
@@ -73,26 +80,23 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
 
       if (activeDashboard && !mapFocus) {
         // Regulatory Areas
-        if (regulatoryLayers?.entities) {
-          const regulatoryLayersIds = activeDashboard.regulatoryAreaIds
-          const features = regulatoryLayersIds.reduce((feats: Feature[], layerId) => {
-            const layer = regulatoryLayers.entities[layerId]
-
-            if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+        if (regulatoryAreas && regulatoryAreas.length > 0) {
+          const features = regulatoryAreas
+            .map(regulatoryArea => {
               const feature = getRegulatoryFeature({
                 code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
                 isolatedLayer,
-                layer
+                layer: regulatoryArea
               })
               if (!feature) {
-                return feats
+                return null
               }
-              drawBorder(layerId, feature, Dashboard.Block.REGULATORY_AREAS)
-              feats.push(feature)
-            }
+              drawBorder(regulatoryArea.id, feature, Dashboard.Block.REGULATORY_AREAS)
 
-            return feats
-          }, [])
+              return feature
+            })
+            .filter((feature): feature is Feature<Geometry> => feature !== null)
+
           layersVectorSourceRef.current.addFeatures(features)
         }
 
@@ -174,14 +178,14 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
     activeDashboard?.reportingIds,
     activeDashboard?.vigilanceAreaIds,
     map,
-    regulatoryLayers,
     vigilanceAreas?.entities,
     mapFocus,
     reportings,
-    dashboard?.dashboard.geom,
+    dashboard?.dashboard?.geom,
     drawBorder,
     displayGeometry,
-    isolatedLayer
+    isolatedLayer,
+    regulatoryAreas
   ])
 
   useEffect(() => {

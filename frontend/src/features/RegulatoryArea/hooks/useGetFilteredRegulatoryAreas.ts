@@ -24,7 +24,16 @@ export const useGetFilteredRegulatoryAreas = () => {
     }),
     [controlPlan, globalSearchText, filteredRegulatoryTags, filteredRegulatoryThemes]
   )
-  const { data, isError, isFetching, isLoading } = useGetRegulatoryAreasQuery(apiFilters)
+  const hasNoFilters = useMemo(
+    () =>
+      !apiFilters.controlPlan &&
+      !apiFilters.searchQuery &&
+      apiFilters.tags.length === 0 &&
+      apiFilters.themes.length === 0,
+    [apiFilters]
+  )
+
+  const { data, isError, isFetching, isLoading } = useGetRegulatoryAreasQuery(hasNoFilters ? undefined : apiFilters)
 
   const flattenRegulatoryAreas = useMemo(() => {
     if (!data?.regulatoryAreasByLayer) {
