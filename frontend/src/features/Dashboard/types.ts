@@ -4,15 +4,11 @@ import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 import type { RecentActivityFilters } from './components/DashboardForm/slice'
 import type { ExportImageType } from './hooks/useExportImages'
 import type { AMP, AMPFromAPI } from '../../domain/entities/AMPs'
-import type {
-  RegulatoryLayerCompact,
-  RegulatoryLayerCompactFromAPI,
-  RegulatoryLayerWithMetadata
-} from '../../domain/entities/regulatory'
 import type { Reporting } from '../../domain/entities/reporting'
 import type { ThemeFromAPI } from '../../domain/entities/themes'
 import type { ImageApi, ImageFront, Link } from '@components/Form/types'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
 import type { TagFromAPI } from 'domain/entities/tags'
@@ -24,7 +20,7 @@ export namespace Dashboard {
     // TODO(24/09/2024): uniformize data naming (properties and types) from api
     amps: AMPFromAPI[]
     inseeCode: string
-    regulatoryAreas: RegulatoryLayerCompactFromAPI[]
+    regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
     reportings: Reporting[]
     tags: TagFromAPI[]
     themes: ThemeFromAPI[]
@@ -65,7 +61,7 @@ export namespace Dashboard {
 
   export type Brief = {
     allLinkedAMPs: AMPFromAPI[]
-    allLinkedRegulatoryAreas: RegulatoryLayerWithMetadata[]
+    allLinkedRegulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
     amps: AMPFromAPI[]
     attachments: {
       images?: ImageFront[]
@@ -78,7 +74,7 @@ export namespace Dashboard {
     recentActivity: RecentActivity.RecentControlsActivity[]
     recentActivityControlUnits: ControlUnit.ControlUnit[]
     recentActivityFilters: RecentActivityFilters
-    regulatoryAreas: RegulatoryLayerWithMetadata[]
+    regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
     reportings: Reporting[]
     selectedControlUnits: ControlUnit.ControlUnit[]
     themes: ThemeFromAPI[]
@@ -115,7 +111,7 @@ export namespace Dashboard {
     'reportings' | 'amps' | 'vigilanceAreas' | 'regulatoryAreas'
   > & {
     amps: AMP[]
-    regulatoryAreas: RegulatoryLayerCompact[]
+    regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
     reportings: Reporting[]
     vigilanceAreas: VigilanceArea.VigilanceAreaLayer[]
   }

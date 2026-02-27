@@ -12,14 +12,14 @@ import { areaStyle, layoutStyle } from '../style'
 import { getImage, getMinimap } from '../utils'
 
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
-import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export function RegulatoryAreas({
   images,
   regulatoryAreas
 }: {
   images: ExportImageType[]
-  regulatoryAreas: RegulatoryLayerWithMetadata[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
 }) {
   return (
     <>

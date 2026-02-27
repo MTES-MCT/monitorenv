@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerName
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.LayerNamesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -32,6 +34,7 @@ class RegulatoryAreas(
     private val getAllLayerNames: GetAllLayerNames,
     private val createOrUpdateRegulatoryArea: CreateOrUpdateRegulatoryArea,
     private val getAllRegulatoryAreasToComplete: GetAllRegulatoryAreasToComplete,
+    private val getRegulatoryAreaByIds: GetRegulatoryAreaByIds,
 ) {
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
@@ -69,6 +72,16 @@ class RegulatoryAreas(
             regulatoryAreasByLayer = groupedDto,
         )
     }
+
+    @PostMapping("")
+    @Operation(summary = "Get regulatory areas by ids")
+    fun getAll(
+        @RequestBody
+        ids: List<Int>,
+    ): List<RegulatoryAreaDataOutput> =
+        getRegulatoryAreaByIds
+            .execute(ids)
+            .map { RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it) }
 
     @GetMapping("/{regulatoryAreaId}")
     @Operation(summary = "Get regulatory area by Id")

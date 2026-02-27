@@ -49,4 +49,15 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
+
+    @Query(
+        value =
+            """
+            SELECT regulatoryArea
+            FROM RegulatoryAreaNewModel regulatoryArea
+            WHERE regulatoryArea.id IN :ids
+            AND regulatoryArea.creation IS NOT NULL
+        """,
+    )
+    fun findAllCompleteByIds(ids: List<Int>): List<RegulatoryAreaNewModel>
 }

@@ -1,4 +1,4 @@
-import { useGetRegulatoryLayerByIdQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
 import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -21,7 +21,7 @@ export function RegulatoryMetadata() {
   const dispatch = useAppDispatch()
   const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
-  const { currentData: regulatoryMetadata } = useGetRegulatoryLayerByIdQuery(
+  const { currentData: regulatoryMetadata } = useGetRegulatoryAreaByIdQuery(
     metadataLayerId ? Number(metadataLayerId) : skipToken,
     {
       pollingInterval: FOUR_HOURS
@@ -41,7 +41,7 @@ export function RegulatoryMetadata() {
               layerType={MonitorEnvLayers.REGULATORY_ENV}
               legendKey={getRegulatoryAreaTitle(regulatoryMetadata.polyName, regulatoryMetadata.resume)}
               plan={regulatoryMetadata.plan}
-              type={regulatoryMetadata.tags.map(({ name }) => name).join(', ')}
+              type={regulatoryMetadata.tags?.map(({ name }) => name).join(', ')}
             />
             <Name title={getTitle(regulatoryMetadata.layerName)}>{getTitle(regulatoryMetadata.layerName)}</Name>
             <IconButton

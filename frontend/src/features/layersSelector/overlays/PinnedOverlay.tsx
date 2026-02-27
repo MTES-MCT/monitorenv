@@ -11,14 +11,14 @@ import styled from 'styled-components'
 import { OverlayContent } from './OverlayContent'
 import { useClickOutsideWithNoMove } from './useClickOutsideWithNoMove'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
-import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { OverlayItem } from 'domain/types/map'
 
 export function PinnedOverlay({
   items
 }: {
-  items: OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryLayerCompactProperties>[]
+  items: OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox>[]
 }) {
   const ref = useRef<HTMLDivElement>(null)
 

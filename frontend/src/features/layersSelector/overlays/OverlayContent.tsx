@@ -13,7 +13,6 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, Size, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
-import { type RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { mapActions } from 'domain/shared_slices/Map'
 import styled from 'styled-components'
@@ -27,6 +26,7 @@ import {
 } from '../metadataPanel/slice'
 import { LayerLegend } from '../utils/LayerLegend.style'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { OverlayItem } from 'domain/types/map'
 
@@ -34,7 +34,7 @@ type OverlayContentProps = {
   items:
     | OverlayItem<
         RegulatoryOrAMPOrViglanceAreaLayerType,
-        AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties
+        AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties
       >[]
     | undefined
 }
