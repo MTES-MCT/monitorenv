@@ -9,11 +9,11 @@ import { RegulatoryAreasTagsCell } from '../Cells/RegulatoryAreasTagsCell'
 import { TotalSelectedItemsCell } from '../Cells/TotalSelectedItemsCell'
 
 import type { Dashboard } from '@features/Dashboard/types'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
-import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
 
 export const Columns = (
-  regulatoryAreas: RegulatoryLayerCompactFromAPI[],
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[],
   controlUnits: ControlUnit.ControlUnit[] | undefined,
   legacyFirefoxOffset: number = 0,
   isFetching: boolean = false
@@ -77,11 +77,11 @@ export const Columns = (
     id: 'regulatoryAreaIds',
     size: 365 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<Dashboard.Dashboard>, rowB: Row<Dashboard.Dashboard>, columnId: string) => {
-      const themeIdA = rowA.original[columnId][0]
-      const themeIdB = rowB.original[columnId][0]
+      const regIdA = rowA.original[columnId][0]
+      const regIdB = rowB.original[columnId][0]
 
-      const themeA: string = regulatoryAreas?.[themeIdA]?.layerName ?? ''
-      const themeB: string = regulatoryAreas?.[themeIdB]?.layerName ?? ''
+      const themeA: string = regulatoryAreas?.find(regulatoryArea => regulatoryArea.id === regIdA)?.layerName ?? ''
+      const themeB: string = regulatoryAreas?.find(regulatoryArea => regulatoryArea.id === regIdB)?.layerName ?? ''
 
       return themeA?.localeCompare(themeB)
     }

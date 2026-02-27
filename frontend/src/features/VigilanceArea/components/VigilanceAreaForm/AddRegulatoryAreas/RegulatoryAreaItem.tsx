@@ -20,12 +20,12 @@ import {
 import { useFormikContext } from 'formik'
 import styled from 'styled-components'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 
 type RegulatoryAreaItemProps = {
   isReadOnly: boolean
-  regulatoryArea: RegulatoryLayerCompact | undefined
+  regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox | undefined
 }
 export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAreaItemProps) {
   const dispatch = useAppDispatch()

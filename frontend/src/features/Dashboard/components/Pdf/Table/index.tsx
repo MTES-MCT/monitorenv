@@ -12,8 +12,8 @@ import { layoutStyle } from '../style'
 
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { Dashboard } from '@features/Dashboard/types'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
-import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
 const maxHeightCell = 30
 const minHeightCell = 20
@@ -78,7 +78,7 @@ export function AreaTable({
 }: {
   amps: AMPFromAPI[]
   image: ExportImageType | undefined
-  regulatoryAreas: RegulatoryLayerWithMetadata[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
   vigilanceAreas: Dashboard.VigilanceAreaWithImages[]
 }) {
   const groupedRegulatoryAreas = groupBy(

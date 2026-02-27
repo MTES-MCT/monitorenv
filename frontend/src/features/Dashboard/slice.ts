@@ -544,7 +544,7 @@ const getRegulatoryAreasByTags = createSelector(
     }
 
     return filteredRegulatoryAreas?.filter(({ tags }) =>
-      tags.some(({ id }) => tagsFilter?.some(tagFilter => tagFilter.id === id))
+      tags?.some(({ id }) => tagsFilter?.some(tagFilter => tagFilter.id === id))
     )
   }
 )
@@ -560,7 +560,7 @@ const getRegulatoryAreasByThemes = createSelector(
     }
 
     return filteredRegulatoryAreas?.filter(({ themes }) =>
-      themes.some(({ id }) => themesFilter?.some(themeFilter => themeFilter.id === id))
+      themes?.some(({ id }) => themesFilter?.some(themeFilter => themeFilter.id === id))
     )
   }
 )

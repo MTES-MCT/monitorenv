@@ -5,9 +5,9 @@ import {
   type RegulatoryOrAMPOrViglanceAreaLayerType
 } from '../../../domain/entities/layers/constants'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { HomeRootState } from '@store/index'
 import type { AMPProperties } from 'domain/entities/AMPs'
-import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { OverlayItem } from 'domain/types/map'
 import type { Coordinate } from 'ol/coordinate'
 
@@ -16,7 +16,7 @@ type MetadataPanelSliceState = {
   layerOverlayIsOpen: boolean
   layerOverlayItems: OverlayItem<
     RegulatoryOrAMPOrViglanceAreaLayerType,
-    AMPProperties | RegulatoryLayerCompactProperties
+    AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox
   >[]
   metadataLayerId: number | string | undefined
   metadataLayerType:

@@ -1,8 +1,8 @@
+import { getSelectedRegulatoryAreas } from '@api/regulatoryAreasAPI'
 import { InlineTransparentButton } from '@components/style'
 import { ChevronIconButton } from '@features/commonStyles/icons/ChevronIconButton'
 
 import { RegulatoryLayersList } from './MyRegulatoryLayersList'
-import { getSelectedRegulatoryLayers } from '../../../api/regulatoryLayersAPI'
 import { layerSidebarActions } from '../../../domain/shared_slices/LayerSidebar'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
@@ -13,8 +13,7 @@ export function RegulatoryLayers() {
   const dispatch = useAppDispatch()
 
   const myRegulatoryZonesIsOpen = useAppSelector(state => state.layerSidebar.myRegulatoryZonesIsOpen)
-
-  const selectedRegulatoryLayers = useAppSelector(state => getSelectedRegulatoryLayers(state))
+  const selectedRegulatoryLayers = useAppSelector(state => getSelectedRegulatoryAreas(state))
 
   const onTitleClicked = () => {
     dispatch(layerSidebarActions.toggleMyRegulatoryZones())

@@ -1,14 +1,14 @@
+import { getSelectedRegulatoryAreas } from '@api/regulatoryAreasAPI'
 import { useMountTransition } from '@hooks/useMountTransition'
 import { groupBy, isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 
 import { RegulatoryLayerGroup } from './MyRegulatoryLayerGroup'
-import { getSelectedRegulatoryLayers } from '../../../api/regulatoryLayersAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function RegulatoryLayersList() {
-  const selectedRegulatoryLayers = useAppSelector(state => getSelectedRegulatoryLayers(state))
+  const selectedRegulatoryLayers = useAppSelector(state => getSelectedRegulatoryAreas(state))
   const myRegulatoryZonesIsOpen = useAppSelector(state => state.layerSidebar.myRegulatoryZonesIsOpen)
 
   const [totalNumberOfZones, setTotalNumberOfZones] = useState(0)

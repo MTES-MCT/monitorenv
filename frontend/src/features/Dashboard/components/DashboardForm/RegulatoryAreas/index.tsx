@@ -1,4 +1,3 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -16,13 +15,13 @@ import { RegulatoryPanel } from './Panel'
 import { StyledToggleSelectAll } from '../ToggleSelectAll'
 import { getSelectionState, handleSelection } from '../ToggleSelectAll/utils'
 
-import type { RegulatoryLayerCompactFromAPI } from 'domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 type RegulatoriesAreasProps = {
   columnWidth: number
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
-  regulatoryAreas: RegulatoryLayerCompactFromAPI[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
   selectedRegulatoryAreaIds: number[]
   setExpandedAccordion: () => void
 }
@@ -42,22 +41,17 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
     const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.REGULATORY_AREAS))
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
 
-    const regulatoryAreasByLayerName = groupBy(
-      [...regulatoryAreas].sort((a, b) => a?.layerName.localeCompare(b?.layerName)) ?? [],
+    const selectedRegulatoryAreas = regulatoryAreas.filter(regulatoryArea =>
+      selectedRegulatoryAreaIds.includes(regulatoryArea.id)
+    )
+    const selectedRegulatoryAreasByLayerName = groupBy(
+      [...(selectedRegulatoryAreas ?? [])].sort((a, b) => (a?.layerName ?? '').localeCompare(b?.layerName ?? '')) ?? [],
       regulatory => regulatory.layerName
     )
-
-    const { selectedRegulatoryAreasByLayerName } = useGetRegulatoryLayersQuery(undefined, {
-      selectFromResult: ({ data }) => ({
-        selectedRegulatoryAreasByLayerName: groupBy(
-          Object.values(data?.entities ?? [])
-            .filter(regulatory => selectedRegulatoryAreaIds.includes(regulatory.id))
-            .sort((a, b) => a.layerName.localeCompare(b.layerName)),
-          regulatory => regulatory.layerName
-        )
-      })
-    })
-
+    const regulatoryAreasByLayerName = groupBy(
+      [...regulatoryAreas].sort((a, b) => (a?.layerName ?? '').localeCompare(b?.layerName ?? '')) ?? [],
+      regulatory => regulatory.layerName
+    )
     useEffect(() => {
       if (isSelectedAccordionOpen) {
         setExpandedSelectedAccordion(isSelectedAccordionOpen)
@@ -121,6 +115,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
                   key={layerGroupName}
                   groupName={layerGroupName}
                   layerIds={layersId}
+                  regulatoryAreas={regulatoryAreas}
                   selectedRegulatoryAreaIds={selectedRegulatoryAreaIds}
                 />
               )
@@ -146,6 +141,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
                   groupName={layerGroupName}
                   isSelected
                   layerIds={layersId}
+                  regulatoryAreas={regulatoryAreas}
                   selectedRegulatoryAreaIds={selectedRegulatoryAreaIds}
                 />
               )

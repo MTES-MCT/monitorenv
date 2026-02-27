@@ -1,5 +1,5 @@
 import { useGetDashboardsQuery } from '@api/dashboardsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useMemo } from 'react'
 
@@ -13,7 +13,7 @@ export const useGetFilteredDashboardsQuery = (skip = false) => {
   const { controlUnits, regulatoryTags, seaFronts, specificPeriod, updatedAt } = useAppSelector(
     state => state.dashboardFilters.filters
   )
-  const { data: regulatoryAreas } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryAreas } = useGetRegulatoryAreasQuery()
 
   const {
     data: dashboards,
@@ -31,10 +31,18 @@ export const useGetFilteredDashboardsQuery = (skip = false) => {
         ?.filter(dashboard => filterBySeaFronts(seaFronts, dashboard))
         .filter(dashboard => filterByUnits(controlUnits, dashboard))
         .filter(dashboard =>
-          filterByRegulatoryTags(regulatoryTags, dashboard, Object.values(regulatoryAreas?.entities ?? []))
+          filterByRegulatoryTags(regulatoryTags, dashboard, regulatoryAreas?.regulatoryAreasByLayer ?? [])
         )
         .filter(dashboard => filterByUpdatedAt(updatedAt, dashboard.updatedAt, specificPeriod)),
-    [controlUnits, dashboards, regulatoryAreas?.entities, regulatoryTags, seaFronts, specificPeriod, updatedAt]
+    [
+      controlUnits,
+      dashboards,
+      regulatoryAreas?.regulatoryAreasByLayer,
+      regulatoryTags,
+      seaFronts,
+      specificPeriod,
+      updatedAt
+    ]
   )
 
   return { dashboards: filteredDashboards, isError, isFetching, isLoading }

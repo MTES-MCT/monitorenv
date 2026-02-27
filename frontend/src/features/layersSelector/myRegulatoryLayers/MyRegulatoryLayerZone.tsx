@@ -16,10 +16,10 @@ import {
 } from '../metadataPanel/slice'
 import { MyLayerZone } from '../utils/MyLayerZone'
 
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 type RegulatoryLayerZoneProps = {
-  regulatoryZone: RegulatoryLayerCompact
+  regulatoryZone: RegulatoryArea.RegulatoryAreaWithBbox
 }
 export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps) {
   const dispatch = useAppDispatch()
@@ -56,7 +56,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
       removeZone={handleRemoveZone}
       showLayer={() => dispatch(showRegulatoryLayer(regulatoryZone.id))}
       toggleZoneMetadata={toggleRegulatoryZoneMetadata}
-      type={regulatoryZone.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
+      type={regulatoryZone.tags?.map(({ name }) => name).join(', ') ?? 'aucun'}
     />
   )
 }

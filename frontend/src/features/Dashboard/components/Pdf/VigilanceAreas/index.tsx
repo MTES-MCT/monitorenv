@@ -15,8 +15,8 @@ import { areaStyle, layoutStyle } from '../style'
 import { getImage, getMinimap } from '../utils'
 
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
-import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
 
 function chunkArray(array: ImageFront[], size: number) {
   const result: ImageFront[][] = []
@@ -72,7 +72,7 @@ export function VigilanceAreas({
 }: {
   images: ExportImageType[]
   linkedAMPs: AMPFromAPI[]
-  linkedRegulatoryAreas: RegulatoryLayerWithMetadata[]
+  linkedRegulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
   vigilanceAreas: Dashboard.VigilanceAreaWithImages[]
 }) {
   return (

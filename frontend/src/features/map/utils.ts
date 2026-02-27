@@ -7,9 +7,9 @@ import {
 } from 'domain/entities/layers/constants'
 import { uniqBy } from 'lodash'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
-import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { OverlayItem, SerializedFeature } from 'domain/types/map'
 import type { FeatureLike } from 'ol/Feature'
 
@@ -49,13 +49,13 @@ export const getOverlayItemsFromFeatures = (
         layerType: type as RegulatoryOrAMPOrViglanceAreaLayerType,
         properties: properties as
           | AMPProperties
-          | RegulatoryLayerCompactProperties
+          | RegulatoryArea.RegulatoryAreaWithBbox
           | VigilanceArea.VigilanceAreaProperties
       })
     }
 
     return acc
-  }, [] as OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties>[])
+  }, [] as OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties>[])
 
 export const getClickedItems = (
   isLinkingZonesToVigilanceArea: boolean,
