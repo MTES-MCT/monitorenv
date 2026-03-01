@@ -8,12 +8,12 @@ plugins {
     id("org.springframework.boot") version "3.5.7"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
-    kotlin("plugin.allopen") version "2.2.21"
-    kotlin("plugin.noarg") version "2.2.21"
-    kotlin("plugin.jpa") version "2.2.21"
-    kotlin("plugin.serialization") version "2.2.21"
+    kotlin("jvm") version "2.3.10"
+    kotlin("plugin.spring") version "2.3.10"
+    kotlin("plugin.allopen") version "2.3.10"
+    kotlin("plugin.noarg") version "2.3.10"
+    kotlin("plugin.jpa") version "2.3.10"
+    kotlin("plugin.serialization") version "2.3.10"
 }
 
 repositories {
@@ -62,7 +62,7 @@ tasks.withType<KotlinCompile> {
 
 val ktorVersion = "3.4.0"
 val testcontainersVersion = "1.21.4"
-val sentryVersion = "8.31.0"
+val sentryVersion = "8.33.0"
 val flywayVersion = "11.17.0"
 
 dependencies {
@@ -87,7 +87,7 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("org.hibernate.orm:hibernate-spatial:6.6.13.Final")
     implementation("org.hibernate.validator:hibernate-validator:9.1.0.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.15.1")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-63:3.15.2")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -95,7 +95,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
 
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.21.1")
     implementation("org.n52.jackson:jackson-datatype-jts:2.0.0")
 
     // HTTP Clients (Ktor)
