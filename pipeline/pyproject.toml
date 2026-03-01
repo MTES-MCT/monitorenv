@@ -30,11 +30,11 @@ mypy = "^1.18.2"
 black = "^26.1.0"
 ## Code quality
 isort = "^7.0.0"
-pylint = "^4.0.3"
+pylint = "^4.0.5"
 ## Automation and management
 pre-commit = "^4.5.0"
 ipython = "^9.7.0"
-autoflake = "^2.3.1"
+autoflake = "^2.3.3"
 flake8 = "^7.3.0"
 
 [tool.poetry.scripts]
