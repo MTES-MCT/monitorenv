@@ -63,7 +63,7 @@ tasks.withType<KotlinCompile> {
 val ktorVersion = "3.4.0"
 val testcontainersVersion = "1.21.4"
 val sentryVersion = "8.31.0"
-val flywayVersion = "11.17.0"
+val flywayVersion = "12.0.3"
 
 dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.7"))
