@@ -7,15 +7,15 @@ authors = ["Thomas Brosset <thomas.brosset@gmail.com>"]
 [tool.poetry.dependencies]
 python = "3.13.9"
 geopandas = "^1.1.1"
-python-dotenv = "^1.2.1"
+python-dotenv = "^1.2.2"
 pandas = "^2.3.3"
-geoalchemy2 = "^0.18.1"
+geoalchemy2 = "^0.18.3"
 simplejson = "^3.20.2"
 pytz = "^2025.2"
-prefect = {version = "3.6.9", extras = ["docker"]}
+prefect = {version = "3.6.20", extras = ["docker"]}
 coverage = "^7.12.0"
 pytest = "^9.0.1"
-sqlalchemy = "^2.0.44"
+sqlalchemy = "^2.0.47"
 psycopg2-binary = "^2.9.11"
 css-inline = "^0.20.0"
 lxml = "^6.0.2"
