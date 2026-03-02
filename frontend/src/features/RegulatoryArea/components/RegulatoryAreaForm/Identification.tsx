@@ -206,7 +206,7 @@ export function Identification({
                 Ajouter un nouveau groupe
               </ExtraFooterContainer>
             )}
-            style={{ flex: 1 }}
+            style={{ flex: '1' }}
           />
           <Tooltip>Le nom du groupe doit permettre de connaître le lieu et le sujet de la réglementation.</Tooltip>
         </FieldWithTooltip>
@@ -235,6 +235,7 @@ export function Identification({
             key={geomOptions.length}
             customSearch={geomCustomSearch}
             disabled={isEditing}
+            isCleanable={false}
             isRequired
             label="Géométrie"
             name="geom"
