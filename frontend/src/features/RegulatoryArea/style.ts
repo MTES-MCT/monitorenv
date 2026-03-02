@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 export const StyledBackofficeWrapper = styled(BackofficeWrapper)`
   display: flex;
+  flex: 1;
   flex-direction: row;
   overflow-y: unset;
   padding: 0;
