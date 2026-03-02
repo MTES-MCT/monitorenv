@@ -96,7 +96,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     return {
       allLinkedAMPs,
       allLinkedRegulatoryAreas,
-      amps: uniq([...amps, ...allLinkedAMPs]),
+      amps,
       attachments: {
         images: attachementImages,
         links: dashboard.links
@@ -108,7 +108,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       recentActivity,
       recentActivityControlUnits: filteredRecentActivityControlUnits,
       recentActivityFilters,
-      regulatoryAreas: uniq([...regulatoryAreas, ...allLinkedRegulatoryAreas]),
+      regulatoryAreas,
       reportings: Object.values(reportings?.entities ?? []),
       selectedControlUnits,
       themes: Object.values(themes ?? []),
