@@ -95,7 +95,9 @@ flows_to_deploy = [
     FlowAndSchedules(
         flow=infractions_flow, schedules=[Schedule(cron="2 8,14 * * *")]
     ),
-    FlowAndSchedules(flow=localized_areas_flow),
+    FlowAndSchedules(
+        flow=localized_areas_flow, schedules=[Schedule(cron="0 7 * * 1")]
+    ),
     FlowAndSchedules(flow=marpol_flow),
     FlowAndSchedules(
         flow=refresh_materialized_view_flow,
