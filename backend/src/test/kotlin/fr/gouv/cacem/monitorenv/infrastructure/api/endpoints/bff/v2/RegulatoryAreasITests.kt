@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerName
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
@@ -56,6 +57,9 @@ class RegulatoryAreasITests {
 
     @MockitoBean
     private lateinit var getAllRegulatoryAreasToComplete: GetAllRegulatoryAreasToComplete
+
+    @MockitoBean
+    private lateinit var getRegulatoryAreaByIds: GetRegulatoryAreaByIds
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
@@ -634,5 +638,63 @@ class RegulatoryAreasITests {
             .andExpect(MockMvcResultMatchers.jsonPath("$.type", Matchers.equalTo("AMP")))
             .andExpect(MockMvcResultMatchers.jsonPath("$.tags.length()", Matchers.equalTo(2)))
             .andExpect(MockMvcResultMatchers.jsonPath("$.themes.length()", Matchers.equalTo(1)))
+    }
+
+    @Test
+    fun `Should retrieve regulatory areas that match ids`() {
+        // Given
+        val regulatoryArea2 =
+            RegulatoryAreaEntity(
+                id = 18,
+                geom = polygon,
+                url = "https://example.com/area-18",
+                creation = ZonedDateTime.parse("2022-01-15T10:30:00Z"),
+                layerName = "AMP_Test_Zone",
+                facade = "MED",
+                refReg = "Arrêté préfectoral N°2022-001",
+                editionBo = ZonedDateTime.parse("2022-01-16T10:30:00Z"),
+                editionCacem = null,
+                editeur = "Jean Dupont",
+                source = "",
+                observation = "",
+                tags = listOf(TagFixture.Companion.aTag(name = "AMP", id = 3)),
+                themes =
+                    listOf(
+                        ThemeFixture.Companion.aTheme(
+                            name = "Aire Marine Protégée",
+                            id = 102,
+                        ),
+                    ),
+                date = ZonedDateTime.parse("2022-01-01T00:00:00Z"),
+                dureeValidite = "10 ans",
+                dateFin = ZonedDateTime.parse("2032-01-01T00:00:00Z"),
+                temporalite = "permanent",
+                plan = "AMP",
+                polyName = "Zone protégée test",
+                resume = "Zone de protection marine",
+            )
+
+        val ids = listOf(17, 18)
+        BDDMockito.given(getRegulatoryAreaByIds.execute(ids)).willReturn(listOf(regulatoryArea, regulatoryArea2))
+
+        // When
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .post("/bff/v2/regulatory-areas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(ids)),
+            ).andDo(MockMvcResultHandlers.print())
+            // Then
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize<Any>(2)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.equalTo(17)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].layerName", Matchers.equalTo("ZMEL_Cale_Querlen")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].facade", Matchers.equalTo("NAMO")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].plan", Matchers.equalTo("PIRC")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[1].id", Matchers.equalTo(18)))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[1].layerName", Matchers.equalTo("AMP_Test_Zone")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[1].facade", Matchers.equalTo("MED")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[1].plan", Matchers.equalTo("AMP")))
     }
 }

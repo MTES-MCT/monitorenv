@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 class GetRegulatoryAreaByIds(
     private val regulatoryAreaRepository: IRegulatoryAreaNewRepository,
 ) {
-    private val logger = LoggerFactory.getLogger(GetRegulatoryAreaById::class.java)
+    private val logger = LoggerFactory.getLogger(GetRegulatoryAreaByIds::class.java)
 
     fun execute(regulatoryAreaIds: List<Int>): List<RegulatoryAreaEntity> {
         logger.info("GET regulatory area $regulatoryAreaIds")

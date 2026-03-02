@@ -6,7 +6,7 @@ context('LayerTree > AMP Layers', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
-    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v2/regulatory-areas').as('getRegulatoryAreas')
     cy.visit(`/`)
     cy.wait(['@getAmps', '@getRegulatoryAreas'])
     cy.clickButton('Arbre des couches').wait(1000)

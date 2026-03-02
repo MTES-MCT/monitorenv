@@ -28,8 +28,8 @@ export const useGetFilteredRegulatoryAreas = () => {
     () =>
       !apiFilters.controlPlan &&
       !apiFilters.searchQuery &&
-      apiFilters.tags.length === 0 &&
-      apiFilters.themes.length === 0,
+      apiFilters.tags?.length === 0 &&
+      apiFilters.themes?.length === 0,
     [apiFilters]
   )
 
