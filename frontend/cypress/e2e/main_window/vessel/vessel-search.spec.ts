@@ -97,7 +97,7 @@ context('Search Places', () => {
         cy.contains('1 PV')
         cy.get('header').contains('Historique des contrôles et signalements')
         cy.getDataCy('2026-vessel-history').within(() => {
-          cy.contains('1 signalement, 1 contrôle, 1 infraction, 1 PV').click()
+          cy.contains('1 signalement, 1 infraction, 1 PV').click()
           cy.contains('Voir le signalement').click()
         })
       })
@@ -123,7 +123,7 @@ context('Search Places', () => {
         cy.contains('1 PV')
         cy.get('header').contains('Historique des contrôles et signalements')
         cy.getDataCy('2026-vessel-history').within(() => {
-          cy.contains('1 signalement, 1 contrôle, 1 infraction, 1 PV').click()
+          cy.contains('1 signalement, 1 infraction, 1 PV').click()
           cy.contains('Voir la mission').click()
           // No assertions after this call because it opens the side window
         })

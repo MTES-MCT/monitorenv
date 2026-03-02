@@ -34,13 +34,13 @@ export function YearTimeline({
     .concat(suspicionOfInfractions)
     .sort((a, b) => customDayjs(b.date).diff(customDayjs(a.date)))
 
-  const getTitle = (quantity: number, suffix: 'signalement' | 'contrôle') =>
+  const getTitle = (quantity: number, suffix: 'signalement' | 'infraction') =>
     quantity > 0 ? (
       <Bold>
         {quantity} {pluralize(suffix, quantity)}
       </Bold>
     ) : (
-      <>aucun {suffix}</>
+      <>{suffix === 'signalement' ? 'Aucun signalement' : 'Aucune infraction'}</>
     )
 
   return (
@@ -57,16 +57,13 @@ export function YearTimeline({
         <Summary>
           <span>
             <Year>{year}</Year>{' '}
-            {suspicionOfInfractions.length === 0 && envActions.length === 0 ? (
-              'Aucun contrôle ou signalement'
+            {suspicionOfInfractions.length === 0 && totalInfractions === 0 ? (
+              'Aucun signalement ou infraction'
             ) : (
               <>
                 {getTitle(suspicionOfInfractions.length, 'signalement')}
-                {', '} {getTitle(envActions.length, 'contrôle')}
-                <Bold>
-                  {totalInfractions !== 0 && `, ${totalInfractions} ${pluralize('infraction', totalInfractions)}`}
-                </Bold>
-                {totalPV !== 0 && `, ${totalPV} PV`}
+                {', '} {getTitle(totalInfractions, 'infraction')}
+                {totalInfractions !== 0 && `, ${totalPV} PV`}
               </>
             )}
           </span>
