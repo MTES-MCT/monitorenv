@@ -10,6 +10,7 @@ import {
   Accent,
   Button,
   Checkbox,
+  CustomSearch,
   FormikSelect,
   FormikTextarea,
   FormikTextInput,
@@ -51,7 +52,7 @@ export function Identification({
   const { errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
 
   const { data: layerNames } = useGetLayerNamesQuery()
-  const { data: regulatoryAreasToComplete } = useGetRegulatoryAreasToCompleteQuery()
+  const { data: regulatoryAreasToComplete } = useGetRegulatoryAreasToCompleteQuery(undefined, { skip: isEditing })
 
   const [isCreatingNewLayerName, setIsCreatingNewLayerName] = useState(false)
   const [newLayerNameType, setNewLayerNameType] = useState<string | undefined>(undefined)
@@ -160,6 +161,18 @@ export function Identification({
     </GeomContainer>
   )
 
+  const typeCustomSearch = new CustomSearch(regulatoryTypeOptions ?? [], ['label'], {
+    isStrict: true
+  })
+
+  const geomCustomSearch = new CustomSearch(geomOptions ?? [], ['label', 'value.refReg'], {
+    isStrict: true
+  })
+
+  const layerNameCustomSearch = new CustomSearch(layerNamesOptions ?? [], ['label'], {
+    isStrict: true
+  })
+
   return (
     <>
       <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
@@ -179,6 +192,8 @@ export function Identification({
         </FieldWithTooltip>
         <FieldWithTooltip>
           <FormikSelect
+            key={layerNamesOptions.length}
+            customSearch={layerNameCustomSearch}
             disabled={isCreatingNewLayerName}
             isErrorMessageHidden
             isRequired
@@ -217,6 +232,8 @@ export function Identification({
         )}
         <InlineFieldsContainer>
           <Select
+            key={geomOptions.length}
+            customSearch={geomCustomSearch}
             disabled={isEditing}
             isRequired
             label="Géométrie"
@@ -234,9 +251,11 @@ export function Identification({
             label="Façade"
             name="facade"
             options={seaFrontsAsOptions}
+            searchable
             style={{ width: '30%' }}
           />
           <FormikSelect
+            customSearch={typeCustomSearch}
             isErrorMessageHidden
             isRequired
             label="Type d’acte administratif"
