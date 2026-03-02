@@ -229,7 +229,7 @@ export function ControlUnitSelector({
 
       <div>
         <SelectAndZoomContainer>
-          <Select
+          <StyledSelect
             key={unitList.length}
             customSearch={unitList.length > 10 ? controlUnitCustomSearch : undefined}
             data-cy="add-control-unit"
@@ -241,7 +241,6 @@ export function ControlUnitSelector({
             onChange={handleUnitChange}
             options={unitListAsOption ?? []}
             searchable={unitList.length > 10}
-            style={{ flex: 1 }}
             value={unitField.value}
           />
           <StyledIconButton
@@ -277,7 +276,7 @@ export function ControlUnitSelector({
         label={`Contact de l'unité ${resourceUnitIndexDisplayed}`}
         name={`controlUnits.${controlUnitIndex}.contact`}
       />
-      <Buttonscontainer>
+      <ButtonsContainer>
         {controlUnitIndex > 0 && (
           <StyledButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={removeControlUnit} size={Size.SMALL}>
             Supprimer l&apos;unité
@@ -295,7 +294,7 @@ export function ControlUnitSelector({
             Ajouter une autre unité
           </Button>
         )}
-      </Buttonscontainer>
+      </ButtonsContainer>
     </RessourceUnitWrapper>
   )
 }
@@ -313,8 +312,11 @@ const StyledButton = styled(Button)`
     color: ${p => p.theme.color.maximumRed};
   }
 `
+const StyledSelect = styled(Select)`
+  width: 90%;
+`
 
-const Buttonscontainer = styled.div`
+const ButtonsContainer = styled.div`
   display: flex;
   gap: 8px;
   margin-top: 8px;
