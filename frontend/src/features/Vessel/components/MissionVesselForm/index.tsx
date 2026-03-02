@@ -23,6 +23,7 @@ export function VesselForm({ envActionIndex, isDisabled, path }: VesselFormProps
       infraction.mmsi ||
       infraction.imo ||
       infraction.registrationNumber ||
+      infraction.vesselName ||
       infraction.vesselSize ||
       infraction.vesselType ||
       infraction.controlledPersonIdentity
