@@ -3,6 +3,8 @@ import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/c
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
 import { Level } from '@mtes-mct/monitor-ui'
 
+import { regulatoryAreaBoActions } from '../slice'
+
 import type { RegulatoryArea } from '../types'
 import type { HomeAppThunk } from '@store/index'
 import type { NavigateFunction } from 'react-router'
@@ -23,6 +25,7 @@ export const createOrUpdateRegulatoryArea =
             withAutomaticClosing: true
           })
         )
+        dispatch(regulatoryAreaBoActions.setNewRegulatoryAreaId(undefined))
         navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
       }
     } catch (error) {

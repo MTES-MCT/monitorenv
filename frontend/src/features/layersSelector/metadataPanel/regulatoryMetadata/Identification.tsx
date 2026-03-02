@@ -1,7 +1,7 @@
 import { displaySubTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 
-import { Body, Field, Fields, Key, NoValue, Value, Zone } from '../MetadataPanel.style'
+import { BeautifyValue, Body, Field, Fields, Key, NoValue, Value, Zone } from '../MetadataPanel.style'
 
 import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
@@ -38,7 +38,9 @@ export function Identification({
           )}
           <Field>
             <Key>Résumé</Key>
-            <Value data-cy="regulatory-layers-metadata-resume">{resume || <NoValue>-</NoValue>}</Value>
+            <Value data-cy="regulatory-layers-metadata-resume">
+              <BeautifyValue>{resume || <NoValue>-</NoValue>}</BeautifyValue>
+            </Value>
           </Field>
           <Field>
             <Key>Ensemble reg.</Key>

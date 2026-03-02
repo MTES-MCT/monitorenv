@@ -39,6 +39,14 @@ export const Value = styled.td`
   font-weight: 500;
 `
 
+export const BeautifyValue = styled.span`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 50;
+  overflow: hidden;
+  white-space: pre-wrap;
+`
+
 export const Section = styled.div`
   display: flex;
   flex-direction: column;
