@@ -1,7 +1,7 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
-import { useGetVigilanceAreasByIdsQuery, useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
+import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getDashboardById } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { extractFeatures } from '@features/Dashboard/utils'
@@ -26,7 +26,7 @@ import { transform } from 'ol/proj'
 import { OSM, TileWMS, XYZ } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
 import { Stroke, Style } from 'ol/style'
-import { type MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
 
 import { getDashboardStyle } from '../components/Layers/style'
 
@@ -112,17 +112,7 @@ export function useExportImages() {
 
   const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(undefined, { skip: !dashboard })
   const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
-  const { data: allVigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
-  const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery(activeDashboard?.vigilanceAreaIds ?? [], {
-    skip: !activeDashboard?.vigilanceAreaIds
-  })
-  const [allLinkedAMPIds, allLinkedRegulatoryAreaIds] = useMemo(
-    () => [
-      Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
-      Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
-    ],
-    [vigilanceAreas]
-  )
+  const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
   const layersVectorSourceRef = useRef(new VectorSource())
   const layersVectorLayerRef = useRef(
@@ -398,14 +388,7 @@ export function useExportImages() {
       return undefined
     }
 
-    const features = extractFeatures(
-      activeDashboard,
-      regulatoryLayers,
-      ampLayers,
-      allVigilanceAreas,
-      allLinkedAMPIds,
-      allLinkedRegulatoryAreaIds
-    )
+    const features = extractFeatures(activeDashboard, regulatoryLayers, ampLayers, vigilanceAreas)
     const dashboardFeature = dashboard?.dashboard.geom ? getFeature(dashboard.dashboard.geom) : undefined
     if (dashboardFeature) {
       dashboardFeature.setStyle([measurementStyle({ filled: true })])
