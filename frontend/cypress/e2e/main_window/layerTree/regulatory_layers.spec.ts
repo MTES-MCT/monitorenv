@@ -6,7 +6,7 @@ context('LayerTree > Regulatory Layers', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
-    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v2/regulatory-areas').as('getRegulatoryAreas')
 
     cy.visit('/#@-481936.30,6137793.76,8.69')
     cy.wait(['@getAmps', '@getRegulatoryAreas'])

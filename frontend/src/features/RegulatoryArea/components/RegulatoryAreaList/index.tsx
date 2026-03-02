@@ -53,7 +53,7 @@ export function RegulatoryAreaList() {
     [filters.seaFronts, filters.searchQuery, filters.tags, filters.themes]
   )
   const hasNoFilters = useMemo(
-    () => !apiFilters.searchQuery && apiFilters.tags.length === 0 && apiFilters.themes.length === 0,
+    () => !apiFilters.searchQuery && apiFilters.tags?.length === 0 && apiFilters.themes?.length === 0,
     [apiFilters]
   )
 

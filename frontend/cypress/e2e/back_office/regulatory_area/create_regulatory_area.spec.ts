@@ -1,6 +1,6 @@
 context('Back Office > Regulatory Area > Create Regulatory Area', () => {
   beforeEach(() => {
-    cy.intercept('GET', `bff/v2/regulatory-areas?*`).as('getRegulatoryAreas')
+    cy.intercept('GET', `bff/v2/regulatory-areas*`).as('getRegulatoryAreas')
     cy.visit('/backoffice/regulatory_areas')
     cy.wait('@getRegulatoryAreas')
   })

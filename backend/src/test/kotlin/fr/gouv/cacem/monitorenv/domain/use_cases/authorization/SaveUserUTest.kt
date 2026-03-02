@@ -31,4 +31,5 @@ class SaveUserUTest {
         assertThat(log.out).contains("Attempt to CREATE or UPDATE user $email")
         assertThat(log.out).contains("User $email created or updated")
     }
+
 }
