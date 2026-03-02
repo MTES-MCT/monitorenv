@@ -4,7 +4,7 @@ describe('Edit Vigilance Area', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
-    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v2/regulatory-areas').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
 
     cy.viewport(1580, 1024)
