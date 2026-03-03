@@ -1,7 +1,7 @@
 import { getAmpsByIds } from '@api/ampsAPI'
 import { dashboardsAPI } from '@api/dashboardsAPI'
 import { recentActivityAPI } from '@api/recentActivity'
-import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
+import { regulatoryAreasAPI } from '@api/regulatoryAreasAPI'
 import { reportingsAPI } from '@api/reportingsAPI'
 import {
   getDateRange,
@@ -87,8 +87,9 @@ export const exportBrief =
       Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
     ]
     const allLinkedAMPs = getAmpsByIds(getState(), allLinkedAMPIds)
-    const { data: allLinkedRegulatoryAreas } = useGetRegulatoryAreasByIdsQuery(allLinkedRegulatoryAreaIds)
-
+    const { data: allLinkedRegulatoryAreas } = await dispatch(
+      regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate(allLinkedRegulatoryAreaIds)
+    )
     const getVigilanceAreaAmpsAndRegulatoryAreas = (vigilanceArea: VigilanceArea.VigilanceArea) => {
       const filteredAmps = allLinkedAMPs
         .filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
@@ -146,19 +147,22 @@ export const exportBrief =
     })
 
     /* REGULATORY AREAS */
-    const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(dashboard.regulatoryAreaIds, {
-      skip: dashboard.regulatoryAreaIds.length === 0
-    })
+    const { data: regulatoryAreas } =
+      dashboard.regulatoryAreaIds.length > 0
+        ? await dispatch(regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate(dashboard.regulatoryAreaIds))
+        : { data: [] }
 
     const formattedRegulatoryAreas = regulatoryAreas?.map(regulatoryArea => {
       const layerTitle = getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume)
 
       return {
+        authorizationPeriods: regulatoryArea.authorizationPeriods,
         color: getRegulatoryEnvColorWithAlpha(displayTags(regulatoryArea.tags), layerTitle, regulatoryArea.plan),
         facade: regulatoryArea.facade,
         id: regulatoryArea.id,
         layerName: getTitle(regulatoryArea.layerName),
         polyName: getTitle(regulatoryArea.polyName),
+        prohibitionPeriods: regulatoryArea.prohibitionPeriods,
         refReg: regulatoryArea.refReg,
         resume: getTitle(regulatoryArea.resume),
         themes: displayThemes(regulatoryArea.themes),
