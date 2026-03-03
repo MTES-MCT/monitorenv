@@ -1,5 +1,6 @@
 import sqlalchemy as sa
 from dotenv import get_key
+import oracledb
 
 from config import DOTENV_PATH
 
@@ -86,6 +87,9 @@ def create_engine(db: str, **kwargs) -> sa.engine.Engine:
         sa.engine.Engine: sqlalchemy engine for selected database.
     """
     connection_string = make_connection_string(db)
+
+    if db_env[db]["client"] == "ORACLE_CLIENT":
+        oracledb.init_oracle_client()
 
     engine = sa.create_engine(connection_string, **kwargs)
 
