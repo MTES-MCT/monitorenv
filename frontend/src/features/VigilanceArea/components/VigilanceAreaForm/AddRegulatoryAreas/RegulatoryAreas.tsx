@@ -12,6 +12,10 @@ export function RegulatoryAreas({ isReadOnly = false, linkedRegulatoryAreas }: R
     skip: !linkedRegulatoryAreas || linkedRegulatoryAreas.length === 0
   })
 
+  if (!linkedRegulatoryAreas || linkedRegulatoryAreas.length === 0) {
+    return null
+  }
+
   const regulatoryAreas = [...(regulatoryLayers ?? [])].sort((a, b) =>
     (getRegulatoryAreaTitle(a?.polyName, a?.resume) ?? '').localeCompare(
       getRegulatoryAreaTitle(b?.polyName, b?.resume) ?? ''
