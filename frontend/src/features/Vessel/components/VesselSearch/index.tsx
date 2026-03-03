@@ -1,8 +1,9 @@
 import { VesselSearchItem } from '@features/Vessel/components/VesselSearch/VesselSearchItem'
 import { useVessels } from '@features/Vessel/hooks/useVessels'
 import { toOptions } from '@features/Vessel/utils'
+import { useTracking } from '@hooks/useTracking'
 import { CustomSearch, Search, Size } from '@mtes-mct/monitor-ui'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useDebounce } from 'use-debounce'
 
@@ -26,11 +27,22 @@ export function SearchVessel({
   optionsWidth,
   value
 }: SearchVesselsProps) {
+  const { trackEvent } = useTracking()
   const isSelecting = useRef(false)
   const [query, setQuery] = useState<string | undefined>()
   const [debouncedQuery] = useDebounce(query, 300)
   const { options } = useVessels(debouncedQuery)
   const optionsOnDefaultValue = useMemo(() => (value ? toOptions([value]) : undefined), [value])
+
+  useEffect(() => {
+    if (!debouncedQuery) {
+      trackEvent({
+        action: 'Recherche',
+        category: 'NAVIRE',
+        name: 'Rechercher un navire'
+      })
+    }
+  }, [debouncedQuery, trackEvent])
 
   const vesselCustomSearch = new CustomSearch(options ?? [], [
     'label',
