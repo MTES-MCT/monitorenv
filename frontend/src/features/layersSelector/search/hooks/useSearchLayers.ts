@@ -57,9 +57,6 @@ export function useSearchLayers() {
   const runSearch = useCallback(() => {
     const shouldSearchByText = !!globalSearchText && globalSearchText.length > 2
     const shouldSearchThroughAMPTypes = filteredAmpTypes.length > 0
-    /*     const shouldSearchThroughRegulatoryTags = filteredRegulatoryTags.length > 0
-    const shouldSearchThroughRegulatoryThemes = filteredRegulatoryThemes.length > 0
-    const shouldSearchThroughControlPlan = !!controlPlan */
 
     dispatch(closeMetadataPanel())
 

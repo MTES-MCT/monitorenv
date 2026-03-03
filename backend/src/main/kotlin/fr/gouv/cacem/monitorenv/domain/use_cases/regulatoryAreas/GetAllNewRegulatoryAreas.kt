@@ -17,7 +17,7 @@ class GetAllNewRegulatoryAreas(
         seaFronts: List<String>?,
         tags: List<Int>?,
         themes: List<Int>?,
-    ): Pair<Map<String?, List<RegulatoryAreaEntity>>, Long> {
+    ): AllRegulatoryAreasAndTotal {
         logger.info("Attempt to GET all regulatory areas")
 
         val allAreas =
@@ -37,3 +37,5 @@ class GetAllNewRegulatoryAreas(
         return Pair(groupedAreas, totalCount)
     }
 }
+
+typealias AllRegulatoryAreasAndTotal = Pair<Map<String?, List<RegulatoryAreaEntity>>, Long>
