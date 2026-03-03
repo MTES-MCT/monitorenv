@@ -97,6 +97,7 @@ services:
   db:
     image: ghcr.io/mtes-mct/monitorenv/monitorenv-database:${DB_VERSION}
     container_name: monitorenv_database
+    shm_size: '128mb'
     user: ":${MONITORENV_LOGS_AND_BACKUPS_GID}"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
