@@ -1,9 +1,9 @@
 import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
 import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
-import { Identification } from '@features/layersSelector/metadataPanel/regulatoryMetadata/Identification'
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
+import { skipToken } from '@reduxjs/toolkit/query'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
@@ -11,17 +11,21 @@ import { getTitle } from 'domain/entities/layers/utils'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 
+import { Identification } from './Identification'
+import { Periods } from './Periods'
+
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 
 type RegulatoryAreasPanelProps = {
-  layerId: number
+  layerId?: number
   onClose: () => void
 }
 
 export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPanelProps>(
   ({ layerId, onClose, ...props }, ref) => {
-    const { data: regulatoryArea } = useGetRegulatoryAreaByIdQuery(layerId, {
-      pollingInterval: FOUR_HOURS
+    const { data: regulatoryArea } = useGetRegulatoryAreaByIdQuery(layerId ?? skipToken, {
+      pollingInterval: FOUR_HOURS,
+      skip: !layerId
     })
 
     const regulatoryMetadata = regulatoryArea
@@ -55,7 +59,15 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
                 themes={regulatoryMetadata.themes}
                 type={regulatoryMetadata.type}
               />
-              <RegulatorySummary regulatoryReference={regulatoryMetadata.refReg} url={regulatoryMetadata.url} />
+              <Periods
+                authorizationPeriods={regulatoryMetadata.authorizationPeriods}
+                prohibitionPeriods={regulatoryMetadata.prohibitionPeriods}
+              />
+              <RegulatorySummary
+                regulatoryReference={regulatoryMetadata.refReg}
+                type="REGULATORY"
+                url={regulatoryMetadata.url}
+              />
             </Content>
           </>
         ) : (
