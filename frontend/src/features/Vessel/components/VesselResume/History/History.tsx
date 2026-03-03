@@ -5,6 +5,7 @@ import { ReportingCard } from '@features/Vessel/components/VesselResume/History/
 import { toEvent } from '@features/Vessel/components/VesselResume/utils'
 import { Vessel } from '@features/Vessel/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useTracking } from '@hooks/useTracking'
 import { Button, customDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -24,6 +25,7 @@ type SummaryProps = {
 
 export function History({ envActions, reportings, vessel }: SummaryProps) {
   const dispatch = useAppDispatch()
+  const { trackEvent } = useTracking()
   const currentYear = customDayjs().year()
   const diff = currentYear - 2023
 
@@ -62,6 +64,11 @@ export function History({ envActions, reportings, vessel }: SummaryProps) {
       vehicleType: VehicleTypeEnum.VESSEL
     }
     dispatch(addReporting(ReportingContext.MAP, reportingWithTarget))
+    trackEvent({
+      action: 'Ajouter un signalement',
+      category: 'NAVIRE',
+      name: 'Ouverture de signalement depuis la fiche navire'
+    })
   }
 
   return (
