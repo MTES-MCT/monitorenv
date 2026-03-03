@@ -1,5 +1,4 @@
 import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
-import { RegulatoryAreasPanel } from '@components/RegulatoryArea/RegulatoryAreasPanel'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { Title } from '@features/BackOffice/components/style'
 import { MapAttributionsBox } from '@features/map/controls/MapAttributionsBox'
@@ -23,6 +22,7 @@ import { SeaFrontTable } from './SeaFrontTable'
 import { regulatoryAreaTableActions } from './slice'
 import { BaseLayerSelector } from '../BaseLayerSelector'
 import { BackofficeRegulatoryAreaLayer } from '../Layers/BackofficeRegulatoryAreaLayer'
+import { RegulatoryAreasPanel } from '../RegulatoryAreaPanel'
 
 const mapChildrensComponents = [
   // @ts-ignore

@@ -6,12 +6,14 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell
 
 data class EditableBriefRegulatoryAreaEntity(
     val id: Int,
+    val authorizationPeriods: String? = null,
     val color: String,
     val facade: String? = null,
     override val image: String?,
     override val minimap: String?,
     val layerName: String,
     val polyName: String? = null,
+    val prohibitionPeriods: String? = null,
     val refReg: String? = null,
     val resume: String? = null,
     val themes: String? = null,
@@ -31,6 +33,8 @@ data class EditableBriefRegulatoryAreaEntity(
             listOf("Ensemble reg", type ?: ""),
             listOf("Thématique", themes ?: ""),
             listOf("Facade", facade ?: ""),
+            listOf("Période d'autorisation", authorizationPeriods ?: ""),
+            listOf("Période d'interdiction", prohibitionPeriods ?: ""),
             listOf("Résumé reg.sur Légicem", refReg ?: ""),
         )
 

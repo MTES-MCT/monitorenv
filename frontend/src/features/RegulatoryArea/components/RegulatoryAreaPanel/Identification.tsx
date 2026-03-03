@@ -1,7 +1,15 @@
+import {
+  BeautifyValue,
+  Body,
+  Field,
+  Fields,
+  Key,
+  NoValue,
+  Value,
+  Zone
+} from '@features/layersSelector/metadataPanel/MetadataPanel.style'
 import { displaySubTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
-
-import { BeautifyValue, Body, Field, Fields, Key, NoValue, Value, Zone } from '../MetadataPanel.style'
 
 import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
