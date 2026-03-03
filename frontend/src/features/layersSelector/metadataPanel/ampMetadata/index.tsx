@@ -36,12 +36,7 @@ export function AmpMetadata() {
           <Header data-cy="amp-metadata-header">
             <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={ampMetadata?.name} type={ampMetadata?.type} />
             <Name title={getTitle(ampMetadata?.name)}>{getTitle(ampMetadata?.name)}</Name>
-            <IconButton
-              accent={Accent.TERTIARY}
-              data-cy="regulatory-layers-metadata-close"
-              Icon={Icon.Close}
-              onClick={onCloseIconClicked}
-            />
+            <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onCloseIconClicked} />
           </Header>
           <Content>
             <Zone>

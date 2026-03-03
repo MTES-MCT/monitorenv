@@ -24,7 +24,7 @@ context('LayerTree > Regulatory Layers', () => {
     cy.log("zoom on the regulation's zone and show metadata")
     cy.clickButton('ZMEL Cale Querlen')
     cy.clickButton('Autorisation temporaire du domaine public')
-    cy.getDataCy('regulatory-metadata-header').contains('ZMEL Cale Querlen').click()
+    cy.getDataCy('regulatory-area-panel').contains('ZMEL Cale Querlen').click()
     cy.wait(1000) // let OL do the rendering
 
     cy.getFeaturesFromLayer(Layers.REGULATORY_ENV_PREVIEW.code, PAGE_CENTER_PIXELS).should(features => {

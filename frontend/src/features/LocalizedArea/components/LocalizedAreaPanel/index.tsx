@@ -39,19 +39,14 @@ export function LocalizedAreaPanel({ localizedArea }: { localizedArea?: Localize
 
   return (
     <Wrapper $regulatoryMetadataPanelIsOpen={metadataPanelIsOpen}>
-      <Header data-cy="regulatory-metadata-header">
+      <Header>
         <LayerLegend
           layerType={MonitorEnvLayers.LOCALIZED_AREAS}
           legendKey={localizedArea.groupName}
           type={localizedArea.groupName}
         />
         <Name title={getTitle(localizedArea?.groupName)}>{getTitle(localizedArea?.groupName)}</Name>
-        <IconButton
-          accent={Accent.TERTIARY}
-          data-cy="regulatory-layers-metadata-close"
-          Icon={Icon.Close}
-          onClick={onCloseIconClicked}
-        />
+        <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onCloseIconClicked} />
       </Header>
       <Content>
         <LinkedAMPs amps={amps} />
