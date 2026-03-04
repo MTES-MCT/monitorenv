@@ -124,3 +124,6 @@ REGULATORY_AREAS_GEOPACKAGE_RESOURCE_TITLE = "regulatory_areas.gpkg"
 # Vessel repository XML
 VESSEL_FILES_GID = os.getenv("VESSEL_FILES_GID")
 VESSEL_FILES_DIRECTORY = "/data/vessel_repository"
+
+# Themes natinfs CSV
+THEMES_NATINFS_FILE = "/data/themes_natinfs.csv"

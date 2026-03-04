@@ -114,7 +114,7 @@ def update_themes(new_themes: pd.DataFrame):
             method=psql_insert_copy,
         )
 
-        logger.info("Updating themes from temporary table {len(new_themes)}")
+        logger.info(f"Updating themes from temporary table {len(new_themes)}")
         connection.execute(
             text(
                 """UPDATE themes
