@@ -139,7 +139,7 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
         )
 
         logger.info(
-            "Updating regulations_cacem from temporary table {len(new_regulatory_areas)}"
+            f"Updating regulations_cacem from temporary table {len(new_regulatory_areas)}"
         )
         connection.execute(
             text(
