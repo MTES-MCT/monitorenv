@@ -13,6 +13,24 @@ context('LayerTree > Regulatory Layers', () => {
 
     cy.clickButton('Arbre des couches')
   })
+  it('A regulatory area should be consulted', () => {
+    cy.getDataCy('regulatory-result-list-button').click()
+    cy.clickButton('Dragage port de Brest')
+    cy.clickButton('Autorisation de dragage pendant les travaux')
+    cy.getDataCy('regulatory-area-panel').should('be.visible')
+    cy.get('[data-cy="regulatory-area-panel"] > header > span').contains('Dragage port de Brest')
+    cy.getDataCy('regulatory-layers-metadata-polyName').contains('Autorisation de dragage pendant les travaux')
+    cy.getDataCy('regulatory-layers-metadata-resume').contains(
+      "Zone de dragage concernant l'accès maritime au Polder 124"
+    )
+    cy.getDataCy('regulatory-layers-metadata-type').contains('Arrêté préfectoral')
+    cy.getDataCy('regulatory-layers-metadata-plan').contains('PSCEM')
+    cy.getDataCy('regulatory-layers-metadata-facade').contains('NAMO')
+    cy.getDataCy('metadata-panel-references').contains(
+      "Arrêté préfectoral n°2015 212 0008 du 31 juillet 2015 portant autorisation au titre de l'article L.214-3 du code de l'environnement du développement du port de Brest"
+    )
+  })
+
   it('A regulatory area Should be searched, added to My Zones and showed on the map with the Zone button', () => {
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
     cy.getDataCy('regulatory-result-list-button').contains('13 résultats')

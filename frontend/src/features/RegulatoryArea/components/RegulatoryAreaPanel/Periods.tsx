@@ -2,7 +2,12 @@ import { Section, SectionTitle } from '@features/layersSelector/metadataPanel/Me
 import { THEME, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-export function Periods({ authorizationPeriods, prohibitionPeriods }) {
+type PeriodsProps = {
+  authorizationPeriods?: string
+  prohibitionPeriods?: string
+}
+
+export function Periods({ authorizationPeriods, prohibitionPeriods }: PeriodsProps) {
   return (
     <PeriodsWrapper>
       {authorizationPeriods && (
