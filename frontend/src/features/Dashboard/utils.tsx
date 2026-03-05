@@ -57,7 +57,7 @@ export const extractFeatures = (
   // RegulatoryAreas Features
   if (dashboard?.regulatoryAreaIds) {
     dashboard.regulatoryAreaIds.forEach(layerId => {
-      const layer = regulatoryLayers?.entities[layerId]
+      const layer = regulatoryLayers?.find(reg => reg.id === layerId)
       if (layer?.geom?.coordinates.length) {
         const feature = getRegulatoryFeature({
           code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,

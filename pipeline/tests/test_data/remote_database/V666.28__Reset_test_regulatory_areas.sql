@@ -8,6 +8,8 @@ DELETE FROM regulations_cacem;
 INSERT INTO public.regulations_cacem (id, geom, url, layer_name, facade, ref_reg, edition, editeur, source, observation, thematique, date, duree_validite, date_fin, temporalite, type, plan, poly_name, resume, row_hash) values (1, 'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))', 'url1', 'layer_name1', 'MED', 'ref_reg1', '2025-01-01', 'editrice1', 'source1', 'observation1', 'thematique1', '2010-06-01', '10 ans', '2024-01-01', 'temporaire', 'Décret', 'PIRC', 'poly_name1', 'resume1', '4ccc708e6a0c4f311dd7e537e282f7f6');
 INSERT INTO public.regulations_cacem (id, geom, url, layer_name, facade, ref_reg, edition, editeur, source, observation, thematique, date, duree_validite, date_fin, temporalite, type, plan, poly_name, resume, row_hash) values (2, 'MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))', 'url2', 'layer_name2', 'NAMO', 'ref_reg2', '2025-01-01', 'editeur2', 'source2', 'observation2', 'thematique2', '2005-07-01', '20 ans', '2025-01-01', 'permanent', 'Arrêté préfectoral', 'PSCEM', 'poly_name2', 'resume2', '8c3842144dfaf46ead39bfa628dd9513');
 
+DELETE FROM themes_regulatory_areas_new;
+DELETE FROM tags_regulatory_areas_new;
 DELETE FROM regulatory_areas;
 
 INSERT INTO public.regulatory_areas (
@@ -34,8 +36,6 @@ INSERT INTO public.regulatory_areas (
     authorization_periods,
     prohibition_periods,
     additional_ref_reg
-    themes,
-    tags
 ) VALUES (
     1,
     'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))',
@@ -59,9 +59,7 @@ INSERT INTO public.regulatory_areas (
     'plan1',
     'période d''autorisation1',
     'période de prohibition1',
-    null,
-    'theme1,theme2',
-    'tag1,tag2'
+    null
 );
 
 INSERT INTO public.regulatory_areas (
@@ -88,8 +86,6 @@ INSERT INTO public.regulatory_areas (
     authorization_periods,
     prohibition_periods,
     additional_ref_reg
-    themes,
-    tags  
 ) VALUES (
     2,
     'MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))',
@@ -113,9 +109,9 @@ INSERT INTO public.regulatory_areas (
     'plan2',
     'période d''autorisation2',
     'période de prohibition2',
-    null,
-    'theme3,theme4',
-    'tag3,tag4'
+    null
 );
 
 
+INSERT INTO themes_regulatory_areas_new (regulatory_areas_id, themes_id) VALUES(1, 101);
+INSERT INTO themes_regulatory_areas_new (regulatory_areas_id, themes_id) VALUES(1, 296);
