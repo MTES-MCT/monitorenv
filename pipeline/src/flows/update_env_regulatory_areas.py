@@ -161,24 +161,28 @@ def load_regulatory_areas(new_regulatory_areas: pd.DataFrame):
 
 @flow(name="Monitorenv - Update Env Regulatory Areas")
 def update_env_regulatory_areas_flow():
+    logger = get_run_logger()
 
     monitor_env_hashes = extract_regulatory_areas_hashes()
     cacem_hashes = extract_cacem_regulatory_areas_hashes()
-    outer_hashes = merge_hashes(monitor_env_hashes, cacem_hashes)
-    inner_merged = merge_hashes(monitor_env_hashes, cacem_hashes, "inner")
+    outer_hashes = merge_hashes(cacem_hashes, monitor_env_hashes)
+    inner_merged = merge_hashes(cacem_hashes, monitor_env_hashes, "inner")
 
     ids_to_delete = select_ids_to_delete(outer_hashes)
+    logger.info(f"Ids to delete: {ids_to_delete}")
     cond_delete = delete_required(ids_to_delete)
     if cond_delete is True:
         delete(ids_to_delete)
 
     ids_to_update = select_ids_to_update(inner_merged)
+    logger.info(f"Ids to update: {ids_to_update}")
     cond_update = update_required(ids_to_update)
     if cond_update is True:
         new_regulatory_areas = extract_cacem_regulatory_areas(ids_to_update)
         update_regulatory_areas(new_regulatory_areas)
 
-    ids_to_insert = select_ids_to_insert(outer_hashes)
+    ids_to_insert =  set(outer_hashes.loc[outer_hashes.monitorenv_row_hash.isna(), "id"])
+    logger.info(f"Ids to insert: {ids_to_insert}")
     cond_insert = insert_required(ids_to_insert)
 
     if cond_insert is True:
