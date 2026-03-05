@@ -31,7 +31,7 @@ import { transformExtent } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { VisibilityState } from '../../../../domain/shared_slices/Global'
+import { ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { Flag } from '../VesselSearch/VesselSearchItem'
 
@@ -49,7 +49,7 @@ type ResumeProps = {
 
 export function Resume({ id, onClose }: ResumeProps) {
   const dispatch = useAppDispatch()
-  const { visibility } = useAppSelector(state => state.global.visibility.reportingFormVisibility)
+  const { context, visibility } = useAppSelector(state => state.global.visibility.reportingFormVisibility)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
   const { data: vessel } = useGetVesselQuery(id)
   const [page, setPage] = useState<ResumePages>('RESUME')
@@ -128,7 +128,7 @@ export function Resume({ id, onClose }: ResumeProps) {
   const countryName = vessel.flag ? countries.getName(vessel.flag.substring(0, 2).toLowerCase(), 'fr') : UNKNOWN
 
   return (
-    <DialogWrapper $isRightMenuOpened={isRightMenuOpened} $visibility={visibility}>
+    <DialogWrapper $context={context} $isRightMenuOpened={isRightMenuOpened} $visibility={visibility}>
       {isTrackSettingsOpen && <VesselSettings vessel={vessel} />}
 
       {vessel.positions && vessel.positions.length > 0 && (
@@ -222,12 +222,19 @@ const TitleWrapper = styled.span`
   gap: 8px;
 `
 
-const DialogWrapper = styled.div<{ $isRightMenuOpened: boolean; $visibility: VisibilityState }>`
+const DialogWrapper = styled.div<{
+  $context: ReportingContext
+  $isRightMenuOpened: boolean
+  $visibility: VisibilityState
+}>`
   display: flex;
   position: absolute;
   right: 50px;
   top: 55px;
-  ${p => p.$visibility === VisibilityState.VISIBLE && `transform: translateX(-457px);`}
+  ${p =>
+    p.$visibility === VisibilityState.VISIBLE &&
+    p.$context === ReportingContext.MAP &&
+    `transform: translateX(-457px);`}
   ${p => p.$isRightMenuOpened && `transform: translateX(calc(-100% + 42px));`}
   transition: 0.3s transform;
 `
