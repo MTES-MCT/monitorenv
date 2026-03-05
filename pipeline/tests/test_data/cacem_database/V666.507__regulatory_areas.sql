@@ -63,7 +63,7 @@ INSERT INTO prod.reg_cacem (
     'url1',        
     'layer_name1',
     'MED',
-    'ref_reg1',
+    'ref_reg1_edited',
     'editeur1',
     'source1',
     'obs1',
@@ -85,7 +85,7 @@ INSERT INTO prod.reg_cacem (
     'tag1,tag2'
 );
 
-INSERT INTO prod.reg_cacem (
+/* INSERT INTO prod.reg_cacem (
     id,
     geom,
     url,        
@@ -137,7 +137,7 @@ INSERT INTO prod.reg_cacem (
     null,
     'theme3,theme4',
     'tag3,tag4'
-);
+); */
 
 
 /* NEW REGULATORY AREAS */
