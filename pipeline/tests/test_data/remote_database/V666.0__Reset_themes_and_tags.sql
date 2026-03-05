@@ -1,7 +1,9 @@
 DELETE FROM themes_env_actions;
 DELETE FROM themes_regulatory_areas;
+DELETE FROM themes_regulatory_areas_new;
 DELETE FROM themes;
 DELETE FROM tags_regulatory_areas;
+DELETE FROM tags_regulatory_areas_new;
 DELETE FROM tags;
 
 INSERT INTO themes (id, name, started_at, ended_at, control_plan_themes_id)

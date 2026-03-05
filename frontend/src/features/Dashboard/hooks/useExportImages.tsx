@@ -15,7 +15,6 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { BaseLayer } from 'domain/entities/layers/BaseLayer'
-import { uniq } from 'lodash'
 import { Feature, View } from 'ol'
 import { buffer, createEmpty, extend, type Extent, getHeight, getWidth } from 'ol/extent'
 import { type Geometry } from 'ol/geom'
@@ -114,10 +113,8 @@ export function useExportImages() {
   const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
-  const allRegulatoryAreaIds = uniq([...(activeDashboard?.regulatoryAreaIds ?? []), ...allLinkedRegulatoryAreaIds])
-
-  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(allRegulatoryAreaIds, {
-    skip: !dashboard || allRegulatoryAreaIds.length === 0
+  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(activeDashboard?.regulatoryAreaIds ?? [], {
+    skip: !dashboard || (activeDashboard?.regulatoryAreaIds ?? []).length === 0
   })
 
   const layersVectorSourceRef = useRef(new VectorSource())
