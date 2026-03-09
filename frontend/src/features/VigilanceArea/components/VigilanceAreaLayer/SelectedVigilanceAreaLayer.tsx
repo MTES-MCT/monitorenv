@@ -76,23 +76,23 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       return []
     }
 
-    return regulatoryAreas
-      .map(regulatoryArea => {
-        const isRegulatoryAreaShouldBeDisplayed =
-          regulatoryAreaIdsToBeDisplayed?.includes(regulatoryArea.id) &&
-          !showedPinnedRegulatoryLayerIds.includes(regulatoryArea.id)
-
-        if (regulatoryArea && isRegulatoryAreaShouldBeDisplayed) {
-          return getRegulatoryFeature({
-            code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
-            isolatedLayer,
-            layer: regulatoryArea
-          })
+    return regulatoryAreas.reduce<Feature<Geometry>[]>((acc, regulatoryArea) => {
+      const isRegulatoryAreaShouldBeDisplayed =
+        regulatoryAreaIdsToBeDisplayed?.includes(regulatoryArea.id) &&
+        !showedPinnedRegulatoryLayerIds.includes(regulatoryArea.id)
+      if (regulatoryArea && isRegulatoryAreaShouldBeDisplayed) {
+        const feature = getRegulatoryFeature({
+          code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
+          isolatedLayer,
+          layer: regulatoryArea
+        })
+        if (feature) {
+          acc.push(feature)
         }
+      }
 
-        return null
-      })
-      .filter(feature => !!feature) as Feature[]
+      return acc
+    }, [])
   }, [regulatoryAreas, regulatoryAreaIdsToBeDisplayed, showedPinnedRegulatoryLayerIds, isolatedLayer])
 
   const regulatoryAreasVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
