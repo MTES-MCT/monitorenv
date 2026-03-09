@@ -45,6 +45,25 @@ def extract_regulatory_areas_hashes() -> pd.DataFrame:
 @task
 def delete(ids_to_delete: set):
     logger = get_run_logger()
+
+    delete_rows(
+        table_name="tags_regulatory_areas_new",
+        schema="public",
+        db_name="monitorenv_remote",
+        table_id_column="regulatory_areas_id",
+        ids_to_delete=ids_to_delete,
+        logger=logger,
+    )
+
+    delete_rows(
+        table_name="themes_regulatory_areas_new",
+        schema="public",
+        db_name="monitorenv_remote",
+        table_id_column="regulatory_areas_id",
+        ids_to_delete=ids_to_delete,
+        logger=logger,
+    )
+
     delete_rows(
         table_name="regulatory_areas",
         schema="public",
