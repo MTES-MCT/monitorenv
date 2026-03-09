@@ -71,17 +71,20 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
       return []
     }
 
-    const features = regulatoryAreas
-      .map(regulatoryArea =>
-        getRegulatoryFeature({
+    return regulatoryAreas.reduce<Feature<Geometry>[]>((acc, regulatoryArea) => {
+      if (regulatoryArea) {
+        const feature = getRegulatoryFeature({
           code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
           isolatedLayer,
           layer: regulatoryArea
         })
-      )
-      .filter(feature => !!feature) as Feature[]
+        if (feature) {
+          acc.push(feature)
+        }
+      }
 
-    return features
+      return acc
+    }, [])
   }, [regulatoryAreas, regulatoryAreasToAdd, isolatedLayer])
 
   const regulatoryAreasVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>

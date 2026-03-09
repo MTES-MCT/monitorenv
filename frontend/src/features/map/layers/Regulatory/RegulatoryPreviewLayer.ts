@@ -48,26 +48,22 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       return undefined
     }
 
-    return flattenRegulatoryAreas
-      ?.map(layer => {
-        if (layer && layer.geom) {
-          const feature = getRegulatoryFeature({
-            code: Layers.REGULATORY_ENV_PREVIEW.code,
-            isolatedLayer,
-            layer
-          })
-
-          if (feature) {
-            const metadataIsShowed = layer.id === regulatoryMetadataLayerId
-            feature.set(metadataIsShowedPropertyName, metadataIsShowed)
-
-            return feature
-          }
+    return flattenRegulatoryAreas.reduce<Feature<Geometry>[]>((acc, regulatoryArea) => {
+      if (regulatoryArea && regulatoryArea.geom) {
+        const feature = getRegulatoryFeature({
+          code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
+          isolatedLayer,
+          layer: regulatoryArea
+        })
+        if (feature) {
+          const metadataIsShowed = regulatoryArea.id === regulatoryMetadataLayerId
+          feature.set(metadataIsShowedPropertyName, metadataIsShowed)
+          acc.push(feature)
         }
+      }
 
-        return undefined
-      })
-      .filter(feature => feature !== undefined) as Feature<Geometry>[]
+      return acc
+    }, [])
   }, [flattenRegulatoryAreas, isolatedLayer, regulatoryMetadataLayerId])
 
   useEffect(() => {

@@ -81,25 +81,23 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
       if (activeDashboard && !mapFocus) {
         // Regulatory Areas
         if (regulatoryAreas && regulatoryAreas.length > 0) {
-          const features = regulatoryAreas
-            .map(regulatoryArea => {
-              const feature = getRegulatoryFeature({
-                code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
-                isolatedLayer,
-                layer: regulatoryArea
-              })
-              if (!feature) {
-                return null
-              }
-              drawBorder(regulatoryArea.id, feature, Dashboard.Block.REGULATORY_AREAS)
-
-              return feature
+          const features = regulatoryAreas.reduce<Feature<Geometry>[]>((acc, regulatoryArea) => {
+            const feature = getRegulatoryFeature({
+              code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
+              isolatedLayer,
+              layer: regulatoryArea
             })
-            .filter((feature): feature is Feature<Geometry> => feature !== null)
+
+            if (feature) {
+              drawBorder(regulatoryArea.id, feature, Dashboard.Block.REGULATORY_AREAS)
+              acc.push(feature)
+            }
+
+            return acc
+          }, [])
 
           layersVectorSourceRef.current.addFeatures(features)
         }
-
         // AMP
         if (ampLayers?.entities) {
           const ampLayerIds = activeDashboard.ampIds
