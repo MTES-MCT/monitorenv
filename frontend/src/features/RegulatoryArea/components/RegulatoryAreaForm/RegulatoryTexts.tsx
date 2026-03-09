@@ -180,7 +180,9 @@ export function RegulatoryTexts({
         <RefRegContainer>
           <RefRegTextContainer>
             <RefRegText title={values?.refReg}>{values?.refReg} </RefRegText>
-            <Link href={values?.url}>{values?.url}</Link>
+            <Link href={values?.url} rel="external noreferrer" target="_blank">
+              {values?.url}
+            </Link>
             <PeriodText>{getPeriodText(values.date, values.dateFin)}</PeriodText>
           </RefRegTextContainer>
           <IconButton accent={Accent.TERTIARY} Icon={Icon.EditUnbordered} onClick={() => onChangeRefReg(mainRefReg)} />
@@ -205,12 +207,12 @@ export function RegulatoryTexts({
         {values?.additionalRefReg &&
           values?.additionalRefReg.length > 0 &&
           values.additionalRefReg.map((otherRefReg, index) => {
-            const refRegindex = values.additionalRefReg?.findIndex(refReg => refReg.id === otherRefReg.id)
+            const refRegIndex = values.additionalRefReg?.findIndex(refReg => refReg.id === otherRefReg.id)
 
             if (editingOtherRefReg?.id === otherRefReg.id) {
               return (
                 <EditingRefRegContainer key={otherRefReg.id}>
-                  <FormikTextarea isLight label="Titre du texte" name={`additionalRefReg[${refRegindex}].refReg`} />
+                  <FormikTextarea isLight label="Titre du texte" name={`additionalRefReg[${refRegIndex}].refReg`} />
                   <RefRegSecondLine>
                     <DateContainer>
                       <FormikDatePicker
@@ -218,13 +220,13 @@ export function RegulatoryTexts({
                         isRequired
                         isStringDate
                         label="Début de validité"
-                        name={`additionalRefReg[${refRegindex}].startDate`}
+                        name={`additionalRefReg[${refRegIndex}].startDate`}
                       />
                       <FormikDatePicker
                         isLight
                         isStringDate
                         label="Fin de validité"
-                        name={`additionalRefReg[${refRegindex}].endDate`}
+                        name={`additionalRefReg[${refRegIndex}].endDate`}
                       />
                     </DateContainer>
                   </RefRegSecondLine>
