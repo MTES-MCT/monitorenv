@@ -524,7 +524,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Appréhension/saisie', 'Oui')
       cy.fill('Mise en demeure', 'Oui')
-      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('NATINF', ["1508 Execution d'un travail dissimule"])
       cy.fill('Nb de cibles avec cette infraction', 1)
 
       cy.getDataCy('control-open-by').type('ABC')
@@ -596,7 +596,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Appréhension/saisie', 'Oui')
       cy.fill('Mise en demeure', 'Oui')
-      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('NATINF', ["1508 Execution d'un travail dissimule"])
       cy.fill('Nb de cibles avec cette infraction', 1)
 
       cy.getDataCy('control-open-by').type('ABC')
@@ -665,7 +665,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Mise en demeure', 'Oui')
-      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('NATINF', ["1508 Execution d'un travail dissimule"])
       cy.clickButton("Valider l'infraction")
 
       // cases without identification
@@ -749,7 +749,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Mise en demeure', 'Oui')
       cy.fill('Appréhension/saisie', 'Oui')
-      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('NATINF', ["1508 Execution d'un travail dissimule"])
       cy.fill('Réponse administrative', 'Régularisation')
       cy.fill('Nb de cibles avec cette infraction', 2)
       cy.clickButton("Valider l'infraction")
@@ -835,6 +835,60 @@ context('Side Window > Mission Form > Mission actions', () => {
       // delete created mission
       cy.clickButton('Supprimer la mission')
       cy.clickButton('Confirmer la suppression')
+    })
+  })
+
+  it('Should suggest infractions based on themes', () => {
+    createPendingMission().then(({ body }) => {
+      const mission = body
+
+      cy.intercept('PUT', `/bff/v1/missions/${mission.id}`).as('updateMission')
+
+      // Add a control
+      cy.clickButton('Ajouter')
+      cy.clickButton('Ajouter des contrôles')
+      cy.wait(500)
+
+      cy.fill('Thématiques et sous-thématiques de contrôle', ['Implantation'])
+      cy.fill('Nb total de contrôles', 2)
+      cy.fill('Type de cible', 'Véhicule')
+      cy.fill('Type de véhicule', 'Navire')
+
+      cy.clickButton('+ Ajouter un contrôle avec infraction')
+
+      cy.fill("Type d'infraction", 'Avec PV')
+      cy.fill('Mise en demeure', 'Oui')
+      // select suggested natinfs
+      cy.getDataCy('natinf-selector-envActions[0].infractions[0]').click({ force: true })
+      cy.contains('Suggestions par rapport aux sous-thématiques sélectionnées')
+      cy.get('.rs-picker-list-item').should('have.length', 3)
+      cy.contains("12920 Exploitation d'etablissement de cultures marines en infraction a la reglementation").click()
+      cy.get('body').type('{esc}')
+      cy.wait(250)
+
+      // Type to retrieve all natinfs
+      cy.fill('NATINF', ["1508 Execution d'un travail dissimule"])
+
+      cy.getDataCy('control-open-by').type('ABC', { force: true })
+      cy.wait(250)
+
+      cy.wait('@updateMission').then(({ request, response }) => {
+        // check request
+        const requestInfraction: Infraction = request.body.envActions[0].infractions[0]
+        expect(requestInfraction.natinf).to.deep.equal(['1508'])
+
+        // check response
+        const responseInfraction = response?.body.envActions[0].infractions[0]
+        expect(response && response.statusCode).equal(200)
+        expect(responseInfraction.natinf).to.deep.equal(['1508'])
+
+        // clean
+        cy.wait(250)
+        cy.clickButton('Fermer')
+        cy.getDataCy(`edit-mission-${mission.id}`).click({ force: true })
+        cy.clickButton('Supprimer la mission')
+        cy.clickButton('Confirmer la suppression')
+      })
     })
   })
 })

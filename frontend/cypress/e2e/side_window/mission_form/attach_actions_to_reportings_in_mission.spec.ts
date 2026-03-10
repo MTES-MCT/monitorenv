@@ -192,7 +192,7 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
         cy.fill("Type d'infraction", 'Avec PV')
         cy.fill('Réponse administrative', 'Sanction')
         cy.fill('Mise en demeure', 'En attente')
-        cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+        cy.fill('NATINF', ["1508 Execution d'un travail dissimule"])
 
         return cy.waitForLastRequest(
           '@updateMission',
