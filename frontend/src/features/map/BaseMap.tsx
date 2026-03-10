@@ -1,4 +1,4 @@
-import { MultiRadio, OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { MultiRadio, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { isCypress } from '@utils/isCypress'
 import {
   getGeoJSONFromFeature,
@@ -7,11 +7,13 @@ import {
   type SerializedFeature
 } from 'domain/types/map'
 import { isEqual, throttle } from 'lodash'
+import { Graticule, type MapBrowserEvent } from 'ol'
 import { defaults as defaultControls, ScaleLine } from 'ol/control'
 import Zoom from 'ol/control/Zoom'
 import { platformModifierKeyOnly } from 'ol/events/condition'
 import OpenLayerMap from 'ol/Map'
 import { transform } from 'ol/proj'
+import { Stroke } from 'ol/style'
 import View from 'ol/View'
 import {
   Children,
@@ -42,7 +44,6 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened'
 
 import type { VectorLayerWithName, WebGLVectorLayerWithName } from '../../domain/types/layer'
-import type { MapBrowserEvent } from 'ol'
 
 export type BaseMapChildrenProps = {
   currentFeatureListOver?: SerializedFeature<Record<string, any>>[]
@@ -71,6 +72,7 @@ export const initialMap = new OpenLayerMap({
 
 function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
   const dispatch = useAppDispatch()
+  const { isGridLinesVisible } = useAppSelector(state => state.administrative)
 
   const [mapClickEvent, setMapClickEvent] = useState<MapClickEvent>({
     coordinates: undefined,
@@ -122,7 +124,7 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
   }, [])
 
   const mapElement = useRef() as MutableRefObject<HTMLDivElement>
-
+  const graticuleRef = useRef<Graticule>()
   const wrapperRef = useRef(null)
   const distanceUnit = useAppSelector(state => state.map.distanceUnit)
   const [unitsSelectionIsOpen, setUnitsSelectionIsOpen] = useState(false)
@@ -216,6 +218,17 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
     initialMap.addControl(updateScaleControl())
     initialMap.on('click', event => handleMapClick(event, initialMap))
     initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
+    graticuleRef.current = new Graticule({
+      latLabelPosition: 0.95,
+      lonLabelPosition: 0.045,
+      showLabels: true,
+      strokeStyle: new Stroke({
+        color: THEME.color.charcoal,
+        lineDash: [2, 2]
+      }),
+      wrapX: false
+    })
+    initialMap.addLayer(graticuleRef.current)
 
     return () => {
       initialMap.un('click', event => handleMapClick(event, initialMap))
@@ -240,6 +253,10 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
       setUnitsSelectionIsOpen(false)
     }
   }, [clickedOutsideComponent])
+
+  useEffect(() => {
+    graticuleRef.current?.setVisible(isGridLinesVisible)
+  }, [isGridLinesVisible])
 
   // Only expose helpers when running under Cypress
   if (isCypress()) {

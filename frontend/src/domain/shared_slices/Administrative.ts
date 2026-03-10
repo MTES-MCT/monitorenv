@@ -10,6 +10,7 @@ const persistConfig = {
 
 const administrativeSlice = createSlice({
   initialState: {
+    isGridLinesVisible: false,
     showedAdministrativeLayerIds: [] as number[]
   },
   name: 'administrative',
@@ -23,6 +24,9 @@ const administrativeSlice = createSlice({
      */
     hideAdministrativeLayer(state, action) {
       state.showedAdministrativeLayerIds = _.without(state.showedAdministrativeLayerIds, action.payload)
+    },
+    setGridLinesVisibility(state, action) {
+      state.isGridLinesVisible = action.payload
     },
 
     /**
@@ -38,6 +42,6 @@ const administrativeSlice = createSlice({
   }
 })
 
-export const { hideAdministrativeLayer, showAdministrativeLayer } = administrativeSlice.actions
+export const { hideAdministrativeLayer, setGridLinesVisibility, showAdministrativeLayer } = administrativeSlice.actions
 
 export const administrativeSlicePersistedReducer = persistReducer(persistConfig, administrativeSlice.reducer)
