@@ -2,17 +2,30 @@ import { InlineTransparentButton } from '@components/style'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-import { hideAdministrativeLayer, showAdministrativeLayer } from '../../../domain/shared_slices/Administrative'
+import {
+  hideAdministrativeLayer,
+  setGridLinesVisibility,
+  showAdministrativeLayer
+} from '../../../domain/shared_slices/Administrative'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 
 export function AdministrativeLayer({ isGrouped, layer }) {
   const dispatch = useAppDispatch()
-  const { showedAdministrativeLayerIds } = useAppSelector(state => state.administrative)
+  const { isGridLinesVisible, showedAdministrativeLayerIds } = useAppSelector(state => state.administrative)
 
-  const isLayerVisible = showedAdministrativeLayerIds.includes(layer.code as number)
+  const isAdministrativeLayerVisible = showedAdministrativeLayerIds.includes(layer.code as number)
+
+  const isLayerVisible = layer.code === 'gridlines' ? isGridLinesVisible : isAdministrativeLayerVisible
 
   const toggleLayer = () => {
+    if (layer.code === 'gridlines') {
+      // gridlines layer is a special case as it is not retrieved from the API but generated on the frontend
+      dispatch(setGridLinesVisibility(!isGridLinesVisible))
+
+      return
+    }
+
     if (isLayerVisible) {
       dispatch(hideAdministrativeLayer(layer.code))
     } else {

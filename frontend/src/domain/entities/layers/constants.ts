@@ -41,6 +41,7 @@ export enum MonitorEnvLayers {
   EEZ = 'EEZ',
   FACADES = 'FACADES',
   FAO = 'FAO',
+  GRIDLINES = 'GRIDLINES',
   HOVERED_MISSION = 'HOVERED_MISSION',
   INTEREST_POINT = 'INTEREST_POINT',
   LOCALIZED_AREAS = 'LOCALIZED_AREAS',
@@ -125,6 +126,11 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     subZoneFieldKey: 'f_division',
     type: LayerType.ADMINISTRATIVE,
     zoneFieldKey: 'f_subarea'
+  },
+  [MonitorEnvLayers.GRIDLINES]: {
+    code: 'gridlines',
+    name: 'Graticules (longitude / latitude)',
+    type: LayerType.ADMINISTRATIVE
   },
   [MonitorEnvLayers.MARPOL]: {
     code: 'marpol',
