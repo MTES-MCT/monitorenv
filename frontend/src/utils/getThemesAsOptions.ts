@@ -56,6 +56,18 @@ export const displayThemes = (themes?: ThemeFromAPI[]) => themes?.map(({ name })
 export const displaySubThemes = (themes?: ThemeFromAPI[]) =>
   themes?.flatMap(({ subThemes }) => subThemes.map(({ name }) => name)).join(', ')
 
+export const getThemeAndSubthemeIds = (themes?: ThemeFromAPI[]) =>
+  themes?.reduce((acc: number[], theme: ThemeFromAPI) => {
+    if (theme.subThemes.length === 0) {
+      acc.push(theme.id)
+    } else {
+      const subthemeIds = theme.subThemes.flatMap(({ id }) => id)
+      acc.push(...subthemeIds)
+    }
+
+    return acc
+  }, [])
+
 export const sortThemes = (a: ThemeOption, b: ThemeOption) => {
   if (a.name.startsWith('Autre')) {
     return 1

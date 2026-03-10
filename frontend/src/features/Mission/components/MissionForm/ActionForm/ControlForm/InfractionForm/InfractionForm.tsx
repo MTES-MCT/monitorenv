@@ -1,6 +1,7 @@
 import { Tooltip } from '@components/Tooltip'
 import { NewInfractionSchema } from '@features/Mission/components/MissionForm/Schemas/Infraction'
 import { Accent, Button, FormikMultiRadio, FormikNumberInput, FormikTextarea, Icon } from '@mtes-mct/monitor-ui'
+import { getThemeAndSubthemeIds } from '@utils/getThemesAsOptions'
 import {
   administrativeResponseOptions,
   formalNoticeLabels,
@@ -17,6 +18,8 @@ import { InfractionFormHeaderCompany } from './InfractionFormHeaderCompany'
 import { InfractionFormHeaderIndividual } from './InfractionFormHeaderIndividual'
 import { InfractionFormHeaderVehicle } from './InfractionFormHeaderVehicle'
 import { NatinfSelector } from './NatinfSelector'
+
+import type { ThemeFromAPI } from '../../../../../../../domain/entities/themes'
 
 const infractionTypeOptions = Object.values(infractionTypeLabels).map(o => ({ label: o.libelle, value: o.code }))
 const formalNoticeOptions = Object.values(formalNoticeLabels).map(o => ({ label: o.libelle, value: o.code }))
@@ -38,6 +41,7 @@ export function InfractionForm({
   const infractionPath = `envActions[${envActionIndex}].infractions[${currentInfractionIndex}]`
   const [infraction] = useField<Infraction>(infractionPath)
   const [actionTargetField] = useField<string>(`envActions.${envActionIndex}.actionTargetType`)
+  const [themesField] = useField<ThemeFromAPI[]>(`envActions.${envActionIndex}.themes`)
   const [nbTarget] = useField<number>(`${infractionPath}.nbTarget`)
 
   const isValid = () => {
@@ -106,7 +110,7 @@ export function InfractionForm({
         options={formalNoticeOptions}
       />
 
-      <NatinfSelector infractionPath={infractionPath} />
+      <NatinfSelector infractionPath={infractionPath} themesIds={getThemeAndSubthemeIds(themesField.value)} />
 
       <FormikTextarea label="Observations" name={`${infractionPath}.observations`} />
 
