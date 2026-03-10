@@ -19,10 +19,10 @@ from src.shared_tasks.datagouv import (
 
 
 @task
-def extract_regulations_open_data() -> gpd.GeoDataFrame:
+def extract_regulatory_areas_open_data() -> gpd.GeoDataFrame:
     return extract(
         "cacem_local",
-        "cross/cacem/regulations_open_data.sql",
+        "cross/cacem/regulatory_areas_open_data.sql",
         backend="geopandas",
         geom_col="geometry",
         parse_dates=["edition", "date_fin", "date"],
@@ -30,7 +30,7 @@ def extract_regulations_open_data() -> gpd.GeoDataFrame:
 
 
 @task
-def get_regulations_for_csv(regulations: gpd.GeoDataFrame) -> pd.DataFrame:
+def get_regulatory_areas_for_csv(regulatory_areas: gpd.GeoDataFrame) -> pd.DataFrame:
 
     columns = [
         "id",
@@ -40,24 +40,29 @@ def get_regulations_for_csv(regulations: gpd.GeoDataFrame) -> pd.DataFrame:
         "ref_reg",
         "edition",
         "source",
-        "obs",
+        "observation",
         "date",
         "date_fin",
-        "validite",
-        "tempo",
+        "duree_validite",
+        "temporalite",
         "type",
         "wkt",
         "resume",
         "poly_name",
         "plan",
+        "authorization_periods",
+        "prohibition_periods",
+        "additional_ref_reg",
+        "themes",
+        "tags",
     ]
 
-    return pd.DataFrame(regulations[columns])
+    return pd.DataFrame(regulatory_areas[columns])
 
 
 @task
-def get_regulations_for_geopackage(
-    regulations: gpd.GeoDataFrame,
+def get_regulatory_areas_for_geopackage(
+    regulatory_areas: gpd.GeoDataFrame,
 ) -> gpd.GeoDataFrame:
 
     columns = [
@@ -68,23 +73,28 @@ def get_regulations_for_geopackage(
         "ref_reg",
         "edition",
         "source",
-        "obs",
+        "observation",
         "date",
         "date_fin",
-        "validite",
-        "tempo",
+        "duree_validite",
+        "temporalite",
         "type",
         "resume",
         "poly_name",
         "plan",
         "geometry",
+        "authorization_periods",
+        "prohibition_periods",
+        "additional_ref_reg",
+        "themes",
+        "tags"
     ]
 
-    return regulations[columns].copy(deep=True)
+    return regulatory_areas[columns].copy(deep=True)
 
 
-@flow(name="Monitorenv - Regulations open data")
-def regulations_open_data_flow(
+@flow(name="Monitorenv - Regulatory Areas open data")
+def regulatory_areas_open_data_flow(
     dataset_id: str = REGULATORY_AREAS_DATASET_ID,
     csv_resource_id: str = REGULATORY_AREAS_CSV_RESOURCE_ID,
     gpkg_resource_id: str = REGULATORY_AREAS_GEOPACKAGE_RESOURCE_ID,
@@ -93,14 +103,14 @@ def regulations_open_data_flow(
     is_integration: bool = IS_INTEGRATION,
 ):
 
-    regulations = extract_regulations_open_data()
+    regulatory_areas = extract_regulatory_areas_open_data()
 
-    regulations_for_csv = get_regulations_for_csv(regulations)
-    regulations_for_geopackage = get_regulations_for_geopackage(regulations)
+    regulatory_areas_for_csv = get_regulatory_areas_for_csv(regulatory_areas)
+    regulatory_areas_for_geopackage = get_regulatory_areas_for_geopackage(regulatory_areas)
 
-    csv_file = get_csv_file_object(regulations_for_csv)
+    csv_file = get_csv_file_object(regulatory_areas_for_csv)
     geopackage_file = get_geopackage_file_object(
-        regulations_for_geopackage, layers="facade"
+        regulatory_areas_for_geopackage, layers="facade"
     )
 
     update_resource(
