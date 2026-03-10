@@ -120,7 +120,10 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                     id integer,
                     geom geometry,
                     ref_reg varchar,
-                    edition_cacem timestamp
+                    edition_cacem timestamp,
+                    observation text,
+                    editeur varchar,
+                    source varchar
                 )
                 ON COMMIT DROP;"""
             )
@@ -131,6 +134,9 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
             "geom",
             "ref_reg",
             "edition_cacem",
+            "observation",
+            "editeur",
+            "source",
         ]
 
         logger.info("Loading to temporary table")
@@ -151,7 +157,10 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                 """UPDATE regulatory_areas reg
                 SET geom = tmp.geom,
                 ref_reg = tmp.ref_reg,
-                edition_cacem = tmp.edition_cacem
+                edition_cacem = tmp.edition_cacem,
+                observation = tmp.observation,
+                editeur = tmp.editeur,
+                source = tmp.source
                 FROM tmp_regulatory_areas tmp
                 WHERE reg.id = tmp.id;
                 """
