@@ -16,4 +16,22 @@ class JpaNatinfRepositoryITests : AbstractDBTests() {
         val natinfs = jpaNatinfsRepository.findAll()
         assertThat(natinfs).hasSize(645)
     }
+
+    @Test
+    @Transactional
+    fun `findAllByThemesIds Should return natinfs from theme ids`() {
+        // When
+        val themeIds = listOf(323)
+        val natinfs = jpaNatinfsRepository.findAllByThemesIds(themeIds)
+        assertThat(natinfs).hasSize(3)
+    }
+
+    @Test
+    @Transactional
+    fun `findAllByThemesIds Should be empty if there are no theme ids`() {
+        // When
+        val themeIds = listOf<Int>()
+        val natinfs = jpaNatinfsRepository.findAllByThemesIds(themeIds)
+        assertThat(natinfs).isEmpty()
+    }
 }
