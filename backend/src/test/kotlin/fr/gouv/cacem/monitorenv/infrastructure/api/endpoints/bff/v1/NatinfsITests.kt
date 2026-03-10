@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.natinf.NatinfEntity
@@ -20,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -29,7 +29,7 @@ class NatinfsITests {
     private lateinit var mockMvc: MockMvc
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var jsonMapper: JsonMapper
 
     @MockitoBean
     private lateinit var getAllNatinfs: GetAllNatinfs
@@ -77,7 +77,7 @@ class NatinfsITests {
         mockMvc
             .perform(
                 post("/bff/v1/natinfs/themes")
-                    .content(objectMapper.writeValueAsString(themeIds))
+                    .content(jsonMapper.writeValueAsString(themeIds))
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then

@@ -148,7 +148,7 @@ context('Reportings', () => {
       cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Appréhension/saisie', 'Oui')
       cy.fill('Mise en demeure', 'Oui')
-      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('NATINF', ["1508 Execution d'un travail dissimule"])
       cy.fill('Nb de cibles avec cette infraction', 1)
       cy.clickButton("Valider l'infraction")
       cy.getDataCy('control-open-by').type('ABC')

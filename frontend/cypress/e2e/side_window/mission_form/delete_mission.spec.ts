@@ -100,7 +100,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
       cy.fill("Type d'infraction", 'Avec PV')
       cy.fill('Réponse administrative', 'Sanction')
       cy.fill('Mise en demeure', 'Oui')
-      cy.fill('NATINF', ["1508 - Execution d'un travail dissimule"])
+      cy.fill('NATINF', ["1508 Execution d'un travail dissimule"])
 
       cy.wait(500)
       cy.waitForLastRequest('@updateMission', {}, 5, 0, missionResponse => {
