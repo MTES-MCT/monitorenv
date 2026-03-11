@@ -35,6 +35,7 @@ class VesselFixture {
                 ownerLegalStatusLabel = null,
                 ownerStartDate = null,
                 positions = mutableListOf(),
+                umsGrossTonnage = null,
             )
     }
 }
