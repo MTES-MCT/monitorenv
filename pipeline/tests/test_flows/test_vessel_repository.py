@@ -61,6 +61,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "professional_type": "Porte-Conteneur",
                 "leisure_type": None,
                 "commercial_name": "UICKSILVER",
+                "ums_gross_tonnage": "9.23",
                 "length": "32",
                 "owner_date_of_information": "2019-05-29T00:00:00.000",
                 "owner_last_name": "NOM 1",
@@ -92,6 +93,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 "professional_type": None,
                 "leisure_type": "Navire a passagers",
                 "commercial_name": None,
+                "ums_gross_tonnage": "10",
                 "length": "9.6",
                 "owner_date_of_information": "2019-05-29T00:00:00.000",
                 "owner_last_name": "NOM 2",
@@ -133,6 +135,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
                 professional_type,
                 leisure_type,
                 commercial_name,
+                ums_gross_tonnage,
                 length,
                 owner_date_of_information,
                 owner_last_name,
@@ -159,7 +162,7 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
     expected_df["owner_date_of_information"] = expected_df[
         "owner_date_of_information"
     ].apply(pd.to_datetime, errors="coerce")
-    # Cast batch_id, row_number, length and ship_id to numeric to compare it
+    # Cast batch_id, row_number, ums_gross_tonnage, length and ship_id to numeric to compare it
     expected_df["batch_id"] = expected_df["batch_id"].apply(
         pd.to_numeric, errors="coerce"
     )
@@ -179,6 +182,12 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
         pd.to_numeric, errors="coerce"
     )
     imported_vessels["ship_id"] = imported_vessels["ship_id"].apply(
+        pd.to_numeric, errors="coerce"
+    )
+    expected_df["ums_gross_tonnage"] = expected_df["ums_gross_tonnage"].apply(
+        pd.to_numeric, errors="coerce"
+    )
+    imported_vessels["ums_gross_tonnage"] = imported_vessels["ums_gross_tonnage"].apply(
         pd.to_numeric, errors="coerce"
     )
     expected_df["length"] = expected_df["length"].apply(

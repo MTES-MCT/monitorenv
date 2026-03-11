@@ -42,6 +42,8 @@ data class VesselModel(
     val shipId: Int?,
     val shipName: String?,
     val status: String?,
+    @Column(name = "ums_gross_tonnage")
+    val umsGrossTonnage: BigDecimal?,
 ) {
     fun toVessel(
         nafLabel: String? = null,
@@ -77,5 +79,6 @@ data class VesselModel(
             ownerLegalStatus = ownerLegalStatus,
             ownerStartDate = ownerStartDate,
             positions = mutableListOf(),
+            umsGrossTonnage = umsGrossTonnage,
         )
 }

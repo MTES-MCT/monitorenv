@@ -26,6 +26,7 @@ TAGS_TO_INCLUDE = {
     "ProfessionalType",
     "LeisureType",
     "CommercialName",
+    "UMSGrossTonnage",
     "Length",
     "BatchId",
     "RowNumber",
