@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import fr.gouv.cacem.monitorenv.domain.entities.positions.AISPositionEntity
 import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPayload
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
@@ -24,7 +23,7 @@ import kotlin.math.roundToInt
 @Entity
 @Table(name = "ais_positions")
 data class AISPositionModel(
-    @Column(insertable = false, updatable = false)
+    @Column(insertable = false, updatable = false, nullable = false)
     @Generated(event = [EventType.INSERT])
     val id: Int?,
     @EmbeddedId
