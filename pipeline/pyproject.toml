@@ -29,7 +29,7 @@ mypy = "^1.18.2"
 ## Code formatting
 black = "^26.1.0"
 ## Code quality
-isort = "^7.0.0"
+isort = "^8.0.1"
 pylint = "^4.0.3"
 ## Automation and management
 pre-commit = "^4.5.0"
