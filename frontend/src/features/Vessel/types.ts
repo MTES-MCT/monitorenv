@@ -33,6 +33,7 @@ export namespace Vessel {
     professionalType?: string
     shipName?: string
     status?: string
+    umsGrossTonnage?: number
   }
 
   export interface ApiSearchFilter {

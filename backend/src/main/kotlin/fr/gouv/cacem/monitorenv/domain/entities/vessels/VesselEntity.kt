@@ -33,4 +33,5 @@ data class VesselEntity(
     val shipName: String?,
     val status: String?,
     val positions: MutableList<AISPositionEntity>,
+    val umsGrossTonnage: BigDecimal?,
 )
