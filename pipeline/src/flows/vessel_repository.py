@@ -73,7 +73,6 @@ def get_xml_files(directory: str) -> List[Path]:
     return xml_files
 
 
-@task
 def get_xsd_schema(xsd_file_path: str):
     xsd_path = Path(xsd_file_path)
     if not xsd_path.exists():
@@ -87,10 +86,11 @@ def get_xsd_schema(xsd_file_path: str):
 def parse_xml_and_load(
     xml_file_path: str,
     logger,
-    schema=None,
+    xsd_file_path=None,
     batch_size: int = 100000,
     connection=None,
 ):
+    schema = get_xsd_schema(xsd_file_path)
     xml_path = Path(xml_file_path)
     if not xml_path.exists():
         raise FileNotFoundError(f"Fichier XML non trouvé : {xml_file_path}")
@@ -191,7 +191,7 @@ def load_vessels_batch(vessels, connection, logger):
 
 
 @task
-def parse_all_xml_files(xml_files, xsd_schema, batch_size=100000):
+def parse_all_xml_files(xml_files, xsd_file, batch_size=100000):
     engine = create_engine("monitorenv_remote")
     logger = get_run_logger()
     try:
@@ -199,7 +199,7 @@ def parse_all_xml_files(xml_files, xsd_schema, batch_size=100000):
             for xml_file in xml_files:
                 logger.info(f"Parsing file {xml_file}")
                 parse_xml_and_load(
-                    xml_file, logger, xsd_schema, batch_size, connection
+                    xml_file, logger, xsd_file, batch_size, connection
                 )
         return True
 
@@ -217,8 +217,7 @@ def delete_files(xml_files: List[Path]):
 @flow(name="Monitorenv - Vessel repository")
 def vessel_repository_flow():
     xsd_file = get_xsd_file(LIBRARY_LOCATION / "data/")
-    xsd_schema = get_xsd_schema(xsd_file)
     xml_files = get_xml_files(LIBRARY_LOCATION / "data/")
-    xml_parsed = parse_all_xml_files(xml_files, xsd_schema)
+    xml_parsed = parse_all_xml_files(xml_files, xsd_file)
     if xml_parsed is True:
         delete_files(xml_files)
