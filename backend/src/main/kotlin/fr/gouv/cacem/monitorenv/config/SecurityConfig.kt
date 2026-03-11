@@ -36,7 +36,7 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import tools.jackson.databind.json.JsonMapper
-import java.util.Base64
+import java.util.*
 
 @Configuration
 @EnableWebSecurity
@@ -216,7 +216,7 @@ class SecurityConfig(
                             "/favicon-32.ico",
                             "/asset-manifest.json",
                             "/swagger-ui/**",
-                            "v3/**",
+                            "/v3/**",
                             // Used to redirect to the frontend SPA, see Spa.kt
                             "/error",
                             "/api/**",
