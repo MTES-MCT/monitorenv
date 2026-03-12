@@ -31,7 +31,7 @@ data class VesselEntity(
     val portOfRegistry: String?,
     val professionalType: String?,
     val rowNumber: Int?,
-    val shipId: Int?,
+    val shipId: Int,
     val shipName: String?,
     val status: String?,
     val positions: MutableList<AISPositionEntity>,

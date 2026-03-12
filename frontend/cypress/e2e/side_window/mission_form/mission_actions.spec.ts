@@ -605,7 +605,9 @@ context('Side Window > Mission Form > Mission actions', () => {
       cy.wait('@updateMission').then(({ request, response }) => {
         // check request
         const requestInfraction: Infraction = request.body.envActions[0].infractions[0]
-        expect(requestInfraction.vesselId).equal(1)
+        expect(requestInfraction.vesselShipId).equal(11)
+        expect(requestInfraction.vesselBatchId).equal(2)
+        expect(requestInfraction.vesselRowNumber).equal(1)
         expect(requestInfraction.mmsi).equal('123456789')
         expect(requestInfraction.vesselName).equal('SHIPNAME 1')
         expect(requestInfraction.imo).equal('IMO1111')
@@ -622,7 +624,9 @@ context('Side Window > Mission Form > Mission actions', () => {
 
         // check response
         const responseInfraction = response?.body.envActions[0].infractions[0]
-        expect(responseInfraction.vesselId).equal(1)
+        expect(responseInfraction.vesselShipId).equal(11)
+        expect(responseInfraction.vesselBatchId).equal(2)
+        expect(responseInfraction.vesselRowNumber).equal(1)
         expect(responseInfraction.mmsi).equal('123456789')
         expect(responseInfraction.vesselName).equal('SHIPNAME 1')
         expect(responseInfraction.imo).equal('IMO1111')

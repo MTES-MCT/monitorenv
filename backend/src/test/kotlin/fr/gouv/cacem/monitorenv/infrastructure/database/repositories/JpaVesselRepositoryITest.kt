@@ -19,7 +19,7 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
         val vessel = jpaVesselRepository.findVesselByShipId(shipId, batchId, rowNumber)
 
         // Then
-        assertThat(vessel?.id).isEqualTo(1)
+        assertThat(vessel?.id).isEqualTo(2)
         assertThat(vessel?.shipId).isEqualTo(11)
         assertThat(vessel?.status).isEqualTo("A")
         assertThat(vessel?.category).isEqualTo("PRO")
@@ -88,6 +88,20 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(vessel).isNull()
+    }
+
+    @Test
+    fun `findById should return vessel when the vessel with given id and batchId and rowNumber are null`() {
+        // Given
+        val shipId = 66
+        val batchId = null
+        val rowNumber = null
+
+        // When
+        val vessel = jpaVesselRepository.findVesselByShipId(shipId, batchId, rowNumber)
+
+        // Then
+        assertThat(vessel).isNotNull
     }
 
     @Test

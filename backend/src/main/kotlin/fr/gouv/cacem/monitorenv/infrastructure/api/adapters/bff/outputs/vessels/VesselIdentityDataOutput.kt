@@ -9,7 +9,7 @@ data class VesselIdentityDataOutput(
     val imo: String?,
     val immatriculation: String?,
     val mmsi: String?,
-    val shipId: Int?,
+    val shipId: Int,
     val shipName: String?,
     val batchId: Int?,
     val rowNumber: Int?,

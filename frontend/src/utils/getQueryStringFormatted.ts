@@ -1,6 +1,6 @@
 function generateQueryStringPart(
   key: string,
-  value: boolean | string | string[] | undefined | number[]
+  value: boolean | string | string[] | number | number[] | undefined
 ): string | undefined {
   if (value === undefined || (typeof value !== 'boolean' && typeof value !== 'number' && value.length === 0)) {
     return undefined
@@ -13,7 +13,7 @@ function generateQueryStringPart(
 
 export function getQueryString(
   basePath: string,
-  params?: Record<string, boolean | string | string[] | undefined | number[]> | void
+  params?: Record<string, boolean | string | string[] | number | number[] | undefined> | void
 ): string {
   if (!params) {
     return `${basePath}`

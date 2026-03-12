@@ -18,7 +18,7 @@ export function VesselForm({ envActionIndex, isDisabled, path }: VesselFormProps
   const [envActionId] = useField(`envActions.${envActionIndex}.id`)
   const [{ value: infraction }] = useField<Infraction>(path)
   const isUnknown =
-    !infraction.vesselId &&
+    !infraction.vesselShipId &&
     !!(
       infraction.mmsi ||
       infraction.imo ||
@@ -33,11 +33,13 @@ export function VesselForm({ envActionIndex, isDisabled, path }: VesselFormProps
   return (
     <>
       <VesselSearchForm
+        batchId={infraction.vesselBatchId}
         envActionId={envActionId.value}
         isUnknown={isUnknownVessel}
         onIsUnknown={isChecked => setIsUnknownVessel(!!isChecked)}
         path={path}
-        vesselId={infraction.vesselId}
+        rowNumber={infraction.vesselRowNumber}
+        shipId={infraction.vesselShipId}
       />
       {(isUnknownVessel || !isVesselsEnabled()) && (
         <>
