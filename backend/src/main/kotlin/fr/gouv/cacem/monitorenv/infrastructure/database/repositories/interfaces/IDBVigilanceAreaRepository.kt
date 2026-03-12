@@ -55,4 +55,31 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
         """,
     )
     fun findAllTrigrams(): List<String>
+
+    @Query(
+        value =
+            """
+            SELECT *
+            FROM vigilance_areas vigilanceArea
+            WHERE vigilanceArea.id IN (:ids)
+            ORDER BY
+                CASE
+                    WHEN :axis = 'SOUTH_NORTH' THEN ST_Y(ST_PointOnSurface(vigilanceArea.geom))
+                END ASC,
+                CASE
+                    WHEN :axis = 'NORTH_SOUTH' THEN ST_Y(ST_PointOnSurface(vigilanceArea.geom))
+                END DESC,
+                CASE
+                    WHEN :axis = 'WEST_EAST' THEN ST_X(ST_PointOnSurface(vigilanceArea.geom))
+                END ASC,
+                CASE
+                    WHEN :axis = 'EAST_WEST' THEN ST_X(ST_PointOnSurface(vigilanceArea.geom))
+                END DESC
+        """,
+        nativeQuery = true,
+    )
+    fun findAllById(
+        ids: List<Int>,
+        axis: String,
+    ): List<VigilanceAreaModel>
 }
