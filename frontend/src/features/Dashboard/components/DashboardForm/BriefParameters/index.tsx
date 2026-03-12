@@ -6,25 +6,30 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { getOptionsFromLabelledEnum, MultiRadio } from '@mtes-mct/monitor-ui'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
+import { Axis, AxisLabel } from 'types'
 
 import { Accordion, Title } from '../Accordion'
 
 import type { BaseLayer } from 'domain/entities/layers/BaseLayer'
 
-type BackgroundMapProps = {
+type BriefParametersProps = {
   isExpanded: boolean
   setExpandedAccordion: () => void
 }
 
-export const BackgroundMap = forwardRef<HTMLDivElement, BackgroundMapProps>(
+export const BriefParameters = forwardRef<HTMLDivElement, BriefParametersProps>(
   ({ isExpanded, setExpandedAccordion }, ref) => {
     const dispatch = useAppDispatch()
     const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
     const backgroundMap = useAppSelector(state =>
       activeDashboardId ? state.dashboard.dashboards[activeDashboardId]?.backgroundMap : undefined
     )
+    const axis = useAppSelector(state =>
+      activeDashboardId ? state.dashboard.dashboards[activeDashboardId]?.axis : undefined
+    )
 
     const baseLayersKeys = getOptionsFromLabelledEnum(Dashboard.BackgroundMapLabel)
+    const axisKeys = getOptionsFromLabelledEnum(AxisLabel)
 
     const handleBackgroundMap = (layercode: BaseLayer | undefined) => {
       if (layercode) {
@@ -32,32 +37,41 @@ export const BackgroundMap = forwardRef<HTMLDivElement, BackgroundMapProps>(
       }
     }
 
+    const handleZoneOrder = (order: Axis | undefined) => {
+      if (order) {
+        dispatch(dashboardActions.setAxis(order))
+      }
+    }
+
     const titleWithTooltip = (
       <TitleContainer>
-        <Title>Fond de carte des zones sélectionnées</Title>
-        <Tooltip isSideWindow>
-          Les fonds de carte impactés seront ceux de la page récapitulative, des zones réglementaires, des zones de
-          vigilance et des zones AMP
-        </Tooltip>
+        <Title>Paramètres des zones sélectionnées</Title>
+        <Tooltip isSideWindow>Ces paramètres impactent uniquement le PDF</Tooltip>
       </TitleContainer>
     )
 
     return (
       <Accordion
         isExpanded={isExpanded}
-        name="Fond de carte des zones sélectionnées"
+        name="Paramètres des zones sélectionnées"
         setExpandedAccordion={setExpandedAccordion}
         title={titleWithTooltip}
         titleRef={ref}
       >
         <Container>
           <MultiRadio
-            isLabelHidden
             label="Fonds de carte"
             name="backgroundMap"
             onChange={handleBackgroundMap}
             options={baseLayersKeys}
             value={backgroundMap}
+          />
+          <MultiRadio
+            label="Ordonnancement des zones"
+            name="zonesOrder"
+            onChange={handleZoneOrder}
+            options={axisKeys}
+            value={axis}
           />
         </Container>
       </Accordion>
@@ -66,6 +80,8 @@ export const BackgroundMap = forwardRef<HTMLDivElement, BackgroundMapProps>(
 )
 
 const Container = styled.div`
+  display: flex;
+  gap: 15%;
   padding: 20px 24px;
 `
 

@@ -20,10 +20,10 @@ class GetRegulatoryAreaByIdsUTest {
         // Given
         val id = listOf(1)
         val expectedRegulatoryArea = listOf(RegulatoryAreaNewFixture.aNewRegulatoryArea())
-        given(regulatoryAreaRepository.findAllByIds(id)).willReturn(expectedRegulatoryArea)
+        given(regulatoryAreaRepository.findAllByIds(id, "NORTH_SOUTH")).willReturn(expectedRegulatoryArea)
 
         // When
-        val regulatoryArea = getRegulatoryAreaByIds.execute(id)
+        val regulatoryArea = getRegulatoryAreaByIds.execute(id, "NORTH_SOUTH")
 
         // Then
         assertThat(expectedRegulatoryArea).isEqualTo(regulatoryArea)

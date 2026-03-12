@@ -14,7 +14,10 @@ interface IRegulatoryAreaNewRepository {
 
     fun findAllIdsByGeometry(geometry: Geometry): List<Int>
 
-    fun findAllByIds(ids: List<Int>): List<RegulatoryAreaEntity>
+    fun findAllByIds(
+        ids: List<Int>,
+        axis: String,
+    ): List<RegulatoryAreaEntity>
 
     fun findAllToComplete(): List<RegulatoryAreaEntity>
 

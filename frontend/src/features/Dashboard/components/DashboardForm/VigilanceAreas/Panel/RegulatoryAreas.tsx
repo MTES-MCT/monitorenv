@@ -13,6 +13,7 @@ import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { Projection, transformExtent } from 'ol/proj'
 import styled from 'styled-components'
+import { Axis } from 'types'
 
 import { ButtonsContainer, Container, Name, StyledButton } from './style'
 
@@ -20,12 +21,18 @@ import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: number[] }) {
   const dispatch = useAppDispatch()
-
-  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(regulatoryAreaIds, {
-    skip: regulatoryAreaIds.length === 0
-  })
-
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+  const axis = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards[activeDashboardId]?.axis : Axis.NORTH_SOUTH
+  )
+
+  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
+    { axis, ids: regulatoryAreaIds },
+    {
+      skip: regulatoryAreaIds.length === 0
+    }
+  )
+
   const regulatoryIdsToDisplay = useAppSelector(state =>
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.regulatoryIdsToDisplay : undefined
   )

@@ -51,6 +51,11 @@ export namespace RegulatoryArea {
 
   export type RegulatoryAreaWithBbox = RegulatoryAreaFromAPI & { bbox: number[] }
 
+  export type RegulatoryAreaByIdsForApi = {
+    axis?: string
+    ids: number[]
+  }
+
   export type AdditionalRegulatoryText = {
     endDate?: string
     id: string
