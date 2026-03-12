@@ -11,6 +11,7 @@ import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { Axis } from 'types'
 
 import { getVigilanceAreaLayerStyle } from './style'
 import { getFormattedGeomForFeature, getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
@@ -63,9 +64,12 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   vectorLayerRef.current.name = Layers.VIGILANCE_AREA.code
 
   // Regulatory Areas Layers
-  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(regulatoryAreasToAdd, {
-    skip: regulatoryAreasToAdd.length === 0
-  })
+  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
+    { axis: Axis.NORTH_SOUTH, ids: regulatoryAreasToAdd },
+    {
+      skip: regulatoryAreasToAdd.length === 0
+    }
+  )
   const regulatoryAreasFeatures = useMemo(() => {
     if (!regulatoryAreas || regulatoryAreasToAdd.length === 0) {
       return []

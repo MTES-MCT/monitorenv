@@ -115,6 +115,70 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
+    fun `findAllByIds Should return specific RegulatoryArea sorted by axis NORTH_SOUTH`() {
+        // When
+        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(300, 425), "NORTH_SOUTH")
+
+        // Then
+        assertThat(requestedRegulatoryArea[0].id).isEqualTo(300)
+        assertThat(
+            requestedRegulatoryArea[0].url,
+        ).isEqualTo("https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044019134")
+        assertThat(requestedRegulatoryArea[0].layerName).isEqualTo("RNN_Iroise")
+        assertThat(requestedRegulatoryArea[0].facade).isEqualTo("NAMO")
+        assertThat(
+            requestedRegulatoryArea[0].refReg,
+        ).isEqualTo(
+            "Décret no 2021-1149 du 4 septembre 2021 portant extension du périmètre  et modification de la réglementation de la réserve naturelle nationale d'Iroise (Finistère)",
+        )
+        assertThat(requestedRegulatoryArea[0].editionBo).isEqualTo("2021-09-28T00:00:00Z")
+        assertThat(requestedRegulatoryArea[0].editeur).isEqualTo("Alexis Pré")
+        assertThat(requestedRegulatoryArea[0].source).isEqualTo("Histolitt SHOM")
+        assertThat(requestedRegulatoryArea[0].observation).isEqualTo("A valider")
+        assertThat(requestedRegulatoryArea[0].date).isEqualTo("2021-09-04T00:00:00Z")
+        assertThat(requestedRegulatoryArea[0].dureeValidite).isEqualTo("permanent")
+        assertThat(requestedRegulatoryArea[0].temporalite).isEqualTo("permanent")
+        assertThat(requestedRegulatoryArea[0].plan).isEqualTo("PIRC")
+        assertThat(requestedRegulatoryArea[0].polyName).isEqualTo("")
+        assertThat(requestedRegulatoryArea[0].resume).isEqualTo("Partie terrestre RNN d'Iroise")
+        assertThat(requestedRegulatoryArea[1].id).isEqualTo(425)
+    }
+
+    @Test
+    @Transactional
+    fun `findAllByIds Should return specific RegulatoryArea sorted by axis SOUTH_NORTH`() {
+        // When
+        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(300, 425), "SOUTH_NORTH")
+
+        // Then
+        assertThat(requestedRegulatoryArea[0].id).isEqualTo(425)
+        assertThat(requestedRegulatoryArea[1].id).isEqualTo(300)
+    }
+
+    @Test
+    @Transactional
+    fun `findAllByIds Should return specific RegulatoryArea sorted by axis EAST_WEST`() {
+        // When
+        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(160, 359), "EAST_WEST")
+
+        // Then
+        assertThat(requestedRegulatoryArea[0].id).isEqualTo(359)
+        assertThat(requestedRegulatoryArea[1].id).isEqualTo(160)
+    }
+
+    @Test
+    @Transactional
+    fun `findAllByIds Should return specific RegulatoryArea sorted by axis WEST_EAST`() {
+        // When
+        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(160, 359), "WEST_EAST")
+
+        // Then
+        assertThat(requestedRegulatoryArea[0].id).isEqualTo(160)
+        assertThat(requestedRegulatoryArea[1].id).isEqualTo(359)
+    }
+
+    @Test
     fun `findAllLayerNames should return all layer names`() {
         // When
         val layerNames = jpaRegulatoryAreaNewRepository.findAllLayerNames()

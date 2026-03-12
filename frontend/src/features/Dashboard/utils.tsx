@@ -5,6 +5,7 @@ import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getVigilanceAreaZoneFeature } from '@features/VigilanceArea/components/VigilanceAreaLayer/vigilanceAreaGeometryHelper'
+import { Axis } from 'types'
 
 import { Dashboard } from './types'
 
@@ -27,7 +28,10 @@ export async function populateExtractAreaFromApi(
   extractedAreaFromApi: Dashboard.ExtractedAreaFromApi
 ): Promise<Dashboard.ExtractedArea> {
   const { data: regulatoryAreas } = await dispatch(
-    regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate(extractedAreaFromApi.regulatoryAreaIds)
+    regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate({
+      axis: Axis.NORTH_SOUTH,
+      ids: extractedAreaFromApi.regulatoryAreaIds
+    })
   )
   const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
   const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())

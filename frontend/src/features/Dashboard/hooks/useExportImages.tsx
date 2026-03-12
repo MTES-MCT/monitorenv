@@ -27,6 +27,7 @@ import { OSM, TileWMS, XYZ } from 'ol/source'
 import VectorSource from 'ol/source/Vector'
 import { Stroke, Style } from 'ol/style'
 import { type MutableRefObject, useCallback, useEffect, useRef, useState } from 'react'
+import { Axis } from 'types'
 
 import { getDashboardStyle } from '../components/Layers/style'
 
@@ -101,6 +102,9 @@ export function useExportImages() {
   const mapRef = useRef(null) as MutableRefObject<OpenLayerMap | null>
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+  const axis = useAppSelector(state =>
+    activeDashboardId ? state.dashboard.dashboards[activeDashboardId]?.axis : Axis.NORTH_SOUTH
+  )
 
   const dashboard = useAppSelector(state => getDashboardById(state.dashboard, activeDashboardId))
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard?.dashboard.reportingIds ?? [], {
@@ -113,9 +117,12 @@ export function useExportImages() {
   const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
-  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(activeDashboard?.regulatoryAreaIds ?? [], {
-    skip: !dashboard || (activeDashboard?.regulatoryAreaIds ?? []).length === 0
-  })
+  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(
+    { axis, ids: activeDashboard?.regulatoryAreaIds ?? [] },
+    {
+      skip: !dashboard || (activeDashboard?.regulatoryAreaIds ?? []).length === 0
+    }
+  )
 
   const layersVectorSourceRef = useRef(new VectorSource())
   const layersVectorLayerRef = useRef(

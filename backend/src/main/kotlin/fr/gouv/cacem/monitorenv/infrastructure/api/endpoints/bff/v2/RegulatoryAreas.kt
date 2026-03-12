@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegula
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.LayerNamesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
@@ -77,10 +78,10 @@ class RegulatoryAreas(
     @Operation(summary = "Get regulatory areas by ids")
     fun getAll(
         @RequestBody
-        ids: List<Int>,
+        body: RegulatoryAreaByIdsDataInput,
     ): List<RegulatoryAreaDataOutput> =
         getRegulatoryAreaByIds
-            .execute(ids)
+            .execute(body.ids, body.axis)
             .map { RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it) }
 
     @GetMapping("/{regulatoryAreaId}")
