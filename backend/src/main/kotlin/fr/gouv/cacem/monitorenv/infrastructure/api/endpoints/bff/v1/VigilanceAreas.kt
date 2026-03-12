@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.*
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea.VigilanceAreaDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceArea.VigilanceAreasDataOutput
@@ -44,9 +45,9 @@ class VigilanceAreas(
     @Operation(summary = "List vigilance areas by ids")
     fun getAll(
         @RequestBody
-        ids: List<Int>,
+        body: VigilanceAreaByIdsDataInput,
     ): List<VigilanceAreaDataOutput> {
-        val vigilanceAreas = getVigilanceAreasByIds.execute(ids)
+        val vigilanceAreas = getVigilanceAreasByIds.execute(body.ids, body.axis)
         if (vigilanceAreas.isNullOrEmpty()) {
             return emptyList()
         }

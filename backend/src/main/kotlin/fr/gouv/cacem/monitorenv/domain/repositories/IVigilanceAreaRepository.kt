@@ -8,7 +8,10 @@ interface IVigilanceAreaRepository {
 
     fun findById(id: Int): VigilanceAreaEntity?
 
-    fun findAllById(ids: List<Int>): List<VigilanceAreaEntity>
+    fun findAllById(
+        ids: List<Int>,
+        axis: String,
+    ): List<VigilanceAreaEntity>
 
     fun save(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity
 

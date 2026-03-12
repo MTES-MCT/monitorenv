@@ -101,7 +101,7 @@ export function Brief({ author, brief, description, isLight, title }: BriefProps
       )}
       {!isLight && (
         <>
-          {brief.regulatoryAreas.length > 0 && (
+          {brief.regulatoryAreas?.length > 0 && (
             <Page style={layoutStyle.page}>
               <Headings name={brief.name} />
               <View style={layoutStyle.section}>

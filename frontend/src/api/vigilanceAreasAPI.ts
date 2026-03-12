@@ -5,6 +5,7 @@ import { monitorenvPrivateApi } from './api'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { Coordinate } from 'ol/coordinate'
+import type { Axis } from 'types'
 
 const VigilanceAreaLayersAdapter = createEntityAdapter<VigilanceArea.VigilanceAreaLayer>()
 
@@ -52,7 +53,7 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
           })
         )
     }),
-    getVigilanceAreasByIds: build.query<VigilanceArea.VigilanceArea[], number[]>({
+    getVigilanceAreasByIds: build.query<VigilanceArea.VigilanceArea[], { axis: Axis; ids: number[] }>({
       providesTags: result =>
         result
           ? [
@@ -60,7 +61,7 @@ export const vigilanceAreasAPI = monitorenvPrivateApi.injectEndpoints({
               { id: 'LIST', type: 'VigilanceAreas' }
             ]
           : [{ id: 'LIST', type: 'VigilanceAreas' }],
-      query: ids => ({ body: ids, method: 'POST', url: '/v1/vigilance_areas' })
+      query: body => ({ body, method: 'POST', url: '/v1/vigilance_areas' })
     }),
 
     updateVigilanceArea: build.mutation<VigilanceArea.VigilanceArea, VigilanceArea.VigilanceArea>({

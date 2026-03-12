@@ -26,9 +26,9 @@ class GetVigilanceAreasByIdsUTest {
                 VigilanceAreaFixture.aVigilanceAreaEntity(id = 3),
             )
 
-        given(vigilanceAreaRepository.findAllById(ids)).willReturn(vigilancesAreas)
+        given(vigilanceAreaRepository.findAllById(ids, "NORTH_SOUTH")).willReturn(vigilancesAreas)
 
-        val result = getVigilanceAreasByIds.execute(ids)
+        val result = getVigilanceAreasByIds.execute(ids, "NORTH_SOUTH")
 
         assertThat(result).isEqualTo(vigilancesAreas)
         assertThat(log.out).contains("Attempt to GET vigilance areas withs ids: $ids")

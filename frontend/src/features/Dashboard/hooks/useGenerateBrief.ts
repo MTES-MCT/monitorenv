@@ -15,6 +15,7 @@ import { getDatesFromFilters } from '@features/RecentActivity/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { uniq } from 'lodash'
 import { useMemo, useState } from 'react'
+import { Axis } from 'types'
 
 import { getRecentActivityFilters } from '../components/DashboardForm/slice'
 
@@ -26,7 +27,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
 
   const { data: themes } = useGetThemesQuery()
 
-  const axis = useAppSelector(state => state.dashboard.dashboards[dashboard.id]?.axis)
+  const axis = useAppSelector(state => state.dashboard.dashboards[dashboard.id]?.axis) ?? Axis.NORTH_SOUTH
 
   const recentActivityFilters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, dashboard.id))
   const { data: allControlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
@@ -42,7 +43,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   )
   const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
-  const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery(dashboard.vigilanceAreaIds)
+  const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery({ axis, ids: dashboard.vigilanceAreaIds })
 
   const [allLinkedAMPIds, allLinkedRegulatoryAreaIds] = useMemo(
     () => [
@@ -111,7 +112,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     return {
       allLinkedAMPs,
       allLinkedRegulatoryAreas,
-      amps,
+      amps: amps ?? [],
       attachments: {
         images: attachementImages,
         links: dashboard.links
@@ -123,7 +124,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       recentActivity,
       recentActivityControlUnits: filteredRecentActivityControlUnits,
       recentActivityFilters,
-      regulatoryAreas,
+      regulatoryAreas: regulatoryAreas ?? [],
       reportings: Object.values(reportings?.entities ?? []),
       selectedControlUnits,
       themes: Object.values(themes ?? []),
