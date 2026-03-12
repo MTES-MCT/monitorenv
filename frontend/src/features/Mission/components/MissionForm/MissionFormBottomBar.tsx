@@ -1,9 +1,9 @@
-import { Icon, Button, Accent, customDayjs, humanizePastDate } from '@mtes-mct/monitor-ui'
+import { Accent, Button, customDayjs, humanizePastDate, Icon } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { useMemo, type MouseEventHandler } from 'react'
+import { type MouseEventHandler, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { MissionSourceEnum, missionSourceEnum, type Mission } from '../../../../domain/entities/missions'
+import { type Mission, missionSourceEnum, MissionSourceEnum } from '../../../../domain/entities/missions'
 import { AutoSaveTag } from '../../../commonComponents/AutoSaveTag'
 import { isMissionNew } from '../../utils'
 
@@ -56,7 +56,7 @@ export function MissionFormBottomBar({
           {!values?.createdAtUtc && <>Mission non créée.</>}
           {values?.createdAtUtc && (
             <>
-              Mission créée par le {missionSourceEnum[values?.missionSource]?.label} le{' '}
+              Mission créée par {missionSourceEnum[values?.missionSource]?.label} le{' '}
               {customDayjs(values.createdAtUtc).utc().format('DD/MM/YYYY à HH[h]mm')}.
             </>
           )}
@@ -87,6 +87,7 @@ export function MissionFormBottomBar({
 const MissionInfos = styled.div`
   color: ${p => p.theme.color.slateGray};
   font-style: italic;
+
   > span {
     font-weight: 500;
   }

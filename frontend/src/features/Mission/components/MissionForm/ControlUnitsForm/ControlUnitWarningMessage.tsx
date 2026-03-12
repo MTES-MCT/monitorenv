@@ -29,13 +29,13 @@ export function ControlUnitWarningMessage({ controlUnitIndex }: { controlUnitInd
         return ''
       }
 
-      return `Une autre mission, ouverte par le ${missionSourceEnum[source].label}, est en cours avec cette unité. `
+      return `Une autre mission, ouverte par ${missionSourceEnum[source]?.label}, est en cours avec cette unité. `
     }
 
     if (engagedControlUnit.missionSources.length > 1) {
-      return `D'autres missions en cours, ouvertes par le ${engagedControlUnit.missionSources
-        .map(source => missionSourceEnum[source].label)
-        .join(' et le ')}, sont en cours avec cette unité. `
+      return `D'autres missions en cours, ouvertes par ${engagedControlUnit.missionSources
+        .map(source => missionSourceEnum[source]?.label)
+        .join(' et ')}, sont en cours avec cette unité. `
     }
 
     return ''

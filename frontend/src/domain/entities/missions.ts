@@ -211,12 +211,16 @@ export enum MissionSourceEnum {
 
 export const missionSourceEnum = {
   MONITORENV: {
-    label: 'CACEM',
+    label: 'le CACEM',
     value: 'MONITORENV'
   },
   MONITORFISH: {
-    label: 'CNSP',
+    label: 'le CNSP',
     value: 'MONITORFISH'
+  },
+  RAPPORT_NAV: {
+    label: 'les ULAM',
+    value: 'RAPPORT_NAV'
   }
 }
 
