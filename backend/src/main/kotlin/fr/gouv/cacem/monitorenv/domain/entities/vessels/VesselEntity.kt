@@ -6,6 +6,7 @@ import java.math.BigDecimal
 data class VesselEntity(
     val category: String?,
     val commercialName: String?,
+    val batchId: Int?,
     val flag: String?,
     val id: Int,
     val isBanned: Boolean,
@@ -29,6 +30,7 @@ data class VesselEntity(
     val ownerStartDate: String?,
     val portOfRegistry: String?,
     val professionalType: String?,
+    val rowNumber: Int?,
     val shipId: Int?,
     val shipName: String?,
     val status: String?,

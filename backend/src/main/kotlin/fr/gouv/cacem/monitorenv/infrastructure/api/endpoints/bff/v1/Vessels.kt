@@ -27,7 +27,20 @@ class Vessels(
         @PathParam("Vessel ID")
         @PathVariable(name = "id")
         id: Int,
-    ): VesselDataOutput = VesselDataOutput.fromVessel(getVesselById.execute(id))
+        @Parameter(
+            description = "batchId",
+            required = false,
+        )
+        @RequestParam(name = "batchId")
+        batchId: Int?,
+        @Parameter(
+            description = "rowNumber",
+            required = false,
+        )
+        @RequestParam(name = "rowNumber")
+        rowNumber: Int?,
+    ): VesselDataOutput =
+        VesselDataOutput.fromVessel(getVesselById.execute(shipId = id, batchId = batchId, rowNumber = rowNumber))
 
     @GetMapping("/search")
     @Operation(summary = "Search vessels")
