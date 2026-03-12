@@ -59,11 +59,11 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
             AND regulatoryArea.creation IS NOT NULL
             ORDER BY
                 CASE
-                    WHEN :axis = 'SOUTH_NORTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom))
-                END ASC,
-                CASE
                     WHEN :axis = 'NORTH_SOUTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom))
                 END DESC,
+                CASE
+                    WHEN :axis = 'SOUTH_NORTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom))
+                END ASC,
                 CASE
                     WHEN :axis = 'WEST_EAST' THEN ST_X(ST_PointOnSurface(regulatoryArea.geom))
                 END ASC,
