@@ -1,10 +1,18 @@
 import { Vessel } from '@features/Vessel/types'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
+type VesselId = {
+  batchId: number | undefined
+  rowNumber: number | undefined
+  shipId: number | undefined
+}
+
 type SelectedVessel = {
+  batchId: number | undefined
   displayedPositions: Vessel.Position[] | undefined
   hasReportings: boolean | undefined
-  id: number | undefined
+  rowNumber: number | undefined
+  shipId: number | undefined
 }
 
 type SelectedPosition = {
@@ -17,7 +25,13 @@ type VesselState = {
 }
 const INITIAL_STATE: VesselState = {
   selectedPosition: { featureId: undefined },
-  selectedVessel: { displayedPositions: undefined, hasReportings: undefined, id: undefined }
+  selectedVessel: {
+    batchId: undefined,
+    displayedPositions: undefined,
+    hasReportings: undefined,
+    rowNumber: undefined,
+    shipId: undefined
+  }
 }
 export const vesselSlice = createSlice({
   initialState: INITIAL_STATE,
@@ -33,8 +47,10 @@ export const vesselSlice = createSlice({
     setSelectedFeatureId: (state, action: PayloadAction<string | number | undefined>): void => {
       state.selectedPosition.featureId = action.payload
     },
-    setSelectedVesselId: (state, action: PayloadAction<number | undefined>): void => {
-      state.selectedVessel.id = action.payload
+    setSelectedVesselId: (state, action: PayloadAction<VesselId | undefined>): void => {
+      state.selectedVessel.shipId = action.payload?.shipId
+      state.selectedVessel.batchId = action.payload?.batchId
+      state.selectedVessel.rowNumber = action.payload?.rowNumber
     }
   }
 })

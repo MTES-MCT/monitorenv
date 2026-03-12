@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.GetVesselById
+import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.GetVesselByShipId
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.SearchVessels
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vessels.VesselDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vessels.VesselIdentityDataOutput
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/bff/v1/vessels")
 @Tag(name = "APIs for Vessels")
 class Vessels(
-    private val getVesselById: GetVesselById,
+    private val getVesselByShipId: GetVesselByShipId,
     private val searchVessels: SearchVessels,
 ) {
     @GetMapping("/{id}")
@@ -40,7 +40,7 @@ class Vessels(
         @RequestParam(name = "rowNumber")
         rowNumber: Int?,
     ): VesselDataOutput =
-        VesselDataOutput.fromVessel(getVesselById.execute(shipId = id, batchId = batchId, rowNumber = rowNumber))
+        VesselDataOutput.fromVessel(getVesselByShipId.execute(shipId = id, batchId = batchId, rowNumber = rowNumber))
 
     @GetMapping("/search")
     @Operation(summary = "Search vessels")
@@ -51,8 +51,5 @@ class Vessels(
         )
         @RequestParam(name = "searched")
         searched: String,
-    ): List<VesselIdentityDataOutput> =
-        searchVessels.execute(searched).map {
-            VesselIdentityDataOutput.fromVessel(it)
-        }
+    ): List<VesselIdentityDataOutput> = searchVessels.execute(searched).map { VesselIdentityDataOutput.fromVessel(it) }
 }

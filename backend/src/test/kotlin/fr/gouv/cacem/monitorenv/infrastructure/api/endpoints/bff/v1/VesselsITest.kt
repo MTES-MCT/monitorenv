@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.GetVesselById
+import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.GetVesselByShipId
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.SearchVessels
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.VesselFixture.Companion.aVessel
 import org.hamcrest.Matchers.equalTo
@@ -31,7 +31,7 @@ class VesselsITest {
     private lateinit var api: MockMvc
 
     @MockitoBean
-    private lateinit var getVesselById: GetVesselById
+    private lateinit var getVesselByShipId: GetVesselByShipId
 
     @MockitoBean
     private lateinit var searchVessels: SearchVessels
@@ -44,7 +44,7 @@ class VesselsITest {
 
         // When
         api
-            .perform(get("/bff/v1/vessels/search?searched=VESSEL"))
+            .perform(get("/bff/v1/vessels/search").param("searched", "VESSEL"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.length()", equalTo(1)))
@@ -65,8 +65,10 @@ class VesselsITest {
         val id = 1
         val vessel = aVessel()
         given(
-            getVesselById.execute(
+            getVesselByShipId.execute(
                 eq(id),
+                eq(1),
+                eq(1),
                 any(),
                 any(),
             ),
@@ -74,7 +76,7 @@ class VesselsITest {
 
         // When
         api
-            .perform(get("/bff/v1/vessels/$id"))
+            .perform(get("/bff/v1/vessels/$id").param("batchId", "1").param("rowNumber", "1"))
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(vessel.id)))
@@ -107,7 +109,7 @@ class VesselsITest {
         // Given
         val id = 1
         given(
-            getVesselById.execute(eq(id), any(), any()),
+            getVesselByShipId.execute(eq(id), eq(null), eq(null), any(), any()),
         ).willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND))
 
         // When

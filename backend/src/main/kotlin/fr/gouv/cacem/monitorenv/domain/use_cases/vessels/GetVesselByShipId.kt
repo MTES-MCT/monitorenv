@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
-class GetVesselById(
+class GetVesselByShipId(
     private val vesselRepository: IVesselRepository,
     private val aisPositionRepository: IAISPositionRepository,
 ) {
-    private val logger = LoggerFactory.getLogger(GetVesselById::class.java)
+    private val logger = LoggerFactory.getLogger(GetVesselByShipId::class.java)
 
     fun execute(
         shipId: Int,

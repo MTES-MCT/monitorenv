@@ -20,19 +20,29 @@ import type { Mission } from '../../../../domain/entities/missions'
 import type { Vessel } from '@features/Vessel/types'
 
 type VesselSearchFormProps = {
+  batchId: number | undefined
   envActionId: string | undefined
   isUnknown: boolean | undefined
   onIsUnknown: (isUnknow: boolean | undefined) => void
   path: string
-  vesselId: number | undefined
+  rowNumber: number | undefined
+  shipId: number | undefined
 }
 
-export function VesselSearchForm({ envActionId, isUnknown, onIsUnknown, path, vesselId }: VesselSearchFormProps) {
+export function VesselSearchForm({
+  batchId,
+  envActionId,
+  isUnknown,
+  onIsUnknown,
+  path,
+  rowNumber,
+  shipId
+}: VesselSearchFormProps) {
   const dispatch = useAppDispatch()
   const [mmsi] = useField(`${path}.mmsi`)
   const [selectedVessel, setSelectedVessel] = useState<Vessel.Vessel | undefined>()
   const [getVessel, { isLoading }] = useLazyGetVesselQuery()
-  const { data: vessel } = useGetVesselQuery(vesselId ?? skipToken)
+  const { data: vessel } = useGetVesselQuery(shipId ? { batchId, rowNumber, shipId } : skipToken)
   const { setFieldValue } = useFormikContext<Mission>()
 
   useEffect(() => {
@@ -42,7 +52,9 @@ export function VesselSearchForm({ envActionId, isUnknown, onIsUnknown, path, ve
   }, [vessel])
 
   const clear = useCallback(() => {
-    setFieldValue(`${path}.vesselId`, undefined)
+    setFieldValue(`${path}.shipId`, undefined)
+    setFieldValue(`${path}.batchId`, undefined)
+    setFieldValue(`${path}.rowNumber`, undefined)
     setFieldValue(`${path}.mmsi`, undefined)
     setFieldValue(`${path}.imo`, undefined)
     setFieldValue(`${path}.vesselName`, undefined)
@@ -55,13 +67,17 @@ export function VesselSearchForm({ envActionId, isUnknown, onIsUnknown, path, ve
   const handleVesselChange = async (vesselIdentity: Vessel.Identity | undefined) => {
     setSelectedVessel(vesselIdentity)
     if (vesselIdentity) {
-      await getVessel(vesselIdentity.id)
+      await getVessel({
+        batchId: vesselIdentity.batchId,
+        rowNumber: vesselIdentity.rowNumber,
+        shipId: vesselIdentity.shipId
+      })
         .unwrap()
         .then(vesselFound => {
           const controlledPersonIdentity = [vesselFound.ownerLastName, vesselFound.ownerFirstName].filter(Boolean)
-          setFieldValue(`${path}.vesselId`, vesselFound.id)
-          setFieldValue(`${path}.mmsi`, vesselFound.mmsi)
-          setFieldValue(`${path}.imo`, vesselFound.imo)
+          setFieldValue(`${path}.shipId`, vesselFound.shipId)
+          setFieldValue(`${path}.batchId`, vesselFound.batchId)
+          setFieldValue(`${path}.rowNumber`, vesselFound.rowNumber)
           setFieldValue(`${path}.vesselName`, vesselFound.shipName)
           setFieldValue(`${path}.registrationNumber`, vesselFound.immatriculation)
           setFieldValue(`${path}.vesselSize`, vesselFound.length)
@@ -75,7 +91,7 @@ export function VesselSearchForm({ envActionId, isUnknown, onIsUnknown, path, ve
           )
         })
     }
-    if (!vesselIdentity && vesselId) {
+    if (!vesselIdentity && shipId) {
       clear()
     }
   }
@@ -100,7 +116,17 @@ export function VesselSearchForm({ envActionId, isUnknown, onIsUnknown, path, ve
                 value={selectedVessel}
               />
               {selectedVessel && (
-                <StyledLinkButton onClick={() => dispatch(vesselAction.setSelectedVesselId(selectedVessel?.id))}>
+                <StyledLinkButton
+                  onClick={() =>
+                    dispatch(
+                      vesselAction.setSelectedVesselId({
+                        batchId: selectedVessel.batchId,
+                        rowNumber: selectedVessel.rowNumber,
+                        shipId: selectedVessel?.shipId
+                      })
+                    )
+                  }
+                >
                   Voir la fiche navire
                 </StyledLinkButton>
               )}

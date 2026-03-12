@@ -11,6 +11,7 @@ data class VesselDataOutput(
     val imo: String?,
     val mmsi: String?,
     val immatriculation: String?,
+    val shipId: Int,
     val shipName: String?,
     val flag: String?,
     val portOfRegistry: String?,
@@ -60,6 +61,7 @@ data class VesselDataOutput(
                 ownerBusinessSegmentLabel = vessel.ownerBusinessSegmentLabel,
                 ownerLegalStatusLabel = vessel.ownerLegalStatusLabel,
                 ownerStartDate = vessel.ownerStartDate,
+                shipId = vessel.shipId,
                 umsGrossTonnage = vessel.umsGrossTonnage,
             )
     }

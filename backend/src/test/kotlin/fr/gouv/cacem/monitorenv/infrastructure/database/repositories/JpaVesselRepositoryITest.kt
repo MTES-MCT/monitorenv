@@ -19,7 +19,7 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
         val vessel = jpaVesselRepository.findVesselByShipId(shipId, batchId, rowNumber)
 
         // Then
-        assertThat(vessel?.id).isEqualTo(1)
+        assertThat(vessel?.id).isEqualTo(2)
         assertThat(vessel?.shipId).isEqualTo(11)
         assertThat(vessel?.status).isEqualTo("A")
         assertThat(vessel?.category).isEqualTo("PRO")
