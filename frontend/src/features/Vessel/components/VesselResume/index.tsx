@@ -26,6 +26,7 @@ import {
   pluralize,
   WSG84_PROJECTION
 } from '@mtes-mct/monitor-ui'
+import { skipToken } from '@reduxjs/toolkit/query'
 import countries from 'i18n-iso-countries'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
@@ -45,15 +46,17 @@ export type ActiveButtons = 'TRACKING'
 const MINIMUM_AIS_VESSEL_SIZE = 15
 
 type ResumeProps = {
-  id: number
+  batchId: number | undefined
   onClose: () => void
+  rowNumber: number | undefined
+  shipId: number
 }
 
-export function Resume({ id, onClose }: ResumeProps) {
+export function Resume({ batchId, onClose, rowNumber, shipId }: ResumeProps) {
   const dispatch = useAppDispatch()
   const { context, visibility } = useAppSelector(state => state.global.visibility.reportingFormVisibility)
   const isRightMenuOpened = useAppSelector(state => state.mainWindow.isRightMenuOpened)
-  const { data: vessel } = useGetVesselQuery(id)
+  const { data: vessel } = useGetVesselQuery(shipId ? { batchId, rowNumber, shipId } : skipToken)
   const [page, setPage] = useState<ResumePages>('RESUME')
   const [activeButton, setActiveButton] = useState<ActiveButtons | undefined>(undefined)
   const [allHistory, setAllHistory] = useState<HistoryOfInfractionsProps | undefined>(undefined)

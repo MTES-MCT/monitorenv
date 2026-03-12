@@ -30,6 +30,6 @@ VALUES (nextval('vessels_id_seq'), '55', 'D', 'PLA', false, 'IMO2225', '22225',
 INSERT INTO public.vessels (id, ship_id, status, category, is_banned, imo_number, mmsi_number, immatriculation,
                             ship_name, batch_id, row_number)
 VALUES (nextval('vessels_id_seq'), '66', 'A', 'PRO', false, null, null,
-        null, 'UNKNOWN SHIP', 1, 1);
+        null, 'UNKNOWN SHIP', null, null);
 
 REFRESH MATERIALIZED VIEW public.latest_vessels;

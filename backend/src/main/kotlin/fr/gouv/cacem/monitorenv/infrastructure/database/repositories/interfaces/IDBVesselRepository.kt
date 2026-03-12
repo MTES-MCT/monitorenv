@@ -11,8 +11,8 @@ interface IDBVesselRepository : JpaRepository<VesselModel, Int> {
             """
                 SELECT vessel FROM VesselModel vessel
                 WHERE vessel.shipId = :shipId 
-                    AND vessel.batchId = :batchId
-                    AND vessel.rowNumber = :rowNumber
+                    AND ((:batchId IS NULL AND vessel.batchId IS NULL) OR vessel.batchId = :batchId)
+                    AND ((:rowNumber IS NULL AND vessel.rowNumber IS NULL) OR vessel.rowNumber = :rowNumber)
                      """,
     )
     fun findByShipIdAndBatchIdAndRowNumber(
