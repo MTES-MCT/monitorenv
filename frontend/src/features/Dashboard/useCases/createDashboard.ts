@@ -5,10 +5,10 @@ import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
 import { generatePath } from 'react-router'
 
+import { dashboardFiltersActions, INITIAL_DASHBOARD_FILTERS } from '../components/DashboardForm/slice'
 import { dashboardActions } from '../slice'
 import { populateExtractAreaFromApi } from '../utils'
 import { closeDrawDashboard } from './closeDrawDashboard'
-import { dashboardFiltersActions, INITIAL_DASHBOARD_FILTERS } from '../components/DashboardForm/slice'
 
 import type { Dashboard } from '../types'
 import type { HomeAppThunk } from '@store/index'
