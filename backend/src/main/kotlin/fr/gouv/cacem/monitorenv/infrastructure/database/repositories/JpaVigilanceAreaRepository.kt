@@ -165,8 +165,11 @@ class JpaVigilanceAreaRepository(
         }
 
     @Transactional
-    override fun findAllById(ids: List<Int>): List<VigilanceAreaEntity> =
-        dbVigilanceAreaRepository.findAllById(ids).map {
+    override fun findAllById(
+        ids: List<Int>,
+        axis: String,
+    ): List<VigilanceAreaEntity> =
+        dbVigilanceAreaRepository.findAllById(ids, axis).map {
             it.toVigilanceAreaEntity(mapper)
         }
 
