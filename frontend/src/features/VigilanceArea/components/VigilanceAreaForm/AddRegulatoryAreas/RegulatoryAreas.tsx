@@ -1,5 +1,6 @@
 import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
+import { Axis } from 'types'
 
 import { RegulatoryAreaItem } from './RegulatoryAreaItem'
 
@@ -8,9 +9,12 @@ type RegulatoryAreasProps = {
   linkedRegulatoryAreas: number[] | undefined
 }
 export function RegulatoryAreas({ isReadOnly = false, linkedRegulatoryAreas }: RegulatoryAreasProps) {
-  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(linkedRegulatoryAreas ?? [], {
-    skip: !linkedRegulatoryAreas || linkedRegulatoryAreas.length === 0
-  })
+  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(
+    { axis: Axis.NORTH_SOUTH, ids: linkedRegulatoryAreas ?? [] },
+    {
+      skip: !linkedRegulatoryAreas || linkedRegulatoryAreas.length === 0
+    }
+  )
 
   if (!linkedRegulatoryAreas || linkedRegulatoryAreas.length === 0) {
     return null

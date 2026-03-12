@@ -13,6 +13,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulator
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
@@ -675,7 +676,11 @@ class RegulatoryAreasITests {
             )
 
         val ids = listOf(17, 18)
-        BDDMockito.given(getRegulatoryAreaByIds.execute(ids)).willReturn(listOf(regulatoryArea, regulatoryArea2))
+        val body = RegulatoryAreaByIdsDataInput(ids = ids, axis = "NORTH_SOUTH")
+        BDDMockito
+            .given(
+                getRegulatoryAreaByIds.execute(ids, "NORTH_SOUTH"),
+            ).willReturn(listOf(regulatoryArea, regulatoryArea2))
 
         // When
         mockMvc
@@ -683,7 +688,7 @@ class RegulatoryAreasITests {
                 MockMvcRequestBuilders
                     .post("/bff/v2/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(ids)),
+                    .content(objectMapper.writeValueAsString(body)),
             ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)

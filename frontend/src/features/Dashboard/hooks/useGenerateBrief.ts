@@ -26,10 +26,20 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
 
   const { data: themes } = useGetThemesQuery()
 
+  const axis = useAppSelector(state => state.dashboard.dashboards[dashboard.id]?.axis)
+
   const recentActivityFilters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, dashboard.id))
   const { data: allControlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const selectedControlUnits = allControlUnits?.filter(controlUnit => dashboard.controlUnitIds.includes(controlUnit.id))
-  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(dashboard.regulatoryAreaIds)
+  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
+    {
+      axis: String(axis),
+      ids: dashboard.regulatoryAreaIds
+    },
+    {
+      skip: dashboard.regulatoryAreaIds.length === 0
+    }
+  )
   const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
   const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery(dashboard.vigilanceAreaIds)
@@ -42,9 +52,12 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     [vigilanceAreas]
   )
 
-  const { data: allLinkedRegulatoryAreas } = useGetRegulatoryAreasByIdsQuery(allLinkedRegulatoryAreaIds, {
-    skip: allLinkedRegulatoryAreaIds.length === 0
-  })
+  const { data: allLinkedRegulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
+    { axis: String(axis), ids: allLinkedRegulatoryAreaIds },
+    {
+      skip: allLinkedRegulatoryAreaIds.length === 0
+    }
+  )
   const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)

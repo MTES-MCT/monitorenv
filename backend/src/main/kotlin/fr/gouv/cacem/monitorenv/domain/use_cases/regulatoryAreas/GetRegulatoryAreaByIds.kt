@@ -11,9 +11,12 @@ class GetRegulatoryAreaByIds(
 ) {
     private val logger = LoggerFactory.getLogger(GetRegulatoryAreaByIds::class.java)
 
-    fun execute(regulatoryAreaIds: List<Int>): List<RegulatoryAreaEntity> {
+    fun execute(
+        regulatoryAreaIds: List<Int>,
+        axis: String,
+    ): List<RegulatoryAreaEntity> {
         logger.info("GET regulatory area $regulatoryAreaIds")
 
-        return regulatoryAreaRepository.findAllByIds(regulatoryAreaIds)
+        return regulatoryAreaRepository.findAllByIds(regulatoryAreaIds, axis)
     }
 }
