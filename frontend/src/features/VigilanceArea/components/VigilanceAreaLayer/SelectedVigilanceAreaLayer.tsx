@@ -10,6 +10,7 @@ import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { Axis } from 'types'
 
 import { getVigilanceAreaLayerStyle } from './style'
 import { getVigilanceAreaZoneFeature } from './vigilanceAreaGeometryHelper'
@@ -65,7 +66,7 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     isLayerVisible
 
   const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
-    selectedVigilanceArea?.linkedRegulatoryAreas ?? [],
+    { axis: Axis.NORTH_SOUTH, ids: selectedVigilanceArea?.linkedRegulatoryAreas ?? [] },
     {
       skip: !selectedVigilanceAreaId || selectedVigilanceArea?.linkedRegulatoryAreas?.length === 0
     }

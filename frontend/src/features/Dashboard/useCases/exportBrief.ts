@@ -57,6 +57,7 @@ type ExportBriefProps = {
 export const exportBrief =
   ({ dashboard, getImages, nearbyUnits, recentActivityFilters, vigilanceAreas }: ExportBriefProps): HomeAppThunk =>
   async (dispatch, getState) => {
+    const axis = getState().dashboard.dashboards?.[dashboard.id]?.axis
     /* RECENT ACTIVITY */
     const startAfterFilter = recentActivityFilters?.startedAfter
     const startBeforeFilter = recentActivityFilters?.startedBefore
@@ -88,7 +89,7 @@ export const exportBrief =
     ]
     const allLinkedAMPs = getAmpsByIds(getState(), allLinkedAMPIds)
     const { data: allLinkedRegulatoryAreas } = await dispatch(
-      regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate(allLinkedRegulatoryAreaIds)
+      regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate({ axis, ids: allLinkedRegulatoryAreaIds })
     )
     const getVigilanceAreaAmpsAndRegulatoryAreas = (vigilanceArea: VigilanceArea.VigilanceArea) => {
       const filteredAmps = allLinkedAMPs
@@ -149,7 +150,9 @@ export const exportBrief =
     /* REGULATORY AREAS */
     const { data: regulatoryAreas } =
       dashboard.regulatoryAreaIds.length > 0
-        ? await dispatch(regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate(dashboard.regulatoryAreaIds))
+        ? await dispatch(
+            regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate({ axis, ids: dashboard.regulatoryAreaIds })
+          )
         : { data: [] }
 
     const formattedRegulatoryAreas = regulatoryAreas?.map(regulatoryArea => {

@@ -5,6 +5,7 @@ import { isGeometryValid } from '@utils/geometryValidation'
 import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 import { InteractionType } from 'domain/entities/map/constants'
 import { type Reporting } from 'domain/entities/reporting'
+import { Axis } from 'types'
 
 import { Dashboard } from './types'
 import { filterReportings } from './useCases/filters/filterReportings'
@@ -16,6 +17,7 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
   ampIdsToDisplay: [],
+  axis: Axis.NORTH_SOUTH,
   backgroundMap: BaseLayer.OSM,
   dashboard: {
     ampIds: [],
@@ -51,6 +53,7 @@ type OpenPanel = {
 
 export type DashboardType = {
   ampIdsToDisplay: number[]
+  axis: Axis
   backgroundMap: BaseLayer
   dashboard: Dashboard.Dashboard
   defaultName: string | undefined
@@ -309,6 +312,17 @@ export const dashboardSlice = createSlice({
     },
     setActiveDashboardId(state, action: PayloadAction<string | undefined>) {
       state.activeDashboardId = action.payload
+    },
+    setAxis(state, action: PayloadAction<Axis>) {
+      const id = state.activeDashboardId
+
+      if (!id) {
+        return
+      }
+
+      if (state.dashboards[id]) {
+        state.dashboards[id].axis = action.payload
+      }
     },
     setBackgroundMap(state, action: PayloadAction<BaseLayer>) {
       const id = state.activeDashboardId
