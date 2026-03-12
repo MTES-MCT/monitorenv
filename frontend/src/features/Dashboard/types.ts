@@ -150,8 +150,8 @@ export namespace Dashboard {
   }
 
   export const BackgroundMapLabel: Record<BaseLayer, string> = {
-    [BaseLayer.LIGHT]: 'Fond de carte clair',
     [BaseLayer.OSM]: 'Open Street Map (défaut)',
+    [BaseLayer.LIGHT]: 'Fond de carte clair',
     [BaseLayer.SATELLITE]: 'Satellite',
     [BaseLayer.SHOM]: 'Carte marine (SHOM)'
   }

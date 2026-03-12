@@ -44,11 +44,15 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
             }
           })
         )
+    }),
+    getAMPsByIds: builder.query<AMP[], { axis: string; ids: number[] }>({
+      query: body => ({ body, method: 'POST', url: '/v1/amps' }),
+      transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response)
     })
   })
 })
 
-export const { useGetAMPQuery, useGetAMPsQuery } = ampsAPI
+export const { useGetAMPQuery, useGetAMPsByIdsQuery, useGetAMPsQuery } = ampsAPI
 
 export const getAMPsIdsGroupedByName = createSelector([ampsAPI.endpoints.getAMPs.select()], ampsQuery => {
   const ampIdsByName = ampsQuery.data?.ids.reduce((acc, id) => {
@@ -72,11 +76,6 @@ export const getNumberOfAMPByGroupName = createCachedSelector(
   [getAMPsIdsGroupedByName, (_, groupName: string) => groupName],
   (ampIdsByName, groupName) => (ampIdsByName && ampIdsByName[groupName]?.length) ?? 0
 )((_, groupName: string) => groupName)
-
-export const getAmpsByIds = createSelector(
-  [ampsAPI.endpoints.getAMPs.select(), (_, ids: number[]) => ids],
-  ({ data }, ids) => Object.values(data?.entities ?? []).filter(amp => ids.includes(amp.id))
-)
 
 export const getExtentOfAMPLayersGroupByGroupName = createCachedSelector(
   [ampsAPI.endpoints.getAMPs.select(), getAMPsIdsByGroupName],

@@ -46,8 +46,11 @@ class JpaRegulatoryAreaNewRepository(
             row[0] as String to row[1] as Long
         }
 
-    override fun findAllByIds(ids: List<Int>): List<RegulatoryAreaEntity> =
-        dbRegulatoryAreaRepository.findAllCompleteByIds(ids).map { it.toRegulatoryArea(mapper) }
+    override fun findAllByIds(
+        ids: List<Int>,
+        axis: String,
+    ): List<RegulatoryAreaEntity> =
+        dbRegulatoryAreaRepository.findAllCompleteByIds(ids, axis).map { it.toRegulatoryArea(mapper) }
 
     @Transactional
     override fun findAllToComplete(): List<RegulatoryAreaEntity> =

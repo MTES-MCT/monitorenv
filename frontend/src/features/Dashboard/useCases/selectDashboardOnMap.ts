@@ -4,6 +4,7 @@ import { reportingsAPI } from '@api/reportingsAPI'
 import { vigilanceAreasAPI } from '@api/vigilanceAreasAPI'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { Level } from '@mtes-mct/monitor-ui'
+import { Axis } from 'types'
 
 import { dashboardActions } from '../slice'
 
@@ -21,7 +22,10 @@ export const selectDashboardOnMap =
       const { data: amps } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
 
       const { data: regulatoryAreas } = await dispatch(
-        regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate(dashboard.regulatoryAreaIds)
+        regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate({
+          axis: Axis.NORTH_SOUTH,
+          ids: dashboard.regulatoryAreaIds
+        })
       )
       const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
 

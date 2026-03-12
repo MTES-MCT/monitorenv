@@ -15,4 +15,9 @@ class JpaAMPRepository(
     override fun count(): Long = dbAMPRepository.count()
 
     override fun findAllIdsByGeometry(geometry: Geometry): List<Int> = dbAMPRepository.findAllIdsByGeom(geometry)
+
+    override fun findAllByIds(
+        ids: List<Int>,
+        axis: String,
+    ): List<AMPEntity> = dbAMPRepository.findAllByIds(ids, axis).map { it.toAMP() }
 }

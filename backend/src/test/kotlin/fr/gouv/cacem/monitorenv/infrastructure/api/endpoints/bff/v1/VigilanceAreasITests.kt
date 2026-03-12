@@ -22,6 +22,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.Vigilanc
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaSourceFixture.Companion.aVigilanceAreaSourceInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.ImageDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataPeriodInput
 import org.hamcrest.Matchers.equalTo
@@ -547,14 +548,15 @@ class VigilanceAreasITests {
     fun `Should return empty list when no vigilance areas found by ids`() {
         // Given
         val ids = listOf(1, 2, 3)
-        given(getVigilanceAreasByIds.execute(ids)).willReturn(emptyList())
+        val body = VigilanceAreaByIdsDataInput(ids = ids, axis = "NORTH_SOUTH")
+        given(getVigilanceAreasByIds.execute(ids, "NORTH_SOUTH")).willReturn(emptyList())
 
         // When
         mockMvc
             .perform(
                 post("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(ids)),
+                    .content(objectMapper.writeValueAsString(body)),
             )
             // Then
             .andExpect(status().isOk)
@@ -565,14 +567,15 @@ class VigilanceAreasITests {
     fun `Should get vigilance areas by ids`() {
         // Given
         val ids = listOf(1, 2)
-        given(getVigilanceAreasByIds.execute(ids)).willReturn(listOf(vigilanceArea1, vigilanceArea2))
+        val body = VigilanceAreaByIdsDataInput(ids = ids, axis = "NORTH_SOUTH")
+        given(getVigilanceAreasByIds.execute(ids, "NORTH_SOUTH")).willReturn(listOf(vigilanceArea1, vigilanceArea2))
 
         // When
         mockMvc
             .perform(
                 post("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(ids)),
+                    .content(objectMapper.writeValueAsString(body)),
             )
             // Then
             .andExpect(status().isOk)

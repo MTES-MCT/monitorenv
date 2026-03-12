@@ -1,4 +1,4 @@
-import { getAmpsByIds } from '@api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
@@ -15,6 +15,7 @@ import { getDatesFromFilters } from '@features/RecentActivity/utils'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { uniq } from 'lodash'
 import { useMemo, useState } from 'react'
+import { Axis } from 'types'
 
 import { getRecentActivityFilters } from '../components/DashboardForm/slice'
 
@@ -26,13 +27,27 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
 
   const { data: themes } = useGetThemesQuery()
 
+  const axis = useAppSelector(state => state.dashboard.dashboards[dashboard.id]?.axis) ?? Axis.NORTH_SOUTH
+
   const recentActivityFilters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, dashboard.id))
   const { data: allControlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const selectedControlUnits = allControlUnits?.filter(controlUnit => dashboard.controlUnitIds.includes(controlUnit.id))
-  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(dashboard.regulatoryAreaIds)
-  const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
+  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
+    {
+      axis: String(axis),
+      ids: dashboard.regulatoryAreaIds
+    },
+    {
+      skip: dashboard.regulatoryAreaIds.length === 0
+    }
+  )
+
+  const { data: amps } = useGetAMPsByIdsQuery(
+    { axis: String(axis), ids: dashboard.ampIds },
+    { skip: dashboard.ampIds.length === 0 }
+  )
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
-  const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery(dashboard.vigilanceAreaIds)
+  const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery({ axis, ids: dashboard.vigilanceAreaIds })
 
   const [allLinkedAMPIds, allLinkedRegulatoryAreaIds] = useMemo(
     () => [
@@ -42,10 +57,16 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     [vigilanceAreas]
   )
 
-  const { data: allLinkedRegulatoryAreas } = useGetRegulatoryAreasByIdsQuery(allLinkedRegulatoryAreaIds, {
-    skip: allLinkedRegulatoryAreaIds.length === 0
-  })
-  const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
+  const { data: allLinkedRegulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
+    { axis: String(axis), ids: allLinkedRegulatoryAreaIds },
+    {
+      skip: allLinkedRegulatoryAreaIds.length === 0
+    }
+  )
+  const { data: allLinkedAMPs } = useGetAMPsByIdsQuery(
+    { axis: String(axis), ids: allLinkedAMPIds },
+    { skip: allLinkedAMPIds.length === 0 }
+  )
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const filters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, activeDashboardId))
@@ -98,7 +119,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
     return {
       allLinkedAMPs,
       allLinkedRegulatoryAreas,
-      amps,
+      amps: amps ?? [],
       attachments: {
         images: attachementImages,
         links: dashboard.links
@@ -110,7 +131,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       recentActivity,
       recentActivityControlUnits: filteredRecentActivityControlUnits,
       recentActivityFilters,
-      regulatoryAreas,
+      regulatoryAreas: regulatoryAreas ?? [],
       reportings: Object.values(reportings?.entities ?? []),
       selectedControlUnits,
       themes: Object.values(themes ?? []),

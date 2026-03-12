@@ -15,7 +15,7 @@ import { RegulatoryAreas } from '../RegulatoryAreas'
 import { VigilanceAreas } from '../VigilanceAreas'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
-import { BackgroundMap } from '../BackgroundMap'
+import { BriefParameters } from '../BriefParameters'
 import { getVigilanceAreaFilters, type DashboardFilters } from '../slice'
 
 type FirstColumnProps = {
@@ -98,7 +98,7 @@ export function FirstColumn({
       {isMount && (
         <BaseColumn ref={columnRef} className={className}>
           <Bookmark bottomBookmarks={bottomBookmarks} columnWidth={columnWidth} topBookmarks={topBookmarks} />
-          <BackgroundMap
+          <BriefParameters
             ref={backgroundMapRef}
             isExpanded={expandedAccordion === Dashboard.Block.BACKGROUND_MAP}
             setExpandedAccordion={() => onExpandedAccordionClick(Dashboard.Block.BACKGROUND_MAP)}
