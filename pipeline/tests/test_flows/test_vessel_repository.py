@@ -8,7 +8,6 @@ from config import TEST_DATA_LOCATION
 from src.db_config import create_engine
 from src.flows.vessel_repository import (
     delete_files,
-    get_xsd_schema,
     parse_xml_and_load,
     vessel_repository_flow,
 )
@@ -40,9 +39,8 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
         )
     xml_path = TEST_DATA_LOCATION / "vessel_xml" / "vessel_repository.xml"
     xsd_path = TEST_DATA_LOCATION / "vessel_xml" / "vessel_repository.xsd"
-    schema = get_xsd_schema(xsd_path)
     logger = Logger("Test logger")
-    parse_xml_and_load(xml_path, logger, schema, batch_size=1)
+    parse_xml_and_load(xml_path, logger, xsd_path, batch_size=1)
 
     expected_df = pd.DataFrame(
         [
@@ -197,5 +195,9 @@ def test_parse_and_load(create_cacem_tables, reset_test_data):
 @patch("src.flows.vessel_repository.get_xml_files", mock_get_xml_files)
 @patch("src.flows.vessel_repository.delete_files", mock_delete_files)
 def test_flow_vessel_repository(create_cacem_tables, reset_test_data):
+    vessels = read_query(query = "SELECT * FROM vessels", db="monitorenv_remote")
+    assert len(vessels) == 4
     state = vessel_repository_flow(return_state=True)
     assert state.is_completed()
+    vessels = read_query(query = "SELECT * FROM vessels", db="monitorenv_remote")
+    assert len(vessels) == 6
