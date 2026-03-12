@@ -11,10 +11,12 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
     @Test
     fun `findById should return the specified vessel by id `() {
         // Given
-        val vesselId = 1
+        val shipId = 11
+        val batchId = 1
+        val rowNumber = 1
 
         // When
-        val vessel = jpaVesselRepository.findVesselById(vesselId)
+        val vessel = jpaVesselRepository.findVesselByShipId(shipId, batchId, rowNumber)
 
         // Then
         assertThat(vessel?.id).isEqualTo(1)
@@ -25,7 +27,7 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
         assertThat(vessel?.imo).isEqualTo("IMO1111")
         assertThat(vessel?.mmsi).isEqualTo("123456789")
         assertThat(vessel?.immatriculation).isEqualTo("IMMAT111111")
-        assertThat(vessel?.shipName).isEqualTo("SHIPNAME 1")
+        assertThat(vessel?.shipName).isEqualTo("OLD SHIPNAME 1")
         assertThat(vessel?.flag).isEqualTo("DZA")
         assertThat(vessel?.portOfRegistry).isEqualTo("ALGER")
         assertThat(vessel?.professionalType).isEqualTo("Porte-conteneur")
@@ -49,10 +51,40 @@ class JpaVesselRepositoryITest : AbstractDBTests() {
     @Test
     fun `findById should return null when the vessel with given id doesnt exist`() {
         // Given
-        val vesselId = 9999
+        val shipId = 99999
+        val batchId = 1
+        val rowNumber = 1
 
         // When
-        val vessel = jpaVesselRepository.findVesselById(vesselId)
+        val vessel = jpaVesselRepository.findVesselByShipId(shipId, batchId, rowNumber)
+
+        // Then
+        assertThat(vessel).isNull()
+    }
+
+    @Test
+    fun `findById should return null when the vessel with given id and batchId doesnt exist`() {
+        // Given
+        val shipId = 11
+        val batchId = 9999
+        val rowNumber = 1
+
+        // When
+        val vessel = jpaVesselRepository.findVesselByShipId(shipId, batchId, rowNumber)
+
+        // Then
+        assertThat(vessel).isNull()
+    }
+
+    @Test
+    fun `findById should return null when the vessel with given id and batchId and rowNumber doesnt exist`() {
+        // Given
+        val shipId = 11
+        val batchId = 1
+        val rowNumber = 9999
+
+        // When
+        val vessel = jpaVesselRepository.findVesselByShipId(shipId, batchId, rowNumber)
 
         // Then
         assertThat(vessel).isNull()

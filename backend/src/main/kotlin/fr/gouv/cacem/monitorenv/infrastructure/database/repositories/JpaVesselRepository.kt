@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IVesselRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBLatestVesselRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBLegalStatusRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBNafRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVesselRepository
@@ -13,13 +14,18 @@ import org.springframework.stereotype.Repository
 @Repository
 class JpaVesselRepository(
     private val dbVesselRepository: IDBVesselRepository,
+    private val dbLastestVesselRepository: IDBLatestVesselRepository,
     private val dbNafRepository: IDBNafRepository,
     private val dbLegalStatusRepository: IDBLegalStatusRepository,
 ) : IVesselRepository {
     private val logger: Logger = LoggerFactory.getLogger(JpaVesselRepository::class.java)
 
-    override fun findVesselById(id: Int): VesselEntity? =
-        dbVesselRepository.findByIdOrNull(id)?.let {
+    override fun findVesselByShipId(
+        shipId: Int,
+        batchId: Int?,
+        rowNumber: Int?,
+    ): VesselEntity? =
+        dbVesselRepository.findByShipIdAndBatchIdAndRowNumber(shipId, batchId, rowNumber)?.let {
             val nafLabel =
                 if (!it.ownerBusinessSegment.isNullOrBlank()) {
                     dbNafRepository.findByIdOrNull(it.ownerBusinessSegment)?.label
@@ -40,6 +46,6 @@ class JpaVesselRepository(
             return listOf()
         }
 
-        return dbVesselRepository.searchBy(searched).map { it.toVessel() }
+        return dbLastestVesselRepository.searchBy(searched).map { it.toVessel() }
     }
 }
