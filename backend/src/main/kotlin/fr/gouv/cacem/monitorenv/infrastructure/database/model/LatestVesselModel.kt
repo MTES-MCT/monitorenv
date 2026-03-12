@@ -5,8 +5,8 @@ import jakarta.persistence.Table
 import java.math.BigDecimal
 
 @Entity
-@Table(name = "vessels")
-data class VesselModel(
+@Table(name = "latest_vessels")
+data class LatestVesselModel(
     override val batchId: Int?,
     override val category: String?,
     override val commercialName: String?,

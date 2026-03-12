@@ -10,19 +10,21 @@ import org.slf4j.LoggerFactory
 import java.time.ZonedDateTime
 
 @UseCase
-class GetVesselById(
+class GetVesselByShipId(
     private val vesselRepository: IVesselRepository,
     private val aisPositionRepository: IAISPositionRepository,
 ) {
-    private val logger = LoggerFactory.getLogger(GetVesselById::class.java)
+    private val logger = LoggerFactory.getLogger(GetVesselByShipId::class.java)
 
     fun execute(
-        id: Int,
+        shipId: Int,
+        batchId: Int?,
+        rowNumber: Int?,
         from: ZonedDateTime = ZonedDateTime.now().minusHours(12),
         to: ZonedDateTime = ZonedDateTime.now(),
     ): VesselEntity {
-        vesselRepository.findVesselById(id)?.let { vessel ->
-            logger.info("GET vessel ${vessel.id}")
+        vesselRepository.findVesselByShipId(shipId, batchId, rowNumber)?.let { vessel ->
+            logger.info("GET vessel ${vessel.shipId}")
             vessel.mmsi?.let { mmsi ->
                 val positions =
                     aisPositionRepository.findAllByMmsiBetweenDates(mmsi.toInt(), from, to)
@@ -32,7 +34,7 @@ class GetVesselById(
         }
         throw BackendUsageException(
             BackendUsageErrorCode.ENTITY_NOT_FOUND,
-            "vessel $id not found",
+            "vessel $shipId not found",
         )
     }
 }

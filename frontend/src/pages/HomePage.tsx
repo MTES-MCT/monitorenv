@@ -54,7 +54,7 @@ export function HomePage() {
   const reportingEvent = useListenReportingEventUpdates()
 
   const dashboardMapFocus = useAppSelector(state => state.dashboard.mapFocus)
-  const { id: selectedVesselId } = useAppSelector(state => state.vessel.selectedVessel)
+  const { batchId, rowNumber, shipId: selectedVesselShipId } = useAppSelector(state => state.vessel.selectedVessel)
 
   const hasAtLeastOneMissionFormDirty = useMemo(
     () => Object.values(selectedMissions).some(mission => mission.isFormDirty),
@@ -129,12 +129,14 @@ export function HomePage() {
         <AttachReportingToMissionModal />
         {displayLocateOnMap && <LocateOnMap />}
         {isControlUnitDialogVisible && isSuperUser && <ControlUnitDialog />}
-        {selectedVesselId && (
+        {selectedVesselShipId && (
           <Resume
-            id={selectedVesselId}
+            batchId={batchId}
             onClose={() => {
               dispatch(closeVesselResume())
             }}
+            rowNumber={rowNumber}
+            shipId={selectedVesselShipId}
           />
         )}
 

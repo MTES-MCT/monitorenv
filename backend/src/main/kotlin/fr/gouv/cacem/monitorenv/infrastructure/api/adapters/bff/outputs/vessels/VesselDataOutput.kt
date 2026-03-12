@@ -11,6 +11,7 @@ data class VesselDataOutput(
     val imo: String?,
     val mmsi: String?,
     val immatriculation: String?,
+    val shipId: Int,
     val shipName: String?,
     val flag: String?,
     val portOfRegistry: String?,
@@ -30,6 +31,7 @@ data class VesselDataOutput(
     val ownerLegalStatusLabel: String?,
     val ownerStartDate: String?,
     val positions: List<PositionOutput>,
+    val umsGrossTonnage: BigDecimal?,
 ) {
     companion object {
         fun fromVessel(vessel: VesselEntity): VesselDataOutput =
@@ -59,6 +61,8 @@ data class VesselDataOutput(
                 ownerBusinessSegmentLabel = vessel.ownerBusinessSegmentLabel,
                 ownerLegalStatusLabel = vessel.ownerLegalStatusLabel,
                 ownerStartDate = vessel.ownerStartDate,
+                shipId = vessel.shipId,
+                umsGrossTonnage = vessel.umsGrossTonnage,
             )
     }
 }

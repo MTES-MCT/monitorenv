@@ -18,11 +18,11 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 import java.time.ZonedDateTime
 
 @ExtendWith(OutputCaptureExtension::class)
-class GetVesselByIdUTest {
+class GetVesselByShipIdUTest {
     private val vesselRepository: IVesselRepository = mock()
     private val aisPositionRepository: IAISPositionRepository = mock()
 
-    val getVesselById = GetVesselById(vesselRepository, aisPositionRepository)
+    val getVesselByShipId = GetVesselByShipId(vesselRepository, aisPositionRepository)
 
     @Test
     fun `execute should retrieve a vessel by id and last positions by shipId`(log: CapturedOutput) {
@@ -30,7 +30,7 @@ class GetVesselByIdUTest {
         val vesselId = 1
 
         val expectedVessel = aVessel(mmsi = "1")
-        given(vesselRepository.findVesselById(vesselId)).willReturn(expectedVessel)
+        given(vesselRepository.findVesselByShipId(vesselId, null, null)).willReturn(expectedVessel)
         val aisPositions = mutableListOf(AisPositionFixture.aPosition())
         val from = ZonedDateTime.now().minusHours(12)
         val to = ZonedDateTime.now()
@@ -43,7 +43,7 @@ class GetVesselByIdUTest {
         ).willReturn(aisPositions)
 
         // When
-        val vessel = getVesselById.execute(vesselId, from, to)
+        val vessel = getVesselByShipId.execute(vesselId, null, null, from, to)
 
         // Then
         assertThat(vessel).isEqualTo(expectedVessel.copy(positions = aisPositions))
@@ -56,10 +56,10 @@ class GetVesselByIdUTest {
         val vesselId = 1
 
         val expectedVessel = aVessel(mmsi = null)
-        given(vesselRepository.findVesselById(vesselId)).willReturn(expectedVessel)
+        given(vesselRepository.findVesselByShipId(vesselId, null, null)).willReturn(expectedVessel)
 
         // When
-        val vessel = getVesselById.execute(vesselId)
+        val vessel = getVesselByShipId.execute(vesselId, null, null)
 
         // Then
         verifyNoInteractions(aisPositionRepository)
@@ -72,10 +72,11 @@ class GetVesselByIdUTest {
         // Given
         val vesselId = 1
 
-        given(vesselRepository.findVesselById(vesselId)).willReturn(null)
+        given(vesselRepository.findVesselByShipId(vesselId, null, null)).willReturn(null)
 
         // When
-        val backendUsageException = assertThrows<BackendUsageException> { getVesselById.execute(vesselId) }
+        val backendUsageException =
+            assertThrows<BackendUsageException> { getVesselByShipId.execute(vesselId, null, null) }
 
         // Then
         assertThat(backendUsageException.message).isEqualTo("vessel $vesselId not found")

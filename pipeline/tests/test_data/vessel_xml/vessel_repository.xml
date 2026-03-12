@@ -29,6 +29,7 @@
                     <DateOfInformation>2019-05-29T00:00:00.000</DateOfInformation>
                     <ProfessionalType>Porte-Conteneur</ProfessionalType>
                     <CommercialName>UICKSILVER</CommercialName>
+                    <UMSGrossTonnage>9.23</UMSGrossTonnage>
                     <Length>32</Length>
                     <Owner>
                         <DateOfInformation>2019-05-29T00:00:00.000</DateOfInformation>
@@ -69,6 +70,7 @@
                 <Characteristics>
                     <DateOfInformation>2019-05-29T00:00:00.000</DateOfInformation>
                     <LeisureType>Navire a passagers</LeisureType>
+                    <UMSGrossTonnage>10</UMSGrossTonnage>
                     <Length>9.6</Length>
                     <Owner>
                         <DateOfInformation>2019-05-29T00:00:00.000</DateOfInformation>

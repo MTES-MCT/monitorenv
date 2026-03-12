@@ -3,13 +3,15 @@ import type { GeoJSON } from '../../domain/types/GeoJSON'
 
 export namespace Vessel {
   export interface Identity {
+    batchId?: number
     category?: string
     flag?: string
     id: number
     immatriculation?: string
     imo?: string
     mmsi?: string
-    shipId?: number
+    rowNumber?: number
+    shipId: number
     shipName?: string
   }
 
@@ -33,6 +35,7 @@ export namespace Vessel {
     professionalType?: string
     shipName?: string
     status?: string
+    umsGrossTonnage?: number
   }
 
   export interface ApiSearchFilter {

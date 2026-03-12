@@ -363,8 +363,10 @@ export type NewInfraction = {
   observations?: string
   registrationNumber?: string
   seizure?: InfractionSeizureEnum
-  vesselId?: number
+  vesselBatchId?: number
   vesselName?: string
+  vesselRowNumber?: number
+  vesselShipId?: number
   vesselSize?: number
   vesselType?: VesselTypeEnum
 }

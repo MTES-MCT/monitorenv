@@ -36,7 +36,13 @@ export function LocateOnMap() {
           <SearchVessel
             onChange={item => {
               if (item) {
-                dispatch(vesselAction.setSelectedVesselId(item?.id))
+                dispatch(
+                  vesselAction.setSelectedVesselId({
+                    batchId: item.batchId,
+                    rowNumber: item.rowNumber,
+                    shipId: item.shipId
+                  })
+                )
               }
             }}
             optionsWidth="500px"
