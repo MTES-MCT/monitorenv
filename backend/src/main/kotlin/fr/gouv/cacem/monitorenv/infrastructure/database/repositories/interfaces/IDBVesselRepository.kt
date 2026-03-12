@@ -10,14 +10,14 @@ interface IDBVesselRepository : JpaRepository<VesselModel, Int> {
         value =
             """
                 SELECT vessel FROM VesselModel vessel
-                WHERE 
-                     UPPER(vessel.shipName) LIKE CONCAT('%', UPPER(:searched), '%')
-                     OR UPPER(vessel.imo) LIKE CONCAT('%', UPPER(:searched), '%')
-                     OR UPPER(vessel.immatriculation) LIKE CONCAT('%', UPPER(:searched), '%')
-                     OR UPPER(vessel.mmsi) LIKE CONCAT('%', UPPER(:searched), '%')
-                ORDER BY vessel.shipName, vessel.mmsi, vessel.immatriculation, vessel.imo ASC LIMIT 50""",
+                WHERE vessel.shipId = :shipId 
+                    AND vessel.batchId = :batchId
+                    AND vessel.rowNumber = :rowNumber
+                     """,
     )
-    fun searchBy(
-        @Param("searched") searched: String,
-    ): List<VesselModel>
+    fun findByShipIdAndBatchIdAndRowNumber(
+        @Param("shipId") shipId: Int,
+        @Param("batchId") batchId: Int?,
+        @Param("rowNumber") rowNumber: Int?,
+    ): VesselModel?
 }

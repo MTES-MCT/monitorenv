@@ -8,8 +8,8 @@ import jakarta.persistence.Table
 import java.math.BigDecimal
 
 @Entity
-@Table(name = "vessels")
-data class VesselModel(
+@Table(name = "latest_vessels")
+data class LatestVesselModel(
     val batchId: Int?,
     val category: String?,
     val commercialName: String?,
@@ -42,8 +42,6 @@ data class VesselModel(
     val shipId: Int?,
     val shipName: String?,
     val status: String?,
-    @Column(name = "ums_gross_tonnage")
-    val umsGrossTonnage: BigDecimal?,
 ) {
     fun toVessel(
         nafLabel: String? = null,
@@ -81,6 +79,5 @@ data class VesselModel(
             ownerStartDate = ownerStartDate,
             positions = mutableListOf(),
             rowNumber = rowNumber,
-            umsGrossTonnage = umsGrossTonnage,
         )
 }
