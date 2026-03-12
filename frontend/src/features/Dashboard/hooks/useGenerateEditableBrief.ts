@@ -2,6 +2,7 @@ import { useGetVigilanceAreasByIdsQuery } from '@api/vigilanceAreasAPI'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useState } from 'react'
+import { Axis } from 'types'
 
 import { useExportImages } from './useExportImages'
 import { getRecentActivityFilters } from '../components/DashboardForm/slice'
@@ -13,6 +14,10 @@ export function useGenerateEditableBrief(dashboard: Dashboard.Dashboard) {
   const [isLoadingBrief, setIsLoadingBrief] = useState(false)
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
+  const axis =
+    useAppSelector(state => (activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.axis : undefined)) ??
+    Axis.NORTH_SOUTH
+
   const recentActivityFilters = useAppSelector(state =>
     getRecentActivityFilters(state.dashboardFilters, activeDashboardId)
   )
@@ -20,7 +25,7 @@ export function useGenerateEditableBrief(dashboard: Dashboard.Dashboard) {
     activeDashboardId ? state.dashboard.dashboards?.[activeDashboardId]?.selectedNearbyUnits : []
   )
 
-  const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery(dashboard.vigilanceAreaIds)
+  const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery({ axis, ids: dashboard.vigilanceAreaIds })
 
   const { getImages } = useExportImages()
 

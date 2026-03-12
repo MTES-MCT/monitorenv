@@ -11,9 +11,12 @@ class GetVigilanceAreasByIds(
 ) {
     private val logger = LoggerFactory.getLogger(GetVigilanceAreasByIds::class.java)
 
-    fun execute(vigilanceAreaIds: List<Int>): List<VigilanceAreaEntity>? {
+    fun execute(
+        vigilanceAreaIds: List<Int>,
+        axis: String,
+    ): List<VigilanceAreaEntity>? {
         logger.info("Attempt to GET vigilance areas withs ids: $vigilanceAreaIds")
-        val vigilanceAreas = vigilanceAreaRepository.findAllById(vigilanceAreaIds)
+        val vigilanceAreas = vigilanceAreaRepository.findAllById(vigilanceAreaIds, axis)
         logger.info("Found ${vigilanceAreas.size} vigilance areas")
         return vigilanceAreas
     }
