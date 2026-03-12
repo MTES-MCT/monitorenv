@@ -1,4 +1,4 @@
-import { getAmpsByIds } from '@api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetRecentControlsActivityMutation } from '@api/recentActivity'
@@ -41,7 +41,11 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       skip: dashboard.regulatoryAreaIds.length === 0
     }
   )
-  const amps = useAppSelector(state => getAmpsByIds(state, dashboard.ampIds))
+
+  const { data: amps } = useGetAMPsByIdsQuery(
+    { axis: String(axis), ids: dashboard.ampIds },
+    { skip: dashboard.ampIds.length === 0 }
+  )
   const { data: reportings } = useGetReportingsByIdsQuery(dashboard.reportingIds)
   const { data: vigilanceAreas } = useGetVigilanceAreasByIdsQuery({ axis, ids: dashboard.vigilanceAreaIds })
 
@@ -59,7 +63,10 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       skip: allLinkedRegulatoryAreaIds.length === 0
     }
   )
-  const allLinkedAMPs = useAppSelector(state => getAmpsByIds(state, allLinkedAMPIds))
+  const { data: allLinkedAMPs } = useGetAMPsByIdsQuery(
+    { axis: String(axis), ids: allLinkedAMPIds },
+    { skip: allLinkedAMPIds.length === 0 }
+  )
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const filters = useAppSelector(state => getRecentActivityFilters(state.dashboardFilters, activeDashboardId))
