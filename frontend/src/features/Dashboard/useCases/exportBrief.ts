@@ -1,4 +1,4 @@
-import { getAmpsByIds } from '@api/ampsAPI'
+import { ampsAPI } from '@api/ampsAPI'
 import { dashboardsAPI } from '@api/dashboardsAPI'
 import { recentActivityAPI } from '@api/recentActivity'
 import { regulatoryAreasAPI } from '@api/regulatoryAreasAPI'
@@ -87,13 +87,18 @@ export const exportBrief =
       Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedAMPs ?? []))),
       Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
     ]
-    const allLinkedAMPs = getAmpsByIds(getState(), allLinkedAMPIds)
+
+    const { data: allLinkedAMPs } =
+      allLinkedAMPIds.length > 0
+        ? await dispatch(ampsAPI.endpoints.getAMPsByIds.initiate({ axis: String(axis), ids: allLinkedAMPIds }))
+        : { data: [] }
+
     const { data: allLinkedRegulatoryAreas } = await dispatch(
       regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate({ axis, ids: allLinkedRegulatoryAreaIds })
     )
     const getVigilanceAreaAmpsAndRegulatoryAreas = (vigilanceArea: VigilanceArea.VigilanceArea) => {
       const filteredAmps = allLinkedAMPs
-        .filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
+        ?.filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
         .map(amp => amp.name)
         .join(', ')
 
@@ -185,8 +190,12 @@ export const exportBrief =
     })
 
     /* AMP */
-    const amps = getAmpsByIds(getState(), dashboard.ampIds)
-    const formattedAmps = amps.map(amp => ({
+    const { data: amps } =
+      dashboard.ampIds.length > 0
+        ? await dispatch(ampsAPI.endpoints.getAMPsByIds.initiate({ axis: String(axis), ids: dashboard.ampIds }))
+        : { data: [] }
+
+    const formattedAmps = amps?.map(amp => ({
       color: getAMPColorWithAlpha(amp.type, amp.name),
       designation: amp.designation,
       id: amp.id,
@@ -195,7 +204,7 @@ export const exportBrief =
       type: amp.type,
       url: amp.urlLegicem
     }))
-    const ampsWithImages = formattedAmps.map(amp => {
+    const ampsWithImages = formattedAmps?.map(amp => {
       const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_AMP, amp.id)
       const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_AMP, amp.id)
 
@@ -339,7 +348,7 @@ export const exportBrief =
 
     const { data, error } = await dispatch(
       dashboardsAPI.endpoints.exportBrief.initiate({
-        amps: ampsWithImages,
+        amps: ampsWithImages ?? [],
         dashboard: {
           ...dashboard,
           id: dashboard.createdAt ? dashboard.id : ''

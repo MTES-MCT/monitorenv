@@ -36,4 +36,48 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
         assertThat(amps).hasSize(1)
         assertThat(amps[0]).isEqualTo(12)
     }
+
+    @Test
+    @Transactional
+    fun `findAllByIds Should return specific APMs sorted by axis NORTH_SOUTH`() {
+        // When
+        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), "NORTH_SOUTH")
+
+        // Then
+        assertThat(requestedAMPs[0].id).isEqualTo(3)
+        assertThat(requestedAMPs[1].id).isEqualTo(1)
+    }
+
+    @Test
+    @Transactional
+    fun `findAllByIds Should return specific APMs sorted by axis SOUTH_NORTH`() {
+        // When
+        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), "SOUTH_NORTH")
+
+        // Then
+        assertThat(requestedAMPs[0].id).isEqualTo(1)
+        assertThat(requestedAMPs[1].id).isEqualTo(3)
+    }
+
+    @Test
+    @Transactional
+    fun `findAllByIds Should return specific APMs sorted by axis WEST_EAST`() {
+        // When
+        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), "WEST_EAST")
+
+        // Then
+        assertThat(requestedAMPs[0].id).isEqualTo(3)
+        assertThat(requestedAMPs[1].id).isEqualTo(1)
+    }
+
+    @Test
+    @Transactional
+    fun `findAllByIds Should return specific APMs sorted by axis EAST_WEST`() {
+        // When
+        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), "EAST_WEST")
+
+        // Then
+        assertThat(requestedAMPs[0].id).isEqualTo(1)
+        assertThat(requestedAMPs[1].id).isEqualTo(3)
+    }
 }
