@@ -6,4 +6,6 @@ interface INatinfRepository {
     fun findAll(): List<NatinfEntity>
 
     fun count(): Long
+
+    fun findAllByThemesIds(ids: List<Int>): List<NatinfEntity>
 }
