@@ -39,6 +39,10 @@ data class EnvActionControlEntity(
     val vehicleType: VehicleTypeEnum? = null,
     val tags: List<TagEntity>,
     var themes: List<ThemeEntity>,
+    @Patchable
+    override var hasDivingDuringOperation: Boolean? = null,
+    @Patchable
+    override var incidentDuringOperation: Boolean? = null,
 ) : EnvActionEntity(
         id = id,
         actionType = ActionTypeEnum.CONTROL,

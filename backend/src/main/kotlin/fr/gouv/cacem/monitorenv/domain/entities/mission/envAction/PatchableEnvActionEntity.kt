@@ -7,4 +7,6 @@ data class PatchableEnvActionEntity(
     val actionStartDateTimeUtc: Optional<ZonedDateTime>?,
     val actionEndDateTimeUtc: Optional<ZonedDateTime>?,
     val observationsByUnit: Optional<String>?,
+    val hasDivingDuringOperation: Optional<Boolean>?,
+    val incidentDuringOperation: Optional<Boolean>?,
 )

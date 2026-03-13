@@ -15,6 +15,8 @@ data class EnvActionControlProperties(
     val infractions: List<InfractionEntity>? = listOf(),
     val observations: String? = null,
     val vehicleType: VehicleTypeEnum? = null,
+    val hasDivingDuringOperation: Boolean? = null,
+    val incidentDuringOperation: Boolean? = null,
 ) {
     fun toEnvActionControlEntity(
         id: UUID,
@@ -33,6 +35,8 @@ data class EnvActionControlProperties(
         openBy: String?,
         tags: List<TagEntity>,
         themes: List<ThemeEntity>,
+        hasDivingDuringOperation: Boolean?,
+        incidentDuringOperation: Boolean?,
     ) = EnvActionControlEntity(
         id = id,
         actionEndDateTimeUtc = actionEndDateTimeUtc,
@@ -57,6 +61,8 @@ data class EnvActionControlProperties(
         vehicleType = vehicleType,
         tags = tags,
         themes = themes,
+        hasDivingDuringOperation = hasDivingDuringOperation,
+        incidentDuringOperation = incidentDuringOperation
     )
 
     companion object {
@@ -67,6 +73,8 @@ data class EnvActionControlProperties(
                 infractions = envAction.infractions,
                 observations = envAction.observations,
                 vehicleType = envAction.vehicleType,
+                hasDivingDuringOperation = envAction.hasDivingDuringOperation,
+                incidentDuringOperation = envAction.incidentDuringOperation
             )
     }
 }
