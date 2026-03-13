@@ -1,8 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
@@ -28,10 +25,13 @@ import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.UpdateTimestamp
-import org.hibernate.dialect.PostgreSQLEnumJdbcType
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
+import tools.jackson.databind.annotation.JsonDeserialize
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.databind.json.JsonMapper
 import java.time.Instant
 import java.time.ZoneOffset.UTC
 
@@ -98,7 +98,7 @@ class MissionModel(
 ) {
     private fun buildMissionEntity(
         mappedControlUnits: List<LegacyControlUnitEntity>? = null,
-        objectMapper: ObjectMapper,
+        jsonMapper: JsonMapper,
     ): MissionEntity =
         MissionEntity(
             id = id,
@@ -107,7 +107,7 @@ class MissionModel(
             endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
             createdAtUtc = createdAtUtc?.atZone(UTC),
             updatedAtUtc = updatedAtUtc?.atZone(UTC),
-            envActions = envActions?.map { it.toActionEntity(objectMapper) },
+            envActions = envActions?.map { it.toActionEntity(jsonMapper) },
             facade = facade,
             geom = geom,
             hasMissionOrder = hasMissionOrder,
@@ -123,7 +123,7 @@ class MissionModel(
             startDateTimeUtc = startDateTimeUtc.atZone(UTC),
         )
 
-    fun toMissionEntity(objectMapper: ObjectMapper): MissionEntity {
+    fun toMissionEntity(jsonMapper: JsonMapper): MissionEntity {
         val mappedControlUnits =
             controlUnits?.map { missionControlUnitModel ->
                 val mappedControlUnitResources =
@@ -140,13 +140,12 @@ class MissionModel(
                     )
             }
 
-        return buildMissionEntity(mappedControlUnits, objectMapper)
+        return buildMissionEntity(mappedControlUnits, jsonMapper)
     }
 
-    fun toMissionEntityWithoutControlUnit(objectMapper: ObjectMapper): MissionEntity =
-        buildMissionEntity(null, objectMapper)
+    fun toMissionEntityWithoutControlUnit(jsonMapper: JsonMapper): MissionEntity = buildMissionEntity(null, jsonMapper)
 
-    fun toMissionDTO(objectMapper: ObjectMapper): MissionDetailsDTO {
+    fun toMissionDTO(jsonMapper: JsonMapper): MissionDetailsDTO {
         val envActionsAttachedToReportingIds =
             attachedReportings?.filter { it.attachedEnvAction != null }?.fold(
                 mutableListOf<EnvActionAttachedToReportingIds>(),
@@ -185,7 +184,7 @@ class MissionModel(
             }
                 ?: listOf()
         return MissionDetailsDTO(
-            mission = this.toMissionEntity(objectMapper),
+            mission = this.toMissionEntity(jsonMapper),
             attachedReportingIds =
                 this.attachedReportings
                     ?.filter { it.detachedFromMissionAtUtc == null }
@@ -194,12 +193,12 @@ class MissionModel(
             attachedReportings =
                 this.attachedReportings
                     ?.filter { it.detachedFromMissionAtUtc == null }
-                    ?.map { it.toReportingDetailsDTO(objectMapper) }
+                    ?.map { it.toReportingDetailsDTO(jsonMapper) }
                     ?: listOf(),
             detachedReportings =
                 this.attachedReportings
                     ?.filter { it.detachedFromMissionAtUtc != null }
-                    ?.map { it.toReporting(objectMapper) }
+                    ?.map { it.toReporting(jsonMapper) }
                     ?: listOf(),
             detachedReportingIds =
                 this.attachedReportings
@@ -210,7 +209,7 @@ class MissionModel(
         )
     }
 
-    private fun toMissionsEntity(objectMapper: ObjectMapper): MissionEntity {
+    private fun toMissionsEntity(jsonMapper: JsonMapper): MissionEntity {
         val mappedControlUnits =
             controlUnits?.map { missionControlUnitModel ->
                 missionControlUnitModel
@@ -221,12 +220,12 @@ class MissionModel(
                     )
             }
 
-        return buildMissionEntity(mappedControlUnits, objectMapper)
+        return buildMissionEntity(mappedControlUnits, jsonMapper)
     }
 
-    fun toMissionListDTO(objectMapper: ObjectMapper): MissionListDTO =
+    fun toMissionListDTO(jsonMapper: JsonMapper): MissionListDTO =
         MissionListDTO(
-            mission = this.toMissionsEntity(objectMapper),
+            mission = this.toMissionsEntity(jsonMapper),
             attachedReportingIds =
                 this.attachedReportings
                     ?.filter { it.detachedFromMissionAtUtc == null }

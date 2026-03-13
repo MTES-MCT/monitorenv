@@ -1,17 +1,18 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.development
 
 import fr.gouv.cacem.monitorenv.config.OIDCProperties
-import io.ktor.client.request.forms.*
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.cloud.gateway.mvc.ProxyExchange
+import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.client.RestClient
+import java.net.HttpURLConnection
 import java.nio.charset.StandardCharsets
 
 /**
@@ -42,6 +43,27 @@ class KeycloakProxy(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(KeycloakProxy::class.java)
 
+    // RestClient configured to NOT follow redirects (critical for OAuth/OIDC flows)
+    private val restClient =
+        RestClient
+            .builder()
+            .requestFactory(
+                object : org.springframework.http.client.SimpleClientHttpRequestFactory() {
+                    override fun prepareConnection(
+                        connection: HttpURLConnection,
+                        httpMethod: String,
+                    ) {
+                        super.prepareConnection(connection, httpMethod)
+                        connection.instanceFollowRedirects = false
+                    }
+                },
+            ).requestInterceptor { request, body, execution ->
+                logger.info(
+                    "[DEV-PROXY] OUTGOING PROXIED REQUEST ${request.method} ${request.uri} ${request.headers}",
+                )
+                execution.execute(request, body)
+            }.build()
+
     init {
         logger.warn(
             """
@@ -60,42 +82,15 @@ class KeycloakProxy(
      */
     @GetMapping("/realms/**")
     @Throws(Exception::class)
-    fun get(
-        proxy: ProxyExchange<ByteArray?>,
-        request: HttpServletRequest,
-    ): ResponseEntity<*> {
-        val targetUri = StringBuilder("${oidcProperties.proxyUrl}${request.requestURI}?${request.queryString}")
+    fun get(request: HttpServletRequest): ResponseEntity<ByteArray> {
+        val targetUri = "${oidcProperties.proxyUrl}${request.requestURI}?${request.queryString}"
         logger.info("[DEV-PROXY] Forwarding ${request.requestURI} to $targetUri")
 
         return try {
-            // TODO Use properties to pass all sensitive headers
-            // @see https://docs.spring.io/spring-cloud-gateway/reference/appendix.html
-            // NOTE: This is acceptable for development/testing only
-            val headerNames = request.headerNames
-            while (headerNames.hasMoreElements()) {
-                val headerName = headerNames.nextElement()
-                val headerValues = request.getHeaders(headerName)
-
-                while (headerValues.hasMoreElements()) {
-                    proxy.header(headerName, headerValues.nextElement())
-                }
-            }
-
-            val response =
-                proxy
-                    .uri(targetUri.toString())
-                    .get()
-
-            // Remove duplicate CORS header added by Spring Cloud Gateway MVC
-            // See: https://github.com/spring-cloud/spring-cloud-gateway/issues/3787
+            val response = forwardRequest(HttpMethod.GET, targetUri, request, null)
             val cleanedResponse = removeCorsHeader(response)
 
-            // Rewrite HTML responses to fix form action URLs
-            if (isHtmlResponse(cleanedResponse)) {
-                rewriteHtmlResponse(cleanedResponse)
-            } else {
-                cleanedResponse
-            }
+            if (isHtmlResponse(cleanedResponse)) rewriteHtmlResponse(cleanedResponse) else cleanedResponse
         } catch (e: Exception) {
             logger.error("[DEV-PROXY] Error forwarding request to $targetUri", e)
             throw e
@@ -110,19 +105,10 @@ class KeycloakProxy(
      */
     @GetMapping("/resources/**")
     @Throws(Exception::class)
-    fun getResources(
-        proxy: ProxyExchange<ByteArray?>,
-        request: HttpServletRequest,
-    ): ResponseEntity<*> {
+    fun getResources(request: HttpServletRequest): ResponseEntity<ByteArray> {
         val targetUri = "${oidcProperties.proxyUrl}${request.requestURI}"
 
-        val response =
-            proxy
-                .uri(targetUri)
-                .get()
-
-        // Remove duplicate CORS header added by Spring Cloud Gateway MVC
-        // See: https://github.com/spring-cloud/spring-cloud-gateway/issues/3787
+        val response = forwardRequest(HttpMethod.GET, targetUri, request, null)
         return removeCorsHeader(response)
     }
 
@@ -137,90 +123,86 @@ class KeycloakProxy(
         consumes = ["application/x-www-form-urlencoded", "application/x-www-form-urlencoded;charset=UTF-8"],
     )
     @Throws(Exception::class)
-    fun post(
-        proxy: ProxyExchange<ByteArray?>,
-        request: HttpServletRequest,
-    ): ResponseEntity<*> {
+    fun post(request: HttpServletRequest): ResponseEntity<ByteArray> {
         val params = request.parameterMap
-        val targetUri = StringBuilder("${oidcProperties.proxyUrl}${request.requestURI}?${request.queryString}")
+        val targetUri = "${oidcProperties.proxyUrl}${request.requestURI}?${request.queryString}"
         logger.info("[DEV-PROXY] Forwarding ${request.requestURI} to $targetUri")
 
         return try {
-            // TODO Use properties to pass all sensitive headers
-            // @see https://docs.spring.io/spring-cloud-gateway/reference/appendix.html
-            // NOTE: This is acceptable for development/testing only
-            val headerNames = request.headerNames
-            while (headerNames.hasMoreElements()) {
-                val headerName = headerNames.nextElement()
-                val headerValues = request.getHeaders(headerName)
-
-                while (headerValues.hasMoreElements()) {
-                    proxy.header(headerName, headerValues.nextElement())
-                }
-            }
-
             // TODO Use properties to pass form data
             // @see spring.cloud.gateway.mvc.form-filter.enabled=false
             // NOTE: This is acceptable for development/testing only
-            val formData = StringBuilder()
-            if (params.isNotEmpty()) {
-                params.entries
-                    .joinToString("&") { (key, values) ->
+            val formData =
+                if (params.isNotEmpty()) {
+                    params.entries.joinToString("&") { (key, values) ->
                         "$key=${values.joinToString(",")}"
-                    }.let { formData.append(it) }
-            }
+                    }
+                } else {
+                    ""
+                }
 
-            val formDataBytes = formData.toString().toByteArray(StandardCharsets.UTF_8)
+            val formDataBytes = formData.toByteArray(StandardCharsets.UTF_8)
 
-            // Ensure the content length matches the size of the byte array
-            proxy
-                .header("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .header("Content-Length", formDataBytes.size.toString())
-            val response =
-                proxy
-                    .uri(targetUri.toString())
-                    .body(formDataBytes)
-                    .post()
-
-            // Remove duplicate CORS header added by Spring Cloud Gateway MVC
-            // See: https://github.com/spring-cloud/spring-cloud-gateway/issues/3787
+            val response = forwardRequest(HttpMethod.POST, targetUri, request, formDataBytes)
             val cleanedResponse = removeCorsHeader(response)
 
-            // Rewrite HTML responses to fix form action URLs
-            if (isHtmlResponse(cleanedResponse)) {
-                rewriteHtmlResponse(cleanedResponse)
-            } else {
-                cleanedResponse
-            }
+            if (isHtmlResponse(cleanedResponse)) rewriteHtmlResponse(cleanedResponse) else cleanedResponse
         } catch (e: Exception) {
             logger.error("[DEV-PROXY] Error forwarding POST request to $targetUri", e)
             throw e
         }
     }
 
-    private fun removeCorsHeader(response: ResponseEntity<*>): ResponseEntity<*> {
-        // In Spring Boot 3.4+, headers are ReadOnlyHttpHeaders and cannot be modified
-        // We need to create a new ResponseEntity with filtered headers
-        val newHeaders = response.headers.toMutableMap()
+    private fun forwardRequest(
+        method: HttpMethod,
+        targetUri: String,
+        request: HttpServletRequest,
+        body: ByteArray?,
+    ): ResponseEntity<ByteArray> {
+        // TODO Use properties to pass all sensitive headers
+        // @see https://docs.spring.io/spring-cloud-gateway/reference/appendix.html
+        // NOTE: This is acceptable for development/testing only
+        val requestSpec = restClient.method(method).uri(targetUri)
+
+        val headerNames = request.headerNames
+        while (headerNames.hasMoreElements()) {
+            val headerName = headerNames.nextElement()
+            val headerValues = request.getHeaders(headerName)
+            while (headerValues.hasMoreElements()) {
+                requestSpec.header(headerName, headerValues.nextElement())
+            }
+        }
+
+        if (body != null) {
+            requestSpec
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(body)
+        }
+
+        return requestSpec
+            .retrieve()
+            .toEntity(ByteArray::class.java)
+    }
+
+    private fun removeCorsHeader(response: ResponseEntity<ByteArray>): ResponseEntity<ByteArray> {
+        val newHeaders = response.headers.toSingleValueMap().toMutableMap()
         newHeaders.remove("Access-Control-Allow-Origin")
 
         return ResponseEntity
             .status(response.statusCode)
             .headers { headers ->
-                newHeaders.forEach { (key, values) ->
-                    headers.addAll(key, values)
-                }
+                newHeaders.forEach { (key, value) -> headers.add(key, value) }
             }.body(response.body)
     }
 
-    private fun isHtmlResponse(response: ResponseEntity<*>): Boolean {
+    private fun isHtmlResponse(response: ResponseEntity<ByteArray>): Boolean {
         val contentType = response.headers.contentType
         return contentType?.toString()?.contains("text/html") == true
     }
 
-    private fun rewriteHtmlResponse(response: ResponseEntity<*>): ResponseEntity<*> {
-        try {
-            val body = response.body as? ByteArray ?: return response
+    private fun rewriteHtmlResponse(response: ResponseEntity<ByteArray>): ResponseEntity<ByteArray> {
+        return try {
+            val body = response.body ?: return response
             val html = String(body, StandardCharsets.UTF_8)
 
             // Replace Keycloak internal URLs with proxy URLs for local development
@@ -234,19 +216,17 @@ class KeycloakProxy(
             val rewrittenBody = rewrittenHtml.toByteArray(StandardCharsets.UTF_8)
 
             // Create new headers without Content-Length (Spring will set it automatically)
-            val newHeaders = response.headers.toMutableMap()
+            val newHeaders = response.headers.toSingleValueMap().toMutableMap()
             newHeaders.remove("Content-Length")
 
-            return ResponseEntity
+            ResponseEntity
                 .status(response.statusCode)
                 .headers { headers ->
-                    newHeaders.forEach { (key, values) ->
-                        headers.addAll(key, values)
-                    }
+                    newHeaders.forEach { (key, value) -> headers.add(key, value) }
                 }.body(rewrittenBody)
         } catch (e: Exception) {
             logger.error("Error rewriting HTML response", e)
-            return response
+            response
         }
     }
 }

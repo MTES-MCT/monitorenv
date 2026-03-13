@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.utils
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.infrastructure.api.utils.validateId
@@ -15,10 +14,11 @@ import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import tools.jackson.databind.json.JsonMapper
 
 @RestController
 class FakeController(
-    private val objectMapper: ObjectMapper,
+    private val jsonMapper: JsonMapper,
 ) {
     @PatchMapping(value = ["/api/v1/fakes/{fakeId}"], consumes = ["application/json"])
     fun patch(
@@ -26,18 +26,18 @@ class FakeController(
         fakeId: Int,
         @RequestBody partialFakeAsJson: String,
     ) {
-        validateId(partialFakeAsJson, "id", fakeId, objectMapper)
+        validateId(partialFakeAsJson, "id", fakeId, jsonMapper)
     }
 }
 
 @ExtendWith(SpringExtension::class)
 class ValidateIdUTests {
     private lateinit var fakeController: FakeController
-    private val objectMapper = ObjectMapper()
+    private val jsonMapper = JsonMapper()
 
     @BeforeEach
     fun setUp() {
-        fakeController = FakeController(objectMapper)
+        fakeController = FakeController(jsonMapper)
     }
 
     @Test

@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.log
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpMethod.POST
@@ -13,11 +12,12 @@ import org.springframework.http.server.ServletServerHttpRequest
 import org.springframework.http.server.ServletServerHttpResponse
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
+import tools.jackson.databind.json.JsonMapper
 
 @ControllerAdvice
 class LogResponseWithBody(
-    val mapper: ObjectMapper,
-) : ResponseBodyAdvice<Any?> {
+    val mapper: JsonMapper,
+) : ResponseBodyAdvice<Any> {
     private val logger = LoggerFactory.getLogger(LogGETRequests::class.java)
 
     override fun supports(

@@ -13,11 +13,11 @@ data class AMPModel(
     @Id
     @Column(name = "id")
     val id: Int,
-    @Column(name = "des_desigfr")
+    @Column(name = "des_desigfr", nullable = false)
     val designation: String,
-    @Column(name = "geom")
+    @Column(name = "geom", nullable = false)
     val geom: MultiPolygon,
-    @Column(name = "mpa_oriname")
+    @Column(name = "mpa_oriname", nullable = false)
     val name: String,
     @Column(name = "ref_reg")
     val refReg: String? = null,

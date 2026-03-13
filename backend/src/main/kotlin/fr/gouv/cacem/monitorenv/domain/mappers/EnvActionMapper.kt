@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.mappers
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
@@ -17,6 +16,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import org.locationtech.jts.geom.Geometry
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import java.util.UUID
 
@@ -25,7 +25,7 @@ object EnvActionMapper {
     private val logger = LoggerFactory.getLogger(EnvActionMapper::class.java)
 
     fun getEnvActionEntityFromJSON(
-        mapper: ObjectMapper,
+        mapper: JsonMapper,
         id: UUID,
         actionEndDateTimeUtc: ZonedDateTime?,
         actionType: ActionTypeEnum,
@@ -112,7 +112,7 @@ object EnvActionMapper {
         }
 
     fun envActionEntityToJSON(
-        mapper: ObjectMapper,
+        mapper: JsonMapper,
         envAction: EnvActionEntity,
     ): String =
         try {

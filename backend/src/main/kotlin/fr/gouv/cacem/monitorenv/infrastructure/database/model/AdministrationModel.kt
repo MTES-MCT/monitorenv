@@ -28,7 +28,7 @@ data class AdministrationModel(
     val id: Int? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "administration")
     val controlUnits: List<ControlUnitModel>? = mutableListOf(),
-    @Column(name = "is_archived")
+    @Column(name = "is_archived", nullable = false)
     val isArchived: Boolean,
     @Column(name = "name", nullable = false, unique = true)
     val name: String,

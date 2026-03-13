@@ -4,12 +4,14 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitRes
 
 data class LegacyControlUnitResourceDataOutput(
     val id: Int,
+    val controlUnitId: Int,
     val name: String,
 ) {
     companion object {
         fun fromLegacyControlResourceEntity(legacyControlUnitResource: LegacyControlUnitResourceEntity) =
             LegacyControlUnitResourceDataOutput(
                 id = requireNotNull(legacyControlUnitResource.id),
+                controlUnitId = requireNotNull(legacyControlUnitResource.controlUnitId),
                 name = legacyControlUnitResource.name,
             )
     }

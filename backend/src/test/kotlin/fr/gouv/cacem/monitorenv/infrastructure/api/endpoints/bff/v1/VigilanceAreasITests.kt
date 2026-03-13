@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
@@ -31,8 +30,8 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
@@ -43,6 +42,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 
 @Import(SentryConfig::class, MapperConfiguration::class)
@@ -75,7 +75,7 @@ class VigilanceAreasITests {
     private lateinit var getTrigrams: GetTrigrams
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var jsonMapper: JsonMapper
 
     private val polygon =
         WKTReader()
@@ -385,7 +385,7 @@ class VigilanceAreasITests {
             .perform(
                 put("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(vigilanceAreaDataInput)),
+                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput)),
             )
             // Then
             .andExpect(status().isOk)
@@ -488,7 +488,7 @@ class VigilanceAreasITests {
             .perform(
                 put("/bff/v1/vigilance_areas/1")
                     .contentType("application/json")
-                    .content(objectMapper.writeValueAsString(vigilanceAreaDataInput)),
+                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput)),
             )
             // Then
             .andExpect(status().isOk)
@@ -554,7 +554,7 @@ class VigilanceAreasITests {
             .perform(
                 post("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(ids)),
+                    .content(jsonMapper.writeValueAsString(ids)),
             )
             // Then
             .andExpect(status().isOk)
@@ -572,7 +572,7 @@ class VigilanceAreasITests {
             .perform(
                 post("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(ids)),
+                    .content(jsonMapper.writeValueAsString(ids)),
             )
             // Then
             .andExpect(status().isOk)
