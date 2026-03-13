@@ -97,5 +97,9 @@ def mock_delete_files(xml_files: List[Path]) -> None:
     pass
 
 @task
-def mock_get_csv_file(dummy: str):
+def mock_get_ref_natinf_csv_file(dummy: str):
     return Path(TEST_DATA_LOCATION / "ref_natinfs_csv" / "ref_natinfs.csv")
+
+@task
+def mock_get_themes_natinfs_csv_file(dummy: str):
+    return Path(TEST_DATA_LOCATION / "themes_natinfs" / "themes_natinfs.csv")

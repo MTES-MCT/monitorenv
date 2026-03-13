@@ -1,3 +1,4 @@
+DELETE FROM themes_natinfs;
 DELETE FROM themes_env_actions;
 DELETE FROM themes_regulatory_areas;
 DELETE FROM themes;

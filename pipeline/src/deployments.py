@@ -17,6 +17,7 @@ from config import (
     TEST_MODE,
     VESSEL_FILES_DIRECTORY,
     VESSEL_FILES_GID,
+    THEMES_NATINFS_FILE
 )
 from src.flows.admin_areas import administrative_areas_flow
 from src.flows.amp_cacem import import_amp_cacem_flow
@@ -40,6 +41,7 @@ from src.flows.remove_broken_missions_resources_links import (
 )
 from src.flows.semaphores import semaphores_flow
 from src.flows.themes_and_tags import themes_and_tags_flow
+from src.flows.themes_natinfs import natinfs_themes_flow
 from src.flows.three_hundred_meters_areas import three_hunder_meters_areas_flow
 from src.flows.update_departments_and_facades import (
     update_departments_and_facades_flow,
@@ -136,6 +138,7 @@ flows_to_deploy = [
     FlowAndSchedules(flow=update_departments_and_facades_flow),
     FlowAndSchedules(flow=vessel_repository_flow),
     FlowAndSchedules(flow=last_positions_flow),
+    FlowAndSchedules(flow=natinfs_themes_flow),
 ]
 
 deployments = []
@@ -168,6 +171,11 @@ for flow_to_deploy in flows_to_deploy:
         }
         deployment.job_variables["volumes"].append(
             f"{VESSEL_FILES_DIRECTORY}:/home/monitorenv-pipeline/pipeline/src/data"
+        )
+
+    if deployment.name in ("Monitorenv - Themes natinfs",):
+        deployment.job_variables["volumes"].append(
+            f"{THEMES_NATINFS_FILE}:/home/monitorenv-pipeline/pipeline/src/data"
         )
 
     deployments.append(deployment)

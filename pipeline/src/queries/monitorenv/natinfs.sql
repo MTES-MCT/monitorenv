@@ -1,0 +1,1 @@
+SELECT natinf_code, infraction FROM public.natinfs;

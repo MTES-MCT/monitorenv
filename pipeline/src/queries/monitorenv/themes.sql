@@ -1,0 +1,1 @@
+SELECT id, name, parent_id FROM public.themes;
