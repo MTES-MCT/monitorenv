@@ -7,7 +7,7 @@ context('Axe core RGAA check that ', () => {
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
-    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v2/regulatory-areas').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
     cy.intercept('GET', '/bff/v1/dashboards').as('getDashboards')
     cy.viewport(1280, 1024)

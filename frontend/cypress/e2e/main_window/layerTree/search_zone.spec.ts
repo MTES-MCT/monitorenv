@@ -4,7 +4,7 @@ context('LayerTree > Search zone', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
-    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v2/regulatory-areas').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
     cy.visit('/#@-196785.63,5515456.96,7.26')
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])

@@ -4,7 +4,7 @@ describe('Edit Vigilance Area', () => {
   beforeEach(() => {
     cy.intercept('GET', 'https://api.mapbox.com/**', FAKE_MAPBOX_RESPONSE)
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
-    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v2/regulatory-areas').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
 
     cy.viewport(1580, 1024)
@@ -50,6 +50,7 @@ describe('Edit Vigilance Area', () => {
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
     cy.wait(300)
     cy.clickButton('Arbre des couches')
+    cy.fill('Période de vigilance', 'Cette année')
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
 
     cy.intercept('PUT', '/bff/v1/vigilance_areas/7').as('editVigilanceArea')
@@ -64,7 +65,7 @@ describe('Edit Vigilance Area', () => {
     cy.get('#root').click(1030, 490)
 
     cy.clickButton("Ajouter la zone réglementaire Réglementation dans la réserve naturelle nationale d'Iroise")
-    cy.clickButton('Ajouter la zone réglementaire Interdiction aux engins à moteur')
+    cy.clickButton('Ajouter la zone réglementaire Article 1')
     cy.getDataCy('regulatory-area-item').should('have.length', 2)
 
     cy.clickButton('Valider la sélection')
@@ -84,7 +85,7 @@ describe('Edit Vigilance Area', () => {
       // check if the regulatory area is added
       cy.clickButton('Mes zones réglementaires')
       cy.clickButton('Interdiction VNM Molene')
-      cy.getDataCy('my-zone-Interdiction aux engins à moteur').should('exist')
+      cy.getDataCy('my-zone-Article 1').should('exist')
 
       // Reset data
       cy.clickButton('Editer')

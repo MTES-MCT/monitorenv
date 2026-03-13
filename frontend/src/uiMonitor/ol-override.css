@@ -21,14 +21,14 @@
 }
 
 .ol-scale-line {
-  border-radius: 0px;
-  position: fixed;
+  border-radius: 0;
+  position: absolute;
   bottom: 9px;
   left: 282px;
   display: inline-block;
-  margin: 0px;
+  margin: 0;
   padding: 2px 1px 1px 2px;
-  font-size: 0.9em;
+  font-size: 12px;
   text-decoration: none;
   text-align: center;
   background-color: #3b4559;
@@ -42,15 +42,17 @@
   border-color: white;
   pointer-events: auto;
 }
+
 .ol-control.ol-zoom {
   display: none;
 }
+
 .ol-control.zoom {
   bottom: 38px;
   left: 0.5em;
   width: 25px;
   height: 53px;
-  position: fixed;
+  position: absolute;
 }
 
 .ol-control.zoom > button {

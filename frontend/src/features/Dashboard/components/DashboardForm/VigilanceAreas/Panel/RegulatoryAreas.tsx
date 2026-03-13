@@ -1,7 +1,8 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
+import { RegulatoryAreasPanel } from '@features/RegulatoryArea/components/RegulatoryAreaPanel'
 import { PanelInlineItemLabel, PanelSubPart } from '@features/VigilanceArea/components/VigilanceAreaForm/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -14,16 +15,15 @@ import { Projection, transformExtent } from 'ol/proj'
 import styled from 'styled-components'
 
 import { ButtonsContainer, Container, Name, StyledButton } from './style'
-import { RegulatoryAreasPanel } from '../../components/RegulatoryAreasPanel'
 
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: number[] }) {
   const dispatch = useAppDispatch()
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-
-  const regulatoryAreas = regulatoryAreaIds.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
+  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(regulatoryAreaIds, {
+    skip: regulatoryAreaIds.length === 0
+  })
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const regulatoryIdsToDisplay = useAppSelector(state =>
@@ -52,7 +52,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
     }
   }
 
-  const showRegulatoryAreaLayer = (event, regulatoryArea: RegulatoryLayerCompact | undefined) => {
+  const showRegulatoryAreaLayer = (event, regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox | undefined) => {
     event.stopPropagation()
 
     if (!regulatoryArea?.id) {

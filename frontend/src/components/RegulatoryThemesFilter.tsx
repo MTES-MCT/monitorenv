@@ -1,43 +1,55 @@
 import { useGetThemesQuery } from '@api/themesAPI'
-import { setFilteredRegulatoryThemes } from '@features/layersSelector/search/slice'
-import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
 
-import type { ThemeOption } from '../domain/entities/themes'
+import type { ThemeFromAPI, ThemeOption } from '../domain/entities/themes'
 
-export function RegulatoryThemesFilter({ style }: { style?: React.CSSProperties }) {
-  const dispatch = useAppDispatch()
-
+export function RegulatoryThemesFilter({
+  error = undefined,
+  isErrorMessageHidden = false,
+  isLabelHidden = true,
+  isRequired = false,
+  isTransparent = true,
+  label,
+  onChange,
+  style,
+  value
+}: {
+  error?: string
+  isErrorMessageHidden?: boolean
+  isLabelHidden?: boolean
+  isRequired?: boolean
+  isTransparent?: boolean
+  label?: string
+  onChange: (nextThemes: ThemeOption[] | ThemeFromAPI[] | undefined) => void
+  style?: React.CSSProperties
+  value: ThemeOption[] | ThemeFromAPI[]
+}) {
   const { data: themes } = useGetThemesQuery()
 
   const themesOptions = useMemo(() => getThemesAsOptions(Object.values(themes ?? [])), [themes])
-
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
-
-  const handleSetFilteredRegulatoryThemes = (nextThemes: ThemeOption[] | undefined = []) => {
-    dispatch(setFilteredRegulatoryThemes(nextThemes))
-  }
 
   return (
     <CheckTreePicker
       key={`regulatory-themes-${themesOptions.length}`}
       childrenKey="subThemes"
-      isLabelHidden
-      isTransparent
-      label="Filtre thématiques et sous-thématiques"
+      error={error}
+      isErrorMessageHidden={isErrorMessageHidden}
+      isLabelHidden={isLabelHidden}
+      isRequired={isRequired}
+      isTransparent={isTransparent}
+      label={label ?? 'Filtre thématiques et sous-thématiques'}
       labelKey="name"
       name="regulatoryThemes"
-      onChange={handleSetFilteredRegulatoryThemes}
+      onChange={onChange}
       options={themesOptions}
       placeholder="Thématiques et sous-thématiques"
       renderedChildrenValue="Sous-thém."
       renderedValue="Thématiques"
       shouldShowLabels={false}
       style={style}
-      value={filteredRegulatoryThemes}
+      value={value}
       valueKey="id"
     />
   )

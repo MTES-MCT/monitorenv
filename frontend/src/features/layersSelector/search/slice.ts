@@ -13,7 +13,6 @@ type LayerSearchState = {
   isAmpSearchResultsVisible: boolean
   isRegulatorySearchResultsVisible: boolean
   isVigilanceAreaSearchResultsVisible: boolean
-  regulatoryLayersSearchResult: number[] | undefined
   searchExtent: number[] | undefined
   shouldFilterSearchOnMapExtent: boolean
 }
@@ -27,7 +26,6 @@ const initialState: LayerSearchState = {
   isAmpSearchResultsVisible: false,
   isRegulatorySearchResultsVisible: false,
   isVigilanceAreaSearchResultsVisible: false,
-  regulatoryLayersSearchResult: undefined,
   searchExtent: undefined,
   shouldFilterSearchOnMapExtent: false
 }
@@ -83,10 +81,6 @@ const layerSearchSlice = createSlice({
       state.isVigilanceAreaSearchResultsVisible = action.payload
     },
 
-    setRegulatoryLayersSearchResult(state, action: PayloadAction<number[] | undefined>) {
-      state.regulatoryLayersSearchResult = action.payload
-    },
-
     setSearchExtent(state, action: PayloadAction<number[] | undefined>) {
       state.searchExtent = action.payload
     },
@@ -109,7 +103,6 @@ export const {
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
   setIsVigilanceAreaSearchResultsVisible,
-  setRegulatoryLayersSearchResult,
   setSearchExtent,
   setShouldFilterSearchOnMapExtent
 } = layerSearchSlice.actions

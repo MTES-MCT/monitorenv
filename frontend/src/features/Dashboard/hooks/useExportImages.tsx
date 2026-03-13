@@ -1,5 +1,5 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getDashboardById } from '@features/Dashboard/slice'
@@ -110,9 +110,12 @@ export function useExportImages() {
   const activeDashboard = dashboard?.dashboard
   const backgroundMap = dashboard?.backgroundMap
 
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery(undefined, { skip: !dashboard })
   const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
+
+  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(activeDashboard?.regulatoryAreaIds ?? [], {
+    skip: !dashboard || (activeDashboard?.regulatoryAreaIds ?? []).length === 0
+  })
 
   const layersVectorSourceRef = useRef(new VectorSource())
   const layersVectorLayerRef = useRef(

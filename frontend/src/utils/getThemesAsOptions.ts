@@ -66,3 +66,6 @@ export const sortThemes = (a: ThemeOption, b: ThemeOption) => {
 
   return a?.name.localeCompare(b?.name)
 }
+
+export const getThemeIds = themes =>
+  themes?.flatMap(theme => [theme.id, ...(theme.subThemes?.map(subTheme => subTheme.id) ?? [])])

@@ -1,5 +1,5 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
 import { getAMPLayerStyle } from '@features/map/layers/AMP/AMPLayers.style'
@@ -63,30 +63,29 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   vectorLayerRef.current.name = Layers.VIGILANCE_AREA.code
 
   // Regulatory Areas Layers
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(regulatoryAreasToAdd, {
+    skip: regulatoryAreasToAdd.length === 0
+  })
   const regulatoryAreasFeatures = useMemo(() => {
-    if (!regulatoryLayers || regulatoryAreasToAdd.length === 0) {
+    if (!regulatoryAreas || regulatoryAreasToAdd.length === 0) {
       return []
     }
 
-    return regulatoryAreasToAdd?.reduce((feats: Feature[], regulatorylayerId) => {
-      const regulatorylayer = regulatoryLayers.entities[regulatorylayerId]
-      if (regulatorylayer) {
+    return regulatoryAreas.reduce<Feature<Geometry>[]>((acc, regulatoryArea) => {
+      if (regulatoryArea) {
         const feature = getRegulatoryFeature({
           code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
           isolatedLayer,
-          layer: regulatorylayer
+          layer: regulatoryArea
         })
-        if (!feature) {
-          return feats
+        if (feature) {
+          acc.push(feature)
         }
-
-        feats.push(feature)
       }
 
-      return feats
+      return acc
     }, [])
-  }, [regulatoryLayers, regulatoryAreasToAdd, isolatedLayer])
+  }, [regulatoryAreas, regulatoryAreasToAdd, isolatedLayer])
 
   const regulatoryAreasVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const regulatoryAreasVectorLayerRef = useRef(

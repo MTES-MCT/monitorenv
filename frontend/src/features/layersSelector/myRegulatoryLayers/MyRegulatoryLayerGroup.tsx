@@ -1,10 +1,10 @@
+import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { getTitle } from 'domain/entities/layers/utils'
 import { intersection } from 'lodash'
 import { useCallback, useMemo } from 'react'
 
 import { RegulatoryLayerZone } from './MyRegulatoryLayerZone'
-import { getNumberOfRegulatoryLayerZonesByGroupName } from '../../../api/regulatoryLayersAPI'
 import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import {
   hideRegulatoryLayers,
@@ -16,7 +16,7 @@ import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getExtentOfLayersGroup } from '../utils/getExtentOfLayersGroup'
 import { MyLayerGroup } from '../utils/MyLayerGroup'
 
-import type { RegulatoryLayerCompact } from '../../../domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export function RegulatoryLayerGroup({
   groupName,
@@ -24,7 +24,7 @@ export function RegulatoryLayerGroup({
   setTotalNumberOfZones
 }: {
   groupName: string
-  layers: RegulatoryLayerCompact[]
+  layers: RegulatoryArea.RegulatoryAreaWithBbox[]
   setTotalNumberOfZones: (totalNumberOfZones: number) => void
 }) {
   const dispatch = useAppDispatch()
@@ -35,7 +35,9 @@ export function RegulatoryLayerGroup({
     () => intersection(groupLayerIds, showedRegulatoryLayerIds).length > 0,
     [groupLayerIds, showedRegulatoryLayerIds]
   )
-  const totalNumberOfZones = useAppSelector(state => getNumberOfRegulatoryLayerZonesByGroupName(state, groupName))
+
+  const { data: layerNames } = useGetLayerNamesQuery()
+  const totalNumberOfZones = useMemo(() => layerNames?.layerNames[groupName] ?? 0, [layerNames, groupName])
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
 

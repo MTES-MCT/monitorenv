@@ -92,8 +92,8 @@ export function Brief({ author, brief, description, isLight, title }: BriefProps
           <View style={layoutStyle.section}>
             <VigilanceAreas
               images={brief.images ?? []}
-              linkedAMPs={brief.allLinkedAMPs}
-              linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas}
+              linkedAMPs={brief.allLinkedAMPs ?? []}
+              linkedRegulatoryAreas={brief.allLinkedRegulatoryAreas ?? []}
               vigilanceAreas={brief.vigilanceAreas}
             />
           </View>

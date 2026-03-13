@@ -1,5 +1,4 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -8,51 +7,23 @@ import Fuse, { type Expression } from 'fuse.js'
 import { debounce } from 'lodash'
 import { useCallback, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
 
-import { setAMPsSearchResult, setRegulatoryLayersSearchResult } from '../slice'
-import { areArraysEqual, buildRegulatoryAreaSearchText } from './utils'
+import { setAMPsSearchResult } from '../slice'
+import { areArraysEqual } from './utils'
 
 import type { AMP } from 'domain/entities/AMPs'
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
-
-function applyRegulatoryAreasFilters(items, params) {
-  const { controlPlan, filteredRegulatoryTags, filteredRegulatoryThemes } = params
-
-  return items.filter(item => {
-    if (controlPlan && item.plan?.includes(controlPlan) === false) {
-      return false
-    }
-
-    if (filteredRegulatoryTags.length && !filteredRegulatoryTags.some(t => item.tags.some(tag => tag.id === t.id))) {
-      return false
-    }
-    if (
-      filteredRegulatoryThemes.length &&
-      !filteredRegulatoryThemes.some(t => item.themes.some(theme => theme.id === t.id))
-    ) {
-      return false
-    }
-
-    return true
-  })
-}
 
 export function useSearchLayers() {
   const dispatch = useAppDispatch()
 
   const lastAMPsResultRef = useRef<number[] | undefined>()
-  const lastRegulatoryResultRef = useRef<number[] | undefined>()
-
-  const { data: amps } = useGetAMPsQuery()
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
 
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
-  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
-  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
-  const controlPlan = useAppSelector(state => state.layerSearch.controlPlan)
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
+
+  const { data: amps } = useGetAMPsQuery()
 
   const fuseAMPs = useMemo(() => {
     if (!amps?.entities) {
@@ -67,25 +38,6 @@ export function useSearchLayers() {
       threshold: 0.2
     })
   }, [amps])
-
-  const fuseRegulatory = useMemo(() => {
-    if (!regulatoryLayers?.entities) {
-      return null
-    }
-
-    const regulatoryList = Object.values(regulatoryLayers.entities).map(layer => ({
-      ...layer,
-      searchText: buildRegulatoryAreaSearchText(layer)
-    }))
-
-    return new Fuse(regulatoryList, {
-      ignoreLocation: true,
-      includeScore: false,
-      keys: ['searchText'],
-      minMatchCharLength: 2,
-      threshold: 0.2
-    })
-  }, [regulatoryLayers])
 
   const dispatchIfChanged = useCallback(
     (
@@ -105,9 +57,6 @@ export function useSearchLayers() {
   const runSearch = useCallback(() => {
     const shouldSearchByText = !!globalSearchText && globalSearchText.length > 2
     const shouldSearchThroughAMPTypes = filteredAmpTypes.length > 0
-    const shouldSearchThroughRegulatoryTags = filteredRegulatoryTags.length > 0
-    const shouldSearchThroughRegulatoryThemes = filteredRegulatoryThemes.length > 0
-    const shouldSearchThroughControlPlan = !!controlPlan
 
     dispatch(closeMetadataPanel())
 
@@ -150,57 +99,15 @@ export function useSearchLayers() {
     } else {
       dispatchIfChanged(undefined, lastAMPsResultRef, setAMPsSearchResult)
     }
-
-    // Regulatory Layers
-    if (
-      shouldSearchByText ||
-      shouldSearchThroughRegulatoryTags ||
-      shouldSearchThroughRegulatoryThemes ||
-      shouldSearchThroughControlPlan ||
-      shouldFilterSearchOnMapExtent
-    ) {
-      let searchedRegulatory
-
-      if (shouldSearchByText && fuseRegulatory) {
-        const filterExpression: Expression[] = [
-          {
-            $or: [{ $path: ['searchText'], $val: globalSearchText }]
-          }
-        ].filter(Boolean) as Expression[]
-
-        searchedRegulatory = fuseRegulatory.search<RegulatoryLayerCompact>({ $and: filterExpression }).map(r => r.item)
-      } else {
-        searchedRegulatory = regulatoryLayers?.entities ? Object.values(regulatoryLayers.entities) : undefined
-      }
-      searchedRegulatory = applyRegulatoryAreasFilters(searchedRegulatory, {
-        controlPlan,
-        filteredRegulatoryTags,
-        filteredRegulatoryThemes
-      })
-      const nextRegulatoryResult = getIntersectingLayerIds(
-        shouldFilterSearchOnMapExtent,
-        searchedRegulatory,
-        searchExtent
-      )
-
-      dispatchIfChanged(nextRegulatoryResult, lastRegulatoryResultRef, setRegulatoryLayersSearchResult)
-    } else {
-      dispatchIfChanged(undefined, lastRegulatoryResultRef, setRegulatoryLayersSearchResult)
-    }
   }, [
-    amps,
-    regulatoryLayers,
-    fuseAMPs,
-    fuseRegulatory,
     globalSearchText,
     filteredAmpTypes,
-    filteredRegulatoryTags,
-    filteredRegulatoryThemes,
-    controlPlan,
-    searchExtent,
-    shouldFilterSearchOnMapExtent,
     dispatch,
-    dispatchIfChanged
+    shouldFilterSearchOnMapExtent,
+    fuseAMPs,
+    searchExtent,
+    dispatchIfChanged,
+    amps?.entities
   ])
 
   const debouncedSearchRef = useRef(

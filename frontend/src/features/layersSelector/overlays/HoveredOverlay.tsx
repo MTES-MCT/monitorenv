@@ -2,10 +2,10 @@ import styled from 'styled-components'
 
 import { OverlayContent } from './OverlayContent'
 
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
-import type { RegulatoryLayerCompactProperties } from 'domain/entities/regulatory'
 import type { OverlayItem } from 'domain/types/map'
 
 export function HoveredOverlay({
@@ -17,7 +17,7 @@ export function HoveredOverlay({
   items:
     | OverlayItem<
         RegulatoryOrAMPOrViglanceAreaLayerType,
-        AMPProperties | RegulatoryLayerCompactProperties | VigilanceArea.VigilanceAreaProperties
+        AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties
       >[]
     | undefined
   pixel: number[] | undefined

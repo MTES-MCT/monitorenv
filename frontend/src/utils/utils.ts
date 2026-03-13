@@ -1,6 +1,7 @@
 /* eslint-disable no-bitwise, no-plusplus */
 
 import { localizedAreasColors } from '@features/LocalizedArea/constants'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { asArray, asString } from 'ol/color'
 
@@ -102,9 +103,9 @@ export function stringToColorInGroup(group: string, name: string, layerType?: st
       colors = [localizedAreasColors]
       break
     case Layers.REGULATORY_ENV.code:
-      if (plan === 'PIRC') {
+      if (plan === RegulatoryArea.RegulatoryAreaControlPlan.PIRC) {
         colors = [regulatoryFishColors]
-      } else if (plan === 'PSCEM') {
+      } else if (plan === RegulatoryArea.RegulatoryAreaControlPlan.PSCEM) {
         colors = [regulatoryEnvColors]
       } else {
         colors = [regulatoryEnvAndFishColors]

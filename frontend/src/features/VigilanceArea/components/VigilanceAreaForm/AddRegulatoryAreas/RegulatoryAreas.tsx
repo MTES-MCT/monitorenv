@@ -1,4 +1,4 @@
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 
 import { RegulatoryAreaItem } from './RegulatoryAreaItem'
@@ -8,15 +8,19 @@ type RegulatoryAreasProps = {
   linkedRegulatoryAreas: number[] | undefined
 }
 export function RegulatoryAreas({ isReadOnly = false, linkedRegulatoryAreas }: RegulatoryAreasProps) {
-  const { data: regulatoryLayers } = useGetRegulatoryLayersQuery()
-  const regulatoryAreas = linkedRegulatoryAreas
-    ?.map(regulatoryArea => regulatoryLayers?.entities[regulatoryArea])
-    .filter(regulatoryArea => !!regulatoryArea)
-    .sort((a, b) =>
-      (getRegulatoryAreaTitle(a?.polyName, a?.resume) ?? '').localeCompare(
-        getRegulatoryAreaTitle(b?.polyName, b?.resume) ?? ''
-      )
+  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(linkedRegulatoryAreas ?? [], {
+    skip: !linkedRegulatoryAreas || linkedRegulatoryAreas.length === 0
+  })
+
+  if (!linkedRegulatoryAreas || linkedRegulatoryAreas.length === 0) {
+    return null
+  }
+
+  const regulatoryAreas = [...(regulatoryLayers ?? [])].sort((a, b) =>
+    (getRegulatoryAreaTitle(a?.polyName, a?.resume) ?? '').localeCompare(
+      getRegulatoryAreaTitle(b?.polyName, b?.resume) ?? ''
     )
+  )
 
   return (
     <>

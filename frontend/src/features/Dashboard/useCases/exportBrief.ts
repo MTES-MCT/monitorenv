@@ -1,7 +1,7 @@
 import { getAmpsByIds } from '@api/ampsAPI'
 import { dashboardsAPI } from '@api/dashboardsAPI'
 import { recentActivityAPI } from '@api/recentActivity'
-import { getRegulatoryAreasByIds } from '@api/regulatoryLayersAPI'
+import { regulatoryAreasAPI } from '@api/regulatoryAreasAPI'
 import { reportingsAPI } from '@api/reportingsAPI'
 import {
   getDateRange,
@@ -87,8 +87,9 @@ export const exportBrief =
       Array.from(new Set(vigilanceAreas?.flatMap(vigilanceArea => vigilanceArea.linkedRegulatoryAreas ?? [])))
     ]
     const allLinkedAMPs = getAmpsByIds(getState(), allLinkedAMPIds)
-    const allLinkedRegulatoryAreas = getRegulatoryAreasByIds(getState(), allLinkedRegulatoryAreaIds)
-
+    const { data: allLinkedRegulatoryAreas } = await dispatch(
+      regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate(allLinkedRegulatoryAreaIds)
+    )
     const getVigilanceAreaAmpsAndRegulatoryAreas = (vigilanceArea: VigilanceArea.VigilanceArea) => {
       const filteredAmps = allLinkedAMPs
         .filter(amp => vigilanceArea.linkedAMPs?.includes(amp.id))
@@ -96,7 +97,7 @@ export const exportBrief =
         .join(', ')
 
       const filteredRegulatoryAreas = allLinkedRegulatoryAreas
-        .filter(regulatoryArea => vigilanceArea.linkedRegulatoryAreas?.includes(regulatoryArea.id))
+        ?.filter(regulatoryArea => vigilanceArea.linkedRegulatoryAreas?.includes(regulatoryArea.id))
         .map(regulatoryArea => regulatoryArea.resume)
         .join(', ')
 
@@ -146,16 +147,22 @@ export const exportBrief =
     })
 
     /* REGULATORY AREAS */
-    const regulatoryAreas = getRegulatoryAreasByIds(getState(), dashboard.regulatoryAreaIds)
-    const formattedRegulatoryAreas = regulatoryAreas.map(regulatoryArea => {
+    const { data: regulatoryAreas } =
+      dashboard.regulatoryAreaIds.length > 0
+        ? await dispatch(regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate(dashboard.regulatoryAreaIds))
+        : { data: [] }
+
+    const formattedRegulatoryAreas = regulatoryAreas?.map(regulatoryArea => {
       const layerTitle = getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume)
 
       return {
+        authorizationPeriods: regulatoryArea.authorizationPeriods,
         color: getRegulatoryEnvColorWithAlpha(displayTags(regulatoryArea.tags), layerTitle, regulatoryArea.plan),
         facade: regulatoryArea.facade,
         id: regulatoryArea.id,
         layerName: getTitle(regulatoryArea.layerName),
         polyName: getTitle(regulatoryArea.polyName),
+        prohibitionPeriods: regulatoryArea.prohibitionPeriods,
         refReg: regulatoryArea.refReg,
         resume: getTitle(regulatoryArea.resume),
         themes: displayThemes(regulatoryArea.themes),
@@ -163,7 +170,7 @@ export const exportBrief =
         url: regulatoryArea.url
       }
     })
-    const regulatoryAreasWithImages = formattedRegulatoryAreas.map(regulatoryArea => {
+    const regulatoryAreasWithImages = formattedRegulatoryAreas?.map(regulatoryArea => {
       const image = getImage(images ?? [], Dashboard.Layer.DASHBOARD_REGULATORY_AREAS, regulatoryArea.id)
       const minimap = getMinimap(images ?? [], Dashboard.Layer.DASHBOARD_REGULATORY_AREAS, regulatoryArea.id)
 
@@ -337,9 +344,9 @@ export const exportBrief =
         image: wholeImage,
         nearbyUnits: formattedNearbyUnits,
         recentActivity: formattedRecentActivity,
-        regulatoryAreas: regulatoryAreasWithImages,
+        regulatoryAreas: regulatoryAreasWithImages ?? [],
         reportings: formattedReportings ?? [],
-        vigilanceAreas: vigilanceAreasWithImagesAttachments
+        vigilanceAreas: vigilanceAreasWithImagesAttachments ?? []
       })
     )
 

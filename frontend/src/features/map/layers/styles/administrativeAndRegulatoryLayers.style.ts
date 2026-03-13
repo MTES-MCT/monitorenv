@@ -1,3 +1,4 @@
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
@@ -210,13 +211,13 @@ const getStyle = (color: string, feature: Feature) => {
     if (asMinimap) {
       return getColorWithAlpha(THEME.color.charcoal, 1)
     }
-    if (plan === 'PIRC') {
+    if (plan === RegulatoryArea.RegulatoryAreaControlPlan.PIRC) {
       return metadataIsShowed
         ? getColorWithAlpha(THEME.color.brightBlue, 0.7)
         : getColorWithAlpha(THEME.color.yaleBlue, 0.7)
     }
 
-    if (plan === 'PSCEM') {
+    if (plan === RegulatoryArea.RegulatoryAreaControlPlan.PSCEM) {
       return metadataIsShowed
         ? getColorWithAlpha(THEME.color.brightGreen, 0.7)
         : getColorWithAlpha(THEME.color.darkPaoloVeroneseGreen, 0.7)

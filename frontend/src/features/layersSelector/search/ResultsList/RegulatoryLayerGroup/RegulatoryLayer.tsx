@@ -1,3 +1,4 @@
+import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -7,7 +8,6 @@ import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
 
-import { useGetRegulatoryLayersQuery } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import {
@@ -26,11 +26,12 @@ import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 type RegulatoryLayerProps = {
+  groupName: string
   layerId: number
   searchedText: string
 }
 
-export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps) {
+export function RegulatoryLayer({ groupName, layerId, searchedText }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLLIElement>()
 
@@ -39,10 +40,14 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
-  const { layer } = useGetRegulatoryLayersQuery(undefined, {
-    selectFromResult: result => ({
-      layer: result?.currentData?.entities[layerId]
-    })
+  const { layer } = useGetRegulatoryAreasQuery(undefined, {
+    selectFromResult: result => {
+      const layerGroup = result?.currentData?.regulatoryAreasByLayer.find(group => group.group === groupName)
+
+      return {
+        layer: layerGroup?.regulatoryAreas.find(area => area.id === layerId)
+      }
+    }
   })
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
@@ -108,7 +113,7 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layerTitle ?? 'aucun'}
           plan={layer?.plan}
-          type={layer?.tags.map(({ name }) => name).join(', ') ?? 'aucun'}
+          type={layer?.tags?.map(({ name }) => name).join(', ') ?? 'aucun'}
         />
         <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layerTitle}>
           <Highlighter

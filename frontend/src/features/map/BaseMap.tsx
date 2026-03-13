@@ -70,7 +70,13 @@ export const initialMap = new OpenLayerMap({
   })
 })
 
-function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMapChildrenProps> | null> }) {
+function BaseMapNotMemoized({
+  children,
+  className
+}: {
+  children: Array<ReactElement<BaseMapChildrenProps> | null>
+  className?: string
+}) {
   const dispatch = useAppDispatch()
   const { isGridLinesVisible } = useAppSelector(state => state.administrative)
 
@@ -215,7 +221,8 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
 
   useEffect(() => {
     initialMap.setTarget(mapElement.current)
-    initialMap.addControl(updateScaleControl())
+    const scaleControl = updateScaleControl()
+    initialMap.addControl(scaleControl)
     initialMap.on('click', event => handleMapClick(event, initialMap))
     initialMap.on('pointermove', event => handleMouseOverFeature(event, initialMap))
     graticuleRef.current = new Graticule({
@@ -234,7 +241,7 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
       initialMap.un('click', event => handleMapClick(event, initialMap))
       initialMap.un('pointermove', event => handleMouseOverFeature(event, initialMap))
       initialMap.setTarget(undefined)
-      initialMap.getControls().clear()
+      initialMap.removeControl(scaleControl)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -277,7 +284,7 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
   }
 
   return (
-    <MapWrapper>
+    <MapWrapper className={className}>
       <MapContainer ref={mapElement} />
       {Children.map(
         children,
@@ -315,10 +322,13 @@ function BaseMapNotMemoized({ children }: { children: Array<ReactElement<BaseMap
 
 export const BaseMap = memo(BaseMapNotMemoized)
 
-const StyledScaleLine = styled.div``
+const StyledScaleLine = styled.div`
+  height: 0px;
+`
 const MapWrapper = styled.div`
   display: flex;
   flex: 1;
+  position: relative;
 `
 
 const MapContainer = styled.div`
@@ -329,6 +339,9 @@ const MapContainer = styled.div`
 `
 
 const StyledDistanceUnitContainer = styled.div`
+  bottom: 40px;
+  left: 280px;
+  position: absolute;
   z-index: 2;
 `
 
@@ -341,21 +354,18 @@ const Header = styled.div`
 `
 
 const DistanceUnitsTypeSelection = styled.div<{ $isOpen: boolean }>`
-  position: absolute;
-  bottom: 40px;
-  left: 283px;
-  margin: 1px;
+  align-items: center;
+  background-color: ${p => p.theme.color.white};
   color: ${p => p.theme.color.slateGray};
   display: flex;
   flex-direction: column;
-  align-items: center;
+  height: ${props => (props.$isOpen ? 69 : 0)}px;
+  margin: 1px;
   text-align: center;
-  background-color: ${p => p.theme.color.white};
-  width: 191px;
+  transition: all 0.5s;
   opacity: ${props => (props.$isOpen ? 1 : 0)};
   visibility: ${props => (props.$isOpen ? 'visible' : 'hidden')};
-  height: ${props => (props.$isOpen ? 69 : 0)}px;
-  transition: all 0.5s;
+  width: 191px;
 
   > fieldset {
     flex-grow: 2;

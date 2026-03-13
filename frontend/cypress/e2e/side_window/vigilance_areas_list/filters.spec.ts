@@ -1,7 +1,7 @@
 context('Side Window > Vigilance Areas List > Filter Bar', () => {
   beforeEach(() => {
     cy.intercept('GET', '/bff/v1/amps').as('getAmps')
-    cy.intercept('GET', '/bff/v1/regulatory').as('getRegulatoryAreas')
+    cy.intercept('GET', '/bff/v2/regulatory-areas').as('getRegulatoryAreas')
     cy.intercept('GET', '/bff/v1/vigilance_areas').as('getVigilanceAreas')
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`)

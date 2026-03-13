@@ -30,15 +30,10 @@ export const AmpsPanel = forwardRef<HTMLDivElement, { layerId: number; onClose: 
       <Wrapper ref={ref} {...props}>
         {ampMetadata ? (
           <>
-            <Header data-cy="regulatory-metadata-header">
+            <Header>
               <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={ampMetadata?.name} type={ampMetadata?.type} />
               <Name title={getTitle(ampMetadata?.name)}>{getTitle(ampMetadata?.name)}</Name>
-              <IconButton
-                accent={Accent.TERTIARY}
-                data-cy="regulatory-layers-metadata-close"
-                Icon={Icon.Close}
-                onClick={onClose}
-              />
+              <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onClose} />
             </Header>
             <Content>
               <Zone>

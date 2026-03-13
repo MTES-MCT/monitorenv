@@ -2,7 +2,6 @@ import { ActiveDashboardLayer } from '@features/Dashboard/components/Layers/Acti
 import { DashboardRecentActivityLayer } from '@features/Dashboard/components/Layers/DashboardRecentActivityLayer'
 import { DashboardsLayer } from '@features/Dashboard/components/Layers/DashboardsLayer'
 import { DrawDashboardLayer } from '@features/Dashboard/components/Layers/DrawDashboardLayer'
-import { DashboardPreviewLayer } from '@features/Dashboard/components/Layers/PreviewDashboardLayer'
 import { DashboardReportingOverlay } from '@features/Dashboard/components/Layers/ReportingOverlay'
 import { SelectedDashboardLayer } from '@features/Dashboard/components/Layers/SelectedDashboardLayer'
 import { LayersOverlay } from '@features/layersSelector/overlays'
@@ -75,6 +74,7 @@ export function Map() {
 
   const displayRecentActivityLegend =
     (displayRecentActivityLayer || !!activeDashboardId) && !isRecentActivityDialogVisible
+  const selectedBaseLayer = useAppSelector(state => state.map.selectedBaseLayer)
 
   const baseChildren = [
     // @ts-ignore
@@ -84,7 +84,7 @@ export function Map() {
     // @ts-ignore
     <MapCoordinatesBox key="MapCoordinatesBox" />,
     // @ts-ignore
-    <MapLayer key="MapLayer" />,
+    <MapLayer key="MapLayer" selectedBaseLayer={selectedBaseLayer} />,
     // @ts-ignore
     <InterestPointLayer key="InterestPointLayer" />,
 
@@ -97,6 +97,7 @@ export function Map() {
     <RegulatoryLayers key="RegulatoryLayers" />,
     // @ts-ignore
     <RegulatoryPreviewLayer key="RegulatoryPreviewLayer" />,
+
     // @ts-ignore
     <AdministrativeLayers key="AdministrativeLayers" />,
     // @ts-ignore
@@ -207,8 +208,6 @@ export function Map() {
         <DrawDashboardLayer key="DrawDashboardLayer" />,
         // @ts-ignore
         <ActiveDashboardLayer key="ActiveDashboardLayer" />,
-        // @ts-ignore
-        <DashboardPreviewLayer key="DashboardPreviewLayer" />,
         // @ts-ignore
         <DashboardReportingOverlay key="DashboardReportingOverlay" />,
         // @ts-ignore

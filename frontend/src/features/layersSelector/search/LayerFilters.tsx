@@ -3,6 +3,7 @@ import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { TransparentButton } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
 import {
   INITIAL_STATE,
@@ -48,12 +49,12 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 const CONTROL_PLAN_AS_OPTIONS = [
   {
-    label: 'PIRC',
-    value: 'PIRC'
+    label: RegulatoryArea.RegulatoryAreaControlPlan.PIRC,
+    value: RegulatoryArea.RegulatoryAreaControlPlan.PIRC
   },
   {
-    label: 'PSCEM',
-    value: 'PSCEM'
+    label: RegulatoryArea.RegulatoryAreaControlPlan.PSCEM,
+    value: RegulatoryArea.RegulatoryAreaControlPlan.PSCEM
   }
 ]
 export function LayerFilters() {
@@ -127,12 +128,24 @@ export function LayerFilters() {
     dispatch(vigilanceAreaFiltersActions.resetFilters())
   }
 
+  const handleSetFilteredRegulatoryThemes = (nextThemes: ThemeOption[] | undefined = []) => {
+    dispatch(setFilteredRegulatoryThemes(nextThemes))
+  }
+
+  const handleSetFilteredRegulatoryTags = (nextTags: TagOption[] | undefined = []) => {
+    dispatch(setFilteredRegulatoryTags(nextTags))
+  }
+
   return (
     <FiltersWrapper>
       {!isLinkingAmpToVigilanceArea && (
         <>
           <SelectContainer>
-            <RegulatoryThemesFilter style={{ flex: 1 }} />
+            <RegulatoryThemesFilter
+              onChange={handleSetFilteredRegulatoryThemes}
+              style={{ flex: 1 }}
+              value={filteredRegulatoryThemes}
+            />
             <Tooltip>
               Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
             </Tooltip>
@@ -154,7 +167,11 @@ export function LayerFilters() {
           </SelectContainer>
 
           <SelectContainer>
-            <RegulatoryTagsFilter style={{ flex: 1 }} />
+            <RegulatoryTagsFilter
+              onChange={handleSetFilteredRegulatoryTags}
+              style={{ flex: 1 }}
+              value={filteredRegulatoryTags}
+            />
             <Tooltip>
               Ce champ est utilisé comme critère de recherche dans les zones réglementaire et les zones de vigilance.
             </Tooltip>

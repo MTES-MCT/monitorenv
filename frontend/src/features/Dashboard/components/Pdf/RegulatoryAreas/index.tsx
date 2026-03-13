@@ -1,25 +1,27 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { THEME } from '@mtes-mct/monitor-ui'
 import { Text, View } from '@react-pdf/renderer'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 
+import { Dot } from '../icons/Dot'
 import { AreaImage } from '../Layout/AreaImage'
 import { AreaLink } from '../Layout/AreaLink'
 import { areaStyle, layoutStyle } from '../style'
 import { getImage, getMinimap } from '../utils'
 
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
-import type { RegulatoryLayerWithMetadata } from 'domain/entities/regulatory'
+import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export function RegulatoryAreas({
   images,
   regulatoryAreas
 }: {
   images: ExportImageType[]
-  regulatoryAreas: RegulatoryLayerWithMetadata[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
 }) {
   return (
     <>
@@ -95,6 +97,28 @@ export function RegulatoryAreas({
                     </View>
                   </View>
                 </View>
+                {regulatoryArea.authorizationPeriods && (
+                  <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
+                    <View style={[areaStyle.description, layoutStyle.row]}>
+                      <Dot color={THEME.color.mediumSeaGreen} size={4} />
+                      <Text>Période d&apos;autorisation</Text>
+                    </View>
+                    <View style={areaStyle.details}>
+                      <Text>{regulatoryArea.authorizationPeriods}</Text>
+                    </View>
+                  </View>
+                )}
+                {regulatoryArea.prohibitionPeriods && (
+                  <View style={[areaStyle.content, { borderTop: `1 solid ${THEME.color.gainsboro}` }]}>
+                    <View style={[areaStyle.description, layoutStyle.row]}>
+                      <Dot color={THEME.color.maximumRed} size={4} />
+                      <Text>Période d&apos;interdiction</Text>
+                    </View>
+                    <View style={areaStyle.details}>
+                      <Text>{regulatoryArea.prohibitionPeriods}</Text>
+                    </View>
+                  </View>
+                )}
                 <AreaLink text={regulatoryArea.refReg} url={regulatoryArea.url} />
               </View>
             </View>

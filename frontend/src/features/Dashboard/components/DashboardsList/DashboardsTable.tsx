@@ -1,5 +1,5 @@
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
-import { useGetRegulatoryLayersQuery } from '@api/regulatoryLayersAPI'
+import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { Table } from '@components/Table'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useTable } from '@hooks/useTable'
@@ -26,20 +26,23 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
   const { pathname } = useLocation()
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -25 : 0
 
-  const { data: regulatoryAreas } = useGetRegulatoryLayersQuery()
+  const { data: regulatoryAreas } = useGetRegulatoryAreasQuery()
   const { data: controlUnits } = useGetControlUnitsQuery()
+
+  const flattenRegulatoryAreas = useMemo(
+    () => regulatoryAreas?.regulatoryAreasByLayer.flatMap(group => group.regulatoryAreas) ?? [],
+    [regulatoryAreas]
+  )
 
   const columns = useMemo(
     () =>
       isLoading
-        ? Columns(Object.values(regulatoryAreas?.entities ?? {}), controlUnits, legacyFirefoxOffset, false).map(
-            column => ({
-              ...column,
-              cell: StyledSkeletonRow
-            })
-          )
-        : Columns(Object.values(regulatoryAreas?.entities ?? {}), controlUnits, legacyFirefoxOffset, isFetching),
-    [isFetching, isLoading, controlUnits, regulatoryAreas, legacyFirefoxOffset]
+        ? Columns(flattenRegulatoryAreas, controlUnits, legacyFirefoxOffset, false).map(column => ({
+            ...column,
+            cell: StyledSkeletonRow
+          }))
+        : Columns(flattenRegulatoryAreas, controlUnits, legacyFirefoxOffset, isFetching),
+    [isFetching, isLoading, controlUnits, flattenRegulatoryAreas, legacyFirefoxOffset]
   )
 
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'updatedAt' }])

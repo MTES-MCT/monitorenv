@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RestController
+@RestController("regulatoryAreasV1")
 @RequestMapping("/bff/v1/regulatory")
 @Tag(name = "BFF.Regulatory", description = "API regulatory layers")
 class RegulatoryAreas(
@@ -33,6 +33,10 @@ class RegulatoryAreas(
     @Operation(summary = "Get regulatory Areas")
     fun getAll(): List<RegulatoryAreaWithMetadataDataOutput> {
         val regulatoryAreas = getAllRegulatoryAreas.execute()
-        return regulatoryAreas.map { RegulatoryAreaWithMetadataDataOutput.fromRegulatoryAreaEntity(it) }
+        return regulatoryAreas.map {
+            RegulatoryAreaWithMetadataDataOutput.fromRegulatoryAreaEntity(
+                it,
+            )
+        }
     }
 }
