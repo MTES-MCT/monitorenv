@@ -75,6 +75,8 @@ class EnvActionModel(
     @Column(name = "is_seafarers_control") val isSeafarersControl: Boolean? = null,
     @Column(name = "observations_by_unit") val observationsByUnit: String? = null,
     @Column(name = "open_by") val openBy: String? = null,
+    @Column(name = "has_diving_during_operations") val hasDivingDuringOperation: Boolean? = null,
+    @Column(name = "incident_during_operation") val incidentDuringOperation: Boolean? = null,
     @OneToMany(
         fetch = FetchType.LAZY,
         mappedBy = "attachedEnvAction",
@@ -95,6 +97,7 @@ class EnvActionModel(
         cascade = [CascadeType.ALL],
     )
     var tags: List<TagEnvActionModel>,
+
 ) {
     fun toActionEntity(mapper: ObjectMapper): EnvActionEntity =
         EnvActionMapper.getEnvActionEntityFromJSON(

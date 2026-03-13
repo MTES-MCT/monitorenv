@@ -49,18 +49,35 @@ class EnvActionITest {
         val today = ZonedDateTime.now(ZoneOffset.UTC)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
         val observationsByUnit = "observationsByUnits"
+        val hasDivingDuringOperation = true
+        val incidentDuringOperation = true
         val partialEnvActionAsJson =
             """
             { "actionEndDateTimeUtc": "$tomorrow",
               "actionStartDateTimeUtc": "$today",
-              "observationsByUnit": "$observationsByUnit"}
+              "observationsByUnit": "$observationsByUnit",
+              "hasDivingDuringOperation": "$hasDivingDuringOperation",
+              "incidentDuringOperation": "$incidentDuringOperation",
+            }
             """.trimIndent()
-        val patchedEnvAction = anEnvAction(objectMapper, id, yesterday, today, observationsByUnit)
+        val patchedEnvAction = anEnvAction(
+            objectMapper,
+            id,
+            yesterday,
+            today,
+            observationsByUnit,
+            listOf(),
+            listOf(),
+            hasDivingDuringOperation,
+            incidentDuringOperation
+        )
         val patchableEnvActionEntity =
             PatchableEnvActionEntity(
                 actionStartDateTimeUtc = Optional.of(today),
                 actionEndDateTimeUtc = Optional.of(tomorrow),
                 Optional.of(observationsByUnit),
+                Optional.of(hasDivingDuringOperation),
+                Optional.of(incidentDuringOperation),
             )
 
         given(patchEnvAction.execute(id, patchableEnvActionEntity)).willReturn(patchedEnvAction)
@@ -88,6 +105,16 @@ class EnvActionITest {
                 jsonPath(
                     "$.observationsByUnit",
                     equalTo(patchedEnvAction.observationsByUnit),
+                ),
+            ).andExpect(
+                jsonPath(
+                    "$.hasDivingDuringOperation",
+                    equalTo(patchedEnvAction.hasDivingDuringOperation),
+                ),
+            ).andExpect(
+                jsonPath(
+                    "$.incidentDuringOperation",
+                    equalTo(patchedEnvAction.incidentDuringOperation),
                 ),
             )
     }

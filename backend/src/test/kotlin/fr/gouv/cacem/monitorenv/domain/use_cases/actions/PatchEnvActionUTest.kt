@@ -35,11 +35,18 @@ class PatchEnvActionUTest {
         val tomorrow = ZonedDateTime.now().plusDays(1)
         val observationsByUnit = "observations"
         val patchedObservationsByUnit = "patched observations"
+        val hasDivingDuringOperation = true
+        val patchedHasDivingDuringOperation = false
+        val incidentDuringOperation = true
+        val patchedIncidentDuringOperation = false
+
         val patchableEnvActionEntity =
             PatchableEnvActionEntity(
                 Optional.of(today),
                 Optional.of(tomorrow),
                 Optional.of(patchedObservationsByUnit),
+                Optional.of(patchedHasDivingDuringOperation),
+                Optional.of(patchedIncidentDuringOperation),
             )
         val envActionFromDatabase =
             anEnvAction(
@@ -48,9 +55,23 @@ class PatchEnvActionUTest {
                 ZonedDateTime.now(),
                 ZonedDateTime.now().plusDays(2),
                 observationsByUnit,
+                listOf(),
+                listOf(),
+                hasDivingDuringOperation,
+                incidentDuringOperation
             )
         val envActionPatched =
-            anEnvAction(objectMapper, envActionFromDatabase.id, today, tomorrow, patchedObservationsByUnit)
+            anEnvAction(
+                objectMapper,
+                envActionFromDatabase.id,
+                today,
+                tomorrow,
+                patchedObservationsByUnit,
+                listOf(),
+                listOf(),
+                patchedHasDivingDuringOperation,
+                patchedIncidentDuringOperation
+            )
 
         given(envActionRepository.findById(id)).willReturn(envActionFromDatabase)
         patchEntity.execute(envActionFromDatabase, patchableEnvActionEntity)
@@ -63,6 +84,8 @@ class PatchEnvActionUTest {
         assertThat(savedEnvAction.actionStartDateTimeUtc).isEqualTo(envActionPatched.actionStartDateTimeUtc)
         assertThat(savedEnvAction.actionEndDateTimeUtc).isEqualTo(envActionPatched.actionEndDateTimeUtc)
         assertThat(savedEnvAction.observationsByUnit).isEqualTo(envActionPatched.observationsByUnit)
+        assertThat(savedEnvAction.hasDivingDuringOperation).isEqualTo(envActionPatched.hasDivingDuringOperation)
+        assertThat(savedEnvAction.incidentDuringOperation).isEqualTo(envActionPatched.incidentDuringOperation)
         verify(envActionRepository).save(envActionPatched)
         assertThat(log.out).contains("Attempt to PATCH envaction $id")
         assertThat(log.out).contains("envaction $id patched")
@@ -72,7 +95,7 @@ class PatchEnvActionUTest {
     fun `execute() should throw BackendUsageException with message when the entity does not exist`() {
         // Given
         val id = UUID.randomUUID()
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null, null, null)
 
         given(envActionRepository.findById(id)).willReturn(null)
 

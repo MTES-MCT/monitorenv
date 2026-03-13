@@ -19,7 +19,7 @@ class PatchEnvActionEntityUTest {
         // Given
         val today = ZonedDateTime.now(ZoneOffset.UTC)
 
-        val patchableEnvActionEntity = PatchableEnvActionEntity(Optional.of(today), null, null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(Optional.of(today), null, null, null, null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
@@ -42,7 +42,7 @@ class PatchEnvActionEntityUTest {
     @Test
     fun `execute() should return envAction with actionStartDateTimeUtc null if its empty`() {
         // Given
-        val patchableEnvActionEntity = PatchableEnvActionEntity(Optional.empty(), null, null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(Optional.empty(), null, null, null, null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
@@ -67,7 +67,7 @@ class PatchEnvActionEntityUTest {
         // Given
         val today = ZonedDateTime.now(ZoneOffset.UTC)
 
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, Optional.of(today), null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, Optional.of(today), null, null, null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
@@ -90,7 +90,7 @@ class PatchEnvActionEntityUTest {
     @Test
     fun `execute() should return envAction with actionEndDateTimeUtc null if its empty`() {
         // Given
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, Optional.empty(), null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, Optional.empty(), null, null, null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
@@ -115,7 +115,7 @@ class PatchEnvActionEntityUTest {
         // Given
         val observationsByUnit = "observationsByUnit"
 
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, Optional.of(observationsByUnit))
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, Optional.of(observationsByUnit), null, null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
@@ -138,7 +138,7 @@ class PatchEnvActionEntityUTest {
     @Test
     fun `execute() should return envAction with observationsByUnit null if its empty`() {
         // Given
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, Optional.empty())
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, Optional.empty(), null, null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)
@@ -161,7 +161,7 @@ class PatchEnvActionEntityUTest {
     @Test
     fun `execute() should return envAction with old values if its null`() {
         // Given
-        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null)
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null, null, null)
         val id = UUID.randomUUID()
         val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
         val tomorrow = ZonedDateTime.now(ZoneOffset.UTC).plusDays(1)

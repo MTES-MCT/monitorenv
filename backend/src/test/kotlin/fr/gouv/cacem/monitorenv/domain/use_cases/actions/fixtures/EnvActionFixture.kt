@@ -41,6 +41,8 @@ class EnvActionFixture {
             observationsByUnit: String? = null,
             tags: List<TagEntity> = listOf(),
             themes: List<ThemeEntity> = listOf(),
+            hasDivingDuringOperation: Boolean? = null,
+            incidentDuringOperation: Boolean? = null,
         ): EnvActionEntity =
             EnvActionMapper.getEnvActionEntityFromJSON(
                 mapper,
@@ -62,6 +64,8 @@ class EnvActionFixture {
                 value = "{}",
                 tags = tags,
                 themes = themes,
+                hasDivingDuringOperation = hasDivingDuringOperation,
+                incidentDuringOperation = incidentDuringOperation
             )
 
         fun anEnvActionControl(
@@ -73,6 +77,8 @@ class EnvActionFixture {
             vehicleTypeEnum: VehicleTypeEnum? = null,
             geom: Geometry? = polygon,
             themes: List<ThemeEntity> = listOf(),
+            hasDivingDuringOperation: Boolean? = null,
+            incidentDuringOperation: Boolean? = null,
         ): EnvActionControlEntity =
             EnvActionControlEntity(
                 id = UUID.randomUUID(),
@@ -85,6 +91,8 @@ class EnvActionFixture {
                 geom = geom,
                 tags = listOf(),
                 themes = themes,
+                hasDivingDuringOperation = hasDivingDuringOperation,
+                incidentDuringOperation = incidentDuringOperation
             )
 
         fun anEnvActionSurveillance(
