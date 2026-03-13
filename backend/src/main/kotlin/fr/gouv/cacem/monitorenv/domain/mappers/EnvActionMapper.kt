@@ -44,6 +44,8 @@ object EnvActionMapper {
         value: String?,
         tags: List<TagEntity>,
         themes: List<ThemeEntity>,
+        hasDivingDuringOperation: Boolean? = null,
+        incidentDuringOperation: Boolean? = null,
     ): EnvActionEntity =
         try {
             when (actionType) {
@@ -91,6 +93,8 @@ object EnvActionMapper {
                             openBy = openBy,
                             tags = tags,
                             themes = themes,
+                            hasDivingDuringOperation = hasDivingDuringOperation,
+                            incidentDuringOperation = incidentDuringOperation
                         )
 
                 ActionTypeEnum.NOTE ->

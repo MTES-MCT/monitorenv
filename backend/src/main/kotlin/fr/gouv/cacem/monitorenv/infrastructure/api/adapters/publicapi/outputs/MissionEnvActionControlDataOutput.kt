@@ -13,6 +13,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.th
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
+import kotlin.Boolean
 
 data class MissionEnvActionControlDataOutput(
     override val id: UUID?,
@@ -38,10 +39,14 @@ data class MissionEnvActionControlDataOutput(
     val vehicleType: VehicleTypeEnum? = null,
     val tags: List<TagOutput>,
     val themes: List<ThemeOutput>,
+    override val hasDivingDuringOperation: Boolean? = null,
+    override val incidentDuringOperation: Boolean? = null,
 ) : MissionEnvActionDataOutput(
         id = id,
         actionStartDateTimeUtc = actionStartDateTimeUtc,
         actionType = ActionTypeEnum.CONTROL,
+        hasDivingDuringOperation = hasDivingDuringOperation,
+        incidentDuringOperation = incidentDuringOperation,
     ) {
     companion object {
         fun fromEnvActionControlEntity(envActionControlEntity: EnvActionControlEntity) =
@@ -75,6 +80,8 @@ data class MissionEnvActionControlDataOutput(
                 vehicleType = envActionControlEntity.vehicleType,
                 tags = envActionControlEntity.tags.map { fromTagEntity(it) },
                 themes = envActionControlEntity.themes.map { fromThemeEntity(it) },
+                hasDivingDuringOperation = envActionControlEntity.hasDivingDuringOperation,
+                incidentDuringOperation = envActionControlEntity.incidentDuringOperation,
             )
     }
 }
