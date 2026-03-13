@@ -13,6 +13,8 @@ abstract class MissionEnvActionDataOutput(
     open val actionStartDateTimeUtc: ZonedDateTime? = null,
     open val actionType: ActionTypeEnum,
     open val observationsByUnit: String? = null,
+    open val hasDivingDuringOperation: Boolean? = null,
+    open val incidentDuringOperation: Boolean? = null,
 ) {
     companion object {
         fun fromEnvActionEntity(envActionEntity: EnvActionEntity): MissionEnvActionDataOutput =
