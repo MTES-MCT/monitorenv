@@ -77,7 +77,7 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.hibernate.orm:hibernate-spatial:7.2.1.Final")
+    implementation("org.hibernate.orm:hibernate-spatial:7.2.7.Final")
     implementation("io.hypersistence:hypersistence-utils-hibernate-73:3.15.2")
     implementation("org.geolatte:geolatte-geom:1.9.1")
 
