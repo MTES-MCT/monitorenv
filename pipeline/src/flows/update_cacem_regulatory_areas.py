@@ -5,35 +5,37 @@ from prefect import flow, get_run_logger, task
 from sqlalchemy import text
 
 from src.shared_tasks.update_queries import (
+    merge_hashes,
+    select_ids_to_update,
     update_required,
 )
 
 from src.generic_tasks import extract
 
 @task
-def cacem_rows() -> pd.DataFrame:
+def extract_cacem_regulatory_areas_hashes() -> pd.DataFrame:
     """
-    Extract edition_bo from cacem
+    Extract regulatory areas hashes from cacem
 
     Returns:
-        pd.DataFrame: GeoDataFrame of id + edition_bo
+        pd.DataFrame: GeoDataFrame of regulatory area ids + row_hash
     """
     return extract(
         db_name="cacem_local",
-        query_filepath="cross/cacem/regulatory_area_edition_bo_date.sql",
+        query_filepath="cross/cacem/regulatory_areas_hashes_for_cacem.sql",
     )
 
 @task
-def monitorenv_rows() -> pd.DataFrame:
+def extract_monitorenv_regulatory_areas_hashes() -> pd.DataFrame:
     """
-    Extract edition_bo from monitorenv
+    Extract regulatory areas hashes from monitorenv
 
     Returns:
-        pd.DataFrame: GeoDataFrame of id + edition_bo
+        pd.DataFrame: GeoDataFrame of regulatory area ids + row_hash
     """
     return extract(
         db_name="monitorenv_remote",
-        query_filepath="monitorenv/regulatory_area_edition_bo_date.sql",
+        query_filepath="monitorenv/regulatory_areas_hashes_for_cacem.sql",
     )
 
 @task
@@ -161,30 +163,19 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
 
 
 @flow(name="Monitorenv - Update CACEM Regulatory Areas")
-def update_cacem_regulatory_areas_flow():    
-    cacem_df = cacem_rows()
-    monitorenv_df = monitorenv_rows()
-    cacem_df["edition_bo"] = pd.to_datetime(cacem_df["edition_bo"], errors="coerce")
-    monitorenv_df["edition_bo"] = pd.to_datetime(monitorenv_df["edition_bo"], errors="coerce")
+def update_cacem_regulatory_areas_flow():
+    logger = get_run_logger()
 
-    merged = cacem_df.merge(
-        monitorenv_df,
-        on="id",
-        how="inner",
-        suffixes=("_cacem", "_monitorenv")
-    )
+    cacem_hashes = extract_cacem_regulatory_areas_hashes()
+    monitor_env_hashes = extract_monitorenv_regulatory_areas_hashes()
 
-    mask = (
-        merged['edition_bo_cacem'].isna().astype(bool)
-        | (merged['edition_bo_monitorenv'] > merged['edition_bo_cacem'])
-    )   
+    inner_merged = merge_hashes(cacem_hashes, monitor_env_hashes, "inner")
 
-    different_ids = merged[mask]['id'].tolist()
-
-
-    cond_update = update_required(different_ids)
+    ids_to_update = select_ids_to_update(inner_merged)
+    logger.info(f"Ids to update: {ids_to_update}")
+    cond_update = update_required(ids_to_update)
     if cond_update is True:
-        new_regulatory_areas = extract_env_regulatory_areas(different_ids)
+        new_regulatory_areas = extract_env_regulatory_areas(ids_to_update)
         update_cacem_regulatory_areas(new_regulatory_areas)
 
 
