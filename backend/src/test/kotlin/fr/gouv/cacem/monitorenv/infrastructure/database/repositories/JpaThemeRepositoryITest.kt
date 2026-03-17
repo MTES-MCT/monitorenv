@@ -59,7 +59,7 @@ class JpaThemeRepositoryITest : AbstractDBTests() {
     @Test
     fun `findEnvActionControlPlanByIds should return legacy control plan from themes ids`() {
         // Given
-        val themesIds = listOf(1, 147, 318, 357)
+        val themesIds = listOf(1, 147, 330, 359)
 
         // When
         val controlPlans = jpaThemeRepository.findEnvActionControlPlanByIds(themesIds)

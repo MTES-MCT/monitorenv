@@ -21,7 +21,7 @@ class JpaNatinfRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAllByThemesIds Should return natinfs from theme ids`() {
         // When
-        val themeIds = listOf(323)
+        val themeIds = listOf(313)
         val natinfs = jpaNatinfsRepository.findAllByThemesIds(themeIds)
         assertThat(natinfs).hasSize(3)
     }

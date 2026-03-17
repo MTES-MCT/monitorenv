@@ -98,7 +98,7 @@ context('Reporting', () => {
         theme: {
           id: 107,
           name: 'Culture marine',
-          subThemes: [{ id: 346, name: 'Remise en état après occupation du DPM' }]
+          subThemes: [{ id: 312, name: 'Remise en état après occupation du DPM' }]
         },
         validityTime: 24
       })
@@ -279,7 +279,7 @@ context('Reporting', () => {
     cy.wait('@updateReporting').then(({ response }) => {
       expect(response && response.statusCode).equal(200)
       expect(response?.body.theme.id).equal(104)
-      expect(response?.body.theme.subThemes[0].id).equal(337)
+      expect(response?.body.theme.subThemes[0].id).equal(299)
       expect(response?.body.withVHFAnswer).equal(null)
     })
 
