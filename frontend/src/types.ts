@@ -23,9 +23,10 @@ export enum Axis {
   WEST_EAST = 'WEST_EAST'
 }
 
-export const AxisLabel: Record<Axis, string> = {
-  [Axis.NORTH_SOUTH]: 'Nord-Sud (défaut)',
-  [Axis.SOUTH_NORTH]: 'Sud-Nord',
-  [Axis.EAST_WEST]: 'Est-Ouest',
-  [Axis.WEST_EAST]: 'Ouest-Est'
+export enum AxisLabel {
+  NORTH_SOUTH = 'Nord-Sud (défaut)',
+  SOUTH_NORTH = 'Sud-Nord',
+  // eslint-disable-next-line typescript-sort-keys/string-enum
+  EAST_WEST = 'Est-Ouest',
+  WEST_EAST = 'Ouest-Est'
 }

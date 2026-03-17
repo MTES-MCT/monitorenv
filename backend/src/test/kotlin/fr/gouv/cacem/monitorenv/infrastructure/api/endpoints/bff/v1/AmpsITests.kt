@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
@@ -25,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -40,7 +40,7 @@ class AmpsITests {
     private lateinit var getAllAMPByIds: GetAllAMPsByIds
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var mapper: JsonMapper
 
     val multipolygonString =
         "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
@@ -102,7 +102,7 @@ class AmpsITests {
                 MockMvcRequestBuilders
                     .post("/bff/v1/amps")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(body)),
+                    .content(mapper.writeValueAsString(body)),
             ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(status().isOk)
