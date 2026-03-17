@@ -1,10 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.AdditionalRefRegEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
@@ -19,6 +14,11 @@ import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.annotation.JsonDeserialize
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.databind.json.JsonMapper
 import java.time.Instant
 import java.time.ZoneOffset
 
@@ -66,7 +66,7 @@ data class RegulatoryAreaNewModel(
     @Column(name = "authorization_periods") val authorizationPeriods: String?,
     @Column(name = "prohibition_periods") val prohibitionPeriods: String?,
 ) {
-    fun toRegulatoryArea(mapper: ObjectMapper) =
+    fun toRegulatoryArea(mapper: JsonMapper) =
         RegulatoryAreaEntity(
             id = id,
             creation = creation?.atZone(ZoneOffset.UTC),
@@ -108,7 +108,7 @@ data class RegulatoryAreaNewModel(
     companion object {
         fun fromRegulatoryAreaEntity(
             regulatoryArea: RegulatoryAreaEntity,
-            mapper: ObjectMapper,
+            mapper: JsonMapper,
         ): RegulatoryAreaNewModel =
             RegulatoryAreaNewModel(
                 id = regulatoryArea.id,

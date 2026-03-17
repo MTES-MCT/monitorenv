@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
@@ -18,13 +17,14 @@ import org.locationtech.jts.geom.Geometry
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import tools.jackson.databind.json.JsonMapper
 
 @Repository
 class JpaRegulatoryAreaNewRepository(
     private val dbRegulatoryAreaRepository: IDBRegulatoryAreaNewRepository,
     private val dbTagVigilanceAreaRepository: IDBTagRegulatoryAreaRepository,
     private val dbThemeRegulatoryAreaRepository: IDBThemeRegulatoryAreaRepository,
-    private val mapper: ObjectMapper,
+    private val mapper: JsonMapper,
 ) : IRegulatoryAreaNewRepository {
     override fun findById(id: Int): RegulatoryAreaEntity? =
         dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea(mapper)
