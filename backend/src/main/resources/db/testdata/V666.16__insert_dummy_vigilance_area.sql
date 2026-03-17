@@ -236,5 +236,5 @@ WHERE is_draft IS FALSE;
 
 INSERT INTO themes_vigilance_areas (vigilance_areas_id, themes_id)
 VALUES (2, 108),
-       (2, 341);
+       (2, 315);
 

@@ -80,7 +80,7 @@ context('Reportings', () => {
         theme: {
           id: 102,
           name: 'Rejet',
-          subThemes: [{ id: 299, name: 'Carénage sauvage' }]
+          subThemes: [{ id: 283, name: 'Carénage sauvage' }]
         },
         validityTime: 24
       })

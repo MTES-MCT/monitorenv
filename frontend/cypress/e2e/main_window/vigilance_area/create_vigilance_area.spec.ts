@@ -136,7 +136,7 @@ describe('Create Vigilance Area', () => {
       expect(createdVigilanceArea.geom.type).equal('MultiPolygon')
       expect(createdVigilanceArea.themes[0].id).equal(9)
       expect(createdVigilanceArea.themes[0].name).equal('Pêche à pied')
-      expect(createdVigilanceArea.themes[0].subThemes[0].id).equal(330)
+      expect(createdVigilanceArea.themes[0].subThemes[0].id).equal(349)
       expect(createdVigilanceArea.themes[0].subThemes[0].name).equal('Pêche à pied de loisir')
       expect(createdVigilanceArea.tags[0].id).equal(2)
       expect(createdVigilanceArea.tags[0].name).equal('AMP')
