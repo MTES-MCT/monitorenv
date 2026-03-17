@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IAMPRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBAMPRepository
@@ -18,6 +19,6 @@ class JpaAMPRepository(
 
     override fun findAllByIds(
         ids: List<Int>,
-        axis: String,
-    ): List<AMPEntity> = dbAMPRepository.findAllByIds(ids, axis).map { it.toAMP() }
+        axis: AxisEnum,
+    ): List<AMPEntity> = dbAMPRepository.findAllByIds(ids, axis.toString()).map { it.toAMP() }
 }

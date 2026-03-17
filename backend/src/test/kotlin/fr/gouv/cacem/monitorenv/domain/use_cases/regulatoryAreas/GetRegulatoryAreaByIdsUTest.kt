@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import com.nhaarman.mockitokotlin2.given
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaNewFixture
 import org.assertj.core.api.Assertions.assertThat
@@ -20,10 +21,10 @@ class GetRegulatoryAreaByIdsUTest {
         // Given
         val id = listOf(1)
         val expectedRegulatoryArea = listOf(RegulatoryAreaNewFixture.aNewRegulatoryArea())
-        given(regulatoryAreaRepository.findAllByIds(id, "NORTH_SOUTH")).willReturn(expectedRegulatoryArea)
+        given(regulatoryAreaRepository.findAllByIds(id, AxisEnum.NORTH_SOUTH)).willReturn(expectedRegulatoryArea)
 
         // When
-        val regulatoryArea = getRegulatoryAreaByIds.execute(id, "NORTH_SOUTH")
+        val regulatoryArea = getRegulatoryAreaByIds.execute(id, AxisEnum.NORTH_SOUTH)
 
         // Then
         assertThat(expectedRegulatoryArea).isEqualTo(regulatoryArea)

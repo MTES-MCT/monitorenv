@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
@@ -48,9 +49,9 @@ class JpaRegulatoryAreaNewRepository(
 
     override fun findAllByIds(
         ids: List<Int>,
-        axis: String,
+        axis: AxisEnum,
     ): List<RegulatoryAreaEntity> =
-        dbRegulatoryAreaRepository.findAllCompleteByIds(ids, axis).map { it.toRegulatoryArea(mapper) }
+        dbRegulatoryAreaRepository.findAllCompleteByIds(ids, axis.toString()).map { it.toRegulatoryArea(mapper) }
 
     @Transactional
     override fun findAllToComplete(): List<RegulatoryAreaEntity> =

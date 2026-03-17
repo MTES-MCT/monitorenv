@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import org.locationtech.jts.geom.Geometry
 
@@ -16,7 +17,7 @@ interface IRegulatoryAreaNewRepository {
 
     fun findAllByIds(
         ids: List<Int>,
-        axis: String,
+        axis: AxisEnum,
     ): List<RegulatoryAreaEntity>
 
     fun findAllToComplete(): List<RegulatoryAreaEntity>

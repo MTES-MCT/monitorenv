@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPs
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPsByIds
@@ -92,9 +93,9 @@ class AmpsITests {
                 type = "mon type2",
                 urlLegicem = "mon url legicem2",
             )
-        given(getAllAMPByIds.execute(listOf(1, 2), "NORTH_SOUTH")).willReturn(listOf(amp, otherAmp))
+        given(getAllAMPByIds.execute(listOf(1, 2), AxisEnum.NORTH_SOUTH)).willReturn(listOf(amp, otherAmp))
 
-        val body = AmpByIdsDataInput(ids = listOf(1, 2), axis = "NORTH_SOUTH")
+        val body = AmpByIdsDataInput(ids = listOf(1, 2), axis = AxisEnum.NORTH_SOUTH)
         // When
         mockMvc
             .perform(

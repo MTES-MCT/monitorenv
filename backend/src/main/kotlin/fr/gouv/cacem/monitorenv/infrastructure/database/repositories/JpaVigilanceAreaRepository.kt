@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
@@ -167,9 +168,9 @@ class JpaVigilanceAreaRepository(
     @Transactional
     override fun findAllById(
         ids: List<Int>,
-        axis: String,
+        axis: AxisEnum,
     ): List<VigilanceAreaEntity> =
-        dbVigilanceAreaRepository.findAllById(ids, axis).map {
+        dbVigilanceAreaRepository.findAllById(ids, axis.toString()).map {
             it.toVigilanceAreaEntity(mapper)
         }
 
