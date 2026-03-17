@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import org.locationtech.jts.geom.Geometry
 
@@ -12,6 +13,6 @@ interface IAMPRepository {
 
     fun findAllByIds(
         ids: List<Int>,
-        axis: String,
+        axis: AxisEnum,
     ): List<AMPEntity>
 }

@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
@@ -118,7 +119,11 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific RegulatoryArea sorted by axis NORTH_SOUTH`() {
         // When
-        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(300, 425), "NORTH_SOUTH")
+        val requestedRegulatoryArea =
+            jpaRegulatoryAreaNewRepository.findAllByIds(
+                listOf(300, 425),
+                AxisEnum.NORTH_SOUTH,
+            )
 
         // Then
         assertThat(requestedRegulatoryArea[0].id).isEqualTo(300)
@@ -149,7 +154,11 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific RegulatoryArea sorted by axis SOUTH_NORTH`() {
         // When
-        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(300, 425), "SOUTH_NORTH")
+        val requestedRegulatoryArea =
+            jpaRegulatoryAreaNewRepository.findAllByIds(
+                listOf(300, 425),
+                AxisEnum.SOUTH_NORTH,
+            )
 
         // Then
         assertThat(requestedRegulatoryArea[0].id).isEqualTo(425)
@@ -160,7 +169,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific RegulatoryArea sorted by axis EAST_WEST`() {
         // When
-        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(160, 359), "EAST_WEST")
+        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(160, 359), AxisEnum.EAST_WEST)
 
         // Then
         assertThat(requestedRegulatoryArea[0].id).isEqualTo(359)
@@ -171,7 +180,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific RegulatoryArea sorted by axis WEST_EAST`() {
         // When
-        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(160, 359), "WEST_EAST")
+        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(160, 359), AxisEnum.WEST_EAST)
 
         // Then
         assertThat(requestedRegulatoryArea[0].id).isEqualTo(160)

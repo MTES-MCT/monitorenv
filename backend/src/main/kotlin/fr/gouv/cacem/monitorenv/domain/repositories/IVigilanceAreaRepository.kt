@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import org.locationtech.jts.geom.Geometry
 
@@ -10,7 +11,7 @@ interface IVigilanceAreaRepository {
 
     fun findAllById(
         ids: List<Int>,
-        axis: String,
+        axis: AxisEnum,
     ): List<VigilanceAreaEntity>
 
     fun save(vigilanceArea: VigilanceAreaEntity): VigilanceAreaEntity

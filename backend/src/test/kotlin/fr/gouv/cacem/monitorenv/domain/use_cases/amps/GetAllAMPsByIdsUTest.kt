@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.amps
 
 import com.nhaarman.mockitokotlin2.given
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IAMPRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.amp.fixtures.AmpFixture.Companion.anAmp
 import org.assertj.core.api.Assertions.assertThat
@@ -26,10 +27,10 @@ class GetAllAMPsByIdsUTest {
         // Given
         val expectedAmps = listOf(anAmp(id = 1), anAmp(id = 2, geom = polygon))
         val ids = listOf(1, 2)
-        given(ampRepository.findAllByIds(ids, "NORTH_SOUTH")).willReturn(expectedAmps)
+        given(ampRepository.findAllByIds(ids, AxisEnum.NORTH_SOUTH)).willReturn(expectedAmps)
 
         // When
-        val amps = getAMPsByIds.execute(ids, "NORTH_SOUTH")
+        val amps = getAMPsByIds.execute(ids, AxisEnum.NORTH_SOUTH)
 
         // Then
         assertThat(amps).isEqualTo(expectedAmps)

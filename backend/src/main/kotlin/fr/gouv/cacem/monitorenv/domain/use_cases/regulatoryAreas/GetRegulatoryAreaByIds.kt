@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.config.UseCase
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
 import org.slf4j.LoggerFactory
@@ -13,7 +14,7 @@ class GetRegulatoryAreaByIds(
 
     fun execute(
         regulatoryAreaIds: List<Int>,
-        axis: String,
+        axis: AxisEnum,
     ): List<RegulatoryAreaEntity> {
         logger.info("GET regulatory area $regulatoryAreaIds")
 

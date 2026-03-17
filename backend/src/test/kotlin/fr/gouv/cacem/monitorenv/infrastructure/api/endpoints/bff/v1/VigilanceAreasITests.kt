@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
@@ -548,8 +549,8 @@ class VigilanceAreasITests {
     fun `Should return empty list when no vigilance areas found by ids`() {
         // Given
         val ids = listOf(1, 2, 3)
-        val body = VigilanceAreaByIdsDataInput(ids = ids, axis = "NORTH_SOUTH")
-        given(getVigilanceAreasByIds.execute(ids, "NORTH_SOUTH")).willReturn(emptyList())
+        val body = VigilanceAreaByIdsDataInput(ids = ids, axis = AxisEnum.NORTH_SOUTH)
+        given(getVigilanceAreasByIds.execute(ids, AxisEnum.NORTH_SOUTH)).willReturn(emptyList())
 
         // When
         mockMvc
@@ -567,8 +568,10 @@ class VigilanceAreasITests {
     fun `Should get vigilance areas by ids`() {
         // Given
         val ids = listOf(1, 2)
-        val body = VigilanceAreaByIdsDataInput(ids = ids, axis = "NORTH_SOUTH")
-        given(getVigilanceAreasByIds.execute(ids, "NORTH_SOUTH")).willReturn(listOf(vigilanceArea1, vigilanceArea2))
+        val body = VigilanceAreaByIdsDataInput(ids = ids, axis = AxisEnum.NORTH_SOUTH)
+        given(
+            getVigilanceAreasByIds.execute(ids, AxisEnum.NORTH_SOUTH),
+        ).willReturn(listOf(vigilanceArea1, vigilanceArea2))
 
         // When
         mockMvc

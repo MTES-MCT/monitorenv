@@ -69,7 +69,8 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
                 END ASC,
                 CASE
                     WHEN :axis = 'EAST_WEST' THEN ST_X(ST_PointOnSurface(regulatoryArea.geom))
-                END DESC
+                END DESC,
+                ST_Y(ST_PointOnSurface(regulatoryArea.geom))
         """,
         nativeQuery = true,
     )
