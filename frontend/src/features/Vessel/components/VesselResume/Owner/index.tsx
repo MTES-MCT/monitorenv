@@ -1,6 +1,7 @@
 import { VesselIdentity } from '@features/Vessel/components/VesselResume/styles'
 import { UNKNOWN } from '@features/Vessel/components/VesselResume/utils'
 import countries from 'i18n-iso-countries'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { Vessel } from '@features/Vessel/types'
@@ -10,9 +11,16 @@ type OwnerProps = {
 }
 
 export function Owner({ vessel }: OwnerProps) {
-  const nationalityName = vessel.ownerNationality
-    ? countries.getName(vessel.ownerNationality.substring(0, 2).toLowerCase(), 'fr')
-    : UNKNOWN
+  const nationalityName = useMemo(() => {
+    if (!vessel.ownerNationality) {
+      return UNKNOWN
+    }
+
+    // targeting the first 3 char of the nationality because it can be up to 50 char, show raw data if not found
+    return vessel.ownerNationality.length === 3
+      ? countries.getName(vessel.ownerNationality.toUpperCase(), 'fr')
+      : vessel.ownerNationality
+  }, [vessel.ownerNationality])
 
   return (
     <OwnerSection>

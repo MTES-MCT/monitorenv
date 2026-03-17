@@ -75,7 +75,7 @@ context('Search Places', () => {
         cy.contains('Adresse postale')
         cy.contains('82 STADE DE FRANCE')
         cy.contains('Nationalité')
-        cy.contains('France')
+        cy.contains('FRANCE')
         cy.contains('Raison sociale')
         cy.contains('COMPANY NAME 1')
         cy.contains("Secteur d'activité")

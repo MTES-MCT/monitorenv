@@ -125,7 +125,7 @@ export function Resume({ id, onClose }: ResumeProps) {
     return null
   }
 
-  const countryName = vessel.flag ? countries.getName(vessel.flag.substring(0, 2).toLowerCase(), 'fr') : UNKNOWN
+  const countryName = vessel.flag ? countries.getName(vessel.flag.toUpperCase(), 'fr') : UNKNOWN
 
   return (
     <DialogWrapper $context={context} $isRightMenuOpened={isRightMenuOpened} $visibility={visibility}>
@@ -160,7 +160,7 @@ export function Resume({ id, onClose }: ResumeProps) {
             <TitleWrapper>
               <Flag
                 rel="preload"
-                src={`/flags/${vessel.flag ? `${vessel.flag.substring(0, 2).toLowerCase()}.svg` : 'unknown.png'}`}
+                src={`/flags/${vessel.flag ? `${vessel.flag.toLowerCase()}.svg` : 'unknown.png'}`}
                 title={countryName}
               />
               {vessel.shipName}

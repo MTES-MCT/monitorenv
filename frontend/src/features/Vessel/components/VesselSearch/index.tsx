@@ -50,11 +50,9 @@ export function SearchVessel({
     'value.mmsi',
     'value.immatriculation'
   ])
-  const flagUrl =
-    value &&
-    `${window.location.origin}/flags/${
-      value?.flag ? `${value?.flag.substring(0, 2).toLowerCase()}.svg` : 'unknown.png'
-    }`
+  const flagName = value?.flag ? `${value?.flag.toLowerCase()}.svg` : 'unknown.png'
+
+  const flagUrl = value && `${window.location.origin}/flags/${flagName}`
 
   return (
     <StyledSearch
