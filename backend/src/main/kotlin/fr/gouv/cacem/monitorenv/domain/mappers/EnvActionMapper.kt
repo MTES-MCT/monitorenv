@@ -94,7 +94,7 @@ object EnvActionMapper {
                             tags = tags,
                             themes = themes,
                             hasDivingDuringOperation = hasDivingDuringOperation,
-                            incidentDuringOperation = incidentDuringOperation
+                            incidentDuringOperation = incidentDuringOperation,
                         )
 
                 ActionTypeEnum.NOTE ->

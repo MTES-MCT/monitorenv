@@ -62,7 +62,7 @@ data class EnvActionControlProperties(
         tags = tags,
         themes = themes,
         hasDivingDuringOperation = hasDivingDuringOperation,
-        incidentDuringOperation = incidentDuringOperation
+        incidentDuringOperation = incidentDuringOperation,
     )
 
     companion object {
@@ -74,7 +74,7 @@ data class EnvActionControlProperties(
                 observations = envAction.observations,
                 vehicleType = envAction.vehicleType,
                 hasDivingDuringOperation = envAction.hasDivingDuringOperation,
-                incidentDuringOperation = envAction.incidentDuringOperation
+                incidentDuringOperation = envAction.incidentDuringOperation,
             )
     }
 }
