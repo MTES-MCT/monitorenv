@@ -39,3 +39,67 @@ CREATE TABLE themes_regulatory_areas_new
     regulatory_areas_id INT REFERENCES regulatory_areas (id),
     primary key (themes_id, regulatory_areas_id)
 );
+
+
+
+/* Insert data from old tables to new tables */
+INSERT INTO regulatory_areas (
+    id,
+    geom,
+    url,
+    layer_name,
+    facade,
+    ref_reg,
+    editeur,
+    source,
+    observation,
+    thematique,
+    duree_validite,
+    temporalite,
+    type,
+    date,
+    date_fin,
+    creation,
+    resume,
+    plan,
+    poly_name
+)
+SELECT
+    id,
+    geom,
+    url,
+    layer_name,
+    facade,
+    ref_reg,
+    editeur,
+    source,
+    observation,
+    thematique,
+    duree_validite,
+    temporalite,
+    type,
+    date::timestamp,
+    date_fin::timestamp,
+    edition::timestamp AS creation,
+    resume,
+    plan,
+    poly_name
+FROM regulations_cacem;
+
+INSERT INTO themes_regulatory_areas_new (
+    themes_id,
+    regulatory_areas_id
+)
+SELECT 
+    themes_id,
+    regulatory_areas_id
+FROM themes_regulatory_areas;
+
+INSERT INTO tags_regulatory_areas_new (
+    tags_id,
+    regulatory_areas_id
+)
+SELECT 
+    tags_id,
+    regulatory_areas_id
+FROM tags_regulatory_areas;
