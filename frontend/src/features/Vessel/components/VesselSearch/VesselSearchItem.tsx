@@ -29,17 +29,15 @@ export function VesselSearchItem({
   searchQuery,
   vesselName
 }: VesselSearchItemProps) {
+  const flagName = flag ? `${flag.toLowerCase()}.svg` : 'unknown.png'
+
+  const flagUrl = flag && `${window.location.origin}/flags/${flagName}`
+
   return (
     <Wrapper>
       <Header>
         <Name $isUnknown={!vesselName}>
-          <Flag
-            rel="preload"
-            src={`${window.location.origin}/flags/${
-              flag ? `${flag.substring(0, 2).toLowerCase()}.svg` : 'unknown.png'
-            }`}
-            title={flag ? countries.getName(flag, 'fr') : 'Inconnu'}
-          />
+          <Flag rel="preload" src={flagUrl} title={flag ? countries.getName(flag, 'fr') : 'Inconnu'} />
           <Highlighter
             autoEscape
             highlightClassName="highlight"

@@ -9,7 +9,7 @@ type SummaryProps = {
 }
 
 export function Summary({ vessel }: SummaryProps) {
-  const countryName = vessel.flag ? countries.getName(vessel.flag.substring(0, 2).toLowerCase(), 'fr') : UNKNOWN
+  const countryName = vessel.flag ? countries.getName(vessel.flag.toUpperCase(), 'fr') : UNKNOWN
 
   return (
     <>
