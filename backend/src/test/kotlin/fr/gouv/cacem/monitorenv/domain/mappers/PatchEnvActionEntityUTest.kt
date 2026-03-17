@@ -160,6 +160,42 @@ class PatchEnvActionEntityUTest {
     }
 
     @Test
+    fun `execute() should return envAction with hasDivingDuringOperation when provided`() {
+        // Given
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null, Optional.of(true), null)
+        val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
+        val envAction =
+            EnvActionFixture.anEnvActionControl(
+                startTime = yesterday,
+                hasDivingDuringOperation = false,
+            )
+
+        // When
+        patchEntity.execute(envAction, patchableEnvActionEntity)
+
+        // Then
+        assertThat(envAction.hasDivingDuringOperation).isTrue
+    }
+
+    @Test
+    fun `execute() should return envAction with incidentDuringOperation when provided`() {
+        // Given
+        val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null, null, Optional.of(true))
+        val yesterday = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1)
+        val envAction =
+            EnvActionFixture.anEnvActionControl(
+                startTime = yesterday,
+                incidentDuringOperation = false,
+            )
+
+        // When
+        patchEntity.execute(envAction, patchableEnvActionEntity)
+
+        // Then
+        assertThat(envAction.incidentDuringOperation).isTrue
+    }
+
+    @Test
     fun `execute() should return envAction with old values if its null`() {
         // Given
         val patchableEnvActionEntity = PatchableEnvActionEntity(null, null, null, null, null)

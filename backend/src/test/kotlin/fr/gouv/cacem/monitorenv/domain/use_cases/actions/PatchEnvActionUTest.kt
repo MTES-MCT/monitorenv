@@ -58,7 +58,7 @@ class PatchEnvActionUTest {
                 listOf(),
                 listOf(),
                 hasDivingDuringOperation,
-                incidentDuringOperation
+                incidentDuringOperation,
             )
         val envActionPatched =
             anEnvAction(
@@ -70,7 +70,7 @@ class PatchEnvActionUTest {
                 listOf(),
                 listOf(),
                 patchedHasDivingDuringOperation,
-                patchedIncidentDuringOperation
+                patchedIncidentDuringOperation,
             )
 
         given(envActionRepository.findById(id)).willReturn(envActionFromDatabase)

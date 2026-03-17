@@ -60,24 +60,25 @@ class EnvActionITest {
               "incidentDuringOperation": $incidentDuringOperation
             }
             """.trimIndent()
-        val patchedEnvAction = anEnvAction(
-            jsonMapper,
-            id,
-            yesterday,
-            today,
-            observationsByUnit,
-            listOf(),
-            listOf(),
-            hasDivingDuringOperation,
-            incidentDuringOperation
-        )
+        val patchedEnvAction =
+            anEnvAction(
+                jsonMapper,
+                id,
+                yesterday,
+                today,
+                observationsByUnit,
+                listOf(),
+                listOf(),
+                hasDivingDuringOperation,
+                incidentDuringOperation,
+            )
         val patchableEnvActionEntity =
             PatchableEnvActionEntity(
                 actionStartDateTimeUtc = Optional.of(today),
                 actionEndDateTimeUtc = Optional.of(tomorrow),
                 observationsByUnit = Optional.of(observationsByUnit),
                 hasDivingDuringOperation = Optional.of(hasDivingDuringOperation),
-                incidentDuringOperation= Optional.of(incidentDuringOperation),
+                incidentDuringOperation = Optional.of(incidentDuringOperation),
             )
 
         given(patchEnvAction.execute(id, patchableEnvActionEntity)).willReturn(patchedEnvAction)

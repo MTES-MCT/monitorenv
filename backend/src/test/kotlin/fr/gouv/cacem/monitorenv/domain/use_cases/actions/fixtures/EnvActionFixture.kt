@@ -65,7 +65,7 @@ class EnvActionFixture {
                 tags = tags,
                 themes = themes,
                 hasDivingDuringOperation = hasDivingDuringOperation,
-                incidentDuringOperation = incidentDuringOperation
+                incidentDuringOperation = incidentDuringOperation,
             )
 
         fun anEnvActionControl(
@@ -92,7 +92,7 @@ class EnvActionFixture {
                 tags = listOf(),
                 themes = themes,
                 hasDivingDuringOperation = hasDivingDuringOperation,
-                incidentDuringOperation = incidentDuringOperation
+                incidentDuringOperation = incidentDuringOperation,
             )
 
         fun anEnvActionSurveillance(

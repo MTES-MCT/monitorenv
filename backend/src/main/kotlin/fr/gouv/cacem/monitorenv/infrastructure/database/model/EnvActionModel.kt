@@ -97,7 +97,6 @@ class EnvActionModel(
         cascade = [CascadeType.ALL],
     )
     var tags: List<TagEnvActionModel>,
-
 ) {
     fun toActionEntity(mapper: JsonMapper): EnvActionEntity =
         EnvActionMapper.getEnvActionEntityFromJSON(
