@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v2
 import com.nhaarman.mockitokotlin2.argThat
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
@@ -676,10 +677,10 @@ class RegulatoryAreasITests {
             )
 
         val ids = listOf(17, 18)
-        val body = RegulatoryAreaByIdsDataInput(ids = ids, axis = "NORTH_SOUTH")
+        val body = RegulatoryAreaByIdsDataInput(ids = ids, axis = AxisEnum.NORTH_SOUTH)
         BDDMockito
             .given(
-                getRegulatoryAreaByIds.execute(ids, "NORTH_SOUTH"),
+                getRegulatoryAreaByIds.execute(ids, AxisEnum.NORTH_SOUTH),
             ).willReturn(listOf(regulatoryArea, regulatoryArea2))
 
         // When

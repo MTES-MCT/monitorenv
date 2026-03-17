@@ -34,7 +34,8 @@ interface IDBAMPRepository : JpaRepository<AMPModel, Int> {
                 END ASC,
                 CASE
                     WHEN :axis = 'EAST_WEST' THEN ST_X(ST_PointOnSurface(amp.geom))
-                END DESC
+                END DESC,
+                ST_Y(ST_PointOnSurface(amp.geom))
         """,
         nativeQuery = true,
     )

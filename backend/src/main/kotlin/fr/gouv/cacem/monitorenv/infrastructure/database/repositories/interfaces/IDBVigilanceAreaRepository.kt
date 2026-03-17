@@ -74,7 +74,8 @@ interface IDBVigilanceAreaRepository : JpaRepository<VigilanceAreaModel, Int> {
                 END ASC,
                 CASE
                     WHEN :axis = 'EAST_WEST' THEN ST_X(ST_PointOnSurface(vigilanceArea.geom))
-                END DESC
+                END DESC,
+                ST_Y(ST_PointOnSurface(vigilanceArea.geom))
         """,
         nativeQuery = true,
     )

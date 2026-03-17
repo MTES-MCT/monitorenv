@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -41,7 +42,7 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific APMs sorted by axis NORTH_SOUTH`() {
         // When
-        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), "NORTH_SOUTH")
+        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), AxisEnum.NORTH_SOUTH)
 
         // Then
         assertThat(requestedAMPs[0].id).isEqualTo(3)
@@ -52,7 +53,7 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific APMs sorted by axis SOUTH_NORTH`() {
         // When
-        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), "SOUTH_NORTH")
+        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), AxisEnum.SOUTH_NORTH)
 
         // Then
         assertThat(requestedAMPs[0].id).isEqualTo(1)
@@ -63,7 +64,7 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific APMs sorted by axis WEST_EAST`() {
         // When
-        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), "WEST_EAST")
+        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), AxisEnum.WEST_EAST)
 
         // Then
         assertThat(requestedAMPs[0].id).isEqualTo(3)
@@ -74,7 +75,7 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific APMs sorted by axis EAST_WEST`() {
         // When
-        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), "EAST_WEST")
+        val requestedAMPs = jpaAMPRepository.findAllByIds(listOf(1, 3), AxisEnum.EAST_WEST)
 
         // Then
         assertThat(requestedAMPs[0].id).isEqualTo(1)

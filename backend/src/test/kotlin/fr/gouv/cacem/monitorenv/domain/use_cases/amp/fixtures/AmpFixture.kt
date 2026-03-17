@@ -16,7 +16,6 @@ class AmpFixture {
             val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
             val geometry = geom ?: polygon
-            println("Created AMP with id: $id and geometry: $geometry")
             return AMPEntity(id = id, designation = "designation", name = "amp", geom = geometry)
         }
     }

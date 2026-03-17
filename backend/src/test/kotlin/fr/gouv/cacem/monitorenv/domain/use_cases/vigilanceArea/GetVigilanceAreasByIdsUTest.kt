@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.mock
+import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.vigilanceArea.fixtures.VigilanceAreaFixture
 import org.assertj.core.api.Assertions.assertThat
@@ -26,9 +27,9 @@ class GetVigilanceAreasByIdsUTest {
                 VigilanceAreaFixture.aVigilanceAreaEntity(id = 3),
             )
 
-        given(vigilanceAreaRepository.findAllById(ids, "NORTH_SOUTH")).willReturn(vigilancesAreas)
+        given(vigilanceAreaRepository.findAllById(ids, AxisEnum.NORTH_SOUTH)).willReturn(vigilancesAreas)
 
-        val result = getVigilanceAreasByIds.execute(ids, "NORTH_SOUTH")
+        val result = getVigilanceAreasByIds.execute(ids, AxisEnum.NORTH_SOUTH)
 
         assertThat(result).isEqualTo(vigilancesAreas)
         assertThat(log.out).contains("Attempt to GET vigilance areas withs ids: $ids")
