@@ -380,7 +380,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       const themes = control.themes[0]
       expect(themes.id).equal(112)
       expect(themes.subThemes.length).equal(1)
-      expect(themes.subThemes[0]?.id).equal(332)
+      expect(themes.subThemes[0]?.id).equal(328)
       const tags = control.tags[0]
       expect(tags.id).equal(4)
       expect(tags.subTags.length).equal(0)
@@ -390,7 +390,7 @@ context('Side Window > Mission Form > Mission actions', () => {
       const surveillanceThemes = surveillance.themes?.[0]
       expect(surveillanceThemes?.id).equal(105)
       expect(surveillanceThemes?.subThemes?.length).equal(1)
-      expect(surveillanceThemes?.subThemes[0]?.id).equal(286)
+      expect(surveillanceThemes?.subThemes[0]?.id).equal(306)
       const surveillanceTags = control.tags[0]
       expect(surveillanceTags.id).equal(4)
       expect(surveillanceTags.subTags.length).equal(0)

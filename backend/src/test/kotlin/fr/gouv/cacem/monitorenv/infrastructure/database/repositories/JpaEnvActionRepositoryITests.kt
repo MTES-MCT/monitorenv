@@ -163,7 +163,7 @@ class JpaEnvActionRepositoryITests : AbstractDBTests() {
         recentControlsActivity.forEach { control ->
 
             assertThat(control.themesIds).containsExactly(112)
-            assertThat(control.subThemesIds).containsExactlyInAnyOrder(318, 333)
+            assertThat(control.subThemesIds).containsExactlyInAnyOrder(330, 329)
         }
     }
 

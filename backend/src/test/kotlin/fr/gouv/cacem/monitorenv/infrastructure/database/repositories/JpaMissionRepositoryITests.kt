@@ -1332,7 +1332,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val nextThemes =
             listOf(
                 aTheme(id = 1, subThemes = listOf(aTheme(id = 170), aTheme(id = 146))),
-                aTheme(id = 14, subThemes = listOf(aTheme(id = 359), aTheme(id = 360), aTheme(id = 366))),
+                aTheme(id = 14, subThemes = listOf(aTheme(id = 355), aTheme(id = 353), aTheme(id = 354))),
                 aTheme(id = 10),
             )
         val nextMission =
@@ -1398,10 +1398,10 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     subThemes =
                         listOf(
                             aTheme(
-                                id = 327, // subThemeId = 180
+                                id = 277, // subThemeId = 180
                             ),
                             aTheme(
-                                id = 329, // subThemeId = 178
+                                id = 275, // subThemeId = 178
                             ),
                         ),
                 ),
@@ -1410,13 +1410,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     subThemes =
                         listOf(
                             aTheme(
-                                id = 279, // subThemeId = 196
+                                id = 293, // subThemeId = 196
                             ),
                             aTheme(
-                                id = 312, // subThemeId = 195
+                                id = 292, // subThemeId = 195
                             ),
                             aTheme(
-                                id = 355, // tagId = 11
+                                id = 360, // tagId = 11
                             ),
                         ),
                 ),
