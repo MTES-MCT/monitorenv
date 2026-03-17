@@ -7,6 +7,11 @@ $$
     edition DATE = DATE '2021-10-14';
     BEGIN
 
+TRUNCATE TABLE public.regulatory_areas CASCADE;
+TRUNCATE TABLE public.tags_regulatory_areas_new;
+TRUNCATE TABLE public.themes_regulatory_areas_new;
+
+
 INSERT INTO public.regulatory_areas (
     id,
     geom,
