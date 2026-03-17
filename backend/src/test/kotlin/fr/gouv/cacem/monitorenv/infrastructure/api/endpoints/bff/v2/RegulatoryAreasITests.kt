@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v2
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.nhaarman.mockitokotlin2.argThat
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
@@ -33,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 
 @Import(SentryConfig::class, MapperConfiguration::class)
@@ -62,7 +62,7 @@ class RegulatoryAreasITests {
     private lateinit var getRegulatoryAreaByIds: GetRegulatoryAreaByIds
 
     @Autowired
-    private lateinit var objectMapper: ObjectMapper
+    private lateinit var mapper: JsonMapper
 
     private val wktReader = WKTReader()
 
@@ -505,7 +505,7 @@ class RegulatoryAreasITests {
                 MockMvcRequestBuilders
                     .put("/bff/v2/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody)),
+                    .content(mapper.writeValueAsString(requestBody)),
             )
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -626,7 +626,7 @@ class RegulatoryAreasITests {
                 MockMvcRequestBuilders
                     .put("/bff/v2/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(requestBody)),
+                    .content(mapper.writeValueAsString(requestBody)),
             ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -683,7 +683,7 @@ class RegulatoryAreasITests {
                 MockMvcRequestBuilders
                     .post("/bff/v2/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(ids)),
+                    .content(mapper.writeValueAsString(ids)),
             ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
