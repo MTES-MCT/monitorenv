@@ -25,7 +25,7 @@ def extract_cacem_regulatory_areas_hashes() -> pd.DataFrame:
     """
     return extract(
         "cacem_local",
-        "cross/cacem/regulatory_areas_hashes.sql",
+        "cross/cacem/regulatory_areas_hashes_for_env.sql",
     )
 
 
@@ -39,7 +39,7 @@ def extract_regulatory_areas_hashes() -> pd.DataFrame:
     """
     return extract(
         db_name="monitorenv_remote",
-        query_filepath="monitorenv/regulatory_areas_hashes.sql",
+        query_filepath="monitorenv/regulatory_areas_hashes_for_env.sql",
     )
 
 @task
