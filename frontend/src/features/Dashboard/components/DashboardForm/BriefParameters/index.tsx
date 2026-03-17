@@ -3,7 +3,7 @@ import { dashboardActions } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { getOptionsFromLabelledEnum, MultiRadio } from '@mtes-mct/monitor-ui'
+import { getOptionsFromLabelledEnum, MultiRadio, type Option } from '@mtes-mct/monitor-ui'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 import { Axis, AxisLabel } from 'types'
@@ -29,7 +29,7 @@ export const BriefParameters = forwardRef<HTMLDivElement, BriefParametersProps>(
     )
 
     const baseLayersKeys = getOptionsFromLabelledEnum(Dashboard.BackgroundMapLabel)
-    const axisKeys = getOptionsFromLabelledEnum(AxisLabel)
+    const axisKeys = getOptionsFromLabelledEnum(AxisLabel) as Option<Axis>[]
 
     const handleBackgroundMap = (layercode: BaseLayer | undefined) => {
       if (layercode) {
