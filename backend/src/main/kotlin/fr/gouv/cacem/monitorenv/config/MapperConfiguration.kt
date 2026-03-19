@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.config
 import org.n52.jackson.datatype.jts.JtsModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.PropertyNamingStrategies
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.kotlin.KotlinFeature
@@ -19,6 +20,7 @@ class MapperConfiguration {
                     JtsModule(),
                     KotlinModule.Builder().configure(KotlinFeature.NullIsSameAsDefault, true).build(),
                 ).propertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE)
+                .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
                 .build()
         return mapperBuilder
     }
