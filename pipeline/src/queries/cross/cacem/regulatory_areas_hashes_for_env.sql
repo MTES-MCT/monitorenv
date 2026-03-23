@@ -1,7 +1,7 @@
 SELECT
     id,
     md5(
-        COALESCE(geom::text, '') ||
+        COALESCE(st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001))::text, '') ||
         COALESCE(ref_reg::text, '')
   ) AS cacem_row_hash
 FROM prod.reg_cacem
