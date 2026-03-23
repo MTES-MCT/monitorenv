@@ -1,10 +1,11 @@
 import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
+import { isRegulatoryAreaListPage } from '@features/BackOffice/utils'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
-import { useParams } from 'react-router'
+import { useLocation, useParams } from 'react-router'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -16,13 +17,15 @@ import type { Geometry } from 'ol/geom'
 
 export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
   const { regulatoryAreaId } = useParams()
+  const location = useLocation()
+  const isOnRegulatoryAreasListPage = isRegulatoryAreaListPage(location.pathname)
 
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
   const newRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaBo.newRegulatoryAreaId)
 
   const layerId = useMemo(
-    () => regulatoryAreaId ?? openedRegulatoryAreaId ?? newRegulatoryAreaId ?? undefined,
-    [regulatoryAreaId, openedRegulatoryAreaId, newRegulatoryAreaId]
+    () => (isOnRegulatoryAreasListPage ? openedRegulatoryAreaId : regulatoryAreaId ?? newRegulatoryAreaId),
+    [regulatoryAreaId, openedRegulatoryAreaId, newRegulatoryAreaId, isOnRegulatoryAreasListPage]
   )
 
   const { data: regulatoryArea } = useGetRegulatoryAreaByIdQuery(Number(layerId), {
@@ -58,7 +61,7 @@ export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     regulatoryVectorSourceRef.current?.clear(true)
     if (regulatoryFeature) {
-      regulatoryVectorSourceRef.current?.addFeatures([regulatoryFeature])
+      regulatoryVectorSourceRef.current?.addFeature(regulatoryFeature)
     }
   }, [regulatoryFeature])
 

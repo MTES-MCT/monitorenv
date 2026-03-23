@@ -1,17 +1,83 @@
+import { matchPath } from 'react-router'
+
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from './components/BackofficeMenu/constants'
 
-export function isRegulatoryAreaPage(pathname: string) {
-  return pathname.includes(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
+export function isRegulatoryAreaListPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`
+    },
+    path
+  )
 }
 
-export function isAdministrationPage(pathname: string) {
-  return pathname.includes(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`)
+export function isRegulatoryAreaPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/:id`
+    },
+    path
+  )
 }
 
-export function isControlUnitPage(pathname: string) {
-  return pathname.includes(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`)
+export function isAdministrationListPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`
+    },
+    path
+  )
 }
 
-export function isStationPage(pathname: string) {
-  return pathname.includes(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}`)
+export function isAdministrationPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}/:id`
+    },
+    path
+  )
+}
+
+export function isControlUnitListPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`
+    },
+    path
+  )
+}
+
+export function isControlUnitPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}/:id`
+    },
+    path
+  )
+}
+
+export function isStationListPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}`
+    },
+    path
+  )
+}
+
+export function isStationPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}/:id`
+    },
+    path
+  )
 }

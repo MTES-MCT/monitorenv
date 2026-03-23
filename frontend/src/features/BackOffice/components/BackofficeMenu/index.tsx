@@ -1,7 +1,11 @@
 import {
+  isAdministrationListPage,
   isAdministrationPage,
+  isControlUnitListPage,
   isControlUnitPage,
+  isRegulatoryAreaListPage,
   isRegulatoryAreaPage,
+  isStationListPage,
   isStationPage
 } from '@features/BackOffice/utils'
 import { Icon } from '@mtes-mct/monitor-ui'
@@ -19,7 +23,7 @@ export function BackOfficeMenu() {
     <Wrapper>
       {isRegulatoryAreasBoEnabled && (
         <StyledNavLink
-          $isActive={isRegulatoryAreaPage(locationPath)}
+          $isActive={isRegulatoryAreaPage(locationPath) || isRegulatoryAreaListPage(locationPath)}
           to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`}
         >
           <Icon.MapLayers />
@@ -28,21 +32,21 @@ export function BackOfficeMenu() {
       )}
 
       <StyledNavLink
-        $isActive={isAdministrationPage(locationPath)}
+        $isActive={isAdministrationPage(locationPath) || isAdministrationListPage(locationPath)}
         to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}`}
       >
         <Icon.GroupPerson />
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.ADMINISTRATION_LIST]}
       </StyledNavLink>
       <StyledNavLink
-        $isActive={isControlUnitPage(locationPath)}
+        $isActive={isControlUnitPage(locationPath) || isControlUnitListPage(locationPath)}
         to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.CONTROL_UNIT_LIST]}`}
       >
         <Icon.ControlUnit />
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.CONTROL_UNIT_LIST]}
       </StyledNavLink>
       <StyledNavLink
-        $isActive={isStationPage(locationPath)}
+        $isActive={isStationPage(locationPath) || isStationListPage(locationPath)}
         to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}`}
       >
         <Icon.Pinpoint />
