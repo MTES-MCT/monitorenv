@@ -36,7 +36,7 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import tools.jackson.databind.json.JsonMapper
-import java.util.*
+import java.util.Base64
 
 @Configuration
 @EnableWebSecurity
@@ -140,6 +140,9 @@ class SecurityConfig(
 
                 val emailClaim = oidcUser.claims["email"] as? String
                 logger.debug("User email from JWT: $emailClaim")
+
+                val organizationalUnitClaim = oidcUser.claims["organizational_unit"] as? String
+                logger.info("User organizational unit from JWT: $organizationalUnitClaim")
 
                 if (emailClaim.isNullOrBlank()) {
                     val errorMsg = "Email claim is missing or empty in JWT"
