@@ -1,6 +1,5 @@
 SELECT
     ra.id,
-    st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001)) AS geom,
     ra.url,
     ra.layer_name,
     ra.facade,
@@ -16,7 +15,6 @@ SELECT
     ra.date_fin,
     ra.temporalite,
     ra.type,
-    ra.ref_reg,
     ra.resume,
     ra.poly_name,
     ra.plan,
