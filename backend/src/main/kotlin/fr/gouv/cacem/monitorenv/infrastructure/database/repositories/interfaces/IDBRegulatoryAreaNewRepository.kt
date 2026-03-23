@@ -58,19 +58,11 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
             WHERE regulatoryArea.id IN (:ids)
             AND regulatoryArea.creation IS NOT NULL
             ORDER BY
-                CASE
-                    WHEN :axis = 'NORTH_SOUTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom))
-                END DESC,
-                CASE
-                    WHEN :axis = 'SOUTH_NORTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom))
-                END ASC,
-                CASE
-                    WHEN :axis = 'WEST_EAST' THEN ST_X(ST_PointOnSurface(regulatoryArea.geom))
-                END ASC,
-                CASE
-                    WHEN :axis = 'EAST_WEST' THEN ST_X(ST_PointOnSurface(regulatoryArea.geom))
-                END DESC,
-                ST_Y(ST_PointOnSurface(regulatoryArea.geom))
+                CASE WHEN :axis = 'NORTH_SOUTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom)) END DESC,
+                CASE WHEN :axis = 'SOUTH_NORTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom)) END ASC,
+                CASE WHEN :axis = 'WEST_EAST'   THEN ST_X(ST_PointOnSurface(regulatoryArea.geom)) END ASC,
+                CASE WHEN :axis = 'EAST_WEST'   THEN ST_X(ST_PointOnSurface(regulatoryArea.geom)) END DESC,
+            ST_Y(ST_PointOnSurface(regulatoryArea.geom)) DESC
         """,
         nativeQuery = true,
     )
