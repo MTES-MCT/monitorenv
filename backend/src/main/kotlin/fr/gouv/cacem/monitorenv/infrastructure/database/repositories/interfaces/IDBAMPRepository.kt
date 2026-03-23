@@ -22,20 +22,12 @@ interface IDBAMPRepository : JpaRepository<AMPModel, Int> {
             """
             SELECT * FROM amp_cacem amp
             WHERE amp.id IN (:ids)
-               ORDER BY
-                CASE
-                    WHEN :axis = 'NORTH_SOUTH' THEN ST_Y(ST_PointOnSurface(amp.geom))
-                END DESC,
-                CASE
-                    WHEN :axis = 'SOUTH_NORTH' THEN ST_Y(ST_PointOnSurface(amp.geom))
-                END ASC,
-                CASE
-                    WHEN :axis = 'WEST_EAST' THEN ST_X(ST_PointOnSurface(amp.geom))
-                END ASC,
-                CASE
-                    WHEN :axis = 'EAST_WEST' THEN ST_X(ST_PointOnSurface(amp.geom))
-                END DESC,
-                ST_Y(ST_PointOnSurface(amp.geom))
+            ORDER BY
+                CASE WHEN :axis = 'NORTH_SOUTH' THEN ST_Y(ST_PointOnSurface(amp.geom)) END DESC,
+                CASE WHEN :axis = 'SOUTH_NORTH' THEN ST_Y(ST_PointOnSurface(amp.geom)) END ASC,
+                CASE WHEN :axis = 'WEST_EAST'   THEN ST_X(ST_PointOnSurface(amp.geom)) END ASC,
+                CASE WHEN :axis = 'EAST_WEST'   THEN ST_X(ST_PointOnSurface(amp.geom)) END DESC,
+            ST_Y(ST_PointOnSurface(amp.geom)) DESC
         """,
         nativeQuery = true,
     )
