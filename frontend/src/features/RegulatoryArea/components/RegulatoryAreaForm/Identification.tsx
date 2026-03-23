@@ -206,7 +206,7 @@ export function Identification({
                 Ajouter un nouveau groupe
               </ExtraFooterContainer>
             )}
-            style={{ flex: '1' }}
+            style={{ flex: 1, width: '93%' }}
           />
           <Tooltip>Le nom du groupe doit permettre de connaître le lieu et le sujet de la réglementation.</Tooltip>
         </FieldWithTooltip>
@@ -342,6 +342,7 @@ const FieldWithTooltip = styled.div`
   display: flex;
   flex: 1;
   gap: 8px;
+  justify-content: space-between;
 `
 const GeomContainer = styled.div`
   overflow: hidden;
