@@ -9,7 +9,7 @@ data class CreateOrUpdateControlUnitResourceDataInput(
     val isArchived: Boolean,
     val name: String,
     val note: String? = null,
-    val photo: ByteArray? = byteArrayOf(),
+    val photo: ByteArray? = null,
     val stationId: Int,
     val type: ControlUnitResourceType,
 ) {
