@@ -71,12 +71,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       RegulatoryArea.RegulatoryAreaByIdsForApi
     >({
       query: body => ({ body, method: 'POST', url: '/v2/regulatory-areas' }),
-      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response),
-      transformResponse: (response: RegulatoryArea.RegulatoryAreaFromAPI[]): RegulatoryArea.RegulatoryAreaWithBbox[] =>
-        response.map(area => ({
-          ...area,
-          bbox: boundingExtent(area.geom?.coordinates.flat().flat() as Coordinate[])
-        }))
+      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response)
     }),
     getRegulatoryAreasToComplete: builder.query<RegulatoryArea.RegulatoryAreaToComplete[], void>({
       providesTags: () => [{ id: 'TO_COMPLETE', type: 'RegulatoryAreas' }],

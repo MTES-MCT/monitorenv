@@ -120,7 +120,6 @@ export function useExportImages() {
   const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(
     { axis, ids: activeDashboard?.regulatoryAreaIds ?? [] },
     {
-      refetchOnMountOrArgChange: true,
       skip: !dashboard || (activeDashboard?.regulatoryAreaIds ?? []).length === 0
     }
   )
