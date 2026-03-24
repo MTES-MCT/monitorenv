@@ -25,6 +25,7 @@ class AISListener(
 
     @KafkaListener(topics = ["\${monitorenv.kafka.ais.topic:monitorenv.ais.position}"])
     fun listenAIS(payload: AISPayload) {
+        logger.info("AIS listener received ${payload.mmsi}")
         queue.put(payload)
     }
 
@@ -36,6 +37,7 @@ class AISListener(
             while (!Thread.currentThread().isInterrupted) {
                 try {
                     val first = queue.take()
+                    logger.info("Add payload ${first.mmsi} to queue")
                     batchAisPayloadToSave.add(first)
 
                     val deadline = System.currentTimeMillis() + kafkaAISProperties.timeout

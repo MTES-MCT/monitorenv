@@ -103,7 +103,7 @@ spring:
 
       ssl.truststore.location: ${MONITORENV_KAFKA_AIS_TRUSTSTORE}
       ssl.truststore.password: ${MONITORENV_KAFKA_AIS_TRUSTSTORE_PASSWORD}
-      ssl.truststore.type: JKS
+      ssl.truststore.type: PKCS12
 
 management:
   endpoints:
