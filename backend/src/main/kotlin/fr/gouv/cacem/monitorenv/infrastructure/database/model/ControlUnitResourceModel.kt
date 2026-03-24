@@ -38,7 +38,7 @@ data class ControlUnitResourceModel(
     @Column(name = "note")
     val note: String? = null,
     @Column(name = "photo")
-    val photo: ByteArray? = byteArrayOf(),
+    val photo: ByteArray? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_id", nullable = false)
     val station: StationModel,
