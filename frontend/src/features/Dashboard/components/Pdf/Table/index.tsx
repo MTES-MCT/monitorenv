@@ -6,7 +6,6 @@ import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
-import { groupBy } from 'lodash'
 
 import { layoutStyle } from '../style'
 
@@ -70,6 +69,20 @@ const styles = StyleSheet.create({
   }
 })
 
+function groupConsecutiveByLayerName(regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]) {
+  return regulatoryAreas.reduce((acc, area) => {
+    const lastGroup = acc[acc.length - 1]
+
+    if (lastGroup && lastGroup.layerName === area.layerName) {
+      lastGroup.layers.push(area)
+    } else {
+      acc.push({ layerName: area.layerName, layers: [area] })
+    }
+
+    return acc
+  }, [] as { layerName: string; layers: RegulatoryArea.RegulatoryAreaWithBbox[] }[])
+}
+
 export function AreaTable({
   amps,
   image,
@@ -81,10 +94,7 @@ export function AreaTable({
   regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
   vigilanceAreas: Dashboard.VigilanceAreaWithImages[]
 }) {
-  const groupedRegulatoryAreas = groupBy(
-    [...regulatoryAreas].sort((a, b) => a.layerName.localeCompare(b.layerName)),
-    regulatory => regulatory.layerName
-  )
+  const groupedRegulatoryAreas = groupConsecutiveByLayerName(regulatoryAreas)
 
   const totalSelected = amps.length + regulatoryAreas.length + vigilanceAreas.length
 
@@ -102,9 +112,10 @@ export function AreaTable({
         <Text>{regulatoryAreas.length} sélectionnée(s)</Text>
       </View>
       <View style={{ marginBottom: 7.4 }}>
-        {Object.entries(groupedRegulatoryAreas).map(([groupName, layers]) => (
+        {groupedRegulatoryAreas.map(({ layerName, layers }, index) => (
           <View
-            key={groupName}
+            // eslint-disable-next-line react/no-array-index-key
+            key={`${layerName}-${index}`}
             style={[
               layoutStyle.row,
               {
@@ -115,7 +126,7 @@ export function AreaTable({
             wrap={false}
           >
             <View style={[styles.layerGroup]}>
-              <Text>{getTitle(groupName)}</Text>
+              <Text>{getTitle(layerName)}</Text>
             </View>
             <View style={{ flex: 0.8 }}>
               {layers.map(layer => {
@@ -126,7 +137,7 @@ export function AreaTable({
                     key={layer.id}
                     style={[
                       styles.cell,
-                      layers.length === 1 && getTitle(groupName).length > 30 ? { height: '100%' } : {}
+                      layers.length === 1 && getTitle(layerName).length > 30 ? { height: '100%' } : {}
                     ]}
                   >
                     <View
