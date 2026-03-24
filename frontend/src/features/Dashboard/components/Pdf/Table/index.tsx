@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 
 function groupConsecutiveByLayerName(regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]) {
   return regulatoryAreas.reduce((acc, area) => {
-    const lastGroup = acc[acc.length - 1]
+    const lastGroup = acc.at(-1)
 
     if (lastGroup && lastGroup.layerName === area.layerName) {
       lastGroup.layers.push(area)

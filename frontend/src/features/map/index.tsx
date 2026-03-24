@@ -2,6 +2,7 @@ import { ActiveDashboardLayer } from '@features/Dashboard/components/Layers/Acti
 import { DashboardRecentActivityLayer } from '@features/Dashboard/components/Layers/DashboardRecentActivityLayer'
 import { DashboardsLayer } from '@features/Dashboard/components/Layers/DashboardsLayer'
 import { DrawDashboardLayer } from '@features/Dashboard/components/Layers/DrawDashboardLayer'
+import { DashboardPreviewLayer } from '@features/Dashboard/components/Layers/PreviewDashboardLayer'
 import { DashboardReportingOverlay } from '@features/Dashboard/components/Layers/ReportingOverlay'
 import { SelectedDashboardLayer } from '@features/Dashboard/components/Layers/SelectedDashboardLayer'
 import { LayersOverlay } from '@features/layersSelector/overlays'
@@ -208,6 +209,8 @@ export function Map() {
         <DrawDashboardLayer key="DrawDashboardLayer" />,
         // @ts-ignore
         <ActiveDashboardLayer key="ActiveDashboardLayer" />,
+        // @ts-ignore
+        <DashboardPreviewLayer key="DashboardPreviewLayer" />,
         // @ts-ignore
         <DashboardReportingOverlay key="DashboardReportingOverlay" />,
         // @ts-ignore
