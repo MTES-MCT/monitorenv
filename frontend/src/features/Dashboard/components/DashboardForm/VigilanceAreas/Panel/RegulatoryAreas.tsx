@@ -29,6 +29,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
   const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
     { axis, ids: regulatoryAreaIds },
     {
+      refetchOnMountOrArgChange: true,
       skip: regulatoryAreaIds.length === 0
     }
   )

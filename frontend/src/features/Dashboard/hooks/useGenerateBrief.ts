@@ -38,6 +38,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       ids: dashboard.regulatoryAreaIds
     },
     {
+      refetchOnMountOrArgChange: true,
       skip: dashboard.regulatoryAreaIds.length === 0
     }
   )
@@ -60,6 +61,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const { data: allLinkedRegulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
     { axis: String(axis), ids: allLinkedRegulatoryAreaIds },
     {
+      refetchOnMountOrArgChange: true,
       skip: allLinkedRegulatoryAreaIds.length === 0
     }
   )

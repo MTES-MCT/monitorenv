@@ -53,7 +53,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
               <Identification
                 facade={regulatoryMetadata.facade}
                 plan={regulatoryMetadata.plan}
-                polyName={regulatoryMetadata.polyName}
+                polyName={getTitle(regulatoryMetadata.polyName)}
                 resume={getTitle(regulatoryMetadata.resume)}
                 tags={regulatoryMetadata.tags}
                 themes={regulatoryMetadata.themes}
