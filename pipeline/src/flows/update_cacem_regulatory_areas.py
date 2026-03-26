@@ -4,6 +4,10 @@ from src.utils import psql_insert_copy
 from prefect import flow, get_run_logger, task
 from sqlalchemy import text
 
+from config import (
+    IS_INTEGRATION
+)
+
 from src.shared_tasks.update_queries import (
     merge_hashes,
     select_ids_to_update,
@@ -163,8 +167,14 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
 
 
 @flow(name="Monitorenv - Update CACEM Regulatory Areas")
-def update_cacem_regulatory_areas_flow():
+def update_cacem_regulatory_areas_flow(
+    is_integration: bool = IS_INTEGRATION,
+):
     logger = get_run_logger()
+    if is_integration:
+        logger.info("Running in integration mode - no update will be performed")
+        return
+    
 
     cacem_hashes = extract_cacem_regulatory_areas_hashes()
     monitor_env_hashes = extract_monitorenv_regulatory_areas_hashes()
