@@ -37,11 +37,12 @@ class KafkaAISConsumerConfig(
 
     @Bean
     fun errorHandler(): DefaultErrorHandler {
-        val recoverer = ConsumerRecordRecoverer { record, exception ->
-            logger.error(
-                "Failed to deserialize message from topic=${record.topic()} partition=${record.partition()} offset=${record.offset()}: ${exception?.message}",
-            )
-        }
+        val recoverer =
+            ConsumerRecordRecoverer { record, exception ->
+                logger.error(
+                    "Failed to deserialize message from topic=${record.topic()} partition=${record.partition()} offset=${record.offset()}: ${exception?.message}",
+                )
+            }
         return DefaultErrorHandler(recoverer, FixedBackOff(0L, 0L))
     }
 

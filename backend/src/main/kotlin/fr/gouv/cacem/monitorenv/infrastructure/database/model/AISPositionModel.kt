@@ -2,11 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.positions.AISPositionEntity
 import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPayload
-import jakarta.persistence.Column
-import jakarta.persistence.Embeddable
-import jakarta.persistence.EmbeddedId
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.annotations.Generated
 import org.hibernate.generator.EventType
 import org.locationtech.jts.geom.Geometry
@@ -49,7 +45,7 @@ data class AISPositionModel(
     companion object {
         fun toAISPositionModel(aisPosition: AISPayload): AISPositionModel =
             AISPositionModel(
-                pk = AISPositionPK(mmsi = aisPosition.mmsi, ts = aisPosition.features?.ais?.ts),
+                pk = AISPositionPK(mmsi = aisPosition.mmsi, ts = aisPosition.ts),
                 coord = aisPosition.coord.let { WKTReader().read(it) },
                 status = aisPosition.status,
                 course = aisPosition.course?.let(toShort()),
@@ -110,6 +106,6 @@ data class AISPositionModel(
 
 @Embeddable
 data class AISPositionPK(
-    val ts: ZonedDateTime?,
+    val ts: ZonedDateTime,
     val mmsi: Int?,
 ) : Serializable

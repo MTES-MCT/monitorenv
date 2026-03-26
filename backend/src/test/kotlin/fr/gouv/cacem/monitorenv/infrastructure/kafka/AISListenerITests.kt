@@ -44,7 +44,7 @@ class AISListenerITests : AbstractKafkaTests() {
                 course = 12.12,
                 heading = 10.12,
                 speed = 10.12,
-                ts = null,
+                ts = ts,
                 features =
                     Feature(
                         ais =
@@ -59,7 +59,7 @@ class AISListenerITests : AbstractKafkaTests() {
                                 toStarboard = 20.00,
                                 draught = 99.99,
                                 destination = "BRE",
-                                ts = ts,
+                                ts = null,
                             ),
                     ),
             )
@@ -74,7 +74,7 @@ class AISListenerITests : AbstractKafkaTests() {
                 val saved = dbAISPositionRepository.findByIdOrNull(AISPositionPK(mmsi = mmsi, ts = ts))
                 assertThat(saved).isNotNull()
                 assertThat(saved?.pk?.mmsi).isEqualTo(aisPosition.mmsi)
-                assertThat(saved?.pk?.ts).isEqualTo(aisPosition.features?.ais?.ts)
+                assertThat(saved?.pk?.ts).isEqualTo(aisPosition.ts)
                 assertThat(saved?.coord).isEqualTo(WKTReader().read(coord) as Point)
                 assertThat(saved?.status).isEqualTo(aisPosition.status)
                 assertThat(saved?.course).isEqualTo(1212)

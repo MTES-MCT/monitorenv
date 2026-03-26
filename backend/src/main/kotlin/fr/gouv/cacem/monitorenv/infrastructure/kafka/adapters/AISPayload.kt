@@ -10,5 +10,5 @@ class AISPayload(
     val mmsi: Int?,
     val speed: Double?,
     val status: String?,
-    val ts: ZonedDateTime?,
+    val ts: ZonedDateTime,
 )
