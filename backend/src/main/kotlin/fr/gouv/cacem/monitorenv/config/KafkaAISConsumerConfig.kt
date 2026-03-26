@@ -10,6 +10,7 @@ import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
+import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
 import org.springframework.kafka.support.serializer.JacksonJsonDeserializer
 
 @EnableKafka
@@ -22,8 +23,10 @@ class KafkaAISConsumerConfig(
     fun consumerFactory(): ConsumerFactory<String, AISPayload> =
         DefaultKafkaConsumerFactory(
             kafkaProperties.buildConsumerProperties(),
-            StringDeserializer(),
-            JacksonJsonDeserializer<AISPayload>().apply { addTrustedPackages("*") },
+            ErrorHandlingDeserializer(StringDeserializer()),
+            ErrorHandlingDeserializer(
+                JacksonJsonDeserializer(AISPayload::class.java).apply { addTrustedPackages("*") },
+            ),
         )
 
     @Bean
