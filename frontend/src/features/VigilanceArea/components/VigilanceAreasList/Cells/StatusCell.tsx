@@ -1,27 +1,22 @@
-import { Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, Tag, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export function StatusCell({ isDraft }: { isDraft: boolean }) {
   if (isDraft) {
     return (
-      <StatusContainer $color={THEME.color.slateGray}>
-        <Icon.EditUnbordered color={THEME.color.slateGray} />
-        Non Publiée
-      </StatusContainer>
+      <StyledTag accent={Accent.PRIMARY} Icon={Icon.EditUnbordered}>
+        Brouillon
+      </StyledTag>
     )
   }
 
   return (
-    <StatusContainer $color={THEME.color.charcoal}>
-      <Icon.Check color={THEME.color.charcoal} />
+    <StyledTag backgroundColor="#D4F0DF" color={THEME.color.mediumSeaGreen}>
       Publiée
-    </StatusContainer>
+    </StyledTag>
   )
 }
 
-const StatusContainer = styled.div<{ $color: string }>`
-  align-items: center;
-  color: ${p => p.$color};
-  display: flex;
-  gap: 4px;
+const StyledTag = styled(Tag)`
+  font-style: normal;
 `
