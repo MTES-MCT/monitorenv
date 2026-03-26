@@ -6,6 +6,7 @@ import { HighlightCell } from '../Cells/HighlightCell'
 import { LocalizeCell } from '../Cells/LocalizeCell'
 import { StatusCell } from '../Cells/StatusCell'
 import { TagsCell } from '../Cells/TagsCell'
+import { ThemesCell } from '../Cells/ThemesCells'
 import { ValidationDateCell } from '../Cells/ValidationDateCell'
 import { VisibilityCell } from '../Cells/VisibilityCell'
 
@@ -27,20 +28,20 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     size: 250 + legacyFirefoxOffset
   },
   {
+    accessorFn: row => row.themes,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <ThemesCell themes={info.getValue()} />),
+    enableSorting: true,
+    header: () => 'Thématiques',
+    id: 'themes',
+    size: 230 + legacyFirefoxOffset
+  },
+  {
     accessorFn: row => row.tags,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <TagsCell tags={info.getValue()} />),
     enableSorting: true,
     header: () => 'Tags',
     id: 'tags',
     size: 230 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.comments,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <HighlightCell text={info.getValue()} />),
-    enableSorting: true,
-    header: () => 'Commentaire',
-    id: 'comments',
-    size: 330 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.seaFront,
@@ -65,14 +66,6 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     header: () => 'Statut',
     id: 'isDraft',
     size: 125 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.createdBy,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : info.getValue() ?? '-'),
-    enableSorting: true,
-    header: () => 'Créée par',
-    id: 'createdBy',
-    size: 97 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.visibility,

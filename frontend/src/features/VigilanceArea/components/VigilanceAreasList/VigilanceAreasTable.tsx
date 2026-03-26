@@ -8,13 +8,14 @@ import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
-import { flexRender, type SortingState } from '@tanstack/react-table'
+import { type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
 import { useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { Columns } from './Columns'
+import { Row } from './Row'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
@@ -73,24 +74,7 @@ export function VigilanceAreasTable({
           {virtualRows?.map(virtualRow => {
             const row = rows[virtualRow.index]
 
-            return (
-              <TableWithSelectableRows.BodyTr key={virtualRow.key} data-cy="vigilance-area-row">
-                {row?.getVisibleCells().map(cell => (
-                  <TableWithSelectableRows.Td
-                    key={cell.id}
-                    $hasRightBorder={cell.column.id === 'geom'}
-                    $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
-                    style={{
-                      maxWidth: cell.column.getSize(),
-                      minWidth: cell.column.getSize(),
-                      width: cell.column.getSize()
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableWithSelectableRows.Td>
-                ))}
-              </TableWithSelectableRows.BodyTr>
-            )
+            return <Row key={virtualRow.key} row={row} />
           })}
         </tbody>
         {after > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={after} name="after" />}
