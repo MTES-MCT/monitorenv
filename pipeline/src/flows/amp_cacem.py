@@ -87,6 +87,7 @@ def update_amps(new_amps: pd.DataFrame):
                 des_desigfr text,
                 row_hash text,
                 mpa_type text,
+                mpa_updatewhen timestamp,
                 ref_reg text,
                 url_legicem text)
                 ON COMMIT DROP;"""
@@ -102,6 +103,7 @@ def update_amps(new_amps: pd.DataFrame):
             "mpa_type",
             "ref_reg",
             "url_legicem",
+            "mpa_updatewhen",
         ]
 
         logger.info("Loading to temporary table")
@@ -124,7 +126,8 @@ def update_amps(new_amps: pd.DataFrame):
                 row_hash = tmp.row_hash,
                 mpa_type = tmp.mpa_type,
                 ref_reg = tmp.ref_reg,
-                url_legicem = tmp.url_legicem
+                url_legicem = tmp.url_legicem,
+                updated_at = tmp.mpa_updatewhen
                 FROM tmp_amp_cacem tmp
                 where amp.id = tmp.id;
                 """

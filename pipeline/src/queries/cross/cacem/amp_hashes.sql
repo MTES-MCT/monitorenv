@@ -6,7 +6,8 @@ md5(
   coalesce(des_desigfr,'')||
   coalesce(mpa_type,'') ||
   coalesce(ref_reg,'')||
-  coalesce(url_legicem,'')
+  coalesce(url_legicem,'') ||
+  coalesce(mpa_updatewhen::text,'')
   ) as cacem_row_hash
 	FROM 
     prod."Aires marines protégées"

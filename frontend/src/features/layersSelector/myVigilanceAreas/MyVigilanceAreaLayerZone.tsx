@@ -3,16 +3,8 @@ import { StyledTransparentButton } from '@components/style'
 import { isOutOfPeriod, isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
-import {
-  Accent,
-  customDayjs,
-  Icon,
-  IconButton,
-  OPENLAYERS_PROJECTION,
-  Size,
-  THEME,
-  WSG84_PROJECTION
-} from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Size, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import { hasMoreThanThirtyDays } from '@utils/hasMoreThanThirtyDays'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import styled from 'styled-components'
@@ -82,8 +74,8 @@ export function MyVigilanceAreaLayerZone({
     dispatch(vigilanceAreaActions.deleteIdToMyVigilanceAreaIds(layerId))
   }
 
-  const isNew = layer ? customDayjs(layer.createdAt).isAfter(customDayjs().subtract(30, 'days')) : false
-  const isUpdatedRecently = layer ? customDayjs(layer.updatedAt).isAfter(customDayjs().subtract(30, 'days')) : false
+  const isNew = layer ? hasMoreThanThirtyDays(layer.createdAt) : false
+  const isUpdatedRecently = layer ? hasMoreThanThirtyDays(layer.updatedAt) : false
 
   return (
     <LayerSelector.Layer

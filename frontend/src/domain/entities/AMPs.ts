@@ -8,6 +8,7 @@ export type AMPFromAPI = {
   name: string
   refReg: string | undefined
   type: string | undefined
+  updatedAt?: string
   urlLegicem: string | undefined
 }
 export type AMP = AMPFromAPI & { bbox: Extent }

@@ -1,4 +1,5 @@
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import { intersection } from 'lodash'
 import { useCallback } from 'react'
 
@@ -62,10 +63,15 @@ export function MyAMPLayerGroup({
     dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea(groupLayerIds))
   }, [dispatch, groupLayerIds])
 
+  const hasNewLayers = layers.some(
+    amp => amp.updatedAt && customDayjs(amp.updatedAt).isAfter(customDayjs().subtract(30, 'day'))
+  )
+
   return (
     <MyLayerGroup
       addZonesToVigilanceArea={addZonesToVigilanceArea}
       groupName={groupName}
+      hasNewLayers={hasNewLayers}
       layers={layers}
       name="amp"
       onRemoveZone={e => handleRemoveZone(e)}

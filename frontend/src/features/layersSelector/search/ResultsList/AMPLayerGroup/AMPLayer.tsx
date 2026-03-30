@@ -6,7 +6,15 @@ import {
   openAMPMetadataPanel
 } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  customDayjs,
+  Icon,
+  IconButton,
+  OPENLAYERS_PROJECTION,
+  THEME,
+  WSG84_PROJECTION
+} from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -79,8 +87,10 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
     }
   }, [ampMetadataLayerId, ref, layerId])
 
+  const isNew = layer?.updatedAt ? customDayjs(layer?.updatedAt).isAfter(customDayjs().subtract(30, 'day')) : false
+
   return (
-    <LayerSelector.Layer ref={ref} $metadataIsShown={metadataIsShown}>
+    <LayerSelector.Layer ref={ref} $isNew={isNew} $metadataIsShown={metadataIsShown}>
       <StyledTransparentButton onClick={toggleZoneMetadata}>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
         <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type ?? 'aucun'}>

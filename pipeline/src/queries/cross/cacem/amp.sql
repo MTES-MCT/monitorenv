@@ -5,6 +5,7 @@ des_desigfr,
 mpa_type,
 ref_reg,
 url_legicem,
+mpa_updatewhen,
 md5(
   coalesce(id::text,'')||
   coalesce(geom::text,'')||
@@ -12,7 +13,8 @@ md5(
   coalesce(des_desigfr,'')||
   coalesce(mpa_type,'') ||
   coalesce(ref_reg,'')||
-  coalesce(url_legicem,'')
+  coalesce(url_legicem,'') ||
+  coalesce(mpa_updatewhen::text,'')
   ) as row_hash
 	FROM prod."Aires marines protégées"
   WHERE
