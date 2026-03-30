@@ -82,13 +82,15 @@ export const InlineTransparentButton = styled(TransparentButton)`
   align-items: center;
 `
 
-export const LoadingIcon = styled(Icon.Reset)`
+export const LoadingIcon = styled(Icon.Reset)<{ $color?: string; $size?: number }>`
   @keyframes spin {
     to {
       transform: rotate(360deg);
     }
   }
   animation: spin 2s linear infinite;
-  color: ${p => p.theme.color.charcoal};
+  color: ${p => p.$color || p.theme.color.charcoal};
   transform-origin: center;
+  width: ${p => p.$size && `${p.$size}px !important`};
+  height: ${p => p.$size && `${p.$size}px !important`};
 `

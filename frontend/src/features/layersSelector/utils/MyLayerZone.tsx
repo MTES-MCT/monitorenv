@@ -23,6 +23,8 @@ type MyLayerZoneProps = {
   hasMetadata: boolean
   hideLayer: () => void
   id: number
+  isNew?: boolean
+  isRecentlyUpdated?: boolean
   layerType: MonitorEnvLayers.REGULATORY_ENV | MonitorEnvLayers.AMP
   layerZoneIsShowed: boolean
   metadataIsShown?: boolean
@@ -40,6 +42,8 @@ export function MyLayerZone({
   hasMetadata,
   hideLayer,
   id,
+  isNew,
+  isRecentlyUpdated,
   layerType,
   layerZoneIsShowed,
   metadataIsShown,
@@ -105,7 +109,7 @@ export function MyLayerZone({
   }
 
   return (
-    <LayerSelector.Layer $metadataIsShown={metadataIsShown}>
+    <LayerSelector.Layer $isNew={isNew} $isRecentlyUpdated={isRecentlyUpdated} $metadataIsShown={metadataIsShown}>
       <StyledTransparentButton $width="70%" onClick={handleClickOnLayerName}>
         <LayerLegend layerType={layerType} legendKey={name} plan={plan} type={type} />
         <LayerSelector.Name data-cy={`my-zone-${displayedName}`} title={displayedName}>

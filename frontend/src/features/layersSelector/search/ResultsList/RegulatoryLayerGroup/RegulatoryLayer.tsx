@@ -12,8 +12,7 @@ import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constant
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import {
   addRegulatoryZonesToMyLayers,
-  removeRegulatoryZonesFromMyLayers,
-  setNewOrUpdatedRegulatoryAreaIds
+  removeRegulatoryZonesFromMyLayers
 } from '../../../../../domain/shared_slices/Regulatory'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
@@ -37,7 +36,6 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
   const ref = createRef<HTMLLIElement>()
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
-  const consultedNewOrUpdatedRegulatoryAreaIds = useAppSelector(state => state.regulatory.newOrUpdatedRegulatoryAreaIds)
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
@@ -66,7 +64,6 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
   }
 
   const toggleZoneMetadata = () => {
-    dispatch(setNewOrUpdatedRegulatoryAreaIds(layerId))
     if (metadataIsShown) {
       dispatch(closeMetadataPanel())
     } else {
@@ -112,8 +109,8 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
   return (
     <LayerSelector.Layer
       ref={ref}
-      $isNew={layer?.isNew && !consultedNewOrUpdatedRegulatoryAreaIds.includes(layerId)}
-      $isRecentlyUpdated={layer?.isUpdatedRecently && !consultedNewOrUpdatedRegulatoryAreaIds.includes(layerId)}
+      $isNew={layer?.isNew}
+      $isRecentlyUpdated={layer?.isUpdatedRecently}
       $metadataIsShown={metadataIsShown}
       data-cy="regulatory-result-zone"
     >
@@ -134,6 +131,7 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
           {!layerTitle && 'AUCUN NOM'}
         </LayerSelector.Name>
       </StyledTransparentButton>
+
       <LayerSelector.IconGroup>
         {isLinkingRegulatoryToVigilanceArea ? (
           <IconButton

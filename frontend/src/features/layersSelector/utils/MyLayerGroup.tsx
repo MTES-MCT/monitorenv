@@ -17,6 +17,8 @@ export function MyLayerGroup({
   addZonesToVigilanceArea,
   children,
   groupName,
+  hasNewLayers,
+  hasRecentlyUpdatedLayers,
   layers,
   name,
   onRemoveZone,
@@ -29,6 +31,8 @@ export function MyLayerGroup({
   addZonesToVigilanceArea: () => void
   children: React.ReactNode
   groupName: string
+  hasNewLayers?: boolean
+  hasRecentlyUpdatedLayers?: boolean
   layers: AMP[] | RegulatoryArea.RegulatoryAreaWithBbox[]
   name: string
   onRemoveZone: (event) => void
@@ -68,7 +72,13 @@ export function MyLayerGroup({
 
   return (
     <li>
-      <LayerSelector.GroupWrapper $isOpen={zonesAreOpen} $isPadded onClick={toggleZonesAreOpen}>
+      <LayerSelector.GroupWrapper
+        $isNew={hasNewLayers}
+        $isOpen={zonesAreOpen}
+        $isPadded
+        $isRecentlyUpdated={hasRecentlyUpdatedLayers}
+        onClick={toggleZonesAreOpen}
+      >
         <StyledTransparentButton $width="70%" onClick={handleClickOnGroupName}>
           <LayerSelector.GroupName data-cy={`${name}-layer-topic`} title={groupName}>
             {groupName}

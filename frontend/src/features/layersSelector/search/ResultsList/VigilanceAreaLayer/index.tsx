@@ -2,7 +2,15 @@ import { StyledTransparentButton } from '@components/style'
 import { isOutOfPeriod, isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useTracking } from '@hooks/useTracking'
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  customDayjs,
+  Icon,
+  IconButton,
+  OPENLAYERS_PROJECTION,
+  THEME,
+  WSG84_PROJECTION
+} from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -89,9 +97,14 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
     }
   }, [layerId, selectedVigilanceAreaId, ref])
 
+  const isNew = customDayjs(layer.createdAt).isAfter(customDayjs().subtract(30, 'days'))
+  const isUpdatedRecently = customDayjs(layer.updatedAt).isAfter(customDayjs().subtract(30, 'days'))
+
   return (
     <LayerSelector.Layer
       ref={ref}
+      $isNew={isNew}
+      $isRecentlyUpdated={isUpdatedRecently}
       $metadataIsShown={metadataIsShown}
       $withBorderBottom
       data-cy="vigilance-area-result-zone"
