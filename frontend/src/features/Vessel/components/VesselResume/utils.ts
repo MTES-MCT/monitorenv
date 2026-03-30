@@ -49,8 +49,8 @@ export function getDatesFromFilters(
   periodFilter: Vessel.AisTrackSettingsEnum | undefined,
   specificDateRange: DateAsStringRange | undefined
 ) {
-  let from = specificDateRange ? customDayjs(specificDateRange[0]) : customDayjs().utc().startOf('day')
-  let to = specificDateRange ? customDayjs(specificDateRange[1]) : customDayjs().utc().endOf('day')
+  let from = specificDateRange ? customDayjs(specificDateRange[0]) : undefined
+  let to = specificDateRange ? customDayjs(specificDateRange[1]) : undefined
   switch (periodFilter) {
     case Vessel.AisTrackSettingsEnum.TWELVE_HOURS:
       from = customDayjs().utc().subtract(12, 'hours').startOf('day')
@@ -68,5 +68,5 @@ export function getDatesFromFilters(
       break
   }
 
-  return { from: from.toISOString(), to: to.toISOString() }
+  return { from: from?.toISOString(), to: to?.toISOString() }
 }

@@ -36,6 +36,7 @@ class AISListenerITests : AbstractKafkaTests() {
         val coord = "POINT(-2.7335 47.6078)"
         val mmsi = 1234567890
         val ts = ZonedDateTime.parse("2025-01-01T00:00:00.00Z")
+        val sentAt = ZonedDateTime.parse("2025-01-01T12:00:00.00Z")
         val aisPosition =
             AISPayload(
                 mmsi = mmsi,
@@ -59,7 +60,7 @@ class AISListenerITests : AbstractKafkaTests() {
                                 toStarboard = 20.00,
                                 draught = 99.99,
                                 destination = "BRE",
-                                ts = null,
+                                ts = sentAt,
                             ),
                     ),
             )
@@ -69,7 +70,7 @@ class AISListenerITests : AbstractKafkaTests() {
         Awaitility
             .await()
             .pollInterval(1, TimeUnit.SECONDS)
-            .atMost(kafkaAISProperties.timeout, TimeUnit.SECONDS)
+            .atMost(30, TimeUnit.SECONDS)
             .untilAsserted {
                 val saved = dbAISPositionRepository.findByIdOrNull(AISPositionPK(mmsi = mmsi, ts = ts))
                 assertThat(saved).isNotNull()
@@ -89,6 +90,7 @@ class AISListenerITests : AbstractKafkaTests() {
                 assertThat(saved?.toStarboard).isEqualTo(2000)
                 assertThat(saved?.draught).isEqualTo(9999)
                 assertThat(saved?.destination).isEqualTo("BRE")
+                assertThat(saved?.sentAt).isEqualTo(sentAt)
             }
     }
 }

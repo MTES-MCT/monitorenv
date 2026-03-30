@@ -7,6 +7,4 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties(prefix = "monitorenv.kafka.ais")
 class KafkaAISProperties(
     var topic: String = "monitorenv.ais.position",
-    var timeout: Long = 30000L,
-    var batchSize: Int = 100,
 )

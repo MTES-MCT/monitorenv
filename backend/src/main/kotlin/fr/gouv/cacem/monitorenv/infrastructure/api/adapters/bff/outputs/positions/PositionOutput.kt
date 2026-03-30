@@ -15,6 +15,7 @@ data class PositionOutput(
     val status: String?,
     val speed: Double?,
     val timestamp: ZonedDateTime?,
+    val sentAt: ZonedDateTime?,
 ) {
     companion object {
         fun toLastPositionOutput(position: AISPositionEntity) =
@@ -29,6 +30,7 @@ data class PositionOutput(
                 status = position.status,
                 speed = position.speed,
                 timestamp = position.timestamp,
+                sentAt = position.sentAt,
             )
     }
 }

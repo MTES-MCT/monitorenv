@@ -29,7 +29,7 @@ export namespace Vessel {
     ownerPostalAddress?: string
     ownerStartDate?: string
     portOfRegistry?: string
-    positions?: Position[]
+    positions?: Position[] | undefined
     professionalType?: string
     shipName?: string
     status?: string
@@ -65,6 +65,7 @@ export namespace Vessel {
     heading?: number
     id: number
     mmsi?: number
+    sentAt?: string
     shipName?: string
     speed?: number
     status?: string

@@ -9,9 +9,10 @@ data class AISPositionEntity(
     val geom: Point?,
     val heading: Double?,
     val id: Int?,
-    val mmsi: Int?,
+    val mmsi: Int,
     val status: String?,
     val speed: Double?,
     val shipname: String?,
-    val timestamp: ZonedDateTime?,
+    val timestamp: ZonedDateTime,
+    val sentAt: ZonedDateTime?,
 )

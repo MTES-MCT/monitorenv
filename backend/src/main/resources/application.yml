@@ -13,9 +13,7 @@ host:
 monitorenv:
   kafka:
     ais:
-      batch-size: ${MONITORENV_KAFKA_AIS_BATCH_SIZE}
       topic: ${MONITORENV_KAFKA_AIS_TOPIC}
-      timeout: ${MONITORENV_KAFKA_AIS_TIMEOUT}
       enabled: ${MONITORENV_KAFKA_AIS_ENABLED}
       producer:
         enabled: ${MONITORENV_KAFKA_AIS_PRODUCER_ENABLED:false}
@@ -92,8 +90,14 @@ spring:
     consumer:
       group-id: ${MONITORENV_KAFKA_AIS_GROUP_ID:test}
       auto-offset-reset: latest
+      max-poll-records: ${MONITORENV_KAFKA_AIS_BATCH_SIZE:100}
+
+    listener:
+      type: batch
 
     properties:
+      max.poll.interval.ms: ${MONITORENV_KAFKA_AIS_TIMEOUT:300000} # Timeout after 5min
+
       security.protocol: SSL
 
       ssl.keystore.location: ${MONITORENV_KAFKA_AIS_KEYSTORE}
@@ -103,7 +107,7 @@ spring:
 
       ssl.truststore.location: ${MONITORENV_KAFKA_AIS_TRUSTSTORE}
       ssl.truststore.password: ${MONITORENV_KAFKA_AIS_TRUSTSTORE_PASSWORD}
-      ssl.truststore.type: JKS
+      ssl.truststore.type: PKCS12
 
 management:
   endpoints:

@@ -18,11 +18,6 @@ class JpaAISPositionRepository(
     private val logger: Logger = LoggerFactory.getLogger(JpaAISPositionRepository::class.java)
 
     @Transactional
-    fun save(aisPosition: AISPayload) {
-        dbAISPositionRepository.save(AISPositionModel.toAISPositionModel(aisPosition))
-    }
-
-    @Transactional
     fun saveAll(aisPositions: List<AISPayload>) {
         dbAISPositionRepository.saveAll(aisPositions.map { AISPositionModel.toAISPositionModel(it) })
     }

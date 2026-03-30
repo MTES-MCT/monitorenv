@@ -5,10 +5,6 @@ monitorenv:
     templatePath: /template_export_brief.docx
     tmpDocxPath: tmp_brief.docx
     tmpOdtPath: tmp_brief.odt
-  kafka:
-    ais:
-      batch-size: 1
-      timeout: 5000
 
 logging:
   level:

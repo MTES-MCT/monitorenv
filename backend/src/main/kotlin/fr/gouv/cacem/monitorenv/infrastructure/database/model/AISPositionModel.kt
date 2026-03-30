@@ -41,12 +41,13 @@ data class AISPositionModel(
     val toStarboard: Short?,
     val draught: Short?,
     val destination: String?,
+    val sentAt: ZonedDateTime?,
 ) {
     companion object {
         fun toAISPositionModel(aisPosition: AISPayload): AISPositionModel =
             AISPositionModel(
                 pk = AISPositionPK(mmsi = aisPosition.mmsi, ts = aisPosition.ts),
-                coord = aisPosition.coord.let { WKTReader().read(it) },
+                coord = aisPosition.coord?.let { WKTReader().read(it) },
                 status = aisPosition.status,
                 course = aisPosition.course?.let(toShort()),
                 speed = aisPosition.speed?.let(toShort()),
@@ -82,6 +83,7 @@ data class AISPositionModel(
                         ?.let(toShort()),
                 destination = aisPosition.features?.ais?.destination,
                 id = null,
+                sentAt = aisPosition.features?.ais?.ts,
             )
 
         private fun toShort(): (Double) -> Short = { (it * 100).roundToInt().toShort() }
@@ -101,11 +103,12 @@ data class AISPositionModel(
             status = status,
             speed = speed?.let(toDouble()),
             timestamp = pk.ts,
+            sentAt = sentAt,
         )
 }
 
 @Embeddable
 data class AISPositionPK(
     val ts: ZonedDateTime,
-    val mmsi: Int?,
+    val mmsi: Int,
 ) : Serializable

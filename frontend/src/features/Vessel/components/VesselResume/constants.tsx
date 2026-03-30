@@ -4,14 +4,14 @@ import { isNumeric } from '@utils/isNumeric'
 
 export const Columns = (isFetching: boolean) => [
   {
-    accessorKey: 'id',
+    accessorKey: 'index',
     cell: info => (isFetching ? <StyledSkeletonRow /> : <span>{info.getValue()}</span>),
     enableSorting: false,
     header: '#',
     size: 42
   },
   {
-    accessorFn: row => getLocalizedDayjs(row.timestamp).format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
+    accessorFn: row => getLocalizedDayjs(row.sentAt).format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
     cell: info => (isFetching ? <StyledSkeletonRow /> : <span>{info.getValue()}</span>),
     enableSorting: true,
     header: 'Date',

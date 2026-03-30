@@ -6,6 +6,8 @@ import { notUndefined } from '@tanstack/react-virtual'
 import { useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
+import { TableBodyEmptyData } from './TableBodyEmptyData'
+
 import type { Vessel } from '@features/Vessel/types'
 
 type PositionsProps = {
@@ -14,6 +16,14 @@ type PositionsProps = {
 
 export function PositionsTable({ positions }: PositionsProps) {
   const tableContainerRef = useRef<HTMLDivElement>(null)
+  const positionsWithIndex = useMemo(
+    () =>
+      positions.map((position, index) => ({
+        ...position,
+        index: positions.length - index
+      })),
+    [positions]
+  )
 
   const columns = useMemo(() => Columns(false), [])
 
@@ -21,7 +31,7 @@ export function PositionsTable({ positions }: PositionsProps) {
 
   const table = useReactTable({
     columns,
-    data: positions,
+    data: positionsWithIndex,
     enableSortingRemoval: true,
     getCoreRowModel: getCoreRowModel(),
     getRowId: row => row.id.toString(),
@@ -34,7 +44,7 @@ export function PositionsTable({ positions }: PositionsProps) {
         }
       ]
     },
-    rowCount: positions?.length ?? 0
+    rowCount: positionsWithIndex?.length ?? 0
   })
 
   const { rows } = table.getRowModel()
@@ -79,6 +89,8 @@ export function PositionsTable({ positions }: PositionsProps) {
               </tr>
             ))}
           </SimpleTable.Head>
+
+          {isBodyEmptyDataVisible && <TableBodyEmptyData />}
 
           {!isBodyEmptyDataVisible && (
             <tbody>
