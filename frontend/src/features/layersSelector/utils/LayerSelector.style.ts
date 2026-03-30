@@ -1,4 +1,5 @@
 import { Icon } from '@mtes-mct/monitor-ui'
+import { getColorWithAlpha } from '@utils/utils'
 import styled from 'styled-components'
 
 export const LAYER_SELECTOR_ROW_HEIGHT = 36
@@ -9,15 +10,30 @@ const IconGroup = styled.div`
   align-items: stretch;
 `
 
-const Layer = styled.li<{ $metadataIsShown?: boolean; $withBorderBottom?: boolean }>`
+const Layer = styled.li<{
+  $isNew?: boolean
+  $isRecentlyUpdated?: boolean
+  $metadataIsShown?: boolean
+  $withBorderBottom?: boolean
+}>`
   align-items: center;
   background: ${p => (p.$metadataIsShown ? p.theme.color.blueYonder25 : 'transparent')};
   border-bottom: ${p => (p.$withBorderBottom ? 1 : 0)}px solid ${p => p.theme.color.lightGray};
+  border-left: ${p => {
+    if (p.$isNew) {
+      return `4px solid ${p.theme.color.blueGray}`
+    }
+    if (p.$isRecentlyUpdated) {
+      return `4px solid ${getColorWithAlpha(p.theme.color.blueGray, 0.4)}`
+    }
+
+    return '4px solid transparent'
+  }};
   color: ${p => p.theme.color.gunMetal};
   display: flex;
   font-size: 13px;
   height: ${LAYER_SELECTOR_ROW_HEIGHT}px;
-  padding-left: 18px;
+  padding-left: 14px;
   text-align: left;
   user-select: none;
   justify-content: space-between;
@@ -46,9 +62,24 @@ const ZonesNumber = styled.span`
   max-width: 50px;
 `
 
-const GroupWrapper = styled.div<{ $isOpen: boolean; $isPadded?: boolean }>`
+const GroupWrapper = styled.div<{
+  $isNew?: boolean
+  $isOpen: boolean
+  $isPadded?: boolean
+  $isRecentlyUpdated?: boolean
+}>`
   align-items: center;
   border-bottom: ${p => (p.$isOpen ? 0 : 1)}px solid ${p => p.theme.color.lightGray};
+  border-left: ${p => {
+    if (p.$isNew) {
+      return `4px solid ${p.theme.color.blueGray}`
+    }
+    if (p.$isRecentlyUpdated) {
+      return `4px solid ${getColorWithAlpha(p.theme.color.blueGray, 0.4)}`
+    }
+
+    return '4px solid transparent'
+  }};
   color: ${p => p.theme.color.gunMetal};
   display: flex;
   font-size: 13px;

@@ -16,6 +16,8 @@ export namespace RegulatoryArea {
     facade: string
     geom: GeoJSON.MultiPolygon
     id: number
+    isNew: boolean
+    isUpdatedRecently: boolean
     layerName: string
     observations?: string
     plan: string

@@ -19,6 +19,8 @@ data class RegulatoryAreaDataOutput(
     val editionCacem: ZonedDateTime? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
+    val isNew: Boolean = false,
+    val isUpdatedRecently: Boolean = false,
     val layerName: String? = null,
     val observation: String? = null,
     val additionalRefReg: List<AdditionalRefRegEntity>? = listOf(),
@@ -35,8 +37,15 @@ data class RegulatoryAreaDataOutput(
     val url: String? = null,
 ) {
     companion object {
-        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) =
-            RegulatoryAreaDataOutput(
+        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity): RegulatoryAreaDataOutput {
+            val moreRecentUpdatedDate = listOfNotNull(regulatoryArea.editionBo, regulatoryArea.editionCacem).maxOrNull()
+            val isUpdatedRecently =
+                moreRecentUpdatedDate != null &&
+                    moreRecentUpdatedDate.isAfter(
+                        ZonedDateTime.now().minusDays(30),
+                    )
+
+            return RegulatoryAreaDataOutput(
                 id = regulatoryArea.id,
                 creation = regulatoryArea.creation,
                 date = regulatoryArea.date,
@@ -47,6 +56,12 @@ data class RegulatoryAreaDataOutput(
                 editionCacem = regulatoryArea.editionCacem,
                 facade = regulatoryArea.facade,
                 geom = regulatoryArea.geom,
+                isNew =
+                    regulatoryArea.creation != null &&
+                        regulatoryArea.creation.isAfter(
+                            ZonedDateTime.now().minusDays(30),
+                        ),
+                isUpdatedRecently = isUpdatedRecently,
                 layerName = regulatoryArea.layerName,
                 observation = regulatoryArea.observation,
                 plan = regulatoryArea.plan,
@@ -63,5 +78,6 @@ data class RegulatoryAreaDataOutput(
                 authorizationPeriods = regulatoryArea.authorizationPeriods,
                 prohibitionPeriods = regulatoryArea.prohibitionPeriods,
             )
+        }
     }
 }
