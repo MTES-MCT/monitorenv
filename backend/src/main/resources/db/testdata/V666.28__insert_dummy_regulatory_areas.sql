@@ -4,7 +4,6 @@ $$
         permanent character varying = 'permanent';
         temporary character varying = 'temporaire';
         editor    character varying = 'Alexis Pré';
-        edition   DATE              = DATE '2021-10-14';
     BEGIN
 
         INSERT INTO public.regulatory_areas (id,
@@ -34,7 +33,7 @@ $$
                 'RNN_Iroise',
                 'NAMO',
                 'Décret n°2021-1149 du 4 septembre 2021 portant extension du périmètre  et modification de la réglementation de la réserve naturelle nationale d’Iroise (Finistère)',
-                edition,
+                NOW() - INTERVAL '12 day',
                 NULL,
                 editor,
                 'OFB lizmap',
@@ -48,7 +47,7 @@ $$
                 'PIRC',
                 'Partie marine (plus basses eaux) RNN d''Iroise',
                 'Réglementation dans la réserve naturelle nationale d''Iroise',
-                CURRENT_DATE);
+                NOW() - INTERVAL '12 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
@@ -77,8 +76,8 @@ $$
                 'Granulats_Marins_Le_Minou',
                 'NAMO',
                 'Décret du 8 juillet 2011 accordant la concession de sables coquilliers dite « Concession du Minou » au large des côtes du département du Finistère à la société Quemeneur',
-                DATE '2011-07-08',
-                DATE '2026-01-08',
+                NOW() - INTERVAL '15 day',
+                NOW() - INTERVAL '1 day',
                 editor,
                 'CAMINO',
                 '',
@@ -91,7 +90,7 @@ $$
                 'PSCEM',
                 'Granulats Marins Le Minou',
                 'Concession de sable coquilliers dite  « Concession du Minou »',
-                CURRENT_DATE);
+                NOW() - INTERVAL '45 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
@@ -120,7 +119,7 @@ $$
                 'ZMEL_Cale_Querlen',
                 'NAMO',
                 'Arrêté inter-préfectoral N°2020118-0003 autorisant l''occupation temporaire du domaine public maritime par une zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen" sur le littoral de la commune de Roscanvel',
-                DATE '2021-11-02',
+                CURRENT_DATE,
                 NULL,
                 editor,
                 '',
@@ -163,8 +162,8 @@ $$
                 'Interdiction_VNM_Molene',
                 'MED',
                 'Arrêté préfectoral N°32/2014 relatif à l''interdiction de la pratique des véhicules nautiques à moteur dans l''archipel de l''Ile Molène, au sein du parc naturel marin d''Iroise',
-                NULL,
-                DATE '2021-09-30',
+                NOW() - INTERVAL '5 day',
+                NOW() - INTERVAL '15 day',
                 'Charlotte Laffargue',
                 '',
                 '',
@@ -177,7 +176,7 @@ $$
                 'PIRC',
                 'Article 1',
                 '',
-                CURRENT_DATE);
+                NOW() - INTERVAL '35 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
@@ -206,8 +205,8 @@ $$
                 'Dragage_port_de_Brest',
                 'NAMO',
                 'Arrêté préfectoral n°2015 212 0008 du 31 juillet 2015 portant autorisation au titre de l''article L.214-3 du code de l''environnement du développement du port de Brest',
-                edition,
-                NULL,
+                NOW() - INTERVAL '45 day',
+                NOW() - INTERVAL '5 day',
                 editor,
                 'Valide (CL)',
                 '',
@@ -220,7 +219,7 @@ $$
                 'PSCEM',
                 'Zone de dragage concernant l''accès au quai sixième Sud et au quai multimoda',
                 '',
-                CURRENT_DATE);
+                NOW() - INTERVAL '45 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
@@ -249,7 +248,7 @@ $$
                 'ZMEL_anse_illien_Ploumoguer',
                 'NAMO',
                 'Arrêté inter-préfectoral N°2006-0303 du 30 mars 2006 autorisant l''association des plaisanciers et riverains d''Ilien à occuper une zone de mouillages pour l''accueil de navires de plaisance au lieu-dit "anse d''Ilien" sur le territoire de la commune de Ploumoguer',
-                DATE'2021-11-06',
+                CURRENT_DATE,
                 NULL,
                 editor,
                 '',
@@ -292,8 +291,8 @@ $$
                 'RNN_Iroise',
                 'NAMO',
                 'Décret no 2021-1149 du 4 septembre 2021 portant extension du périmètre  et modification de la réglementation de la réserve naturelle nationale d''Iroise (Finistère)',
-                DATE '2021-09-28',
-                NULL,
+                NOW() - INTERVAL '45 day',
+                NOW() - INTERVAL '20 day',
                 editor,
                 'Histolitt SHOM',
                 'A valider',
@@ -306,7 +305,7 @@ $$
                 'PIRC',
                 'Partie terrestre RNN d''Iroise',
                 '',
-                CURRENT_DATE);
+                NOW() - INTERVAL '45 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
@@ -335,7 +334,7 @@ $$
                 'Mouillage_interdiction_port_Camaret',
                 'NAMO',
                 'Arrêté préfectoral n°2018-107 interdisant le mouillage dans une zone restreinte située face à la plage située au Nord de la digue du port de Camaret',
-                DATE '2021-11-02',
+                NOW() - INTERVAL '45 day',
                 NULL,
                 'Alexis Pré',
                 '',
@@ -349,7 +348,7 @@ $$
                 'PIRC',
                 'Zone interdisant mouillage port de Camaret',
                 'Interdiciton de mouillage',
-                CURRENT_DATE);
+                NOW() - INTERVAL '45 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
@@ -378,8 +377,8 @@ $$
                 'Dragage_port_de_Brest',
                 'NAMO',
                 'Arrêté préfectoral n°2015 212 0008 du 31 juillet 2015 portant autorisation au titre de l''article L.214-3 du code de l''environnement du développement du port de Brest',
-                edition,
-                NULL,
+                NOW() - INTERVAL '5 day',
+                NOW() - INTERVAL '2 day',
                 editor,
                 'Valide (CL)',
                 '',
@@ -392,7 +391,7 @@ $$
                 'PSCEM',
                 'Zone de dragage concernant l''accès maritime au Polder 124',
                 'Autorisation de dragage pendant les travaux',
-                CURRENT_DATE);
+                NOW() - INTERVAL '5 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
@@ -421,7 +420,7 @@ $$
                 'ZMEL_maison_blanche',
                 'NAMO',
                 'Arrêté interpréfectoral N°2012/342 du 07/12/2012 autorisant l''occupation du domaine public maritime par une zone de mouillage et d''équipements légers au lieu-dit "La Maison Blanche" sur le littoral de la commune de Brest',
-                DATE '2021-11-09',
+                CURRENT_DATE,
                 NULL,
                 editor,
                 '',
@@ -464,8 +463,8 @@ $$
                 'ZMEL_maison_blanche',
                 'NAMO',
                 'Arrêté interpréfectoral N°2012/342 du 07/12/2012 autorisant l''occupation du domaine public maritime par une zone de mouillage et d''équipements légers au lieu-dit "La Maison Blanche" sur le littoral de la commune de Brest',
-                DATE '2021-11-09',
-                NULL,
+                CURRENT_DATE,
+                CURRENT_DATE,
                 editor,
                 '',
                 '',
@@ -507,8 +506,8 @@ $$
                 'Mouillage_Conquet_Ile_de_bannec',
                 'NAMO',
                 'Arrêté préfectoral n° 2016/125\nréglementant la navigation et le mouillage ainsi que la baignade et toutes les activités nautiques et\nsubaquatiques aux abords de l''île de Bannec située sur le territoire de la commune du Conquet',
-                DATE '2021-11-02',
-                NULL,
+                NOW() - INTERVAL '45 day',
+                NOW() - INTERVAL '1 day',
                 editor,
                 'Valide (AP)',
                 '',
@@ -521,7 +520,7 @@ $$
                 'PSCEM',
                 'Zone reglementée',
                 'Réglementation sur la navigation',
-                CURRENT_DATE);
+                NOW() - INTERVAL '45 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
@@ -550,8 +549,8 @@ $$
                 'ZMEL_Cale_Querlen',
                 'NAMO',
                 'Arrêté inter-préfectoral N°2020118-0003 autorisant l''occupation temporaire du domaine public maritime par une zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen" sur le littoral de la commune de Roscanvel',
-                DATE'2021-11-02',
-                NULL,
+                NOW() - INTERVAL '1 day',
+                NOW() - INTERVAL '12 day',
                 editor,
                 '',
                 '',
@@ -564,7 +563,7 @@ $$
                 'PIRC, PSCEM',
                 'Zone au nord de la cale',
                 'Autorisation temporaire du domaine public',
-                CURRENT_DATE);
+                NOW() - INTERVAL '45 day');
 
 /* New REGULATORY AREAS */
         INSERT INTO public.regulatory_areas (id,

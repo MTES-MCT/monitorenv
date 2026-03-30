@@ -25,6 +25,8 @@ type ResultListLayerGroupProps = {
   addLayers: (layerIds: number[]) => void
   groupExtent: Extent
   groupName: string
+  hasNewLayers?: boolean
+  hasRecentlyUpdatedLayers?: boolean
   layerIdToDisplay: number | undefined
   layerIds: number[]
   layerType: MonitorEnvLayers.REGULATORY_ENV | MonitorEnvLayers.AMP | MonitorEnvLayers.VIGILANCE_AREA
@@ -38,6 +40,8 @@ export function ResultListLayerGroup({
   addLayers,
   groupExtent,
   groupName,
+  hasNewLayers,
+  hasRecentlyUpdatedLayers,
   layerIds,
   layerIdToDisplay,
   layerType,
@@ -96,7 +100,11 @@ export function ResultListLayerGroup({
 
   return (
     <>
-      <LayerSelector.GroupWrapper $isOpen={forceZonesAreOpen || zonesAreOpen}>
+      <LayerSelector.GroupWrapper
+        $isNew={hasNewLayers}
+        $isOpen={forceZonesAreOpen || zonesAreOpen}
+        $isRecentlyUpdated={hasRecentlyUpdatedLayers}
+      >
         <StyledTransparentButton onClick={clickOnGroupZones}>
           <LayerSelector.GroupName data-cy="result-group" title={groupName}>
             <Highlighter

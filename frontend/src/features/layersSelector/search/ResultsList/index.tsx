@@ -47,7 +47,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const { regulatoryAreas: groupedRegulatoryAreas, totalCount } = useGetFilteredRegulatoryAreas()
+  const { isFetching, isLoading, regulatoryAreas: groupedRegulatoryAreas, totalCount } = useGetFilteredRegulatoryAreas()
 
   const { data: amps } = useGetAMPsQuery()
   const ampResultsByAMPName = useMemo(
@@ -174,7 +174,7 @@ export function ResultList({ searchedText }: ResultListProps) {
                 <Title data-cy="amp-results-list-button" onClick={toggleAMPs}>
                   ZONES AMP &nbsp;
                   <NumberOfResults>
-                    ({totalAmps} {pluralize('résultat', totalAmps)})
+                    {isFetching || isLoading ? '...' : `(${totalAmps} ${pluralize('résultat', totalAmps)})`}
                   </NumberOfResults>
                 </Title>
               }

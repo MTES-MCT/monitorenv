@@ -5,15 +5,16 @@ import storage from 'redux-persist/lib/storage'
 
 const persistConfig = {
   key: 'regulatory',
-  storage,
-  whitelist: ['selectedRegulatoryLayerIds', 'showedRegulatoryLayerIds']
+  storage
 }
 
 type RegulatorySliceState = {
+  newOrUpdatedRegulatoryAreaIds: number[]
   selectedRegulatoryLayerIds: number[]
   showedRegulatoryLayerIds: number[]
 }
 const initialState: RegulatorySliceState = {
+  newOrUpdatedRegulatoryAreaIds: [],
   selectedRegulatoryLayerIds: [],
   showedRegulatoryLayerIds: []
 }
@@ -64,6 +65,10 @@ const regulatorySlice = createSlice({
       }
     },
 
+    setNewOrUpdatedRegulatoryAreaIds(state, action: PayloadAction<number>) {
+      state.newOrUpdatedRegulatoryAreaIds = [...state.newOrUpdatedRegulatoryAreaIds, action.payload]
+    },
+
     showRegulatoryLayer(state, action: PayloadAction<number | number[]>) {
       state.showedRegulatoryLayerIds = _.uniq(_.concat(state.showedRegulatoryLayerIds, action.payload))
     }
@@ -75,6 +80,7 @@ export const {
   hideRegulatoryLayer,
   hideRegulatoryLayers,
   removeRegulatoryZonesFromMyLayers,
+  setNewOrUpdatedRegulatoryAreaIds,
   showRegulatoryLayer
 } = regulatorySlice.actions
 

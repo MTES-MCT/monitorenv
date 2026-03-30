@@ -29,6 +29,7 @@ export function RegulatoryLayerGroup({
 
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
+  const consultedNewOrUpdatedRegulatoryAreaIds = useAppSelector(state => state.regulatory.newOrUpdatedRegulatoryAreaIds)
 
   const totalNumberOfZones = useMemo(
     () => regulatoryAreasLayerNames?.layerNames[groupName] ?? 0,
@@ -40,11 +41,20 @@ export function RegulatoryLayerGroup({
   const handleAddLayers = ids => dispatch(addRegulatoryZonesToMyLayers(ids))
   const handleRemoveLayers = ids => dispatch(removeRegulatoryZonesFromMyLayers(ids))
 
+  const hasLeastOneNewLayer = layers.some(
+    layer => layer.isNew && !consultedNewOrUpdatedRegulatoryAreaIds.includes(layer.id)
+  )
+  const hasLeastOneRecentlyUpdatedLayer = layers.some(
+    layer => layer.isUpdatedRecently && !consultedNewOrUpdatedRegulatoryAreaIds.includes(layer.id)
+  )
+
   return (
     <ResultListLayerGroup
       addLayers={handleAddLayers}
       groupExtent={groupExtent}
       groupName={groupName}
+      hasNewLayers={hasLeastOneNewLayer}
+      hasRecentlyUpdatedLayers={hasLeastOneRecentlyUpdatedLayer}
       layerIds={layerIds}
       layerIdToDisplay={regulatoryMetadataLayerId as number}
       layerType={MonitorEnvLayers.REGULATORY_ENV}

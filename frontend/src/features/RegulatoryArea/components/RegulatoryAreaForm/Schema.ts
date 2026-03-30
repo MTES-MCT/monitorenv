@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export const RegulatoryAreaFormSchema: Yup.Schema<
-  RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea
+  Omit<RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea, 'isNew' | 'isUpdatedRecently'>
 > = Yup.object().shape({
   additionalRefReg: Yup.array().of(
     Yup.object().shape({
