@@ -1,7 +1,6 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { createSelector } from '@reduxjs/toolkit'
 import { getQueryString } from '@utils/getQueryStringFormatted'
-import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { boundingExtent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
@@ -153,10 +152,9 @@ export const getRegulatoryAreasBySeaFront = createSelector(
           return
         }
 
-        const seaFront = SeaFrontLabels[facade]?.label
-        acc[seaFront] ??= {}
-        acc[seaFront][layerName] ??= []
-        acc[seaFront][layerName].push(area)
+        acc[facade] ??= {}
+        acc[facade][layerName] ??= []
+        acc[facade][layerName].push(area)
       })
 
       return acc
