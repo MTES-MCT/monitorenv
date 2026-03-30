@@ -1,3 +1,4 @@
+import { LoadingIcon } from '@components/style'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { useGetFilteredRegulatoryAreas } from '@features/RegulatoryArea/hooks/useGetFilteredRegulatoryAreas'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
@@ -7,7 +8,7 @@ import {
   getIsLinkingZonesToVigilanceArea
 } from '@features/VigilanceArea/slice'
 import { useMountTransition } from '@hooks/useMountTransition'
-import { Checkbox, pluralize } from '@mtes-mct/monitor-ui'
+import { Checkbox, pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
 import { groupBy } from 'lodash'
 import React, { useMemo } from 'react'
@@ -47,9 +48,14 @@ export function ResultList({ searchedText }: ResultListProps) {
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const { isFetching, isLoading, regulatoryAreas: groupedRegulatoryAreas, totalCount } = useGetFilteredRegulatoryAreas()
+  const {
+    isFetching: isFetchingRegulatoryAreas,
+    isLoading: isLoadingRegulatoryAreas,
+    regulatoryAreas: groupedRegulatoryAreas,
+    totalCount
+  } = useGetFilteredRegulatoryAreas()
 
-  const { data: amps } = useGetAMPsQuery()
+  const { data: amps, isFetching: isFetchingAmps, isLoading: isLoadingAmps } = useGetAMPsQuery()
   const ampResultsByAMPName = useMemo(
     () =>
       groupBy(
@@ -67,7 +73,11 @@ export function ResultList({ searchedText }: ResultListProps) {
 
   const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
-  const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
+  const {
+    isFetching: isFetchingVigilanceAreas,
+    isLoading: isLoadingVigilanceAreas,
+    vigilanceAreas
+  } = useGetFilteredVigilanceAreasQuery()
   const vigilanceAreasResults = useMemo(() => vigilanceAreas?.ids ?? [], [vigilanceAreas])
 
   const sortedVigilanceAreasResultsByName = useMemo(
@@ -141,9 +151,13 @@ export function ResultList({ searchedText }: ResultListProps) {
               label={
                 <Title data-cy="regulatory-result-list-button" onClick={toggleRegulatory}>
                   ZONES RÉGLEMENTAIRES &nbsp;
-                  <NumberOfResults>
-                    ({totalCount} {pluralize('résultat', totalCount)})
-                  </NumberOfResults>
+                  {isLoadingRegulatoryAreas || isFetchingRegulatoryAreas ? (
+                    <LoadingIcon $color={THEME.color.slateGray} $size={14} />
+                  ) : (
+                    <NumberOfResults>
+                      ({totalCount} {pluralize('résultat', totalCount)})
+                    </NumberOfResults>
+                  )}
                 </Title>
               }
               name="isRegulatorySearchResultsVisible"
@@ -173,9 +187,13 @@ export function ResultList({ searchedText }: ResultListProps) {
               label={
                 <Title data-cy="amp-results-list-button" onClick={toggleAMPs}>
                   ZONES AMP &nbsp;
-                  <NumberOfResults>
-                    {isFetching || isLoading ? '...' : `(${totalAmps} ${pluralize('résultat', totalAmps)})`}
-                  </NumberOfResults>
+                  {isLoadingAmps || isFetchingAmps ? (
+                    <LoadingIcon $color={THEME.color.slateGray} $size={14} />
+                  ) : (
+                    <NumberOfResults>
+                      ({totalAmps} {pluralize('résultat', totalAmps)})
+                    </NumberOfResults>
+                  )}
                 </Title>
               }
               name="isAmpSearchResultsVisible"
@@ -200,9 +218,13 @@ export function ResultList({ searchedText }: ResultListProps) {
               label={
                 <Title data-cy="vigilance-area-results-list-button" onClick={toggleVigilanceAreas}>
                   ZONES DE VIGILANCE &nbsp;
-                  <NumberOfResults>
-                    ({totalVigilanceAreas} {pluralize('résultat', totalVigilanceAreas)})
-                  </NumberOfResults>
+                  {isLoadingVigilanceAreas || isFetchingVigilanceAreas ? (
+                    <LoadingIcon $color={THEME.color.slateGray} $size={14} />
+                  ) : (
+                    <NumberOfResults>
+                      ({totalVigilanceAreas} {pluralize('résultat', totalVigilanceAreas)})
+                    </NumberOfResults>
+                  )}
                 </Title>
               }
               name="isVigilanceAreaSearchResultsVisible"

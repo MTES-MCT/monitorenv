@@ -262,7 +262,7 @@ $$
                 'PIRC, PSCEM',
                 'Autorisation pour asso de plaisanciers riverains',
                 'Reglementation_mouillage_anse_illien',
-                CURRENT_DATE);
+                NOW() - INTERVAL '55 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
@@ -434,7 +434,7 @@ $$
                 'PIRC, PSCEM',
                 'Zone 1',
                 'Autorisation d''occupation du domaine public',
-                CURRENT_DATE);
+                NOW() - INTERVAL '35 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,

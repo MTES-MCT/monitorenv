@@ -3,7 +3,16 @@ import { StyledTransparentButton } from '@components/style'
 import { isOutOfPeriod, isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, Size, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  customDayjs,
+  Icon,
+  IconButton,
+  OPENLAYERS_PROJECTION,
+  Size,
+  THEME,
+  WSG84_PROJECTION
+} from '@mtes-mct/monitor-ui'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import styled from 'styled-components'
@@ -73,8 +82,16 @@ export function MyVigilanceAreaLayerZone({
     dispatch(vigilanceAreaActions.deleteIdToMyVigilanceAreaIds(layerId))
   }
 
+  const isNew = layer ? customDayjs(layer.createdAt).isAfter(customDayjs().subtract(30, 'days')) : false
+  const isUpdatedRecently = layer ? customDayjs(layer.updatedAt).isAfter(customDayjs().subtract(30, 'days')) : false
+
   return (
-    <LayerSelector.Layer $metadataIsShown={metadataIsShown} $withBorderBottom>
+    <LayerSelector.Layer
+      $isNew={isNew}
+      $isRecentlyUpdated={isUpdatedRecently}
+      $metadataIsShown={metadataIsShown}
+      $withBorderBottom
+    >
       <StyledTransparentButton onClick={zoomToLayerExtent}>
         <LayerLegend
           border={isWithinPeriod(layer?.periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}

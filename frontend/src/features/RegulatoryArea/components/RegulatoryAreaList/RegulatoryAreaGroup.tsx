@@ -1,7 +1,6 @@
 import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useMemo, useState } from 'react'
 
@@ -23,14 +22,8 @@ export function RegulatoryAreaGroup({
   const layerGroupName = getTitle(groupName)
   const [isGroupNameOpen, setIsGroupNameOpen] = useState(false)
 
-  const consultedNewOrUpdatedRegulatoryAreaIds = useAppSelector(state => state.regulatory.newOrUpdatedRegulatoryAreaIds)
-
-  const hasLeastOneNewLayer = regulatoryAreas.some(
-    layer => layer.isNew && !consultedNewOrUpdatedRegulatoryAreaIds.includes(layer.id)
-  )
-  const hasLeastOneRecentlyUpdatedLayer = regulatoryAreas.some(
-    layer => layer.isUpdatedRecently && !consultedNewOrUpdatedRegulatoryAreaIds.includes(layer.id)
-  )
+  const hasLeastOneNewLayer = regulatoryAreas.some(layer => layer.isNew)
+  const hasLeastOneRecentlyUpdatedLayer = regulatoryAreas.some(layer => layer.isUpdatedRecently)
   const openGroupName = (event: React.MouseEvent) => {
     event.stopPropagation()
     setIsGroupNameOpen(!isGroupNameOpen)

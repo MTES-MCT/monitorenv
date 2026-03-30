@@ -8,7 +8,6 @@ import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTIO
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import { setNewOrUpdatedRegulatoryAreaIds } from 'domain/shared_slices/Regulatory'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { useNavigate } from 'react-router'
@@ -23,14 +22,8 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
   const layerTitle = getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume) ?? 'AUCUN NOM'
 
-  const consultedNewOrUpdatedRegulatoryAreaIds = useAppSelector(state => state.regulatory.newOrUpdatedRegulatoryAreaIds)
-  const isNew = regulatoryArea.isNew && !consultedNewOrUpdatedRegulatoryAreaIds.includes(regulatoryArea.id)
-  const isUpdatedRecently =
-    regulatoryArea.isUpdatedRecently && !consultedNewOrUpdatedRegulatoryAreaIds.includes(regulatoryArea.id)
-
   const openMetadata = event => {
     event.stopPropagation()
-    dispatch(setNewOrUpdatedRegulatoryAreaIds(regulatoryArea.id))
     dispatch(
       regulatoryAreaTableActions.setOpenRegulatoryAreaId(
         openedRegulatoryAreaId === regulatoryArea.id ? undefined : regulatoryArea.id
@@ -61,8 +54,8 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
 
   return (
     <LayerSelector.Layer
-      $isNew={isNew}
-      $isRecentlyUpdated={isUpdatedRecently}
+      $isNew={regulatoryArea.isNew}
+      $isRecentlyUpdated={regulatoryArea.isUpdatedRecently}
       $metadataIsShown={openedRegulatoryAreaId === regulatoryArea.id}
     >
       <StyledTransparentButton $width="70%" onClick={openMetadata}>

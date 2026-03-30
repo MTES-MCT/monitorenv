@@ -41,6 +41,9 @@ export function RegulatoryLayerGroup({
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
 
+  const hasLeastOneNewLayer = layers.some(layer => layer.isNew)
+  const hasLeastOneRecentlyUpdatedLayer = layers.some(layer => layer.isUpdatedRecently)
+
   const handleRemoveZone = useCallback(
     e => {
       e.stopPropagation()
@@ -71,6 +74,8 @@ export function RegulatoryLayerGroup({
     <MyLayerGroup
       addZonesToVigilanceArea={addZonesToVigilanceArea}
       groupName={getTitle(groupName)}
+      hasNewLayers={hasLeastOneNewLayer}
+      hasRecentlyUpdatedLayers={hasLeastOneRecentlyUpdatedLayer}
       layers={layers}
       name="regulatory"
       onRemoveZone={e => handleRemoveZone(e)}
