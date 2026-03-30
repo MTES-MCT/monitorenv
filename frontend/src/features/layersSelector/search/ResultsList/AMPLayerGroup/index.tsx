@@ -1,6 +1,11 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
+import { customDayjs } from '@mtes-mct/monitor-ui'
 
-import { getExtentOfAMPLayersGroupByGroupName, getNumberOfAMPByGroupName } from '../../../../../api/ampsAPI'
+import {
+  getExtentOfAMPLayersGroupByGroupName,
+  getNumberOfAMPByGroupName,
+  useGetAMPsQuery
+} from '../../../../../api/ampsAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/Amp'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
@@ -25,11 +30,22 @@ export function AMPLayerGroup({
   const handleAddLayers = ids => dispatch(addAmpZonesToMyLayers(ids))
   const handleRemoveLayers = ids => dispatch(removeAmpZonesFromMyLayers(ids))
 
+  const { amps } = useGetAMPsQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      amps: Object.values(data?.entities ?? []).filter(amp => layerIds.includes(amp.id))
+    })
+  })
+
+  const hasRecentlyUpdatedLayers = amps.some(
+    amp => amp.updatedAt && customDayjs(amp.updatedAt).isAfter(customDayjs().subtract(30, 'day'))
+  )
+
   return (
     <ResultListLayerGroup
       addLayers={handleAddLayers}
       groupExtent={groupExtent}
       groupName={groupName}
+      hasNewLayers={hasRecentlyUpdatedLayers}
       layerIds={layerIds}
       layerIdToDisplay={ampMetadataLayerId as number}
       layerType={MonitorEnvLayers.AMP}
