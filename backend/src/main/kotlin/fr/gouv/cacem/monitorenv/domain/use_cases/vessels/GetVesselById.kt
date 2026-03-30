@@ -18,7 +18,7 @@ class GetVesselById(
 
     fun execute(
         id: Int,
-        from: ZonedDateTime = ZonedDateTime.now().minusHours(12),
+        from: ZonedDateTime = ZonedDateTime.now().minusDays(3),
         to: ZonedDateTime = ZonedDateTime.now(),
     ): VesselEntity {
         vesselRepository.findVesselById(id)?.let { vessel ->

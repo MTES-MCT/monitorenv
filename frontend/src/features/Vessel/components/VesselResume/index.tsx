@@ -14,6 +14,7 @@ import { Summary } from '@features/Vessel/components/VesselResume/Resume/Summary
 import { Tabs } from '@features/Vessel/components/VesselResume/Tabs'
 import { UNKNOWN } from '@features/Vessel/components/VesselResume/utils'
 import { vesselAction } from '@features/Vessel/slice'
+import { Vessel } from '@features/Vessel/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
@@ -36,11 +37,12 @@ import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { Flag } from '../VesselSearch/VesselSearchItem'
 
 import type { Reporting } from '../../../../domain/entities/reporting'
-import type { Vessel } from '@features/Vessel/types'
 import type { Coordinate } from 'ol/coordinate'
 
 export type ResumePages = 'RESUME' | 'OWNER' | 'HISTORY'
 export type ActiveButtons = 'TRACKING'
+
+const MINIMUM_AIS_VESSEL_SIZE = 15
 
 type ResumeProps = {
   id: number
@@ -117,6 +119,11 @@ export function Resume({ id, onClose }: ResumeProps) {
     [reportings]
   )
 
+  const close = () => {
+    setIsTrackOpen(false)
+    onClose()
+  }
+
   useEffect(() => {
     dispatch(vesselAction.setHasReportings(currentNbReportings > 0))
   }, [currentNbReportings, dispatch])
@@ -127,33 +134,35 @@ export function Resume({ id, onClose }: ResumeProps) {
 
   const countryName = vessel.flag ? countries.getName(vessel.flag.toUpperCase(), 'fr') : UNKNOWN
 
+  const hasNoAIS = !!(vessel.positions?.length === 0 && vessel.length && vessel.length < MINIMUM_AIS_VESSEL_SIZE)
+
   return (
     <DialogWrapper $context={context} $isRightMenuOpened={isRightMenuOpened} $visibility={visibility}>
       {isTrackSettingsOpen && <VesselSettings vessel={vessel} />}
 
-      {vessel.positions && vessel.positions.length > 0 && (
-        <ButtonsWrapper>
-          <li>
-            <VesselButton
-              $isActive={activeButton === 'TRACKING'}
-              Icon={Icon.Vessel}
-              onClick={() => {
-                openTrackSettings(isTrackSettingsOpen)
-              }}
-              title={`${isTrackSettingsOpen ? 'Fermer' : 'Ouvrir'} le paramétrage de la piste AIS`}
-            />
-          </li>
-          <li>
-            <VesselButton
-              Icon={Icon.FocusVessel}
-              onClick={() => {
-                focusLastPosition(vessel.positions?.[0])
-              }}
-              title="Centrer sur le navire"
-            />
-          </li>
-        </ButtonsWrapper>
-      )}
+      <ButtonsWrapper>
+        <li>
+          <VesselButton
+            $isActive={activeButton === 'TRACKING'}
+            disabled={hasNoAIS}
+            Icon={Icon.Vessel}
+            onClick={() => {
+              openTrackSettings(isTrackSettingsOpen)
+            }}
+            title={`${isTrackSettingsOpen ? 'Fermer' : 'Ouvrir'} le paramétrage de la piste AIS`}
+          />
+        </li>
+        <li>
+          <VesselButton
+            disabled={vessel.positions?.length === 0}
+            Icon={Icon.FocusVessel}
+            onClick={() => {
+              focusLastPosition(vessel.positions?.[0])
+            }}
+            title="Centrer sur le navire"
+          />
+        </li>
+      </ButtonsWrapper>
       <StyledMapMenuDialogContainer data-cy={`vessel-resume-${vessel.shipName}`}>
         <MapMenuDialog.Header>
           <MapMenuDialog.Title>
@@ -166,13 +175,7 @@ export function Resume({ id, onClose }: ResumeProps) {
               {vessel.shipName}
             </TitleWrapper>
           </MapMenuDialog.Title>
-          <MapMenuDialog.CloseButton
-            Icon={Icon.Close}
-            onClick={() => {
-              onClose()
-            }}
-            title="Fermer la fiche navire"
-          />
+          <MapMenuDialog.CloseButton Icon={Icon.Close} onClick={close} title="Fermer la fiche navire" />
         </MapMenuDialog.Header>
         <>
           <Tabs
@@ -192,10 +195,17 @@ export function Resume({ id, onClose }: ResumeProps) {
                   </CurrentReportingBanner>
                 )}
 
-                {vessel.positions?.length === 0 && (
+                {hasNoAIS && (
                   <AisInformationMessage>
                     <Icon.AttentionFilled />
                     Navire non rattaché à l’AIS
+                  </AisInformationMessage>
+                )}
+
+                {vessel.positions?.length === 0 && (!vessel.length || vessel?.length > MINIMUM_AIS_VESSEL_SIZE) && (
+                  <AisInformationMessage>
+                    <Icon.AttentionFilled />
+                    Pas de message AIS depuis {Vessel.AisTrackSettingsLabel.THREE_DAYS}
                   </AisInformationMessage>
                 )}
 

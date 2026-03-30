@@ -7,7 +7,7 @@ class AISPayload(
     val course: Double?,
     val features: Feature?,
     val heading: Double?,
-    val mmsi: Int?,
+    val mmsi: Int,
     val speed: Double?,
     val status: String?,
     val ts: ZonedDateTime,

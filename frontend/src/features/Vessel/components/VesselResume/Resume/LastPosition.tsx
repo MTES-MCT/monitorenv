@@ -23,14 +23,14 @@ export function LastPosition({ context = 'RESUME', lastPosition }: LastPositionP
   const coordinatesFormat = useAppSelector(state => state.map.coordinatesFormat)
 
   const displayedDate = useMemo(() => {
-    if (!lastPosition?.timestamp) {
+    if (!lastPosition?.sentAt) {
       return UNKNOWN
     }
 
     const date =
       context === 'RESUME'
-        ? customDayjs(lastPosition?.timestamp).fromNow(true)
-        : getDateAsLocalizedStringVeryCompact(lastPosition?.timestamp, false, true)
+        ? customDayjs(lastPosition?.sentAt).fromNow(true)
+        : getDateAsLocalizedStringVeryCompact(lastPosition?.sentAt, false, true)
 
     return (
       <>
@@ -38,7 +38,7 @@ export function LastPosition({ context = 'RESUME', lastPosition }: LastPositionP
         <dd>{date}</dd>
       </>
     )
-  }, [lastPosition?.timestamp, context])
+  }, [lastPosition?.sentAt, context])
 
   const [latitude, longitude] = formatCoordinates(lastPosition?.geom?.coordinates, coordinatesFormat)
 
