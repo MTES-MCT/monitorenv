@@ -17,7 +17,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Nom de la zone',
     id: 'name',
-    size: 250 + legacyFirefoxOffset
+    size: 350 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.periods,
@@ -33,7 +33,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Thématiques',
     id: 'themes',
-    size: 230 + legacyFirefoxOffset
+    size: 270 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.tags,
@@ -41,7 +41,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Tags',
     id: 'tags',
-    size: 230 + legacyFirefoxOffset
+    size: 270 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.seaFront,
@@ -57,7 +57,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Validée le',
     id: 'validatedAt',
-    size: 100 + legacyFirefoxOffset
+    size: 160 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.isDraft,
@@ -65,7 +65,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Statut',
     id: 'isDraft',
-    size: 125 + legacyFirefoxOffset
+    size: 150 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.visibility,
@@ -73,7 +73,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Visibilité',
     id: 'visibility',
-    size: 105 + legacyFirefoxOffset
+    size: 120 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,

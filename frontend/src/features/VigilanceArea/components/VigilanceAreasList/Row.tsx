@@ -2,8 +2,15 @@ import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender } from '@tanstack/react-table'
 import styled from 'styled-components'
 
+import { FrequencyCell } from './Cells/FrequencyCell'
+import { TagsDetailsCell } from './Cells/TagsDetailsCell'
+import { ThemesDetailsCell } from './Cells/ThemesDetailsCell'
+import { ValidationDateDetailsCell } from './Cells/ValidationDateDetailsCell'
+
+import type { VigilanceArea } from '@features/VigilanceArea/types'
+
 export function Row({ row }) {
-  const vigilanceArea = row.original
+  const vigilanceArea: VigilanceArea.VigilanceArea = row.original
 
   return (
     <>
@@ -11,7 +18,7 @@ export function Row({ row }) {
         {row?.getVisibleCells().map(cell => (
           <ExpandableRowCell
             key={cell.id}
-            $hasRightBorder={cell.column.id === 'geom'}
+            $hasRightBorder={cell.column.id === 'visibility'}
             $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
             $isDraft={!!vigilanceArea.isDraft}
             onClick={() => row.toggleExpanded()}
@@ -29,24 +36,23 @@ export function Row({ row }) {
         <ExpandedRow $isDraft={!!vigilanceArea.isDraft} data-id={`${row.id}-expanded`}>
           <ExpandedRowCell>
             <ExpandedRowLabel>Commentaire</ExpandedRowLabel>
-            <ExpandedRowValue>{vigilanceArea.comment}</ExpandedRowValue>
+            <ExpandedRowValue>{vigilanceArea.comments}</ExpandedRowValue>
           </ExpandedRowCell>
           <ExpandedRowCell>
-            <ExpandedRowLabel>Récurrence</ExpandedRowLabel>
-            <ExpandedRowValue>{vigilanceArea.comment}</ExpandedRowValue>
+            <FrequencyCell periods={vigilanceArea.periods} />
           </ExpandedRowCell>
           <ExpandedRowCell>
-            <ExpandedRowLabel>Thématiques</ExpandedRowLabel>
-            <ExpandedRowValue>{vigilanceArea.comment}</ExpandedRowValue>
+            <ExpandedRowLabel>Thématiques et sous-thématiques</ExpandedRowLabel>
+            <ThemesDetailsCell themes={vigilanceArea.themes} />
           </ExpandedRowCell>
           <ExpandedRowCell>
-            <ExpandedRowLabel>Tags</ExpandedRowLabel>
-            <ExpandedRowValue>{vigilanceArea.comment}</ExpandedRowValue>
+            <ExpandedRowLabel>Tags et sous-tags</ExpandedRowLabel>
+            <TagsDetailsCell tags={vigilanceArea.tags} />
           </ExpandedRowCell>
           <ExpandedRowCell />
           <ExpandedRowCell>
             <ExpandedRowLabel>Dernière validation</ExpandedRowLabel>
-            <ExpandedRowValue>{vigilanceArea.comment}</ExpandedRowValue>
+            <ValidationDateDetailsCell date={vigilanceArea.validatedAt} />
           </ExpandedRowCell>
           <ExpandedRowCell>
             <ExpandedRowLabel>Créée par </ExpandedRowLabel>
@@ -103,7 +109,6 @@ const ExpandedRowCell = styled(TableWithSelectableRows.Td).attrs(props => ({
 const ExpandedRowLabel = styled.span`
   color: ${p => p.theme.color.slateGray};
   display: block;
-  font-weight: 400;
   width: 100%;
 `
 const ExpandedRowValue = styled.span``
