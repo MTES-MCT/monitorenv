@@ -187,7 +187,7 @@ jobs:
 
   e2e_test:
     name: Run E2E tests
-    needs: [ version, build ]
+    needs: [version, build]
     runs-on: ubuntu-22.04
     strategy:
       # when one test fails, DO NOT cancel the other
@@ -196,14 +196,13 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
+        containers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
       CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
       ENV_PROFILE: ${{needs.version.outputs.ENV_PROFILE}}
       FRONTEND_GOOGLEMAPS_API_KEY: ${{ secrets.FRONTEND_GOOGLEMAPS_API_KEY }}
-      FRONTEND_SHOM_KEY: ${{ secrets.FRONTEND_SHOM_KEY }}
       FRONTEND_MAPBOX_KEY: ${{ secrets.FRONTEND_MAPBOX_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       MONITORENV_VERSION: ${{ needs.version.outputs.VERSION }}
@@ -258,7 +257,7 @@ jobs:
 
   e2e_multi_windows_test:
     name: Run E2E multi windows tests
-    needs: [ version, build ]
+    needs: [version, build]
     runs-on: ubuntu-22.04
     if: false
     env:
@@ -308,7 +307,7 @@ jobs:
 
   generate_and_upload_source_maps:
     name: Generate and upload source maps to Sentry
-    needs: [ version, build, unit_test_backend, unit_test_frontend, e2e_test ]
+    needs: [version, build, unit_test_backend, unit_test_frontend, e2e_test]
     runs-on: ubuntu-22.04
     env:
       VERSION: ${{ needs.version.outputs.VERSION }}
@@ -353,7 +352,7 @@ jobs:
 
   push_to_registry:
     name: Push to registry
-    needs: [ version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps ]
+    needs: [version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps]
     # needs: [version, e2e_test, e2e_multi_windows_test, unit_test_frontend, e2e_test]
     runs-on: ubuntu-22.04
     env:
