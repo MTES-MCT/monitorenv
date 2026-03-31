@@ -1,3 +1,5 @@
+import type { Extent } from 'ol/extent'
+
 function generateQueryStringPart(
   key: string,
   value: boolean | string | string[] | number | number[] | undefined
@@ -13,7 +15,7 @@ function generateQueryStringPart(
 
 export function getQueryString(
   basePath: string,
-  params?: Record<string, boolean | string | string[] | number | number[] | undefined> | void
+  params?: Record<string, boolean | string | string[] | Extent | number | number[] | undefined> | void
 ): string {
   if (!params) {
     return `${basePath}`

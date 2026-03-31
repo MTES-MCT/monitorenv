@@ -14,15 +14,18 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
             LEFT JOIN regulatoryArea.themes th
             LEFT JOIN regulatoryArea.tags tg
             WHERE (:seaFronts IS NULL OR regulatoryArea.facade IN (:seaFronts))
-            AND (:themes IS NULL OR th.theme.id IN :themes)
-            AND (:tags IS NULL OR tg.tag.id IN :tags)
-            AND (:controlPlan IS NULL OR regulatoryArea.plan LIKE %:controlPlan%)
-            AND regulatoryArea.creation IS NOT NULL
-            AND (:onlyRecentsAreas IS FALSE OR (
-                regulatoryArea.creation >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
-                OR regulatoryArea.editionBo >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
-                OR regulatoryArea.editionCacem >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
-            ))
+                AND (:themes IS NULL OR th.theme.id IN :themes)
+                AND (:tags IS NULL OR tg.tag.id IN :tags)
+                AND (:controlPlan IS NULL OR regulatoryArea.plan LIKE %:controlPlan%)
+                AND regulatoryArea.creation IS NOT NULL
+                AND (:onlyRecentsAreas IS FALSE OR (
+                    regulatoryArea.creation >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
+                    OR regulatoryArea.editionBo >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
+                    OR regulatoryArea.editionCacem >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
+                ))
+                AND
+                ((:withGeometry IS FALSE OR :geom IS NULL)
+                OR intersects(regulatoryArea.geom, :geom) = true)
             ORDER BY regulatoryArea.layerName
         """,
     )
@@ -32,6 +35,9 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
         tags: List<Int>? = null,
         themes: List<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
+        withGeometry: Boolean,
+        zoom: Int?,
+        geom: Geometry?,
     ): List<RegulatoryAreaNewModel>
 
     fun findAllByCreationIsNull(): List<RegulatoryAreaNewModel>

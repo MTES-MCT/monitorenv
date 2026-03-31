@@ -16,7 +16,7 @@ class GetAllAMPsByIds(
         ids: List<Int>,
         axis: AxisEnum,
     ): List<AMPEntity> {
-        logger.info("Attempt to GET AMPs with ids:  $ids")
+        logger.info("Attempt to GET AMPs with ids: $ids")
         val amps = ampRepository.findAllByIds(ids, axis)
         logger.info("Found ${amps.size} AMPs")
 

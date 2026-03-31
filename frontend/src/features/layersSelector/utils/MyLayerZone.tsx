@@ -18,7 +18,7 @@ import { setFitToExtent } from '../../../domain/shared_slices/Map'
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 
 type MyLayerZoneProps = {
-  bbox: number[]
+  bbox: number[] | undefined
   displayedName: string
   hasMetadata: boolean
   hideLayer: () => void
@@ -71,6 +71,9 @@ export function MyLayerZone({
   )
 
   const zoomToLayerExtent = () => {
+    if (!bbox) {
+      return
+    }
     const extent = transformExtent(
       bbox,
       new Projection({ code: WSG84_PROJECTION }),

@@ -1,7 +1,7 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { createSelector } from '@reduxjs/toolkit'
 import { getQueryString } from '@utils/getQueryStringFormatted'
-import { boundingExtent } from 'ol/extent'
+import { boundingExtent, type Extent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
 
@@ -14,12 +14,15 @@ const GET_REGULATORY_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/l
 const GET_REGULATORY_AREA_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zones réglementaire"
 const GET_LAYER_NAMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les noms de groupes de zones réglementaires"
 type Filters = {
+  bbox?: Extent | undefined
   controlPlan?: string
   onlyRecentsAreas?: boolean
   seaFronts?: string[]
   searchQuery?: string
   tags?: number[]
   themes?: number[]
+  withGeometry?: boolean
+  zoom?: number
 }
 
 export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
@@ -61,7 +64,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
           group: group.group,
           regulatoryAreas: group.regulatoryAreas.map(area => ({
             ...area,
-            bbox: boundingExtent(area.geom?.coordinates.flat().flat() as Coordinate[])
+            bbox: area.geom ? boundingExtent(area.geom?.coordinates.flat().flat() as Coordinate[]) : undefined
           }))
         })),
         totalCount: response.totalCount

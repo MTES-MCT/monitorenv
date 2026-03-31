@@ -1,3 +1,4 @@
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
 import VectorLayer from 'ol/layer/Vector'
@@ -6,9 +7,9 @@ import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
 import { getAMPFeature } from './AMPGeometryHelpers'
 import { getAMPLayerStyle } from './AMPLayers.style'
-import { useGetAmpsByIdsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { Axis } from '../../../../types'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
 import type { VectorLayerWithName } from 'domain/types/layer'
@@ -25,7 +26,13 @@ export function AMPLayers({ map }: BaseMapChildrenProps) {
 
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLayerVisible = showedAmpLayerIds.length > 0 && !isLinkingRegulatoryToVigilanceArea
-  const { data: ampLayers } = useGetAmpsByIdsQuery(showedAmpLayerIds, { skip: !isLayerVisible })
+  const { data: ampLayers } = useGetAMPsByIdsQuery(
+    {
+      axis: Axis.NORTH_SOUTH,
+      ids: showedAmpLayerIds
+    },
+    { skip: !isLayerVisible }
+  )
 
   const ampVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const ampVectorLayerRef = useRef(

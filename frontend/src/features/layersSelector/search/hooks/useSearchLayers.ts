@@ -3,9 +3,11 @@ import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice
 import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import Fuse, { type Expression } from 'fuse.js'
 import { debounce } from 'lodash'
-import { useCallback, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { transformExtent } from 'ol/proj'
+import { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { setAMPsSearchResult } from '../slice'
 import { areArraysEqual } from './utils'
@@ -22,7 +24,13 @@ export function useSearchLayers() {
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
   const areRecentsAreasChecked = useAppSelector(state => state.layerSearch.areRecentsAreasChecked)
 
-  const { data: amps } = useGetAMPsQuery()
+  const { zoom } = useAppSelector(state => state.map.mapView)
+
+  const { data: amps } = useGetAMPsQuery({
+    bbox: searchExtent ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION) : undefined,
+    withGeometry: shouldFilterSearchOnMapExtent,
+    zoom
+  })
 
   const fuseAMPs = useMemo(() => {
     if (!amps?.entities) {
@@ -36,7 +44,7 @@ export function useSearchLayers() {
       minMatchCharLength: 2,
       threshold: 0.2
     })
-  }, [amps])
+  }, [amps?.entities])
 
   const dispatchIfChanged = useCallback(
     (

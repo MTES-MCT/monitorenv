@@ -8,15 +8,17 @@ import type { AMP } from 'domain/entities/AMPs'
 export const getExtentOfLayersGroup = (layers: RegulatoryArea.RegulatoryAreaWithBbox[] | AMP[]): Extent => {
   const extentOfLayersGroup = layers.reduce((accumulatedExtent, currentLayer) => {
     const extendedExtent = [...accumulatedExtent]
+    if (!currentLayer.bbox) {
+      return accumulatedExtent
+    }
     extend(extendedExtent, currentLayer.bbox)
 
     return extendedExtent
   }, createEmpty())
-  const extent = transformExtent(
+
+  return transformExtent(
     extentOfLayersGroup,
     new Projection({ code: WSG84_PROJECTION }),
     new Projection({ code: OPENLAYERS_PROJECTION })
   )
-
-  return extent
 }

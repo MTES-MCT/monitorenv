@@ -43,6 +43,9 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
 
   const onEdit = () => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${regulatoryArea.id}`)
+    if (!regulatoryArea?.bbox) {
+      return
+    }
     const extent = transformExtent(
       regulatoryArea?.bbox,
       new Projection({ code: WSG84_PROJECTION }),

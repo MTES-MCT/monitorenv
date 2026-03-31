@@ -18,6 +18,9 @@ class GetAllNewRegulatoryAreas(
         tags: List<Int>?,
         themes: List<Int>?,
         onlyRecentsAreas: Boolean? = false,
+        withGeometry: Boolean,
+        zoom: Int?,
+        bbox: List<Double>?,
     ): AllRegulatoryAreasAndTotal {
         logger.info("Attempt to GET all regulatory areas")
 
@@ -29,6 +32,9 @@ class GetAllNewRegulatoryAreas(
                 tags = tags,
                 themes = themes,
                 onlyRecentsAreas = onlyRecentsAreas,
+                withGeometry = withGeometry,
+                zoom = zoom,
+                bbox = bbox,
             )
 
         val totalCount = allAreas.size.toLong()

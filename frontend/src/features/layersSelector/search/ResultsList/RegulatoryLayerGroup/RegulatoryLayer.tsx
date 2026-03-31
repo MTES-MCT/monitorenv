@@ -1,3 +1,4 @@
+import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
@@ -7,7 +8,6 @@ import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
 
-import { useGetRegulatoryLayerByIdQuery } from '../../../../../api/regulatoryLayersAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 import {
@@ -26,7 +26,6 @@ import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
 type RegulatoryLayerProps = {
-  groupName: string
   layerId: number
   searchedText: string
 }
@@ -40,7 +39,7 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
-  const { data: layer } = useGetRegulatoryLayerByIdQuery(layerId)
+  const { data: layer } = useGetRegulatoryAreaByIdQuery(layerId)
 
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 

@@ -48,7 +48,9 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
                 seaFronts = listOf("NAMO"),
                 tags = null,
                 themes = null,
+                withGeometry = false,
             )
+
         println("regulatoryAreas : $regulatoryAreas")
         assertThat(regulatoryAreas.size).isEqualTo(12)
     }

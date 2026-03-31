@@ -1,4 +1,4 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getDashboardById } from '@features/Dashboard/slice'
@@ -16,6 +16,7 @@ import VectorSource from 'ol/source/Vector'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { dashboardIcon, getDashboardStyle } from './style'
+import { Axis } from '../../../../types'
 import { Dashboard } from '../../types'
 
 import type { BaseMapChildrenProps } from '@features/map/BaseMap'
@@ -49,7 +50,13 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
     [allRegulatoryAreas, regulatoryLayersIds]
   )
 
-  const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
+  const { data: ampLayers } = useGetAMPsByIdsQuery(
+    {
+      axis: Axis.NORTH_SOUTH,
+      ids: activeDashboard?.ampIds ?? []
+    },
+    { skip: !activeDashboard || (activeDashboard?.ampIds && activeDashboard.ampIds.length === 0) }
+  )
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
   const metadataLayerId = useAppSelector(state => state.layersMetadata.metadataLayerId)
@@ -99,18 +106,15 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
           layersVectorSourceRef.current.addFeatures(features)
         }
         // AMP
-        if (ampLayers?.entities) {
-          const ampLayerIds = activeDashboard.ampIds
-          const features = ampLayerIds?.reduce((feats: Feature[], layerId) => {
-            const layer = ampLayers.entities[layerId]
-
-            if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+        if (ampLayers) {
+          const features = ampLayers?.reduce((feats: Feature[], layer) => {
+            if (layer?.geom && layer?.geom?.coordinates.length > 0) {
               const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, isolatedLayer, layer })
 
               if (!feature) {
                 return feats
               }
-              drawBorder(layerId, feature, Dashboard.Block.AMP)
+              drawBorder(layer.id, feature, Dashboard.Block.AMP)
 
               feats.push(feature)
             }
@@ -170,20 +174,16 @@ export function ActiveDashboardLayer({ map }: BaseMapChildrenProps) {
   }, [
     activeDashboard,
     activeDashboardId,
-    ampLayers?.entities,
-    activeDashboard?.ampIds,
-    activeDashboard?.regulatoryAreaIds,
-    activeDashboard?.reportingIds,
-    activeDashboard?.vigilanceAreaIds,
-    map,
-    vigilanceAreas?.entities,
-    mapFocus,
-    reportings,
-    dashboard?.dashboard?.geom,
-    drawBorder,
+    ampLayers,
+    dashboard?.dashboard.geom,
     displayGeometry,
+    drawBorder,
     isolatedLayer,
-    regulatoryAreas
+    map,
+    mapFocus,
+    regulatoryAreas,
+    reportings,
+    vigilanceAreas?.entities
   ])
 
   useEffect(() => {

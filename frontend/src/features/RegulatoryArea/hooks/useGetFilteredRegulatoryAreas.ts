@@ -1,8 +1,10 @@
 import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { getIntersectingLayerIds } from '@features/layersSelector/utils/getIntersectingLayerIds'
 import { useAppSelector } from '@hooks/useAppSelector'
+import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getTagIds } from '@utils/getTagsAsOptions'
 import { getThemeIds } from '@utils/getThemesAsOptions'
+import { transformExtent } from 'ol/proj'
 import { useMemo } from 'react'
 
 export const useGetFilteredRegulatoryAreas = () => {
@@ -15,16 +17,33 @@ export const useGetFilteredRegulatoryAreas = () => {
     searchExtent,
     shouldFilterSearchOnMapExtent
   } = useAppSelector(state => state.layerSearch)
+  const { bbox, zoom } = useAppSelector(state => state.map.mapView)
 
   const apiFilters = useMemo(
     () => ({
+      bbox:
+        shouldFilterSearchOnMapExtent && searchExtent
+          ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+          : bbox,
       controlPlan,
       onlyRecentsAreas: areRecentsAreasChecked,
       searchQuery: globalSearchText,
       tags: getTagIds(filteredRegulatoryTags),
-      themes: getThemeIds(filteredRegulatoryThemes)
+      themes: getThemeIds(filteredRegulatoryThemes),
+      withGeometry: shouldFilterSearchOnMapExtent,
+      zoom
     }),
-    [controlPlan, globalSearchText, filteredRegulatoryTags, filteredRegulatoryThemes, areRecentsAreasChecked]
+    [
+      areRecentsAreasChecked,
+      shouldFilterSearchOnMapExtent,
+      searchExtent,
+      bbox,
+      controlPlan,
+      globalSearchText,
+      filteredRegulatoryTags,
+      filteredRegulatoryThemes,
+      zoom
+    ]
   )
   const hasNoFilters = useMemo(
     () =>
@@ -32,7 +51,9 @@ export const useGetFilteredRegulatoryAreas = () => {
       !apiFilters.searchQuery &&
       apiFilters.tags?.length === 0 &&
       apiFilters.themes?.length === 0 &&
-      !apiFilters.onlyRecentsAreas,
+      !apiFilters.onlyRecentsAreas &&
+      !apiFilters.zoom &&
+      !apiFilters.bbox,
     [apiFilters]
   )
 
@@ -59,7 +80,7 @@ export const useGetFilteredRegulatoryAreas = () => {
       }
     }
 
-    const filteredregulatoryAreas = data?.regulatoryAreasByLayer
+    const filteredRegulatoryAreas = data?.regulatoryAreasByLayer
       .map(layer => ({
         ...layer,
         regulatoryAreas: layer.regulatoryAreas.filter(area => nextRegulatoryAreaIds?.includes(area.id))
@@ -67,8 +88,8 @@ export const useGetFilteredRegulatoryAreas = () => {
       .filter(layer => layer.regulatoryAreas.length > 0)
 
     return {
-      regulatoryAreas: filteredregulatoryAreas || [],
-      totalCount: filteredregulatoryAreas?.reduce((acc, layer) => acc + layer.regulatoryAreas.length, 0) || 0
+      regulatoryAreas: filteredRegulatoryAreas || [],
+      totalCount: filteredRegulatoryAreas?.reduce((acc, layer) => acc + layer.regulatoryAreas.length, 0) || 0
     }
   }, [data?.regulatoryAreasByLayer, data?.totalCount, nextRegulatoryAreaIds])
 

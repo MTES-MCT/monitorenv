@@ -1,14 +1,15 @@
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { getFeature } from '@utils/getFeature'
 import { getArea } from 'ol/sphere'
 
-import type { RegulatoryLayerCompact } from 'domain/entities/regulatory'
 import type { IsolatedLayerType } from 'domain/shared_slices/Map'
 
 type RegulatoryFeatureType = {
   code: string
   isolatedLayer: IsolatedLayerType | undefined
-  layer: RegulatoryLayerCompact
+  layer: RegulatoryArea.RegulatoryAreaWithBbox
 }
+
 export function getRegulatoryFeature({ code, isolatedLayer, layer }: RegulatoryFeatureType) {
   const feature = getFeature(layer.geom)
   if (!feature) {

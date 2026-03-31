@@ -1,30 +1,19 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v2
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegulatoryAreas
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.*
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.LayerNamesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaToCompleteDataOuput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasDataOutput.Companion.fromRegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasWithTotalDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController("regulatoryAreasV2")
 @RequestMapping("/bff/v2/regulatory-areas")
@@ -58,6 +47,11 @@ class RegulatoryAreas(
         @Parameter(description = "Only recent areas")
         @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
         onlyRecentsAreas: Boolean?,
+        @Parameter(description = "Avec geometrie")
+        @RequestParam(name = "withGeometry", required = false)
+        withGeometry: Boolean = true,
+        @RequestParam(name = "zoom", required = false) zoom: Int?,
+        @RequestParam(name = "bbox", required = false) bbox: List<Double>?,
     ): RegulatoryAreasWithTotalDataOutput {
         val (regulatoryAreasGrouped, totalCount) =
             getAllNewRegulatoryAreas.execute(
@@ -67,10 +61,13 @@ class RegulatoryAreas(
                 tags = tags,
                 themes = themes,
                 onlyRecentsAreas = onlyRecentsAreas,
+                withGeometry = withGeometry,
+                zoom = zoom,
+                bbox = bbox,
             )
 
         val groupedDto =
-            regulatoryAreasGrouped.map { RegulatoryAreasDataOutput.Companion.fromRegulatoryAreaEntity(it) }
+            regulatoryAreasGrouped.map { fromRegulatoryAreaEntity(it) }
 
         return RegulatoryAreasWithTotalDataOutput(
             totalCount = totalCount,
@@ -86,7 +83,7 @@ class RegulatoryAreas(
     ): List<RegulatoryAreaDataOutput> =
         getRegulatoryAreaByIds
             .execute(body.ids, body.axis)
-            .map { RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it) }
+            .map { fromRegulatoryAreaEntity(it) }
 
     @GetMapping("/{regulatoryAreaId}")
     @Operation(summary = "Get regulatory area by Id")
@@ -96,7 +93,7 @@ class RegulatoryAreas(
         regulatoryAreaId: Int,
     ): RegulatoryAreaDataOutput? =
         getNewRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)?.let {
-            RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it)
+            fromRegulatoryAreaEntity(it)
         }
 
     @PutMapping("", consumes = ["application/json"])
@@ -104,7 +101,7 @@ class RegulatoryAreas(
     fun put(
         @RequestBody regulatoryAreaDataInput: RegulatoryAreaDataInput,
     ): RegulatoryAreaDataOutput =
-        RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(
+        fromRegulatoryAreaEntity(
             createOrUpdateRegulatoryArea.execute(regulatoryAreaDataInput.toRegulatoryAreaEntity()),
         )
 

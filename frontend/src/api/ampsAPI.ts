@@ -54,7 +54,7 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
           })
         )
     }),
-    getAMPsByIds: builder.query<AMP[], { axis: string; ids: number[] }>({
+    getAMPsByIds: builder.query<AMP[], { axis?: string; ids: number[] }>({
       query: body => ({ body, method: 'POST', url: '/v1/amps' }),
       transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response)
     })

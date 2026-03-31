@@ -5,12 +5,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegulatoryAreas
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
@@ -120,6 +115,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = null,
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -296,6 +294,9 @@ class RegulatoryAreasITests {
                     seaFronts = listOf("NAMO"),
                     tags = null,
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -328,6 +329,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = null,
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -355,6 +359,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = null,
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(emptyMap(), 0L))
 
@@ -377,6 +384,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = listOf(5),
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -404,6 +414,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = null,
                     themes = listOf(101),
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 

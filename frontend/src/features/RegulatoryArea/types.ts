@@ -51,7 +51,7 @@ export namespace RegulatoryArea {
     refReg: string
   }
 
-  export type RegulatoryAreaWithBbox = RegulatoryAreaFromAPI & { bbox: number[] }
+  export type RegulatoryAreaWithBbox = RegulatoryAreaFromAPI & { bbox?: number[]; metadataIsShowed?: boolean }
 
   export type RegulatoryAreaByIdsForApi = {
     axis?: string
@@ -111,6 +111,7 @@ export namespace RegulatoryArea {
     REGIONAL_PREFECT_ORDER = 'Arrêté du préfet de région',
     REGULATION = 'Règlement'
   }
+
   export const RegulatoryAreaTypeLabel = {
     [RegulatoryAreaType.AGREEMENT]: 'Convention',
     [RegulatoryAreaType.BROCHURE]: 'Plaquette',
