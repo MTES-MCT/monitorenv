@@ -5,11 +5,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaNewModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaNewModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagRegulatoryAreaNewPk
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaNewModel
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeRegulatoryAreaNewPk
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.*
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaNewRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRegulatoryAreaRepository
@@ -52,6 +48,7 @@ class JpaRegulatoryAreaNewRepository(
                 themes = themes,
                 onlyRecentsAreas = onlyRecentsAreas,
                 withGeometry = withGeometry,
+                zoom = zoom,
                 geom = bbox?.let { bboxToPolygon(it) },
             ).map { it.toRegulatoryArea(mapper, withGeometry, zoom) }
 

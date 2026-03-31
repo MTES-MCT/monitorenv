@@ -36,6 +36,7 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
         themes: List<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
         withGeometry: Boolean,
+        zoom: Int?,
         geom: Geometry?,
     ): List<RegulatoryAreaNewModel>
 
@@ -102,6 +103,8 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
         maxX: Double?,
         maxY: Double?,
         withGeometry: Boolean,
+        zoom: Int?,
+        geom: Geometry?,
     ): List<RegulatoryAreaNewModel>
 
     fun findAllByCreationIsNull(): List<RegulatoryAreaNewModel>
