@@ -6,13 +6,14 @@ export function TagsCell({ tags }: { tags: TagFromAPI[] }) {
   if (!tags || tags.length === 0) {
     return <span>-</span>
   }
+  const title = tags.map(tag => tag.name).join(', ')
 
   return (
     <>
       {tags.map((tag, index) => (
-        <ThemesOrTagsContainer key={tag.name} title={tag.name}>
+        <ThemesOrTagsContainer key={tag.name} title={title}>
           {tag.name}
-          {index < tags.length - 1 ? ' - ' : ''}
+          {index < tags.length - 1 ? ', ' : ''}
         </ThemesOrTagsContainer>
       ))}
     </>

@@ -60,8 +60,8 @@ export function computeVigilanceAreaPeriod(
   }
   if (period?.startDatePeriod) {
     return `${[
-      `${period?.startDatePeriod ? `Du ${customDayjs(period?.startDatePeriod).utc().format('DD/MM/YYYY')}` : ''}
-      ${period?.endDatePeriod ? `au ${customDayjs(period?.endDatePeriod).utc().format('DD/MM/YYYY')}` : ''}`,
+      `${period?.startDatePeriod ? `Du ${customDayjs(period?.startDatePeriod).utc().format('DD/MM/YY')}` : ''}
+      ${period?.endDatePeriod ? `au ${customDayjs(period?.endDatePeriod).utc().format('DD/MM/YY')}` : ''}`,
       withReccurenceText ? frequencyText(period?.frequency, false) : '',
       withReccurenceText ? endingOccurenceText(period?.endingCondition, period?.computedEndDate, false) : ''
     ]
