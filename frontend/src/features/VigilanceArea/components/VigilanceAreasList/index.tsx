@@ -13,7 +13,7 @@ export function VigilancesAreasList() {
   const vigilanceAreasResults = Object.values(vigilanceAreas?.entities ?? {})
 
   return (
-    <SideWindowContent>
+    <StyledSideWindowContent>
       <StyledHeader>
         <Title data-cy="SideWindowHeader-title">Zones de vigilance</Title>
       </StyledHeader>
@@ -29,10 +29,13 @@ export function VigilancesAreasList() {
           <VigilanceAreasTable isFetching={isFetching} isLoading={isLoading} vigilanceAreas={vigilanceAreasResults} />
         </>
       )}
-    </SideWindowContent>
+    </StyledSideWindowContent>
   )
 }
 
+const StyledSideWindowContent = styled(SideWindowContent)`
+  overflow-x: inherit;
+`
 const StyledHeader = styled.div`
   display: flex;
   flex-direction: row;

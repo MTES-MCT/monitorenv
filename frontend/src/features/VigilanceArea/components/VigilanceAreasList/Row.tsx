@@ -1,5 +1,6 @@
+import { createPinnedCellStyle } from '@components/Table/TableWithSelectableRows/utils'
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
-import { flexRender } from '@tanstack/react-table'
+import { flexRender, type Row as RowType } from '@tanstack/react-table'
 import styled from 'styled-components'
 
 import { FrequencyCell } from './Cells/FrequencyCell'
@@ -9,28 +10,36 @@ import { ValidationDateDetailsCell } from './Cells/ValidationDateDetailsCell'
 
 import type { VigilanceArea } from '@features/VigilanceArea/types'
 
-export function Row({ row }) {
+export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
   const vigilanceArea: VigilanceArea.VigilanceArea = row.original
 
   return (
     <>
-      <TableWithSelectableRows.BodyTr key={row.key} data-cy="vigilance-area-row">
-        {row?.getVisibleCells().map(cell => (
-          <ExpandableRowCell
-            key={cell.id}
-            $hasRightBorder={cell.column.id === 'visibility'}
-            $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
-            $isDraft={!!vigilanceArea.isDraft}
-            onClick={() => row.toggleExpanded()}
-            style={{
-              maxWidth: cell.column.getSize(),
-              minWidth: cell.column.getSize(),
-              width: cell.column.getSize()
-            }}
-          >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </ExpandableRowCell>
-        ))}
+      <TableWithSelectableRows.BodyTr key={row.id} data-cy="vigilance-area-row">
+        {row?.getVisibleCells().map((cell, index, rowCells) => {
+          const cellStyle = createPinnedCellStyle({
+            context: cell,
+            index,
+            rowLength: rowCells.length
+          })
+
+          return (
+            <ExpandableRowCell
+              key={cell.id}
+              $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
+              $isDraft={!!vigilanceArea.isDraft}
+              onClick={() => row.toggleExpanded()}
+              style={{
+                maxWidth: cell.column.getSize(),
+                minWidth: cell.column.getSize(),
+                width: cell.column.getSize(),
+                ...cellStyle
+              }}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </ExpandableRowCell>
+          )
+        })}
       </TableWithSelectableRows.BodyTr>
       {row.getIsExpanded() && (
         <ExpandedRow $isDraft={!!vigilanceArea.isDraft} data-id={`${row.id}-expanded`}>
