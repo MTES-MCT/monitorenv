@@ -62,7 +62,7 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
 
   it('Should filter vigilance areas by draft status', () => {
     cy.fill('Publiée', false)
-    verifyVigilanceAreaRows('Non Publiée')
+    verifyVigilanceAreaRows('Brouillon')
   })
 
   it('Should filter vigilance areas by published status', () => {
