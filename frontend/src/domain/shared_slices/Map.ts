@@ -37,9 +37,16 @@ type MapSliceStateType = {
   isAreaSelected: boolean
   isolatedLayer: IsolatedLayerType | undefined
   locateOnMap: LocateOnMap | undefined
+  mapControls: MapControls
   mapView: MapView
   selectedBaseLayer: BaseLayer
   zoomToCenter?: Coordinate
+}
+
+export type MapControls = {
+  baseDelta: number
+  debounceTime: number
+  zoomFactor: number
 }
 
 export type MapView = {
@@ -55,6 +62,7 @@ const initialState: MapSliceStateType = {
   isAreaSelected: false,
   isolatedLayer: undefined,
   locateOnMap: undefined,
+  mapControls: { baseDelta: 1, debounceTime: 1000, zoomFactor: 6 },
   mapView: { bbox: undefined, zoom: undefined },
   selectedBaseLayer: BaseLayer.LIGHT,
   zoomToCenter: undefined
@@ -115,6 +123,17 @@ const mapSlice = createSlice({
     setLocateOnMap(state, action: PayloadAction<LocateOnMap | undefined>) {
       state.locateOnMap = action.payload
     },
+    setMapControls(state, action: PayloadAction<Partial<MapControls>>) {
+      if (action.payload.debounceTime) {
+        state.mapControls.debounceTime = action.payload.debounceTime
+      }
+      if (action.payload.baseDelta) {
+        state.mapControls.baseDelta = action.payload.baseDelta
+      }
+      if (action.payload.zoomFactor) {
+        state.mapControls.zoomFactor = action.payload.zoomFactor
+      }
+    },
     setMapView(state, action: PayloadAction<MapView>) {
       state.mapView = action.payload
     },
@@ -133,8 +152,8 @@ export const {
   setCurrentMapExtentTracker,
   setDistanceUnit,
   setFitToExtent,
-  setIsolateMode,
   setLocateOnMap,
+  setMapControls,
   setMapView,
   setZoomToCenter
 } = mapActions

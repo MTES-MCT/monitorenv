@@ -9,6 +9,7 @@ import { LayersOverlay } from '@features/layersSelector/overlays'
 import { LayerEvents } from '@features/layersSelector/overlays/LayerEvents'
 import { LocalizedAreasLayer } from '@features/LocalizedArea/components/Layers'
 import { LocateOnMapLayer } from '@features/LocateOnMap/Layer'
+import { Slider } from '@features/map/controls/Slider'
 import { MissionsLayer } from '@features/Mission/components/Layers'
 import { EditingMissionLayer } from '@features/Mission/components/Layers/EditingMissionLayer'
 import { HoveredMissionLayer } from '@features/Mission/components/Layers/HoveredMissionLayer'
@@ -29,6 +30,7 @@ import { DrawVigilanceAreaLayer } from '@features/VigilanceArea/components/Vigil
 import { EditingVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/EditingVigilanceAreaLayer'
 import { PreviewVigilanceAreasLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/PreviewVigilanceAreasLayer'
 import { SelectedVigilanceAreaLayer } from '@features/VigilanceArea/components/VigilanceAreaLayer/SelectedVigilanceAreaLayer'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 
 import { BaseMap } from './BaseMap'
@@ -64,10 +66,12 @@ import { SearchExtentLayer } from './layers/SearchExtentLayer'
 import { MapExtentController } from './MapExtentController'
 import { MapHistory } from './MapHistory'
 import { ActionOverlay } from './overlays/actions'
+import { setMapControls } from '../../domain/shared_slices/Map'
 
 // TODO Either use HOC to get proprer typings inference or migrate to vanilla JS.
 // https://legacy.reactjs.org/docs/higher-order-components.html#convention-pass-unrelated-props-through-to-the-wrapped-component
 export function Map() {
+  const dispatch = useAppDispatch()
   const displayRecentActivityLayer = useAppSelector(state => state.global.layers.displayRecentActivityLayer)
   const isRecentActivityDialogVisible = useAppSelector(state => state.global.visibility.isRecentActivityDialogVisible)
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
@@ -88,7 +92,40 @@ export function Map() {
     <MapLayer key="MapLayer" selectedBaseLayer={selectedBaseLayer} />,
     // @ts-ignore
     <InterestPointLayer key="InterestPointLayer" />,
+    <div style={{ padding: '2rem 1.5rem', position: 'absolute' }}>
+      <Slider
+        key="debounceSlider"
+        initialValue={1000}
+        max={2000}
+        onChange={value => {
+          dispatch(setMapControls({ debounceTime: value }))
+        }}
+        step={50}
+        title="debounceTime"
+      />
 
+      <Slider
+        key="baseDelta"
+        initialValue={1}
+        max={2}
+        onChange={value => {
+          dispatch(setMapControls({ baseDelta: value }))
+        }}
+        step={0.1}
+        title="baseDelta"
+      />
+
+      <Slider
+        key="zoomFactor"
+        initialValue={6}
+        max={10}
+        onChange={value => {
+          dispatch(setMapControls({ zoomFactor: value }))
+        }}
+        step={1}
+        title="zoomFactor"
+      />
+    </div>,
     // ZONE
     // @ts-ignore
     <AMPLayers key="AMPLayers" />,

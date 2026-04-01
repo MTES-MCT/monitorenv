@@ -1,5 +1,6 @@
 import { addBufferToExtent } from '@features/ControlUnit/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { setMapView } from 'domain/shared_slices/Map'
 import { debounce } from 'lodash'
@@ -15,6 +16,8 @@ export const useSyncMapViewToRedux = (map: OpenLayerMap | undefined) => {
   const lastExtentRef = useRef<Extent | undefined>(undefined)
   const lastZoomRef = useRef<number | undefined>(undefined)
 
+  const { baseDelta, debounceTime, zoomFactor } = useAppSelector(state => state.map.mapControls)
+
   useEffect(() => {
     if (!map) {
       return undefined
@@ -29,8 +32,6 @@ export const useSyncMapViewToRedux = (map: OpenLayerMap | undefined) => {
       const zoom = view.getZoom()
       const zoomValue = zoom ? Math.floor(zoom) : undefined
 
-      const baseDelta = 1 // tolérance de base
-      const zoomFactor = 6 // zoom à partir duquel la tolérance de base est appliquée
       const delta = baseDelta * 2 ** (zoomFactor - (zoomValue || zoomFactor))
 
       const hasExtentChanged =
@@ -47,7 +48,7 @@ export const useSyncMapViewToRedux = (map: OpenLayerMap | undefined) => {
 
         dispatch(setMapView({ bbox: extentWithMargin, zoom: zoomValue }))
       }
-    }, 250)
+    }, debounceTime)
 
     map.on('moveend', handleMoveEnd)
 
@@ -56,5 +57,5 @@ export const useSyncMapViewToRedux = (map: OpenLayerMap | undefined) => {
     return () => {
       map.un('moveend', handleMoveEnd)
     }
-  }, [map, dispatch])
+  }, [map, dispatch, debounceTime, baseDelta, zoomFactor])
 }
