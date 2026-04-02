@@ -5,15 +5,15 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "4.0.2"
+    id("org.springframework.boot") version "4.0.5"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
-    kotlin("jvm") version "2.2.21"
-    kotlin("plugin.spring") version "2.2.21"
-    kotlin("plugin.allopen") version "2.2.21"
-    kotlin("plugin.noarg") version "2.2.21"
-    kotlin("plugin.jpa") version "2.2.21"
-    kotlin("plugin.serialization") version "2.2.21"
+    kotlin("jvm") version "2.3.20"
+    kotlin("plugin.spring") version "2.3.20"
+    kotlin("plugin.allopen") version "2.3.20"
+    kotlin("plugin.noarg") version "2.3.20"
+    kotlin("plugin.jpa") version "2.3.20"
+    kotlin("plugin.serialization") version "2.3.20"
 }
 
 repositories {
@@ -54,13 +54,13 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.4.0"
+val ktorVersion = "3.4.2"
 val testcontainersVersion = "1.21.4"
-val sentryVersion = "8.31.0"
+val sentryVersion = "8.37.1"
 val flywayVersion = "11.17.0"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.2"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.5"))
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -77,9 +77,9 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.hibernate.orm:hibernate-spatial:7.2.1.Final")
+    implementation("org.hibernate.orm:hibernate-spatial:7.3.0.Final")
     implementation("io.hypersistence:hypersistence-utils-hibernate-73:3.15.2")
-    implementation("org.geolatte:geolatte-geom:1.9.1")
+    implementation("org.geolatte:geolatte-geom:1.11")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -104,7 +104,7 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
 
     // API Documentation
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
 
     // JodConverter
     implementation("org.jodconverter:jodconverter-local-lo:4.4.11")
