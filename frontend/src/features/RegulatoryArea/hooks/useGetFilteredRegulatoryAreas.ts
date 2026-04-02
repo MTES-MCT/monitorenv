@@ -24,13 +24,15 @@ export const useGetFilteredRegulatoryAreas = ({ skip = false, withGeometry = tru
   const { bbox, zoom } = useAppSelector(state => state.map.mapView)
   const shouldSearchWithGeometry = withGeometry || shouldFilterSearchOnMapExtent
 
-  const getBbox = useCallback(
-    () =>
-      shouldFilterSearchOnMapExtent && searchExtent
-        ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-        : bbox,
-    [bbox, searchExtent, shouldFilterSearchOnMapExtent]
-  )
+  const getBbox = useCallback(() => {
+    if (!withGeometry) {
+      return undefined
+    }
+
+    return shouldFilterSearchOnMapExtent && searchExtent
+      ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+      : bbox
+  }, [bbox, searchExtent, shouldFilterSearchOnMapExtent, withGeometry])
 
   const apiFilters = useMemo(
     () => ({
