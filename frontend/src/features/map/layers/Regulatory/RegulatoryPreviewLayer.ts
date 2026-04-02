@@ -21,7 +21,10 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
 
-  const { flattenRegulatoryAreas } = useGetFilteredRegulatoryAreas()
+  const { flattenRegulatoryAreas } = useGetFilteredRegulatoryAreas({
+    skip: !isRegulatorySearchResultsVisible,
+    withGeometry: isRegulatorySearchResultsVisible
+  })
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 

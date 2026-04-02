@@ -5,9 +5,13 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getTagIds } from '@utils/getTagsAsOptions'
 import { getThemeIds } from '@utils/getThemesAsOptions'
 import { transformExtent } from 'ol/proj'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
-export const useGetFilteredRegulatoryAreas = () => {
+type FilteredRegulatoryAreas = {
+  skip?: boolean
+  withGeometry?: boolean
+}
+export const useGetFilteredRegulatoryAreas = ({ skip = false, withGeometry = true }: FilteredRegulatoryAreas) => {
   const {
     areRecentsAreasChecked,
     controlPlan,
@@ -19,29 +23,36 @@ export const useGetFilteredRegulatoryAreas = () => {
   } = useAppSelector(state => state.layerSearch)
   const { bbox, zoom } = useAppSelector(state => state.map.mapView)
 
+  const getBbox = useCallback(() => {
+    if (!withGeometry) {
+      return undefined
+    }
+
+    return shouldFilterSearchOnMapExtent && searchExtent
+      ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+      : bbox
+  }, [bbox, searchExtent, shouldFilterSearchOnMapExtent, withGeometry])
+
   const apiFilters = useMemo(
     () => ({
-      bbox:
-        shouldFilterSearchOnMapExtent && searchExtent
-          ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-          : bbox,
+      bbox: getBbox(),
       controlPlan,
       onlyRecentsAreas: areRecentsAreasChecked,
       searchQuery: globalSearchText,
       tags: getTagIds(filteredRegulatoryTags),
       themes: getThemeIds(filteredRegulatoryThemes),
-      withGeometry: shouldFilterSearchOnMapExtent,
+      withGeometry: withGeometry && shouldFilterSearchOnMapExtent,
       zoom
     }),
     [
       areRecentsAreasChecked,
       shouldFilterSearchOnMapExtent,
-      searchExtent,
-      bbox,
+      getBbox,
       controlPlan,
       globalSearchText,
       filteredRegulatoryTags,
       filteredRegulatoryThemes,
+      withGeometry,
       zoom
     ]
   )
@@ -57,7 +68,9 @@ export const useGetFilteredRegulatoryAreas = () => {
     [apiFilters]
   )
 
-  const { data, isError, isFetching, isLoading } = useGetRegulatoryAreasQuery(hasNoFilters ? undefined : apiFilters)
+  const { data, isError, isFetching, isLoading } = useGetRegulatoryAreasQuery(hasNoFilters ? undefined : apiFilters, {
+    skip
+  })
 
   const flattenRegulatoryAreas = useMemo(() => {
     if (!data?.regulatoryAreasByLayer) {

@@ -1,14 +1,21 @@
-import { getSelectedRegulatoryAreas } from '@api/regulatoryAreasAPI'
+import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useMountTransition } from '@hooks/useMountTransition'
 import { groupBy, isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 
 import { RegulatoryLayerGroup } from './MyRegulatoryLayerGroup'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { Axis } from '../../../types'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function RegulatoryLayersList() {
-  const selectedRegulatoryLayers = useAppSelector(state => getSelectedRegulatoryAreas(state))
+  const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
+  const { data: selectedRegulatoryLayers } = useGetRegulatoryAreasByIdsQuery(
+    { axis: Axis.NORTH_SOUTH, ids: selectedRegulatoryLayerIds },
+    {
+      skip: selectedRegulatoryLayerIds.length === 0
+    }
+  )
   const myRegulatoryZonesIsOpen = useAppSelector(state => state.layerSidebar.myRegulatoryZonesIsOpen)
 
   const [totalNumberOfZones, setTotalNumberOfZones] = useState(0)
@@ -17,7 +24,7 @@ export function RegulatoryLayersList() {
   const layersByLayersName = useMemo(
     () =>
       groupBy(
-        selectedRegulatoryLayers.sort((a, b) => a?.layerName?.localeCompare(b?.layerName)),
+        [...(selectedRegulatoryLayers ?? [])]?.sort((a, b) => a?.layerName?.localeCompare(b?.layerName)),
         r => r?.layerName
       ),
     [selectedRegulatoryLayers]

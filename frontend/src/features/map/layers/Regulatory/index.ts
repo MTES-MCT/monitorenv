@@ -25,11 +25,14 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   const isLayerVisible = !isLinkingAMPToVigilanceArea
   const { bbox, zoom } = useAppSelector(state => state.map.mapView)
 
-  const { data: regulatoryLayers } = useGetRegulatoryAreasQuery({
-    bbox,
-    withGeometry: showedRegulatoryLayerIds.length > 0 && isLayerVisible,
-    zoom
-  })
+  const { data: regulatoryLayers } = useGetRegulatoryAreasQuery(
+    {
+      bbox,
+      withGeometry: true,
+      zoom
+    },
+    { skip: !isLayerVisible || showedRegulatoryLayerIds.length === 0 }
+  )
 
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 

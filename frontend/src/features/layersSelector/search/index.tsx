@@ -21,7 +21,7 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
 
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
-  const { totalCount } = useGetFilteredRegulatoryAreas()
+  const { totalCount } = useGetFilteredRegulatoryAreas({ withGeometry: false })
 
   const [query, setQuery] = useState<string | undefined>(undefined)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
