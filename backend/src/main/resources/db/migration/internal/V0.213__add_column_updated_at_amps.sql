@@ -1,3 +1,3 @@
 ALTER TABLE public.amp_cacem
-    ADD COLUMN updated_at timestamp;
+    ADD COLUMN updated_at text;
 
