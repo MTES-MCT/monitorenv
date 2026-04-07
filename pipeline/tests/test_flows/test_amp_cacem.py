@@ -63,6 +63,12 @@ def old_amp() -> pd.DataFrame:
                 "cacem_row_hash_3",
                 "cacem_row_hash_4_new",
             ],
+            "updated_at": [
+                "2024-01-01 00:00:00",
+                "2024-01-02 00:00:00",
+                "2024-01-03 00:00:00",
+                "2024-01-04 00:00:00",
+            ]
         }
     )
 
@@ -122,6 +128,12 @@ def new_amp() -> pd.DataFrame:
                 "cacem_row_hash_3",
                 "cacem_row_hash_4_new",
             ],
+            "updated_at": [
+                "2024-01-01 00:00:00",
+                "2024-01-02 00:00:00",
+                "2024-01-03 00:00:00",
+                "2024-01-05 00:00:00",
+            ]
         }
     )
 
@@ -133,7 +145,8 @@ def test_load_new_amps(reset_test_data, old_amp):
         """SELECT id, geom,
             mpa_oriname, des_desigfr,
             mpa_type, ref_reg,
-            url_legicem, row_hash
+            url_legicem, row_hash,
+            updated_at
             FROM amp_cacem
             ORDER BY id""",
     )
@@ -156,7 +169,8 @@ def test_update_new_amps(reset_test_data, new_amp, old_amp):
         """SELECT id, geom,
             mpa_oriname, des_desigfr,
             mpa_type, ref_reg,
-            url_legicem, row_hash
+            url_legicem, row_hash,
+            updated_at
             FROM amp_cacem
             ORDER BY id""",
     )

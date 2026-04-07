@@ -14,7 +14,7 @@ md5(
   coalesce(mpa_type,'') ||
   coalesce(ref_reg,'')||
   coalesce(url_legicem,'') ||
-  coalesce(mpa_updatewhen::text,'')
+  coalesce(mpa_updatewhen,'')
   ) as row_hash
 	FROM prod."Aires marines protégées"
   WHERE

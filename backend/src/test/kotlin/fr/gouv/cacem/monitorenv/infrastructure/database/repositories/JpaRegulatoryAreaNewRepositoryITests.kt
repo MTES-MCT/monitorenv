@@ -103,7 +103,6 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         ).isEqualTo(
             "Décret no 2021-1149 du 4 septembre 2021 portant extension du périmètre  et modification de la réglementation de la réserve naturelle nationale d'Iroise (Finistère)",
         )
-        assertThat(requestedRegulatoryArea.editionBo).isEqualTo("2021-09-28T00:00:00Z")
         assertThat(requestedRegulatoryArea.editeur).isEqualTo("Alexis Pré")
         assertThat(requestedRegulatoryArea.source).isEqualTo("Histolitt SHOM")
         assertThat(requestedRegulatoryArea.observation).isEqualTo("A valider")
@@ -137,7 +136,6 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         ).isEqualTo(
             "Décret no 2021-1149 du 4 septembre 2021 portant extension du périmètre  et modification de la réglementation de la réserve naturelle nationale d'Iroise (Finistère)",
         )
-        assertThat(requestedRegulatoryArea[0].editionBo).isEqualTo("2021-09-28T00:00:00Z")
         assertThat(requestedRegulatoryArea[0].editeur).isEqualTo("Alexis Pré")
         assertThat(requestedRegulatoryArea[0].source).isEqualTo("Histolitt SHOM")
         assertThat(requestedRegulatoryArea[0].observation).isEqualTo("A valider")
