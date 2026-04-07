@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs
 
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import org.locationtech.jts.geom.MultiPolygon
-import java.time.ZonedDateTime
 
 data class AMPDataOutput(
     val id: Int,
@@ -12,7 +11,7 @@ data class AMPDataOutput(
     val refReg: String? = null,
     val type: String? = null,
     val urlLegicem: String? = null,
-    val updatedAt: ZonedDateTime? = null,
+    val updatedAt: String? = null,
 ) {
     companion object {
         fun fromAMPEntity(amp: AMPEntity) =
