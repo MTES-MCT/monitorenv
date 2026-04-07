@@ -22,53 +22,40 @@ export const useGetFilteredRegulatoryAreas = ({ skip = false, withGeometry = tru
     shouldFilterSearchOnMapExtent
   } = useAppSelector(state => state.layerSearch)
   const { bbox, zoom } = useAppSelector(state => state.map.mapView)
+  const shouldSearchWithGeometry = withGeometry || shouldFilterSearchOnMapExtent
 
-  const getBbox = useCallback(() => {
-    if (!withGeometry) {
-      return undefined
-    }
-
-    return shouldFilterSearchOnMapExtent && searchExtent
-      ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
-      : bbox
-  }, [bbox, searchExtent, shouldFilterSearchOnMapExtent, withGeometry])
+  const getBbox = useCallback(
+    () =>
+      shouldFilterSearchOnMapExtent && searchExtent
+        ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
+        : bbox,
+    [bbox, searchExtent, shouldFilterSearchOnMapExtent]
+  )
 
   const apiFilters = useMemo(
     () => ({
-      bbox: getBbox(),
+      bbox: shouldSearchWithGeometry ? getBbox() : undefined,
       controlPlan,
       onlyRecentsAreas: areRecentsAreasChecked,
       searchQuery: globalSearchText,
       tags: getTagIds(filteredRegulatoryTags),
       themes: getThemeIds(filteredRegulatoryThemes),
-      withGeometry: withGeometry && shouldFilterSearchOnMapExtent,
-      zoom
+      withGeometry: shouldSearchWithGeometry,
+      zoom: shouldSearchWithGeometry ? zoom : undefined
     }),
     [
       areRecentsAreasChecked,
-      shouldFilterSearchOnMapExtent,
+      shouldSearchWithGeometry,
       getBbox,
       controlPlan,
       globalSearchText,
       filteredRegulatoryTags,
       filteredRegulatoryThemes,
-      withGeometry,
       zoom
     ]
   )
-  const hasNoFilters = useMemo(
-    () =>
-      !apiFilters.controlPlan &&
-      !apiFilters.searchQuery &&
-      apiFilters.tags?.length === 0 &&
-      apiFilters.themes?.length === 0 &&
-      !apiFilters.onlyRecentsAreas &&
-      !apiFilters.zoom &&
-      !apiFilters.bbox,
-    [apiFilters]
-  )
 
-  const { data, isError, isFetching, isLoading } = useGetRegulatoryAreasQuery(hasNoFilters ? undefined : apiFilters, {
+  const { data, isError, isFetching, isLoading } = useGetRegulatoryAreasQuery(apiFilters, {
     skip
   })
 

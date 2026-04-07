@@ -53,7 +53,7 @@ export function ResultList({ searchedText }: ResultListProps) {
     isLoading: isLoadingRegulatoryAreas,
     regulatoryAreas: groupedRegulatoryAreas,
     totalCount
-  } = useGetFilteredRegulatoryAreas({withGeometry: isRegulatorySearchResultsVisible})
+  } = useGetFilteredRegulatoryAreas({withGeometry: false})
 
   const { data: amps, isFetching: isFetchingAmps, isLoading: isLoadingAmps } = useGetAMPsQuery({ withGeometry: false })
   const ampResultsByAMPName = useMemo(
