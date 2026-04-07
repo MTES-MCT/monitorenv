@@ -26,7 +26,7 @@ data class AMPModel(
     @Column(name = "url_legicem")
     val urlLegicem: String? = null,
     @Column(name = "updated_at")
-    val updatedAt: java.time.ZonedDateTime? = null,
+    val updatedAt: String? = null,
 ) {
     fun toAMP() =
         AMPEntity(
