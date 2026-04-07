@@ -21,17 +21,17 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
 
-  const { flattenRegulatoryAreas } = useGetFilteredRegulatoryAreas({
-    skip: !isRegulatorySearchResultsVisible,
-    withGeometry: isRegulatorySearchResultsVisible
-  })
-
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
 
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
 
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
+
+  const { flattenRegulatoryAreas } = useGetFilteredRegulatoryAreas({
+    skip: !isLayerVisible,
+    withGeometry: isLayerVisible
+  })
 
   const regulatoryPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
     VectorSource<Feature<Geometry>>

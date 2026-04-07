@@ -9,7 +9,27 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
     @Query(
         value =
             """
-            SELECT DISTINCT regulatoryArea
+            SELECT DISTINCT regulatoryArea,
+            CASE
+                WHEN :withGeometry IS FALSE THEN NULL
+                WHEN :withGeometry IS TRUE AND (:zoom IS NULL OR :zoom >= 14) THEN
+                regulatoryArea.geom
+                WHEN :withGeometry IS TRUE AND :zoom < 14 THEN
+                function('ST_Multi', function( 
+                    'ST_CollectionExtract', function( 
+                        'ST_MakeValid',
+                            function('ST_SimplifyPreserveTopology',
+                                regulatoryArea.geom,
+                                CASE
+                                  WHEN :zoom <= 5 THEN 0.01
+                                  WHEN :zoom <= 7 THEN 0.05
+                                  WHEN :zoom <= 11 THEN 0.001
+                                  ELSE 0.0001
+                                END
+                              )
+                        ), 3)
+                  )
+                END as geom
             FROM RegulatoryAreaNewModel regulatoryArea
             LEFT JOIN FETCH regulatoryArea.themes th
             LEFT JOIN regulatoryArea.tags tg
