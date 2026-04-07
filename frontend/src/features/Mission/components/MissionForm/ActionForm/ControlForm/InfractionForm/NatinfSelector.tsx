@@ -72,7 +72,7 @@ export function NatinfSelector({ infractionPath, themesIds }: NatinfSelectorProp
 
   const customRenderMenuItem = useCallback(
     (_, item) => (
-      <span>
+      <span title={item.label}>
         <NatinfCode>{item.value}</NatinfCode> <NatinfLabel>{item.label}</NatinfLabel>
       </span>
     ),
