@@ -1,5 +1,4 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
-import { customDayjs } from '@mtes-mct/monitor-ui'
 
 import {
   getExtentOfAMPLayersGroupByGroupName,
@@ -36,16 +35,14 @@ export function AMPLayerGroup({
     })
   })
 
-  const hasRecentlyUpdatedLayers = amps.some(
-    amp => amp.updatedAt && customDayjs(amp.updatedAt).isAfter(customDayjs().subtract(30, 'day'))
-  )
+  const hasNewLayers = amps.some(amp => amp.isNew)
 
   return (
     <ResultListLayerGroup
       addLayers={handleAddLayers}
       groupExtent={groupExtent}
       groupName={groupName}
-      hasNewLayers={hasRecentlyUpdatedLayers}
+      hasNewLayers={hasNewLayers}
       layerIds={layerIds}
       layerIdToDisplay={ampMetadataLayerId as number}
       layerType={MonitorEnvLayers.AMP}

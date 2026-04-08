@@ -5,7 +5,7 @@ des_desigfr,
 mpa_type,
 ref_reg,
 url_legicem,
-mpa_updatewhen,
+mpa_updatewhen AS updated_at,
 md5(
   coalesce(id::text,'')||
   coalesce(geom::text,'')||

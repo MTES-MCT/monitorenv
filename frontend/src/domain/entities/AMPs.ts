@@ -5,6 +5,7 @@ export type AMPFromAPI = {
   designation: string
   geom: GeoJSON.MultiPolygon
   id: number
+  isNew: boolean
   name: string
   refReg: string | undefined
   type: string | undefined
