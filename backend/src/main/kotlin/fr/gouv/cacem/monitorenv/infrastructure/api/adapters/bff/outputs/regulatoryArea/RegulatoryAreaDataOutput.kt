@@ -37,15 +37,8 @@ data class RegulatoryAreaDataOutput(
     val url: String? = null,
 ) {
     companion object {
-        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity): RegulatoryAreaDataOutput {
-            val moreRecentUpdatedDate = listOfNotNull(regulatoryArea.editionBo, regulatoryArea.editionCacem).maxOrNull()
-            val isUpdatedRecently =
-                moreRecentUpdatedDate != null &&
-                    moreRecentUpdatedDate.isAfter(
-                        ZonedDateTime.now().minusDays(30),
-                    )
-
-            return RegulatoryAreaDataOutput(
+        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) =
+            RegulatoryAreaDataOutput(
                 id = regulatoryArea.id,
                 creation = regulatoryArea.creation,
                 date = regulatoryArea.date,
@@ -56,12 +49,8 @@ data class RegulatoryAreaDataOutput(
                 editionCacem = regulatoryArea.editionCacem,
                 facade = regulatoryArea.facade,
                 geom = regulatoryArea.geom,
-                isNew =
-                    regulatoryArea.creation != null &&
-                        regulatoryArea.creation.isAfter(
-                            ZonedDateTime.now().minusDays(30),
-                        ),
-                isUpdatedRecently = isUpdatedRecently,
+                isNew = regulatoryArea.isNew(),
+                isUpdatedRecently = regulatoryArea.isRecentlyUpdated(),
                 layerName = regulatoryArea.layerName,
                 observation = regulatoryArea.observation,
                 plan = regulatoryArea.plan,
@@ -78,6 +67,5 @@ data class RegulatoryAreaDataOutput(
                 authorizationPeriods = regulatoryArea.authorizationPeriods,
                 prohibitionPeriods = regulatoryArea.prohibitionPeriods,
             )
-        }
     }
 }

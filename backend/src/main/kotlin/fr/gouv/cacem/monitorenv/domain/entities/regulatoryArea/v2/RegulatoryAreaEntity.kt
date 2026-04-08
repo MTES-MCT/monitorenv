@@ -31,4 +31,18 @@ data class RegulatoryAreaEntity(
     val themes: List<ThemeEntity>,
     val type: String? = null,
     val url: String? = null,
-)
+) {
+    fun isNew(): Boolean =
+        creation != null &&
+            creation.isAfter(
+                ZonedDateTime.now().minusDays(30),
+            )
+
+    fun isRecentlyUpdated(): Boolean {
+        val mostRecentUpdatedDate = listOfNotNull(editionBo, editionCacem).maxOrNull()
+        return mostRecentUpdatedDate != null &&
+            mostRecentUpdatedDate.isAfter(
+                ZonedDateTime.now().minusDays(30),
+            )
+    }
+}

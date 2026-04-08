@@ -87,9 +87,9 @@ def update_amps(new_amps: pd.DataFrame):
                 des_desigfr text,
                 row_hash text,
                 mpa_type text,
-                updated_at text,
                 ref_reg text,
-                url_legicem text)
+                url_legicem text,
+                updated_at text)
                 ON COMMIT DROP;"""
             )
         )

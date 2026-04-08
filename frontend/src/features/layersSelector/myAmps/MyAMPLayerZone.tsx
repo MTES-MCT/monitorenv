@@ -1,5 +1,4 @@
 import { useAppSelector } from '@hooks/useAppSelector'
-import { customDayjs } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 
 import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
@@ -27,10 +26,6 @@ export function MyAMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bo
     }
   }
 
-  const isRecentlyUpdated = amp.updatedAt
-    ? customDayjs(amp.updatedAt).isAfter(customDayjs().subtract(30, 'day'))
-    : false
-
   return (
     <MyLayerZone
       bbox={amp.bbox}
@@ -38,7 +33,7 @@ export function MyAMPLayerZone({ amp, isDisplayed }: { amp: AMP; isDisplayed: bo
       hasMetadata={!!amp.name}
       hideLayer={() => dispatch(hideAmpLayer(amp.id))}
       id={amp.id}
-      isNew={isRecentlyUpdated}
+      isNew={amp.isNew}
       layerType={MonitorEnvLayers.AMP}
       layerZoneIsShowed={isDisplayed}
       metadataIsShown={metadataIsShown}

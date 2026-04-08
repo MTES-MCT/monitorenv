@@ -12,6 +12,7 @@ data class AMPDataOutput(
     val type: String? = null,
     val urlLegicem: String? = null,
     val updatedAt: String? = null,
+    val isNew: Boolean = false,
 ) {
     companion object {
         fun fromAMPEntity(amp: AMPEntity) =
@@ -24,6 +25,7 @@ data class AMPDataOutput(
                 type = amp.type,
                 urlLegicem = amp.urlLegicem,
                 updatedAt = amp.updatedAt,
+                isNew = amp.isNew(),
             )
     }
 }

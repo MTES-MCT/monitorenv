@@ -8,7 +8,7 @@ INSERT INTO public.amp_cacem VALUES (
     NULL,
     NULL,
     NULL,
-    NOW() - INTERVAl '45 days'
+    TO_CHAR(NOW() - INTERVAL '45 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     15, 
@@ -19,7 +19,7 @@ INSERT INTO public.amp_cacem VALUES (
     'AMP Polynésie française',
     NULL,
     NULL,
-    NOW() - INTERVAl '15 days'
+    TO_CHAR(NOW() - INTERVAL '15 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     16,
@@ -30,7 +30,7 @@ INSERT INTO public.amp_cacem VALUES (
     'AMP Polynésie française',
     NULL,
     NULL,
-    NOW() - INTERVAl '35 days'
+    TO_CHAR(NOW() - INTERVAL '35 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     18,
@@ -41,7 +41,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Natura 2000',
     NULL,
     NULL,
-    NOW() - INTERVAl '10 days'
+    TO_CHAR(NOW() - INTERVAL '10 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     19,
@@ -52,7 +52,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Réserve naturelle',
     NULL,
     NULL,
-    NOW() - INTERVAl '5 days'
+    TO_CHAR(NOW() - INTERVAL '5 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     20,
@@ -63,7 +63,7 @@ INSERT INTO public.amp_cacem VALUES (
     'AMP Polynésie française',
     NULL,
     NULL,
-    NOW() - INTERVAl '12 days'
+    TO_CHAR(NOW() - INTERVAL '12 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     12,
@@ -74,7 +74,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Natura 2000',
     'Arrêté préfectoral n° 2016/125 réglementant la navigation et le mouillage ainsi que la baignade et toutes les activités nautiques et subaquatiques aux abords de l’île de Bannec située sur le territoire de la commune du Conquet',
     'http://extranet.legicem.metier.developpement-durable.gouv.fr/spip.php?page=article&id_article=4519&id_rubrique=1098&var_mode=calcul',
-    NOW() - INTERVAl '45 days'
+    TO_CHAR(NOW() - INTERVAL '45 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     17,
@@ -85,7 +85,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Natura 2000',
     NULL,
     NULL,
-    NOW() - INTERVAl '1 days'
+    TO_CHAR(NOW() - INTERVAL '1 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     1,
@@ -96,7 +96,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Natura 2000',
     'Décret n°2021-1149 du 4 septembre 2021 portant extension du périmètre  et modification de la réglementation de la réserve naturelle nationale d’Iroise (Finistère) ',
     'https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044019134',
-    CURRENT_DATE
+    TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     2,
@@ -107,7 +107,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Natura 2000',
     'Décret du 8 juillet 2011 accordant la concession de sables coquilliers dite « Concession du Minou » au large des côtes du département du Finistère à la société Quemeneur',
     'https://www.legifrance.gouv.fr/eli/decret/2011/7/8/EFIL1106625D/jo/texte',
-    NOW() - INTERVAl '55 days'
+    TO_CHAR(NOW() - INTERVAL '55 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     11,
@@ -118,7 +118,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Réserve naturelle',
     'Arrêté interpréfectoral N°2012/342 du 07/12/2012 autorisant l''occupation du domaine public maritime par une zone de mouillage et d''équipements légers au lieu-dit "La Maison Blanche" sur le littoral de la commune de Brest',
     'http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2012-342-0018_cle018e67.pdf?arg=7895&cle=44714cc87631312d51de5bad60a18337949b5072&file=pdf%2F2012-342-0018_cle018e67.pdf',
-    NOW() - INTERVAl '7 days'
+    TO_CHAR(NOW() - INTERVAL '7 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     3,
@@ -129,7 +129,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Parc naturel marin',
     'Arrêté inter-préfectoral N°2020118-0003 autorisant l''occupation temporaire du domaine public maritime par une zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen" sur le littoral de la commune de Roscanvel ',
     'http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098',
-    NOW() - INTERVAl '31 days'
+    TO_CHAR(NOW() - INTERVAL '31 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     4,
@@ -140,7 +140,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Parc national',
     'Arrêté préfectoral N°32/2014 relatif à l''interdiction de la pratique des véhicules nautiques à moteur dans l''archipel de l''Ile Molène, au sein du parc naturel marin d''Iroise',
     'https://www.premar-atlantique.gouv.fr/uploads/atlantique/arretes/1fa561cf90cef71299149c26c197834e.pdf',
-    NOW() - INTERVAl '45 days'
+    TO_CHAR(NOW() - INTERVAL '45 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     5,
@@ -151,7 +151,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Natura 2000',
     'Arrêté préfectoral n°2015 212 0008 du 31 juillet 2015 portant autorisation au titre de l''article L.214-3 du code de l''environnement du développement du port de Brest',
     'http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf?arg=7593&cle=834037ab790f6a5b1f3c141f0374679e3c04dfec&file=pdf%2F2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf',
-    NOW() - INTERVAl '5 days'  
+    TO_CHAR(NOW() - INTERVAL '5 days', 'YYYY-MM-DD HH24:MI:SS') 
 );
 
 INSERT INTO public.amp_cacem VALUES (
@@ -163,7 +163,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Natura 2000',
     'Arrêté inter-préfectoral N°2006-0303 du 30 mars 2006 autorisant l''association des plaisanciers et riverains d''Ilien à occuper une zone de mouillages pour l''accueil de navires de plaisance au lieu-dit "anse d''Ilien" sur le territoire de la commune de Ploumoguer ',
     'http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/aip_2006-0303_anse_ilien_ploumoguer_cle217d9b-1.pdf?arg=7879&cle=84fe8cc602b2e2300ece27ca96f340a3e00f58a4&file=pdf%2Faip_2006-0303_anse_ilien_ploumoguer_cle217d9b-1.pdf',
-    NOW() - INTERVAl '67 days'
+    TO_CHAR(NOW() - INTERVAL '67 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     7,
@@ -174,7 +174,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Natura 2000',
     'Décret no 2021-1149 du 4 septembre 2021 portant extension du périmètre  et modification de la réglementation de la réserve naturelle nationale d’Iroise (Finistère) ',
     'https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044019134',
-    NOW() - INTERVAl '5 days'
+    TO_CHAR(NOW() - INTERVAL '5 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     8,
@@ -185,7 +185,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Réserve naturelle',
     'Arrêté préfectoral n°2018-107 interdisant le mouillage dans une zone restreinte située face à la plage située au Nord de la digue du port de Camaret',
     'http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-port-de-camaret-a4520.html?var_mode=calcul',
-    NOW() - INTERVAl '7 days'
+    TO_CHAR(NOW() - INTERVAL '7 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     9,
@@ -196,7 +196,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Réserve naturelle',
     'Arrêté préfectoral n°2015 212 0008 du 31 juillet 2015 portant autorisation au titre de l''article L.214-3 du code de l''environnement du développement du port de Brest',
     'http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf?arg=7593&cle=834037ab790f6a5b1f3c141f0374679e3c04dfec&file=pdf%2F2015_212-0008_du_31_juillet_2015_signe_cle5a3a13.pdf',
-    NOW() - INTERVAl '35 days'
+    TO_CHAR(NOW() - INTERVAL '35 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     10,
@@ -207,7 +207,7 @@ INSERT INTO public.amp_cacem VALUES (
     'Natura 2000',
     'Arrêté interpréfectoral N°2012/342 du 07/12/2012 autorisant l''occupation du domaine public maritime par une zone de mouillage et d''équipements légers au lieu-dit "La Maison Blanche" sur le littoral de la commune de Brest',
     'http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/2012-342-0018_cle018e67.pdf?arg=7895&cle=44714cc87631312d51de5bad60a18337949b5072&file=pdf%2F2012-342-0018_cle018e67.pdf',
-    NOW() - INTERVAl '35 days'
+    TO_CHAR(NOW() - INTERVAL '35 days', 'YYYY-MM-DD HH24:MI:SS')
 );
 INSERT INTO public.amp_cacem VALUES (
     13,
@@ -218,5 +218,5 @@ INSERT INTO public.amp_cacem VALUES (
     'AMP Polynésie française',
     'Arrêté inter-préfectoral N°2020118-0003 autorisant l''occupation temporaire du domaine public maritime par une zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen" sur le littoral de la commune de Roscanvel ',
     'http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098',
-    NOW() - INTERVAl '35 days'
+    TO_CHAR(NOW() - INTERVAL '35 days', 'YYYY-MM-DD HH24:MI:SS')
 );

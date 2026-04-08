@@ -16,7 +16,13 @@ class AmpFixture {
             val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
             val geometry = geom ?: polygon
-            return AMPEntity(id = id, designation = "designation", name = "amp", geom = geometry)
+            return AMPEntity(
+                id = id,
+                designation = "designation",
+                name = "amp",
+                geom = geometry,
+                updatedAt = "2024-05-01 12:00:00",
+            )
         }
     }
 }
