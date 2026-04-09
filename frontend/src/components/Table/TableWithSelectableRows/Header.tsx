@@ -1,9 +1,10 @@
 import { Icon, TableWithSelectableRows, THEME } from '@mtes-mct/monitor-ui'
-import { flexRender } from '@tanstack/react-table'
+import { flexRender, type HeaderGroup } from '@tanstack/react-table'
+import styled from 'styled-components'
 
 import { createPinnedCellStyle } from './utils'
 
-export function TableWithSelectableRowsHeader({ headerGroup }) {
+export function TableWithSelectableRowsHeader({ headerGroup }: { headerGroup: HeaderGroup<any> }) {
   return (
     <tr key={headerGroup.id}>
       {headerGroup.headers.map((header, index, headerCells) => {
@@ -25,10 +26,23 @@ export function TableWithSelectableRowsHeader({ headerGroup }) {
 
                 {header.column.getCanSort() &&
                   ({
-                    asc: <Icon.SortSelectedUp size={14} />,
-                    desc: <Icon.SortSelectedDown size={14} />
+                    asc: (
+                      <ChevronWrapper>
+                        <StyledChevronIcon $isOpen color={THEME.color.lightGray} size={14} />
+                        <StyledChevronIcon color={THEME.color.slateGray} size={14} />
+                      </ChevronWrapper>
+                    ),
+                    desc: (
+                      <ChevronWrapper>
+                        <StyledChevronIcon $isOpen color={THEME.color.slateGray} size={14} />
+                        <StyledChevronIcon color={THEME.color.lightGray} size={14} />
+                      </ChevronWrapper>
+                    )
                   }[header.column.getIsSorted() as string] ?? (
-                    <Icon.SortingChevrons color={THEME.color.lightGray} size={14} />
+                    <ChevronWrapper>
+                      <StyledChevronIcon $isOpen color={THEME.color.lightGray} size={14} />
+                      <StyledChevronIcon color={THEME.color.lightGray} size={14} />
+                    </ChevronWrapper>
                   ))}
               </TableWithSelectableRows.SortContainer>
             )}
@@ -38,3 +52,14 @@ export function TableWithSelectableRowsHeader({ headerGroup }) {
     </tr>
   )
 }
+
+const StyledChevronIcon = styled(Icon.Chevron)<{ $isOpen?: boolean }>`
+  transform: ${props => (!props.$isOpen ? 'rotate(0deg)' : 'rotate(-180deg)')};
+  transition: all 0.5s;
+  width: 12px !important;
+  height: 12px !important;
+`
+const ChevronWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`

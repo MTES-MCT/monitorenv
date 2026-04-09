@@ -7,6 +7,7 @@ import {
   setSearchExtent,
   setShouldFilterSearchOnMapExtent
 } from '@features/layersSelector/search/slice'
+import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, SingleTag } from '@mtes-mct/monitor-ui'
@@ -21,7 +22,9 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
-  const { createdBy, nbOfFiltersSetted, seaFronts } = useAppSelector(state => state.vigilanceAreaFilters)
+  const { createdBy, nbOfFiltersSetted, seaFronts, status, type, visibility } = useAppSelector(
+    state => state.vigilanceAreaFilters
+  )
   const { filteredRegulatoryTags, filteredRegulatoryThemes, searchExtent } = useAppSelector(state => state.layerSearch)
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: keyof VigilanceAreaSliceState, filter) => {
@@ -30,6 +33,15 @@ export function FilterTags() {
       vigilanceAreaFiltersActions.updateFilters({
         key: filterKey,
         value: updatedFilter?.length === 0 ? [] : updatedFilter
+      })
+    )
+  }
+
+  const onDeleteSimpleTag = (filterKey: keyof VigilanceAreaSliceState) => {
+    dispatch(
+      vigilanceAreaFiltersActions.updateFilters({
+        key: filterKey,
+        value: undefined
       })
     )
   }
@@ -62,14 +74,9 @@ export function FilterTags() {
 
   return (
     <StyledContainer data-cy="vigilance-areas-filter-tags">
-      {createdBy?.map(author => (
-        <SingleTag key={author} onDelete={() => onDeleteTag(author, 'createdBy', createdBy)}>
-          {author}
-        </SingleTag>
-      ))}
-      {seaFronts?.map(seaFront => (
-        <SingleTag key={seaFront} onDelete={() => onDeleteTag(seaFront, 'seaFronts', seaFronts)}>
-          {String(`Façade ${seaFront}`)}
+      {type?.map(typeValue => (
+        <SingleTag key={typeValue} onDelete={() => onDeleteTag(typeValue, 'type', type)}>
+          {VigilanceArea.VigilanceAreaFilterTypeLabel[typeValue]}
         </SingleTag>
       ))}
       {filteredRegulatoryThemes?.map(theme => (
@@ -116,6 +123,27 @@ export function FilterTags() {
           ))}
         </>
       ))}
+      {createdBy?.map(author => (
+        <SingleTag key={author} onDelete={() => onDeleteTag(author, 'createdBy', createdBy)}>
+          {author}
+        </SingleTag>
+      ))}
+      {seaFronts?.map(seaFront => (
+        <SingleTag key={seaFront} onDelete={() => onDeleteTag(seaFront, 'seaFronts', seaFronts)}>
+          {String(`Façade ${seaFront}`)}
+        </SingleTag>
+      ))}
+
+      {status && (
+        <SingleTag onDelete={() => onDeleteSimpleTag('status')}>
+          {String(`Statut ${VigilanceArea.StatusLabel[status]}`)}
+        </SingleTag>
+      )}
+      {visibility && (
+        <SingleTag onDelete={() => onDeleteSimpleTag('visibility')}>
+          {String(`Visibilité ${VigilanceArea.VisibilityLabel[visibility]}`)}
+        </SingleTag>
+      )}
       {searchExtent && (
         <SingleTag
           key="searchExtent"

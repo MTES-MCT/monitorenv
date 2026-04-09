@@ -9,43 +9,52 @@ import type { DateAsStringRange } from '@mtes-mct/monitor-ui'
 
 const migrations = {
   // Start at 4 because test platform and migrations cant downgrade
-  4: (state: any) => vigilanceAreasFiltersMigrations.v2(state)
+  4: (state: any) => vigilanceAreasFiltersMigrations.v2(state),
+  5: (state: any) => vigilanceAreasFiltersMigrations.v3(state)
 }
 
 const persistConfig = {
   key: 'vigilanceAreaFilters',
   migrate: createMigrate(migrations),
   storage,
-  version: 4
+  version: 5
 }
 
 export type VigilanceAreaSliceState = {
+  areFiltersVisible: boolean
   createdBy: string[]
   nbOfFiltersSetted: number
   period: VigilanceArea.VigilanceAreaFilterPeriod
   seaFronts: string[]
   specificPeriod: DateAsStringRange | undefined
-  status: VigilanceArea.Status[]
+  status: 'DRAFT' | 'PUBLISHED' | undefined
   type: VigilanceArea.VigilanceAreaFilterType[]
-  visibility: VigilanceArea.Visibility[]
+  visibility: 'PUBLIC' | 'PRIVATE' | undefined
 }
 
 export const INITIAL_STATE: VigilanceAreaSliceState = {
+  areFiltersVisible: false,
   createdBy: [],
   nbOfFiltersSetted: 0,
   period: VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS,
   seaFronts: [],
   specificPeriod: undefined,
-  status: [VigilanceArea.Status.DRAFT, VigilanceArea.Status.PUBLISHED],
+  status: undefined,
   type: [],
-  visibility: [VigilanceArea.Visibility.PUBLIC, VigilanceArea.Visibility.PRIVATE]
+  visibility: undefined
 }
 
 export const vigilanceAreaFiltersSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'vigilanceAreaFilters',
   reducers: {
-    resetFilters: () => INITIAL_STATE,
+    resetFilters: state => ({
+      ...INITIAL_STATE,
+      areFiltersVisible: state.areFiltersVisible
+    }),
+    setFiltersVisibility: (state, action: PayloadAction<boolean>) => {
+      state.areFiltersVisible = action.payload
+    },
     updateFilters: <K extends keyof VigilanceAreaSliceState>(
       state: VigilanceAreaSliceState,
       action: PayloadAction<{
@@ -59,7 +68,7 @@ export const vigilanceAreaFiltersSlice = createSlice({
       }
 
       const keysToCheck = Object.keys(INITIAL_STATE).filter(
-        key => !['nbOfFiltersSetted', 'specificPeriod'].includes(key)
+        key => !['nbOfFiltersSetted', 'specificPeriod', 'areFiltersVisible'].includes(key)
       )
 
       const nbOfFiltersSetted = keysToCheck.reduce(

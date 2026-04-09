@@ -38,7 +38,7 @@ const StyledSideWindowContent = styled(SideWindowContent)`
 `
 const StyledHeader = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 32px;
   margin-bottom: 32px;
 `
@@ -46,5 +46,5 @@ const StyledHeader = styled.div`
 const Title = styled.h1`
   color: ${p => p.theme.color.gunMetal};
   font-size: 22px;
-  line-height: 50px;
+  border-bottom: 1px solid ${p => p.theme.color.gainsboro};
 `

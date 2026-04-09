@@ -3,11 +3,11 @@ import { vigilanceAreaFiltersActions } from '@features/VigilanceArea/components/
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckPicker, type Option } from '@mtes-mct/monitor-ui'
-import React from 'react'
+import { type CSSProperties } from 'react'
 
 import { VigilanceArea } from '../types'
 
-export function VigilanceAreaTypeFilter({ style }: { style?: React.CSSProperties }) {
+export function VigilanceAreaTypeFilter({ menuStyle, style }: { menuStyle?: CSSProperties; style?: CSSProperties }) {
   const dispatch = useAppDispatch()
   const vigilanceAreaTypeOptions = Object.entries(VigilanceArea.VigilanceAreaFilterTypeLabel).map(([value, label]) => ({
     label,
@@ -28,6 +28,7 @@ export function VigilanceAreaTypeFilter({ style }: { style?: React.CSSProperties
       isLabelHidden
       isTransparent
       label="Type de zone de vigilance"
+      menuStyle={menuStyle}
       name="periodOfVigilanceArea"
       onChange={handleSetFilteredVigilanceType}
       options={vigilanceAreaTypeOptions}

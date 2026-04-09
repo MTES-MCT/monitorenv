@@ -41,7 +41,7 @@ export const useGetFilteredVigilanceAreasQuery = () => {
         vigilanceArea =>
           isVigilanceAreaPartOfCreatedBy(vigilanceArea, createdBy) &&
           isVigilanceAreaPartOfSeaFront(vigilanceArea, seaFronts) &&
-          isVigilanceAreaPartOfStatus(vigilanceArea, isSuperUser ? status : [VigilanceArea.Status.PUBLISHED]) &&
+          isVigilanceAreaPartOfStatus(vigilanceArea, isSuperUser ? status : 'PUBLISHED') &&
           isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
           isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes) &&
           isVigilanceAreaPartOfVisibility(vigilanceArea, visibility) &&

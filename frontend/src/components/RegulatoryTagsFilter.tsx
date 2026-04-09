@@ -1,7 +1,7 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
-import { useMemo } from 'react'
+import { useMemo, type CSSProperties } from 'react'
 
 import type { TagFromAPI, TagOption } from '../domain/entities/tags'
 
@@ -13,6 +13,7 @@ export function RegulatoryTagsFilter({
   isTransparent = true,
   label,
   onChange,
+  popupStyle,
   style,
   value
 }: {
@@ -23,7 +24,8 @@ export function RegulatoryTagsFilter({
   isTransparent?: boolean
   label?: string
   onChange: (nextTags: TagOption[] | TagFromAPI[] | undefined) => void
-  style?: React.CSSProperties
+  popupStyle?: CSSProperties
+  style?: CSSProperties
   value: TagOption[] | TagFromAPI[]
 }) {
   const { data: tags } = useGetTagsQuery()
@@ -45,6 +47,7 @@ export function RegulatoryTagsFilter({
       onChange={onChange}
       options={tagsOptions}
       placeholder="Tags et sous-tags"
+      popupStyle={popupStyle}
       renderedChildrenValue="Sous-tags."
       renderedValue="Tags"
       shouldShowLabels={false}

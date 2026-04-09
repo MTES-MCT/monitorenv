@@ -170,7 +170,7 @@ export namespace VigilanceArea {
   }
 
   export enum StatusLabel {
-    DRAFT = 'Non publiée',
+    DRAFT = 'Brouillon',
     PUBLISHED = 'Publiée'
   }
 
