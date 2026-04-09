@@ -29,11 +29,14 @@ export function AMPLayerGroup({
   const handleAddLayers = ids => dispatch(addAmpZonesToMyLayers(ids))
   const handleRemoveLayers = ids => dispatch(removeAmpZonesFromMyLayers(ids))
 
-  const { amps } = useGetAMPsQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      amps: Object.values(data?.entities ?? []).filter(amp => layerIds.includes(amp.id))
-    })
-  })
+  const { amps } = useGetAMPsQuery(
+    { withGeometry: false },
+    {
+      selectFromResult: ({ data }) => ({
+        amps: Object.values(data?.entities ?? []).filter(amp => layerIds.includes(amp.id))
+      })
+    }
+  )
 
   const hasNewLayers = amps.some(amp => amp.isNew)
 

@@ -18,14 +18,14 @@ import { setGlobalSearchText } from './slice'
 
 export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
   const dispatch = useAppDispatch()
+  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
 
   const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
-  const { totalCount } = useGetFilteredRegulatoryAreas({ withGeometry: false })
+  const { totalCount } = useGetFilteredRegulatoryAreas({ withGeometry: shouldFilterSearchOnMapExtent })
 
   const [query, setQuery] = useState<string | undefined>(undefined)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
-  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
 
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.vigilanceAreaFilters.period)
 
