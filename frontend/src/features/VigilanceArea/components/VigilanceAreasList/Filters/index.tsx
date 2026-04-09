@@ -17,7 +17,7 @@ import { VigilanceAreaTypeFilter } from '@features/VigilanceArea/components/Vigi
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Checkbox, CheckPicker, getOptionsFromLabelledEnum, type Option } from '@mtes-mct/monitor-ui'
+import { CheckPicker, getOptionsFromLabelledEnum, Icon, LinkButton, Select } from '@mtes-mct/monitor-ui'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import styled from 'styled-components'
 
@@ -42,6 +42,7 @@ export function VigilanceAreasFilters() {
   const searchText = useAppSelector(state => state.layerSearch.globalSearchText)
 
   const {
+    areFiltersVisible,
     createdBy: createdByFilter,
     nbOfFiltersSetted: nbOfVigilanceAreaFilters,
     period: periodFilter,
@@ -52,6 +53,7 @@ export function VigilanceAreasFilters() {
 
   const seaFrontsAsOptions = Object.values(SeaFrontLabels)
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
+  const statusOptions = getOptionsFromLabelledEnum(VigilanceArea.StatusLabel)
 
   const updateSeaFrontFilter = (selectedSeaFronts: string[] | undefined) => {
     dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'seaFronts', value: selectedSeaFronts ?? [] }))
@@ -61,16 +63,8 @@ export function VigilanceAreasFilters() {
     dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'createdBy', value: selectedCreatedBy ?? [] }))
   }
 
-  const updateStatusFilter = (checked: boolean | undefined, status: VigilanceArea.Status) => {
-    const filter = [...statusFilter]
-
-    if (checked) {
-      filter.push(status)
-    } else {
-      filter.splice(filter.indexOf(status), 1)
-    }
-
-    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'status', value: filter }))
+  const updateStatusFilter = (status: 'DRAFT' | 'PUBLISHED' | undefined) => {
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'status', value: status }))
   }
 
   const resetFilters = () => {
@@ -88,18 +82,8 @@ export function VigilanceAreasFilters() {
     }
   }
 
-  const updateVisibilityFilter = (visibilityOption: Option, isChecked: boolean | undefined) => {
-    const currentVisibilityFilter = visibilityFilter
-    let newVisibilityFilter: VigilanceArea.Visibility[]
-    const optionValue = visibilityOption.value as VigilanceArea.Visibility
-
-    if (isChecked) {
-      newVisibilityFilter = [...currentVisibilityFilter, optionValue]
-    } else {
-      newVisibilityFilter = currentVisibilityFilter.filter(visibility => visibility !== optionValue)
-    }
-
-    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'visibility', value: newVisibilityFilter }))
+  const updateVisibilityFilter = (visibility: 'PUBLIC' | 'PRIVATE' | undefined) => {
+    dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'visibility', value: visibility }))
   }
 
   const handleSetFilteredRegulatoryThemes = (nextThemes: ThemeOption[] | undefined = []) => {
@@ -108,6 +92,10 @@ export function VigilanceAreasFilters() {
 
   const handleSetFilteredRegulatoryTags = (nextTags: TagOption[] | undefined = []) => {
     dispatch(setFilteredRegulatoryTags(nextTags))
+  }
+
+  const setFiltersVisibility = () => {
+    dispatch(vigilanceAreaFiltersActions.setFiltersVisibility(!areFiltersVisible))
   }
 
   const nbOfFilters = nbOfVigilanceAreaFilters + filteredRegulatoryTags.length + filteredRegulatoryThemes.length
@@ -120,76 +108,79 @@ export function VigilanceAreasFilters() {
     <Wrapper>
       <FiltersFirstLine>
         <SearchFilter />
-        <StyledStatusFilter>
-          {visibilityOptions.map(visibility => (
-            <Checkbox
-              key={visibility.label}
-              checked={visibilityFilter?.includes(visibility.value as VigilanceArea.Visibility)}
-              label={visibility.label}
-              name={visibility.label}
-              onChange={isChecked => updateVisibilityFilter(visibility, isChecked)}
-            />
-          ))}
-          <Separator />
-          <>
-            <Checkbox
-              key={VigilanceArea.StatusLabel.PUBLISHED}
-              checked={statusFilter.includes(VigilanceArea.Status.PUBLISHED)}
-              label={VigilanceArea.StatusLabel.PUBLISHED}
-              name={VigilanceArea.StatusLabel.PUBLISHED}
-              onChange={checked => updateStatusFilter(checked, VigilanceArea.Status.PUBLISHED)}
-            />
-            <Checkbox
-              key={VigilanceArea.StatusLabel.DRAFT}
-              checked={statusFilter.includes(VigilanceArea.Status.DRAFT)}
-              label={VigilanceArea.StatusLabel.DRAFT}
-              name={VigilanceArea.StatusLabel.DRAFT}
-              onChange={checked => updateStatusFilter(checked, VigilanceArea.Status.DRAFT)}
-            />
-          </>
-        </StyledStatusFilter>
+        <StyledLinkButton Icon={Icon.FilterBis} onClick={setFiltersVisibility}>
+          {areFiltersVisible ? 'Masquer les filtres' : 'Afficher les filtres'}
+        </StyledLinkButton>
       </FiltersFirstLine>
 
-      <FilterContainer>
-        <PeriodFilter style={{ width: 320 }} />
-        <VigilanceAreaTypeFilter style={{ width: 320 }} />
-        <RegulatoryThemesFilter
-          onChange={handleSetFilteredRegulatoryThemes}
-          style={{ width: 320 }}
-          value={filteredRegulatoryThemes}
-        />
-        <RegulatoryTagsFilter
-          onChange={handleSetFilteredRegulatoryTags}
-          style={{ width: 320 }}
-          value={filteredRegulatoryTags}
-        />
+      {areFiltersVisible && (
+        <FilterContainer>
+          <PeriodFilter style={{ width: 220 }} />
+          <VigilanceAreaTypeFilter menuStyle={{ width: '300px' }} style={{ width: 245 }} />
+          <RegulatoryThemesFilter
+            onChange={handleSetFilteredRegulatoryThemes}
+            popupStyle={{ width: 400 }}
+            style={{ width: 265 }}
+            value={filteredRegulatoryThemes}
+          />
+          <RegulatoryTagsFilter
+            onChange={handleSetFilteredRegulatoryTags}
+            popupStyle={{ width: 400 }}
+            style={{ width: 265 }}
+            value={filteredRegulatoryTags}
+          />
 
-        <CheckPicker
-          isLabelHidden
-          isTransparent
-          label="Zone créée par..."
-          name="createdBy"
-          onChange={updateCreatedByFilter}
-          options={trigramsAsOptions}
-          placeholder="Zone créée par..."
-          renderValue={() => createdByFilter && <OptionValue>{`Créée par (${createdByFilter.length})`}</OptionValue>}
-          searchable
-          style={{ width: 181 }}
-          value={createdByFilter}
-        />
-        <CheckPicker
-          isLabelHidden
-          isTransparent
-          label="Façade"
-          name="seaFront"
-          onChange={updateSeaFrontFilter}
-          options={seaFrontsAsOptions ?? []}
-          placeholder="Façade"
-          renderValue={() => seaFrontFilter && <OptionValue>{`Façade (${seaFrontFilter.length})`}</OptionValue>}
-          style={{ width: 181 }}
-          value={seaFrontFilter}
-        />
-      </FilterContainer>
+          <CheckPicker
+            isLabelHidden
+            isTransparent
+            label="Zone créée par..."
+            name="createdBy"
+            onChange={updateCreatedByFilter}
+            options={trigramsAsOptions}
+            placeholder="Zone créée par..."
+            renderValue={() => createdByFilter && <OptionValue>{`Créée par (${createdByFilter.length})`}</OptionValue>}
+            searchable
+            style={{ width: 170 }}
+            value={createdByFilter}
+          />
+          <CheckPicker
+            isLabelHidden
+            isTransparent
+            label="Façade"
+            name="seaFront"
+            onChange={updateSeaFrontFilter}
+            options={seaFrontsAsOptions ?? []}
+            placeholder="Façade"
+            renderValue={() => seaFrontFilter && <OptionValue>{`Façade (${seaFrontFilter.length})`}</OptionValue>}
+            style={{ width: 165 }}
+            value={seaFrontFilter}
+          />
+          <Select
+            isCleanable
+            isLabelHidden
+            isTransparent
+            label="Statut"
+            name="status"
+            onChange={updateStatusFilter}
+            options={statusOptions}
+            placeholder="Statut"
+            style={{ width: 165 }}
+            value={statusFilter}
+          />
+          <Select
+            isCleanable
+            isLabelHidden
+            isTransparent
+            label="Visibilité"
+            name="visibility"
+            onChange={updateVisibilityFilter}
+            options={visibilityOptions}
+            placeholder="Visibilité"
+            style={{ width: 165 }}
+            value={visibilityFilter}
+          />
+        </FilterContainer>
+      )}
       {hasFilters && (
         <TagsContainer>
           {hasCustomPeriodFilter && (
@@ -214,9 +205,11 @@ const Wrapper = styled.div`
   gap: 16px;
 `
 const FiltersFirstLine = styled.div`
+  align-items: center;
   display: flex;
-  justify-content: space-between;
+  gap: 16px;
 `
+
 export const StyledStatusFilter = styled.div`
   align-items: end;
   display: flex;
@@ -240,4 +233,14 @@ export const Separator = styled.div`
   border-right: ${p => `1px solid ${p.theme.color.slateGray}`};
   height: 50%;
   width: 2px;
+`
+
+const StyledLinkButton = styled(LinkButton)`
+  font-size: 13px;
+  color: ${p => p.theme.color.charcoal};
+  svg {
+    color: ${p => p.theme.color.charcoal} !important;
+    height: 20px !important;
+    width: 20px !important;
+  }
 `

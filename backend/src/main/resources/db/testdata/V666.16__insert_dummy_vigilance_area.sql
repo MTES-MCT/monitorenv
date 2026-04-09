@@ -36,7 +36,7 @@ $$
               "linkUrl": "www.google.fr"
             }
           ]', 'Zone de vigilance 1',
-                '{"Dragage","Extraction granulats"}', 'PUBLIC', '{"12", "6"}', '{}', CURRENT_DATE), now() - INTERVAL '15 day', now());
+                '{"Dragage","Extraction granulats"}', 'PUBLIC', '{"12", "6"}', '{}', CURRENT_DATE, now() - INTERVAL '15 day', now());
 
         INSERT INTO vigilance_areas_source(id, vigilance_areas_id, name, type, comments, is_anonymous)
         VALUES (uuid_generate_v4(), 1, 'Unité BSN Ste Maxime', 'OTHER'::vigilance_area_source_type,
@@ -98,7 +98,7 @@ $$
               "linkUrl": "www.google.fr"
             }
           ]', 'Zone de vigilance 3', '{"PN","SAGE"}',
-                'PUBLIC', '{}', '{}', NOW() - INTERVAL '15 day'), now() - INTERVAL '40 day', now() - INTERVAL '35 day');
+                'PUBLIC', '{}', '{}', NOW() - INTERVAL '15 day', now() - INTERVAL '40 day', now() - INTERVAL '35 day');
 
         INSERT INTO vigilance_area_period(id, vigilance_areas_id, end_date_period, ending_condition,
                                           ending_occurrence_date,

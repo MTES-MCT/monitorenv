@@ -1,7 +1,7 @@
 import { useGetThemesQuery } from '@api/themesAPI'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions } from '@utils/getThemesAsOptions'
-import { useMemo } from 'react'
+import { useMemo, type CSSProperties } from 'react'
 
 import type { ThemeFromAPI, ThemeOption } from '../domain/entities/themes'
 
@@ -13,6 +13,7 @@ export function RegulatoryThemesFilter({
   isTransparent = true,
   label,
   onChange,
+  popupStyle,
   style,
   value
 }: {
@@ -23,7 +24,8 @@ export function RegulatoryThemesFilter({
   isTransparent?: boolean
   label?: string
   onChange: (nextThemes: ThemeOption[] | ThemeFromAPI[] | undefined) => void
-  style?: React.CSSProperties
+  popupStyle?: CSSProperties
+  style?: CSSProperties
   value: ThemeOption[] | ThemeFromAPI[]
 }) {
   const { data: themes } = useGetThemesQuery()
@@ -45,6 +47,7 @@ export function RegulatoryThemesFilter({
       onChange={onChange}
       options={themesOptions}
       placeholder="Thématiques et sous-thématiques"
+      popupStyle={popupStyle}
       renderedChildrenValue="Sous-thém."
       renderedValue="Thématiques"
       shouldShowLabels={false}

@@ -273,22 +273,22 @@ export function LayerFilters() {
               {type}
             </SingleTag>
           ))}
-          {visibility.length === 1 && visibility[0] && (
+          {visibility && (
             <SingleTag
               accent={Accent.SECONDARY}
               onDelete={() => updateVigilanceAreaFilters('visibility', INITIAL_STATE.visibility)}
-              title={visibility[0]}
+              title={VigilanceArea.VisibilityLabel[visibility]}
             >
-              {VigilanceArea.VisibilityLabel[visibility[0]]}
+              {VigilanceArea.VisibilityLabel[visibility]}
             </SingleTag>
           )}
-          {status.length === 1 && status[0] && (
+          {status && (
             <SingleTag
               accent={Accent.SECONDARY}
               onDelete={() => updateVigilanceAreaFilters('status', INITIAL_STATE.status)}
-              title={status[0]}
+              title={VigilanceArea.StatusLabel[status]}
             >
-              {VigilanceArea.StatusLabel[status[0]]}
+              {VigilanceArea.StatusLabel[status]}
             </SingleTag>
           )}
           {createdBy?.map(creator => (

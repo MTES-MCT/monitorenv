@@ -2,14 +2,14 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 
 export function isVigilanceAreaPartOfStatus(
   vigilanceArea: VigilanceArea.VigilanceArea,
-  status: VigilanceArea.Status[]
+  status?: 'PUBLISHED' | 'DRAFT'
 ): boolean {
-  if (status.length === 0) {
+  if (!status) {
     return true
   }
 
   return (
-    (vigilanceArea.isDraft && status.includes(VigilanceArea.Status.DRAFT)) ||
-    (!vigilanceArea.isDraft && status.includes(VigilanceArea.Status.PUBLISHED))
+    (vigilanceArea.isDraft && status === VigilanceArea.Status.DRAFT) ||
+    (!vigilanceArea.isDraft && status === VigilanceArea.Status.PUBLISHED)
   )
 }

@@ -1,7 +1,7 @@
 import { setGlobalSearchText } from '@features/layersSelector/search/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { TextInput } from '@mtes-mct/monitor-ui'
+import { Size, TextInput } from '@mtes-mct/monitor-ui'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
@@ -25,6 +25,7 @@ export function SearchFilter() {
       name="vigilance-area-search"
       onChange={onQuery}
       placeholder="Rechercher dans les zones de vigilance"
+      size={Size.LARGE}
       value={searchQueryFilter}
     />
   )
@@ -32,5 +33,5 @@ export function SearchFilter() {
 
 const StyledSearch = styled(TextInput)`
   border: 1px solid ${p => p.theme.color.lightGray};
-  width: 320px;
+  width: 330px;
 `

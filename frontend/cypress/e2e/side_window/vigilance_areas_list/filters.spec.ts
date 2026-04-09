@@ -7,6 +7,7 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
     cy.visit(`/side_window`)
     cy.wait(250)
     cy.clickButton('Zones de vigilance')
+    cy.clickButton('Afficher les filtres')
   })
 
   afterEach(() => {
@@ -61,12 +62,12 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
   })
 
   it('Should filter vigilance areas by draft status', () => {
-    cy.fill('Publiée', false)
+    cy.fill('Statut', 'Brouillon')
     verifyVigilanceAreaRows('Brouillon')
   })
 
   it('Should filter vigilance areas by published status', () => {
-    cy.fill('Non publiée', false)
+    cy.fill('Statut', 'Publiée')
     verifyVigilanceAreaRows('Publiée')
   })
 
@@ -76,13 +77,11 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
   })
 
   it('Should filter vigilance areas by visibility', () => {
-    // with only PUBLIC visibility option checked
-    cy.fill('Interne CACEM', false)
+    cy.fill('Visibilité', 'Publique')
     cy.getDataCy('vigilance-area-row').should('have.length', 3)
 
     // with only PRIVATE visibility option checked
-    cy.fill('Interne CACEM', true)
-    cy.fill('Publique', false)
+    cy.fill('Visibilité', 'Interne CACEM')
     cy.getDataCy('vigilance-area-row').should('have.length', 1)
   })
 
