@@ -17,6 +17,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
 
+import { REQUIRED_FIELD } from './Schema'
 import { SubTitle } from './style'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
@@ -34,13 +35,24 @@ export function RegulatoryTexts({
   editingMainRefReg: MainRefReg | undefined
   onChangeRefReg: (refReg?: MainRefReg) => void
 }) {
-  const { setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
+  const { setFieldError, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
   const [editingOtherRefReg, setEditingOtherRefReg] = useState<RegulatoryArea.AdditionalRegulatoryText | undefined>(
     undefined
   )
 
-  const validateRefReg = () => {
-    onChangeRefReg(undefined)
+  const validateRefReg = async () => {
+    if (values.refReg && values.url && values.date) {
+      onChangeRefReg(undefined)
+
+      return
+    }
+    if (!values.url) {
+      setFieldError('url', REQUIRED_FIELD)
+    }
+
+    if (!values.date) {
+      setFieldError('date', REQUIRED_FIELD)
+    }
   }
 
   const cancelEditRefReg = () => {
@@ -53,14 +65,19 @@ export function RegulatoryTexts({
 
   const validateOtherRefReg = (index: number) => {
     const updatedOtherRefReg = values.additionalRefReg ? values.additionalRefReg[index] : undefined
-    const isOtherRefRegEmpty =
-      !updatedOtherRefReg?.refReg && !updatedOtherRefReg?.startDate && !updatedOtherRefReg?.endDate
-    if (isOtherRefRegEmpty) {
-      deleteOtherRefReg(index)
+    if (updatedOtherRefReg?.refReg && updatedOtherRefReg?.startDate) {
+      setEditingOtherRefReg(undefined)
 
       return
     }
-    setEditingOtherRefReg(undefined)
+
+    if (!updatedOtherRefReg?.refReg) {
+      setFieldError(`additionalRefReg[${index}].refReg`, REQUIRED_FIELD)
+    }
+
+    if (!updatedOtherRefReg?.startDate) {
+      setFieldError(`additionalRefReg[${index}].startDate`, REQUIRED_FIELD)
+    }
   }
 
   const cancelEditOtherRefReg = (index: number) => {
@@ -139,7 +156,14 @@ export function RegulatoryTexts({
             <RefRegText>{values.refReg} </RefRegText>
           </div>
           <RefRegSecondLine>
-            <FormikTextInput isErrorMessageHidden isLight label="URL du lien" name="url" style={{ width: '65%' }} />
+            <FormikTextInput
+              isErrorMessageHidden
+              isLight
+              isRequired
+              label="URL du lien"
+              name="url"
+              style={{ width: '65%' }}
+            />
             <DateContainer>
               <FormikDatePicker
                 isErrorMessageHidden
@@ -212,10 +236,17 @@ export function RegulatoryTexts({
             if (editingOtherRefReg?.id === otherRefReg.id) {
               return (
                 <EditingRefRegContainer key={otherRefReg.id}>
-                  <FormikTextarea isLight label="Titre du texte" name={`additionalRefReg[${refRegIndex}].refReg`} />
+                  <FormikTextarea
+                    isErrorMessageHidden
+                    isLight
+                    isRequired
+                    label="Titre du texte"
+                    name={`additionalRefReg[${refRegIndex}].refReg`}
+                  />
                   <RefRegSecondLine>
                     <DateContainer>
                       <FormikDatePicker
+                        isErrorMessageHidden
                         isLight
                         isRequired
                         isStringDate
@@ -223,6 +254,7 @@ export function RegulatoryTexts({
                         name={`additionalRefReg[${refRegIndex}].startDate`}
                       />
                       <FormikDatePicker
+                        isErrorMessageHidden
                         isLight
                         isStringDate
                         label="Fin de validité"

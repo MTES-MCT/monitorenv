@@ -24,6 +24,7 @@ type Filters = {
 export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     getLayerNames: builder.query<{ layerNames: string[] }, void>({
+      providesTags: () => [{ id: 'LAYERS_NAME', type: 'RegulatoryAreas' }],
       query: () => 'v2/regulatory-areas/layer-names',
       transformErrorResponse: response => new FrontendApiError(GET_LAYER_NAMES_ERROR_MESSAGE, response)
     }),
@@ -85,7 +86,8 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       invalidatesTags: (_, __, { id }) => [
         { id, type: 'RegulatoryAreas' },
         { id: 'LIST', type: 'RegulatoryAreas' },
-        { id: 'TO_COMPLETE', type: 'RegulatoryAreas' }
+        { id: 'TO_COMPLETE', type: 'RegulatoryAreas' },
+        { id: 'LAYERS_NAME', type: 'RegulatoryAreas' }
       ],
       query: regulatoryArea => ({
         body: regulatoryArea,
