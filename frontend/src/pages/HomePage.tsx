@@ -1,10 +1,7 @@
-import { EnvBannerStack } from '@components/BannerStack/EnvBannerStack'
+import { EnvironmentBanner, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
 import { Menu } from '@components/Menu'
 import { MapFocusForDashboardBanner } from '@features/Dashboard/components/MapFocusForDashboardBanner'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
-import { BannerStack } from '@features/MainWindow/components/BannerStack'
-import { mainWindowActions } from '@features/MainWindow/slice'
-import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { AttachMissionToReportingModal } from '@features/Reportings/components/ReportingForm/AttachMission/AttachMissionToReportingModal'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
@@ -13,6 +10,7 @@ import { SideWindowStatus } from '@features/SideWindow/slice'
 import { Resume } from '@features/Vessel/components/VesselResume'
 import { closeVesselResume } from '@features/Vessel/useCases/closeVesselResume'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { getEnvironmentData } from '@utils/getEnvironmentData'
 import { omit } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useBeforeUnload } from 'react-router'
@@ -31,9 +29,7 @@ import { Reportings } from '../features/Reportings'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
-import type { Environment } from 'types'
-
-const environment = import.meta.env.FRONTEND_SENTRY_ENV as Environment
+const { environmentMessage, isEnvironmentBoxVisible, version } = getEnvironmentData()
 
 export function HomePage() {
   const dispatch = useAppDispatch()
@@ -98,29 +94,20 @@ export function HomePage() {
     dispatch(reportingActions.updateUnactiveReporting(omit(reportingEvent, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES)))
   }, [dispatch, reportingEvent])
 
-  useEffect(() => {
-    let bannerId: number
-    if (environment === 'integration' || environment === 'preprod') {
-      bannerId = dispatch(addMainWindowBanner(EnvBannerStack.Props))
-    }
-
-    return () => {
-      if (bannerId) {
-        dispatch(mainWindowActions.removeBanner(bannerId))
-      }
-    }
-  }, [dispatch])
-
   useSearchLayers()
 
   return (
     <>
       {/* TODO Move this wrapper to `@features/MainWindow/components/MainWindowLayout.tsx`. */}
       {dashboardMapFocus && <MapFocusForDashboardBanner />}
-      <Wrapper>
+      {isEnvironmentBoxVisible && (
+        <EnvironmentBanner>
+          <span>{environmentMessage}</span>
+          <span> version {version}</span>
+        </EnvironmentBanner>
+      )}
+      <Wrapper $isEnvironmentBoxVisible={isEnvironmentBoxVisible}>
         <Healthcheck />
-        <BannerStack />
-
         <Map />
         <LayersSidebar />
         <RightMenuOnHoverArea />
@@ -150,8 +137,10 @@ export function HomePage() {
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $isEnvironmentBoxVisible: boolean }>`
+  ${p => getEnvironmentBorderStyle(p.$isEnvironmentBoxVisible)}
   font-size: 13px;
+  height: 100%;
   overflow-y: hidden;
   overflow-x: hidden;
   width: 100%;
