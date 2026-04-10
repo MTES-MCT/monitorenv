@@ -33,7 +33,7 @@ export const useGetFilteredVigilanceAreasQuery = () => {
     pollingInterval: TWO_MINUTES
   })
 
-  const vigilanceAreas = useMemo(() => (data ? Object.values(data?.entities) : []), [data])
+  const vigilanceAreas = useMemo(() => (data ? data.ids.map(id => data.entities[id]!) : []), [data])
 
   const tempVigilanceAreas = useMemo(
     () =>
@@ -107,9 +107,7 @@ export const useGetFilteredVigilanceAreasQuery = () => {
         vigilanceAreaSchema
       )
     }
-
-    const sortedVigilanceAreas = [...searchedVigilanceAreasInExtent].sort((a, b) => a?.name?.localeCompare(b?.name))
-    const vigilanceAreasEntities = sortedVigilanceAreas.reduce((acc, vigilanceArea) => {
+    const vigilanceAreasEntities = searchedVigilanceAreasInExtent.reduce((acc, vigilanceArea) => {
       acc[vigilanceArea.id] = vigilanceArea
 
       return acc
