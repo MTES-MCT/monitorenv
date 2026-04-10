@@ -57,6 +57,7 @@ export function Identification({
   const [isCreatingNewLayerName, setIsCreatingNewLayerName] = useState(false)
   const [newLayerNameType, setNewLayerNameType] = useState<string | undefined>(undefined)
   const [newLayerNameLocation, setNewLayerNameLocation] = useState<string | undefined>(undefined)
+  const [isNewLayerNameValid, setIsNewLayerNameValid] = useState(true)
 
   const layerNamesOptions = useMemo(() => {
     const layersNamesFromApi = Object.keys(layerNames?.layerNames || {})
@@ -148,10 +149,14 @@ export function Identification({
   }
 
   const validateLayerName = () => {
-    if (newLayerNameType && newLayerNameLocation) {
-      setFieldValue('layerName', `${newLayerNameType} - ${newLayerNameLocation}`)
-      setIsCreatingNewLayerName(false)
+    if (!newLayerNameType || !newLayerNameLocation) {
+      setIsNewLayerNameValid(false)
+
+      return
     }
+    setFieldValue('layerName', `${newLayerNameType} - ${newLayerNameLocation}`)
+    setIsCreatingNewLayerName(false)
+    setIsNewLayerNameValid(true)
   }
 
   const renderMenuItem = (label, item) => (
@@ -213,12 +218,18 @@ export function Identification({
         {isCreatingNewLayerName && (
           <CreateLayerNameContainer>
             <TextInput
+              error={!isNewLayerNameValid && !newLayerNameType ? 'Champ requis' : undefined}
+              isErrorMessageHidden
+              isRequired
               label="Type"
               name="newLayerNameType"
               onChange={nextValue => setNewLayerNameType(nextValue)}
               value={newLayerNameType}
             />
             <TextInput
+              error={!isNewLayerNameValid && !newLayerNameLocation ? 'Champ requis' : undefined}
+              isErrorMessageHidden
+              isRequired
               label="Lieu"
               name="newLayerNameLocation"
               onChange={nextValue => setNewLayerNameLocation(nextValue)}
