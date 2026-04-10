@@ -33,7 +33,7 @@ export function VigilanceAreasTable({
 
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -35 : 0
 
-  const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'name' }])
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const columns = useMemo(
     () =>

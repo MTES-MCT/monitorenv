@@ -161,7 +161,7 @@ class JpaVigilanceAreaRepository(
 
     @Transactional
     override fun findAll(): List<VigilanceAreaEntity> =
-        dbVigilanceAreaRepository.findAllByIsDeletedFalseOrderByName().map {
+        dbVigilanceAreaRepository.findAllByIsDeletedFalseOrderByCreatedAtDesc().map {
             it.toVigilanceAreaEntity(mapper)
         }
 

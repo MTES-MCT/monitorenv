@@ -1,6 +1,5 @@
 import { Icon, TableWithSelectableRows, THEME } from '@mtes-mct/monitor-ui'
 import { flexRender, type HeaderGroup } from '@tanstack/react-table'
-import styled from 'styled-components'
 
 import { createPinnedCellStyle } from './utils'
 
@@ -26,24 +25,9 @@ export function TableWithSelectableRowsHeader({ headerGroup }: { headerGroup: He
 
                 {header.column.getCanSort() &&
                   ({
-                    asc: (
-                      <ChevronWrapper>
-                        <StyledChevronIcon $isOpen color={THEME.color.lightGray} size={14} />
-                        <StyledChevronIcon color={THEME.color.slateGray} size={14} />
-                      </ChevronWrapper>
-                    ),
-                    desc: (
-                      <ChevronWrapper>
-                        <StyledChevronIcon $isOpen color={THEME.color.slateGray} size={14} />
-                        <StyledChevronIcon color={THEME.color.lightGray} size={14} />
-                      </ChevronWrapper>
-                    )
-                  }[header.column.getIsSorted() as string] ?? (
-                    <ChevronWrapper>
-                      <StyledChevronIcon $isOpen color={THEME.color.lightGray} size={14} />
-                      <StyledChevronIcon color={THEME.color.lightGray} size={14} />
-                    </ChevronWrapper>
-                  ))}
+                    asc: <Icon.SortingChevrons secondaryColor={THEME.color.lightGray} size={14} />,
+                    desc: <Icon.SortingChevrons size={14} tertiaryColor={THEME.color.lightGray} />
+                  }[header.column.getIsSorted() as string] ?? <Icon.SortingChevrons size={14} />)}
               </TableWithSelectableRows.SortContainer>
             )}
           </TableWithSelectableRows.Th>
@@ -52,14 +36,3 @@ export function TableWithSelectableRowsHeader({ headerGroup }: { headerGroup: He
     </tr>
   )
 }
-
-const StyledChevronIcon = styled(Icon.Chevron)<{ $isOpen?: boolean }>`
-  transform: ${props => (!props.$isOpen ? 'rotate(0deg)' : 'rotate(-180deg)')};
-  transition: all 0.5s;
-  width: 12px !important;
-  height: 12px !important;
-`
-const ChevronWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`

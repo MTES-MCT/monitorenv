@@ -37,7 +37,7 @@ export function useTable({
     data,
     enableMultiRowSelection: withRowSelection,
     enableRowSelection: withRowSelection,
-    enableSortingRemoval: false,
+    enableSortingRemoval: true,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (row: any) => row.id,
     getSortedRowModel: getSortedRowModel(),
