@@ -1,4 +1,4 @@
-import { EnvBannerStack } from '@components/BannerStack/EnvBannerStack'
+import { EnvironmentBanner } from '@components/EnvironmentBox'
 import { DashboardForms } from '@features/Dashboard/components/DashboardForm'
 import { DashboardsList } from '@features/Dashboard/components/DashboardsList'
 import { DashboardsNavBar } from '@features/Dashboard/components/DashboardsNavBar'
@@ -14,6 +14,7 @@ import { VigilancesAreasList } from '@features/VigilanceArea/components/Vigilanc
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Icon, NewWindowContext, type NewWindowContextValue, SideMenu } from '@mtes-mct/monitor-ui'
+import { getEnvironmentData } from '@utils/getEnvironmentData'
 import {
   isDashboardPage,
   isDashboardsPage,
@@ -33,15 +34,11 @@ import { useListenMissionEventUpdates } from '../Mission/components/MissionForm/
 import { missionFormsActions } from '../Mission/components/MissionForm/slice'
 import { MissionsNavBar } from '../Mission/MissionsNavBar'
 import { Reportings } from '../Reportings'
-import { BannerStack } from './components/BannerStack'
 import { Route } from './Route'
 import { sideWindowActions } from './slice'
 import { StyledRouteContainer, Wrapper } from './style'
-import { addSideWindowBanner } from './useCases/addSideWindowBanner'
 
-import type { Environment } from 'types'
-
-const environment = import.meta.env.FRONTEND_SENTRY_ENV as Environment
+const { environmentMessage, isEnvironmentBoxVisible, version } = getEnvironmentData()
 
 export function SideWindow() {
   const dispatch = useAppDispatch()
@@ -94,16 +91,6 @@ export function SideWindow() {
       dispatch(dashboardActions.setMapFocus(false))
       dispatch(restorePreviousDisplayedItems())
     }
-    let bannerId: number
-    if (environment === 'integration' || environment === 'preprod') {
-      bannerId = dispatch(addSideWindowBanner(EnvBannerStack.Props))
-    }
-
-    return () => {
-      if (bannerId) {
-        dispatch(sideWindowActions.removeBanner(bannerId))
-      }
-    }
   }, [currentPath, dispatch])
 
   const navigate = (nextPath: string) => {
@@ -138,9 +125,15 @@ export function SideWindow() {
 
   return (
     <StyleSheetManager target={wrapperRef.current ?? undefined}>
-      <Wrapper ref={wrapperRef}>
+      <Wrapper ref={wrapperRef} $isEnvironmentBoxVisible={isEnvironmentBoxVisible}>
         {wrapperRef.current && (
           <>
+            {isEnvironmentBoxVisible && (
+              <EnvironmentBanner>
+                <span>{environmentMessage}</span>
+                <span> version {version}</span>
+              </EnvironmentBanner>
+            )}
             <NewWindowContext.Provider value={newWindowContextProviderValue}>
               <SideMenu>
                 <SideMenu.Button
@@ -171,7 +164,6 @@ export function SideWindow() {
               </SideMenu>
 
               <StyledRouteContainer>
-                <BannerStack />
                 <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
                 <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
                 <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />

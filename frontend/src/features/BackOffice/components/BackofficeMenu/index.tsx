@@ -17,19 +17,15 @@ import { BACK_OFFICE_MENU_LABEL, BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from
 export function BackOfficeMenu() {
   const locationPath = useLocation().pathname
 
-  const isRegulatoryAreasBoEnabled = import.meta.env.FRONTEND_REGULATORY_AREAS_BO_ENABLED === 'true'
-
   return (
     <Wrapper>
-      {isRegulatoryAreasBoEnabled && (
-        <StyledNavLink
-          $isActive={isRegulatoryAreaPage(locationPath) || isRegulatoryAreaListPage(locationPath)}
-          to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`}
-        >
-          <Icon.MapLayers />
-          {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.REGULATORY_AREA_LIST]}
-        </StyledNavLink>
-      )}
+      <StyledNavLink
+        $isActive={isRegulatoryAreaPage(locationPath) || isRegulatoryAreaListPage(locationPath)}
+        to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`}
+      >
+        <Icon.MapLayers />
+        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.REGULATORY_AREA_LIST]}
+      </StyledNavLink>
 
       <StyledNavLink
         $isActive={isAdministrationPage(locationPath) || isAdministrationListPage(locationPath)}

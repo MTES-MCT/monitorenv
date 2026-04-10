@@ -1,6 +1,8 @@
+import { getEnvironmentBorderStyle } from '@components/EnvironmentBox'
 import styled from 'styled-components'
 
-export const Wrapper = styled.section`
+export const Wrapper = styled.section<{ $isEnvironmentBoxVisible: boolean }>`
+  ${p => getEnvironmentBorderStyle(p.$isEnvironmentBoxVisible)}
   background: ${p => p.theme.color.white};
   display: flex;
 

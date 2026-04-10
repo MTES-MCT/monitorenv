@@ -1,11 +1,7 @@
-import { EnvBannerStack } from '@components/BannerStack/EnvBannerStack'
-import { BannerStack } from '@features/BackOffice/components/BannerStack'
-import { backOfficeActions } from '@features/BackOffice/slice'
-import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { EnvironmentBanner, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
 import { RegulatoryAreaForm } from '@features/RegulatoryArea/components/RegulatoryAreaForm'
 import { RegulatoryAreaList } from '@features/RegulatoryArea/components/RegulatoryAreaList'
-import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useEffect } from 'react'
+import { getEnvironmentData } from '@utils/getEnvironmentData'
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
 
@@ -18,55 +14,34 @@ import { ControlUnitTable } from '../features/ControlUnit/components/ControlUnit
 import { StationForm } from '../features/Station/components/StationForm'
 import { BaseTable } from '../features/Station/components/StationTable'
 
-import type { Environment } from 'types'
-
-const environment = import.meta.env.FRONTEND_SENTRY_ENV as Environment
+const { environmentMessage, isEnvironmentBoxVisible, version } = getEnvironmentData()
 
 export function BackOfficePage() {
-  const dispatch = useAppDispatch()
-  const isRegulatoryAreasBoEnabled = import.meta.env.FRONTEND_REGULATORY_AREAS_BO_ENABLED === 'true'
-
-  useEffect(() => {
-    let bannerId: number
-    if (environment === 'integration' || environment === 'preprod') {
-      bannerId = dispatch(addBackOfficeBanner(EnvBannerStack.Props))
-    }
-
-    return () => {
-      if (bannerId) {
-        dispatch(backOfficeActions.removeBanner(bannerId))
-      }
-    }
-  }, [dispatch])
-
   return (
-    <Wrapper>
+    <Wrapper $isEnvironmentBoxVisible={isEnvironmentBoxVisible}>
+      {isEnvironmentBoxVisible && (
+        <EnvironmentBanner>
+          <span>{environmentMessage}</span>
+          <span> version {version}</span>
+        </EnvironmentBanner>
+      )}
       <BackOfficeMenu />
 
       <>
-        <BannerStack />
         <Routes>
-          {isRegulatoryAreasBoEnabled ? (
-            <>
-              <Route element={<RegulatoryAreaList />} path="/" />
-
-              <Route
-                element={<RegulatoryAreaList />}
-                path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}
-              />
-              <Route
-                element={<RegulatoryAreaForm />}
-                path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/:regulatoryAreaId`}
-              />
-              <Route
-                element={<RegulatoryAreaForm />}
-                path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new`}
-              />
-            </>
-          ) : (
-            <Route element={<AdministrationTable />} path="/" />
-          )}
-
+          <Route element={<RegulatoryAreaList />} path="/" />
+          <Route
+            element={<RegulatoryAreaList />}
+            path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}
+          />
+          <Route
+            element={<RegulatoryAreaForm />}
+            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/:regulatoryAreaId`}
+          />
+          <Route
+            element={<RegulatoryAreaForm />}
+            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new`}
+          />
           <Route
             element={<AdministrationTable />}
             path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.ADMINISTRATION_LIST]}
@@ -93,7 +68,8 @@ export function BackOfficePage() {
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $isEnvironmentBoxVisible: boolean }>`
+  ${p => getEnvironmentBorderStyle(p.$isEnvironmentBoxVisible)}
   display: flex;
   height: 100%;
 `

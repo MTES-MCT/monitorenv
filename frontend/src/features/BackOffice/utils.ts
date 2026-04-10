@@ -3,13 +3,23 @@ import { matchPath } from 'react-router'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from './components/BackofficeMenu/constants'
 
 export function isRegulatoryAreaListPage(path: string) {
-  return !!matchPath(
+  const isListPage = !!matchPath(
     {
       end: true,
       path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`
     },
     path
   )
+
+  const isIndexPage = !!matchPath(
+    {
+      end: true,
+      path: `/backoffice/`
+    },
+    path
+  )
+
+  return isListPage || isIndexPage
 }
 
 export function isRegulatoryAreaPage(path: string) {
