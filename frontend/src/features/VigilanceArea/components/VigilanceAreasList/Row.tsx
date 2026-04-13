@@ -26,7 +26,6 @@ export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
           return (
             <ExpandableRowCell
               key={cell.id}
-              $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
               $isDraft={!!vigilanceArea.isDraft}
               onClick={() => row.toggleExpanded()}
               style={{
@@ -113,6 +112,7 @@ const ExpandedRowCell = styled(TableWithSelectableRows.Td).attrs(props => ({
   > p:not(:first-child) {
     margin-top: 16px;
   }
+  max-width: 350px;
 `
 
 const ExpandedRowLabel = styled.span`
@@ -120,4 +120,10 @@ const ExpandedRowLabel = styled.span`
   display: block;
   width: 100%;
 `
-const ExpandedRowValue = styled.span``
+const ExpandedRowValue = styled.span`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 50;
+  overflow: hidden;
+  white-space: pre-wrap;
+`
