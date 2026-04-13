@@ -18,8 +18,7 @@ export const EnvironmentBanner = styled.div`
 
 export function getEnvironmentBorderStyle(isEnvironmentBoxVisible: boolean) {
   return `
-   border-left: ${isEnvironmentBoxVisible ? '4px' : '0'} solid ${THEME.color.goldenPoppy};
-   border-right: ${isEnvironmentBoxVisible ? '4px' : '0'} solid ${THEME.color.goldenPoppy};
-   border-bottom: ${isEnvironmentBoxVisible ? '4px' : '0'} solid ${THEME.color.goldenPoppy};
+   border: ${isEnvironmentBoxVisible ? '4px' : '0'} solid ${THEME.color.goldenPoppy};
+   border-top: ${isEnvironmentBoxVisible ? '6px' : '0'} solid ${THEME.color.goldenPoppy};
   `
 }
