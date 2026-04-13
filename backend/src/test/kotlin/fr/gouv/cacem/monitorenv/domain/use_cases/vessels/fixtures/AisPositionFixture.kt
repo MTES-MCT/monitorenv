@@ -22,7 +22,6 @@ class AisPositionFixture {
             status = null,
             timestamp = ts,
             shipname = null,
-            sentAt = null,
         )
 
         fun aMessagePayload(

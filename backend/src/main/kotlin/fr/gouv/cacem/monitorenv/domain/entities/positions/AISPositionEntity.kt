@@ -14,5 +14,4 @@ data class AISPositionEntity(
     val speed: Double?,
     val shipname: String?,
     val timestamp: ZonedDateTime,
-    val sentAt: ZonedDateTime?,
 )

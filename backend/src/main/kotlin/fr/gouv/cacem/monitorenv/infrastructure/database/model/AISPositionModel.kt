@@ -2,7 +2,11 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.positions.AISPositionEntity
 import fr.gouv.cacem.monitorenv.infrastructure.kafka.adapters.AISPayload
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import org.hibernate.annotations.Generated
 import org.hibernate.generator.EventType
 import org.locationtech.jts.geom.Geometry
@@ -41,7 +45,7 @@ data class AISPositionModel(
     val toStarboard: Short?,
     val draught: Short?,
     val destination: String?,
-    val sentAt: ZonedDateTime?,
+    val vesselFoundAt: ZonedDateTime?,
 ) {
     companion object {
         fun toAISPositionModel(aisPosition: AISPayload): AISPositionModel =
@@ -83,7 +87,7 @@ data class AISPositionModel(
                         ?.let(toShort()),
                 destination = aisPosition.features?.ais?.destination,
                 id = null,
-                sentAt = aisPosition.features?.ais?.ts,
+                vesselFoundAt = aisPosition.features?.ais?.ts,
             )
 
         private fun toShort(): (Double) -> Short = { (it * 100).roundToInt().toShort() }
@@ -103,7 +107,6 @@ data class AISPositionModel(
             status = status,
             speed = speed?.let(toDouble()),
             timestamp = pk.ts,
-            sentAt = sentAt,
         )
 }
 
