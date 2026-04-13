@@ -10,11 +10,8 @@ export function ValidationDateDetailsCell({ date }: { date?: string }) {
     const targetDate = customDayjs(date)
     const hasBeenValidated = targetDate.fromNow(true)
 
-    if (
-      hasBeenValidated.includes('heure') ||
-      hasBeenValidated.includes('minute') ||
-      hasBeenValidated.includes('seconde')
-    ) {
+    const isLessThanOneDay = ['heure', 'minute', 'seconde'].some(unit => hasBeenValidated.includes(unit))
+    if (isLessThanOneDay) {
       return ' < 1 jour'
     }
 
