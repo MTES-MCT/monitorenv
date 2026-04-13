@@ -12,7 +12,7 @@
   <script type="module">
     // Set favicon based on environment
     const env = import.meta.env.FRONTEND_SENTRY_ENV;
-    const faviconUrl = env === 'production' ? '/favicon.ico' : '/faviconBW.png';
+    const faviconUrl = env === 'production' ? '/favicon.ico' : '/faviconBW.ico';
     const description = env === 'production' ? 'MonitorEnv' : `MonitorEnv - ${env}`;
     document.getElementById('favicon').href = faviconUrl;
     document.getElementsByTagName('title')[0].textContent = description;
