@@ -1,5 +1,5 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { computeVigilanceAreaPeriod } from '@features/VigilanceArea/utils'
+import { computeVigilanceAreaPeriod, frequencyText } from '@features/VigilanceArea/utils'
 import styled from 'styled-components'
 
 import { StyledPeriodCircle } from './PeriodsCell'
@@ -12,6 +12,19 @@ export function FrequencyCell({ periods }: { periods: VigilanceArea.VigilanceAre
   const simpleVigilanceAreaPeriods = periods.filter(period => !period.isCritical)
   const criticalVigilanceAreaPeriods = periods.filter(period => period.isCritical)
 
+  if (periods.length === 1) {
+    if (periods[0]?.frequency === VigilanceArea.Frequency.NONE || periods[0]?.isAtAllTimes) {
+      return undefined
+    }
+
+    return (
+      <PeriodWrapper>
+        <Title>Récurrence</Title>
+        <span>{frequencyText(periods[0]?.frequency)}</span>
+      </PeriodWrapper>
+    )
+  }
+
   return (
     <Wrapper>
       {simpleVigilanceAreaPeriods.length > 0 && (
@@ -20,7 +33,7 @@ export function FrequencyCell({ periods }: { periods: VigilanceArea.VigilanceAre
           <Title>Vigilance simple</Title>
           <PeriodWrapper>
             {simpleVigilanceAreaPeriods.map(period => (
-              <span key={period.id}>{computeVigilanceAreaPeriod(period, false)}</span>
+              <span key={period.id}>{computeVigilanceAreaPeriod(period)}</span>
             ))}
           </PeriodWrapper>
         </div>
@@ -31,7 +44,7 @@ export function FrequencyCell({ periods }: { periods: VigilanceArea.VigilanceAre
           <Title>Vigilance critique</Title>
           <PeriodWrapper>
             {criticalVigilanceAreaPeriods.map(period => (
-              <span key={period.id}>{computeVigilanceAreaPeriod(period, true)}</span>
+              <span key={period.id}>{computeVigilanceAreaPeriod(period)}</span>
             ))}
           </PeriodWrapper>
         </div>

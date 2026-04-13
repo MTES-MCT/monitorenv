@@ -8,11 +8,12 @@ import styled from 'styled-components'
 
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
-export function EditCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: number }) {
+export function ActionsCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: number }) {
   const dispatch = useAppDispatch()
   const editingVigilanceAreaId = useAppSelector(state => state.vigilanceArea.editingVigilanceAreaId)
 
-  const editVigilanceArea = () => {
+  const editVigilanceArea = e => {
+    e.stopPropagation()
     if (editingVigilanceAreaId && editingVigilanceAreaId !== id) {
       dispatch(vigilanceAreaActions.openCancelModal(id))
 
@@ -31,16 +32,41 @@ export function EditCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: number
     }
   }
 
+  const handleZoomToVigilanceArea = e => {
+    e.stopPropagation()
+    dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
+    const feature = getFeature(geom)
+
+    const extent = feature?.getGeometry()?.getExtent()
+    if (extent) {
+      dispatch(setFitToExtent(extent))
+    }
+  }
+
   return (
-    <StyledIconButton
-      accent={Accent.TERTIARY}
-      data-cy={`edit-mission-${id}`}
-      Icon={Icon.Edit}
-      onClick={editVigilanceArea}
-      title="Editer"
-    />
+    <Wrapper>
+      <StyledIconButton
+        accent={Accent.TERTIARY}
+        Icon={Icon.FocusZones}
+        onClick={handleZoomToVigilanceArea}
+        title="Centrer sur la carte"
+      />
+      <StyledIconButton
+        accent={Accent.TERTIARY}
+        data-cy={`edit-mission-${id}`}
+        Icon={Icon.Edit}
+        onClick={editVigilanceArea}
+        title="Editer"
+      />
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  gap: 12px;
+`
+
 const StyledIconButton = styled(IconButton)`
   padding: 0px;
 `

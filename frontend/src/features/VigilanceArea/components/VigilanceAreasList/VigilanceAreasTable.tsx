@@ -48,7 +48,7 @@ export function VigilanceAreasTable({
   const table = useTable({
     columnPinning: {
       left: ['name'],
-      right: ['geom', 'edit']
+      right: ['actions']
     },
     columns,
     data: tableData,

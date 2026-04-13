@@ -1,9 +1,8 @@
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { PeriodsCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/PeriodsCell'
 
-import { EditCell } from '../Cells/EditCell'
+import { ActionsCell } from '../Cells/ActionsCell'
 import { HighlightCell } from '../Cells/HighlightCell'
-import { LocalizeCell } from '../Cells/LocalizeCell'
 import { StatusCell } from '../Cells/StatusCell'
 import { TagsCell } from '../Cells/TagsCell'
 import { ThemesCell } from '../Cells/ThemesCells'
@@ -49,7 +48,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 100 + legacyFirefoxOffset
+    size: 150 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.validatedAt,
@@ -65,7 +64,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Statut',
     id: 'isDraft',
-    size: 150 + legacyFirefoxOffset
+    size: 140 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.visibility,
@@ -73,24 +72,15 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Visibilité',
     id: 'visibility',
-    size: 120 + legacyFirefoxOffset
+    size: 110 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,
     cell: ({ row }) =>
-      isFetching ? <StyledSkeletonRow /> : <LocalizeCell geom={row.original.geom} id={row.original.id} />,
+      isFetching ? <StyledSkeletonRow /> : <ActionsCell geom={row.original.geom} id={row.original.id} />,
     enableSorting: false,
     header: () => '',
-    id: 'geom',
-    size: 52 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.id,
-    cell: ({ row }) =>
-      isFetching ? <StyledSkeletonRow /> : <EditCell geom={row.original.geom} id={row.original.id} />,
-    enableSorting: false,
-    header: () => '',
-    id: 'edit',
-    size: 52 + legacyFirefoxOffset
+    id: 'actions',
+    size: 82 + legacyFirefoxOffset
   }
 ]
