@@ -1,4 +1,5 @@
 import { EnvironmentBanner, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
+import { BannerStack } from '@features/BackOffice/components/BannerStack'
 import { RegulatoryAreaForm } from '@features/RegulatoryArea/components/RegulatoryAreaForm'
 import { RegulatoryAreaList } from '@features/RegulatoryArea/components/RegulatoryAreaList'
 import { getEnvironmentData } from '@utils/getEnvironmentData'
@@ -28,6 +29,7 @@ export function BackOfficePage() {
       <BackOfficeMenu />
 
       <>
+        <BannerStack />
         <Routes>
           <Route element={<RegulatoryAreaList />} path="/" />
           <Route

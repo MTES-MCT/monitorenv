@@ -34,6 +34,7 @@ import { useListenMissionEventUpdates } from '../Mission/components/MissionForm/
 import { missionFormsActions } from '../Mission/components/MissionForm/slice'
 import { MissionsNavBar } from '../Mission/MissionsNavBar'
 import { Reportings } from '../Reportings'
+import { BannerStack } from './components/BannerStack'
 import { Route } from './Route'
 import { sideWindowActions } from './slice'
 import { StyledRouteContainer, Wrapper } from './style'
@@ -164,6 +165,7 @@ export function SideWindow() {
               </SideMenu>
 
               <StyledRouteContainer>
+                <BannerStack />
                 <Route element={<ReportingsList />} path={sideWindowPaths.REPORTINGS} />
                 <Route element={<MissionsNavBar />} path={[sideWindowPaths.MISSIONS, sideWindowPaths.MISSION]} />
                 <Route element={<Missions />} path={sideWindowPaths.MISSIONS} />

@@ -2,6 +2,7 @@ import { EnvironmentBanner, getEnvironmentBorderStyle } from '@components/Enviro
 import { Menu } from '@components/Menu'
 import { MapFocusForDashboardBanner } from '@features/Dashboard/components/MapFocusForDashboardBanner'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
+import { BannerStack } from '@features/MainWindow/components/BannerStack'
 import { AttachMissionToReportingModal } from '@features/Reportings/components/ReportingForm/AttachMission/AttachMissionToReportingModal'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
 import { useListenReportingEventUpdates } from '@features/Reportings/components/ReportingForm/hooks/useListenReportingEventUpdates'
@@ -108,6 +109,7 @@ export function HomePage() {
       )}
       <Wrapper $isEnvironmentBoxVisible={isEnvironmentBoxVisible}>
         <Healthcheck />
+        <BannerStack />
         <Map />
         <LayersSidebar />
         <RightMenuOnHoverArea />
