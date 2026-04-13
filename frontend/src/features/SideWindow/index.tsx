@@ -1,4 +1,4 @@
-import { EnvironmentBanner } from '@components/EnvironmentBox'
+import { EnvironmentBox } from '@components/EnvironmentBox'
 import { DashboardForms } from '@features/Dashboard/components/DashboardForm'
 import { DashboardsList } from '@features/Dashboard/components/DashboardsList'
 import { DashboardsNavBar } from '@features/Dashboard/components/DashboardsNavBar'
@@ -39,7 +39,7 @@ import { Route } from './Route'
 import { sideWindowActions } from './slice'
 import { StyledRouteContainer, Wrapper } from './style'
 
-const { environmentMessage, isEnvironmentBoxVisible, version } = getEnvironmentData()
+const { isEnvironmentBoxVisible } = getEnvironmentData()
 
 export function SideWindow() {
   const dispatch = useAppDispatch()
@@ -129,12 +129,7 @@ export function SideWindow() {
       <Wrapper ref={wrapperRef} $isEnvironmentBoxVisible={isEnvironmentBoxVisible}>
         {wrapperRef.current && (
           <>
-            {isEnvironmentBoxVisible && (
-              <EnvironmentBanner>
-                <span>{environmentMessage}</span>
-                <span> version {version}</span>
-              </EnvironmentBanner>
-            )}
+            <EnvironmentBox />
             <NewWindowContext.Provider value={newWindowContextProviderValue}>
               <SideMenu>
                 <SideMenu.Button

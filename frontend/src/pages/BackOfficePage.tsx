@@ -1,4 +1,4 @@
-import { EnvironmentBanner, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
+import { EnvironmentBox, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
 import { BannerStack } from '@features/BackOffice/components/BannerStack'
 import { RegulatoryAreaForm } from '@features/RegulatoryArea/components/RegulatoryAreaForm'
 import { RegulatoryAreaList } from '@features/RegulatoryArea/components/RegulatoryAreaList'
@@ -15,17 +15,12 @@ import { ControlUnitTable } from '../features/ControlUnit/components/ControlUnit
 import { StationForm } from '../features/Station/components/StationForm'
 import { BaseTable } from '../features/Station/components/StationTable'
 
-const { environmentMessage, isEnvironmentBoxVisible, version } = getEnvironmentData()
+const { isEnvironmentBoxVisible } = getEnvironmentData()
 
 export function BackOfficePage() {
   return (
     <Wrapper $isEnvironmentBoxVisible={isEnvironmentBoxVisible}>
-      {isEnvironmentBoxVisible && (
-        <EnvironmentBanner>
-          <span>{environmentMessage}</span>
-          <span> version {version}</span>
-        </EnvironmentBanner>
-      )}
+      <EnvironmentBox />
       <BackOfficeMenu />
 
       <>
