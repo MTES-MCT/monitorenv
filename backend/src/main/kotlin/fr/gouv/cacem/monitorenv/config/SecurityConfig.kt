@@ -133,6 +133,9 @@ class SecurityConfig(
             }
 
             private fun validateAndProcessUser(oidcUser: OidcUser): OidcUser {
+                val organizationalUnitClaim = oidcUser.claims["organizational_unit"] as? String
+                logger.info("User organizational unit from JWT: $organizationalUnitClaim")
+
                 if (oidcProperties.bypassEmailDomainsFilter == "true") {
                     logger.info("✅ OIDC is bypassing email domain checks.")
                     return oidcUser
@@ -140,9 +143,6 @@ class SecurityConfig(
 
                 val emailClaim = oidcUser.claims["email"] as? String
                 logger.debug("User email from JWT: $emailClaim")
-
-                val organizationalUnitClaim = oidcUser.claims["organizational_unit"] as? String
-                logger.info("User organizational unit from JWT: $organizationalUnitClaim")
 
                 if (emailClaim.isNullOrBlank()) {
                     val errorMsg = "Email claim is missing or empty in JWT"
