@@ -1,4 +1,4 @@
-import { EnvironmentBanner, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
+import { EnvironmentBox, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
 import { Menu } from '@components/Menu'
 import { MapFocusForDashboardBanner } from '@features/Dashboard/components/MapFocusForDashboardBanner'
 import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
@@ -30,7 +30,7 @@ import { Reportings } from '../features/Reportings'
 import { SideWindowLauncher } from '../features/SideWindow/SideWindowLauncher'
 import { useAppSelector } from '../hooks/useAppSelector'
 
-const { environmentMessage, isEnvironmentBoxVisible, version } = getEnvironmentData()
+const { isEnvironmentBoxVisible } = getEnvironmentData()
 
 export function HomePage() {
   const dispatch = useAppDispatch()
@@ -101,12 +101,7 @@ export function HomePage() {
     <>
       {/* TODO Move this wrapper to `@features/MainWindow/components/MainWindowLayout.tsx`. */}
       {dashboardMapFocus && <MapFocusForDashboardBanner />}
-      {isEnvironmentBoxVisible && (
-        <EnvironmentBanner>
-          <span>{environmentMessage}</span>
-          <span> version {version}</span>
-        </EnvironmentBanner>
-      )}
+      <EnvironmentBox />
       <Wrapper $isEnvironmentBoxVisible={isEnvironmentBoxVisible}>
         <Healthcheck />
         <BannerStack />

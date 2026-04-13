@@ -1,7 +1,23 @@
 import { THEME } from '@mtes-mct/monitor-ui'
+import { getEnvironmentData } from '@utils/getEnvironmentData'
 import styled from 'styled-components'
 
-export const EnvironmentBanner = styled.div`
+export function EnvironmentBox() {
+  const { environmentMessage, isEnvironmentBoxVisible, version } = getEnvironmentData()
+
+  if (!isEnvironmentBoxVisible) {
+    return null
+  }
+
+  return (
+    <Wrapper>
+      <span>{environmentMessage}</span>
+      <span> version {version}</span>
+    </Wrapper>
+  )
+}
+
+const Wrapper = styled.div`
   background-color: ${p => p.theme.color.goldenPoppy};
   color: ${p => p.theme.color.charcoal};
   display: flex;
