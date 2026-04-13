@@ -11,7 +11,7 @@ export const Columns = (isFetching: boolean) => [
     size: 42
   },
   {
-    accessorFn: row => getLocalizedDayjs(row.sentAt).format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
+    accessorFn: row => getLocalizedDayjs(row.timestamp).format('YYYY-MM-DD[T]HH:mm:ss[Z]'),
     cell: info => (isFetching ? <StyledSkeletonRow /> : <span>{info.getValue()}</span>),
     enableSorting: true,
     header: 'Date',

@@ -45,7 +45,7 @@ export function VesselSettings({ vessel }: VesselSettingsProps) {
       filter === Vessel.AisTrackSettingsEnum.SPECIFIC_PERIOD
         ? positions
         : vessel.positions?.filter(position =>
-            customDayjs(position.sentAt).isBetween(customDayjs(from), customDayjs(to))
+            customDayjs(position.timestamp).isBetween(customDayjs(from), customDayjs(to))
           ),
     [filter, from, positions, to, vessel.positions]
   )

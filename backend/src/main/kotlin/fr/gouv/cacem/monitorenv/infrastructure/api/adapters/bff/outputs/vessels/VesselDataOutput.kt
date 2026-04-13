@@ -50,7 +50,7 @@ data class VesselDataOutput(
                 leisureType = vessel.leisureType,
                 professionalType = vessel.professionalType,
                 commercialName = vessel.commercialName,
-                positions = vessel.positions.map { PositionOutput.toLastPositionOutput(it) },
+                positions = vessel.positions.map { PositionOutput.toPositionOutput(it) },
                 length = vessel.length,
                 ownerLastName = vessel.ownerLastName,
                 ownerFirstName = vessel.ownerFirstName,

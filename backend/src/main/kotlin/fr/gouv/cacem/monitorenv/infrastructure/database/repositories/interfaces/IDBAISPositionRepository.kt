@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
 
 interface IDBAISPositionRepository : JpaRepository<AISPositionModel, AISPositionPK> {
     @Query(
-        "SELECT position FROM AISPositionModel position WHERE position.pk.mmsi = :mmsi AND position.sentAt BETWEEN :from AND :to ORDER BY position.sentAt DESC",
+        "SELECT position FROM AISPositionModel position WHERE position.pk.mmsi = :mmsi AND position.pk.ts BETWEEN :from AND :to ORDER BY position.pk.ts DESC",
     )
     fun findAllByMmsiBetweenDates(
         mmsi: Int,

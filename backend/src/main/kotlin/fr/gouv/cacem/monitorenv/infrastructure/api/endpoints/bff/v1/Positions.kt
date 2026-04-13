@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.lastPositions.GetPositions
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.positions.PositionOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.positions.PositionOutput.Companion.toLastPositionOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.positions.PositionOutput.Companion.toPositionOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -32,5 +32,5 @@ class Positions(
         @Parameter(description = "Upper limit of the date of positions")
         @RequestParam(name = "to")
         to: ZonedDateTime,
-    ): List<PositionOutput> = getPositions.execute(mmsi, from, to).map { toLastPositionOutput(it) }
+    ): List<PositionOutput> = getPositions.execute(mmsi, from, to).map { toPositionOutput(it) }
 }

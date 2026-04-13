@@ -68,10 +68,9 @@ export namespace Vessel {
     heading?: number
     id: number
     mmsi?: number
-    sentAt?: string
     shipName?: string
     speed?: number
     status?: string
-    timestamp?: string
+    timestamp: string
   }
 }
