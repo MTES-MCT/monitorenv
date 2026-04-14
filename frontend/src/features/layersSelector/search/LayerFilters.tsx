@@ -20,6 +20,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {
   Accent,
+  Checkbox,
   CheckPicker,
   CustomSearch,
   type DateAsStringRange,
@@ -36,6 +37,7 @@ import styled from 'styled-components'
 
 import {
   resetFilters,
+  setAreRecentsAreasChecked,
   setControlPlan,
   setFilteredAmpTypes,
   setFilteredRegulatoryTags,
@@ -69,6 +71,7 @@ export function LayerFilters() {
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const controlPlan = useAppSelector(state => state.layerSearch.controlPlan)
+  const areRecentsAreasChecked = useAppSelector(state => state.layerSearch.areRecentsAreasChecked)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.vigilanceAreaFilters.period)
 
   const { data: amps } = useGetAMPsQuery()
@@ -135,6 +138,19 @@ export function LayerFilters() {
   const handleSetFilteredRegulatoryTags = (nextTags: TagOption[] | undefined = []) => {
     dispatch(setFilteredRegulatoryTags(nextTags))
   }
+
+  const setRecentsAreasFilter = (isChecked: boolean | undefined) => {
+    dispatch(setAreRecentsAreasChecked(isChecked ?? false))
+  }
+
+  const hasFilters = useMemo(
+    () =>
+      filteredRegulatoryTags.length > 0 ||
+      filteredAmpTypes?.length > 0 ||
+      filteredRegulatoryThemes.length > 0 ||
+      numberOfVigilanceAreaFiltersSetted > 0,
+    [filteredRegulatoryTags, filteredAmpTypes, filteredRegulatoryThemes, numberOfVigilanceAreaFiltersSetted]
+  )
 
   return (
     <FiltersWrapper>
@@ -227,11 +243,16 @@ export function LayerFilters() {
           <Tooltip>Ce champ est utilisé uniquement comme critère de recherche pour les zones de vigilance.</Tooltip>
         </SelectContainer>
       )}
-
-      {(filteredRegulatoryTags.length > 0 ||
-        filteredAmpTypes?.length > 0 ||
-        filteredRegulatoryThemes.length > 0 ||
-        numberOfVigilanceAreaFiltersSetted > 0) && (
+      <li>
+        <Checkbox
+          checked={areRecentsAreasChecked}
+          inline
+          label="Zones ajoutées/modifiées récemment"
+          name="selectAllTags"
+          onChange={setRecentsAreasFilter}
+        />
+      </li>
+      {hasFilters && (
         <TagWrapper>
           {filteredRegulatoryThemes?.map(theme => (
             <Fragment key={`filteredRegulatoryThemes-${theme.id}`}>
@@ -324,11 +345,7 @@ export function LayerFilters() {
         </TagWrapper>
       )}
 
-      {(filteredRegulatoryTags.length > 0 ||
-        filteredRegulatoryThemes.length > 0 ||
-        filteredAmpTypes?.length > 0 ||
-        !!controlPlan ||
-        numberOfVigilanceAreaFiltersSetted > 0) && (
+      {(hasFilters || !!controlPlan || areRecentsAreasChecked) && (
         <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>
       )}
     </FiltersWrapper>

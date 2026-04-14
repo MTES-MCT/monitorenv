@@ -15,6 +15,7 @@ const GET_REGULATORY_AREA_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zo
 const GET_LAYER_NAMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les noms de groupes de zones réglementaires"
 type Filters = {
   controlPlan?: string
+  onlyRecentsAreas?: boolean
   seaFronts?: string[]
   searchQuery?: string
   tags?: number[]

@@ -7,6 +7,7 @@ import { useMemo } from 'react'
 
 export const useGetFilteredRegulatoryAreas = () => {
   const {
+    areRecentsAreasChecked,
     controlPlan,
     filteredRegulatoryTags,
     filteredRegulatoryThemes,
@@ -18,18 +19,20 @@ export const useGetFilteredRegulatoryAreas = () => {
   const apiFilters = useMemo(
     () => ({
       controlPlan,
+      onlyRecentsAreas: areRecentsAreasChecked,
       searchQuery: globalSearchText,
       tags: getTagIds(filteredRegulatoryTags),
       themes: getThemeIds(filteredRegulatoryThemes)
     }),
-    [controlPlan, globalSearchText, filteredRegulatoryTags, filteredRegulatoryThemes]
+    [controlPlan, globalSearchText, filteredRegulatoryTags, filteredRegulatoryThemes, areRecentsAreasChecked]
   )
   const hasNoFilters = useMemo(
     () =>
       !apiFilters.controlPlan &&
       !apiFilters.searchQuery &&
       apiFilters.tags?.length === 0 &&
-      apiFilters.themes?.length === 0,
+      apiFilters.themes?.length === 0 &&
+      !apiFilters.onlyRecentsAreas,
     [apiFilters]
   )
 

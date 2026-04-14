@@ -22,6 +22,7 @@ export function useSearchLayers() {
 
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
+  const areRecentsAreasChecked = useAppSelector(state => state.layerSearch.areRecentsAreasChecked)
 
   const { data: amps } = useGetAMPsQuery()
 
@@ -61,7 +62,7 @@ export function useSearchLayers() {
     dispatch(closeMetadataPanel())
 
     // AMPS
-    if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldFilterSearchOnMapExtent) {
+    if (shouldSearchByText || shouldSearchThroughAMPTypes || shouldFilterSearchOnMapExtent || areRecentsAreasChecked) {
       let searchedAMPs
       let itemSchema
 
@@ -88,9 +89,12 @@ export function useSearchLayers() {
         itemSchema = { bboxPath: 'bbox', idPath: 'id' }
       }
 
+      const recentAreasAMPs = areRecentsAreasChecked
+        ? Object.values(amps?.entities ?? {}).filter(amp => amp.isNew)
+        : searchedAMPs
       const nextAMPsResult = getIntersectingLayerIds(
         shouldFilterSearchOnMapExtent,
-        searchedAMPs,
+        recentAreasAMPs,
         searchExtent,
         itemSchema
       )
@@ -107,7 +111,8 @@ export function useSearchLayers() {
     fuseAMPs,
     searchExtent,
     dispatchIfChanged,
-    amps?.entities
+    amps?.entities,
+    areRecentsAreasChecked
   ])
 
   const debouncedSearchRef = useRef(

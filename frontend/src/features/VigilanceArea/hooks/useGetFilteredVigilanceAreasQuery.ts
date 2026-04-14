@@ -8,6 +8,7 @@ import { useMemo } from 'react'
 
 import { TWO_MINUTES } from '../../../constants'
 import { VigilanceArea } from '../types'
+import { isRecentAreaFilter } from '../useCases/filters/isRecentAreaFilter'
 import { isVigilanceAreaPartOfCreatedBy } from '../useCases/filters/isVigilanceAreaPartOfCreatedBy'
 import { isVigilanceAreaPartOfSeaFront } from '../useCases/filters/isVigilanceAreaPartOfSeaFront'
 import { isVigilanceAreaPartOfStatus } from '../useCases/filters/isVigilanceAreaPartOfStatus'
@@ -25,6 +26,7 @@ export const useGetFilteredVigilanceAreasQuery = () => {
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
+  const areRecentsAreasChecked = useAppSelector(state => state.layerSearch.areRecentsAreasChecked)
 
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
@@ -45,7 +47,8 @@ export const useGetFilteredVigilanceAreasQuery = () => {
           isVigilanceAreaPartOfTag(vigilanceArea, filteredRegulatoryTags) &&
           isVigilanceAreaPartOfTheme(vigilanceArea, filteredRegulatoryThemes) &&
           isVigilanceAreaPartOfVisibility(vigilanceArea, visibility) &&
-          isVigilanceAreaPartOfType(vigilanceArea, type)
+          isVigilanceAreaPartOfType(vigilanceArea, type) &&
+          isRecentAreaFilter(vigilanceArea, areRecentsAreasChecked)
       ),
     [
       vigilanceAreas,
@@ -56,7 +59,8 @@ export const useGetFilteredVigilanceAreasQuery = () => {
       filteredRegulatoryTags,
       filteredRegulatoryThemes,
       visibility,
-      type
+      type,
+      areRecentsAreasChecked
     ]
   )
 
