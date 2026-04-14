@@ -1,4 +1,6 @@
 import { useGetThemesQuery } from '@api/themesAPI'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions, parseOptionsToThemes, sortThemes } from '@utils/getThemesAsOptions'
 import { useField, useFormikContext } from 'formik'
@@ -11,16 +13,24 @@ import {
   type EnvActionSurveillance,
   type Mission
 } from '../../../../../../domain/entities/missions'
+import { getTagsWarningMessageHasBeenShownForActionId, missionFormsActions } from '../../slice'
 
-import type { ThemeFromAPI } from 'domain/entities/themes'
+import type { ThemeFromAPI, ThemeOption } from 'domain/entities/themes'
 
 export const GENERAL_SURVEILLANCE = 'Surveillance générale'
 
 type ActionThemeProps = {
+  actionId: string
   actionIndex: number
   actionType: ActionTypeEnum
 }
-export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
+export function ActionThemes({ actionId, actionIndex, actionType }: ActionThemeProps) {
+  const dispatch = useAppDispatch()
+
+  const tagsWarningMessageHasBeenShown = useAppSelector(state =>
+    getTagsWarningMessageHasBeenShownForActionId(state.missionForms, actionId)
+  )
+
   const {
     setFieldValue,
     values: { envActions, startDateTimeUtc }
@@ -46,6 +56,13 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
       ? 'Thématiques et sous-thématiques de contrôle'
       : 'Thématiques et sous-thématiques de surveillance'
 
+  const onChange = (option: ThemeOption[] | undefined) => {
+    setFieldValue(`envActions[${actionIndex}].themes`, parseOptionsToThemes(option))
+    if (!tagsWarningMessageHasBeenShown) {
+      dispatch(missionFormsActions.setTagsWarningMessageHasBeenShown({ actionId, hasBeenShown: false }))
+    }
+  }
+
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">
       <CheckTreePicker
@@ -59,9 +76,7 @@ export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
         label={label}
         labelKey="name"
         name={`envActions[${actionIndex}].themes`}
-        onChange={option => {
-          setFieldValue(`envActions[${actionIndex}].themes`, parseOptionsToThemes(option))
-        }}
+        onChange={onChange}
         options={themesOptions}
         value={envActions[actionIndex]?.themes}
         valueKey="id"

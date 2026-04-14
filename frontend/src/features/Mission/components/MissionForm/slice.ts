@@ -10,6 +10,11 @@ export type MissionInStateType = {
   engagedControlUnit?: ControlUnit.EngagedControlUnit
   isFormDirty: boolean
   missionForm: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission>
+  tagsWarningMessageHasBeenShown?: {
+    [actionId: string]: {
+      hasBeenShown: boolean
+    }
+  }
 }
 
 type SelectedMissionType = {
@@ -138,6 +143,25 @@ const missionFormsSlice = createSlice({
         mission.displayCreatedMissionBanner = showBanner
       }
     },
+    setTagsWarningMessageHasBeenShown(state, action: PayloadAction<{ actionId: string; hasBeenShown: boolean }>) {
+      const { activeMissionId } = state
+
+      if (!activeMissionId) {
+        return
+      }
+      const mission = state.missions[activeMissionId]
+      if (mission) {
+        const { actionId, hasBeenShown } = action.payload
+        if (!mission.tagsWarningMessageHasBeenShown) {
+          mission.tagsWarningMessageHasBeenShown = {}
+        }
+        if (!mission.tagsWarningMessageHasBeenShown[actionId]) {
+          mission.tagsWarningMessageHasBeenShown[actionId] = { hasBeenShown }
+        } else {
+          mission.tagsWarningMessageHasBeenShown[actionId].hasBeenShown = hasBeenShown
+        }
+      }
+    },
     updateUnactiveMission(state, action: PayloadAction<AtLeast<Partial<Mission>, 'id'>>) {
       const { id } = action.payload
 
@@ -186,6 +210,14 @@ export const getNumberOfInfractionTarget = createSelector(
 
   (selectedInfraction: Infraction[] | NewInfraction[] | undefined) =>
     selectedInfraction?.reduce((sumNbTarget, infraction) => sumNbTarget + (infraction?.nbTarget ?? 0), 0) ?? 0
+)
+
+export const getTagsWarningMessageHasBeenShownForActionId = createSelector(
+  (state: MissionFormsState) => state.activeMissionId,
+  (state: MissionFormsState) => state.missions,
+  (_: MissionFormsState, actionId: string) => actionId,
+  (activeMissionId, missions, actionId) =>
+    activeMissionId ? missions[activeMissionId]?.tagsWarningMessageHasBeenShown?.[actionId] : undefined
 )
 
 export const missionFormsActions = missionFormsSlice.actions

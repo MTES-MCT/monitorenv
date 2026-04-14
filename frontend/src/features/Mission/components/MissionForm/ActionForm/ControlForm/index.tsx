@@ -56,6 +56,7 @@ import {
   TitleWithIcon
 } from '../style'
 import { ActionTags } from '../Tags/ActionTags'
+import { TagsWarningMessage } from '../TagsWarningMessage'
 import { ActionThemes } from '../Themes/ActionThemes'
 
 import type { Reporting } from 'domain/entities/reporting'
@@ -388,8 +389,9 @@ export function ControlForm({
           )}
         </div>
 
-        <ActionThemes actionIndex={envActionIndex} actionType={ActionTypeEnum.CONTROL} />
+        <ActionThemes actionId={currentActionId} actionIndex={envActionIndex} actionType={ActionTypeEnum.CONTROL} />
         <ActionTags actionIndex={envActionIndex} />
+        <TagsWarningMessage actionId={currentActionId} />
 
         <div>
           <DatePicker

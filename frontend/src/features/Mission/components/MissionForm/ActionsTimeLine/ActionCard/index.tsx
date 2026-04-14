@@ -1,10 +1,14 @@
 import { FishMissionAction } from '@features/Mission/fishActions.types'
+import { isMissionNew } from '@features/Mission/utils'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 
 import { EnvActions } from './EnvActions'
 import { FishActions } from './FishActions'
 import { Action, TimeLine } from './style'
-import { ActionSource, type EnvActionForTimeline } from '../../../../../../domain/entities/missions'
+import { ActionSource, ActionTypeEnum, type EnvActionForTimeline } from '../../../../../../domain/entities/missions'
 import { getDateAsLocalizedStringExpanded } from '../../../../../../utils/getDateAsLocalizedString'
+import { getTagsWarningMessageHasBeenShownForActionId, missionFormsActions } from '../../slice'
 import { CompletionStatusIcon } from '../CompletionStatusIcon'
 
 import type { DetachedReportingForTimeline, ReportingForTimeline } from '../../../../../../domain/entities/reporting'
@@ -33,11 +37,27 @@ export function ActionCard({
   selected,
   setCurrentActionId
 }: ActionCardProps) {
+  const dispatch = useAppDispatch()
+  const tagsWarningMessageHasBeenShown = useAppSelector(state =>
+    getTagsWarningMessageHasBeenShownForActionId(state.missionForms, String(action.id ?? ''))
+  )
+  const activeMissionId = useAppSelector(state => state.missionForms.activeMissionId)
+
   const onClickCard = id => {
     if (action.actionSource !== ActionSource.MONITORENV) {
       return
     }
     selectAction(id)
+
+    if (
+      !isMissionNew(activeMissionId) &&
+      !tagsWarningMessageHasBeenShown &&
+      (action.actionType === ActionTypeEnum.SURVEILLANCE || action.actionType === ActionTypeEnum.CONTROL)
+    ) {
+      dispatch(
+        missionFormsActions.setTagsWarningMessageHasBeenShown({ actionId: String(action.id), hasBeenShown: false })
+      )
+    }
   }
 
   return (
