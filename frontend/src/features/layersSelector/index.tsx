@@ -49,6 +49,7 @@ export function LayersSidebar() {
   const nbOfFiltersSetted = useAppSelector(state => state.vigilanceAreaFilters.nbOfFiltersSetted)
 
   const {
+    areRecentsAreasChecked,
     controlPlan,
     filteredAmpTypes,
     filteredRegulatoryTags,
@@ -81,7 +82,8 @@ export function LayersSidebar() {
     (filteredAmpTypes?.length > 0 ? 1 : 0) +
     (globalSearchText ? 1 : 0) +
     (controlPlan ? 1 : 0) +
-    (searchExtent ? 1 : 0)
+    (searchExtent ? 1 : 0) +
+    (areRecentsAreasChecked ? 1 : 0)
 
   const numberOfFilters = nbOfFiltersSetted + numberOfMapFilters
 

@@ -1,4 +1,5 @@
 import {
+  setAreRecentsAreasChecked,
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
   setIsAmpSearchResultsVisible,
@@ -25,7 +26,9 @@ export function FilterTags() {
   const { createdBy, nbOfFiltersSetted, seaFronts, status, type, visibility } = useAppSelector(
     state => state.vigilanceAreaFilters
   )
-  const { filteredRegulatoryTags, filteredRegulatoryThemes, searchExtent } = useAppSelector(state => state.layerSearch)
+  const { areRecentsAreasChecked, filteredRegulatoryTags, filteredRegulatoryThemes, searchExtent } = useAppSelector(
+    state => state.layerSearch
+  )
 
   const onDeleteTag = (valueToDelete: string | any, filterKey: keyof VigilanceAreaSliceState, filter) => {
     const updatedFilter = filter.filter(unit => unit !== valueToDelete)
@@ -65,8 +68,16 @@ export function FilterTags() {
     dispatch(setIsVigilanceAreaSearchResultsVisible(false))
   }
 
+  const onDeleteRecentsAreasChecked = () => {
+    dispatch(setAreRecentsAreasChecked(false))
+  }
+
   const hasFilters =
-    nbOfFiltersSetted > 0 || filteredRegulatoryTags?.length > 0 || filteredRegulatoryThemes?.length > 0 || searchExtent
+    nbOfFiltersSetted > 0 ||
+    filteredRegulatoryTags?.length > 0 ||
+    filteredRegulatoryThemes?.length > 0 ||
+    searchExtent ||
+    areRecentsAreasChecked
 
   if (!hasFilters) {
     return null
@@ -145,13 +156,13 @@ export function FilterTags() {
         </SingleTag>
       )}
       {searchExtent && (
-        <SingleTag
-          key="searchExtent"
-          accent={Accent.SECONDARY}
-          onDelete={onDeleteSearchZone}
-          title="Zone de filtre manuelle"
-        >
+        <SingleTag onDelete={onDeleteSearchZone} title="Zone de filtre manuelle">
           Zone de filtre manuelle
+        </SingleTag>
+      )}
+      {areRecentsAreasChecked && (
+        <SingleTag onDelete={onDeleteRecentsAreasChecked} title="Zones ajoutées/modifées récemment">
+          Zones ajoutées/modifées récemment
         </SingleTag>
       )}
     </StyledContainer>

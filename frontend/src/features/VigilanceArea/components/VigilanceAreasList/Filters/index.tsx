@@ -4,6 +4,7 @@ import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import {
+  setAreRecentsAreasChecked,
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
   setGlobalSearchText,
@@ -40,6 +41,7 @@ export function VigilanceAreasFilters() {
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
   const searchText = useAppSelector(state => state.layerSearch.globalSearchText)
+  const areRecentsAreasChecked = useAppSelector(state => state.layerSearch.areRecentsAreasChecked)
 
   const {
     areFiltersVisible,
@@ -73,6 +75,7 @@ export function VigilanceAreasFilters() {
     dispatch(setFilteredRegulatoryThemes([]))
     dispatch(setIsVigilanceAreaSearchResultsVisible(false))
     dispatch(setGlobalSearchText(''))
+    dispatch(setAreRecentsAreasChecked(false))
 
     if (searchExtent) {
       dispatch(setSearchExtent(undefined))
@@ -102,7 +105,7 @@ export function VigilanceAreasFilters() {
 
   const hasCustomPeriodFilter = periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
 
-  const hasFilters = nbOfFilters > 0 || hasCustomPeriodFilter || searchExtent || !!searchText
+  const hasFilters = nbOfFilters > 0 || hasCustomPeriodFilter || searchExtent || !!searchText || areRecentsAreasChecked
 
   return (
     <Wrapper>

@@ -61,12 +61,13 @@ export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
           <ExpandedRowCell>
             <ExpandedRowLabel>Dernière validation</ExpandedRowLabel>
             <ValidationDateDetailsCell date={vigilanceArea.validatedAt} />
+            <ExpandedRowLabel>Dernière modification</ExpandedRowLabel>
+            <ValidationDateDetailsCell date={vigilanceArea.updatedAt} />
           </ExpandedRowCell>
           <ExpandedRowCell>
             <ExpandedRowLabel>Créée par </ExpandedRowLabel>
             <ExpandedRowValue>{vigilanceArea.createdBy}</ExpandedRowValue>
           </ExpandedRowCell>
-          <ExpandedRowCell />
           <ExpandedRowCell />
           <ExpandedRowCell />
         </ExpandedRow>
@@ -104,7 +105,7 @@ const ExpandedRowCell = styled(TableWithSelectableRows.Td).attrs(props => ({
   ...props,
   $hasRightBorder: false
 }))`
-  padding: 8px 16px 16px;
+  padding: 16px 4px 16px 16px;
   height: 42px;
   vertical-align: top;
   white-space: normal;

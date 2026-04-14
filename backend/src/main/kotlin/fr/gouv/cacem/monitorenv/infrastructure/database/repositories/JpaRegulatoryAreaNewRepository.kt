@@ -36,10 +36,17 @@ class JpaRegulatoryAreaNewRepository(
         seaFronts: List<String>?,
         tags: List<Int>?,
         themes: List<Int>?,
+        onlyRecentsAreas: Boolean?,
     ): List<RegulatoryAreaEntity> =
         dbRegulatoryAreaRepository
-            .findAll(controlPlan = controlPlan, seaFronts = seaFronts, tags = tags, themes = themes)
-            .map { it.toRegulatoryArea(mapper) }
+            .findAll(
+                controlPlan = controlPlan,
+                seaFronts = seaFronts,
+                tags = tags,
+                themes = themes,
+                onlyRecentsAreas =
+                    onlyRecentsAreas ?: false,
+            ).map { it.toRegulatoryArea(mapper) }
             .filter { findBySearchQuery(it, query) }
 
     override fun findAllLayerNames(): Map<String, Long> =

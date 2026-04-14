@@ -18,6 +18,11 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
             AND (:tags IS NULL OR tg.tag.id IN :tags)
             AND (:controlPlan IS NULL OR regulatoryArea.plan LIKE %:controlPlan%)
             AND regulatoryArea.creation IS NOT NULL
+            AND (:onlyRecentsAreas IS FALSE OR (
+                regulatoryArea.creation >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
+                OR regulatoryArea.editionBo >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
+                OR regulatoryArea.editionCacem >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
+            ))
             ORDER BY regulatoryArea.layerName
         """,
     )
@@ -26,6 +31,7 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
         seaFronts: List<String>? = null,
         tags: List<Int>? = null,
         themes: List<Int>? = null,
+        onlyRecentsAreas: Boolean,
     ): List<RegulatoryAreaNewModel>
 
     fun findAllByCreationIsNull(): List<RegulatoryAreaNewModel>

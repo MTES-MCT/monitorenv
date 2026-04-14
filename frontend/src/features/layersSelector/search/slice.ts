@@ -5,6 +5,7 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 type LayerSearchState = {
   ampsSearchResult: number[] | undefined
+  areRecentsAreasChecked: boolean
   controlPlan: string | undefined
   filteredAmpTypes: string[]
   filteredRegulatoryTags: TagOption[]
@@ -18,6 +19,7 @@ type LayerSearchState = {
 }
 const initialState: LayerSearchState = {
   ampsSearchResult: undefined,
+  areRecentsAreasChecked: false,
   controlPlan: undefined,
   filteredAmpTypes: [],
   filteredRegulatoryTags: [],
@@ -42,12 +44,16 @@ const layerSearchSlice = createSlice({
       state.filteredAmpTypes = []
       state.isAmpSearchResultsVisible = false
       state.isVigilanceAreaSearchResultsVisible = false
+      state.areRecentsAreasChecked = false
     },
     resetSearch(state) {
       return { state, ...initialState }
     },
     setAMPsSearchResult(state, action: PayloadAction<number[] | undefined>) {
       state.ampsSearchResult = action.payload
+    },
+    setAreRecentsAreasChecked(state, action: PayloadAction<boolean>) {
+      state.areRecentsAreasChecked = action.payload
     },
 
     setControlPlan(state, action: PayloadAction<string | undefined>) {
@@ -95,6 +101,7 @@ export const {
   resetFilters,
   resetSearch,
   setAMPsSearchResult,
+  setAreRecentsAreasChecked,
   setControlPlan,
   setFilteredAmpTypes,
   setFilteredRegulatoryTags,
