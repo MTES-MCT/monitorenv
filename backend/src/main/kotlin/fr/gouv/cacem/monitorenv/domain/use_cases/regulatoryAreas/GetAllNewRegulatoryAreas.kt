@@ -17,6 +17,7 @@ class GetAllNewRegulatoryAreas(
         seaFronts: List<String>?,
         tags: List<Int>?,
         themes: List<Int>?,
+        onlyRecentsAreas: Boolean? = false,
     ): AllRegulatoryAreasAndTotal {
         logger.info("Attempt to GET all regulatory areas")
 
@@ -27,6 +28,7 @@ class GetAllNewRegulatoryAreas(
                 seaFronts = seaFronts,
                 tags = tags,
                 themes = themes,
+                onlyRecentsAreas = onlyRecentsAreas,
             )
 
         val totalCount = allAreas.size.toLong()

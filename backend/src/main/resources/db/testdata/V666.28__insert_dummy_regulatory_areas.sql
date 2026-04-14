@@ -33,7 +33,7 @@ $$
                 'RNN_Iroise',
                 'NAMO',
                 'Décret n°2021-1149 du 4 septembre 2021 portant extension du périmètre  et modification de la réglementation de la réserve naturelle nationale d’Iroise (Finistère)',
-                NOW() - INTERVAL '12 day',
+                NULL,
                 NULL,
                 editor,
                 'OFB lizmap',
@@ -47,7 +47,7 @@ $$
                 'PIRC',
                 'Partie marine (plus basses eaux) RNN d''Iroise',
                 'Réglementation dans la réserve naturelle nationale d''Iroise',
-                NOW() - INTERVAL '12 day');
+                NOW() - INTERVAL '32 day');
 
         INSERT INTO public.regulatory_areas (id,
                                              geom,
