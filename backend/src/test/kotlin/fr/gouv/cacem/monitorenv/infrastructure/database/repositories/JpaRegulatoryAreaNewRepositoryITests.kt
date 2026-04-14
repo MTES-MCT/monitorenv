@@ -26,6 +26,21 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
+    fun `findAll should return all regulatoryAreas when onlyRecentsArea filter is set to TRUE`() {
+        val regulatoryAreas =
+            jpaRegulatoryAreaNewRepository.findAll(
+                controlPlan = null,
+                seaFronts = null,
+                tags = null,
+                themes = null,
+                onlyRecentsAreas = true,
+            )
+        println("regulatoryAreas : $regulatoryAreas")
+        assertThat(regulatoryAreas.size).isEqualTo(11)
+    }
+
+    @Test
+    @Transactional
     fun `findAll should return all regulatoryAreas when seafront filter is set to NAMO`() {
         val regulatoryAreas =
             jpaRegulatoryAreaNewRepository.findAll(

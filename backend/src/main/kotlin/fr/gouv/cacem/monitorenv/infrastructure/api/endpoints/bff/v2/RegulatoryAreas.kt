@@ -55,6 +55,9 @@ class RegulatoryAreas(
         @Parameter(description = "Façades")
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
+        @Parameter(description = "Only recent areas")
+        @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
+        onlyRecentsAreas: Boolean?,
     ): RegulatoryAreasWithTotalDataOutput {
         val (regulatoryAreasGrouped, totalCount) =
             getAllNewRegulatoryAreas.execute(
@@ -63,6 +66,7 @@ class RegulatoryAreas(
                 seaFronts = seaFronts,
                 tags = tags,
                 themes = themes,
+                onlyRecentsAreas = onlyRecentsAreas,
             )
 
         val groupedDto =

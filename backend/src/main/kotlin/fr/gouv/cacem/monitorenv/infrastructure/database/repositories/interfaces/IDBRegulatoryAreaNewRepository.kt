@@ -31,7 +31,7 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
         seaFronts: List<String>? = null,
         tags: List<Int>? = null,
         themes: List<Int>? = null,
-        onlyRecentsAreas: Boolean,
+        onlyRecentsAreas: Boolean? = false,
     ): List<RegulatoryAreaNewModel>
 
     fun findAllByCreationIsNull(): List<RegulatoryAreaNewModel>

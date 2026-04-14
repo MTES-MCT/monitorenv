@@ -11,7 +11,7 @@ interface IRegulatoryAreaNewRepository {
         seaFronts: List<String>? = null,
         tags: List<Int>? = null,
         themes: List<Int>? = null,
-        onlyRecentsAreas: Boolean? = null,
+        onlyRecentsAreas: Boolean? = false,
     ): List<RegulatoryAreaEntity>
 
     fun findAllIdsByGeometry(geometry: Geometry): List<Int>

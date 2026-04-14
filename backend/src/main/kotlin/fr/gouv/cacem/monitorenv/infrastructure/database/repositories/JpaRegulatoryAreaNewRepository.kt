@@ -45,7 +45,7 @@ class JpaRegulatoryAreaNewRepository(
                 tags = tags,
                 themes = themes,
                 onlyRecentsAreas =
-                    onlyRecentsAreas ?: false,
+                onlyRecentsAreas,
             ).map { it.toRegulatoryArea(mapper) }
             .filter { findBySearchQuery(it, query) }
 
