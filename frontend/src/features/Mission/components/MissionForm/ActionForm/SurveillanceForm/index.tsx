@@ -52,6 +52,7 @@ import {
   TitleWithIcon
 } from '../style'
 import { ActionTags } from '../Tags/ActionTags'
+import { TagsWarningMessage } from '../TagsWarningMessage'
 import { ActionThemes } from '../Themes/ActionThemes'
 
 export function SurveillanceForm({ currentActionId, remove }) {
@@ -258,8 +259,13 @@ export function SurveillanceForm({ currentActionId, remove }) {
             />
           )}
         </div>
-        <ActionThemes actionIndex={envActionIndex} actionType={ActionTypeEnum.SURVEILLANCE} />
+        <ActionThemes
+          actionId={currentActionId}
+          actionIndex={envActionIndex}
+          actionType={ActionTypeEnum.SURVEILLANCE}
+        />
         <ActionTags actionIndex={envActionIndex} />
+        <TagsWarningMessage actionId={currentActionId} />
         <FlexSelectorWrapper>
           <Label $isRequired>Début et fin de surveillance (UTC)</Label>
           <StyledDatePickerContainer>

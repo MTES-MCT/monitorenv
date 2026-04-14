@@ -19,6 +19,9 @@ export function MissionFormWrapper() {
   const selectedMission = useAppSelector(state => getActiveMission(state.missionForms))
 
   const engagedControlUnit = selectedMission?.engagedControlUnit
+  const isTagsWarningMessageVisible = selectedMission?.tagsWarningMessageHasBeenShown
+    ? Object.values(selectedMission.tagsWarningMessageHasBeenShown).some(message => message.hasBeenShown === false)
+    : false
 
   const activeAction = selectedMission?.activeAction
 
@@ -78,7 +81,7 @@ export function MissionFormWrapper() {
           />
         </Form>
       </Formik>
-      {engagedControlUnit && <DisabledMissionBackground />}
+      {(engagedControlUnit || isTagsWarningMessageVisible) && <DisabledMissionBackground />}
     </EditMissionWrapper>
   )
 }
