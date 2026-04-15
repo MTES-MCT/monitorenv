@@ -8,12 +8,14 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
+import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionWithEnvActionsValidator
 import org.slf4j.LoggerFactory
 
 @UseCase
 class PatchMission(
     private val missionRepository: IMissionRepository,
     private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity>,
+    private val missionWithEnvActionsValidator: MissionWithEnvActionsValidator,
 ) {
     private val logger = LoggerFactory.getLogger(GetFullMissionWithFishAndRapportNavActions::class.java)
 
@@ -24,6 +26,7 @@ class PatchMission(
         logger.info("Attempt to PATCH mission $id")
         missionRepository.findById(id)?.let {
             patchEntity.execute(it, patchableMissionEntity)
+            missionWithEnvActionsValidator.validate(it)
             val patchedMission = missionRepository.save(it)
             logger.info("Mission $id patched")
             return patchedMission
