@@ -1,3 +1,4 @@
+import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
 import { displaySubTags } from '@utils/getTagsAsOptions'
 import {
   ActionTypeEnum,
@@ -27,35 +28,40 @@ const getTagsCell = (envActions: EnvAction[]) => {
       return acc
     }, {})
 
-  const toTagCell = (tag: TagFromAPI) => ({
-    component: (
-      <>
-        {tag.name} <SubTagsContainer>({displaySubTags([tag])})</SubTagsContainer>
-      </>
-    ),
-    title: `${tag.name} (${displaySubTags(tag.subTags)})`
-  })
+  const toTagCell = (tag: TagFromAPI) => {
+    const subTags = displaySubTags([tag])
+
+    return {
+      component: (
+        <>
+          {tag.name} {subTags && subTags.length > 0 && <SubTagsContainer>({subTags})</SubTagsContainer>}
+        </>
+      ),
+      title: `${tag.name} ${subTags && subTags.length > 0 ? `(${subTags})` : ''}`
+    }
+  }
 
   return Object.values(groupedTags).flatMap(tag => toTagCell(tag))
 }
 
-export function CellActionTags({ envActions }: { envActions: EnvAction[] }) {
+export function ActionTagsCell({ envActions }: { envActions: EnvAction[] }) {
   const cellContent = useMemo(() => getTagsCell(envActions), [envActions])
   const cellTitle = useMemo(() => cellContent.map(content => content.title).join(' - '), [cellContent])
 
   return cellContent?.length > 0
-    ? cellContent.map(({ component, title }, index) => (
-        <TagsAndSubTagsContainer key={title} data-cy="cell-envActions-tags" title={cellTitle}>
+    ? cellContent.map(({ component, title }) => (
+        <TagsAndSubTagsContainer key={title} as="li" data-cy="cell-envActions-tags" title={cellTitle}>
           {component}
-          {index < cellContent.length - 1 ? ' - ' : ''}
         </TagsAndSubTagsContainer>
       ))
-    : null
+    : UNKNOWN
 }
 
 const TagsAndSubTagsContainer = styled.span`
   color: ${p => p.theme.color.charcoal};
   font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `
 const SubTagsContainer = styled.span`
   color: ${p => p.theme.color.slateGray};

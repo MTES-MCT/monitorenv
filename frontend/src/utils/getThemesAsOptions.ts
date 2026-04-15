@@ -1,3 +1,5 @@
+import { uniq } from 'lodash/fp'
+
 import type { Option } from '@mtes-mct/monitor-ui'
 import type { ThemeFromAPI, ThemeOption } from 'domain/entities/themes'
 
@@ -54,7 +56,7 @@ export const filterSubThemes = (theme: ThemeOption, themeToFilter: ThemeOption):
 export const displayThemes = (themes?: ThemeFromAPI[]) => themes?.map(({ name }) => name).join(', ')
 
 export const displaySubThemes = (themes?: ThemeFromAPI[]) =>
-  themes?.flatMap(({ subThemes }) => subThemes.map(({ name }) => name)).join(', ')
+  themes?.flatMap(({ subThemes }) => uniq(subThemes.map(({ name }) => name))).join(', ')
 
 export const getThemeAndSubthemeIds = (themes?: ThemeFromAPI[]) =>
   themes?.reduce((acc: number[], theme: ThemeFromAPI) => {

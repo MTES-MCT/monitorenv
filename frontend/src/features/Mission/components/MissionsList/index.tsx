@@ -42,8 +42,7 @@ export function Missions() {
 
 const StyledHeader = styled.div`
   display: flex;
-  flex-direction: row;
-  gap: 32px;
+  justify-content: space-between;
   margin-bottom: 40px;
 `
 

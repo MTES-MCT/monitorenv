@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
@@ -248,6 +249,7 @@ class MissionsITests {
                                                 1,
                                                 name =
                                                     "Ressource 2",
+                                                type = ControlUnitResourceType.FAST_BOAT,
                                             ),
                                         ),
                                     isArchived = false,
@@ -472,6 +474,7 @@ class MissionsITests {
                                                 1,
                                                 name =
                                                     "Ressource 2",
+                                                type = ControlUnitResourceType.FAST_BOAT,
                                             ),
                                         ),
                                     isArchived = false,

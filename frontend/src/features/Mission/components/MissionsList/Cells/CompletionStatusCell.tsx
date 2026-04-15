@@ -2,7 +2,7 @@ import { CompletionStatusLabel } from '@features/Mission/components/CompletionSt
 import { getMissionCompletionStatus } from '@features/Mission/utils'
 import { useMemo } from 'react'
 
-export function CellCompletionStatus({ row }: { row?: any }) {
+export function CompletionStatusCell({ row }: { row?: any }) {
   const mission = row.original
 
   const completion = useMemo(() => getMissionCompletionStatus(mission), [mission])

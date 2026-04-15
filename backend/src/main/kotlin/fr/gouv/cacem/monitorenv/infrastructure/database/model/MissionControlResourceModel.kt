@@ -30,5 +30,6 @@ data class MissionControlResourceModel(
             id = requireNotNull(resource.id),
             controlUnitId = requireNotNull(resource.controlUnit.id),
             name = resource.name,
+            type = resource.type,
         )
 }

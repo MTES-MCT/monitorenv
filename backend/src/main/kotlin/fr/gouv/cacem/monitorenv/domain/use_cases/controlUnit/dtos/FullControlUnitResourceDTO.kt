@@ -15,5 +15,6 @@ data class FullControlUnitResourceDTO(
             id = requireNotNull(controlUnitResource.id),
             controlUnitId = requireNotNull(controlUnit.id),
             name = controlUnitResource.name,
+            type = controlUnitResource.type,
         )
 }

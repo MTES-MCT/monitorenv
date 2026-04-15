@@ -5,6 +5,7 @@ data class LegacyControlUnitResourceEntity(
     val id: Int,
     val controlUnitId: Int,
     val name: String,
+    val type: ControlUnitResourceType,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

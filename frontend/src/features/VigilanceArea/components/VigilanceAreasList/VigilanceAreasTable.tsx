@@ -1,19 +1,12 @@
-import {
-  getPaddingValuesForVirtualizeTable,
-  PaddingForVirtualizeTable
-} from '@components/Table/PaddingForVirtualizeTable'
-import { TableContainer } from '@components/Table/style'
-import { TableWithSelectableRowsHeader } from '@components/Table/TableWithSelectableRows/Header'
+import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
-import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { type Row as RowType, type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
 import { useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
-import styled from 'styled-components'
 
 import { Columns } from './Columns'
 import { Row } from './Row'
@@ -64,31 +57,23 @@ export function VigilanceAreasTable({
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
-  const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
-
   return (
-    <StyledTableContainer ref={tableContainerRef}>
-      <TableWithSelectableRows.Table>
-        <TableWithSelectableRows.Head>
-          {table.getHeaderGroups().map(headerGroup => (
-            <TableWithSelectableRowsHeader key={headerGroup.id} headerGroup={headerGroup} />
-          ))}
-        </TableWithSelectableRows.Head>
-        {before > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={before} name="before" />}
-        <tbody>
+    <SelectableRowsTable
+      ref={tableContainerRef}
+      className="vigilance-area-table"
+      columnsLength={columns.length}
+      rows={
+        <>
           {virtualRows?.map(virtualRow => {
             const row = rows[virtualRow.index] as RowType<VigilanceArea.VigilanceArea>
 
             return <Row key={virtualRow.key} row={row} />
           })}
-        </tbody>
-        {after > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={after} name="after" />}
-      </TableWithSelectableRows.Table>
-    </StyledTableContainer>
+        </>
+      }
+      rowVirtualizer={rowVirtualizer}
+      table={table}
+      virtualRows={virtualRows}
+    />
   )
 }
-
-const StyledTableContainer = styled(TableContainer)`
-  padding-right: 0;
-  width: 100%;
-`

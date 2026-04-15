@@ -13,6 +13,7 @@ export const TODAY = customDayjs().utc().startOf('day').toISOString()
 
 export enum MissionFiltersEnum {
   ADMINISTRATION_FILTER = 'selectedAdministrationNames',
+  ARE_FILTERS_VISIBLE = 'areFiltersVisible',
   COMPLETION_STATUS_FILTER = 'selectedCompletionStatus',
   PERIOD_FILTER = 'selectedPeriod',
   SEARCH_QUERY_FILTER = 'searchQuery',
@@ -28,6 +29,7 @@ export enum MissionFiltersEnum {
 }
 
 type MissionFilterValues = {
+  areFiltersVisible: boolean
   nbOfFiltersSetted: boolean
   searchQuery: string | undefined
   selectedAdministrationNames: string[] | undefined
@@ -51,6 +53,7 @@ export type MissionFiltersState = {
 }
 
 export const INITIAL_STATE: MissionFiltersState = {
+  areFiltersVisible: false,
   nbOfFiltersSetted: 0,
   searchQuery: undefined,
   selectedAdministrationNames: undefined,
@@ -82,10 +85,15 @@ const missionFiltersSlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'missionFilters',
   reducers: {
-    resetMissionFilters() {
-      return { ...INITIAL_STATE }
+    resetMissionFilters(state) {
+      return {
+        ...INITIAL_STATE,
+        areFiltersVisible: state.areFiltersVisible
+      }
     },
-
+    setFiltersVisibility: (state, action: PayloadAction<boolean>) => {
+      state.areFiltersVisible = action.payload
+    },
     updateFilters<K extends MissionFiltersEnum>(
       // TODO There is not `MissionFiltersState` type inference in `createSlice()`.
       // Investigate why (this should be automatic).
@@ -116,6 +124,6 @@ const missionFiltersSlice = createSlice({
   }
 })
 
-export const { resetMissionFilters, updateFilters } = missionFiltersSlice.actions
+export const { resetMissionFilters, setFiltersVisibility, updateFilters } = missionFiltersSlice.actions
 
 export const missionFiltersPersistedReducer = persistReducer(persistConfig, missionFiltersSlice.reducer)

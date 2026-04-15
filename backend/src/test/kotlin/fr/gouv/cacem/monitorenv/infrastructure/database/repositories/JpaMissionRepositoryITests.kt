@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
@@ -525,6 +526,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                                 10002,
                                                 name =
                                                     "Semi-rigide 1",
+                                                type = ControlUnitResourceType.SEMI_RIGID,
                                             ),
                                             LegacyControlUnitResourceEntity(
                                                 id = 4,
@@ -532,6 +534,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                                 10002,
                                                 name =
                                                     "Semi-rigide 2",
+                                                type = ControlUnitResourceType.SEMI_RIGID,
                                             ),
                                             LegacyControlUnitResourceEntity(
                                                 id = 5,
@@ -539,6 +542,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                                 10002,
                                                 name =
                                                     "Voiture",
+                                                type = ControlUnitResourceType.CAR,
                                             ),
                                         ),
                                 ),
@@ -701,6 +705,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                         id = 8,
                                         controlUnitId = 10121,
                                         name = "PAM Jeanne Barret",
+                                        type = ControlUnitResourceType.PATROL_BOAT,
                                     ),
                                 ),
                         ),
@@ -830,6 +835,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                         id = 8,
                                         controlUnitId = 10004,
                                         name = "PAM Jeanne Barret",
+                                        type = ControlUnitResourceType.PATROL_BOAT,
                                     ),
                                 ),
                         ),
@@ -859,12 +865,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                             10002,
                                             name =
                                                 "Semi-rigide 1",
+                                            type = ControlUnitResourceType.SEMI_RIGID,
                                         ),
                                         LegacyControlUnitResourceEntity(
                                             id = 5,
                                             controlUnitId =
                                             10002,
                                             name = "Voiture",
+                                            type = ControlUnitResourceType.CAR,
                                         ),
                                     ),
                             ),
@@ -1048,6 +1056,7 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                         id = 123456,
                                         controlUnitId = 5,
                                         name = "PAM Jeanne Barret",
+                                        type = ControlUnitResourceType.PATROL_BOAT,
                                     ),
                                 ),
                         ),

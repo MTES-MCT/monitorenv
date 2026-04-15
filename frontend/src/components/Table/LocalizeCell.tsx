@@ -2,15 +2,12 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import styled from 'styled-components'
 
 export function LocalizeCell({ geom }: { geom: any }) {
   const dispatch = useAppDispatch()
 
-  if (!geom) {
-    return <StyledEmptyContainer>-</StyledEmptyContainer>
-  }
-  const handleZoom = () => {
+  const handleZoom = e => {
+    e.stopPropagation()
     const feature = getFeature(geom)
 
     const extent = feature?.getGeometry()?.getExtent()
@@ -20,13 +17,12 @@ export function LocalizeCell({ geom }: { geom: any }) {
   }
 
   return (
-    <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoom} title="Centrer sur la carte" />
+    <IconButton
+      accent={Accent.TERTIARY}
+      disabled={!geom}
+      Icon={Icon.FocusZones}
+      onClick={handleZoom}
+      title={geom ? 'Centrer sur la carte' : 'Pas de zone renseignée'}
+    />
   )
 }
-
-const StyledEmptyContainer = styled.div`
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`

@@ -134,7 +134,8 @@ data class ControlUnitResourceModel(
         LegacyControlUnitResourceEntity(
             id = requireNotNull(id),
             controlUnitId = requireNotNull(controlUnit.id),
-            name,
+            name = name,
+            type = type,
         )
 
     @Override
