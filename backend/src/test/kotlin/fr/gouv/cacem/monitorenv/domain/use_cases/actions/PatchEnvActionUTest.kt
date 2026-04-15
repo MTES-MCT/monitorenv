@@ -1,17 +1,18 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.actions
 
 import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.PatchableEnvActionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IEnvActionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.actions.fixtures.EnvActionFixture.Companion.anEnvAction
+import fr.gouv.cacem.monitorenv.domain.validators.mission.EnvActionValidator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
@@ -23,13 +24,16 @@ import java.util.UUID
 @ExtendWith(OutputCaptureExtension::class)
 class PatchEnvActionUTest {
     private val envActionRepository: IEnvActionRepository = mock()
+    private val envActionValidator: EnvActionValidator = mock()
     private val patchEntity: PatchEntity<EnvActionEntity, PatchableEnvActionEntity> = PatchEntity()
-    private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, patchEntity)
+    private val patchEnvAction: PatchEnvAction = PatchEnvAction(envActionRepository, patchEntity, envActionValidator)
     private val jsonMapper: JsonMapper = JsonMapper()
 
     @Test
     fun `execute() should return the patched entity`(log: CapturedOutput) {
         // Given
+        val inOrder = Mockito.inOrder(envActionValidator, envActionRepository)
+
         val id = UUID.randomUUID()
         val today = ZonedDateTime.now()
         val tomorrow = ZonedDateTime.now().plusDays(1)
@@ -86,7 +90,8 @@ class PatchEnvActionUTest {
         assertThat(savedEnvAction.observationsByUnit).isEqualTo(envActionPatched.observationsByUnit)
         assertThat(savedEnvAction.hasDivingDuringOperation).isEqualTo(envActionPatched.hasDivingDuringOperation)
         assertThat(savedEnvAction.incidentDuringOperation).isEqualTo(envActionPatched.incidentDuringOperation)
-        verify(envActionRepository).save(envActionPatched)
+        inOrder.verify(envActionValidator).validate(envActionPatched)
+        inOrder.verify(envActionRepository).save(envActionPatched)
         assertThat(log.out).contains("Attempt to PATCH envaction $id")
         assertThat(log.out).contains("envaction $id patched")
     }

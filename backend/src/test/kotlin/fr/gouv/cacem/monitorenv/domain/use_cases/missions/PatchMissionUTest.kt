@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
@@ -13,10 +12,12 @@ import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
+import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionWithEnvActionsValidator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
@@ -27,12 +28,15 @@ import kotlin.random.Random
 @ExtendWith(OutputCaptureExtension::class)
 class PatchMissionUTest {
     private val missionRepository: IMissionRepository = mock()
+    private val missionWithEnvActionsValidator: MissionWithEnvActionsValidator = mock()
     private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = PatchEntity()
-    private val patchMission: PatchMission = PatchMission(missionRepository, patchEntity)
+    private val patchMission: PatchMission =
+        PatchMission(missionRepository, patchEntity, missionWithEnvActionsValidator)
 
     @Test
-    fun `execute() should return the patched entity`(log: CapturedOutput) {
+    fun `execute() should validate then return the patched entity`(log: CapturedOutput) {
         // Given
+        val inOrder = Mockito.inOrder(missionWithEnvActionsValidator, missionRepository)
         val id = Random.nextInt()
         val today = ZonedDateTime.now()
         val tomorrow = ZonedDateTime.now().plusDays(1)
@@ -91,7 +95,8 @@ class PatchMissionUTest {
         assertThat(savedMission.mission.isUnderJdp).isEqualTo(missionPatched.isUnderJdp)
         assertThat(savedMission.mission.controlUnits).isEqualTo(missionPatched.controlUnits)
         assertThat(savedMission.mission.missionTypes).isEqualTo(missionPatched.missionTypes)
-        verify(missionRepository).save(missionPatched)
+        inOrder.verify(missionWithEnvActionsValidator).validate(missionPatched)
+        inOrder.verify(missionRepository).save(missionPatched)
         assertThat(log.out).contains("Attempt to PATCH mission $id")
         assertThat(log.out).contains("Mission $id patched")
     }
