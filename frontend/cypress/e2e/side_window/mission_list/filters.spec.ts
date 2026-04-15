@@ -252,7 +252,7 @@ context('Side Window > Mission List > Filter Bar', () => {
 
   it('Should filter missions with env actions', () => {
     cy.fill('Période', 'Année en cours')
-    cy.fill('Missions avec actions CACEM', true)
+    cy.fill('Missions avec actions env.', true)
 
     cy.getDataCy('edit-mission-53').should('exist')
     cy.getDataCy('edit-mission-38').should('exist')

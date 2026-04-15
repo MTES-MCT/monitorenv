@@ -1,4 +1,5 @@
 import { SubThemesOrSubTagsContainer, ThemesOrTagsContainer } from '@components/Table/style'
+import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 import {
   ActionTypeEnum,
@@ -27,28 +28,38 @@ const getThemesCell = (envActions: EnvAction[]) => {
       return acc
     }, {})
 
-  const toThemeCell = (theme: ThemeFromAPI) => ({
-    component: (
-      <>
-        {theme.name} <SubThemesOrSubTagsContainer>({displaySubThemes([theme])})</SubThemesOrSubTagsContainer>
-      </>
-    ),
-    title: `${theme.name} (${theme.subThemes.map(subTheme => subTheme.name).join(', ')})`
-  })
+  const toThemeCell = (theme: ThemeFromAPI) => {
+    const subThemes = displaySubThemes([theme])
+
+    return {
+      component: (
+        <>
+          {theme.name}{' '}
+          {subThemes && subThemes.length > 0 && (
+            <SubThemesOrSubTagsContainer>({subThemes})</SubThemesOrSubTagsContainer>
+          )}
+        </>
+      ),
+      title: `${theme.name} ${subThemes && subThemes.length > 0 ? `(${subThemes})` : ''}`
+    }
+  }
 
   return Object.values(groupedThemes).flatMap(theme => toThemeCell(theme))
 }
 
-export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
+export function ActionThemesCell({ envActions }: { envActions: EnvAction[] }) {
   const cellContent = useMemo(() => getThemesCell(envActions), [envActions])
   const cellTitle = useMemo(() => cellContent.map(content => content.title).join(' - '), [cellContent])
 
-  return cellContent?.length > 0
-    ? cellContent.map(({ component, title }, index) => (
-        <ThemesOrTagsContainer key={title} data-cy="cell-envActions-themes" title={cellTitle}>
+  return cellContent?.length > 0 ? (
+    <ul>
+      {cellContent.map(({ component, title }) => (
+        <ThemesOrTagsContainer key={title} as="li" data-cy="cell-envActions-themes" title={cellTitle}>
           {component}
-          {index < cellContent.length - 1 ? ' - ' : ''}
         </ThemesOrTagsContainer>
-      ))
-    : null
+      ))}
+    </ul>
+  ) : (
+    UNKNOWN
+  )
 }

@@ -1,7 +1,13 @@
+import {
+  ExpandableRowCell,
+  ExpandedRow,
+  ExpandedRowCell,
+  ExpandedRowLabel,
+  ExpandedRowValue
+} from '@components/Table/TableWithSelectableRows/style'
 import { createPinnedCellStyle } from '@components/Table/TableWithSelectableRows/utils'
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender, type Row as RowType } from '@tanstack/react-table'
-import styled from 'styled-components'
 
 import { FrequencyCell } from './Cells/FrequencyCell'
 import { TagsDetailsCell } from './Cells/TagsDetailsCell'
@@ -26,7 +32,7 @@ export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
           return (
             <ExpandableRowCell
               key={cell.id}
-              $isDraft={!!vigilanceArea.isDraft}
+              $isDraft={vigilanceArea.isDraft}
               onClick={() => row.toggleExpanded()}
               style={{
                 maxWidth: cell.column.getSize(),
@@ -41,7 +47,7 @@ export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
         })}
       </TableWithSelectableRows.BodyTr>
       {row.getIsExpanded() && (
-        <ExpandedRow $isDraft={!!vigilanceArea.isDraft} data-id={`${row.id}-expanded`}>
+        <ExpandedRow $isDraft={vigilanceArea.isDraft} data-id={`${row.id}-expanded`}>
           <ExpandedRowCell>
             <ExpandedRowLabel>Commentaire</ExpandedRowLabel>
             <ExpandedRowValue>{vigilanceArea.comments}</ExpandedRowValue>
@@ -53,78 +59,22 @@ export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
             <ExpandedRowLabel>Thématiques et sous-thématiques</ExpandedRowLabel>
             <ThemesDetailsCell themes={vigilanceArea.themes} />
           </ExpandedRowCell>
-          <ExpandedRowCell>
+          <ExpandedRowCell colSpan={2}>
             <ExpandedRowLabel>Tags et sous-tags</ExpandedRowLabel>
             <TagsDetailsCell tags={vigilanceArea.tags} />
           </ExpandedRowCell>
-          <ExpandedRowCell />
           <ExpandedRowCell>
             <ExpandedRowLabel>Dernière validation</ExpandedRowLabel>
             <ValidationDateDetailsCell date={vigilanceArea.validatedAt} />
             <ExpandedRowLabel>Dernière modification</ExpandedRowLabel>
             <ValidationDateDetailsCell date={vigilanceArea.updatedAt} />
           </ExpandedRowCell>
-          <ExpandedRowCell>
+          <ExpandedRowCell colSpan={4}>
             <ExpandedRowLabel>Créée par </ExpandedRowLabel>
             <ExpandedRowValue>{vigilanceArea.createdBy}</ExpandedRowValue>
           </ExpandedRowCell>
-          <ExpandedRowCell />
-          <ExpandedRowCell />
         </ExpandedRow>
       )}
     </>
   )
 }
-
-const ExpandableRowCell = styled(TableWithSelectableRows.Td)<{
-  $isDraft: boolean
-}>`
-  cursor: pointer;
-  user-select: none;
-  color: ${p => (p.$isDraft ? p.theme.color.slateGray : p.theme.color.charcoal)};
-  font-style: ${p => (p.$isDraft ? 'italic' : 'normal')};
-`
-
-const ExpandedRow = styled(TableWithSelectableRows.BodyTr)<{
-  $isDraft: boolean
-}>`
-  > td {
-    overflow: hidden !important;
-    color: ${p => (p.$isDraft ? p.theme.color.slateGray : p.theme.color.charcoal)};
-  }
-
-  &:hover {
-    > td {
-      /* Hack to disable hover background color in expanded rows */
-      background-color: ${p => p.theme.color.cultured};
-    }
-  }
-`
-
-const ExpandedRowCell = styled(TableWithSelectableRows.Td).attrs(props => ({
-  ...props,
-  $hasRightBorder: false
-}))`
-  padding: 16px 4px 16px 16px;
-  height: 42px;
-  vertical-align: top;
-  white-space: normal;
-
-  > p:not(:first-child) {
-    margin-top: 16px;
-  }
-  max-width: 350px;
-`
-
-const ExpandedRowLabel = styled.span`
-  color: ${p => p.theme.color.slateGray};
-  display: block;
-  width: 100%;
-`
-const ExpandedRowValue = styled.span`
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 50;
-  overflow: hidden;
-  white-space: pre-wrap;
-`

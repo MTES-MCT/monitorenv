@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.mappers
 
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
@@ -10,7 +11,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixtur
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Optional
 
 class PatchMissionEntityUTest {
     private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = PatchEntity()
@@ -259,6 +260,7 @@ class PatchMissionEntityUTest {
                                 id = 1,
                                 controlUnitId = 2,
                                 name = "Vedette",
+                                type = ControlUnitResourceType.FAST_BOAT,
                             ),
                         ),
                     contact = null,

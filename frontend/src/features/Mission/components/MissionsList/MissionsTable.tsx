@@ -1,5 +1,6 @@
-import { Table } from '@components/Table'
+import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
+import { Row } from '@features/Mission/components/MissionsList/Row'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
 import { type SortingState } from '@tanstack/react-table'
@@ -7,10 +8,10 @@ import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
 import { useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
-import styled from 'styled-components'
 
 import { Columns } from './Columns'
 
+import type { Row as RowType } from '@tanstack/table-core/build/lib/types'
 import type { Mission } from 'domain/entities/missions'
 
 type MissionsTableProps = {
@@ -38,6 +39,9 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : missions), [isLoading, missions])
 
   const table = useTable({
+    columnPinning: {
+      right: ['actions']
+    },
     columns,
     data: tableData,
     setSorting,
@@ -56,22 +60,22 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
   const virtualRows = rowVirtualizer.getVirtualItems()
 
   return (
-    <StyledTable
+    <SelectableRowsTable
       ref={tableContainerRef}
       className="missions-table"
       columnsLength={columns.length}
-      rows={rows}
+      rows={
+        <>
+          {virtualRows?.map(virtualRow => {
+            const row = rows[virtualRow.index] as RowType<Mission>
+
+            return <Row key={virtualRow.key} row={row} />
+          })}
+        </>
+      }
       rowVirtualizer={rowVirtualizer}
       table={table}
       virtualRows={virtualRows}
     />
   )
 }
-
-const StyledTable = styled(Table)`
-  > table > tbody {
-    > tr > td:nth-child(11) {
-      padding: 0;
-    }
-  }
-`

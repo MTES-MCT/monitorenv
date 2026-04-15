@@ -2,6 +2,8 @@ import { THEME } from '@mtes-mct/monitor-ui'
 
 import type { CSSProperties } from 'styled-components'
 
+export const UNKNOWN = '-'
+
 export const createPinnedCellStyle = ({ context, index, rowLength }): CSSProperties | undefined => {
   const pinPosition = context.column.getIsPinned()
   const bordersLeft = index !== 0 ? index + 1 : 0

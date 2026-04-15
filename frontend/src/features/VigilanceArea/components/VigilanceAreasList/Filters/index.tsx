@@ -2,6 +2,7 @@ import { useGetTrigramsQuery } from '@api/vigilanceAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
+import { ShowFilters } from '@components/Table/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import {
   setAreRecentsAreasChecked,
@@ -18,7 +19,7 @@ import { VigilanceAreaTypeFilter } from '@features/VigilanceArea/components/Vigi
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CheckPicker, getOptionsFromLabelledEnum, Icon, LinkButton, Select } from '@mtes-mct/monitor-ui'
+import { CheckPicker, getOptionsFromLabelledEnum, Icon, Select } from '@mtes-mct/monitor-ui'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import styled from 'styled-components'
 
@@ -111,9 +112,9 @@ export function VigilanceAreasFilters() {
     <Wrapper>
       <FiltersFirstLine>
         <SearchFilter />
-        <StyledLinkButton Icon={Icon.FilterBis} onClick={setFiltersVisibility}>
+        <ShowFilters Icon={Icon.FilterBis} onClick={setFiltersVisibility}>
           {areFiltersVisible ? 'Masquer les filtres' : 'Afficher les filtres'}
-        </StyledLinkButton>
+        </ShowFilters>
       </FiltersFirstLine>
 
       {areFiltersVisible && (
@@ -231,19 +232,4 @@ const OptionValue = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-`
-export const Separator = styled.div`
-  border-right: ${p => `1px solid ${p.theme.color.slateGray}`};
-  height: 50%;
-  width: 2px;
-`
-
-const StyledLinkButton = styled(LinkButton)`
-  font-size: 13px;
-  color: ${p => p.theme.color.charcoal};
-  svg {
-    color: ${p => p.theme.color.charcoal} !important;
-    height: 20px !important;
-    width: 20px !important;
-  }
 `

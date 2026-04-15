@@ -1,12 +1,26 @@
 import { StyledChevronIcon } from '@features/commonStyles/icons/ChevronIconButton'
 import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
-import { flexRender } from '@tanstack/react-table'
+import { flexRender, type Row, type Table as TableType } from '@tanstack/react-table'
 import { forwardRef } from 'react'
 
 import { getPaddingValuesForVirtualizeTable, PaddingForVirtualizeTable } from './PaddingForVirtualizeTable'
 import { TableContainer } from './style'
 
-export function TableWithRef({ className = '', columnsLength, rows, rowVirtualizer, table, virtualRows }, ref) {
+import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
+
+type TableProps = {
+  className?: string
+  columnsLength: number
+  rowVirtualizer: Virtualizer<HTMLDivElement, Element>
+  rows: Row<any>[]
+  table: TableType<any>
+  virtualRows: VirtualItem[]
+}
+
+export function TableWithRef(
+  { className = '', columnsLength, rows, rowVirtualizer, table, virtualRows }: TableProps,
+  ref
+) {
   const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
 
   return (
@@ -40,6 +54,9 @@ export function TableWithRef({ className = '', columnsLength, rows, rowVirtualiz
         <tbody>
           {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
           {virtualRows?.map(virtualRow => {
+            if (!rows) {
+              return null
+            }
             const row = rows[virtualRow?.index]
 
             return (
