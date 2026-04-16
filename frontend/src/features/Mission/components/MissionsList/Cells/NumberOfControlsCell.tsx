@@ -11,7 +11,7 @@ export function NumberOfControlsCell({ envActions }) {
     <span>
       {totalInfractions > 0 && <StyledCircle $color={THEME.color.maximumRed} />}
       {numberOfControls > 0
-        ? `${numberOfControls}${totalInfractions > 0 ? `(${totalInfractions} inf.)` : ''}`
+        ? `${numberOfControls}${totalInfractions > 0 ? ` (${totalInfractions} inf.)` : ''}`
         : UNKNOWN}
     </span>
   )

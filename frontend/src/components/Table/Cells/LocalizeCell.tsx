@@ -1,7 +1,9 @@
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { getFeature } from '@utils/getFeature'
-import { setFitToExtent } from 'domain/shared_slices/Map'
+import styled from 'styled-components'
+
+import { setFitToExtent } from '../../../domain/shared_slices/Map'
 
 export function LocalizeCell({ geom }: { geom: any }) {
   const dispatch = useAppDispatch()
@@ -17,7 +19,7 @@ export function LocalizeCell({ geom }: { geom: any }) {
   }
 
   return (
-    <IconButton
+    <StyledIconButton
       accent={Accent.TERTIARY}
       disabled={!geom}
       Icon={Icon.FocusZones}
@@ -26,3 +28,7 @@ export function LocalizeCell({ geom }: { geom: any }) {
     />
   )
 }
+
+const StyledIconButton = styled(IconButton)`
+  padding: 0;
+`

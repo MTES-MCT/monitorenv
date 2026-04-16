@@ -1,14 +1,16 @@
-import { DateCell } from '@components/Table/DateCell'
+import { HumanDateCell } from '@components/Table/Cells/HumanDateCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { ActionsCell } from '@features/Mission/components/MissionsList/Cells/ActionsCell'
-import { ActionThemeCell } from '@features/Mission/components/MissionsList/Cells/ActionThemeCell'
+import { ThemesCell } from '@features/Mission/components/MissionsList/Cells/ThemesCell'
+import { getAllThemes } from '@features/Mission/utils'
 
+import { getControlUnitsAsText } from '../../../../../domain/entities/legacyControlUnit'
 import { CompletionStatusCell } from '../Cells/CompletionStatusCell'
 import { MissionTypeCell } from '../Cells/MissionTypeCell'
 import { NumberOfControlsCell } from '../Cells/NumberOfControlsCell'
 import { ResourcesCell } from '../Cells/ResourcesCell'
 import { StatusCell } from '../Cells/StatusCell'
-import { sortCompletion, sortNumberOfControls, sortStatus } from '../utils'
+import { sortCompletion, sortNumberOfControls, sortStatus, sortThemes } from '../utils'
 
 import type { Row } from '@tanstack/react-table'
 
@@ -19,23 +21,23 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: true,
     header: () => 'N°',
     id: 'id',
-    size: 71 + legacyFirefoxOffset
+    size: 70 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.startDateTimeUtc,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} />),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <HumanDateCell date={info.getValue()} />),
     enableSorting: true,
     header: () => 'Début',
     id: 'startDate',
-    size: 130 + legacyFirefoxOffset
+    size: 140 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.endDateTimeUtc,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} />),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <HumanDateCell date={info.getValue()} />),
     enableSorting: true,
     header: () => 'Fin',
     id: 'endDate',
-    size: 130 + legacyFirefoxOffset
+    size: 140 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.facade,
@@ -43,31 +45,39 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 99 + legacyFirefoxOffset
+    size: 144 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.missionTypes,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <MissionTypeCell missionTypes={info.getValue()} />),
-    enableSorting: false,
+    enableSorting: true,
     header: () => 'Type',
     id: 'type',
-    size: 108 + legacyFirefoxOffset
+    size: 110 + legacyFirefoxOffset
   },
   {
-    accessorFn: row => row.controlUnits,
+    accessorFn: row => getControlUnitsAsText(row.controlUnits),
     cell: info => (isFetching ? <StyledSkeletonRow /> : <ResourcesCell controlUnits={info.getValue()} />),
-    enableSorting: false,
+    enableSorting: true,
     header: () => 'Unité',
     id: 'unit',
-    size: 381 + legacyFirefoxOffset
+    minSize: 220 + legacyFirefoxOffset,
+    size: 220 + legacyFirefoxOffset
   },
   {
-    accessorFn: row => row.envActions,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <ActionThemeCell envActions={info.getValue()} />),
-    enableSorting: false,
+    accessorFn: row => getAllThemes(row.envActions ?? [])[0],
+    cell: info =>
+      isFetching ? (
+        <StyledSkeletonRow />
+      ) : (
+        <ThemesCell asDetails={false} themes={info.getValue() ? [info.getValue()] : []} />
+      ),
+    enableSorting: true,
     header: () => 'Thématiques',
     id: 'themes',
-    size: 381 + legacyFirefoxOffset
+    minSize: 275 + legacyFirefoxOffset,
+    size: 275 + legacyFirefoxOffset,
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortThemes(rowA, rowB, 'envActions')
   },
   {
     accessorFn: row => row.envActions,
@@ -82,7 +92,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <StatusCell row={row} />),
     header: () => 'Statut',
     id: 'status',
-    size: 120 + legacyFirefoxOffset,
+    size: 126 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortStatus(rowA, rowB)
   },
   {
@@ -90,7 +100,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CompletionStatusCell row={row} />),
     header: () => 'État données',
     id: 'completion',
-    size: 140 + legacyFirefoxOffset,
+    size: 146 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
   },
   {

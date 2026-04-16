@@ -1,7 +1,7 @@
 import { FormikSelect, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { vesselTypeLabel } from 'domain/entities/vesselType'
 
-import type { CSSProperties } from 'styled-components'
+import type { CSSProperties } from 'react'
 
 type VesselTypeSelectorProps = {
   disabled?: boolean
@@ -9,6 +9,7 @@ type VesselTypeSelectorProps = {
   name: string
   style?: CSSProperties
 }
+
 export function VesselTypeSelector({ disabled = false, isLight = false, name, style }: VesselTypeSelectorProps) {
   const vesselTypeOptions = getOptionsFromLabelledEnum(vesselTypeLabel)
 

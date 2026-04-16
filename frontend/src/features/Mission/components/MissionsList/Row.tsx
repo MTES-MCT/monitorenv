@@ -8,11 +8,13 @@ import {
 } from '@components/Table/TableWithSelectableRows/style'
 import { createPinnedCellStyle, UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
 import { ActionTagsCell } from '@features/Mission/components/MissionsList/Cells/ActionTagsCell'
-import { ActionThemesCell } from '@features/Mission/components/MissionsList/Cells/ActionThemesCell'
 import { ControlsCell } from '@features/Mission/components/MissionsList/Cells/ControlsCell'
+import { ThemesCell } from '@features/Mission/components/MissionsList/Cells/ThemesCell'
 import { UnitCell } from '@features/Mission/components/MissionsList/Cells/UnitCell'
+import { getAllThemes } from '@features/Mission/utils'
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
 import { flexRender, type Row as RowType } from '@tanstack/react-table'
+import styled from 'styled-components'
 
 import type { Mission } from '../../../../domain/entities/missions'
 
@@ -21,12 +23,13 @@ export function Row({ row }: { row: RowType<Mission> }) {
 
   return (
     <>
-      <TableWithSelectableRows.BodyTr key={row.id} data-cy="mission-row">
+      <StyledTr key={row.id} data-cy="mission-row">
         {row?.getVisibleCells().map((cell, index, rowCells) => {
           const cellStyle = createPinnedCellStyle({
             context: cell,
             index,
-            rowLength: rowCells.length
+            rowLength: rowCells.length,
+            stickyLeftBorderIndex: 3
           })
 
           return (
@@ -44,7 +47,7 @@ export function Row({ row }: { row: RowType<Mission> }) {
             </ExpandableRowCell>
           )
         })}
-      </TableWithSelectableRows.BodyTr>
+      </StyledTr>
       {row.getIsExpanded() && (
         <ExpandedRow data-id={`${row.id}-expanded`}>
           <ExpandedRowCell colSpan={5}>
@@ -66,7 +69,9 @@ export function Row({ row }: { row: RowType<Mission> }) {
             <ExpandedRowList>
               <li>
                 <ExpandedRowLabel>Thématiques et sous-thématiques</ExpandedRowLabel>
-                <ActionThemesCell envActions={mission.envActions} />
+                <ul>
+                  <ThemesCell asDetails themes={getAllThemes(mission.envActions)} />
+                </ul>
               </li>
               <li>
                 <ExpandedRowLabel>Tags et sous-tags</ExpandedRowLabel>
@@ -87,3 +92,11 @@ export function Row({ row }: { row: RowType<Mission> }) {
     </>
   )
 }
+
+const StyledTr = styled(TableWithSelectableRows.BodyTr)`
+  td:nth-of-type(2),
+  td:nth-of-type(3),
+  td:nth-of-type(5) {
+    text-overflow: unset;
+  }
+`

@@ -1,5 +1,5 @@
-import { DateCell } from '@components/Table/DateCell'
-import { LocalizeCell } from '@components/Table/LocalizeCell'
+import { DateCell } from '@components/Table/Cells/DateCell'
+import { LocalizeCell } from '@components/Table/Cells/LocalizeCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { type Row } from '@tanstack/react-table'
 

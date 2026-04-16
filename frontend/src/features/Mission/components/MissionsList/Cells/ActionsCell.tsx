@@ -1,4 +1,4 @@
-import { LocalizeCell } from '@components/Table/LocalizeCell'
+import { LocalizeCell } from '@components/Table/Cells/LocalizeCell'
 import { editMissionInLocalStore } from '@features/Mission/useCases/editMissionInLocalStore'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'

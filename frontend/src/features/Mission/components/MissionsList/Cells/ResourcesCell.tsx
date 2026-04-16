@@ -1,7 +1,3 @@
-import { getControlUnitsAsText, type LegacyControlUnit } from 'domain/entities/legacyControlUnit'
-
-export function ResourcesCell({ controlUnits }: { controlUnits: LegacyControlUnit[] }) {
-  const controlUnitsAsText = controlUnits && getControlUnitsAsText(controlUnits)
-
-  return <span title={controlUnitsAsText}>{controlUnitsAsText}</span>
+export function ResourcesCell({ controlUnits }: { controlUnits: string }) {
+  return <span title={controlUnits}>{controlUnits}</span>
 }

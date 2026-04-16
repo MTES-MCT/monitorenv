@@ -26,7 +26,8 @@ export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
           const cellStyle = createPinnedCellStyle({
             context: cell,
             index,
-            rowLength: rowCells.length
+            rowLength: rowCells.length,
+            stickyLeftBorderIndex: 0
           })
 
           return (

@@ -14,28 +14,35 @@ type TableProps = {
   columnsLength: number
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>
   rows: ReactNode | ReactNode[]
+  stickyLeftBorderIndex?: number
   table: TableType<any>
   virtualRows: VirtualItem[]
 }
 
 export function SelectableRowsTableWithRef(
-  { className = '', columnsLength, rows, rowVirtualizer, table, virtualRows }: TableProps,
+  { className = '', columnsLength, rows, rowVirtualizer, stickyLeftBorderIndex, table, virtualRows }: TableProps,
   ref
 ) {
   const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
 
   return (
     <StyledTableContainer ref={ref} className={className}>
-      <TableWithSelectableRows.Table>
+      <StyledTable>
         <TableWithSelectableRows.Head>
           {table.getHeaderGroups().map(headerGroup => (
-            <TableWithSelectableRowsHeader key={headerGroup.id} headerGroup={headerGroup} />
+            <TableWithSelectableRowsHeader
+              key={headerGroup.id}
+              headerGroup={headerGroup}
+              stickyLeftBorderIndex={stickyLeftBorderIndex}
+            />
           ))}
         </TableWithSelectableRows.Head>
-        {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
-        <tbody>{rows}</tbody>
-        {after > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={after} name="after" />}
-      </TableWithSelectableRows.Table>
+        <tbody>
+          {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
+          {rows}
+          {after > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={after} name="after" />}
+        </tbody>
+      </StyledTable>
     </StyledTableContainer>
   )
 }
@@ -46,3 +53,4 @@ const StyledTableContainer = styled(TableContainer)`
   padding-right: 0;
   width: 100%;
 `
+const StyledTable = styled(TableWithSelectableRows.Table)``
