@@ -72,6 +72,7 @@ export function VigilanceAreasTable({
         </>
       }
       rowVirtualizer={rowVirtualizer}
+      stickyLeftBorderIndex={0}
       table={table}
       virtualRows={virtualRows}
     />

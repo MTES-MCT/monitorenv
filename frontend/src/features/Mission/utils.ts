@@ -169,5 +169,16 @@ export const getAllThemes = (envActions: EnvAction[]) => {
   return uniqBy(
     controlsAndSurveillances.flatMap(action => action.themes ?? []),
     'id'
+  ).sort((a, b) => a.name.localeCompare(b.name))
+}
+
+export const getAllTags = (envActions: EnvAction[]) => {
+  const controlsAndSurveillances = envActions.filter(
+    envAction => envAction.actionType === ActionTypeEnum.CONTROL || envAction.actionType === ActionTypeEnum.SURVEILLANCE
   )
+
+  return uniqBy(
+    controlsAndSurveillances.flatMap(action => action.tags ?? []),
+    'id'
+  ).sort((a, b) => a.name.localeCompare(b.name))
 }

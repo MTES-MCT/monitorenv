@@ -1,4 +1,4 @@
-import { notUndefined, Virtualizer, type VirtualItem } from '@tanstack/react-virtual'
+import { notUndefined, type VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
 export function PaddingForVirtualizeTable({
   columLength,
@@ -23,6 +23,6 @@ export const getPaddingValuesForVirtualizeTable = (
   virtualRows?.length > 0
     ? [
         notUndefined(virtualRows[0]).start - rowVirtualizer.options.scrollMargin,
-        rowVirtualizer.getTotalSize() - notUndefined(virtualRows[virtualRows.length - 1]).end
+        rowVirtualizer.getTotalSize() - notUndefined(virtualRows[virtualRows.length - 1]).end + 10
       ]
     : [0, 0]

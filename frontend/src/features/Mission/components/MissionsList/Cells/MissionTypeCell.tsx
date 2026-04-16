@@ -4,9 +4,14 @@ import { MissionTypeEnum } from 'domain/entities/missions'
 export function MissionTypeCell({ missionTypes }: { missionTypes: MissionTypeEnum[] }) {
   return (
     <span>
-      {missionTypes?.map(missionType => (
-        <IconButton accent={Accent.TERTIARY} color={THEME.color.slateGray} Icon={getIcon(missionType)} />
-      ))}
+      {missionTypes?.map(missionType => {
+        const icon = getIcon(missionType)
+        if (!icon) {
+          return null
+        }
+
+        return <IconButton key={missionType} accent={Accent.TERTIARY} color={THEME.color.slateGray} Icon={icon} />
+      })}
     </span>
   )
 }
@@ -20,6 +25,6 @@ function getIcon(missionType: MissionTypeEnum) {
     case MissionTypeEnum.SEA:
       return Icon.VesselPro
     default:
-      return Icon.Minus
+      return undefined
   }
 }

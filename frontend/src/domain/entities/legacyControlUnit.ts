@@ -19,4 +19,4 @@ export type LegacyControlUnitForm = {
 }
 
 export const getControlUnitsAsText = (controlUnits: LegacyControlUnit[]) =>
-  controlUnits.map(controlUnit => `${controlUnit.name} (${controlUnit.administration})`).join(' / ')
+  controlUnits.map(controlUnit => controlUnit.name).join(' / ')

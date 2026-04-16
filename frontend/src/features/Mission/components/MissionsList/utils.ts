@@ -1,7 +1,21 @@
-import { getMissionCompletionStatus, getTotalOfControls } from '@features/Mission/utils'
+import { getAllTags, getAllThemes, getMissionCompletionStatus, getTotalOfControls } from '@features/Mission/utils'
 import { FrontCompletionStatus, FrontCompletionStatusLabel, getMissionStatus } from 'domain/entities/missions'
 
 import type { Row } from '@tanstack/react-table'
+
+export function sortThemes(rowA: Row<any>, rowB: Row<any>, columnId: string) {
+  // Compare first sorted themes
+  return (getAllThemes(rowA.original[columnId] ?? [])[0]?.name ?? '').localeCompare(
+    getAllThemes(rowB.original[columnId] ?? [])[0]?.name ?? ''
+  )
+}
+
+export function sortTags(rowA: Row<any>, rowB: Row<any>, columnId: string) {
+  // Compare first sorted themes
+  return (getAllTags(rowA.original[columnId] ?? [])[0]?.name ?? '').localeCompare(
+    getAllTags(rowB.original[columnId] ?? [])[0]?.name ?? ''
+  )
+}
 
 export function sortNumberOfControls(rowA: Row<any>, rowB: Row<any>, columnId: string) {
   return getTotalOfControls(rowA.original[columnId]) - getTotalOfControls(rowB.original[columnId])

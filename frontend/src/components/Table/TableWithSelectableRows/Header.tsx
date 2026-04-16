@@ -3,14 +3,21 @@ import { flexRender, type HeaderGroup } from '@tanstack/react-table'
 
 import { createPinnedCellStyle } from './utils'
 
-export function TableWithSelectableRowsHeader({ headerGroup }: { headerGroup: HeaderGroup<any> }) {
+export function TableWithSelectableRowsHeader({
+  headerGroup,
+  stickyLeftBorderIndex
+}: {
+  headerGroup: HeaderGroup<any>
+  stickyLeftBorderIndex?: number
+}) {
   return (
     <tr key={headerGroup.id}>
       {headerGroup.headers.map((header, index, headerCells) => {
         const cellStyle = createPinnedCellStyle({
           context: header,
           index,
-          rowLength: headerCells.length
+          rowLength: headerCells.length,
+          stickyLeftBorderIndex
         })
 
         return (

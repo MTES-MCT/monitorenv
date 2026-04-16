@@ -33,7 +33,6 @@ export const ExpandedRowCell = styled(TableWithSelectableRows.Td).attrs(props =>
   padding: 8px 16px 16px;
   height: 42px;
   vertical-align: top;
-  white-space: normal;
 
   > p:not(:first-child) {
     margin-top: 16px;

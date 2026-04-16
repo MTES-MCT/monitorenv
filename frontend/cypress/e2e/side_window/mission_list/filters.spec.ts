@@ -8,6 +8,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   beforeEach(() => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`).wait(1000)
+    cy.clickButton('Afficher les filtres')
   })
 
   afterEach(() => {
@@ -77,7 +78,7 @@ context('Side Window > Mission List > Filter Bar', () => {
         return
       }
 
-      cy.wrap(row).should('contain', 'DDTM')
+      cy.wrap(row).should('contain', 'DML 2A')
     })
   })
 
@@ -115,7 +116,7 @@ context('Side Window > Mission List > Filter Bar', () => {
         return
       }
 
-      cy.wrap(row).should('contain', 'DREAL / DEAL')
+      cy.wrap(row).should('contain', 'DREAL Pays-de-la-loire')
     })
 
     // selected an administration corresponding to the selected unit

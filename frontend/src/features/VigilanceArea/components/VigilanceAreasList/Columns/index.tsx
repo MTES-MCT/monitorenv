@@ -16,6 +16,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Nom de la zone',
     id: 'name',
+
     size: 350 + legacyFirefoxOffset
   },
   {

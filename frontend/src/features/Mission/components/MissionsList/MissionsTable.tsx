@@ -40,6 +40,7 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
 
   const table = useTable({
     columnPinning: {
+      left: ['id', 'startDate', 'endDate', 'seaFront'],
       right: ['actions']
     },
     columns,
@@ -74,6 +75,7 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
         </>
       }
       rowVirtualizer={rowVirtualizer}
+      stickyLeftBorderIndex={3}
       table={table}
       virtualRows={virtualRows}
     />

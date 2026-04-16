@@ -1,3 +1,4 @@
+import { LocalizeCell } from '@components/Table/Cells/LocalizeCell'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -32,25 +33,9 @@ export function ActionsCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: num
     }
   }
 
-  const handleZoomToVigilanceArea = e => {
-    e.stopPropagation()
-    dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
-    const feature = getFeature(geom)
-
-    const extent = feature?.getGeometry()?.getExtent()
-    if (extent) {
-      dispatch(setFitToExtent(extent))
-    }
-  }
-
   return (
     <Wrapper>
-      <StyledIconButton
-        accent={Accent.TERTIARY}
-        Icon={Icon.FocusZones}
-        onClick={handleZoomToVigilanceArea}
-        title="Centrer sur la carte"
-      />
+      <LocalizeCell geom={geom} />
       <StyledIconButton
         accent={Accent.TERTIARY}
         data-cy={`edit-mission-${id}`}

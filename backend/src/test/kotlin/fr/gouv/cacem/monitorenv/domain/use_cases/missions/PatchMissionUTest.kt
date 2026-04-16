@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
@@ -20,7 +21,7 @@ import org.mockito.Mockito.mock
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Optional
 import kotlin.random.Random
 
 @ExtendWith(OutputCaptureExtension::class)
@@ -50,6 +51,7 @@ class PatchMissionUTest {
                                 id = 1,
                                 controlUnitId = 2,
                                 name = "Vedette",
+                                type = ControlUnitResourceType.FAST_BOAT,
                             ),
                         ),
                     contact = null,
