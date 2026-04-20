@@ -13,6 +13,7 @@ context('Missions', () => {
       const archivedControlUnit = response && response.body.find(controlUnit => controlUnit.name === 'BGC Ajaccio')
       expect(archivedControlUnit.isArchived).equals(true)
     })
+    cy.clickButton('Afficher les filtres')
     cy.getDataCy('select-units-filter').click({ force: true })
     cy.get('[data-key="BGC Ajaccio"]').should('not.exist')
   })

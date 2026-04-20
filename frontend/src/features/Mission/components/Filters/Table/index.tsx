@@ -140,8 +140,6 @@ export function TableMissionsFiltersWithRef(
                 style={tagPickerStyle}
                 value={selectedControlUnitIds}
               />
-            </FilterWrapperLine>
-            <FilterWrapperLine>
               <StyledSelect
                 cleanable={false}
                 data-cy="select-period-filter"
@@ -171,6 +169,8 @@ export function TableMissionsFiltersWithRef(
                 style={tagPickerStyle}
                 value={selectedMissionTypes}
               />
+            </FilterWrapperLine>
+            <FilterWrapperLine>
               <CheckPicker
                 key={`theme${themes?.length}`}
                 customSearch={themeCustomSearch}

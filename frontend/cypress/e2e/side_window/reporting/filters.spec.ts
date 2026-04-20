@@ -21,7 +21,7 @@ context('Reportings', () => {
 
     cy.wait('@getReportings')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
   })
   it('Should filter reportings by source type', () => {
     cy.fill('Type de source', [ReportingSourceLabels.SEMAPHORE])
@@ -29,31 +29,23 @@ context('Reportings', () => {
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Type Sémaphore')
     cy.wait('@getReportings')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
 
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
+    cy.getDataCy('reporting-row').each(row => {
       cy.wrap(row).should('contain', 'Sémaphore')
     })
   })
 
   it('Should filter reportings by source', () => {
     cy.wait(1000)
-    cy.fill('Source', ['BSN Ste Maxime'], { delay: 300 })
+    cy.fill('Source', ['Sémaphore de Fécamp'], { delay: 300 })
     cy.wait(500)
-    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Source BSN Ste Maxime')
+    cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Source Sémaphore de Fécamp')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
 
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
-      cy.wrap(row).should('contain', 'BSN Ste Maxime')
+    cy.getDataCy('reporting-row').each(row => {
+      cy.wrap(row).should('contain', 'Sémaphore de Fécamp')
     })
   })
 
@@ -62,13 +54,9 @@ context('Reportings', () => {
     cy.wait(500)
     cy.wait('@getReportings')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
 
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
+    cy.getDataCy('reporting-row').each(row => {
       cy.wrap(row).should('contain', 'Observation')
     })
   })
@@ -80,13 +68,9 @@ context('Reportings', () => {
 
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Autre')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
 
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
+    cy.getDataCy('reporting-row').each(row => {
       cy.wrap(row).should('contain', 'La description du signalement')
     })
   })
@@ -98,12 +82,7 @@ context('Reportings', () => {
       .find('.Component-SingleTag > span')
       .contains('Réglementation du parc national')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 1)
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
+    cy.getDataCy('reporting-row').each(row => {
       cy.wrap(row).should('contain', 'Réglementation du parc national')
     })
   })
@@ -113,7 +92,7 @@ context('Reportings', () => {
     cy.fill('Filtre tags et sous-tags', ['Dragage'])
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Dragage')
 
-    cy.get('.Table-SimpleTable tr').should('have.length', 2)
+    cy.getDataCy('reporting-row').should('have.length', 1)
   })
 
   it('Should filter reportings by subTags', () => {
@@ -122,7 +101,7 @@ context('Reportings', () => {
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Mouillage')
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('subtagMouillage1')
 
-    cy.get('.Table-SimpleTable tr').should('have.length', 2)
+    cy.getDataCy('reporting-row').should('have.length', 1)
   })
 
   it('Should filter reportings by sea-fronts', () => {
@@ -131,12 +110,8 @@ context('Reportings', () => {
 
     cy.wait('@getReportings')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
+    cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('reporting-row').each(row => {
       cy.wrap(row).should('contain', 'NAMO')
     })
   })
@@ -147,12 +122,8 @@ context('Reportings', () => {
     cy.wait(500)
     cy.wait('@getReportings')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
+    cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('reporting-row').each(row => {
       cy.wrap(row).should('contain', 'Archivé')
     })
   })
@@ -162,12 +133,8 @@ context('Reportings', () => {
     cy.getDataCy('attach-to-mission-filter-ATTACHED').click()
     cy.wait(500)
     cy.wait('@getReportings')
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
+    cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('reporting-row').each(row => {
       cy.wrap(row).should('contain', 'Mission')
     })
 
@@ -176,12 +143,8 @@ context('Reportings', () => {
     cy.getDataCy('attach-to-mission-filter-UNATTACHED').click()
     cy.wait(500)
     cy.wait('@getReportings')
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index, list) => {
-      if (index === 0 || index === list.length - 1) {
-        return
-      }
-
+    cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('reporting-row').each(row => {
       cy.wrap(row).should('not.contain', 'Mission')
     })
   })

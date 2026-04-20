@@ -1,5 +1,5 @@
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import { MissionTypeEnum } from 'domain/entities/missions'
+import { missionTypeEnum, MissionTypeEnum } from 'domain/entities/missions'
 
 export function MissionTypeCell({ missionTypes }: { missionTypes: MissionTypeEnum[] }) {
   return (
@@ -10,7 +10,16 @@ export function MissionTypeCell({ missionTypes }: { missionTypes: MissionTypeEnu
           return null
         }
 
-        return <IconButton key={missionType} accent={Accent.TERTIARY} color={THEME.color.slateGray} Icon={icon} />
+        return (
+          <IconButton
+            key={missionType}
+            accent={Accent.TERTIARY}
+            color={THEME.color.slateGray}
+            data-cy={`mission-type-${missionTypeEnum[missionType].libelle}`}
+            Icon={icon}
+            title={missionTypeEnum[missionType].libelle}
+          />
+        )
       })}
     </span>
   )

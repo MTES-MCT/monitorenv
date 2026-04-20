@@ -68,6 +68,7 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
       rows={rows}
       rowVirtualizer={rowVirtualizer}
       table={table}
+      title="dashboard"
       virtualRows={virtualRows}
     />
   )

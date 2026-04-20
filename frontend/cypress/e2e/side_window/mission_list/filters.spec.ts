@@ -23,7 +23,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.fill('Période', '7 derniers jours')
     cy.wait('@getMissionsForCurrentWeek')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
   })
 
   it('Should filter missions for the current month', () => {
@@ -34,7 +34,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.fill('Période', '30 derniers jours')
     cy.wait('@getMissionsForCurrentMonth')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
   })
 
   it('Should filter missions for the current year', () => {
@@ -43,7 +43,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.fill('Période', 'Année en cours')
     cy.wait('@getMissionsForCurrentYear')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
   })
 
   it('Should filter missions for future missions', () => {
@@ -52,19 +52,19 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.fill('Période', 'A venir')
     cy.wait('@getMissionsForCurrentYear')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
   })
 
   it('Should filter missions by completion status', () => {
+    const currentYear = encodeURIComponent(customDayjs().utc().startOf('year').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentYear}`).as('getMissionsForCurrentYear')
+    cy.fill('Période', 'Année en cours')
+    cy.wait('@getMissionsForCurrentYear')
     cy.fill('État des données', ['Complétées'])
 
     cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Données complétées')
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').each(row => {
       cy.wrap(row).should('contain', 'Complétées')
     })
   })
@@ -72,38 +72,34 @@ context('Side Window > Mission List > Filter Bar', () => {
   it('Should filter missions by administrations', () => {
     cy.fill('Administration', ['DDTM'])
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').each(row => {
       cy.wrap(row).should('contain', 'DML 2A')
     })
   })
 
   it('Should filter missions by units', () => {
+    const currentYear = encodeURIComponent(customDayjs().utc().startOf('year').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentYear}`).as('getMissionsForCurrentYear')
+    cy.fill('Période', 'Année en cours')
+    cy.wait('@getMissionsForCurrentYear')
     cy.fill('Unité', ['BSN'])
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').each(row => {
       cy.wrap(row).should('contain', 'BSN Ste Maxime')
     })
   })
 
   it('Should filter missions by administration, and units filter accordingly.', () => {
     // selected an administration that does not correspond to the selected unit
+    const currentYear = encodeURIComponent(customDayjs().utc().startOf('year').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentYear}`).as('getMissionsForCurrentYear')
+    cy.fill('Période', 'Année en cours')
     cy.fill('Unité', ['DPM – DDTM 14'])
+    cy.wait('@getMissionsForCurrentYear')
     cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Unité DPM – DDTM 14')
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('mission-row').each(row => {
       cy.wrap(row).should('contain', 'DPM – DDTM 14')
     })
     cy.fill('Administration', ['DREAL / DEAL'])
@@ -111,72 +107,59 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.getDataCy('missions-filter-tags')
       .find('.Component-SingleTag > span')
       .should('not.contain', 'Unité DPM - DDTM 14')
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
-      cy.wrap(row).should('contain', 'DREAL Pays-de-la-loire')
+    cy.getDataCy('mission-row').each(row => {
+      cy.wrap(row).should('contain', 'DREAL Pays-de-La-Loire')
     })
 
     // selected an administration corresponding to the selected unit
     cy.fill('Administration', undefined)
     cy.fill('Unité', ['DREAL Pays-de-La-Loire'])
     cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Unité DREAL Pays-de-La-Loire')
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('mission-row').each(row => {
       cy.wrap(row).should('contain', 'DREAL Pays-de-La-Loire')
     })
     cy.fill('Administration', ['DREAL / DEAL'])
     cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Admin. DREAL / DEAL')
     cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Unité DREAL Pays-de-La-Loire')
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
-      cy.wrap(row).should('contain', 'DREAL Pays-de-La-Loire (DREAL / DEAL)')
+    cy.getDataCy('mission-row').each(row => {
+      cy.wrap(row).should('contain', 'DREAL Pays-de-La-Loire')
     })
   })
 
   it('Should filter missions by types', () => {
-    const date = encodeURIComponent(customDayjs().utc().startOf('day').toISOString())
-
-    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${date}&missionTypes=SEA`).as('getMissionsByType')
-
+    const currentYear = encodeURIComponent(customDayjs().utc().startOf('year').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentYear}&missionTypes=SEA`).as(
+      'getMissionsForCurrentYear'
+    )
+    cy.fill('Période', 'Année en cours')
     cy.fill('Type de mission', ['Mer'])
+    cy.wait('@getMissionsForCurrentYear')
 
     // We can't wait because cy.fill ends after the request
     // cy.wait('@getMissionsByType')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
-      cy.wrap(row).should('contain', 'Mer')
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').each(row => {
+      cy.wrap(row).within(() => {
+        cy.getDataCy('mission-type-Mer').should('exist')
+      })
     })
   })
 
   it('Should filter missions by sea fronts', () => {
-    const date = encodeURIComponent(customDayjs().utc().startOf('day').toISOString())
-    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${date}&seaFronts=MED`).as('getMissionsBySeaFront')
-
+    const currentYear = encodeURIComponent(customDayjs().utc().startOf('year').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentYear}&seaFronts=MED`).as(
+      'getMissionsForCurrentYear'
+    )
+    cy.fill('Période', 'Année en cours')
     cy.fill('Façade', ['MED'])
+    cy.wait('@getMissionsForCurrentYear')
 
     // We can't wait because cy.fill ends after the request
     // cy.wait('@getMissionsBySeaFront')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').each(row => {
       cy.wrap(row).should('contain', 'MED')
     })
   })
@@ -192,26 +175,23 @@ context('Side Window > Mission List > Filter Bar', () => {
     // We can't wait because cy.fill ends after the request
     // cy.wait('@getMissionsByStatus')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').each(row => {
       cy.wrap(row).should('contain', 'En cours')
     })
   })
 
   it('Should filter missions by themes', () => {
+    const currentYear = encodeURIComponent(customDayjs().utc().startOf('year').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentYear}`).as('getMissionsForCurrentYear')
+    cy.fill('Période', 'Année en cours')
     cy.fill('Thématique', ['Mouillage individuel'])
+    cy.wait('@getMissionsForCurrentYear')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
-      cy.wrap(row).should('contain', 'Mouillage individuel')
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').each(row => {
+      cy.wrap(row).click()
+      cy.getDataCy('mission-row-expanded').should('contain', 'Mouillage individuel')
     })
   })
 
@@ -265,7 +245,7 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.fill('Période', 'Année en cours')
     cy.fill('Rechercher dans un contrôle (navire, personne...)', 'BALTIK')
 
-    cy.get('.Table-SimpleTable tr').should('have.length', 2)
+    cy.getDataCy('mission-row').should('have.length', 1)
     cy.getDataCy('edit-mission-34').click({ force: true })
 
     cy.getDataCy('action-card').eq(1).click()

@@ -49,7 +49,7 @@ export function Row({ row }: { row: RowType<Mission> }) {
         })}
       </StyledTr>
       {row.getIsExpanded() && (
-        <ExpandedRow data-id={`${row.id}-expanded`}>
+        <ExpandedRow data-cy="mission-row-expanded">
           <ExpandedRowCell colSpan={5}>
             <ExpandedRowList>
               <li>
