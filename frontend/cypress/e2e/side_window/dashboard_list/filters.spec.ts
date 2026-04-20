@@ -16,7 +16,7 @@ context('Side Window > Dashboard List > Filter Bar', () => {
   it('Should filter dashboard for today', () => {
     cy.fill('Période de mise à jour', "Aujourd'hui")
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
 
     cy.clickButton('Réinitialiser les filtres')
   })
@@ -24,7 +24,7 @@ context('Side Window > Dashboard List > Filter Bar', () => {
   it('Should filter dashboard for the last week', () => {
     cy.fill('Période de mise à jour', 'Une semaine')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
 
     cy.clickButton('Réinitialiser les filtres')
   })
@@ -32,13 +32,13 @@ context('Side Window > Dashboard List > Filter Bar', () => {
   it('Should filter dashboard for the last month', () => {
     cy.fill('Période de mise à jour', 'Un mois')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
   })
 
   it('Should filter dashboard for the current year', () => {
     cy.fill('Période de mise à jour', 'Année en cours')
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
 
     cy.clickButton('Réinitialiser les filtres')
   })
@@ -54,7 +54,7 @@ context('Side Window > Dashboard List > Filter Bar', () => {
       expectedEndDate.asDatePickerDate
     ])
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
 
     cy.clickButton('Réinitialiser les filtres')
   })
@@ -63,12 +63,8 @@ context('Side Window > Dashboard List > Filter Bar', () => {
     cy.wait(200)
     cy.fill('Façade', ['NAMO'])
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').each(row => {
       cy.wrap(row).should('contain', 'NAMO')
     })
 
@@ -79,12 +75,8 @@ context('Side Window > Dashboard List > Filter Bar', () => {
     cy.wait(200)
     cy.fill('Tags', ['Mixte'])
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').each(row => {
       cy.wrap(row).should('contain', 'Mixte')
     })
 
@@ -94,12 +86,8 @@ context('Side Window > Dashboard List > Filter Bar', () => {
   it('Should filter dashboards by units', () => {
     cy.fill('Unité', ['DML'])
 
-    cy.get('.Table-SimpleTable tr').should('have.length.to.be.greaterThan', 0)
-    cy.get('.Table-SimpleTable tr').each((row, index) => {
-      if (index === 0) {
-        return
-      }
-
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').each(row => {
       cy.wrap(row).should('contain', 'DML 2A (DDTM)')
     })
 

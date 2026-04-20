@@ -9,6 +9,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
     cy.viewport(1280, 1024)
     cy.intercept('GET', '/bff/v1/missions*').as('getMissions')
     visitSideWindow()
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Année en cours')
     cy.wait('@getMissions')
   })

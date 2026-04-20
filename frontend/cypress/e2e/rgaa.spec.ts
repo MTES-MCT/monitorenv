@@ -33,6 +33,7 @@ context('Axe core RGAA check that ', () => {
   describe('Mission ', () => {
     it('list should respect RGAA criteria', () => {
       visitSideWindow()
+      cy.clickButton('Afficher les filtres')
       cy.wait('@getMissions')
       cy.injectAxe()
       // @ts-ignore
@@ -50,6 +51,7 @@ context('Axe core RGAA check that ', () => {
     it('with surveillance action opened should respect RGAA criteria', () => {
       visitSideWindow()
       cy.wait('@getMissions')
+      cy.clickButton('Afficher les filtres')
       cy.fill('Période', 'Année en cours')
       cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
       cy.getDataCy('action-card').eq(0).click()
@@ -69,6 +71,7 @@ context('Axe core RGAA check that ', () => {
     it('with a control action opened should respect RGAA criteria', () => {
       visitSideWindow()
       cy.wait('@getMissions')
+      cy.clickButton('Afficher les filtres')
       cy.fill('Période', 'Année en cours')
       cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
       cy.getDataCy('action-card').eq(1).click()
@@ -88,6 +91,7 @@ context('Axe core RGAA check that ', () => {
     it('with attached reporting should respect RGAA criteria', () => {
       visitSideWindow()
       cy.wait('@getMissions')
+      cy.clickButton('Afficher les filtres')
       cy.fill('Période', 'Année en cours')
       cy.injectAxe()
       cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })

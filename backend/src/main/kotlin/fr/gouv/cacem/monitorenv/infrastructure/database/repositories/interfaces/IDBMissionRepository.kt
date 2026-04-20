@@ -25,6 +25,23 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
     fun delete(id: Int)
 
     @Query(
+        value = """
+        SELECT mission
+        FROM MissionModel mission
+        WHERE
+            mission.isDeleted = false AND
+            mission.id IN :ids
+        ORDER BY mission.startDateTimeUtc DESC
+        """,
+    )
+    fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
+
+    @Query(
+        "SELECT mission FROM MissionModel mission JOIN mission.controlUnits missionControlUnitResources WHERE missionControlUnitResources.unit.id = :controlUnitId",
+    )
+    fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
+
+    @Query(
         """
         SELECT DISTINCT mission
         FROM MissionModel mission
@@ -83,23 +100,6 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
         startedAfter: Instant,
         startedBefore: Instant?,
     ): List<MissionModel>
-
-    @Query(
-        value = """
-        SELECT mission
-        FROM MissionModel mission
-        WHERE
-            mission.isDeleted = false AND
-            mission.id IN :ids
-        ORDER BY mission.startDateTimeUtc DESC
-        """,
-    )
-    fun findNotDeletedByIds(ids: List<Int>): List<MissionModel>
-
-    @Query(
-        "SELECT mission FROM MissionModel mission JOIN mission.controlUnits missionControlUnitResources WHERE missionControlUnitResources.unit.id = :controlUnitId",
-    )
-    fun findByControlUnitId(controlUnitId: Int): List<MissionModel>
 
     @Query(
         "SELECT mission FROM MissionModel mission JOIN mission.controlResources missionControlUnitResources WHERE missionControlUnitResources.resource.id = :controlUnitResourceId",

@@ -35,6 +35,7 @@ context('Side Window > Mission Form > Mission actions', () => {
         Cypress.env('CYPRESS_REPORTING_FORM_AUTO_UPDATE', 'true')
       }
     })
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Année en cours')
     cy.wait('@getMissions')
   })

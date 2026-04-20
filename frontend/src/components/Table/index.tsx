@@ -14,11 +14,12 @@ type TableProps = {
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>
   rows: Row<any>[]
   table: TableType<any>
+  title?: string
   virtualRows: VirtualItem[]
 }
 
 export function TableWithRef(
-  { className = '', columnsLength, rows, rowVirtualizer, table, virtualRows }: TableProps,
+  { className = '', columnsLength, rows, rowVirtualizer, table, title, virtualRows }: TableProps,
   ref
 ) {
   const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
@@ -63,7 +64,8 @@ export function TableWithRef(
               <SimpleTable.BodyTr
                 key={row?.id}
                 ref={rowVirtualizer.measureElement} // measure dynamic row height
-                data-index={virtualRow.index} // needed for dynamic row height measurement
+                data-cy={`${title}-row`} // needed for dynamic row height measurement
+                data-index={virtualRow.index}
               >
                 {row?.getVisibleCells().map(cell => (
                   <SimpleTable.Td

@@ -166,6 +166,7 @@ context('Side Window > Mission Form > Main Form', () => {
   it('A mission tab should be closed', () => {
     // Given
     visitSideWindow()
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Année en cours')
     cy.get('[data-cy="edit-mission-25"]').click({ force: true })
     cy.wait(500)
@@ -191,7 +192,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // Given
     visitSideWindow()
     cy.wait(200)
-
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', '30 derniers jours')
 
     cy.getDataCy('edit-mission-50').scrollIntoView().click({ force: true })
@@ -208,7 +209,7 @@ context('Side Window > Mission Form > Main Form', () => {
       getPreviousMonthUTC(2, customDayjs().utc())
     )
     const { asDatePickerDate: expectedEndDate } = getUtcDateInMultipleFormats(todayUTC())
-
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Période spécifique')
     cy.fill('Période spécifique', [expectedStartDate, expectedEndDate])
     const controlUnit = 'PAM Jeanne Barret'
@@ -300,6 +301,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // Given
     visitSideWindow()
     cy.wait(200)
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Année en cours')
     cy.intercept('GET', '/api/v1/missions/engaged_control_units').as('getEngagedControlUnits')
 
@@ -410,6 +412,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // Open
 
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Période spécifique')
     const startDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.subtract(6, 'month').toISOString()
     const endDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.subtract(3, 'month').toISOString()
@@ -453,8 +456,8 @@ context('Side Window > Mission Form > Main Form', () => {
           isArchived: false,
           name: 'Cultures marines – DDTM 40',
           resources: [
-            { controlUnitId: 10000, id: 1, name: 'Semi-rigide 1' },
-            { controlUnitId: 10000, id: 13, name: 'Voiture' }
+            { controlUnitId: 10000, id: 1, name: 'Semi-rigide 1', type: 'BARGE' },
+            { controlUnitId: 10000, id: 13, name: 'Voiture', type: 'CAR' }
           ]
         },
         {
@@ -486,6 +489,7 @@ context('Side Window > Mission Form > Main Form', () => {
   it('Should display the archived control unit and administration when edit mission', () => {
     visitSideWindow()
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=*`).as('getMissions')
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Période spécifique')
     const startDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.subtract(6, 'month').toISOString()
     const endDateInString = getUtcDateInMultipleFormats().asDayjsUtcDate.toISOString()
@@ -507,6 +511,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
   it('Should display missing fields banner if mission is ended and has missing fields', () => {
     visitSideWindow()
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Année en cours')
     cy.wait(500)
     cy.get('.missions-table').scrollTo('bottom')
@@ -516,6 +521,7 @@ context('Side Window > Mission Form > Main Form', () => {
 
   it('Should display text in timeline if data has been added to the mission by the control unit in RapportNav. ', () => {
     visitSideWindow()
+    cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Année en cours')
     cy.getDataCy('edit-mission-53').scrollIntoView().click({ force: true }).wait(500)
     cy.getDataCy('rapportNav-actions-text').should('be.visible')
