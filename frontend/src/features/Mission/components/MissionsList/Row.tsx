@@ -85,7 +85,7 @@ export function Row({ row }: { row: RowType<Mission> }) {
           </ExpandedRowCell>
           <ExpandedRowCell colSpan={3}>
             <ExpandedRowLabel>Ouvert part</ExpandedRowLabel>
-            <ExpandedRowValue>{mission.openBy}</ExpandedRowValue>
+            <ExpandedRowValue>{mission.openBy ? mission.openBy : UNKNOWN}</ExpandedRowValue>
           </ExpandedRowCell>
         </ExpandedRow>
       )}
@@ -94,6 +94,7 @@ export function Row({ row }: { row: RowType<Mission> }) {
 }
 
 const StyledTr = styled(TableWithSelectableRows.BodyTr)`
+  td:nth-of-type(1),
   td:nth-of-type(2),
   td:nth-of-type(3),
   td:nth-of-type(5) {
