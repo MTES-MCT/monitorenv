@@ -17,7 +17,7 @@ import type { Row } from '@tanstack/react-table'
 export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => [
   {
     accessorFn: row => row.id,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <span>{info.getValue()}</span>),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <span title={info.getValue()}>{info.getValue()}</span>),
     enableSorting: true,
     header: () => 'N°',
     id: 'id',
