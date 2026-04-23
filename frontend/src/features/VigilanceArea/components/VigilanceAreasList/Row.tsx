@@ -35,12 +35,7 @@ export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
               key={cell.id}
               $isDraft={vigilanceArea.isDraft}
               onClick={() => row.toggleExpanded()}
-              style={{
-                maxWidth: cell.column.getSize(),
-                minWidth: cell.column.getSize(),
-                width: cell.column.getSize(),
-                ...cellStyle
-              }}
+              style={cellStyle}
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </ExpandableRowCell>

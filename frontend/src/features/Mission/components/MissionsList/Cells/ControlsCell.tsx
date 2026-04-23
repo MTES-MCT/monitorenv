@@ -3,7 +3,7 @@ import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
 import { ControlInfractionsTags } from '@features/Mission/components/ControlInfractionsTags'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 
-import { TargetTypeLabels } from '../../../../../domain/entities/targetType'
+import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
 import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
 
 import type { EnvAction } from '../../../../../domain/entities/missions'
@@ -27,11 +27,11 @@ export function ControlsCell({ envActions }: { envActions: EnvAction[] }) {
               )}
             </ExpandedRowValue>
             <ExpandedRowValue>
-              {TargetTypeLabels[envAction.actionTargetType]
+              {TargetTypeLabels[envAction.actionTargetType] && envAction.actionTargetType !== TargetTypeEnum.VEHICLE
                 ? TargetTypeLabels[envAction.actionTargetType]
                 : '(Cible non renseignée)'}{' '}
               {envAction.vehicleType && vehicleTypeLabels[envAction.vehicleType].label
-                ? vehicleTypeLabels[envAction.vehicleType].label
+                ? `${vehicleTypeLabels[envAction.vehicleType].label} (${TargetTypeLabels[envAction.actionTargetType]})`
                 : ''}
               <ul>
                 {envAction.infractions.map(infraction => (

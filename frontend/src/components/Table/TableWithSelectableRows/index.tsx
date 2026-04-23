@@ -5,7 +5,6 @@ import { forwardRef, type ReactNode } from 'react'
 import styled from 'styled-components'
 
 import { getPaddingValuesForVirtualizeTable, PaddingForVirtualizeTable } from '../PaddingForVirtualizeTable'
-import { TableContainer } from '../style'
 
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
@@ -26,31 +25,44 @@ export function SelectableRowsTableWithRef(
   const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
 
   return (
-    <StyledTableContainer ref={ref} className={className}>
-      <StyledTable>
-        <TableWithSelectableRows.Head>
-          {table.getHeaderGroups().map(headerGroup => (
-            <TableWithSelectableRowsHeader
-              key={headerGroup.id}
-              headerGroup={headerGroup}
-              stickyLeftBorderIndex={stickyLeftBorderIndex}
-            />
-          ))}
-        </TableWithSelectableRows.Head>
-        <tbody>
-          {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
-          {rows}
-          {after > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={after} name="after" />}
-        </tbody>
-      </StyledTable>
-    </StyledTableContainer>
+    <StyledTableWrapper ref={ref} className={className}>
+      <StyledTableContainer data-cy="scrollable-container">
+        <StyledTable>
+          <TableWithSelectableRows.Head>
+            {table.getHeaderGroups().map(headerGroup => (
+              <TableWithSelectableRowsHeader
+                key={headerGroup.id}
+                headerGroup={headerGroup}
+                stickyLeftBorderIndex={stickyLeftBorderIndex}
+              />
+            ))}
+          </TableWithSelectableRows.Head>
+          <tbody>
+            {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
+            {rows}
+            {after > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={after} name="after" />}
+          </tbody>
+        </StyledTable>
+      </StyledTableContainer>
+    </StyledTableWrapper>
   )
 }
 
 export const SelectableRowsTable = forwardRef(SelectableRowsTableWithRef)
 
-const StyledTableContainer = styled(TableContainer)`
-  padding-right: 0;
+const StyledTableWrapper = styled.div`
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+`
+
+const StyledTableContainer = styled.div`
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+`
+
+const StyledTable = styled(TableWithSelectableRows.Table)`
+  table-layout: auto;
   width: 100%;
 `
-const StyledTable = styled(TableWithSelectableRows.Table)``

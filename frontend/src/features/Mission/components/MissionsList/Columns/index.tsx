@@ -61,22 +61,20 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     enableSorting: true,
     header: () => 'Unité',
     id: 'unit',
-    minSize: 220 + legacyFirefoxOffset,
-    size: 220 + legacyFirefoxOffset
+    minSize: 220 + legacyFirefoxOffset
   },
   {
-    accessorFn: row => getAllThemes(row.envActions ?? [])[0],
+    accessorFn: row => getAllThemes(row.envActions ?? []),
     cell: info =>
       isFetching ? (
         <StyledSkeletonRow />
       ) : (
-        <ThemesCell asDetails={false} themes={info.getValue() ? [info.getValue()] : []} />
+        <ThemesCell asDetails={false} themes={info.getValue() ? info.getValue() : []} />
       ),
     enableSorting: true,
     header: () => 'Thématiques',
     id: 'themes',
     minSize: 275 + legacyFirefoxOffset,
-    size: 275 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortThemes(rowA, rowB, 'envActions')
   },
   {

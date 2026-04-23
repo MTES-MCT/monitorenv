@@ -23,6 +23,6 @@ export const getPaddingValuesForVirtualizeTable = (
   virtualRows?.length > 0
     ? [
         notUndefined(virtualRows[0]).start - rowVirtualizer.options.scrollMargin,
-        rowVirtualizer.getTotalSize() - notUndefined(virtualRows[virtualRows.length - 1]).end + 10
+        rowVirtualizer.getTotalSize() - notUndefined(virtualRows[virtualRows.length - 1]).end
       ]
     : [0, 0]
