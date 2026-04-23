@@ -1,15 +1,17 @@
-import { Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 type ChevronProps = {
   $isOpen: boolean
+  accent?: Accent
   onClick?: () => void
 }
 
-export function ChevronIconButton({ $isOpen, onClick }: ChevronProps) {
+export function ChevronIconButton({ $isOpen, accent = Accent.PRIMARY, onClick }: ChevronProps) {
   return (
     <StyledChevronButton
       $isOpen={$isOpen}
+      accent={accent}
       Icon={Icon.Chevron}
       onClick={onClick}
       title={$isOpen ? 'Fermer' : 'Ouvrir'}

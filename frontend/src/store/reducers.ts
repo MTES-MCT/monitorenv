@@ -24,6 +24,7 @@ import { reportingSliceReducer } from '@features/Reportings/slice'
 import { sideWindowReducer } from '@features/SideWindow/slice'
 import { stationTablePersistedReducer } from '@features/Station/components/StationTable/slice'
 import { stationReducer } from '@features/Station/slice'
+import { tagTablePersistedReducer } from '@features/Tags/components/Table/slice'
 import { vesselReducer } from '@features/Vessel/slice'
 import { vigilanceAreaFiltersPersistedReducer } from '@features/VigilanceArea/components/VigilanceAreasList/Filters/slice'
 import { vigilanceAreaPersistedReducer } from '@features/VigilanceArea/slice'
@@ -78,6 +79,7 @@ export const homeReducers = {
   sideWindow: sideWindowReducer,
   station: stationReducer,
   stationTable: stationTablePersistedReducer,
+  tagTable: tagTablePersistedReducer,
   vessel: vesselReducer,
   vigilanceArea: vigilanceAreaPersistedReducer,
   vigilanceAreaFilters: vigilanceAreaFiltersPersistedReducer

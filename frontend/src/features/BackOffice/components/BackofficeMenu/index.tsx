@@ -6,7 +6,8 @@ import {
   isRegulatoryAreaListPage,
   isRegulatoryAreaPage,
   isStationListPage,
-  isStationPage
+  isStationPage,
+  isTagListPage
 } from '@features/BackOffice/utils'
 import { Icon } from '@mtes-mct/monitor-ui'
 import { NavLink, useLocation } from 'react-router'
@@ -48,6 +49,13 @@ export function BackOfficeMenu() {
         <Icon.Pinpoint />
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.STATION_LIST]}
       </StyledNavLink>
+      <StyledNavLink
+        $isActive={isTagListPage(locationPath)}
+        to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.TAG_LIST]}`}
+      >
+        <Icon.Tag />
+        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.TAG_LIST]}
+      </StyledNavLink>
     </Wrapper>
   )
 }
@@ -83,6 +91,7 @@ const StyledNavLink = styled(NavLink)<{ $isActive?: boolean }>`
   &:first-child {
     border-top: solid 0.5px ${p => p.theme.color.slateGray};
     margin-top: 64px;
+
     &:hover {
       border: none;
     }
