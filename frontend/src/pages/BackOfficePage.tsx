@@ -2,6 +2,7 @@ import { EnvironmentBox, getEnvironmentBorderStyle } from '@components/Environme
 import { BannerStack } from '@features/BackOffice/components/BannerStack'
 import { RegulatoryAreaForm } from '@features/RegulatoryArea/components/RegulatoryAreaForm'
 import { RegulatoryAreaList } from '@features/RegulatoryArea/components/RegulatoryAreaList'
+import { TagTable } from '@features/Tags/components/Table'
 import { getEnvironmentData } from '@utils/getEnvironmentData'
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
@@ -59,6 +60,7 @@ export function BackOfficePage() {
             element={<StationForm />}
             path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}/:stationId`}
           />
+          <Route element={<TagTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.TAG_LIST]} />
         </Routes>
       </>
     </Wrapper>

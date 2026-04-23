@@ -1,6 +1,6 @@
 import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
-import { Title } from '@features/BackOffice/components/style'
+import { Title, TitleContainer } from '@features/BackOffice/components/style'
 import { MapAttributionsBox } from '@features/map/controls/MapAttributionsBox'
 import { MapCoordinatesBox } from '@features/map/controls/MapCoordinatesBox'
 import { MapLayer } from '@features/map/layers/MapLayer'
@@ -95,14 +95,6 @@ export function RegulatoryAreaList() {
   )
 }
 
-const TitleContainer = styled.div`
-  border-bottom: 1px solid ${p => p.theme.color.gainsboro};
-  display: flex;
-  justify-content: space-between;
-  > Button {
-    align-self: start;
-  }
-`
 const StyledRegulatoryAreasPanel = styled(RegulatoryAreasPanel)`
   left: 51%;
   top: 12px;

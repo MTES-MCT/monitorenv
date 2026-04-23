@@ -1,13 +1,15 @@
 import {
   getCoreRowModel,
+  getExpandedRowModel,
   getSortedRowModel,
-  useReactTable,
   type RowSelectionState,
   type SortingState,
   type ColumnDef,
   type ColumnPinningState,
-  type Table
+  type Table,
+  useReactTable
 } from '@tanstack/react-table'
+import { useState } from 'react'
 
 type UseTableProps = {
   columnPinning?: ColumnPinningState
@@ -20,6 +22,7 @@ type UseTableProps = {
   sorting: SortingState
   withRowSelection: boolean
 }
+
 export function useTable({
   columnPinning = {
     left: [],
@@ -34,6 +37,8 @@ export function useTable({
   sorting,
   withRowSelection
 }: UseTableProps): Table<any> {
+  const [expanded, setExpanded] = useState({})
+
   return useReactTable({
     columns,
     data,
@@ -41,13 +46,17 @@ export function useTable({
     enableRowSelection: withRowSelection,
     enableSortingRemoval: true,
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     getRowId: (row: any) => row.id,
     getSortedRowModel: getSortedRowModel(),
+    getSubRows: (row: any) => row.subRows,
+    onExpandedChange: setExpanded,
     meta,
     onRowSelectionChange: withRowSelection ? setRowSelection : undefined,
     onSortingChange: setSorting,
     state: {
       columnPinning,
+      expanded,
       rowSelection: withRowSelection ? rowSelection : undefined,
       sorting
     }
