@@ -514,7 +514,7 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.clickButton('Afficher les filtres')
     cy.fill('Période', 'Année en cours')
     cy.wait(500)
-    cy.get('.missions-table').scrollTo('bottom')
+    cy.getDataCy('scrollable-container').scrollTo('bottom')
     cy.getDataCy('edit-mission-27').click({ force: true })
     cy.get('.Component-Banner').contains('Veuillez compléter ou corriger les éléments en rouge')
   })

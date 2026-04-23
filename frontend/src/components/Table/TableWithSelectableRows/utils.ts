@@ -11,13 +11,14 @@ export const createPinnedCellStyle = ({
   stickyLeftBorderIndex
 }): CSSProperties | undefined => {
   const pinPosition = context.column.getIsPinned()
+  const bordersLeft = index !== 0 ? index + 1 : 0
   const bordersRight = index === rowLength ? 0 : rowLength - (index + 1)
 
   switch (pinPosition) {
     case 'left': {
       return {
         borderRight: stickyLeftBorderIndex === index ? `1px solid ${THEME.color.lightGray}` : undefined,
-        left: context.column.getStart('left'),
+        left: context.column.getStart('left') + bordersLeft,
         position: 'sticky'
       }
     }

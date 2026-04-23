@@ -6,13 +6,14 @@ import { useMemo } from 'react'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
 const getThemesCell = (themes: ThemeFromAPI[], asDetails: boolean) => {
-  const toThemeCell = (theme: ThemeFromAPI) => {
+  const toThemeCell = (theme: ThemeFromAPI, isLast: boolean) => {
     const subThemes = displaySubThemes([theme])
 
     return {
       component: (
         <>
-          {theme.name}{' '}
+          {theme.name}
+          {!asDetails && !isLast ? ', ' : ' '}
           {asDetails && subThemes && subThemes.length > 0 && (
             <SubThemesOrSubTagsContainer>({subThemes})</SubThemesOrSubTagsContainer>
           )}
@@ -22,7 +23,7 @@ const getThemesCell = (themes: ThemeFromAPI[], asDetails: boolean) => {
     }
   }
 
-  return themes.map(theme => toThemeCell(theme))
+  return themes.map((theme, index) => toThemeCell(theme, index === themes.length - 1))
 }
 
 export function ThemesCell({ asDetails, themes }: { asDetails: boolean; themes: ThemeFromAPI[] }) {

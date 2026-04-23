@@ -33,16 +33,7 @@ export function Row({ row }: { row: RowType<Mission> }) {
           })
 
           return (
-            <ExpandableRowCell
-              key={cell.id}
-              onClick={() => row.toggleExpanded()}
-              style={{
-                maxWidth: cell.column.getSize(),
-                minWidth: cell.column.getSize(),
-                width: cell.column.getSize(),
-                ...cellStyle
-              }}
-            >
+            <ExpandableRowCell key={cell.id} onClick={() => row.toggleExpanded()} style={cellStyle}>
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </ExpandableRowCell>
           )
