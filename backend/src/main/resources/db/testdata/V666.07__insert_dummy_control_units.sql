@@ -70,6 +70,6 @@ VALUES
     (   11,             10018,              'PHEROUSA',       3,         'FRIGATE',       false),
     (   12,             10018,                'ARIOLA',       3,         'FRIGATE',       false),
     (   13,             10000,               'Voiture',       1,             'CAR',        true),
-    (   14,             10000,                 'Drône',       2,           'DRONE',       false);
+    (   14,             10000,                 'Drone',       2,           'DRONE',       false);
 
 SELECT setval('control_unit_resources_id_seq', 14, true);
