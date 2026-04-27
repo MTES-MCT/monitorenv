@@ -18,7 +18,7 @@ export function ControlsCell({ envActions }: { envActions: EnvAction[] }) {
       {envActions
         .filter(envAction => envAction.actionType === 'CONTROL')
         .map(envAction => (
-          <li>
+          <li key={envAction.id}>
             <ExpandedRowValue>
               {envAction.actionStartDateTimeUtc ? (
                 <>Le {getDateAsLocalizedStringVeryCompact(envAction.actionStartDateTimeUtc)}`</>

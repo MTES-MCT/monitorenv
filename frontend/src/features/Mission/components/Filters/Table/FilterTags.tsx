@@ -1,31 +1,40 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
+import { CustomPeriodContainer } from '@components/style'
+import { MissionDateRangeLabel } from '@features/Mission/components/MissionsList/type'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { FrontendError } from '@libs/FrontendError'
-import { customDayjs, SingleTag } from '@mtes-mct/monitor-ui'
+import { customDayjs, type DateAsStringRange, DateRangePicker, SingleTag, useNewWindow } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
+import { DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, missionStatusLabels, missionTypeEnum } from 'domain/entities/missions'
 import { MissionFiltersEnum, type MissionFiltersState, updateFilters } from 'domain/shared_slices/MissionFilters'
-import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
-export function FilterTags() {
+export function FilterTags({
+  onUpdateDateRangeFilter
+}: {
+  onUpdateDateRangeFilter: (value: DateAsStringRange | undefined) => void
+}) {
   const dispatch = useAppDispatch()
+  const { newWindowContainerRef } = useNewWindow()
+
   const {
-    nbOfFiltersSetted,
     selectedAdministrationNames,
     selectedCompletionStatus,
     selectedControlUnitIds,
     selectedMissionTypes,
+    selectedPeriod,
     selectedSeaFronts,
     selectedStatuses,
     selectedTags,
     selectedThemes,
+    selectedWithEnvActions,
     startedAfter,
     startedBefore
   } = useAppSelector(state => state.missionFilters)
@@ -40,7 +49,7 @@ export function FilterTags() {
   const themesAPI: ThemeFromAPI[] = Object.values(data ?? [])
 
   const onDeleteTag = <K extends MissionFiltersEnum>(
-    valueToDelete: number | string | TagOption,
+    valueToDelete: number | string | boolean | TagOption,
     filterKey: K,
     selectedValues: MissionFiltersState[K]
   ) => {
@@ -64,39 +73,29 @@ export function FilterTags() {
     )
   }
 
-  const hasTagFilters = useMemo(
-    () =>
-      nbOfFiltersSetted > 0 &&
-      ((selectedAdministrationNames && selectedAdministrationNames?.length > 0) ||
-        (selectedCompletionStatus && selectedCompletionStatus?.length > 0) ||
-        (selectedControlUnitIds && selectedControlUnitIds?.length > 0) ||
-        (selectedMissionTypes && selectedMissionTypes?.length > 0) ||
-        (selectedSeaFronts && selectedSeaFronts?.length > 0) ||
-        (selectedStatuses && selectedStatuses?.length > 0) ||
-        (selectedTags && selectedTags?.length > 0) ||
-        (selectedThemes && selectedThemes?.length > 0)),
-    [
-      nbOfFiltersSetted,
-      selectedAdministrationNames,
-      selectedCompletionStatus,
-      selectedControlUnitIds,
-      selectedMissionTypes,
-      selectedSeaFronts,
-      selectedStatuses,
-      selectedThemes,
-      selectedTags
-    ]
-  )
-
-  if (!hasTagFilters) {
-    return null
-  }
-
   return (
-    <StyledContainer data-cy="missions-filter-tags">
-      {selectedSeaFronts &&
-        selectedSeaFronts?.length > 0 &&
-        selectedSeaFronts.map(seaFront => (
+    <>
+      {selectedPeriod === DateRangeEnum.CUSTOM && (
+        <StyledCustomPeriodContainer>
+          <DateRangePicker
+            key="dateRange"
+            baseContainer={newWindowContainerRef.current}
+            data-cy="datepicker-missionStartedAfter"
+            defaultValue={startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined}
+            isStringDate
+            label="Période spécifique"
+            name="missionDateRange"
+            onChange={onUpdateDateRangeFilter}
+          />
+        </StyledCustomPeriodContainer>
+      )}
+      <StyledContainer data-cy="missions-filter-tags">
+        {selectedPeriod !== DateRangeEnum.CUSTOM && (
+          <SingleTag onDelete={() => onDeleteTag(selectedPeriod, MissionFiltersEnum.PERIOD_FILTER, selectedPeriod)}>
+            {MissionDateRangeLabel[selectedPeriod]}
+          </SingleTag>
+        )}
+        {selectedSeaFronts?.map(seaFront => (
           <SingleTag
             key={seaFront}
             onDelete={() => onDeleteTag(seaFront, MissionFiltersEnum.SEA_FRONT_FILTER, selectedSeaFronts)}
@@ -104,9 +103,7 @@ export function FilterTags() {
             {String(`Façade ${seaFront}`)}
           </SingleTag>
         ))}
-      {selectedAdministrationNames &&
-        selectedAdministrationNames?.length > 0 &&
-        selectedAdministrationNames.map(admin => (
+        {selectedAdministrationNames?.map(admin => (
           <SingleTag
             key={admin}
             onDelete={() => onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, selectedAdministrationNames)}
@@ -114,9 +111,7 @@ export function FilterTags() {
             {String(`Admin. ${admin}`)}
           </SingleTag>
         ))}
-      {selectedControlUnitIds &&
-        selectedControlUnitIds?.length > 0 &&
-        selectedControlUnitIds.map(unit => (
+        {selectedControlUnitIds?.map(unit => (
           <SingleTag
             key={unit}
             onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
@@ -124,9 +119,7 @@ export function FilterTags() {
             {String(`Unité ${controlUnits.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`)}
           </SingleTag>
         ))}
-      {selectedMissionTypes &&
-        selectedMissionTypes?.length > 0 &&
-        selectedMissionTypes.map(type => (
+        {selectedMissionTypes?.map(type => (
           <SingleTag
             key={type}
             onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, selectedMissionTypes)}
@@ -134,16 +127,12 @@ export function FilterTags() {
             {String(`Type ${missionTypeEnum[type].libelle}`)}
           </SingleTag>
         ))}
-      {selectedThemes &&
-        selectedThemes?.length > 0 &&
-        selectedThemes.map(theme => (
+        {selectedThemes?.map(theme => (
           <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
             {String(`Thème ${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`)}
           </SingleTag>
         ))}
-      {selectedTags &&
-        selectedTags?.length > 0 &&
-        selectedTags.map(tag => (
+        {selectedTags?.map(tag => (
           <>
             <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
               {`Tag ${tag.name}`}
@@ -155,9 +144,7 @@ export function FilterTags() {
             ))}
           </>
         ))}
-      {selectedStatuses &&
-        selectedStatuses?.length > 0 &&
-        selectedStatuses.map(status => (
+        {selectedStatuses?.map(status => (
           <SingleTag
             key={status}
             onDelete={() => onDeleteTag(status, MissionFiltersEnum.STATUS_FILTER, selectedStatuses)}
@@ -165,9 +152,7 @@ export function FilterTags() {
             {String(`Mission ${missionStatusLabels[status].libelle.toLowerCase()}`)}
           </SingleTag>
         ))}
-      {selectedCompletionStatus &&
-        selectedCompletionStatus?.length > 0 &&
-        selectedCompletionStatus.map(completionStatus => (
+        {selectedCompletionStatus?.map(completionStatus => (
           <SingleTag
             key={completionStatus}
             onDelete={() =>
@@ -177,7 +162,17 @@ export function FilterTags() {
             {String(`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`)}
           </SingleTag>
         ))}
-    </StyledContainer>
+        {selectedWithEnvActions && (
+          <SingleTag
+            onDelete={() =>
+              onDeleteTag(selectedWithEnvActions, MissionFiltersEnum.WITH_ENV_ACTIONS_FILTER, selectedWithEnvActions)
+            }
+          >
+            Mission avec actions env.
+          </SingleTag>
+        )}
+      </StyledContainer>
+    </>
   )
 }
 
@@ -188,4 +183,8 @@ const StyledContainer = styled.div`
   gap: 8px 16px;
   max-width: 100%;
   flex-wrap: wrap;
+`
+
+const StyledCustomPeriodContainer = styled(CustomPeriodContainer)`
+  margin-top: 5px;
 `

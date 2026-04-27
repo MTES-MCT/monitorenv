@@ -49,7 +49,7 @@ context('Side Window > Mission List > Filter Bar', () => {
   it('Should filter missions for future missions', () => {
     const currentEndOfDay = encodeURIComponent(customDayjs().utc().endOf('day').toISOString())
     cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentEndOfDay}`).as('getMissionsForCurrentYear')
-    cy.fill('Période', 'A venir')
+    cy.fill('Période', 'À venir')
     cy.wait('@getMissionsForCurrentYear')
 
     cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)

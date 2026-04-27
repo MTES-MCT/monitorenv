@@ -112,40 +112,6 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     }),
     [activeAdministrations, controlUnitsAsOptions, tagsAsOptions, themesAsOptions]
   )
-  //
-  // // Include archived control units (and administrations) if they're already selected
-  // const activeWithSelectedControlUnits = useMemo(
-  //   () => legacyControlUnits?.filter(controlUnit => isNotArchived(controlUnit)) ?? [],
-  //   [legacyControlUnits]
-  // )
-  //
-  // const administrationsAsOption = useMemo(() => {
-  //   const formattedAdministrations = uniq(
-  //     activeWithSelectedControlUnits.map(({ administration }) => administration)
-  //   ).sort()
-  //
-  //   return formattedAdministrations.map(administration => ({
-  //     label: administration,
-  //     value: administration
-  //   }))
-  // }, [activeWithSelectedControlUnits])
-  //
-  // const activeWithSelectedControlUnitResources = useMemo(() => {
-  //   const activeControlUnitResources = (
-  //     activeWithSelectedControlUnits?.find(
-  //       unit => unit.administration === administrationField.value && unit.id === unitField.value
-  //     )?.resources ?? []
-  //   ).filter(isNotArchived)
-  //
-  //   const resources = [...activeControlUnitResources, ...resourcesField.value]
-  //
-  //   return uniqBy(resources, 'id')
-  // }, [activeWithSelectedControlUnits, administrationField.value, resourcesField.value, unitField.value])
-  //
-  // const resourcesAsOption = useMemo(
-  //   () => getOptionsFromIdAndName(activeWithSelectedControlUnitResources),
-  //   [activeWithSelectedControlUnitResources]
-  // )
 
   const updatePeriodFilter = useCallback(
     (nextDateRange: DateRangeEnum | undefined) => {

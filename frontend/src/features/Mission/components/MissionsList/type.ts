@@ -1,25 +1,34 @@
-import { DateRangeEnum, DAY_OPTION } from 'domain/entities/dateRange'
+import { DateRangeEnum, DateRangeLabel, DAY_OPTION } from 'domain/entities/dateRange'
+
+export enum MissionDateRangeLabel {
+  CUSTOM = DateRangeLabel.CUSTOM,
+  DAY = DateRangeLabel.DAY,
+  MONTH = '30 derniers jours',
+  WEEK = '7 derniers jours',
+  YEAR = DateRangeLabel.YEAR,
+  UPCOMING = DateRangeLabel.UPCOMING
+}
 
 export const missionDateRangeOptions = [
   DAY_OPTION,
   {
-    label: '7 derniers jours',
+    label: MissionDateRangeLabel.WEEK,
     value: DateRangeEnum.WEEK
   },
   {
-    label: '30 derniers jours',
+    label: MissionDateRangeLabel.MONTH,
     value: DateRangeEnum.MONTH
   },
   {
-    label: 'Année en cours',
+    label: MissionDateRangeLabel.YEAR,
     value: DateRangeEnum.YEAR
   },
   {
-    label: 'A venir',
+    label: MissionDateRangeLabel.UPCOMING,
     value: DateRangeEnum.UPCOMING
   },
   {
-    label: 'Période spécifique',
+    label: MissionDateRangeLabel.CUSTOM,
     value: DateRangeEnum.CUSTOM
   }
 ]

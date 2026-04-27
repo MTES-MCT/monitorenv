@@ -108,9 +108,8 @@ const missionFiltersSlice = createSlice({
         [action.payload.key]: action.payload.value
       }
 
-      const keysToExclude = ['startedAfter', 'startedBefore', 'nbOfFiltersSetted']
+      const keysToExclude = ['startedAfter', 'startedBefore', 'nbOfFiltersSetted', 'areFiltersVisible']
       const keysToCheck = Object.keys(INITIAL_STATE).filter(key => !keysToExclude.includes(key))
-
       const nbOfFiltersSetted = keysToCheck.reduce(
         (count, key) => (isEqual(nextState[key], INITIAL_STATE[key]) ? count : count + 1),
         0
