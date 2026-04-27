@@ -1,7 +1,7 @@
 import { useGetTrigramsQuery } from '@api/vigilanceAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
-import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
+import { TagsContainer } from '@components/style'
 import { ShowFilters } from '@components/Table/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import {
@@ -27,7 +27,6 @@ import { FilterTags } from './FiltersTag'
 import { SearchFilter } from './SearchFilter'
 import { vigilanceAreaFiltersActions } from './slice'
 import { PeriodFilter } from '../../PeriodFilter'
-import { SpecificPeriodFilter } from '../../SpecificPeriodFilter'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
@@ -187,13 +186,6 @@ export function VigilanceAreasFilters() {
       )}
       {hasFilters && (
         <TagsContainer>
-          {hasCustomPeriodFilter && (
-            <CustomPeriodContainer>
-              <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>
-              <SpecificPeriodFilter />
-            </CustomPeriodContainer>
-          )}
-
           <FilterTags />
 
           <ReinitializeFiltersButton onClick={resetFilters} />
@@ -211,13 +203,6 @@ const Wrapper = styled.div`
 const FiltersFirstLine = styled.div`
   align-items: center;
   display: flex;
-  gap: 16px;
-`
-
-export const StyledStatusFilter = styled.div`
-  align-items: end;
-  display: flex;
-  flex-wrap: wrap;
   gap: 16px;
 `
 

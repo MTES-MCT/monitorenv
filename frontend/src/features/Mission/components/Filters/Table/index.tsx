@@ -1,4 +1,4 @@
-import { CustomPeriodContainer, TagsContainer } from '@components/style'
+import { TagsContainer } from '@components/style'
 import { ShowFilters } from '@components/Table/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { MissionSearch } from '@features/Mission/MissionsSearch'
@@ -10,10 +10,8 @@ import {
   CheckTreePicker,
   CustomSearch,
   type DateAsStringRange,
-  DateRangePicker,
   Icon,
-  Select,
-  useNewWindow
+  Select
 } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { MissionFiltersEnum, setFiltersVisibility } from 'domain/shared_slices/MissionFilters'
@@ -44,7 +42,6 @@ export function TableMissionsFiltersWithRef(
   },
   ref
 ) {
-  const { newWindowContainerRef } = useNewWindow()
   const dispatch = useAppDispatch()
   const {
     areFiltersVisible,
@@ -58,9 +55,7 @@ export function TableMissionsFiltersWithRef(
     selectedStatuses,
     selectedTags,
     selectedThemes,
-    selectedWithEnvActions,
-    startedAfter,
-    startedBefore
+    selectedWithEnvActions
   } = useAppSelector(state => state.missionFilters)
 
   const setAreFiltersVisibility = () => {
@@ -88,6 +83,19 @@ export function TableMissionsFiltersWithRef(
         {areFiltersVisible && (
           <>
             <FilterWrapperLine>
+              <StyledSelect
+                cleanable={false}
+                data-cy="select-period-filter"
+                isLabelHidden
+                isTransparent
+                label="Période"
+                name="Période"
+                onChange={onUpdatePeriodFilter}
+                options={dates ?? []}
+                placeholder="Date de mission depuis"
+                style={tagPickerStyle}
+                value={selectedPeriod}
+              />
               <CheckPicker
                 data-cy="select-seaFronts-filter"
                 isLabelHidden
@@ -139,19 +147,6 @@ export function TableMissionsFiltersWithRef(
                 }
                 style={tagPickerStyle}
                 value={selectedControlUnitIds}
-              />
-              <StyledSelect
-                cleanable={false}
-                data-cy="select-period-filter"
-                isLabelHidden
-                isTransparent
-                label="Période"
-                name="Période"
-                onChange={onUpdatePeriodFilter}
-                options={dates ?? []}
-                placeholder="Date de mission depuis"
-                style={tagPickerStyle}
-                value={selectedPeriod}
               />
 
               <CheckPicker
@@ -246,25 +241,8 @@ export function TableMissionsFiltersWithRef(
           </>
         )}
       </FilterWrapper>
-      <TagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM || nbOfFiltersSetted > 0}>
-        {selectedPeriod === DateRangeEnum.CUSTOM && (
-          <StyledCustomPeriodContainer>
-            <DateRangePicker
-              key="dateRange"
-              baseContainer={newWindowContainerRef.current}
-              data-cy="datepicker-missionStartedAfter"
-              defaultValue={
-                startedAfter && startedBefore ? [new Date(startedAfter), new Date(startedBefore)] : undefined
-              }
-              isStringDate
-              label="Période spécifique"
-              name="missionDateRange"
-              onChange={onUpdateDateRangeFilter}
-            />
-          </StyledCustomPeriodContainer>
-        )}
-        <FilterTags />
-
+      <TagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM}>
+        <FilterTags onUpdateDateRangeFilter={onUpdateDateRangeFilter} />
         {nbOfFiltersSetted > 0 && <ReinitializeFiltersButton onClick={onResetFilters} />}
       </TagsContainer>
     </>
@@ -297,10 +275,6 @@ const StyledSelect = styled(Select<DateRangeEnum>)`
   .rs-picker-toggle-clean {
     top: 5px !important;
   }
-`
-
-const StyledCustomPeriodContainer = styled(CustomPeriodContainer)`
-  margin-top: 5px;
 `
 
 const OptionValue = styled.span`

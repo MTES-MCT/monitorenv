@@ -8,26 +8,35 @@ export enum DateRangeEnum {
   UPCOMING = 'UPCOMING'
 }
 
+export enum DateRangeLabel {
+  CUSTOM = 'Période spécifique',
+  DAY = "Aujourd'hui",
+  MONTH = 'Un mois',
+  WEEK = 'Une semaine',
+  YEAR = 'Année en cours',
+  UPCOMING = 'À venir'
+}
+
 export const DAY_OPTION = {
-  label: "Aujourd'hui",
+  label: DateRangeLabel.DAY,
   value: DateRangeEnum.DAY
 }
 export const dateRangeOptions = [
   DAY_OPTION,
   {
-    label: 'Une semaine',
+    label: DateRangeLabel.WEEK,
     value: DateRangeEnum.WEEK
   },
   {
-    label: 'Un mois',
+    label: DateRangeLabel.MONTH,
     value: DateRangeEnum.MONTH
   },
   {
-    label: 'Année en cours',
+    label: DateRangeLabel.YEAR,
     value: DateRangeEnum.YEAR
   },
   {
-    label: 'Période spécifique',
+    label: DateRangeLabel.CUSTOM,
     value: DateRangeEnum.CUSTOM
   }
 ]
@@ -36,6 +45,6 @@ export enum ReportingDateRangeLabels {
   DAY = '24 dernières heures',
   WEEK = '7 derniers jours',
   MONTH = '30 derniers jours',
-  YEAR = 'Année en cours',
-  CUSTOM = 'Période spécifique'
+  YEAR = DateRangeLabel.YEAR,
+  CUSTOM = DateRangeLabel.CUSTOM
 }

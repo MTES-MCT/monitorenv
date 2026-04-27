@@ -1,3 +1,4 @@
+import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import {
   setAreRecentsAreasChecked,
   setFilteredRegulatoryTags,
@@ -8,6 +9,7 @@ import {
   setSearchExtent,
   setShouldFilterSearchOnMapExtent
 } from '@features/layersSelector/search/slice'
+import { SpecificPeriodFilter } from '@features/VigilanceArea/components/SpecificPeriodFilter'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -23,7 +25,7 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 export function FilterTags() {
   const dispatch = useAppDispatch()
-  const { createdBy, nbOfFiltersSetted, seaFronts, status, type, visibility } = useAppSelector(
+  const { createdBy, nbOfFiltersSetted, period, seaFronts, status, type, visibility } = useAppSelector(
     state => state.vigilanceAreaFilters
   )
   const { areRecentsAreasChecked, filteredRegulatoryTags, filteredRegulatoryThemes, searchExtent } = useAppSelector(
@@ -85,6 +87,16 @@ export function FilterTags() {
 
   return (
     <StyledContainer data-cy="vigilance-areas-filter-tags">
+      {period === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD ? (
+        <CustomPeriodContainer>
+          <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>
+          <SpecificPeriodFilter />
+        </CustomPeriodContainer>
+      ) : (
+        <SingleTag onDelete={() => onDeleteTag(period, 'period', period)}>
+          {VigilanceArea.VigilanceAreaFilterPeriodLabel[period]}
+        </SingleTag>
+      )}
       {type?.map(typeValue => (
         <SingleTag key={typeValue} onDelete={() => onDeleteTag(typeValue, 'type', type)}>
           {VigilanceArea.VigilanceAreaFilterTypeLabel[typeValue]}

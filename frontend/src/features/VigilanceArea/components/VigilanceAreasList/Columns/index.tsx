@@ -16,7 +16,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Nom de la zone',
     id: 'name',
-    size: 350 + legacyFirefoxOffset
+    minSize: 350 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.periods,
@@ -24,7 +24,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Période(s) de vigilance',
     id: 'periods',
-    size: 250 + legacyFirefoxOffset
+    size: 210 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.themes,
@@ -32,7 +32,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Thématiques',
     id: 'themes',
-    size: 270 + legacyFirefoxOffset
+    minSize: 275 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.tags,
@@ -40,7 +40,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Tags',
     id: 'tags',
-    size: 270 + legacyFirefoxOffset
+    minSize: 275 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.seaFront,
@@ -48,7 +48,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 150 + legacyFirefoxOffset
+    size: 144 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.validatedAt,
@@ -56,7 +56,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Validée le',
     id: 'validatedAt',
-    size: 160 + legacyFirefoxOffset
+    size: 172 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.isDraft,
@@ -64,7 +64,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Statut',
     id: 'isDraft',
-    size: 140 + legacyFirefoxOffset
+    size: 133 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.visibility,
@@ -72,7 +72,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Visibilité',
     id: 'visibility',
-    size: 110 + legacyFirefoxOffset
+    size: 106 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,
