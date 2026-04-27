@@ -4,7 +4,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions, parseOptionsToThemes, sortThemes } from '@utils/getThemesAsOptions'
 import { useField, useFormikContext } from 'formik'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import {
@@ -26,6 +26,7 @@ type ActionThemeProps = {
 }
 export function ActionThemes({ actionId, actionIndex, actionType }: ActionThemeProps) {
   const dispatch = useAppDispatch()
+  const [isMounted, setIsMounted] = useState(false)
 
   const tagsWarningMessageHasBeenShown = useAppSelector(state =>
     getTagsWarningMessageHasBeenShownForActionId(state.missionForms, actionId)
@@ -58,8 +59,14 @@ export function ActionThemes({ actionId, actionIndex, actionType }: ActionThemeP
 
   const onChange = (option: ThemeOption[] | undefined) => {
     setFieldValue(`envActions[${actionIndex}].themes`, parseOptionsToThemes(option))
-    if (!tagsWarningMessageHasBeenShown) {
+  }
+
+  const onBlur = () => {
+    if (!tagsWarningMessageHasBeenShown && isMounted) {
       dispatch(missionFormsActions.setTagsWarningMessageHasBeenShown({ actionId, hasBeenShown: false }))
+    }
+    if (!isMounted) {
+      setIsMounted(true)
     }
   }
 
@@ -76,6 +83,7 @@ export function ActionThemes({ actionId, actionIndex, actionType }: ActionThemeP
         label={label}
         labelKey="name"
         name={`envActions[${actionIndex}].themes`}
+        onBlur={onBlur}
         onChange={onChange}
         options={themesOptions}
         value={envActions[actionIndex]?.themes}
