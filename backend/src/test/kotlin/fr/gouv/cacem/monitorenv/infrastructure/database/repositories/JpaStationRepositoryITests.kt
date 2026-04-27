@@ -200,7 +200,7 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             id = 14,
                             controlUnitId = 10000,
                             isArchived = false,
-                            name = "Drône",
+                            name = "Drone",
                             note = null,
                             photo = null,
                             stationId = 2,
