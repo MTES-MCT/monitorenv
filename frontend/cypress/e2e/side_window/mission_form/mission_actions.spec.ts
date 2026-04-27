@@ -199,6 +199,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     // Attach reporting to surveillance
     cy.wait(250)
     cy.getDataCy('action-card').eq(0).click()
+    cy.clickButton('Ok, je vérifie')
     cy.getDataCy('surveillance-form-toggle-reporting').click({ force: true })
     cy.fill('Signalements', ['6'])
     cy.wait(250)
@@ -206,6 +207,7 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.clickButton("Dupliquer l'action")
     cy.wait(500)
     cy.getDataCy('action-card').eq(0).click()
+    cy.clickButton('Ok, je vérifie')
     // The duplicate surveillance should be the "active" action and attached reporting should be removed
     cy.get('input[name="isSurveillanceAttachedToReporting"]').should('be.not.checked')
     // The duplicate control should be the "active" action and attached reporting should be removed
@@ -343,6 +345,7 @@ context('Side Window > Mission Form > Mission actions', () => {
 
     // select sub-theme and tags
     cy.fill('Thématiques et sous-thématiques de surveillance', ['Autre (Épave)'])
+    cy.clickOutside() // to trigger validation and display tags warning message if needed
     cy.clickButton('Ok, je vérifie')
     cy.fill('Tags et sous-tags', ['Mixte'])
     cy.getDataCy('surveillance-open-by').type('ABC', { force: true })
@@ -369,6 +372,8 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.intercept('PUT', '/bff/v1/missions/*').as('updateMission')
 
     cy.fill('Thématiques et sous-thématiques de contrôle', ['Pêche embarquée'])
+    cy.clickOutside() // to trigger validation and display tags warning message if needed
+    cy.clickButton('Ok, je vérifie')
     cy.fill('Tags et sous-tags', ['Mixte'])
 
     cy.getDataCy('control-open-by').scrollIntoView().type('ABC', { force: true })
