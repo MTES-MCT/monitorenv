@@ -1,4 +1,5 @@
 import pandas as pd
+from pipeline.src.processing import to_json
 from src.db_config import create_engine
 from src.utils import psql_insert_copy
 from prefect import flow, get_run_logger, task
@@ -60,6 +61,13 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
     """
     e = create_engine("cacem_local")
     logger = get_run_logger()
+
+    new_regulatory_areas = new_regulatory_areas.copy()
+    new_regulatory_areas["additional_ref_reg"] = (
+        new_regulatory_areas["additional_ref_reg"]
+        .map(to_json, na_action="ignore")
+        .fillna("null")
+    )
 
     with e.begin() as connection:
         logger.info("Creating temporary table")
