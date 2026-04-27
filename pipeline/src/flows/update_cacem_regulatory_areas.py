@@ -1,5 +1,5 @@
 import pandas as pd
-from pipeline.src.processing import to_json
+from src.processing import to_json
 from src.db_config import create_engine
 from src.utils import psql_insert_copy
 from prefect import flow, get_run_logger, task
