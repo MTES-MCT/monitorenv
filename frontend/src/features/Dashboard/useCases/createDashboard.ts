@@ -66,7 +66,7 @@ export const createDashboard =
             }
           }
           dispatch(
-            dashboardFiltersActions.setDashboardFilters({ filters: formattedDashboardFilters, id: dashboard.id })
+            dashboardFiltersActions.setAllDashboardFilters({ filters: formattedDashboardFilters, id: dashboard.id })
           )
         } else {
           dispatch(dashboardFiltersActions.createDashboardFilters({ id: newId }))

@@ -87,7 +87,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
       setExpandedAccordionFirstColumn(undefined)
       setExpandedAccordionSecondColumn(undefined)
       setExpandedAccordionThirdColumn(undefined)
-      dispatch(dashboardFiltersActions.setFilters({ filters: { previewSelection: false }, id: key }))
+      dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { previewSelection: false }, id: key }))
     }
   }, [previewSelectionFilter, dispatch, key])
 

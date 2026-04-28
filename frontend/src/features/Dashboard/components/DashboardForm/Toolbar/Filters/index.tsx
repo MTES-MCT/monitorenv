@@ -47,7 +47,7 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
   const vigilanceAreaPeriodOptions = getOptionsFromLabelledEnum(VigilanceArea.VigilanceAreaFilterPeriodLabel)
 
   const setFilteredRegulatoryTags = (nextTag: TagOption[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { tags: nextTag }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { tags: nextTag }, id }))
   }
 
   const areAllTagsChecked = useMemo(
@@ -62,12 +62,12 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
 
   const checkAllTags = () => {
     if (areAllTagsChecked) {
-      dispatch(dashboardFiltersActions.setFilters({ filters: { tags: undefined }, id }))
+      dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { tags: undefined }, id }))
 
       return
     }
 
-    dispatch(dashboardFiltersActions.setFilters({ filters: { tags: tagsAsOptions }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { tags: tagsAsOptions }, id }))
   }
 
   const renderTagsExtraFooter = () => (
@@ -86,7 +86,7 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
   )
 
   const setFilteredThemes = (nextTheme: TagOption[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { themes: nextTheme }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { themes: nextTheme }, id }))
   }
 
   const areAllThemesChecked = useMemo(
@@ -101,12 +101,12 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
 
   const checkAllThemes = () => {
     if (areAllThemesChecked) {
-      dispatch(dashboardFiltersActions.setFilters({ filters: { themes: undefined }, id }))
+      dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { themes: undefined }, id }))
 
       return
     }
 
-    dispatch(dashboardFiltersActions.setFilters({ filters: { themes: themesAsOptions }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { themes: themesAsOptions }, id }))
   }
 
   const renderThemesExtraFooter = () => (
@@ -125,16 +125,16 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
   )
 
   const setFilteredAmpTypes = (value: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { amps: value }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { amps: value }, id }))
   }
 
   const setFilteredVigilancePeriod = (nextValue: OptionValueType | undefined) => {
     const value = nextValue as VigilanceArea.VigilanceAreaFilterPeriod | undefined
-    dispatch(dashboardFiltersActions.setFilters({ filters: { vigilanceAreaPeriod: value }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { vigilanceAreaPeriod: value }, id }))
   }
 
   const showSelectedItems = () => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { previewSelection: true }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { previewSelection: true }, id }))
   }
 
   return (

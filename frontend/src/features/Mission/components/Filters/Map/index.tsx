@@ -1,7 +1,8 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import { CustomPeriodContainer } from '@components/style'
+import { CustomPeriodContainer, Italic } from '@components/style'
+import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { FrontendError } from '@libs/FrontendError'
@@ -14,6 +15,7 @@ import {
   type DateAsStringRange,
   DateRangePicker,
   type Option,
+  pluralize,
   Select,
   SingleTag,
   useNewWindow
@@ -30,6 +32,7 @@ import type { TagFromAPI, TagOption } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
 type MapMissionsFiltersProps = {
+  onResetFilters: () => void
   onUpdateAdministrationFilter: (value: any) => void
   onUpdateDateRangeFilter: (value: DateAsStringRange | undefined) => void
   onUpdatePeriodFilter: (value: DateRangeEnum | undefined) => void
@@ -38,12 +41,20 @@ type MapMissionsFiltersProps = {
 }
 
 function MapMissionsFiltersWithRef(
-  { onUpdateAdministrationFilter, onUpdateDateRangeFilter, onUpdatePeriodFilter, onUpdateSimpleFilter, optionsList },
+  {
+    onResetFilters,
+    onUpdateAdministrationFilter,
+    onUpdateDateRangeFilter,
+    onUpdatePeriodFilter,
+    onUpdateSimpleFilter,
+    optionsList
+  },
   ref
 ) {
   const dispatch = useAppDispatch()
   const { newWindowContainerRef } = useNewWindow()
   const {
+    nbOfFiltersSetted,
     selectedAdministrationNames,
     selectedCompletionStatus,
     selectedControlUnitIds,
@@ -119,6 +130,16 @@ function MapMissionsFiltersWithRef(
   return (
     <FilterWrapper ref={ref}>
       <StyledBloc>
+        {nbOfFiltersSetted > 0 ? (
+          <FiltersText>
+            <span>{`${nbOfFiltersSetted} ${pluralize('filtre', nbOfFiltersSetted)} actif${
+              nbOfFiltersSetted > 1 ? 's' : ''
+            }`}</span>
+            <ReinitializeFiltersButton onClick={onResetFilters} />
+          </FiltersText>
+        ) : (
+          <StyledItalic>Aucun filtre actif</StyledItalic>
+        )}
         <StyledStatusFilter>
           {status?.map(missionStatus => (
             <Checkbox
@@ -177,18 +198,20 @@ function MapMissionsFiltersWithRef(
           searchable
           value={selectedAdministrationNames}
         />
-
-        {selectedAdministrationNames &&
-          selectedAdministrationNames?.length > 0 &&
-          selectedAdministrationNames.map(admin => (
-            <SingleTag
-              key={admin}
-              onDelete={() => onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, selectedAdministrationNames)}
-            >
-              {admin}
-            </SingleTag>
-          ))}
-
+        <TagsWrapper>
+          {selectedAdministrationNames &&
+            selectedAdministrationNames?.length > 0 &&
+            selectedAdministrationNames.map(admin => (
+              <SingleTag
+                key={admin}
+                onDelete={() =>
+                  onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, selectedAdministrationNames)
+                }
+              >
+                {admin}
+              </SingleTag>
+            ))}
+        </TagsWrapper>
         <CheckPicker
           key={controlUnits?.length}
           customSearch={controlUnitCustomSearch}
@@ -205,17 +228,18 @@ function MapMissionsFiltersWithRef(
           }
           value={selectedControlUnitIds}
         />
-        {selectedControlUnitIds &&
-          selectedControlUnitIds?.length > 0 &&
-          selectedControlUnitIds.map(unit => (
-            <SingleTag
-              key={unit}
-              onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
-            >
-              {`${controlUnitsData.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`}
-            </SingleTag>
-          ))}
-
+        <TagsWrapper>
+          {selectedControlUnitIds &&
+            selectedControlUnitIds?.length > 0 &&
+            selectedControlUnitIds.map(unit => (
+              <SingleTag
+                key={unit}
+                onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
+              >
+                {`${controlUnitsData.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`}
+              </SingleTag>
+            ))}
+        </TagsWrapper>
         <CheckPicker
           isLabelHidden
           isTransparent
@@ -229,17 +253,18 @@ function MapMissionsFiltersWithRef(
           }
           value={selectedMissionTypes}
         />
-        {selectedMissionTypes &&
-          selectedMissionTypes?.length > 0 &&
-          selectedMissionTypes.map(type => (
-            <SingleTag
-              key={type}
-              onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, selectedMissionTypes)}
-            >
-              {missionTypeEnum[type].libelle}
-            </SingleTag>
-          ))}
-
+        <TagsWrapper>
+          {selectedMissionTypes &&
+            selectedMissionTypes?.length > 0 &&
+            selectedMissionTypes.map(type => (
+              <SingleTag
+                key={type}
+                onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, selectedMissionTypes)}
+              >
+                {missionTypeEnum[type].libelle}
+              </SingleTag>
+            ))}
+        </TagsWrapper>
         <CheckPicker
           isLabelHidden
           isTransparent
@@ -255,18 +280,20 @@ function MapMissionsFiltersWithRef(
           }
           value={selectedCompletionStatus}
         />
-        {selectedCompletionStatus &&
-          selectedCompletionStatus?.length > 0 &&
-          selectedCompletionStatus.map(completionStatus => (
-            <SingleTag
-              key={completionStatus}
-              onDelete={() =>
-                onDeleteTag(completionStatus, MissionFiltersEnum.COMPLETION_STATUS_FILTER, selectedCompletionStatus)
-              }
-            >
-              {`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`}
-            </SingleTag>
-          ))}
+        <TagsWrapper>
+          {selectedCompletionStatus &&
+            selectedCompletionStatus?.length > 0 &&
+            selectedCompletionStatus.map(completionStatus => (
+              <SingleTag
+                key={completionStatus}
+                onDelete={() =>
+                  onDeleteTag(completionStatus, MissionFiltersEnum.COMPLETION_STATUS_FILTER, selectedCompletionStatus)
+                }
+              >
+                {`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`}
+              </SingleTag>
+            ))}
+        </TagsWrapper>
       </StyledBloc>
       <StyledBloc>
         <CheckPicker
@@ -283,13 +310,18 @@ function MapMissionsFiltersWithRef(
           renderValue={() => selectedThemes && <OptionValue>{`Thème (${selectedThemes.length})`}</OptionValue>}
           value={selectedThemes}
         />
-        {selectedThemes &&
-          selectedThemes?.length > 0 &&
-          selectedThemes.map(theme => (
-            <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
-              {`${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
-            </SingleTag>
-          ))}
+        <TagsWrapper>
+          {selectedThemes &&
+            selectedThemes?.length > 0 &&
+            selectedThemes.map(theme => (
+              <SingleTag
+                key={theme}
+                onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}
+              >
+                {`${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
+              </SingleTag>
+            ))}
+        </TagsWrapper>
         <CheckTreePicker
           childrenKey="subTags"
           isLabelHidden
@@ -306,20 +338,22 @@ function MapMissionsFiltersWithRef(
           value={selectedTags}
           valueKey="id"
         />
-        {selectedTags &&
-          selectedTags?.length > 0 &&
-          selectedTags.map(tag => (
-            <>
-              <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
-                {tag.name}
-              </SingleTag>
-              {tag.subTags?.map(subTag => (
-                <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
-                  {subTag.name}
+        <TagsWrapper>
+          {selectedTags &&
+            selectedTags?.length > 0 &&
+            selectedTags.map(tag => (
+              <>
+                <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
+                  {tag.name}
                 </SingleTag>
-              ))}
-            </>
-          ))}
+                {tag.subTags?.map(subTag => (
+                  <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
+                    {subTag.name}
+                  </SingleTag>
+                ))}
+              </>
+            ))}
+        </TagsWrapper>
       </StyledBloc>
     </FilterWrapper>
   )
@@ -335,7 +369,7 @@ const FilterWrapper = styled.div`
   display: flex;
   gap: 32px;
   flex-direction: column;
-  padding: 12px 4px;
+  padding: 0px 4px 12px 4px;
 `
 const StyledBloc = styled.div`
   display: flex;
@@ -376,4 +410,23 @@ export const StyledStatusFilter = styled.div`
   flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 8px;
+`
+
+const TagsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+`
+const FiltersText = styled.div`
+  display: flex;
+  gap: 8px;
+
+  > span {
+    color: ${p => p.theme.color.slateGray};
+  }
+`
+
+const StyledItalic = styled(Italic)`
+  color: ${p => p.theme.color.slateGray};
+  padding: 4px 0px;
 `

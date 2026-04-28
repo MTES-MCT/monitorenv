@@ -38,4 +38,13 @@ context('Reporting', () => {
       cy.getDataCy('reporting-number-filters').should('not.exist')
     })
   })
+  it('Should reinitialize filters', () => {
+    cy.clickButton('Chercher des signalements')
+    cy.contains('Aucun filtre actif').should('be.visible')
+    cy.fill('Archivés', true)
+    cy.contains('1 filtre actif').should('be.visible')
+    cy.clickButton('Réinitialiser les filtres')
+
+    cy.getDataCy('reporting-number-filters').should('not.exist')
+  })
 })

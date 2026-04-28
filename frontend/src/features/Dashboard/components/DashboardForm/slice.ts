@@ -149,8 +149,16 @@ export const dashboardFiltersSlice = createSlice({
         state.dashboards[id].filters = {}
       }
     },
-    resetFilters(state) {
+    resetListFilters(state) {
       state.filters = INITIAL_LIST_FILTERS_STATE
+      state.nbOfFiltersSetted = 0
+    },
+    setAllDashboardFilters(state, action: PayloadAction<{ filters: DashboardFiltersType | undefined; id: string }>) {
+      const { filters, id } = action.payload
+      if (!id) {
+        return
+      }
+      state.dashboards[id] = filters ?? INITIAL_DASHBOARD_FILTERS
     },
     setControlUnitsFilters(
       state,
@@ -168,14 +176,7 @@ export const dashboardFiltersSlice = createSlice({
         state.dashboards[id].controlUnitFilters = set(state.dashboards[id].controlUnitFilters, key, value)
       }
     },
-    setDashboardFilters(state, action: PayloadAction<{ filters: DashboardFiltersType | undefined; id: string }>) {
-      const { filters, id } = action.payload
-      if (!id) {
-        return
-      }
-      state.dashboards[id] = filters ?? INITIAL_DASHBOARD_FILTERS
-    },
-    setFilters(state, action: PayloadAction<{ filters: DashboardFilters; id: string | undefined }>) {
+    setDashboardFilters(state, action: PayloadAction<{ filters: DashboardFilters; id: string | undefined }>) {
       const { filters, id } = action.payload
       if (!id) {
         return
@@ -185,15 +186,6 @@ export const dashboardFiltersSlice = createSlice({
       } else {
         state.dashboards[id] = INITIAL_DASHBOARD_FILTERS
       }
-    },
-    setListFilters(state, action: PayloadAction<Partial<DashboardsListFilters>>) {
-      const nextState = { ...state.filters, ...action.payload }
-      state.filters = nextState
-      const keysToCheck = Object.keys(INITIAL_LIST_FILTERS_STATE)
-      state.nbOfFiltersSetted = keysToCheck.reduce(
-        (count, key) => (isEqual(nextState[key], INITIAL_LIST_FILTERS_STATE[key]) ? count : count + 1),
-        0
-      )
     },
     setNearbyUnitFilters(
       state,
@@ -241,7 +233,7 @@ export const dashboardFiltersSlice = createSlice({
         state.dashboards[id].vigilanceAreaFilters = { ...vigilanceAreaFilters, ...filters }
       }
     },
-    updateFilters: <K extends keyof DashboardsListFilters>(
+    updateListFilters: <K extends keyof DashboardsListFilters>(
       state,
       action: PayloadAction<{
         key: K
