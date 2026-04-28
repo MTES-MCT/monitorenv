@@ -18,7 +18,7 @@ pytest = "^9.0.3"
 sqlalchemy = "^2.0.44"
 psycopg2-binary = "^2.9.11"
 css-inline = "^0.20.0"
-lxml = "^6.0.2"
+lxml = "^6.1.0"
 oracledb = "^3.4.2"
 
 
