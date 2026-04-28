@@ -237,6 +237,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     <MapReportingsFilters
       ref={wrapperRef}
       optionsList={optionsList}
+      resetFilters={resetFilters}
       updateCheckboxFilter={updateCheckboxFilter}
       updateDateRangeFilter={updateDateRangeFilter}
       updatePeriodFilter={updatePeriodFilter}

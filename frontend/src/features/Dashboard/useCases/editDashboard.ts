@@ -47,7 +47,7 @@ export const editDashboard =
     if (openedDashboard) {
       dispatch(dashboardActions.setActiveDashboardId(openedDashboard[0]))
       dispatch(sideWindowActions.focusAndGoTo(generatePath(sideWindowPaths.DASHBOARD, { id: openedDashboard[0] })))
-      dispatch(dashboardFiltersActions.setDashboardFilters({ filters: formattedDashboardFilters, id }))
+      dispatch(dashboardFiltersActions.setAllDashboardFilters({ filters: formattedDashboardFilters, id }))
 
       return
     }
@@ -72,7 +72,7 @@ export const editDashboard =
         extractedArea,
         unsavedDashboard: dashboard
       }
-      dispatch(dashboardFiltersActions.setDashboardFilters({ filters: formattedDashboardFilters, id }))
+      dispatch(dashboardFiltersActions.setAllDashboardFilters({ filters: formattedDashboardFilters, id }))
       dispatch(dashboardActions.editDashboard(formattedDashboard))
       dispatch(dashboardActions.setActiveDashboardId(id))
       dispatch(dashboardActions.setSelectedDashboardOnMap(undefined))

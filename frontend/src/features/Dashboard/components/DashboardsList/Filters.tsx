@@ -1,7 +1,7 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetTagsQuery } from '@api/tagsAPI'
-import { TagsContainer } from '@components/style'
+import { Italic, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { StyledSelect } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -13,6 +13,7 @@ import {
   DateRangePicker,
   getOptionsFromIdAndName,
   type OptionValueType,
+  pluralize,
   SingleTag
 } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptionsLegacy } from '@utils/getTagsAsOptions'
@@ -42,23 +43,23 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     [allControlUnits]
   )
   const updateSeaFrontFilter = (nextValue: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.updateFilters({ key: 'seaFronts', value: nextValue ?? [] }))
+    dispatch(dashboardFiltersActions.updateListFilters({ key: 'seaFronts', value: nextValue ?? [] }))
   }
   const resetFilter = () => {
-    dispatch(dashboardFiltersActions.resetFilters())
+    dispatch(dashboardFiltersActions.resetListFilters())
   }
   const updateControlUnitFilter = (nextValue: number[] | undefined) => {
-    dispatch(dashboardFiltersActions.updateFilters({ key: 'controlUnits', value: nextValue ?? [] }))
+    dispatch(dashboardFiltersActions.updateListFilters({ key: 'controlUnits', value: nextValue ?? [] }))
   }
   const updateRegulatoryTagsFilter = (nextValue: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.updateFilters({ key: 'regulatoryTags', value: nextValue ?? [] }))
+    dispatch(dashboardFiltersActions.updateListFilters({ key: 'regulatoryTags', value: nextValue ?? [] }))
   }
   const updateUpdatedAtFilter = (nextValue: OptionValueType | undefined) => {
     const value = nextValue as DateRangeEnum
-    dispatch(dashboardFiltersActions.updateFilters({ key: 'updatedAt', value }))
+    dispatch(dashboardFiltersActions.updateListFilters({ key: 'updatedAt', value }))
   }
   const updateUpdateAtSpecificPeriodFilter = (nextValue: DateAsStringRange | undefined) => {
-    dispatch(dashboardFiltersActions.updateFilters({ key: 'specificPeriod', value: nextValue ?? [] }))
+    dispatch(dashboardFiltersActions.updateListFilters({ key: 'specificPeriod', value: nextValue ?? [] }))
   }
   const controlUnitCustomSearch = useMemo(
     () => new CustomSearch(activeControlUnitsOptions ?? [], ['label'], { isStrict: true, threshold: 0.2 }),
@@ -86,7 +87,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
       updatedFilter = (filter as any).filter(unit => unit !== valueToDelete)
     }
     dispatch(
-      dashboardFiltersActions.updateFilters({
+      dashboardFiltersActions.updateListFilters({
         key: filterKey,
         value: updatedFilter
       })
@@ -145,6 +146,17 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
   return (
     <Wrapper $orientation={orientation}>
       <FiltersContainer $orientation={orientation}>
+        {orientation === 'column' &&
+          (nbOfFiltersSetted > 0 ? (
+            <FiltersText>
+              <span>{`${nbOfFiltersSetted} ${pluralize('filtre', nbOfFiltersSetted)} actif${
+                nbOfFiltersSetted > 1 ? 's' : ''
+              }`}</span>
+              <ReinitializeFiltersButton onClick={resetFilter} />
+            </FiltersText>
+          ) : (
+            <StyledItalic>Aucun filtre actif</StyledItalic>
+          ))}
         <FilterWrapper $orientation={orientation}>
           <CheckPicker
             isLabelHidden
@@ -227,7 +239,7 @@ const Wrapper = styled.div<{ $orientation: Orientation }>`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  ${p => p.$orientation === 'column' && 'padding: 12px 4px;'}
+  ${p => p.$orientation === 'column' && 'padding: 0px 4px 12px 4px'}
 `
 
 const FiltersContainer = styled.div<{ $orientation: Orientation }>`
@@ -258,4 +270,18 @@ const OptionValue = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+const FiltersText = styled.div`
+  display: flex;
+  gap: 8px;
+  padding-bottom: 6px;
+
+  > span {
+    color: ${p => p.theme.color.slateGray};
+  }
+`
+
+const StyledItalic = styled(Italic)`
+  color: ${p => p.theme.color.slateGray};
+  padding-bottom: 13px;
 `

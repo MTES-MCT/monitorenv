@@ -1,4 +1,5 @@
-import { CustomPeriodContainer } from '@components/style'
+import { CustomPeriodContainer, Italic } from '@components/style'
+import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import {
   Checkbox,
   CheckPicker,
@@ -6,6 +7,7 @@ import {
   type DateAsStringRange,
   DateRangePicker,
   type OptionValueType,
+  pluralize,
   SingleTag
 } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
@@ -31,6 +33,7 @@ import type { ThemeOption } from 'domain/entities/themes'
 
 type MapReportingsFiltersProps = {
   optionsList: ReportingsOptionsListType
+  resetFilters: () => void
   updateCheckboxFilter: (
     isChecked: boolean | undefined,
     value: string,
@@ -46,6 +49,7 @@ type MapReportingsFiltersProps = {
 export function MapReportingsFiltersWithRef(
   {
     optionsList,
+    resetFilters,
     updateCheckboxFilter,
     updateDateRangeFilter,
     updatePeriodFilter,
@@ -58,6 +62,7 @@ export function MapReportingsFiltersWithRef(
   const {
     isAttachedToMissionFilter,
     isUnattachedToMissionFilter,
+    nbOfFiltersSetted,
     periodFilter,
     sourceTypeFilter,
     startedAfter,
@@ -112,6 +117,16 @@ export function MapReportingsFiltersWithRef(
   return (
     <FilterWrapper ref={ref}>
       <StyledBloc>
+        {nbOfFiltersSetted > 0 ? (
+          <FiltersText>
+            <span>{`${nbOfFiltersSetted} ${pluralize('filtre', nbOfFiltersSetted)} actif${
+              nbOfFiltersSetted > 1 ? 's' : ''
+            }`}</span>
+            <ReinitializeFiltersButton onClick={resetFilters} />
+          </FiltersText>
+        ) : (
+          <StyledItalic>Aucun filtre actif</StyledItalic>
+        )}
         <StyledStatusFilter $withBottomMargin>
           {statusOptions.map(status => (
             <Checkbox
@@ -325,7 +340,7 @@ const FilterWrapper = styled.div`
   display: flex;
   gap: 32px;
   flex-direction: column;
-  padding: 12px 4px;
+  padding: 0px 4px 12px 4px;
 `
 export const StyledCustomPeriodContainer = styled(CustomPeriodContainer)`
   align-items: start;
@@ -340,4 +355,17 @@ const StyledTagsContainer = styled.div`
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+`
+const FiltersText = styled.div`
+  display: flex;
+  gap: 8px;
+
+  > span {
+    color: ${p => p.theme.color.slateGray};
+  }
+`
+
+const StyledItalic = styled(Italic)`
+  color: ${p => p.theme.color.slateGray};
+  padding-bottom: 8px;
 `

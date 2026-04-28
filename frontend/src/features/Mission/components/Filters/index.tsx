@@ -197,6 +197,7 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
       ) : (
         <MapMissionsFilters
           ref={wrapperRef}
+          onResetFilters={resetFilters}
           onUpdateAdministrationFilter={updateAdministrationFilter}
           onUpdateDateRangeFilter={updateDateRangeFilter}
           onUpdatePeriodFilter={updatePeriodFilter}

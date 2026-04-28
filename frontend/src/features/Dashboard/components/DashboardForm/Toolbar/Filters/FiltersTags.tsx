@@ -21,7 +21,7 @@ export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
   const filters = useAppSelector(state => state.dashboardFilters.dashboards[id]?.filters)
 
   const setFilteredTags = (value: TagOption[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { tags: value }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { tags: value }, id }))
   }
 
   const deleteTag = (tagToDelete: TagOption) => {
@@ -30,11 +30,11 @@ export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
 
   const deleteTheme = (themeToDelete: ThemeOption) => {
     const filtersThemes = filters?.themes?.filter(theme => theme.id !== themeToDelete.id)
-    dispatch(dashboardFiltersActions.setFilters({ filters: { themes: filtersThemes }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { themes: filtersThemes }, id }))
   }
 
   const setFilteredAmpTypes = (value: string[] | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { amps: value }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { amps: value }, id }))
   }
 
   const deleteAmpType = (ampTypeToDelete: string) => {
@@ -42,7 +42,7 @@ export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
   }
 
   const updateDateRangeFilter = (dateRange: DateAsStringRange | undefined) => {
-    dispatch(dashboardFiltersActions.setFilters({ filters: { specificPeriod: dateRange }, id }))
+    dispatch(dashboardFiltersActions.setDashboardFilters({ filters: { specificPeriod: dateRange }, id }))
   }
 
   const resetFilters = () => {

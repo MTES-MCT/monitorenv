@@ -58,4 +58,13 @@ context('Dashboard', () => {
 
     cy.getDataCy('dashboard-number-filters').should('not.exist')
   })
+  it('Should reinitialize filters', () => {
+    cy.clickButton('Voir les briefs pour les unités')
+    cy.contains('Aucun filtre actif').should('be.visible')
+    cy.fill('Façade', ['Guadeloupe'])
+    cy.contains('1 filtre actif').should('be.visible')
+    cy.clickButton('Réinitialiser les filtres')
+
+    cy.getDataCy('dashboard-number-filters').should('not.exist')
+  })
 })

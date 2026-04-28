@@ -38,4 +38,13 @@ context('Mission', () => {
       cy.getDataCy('mission-number-filters').should('not.exist')
     })
   })
+  it('Should reinitialize filters', () => {
+    cy.clickButton('Voir les missions')
+    cy.contains('Aucun filtre actif').should('be.visible')
+    cy.fill('En cours', true)
+    cy.contains('1 filtre actif').should('be.visible')
+    cy.clickButton('Réinitialiser les filtres')
+
+    cy.getDataCy('mission-number-filters').should('not.exist')
+  })
 })

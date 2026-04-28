@@ -21,7 +21,7 @@ export const saveDashboard =
     if (data) {
       dispatch(dashboardActions.updateDashboard({ dashboard: data }))
       dispatch(
-        dashboardFiltersActions.setDashboardFilters({
+        dashboardFiltersActions.setAllDashboardFilters({
           filters: getState().dashboardFilters.dashboards[key],
           id: data.id
         })
