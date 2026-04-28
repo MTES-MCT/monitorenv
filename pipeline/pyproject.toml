@@ -25,16 +25,16 @@ oracledb = "^3.4.2"
 [tool.poetry.group.dev.dependencies]
 # Linting
 ## Type Checking and Data Validation
-mypy = "^1.18.2"
+mypy = "^1.20.2"
 ## Code formatting
 black = "^26.3.1"
 ## Code quality
 isort = "^7.0.0"
-pylint = "^4.0.3"
+pylint = "^4.0.5"
 ## Automation and management
-pre-commit = "^4.5.0"
-ipython = "^9.7.0"
-autoflake = "^2.3.1"
+pre-commit = "^4.6.0"
+ipython = "^9.13.0"
+autoflake = "^2.3.3"
 flake8 = "^7.3.0"
 
 [tool.poetry.scripts]
