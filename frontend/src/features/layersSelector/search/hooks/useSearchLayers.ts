@@ -10,8 +10,6 @@ import { useCallback, useEffect, useMemo, useRef, type MutableRefObject } from '
 import { setAMPsSearchResult } from '../slice'
 import { areArraysEqual } from './utils'
 
-import type { AMP } from 'domain/entities/AMPs'
-
 export function useSearchLayers() {
   const dispatch = useAppDispatch()
 
@@ -82,7 +80,7 @@ export function useSearchLayers() {
           }
         ].filter(Boolean) as Expression[]
 
-        searchedAMPs = fuseAMPs.search<AMP>({ $and: filterExpression })
+        searchedAMPs = fuseAMPs.search({ $and: filterExpression })
         itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
       } else {
         searchedAMPs = amps?.entities ? Object.values(amps.entities) : undefined
