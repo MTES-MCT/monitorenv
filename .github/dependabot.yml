@@ -15,6 +15,7 @@ updates:
     commit-message:
       prefix: "[Tech] "
     labels: [ "tech. enhancement", "dependencies" ]
+    rebase-strategy: "disabled"
 
   - package-ecosystem: "gradle"
     directory: "/backend"
@@ -30,6 +31,7 @@ updates:
     commit-message:
       prefix: "[Tech] "
     labels: [ "tech. enhancement", "dependencies" ]
+    rebase-strategy: "disabled"
     groups:
       non-major-dependencies:
         applies-to: version-updates
@@ -47,6 +49,8 @@ updates:
       semver-minor-days: 7
       semver-major-days: 30
     directory: "/pipeline"
+    exclude-paths:
+      - "pipeline/poetry.lock"
     assignees:
       - "VincentAntoine"
     schedule:
@@ -54,6 +58,7 @@ updates:
     commit-message:
       prefix: "[Tech] "
     labels: [ "tech. enhancement", "dependencies" ]
+    rebase-strategy: "disabled"
     groups:
       non-major-dependencies:
         applies-to: version-updates
@@ -83,6 +88,7 @@ updates:
     labels: [ "tech. enhancement", "dependencies" ]
     ignore:
       - dependency-name: "rsuite"
+    rebase-strategy: "disabled"
     groups:
       non-major-dependencies:
         applies-to: version-updates
