@@ -50,7 +50,7 @@ export function MissionsNavBar() {
         dispatch(deleteTab(nextPath))
       }
 
-      const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionForm.id })
+      const nextPath = generatePath(sideWindowPaths.MISSION, { id: String(missionForm.id) })
 
       const title = missionIsNewMission ? getNewMissionTitle(missionForm) : getMissionTitle(missionForm)
 

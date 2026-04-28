@@ -65,7 +65,7 @@ export const saveMission =
           )
 
           await dispatch(missionActions.setSelectedMissionIdOnMap(missionUpdated.id))
-          const nextPath = generatePath(sideWindowPaths.MISSION, { id: missionUpdated.id })
+          const nextPath = generatePath(sideWindowPaths.MISSION, { id: String(missionUpdated.id) })
           await dispatch(sideWindowActions.setCurrentPath(nextPath))
 
           // wait for the mission to be updated in the form before displaying the banner

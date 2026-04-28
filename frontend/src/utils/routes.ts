@@ -3,7 +3,7 @@ import { matchPath } from 'react-router'
 import { sideWindowPaths } from '../domain/entities/sideWindow'
 
 export function getMissionPageRoute(path: string) {
-  return matchPath<'id', string>(
+  return matchPath<string>(
     {
       end: true,
       path: sideWindowPaths.MISSION
@@ -12,7 +12,7 @@ export function getMissionPageRoute(path: string) {
   )
 }
 export function isMissionPage(path: string) {
-  return !!matchPath<'id', string>(
+  return !!matchPath<string>(
     {
       end: true,
       path: sideWindowPaths.MISSION
@@ -64,7 +64,7 @@ export function isDashboardPage(path: string) {
 }
 
 export function getDashboardPageRoute(path: string) {
-  return matchPath<'id', string>(
+  return matchPath<string>(
     {
       end: true,
       path: sideWindowPaths.DASHBOARD

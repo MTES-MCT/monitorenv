@@ -85,7 +85,7 @@ const recentActivitySlice = createSlice({
   initialState: INITIAL_STATE,
   name: 'recentActivity',
   reducers: {
-    resetControlListOverlay(state: RecentActivityState) {
+    resetControlListOverlay(state) {
       state.layersAndOverlays.layerOverlayItems = undefined
       state.layersAndOverlays.isControlsListClicked = false
       state.layersAndOverlays.layerOverlayCoordinates = undefined
@@ -93,39 +93,39 @@ const recentActivitySlice = createSlice({
     resetRecentActivityFilters() {
       return { ...INITIAL_STATE }
     },
-    setGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.MultiPolygon | undefined>) {
+    setGeometry(state, action: PayloadAction<GeoJSON.MultiPolygon | undefined>) {
       state.drawedGeometry = action.payload
       state.isGeometryValid = action.payload ? isGeometryValid(action.payload) : true
     },
-    setInitialGeometry(state: RecentActivityState, action: PayloadAction<GeoJSON.MultiPolygon | undefined>) {
+    setInitialGeometry(state, action: PayloadAction<GeoJSON.MultiPolygon | undefined>) {
       state.initialGeometry = action.payload
     },
-    setInteractionType(state: RecentActivityState, action: PayloadAction<InteractionType>) {
+    setInteractionType(state, action: PayloadAction<InteractionType>) {
       state.interactionType = action.payload
     },
-    setIsControlsListClicked(state: RecentActivityState, action: PayloadAction<boolean>) {
+    setIsControlsListClicked(state, action: PayloadAction<boolean>) {
       state.layersAndOverlays.isControlsListClicked = action.payload
     },
-    setIsDrawing(state: RecentActivityState, action: PayloadAction<boolean>) {
+    setIsDrawing(state, action: PayloadAction<boolean>) {
       state.isDrawing = action.payload
     },
-    setIsLegenOpen(state: RecentActivityState, action: PayloadAction<boolean>) {
+    setIsLegenOpen(state, action: PayloadAction<boolean>) {
       state.isLegendOpen = action.payload
     },
-    setLayerOverlayCoordinates(state: RecentActivityState, action: PayloadAction<Coordinate | undefined>) {
+    setLayerOverlayCoordinates(state, action: PayloadAction<Coordinate | undefined>) {
       state.layersAndOverlays.layerOverlayCoordinates = action.payload
     },
     setLayerOverlayItems(
-      state: RecentActivityState,
+      state,
       action: PayloadAction<OverlayItem<string, RecentActivity.RecentControlsActivity>[] | undefined>
     ) {
       state.layersAndOverlays.layerOverlayItems = action.payload
     },
-    setSelectedControlId(state: RecentActivityState, action: PayloadAction<string | undefined>) {
+    setSelectedControlId(state, action: PayloadAction<string | undefined>) {
       state.layersAndOverlays.selectedControlId = action.payload
     },
     updateFilters(
-      state: RecentActivityState,
+      state,
       action: PayloadAction<{
         key: RecentActivityFiltersEnum
         value: RecentActivityFilters[keyof RecentActivityFilters]
