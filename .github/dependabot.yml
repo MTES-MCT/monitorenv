@@ -71,6 +71,8 @@ updates:
       semver-minor-days: 7
       semver-major-days: 30
     directory: "/frontend"
+    exclude-paths:
+      - "frontend/package-lock.json"
     assignees:
       - "claire2212"
       - "maximeperraultdev"
