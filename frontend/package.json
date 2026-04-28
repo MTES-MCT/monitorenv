@@ -49,7 +49,7 @@
     "jszip": "^3.10.1",
     "lodash": "4.18.1",
     "ol": "10.9.0",
-    "ol-mapbox-style": "12.3.3",
+    "ol-mapbox-style": "13.4.1",
     "ramda": "0.32.0",
     "re-reselect": "5.1.0",
     "react": "18.3.1",
