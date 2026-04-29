@@ -45,11 +45,11 @@ export function Row({ row }: { row: RowType<Mission> }) {
             <ExpandedRowList>
               <li>
                 <ExpandedRowLabel>CACEM: Observations</ExpandedRowLabel>
-                <ExpandedRowValue>{mission.observationsCacem ? mission.observationsCacem : UNKNOWN}</ExpandedRowValue>
+                <ExpandedRowValue>{mission.observationsCacem ?? UNKNOWN}</ExpandedRowValue>
               </li>
               <li>
                 <ExpandedRowLabel>CNSP: Observations</ExpandedRowLabel>
-                <ExpandedRowValue>{mission.observationsCnsp ? mission.observationsCnsp : UNKNOWN}</ExpandedRowValue>
+                <ExpandedRowValue>{mission.observationsCnsp ?? UNKNOWN}</ExpandedRowValue>
               </li>
             </ExpandedRowList>
           </ExpandedRowCell>
@@ -76,7 +76,7 @@ export function Row({ row }: { row: RowType<Mission> }) {
           </ExpandedRowCell>
           <ExpandedRowCell colSpan={3}>
             <ExpandedRowLabel>Ouvert part</ExpandedRowLabel>
-            <ExpandedRowValue>{mission.openBy ? mission.openBy : UNKNOWN}</ExpandedRowValue>
+            <ExpandedRowValue>{mission.openBy ?? UNKNOWN}</ExpandedRowValue>
           </ExpandedRowCell>
         </ExpandedRow>
       )}

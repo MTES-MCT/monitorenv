@@ -35,7 +35,7 @@ export function ControlsCell({ envActions }: { envActions: EnvAction[] }) {
                 : ''}
               <ul>
                 {envAction.infractions.map(infraction => (
-                  <li>{infraction.vesselName}</li>
+                  <li key={infraction.id}>{infraction.vesselName}</li>
                 ))}
               </ul>
               <ControlInfractionsTags

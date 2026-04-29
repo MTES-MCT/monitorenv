@@ -1,4 +1,4 @@
-import { TotalResults } from '@components/Table/style'
+import { Header, Title, TotalResults } from '@components/Table/style'
 import { MissionFilterContext, MissionFilters } from '@features/Mission/components/Filters'
 import { useGetFilteredMissionsQuery } from '@features/Mission/hooks/useGetFilteredMissionsQuery'
 import { addMission } from '@features/Mission/useCases/addMission'
@@ -20,12 +20,12 @@ export function Missions() {
 
   return (
     <SideWindowContent>
-      <StyledHeader>
+      <Header>
         <Title data-cy="SideWindowHeader-title">Missions et contrôles</Title>
         <StyledButton data-cy="add-mission" Icon={Icon.Plus} onClick={createMission}>
           Ajouter une nouvelle mission
         </StyledButton>
-      </StyledHeader>
+      </Header>
       <MissionFilters context={MissionFilterContext.TABLE} />
       <StyledTotalResults data-cy="Missions-numberOfDisplayedMissions">
         {missions?.length ?? '0'} Mission{missions && missions.length > 1 ? 's' : ''}
@@ -39,18 +39,6 @@ export function Missions() {
     </SideWindowContent>
   )
 }
-
-const StyledHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 40px;
-`
-
-const Title = styled.h1`
-  color: ${p => p.theme.color.gunMetal};
-  font-size: 22px;
-  line-height: 50px;
-`
 
 const StyledButton = styled(Button)`
   align-self: center;

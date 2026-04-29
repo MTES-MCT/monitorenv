@@ -8,14 +8,14 @@ export function UnitCell({ controlUnits }: { controlUnits: LegacyControlUnit[] }
   return (
     <ExpandedRowList>
       {controlUnits.map(unit => (
-        <li>
+        <li key={unit.id}>
           <ExpandedRowLabel>{unit.administration}</ExpandedRowLabel>
           <ExpandedRowValue>{unit.name}</ExpandedRowValue>
           {unit.resources.map(resource => {
             const Icon = getIconFromControlUnitResourceType(resource.type)
 
             return (
-              <ExpandedRowValue>
+              <ExpandedRowValue key={resource.id}>
                 <HAlign>
                   {Icon ? <Icon color={THEME.color.slateGray} size={16} /> : undefined} {resource.name}
                 </HAlign>

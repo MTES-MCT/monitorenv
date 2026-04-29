@@ -2,7 +2,7 @@ import { Accent, Icon, Tag, THEME } from '@mtes-mct/monitor-ui'
 
 import { missionStatusLabels } from '../../../domain/entities/missions'
 
-export function MissionStatusTag({ status }: { status: string }) {
+export function MissionStatusTag({ isLight = false, status }: { isLight?: boolean; status: string }) {
   switch (status) {
     case missionStatusLabels.PENDING.code:
       return (
@@ -12,6 +12,7 @@ export function MissionStatusTag({ status }: { status: string }) {
           data-cy="mission-status-tag-pending"
           Icon={Icon.Clock}
           iconColor={THEME.color.blueGray}
+          isLight={isLight}
           withCircleIcon
         >
           {missionStatusLabels.PENDING.libelle}
@@ -24,6 +25,7 @@ export function MissionStatusTag({ status }: { status: string }) {
           data-cy="mission-status-tag-ended"
           Icon={Icon.Confirm}
           iconColor={THEME.color.charcoal}
+          isLight={isLight}
           withCircleIcon
         >
           {missionStatusLabels.ENDED.libelle}
@@ -37,6 +39,7 @@ export function MissionStatusTag({ status }: { status: string }) {
           data-cy="mission-status-tag-upcoming"
           Icon={Icon.ClockDashed}
           iconColor={THEME.color.mayaBlue}
+          isLight={isLight}
           withCircleIcon
         >
           {missionStatusLabels.UPCOMING.libelle}

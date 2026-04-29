@@ -32,3 +32,17 @@ export const ShowFilters = styled(LinkButton)`
     width: 20px !important;
   }
 `
+
+export const Header = styled.header`
+  border-bottom: 1px solid ${p => p.theme.color.gainsboro};
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+`
+
+export const Title = styled.h1`
+  color: ${p => p.theme.color.gunMetal};
+  font-size: 22px;
+  line-height: 31px;
+  height: 55px;
+`

@@ -47,7 +47,6 @@ export function VigilanceAreasFilters() {
     areFiltersVisible,
     createdBy: createdByFilter,
     nbOfFiltersSetted: nbOfVigilanceAreaFilters,
-    period: periodFilter,
     seaFronts: seaFrontFilter,
     status: statusFilter,
     visibility: visibilityFilter
@@ -103,9 +102,7 @@ export function VigilanceAreasFilters() {
 
   const nbOfFilters = nbOfVigilanceAreaFilters + filteredRegulatoryTags.length + filteredRegulatoryThemes.length
 
-  const hasCustomPeriodFilter = periodFilter === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD
-
-  const hasFilters = nbOfFilters > 0 || hasCustomPeriodFilter || searchExtent || !!searchText || areRecentsAreasChecked
+  const hasFilters = nbOfFilters > 0 || searchExtent || !!searchText || areRecentsAreasChecked
 
   return (
     <Wrapper>
