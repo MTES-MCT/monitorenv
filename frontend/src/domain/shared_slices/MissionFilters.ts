@@ -28,7 +28,7 @@ export enum MissionFiltersEnum {
   WITH_ENV_ACTIONS_FILTER = 'selectedWithEnvActions'
 }
 
-type MissionFilterValues = {
+export type MissionFilterValues = {
   areFiltersVisible: boolean
   nbOfFiltersSetted: boolean
   searchQuery: string | undefined

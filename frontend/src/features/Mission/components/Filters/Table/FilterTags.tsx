@@ -10,7 +10,12 @@ import { customDayjs, type DateAsStringRange, DateRangePicker, SingleTag, useNew
 import { deleteTagTag } from '@utils/deleteTagTag'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, missionStatusLabels, missionTypeEnum } from 'domain/entities/missions'
-import { MissionFiltersEnum, type MissionFiltersState, updateFilters } from 'domain/shared_slices/MissionFilters'
+import {
+  INITIAL_STATE,
+  MissionFiltersEnum,
+  type MissionFiltersState,
+  updateFilters
+} from 'domain/shared_slices/MissionFilters'
 import styled from 'styled-components'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -73,6 +78,15 @@ export function FilterTags({
     )
   }
 
+  const onDeleteSimpleTag = (filterKey: keyof Omit<MissionFiltersState, 'nbOfFiltersSetted'>) => {
+    dispatch(
+      updateFilters({
+        key: filterKey,
+        value: INITIAL_STATE[filterKey]
+      })
+    )
+  }
+
   return (
     <>
       {selectedPeriod === DateRangeEnum.CUSTOM && (
@@ -91,7 +105,7 @@ export function FilterTags({
       )}
       <StyledContainer data-cy="missions-filter-tags">
         {selectedPeriod !== DateRangeEnum.CUSTOM && (
-          <SingleTag onDelete={() => onDeleteTag(selectedPeriod, MissionFiltersEnum.PERIOD_FILTER, selectedPeriod)}>
+          <SingleTag onDelete={() => onDeleteSimpleTag(MissionFiltersEnum.PERIOD_FILTER)}>
             {MissionDateRangeLabel[selectedPeriod]}
           </SingleTag>
         )}

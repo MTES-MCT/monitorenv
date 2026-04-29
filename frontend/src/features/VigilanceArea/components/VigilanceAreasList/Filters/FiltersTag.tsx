@@ -18,7 +18,7 @@ import { deleteTagTag } from '@utils/deleteTagTag'
 import { deleteThemeTag } from '@utils/deleteThemeTag'
 import styled from 'styled-components'
 
-import { vigilanceAreaFiltersActions, type VigilanceAreaSliceState } from './slice'
+import { INITIAL_STATE, vigilanceAreaFiltersActions, type VigilanceAreaSliceState } from './slice'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
@@ -46,7 +46,7 @@ export function FilterTags() {
     dispatch(
       vigilanceAreaFiltersActions.updateFilters({
         key: filterKey,
-        value: undefined
+        value: INITIAL_STATE[filterKey]
       })
     )
   }
@@ -93,7 +93,7 @@ export function FilterTags() {
           <SpecificPeriodFilter />
         </CustomPeriodContainer>
       ) : (
-        <SingleTag onDelete={() => onDeleteTag(period, 'period', period)}>
+        <SingleTag onDelete={() => onDeleteSimpleTag('period')}>
           {VigilanceArea.VigilanceAreaFilterPeriodLabel[period]}
         </SingleTag>
       )}

@@ -1,4 +1,4 @@
-import { TotalResults } from '@components/Table/style'
+import { Header, Title, TotalResults } from '@components/Table/style'
 import { SideWindowContent } from '@features/SideWindow/style'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { pluralize } from '@mtes-mct/monitor-ui'
@@ -17,9 +17,9 @@ export function VigilancesAreasList() {
 
   return (
     <StyledSideWindowContent>
-      <StyledHeader>
+      <Header>
         <Title data-cy="SideWindowHeader-title">Zones de vigilance</Title>
-      </StyledHeader>
+      </Header>
       <VigilanceAreasFilters />
       {isError ? (
         <p data-cy="listReportingWrapper">Erreur au chargement des données</p>
@@ -40,16 +40,4 @@ export function VigilancesAreasList() {
 
 const StyledSideWindowContent = styled(SideWindowContent)`
   overflow-x: inherit;
-`
-const StyledHeader = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  margin-bottom: 32px;
-`
-
-const Title = styled.h1`
-  color: ${p => p.theme.color.gunMetal};
-  font-size: 22px;
-  border-bottom: 1px solid ${p => p.theme.color.gainsboro};
 `

@@ -1,7 +1,13 @@
 import { Icon, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { FrontCompletionStatus, FrontCompletionStatusLabel } from 'domain/entities/missions'
 
-export function CompletionStatusTag({ completion = undefined }: { completion?: FrontCompletionStatus }) {
+export function CompletionStatusTag({
+  completion = undefined,
+  isLight = false
+}: {
+  completion?: FrontCompletionStatus
+  isLight?: boolean
+}) {
   if (!completion) {
     return null
   }
@@ -9,7 +15,7 @@ export function CompletionStatusTag({ completion = undefined }: { completion?: F
     case FrontCompletionStatus.COMPLETED:
       return (
         <Tag
-          backgroundColor={THEME.color.gainsboro}
+          backgroundColor={isLight ? THEME.color.mediumSeaGreen25 : THEME.color.gainsboro}
           color={THEME.color.mediumSeaGreen}
           data-cy="completion-mission-status-tag-completed"
           Icon={Icon.Confirm}
@@ -22,7 +28,7 @@ export function CompletionStatusTag({ completion = undefined }: { completion?: F
     case FrontCompletionStatus.UP_TO_DATE:
       return (
         <Tag
-          backgroundColor={THEME.color.gainsboro}
+          backgroundColor={isLight ? THEME.color.mediumSeaGreen25 : THEME.color.gainsboro}
           color={THEME.color.mediumSeaGreen}
           data-cy="completion-mission-status-tag-up-to-date"
           Icon={Icon.Confirm}
@@ -35,7 +41,7 @@ export function CompletionStatusTag({ completion = undefined }: { completion?: F
     case FrontCompletionStatus.TO_COMPLETE_MISSION_ENDED:
       return (
         <Tag
-          backgroundColor={THEME.color.gainsboro}
+          backgroundColor={isLight ? THEME.color.maximumRed15 : THEME.color.gainsboro}
           color={THEME.color.maximumRed}
           data-cy="completion-mission-status-tag-to-completed-mission-ended"
           Icon={Icon.AttentionFilled}

@@ -53,7 +53,6 @@ export const SelectableRowsTable = forwardRef(SelectableRowsTableWithRef)
 const StyledTableWrapper = styled.div`
   overflow: hidden;
   width: 100%;
-  height: 100%;
 `
 
 const StyledTableContainer = styled.div`

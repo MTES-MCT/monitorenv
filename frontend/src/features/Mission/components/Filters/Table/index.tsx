@@ -241,10 +241,12 @@ export function TableMissionsFiltersWithRef(
           </>
         )}
       </FilterWrapper>
-      <TagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM}>
-        <FilterTags onUpdateDateRangeFilter={onUpdateDateRangeFilter} />
-        {nbOfFiltersSetted > 0 && <ReinitializeFiltersButton onClick={onResetFilters} />}
-      </TagsContainer>
+      {nbOfFiltersSetted > 0 && (
+        <TagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM}>
+          <FilterTags onUpdateDateRangeFilter={onUpdateDateRangeFilter} />
+          <ReinitializeFiltersButton onClick={onResetFilters} />
+        </TagsContainer>
+      )}
     </>
   )
 }
