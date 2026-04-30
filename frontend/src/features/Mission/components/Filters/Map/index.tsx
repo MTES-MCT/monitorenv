@@ -199,18 +199,14 @@ function MapMissionsFiltersWithRef(
           value={selectedAdministrationNames}
         />
         <TagsWrapper>
-          {selectedAdministrationNames &&
-            selectedAdministrationNames?.length > 0 &&
-            selectedAdministrationNames.map(admin => (
-              <SingleTag
-                key={admin}
-                onDelete={() =>
-                  onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, selectedAdministrationNames)
-                }
-              >
-                {admin}
-              </SingleTag>
-            ))}
+          {selectedAdministrationNames?.map(admin => (
+            <SingleTag
+              key={admin}
+              onDelete={() => onDeleteTag(admin, MissionFiltersEnum.ADMINISTRATION_FILTER, selectedAdministrationNames)}
+            >
+              {admin}
+            </SingleTag>
+          ))}
         </TagsWrapper>
         <CheckPicker
           key={controlUnits?.length}
@@ -229,16 +225,14 @@ function MapMissionsFiltersWithRef(
           value={selectedControlUnitIds}
         />
         <TagsWrapper>
-          {selectedControlUnitIds &&
-            selectedControlUnitIds?.length > 0 &&
-            selectedControlUnitIds.map(unit => (
-              <SingleTag
-                key={unit}
-                onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
-              >
-                {`${controlUnitsData.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`}
-              </SingleTag>
-            ))}
+          {selectedControlUnitIds?.map(unit => (
+            <SingleTag
+              key={unit}
+              onDelete={() => onDeleteTag(unit, MissionFiltersEnum.UNIT_FILTER, selectedControlUnitIds)}
+            >
+              {`${controlUnitsData.currentData?.find(controlUnit => controlUnit.id === unit)?.name ?? unit}`}
+            </SingleTag>
+          ))}
         </TagsWrapper>
         <CheckPicker
           isLabelHidden
@@ -254,16 +248,14 @@ function MapMissionsFiltersWithRef(
           value={selectedMissionTypes}
         />
         <TagsWrapper>
-          {selectedMissionTypes &&
-            selectedMissionTypes?.length > 0 &&
-            selectedMissionTypes.map(type => (
-              <SingleTag
-                key={type}
-                onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, selectedMissionTypes)}
-              >
-                {missionTypeEnum[type].libelle}
-              </SingleTag>
-            ))}
+          {selectedMissionTypes?.map(type => (
+            <SingleTag
+              key={type}
+              onDelete={() => onDeleteTag(type, MissionFiltersEnum.TYPE_FILTER, selectedMissionTypes)}
+            >
+              {missionTypeEnum[type].libelle}
+            </SingleTag>
+          ))}
         </TagsWrapper>
         <CheckPicker
           isLabelHidden
@@ -281,18 +273,16 @@ function MapMissionsFiltersWithRef(
           value={selectedCompletionStatus}
         />
         <TagsWrapper>
-          {selectedCompletionStatus &&
-            selectedCompletionStatus?.length > 0 &&
-            selectedCompletionStatus.map(completionStatus => (
-              <SingleTag
-                key={completionStatus}
-                onDelete={() =>
-                  onDeleteTag(completionStatus, MissionFiltersEnum.COMPLETION_STATUS_FILTER, selectedCompletionStatus)
-                }
-              >
-                {`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`}
-              </SingleTag>
-            ))}
+          {selectedCompletionStatus?.map(completionStatus => (
+            <SingleTag
+              key={completionStatus}
+              onDelete={() =>
+                onDeleteTag(completionStatus, MissionFiltersEnum.COMPLETION_STATUS_FILTER, selectedCompletionStatus)
+              }
+            >
+              {`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`}
+            </SingleTag>
+          ))}
         </TagsWrapper>
       </StyledBloc>
       <StyledBloc>
@@ -311,16 +301,11 @@ function MapMissionsFiltersWithRef(
           value={selectedThemes}
         />
         <TagsWrapper>
-          {selectedThemes &&
-            selectedThemes?.length > 0 &&
-            selectedThemes.map(theme => (
-              <SingleTag
-                key={theme}
-                onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}
-              >
-                {`${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
-              </SingleTag>
-            ))}
+          {selectedThemes?.map(theme => (
+            <SingleTag key={theme} onDelete={() => onDeleteTag(theme, MissionFiltersEnum.THEME_FILTER, selectedThemes)}>
+              {`${themesAPI.find(themeAPI => themeAPI.id === theme)?.name ?? theme}`}
+            </SingleTag>
+          ))}
         </TagsWrapper>
         <CheckTreePicker
           childrenKey="subTags"
@@ -339,20 +324,18 @@ function MapMissionsFiltersWithRef(
           valueKey="id"
         />
         <TagsWrapper>
-          {selectedTags &&
-            selectedTags?.length > 0 &&
-            selectedTags.map(tag => (
-              <>
-                <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
-                  {tag.name}
+          {selectedTags?.map(tag => (
+            <>
+              <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, selectedTags)}>
+                {tag.name}
+              </SingleTag>
+              {tag.subTags?.map(subTag => (
+                <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
+                  {subTag.name}
                 </SingleTag>
-                {tag.subTags?.map(subTag => (
-                  <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, selectedTags)} title={subTag.name}>
-                    {subTag.name}
-                  </SingleTag>
-                ))}
-              </>
-            ))}
+              ))}
+            </>
+          ))}
         </TagsWrapper>
       </StyledBloc>
     </FilterWrapper>
