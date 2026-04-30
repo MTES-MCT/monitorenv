@@ -34,7 +34,6 @@ from src.flows.infractions import infractions_flow
 from src.flows.localized_areas import localized_areas_flow
 from src.flows.marpol import marpol_flow
 from src.flows.refresh_materialized_view import refresh_materialized_view_flow
-from src.flows.regulations import regulations_flow
 from src.flows.regulatory_areas_open_data import regulatory_areas_open_data_flow
 from src.flows.update_env_regulatory_areas import update_env_regulatory_areas_flow
 from src.flows.update_cacem_regulatory_areas import update_cacem_regulatory_areas_flow
@@ -42,7 +41,6 @@ from src.flows.remove_broken_missions_resources_links import (
     remove_broken_missions_resources_links_flow,
 )
 from src.flows.semaphores import semaphores_flow
-from src.flows.themes_and_tags import themes_and_tags_flow
 from src.flows.themes_natinfs import natinfs_themes_flow
 from src.flows.three_hundred_meters_areas import three_hunder_meters_areas_flow
 from src.flows.update_departments_and_facades import (
@@ -117,10 +115,6 @@ flows_to_deploy = [
         ],
     ),
     FlowAndSchedules(
-        flow=regulations_flow,
-        schedules=[Schedule(cron="6,16,26,36,46,56 * * * *")],
-    ),
-    FlowAndSchedules(
         flow=regulatory_areas_open_data_flow,
         schedules=[Schedule(cron="0 20 * * 5")],
     ),
@@ -136,10 +130,6 @@ flows_to_deploy = [
     FlowAndSchedules(
         flow=semaphores_flow,
         schedules=[Schedule(cron="3 5,15 * * *")],
-    ),
-    FlowAndSchedules(
-        flow=themes_and_tags_flow,
-        schedules=[Schedule(cron="2,12,22,32,42,52 * * * *")],
     ),
     FlowAndSchedules(flow=three_hunder_meters_areas_flow),
     FlowAndSchedules(
