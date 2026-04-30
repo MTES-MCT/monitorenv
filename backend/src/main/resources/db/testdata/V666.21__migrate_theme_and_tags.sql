@@ -26,20 +26,26 @@ WHERE NOT EXISTS (SELECT 1
                   WHERE tva.tags_id = t.id
                     AND tva.vigilance_areas_id = va.id);
 
--- INSERTING TAGS <-> REGULATIONS FROM CURRENT REGULATIONS
-INSERT INTO tags_regulatory_areas (tags_id, regulatory_areas_id)
-SELECT t.id, r.id
-FROM regulatory_areas r
-         INNER JOIN tags t ON t.name = ANY (string_to_array(r.thematique, ', '));
-
 -- INSERTING SUBTAGS <-> REGULATIONS FROM RANDOM REGULATIONS
-INSERT INTO tags_regulatory_areas (tags_id, regulatory_areas_id)
+INSERT INTO tags_regulatory_areas_new (tags_id, regulatory_areas_id)
 VALUES (10, 16),
        (5, 16),
        (9, 17),
-       (10, 17);
+       (10, 17),
+       (6,16),
+       (1,17),
+       (5,17),
+       (4,134),
+       (7,160),
+       (5,305),
+       (5,300),
+       (7,359),
+       (3,523),
+       (5,522),
+       (4,625),
+       (5, 697);
 
-INSERT INTO themes_regulatory_areas (themes_id, regulatory_areas_id)
+INSERT INTO themes_regulatory_areas_new (themes_id, regulatory_areas_id)
 VALUES (101, 16),
        (281, 16),
        (9, 17),
