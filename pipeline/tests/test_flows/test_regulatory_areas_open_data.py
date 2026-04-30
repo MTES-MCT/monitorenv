@@ -40,7 +40,6 @@ def regulatory_areas_open_data():
             "source": [
                 "source1",
             ],
-            "thematique": ["thematique1",],
             "observation": [
                 "obs1",
             ],
@@ -49,12 +48,6 @@ def regulatory_areas_open_data():
             ],
             "date_fin": [
                 pd.to_datetime("2025-12-31"),
-            ],
-            "duree_validite": [
-                "validite1",
-            ],
-            "temporalite": [
-                "tempo1",
             ],
             "type": [
                 "type1",
@@ -125,12 +118,6 @@ def regulatory_areas_for_csv():
             "date_fin": [
                 pd.to_datetime("2025-12-31"),
             ],
-            "duree_validite": [
-                "validite1",
-            ],
-            "temporalite": [
-                "tempo1",
-            ],
             "type": [
                 "type1",
             ],
@@ -197,12 +184,6 @@ def regulatory_areas_for_geopackage():
             "date_fin": [
                 pd.to_datetime("2025-12-31"),
             ],
-            "duree_validite": [
-                "validite1",
-            ],
-            "temporalite": [
-                "tempo1",
-            ],
             "type": [
                 "type1",
             ],
@@ -239,6 +220,19 @@ def test_extract_regulatory_areas_open_data(
 ):
     
     regulatory_areas = extract_regulatory_areas_open_data()
+
+    print("\n=== LOGS regulatory_areas ===")
+    print(f"Shape: {regulatory_areas.shape}")
+    print(f"Columns: {regulatory_areas.columns.tolist()}")
+    print(f"Dtypes:\n{regulatory_areas.dtypes}")
+    print(f"Data:\n{regulatory_areas}")
+    
+    print("\n=== LOGS regulatory_areas_open_data ===")
+    print(f"Shape: {regulatory_areas_open_data.shape}")
+    print(f"Columns: {regulatory_areas_open_data.columns.tolist()}")
+    print(f"Dtypes:\n{regulatory_areas_open_data.dtypes}")
+    print(f"Data:\n{regulatory_areas_open_data}")
+    
     pd.testing.assert_frame_equal(regulatory_areas, regulatory_areas_open_data)
 
 
