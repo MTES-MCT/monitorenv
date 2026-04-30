@@ -9,7 +9,6 @@ export namespace RegulatoryArea {
     creation?: string
     date?: string
     dateFin?: string
-    dureeValidite?: string
     editeur?: string
     editionBo?: string
     editionCacem?: string
@@ -27,7 +26,6 @@ export namespace RegulatoryArea {
     resume?: string
     source?: string
     tags?: TagFromAPI[]
-    temporalite?: string
     themes?: ThemeFromAPI[]
     type: string
     url: string

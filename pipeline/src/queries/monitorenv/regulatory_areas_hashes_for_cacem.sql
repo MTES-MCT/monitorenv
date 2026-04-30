@@ -7,9 +7,6 @@ SELECT
         COALESCE(editeur::text, '') ||
         COALESCE(source::text, '') ||
         COALESCE(observation::text, '') ||
-        COALESCE(thematique::text, '') ||
-        COALESCE(duree_validite::text, '')||
-        COALESCE(temporalite::text, '')||
         COALESCE(type::text, '') ||
         COALESCE(date::text, '') ||
         COALESCE(date_fin::text, '') ||

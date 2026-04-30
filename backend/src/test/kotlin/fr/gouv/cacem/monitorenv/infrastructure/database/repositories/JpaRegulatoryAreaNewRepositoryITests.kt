@@ -122,8 +122,6 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea.source).isEqualTo("Histolitt SHOM")
         assertThat(requestedRegulatoryArea.observation).isEqualTo("A valider")
         assertThat(requestedRegulatoryArea.date).isEqualTo("2021-09-04T00:00:00Z")
-        assertThat(requestedRegulatoryArea.dureeValidite).isEqualTo("permanent")
-        assertThat(requestedRegulatoryArea.temporalite).isEqualTo("permanent")
         assertThat(requestedRegulatoryArea.plan).isEqualTo("PIRC")
         assertThat(requestedRegulatoryArea.polyName).isEqualTo("")
         assertThat(requestedRegulatoryArea.resume).isEqualTo("Partie terrestre RNN d'Iroise")
@@ -155,8 +153,6 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         assertThat(requestedRegulatoryArea[0].source).isEqualTo("Histolitt SHOM")
         assertThat(requestedRegulatoryArea[0].observation).isEqualTo("A valider")
         assertThat(requestedRegulatoryArea[0].date).isEqualTo("2021-09-04T00:00:00Z")
-        assertThat(requestedRegulatoryArea[0].dureeValidite).isEqualTo("permanent")
-        assertThat(requestedRegulatoryArea[0].temporalite).isEqualTo("permanent")
         assertThat(requestedRegulatoryArea[0].plan).isEqualTo("PIRC")
         assertThat(requestedRegulatoryArea[0].polyName).isEqualTo("")
         assertThat(requestedRegulatoryArea[0].resume).isEqualTo("Partie terrestre RNN d'Iroise")
@@ -263,8 +259,6 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
                 editeur = "Test Editor",
                 observation = "Test observation",
                 date = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
-                dureeValidite = "permanent",
-                temporalite = "permanent",
                 plan = "TEST",
                 polyName = "Test Polygon",
                 tags = listOf(aTag(id = 5)),

@@ -1,9 +1,7 @@
 DELETE FROM themes_natinfs;
 DELETE FROM themes_env_actions;
-DELETE FROM themes_regulatory_areas;
 DELETE FROM themes_regulatory_areas_new;
 DELETE FROM themes;
-DELETE FROM tags_regulatory_areas;
 DELETE FROM tags_regulatory_areas_new;
 DELETE FROM tags;
 

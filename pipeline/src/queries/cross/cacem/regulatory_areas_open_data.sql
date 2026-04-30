@@ -12,8 +12,6 @@ SELECT
     observation,
     date::timestamp,
     date_fin::timestamp,
-    duree_validite,
-    temporalite,
     type,
     ST_ASTEXT(ST_CurveToLine(geom)) AS wkt,
     resume,

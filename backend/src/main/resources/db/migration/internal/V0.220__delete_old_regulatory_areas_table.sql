@@ -6,3 +6,8 @@ ADD CONSTRAINT fk_regulatory_cacem FOREIGN KEY (regulations_cacem_id) REFERENCES
 DROP TABLE public.regulations_cacem;
 DROP TABLE public.themes_regulatory_areas;
 DROP TABLE public.tags_regulatory_areas;
+
+ALTER TABLE public.regulatory_areas
+    DROP COLUMN thematique,
+    DROP COLUMN duree_validite,
+    DROP COLUMN temporalite;

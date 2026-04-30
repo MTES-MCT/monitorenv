@@ -19,7 +19,6 @@ export const RegulatoryAreaFormSchema: Yup.Schema<
   creation: Yup.string().optional(),
   date: Yup.string().required(),
   dateFin: Yup.string().optional(),
-  dureeValidite: Yup.string().optional(),
   editeur: Yup.string().optional(),
   editionBo: Yup.string().optional(),
   editionCacem: Yup.string().optional(),
@@ -46,7 +45,6 @@ export const RegulatoryAreaFormSchema: Yup.Schema<
 
       return (tags && tags.length > 0) || (themes && themes.length > 0)
     }),
-  temporalite: Yup.string().optional(),
   themes: Yup.array()
     .ensure()
     .test('required-if-no-tags', 'Renseignez au moins un thème ou un tag', (themes, context) => {
