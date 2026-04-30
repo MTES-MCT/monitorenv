@@ -57,7 +57,7 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
     <SearchContainer>
       <Search>
         <SearchInput
-          globalSearchText={query}
+          globalSearchText={query ?? globalSearchText}
           placeholder="Rechercher une zone"
           setGlobalSearchText={handleSearchInputChange}
         >
