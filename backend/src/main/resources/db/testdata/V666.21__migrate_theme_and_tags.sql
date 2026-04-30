@@ -29,7 +29,7 @@ WHERE NOT EXISTS (SELECT 1
 -- INSERTING TAGS <-> REGULATIONS FROM CURRENT REGULATIONS
 INSERT INTO tags_regulatory_areas (tags_id, regulatory_areas_id)
 SELECT t.id, r.id
-FROM regulations_cacem r
+FROM regulatory_areas r
          INNER JOIN tags t ON t.name = ANY (string_to_array(r.thematique, ', '));
 
 -- INSERTING SUBTAGS <-> REGULATIONS FROM RANDOM REGULATIONS

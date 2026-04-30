@@ -1,13 +1,11 @@
--- INSERTING DEFAULT TAGS FROM CURRENT REGULATIONS
-INSERT INTO tags (name, started_at, ended_at)
-SELECT DISTINCT trim(tag), '2023-01-01 00:00:00'::timestamp, '2030-12-31 00:00:00'::timestamp
-FROM (SELECT unnest(string_to_array(thematique, ', ')) AS tag
-      FROM regulations_cacem) t
-WHERE trim(tag) NOT IN (SELECT name FROM tags);
-
--- INSERTING RANDOM SUBTAGS
-INSERT INTO tags (parent_id, name, started_at, ended_at)
-VALUES (1, 'subtagPN1', '2023-01-01 00:00:00'::timestamp, '2024-01-01'::timestamp),
-       (1, 'subtagPN2', '2023-01-01 00:00:00'::timestamp, null),
-       (5, 'subtagMouillage1', '2023-01-01 00:00:00'::timestamp, '2030-01-01'::timestamp),
-       (5, 'subtagMouillage2', '2023-01-01 00:00:00'::timestamp, null);
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (1, 'PN', null, '2023-01-01 00:00:00.000000', '2030-12-31 00:00:00.000000');
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (2, 'AMP', null, '2023-01-01 00:00:00.000000', '2030-12-31 00:00:00.000000');
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (3, 'SAGE', null, '2023-01-01 00:00:00.000000', '2030-12-31 00:00:00.000000');
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (4, 'Mixte', null, '2023-01-01 00:00:00.000000', '2030-12-31 00:00:00.000000');
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (5, 'Mouillage', null, '2023-01-01 00:00:00.000000', '2030-12-31 00:00:00.000000');
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (6, 'Extraction granulats', null, '2023-01-01 00:00:00.000000', '2030-12-31 00:00:00.000000');
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (7, 'Dragage', null, '2023-01-01 00:00:00.000000', '2030-12-31 00:00:00.000000');
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (8, 'subtagPN1', 1, '2023-01-01 00:00:00.000000', '2024-01-01 00:00:00.000000');
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (9, 'subtagPN2', 1, '2023-01-01 00:00:00.000000', null);
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (10, 'subtagMouillage1', 5, '2023-01-01 00:00:00.000000', '2030-01-01 00:00:00.000000');
+INSERT INTO public.tags (id, name, parent_id, started_at, ended_at) values (11, 'subtagMouillage2', 5, '2023-01-01 00:00:00.000000', null);

@@ -21,9 +21,9 @@ interface IDBThemeRepository : JpaRepository<ThemeModel, Int> {
     @Query(
         """SELECT DISTINCT theme FROM ThemeModel theme
             LEFT JOIN FETCH theme.subThemes subTheme
-            INNER JOIN ThemeRegulatoryAreaModel tr
+            INNER JOIN ThemeRegulatoryAreaNewModel tr
                 ON tr.theme.id = theme.id AND tr.regulatoryArea.id IN (:regulatoryAreaIds)
-            LEFT JOIN ThemeRegulatoryAreaModel str
+            LEFT JOIN ThemeRegulatoryAreaNewModel str
                 ON str.theme.id = subTheme.id AND str.regulatoryArea.id IN (:regulatoryAreaIds)
         WHERE theme.parent IS NULL AND theme.startedAt <= :time AND (theme.endedAt IS NULL OR theme.endedAt > :time)
         AND (subTheme.id IS NULL OR (subTheme.startedAt <= :time AND (subTheme.endedAt IS NULL OR subTheme.endedAt > :time)))

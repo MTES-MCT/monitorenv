@@ -10,7 +10,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardDatasRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardImageRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBDashboardRepository
-import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaNewRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBReportingRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBVigilanceAreaRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -26,7 +26,7 @@ class JpaDashboardRepository(
     private val dashboardImageRepository: IDBDashboardImageRepository,
     private val ampRepository: IDBAMPRepository,
     private val controlUnitRepository: IDBControlUnitRepository,
-    private val regulatoryAreaRepository: IDBRegulatoryAreaRepository,
+    private val regulatoryAreaRepository: IDBRegulatoryAreaNewRepository,
     private val reportingRepository: IDBReportingRepository,
     private val vigilanceAreaRepository: IDBVigilanceAreaRepository,
     private val mapper: JsonMapper,

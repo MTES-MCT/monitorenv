@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 class GetAllNewRegulatoryAreas(
     private val regulatoryAreaRepository: IRegulatoryAreaNewRepository,
 ) {
-    private val logger = LoggerFactory.getLogger(GetAllRegulatoryAreas::class.java)
+    private val logger = LoggerFactory.getLogger(GetAllNewRegulatoryAreas::class.java)
 
     fun execute(
         controlPlan: String?,

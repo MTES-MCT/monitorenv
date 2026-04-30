@@ -82,6 +82,8 @@ class JpaRegulatoryAreaNewRepository(
             .toRegulatoryArea(mapper)
     }
 
+    override fun count(): Long = dbRegulatoryAreaRepository.count()
+
     private fun findBySearchQuery(
         regulatoryArea: RegulatoryAreaEntity,
         searchQuery: String?,
