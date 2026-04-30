@@ -10,4 +10,26 @@ DROP TABLE public.tags_regulatory_areas;
 ALTER TABLE public.regulatory_areas
     DROP COLUMN thematique,
     DROP COLUMN duree_validite,
-    DROP COLUMN temporalite;
+    DROP COLUMN temporalite,
+    ADD COLUMN row_hash text;
+
+
+UPDATE public.regulatory_areas SET row_hash = md5(
+    COALESCE(geom::text, '') ||
+    COALESCE(ref_reg::text, '')
+);
+
+CREATE FUNCTION public.create_row_hash() RETURNS trigger AS $$
+    BEGIN
+        NEW.row_hash := md5(
+            COALESCE(NEW.geom::text, '') ||
+            COALESCE(NEW.ref_reg::text, '')
+        );
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER create_row_hash
+    BEFORE INSERT OR UPDATE ON public.regulatory_areas
+    FOR EACH ROW
+    EXECUTE PROCEDURE public.create_row_hash();

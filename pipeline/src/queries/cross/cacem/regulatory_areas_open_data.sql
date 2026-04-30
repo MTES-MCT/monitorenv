@@ -8,7 +8,6 @@ SELECT
     edition_bo::timestamp as "edition",
     editeur,
     source,
-    thematique,
     observation,
     date::timestamp,
     date_fin::timestamp,
