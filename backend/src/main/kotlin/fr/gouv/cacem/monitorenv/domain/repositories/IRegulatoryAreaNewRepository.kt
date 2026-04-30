@@ -28,4 +28,6 @@ interface IRegulatoryAreaNewRepository {
     fun findAllLayerNames(): Map<String, Long>
 
     fun save(regulatoryArea: RegulatoryAreaEntity): RegulatoryAreaEntity
+
+    fun count(): Long
 }

@@ -579,28 +579,6 @@ $$
         VALUES (456,
                 '0106000020E610000001000000010300000001000000060000002375697DC1722240ECD3CC93A8B8444096AA258401722240981650B96EB8444058907697FA712240744D171A28B84440A1829EC152722240808705EAA5B74440F914BDC7B072224004BB9A8793B744402375697DC1722240ECD3CC93A8B84440',
                 'Délibération interdisant la pêche à pied');
-
--- INSERTING TAGS <-> REGULATIONS FROM CURRENT REGULATIONS
-        INSERT INTO tags_regulatory_areas_new (tags_id, regulatory_areas_id)
-        SELECT t.id, r.id
-        FROM regulatory_areas r
-                 INNER JOIN tags t ON t.name = ANY (string_to_array(r.thematique, ', '));
-
--- INSERTING SUBTAGS <-> REGULATIONS FROM RANDOM REGULATIONS
-        INSERT INTO tags_regulatory_areas_new (tags_id, regulatory_areas_id)
-        VALUES (10, 16),
-               (5, 16),
-               (9, 17),
-               (10, 17);
-
-        INSERT INTO themes_regulatory_areas_new (themes_id, regulatory_areas_id)
-        VALUES (101, 16),
-               (281, 16),
-               (9, 17),
-               (352, 17),
-               (349, 17),
-               (350, 17);
-
     END;
 $$
 
