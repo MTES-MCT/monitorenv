@@ -60,7 +60,6 @@ export function RegulatoryAreaForm() {
         creation: regulatoryArea?.creation,
         date: regulatoryArea?.date ?? customDayjs().toISOString(),
         dateFin: regulatoryArea?.dateFin,
-        dureeValidite: regulatoryArea?.dureeValidite,
         editeur: regulatoryArea?.editeur,
         editionBo: regulatoryArea?.editionBo,
         editionCacem: regulatoryArea?.editionCacem,
@@ -76,7 +75,6 @@ export function RegulatoryAreaForm() {
         resume: regulatoryArea?.resume,
         source: regulatoryArea?.source,
         tags: regulatoryArea?.tags ?? [],
-        temporalite: regulatoryArea?.temporalite,
         themes: regulatoryArea?.themes ?? [],
         type: regulatoryArea?.type,
         url: regulatoryArea?.url
