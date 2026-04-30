@@ -7,4 +7,5 @@ SELECT
 FROM prod.reg_cacem
 WHERE 
   geom IS NOT NULL
-  AND ref_reg IS NOT NULL;
+  AND ref_reg IS NOT NULL
+  AND poly_name IS NULL;
