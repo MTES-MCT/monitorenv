@@ -9,17 +9,17 @@ import type { AtLeast } from 'types'
 
 /* Is auto-save enabled.
  *
- * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.env()`
+ * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.expose()`
  * instead of `import.meta.env`.
  */
 export const isReportingAutoSaveEnabled = () =>
   isCypress()
-    ? window.Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED') === 'true'
+    ? window.Cypress.expose('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED') === 'true'
     : import.meta.env.FRONTEND_REPORTING_FORM_AUTO_SAVE_ENABLED === 'true'
 
 export const isReportingAutoUpdateEnabled = () =>
   isCypress()
-    ? window.Cypress.env('CYPRESS_REPORTING_FORM_AUTO_UPDATE') === 'true'
+    ? window.Cypress.expose('CYPRESS_REPORTING_FORM_AUTO_UPDATE') === 'true'
     : import.meta.env.FRONTEND_REPORTING_FORM_AUTO_UPDATE === 'true'
 
 /**

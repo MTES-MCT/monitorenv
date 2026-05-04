@@ -6,7 +6,7 @@ context('Mission', () => {
   it('Missions should be created and saved in store When auto-save is not enabled', () => {
     cy.visit(`/side_window`, {
       onBeforeLoad: () => {
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'false')
+        Cypress.expose('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'false')
       }
     })
 

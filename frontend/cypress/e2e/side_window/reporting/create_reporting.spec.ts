@@ -11,7 +11,7 @@ context('Reportings', () => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`, {
       onBeforeLoad() {
-        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
+        Cypress.expose('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
       }
     })
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')

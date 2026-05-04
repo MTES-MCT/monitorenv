@@ -6,9 +6,9 @@ export function visitSideWindow(isAutoSaveEnabled = 'true') {
       Object.defineProperty(window, 'EventSource', { value: EventSource })
       Object.defineProperty(window, 'mockEventSources', { value: sources })
 
-      Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', isAutoSaveEnabled)
-      Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
-      Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
+      Cypress.expose('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', isAutoSaveEnabled)
+      Cypress.expose('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
+      Cypress.expose('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
     }
   })
 }

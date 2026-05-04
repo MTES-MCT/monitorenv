@@ -9,16 +9,16 @@ import type { Mission, NewMission } from '../../../../domain/entities/missions'
 /**
  * Is auto-save enabled.
  *
- * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.env()`
+ * When running Cypress tests, we modify this env var in spec file, so we use `window.Cypress.expose()`
  * instead of `import.meta.env`.
  */
 export const isMissionAutoSaveEnabled = () =>
   isCypress()
-    ? window.Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED') === 'true'
+    ? window.Cypress.expose('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED') === 'true'
     : import.meta.env.FRONTEND_MISSION_FORM_AUTO_SAVE_ENABLED === 'true'
 export const isMissionAutoUpdateEnabled = () =>
   isCypress()
-    ? window.Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE') === 'true'
+    ? window.Cypress.expose('CYPRESS_MISSION_FORM_AUTO_UPDATE') === 'true'
     : import.meta.env.FRONTEND_MISSION_FORM_AUTO_UPDATE === 'true'
 
 /**

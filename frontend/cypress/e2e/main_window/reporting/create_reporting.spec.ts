@@ -14,7 +14,7 @@ context('Reporting', () => {
 
     cy.visit(`/`, {
       onBeforeLoad() {
-        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
+        Cypress.expose('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
       }
     })
 
