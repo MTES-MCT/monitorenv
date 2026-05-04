@@ -17,16 +17,24 @@ export function ThemesDetailsCell({ themes }: { themes?: ThemeFromAPI[] }) {
     <>
       {formattedThemes.map(theme => (
         <div key={theme.id}>
-          <ThemeText>{theme.name}</ThemeText>
-          {theme.subThemes && <SubThemesText>({theme.subThemes})</SubThemesText>}
+          <ThemeText title={theme.name}>{theme.name}</ThemeText>
+          {theme.subThemes && <SubThemesText title={theme.subThemes}>({theme.subThemes})</SubThemesText>}
         </div>
       ))}
     </>
   )
 }
 
-const ThemeText = styled.span``
+const ThemeText = styled.span`
+  color: ${p => p.theme.color.charcoal};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
 
 const SubThemesText = styled.div`
   color: ${p => p.theme.color.slateGray};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
