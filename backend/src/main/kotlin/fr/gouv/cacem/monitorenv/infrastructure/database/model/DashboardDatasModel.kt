@@ -33,7 +33,7 @@ data class DashboardDatasModel(
     val vigilanceAreaModel: VigilanceAreaModel?,
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regulations_cacem_id")
-    val regulatoryAreaModel: RegulatoryAreaNewModel?,
+    val regulatoryAreaModel: RegulatoryAreaModel?,
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id")
     val controlUnitModel: ControlUnitModel?,

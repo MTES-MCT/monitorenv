@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import org.locationtech.jts.geom.Geometry
 
-interface IRegulatoryAreaNewRepository {
+interface IRegulatoryAreaRepository {
     fun findAll(
         controlPlan: String? = null,
         query: String? = null,

@@ -1,16 +1,16 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
-import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaNewModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel, Int> {
+interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> {
     @Query(
         value =
             """
             SELECT DISTINCT regulatoryArea
-            FROM RegulatoryAreaNewModel regulatoryArea
+            FROM RegulatoryAreaModel regulatoryArea
             LEFT JOIN regulatoryArea.themes th
             LEFT JOIN regulatoryArea.tags tg
             WHERE (:seaFronts IS NULL OR regulatoryArea.facade IN (:seaFronts))
@@ -32,14 +32,14 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
         tags: List<Int>? = null,
         themes: List<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
-    ): List<RegulatoryAreaNewModel>
+    ): List<RegulatoryAreaModel>
 
-    fun findAllByCreationIsNull(): List<RegulatoryAreaNewModel>
+    fun findAllByCreationIsNull(): List<RegulatoryAreaModel>
 
     @Query(
         """
         SELECT regulatoryArea.layerName, COUNT(regulatoryArea)
-        FROM RegulatoryAreaNewModel regulatoryArea
+        FROM RegulatoryAreaModel regulatoryArea
         WHERE regulatoryArea.layerName IS NOT NULL
         GROUP BY regulatoryArea.layerName
         ORDER BY regulatoryArea.layerName
@@ -50,7 +50,7 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
     @Query(
         value =
             """
-            SELECT r.id FROM RegulatoryAreaNewModel r
+            SELECT r.id FROM RegulatoryAreaModel r
             WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), ST_Buffer(st_setsrid(:geometry, 4326), 0))
         """,
     )
@@ -75,5 +75,5 @@ interface IDBRegulatoryAreaNewRepository : JpaRepository<RegulatoryAreaNewModel,
     fun findAllCompleteByIds(
         ids: List<Int>,
         axis: String,
-    ): List<RegulatoryAreaNewModel>
+    ): List<RegulatoryAreaModel>
 }

@@ -27,7 +27,7 @@ WHERE NOT EXISTS (SELECT 1
                     AND tva.vigilance_areas_id = va.id);
 
 -- INSERTING SUBTAGS <-> REGULATIONS FROM RANDOM REGULATIONS
-INSERT INTO tags_regulatory_areas_new (tags_id, regulatory_areas_id)
+INSERT INTO tags_regulatory_areas (tags_id, regulatory_areas_id)
 VALUES (10, 16),
        (5, 16),
        (9, 17),
@@ -45,7 +45,7 @@ VALUES (10, 16),
        (4,625),
        (5, 697);
 
-INSERT INTO themes_regulatory_areas_new (themes_id, regulatory_areas_id)
+INSERT INTO themes_regulatory_areas (themes_id, regulatory_areas_id)
 VALUES (101, 16),
        (281, 16),
        (9, 17),

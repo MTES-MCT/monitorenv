@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -10,7 +10,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
 class GetAllLayerNamesUTest {
-    private val regulatoryAreaRepository: IRegulatoryAreaNewRepository = mock()
+    private val regulatoryAreaRepository: IRegulatoryAreaRepository = mock()
     private val getAllLayerNames = GetAllLayerNames(regulatoryAreaRepository)
 
     @Test

@@ -1,12 +1,12 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
 class GetAllLayerNames(
-    private val regulatoryAreaRepository: IRegulatoryAreaNewRepository,
+    private val regulatoryAreaRepository: IRegulatoryAreaRepository,
 ) {
     private val logger = LoggerFactory.getLogger(GetAllLayerNames::class.java)
 

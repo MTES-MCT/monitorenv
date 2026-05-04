@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaNewFixture
+import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -12,7 +12,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
 class GetAllRegulatoryAreasToCompleteUTest {
-    private val regulatoryAreaRepository: IRegulatoryAreaNewRepository = mock()
+    private val regulatoryAreaRepository: IRegulatoryAreaRepository = mock()
     private val getAllRegulatoryAreasToComplete = GetAllRegulatoryAreasToComplete(regulatoryAreaRepository)
 
     @Test
@@ -20,8 +20,8 @@ class GetAllRegulatoryAreasToCompleteUTest {
         // Given
         val expectedRegulatoryAreas =
             listOf(
-                RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 1),
-                RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 2),
+                RegulatoryAreaFixture.aRegulatoryArea(id = 1),
+                RegulatoryAreaFixture.aRegulatoryArea(id = 2),
             )
         given(regulatoryAreaRepository.findAllToComplete()).willReturn(expectedRegulatoryAreas)
 
@@ -51,7 +51,7 @@ class GetAllRegulatoryAreasToCompleteUTest {
     @Test
     fun `execute should return single regulatory area to create`(log: CapturedOutput) {
         // Given
-        val expectedRegulatoryAreas = listOf(RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 1))
+        val expectedRegulatoryAreas = listOf(RegulatoryAreaFixture.aRegulatoryArea(id = 1))
         given(regulatoryAreaRepository.findAllToComplete()).willReturn(expectedRegulatoryAreas)
 
         // When

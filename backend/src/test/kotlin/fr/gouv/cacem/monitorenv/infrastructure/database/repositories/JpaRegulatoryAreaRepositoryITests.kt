@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.assertj.core.api.Assertions.assertThat
@@ -12,15 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
-class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
+class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     @Autowired
-    private lateinit var jpaRegulatoryAreaNewRepository: JpaRegulatoryAreaNewRepository
+    private lateinit var jpaRegulatoryAreaRepository: JpaRegulatoryAreaRepository
 
     @Test
     @Transactional
     fun `findAll Should return all regulatoryAreas`() {
         // When
-        val regulatoryAreas = jpaRegulatoryAreaNewRepository.findAll()
+        val regulatoryAreas = jpaRegulatoryAreaRepository.findAll()
         assertThat(regulatoryAreas).hasSize(13)
     }
 
@@ -28,7 +28,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll should return all regulatoryAreas when onlyRecentsArea filter is set to TRUE`() {
         val regulatoryAreas =
-            jpaRegulatoryAreaNewRepository.findAll(
+            jpaRegulatoryAreaRepository.findAll(
                 controlPlan = null,
                 seaFronts = null,
                 tags = null,
@@ -43,7 +43,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll should return all regulatoryAreas when seafront filter is set to NAMO`() {
         val regulatoryAreas =
-            jpaRegulatoryAreaNewRepository.findAll(
+            jpaRegulatoryAreaRepository.findAll(
                 controlPlan = null,
                 seaFronts = listOf("NAMO"),
                 tags = null,
@@ -58,7 +58,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     fun `findAll should return all regulatoryAreas when seafront filter is set to MED`() {
         // When
         val regulatoryAreas =
-            jpaRegulatoryAreaNewRepository.findAll(
+            jpaRegulatoryAreaRepository.findAll(
                 controlPlan = null,
                 seaFronts = listOf("MED"),
                 tags = null,
@@ -74,7 +74,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     fun `findAll should return all regulatoryAreas when tags filter is set to 'subtagMouillage1'`() {
         // When
         val regulatoryAreas =
-            jpaRegulatoryAreaNewRepository.findAll(
+            jpaRegulatoryAreaRepository.findAll(
                 controlPlan = null,
                 seaFronts = null,
                 tags = listOf(10),
@@ -90,7 +90,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     fun `findAll should return all regulatoryAreas when themes filter is set to 'Pêche à pied'`() {
         // When
         val regulatoryAreas =
-            jpaRegulatoryAreaNewRepository.findAll(
+            jpaRegulatoryAreaRepository.findAll(
                 controlPlan = null,
                 seaFronts = null,
                 tags = null,
@@ -105,7 +105,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findById Should return specific RegulatoryArea`() {
         // When
-        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findById(300)
+        val requestedRegulatoryArea = jpaRegulatoryAreaRepository.findById(300)
 
         // Then
         require(requestedRegulatoryArea !== null)
@@ -132,7 +132,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     fun `findAllByIds Should return specific RegulatoryArea sorted by axis NORTH_SOUTH`() {
         // When
         val requestedRegulatoryArea =
-            jpaRegulatoryAreaNewRepository.findAllByIds(
+            jpaRegulatoryAreaRepository.findAllByIds(
                 listOf(300, 425),
                 AxisEnum.NORTH_SOUTH,
             )
@@ -164,7 +164,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     fun `findAllByIds Should return specific RegulatoryArea sorted by axis SOUTH_NORTH`() {
         // When
         val requestedRegulatoryArea =
-            jpaRegulatoryAreaNewRepository.findAllByIds(
+            jpaRegulatoryAreaRepository.findAllByIds(
                 listOf(300, 425),
                 AxisEnum.SOUTH_NORTH,
             )
@@ -178,7 +178,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific RegulatoryArea sorted by axis EAST_WEST`() {
         // When
-        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(160, 359), AxisEnum.EAST_WEST)
+        val requestedRegulatoryArea = jpaRegulatoryAreaRepository.findAllByIds(listOf(160, 359), AxisEnum.EAST_WEST)
 
         // Then
         assertThat(requestedRegulatoryArea[0].id).isEqualTo(359)
@@ -189,7 +189,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAllByIds Should return specific RegulatoryArea sorted by axis WEST_EAST`() {
         // When
-        val requestedRegulatoryArea = jpaRegulatoryAreaNewRepository.findAllByIds(listOf(160, 359), AxisEnum.WEST_EAST)
+        val requestedRegulatoryArea = jpaRegulatoryAreaRepository.findAllByIds(listOf(160, 359), AxisEnum.WEST_EAST)
 
         // Then
         assertThat(requestedRegulatoryArea[0].id).isEqualTo(160)
@@ -199,7 +199,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Test
     fun `findAllLayerNames should return all layer names`() {
         // When
-        val layerNames = jpaRegulatoryAreaNewRepository.findAllLayerNames()
+        val layerNames = jpaRegulatoryAreaRepository.findAllLayerNames()
 
         println("Layer names: $layerNames")
         // Then
@@ -220,7 +220,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Test
     fun `findAllToComplete should return all regulatory areas to create`() {
         // When
-        val regulatoryAreasToComplete = jpaRegulatoryAreaNewRepository.findAllToComplete()
+        val regulatoryAreasToComplete = jpaRegulatoryAreaRepository.findAllToComplete()
         // Then
         assertThat(regulatoryAreasToComplete).hasSize(2)
         assertThat(regulatoryAreasToComplete[0].id).isEqualTo(123)
@@ -273,7 +273,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
                 additionalRefReg = null,
             )
 
-        val savedRegulatoryArea = jpaRegulatoryAreaNewRepository.save(regulatoryArea)
+        val savedRegulatoryArea = jpaRegulatoryAreaRepository.save(regulatoryArea)
 
         assertThat(savedRegulatoryArea.id).isEqualTo(9999)
         assertThat(savedRegulatoryArea.layerName).isEqualTo("Test_Area")
@@ -292,7 +292,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
     @Test
     @Transactional
     fun `save should update regulatory area`() {
-        val existingRegulatoryArea = jpaRegulatoryAreaNewRepository.findById(300)
+        val existingRegulatoryArea = jpaRegulatoryAreaRepository.findById(300)
         println("Existing regulatory area before update: $existingRegulatoryArea")
         require(existingRegulatoryArea != null)
 
@@ -304,7 +304,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
                 themes = listOf(aTheme(id = 9)),
             )
 
-        val savedRegulatoryArea = jpaRegulatoryAreaNewRepository.save(updatedRegulatoryArea)
+        val savedRegulatoryArea = jpaRegulatoryAreaRepository.save(updatedRegulatoryArea)
 
         assertThat(savedRegulatoryArea.id).isEqualTo(300)
         assertThat(savedRegulatoryArea.layerName).isEqualTo("Updated_RNN_Iroise")
@@ -326,7 +326,7 @@ class JpaRegulatoryAreaNewRepositoryITests : AbstractDBTests() {
         val polygon = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val regulatoryAreas = jpaRegulatoryAreaNewRepository.findAllIdsByGeometry(polygon)
+        val regulatoryAreas = jpaRegulatoryAreaRepository.findAllIdsByGeometry(polygon)
 
         // Then
         assertThat(regulatoryAreas).hasSize(4)

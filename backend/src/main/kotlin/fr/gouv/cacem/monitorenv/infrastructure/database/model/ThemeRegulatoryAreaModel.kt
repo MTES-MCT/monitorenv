@@ -12,10 +12,10 @@ import jakarta.persistence.Table
 import java.io.Serializable
 
 @Entity
-@Table(name = "themes_regulatory_areas_new")
-data class ThemeRegulatoryAreaNewModel(
+@Table(name = "themes_regulatory_areas")
+data class ThemeRegulatoryAreaModel(
     @EmbeddedId
-    var id: ThemeRegulatoryAreaNewPk,
+    var id: ThemeRegulatoryAreaPk,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "themes_id")
     @MapsId("themeId")
@@ -23,10 +23,10 @@ data class ThemeRegulatoryAreaNewModel(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regulatory_areas_id")
     @MapsId("regulatoryAreaId")
-    val regulatoryArea: RegulatoryAreaNewModel,
+    val regulatoryArea: RegulatoryAreaModel,
 ) {
     companion object {
-        fun toThemeEntities(themes: List<ThemeRegulatoryAreaNewModel>): List<ThemeEntity> {
+        fun toThemeEntities(themes: List<ThemeRegulatoryAreaModel>): List<ThemeEntity> {
             val parents = themes.map { it.theme }.filter { it.parent === null }
 
             return parents.map { parent ->
@@ -38,24 +38,24 @@ data class ThemeRegulatoryAreaNewModel(
 
         fun fromThemeEntity(
             theme: ThemeEntity,
-            regulatoryAreaNewModel: RegulatoryAreaNewModel,
-        ): ThemeRegulatoryAreaNewModel =
-            ThemeRegulatoryAreaNewModel(
-                id = ThemeRegulatoryAreaNewPk(theme.id, regulatoryAreaNewModel.id),
+            regulatoryAreaModel: RegulatoryAreaModel,
+        ): ThemeRegulatoryAreaModel =
+            ThemeRegulatoryAreaModel(
+                id = ThemeRegulatoryAreaPk(theme.id, regulatoryAreaModel.id),
                 theme = ThemeModel.Companion.fromThemeEntity(theme),
-                regulatoryArea = regulatoryAreaNewModel,
+                regulatoryArea = regulatoryAreaModel,
             )
 
         fun fromThemesEntities(
             themes: List<ThemeEntity>,
-            regulatoryAreaNewModel: RegulatoryAreaNewModel,
-        ): List<ThemeRegulatoryAreaNewModel> =
+            regulatoryAreaModel: RegulatoryAreaModel,
+        ): List<ThemeRegulatoryAreaModel> =
             themes
-                .map { theme -> fromThemeEntity(theme, regulatoryAreaNewModel) }
+                .map { theme -> fromThemeEntity(theme, regulatoryAreaModel) }
                 .plus(
                     themes.flatMap { theme ->
                         theme.subThemes.map { subTheme ->
-                            fromThemeEntity(subTheme, regulatoryAreaNewModel)
+                            fromThemeEntity(subTheme, regulatoryAreaModel)
                         }
                     },
                 )
@@ -63,7 +63,7 @@ data class ThemeRegulatoryAreaNewModel(
 }
 
 @Embeddable
-data class ThemeRegulatoryAreaNewPk(
+data class ThemeRegulatoryAreaPk(
     val themeId: Int,
     val regulatoryAreaId: Int,
 ) : Serializable

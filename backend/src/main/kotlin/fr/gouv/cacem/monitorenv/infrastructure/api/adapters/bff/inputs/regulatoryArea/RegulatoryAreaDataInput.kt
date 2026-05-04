@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.AdditionalRefRegEntity
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import org.locationtech.jts.geom.MultiPolygon

@@ -26,12 +26,12 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
     getLayerNames: builder.query<{ layerNames: string[] }, void>({
       providesTags: () => [{ id: 'LAYERS_NAME', type: 'RegulatoryAreas' }],
-      query: () => 'v2/regulatory-areas/layer-names',
+      query: () => 'v1/regulatory-areas/layer-names',
       transformErrorResponse: response => new FrontendApiError(GET_LAYER_NAMES_ERROR_MESSAGE, response)
     }),
     getRegulatoryAreaById: builder.query<RegulatoryArea.RegulatoryAreaWithBbox, number>({
       providesTags: (_, __, id) => [{ id, type: 'RegulatoryAreas' }],
-      query: id => `v2/regulatory-areas/${id}`,
+      query: id => `v1/regulatory-areas/${id}`,
       transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREA_ERROR_MESSAGE, response),
       transformResponse: (response: RegulatoryArea.RegulatoryAreaFromAPI) => {
         const bbox = boundingExtent(response.geom?.coordinates.flat().flat() as Coordinate[])
@@ -54,7 +54,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
             ]
           : // an error occurred, but we still want to refetch this query when `{ type: 'RegulatoryAreas', id: 'LIST' }` is invalidated
             [{ id: 'LIST', type: 'RegulatoryAreas' }],
-      query: filters => getQueryString('v2/regulatory-areas', filters),
+      query: filters => getQueryString('v1/regulatory-areas', filters),
       transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response),
       transformResponse: (response: RegulatoryArea.RegulatoryAreasFromApi): RegulatoryArea.RegulatoryAreasFromApi => ({
         regulatoryAreasByLayer: response.regulatoryAreasByLayer.map(group => ({
@@ -71,12 +71,12 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       RegulatoryArea.RegulatoryAreaWithBbox[],
       RegulatoryArea.RegulatoryAreaByIdsForApi
     >({
-      query: body => ({ body, method: 'POST', url: '/v2/regulatory-areas' }),
+      query: body => ({ body, method: 'POST', url: 'v1/regulatory-areas' }),
       transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response)
     }),
     getRegulatoryAreasToComplete: builder.query<RegulatoryArea.RegulatoryAreaToComplete[], void>({
       providesTags: () => [{ id: 'TO_COMPLETE', type: 'RegulatoryAreas' }],
-      query: () => 'v2/regulatory-areas/to-complete',
+      query: () => 'v1/regulatory-areas/to-complete',
       transformErrorResponse: response =>
         new FrontendApiError("Nous n'avons pas pu récupérer les zones réglementaires à compléter", response)
     }),
@@ -93,7 +93,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       query: regulatoryArea => ({
         body: regulatoryArea,
         method: 'PUT',
-        url: 'v2/regulatory-areas'
+        url: 'v1/regulatory-areas'
       })
     })
   })

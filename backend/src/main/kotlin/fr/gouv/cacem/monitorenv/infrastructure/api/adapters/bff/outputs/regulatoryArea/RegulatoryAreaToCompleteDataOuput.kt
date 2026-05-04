@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
