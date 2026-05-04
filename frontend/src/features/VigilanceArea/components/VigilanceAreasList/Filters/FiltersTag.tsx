@@ -87,12 +87,13 @@ export function FilterTags() {
 
   return (
     <StyledContainer data-cy="vigilance-areas-filter-tags">
-      {period === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD ? (
+      {period === VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && (
         <CustomPeriodContainer>
           <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>
           <SpecificPeriodFilter />
         </CustomPeriodContainer>
-      ) : (
+      )}
+      {period !== VigilanceArea.VigilanceAreaFilterPeriod.SPECIFIC_PERIOD && period !== INITIAL_STATE.period && (
         <SingleTag onDelete={() => onDeleteSimpleTag('period')}>
           {VigilanceArea.VigilanceAreaFilterPeriodLabel[period]}
         </SingleTag>
@@ -156,7 +157,6 @@ export function FilterTags() {
           {String(`Façade ${seaFront}`)}
         </SingleTag>
       ))}
-
       {status && (
         <SingleTag onDelete={() => onDeleteSimpleTag('status')}>
           {String(`Statut ${VigilanceArea.StatusLabel[status]}`)}

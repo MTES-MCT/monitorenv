@@ -104,7 +104,7 @@ export function FilterTags({
         </StyledCustomPeriodContainer>
       )}
       <StyledContainer data-cy="missions-filter-tags">
-        {selectedPeriod !== DateRangeEnum.CUSTOM && (
+        {selectedPeriod !== DateRangeEnum.CUSTOM && selectedPeriod !== INITIAL_STATE.selectedPeriod && (
           <SingleTag onDelete={() => onDeleteSimpleTag(MissionFiltersEnum.PERIOD_FILTER)}>
             {MissionDateRangeLabel[selectedPeriod]}
           </SingleTag>
