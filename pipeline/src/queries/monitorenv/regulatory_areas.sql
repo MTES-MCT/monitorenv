@@ -21,11 +21,11 @@ SELECT
     STRING_AGG(DISTINCT t.name, ',') AS themes,
     STRING_AGG(DISTINCT tag.name, ',') AS tags
 FROM regulatory_areas ra
-LEFT JOIN themes_regulatory_areas_new tra
+LEFT JOIN themes_regulatory_areas tra
        ON tra.regulatory_areas_id = ra.id
 LEFT JOIN themes t
        ON t.id = tra.themes_id
-LEFT JOIN tags_regulatory_areas_new trt
+LEFT JOIN tags_regulatory_areas trt
        ON trt.regulatory_areas_id = ra.id
 LEFT JOIN tags tag
        ON tag.id = trt.tags_id
