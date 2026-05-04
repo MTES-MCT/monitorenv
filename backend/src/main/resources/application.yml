@@ -7,6 +7,11 @@ server:
     mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
     min-response-size: 2048
 
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE  # affiche les valeurs des paramètres
+    org.hibernate.stat: DEBUG           # statistiques (nb requêtes, temps)
 host:
   ip: ${MONITORENV_URL}
 
@@ -70,6 +75,7 @@ spring:
   flyway:
     locations: ${FLYWAY_MIGRATION_PATH}
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: validate
     properties:
@@ -80,6 +86,8 @@ spring:
         jdbc:
           time_zone: UTC
         default_batch_fetch_size: ${MONITORENV_BATCH_SIZE:50}
+        format_sql: true
+        generate_statistics: true
   datasource:
     url: ${ENV_DB_URL}
     driver-class-name: org.postgresql.Driver
@@ -127,3 +135,4 @@ monitorfish:
 rapportnav:
   url: ${RAPPORTNAV_URL}
   timeout: 3000
+

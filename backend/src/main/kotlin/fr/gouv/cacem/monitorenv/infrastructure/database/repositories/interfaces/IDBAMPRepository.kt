@@ -43,7 +43,8 @@ interface IDBAMPRepository : JpaRepository<AMPModel, Int> {
             a.mpa_oriname,
             a.ref_reg,
             a.mpa_type,
-            a.url_legicem
+            a.url_legicem,
+            a.updated_at
         FROM amp_cacem a
         WHERE
             (:withGeometry IS FALSE OR :minX IS NULL OR :minY IS NULL OR :maxX IS NULL OR :maxY IS NULL)

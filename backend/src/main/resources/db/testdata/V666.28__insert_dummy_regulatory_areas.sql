@@ -605,3 +605,4 @@ $$
 $$
 
 
+/* COPY regulatory_areas FROM '/data/reg.csv' DELIMITER ';' CSV HEADER; */

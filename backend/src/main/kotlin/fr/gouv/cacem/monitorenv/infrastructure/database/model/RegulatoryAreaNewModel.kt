@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.AdditionalRefRegEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.utils.ByteArrayConverter
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -12,8 +13,11 @@ import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
+import org.locationtech.jts.simplify.TopologyPreservingSimplifier
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.annotation.JsonDeserialize
@@ -21,6 +25,8 @@ import tools.jackson.databind.annotation.JsonSerialize
 import tools.jackson.databind.json.JsonMapper
 import java.time.Instant
 import java.time.ZoneOffset
+
+private val logger: Logger = LoggerFactory.getLogger(ByteArrayConverter::class.java)
 
 @Entity
 @Table(name = "regulatory_areas")
@@ -69,43 +75,73 @@ data class RegulatoryAreaNewModel(
     fun toRegulatoryArea(
         mapper: JsonMapper,
         withGeometry: Boolean = true,
-    ) = RegulatoryAreaEntity(
-        id = id,
-        creation = creation?.atZone(ZoneOffset.UTC),
-        plan = plan,
-        date = date?.atZone(ZoneOffset.UTC),
-        dateFin = dateFin?.atZone(ZoneOffset.UTC),
-        dureeValidite = dureeValidite,
-        editeur = editeur,
-        editionBo = editionBo?.atZone(ZoneOffset.UTC),
-        editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
-        facade = facade,
-        geom = if (withGeometry) geom else null,
-        layerName = layerName,
-        polyName = polyName,
-        observation = observation,
-        refReg = refReg,
-        resume = resume,
-        source = source,
-        temporalite = temporalite,
-        tags = TagRegulatoryAreaNewModel.Companion.toTagEntities(tags),
-        themes = ThemeRegulatoryAreaNewModel.Companion.toThemeEntities(themes),
-        type = type,
-        url = url,
-        additionalRefReg =
-            additionalRefReg.let {
-                mapper.convertValue(
-                    it,
-                    object : TypeReference<
-                        List<
-                            AdditionalRefRegEntity,
-                        >,
-                    >() {},
-                )
-            },
-        authorizationPeriods = authorizationPeriods,
-        prohibitionPeriods = prohibitionPeriods,
-    )
+        zoom: Int? = null,
+    ): RegulatoryAreaEntity {
+        logger.error("start mapping of reg $id")
+        val simplifiedGeom: MultiPolygon? =
+            if (withGeometry && zoom != null && zoom < 14 && geom != null) {
+                val tolerance =
+                    when {
+                        zoom <= 6 -> 0.02
+                        zoom <= 8 -> 0.01
+                        zoom <= 11 -> 0.001
+                        else -> 0.0001
+                    }
+                if (!geom.isValid) {
+                    logger.error("geometry invalid of reg $id")
+                    null
+                }
+                val simpGeom = TopologyPreservingSimplifier.simplify(geom, tolerance)
+                when (simpGeom) {
+                    is MultiPolygon -> simpGeom
+//                is Polygon -> geom.factory.createMultiPolygon(arrayOf(simpGeom))
+                    else -> {
+                        logger.error("Unsupported geom type: ${simpGeom.javaClass.name} of reg $id")
+                        null
+                    }
+                }
+            } else {
+                null
+            }
+        logger.error("geometry simplifed of reg $id")
+        return RegulatoryAreaEntity(
+            id = id,
+            creation = creation?.atZone(ZoneOffset.UTC),
+            plan = plan,
+            date = date?.atZone(ZoneOffset.UTC),
+            dateFin = dateFin?.atZone(ZoneOffset.UTC),
+            dureeValidite = dureeValidite,
+            editeur = editeur,
+            editionBo = editionBo?.atZone(ZoneOffset.UTC),
+            editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
+            facade = facade,
+            geom = if (withGeometry) simplifiedGeom else null,
+            layerName = layerName,
+            polyName = polyName,
+            observation = observation,
+            refReg = refReg,
+            resume = resume,
+            source = source,
+            temporalite = temporalite,
+            tags = TagRegulatoryAreaNewModel.Companion.toTagEntities(tags),
+            themes = ThemeRegulatoryAreaNewModel.Companion.toThemeEntities(themes),
+            type = type,
+            url = url,
+            additionalRefReg =
+                additionalRefReg.let {
+                    mapper.convertValue(
+                        it,
+                        object : TypeReference<
+                            List<
+                                AdditionalRefRegEntity,
+                            >,
+                        >() {},
+                    )
+                },
+            authorizationPeriods = authorizationPeriods,
+            prohibitionPeriods = prohibitionPeriods,
+        )
+    }
 
     companion object {
         fun fromRegulatoryAreaEntity(
