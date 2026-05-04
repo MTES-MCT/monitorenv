@@ -1,8 +1,8 @@
 -- Supprimer les données des tables dépendantes
 DELETE FROM dashboard_datas;
 
-DELETE FROM themes_regulatory_areas_new;
-DELETE FROM tags_regulatory_areas_new;
+DELETE FROM themes_regulatory_areas;
+DELETE FROM tags_regulatory_areas;
 DELETE FROM regulatory_areas;
 
 INSERT INTO public.regulatory_areas (
@@ -94,5 +94,5 @@ INSERT INTO public.regulatory_areas (
 );
 
 
-INSERT INTO themes_regulatory_areas_new (regulatory_areas_id, themes_id) VALUES(1, 101);
-INSERT INTO themes_regulatory_areas_new (regulatory_areas_id, themes_id) VALUES(1, 296);
+INSERT INTO themes_regulatory_areas (regulatory_areas_id, themes_id) VALUES(1, 101);
+INSERT INTO themes_regulatory_areas (regulatory_areas_id, themes_id) VALUES(1, 296);
