@@ -33,7 +33,9 @@ export function FrequencyCell({ periods }: { periods: VigilanceArea.VigilanceAre
           <Title>Vigilance simple</Title>
           <PeriodWrapper>
             {simpleVigilanceAreaPeriods.map(period => (
-              <span key={period.id}>{computeVigilanceAreaPeriod(period)}</span>
+              <span key={period.id} title={computeVigilanceAreaPeriod(period)}>
+                {computeVigilanceAreaPeriod(period)}
+              </span>
             ))}
           </PeriodWrapper>
         </div>
@@ -44,7 +46,9 @@ export function FrequencyCell({ periods }: { periods: VigilanceArea.VigilanceAre
           <Title>Vigilance critique</Title>
           <PeriodWrapper>
             {criticalVigilanceAreaPeriods.map(period => (
-              <span key={period.id}>{computeVigilanceAreaPeriod(period)}</span>
+              <span key={period.id} title={computeVigilanceAreaPeriod(period)}>
+                {computeVigilanceAreaPeriod(period)}
+              </span>
             ))}
           </PeriodWrapper>
         </div>
@@ -62,6 +66,11 @@ const PeriodWrapper = styled.span`
   display: flex;
   flex-direction: column;
   gap: 4px;
+  > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 `
 const Title = styled.span`
   color: ${p => p.theme.color.slateGray};

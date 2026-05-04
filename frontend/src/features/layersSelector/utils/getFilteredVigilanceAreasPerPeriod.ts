@@ -58,7 +58,7 @@ function isMatchForSingleOccurrence(
   return isWithinPeriod(endDate, startDate, startDateFilter, endDateFilter)
 }
 
-function isMatchForRecurringOccurrence(
+export function isMatchForRecurringOccurrence(
   startDate: Dayjs,
   endDate: Dayjs,
   startDateFilter: Dayjs,
@@ -96,7 +96,11 @@ function isMatchForRecurringOccurrence(
 }
 
 export const getFilterVigilanceAreasPerPeriod = (
-  vigilanceAreas: (VigilanceArea.VigilanceAreaLayer | VigilanceArea.VigilanceAreaFromApi)[],
+  vigilanceAreas: (
+    | VigilanceArea.VigilanceAreaLayer
+    | VigilanceArea.VigilanceAreaFromApi
+    | VigilanceArea.VigilanceArea
+  )[],
   periodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined,
   vigilanceAreaSpecificPeriodFilter?: string[],
   vigilanceAreaTypeFilter?: VigilanceArea.VigilanceAreaFilterType[],
@@ -133,7 +137,8 @@ export const getFilterVigilanceAreasPerPeriod = (
       const startDate = customDayjs(period.startDatePeriod).utc()
       const endDate = customDayjs(period.endDatePeriod).utc()
 
-      // in case there is no end of recurrence (because endingCondition is NEVER) we set a default end date to the end of the period filter
+      // in case there is no end of recurrence (because endingCondition is NEVER)
+      // we set a default end date to the end of the period filter
       const loopStopDate = period.computedEndDate
         ? customDayjs(period.computedEndDate)
         : customDayjs(endDate).add(5, 'year')
