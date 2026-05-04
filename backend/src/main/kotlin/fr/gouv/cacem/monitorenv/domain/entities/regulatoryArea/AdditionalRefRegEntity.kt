@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2
+package fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea
 
 import java.time.ZonedDateTime
 

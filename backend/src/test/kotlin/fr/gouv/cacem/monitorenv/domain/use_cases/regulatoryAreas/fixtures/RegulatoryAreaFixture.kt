@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 
-class RegulatoryAreaNewFixture {
+class RegulatoryAreaFixture {
     companion object {
-        fun aNewRegulatoryArea(
+        fun aRegulatoryArea(
             id: Int = 1,
             facade: String = "NAMO",
             layerName: String? = "Layername 1",

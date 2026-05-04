@@ -12,10 +12,10 @@ import jakarta.persistence.Table
 import java.io.Serializable
 
 @Entity
-@Table(name = "tags_regulatory_areas_new")
-data class TagRegulatoryAreaNewModel(
+@Table(name = "tags_regulatory_areas")
+data class TagRegulatoryAreaModel(
     @EmbeddedId
-    var id: TagRegulatoryAreaNewPk,
+    var id: TagRegulatoryAreaPk,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tags_id")
     @MapsId("tagId")
@@ -23,10 +23,10 @@ data class TagRegulatoryAreaNewModel(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "regulatory_areas_id")
     @MapsId("regulatoryAreaId")
-    val regulatoryArea: RegulatoryAreaNewModel,
+    val regulatoryArea: RegulatoryAreaModel,
 ) {
     companion object {
-        fun toTagEntities(tags: List<TagRegulatoryAreaNewModel>): List<TagEntity> {
+        fun toTagEntities(tags: List<TagRegulatoryAreaModel>): List<TagEntity> {
             val parents = tags.map { it.tag }.filter { it.parent === null }
 
             return parents.map { parent ->
@@ -38,24 +38,24 @@ data class TagRegulatoryAreaNewModel(
 
         fun fromTagEntity(
             tag: TagEntity,
-            regulatoryAreaNewModel: RegulatoryAreaNewModel,
-        ): TagRegulatoryAreaNewModel =
-            TagRegulatoryAreaNewModel(
-                id = TagRegulatoryAreaNewPk(tag.id, regulatoryAreaNewModel.id),
+            regulatoryAreaModel: RegulatoryAreaModel,
+        ): TagRegulatoryAreaModel =
+            TagRegulatoryAreaModel(
+                id = TagRegulatoryAreaPk(tag.id, regulatoryAreaModel.id),
                 tag = TagModel.Companion.fromTagEntity(tag),
-                regulatoryArea = regulatoryAreaNewModel,
+                regulatoryArea = regulatoryAreaModel,
             )
 
         fun fromTagEntities(
             tags: List<TagEntity>,
-            regulatoryAreaNewModel: RegulatoryAreaNewModel,
-        ): List<TagRegulatoryAreaNewModel> =
+            regulatoryAreaModel: RegulatoryAreaModel,
+        ): List<TagRegulatoryAreaModel> =
             tags
-                .map { tag -> fromTagEntity(tag, regulatoryAreaNewModel) }
+                .map { tag -> fromTagEntity(tag, regulatoryAreaModel) }
                 .plus(
                     tags.flatMap { tag ->
                         tag.subTags.map { subTag ->
-                            fromTagEntity(subTag, regulatoryAreaNewModel)
+                            fromTagEntity(subTag, regulatoryAreaModel)
                         }
                     },
                 )
@@ -63,7 +63,7 @@ data class TagRegulatoryAreaNewModel(
 }
 
 @Embeddable
-data class TagRegulatoryAreaNewPk(
+data class TagRegulatoryAreaPk(
     val tagId: Int,
     val regulatoryAreaId: Int,
 ) : Serializable

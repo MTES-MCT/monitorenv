@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.AdditionalRefRegEntity
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -24,7 +24,7 @@ import java.time.ZoneOffset
 
 @Entity
 @Table(name = "regulatory_areas")
-data class RegulatoryAreaNewModel(
+data class RegulatoryAreaModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     val id: Int,
@@ -50,12 +50,12 @@ data class RegulatoryAreaNewModel(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    var tags: List<TagRegulatoryAreaNewModel>,
+    var tags: List<TagRegulatoryAreaModel>,
     @OneToMany(
         mappedBy = "regulatoryArea",
         fetch = FetchType.LAZY,
     )
-    var themes: List<ThemeRegulatoryAreaNewModel>,
+    var themes: List<ThemeRegulatoryAreaModel>,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
     @Type(JsonBinaryType::class)
@@ -82,8 +82,8 @@ data class RegulatoryAreaNewModel(
             refReg = refReg,
             resume = resume,
             source = source,
-            tags = TagRegulatoryAreaNewModel.Companion.toTagEntities(tags),
-            themes = ThemeRegulatoryAreaNewModel.Companion.toThemeEntities(themes),
+            tags = TagRegulatoryAreaModel.Companion.toTagEntities(tags),
+            themes = ThemeRegulatoryAreaModel.Companion.toThemeEntities(themes),
             type = type,
             url = url,
             additionalRefReg =
@@ -105,8 +105,8 @@ data class RegulatoryAreaNewModel(
         fun fromRegulatoryAreaEntity(
             regulatoryArea: RegulatoryAreaEntity,
             mapper: JsonMapper,
-        ): RegulatoryAreaNewModel =
-            RegulatoryAreaNewModel(
+        ): RegulatoryAreaModel =
+            RegulatoryAreaModel(
                 id = regulatoryArea.id,
                 creation = regulatoryArea.creation?.toInstant(),
                 plan = regulatoryArea.plan,
@@ -136,7 +136,7 @@ data class RegulatoryAreaNewModel(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as RegulatoryAreaNewModel
+        other as RegulatoryAreaModel
 
         return id == other.id
     }

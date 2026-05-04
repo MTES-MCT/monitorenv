@@ -1,15 +1,15 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v2
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.nhaarman.mockitokotlin2.argThat
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.v2.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegulatoryAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
@@ -46,10 +46,10 @@ class RegulatoryAreasITests {
     private lateinit var mockMvc: MockMvc
 
     @MockitoBean
-    private lateinit var getAllRegulatoryAreas: GetAllNewRegulatoryAreas
+    private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
 
     @MockitoBean
-    private lateinit var getRegulatoryAreaById: GetNewRegulatoryAreaById
+    private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
 
     @MockitoBean
     private lateinit var getAllLayerNames: GetAllLayerNames
@@ -123,7 +123,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas"))
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -187,7 +187,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas/17"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/17"))
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -210,7 +210,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas/999"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/999"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist())
@@ -224,7 +224,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas/layer-names"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/layer-names"))
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -240,7 +240,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas/layer-names"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/layer-names"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.layerNames").isEmpty)
@@ -275,7 +275,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas/to-complete"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/to-complete"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.equalTo(regulatoryArea.id)))
@@ -297,7 +297,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas?seaFronts=NAMO"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?seaFronts=NAMO"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
@@ -329,7 +329,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas?searchQuery=Querlen"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?searchQuery=Querlen"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
@@ -356,7 +356,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas?searchQuery=NonExistent"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?searchQuery=NonExistent"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("totalCount", Matchers.equalTo(0)))
@@ -378,7 +378,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas?tags=5"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?tags=5"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
@@ -405,7 +405,7 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v2/regulatory-areas?themes=101"))
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?themes=101"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
@@ -497,7 +497,7 @@ class RegulatoryAreasITests {
         mockMvc
             .perform(
                 MockMvcRequestBuilders
-                    .put("/bff/v2/regulatory-areas")
+                    .put("/bff/v1/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(requestBody)),
             )
@@ -614,7 +614,7 @@ class RegulatoryAreasITests {
         mockMvc
             .perform(
                 MockMvcRequestBuilders
-                    .put("/bff/v2/regulatory-areas")
+                    .put("/bff/v1/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(requestBody)),
             ).andDo(MockMvcResultHandlers.print())
@@ -673,7 +673,7 @@ class RegulatoryAreasITests {
         mockMvc
             .perform(
                 MockMvcRequestBuilders
-                    .post("/bff/v2/regulatory-areas")
+                    .post("/bff/v1/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(body)),
             ).andDo(MockMvcResultHandlers.print())

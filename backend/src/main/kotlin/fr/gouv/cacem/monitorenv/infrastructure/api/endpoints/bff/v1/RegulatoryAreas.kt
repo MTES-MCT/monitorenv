@@ -1,10 +1,10 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v2
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllNewRegulatoryAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetNewRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@RestController("regulatoryAreasV2")
-@RequestMapping("/bff/v2/regulatory-areas")
+@RestController("regulatoryAreas")
+@RequestMapping("/bff/v1/regulatory-areas")
 @Tag(name = "BFF.RegulatoryAreas", description = "API regulatory areas")
 class RegulatoryAreas(
-    private val getAllNewRegulatoryAreas: GetAllNewRegulatoryAreas,
-    private val getNewRegulatoryAreaById: GetNewRegulatoryAreaById,
+    private val getAllRegulatoryAreas: GetAllRegulatoryAreas,
+    private val getRegulatoryAreaById: GetRegulatoryAreaById,
     private val getAllLayerNames: GetAllLayerNames,
     private val createOrUpdateRegulatoryArea: CreateOrUpdateRegulatoryArea,
     private val getAllRegulatoryAreasToComplete: GetAllRegulatoryAreasToComplete,
@@ -60,7 +60,7 @@ class RegulatoryAreas(
         onlyRecentsAreas: Boolean?,
     ): RegulatoryAreasWithTotalDataOutput {
         val (regulatoryAreasGrouped, totalCount) =
-            getAllNewRegulatoryAreas.execute(
+            getAllRegulatoryAreas.execute(
                 controlPlan = controlPlan,
                 searchQuery = searchQuery,
                 seaFronts = seaFronts,
@@ -95,7 +95,7 @@ class RegulatoryAreas(
         @PathVariable(name = "regulatoryAreaId")
         regulatoryAreaId: Int,
     ): RegulatoryAreaDataOutput? =
-        getNewRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)?.let {
+        getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)?.let {
             RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it)
         }
 

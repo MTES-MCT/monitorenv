@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaNewFixture
+import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -11,14 +11,14 @@ import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
-class GetAllNewRegulatoryAreasUTest {
-    private val regulatoryAreaRepository: IRegulatoryAreaNewRepository = mock()
-    private val getAllRegulatoryAreas = GetAllNewRegulatoryAreas(regulatoryAreaRepository)
+class GetAllRegulatoryAreasUTest {
+    private val regulatoryAreaRepository: IRegulatoryAreaRepository = mock()
+    private val getAllRegulatoryAreas = GetAllRegulatoryAreas(regulatoryAreaRepository)
 
     @Test
     fun `execute should return all regulatory areas`(log: CapturedOutput) {
         // Given
-        val expectedRegulatoryAreas = RegulatoryAreaNewFixture.aNewRegulatoryArea()
+        val expectedRegulatoryAreas = RegulatoryAreaFixture.aRegulatoryArea()
         given(
             regulatoryAreaRepository.findAll(
                 controlPlan = null,
@@ -51,9 +51,9 @@ class GetAllNewRegulatoryAreasUTest {
         // Given
         val regulatoryAreas =
             listOf(
-                RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 1, layerName = "Layer1", plan = "PIRC"),
-                RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 2, layerName = "Layer2", plan = "PIRC"),
-                RegulatoryAreaNewFixture.aNewRegulatoryArea(id = 3, layerName = "Layer1", plan = "PSCEM"),
+                RegulatoryAreaFixture.aRegulatoryArea(id = 1, layerName = "Layer1", plan = "PIRC"),
+                RegulatoryAreaFixture.aRegulatoryArea(id = 2, layerName = "Layer2", plan = "PIRC"),
+                RegulatoryAreaFixture.aRegulatoryArea(id = 3, layerName = "Layer1", plan = "PSCEM"),
             )
         given(
             regulatoryAreaRepository.findAll(

@@ -6,13 +6,13 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.health.Health
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.INatinfRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaNewRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 
 @UseCase
 class GetHealthcheck(
-    private val regulatoryAreaRepository: IRegulatoryAreaNewRepository,
+    private val regulatoryAreaRepository: IRegulatoryAreaRepository,
     private val missionRepository: IMissionRepository,
     private val natinfRepository: INatinfRepository,
     private val semaphoreRepository: ISemaphoreRepository,
