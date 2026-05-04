@@ -13,9 +13,9 @@ context('Side Window > Mission Form > Attach action to reporting', () => {
 
     cy.visit(`/side_window`, {
       onBeforeLoad: () => {
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
-        Cypress.env('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
+        Cypress.expose('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
+        Cypress.expose('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
+        Cypress.expose('CYPRESS_REPORTING_FORM_AUTO_SAVE_ENABLED', 'true')
       }
     })
     cy.clickButton('Afficher les filtres')

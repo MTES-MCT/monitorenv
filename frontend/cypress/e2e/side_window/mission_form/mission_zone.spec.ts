@@ -29,8 +29,8 @@ context('Side Window > Mission Form > Mission zone', () => {
     cy.viewport(1280, 1024)
     cy.visit(`/side_window`, {
       onBeforeLoad: () => {
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
-        Cypress.env('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
+        Cypress.expose('CYPRESS_MISSION_FORM_AUTO_SAVE_ENABLED', 'true')
+        Cypress.expose('CYPRESS_MISSION_FORM_AUTO_UPDATE', 'true')
       }
     })
 
