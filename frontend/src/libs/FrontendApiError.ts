@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import { Scope } from '@sentry/browser'
 
 import { FrontendError } from './FrontendError'
