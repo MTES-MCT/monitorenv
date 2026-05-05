@@ -1,5 +1,12 @@
 ALTER TABLE dashboard_datas DROP CONSTRAINT fk_regulatory_cacem;
 
+DELETE FROM dashboard_datas
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM regulatory_areas
+    WHERE regulatory_areas.id = dashboard_datas.regulations_cacem_id
+);
+
 ALTER TABLE dashboard_datas
 ADD CONSTRAINT fk_regulatory_cacem FOREIGN KEY (regulations_cacem_id) REFERENCES public.regulatory_areas (id);
 

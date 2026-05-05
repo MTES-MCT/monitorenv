@@ -73,6 +73,15 @@ def delete(ids_to_delete: set):
         logger=logger,
     )
 
+    delete_rows(
+        table_name="dashboard_datas",
+        schema="public",
+        db_name="monitorenv_remote",
+        table_id_column="regulations_cacem_id",
+        ids_to_delete=ids_to_delete,
+        logger=logger,
+    )
+
 
 @task
 def extract_cacem_regulatory_areas(ids_to_update: set) -> pd.DataFrame:
