@@ -52,8 +52,10 @@ class JpaRegulatoryAreaNewRepository(
                 themes = themes,
                 onlyRecentsAreas = onlyRecentsAreas,
                 withGeometry = withGeometry,
+                zoom = zoom,
                 geom = bbox?.let { bboxToPolygon(it) },
             ).map { it.toRegulatoryArea(mapper, withGeometry, zoom) }
+            .filter { findBySearchQuery(it, query) }
 
     fun bboxToPolygon(bbox: List<Double>): Geometry {
         val minX = bbox[0]

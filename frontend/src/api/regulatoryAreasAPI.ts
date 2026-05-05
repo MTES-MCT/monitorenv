@@ -1,13 +1,12 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { createSelector } from '@reduxjs/toolkit'
 import { getQueryString } from '@utils/getQueryStringFormatted'
-import { boundingExtent, type Extent } from 'ol/extent'
+import { type Extent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { HomeRootState } from '@store/index'
-import type { Coordinate } from 'ol/coordinate'
 import type { StringDigit } from 'type-fest/source/internal'
 
 const GET_REGULATORY_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/les zones réglementaires"
@@ -35,15 +34,15 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
     getRegulatoryAreaById: builder.query<RegulatoryArea.RegulatoryAreaWithBbox, number>({
       providesTags: (_, __, id) => [{ id, type: 'RegulatoryAreas' }],
       query: id => `v2/regulatory-areas/${id}`,
-      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREA_ERROR_MESSAGE, response),
-      transformResponse: (response: RegulatoryArea.RegulatoryAreaFromAPI) => {
+      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREA_ERROR_MESSAGE, response)
+      /*       transformResponse: (response: RegulatoryArea.RegulatoryAreaFromAPI) => {
         const bbox = boundingExtent(response.geom?.coordinates.flat().flat() as Coordinate[])
 
         return {
           ...response,
           bbox
         }
-      }
+      } */
     }),
     getRegulatoryAreas: builder.query<RegulatoryArea.RegulatoryAreasFromApi, Filters | void>({
       providesTags: result =>
@@ -58,8 +57,8 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
           : // an error occurred, but we still want to refetch this query when `{ type: 'RegulatoryAreas', id: 'LIST' }` is invalidated
             [{ id: 'LIST', type: 'RegulatoryAreas' }],
       query: filters => getQueryString('v2/regulatory-areas', filters),
-      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response),
-      transformResponse: (response: RegulatoryArea.RegulatoryAreasFromApi): RegulatoryArea.RegulatoryAreasFromApi => ({
+      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response)
+      /*       transformResponse: (response: RegulatoryArea.RegulatoryAreasFromApi): RegulatoryArea.RegulatoryAreasFromApi => ({
         regulatoryAreasByLayer: response.regulatoryAreasByLayer.map(group => ({
           group: group.group,
           regulatoryAreas: group.regulatoryAreas.map(area => ({
@@ -68,7 +67,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
           }))
         })),
         totalCount: response.totalCount
-      })
+      }) */
     }),
     getRegulatoryAreasByIds: builder.query<
       RegulatoryArea.RegulatoryAreaWithBbox[],

@@ -8,19 +8,30 @@ import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTIO
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
+import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router'
 
 import { regulatoryAreaTableActions } from './slice'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
+import type { Coordinate } from 'ol/coordinate'
 
 export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox }) {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
   const layerTitle = getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume) ?? 'AUCUN NOM'
+
+  const bbox = useMemo(() => {
+    if (!regulatoryArea.geom) {
+      return undefined
+    }
+
+    return boundingExtent(regulatoryArea.geom?.coordinates.flat().flat() as Coordinate[])
+  }, [regulatoryArea.geom])
 
   const openMetadata = event => {
     event.stopPropagation()
@@ -29,12 +40,12 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
         openedRegulatoryAreaId === regulatoryArea.id ? undefined : regulatoryArea.id
       )
     )
-    if (!regulatoryArea?.bbox) {
+    if (!bbox) {
       return
     }
 
     const extent = transformExtent(
-      regulatoryArea?.bbox,
+      bbox,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )
@@ -43,11 +54,11 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
 
   const onEdit = () => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${regulatoryArea.id}`)
-    if (!regulatoryArea?.bbox) {
+    if (!bbox) {
       return
     }
     const extent = transformExtent(
-      regulatoryArea?.bbox,
+      bbox,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )
