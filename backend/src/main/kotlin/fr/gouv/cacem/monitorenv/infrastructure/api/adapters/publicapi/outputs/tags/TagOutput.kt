@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import java.time.ZonedDateTime
 
 data class TagOutput(
-    val id: Int,
+    val id: Int?,
     val name: String,
     val startedAt: ZonedDateTime?,
     val endedAt: ZonedDateTime?,

@@ -8,12 +8,15 @@ import java.time.ZonedDateTime
 interface IDBTagRepository : JpaRepository<TagModel, Int> {
     @Query(
         """SELECT DISTINCT tag FROM TagModel tag
-            LEFT JOIN FETCH tag.subTags subTag
-        WHERE tag.parent IS NULL AND tag.startedAt <= :time AND (tag.endedAt IS NULL OR tag.endedAt > :time)
-        AND (subTag IS NULL OR (subTag.startedAt <= :time AND (subTag.endedAt IS NULL OR subTag.endedAt > :time)))
+            LEFT JOIN FETCH tag.subTags subTags
+        WHERE tag.parent IS NULL AND tag.startedAt <= :endedAt AND (tag.endedAt IS NULL OR tag.endedAt > :startedAt)
+        AND (subTags IS NULL OR (subTags.startedAt <= :endedAt AND (subTags.endedAt IS NULL OR subTags.endedAt > :startedAt)))
             """,
     )
-    fun findAllWithin(time: ZonedDateTime): List<TagModel>
+    fun findAllWithin(
+        startedAt: ZonedDateTime,
+        endedAt: ZonedDateTime,
+    ): List<TagModel>
 
     @Query(
         """SELECT DISTINCT tag FROM TagModel tag

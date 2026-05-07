@@ -19,11 +19,18 @@ const VALIDITY_AS_OPTIONS = [
 
 export function FilterBar() {
   const dispatch = useAppDispatch()
-  const stationTable = useAppSelector(store => store.stationTable)
+  const { query, validity } = useAppSelector(store => store.tagTable.filtersState)
 
   const updateQuery = useCallback(
     (nextValue: string | undefined) => {
       dispatch(tagTableActions.setFilter({ key: 'query', value: nextValue }))
+    },
+    [dispatch]
+  )
+
+  const updateValidity = useCallback(
+    (nextValue: string | undefined) => {
+      dispatch(tagTableActions.setFilter({ key: 'validity', value: nextValue }))
     },
     [dispatch]
   )
@@ -34,20 +41,22 @@ export function FilterBar() {
         Icon={Icon.Search}
         isLabelHidden
         isTransparent
-        label="Rechercher..."
+        label="Rechercher dans les tags"
         name="query"
         onChange={updateQuery}
-        placeholder="Rechercher..."
+        placeholder="Rechercher dans les tags"
         style={{ width: '350px' }}
-        value={stationTable.filtersState.query}
+        value={query}
       />
       <Select
         isLabelHidden
         isTransparent
         label="Validité"
         name="validity"
+        onChange={updateValidity}
         options={VALIDITY_AS_OPTIONS}
-        style={{ width: '170px' }}
+        style={{ width: '210px' }}
+        value={validity}
       />
     </Wrapper>
   )

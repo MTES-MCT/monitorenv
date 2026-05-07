@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -20,7 +19,7 @@ data class TagModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Int?,
     @Column(nullable = false)
     val name: String,
     @Column(nullable = false)
@@ -32,7 +31,6 @@ data class TagModel(
     @OneToMany(
         mappedBy = "parent",
         fetch = FetchType.LAZY,
-        cascade = [CascadeType.ALL],
     )
     var subTags: List<TagModel>,
 ) {
@@ -83,7 +81,7 @@ data class TagModel(
 
     override fun hashCode(): Int {
         var result = id
-        result = 31 * result + name.hashCode()
+        result = 31 * (result ?: 0) + name.hashCode()
         result = 31 * result + (startedAt?.hashCode() ?: 0)
         result = 31 * result + (endedAt?.hashCode() ?: 0)
         return result

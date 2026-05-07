@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.entities.tags
 import java.time.ZonedDateTime
 
 data class TagEntity(
-    val id: Int,
+    val id: Int?,
     val name: String,
     val startedAt: ZonedDateTime?,
     val endedAt: ZonedDateTime?,
@@ -24,7 +24,7 @@ data class TagEntity(
 
     override fun hashCode(): Int {
         var result = id
-        result = 31 * result + name.hashCode()
+        result = 31 * (result ?: 0) + name.hashCode()
         result = 31 * result + (startedAt?.hashCode() ?: 0)
         result = 31 * result + (endedAt?.hashCode() ?: 0)
         result = 31 * result + subTags.hashCode()

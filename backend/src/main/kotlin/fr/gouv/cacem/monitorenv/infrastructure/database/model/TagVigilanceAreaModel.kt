@@ -65,6 +65,6 @@ data class TagVigilanceAreaModel(
 
 @Embeddable
 data class TagVigilanceAreaPk(
-    val tagId: Int,
+    val tagId: Int?,
     val vigilanceAreaId: Int?,
 ) : Serializable

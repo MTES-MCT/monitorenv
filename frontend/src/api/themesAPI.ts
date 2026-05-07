@@ -8,7 +8,7 @@ import type { ThemeFromAPI } from 'domain/entities/themes'
 
 const GET_THEMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les thèmes."
 
-export const themeAPI = monitorenvPublicApi.injectEndpoints({
+export const themesAPI = monitorenvPublicApi.injectEndpoints({
   endpoints: builder => ({
     getThemes: builder.query<EntityState<ThemeFromAPI, number>, DateAsStringRange | void>({
       keepUnusedDataFor: 0,
@@ -21,4 +21,4 @@ export const themeAPI = monitorenvPublicApi.injectEndpoints({
   })
 })
 
-export const { useGetThemesQuery } = themeAPI
+export const { useGetThemesQuery } = themesAPI

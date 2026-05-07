@@ -7,7 +7,7 @@ import kotlin.random.Random
 class TagFixture {
     companion object {
         fun aTag(
-            id: Int = Random.nextInt(),
+            id: Int? = Random.nextInt(),
             name: String = "tag",
             startedAt: ZonedDateTime = ZonedDateTime.now(),
             endedAt: ZonedDateTime? = null,
