@@ -13,6 +13,7 @@ import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
+import org.locationtech.jts.geom.Polygon
 import org.locationtech.jts.simplify.TopologyPreservingSimplifier
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -92,18 +93,19 @@ data class RegulatoryAreaNewModel(
                     null
                 }
                 val simpGeom = TopologyPreservingSimplifier.simplify(geom, tolerance)
+                logger.error("simpGeom $simpGeom")
                 when (simpGeom) {
                     is MultiPolygon -> simpGeom
-//                is Polygon -> geom.factory.createMultiPolygon(arrayOf(simpGeom))
+                    is Polygon -> geom.factory.createMultiPolygon(arrayOf(simpGeom) as Array<out Polygon?>?)
                     else -> {
                         logger.error("Unsupported geom type: ${simpGeom.javaClass.name} of reg $id")
                         null
                     }
                 }
             } else {
-                null
+                geom
             }
-        logger.error("geometry simplifed of reg $id")
+        logger.error("geometry simplifed of reg $id $simplifiedGeom")
         return RegulatoryAreaEntity(
             id = id,
             creation = creation?.atZone(ZoneOffset.UTC),
