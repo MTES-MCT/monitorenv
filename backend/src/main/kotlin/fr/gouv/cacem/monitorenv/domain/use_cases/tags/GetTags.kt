@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.ITagRepository
 import org.slf4j.LoggerFactory
+import java.time.ZonedDateTime
 
 @UseCase
 class GetTags(
@@ -11,9 +12,12 @@ class GetTags(
 ) {
     private val logger = LoggerFactory.getLogger(GetTags::class.java)
 
-    fun execute(): List<TagEntity> {
+    fun execute(
+        startedAt: ZonedDateTime,
+        endedAt: ZonedDateTime,
+    ): List<TagEntity> {
         logger.info("Attempt to GET all tags")
-        val tags = tagRepository.findAllWithin()
+        val tags = tagRepository.findAllWithin(startedAt, endedAt)
         logger.info("Found ${tags.size} tags")
 
         return tags

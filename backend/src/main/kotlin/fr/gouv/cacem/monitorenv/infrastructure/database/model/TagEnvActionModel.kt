@@ -65,6 +65,6 @@ data class TagEnvActionModel(
 
 @Embeddable
 data class TagEnvActionPk(
-    val tagId: Int,
+    val tagId: Int?,
     val envActionId: UUID,
 ) : Serializable

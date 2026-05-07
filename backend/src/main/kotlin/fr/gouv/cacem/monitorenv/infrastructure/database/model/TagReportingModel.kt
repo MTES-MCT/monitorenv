@@ -64,6 +64,6 @@ data class TagReportingModel(
 
 @Embeddable
 data class TagReportingPk(
-    val themeId: Int,
+    val themeId: Int?,
     val reportingId: Int?,
 ) : Serializable

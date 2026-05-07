@@ -7,11 +7,22 @@ export type TagFromAPI = {
 }
 
 export type TagToAPI = {
-  endedAt: string | undefined
-  id: number | undefined
-  name: string | undefined
-  startedAt: string | undefined
-  subTags: TagToAPI[] | undefined
+  endedAt?: string
+  id?: number
+  name?: string
+  parentId?: number
+  startedAt?: string
+}
+
+export type TagTable = {
+  endedAt?: string
+  id?: number
+  name?: string
+  parentId?: number
+  rowId: string
+  startedAt?: string
+  subRows?: TagTable[]
+  subTags: TagTable[]
 }
 
 export type TagOption = {

@@ -4,7 +4,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import java.time.ZonedDateTime
 
 interface ITagRepository {
-    fun findAllWithin(time: ZonedDateTime = ZonedDateTime.now()): List<TagEntity>
+    fun findAllWithin(
+        startedAt: ZonedDateTime,
+        endedAt: ZonedDateTime,
+    ): List<TagEntity>
 
     fun findAllWithinByRegulatoryAreaIds(
         regulatoryAreaIds: List<Int>,
@@ -15,4 +18,9 @@ interface ITagRepository {
         vigilanceAreasIds: List<Int>,
         time: ZonedDateTime = ZonedDateTime.now(),
     ): List<TagEntity>
+
+    fun save(
+        tag: TagEntity,
+        parentId: Int?,
+    ): TagEntity
 }
