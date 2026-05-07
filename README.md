@@ -6,9 +6,9 @@ marine, à savoir:
 
 - l'appui, l'orientation et la coordination des contrôles sur le terrain,
 - le suivi et le rapportage des missions de contrôle,
-- l'analyse des données de contrôle, l'aide à la décision et à la définiton des plans de contrôle.
+- l'analyse des données de contrôle, l'aide à la décision et à la définition des plans de contrôle.
 
-MonitorEnv est constituté de deux briques logicielles :
+MonitorEnv est constitué de deux briques logicielles :
 
 - une application web (MonitorEnv),
 - un pipeline de traitement de données (datapipeline).
