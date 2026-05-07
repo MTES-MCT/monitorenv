@@ -47,6 +47,15 @@ def delete(ids_to_delete: set):
     logger = get_run_logger()
 
     delete_rows(
+        table_name="dashboard_datas",
+        schema="public",
+        db_name="monitorenv_remote",
+        table_id_column="regulations_cacem_id",
+        ids_to_delete=ids_to_delete,
+        logger=logger,
+    )
+
+    delete_rows(
         table_name="tags_regulatory_areas",
         schema="public",
         db_name="monitorenv_remote",
@@ -69,15 +78,6 @@ def delete(ids_to_delete: set):
         schema="public",
         db_name="monitorenv_remote",
         table_id_column="id",
-        ids_to_delete=ids_to_delete,
-        logger=logger,
-    )
-
-    delete_rows(
-        table_name="dashboard_datas",
-        schema="public",
-        db_name="monitorenv_remote",
-        table_id_column="regulations_cacem_id",
         ids_to_delete=ids_to_delete,
         logger=logger,
     )
