@@ -1,3 +1,5 @@
+/* COPY regulatory_areas FROM '/data/reg.csv' DELIMITER ';' CSV HEADER; */
+
 DO
 $$
     DECLARE
@@ -601,8 +603,11 @@ $$
                (349, 17),
                (350, 17);
 
+
+
+UPDATE public.regulatory_areas SET geom_simplified = ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.01);
+
+
     END;
 $$
 
-
-/* COPY regulatory_areas FROM '/data/reg.csv' DELIMITER ';' CSV HEADER; */

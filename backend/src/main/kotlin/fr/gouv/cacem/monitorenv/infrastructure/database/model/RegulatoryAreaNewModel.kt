@@ -13,8 +13,6 @@ import jakarta.persistence.Table
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
-import org.locationtech.jts.geom.Polygon
-import org.locationtech.jts.simplify.TopologyPreservingSimplifier
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
 import org.slf4j.Logger
@@ -47,6 +45,10 @@ data class RegulatoryAreaNewModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon?,
+    @JsonSerialize(using = GeometrySerializer::class)
+    @JsonDeserialize(contentUsing = GeometryDeserializer::class)
+    @Column(name = "geom_simplified")
+    val geomSimplified: MultiPolygon?,
     @Column(name = "layer_name") val layerName: String?,
     @Column(name = "observation") val observation: String?,
     @Column(name = "plan") val plan: String?,
@@ -78,34 +80,12 @@ data class RegulatoryAreaNewModel(
         withGeometry: Boolean = true,
         zoom: Int? = null,
     ): RegulatoryAreaEntity {
-        logger.error("start mapping of reg $id")
-        val simplifiedGeom: MultiPolygon? =
-            if (withGeometry && zoom != null && zoom < 14 && geom != null) {
-                val tolerance =
-                    when {
-                        zoom <= 6 -> 0.02
-                        zoom <= 8 -> 0.01
-                        zoom <= 11 -> 0.001
-                        else -> 0.0001
-                    }
-                if (!geom.isValid) {
-                    logger.error("geometry invalid of reg $id")
-                    null
-                }
-                val simpGeom = TopologyPreservingSimplifier.simplify(geom, tolerance)
-                logger.error("simpGeom $simpGeom")
-                when (simpGeom) {
-                    is MultiPolygon -> simpGeom
-                    is Polygon -> geom.factory.createMultiPolygon(arrayOf(simpGeom) as Array<out Polygon?>?)
-                    else -> {
-                        logger.error("Unsupported geom type: ${simpGeom.javaClass.name} of reg $id")
-                        null
-                    }
-                }
+        val geom =
+            if (zoom != null && zoom < 9 && geom != null) {
+                geomSimplified
             } else {
                 geom
             }
-        logger.error("geometry simplifed of reg $id $simplifiedGeom")
         return RegulatoryAreaEntity(
             id = id,
             creation = creation?.atZone(ZoneOffset.UTC),
@@ -117,7 +97,7 @@ data class RegulatoryAreaNewModel(
             editionBo = editionBo?.atZone(ZoneOffset.UTC),
             editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
             facade = facade,
-            geom = if (withGeometry) simplifiedGeom else null,
+            geom = if (withGeometry) geom else null,
             layerName = layerName,
             polyName = polyName,
             observation = observation,
@@ -162,6 +142,7 @@ data class RegulatoryAreaNewModel(
                 editionCacem = regulatoryArea.editionCacem?.toInstant(),
                 facade = regulatoryArea.facade,
                 geom = regulatoryArea.geom,
+                geomSimplified = regulatoryArea.geomSimplified,
                 layerName = regulatoryArea.layerName,
                 observation = regulatoryArea.observation,
                 polyName = regulatoryArea.polyName,

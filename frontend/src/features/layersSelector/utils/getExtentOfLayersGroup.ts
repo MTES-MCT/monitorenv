@@ -1,5 +1,5 @@
 import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { createEmpty, extend, type Extent } from 'ol/extent'
+import { boundingExtent, createEmpty, extend, type Extent } from 'ol/extent'
 import { Projection, transformExtent } from 'ol/proj'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
@@ -8,10 +8,11 @@ import type { AMP } from 'domain/entities/AMPs'
 export const getExtentOfLayersGroup = (layers: RegulatoryArea.RegulatoryAreaWithBbox[] | AMP[]): Extent => {
   const extentOfLayersGroup = layers.reduce((accumulatedExtent, currentLayer) => {
     const extendedExtent = [...accumulatedExtent]
-    if (!currentLayer.bbox) {
+    if (!currentLayer.geom) {
       return accumulatedExtent
     }
-    extend(extendedExtent, currentLayer.bbox)
+    const bbox = boundingExtent(currentLayer.geom?.coordinates.flat().flat() as number[][])
+    extend(extendedExtent, bbox)
 
     return extendedExtent
   }, createEmpty())

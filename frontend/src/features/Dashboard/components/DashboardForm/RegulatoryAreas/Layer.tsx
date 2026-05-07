@@ -35,6 +35,7 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
   const ref = createRef<HTMLLIElement>()
 
   const layer = regulatoryAreas.find(regulatoryArea => regulatoryArea.id === layerId)
+  const bbox = boundingExtent(layer?.geom?.coordinates.flat().flat() as Coordinate[])
   // const { layer } = useGetRegulatoryLayersQuery(
   //   { bbox, withGeometry: true, zoom },
   //   {
@@ -52,14 +53,16 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
       dispatch(dashboardActions.removeItems(payload))
     } else {
       dispatch(dashboardActions.addItems(payload))
-      if (!layer?.bbox) {
+      if (!layer?.geom) {
         return
       }
+
       const extent = transformExtent(
-        layer?.bbox,
+        bbox,
         new Projection({ code: WSG84_PROJECTION }),
         new Projection({ code: OPENLAYERS_PROJECTION })
       )
+
       dispatch(setFitToExtent(extent))
     }
   }
@@ -77,7 +80,6 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
     if (!layer?.geom) {
       return
     }
-    const bbox = boundingExtent(layer.geom?.coordinates.flat().flat() as Coordinate[])
 
     const extent = transformExtent(
       bbox,

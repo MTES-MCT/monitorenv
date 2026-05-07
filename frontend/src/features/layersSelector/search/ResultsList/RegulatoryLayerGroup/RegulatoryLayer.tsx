@@ -3,6 +3,7 @@ import { StyledTransparentButton } from '@components/style'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
+import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -24,6 +25,8 @@ import {
 } from '../../../metadataPanel/slice'
 import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
+
+import type { Coordinate } from 'ol/coordinate'
 
 type RegulatoryLayerProps = {
   layerId: number
@@ -64,11 +67,12 @@ export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps)
   }
 
   const fitToRegulatoryLayer = () => {
-    if (!layer?.bbox) {
+    if (!layer?.geom) {
       return
     }
+    const bbox = boundingExtent(layer.geom?.coordinates.flat().flat() as Coordinate[])
     const extent = transformExtent(
-      layer?.bbox,
+      bbox,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )

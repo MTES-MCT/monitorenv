@@ -5,26 +5,48 @@ import { OPENLAYERS_PROJECTION, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getTagIds } from '@utils/getTagsAsOptions'
 import { getThemeIds } from '@utils/getThemesAsOptions'
 import { transformExtent } from 'ol/proj'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
+
+import type { RegulatoryArea } from '../types'
+
+const EMPTY_ARRAY: never[] = []
 
 type FilteredRegulatoryAreas = {
   skip?: boolean
   withGeometry?: boolean
 }
 export const useGetFilteredRegulatoryAreas = ({ skip = false, withGeometry = true }: FilteredRegulatoryAreas) => {
-  const {
-    areRecentsAreasChecked,
-    controlPlan,
-    filteredRegulatoryTags,
-    filteredRegulatoryThemes,
-    globalSearchText,
-    searchExtent,
-    shouldFilterSearchOnMapExtent
-  } = useAppSelector(state => state.layerSearch)
-  const { bbox, zoom } = useAppSelector(state => state.map.mapView)
-  const shouldSearchWithGeometry = withGeometry || shouldFilterSearchOnMapExtent
+  const areRecentsAreasChecked = useAppSelector(state => state.layerSearch.areRecentsAreasChecked)
+  const controlPlan = useAppSelector(state => state.layerSearch.controlPlan)
+  const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
+  const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
+  const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
+  const searchExtent = useAppSelector(state => state.layerSearch.searchExtent)
+  const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
+  const bbox = useAppSelector(state => state.map.mapView.bbox)
+  const zoom = useAppSelector(state => state.map.mapView.zoom)
+  const shouldSearchWithGeometry = (withGeometry || shouldFilterSearchOnMapExtent) ?? false
 
-  const getBbox = useCallback(
+  // Hook de debug - à supprimer après
+  /*   function useWhyDidYouUpdate(name: string, props: Record<string, unknown>) {
+    const previousProps = useRef<Record<string, unknown>>({})
+    useEffect(() => {
+      const changedProps = Object.entries(props).reduce((acc, [key, value]) => {
+        if (previousProps.current[key] !== value) {
+          acc[key] = { from: previousProps.current[key], to: value }
+        }
+
+        return acc
+      }, {} as Record<string, unknown>)
+
+      if (Object.keys(changedProps).length > 0) {
+        console.log(`[${name}] changed:`, changedProps)
+      }
+      previousProps.current = props
+    })
+  } */
+
+  const resolvedBbox = useMemo(
     () =>
       shouldFilterSearchOnMapExtent && searchExtent
         ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
@@ -32,31 +54,53 @@ export const useGetFilteredRegulatoryAreas = ({ skip = false, withGeometry = tru
     [bbox, searchExtent, shouldFilterSearchOnMapExtent]
   )
 
-  const apiFilters = useMemo(
-    () => ({
-      bbox: shouldSearchWithGeometry ? getBbox() : undefined,
+  const tagIds = useMemo(() => getTagIds(filteredRegulatoryTags) ?? EMPTY_ARRAY, [filteredRegulatoryTags])
+  const themeIds = useMemo(() => getThemeIds(filteredRegulatoryThemes) ?? EMPTY_ARRAY, [filteredRegulatoryThemes])
+
+  /*   useWhyDidYouUpdate('apiFilters deps', {
+    controlPlan,
+    globalSearchText,
+    resolvedBbox,
+    shouldSearchWithGeometry,
+    tagIds,
+    themeIds,
+    zoom
+  }) */
+
+  const apiFilters = useMemo(() => {
+    if (!shouldSearchWithGeometry) {
+      return {
+        controlPlan,
+        searchQuery: globalSearchText,
+        tags: tagIds ?? [],
+        themes: themeIds ?? [],
+        withGeometry: false
+      }
+    }
+
+    return {
+      bbox: shouldSearchWithGeometry ? resolvedBbox : undefined,
       controlPlan,
       onlyRecentsAreas: areRecentsAreasChecked,
       searchQuery: globalSearchText,
-      tags: getTagIds(filteredRegulatoryTags),
-      themes: getThemeIds(filteredRegulatoryThemes),
+      tags: tagIds ?? [],
+      themes: themeIds ?? [],
       withGeometry: shouldSearchWithGeometry,
       zoom: shouldSearchWithGeometry ? zoom : undefined
-    }),
-    [
-      areRecentsAreasChecked,
-      shouldSearchWithGeometry,
-      getBbox,
-      controlPlan,
-      globalSearchText,
-      filteredRegulatoryTags,
-      filteredRegulatoryThemes,
-      zoom
-    ]
-  )
+    }
+  }, [
+    areRecentsAreasChecked,
+    resolvedBbox,
+    controlPlan,
+    globalSearchText,
+    tagIds,
+    themeIds,
+    shouldSearchWithGeometry,
+    zoom
+  ])
 
   const { data, isError, isFetching, isLoading } = useGetRegulatoryAreasQuery(apiFilters, {
-    skip
+    skip: skip || !resolvedBbox || zoom === undefined
   })
 
   const flattenRegulatoryAreas = useMemo(() => {
@@ -69,7 +113,13 @@ export const useGetFilteredRegulatoryAreas = ({ skip = false, withGeometry = tru
 
   let nextRegulatoryAreaIds: number[] | undefined
   if (searchExtent && shouldFilterSearchOnMapExtent) {
-    nextRegulatoryAreaIds = getIntersectingLayerIds(shouldFilterSearchOnMapExtent, flattenRegulatoryAreas, searchExtent)
+    nextRegulatoryAreaIds = getIntersectingLayerIds(
+      shouldFilterSearchOnMapExtent,
+      flattenRegulatoryAreas as RegulatoryArea.RegulatoryAreaWithBbox[],
+      searchExtent,
+      undefined,
+      true
+    )
   }
 
   const results = useMemo(() => {
