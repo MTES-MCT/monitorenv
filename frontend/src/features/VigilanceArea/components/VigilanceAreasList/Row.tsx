@@ -10,7 +10,6 @@ import { isMatchForRecurringOccurrence } from '@features/layersSelector/utils/ge
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { customDayjs, TableWithSelectableRows, THEME } from '@mtes-mct/monitor-ui'
 import { flexRender, type Row as RowType } from '@tanstack/react-table'
-import { hasMoreThanThirtyDays } from '@utils/hasMoreThanThirtyDays'
 import { getColorWithAlpha } from '@utils/utils'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -24,7 +23,7 @@ import { BasePeriodCircle } from '../VigilanceAreaForm/Periods/Periods'
 const ALL_TIMES_AND_CRITICAL = 'CRITICAL_AT_ALL_TIMES'
 const ALL_TIMES_AND_SIMPLE = 'SIMPLE_AT_ALL_TIMES'
 
-export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
+export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>; table: any }) {
   const vigilanceArea: VigilanceArea.VigilanceArea = row.original
 
   const isVigilanceAreaActive = useMemo(() => {
@@ -74,8 +73,8 @@ export function Row({ row }: { row: RowType<VigilanceArea.VigilanceArea> }) {
             rowLength: rowCells.length,
             stickyLeftBorderIndex: 0
           })
-          const isNew = hasMoreThanThirtyDays(vigilanceArea.createdAt)
-          const isUpdatedRecently = hasMoreThanThirtyDays(vigilanceArea.updatedAt)
+          const isNew = table.options.meta?.isNew(row)
+          const isUpdatedRecently = table.options.meta?.isUpdatedRecently(row)
 
           if (index === 0) {
             const borderLeftColor = isNew ? THEME.color.blueGray : getColorWithAlpha(THEME.color.blueGray, 0.4)
