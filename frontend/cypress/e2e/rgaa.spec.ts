@@ -148,6 +148,7 @@ context('Axe core RGAA check that ', () => {
       })
     })
   })
+
   describe('Reporting ', () => {
     it('list should respect RGAA criteria', () => {
       visitSideWindow()
@@ -257,6 +258,42 @@ context('Axe core RGAA check that ', () => {
     it('stations list should respect RGAA criteria', () => {
       cy.visit(`/backoffice/stations`)
       cy.injectAxe()
+      // @ts-ignore
+      cy.checkA11y(null, {
+        rules: {
+          'color-contrast': { enabled: false }
+        },
+        runOnly: {
+          type: 'tag',
+          values: ['wcag2a', 'wcag2aa']
+        }
+      })
+    })
+    it('regulatory areas list should respect RGAA criteria', () => {
+      cy.visit(`/backoffice/regulatory_areas`)
+      cy.injectAxe()
+      cy.intercept('GET', `bff/v1/regulatory-areas/134`).as('getRegulatoryArea')
+      cy.clickButton('Déplier le contenu des zones PIRC')
+      cy.clickButton('Interdiction VNM Molene')
+      cy.get('span[title="Article 1"]').click()
+      cy.wait('@getRegulatoryArea')
+
+      cy.clickButton('Editer la réglementation')
+      // @ts-ignore
+      cy.checkA11y(null, {
+        rules: {
+          'color-contrast': { enabled: false }
+        },
+        runOnly: {
+          type: 'tag',
+          values: ['wcag2a', 'wcag2aa']
+        }
+      })
+    })
+    it('tag list should respect RGAA criteria', () => {
+      cy.visit(`/backoffice/tags`)
+      cy.injectAxe()
+      cy.clickButton('Éditer ce tag')
       // @ts-ignore
       cy.checkA11y(null, {
         rules: {
