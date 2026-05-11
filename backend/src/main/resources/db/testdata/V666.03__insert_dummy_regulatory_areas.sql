@@ -1,10 +1,12 @@
+COPY regulatory_areas FROM '/data/reg.csv' DELIMITER ';' CSV HEADER;
+
 DO
 $$
     DECLARE
         editor    character varying = 'Alexis Pré';
     BEGIN
 
-INSERT INTO public.regulatory_areas (id,
+/* INSERT INTO public.regulatory_areas (id,
     geom,
     url,
     layer_name,
@@ -113,7 +115,7 @@ VALUES (17,
     'PIRC,PSCEM',
     'Zone au sud de la cale',
     'Zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen"',
-    CURRENT_DATE);
+    CURRENT_DATE); 
 
 INSERT INTO public.regulatory_areas (id,
     geom,
@@ -150,7 +152,7 @@ VALUES (134,
     'PIRC',
     'Article 1',
     '',
-    NOW() - INTERVAL '35 day');
+    NOW() - INTERVAL '35 day');*/
 
 INSERT INTO public.regulatory_areas (id,
     geom,
@@ -189,7 +191,7 @@ VALUES (160,
     '',
     NOW() - INTERVAL '45 day');
 
-INSERT INTO public.regulatory_areas (id,
+/* INSERT INTO public.regulatory_areas (id,
     geom,
     url,
     layer_name,
@@ -224,7 +226,7 @@ VALUES (305,
     'PIRC, PSCEM',
     'Autorisation pour asso de plaisanciers riverains',
     'Reglementation_mouillage_anse_illien',
-    NOW() - INTERVAL '55 day');
+    NOW() - INTERVAL '55 day'); 
 
 INSERT INTO public.regulatory_areas (
     id,
@@ -300,7 +302,7 @@ VALUES (329,
     'PIRC',
     'Zone interdisant mouillage port de Camaret',
     'Interdiciton de mouillage',
-    NOW() - INTERVAL '45 day');
+    NOW() - INTERVAL '45 day');*/
 
 INSERT INTO public.regulatory_areas (
   id,
@@ -340,7 +342,7 @@ VALUES (359,
     'Autorisation de dragage pendant les travaux',
     NOW() - INTERVAL '5 day');
 
-INSERT INTO public.regulatory_areas (id,
+/* INSERT INTO public.regulatory_areas (id,
     geom,
     url,
     layer_name,
@@ -375,7 +377,7 @@ VALUES (523,
     'PIRC, PSCEM',
     'Zone 1',
     'Autorisation d''occupation du domaine public',
-    NOW() - INTERVAL '35 day');
+    NOW() - INTERVAL '35 day'); 
 
 INSERT INTO public.regulatory_areas (id,
     geom,
@@ -486,10 +488,10 @@ VALUES (697,
     'PIRC, PSCEM',
     'Zone au nord de la cale',
     'Autorisation temporaire du domaine public',
-    NOW() - INTERVAL '45 day');
+    NOW() - INTERVAL '45 day');*/
 
 /* New REGULATORY AREAS */
-INSERT INTO public.regulatory_areas (id,
+/* INSERT INTO public.regulatory_areas (id,
                                       geom,
                                       ref_reg)
 VALUES (123,
@@ -501,7 +503,9 @@ INSERT INTO public.regulatory_areas (id,
                                       ref_reg)
 VALUES (456,
         '0106000020E610000001000000010300000001000000060000002375697DC1722240ECD3CC93A8B8444096AA258401722240981650B96EB8444058907697FA712240744D171A28B84440A1829EC152722240808705EAA5B74440F914BDC7B072224004BB9A8793B744402375697DC1722240ECD3CC93A8B84440',
-        'Délibération interdisant la pêche à pied');
+        'Délibération interdisant la pêche à pied'); */
+
+UPDATE public.regulatory_areas SET geom_simplified = ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.01);
 END;
 $$
 

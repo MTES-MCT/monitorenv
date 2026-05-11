@@ -23,6 +23,9 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                 OR regulatoryArea.editionBo >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
                 OR regulatoryArea.editionCacem >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
             ))
+            AND
+                ((:withGeometry IS FALSE OR :geom IS NULL)
+            OR intersects(regulatoryArea.geom, :geom) = true)
             ORDER BY regulatoryArea.layerName
         """,
     )
@@ -32,6 +35,9 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         tags: List<Int>? = null,
         themes: List<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
+        withGeometry: Boolean,
+        zoom: Int?,
+        geom: Geometry?,
     ): List<RegulatoryAreaModel>
 
     fun findAllByCreationIsNull(): List<RegulatoryAreaModel>

@@ -34,6 +34,8 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
   const ref = createRef<HTMLLIElement>()
 
   const layer = regulatoryAreas.find(regulatoryArea => regulatoryArea.id === layerId)
+  const bbox = boundingExtent(layer?.geom?.coordinates.flat().flat() as Coordinate[])
+
   const handleSelectZone = e => {
     e.stopPropagation()
 
@@ -42,11 +44,11 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
       dispatch(dashboardActions.removeItems(payload))
     } else {
       dispatch(dashboardActions.addItems(payload))
-      if (!layer?.bbox) {
+      if (!bbox) {
         return
       }
       const extent = transformExtent(
-        layer?.bbox,
+        bbox,
         new Projection({ code: WSG84_PROJECTION }),
         new Projection({ code: OPENLAYERS_PROJECTION })
       )
@@ -64,10 +66,9 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
     dispatch(
       dashboardActions.setDashboardPanel({ id: layerId, isPinned: isSelected, type: Dashboard.Block.REGULATORY_AREAS })
     )
-    if (!layer?.geom) {
+    if (!bbox) {
       return
     }
-    const bbox = boundingExtent(layer.geom?.coordinates.flat().flat() as Coordinate[])
 
     const extent = transformExtent(
       bbox,

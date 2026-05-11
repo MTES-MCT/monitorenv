@@ -1,8 +1,9 @@
-import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
+import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
+import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
@@ -25,13 +26,14 @@ import {
 import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
+import type { Coordinate } from 'ol/coordinate'
+
 type RegulatoryLayerProps = {
-  groupName: string
   layerId: number
   searchedText: string
 }
 
-export function RegulatoryLayer({ groupName, layerId, searchedText }: RegulatoryLayerProps) {
+export function RegulatoryLayer({ layerId, searchedText }: RegulatoryLayerProps) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLLIElement>()
 
@@ -40,15 +42,7 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
 
-  const { layer } = useGetRegulatoryAreasQuery(undefined, {
-    selectFromResult: result => {
-      const layerGroup = result?.currentData?.regulatoryAreasByLayer.find(group => group.group === groupName)
-
-      return {
-        layer: layerGroup?.regulatoryAreas.find(area => area.id === layerId)
-      }
-    }
-  })
+  const { data: layer } = useGetRegulatoryAreaByIdQuery(layerId)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
   const isZoneSelected = selectedRegulatoryLayerIds.includes(layerId)
@@ -72,11 +66,13 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
   }
 
   const fitToRegulatoryLayer = () => {
-    if (!layer?.bbox) {
+    if (!layer?.geom) {
       return
     }
+    const bbox = boundingExtent(layer.geom?.coordinates.flat().flat() as Coordinate[])
+
     const extent = transformExtent(
-      layer?.bbox,
+      bbox,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )

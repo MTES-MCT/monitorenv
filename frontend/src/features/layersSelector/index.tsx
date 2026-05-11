@@ -58,7 +58,7 @@ export function LayersSidebar() {
     searchExtent
   } = useAppSelector(state => state.layerSearch)
 
-  const regulatoryAreas = useGetFilteredRegulatoryAreas()
+  const regulatoryAreas = useGetFilteredRegulatoryAreas({ withGeometry: false })
   const amps = useGetAMPsQuery()
 
   const dispatch = useAppDispatch()

@@ -39,6 +39,10 @@ data class RegulatoryAreaModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon?,
+    @JsonSerialize(using = GeometrySerializer::class)
+    @JsonDeserialize(contentUsing = GeometryDeserializer::class)
+    @Column(name = "geom_simplified")
+    val geomSimplified: MultiPolygon?,
     @Column(name = "layer_name") val layerName: String?,
     @Column(name = "observation") val observation: String?,
     @Column(name = "plan") val plan: String?,
@@ -64,8 +68,19 @@ data class RegulatoryAreaModel(
     @Column(name = "authorization_periods") val authorizationPeriods: String?,
     @Column(name = "prohibition_periods") val prohibitionPeriods: String?,
 ) {
-    fun toRegulatoryArea(mapper: JsonMapper) =
-        RegulatoryAreaEntity(
+    fun toRegulatoryArea(
+        mapper: JsonMapper,
+        withGeometry: Boolean = true,
+        zoom: Int? = null,
+    ): RegulatoryAreaEntity {
+        val geom =
+            if (zoom != null && zoom < 9 && geomSimplified != null) {
+                geomSimplified
+            } else {
+                geom
+            }
+
+        return RegulatoryAreaEntity(
             id = id,
             creation = creation?.atZone(ZoneOffset.UTC),
             plan = plan,
@@ -75,7 +90,7 @@ data class RegulatoryAreaModel(
             editionBo = editionBo?.atZone(ZoneOffset.UTC),
             editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
             facade = facade,
-            geom = geom,
+            geom = if (withGeometry) geom else null,
             layerName = layerName,
             polyName = polyName,
             observation = observation,
@@ -100,6 +115,7 @@ data class RegulatoryAreaModel(
             authorizationPeriods = authorizationPeriods,
             prohibitionPeriods = prohibitionPeriods,
         )
+    }
 
     companion object {
         fun fromRegulatoryAreaEntity(
@@ -117,6 +133,7 @@ data class RegulatoryAreaModel(
                 editionCacem = regulatoryArea.editionCacem?.toInstant(),
                 facade = regulatoryArea.facade,
                 geom = regulatoryArea.geom,
+                geomSimplified = regulatoryArea.geomSimplified,
                 layerName = regulatoryArea.layerName,
                 observation = regulatoryArea.observation,
                 polyName = regulatoryArea.polyName,

@@ -53,23 +53,25 @@ export function SearchLocation() {
   const locateOnMapCustomSearch = new CustomSearch(options ?? [], ['label'])
 
   return (
-    <StyledSearch
-      key="location-search"
-      customSearch={locateOnMapCustomSearch}
-      data-cy="location-search-input"
-      isLabelHidden
-      isLight
-      isSearchIconHidden
-      label="Rechercher un lieu"
-      name="search-place"
-      onChange={handleSelectLocation}
-      onQuery={onQuery}
-      options={options}
-      optionValueKey="name"
-      placeholder="Rechercher un lieu (port, lieu-dit, baie...)"
-      size={Size.LARGE}
-      value={locateOnMap?.location}
-    />
+    <>
+      <StyledSearch
+        key="location-search"
+        customSearch={locateOnMapCustomSearch}
+        data-cy="location-search-input"
+        isLabelHidden
+        isLight
+        isSearchIconHidden
+        label="Rechercher un lieu"
+        name="search-place"
+        onChange={handleSelectLocation}
+        onQuery={onQuery}
+        options={options}
+        optionValueKey="name"
+        placeholder="Rechercher un lieu (port, lieu-dit, baie...)"
+        size={Size.LARGE}
+        value={locateOnMap?.location}
+      />
+    </>
   )
 }
 

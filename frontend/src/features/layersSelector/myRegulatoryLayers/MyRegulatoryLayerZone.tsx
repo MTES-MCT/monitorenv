@@ -1,5 +1,6 @@
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { getTitle } from 'domain/entities/layers/utils'
+import { boundingExtent } from 'ol/extent'
 
 import { MonitorEnvLayers } from '../../../domain/entities/layers/constants'
 import {
@@ -17,6 +18,7 @@ import {
 import { MyLayerZone } from '../utils/MyLayerZone'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
+import type { Coordinate } from 'ol/coordinate'
 
 type RegulatoryLayerZoneProps = {
   regulatoryZone: RegulatoryArea.RegulatoryAreaWithBbox
@@ -33,6 +35,8 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
 
   const displayedName = getTitle(layerTitle) || 'AUCUN NOM'
 
+  const bbox = boundingExtent(regulatoryZone.geom?.coordinates.flat().flat() as Coordinate[])
+
   const toggleRegulatoryZoneMetadata = () => {
     if (metadataIsShown) {
       dispatch(closeMetadataPanel())
@@ -43,7 +47,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
 
   return (
     <MyLayerZone
-      bbox={regulatoryZone.bbox}
+      bbox={bbox}
       displayedName={displayedName}
       hasMetadata={!!layerTitle}
       hideLayer={() => dispatch(hideRegulatoryLayer(regulatoryZone.id))}

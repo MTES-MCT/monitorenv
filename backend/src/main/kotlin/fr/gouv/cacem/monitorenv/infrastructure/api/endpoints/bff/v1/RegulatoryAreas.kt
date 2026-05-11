@@ -58,6 +58,11 @@ class RegulatoryAreas(
         @Parameter(description = "Only recent areas")
         @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
         onlyRecentsAreas: Boolean?,
+        @Parameter(description = "Avec geometrie")
+        @RequestParam(name = "withGeometry", required = false)
+        withGeometry: Boolean = true,
+        @RequestParam(name = "zoom", required = false) zoom: Int?,
+        @RequestParam(name = "bbox", required = false) bbox: List<Double>?,
     ): RegulatoryAreasWithTotalDataOutput {
         val (regulatoryAreasGrouped, totalCount) =
             getAllRegulatoryAreas.execute(
@@ -67,6 +72,9 @@ class RegulatoryAreas(
                 tags = tags,
                 themes = themes,
                 onlyRecentsAreas = onlyRecentsAreas,
+                withGeometry = withGeometry,
+                zoom = zoom,
+                bbox = bbox,
             )
 
         val groupedDto =

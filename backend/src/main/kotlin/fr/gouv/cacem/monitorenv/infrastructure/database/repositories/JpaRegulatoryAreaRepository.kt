@@ -14,7 +14,10 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRegulatoryAreaRepository
 import org.apache.commons.lang3.StringUtils
+import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.GeometryFactory
+import org.locationtech.jts.geom.PrecisionModel
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -37,6 +40,9 @@ class JpaRegulatoryAreaRepository(
         tags: List<Int>?,
         themes: List<Int>?,
         onlyRecentsAreas: Boolean?,
+        withGeometry: Boolean?,
+        zoom: Int?,
+        bbox: List<Double>?,
     ): List<RegulatoryAreaEntity> =
         dbRegulatoryAreaRepository
             .findAll(
@@ -44,10 +50,32 @@ class JpaRegulatoryAreaRepository(
                 seaFronts = seaFronts,
                 tags = tags,
                 themes = themes,
-                onlyRecentsAreas =
-                onlyRecentsAreas,
-            ).map { it.toRegulatoryArea(mapper) }
+                onlyRecentsAreas = onlyRecentsAreas,
+                withGeometry = withGeometry ?: true,
+                zoom = zoom,
+                geom = bbox?.let { bboxToPolygon(it) },
+            ).map { it.toRegulatoryArea(mapper, withGeometry ?: true, zoom) }
             .filter { findBySearchQuery(it, query) }
+
+    fun bboxToPolygon(bbox: List<Double>): Geometry {
+        val minX = bbox[0]
+        val minY = bbox[1]
+        val maxX = bbox[2]
+        val maxY = bbox[3]
+
+        val gf = GeometryFactory(PrecisionModel(), 4326)
+
+        val coords: Array<Coordinate?> =
+            arrayOf(
+                Coordinate(minX, minY),
+                Coordinate(maxX, minY),
+                Coordinate(maxX, maxY),
+                Coordinate(minX, maxY),
+                Coordinate(minX, minY),
+            )
+
+        return gf.createPolygon(coords)
+    }
 
     override fun findAllLayerNames(): Map<String, Long> =
         dbRegulatoryAreaRepository.findAllLayerNames().associate { row ->

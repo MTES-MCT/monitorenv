@@ -1,9 +1,10 @@
-import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
+import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { Axis } from 'types'
 
 import { getRegulatoryFeature } from './regulatoryGeometryHelpers'
 import { Layers } from '../../../../domain/entities/layers/constants'
@@ -18,9 +19,13 @@ import type { Geometry } from 'ol/geom'
 export const metadataIsShowedPropertyName = 'metadataIsShowed'
 
 export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
-  const { data: regulatoryLayers } = useGetRegulatoryAreasQuery()
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
+
+  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery({
+    axis: Axis.NORTH_SOUTH,
+    ids: showedRegulatoryLayerIds
+  })
 
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLayerVisible = !isLinkingAMPToVigilanceArea
@@ -41,11 +46,9 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   const regulatoryLayersFeatures = useMemo(() => {
     let regulatoryFeatures: Feature[] = []
 
-    if (regulatoryLayers?.totalCount !== 0) {
-      const flattenRegulatoryAreas =
-        regulatoryLayers?.regulatoryAreasByLayer.flatMap(layer => layer.regulatoryAreas) ?? []
+    if (regulatoryLayers) {
       regulatoryFeatures = showedRegulatoryLayerIds.reduce((feats: Feature[], regulatorylayerId) => {
-        const regulatorylayer = flattenRegulatoryAreas.find(layer => layer.id === regulatorylayerId)
+        const regulatorylayer = regulatoryLayers.find(layer => layer.id === regulatorylayerId)
         if (regulatorylayer) {
           const feature = getRegulatoryFeature({
             code: Layers.REGULATORY_ENV.code,
@@ -64,13 +67,7 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
     }
 
     return regulatoryFeatures
-  }, [
-    regulatoryLayers?.totalCount,
-    regulatoryLayers?.regulatoryAreasByLayer,
-    showedRegulatoryLayerIds,
-    regulatoryMetadataLayerId,
-    isolatedLayer
-  ])
+  }, [regulatoryLayers, showedRegulatoryLayerIds, regulatoryMetadataLayerId, isolatedLayer])
 
   useEffect(() => {
     regulatoryVectorSourceRef.current?.clear(true)

@@ -23,38 +23,48 @@ export function LocateOnMap() {
   }
 
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+  const zoom = useAppSelector(state => state.map.mapView.zoom)
 
   return (
-    <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
-      <SearchWrapper
-        $shouldExpand={searchType === SearchType.VESSELS && shouldExpand}
-        onClick={() => handleClickExpand(true)}
-        onFocus={() => handleClickExpand(true)}
-      >
-        {searchType === SearchType.PLACES && <SearchLocation />}
-        {searchType === SearchType.VESSELS && (
-          <SearchVessel
-            onChange={item => {
-              if (item) {
-                dispatch(
-                  vesselAction.setSelectedVesselId({
-                    batchId: item.batchId,
-                    rowNumber: item.rowNumber,
-                    shipId: item.shipId
-                  })
-                )
-              }
-            }}
-            optionsWidth="500px"
-          />
-        )}
+    <>
+      <Wrapper $hasFullHeightRightDialogOpen={hasFullHeightRightDialogOpen} $isRightMenuOpened={isRightMenuOpened}>
+        <SearchWrapper
+          $shouldExpand={searchType === SearchType.VESSELS && shouldExpand}
+          onClick={() => handleClickExpand(true)}
+          onFocus={() => handleClickExpand(true)}
+        >
+          {searchType === SearchType.PLACES && <SearchLocation />}
+          {searchType === SearchType.VESSELS && (
+            <SearchVessel
+              onChange={item => {
+                if (item) {
+                  dispatch(
+                    vesselAction.setSelectedVesselId({
+                      batchId: item.batchId,
+                      rowNumber: item.rowNumber,
+                      shipId: item.shipId
+                    })
+                  )
+                }
+              }}
+              optionsWidth="500px"
+            />
+          )}
 
-        {isSuperUser && isVesselsEnabled() && (
-          <SearchSwitcher onChange={nextSearchType => setSearchType(nextSearchType)} searchType={searchType} />
-        )}
-      </SearchWrapper>
-      <StyledIconButton accent={Accent.PRIMARY} Icon={Icon.Search} size={Size.LARGE} tabIndex={-1} title="Rechercher" />
-    </Wrapper>
+          {isSuperUser && isVesselsEnabled() && (
+            <SearchSwitcher onChange={nextSearchType => setSearchType(nextSearchType)} searchType={searchType} />
+          )}
+        </SearchWrapper>
+        <StyledIconButton
+          accent={Accent.PRIMARY}
+          Icon={Icon.Search}
+          size={Size.LARGE}
+          tabIndex={-1}
+          title="Rechercher"
+        />
+      </Wrapper>
+      <ZoomWrapper>ZOOM: {zoom}</ZoomWrapper>
+    </>
   )
 }
 
@@ -83,4 +93,12 @@ const SearchWrapper = styled.div<{ $shouldExpand: boolean }>`
 const StyledIconButton = styled(IconButton)`
   padding: 6px;
   margin-left: 5px;
+`
+
+const ZoomWrapper = styled.div`
+  background-color: ${p => p.theme.color.goldenPoppy};
+  display: flex;
+  top: 51px;
+  position: absolute;
+  right: 390px;
 `

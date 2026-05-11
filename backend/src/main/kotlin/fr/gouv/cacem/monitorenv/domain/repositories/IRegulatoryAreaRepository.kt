@@ -12,6 +12,9 @@ interface IRegulatoryAreaRepository {
         tags: List<Int>? = null,
         themes: List<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
+        withGeometry: Boolean? = true,
+        zoom: Int? = null,
+        bbox: List<Double>? = null,
     ): List<RegulatoryAreaEntity>
 
     fun findAllIdsByGeometry(geometry: Geometry): List<Int>

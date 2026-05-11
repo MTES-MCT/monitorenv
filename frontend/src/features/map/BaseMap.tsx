@@ -31,6 +31,7 @@ import styled from 'styled-components'
 
 import { getHighestPriorityFeatures } from './utils'
 import { HIT_PIXEL_TO_TOLERANCE } from '../../constants'
+import { useSyncMapViewToRedux } from './hook/useSyncMapView'
 import {
   HoverableLayers0To7,
   HoverableLayers7To26,
@@ -282,6 +283,8 @@ function BaseMapNotMemoized({
       }
     }
   }
+
+  useSyncMapViewToRedux(initialMap)
 
   return (
     <MapWrapper className={className}>
