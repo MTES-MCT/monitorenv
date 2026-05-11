@@ -3,9 +3,10 @@ import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
 import { type Row as RowType, type SortingState } from '@tanstack/react-table'
+import { hasMoreThanThirtyDays } from '@utils/hasMoreThanThirtyDays'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { Columns } from './Columns'
@@ -38,6 +39,9 @@ export function VigilanceAreasTable({
 
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : vigilanceAreas), [isLoading, vigilanceAreas])
 
+  const isNew = useCallback(({ original }) => !original.id || hasMoreThanThirtyDays(original.createdAt), [])
+  const isUpdatedRecently = useCallback(({ original }) => hasMoreThanThirtyDays(original.updatedAt), [])
+
   const table = useTable({
     columnPinning: {
       left: ['name'],
@@ -45,6 +49,10 @@ export function VigilanceAreasTable({
     },
     columns,
     data: tableData,
+    meta: {
+      isNew,
+      isUpdatedRecently
+    },
     setSorting,
     sorting,
     withRowSelection: false
@@ -67,7 +75,7 @@ export function VigilanceAreasTable({
           {virtualRows?.map(virtualRow => {
             const row = rows[virtualRow.index] as RowType<VigilanceArea.VigilanceArea>
 
-            return <Row key={virtualRow.key} row={row} />
+            return <Row key={virtualRow.key} row={row} table={table} />
           })}
         </>
       }

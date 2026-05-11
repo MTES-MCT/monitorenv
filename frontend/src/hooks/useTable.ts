@@ -4,15 +4,16 @@ import {
   useReactTable,
   type RowSelectionState,
   type SortingState,
-  type Table,
   type ColumnDef,
-  type ColumnPinningState
+  type ColumnPinningState,
+  type Table
 } from '@tanstack/react-table'
 
 type UseTableProps = {
   columnPinning?: ColumnPinningState
   columns: ColumnDef<any>[]
   data: any
+  meta?: any
   rowSelection?: RowSelectionState
   setRowSelection?: (updaterOrValue: RowSelectionState | ((old: RowSelectionState) => RowSelectionState)) => void
   setSorting: (sorting: SortingState | ((old: SortingState) => SortingState)) => void
@@ -26,6 +27,7 @@ export function useTable({
   },
   columns,
   data,
+  meta,
   rowSelection,
   setRowSelection,
   setSorting,
@@ -41,6 +43,7 @@ export function useTable({
     getCoreRowModel: getCoreRowModel(),
     getRowId: (row: any) => row.id,
     getSortedRowModel: getSortedRowModel(),
+    meta,
     onRowSelectionChange: withRowSelection ? setRowSelection : undefined,
     onSortingChange: setSorting,
     state: {
