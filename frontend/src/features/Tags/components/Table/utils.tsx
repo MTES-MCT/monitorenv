@@ -43,19 +43,31 @@ export function getFilters(data: TagTable[], filtersState: FiltersState): Filter
   return filters
 }
 
+function isValidTagName(value?: string) {
+  return !!value && value.trim().length > 0
+}
+
+function isValidTagStartedAt(value?: string) {
+  return !!value
+}
+
+function isValidTagEndededAt(value?: string, pastDate?: string) {
+  return !(value && pastDate && customDayjs(value).isBefore(customDayjs(pastDate)))
+}
+
 export function validate(columnId: string, value: string, pastDate?: string): string {
   if (columnId === 'name') {
-    if (!value?.trim()) {
+    if (!isValidTagName(value)) {
       return 'Le nom est requis'
     }
   }
   if (columnId === 'startedAt') {
-    if (!value) {
+    if (!isValidTagStartedAt(value)) {
       return 'La date de début est requise'
     }
   }
   if (columnId === 'endedAt') {
-    if (value && pastDate && customDayjs(value).isBefore(customDayjs(pastDate))) {
+    if (!isValidTagEndededAt(value, pastDate)) {
       return 'La date de fin doit être supérieure à la date de début'
     }
   }
@@ -64,12 +76,7 @@ export function validate(columnId: string, value: string, pastDate?: string): st
 }
 
 export function isTagValid(tag: TagTable) {
-  if (!tag.name?.trim()) {
-    return false
-  }
-  if (!tag.startedAt) {
-    return false
-  }
-
-  return !(tag.endedAt && customDayjs(tag.endedAt).isBefore(customDayjs(tag.startedAt)))
+  return (
+    isValidTagName(tag.name) && isValidTagStartedAt(tag.startedAt) && isValidTagEndededAt(tag.endedAt, tag.startedAt)
+  )
 }

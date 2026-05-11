@@ -23,6 +23,7 @@ export function TagTable() {
   const [tags, setTags] = useState<TagTableType[]>([])
   const [draftTags, setDraftTags] = useState<TagTableType[]>([])
   const [newTags, setNewTags] = useState<TagTableType[]>([])
+  const [expanded, setExpanded] = useState({})
 
   useEffect(() => {
     const entityTags = Object.values(data ?? [])
@@ -50,6 +51,19 @@ export function TagTable() {
       subRows: tag.subTags
     }))
   }, [filtersState, tags])
+
+  const addNewTag = useCallback(() => {
+    const newTag: TagTableType = {
+      endedAt: undefined,
+      id: undefined,
+      name: undefined,
+      rowId: uuidv4(),
+      startedAt: undefined,
+      subTags: []
+    }
+    setNewTags(previousTags => [...previousTags, newTag])
+    setDraftTags(previousTags => [...previousTags, newTag])
+  }, [])
 
   const addDraftRow = useCallback(
     (rowId: string) => {
@@ -86,6 +100,7 @@ export function TagTable() {
           }
           // Added to drafted tags
           setDraftTags(previousDraftTags => [...previousDraftTags, newSubTag])
+          setExpanded({ [tag.rowId]: true })
 
           return {
             ...tag,
@@ -171,22 +186,7 @@ export function TagTable() {
     <BackofficeWrapper>
       <TitleContainer>
         <Title>Tags</Title>
-        <Button
-          onClick={() => {
-            const newTag: TagTableType = {
-              endedAt: undefined,
-              id: undefined,
-              name: undefined,
-              rowId: uuidv4(),
-              startedAt: undefined,
-              subTags: []
-            }
-            setNewTags(previousTags => [...previousTags, newTag])
-            setDraftTags(previousTags => [...previousTags, newTag])
-          }}
-        >
-          Ajouter un nouveau tag
-        </Button>
+        <Button onClick={addNewTag}>Ajouter un nouveau tag</Button>
       </TitleContainer>
       <FilterBar />
       <DataTable
@@ -203,7 +203,9 @@ export function TagTable() {
             onEdit,
             onSubmit,
             updateData
-          }
+          },
+          onExpandedChange: setExpanded,
+          state: { expanded }
         }}
       />
     </BackofficeWrapper>
