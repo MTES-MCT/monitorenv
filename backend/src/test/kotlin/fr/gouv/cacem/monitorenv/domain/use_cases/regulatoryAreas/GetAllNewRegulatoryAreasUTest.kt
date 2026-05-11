@@ -36,6 +36,9 @@ class GetAllRegulatoryAreasUTest {
                 seaFronts = null,
                 tags = null,
                 themes = null,
+                withGeometry = true,
+                zoom = null,
+                bbox = null,
             )
 
         // Then
@@ -72,6 +75,9 @@ class GetAllRegulatoryAreasUTest {
                 seaFronts = null,
                 tags = null,
                 themes = null,
+                withGeometry = true,
+                zoom = null,
+                bbox = null,
             )
 
         // Then

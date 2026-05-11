@@ -118,6 +118,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = null,
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -292,6 +295,9 @@ class RegulatoryAreasITests {
                     seaFronts = listOf("NAMO"),
                     tags = null,
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -324,6 +330,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = null,
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -351,6 +360,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = null,
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(emptyMap(), 0L))
 
@@ -373,6 +385,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = listOf(5),
                     themes = null,
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -400,6 +415,9 @@ class RegulatoryAreasITests {
                     seaFronts = null,
                     tags = null,
                     themes = listOf(101),
+                    withGeometry = true,
+                    zoom = null,
+                    bbox = null,
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
