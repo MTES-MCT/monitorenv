@@ -1,11 +1,11 @@
 import {
+  type ColumnDef,
+  type ColumnPinningState,
   getCoreRowModel,
   getExpandedRowModel,
   getSortedRowModel,
   type RowSelectionState,
   type SortingState,
-  type ColumnDef,
-  type ColumnPinningState,
   type Table,
   useReactTable
 } from '@tanstack/react-table'
@@ -50,8 +50,8 @@ export function useTable({
     getRowId: (row: any) => row.id,
     getSortedRowModel: getSortedRowModel(),
     getSubRows: (row: any) => row.subRows,
-    onExpandedChange: setExpanded,
     meta,
+    onExpandedChange: setExpanded,
     onRowSelectionChange: withRowSelection ? setRowSelection : undefined,
     onSortingChange: setSorting,
     state: {
