@@ -11,7 +11,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { customDayjs, TableWithSelectableRows, THEME } from '@mtes-mct/monitor-ui'
 import { flexRender, type Row as RowType } from '@tanstack/react-table'
 import { getColorWithAlpha } from '@utils/utils'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { FrequencyCell } from './Cells/FrequencyCell'
@@ -127,9 +127,23 @@ export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>;
             <ExpandedRowLabel>Dernière modification</ExpandedRowLabel>
             <ValidationDateDetailsCell date={vigilanceArea.updatedAt} />
           </ExpandedRowCell>
-          <ExpandedRowCell colSpan={4}>
+          <ExpandedRowCell>
             <ExpandedRowLabel>Créée par </ExpandedRowLabel>
             <ExpandedRowValue>{vigilanceArea.createdBy}</ExpandedRowValue>
+          </ExpandedRowCell>
+          <ExpandedRowCell colSpan={3}>
+            <ExpandedRowValue>
+              {vigilanceArea.sources?.map(source => {
+                const sourceLabel = source.type === VigilanceArea.VigilanceAreaSourceType.INTERNAL ? 'CACEM' : 'externe'
+
+                return (
+                  <Fragment key={source.id}>
+                    <ExpandedRowLabel>Source {sourceLabel}</ExpandedRowLabel>
+                    <span>{source.name}</span>
+                  </Fragment>
+                )
+              })}
+            </ExpandedRowValue>
           </ExpandedRowCell>
         </ExpandedRow>
       )}

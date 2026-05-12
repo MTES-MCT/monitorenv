@@ -1,6 +1,7 @@
 import { Tooltip } from '@components/Tooltip'
 import { Dashboard } from '@features/Dashboard/types'
 import { isOutOfPeriod, isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
+import { VigilanceAreaOverlay } from '@features/VigilanceArea/components/VigilanceAreaOverlay'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingRegulatoryToVigilanceArea,
@@ -156,6 +157,15 @@ export function OverlayContent({ items }: OverlayContentProps) {
       })
     )
   }
+  if (items?.length === 1 && items[0] && isVigilanceAreaLayer(items[0]?.layerType)) {
+    return (
+      <VigilanceAreaOverlay
+        vigilanceAreaItem={
+          items[0] as OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, VigilanceArea.VigilanceAreaProperties>
+        }
+      />
+    )
+  }
 
   return (
     <Layerlist>
@@ -291,7 +301,7 @@ const LayerItem = styled.li<{ $isSelected: boolean; $withMargin: boolean }>`
 
 // using average width of 7px per character to approximate min-width
 // more precise calculation would require measuring text width with access to the dom
-const GroupName = styled.span<{ $isDisabled: boolean }>`
+export const GroupName = styled.span<{ $isDisabled: boolean }>`
   color: ${p => (p.$isDisabled ? p.theme.color.lightGray : p.theme.color.gunMetal)};
   overflow: hidden;
   text-overflow: ellipsis;
