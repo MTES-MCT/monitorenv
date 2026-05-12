@@ -23,7 +23,7 @@ class JpaTagRepositoryITest : AbstractDBTests() {
     @Test
     fun `findAllWithin should return all tags with subTags within validity range time`() {
         // Given
-        val expectedTagSize = 7
+        val expectedTagSize = 15
 
         // When
         val tags = jpaTagRepository.findAllWithin(ZonedDateTime.now())
@@ -40,9 +40,9 @@ class JpaTagRepositoryITest : AbstractDBTests() {
     }
 
     @Test
-    fun `findAllWithin should not return themes when validity range time is out of range`() {
+    fun `findAllWithin should not return tags when validity range time is out of range`() {
         // Given
-        val expectedTagSize = 0
+        val expectedTagSize = 8
 
         // When
         val tags = jpaTagRepository.findAllWithin(ZonedDateTime.parse("2100-01-01T00:00:00Z"))
