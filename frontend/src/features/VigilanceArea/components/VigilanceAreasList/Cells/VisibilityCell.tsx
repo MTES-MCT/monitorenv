@@ -1,5 +1,5 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { Accent, Tag } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, Tag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 export function VisibilityCell({ visibility }: { visibility: VigilanceArea.Visibility | undefined }) {
@@ -7,7 +7,13 @@ export function VisibilityCell({ visibility }: { visibility: VigilanceArea.Visib
     return <span>-</span>
   }
 
-  return visibility === VigilanceArea.Visibility.PRIVATE ? <StyledTag accent={Accent.PRIMARY}>INTERNE</StyledTag> : ''
+  return visibility === VigilanceArea.Visibility.PRIVATE ? (
+    <StyledTag accent={Accent.TERTIARY} Icon={Icon.Unlock}>
+      Confidentiel
+    </StyledTag>
+  ) : (
+    ''
+  )
 }
 
 const StyledTag = styled(Tag)`
