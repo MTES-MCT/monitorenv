@@ -1,0 +1,3038 @@
+Subject: [PATCH] feat: refacto mission table to make it expandable
+---
+Index: backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/entities/controlUnit/LegacyControlUnitResourceEntity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/entities/controlUnit/LegacyControlUnitResourceEntity.kt b/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/entities/controlUnit/LegacyControlUnitResourceEntity.kt
+--- a/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/entities/controlUnit/LegacyControlUnitResourceEntity.kt	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/entities/controlUnit/LegacyControlUnitResourceEntity.kt	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -5,6 +5,7 @@
+     val id: Int,
+     val controlUnitId: Int,
+     val name: String,
++    val type: ControlUnitResourceType,
+ ) {
+     override fun equals(other: Any?): Boolean {
+         if (this === other) return true
+Index: backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/use_cases/controlUnit/dtos/FullControlUnitResourceDTO.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/use_cases/controlUnit/dtos/FullControlUnitResourceDTO.kt b/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/use_cases/controlUnit/dtos/FullControlUnitResourceDTO.kt
+--- a/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/use_cases/controlUnit/dtos/FullControlUnitResourceDTO.kt	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/domain/use_cases/controlUnit/dtos/FullControlUnitResourceDTO.kt	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -15,5 +15,6 @@
+             id = requireNotNull(controlUnitResource.id),
+             controlUnitId = requireNotNull(controlUnit.id),
+             name = controlUnitResource.name,
++            type = controlUnitResource.type,
+         )
+ }
+Index: backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/ControlUnitResourceModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/ControlUnitResourceModel.kt b/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/ControlUnitResourceModel.kt
+--- a/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/ControlUnitResourceModel.kt	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/ControlUnitResourceModel.kt	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -134,7 +134,8 @@
+         LegacyControlUnitResourceEntity(
+             id = requireNotNull(id),
+             controlUnitId = requireNotNull(controlUnit.id),
+-            name,
++            name = name,
++            type = type,
+         )
+ 
+     @Override
+Index: backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/MissionControlResourceModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/MissionControlResourceModel.kt b/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/MissionControlResourceModel.kt
+--- a/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/MissionControlResourceModel.kt	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/backend/src/main/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/model/MissionControlResourceModel.kt	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -30,5 +30,6 @@
+             id = requireNotNull(resource.id),
+             controlUnitId = requireNotNull(resource.controlUnit.id),
+             name = resource.name,
++            type = resource.type,
+         )
+ }
+Index: backend/src/test/kotlin/fr/gouv/cacem/monitorenv/domain/mappers/PatchMissionEntityUTest.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/domain/mappers/PatchMissionEntityUTest.kt b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/domain/mappers/PatchMissionEntityUTest.kt
+--- a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/domain/mappers/PatchMissionEntityUTest.kt	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/domain/mappers/PatchMissionEntityUTest.kt	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,5 +1,6 @@
+ package fr.gouv.cacem.monitorenv.domain.mappers
+ 
++import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
+@@ -10,7 +11,7 @@
+ import org.assertj.core.api.Assertions.assertThat
+ import org.junit.jupiter.api.Test
+ import java.time.ZonedDateTime
+-import java.util.*
++import java.util.Optional
+ 
+ class PatchMissionEntityUTest {
+     private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity> = PatchEntity()
+@@ -259,6 +260,7 @@
+                                 id = 1,
+                                 controlUnitId = 2,
+                                 name = "Vedette",
++                                type = ControlUnitResourceType.FAST_BOAT,
+                             ),
+                         ),
+                     contact = null,
+Index: backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/bff/v1/MissionsITests.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/bff/v1/MissionsITests.kt b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/bff/v1/MissionsITests.kt
+--- a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/bff/v1/MissionsITests.kt	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/bff/v1/MissionsITests.kt	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -4,6 +4,7 @@
+ import fr.gouv.cacem.monitorenv.config.SentryConfig
+ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+ import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
++import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
+@@ -248,6 +249,7 @@
+                                                 1,
+                                                 name =
+                                                     "Ressource 2",
++                                                type = ControlUnitResourceType.FAST_BOAT,
+                                             ),
+                                         ),
+                                     isArchived = false,
+@@ -472,6 +474,7 @@
+                                                 1,
+                                                 name =
+                                                     "Ressource 2",
++                                                type = ControlUnitResourceType.FAST_BOAT,
+                                             ),
+                                         ),
+                                     isArchived = false,
+Index: backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/LegacyControlUnitsITests.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/LegacyControlUnitsITests.kt b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/LegacyControlUnitsITests.kt
+--- a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/LegacyControlUnitsITests.kt	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/LegacyControlUnitsITests.kt	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -2,6 +2,7 @@
+ 
+ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
+ import fr.gouv.cacem.monitorenv.config.SentryConfig
++import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
+ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetLegacyControlUnits
+@@ -45,6 +46,7 @@
+                             id = 0,
+                             controlUnitId = 4,
+                             name = "Vedette",
++                            type = ControlUnitResourceType.FAST_BOAT,
+                         ),
+                     ),
+             )
+Index: backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/v2/MissionsITests.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/v2/MissionsITests.kt b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/v2/MissionsITests.kt
+--- a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/v2/MissionsITests.kt	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/api/endpoints/publicapi/v2/MissionsITests.kt	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -5,6 +5,7 @@
+ import com.nhaarman.mockitokotlin2.given
+ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
+ import fr.gouv.cacem.monitorenv.config.SentryConfig
++import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+@@ -88,6 +89,7 @@
+                                 id = 1,
+                                 controlUnitId = 2,
+                                 name = "Vedette",
++                                type = ControlUnitResourceType.FAST_BOAT,
+                             ),
+                         ),
+                     contact = null,
+Index: backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/repositories/JpaMissionRepositoryITests.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/repositories/JpaMissionRepositoryITests.kt b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/repositories/JpaMissionRepositoryITests.kt
+--- a/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/repositories/JpaMissionRepositoryITests.kt	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/backend/src/test/kotlin/fr/gouv/cacem/monitorenv/infrastructure/database/repositories/JpaMissionRepositoryITests.kt	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -4,6 +4,7 @@
+ import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
+ import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+ import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
++import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
+ import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
+@@ -525,6 +526,7 @@
+                                                 10002,
+                                                 name =
+                                                     "Semi-rigide 1",
++                                                type = ControlUnitResourceType.SEMI_RIGID,
+                                             ),
+                                             LegacyControlUnitResourceEntity(
+                                                 id = 4,
+@@ -532,6 +534,7 @@
+                                                 10002,
+                                                 name =
+                                                     "Semi-rigide 2",
++                                                type = ControlUnitResourceType.SEMI_RIGID,
+                                             ),
+                                             LegacyControlUnitResourceEntity(
+                                                 id = 5,
+@@ -539,6 +542,7 @@
+                                                 10002,
+                                                 name =
+                                                     "Voiture",
++                                                type = ControlUnitResourceType.CAR,
+                                             ),
+                                         ),
+                                 ),
+@@ -701,6 +705,7 @@
+                                         id = 8,
+                                         controlUnitId = 10121,
+                                         name = "PAM Jeanne Barret",
++                                        type = ControlUnitResourceType.PATROL_BOAT,
+                                     ),
+                                 ),
+                         ),
+@@ -830,6 +835,7 @@
+                                         id = 8,
+                                         controlUnitId = 10004,
+                                         name = "PAM Jeanne Barret",
++                                        type = ControlUnitResourceType.PATROL_BOAT,
+                                     ),
+                                 ),
+                         ),
+@@ -859,12 +865,14 @@
+                                             10002,
+                                             name =
+                                                 "Semi-rigide 1",
++                                            type = ControlUnitResourceType.SEMI_RIGID,
+                                         ),
+                                         LegacyControlUnitResourceEntity(
+                                             id = 5,
+                                             controlUnitId =
+                                             10002,
+                                             name = "Voiture",
++                                            type = ControlUnitResourceType.CAR,
+                                         ),
+                                     ),
+                             ),
+@@ -1048,6 +1056,7 @@
+                                         id = 123456,
+                                         controlUnitId = 5,
+                                         name = "PAM Jeanne Barret",
++                                        type = ControlUnitResourceType.PATROL_BOAT,
+                                     ),
+                                 ),
+                         ),
+Index: frontend/cypress/e2e/side_window/mission_list/filters.spec.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/cypress/e2e/side_window/mission_list/filters.spec.ts b/frontend/cypress/e2e/side_window/mission_list/filters.spec.ts
+--- a/frontend/cypress/e2e/side_window/mission_list/filters.spec.ts	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/cypress/e2e/side_window/mission_list/filters.spec.ts	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -252,7 +252,7 @@
+ 
+   it('Should filter missions with env actions', () => {
+     cy.fill('Période', 'Année en cours')
+-    cy.fill('Missions avec actions CACEM', true)
++    cy.fill('Missions avec actions env.', true)
+ 
+     cy.getDataCy('edit-mission-53').should('exist')
+     cy.getDataCy('edit-mission-38').should('exist')
+Index: frontend/package-lock.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/package-lock.json b/frontend/package-lock.json
+--- a/frontend/package-lock.json	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/package-lock.json	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -147,7 +147,6 @@
+       "resolved": "https://registry.npmjs.org/@babel/core/-/core-7.28.4.tgz",
+       "integrity": "sha512-2BCOP7TN8M+gVDj7/ht3hsaO/B/n5oDbiAyyvnRlNOs+u1o+JWNYTQrmpuNp1/Wq2gcFrI01JAW+paEKDMx/CA==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@babel/code-frame": "^7.27.1",
+         "@babel/generator": "^7.28.3",
+@@ -2769,7 +2768,6 @@
+       "dev": true,
+       "hasInstallScript": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "dotenv": "16.5.0",
+         "magic-string": "0.30.17",
+@@ -3829,7 +3827,6 @@
+       "resolved": "https://registry.npmjs.org/@jest/transform/-/transform-30.2.0.tgz",
+       "integrity": "sha512-XsauDV82o5qXbhalKxD7p4TZYYdwcaEXC77PPD2HixEFF+6YGppjrAAQurTl2ECWcEomHBMMNS9AH3kcCFx8jA==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@babel/core": "^7.27.4",
+         "@jest/types": "30.2.0",
+@@ -3922,7 +3919,6 @@
+       "integrity": "sha512-u3UPsIilWKOM3F9CXtrG8LEJmNxwoCQC/XVj4IKYXvvpx7QIi/Kg1LI5uDmDpKlac62NUtX7eLjRh+jVZcLOzw==",
+       "devOptional": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@jest/schemas": "^29.6.3",
+         "@types/istanbul-lib-coverage": "^2.0.0",
+@@ -3969,6 +3965,7 @@
+       "resolved": "https://registry.npmjs.org/@jridgewell/source-map/-/source-map-0.3.11.tgz",
+       "integrity": "sha512-ZMp1V8ZFcPG5dIWnQLr3NSI1MiCU7UETdS/A0G8V/XWHvJv3ZsFqutJn1Y5RPmAPX6F3BiE397OqveU/9NCuIA==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@jridgewell/gen-mapping": "^0.3.5",
+         "@jridgewell/trace-mapping": "^0.3.25"
+@@ -5268,7 +5265,6 @@
+       "resolved": "https://registry.npmjs.org/@sentry/react/-/react-8.54.0.tgz",
+       "integrity": "sha512-42T/fp8snYN19Fy/2P0Mwotu4gcdy+1Lx+uYCNcYP1o7wNGigJ7qb27sW7W34GyCCHjoCCfQgeOqDQsyY8LC9w==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@sentry/browser": "8.54.0",
+         "@sentry/core": "8.54.0",
+@@ -5542,7 +5538,6 @@
+       "resolved": "https://registry.npmjs.org/@svgr/core/-/core-8.1.0.tgz",
+       "integrity": "sha512-8QqtOQT5ACVlmsvKOJNEaWmRPmcojMOzCz4Hs2BGG/toAp/K38LcsMRyLp349glq5AzJbCEeimEoxaX6v/fLrA==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@babel/core": "^7.21.3",
+         "@svgr/babel-preset": "8.1.0",
+@@ -5648,7 +5643,6 @@
+       "dev": true,
+       "hasInstallScript": true,
+       "license": "Apache-2.0",
+-      "peer": true,
+       "dependencies": {
+         "@swc/counter": "^0.1.3",
+         "@swc/types": "^0.1.24"
+@@ -6044,6 +6038,7 @@
+       "resolved": "https://registry.npmjs.org/@types/eslint/-/eslint-9.6.1.tgz",
+       "integrity": "sha512-FXx2pKgId/WyYo2jXw63kk7/+TY7u7AziEJxJAnSFzHlqTAS3Ync6SvgYAN/k4/PQpnnVuzoMuVnByKK2qp0ag==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@types/estree": "*",
+         "@types/json-schema": "*"
+@@ -6054,6 +6049,7 @@
+       "resolved": "https://registry.npmjs.org/@types/eslint-scope/-/eslint-scope-3.7.7.tgz",
+       "integrity": "sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@types/eslint": "*",
+         "@types/estree": "*"
+@@ -6373,7 +6369,6 @@
+       "resolved": "https://registry.npmjs.org/@types/react/-/react-18.3.12.tgz",
+       "integrity": "sha512-D2wOSq/d6Agt28q7rSI3jhU7G6aiuzljDGZ2hTZHIkrTLUI+AF3WMeKkEZ9nN2fkBAlcktT6vcZjDFiIhMYEQw==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@types/prop-types": "*",
+         "csstype": "^3.0.2"
+@@ -6479,7 +6474,6 @@
+       "integrity": "sha512-j6vT/kCulhG5wBmGtstKeiVr1rdXE4nk+DT1k6trYkwlrvW9eOF5ZbgKnd/YR6PcM4uTEXa0h6Fcvf6X7Dxl0w==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@eslint-community/regexpp": "^4.5.1",
+         "@typescript-eslint/scope-manager": "7.1.0",
+@@ -6691,7 +6685,6 @@
+       "integrity": "sha512-V1EknKUubZ1gWFjiOZhDSNToOjs63/9O0puCgGS8aDOgpZY326fzFu15QAUjwaXzRZjf/qdsdBrckYdv9YxB8w==",
+       "dev": true,
+       "license": "BSD-2-Clause",
+-      "peer": true,
+       "dependencies": {
+         "@typescript-eslint/scope-manager": "7.1.0",
+         "@typescript-eslint/types": "7.1.0",
+@@ -7156,6 +7149,7 @@
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/ast/-/ast-1.14.1.tgz",
+       "integrity": "sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@webassemblyjs/helper-numbers": "1.13.2",
+         "@webassemblyjs/helper-wasm-bytecode": "1.13.2"
+@@ -7165,25 +7159,29 @@
+       "version": "1.13.2",
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/floating-point-hex-parser/-/floating-point-hex-parser-1.13.2.tgz",
+       "integrity": "sha512-6oXyTOzbKxGH4steLbLNOu71Oj+C8Lg34n6CqRvqfS2O71BxY6ByfMDRhBytzknj9yGUPVJ1qIKhRlAwO1AovA==",
+-      "license": "MIT"
++      "license": "MIT",
++      "peer": true
+     },
+     "node_modules/@webassemblyjs/helper-api-error": {
+       "version": "1.13.2",
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/helper-api-error/-/helper-api-error-1.13.2.tgz",
+       "integrity": "sha512-U56GMYxy4ZQCbDZd6JuvvNV/WFildOjsaWD3Tzzvmw/mas3cXzRJPMjP83JqEsgSbyrmaGjBfDtV7KDXV9UzFQ==",
+-      "license": "MIT"
++      "license": "MIT",
++      "peer": true
+     },
+     "node_modules/@webassemblyjs/helper-buffer": {
+       "version": "1.14.1",
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/helper-buffer/-/helper-buffer-1.14.1.tgz",
+       "integrity": "sha512-jyH7wtcHiKssDtFPRB+iQdxlDf96m0E39yb0k5uJVhFGleZFoNw1c4aeIcVUPPbXUVJ94wwnMOAqUHyzoEPVMA==",
+-      "license": "MIT"
++      "license": "MIT",
++      "peer": true
+     },
+     "node_modules/@webassemblyjs/helper-numbers": {
+       "version": "1.13.2",
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/helper-numbers/-/helper-numbers-1.13.2.tgz",
+       "integrity": "sha512-FE8aCmS5Q6eQYcV3gI35O4J789wlQA+7JrqTTpJqn5emA4U2hvwJmvFRC0HODS+3Ye6WioDklgd6scJ3+PLnEA==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@webassemblyjs/floating-point-hex-parser": "1.13.2",
+         "@webassemblyjs/helper-api-error": "1.13.2",
+@@ -7194,13 +7192,15 @@
+       "version": "1.13.2",
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.13.2.tgz",
+       "integrity": "sha512-3QbLKy93F0EAIXLh0ogEVR6rOubA9AoZ+WRYhNbFyuB70j3dRdwH9g+qXhLAO0kiYGlg3TxDV+I4rQTr/YNXkA==",
+-      "license": "MIT"
++      "license": "MIT",
++      "peer": true
+     },
+     "node_modules/@webassemblyjs/helper-wasm-section": {
+       "version": "1.14.1",
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/helper-wasm-section/-/helper-wasm-section-1.14.1.tgz",
+       "integrity": "sha512-ds5mXEqTJ6oxRoqjhWDU83OgzAYjwsCV8Lo/N+oRsNDmx/ZDpqalmrtgOMkHwxsG0iI//3BwWAErYRHtgn0dZw==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@webassemblyjs/ast": "1.14.1",
+         "@webassemblyjs/helper-buffer": "1.14.1",
+@@ -7213,6 +7213,7 @@
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/ieee754/-/ieee754-1.13.2.tgz",
+       "integrity": "sha512-4LtOzh58S/5lX4ITKxnAK2USuNEvpdVV9AlgGQb8rJDHaLeHciwG4zlGr0j/SNWlr7x3vO1lDEsuePvtcDNCkw==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@xtuc/ieee754": "^1.2.0"
+       }
+@@ -7222,6 +7223,7 @@
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/leb128/-/leb128-1.13.2.tgz",
+       "integrity": "sha512-Lde1oNoIdzVzdkNEAWZ1dZ5orIbff80YPdHx20mrHwHrVNNTjNr8E3xz9BdpcGqRQbAEa+fkrCb+fRFTl/6sQw==",
+       "license": "Apache-2.0",
++      "peer": true,
+       "dependencies": {
+         "@xtuc/long": "4.2.2"
+       }
+@@ -7230,13 +7232,15 @@
+       "version": "1.13.2",
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/utf8/-/utf8-1.13.2.tgz",
+       "integrity": "sha512-3NQWGjKTASY1xV5m7Hr0iPeXD9+RDobLll3T9d2AO+g3my8xy5peVyjSag4I50mR1bBSN/Ct12lo+R9tJk0NZQ==",
+-      "license": "MIT"
++      "license": "MIT",
++      "peer": true
+     },
+     "node_modules/@webassemblyjs/wasm-edit": {
+       "version": "1.14.1",
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/wasm-edit/-/wasm-edit-1.14.1.tgz",
+       "integrity": "sha512-RNJUIQH/J8iA/1NzlE4N7KtyZNHi3w7at7hDjvRNm5rcUXa00z1vRz3glZoULfJ5mpvYhLybmVcwcjGrC1pRrQ==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@webassemblyjs/ast": "1.14.1",
+         "@webassemblyjs/helper-buffer": "1.14.1",
+@@ -7253,6 +7257,7 @@
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/wasm-gen/-/wasm-gen-1.14.1.tgz",
+       "integrity": "sha512-AmomSIjP8ZbfGQhumkNvgC33AY7qtMCXnN6bL2u2Js4gVCg8fp735aEiMSBbDR7UQIj90n4wKAFUSEd0QN2Ukg==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@webassemblyjs/ast": "1.14.1",
+         "@webassemblyjs/helper-wasm-bytecode": "1.13.2",
+@@ -7266,6 +7271,7 @@
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/wasm-opt/-/wasm-opt-1.14.1.tgz",
+       "integrity": "sha512-PTcKLUNvBqnY2U6E5bdOQcSM+oVP/PmrDY9NzowJjislEjwP/C4an2303MCVS2Mg9d3AJpIGdUFIQQWbPds0Sw==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@webassemblyjs/ast": "1.14.1",
+         "@webassemblyjs/helper-buffer": "1.14.1",
+@@ -7278,6 +7284,7 @@
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/wasm-parser/-/wasm-parser-1.14.1.tgz",
+       "integrity": "sha512-JLBl+KZ0R5qB7mCnud/yyX08jWFw5MsoalJ1pQ4EdFlgj9VdXKGuENGsiCIjegI1W7p91rUlcB/LB5yRJKNTcQ==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@webassemblyjs/ast": "1.14.1",
+         "@webassemblyjs/helper-api-error": "1.13.2",
+@@ -7292,6 +7299,7 @@
+       "resolved": "https://registry.npmjs.org/@webassemblyjs/wast-printer/-/wast-printer-1.14.1.tgz",
+       "integrity": "sha512-kPSSXE6De1XOR820C90RIo2ogvZG+c3KiHzqUoO/F34Y2shGzesfqv7o57xrxovZJH/MetF5UjroJ/R/3isoiw==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@webassemblyjs/ast": "1.14.1",
+         "@xtuc/long": "4.2.2"
+@@ -7301,13 +7309,15 @@
+       "version": "1.2.0",
+       "resolved": "https://registry.npmjs.org/@xtuc/ieee754/-/ieee754-1.2.0.tgz",
+       "integrity": "sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==",
+-      "license": "BSD-3-Clause"
++      "license": "BSD-3-Clause",
++      "peer": true
+     },
+     "node_modules/@xtuc/long": {
+       "version": "4.2.2",
+       "resolved": "https://registry.npmjs.org/@xtuc/long/-/long-4.2.2.tgz",
+       "integrity": "sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==",
+-      "license": "Apache-2.0"
++      "license": "Apache-2.0",
++      "peer": true
+     },
+     "node_modules/abab": {
+       "version": "2.0.6",
+@@ -7328,7 +7338,6 @@
+       "resolved": "https://registry.npmjs.org/acorn/-/acorn-8.15.0.tgz",
+       "integrity": "sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==",
+       "license": "MIT",
+-      "peer": true,
+       "bin": {
+         "acorn": "bin/acorn"
+       },
+@@ -7352,6 +7361,7 @@
+       "resolved": "https://registry.npmjs.org/acorn-import-phases/-/acorn-import-phases-1.0.4.tgz",
+       "integrity": "sha512-wKmbr/DDiIXzEOiWrTTUcDm24kQ2vGfZQvM2fwg2vXqR5uW6aapr7ObPtj1th32b9u90/Pf4AItvdTh42fBmVQ==",
+       "license": "MIT",
++      "peer": true,
+       "engines": {
+         "node": ">=10.13.0"
+       },
+@@ -7412,7 +7422,6 @@
+       "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.12.6.tgz",
+       "integrity": "sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "fast-deep-equal": "^3.1.1",
+         "fast-json-stable-stringify": "^2.0.0",
+@@ -7429,6 +7438,7 @@
+       "resolved": "https://registry.npmjs.org/ajv-formats/-/ajv-formats-2.1.1.tgz",
+       "integrity": "sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "ajv": "^8.0.0"
+       },
+@@ -7446,6 +7456,7 @@
+       "resolved": "https://registry.npmjs.org/ajv/-/ajv-8.17.1.tgz",
+       "integrity": "sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "fast-deep-equal": "^3.1.3",
+         "fast-uri": "^3.0.1",
+@@ -7461,7 +7472,8 @@
+       "version": "1.0.0",
+       "resolved": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz",
+       "integrity": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==",
+-      "license": "MIT"
++      "license": "MIT",
++      "peer": true
+     },
+     "node_modules/ajv-keywords": {
+       "version": "3.5.2",
+@@ -7879,7 +7891,6 @@
+       "integrity": "sha512-Xm7bpRXnDSX2YE2YFfBk2FnF0ep6tmG7xPh8iHee8MIcrgq762Nkce856dYtJYLkuIoYZvGfTs/PbZhideTcEg==",
+       "dev": true,
+       "license": "MPL-2.0",
+-      "peer": true,
+       "engines": {
+         "node": ">=4"
+       }
+@@ -7931,7 +7942,6 @@
+       "resolved": "https://registry.npmjs.org/babel-jest/-/babel-jest-30.2.0.tgz",
+       "integrity": "sha512-0YiBEOxWqKkSQWL9nNGGEgndoeL0ZpWrbLMNL5u/Kaxrli3Eaxlt3ZtIDktEvXt4L/R9r3ODr2zKwGM/2BjxVw==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@jest/transform": "30.2.0",
+         "@types/babel__core": "^7.20.5",
+@@ -8298,7 +8308,6 @@
+         }
+       ],
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "baseline-browser-mapping": "^2.8.9",
+         "caniuse-lite": "^1.0.30001746",
+@@ -8591,6 +8600,7 @@
+       "resolved": "https://registry.npmjs.org/chrome-trace-event/-/chrome-trace-event-1.0.4.tgz",
+       "integrity": "sha512-rNjApaLzuwaOTjCiT8lSDdGN1APCiqkChLMJxJPWLunPAt5fy8xgU9/jNOchV84wfIxrA0lRQB7oCT8jrn/wrQ==",
+       "license": "MIT",
++      "peer": true,
+       "engines": {
+         "node": ">=6.0"
+       }
+@@ -9122,7 +9132,6 @@
+       "integrity": "sha512-syLwKjDeMg77FRRx68bytLdlqHXDT4yBVh0/PPkcgesChYDjUZbwxLqMXuryYKzAyJsPsQHUDW1YU74/IYEUIA==",
+       "hasInstallScript": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@cypress/request": "^3.0.9",
+         "@cypress/xvfb": "^1.2.4",
+@@ -9486,8 +9495,7 @@
+       "resolved": "https://registry.npmjs.org/devtools-protocol/-/devtools-protocol-0.0.1299070.tgz",
+       "integrity": "sha512-+qtL3eX50qsJ7c+qVyagqi7AWMoQCBGNfoyJZMwm/NSXVqLYbuitrWEEIzxfUmTNy7//Xe8yhMmQ+elj3uAqSg==",
+       "dev": true,
+-      "license": "BSD-3-Clause",
+-      "peer": true
++      "license": "BSD-3-Clause"
+     },
+     "node_modules/dfa": {
+       "version": "1.2.0",
+@@ -9766,6 +9774,7 @@
+       "resolved": "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-5.18.3.tgz",
+       "integrity": "sha512-d4lC8xfavMeBjzGr2vECC3fsGXziXZQyJxD868h2M/mBI3PwAuODxAkLkq5HYuvrPYcUtiLzsTo8U3PgX3Ocww==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "graceful-fs": "^4.2.4",
+         "tapable": "^2.2.0"
+@@ -9779,7 +9788,6 @@
+       "resolved": "https://registry.npmjs.org/enquirer/-/enquirer-2.4.1.tgz",
+       "integrity": "sha512-rRqJg/6gd538VHvR3PSrdRBb/1Vy2YfzHqzvbhGIQpDRKIa4FgV/54b5Q1xYSxOOwKvjXweS26E0Q+nAMwp2pQ==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "ansi-colors": "^4.1.1",
+         "strip-ansi": "^6.0.1"
+@@ -9951,7 +9959,8 @@
+       "version": "1.7.0",
+       "resolved": "https://registry.npmjs.org/es-module-lexer/-/es-module-lexer-1.7.0.tgz",
+       "integrity": "sha512-jEQoCwk8hyb2AZziIOLhDqpm5+2ww5uIE6lkO/6jcOCusfk6LhMHpXXfBLXTZ7Ydyt0j4VoUQv6uGNYbdW+kBA==",
+-      "license": "MIT"
++      "license": "MIT",
++      "peer": true
+     },
+     "node_modules/es-object-atoms": {
+       "version": "1.1.1",
+@@ -10104,7 +10113,6 @@
+       "deprecated": "This version is no longer supported. Please see https://eslint.org/version-support for other options.",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@eslint-community/eslint-utils": "^4.2.0",
+         "@eslint-community/regexpp": "^4.6.1",
+@@ -10343,7 +10351,6 @@
+       "integrity": "sha512-whOE1HFo/qJDyX4SnXzP4N6zOWn79WhnCUY/iDR0mPfQZO8wcYE4JClzI2oZrhBnnMUCBCHZhO6VQyoBU95mZA==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@rtsao/scc": "^1.1.0",
+         "array-includes": "^3.1.9",
+@@ -10451,7 +10458,6 @@
+       "integrity": "sha512-scB3nz4WmG75pV8+3eRUQOHZlNSUhFNq37xnpgRkCCELU3XMvXAxLk1eqWWyE22Ki4Q01Fnsw9BA3cJHDPgn2Q==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "aria-query": "^5.3.2",
+         "array-includes": "^3.1.8",
+@@ -10659,7 +10665,6 @@
+       "integrity": "sha512-Qteup0SqU15kdocexFNAJMvCJEfa2xUKNV4CC1xsVMrIIqEy3SQ/rqyxCWNzfrd3/ldy6HMlD2e0JDVpDg2qIA==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "array-includes": "^3.1.8",
+         "array.prototype.findlast": "^1.2.5",
+@@ -10693,7 +10698,6 @@
+       "integrity": "sha512-QzliNJq4GinDBcD8gPB5v0wh6g8q3SUi6EFF0x8N/BL9PoVs0atuGc47ozMRyOWAKdwaZ5OnbOEa3WR+dSGKuQ==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "engines": {
+         "node": ">=10"
+       },
+@@ -11242,7 +11246,8 @@
+           "url": "https://opencollective.com/fastify"
+         }
+       ],
+-      "license": "BSD-3-Clause"
++      "license": "BSD-3-Clause",
++      "peer": true
+     },
+     "node_modules/fast-url-parser": {
+       "version": "1.1.3",
+@@ -11542,7 +11547,6 @@
+         }
+       ],
+       "license": "Apache-2.0",
+-      "peer": true,
+       "dependencies": {
+         "@types/hoist-non-react-statics": "^3.3.1",
+         "deepmerge": "^2.1.1",
+@@ -11869,7 +11873,8 @@
+       "version": "0.4.1",
+       "resolved": "https://registry.npmjs.org/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz",
+       "integrity": "sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==",
+-      "license": "BSD-2-Clause"
++      "license": "BSD-2-Clause",
++      "peer": true
+     },
+     "node_modules/glob/node_modules/minimatch": {
+       "version": "10.0.3",
+@@ -13219,7 +13224,6 @@
+       "resolved": "https://registry.npmjs.org/jest/-/jest-30.2.0.tgz",
+       "integrity": "sha512-F26gjC0yWN8uAA5m5Ss8ZQf5nDHWGlN/xWZIh8S5SRbsEKBovwZhxGd6LJlbZYxBgCYOtreSUyb8hpXyGC5O4A==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@jest/core": "30.2.0",
+         "@jest/types": "30.2.0",
+@@ -15613,7 +15617,6 @@
+       "integrity": "sha512-z6EbKajIpqGKU56y5KBUgy1dt1ihhQJgWzUlZHArA/+X2ad7Cb5iF+AK1EWVL/Bo7Rz9uurpqw6SiBCefUbCGA==",
+       "devOptional": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@jest/types": "^29.6.3",
+         "@types/node": "*",
+@@ -16767,6 +16770,7 @@
+       "resolved": "https://registry.npmjs.org/loader-runner/-/loader-runner-4.3.0.tgz",
+       "integrity": "sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg==",
+       "license": "MIT",
++      "peer": true,
+       "engines": {
+         "node": ">=6.11.5"
+       }
+@@ -17533,7 +17537,6 @@
+       "resolved": "https://registry.npmjs.org/ol/-/ol-10.7.0.tgz",
+       "integrity": "sha512-122U5gamPqNgLpLOkogFJhgpywvd/5en2kETIDW+Ubfi9lPnZ0G9HWRdG+CX0oP8od2d6u6ky3eewIYYlrVczw==",
+       "license": "BSD-2-Clause",
+-      "peer": true,
+       "dependencies": {
+         "@types/rbush": "4.0.0",
+         "earcut": "^3.0.0",
+@@ -18115,7 +18118,6 @@
+       "integrity": "sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "bin": {
+         "prettier": "bin-prettier.js"
+       },
+@@ -18230,7 +18232,6 @@
+       "resolved": "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz",
+       "integrity": "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "loose-envify": "^1.4.0",
+         "object-assign": "^4.1.1",
+@@ -18589,7 +18590,6 @@
+       "resolved": "https://registry.npmjs.org/react/-/react-18.3.1.tgz",
+       "integrity": "sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "loose-envify": "^1.1.0"
+       },
+@@ -18638,7 +18638,6 @@
+       "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz",
+       "integrity": "sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "loose-envify": "^1.1.0",
+         "scheduler": "^0.23.2"
+@@ -18736,7 +18735,6 @@
+       "resolved": "https://registry.npmjs.org/react-redux/-/react-redux-9.2.0.tgz",
+       "integrity": "sha512-ROY9fvHhwOD9ySfrF0wmvu//bKCQ6AeZZq1nJNtbDC+kk5DuSuNX/n6YWYF/SYy7bSba4D4FSz8DJeKY/S/r+g==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@types/use-sync-external-store": "^0.0.6",
+         "use-sync-external-store": "^1.4.0"
+@@ -18792,6 +18790,7 @@
+       "resolved": "https://registry.npmjs.org/react-router-dom/-/react-router-dom-7.9.3.tgz",
+       "integrity": "sha512-1QSbA0TGGFKTAc/aWjpfW/zoEukYfU4dc1dLkT/vvf54JoGMkW+fNA+3oyo2gWVW1GM7BxjJVHz5GnPJv40rvg==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "react-router": "7.9.3"
+       },
+@@ -18808,6 +18807,7 @@
+       "resolved": "https://registry.npmjs.org/react-router/-/react-router-7.9.3.tgz",
+       "integrity": "sha512-4o2iWCFIwhI/eYAIL43+cjORXYn/aRQPgtFRRZb3VzoyQ5Uej0Bmqj7437L97N9NJW4wnicSwLOLS+yCXfAPgg==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "cookie": "^1.0.1",
+         "set-cookie-parser": "^2.6.0"
+@@ -18888,8 +18888,7 @@
+       "version": "5.0.1",
+       "resolved": "https://registry.npmjs.org/redux/-/redux-5.0.1.tgz",
+       "integrity": "sha512-M9/ELqF6fy8FwmkpnF0S3YKOqMyoWJ4+CS5Efg2ct3oY9daQvd/Pc71FpGZsVsbl3Cpb+IIcjBDUnnyBdQbq4w==",
+-      "license": "MIT",
+-      "peer": true
++      "license": "MIT"
+     },
+     "node_modules/redux-persist": {
+       "version": "6.0.0",
+@@ -19093,8 +19092,7 @@
+       "version": "5.1.1",
+       "resolved": "https://registry.npmjs.org/reselect/-/reselect-5.1.1.tgz",
+       "integrity": "sha512-K/BG6eIky/SBpzfHZv/dd+9JBFiS4SWV7FIujVyJRux6e45+73RaUHXLmIR1f7WOMaQ0U1km6qwklRQxpJJY0w==",
+-      "license": "MIT",
+-      "peer": true
++      "license": "MIT"
+     },
+     "node_modules/resolve": {
+       "version": "1.22.10",
+@@ -19287,7 +19285,6 @@
+       "integrity": "sha512-CLEVl+MnPAiKh5pl4dEWSyMTpuflgNQiLGhMv8ezD5W/qP8AKvmYpCOKRRNOh7oRKnauBZ4SyeYkMS+1VSyKwQ==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@types/estree": "1.0.8"
+       },
+@@ -19329,7 +19326,6 @@
+       "resolved": "https://registry.npmjs.org/rsuite/-/rsuite-5.83.3.tgz",
+       "integrity": "sha512-L9iNrFTSDyXzSSJCu5tEK1sv9dE2gT4H6b5AQBbdIzdADqYr3DhBJLnOW5WthqSnCc40hupoPUcI9wUrnGbjZQ==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@babel/runtime": "^7.20.1",
+         "@juggle/resize-observer": "^3.4.0",
+@@ -19536,6 +19532,7 @@
+       "resolved": "https://registry.npmjs.org/schema-utils/-/schema-utils-4.3.3.tgz",
+       "integrity": "sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@types/json-schema": "^7.0.9",
+         "ajv": "^8.9.0",
+@@ -19572,6 +19569,7 @@
+       "resolved": "https://registry.npmjs.org/ajv-keywords/-/ajv-keywords-5.1.0.tgz",
+       "integrity": "sha512-YCS/JNFAUyr5vAuhk1DWm1CBxRHW9LbJ2ozWeemrIqpbsqKjHVxYPyi5GC0rjZIT5JxJ3virVTS8wk4i/Z+krw==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "fast-deep-equal": "^3.1.3"
+       },
+@@ -19583,7 +19581,8 @@
+       "version": "1.0.0",
+       "resolved": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz",
+       "integrity": "sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==",
+-      "license": "MIT"
++      "license": "MIT",
++      "peer": true
+     },
+     "node_modules/semver": {
+       "version": "6.3.1",
+@@ -20290,7 +20289,6 @@
+       "resolved": "https://registry.npmjs.org/styled-components/-/styled-components-6.1.13.tgz",
+       "integrity": "sha512-M0+N2xSnAtwcVAQeFEsGWFFxXDftHUD7XrKla06QbpUMmbmtFBMMTcKWvFXtWxuD5qQkB8iU5gk6QASlx2ZRMw==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@emotion/is-prop-valid": "1.2.2",
+         "@emotion/unitless": "0.8.1",
+@@ -20423,6 +20421,7 @@
+       "resolved": "https://registry.npmjs.org/tapable/-/tapable-2.3.0.tgz",
+       "integrity": "sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==",
+       "license": "MIT",
++      "peer": true,
+       "engines": {
+         "node": ">=6"
+       },
+@@ -20530,6 +20529,7 @@
+       "resolved": "https://registry.npmjs.org/terser/-/terser-5.44.0.tgz",
+       "integrity": "sha512-nIVck8DK+GM/0Frwd+nIhZ84pR/BX7rmXMfYwyg+Sri5oGVE99/E3KvXqpC2xHFxyqXyGHTKBSioxxplrO4I4w==",
+       "license": "BSD-2-Clause",
++      "peer": true,
+       "dependencies": {
+         "@jridgewell/source-map": "^0.3.3",
+         "acorn": "^8.15.0",
+@@ -20548,6 +20548,7 @@
+       "resolved": "https://registry.npmjs.org/terser-webpack-plugin/-/terser-webpack-plugin-5.3.14.tgz",
+       "integrity": "sha512-vkZjpUjb6OMS7dhV+tILUW6BhpDR7P2L/aQSAv+Uwk+m8KATX9EccViHTJR2qDtACKPIYndLGCyl3FMo+r2LMw==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@jridgewell/trace-mapping": "^0.3.25",
+         "jest-worker": "^27.4.5",
+@@ -20582,6 +20583,7 @@
+       "resolved": "https://registry.npmjs.org/jest-worker/-/jest-worker-27.5.1.tgz",
+       "integrity": "sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@types/node": "*",
+         "merge-stream": "^2.0.0",
+@@ -20596,6 +20598,7 @@
+       "resolved": "https://registry.npmjs.org/supports-color/-/supports-color-8.1.1.tgz",
+       "integrity": "sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "has-flag": "^4.0.0"
+       },
+@@ -20610,13 +20613,15 @@
+       "version": "2.20.3",
+       "resolved": "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz",
+       "integrity": "sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==",
+-      "license": "MIT"
++      "license": "MIT",
++      "peer": true
+     },
+     "node_modules/terser/node_modules/source-map-support": {
+       "version": "0.5.21",
+       "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.21.tgz",
+       "integrity": "sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "buffer-from": "^1.0.0",
+         "source-map": "^0.6.0"
+@@ -20785,7 +20790,6 @@
+       "integrity": "sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "engines": {
+         "node": ">=12"
+       },
+@@ -21186,7 +21190,6 @@
+       "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
+       "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+       "license": "Apache-2.0",
+-      "peer": true,
+       "bin": {
+         "tsc": "bin/tsc",
+         "tsserver": "bin/tsserver"
+@@ -21679,7 +21682,6 @@
+       "integrity": "sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "esbuild": "^0.25.0",
+         "fdir": "^6.4.4",
+@@ -21822,7 +21824,6 @@
+       "integrity": "sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==",
+       "dev": true,
+       "license": "MIT",
+-      "peer": true,
+       "engines": {
+         "node": ">=12"
+       },
+@@ -21886,6 +21887,7 @@
+       "resolved": "https://registry.npmjs.org/watchpack/-/watchpack-2.4.4.tgz",
+       "integrity": "sha512-c5EGNOiyxxV5qmTtAB7rbiXxi1ooX1pQKMLX/MIabJjRA0SJBQOjKF+KSVfHkr9U1cADPon0mRiVe/riyaiDUA==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "glob-to-regexp": "^0.4.1",
+         "graceful-fs": "^4.1.2"
+@@ -21915,6 +21917,7 @@
+       "resolved": "https://registry.npmjs.org/webpack/-/webpack-5.102.0.tgz",
+       "integrity": "sha512-hUtqAR3ZLVEYDEABdBioQCIqSoguHbFn1K7WlPPWSuXmx0031BD73PSE35jKyftdSh4YLDoQNgK4pqBt5Q82MA==",
+       "license": "MIT",
++      "peer": true,
+       "dependencies": {
+         "@types/eslint-scope": "^3.7.7",
+         "@types/estree": "^1.0.8",
+@@ -21979,6 +21982,7 @@
+       "resolved": "https://registry.npmjs.org/eslint-scope/-/eslint-scope-5.1.1.tgz",
+       "integrity": "sha512-2NxwbF/hZ0KpepYN0cNbo+FN6XoK7GaHlQhgx/hIZl6Va0bF45RQOOwhLIy8lQDbuCiadSLCBnH2CFYquit5bw==",
+       "license": "BSD-2-Clause",
++      "peer": true,
+       "dependencies": {
+         "esrecurse": "^4.3.0",
+         "estraverse": "^4.1.1"
+@@ -21992,6 +21996,7 @@
+       "resolved": "https://registry.npmjs.org/estraverse/-/estraverse-4.3.0.tgz",
+       "integrity": "sha512-39nnKffWz8xN1BU/2c79n9nB9HDzo0niYUqx6xyqUnyoAnQyyWpOTdZEeiCch8BBu515t4wp9ZmgVfVhn9EBpw==",
+       "license": "BSD-2-Clause",
++      "peer": true,
+       "engines": {
+         "node": ">=4.0"
+       }
+Index: frontend/src/components/Table/LocalizeCell.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/components/Table/LocalizeCell.tsx b/frontend/src/components/Table/LocalizeCell.tsx
+--- a/frontend/src/components/Table/LocalizeCell.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/components/Table/LocalizeCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -2,15 +2,12 @@
+ import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+ import { getFeature } from '@utils/getFeature'
+ import { setFitToExtent } from 'domain/shared_slices/Map'
+-import styled from 'styled-components'
+ 
+ export function LocalizeCell({ geom }: { geom: any }) {
+   const dispatch = useAppDispatch()
+ 
+-  if (!geom) {
+-    return <StyledEmptyContainer>-</StyledEmptyContainer>
+-  }
+-  const handleZoom = () => {
++  const handleZoom = e => {
++    e.stopPropagation()
+     const feature = getFeature(geom)
+ 
+     const extent = feature?.getGeometry()?.getExtent()
+@@ -20,13 +17,12 @@
+   }
+ 
+   return (
+-    <IconButton accent={Accent.TERTIARY} Icon={Icon.FocusZones} onClick={handleZoom} title="Centrer sur la carte" />
++    <IconButton
++      accent={Accent.TERTIARY}
++      disabled={!geom}
++      Icon={Icon.FocusZones}
++      onClick={handleZoom}
++      title={geom ? 'Centrer sur la carte' : 'Pas de zone renseignée'}
++    />
+   )
+ }
+-
+-const StyledEmptyContainer = styled.div`
+-  height: 32px;
+-  display: flex;
+-  align-items: center;
+-  justify-content: center;
+-`
+Index: frontend/src/components/Table/TableWithSelectableRows/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/components/Table/TableWithSelectableRows/index.tsx b/frontend/src/components/Table/TableWithSelectableRows/index.tsx
+new file mode 100644
+--- /dev/null	(revision f543891dc543522c6137488748bf4f37453ee565)
++++ b/frontend/src/components/Table/TableWithSelectableRows/index.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -0,0 +1,48 @@
++import { TableWithSelectableRowsHeader } from '@components/Table/TableWithSelectableRows/Header'
++import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
++import { type Table as TableType } from '@tanstack/react-table'
++import { forwardRef, type ReactNode } from 'react'
++import styled from 'styled-components'
++
++import { getPaddingValuesForVirtualizeTable, PaddingForVirtualizeTable } from '../PaddingForVirtualizeTable'
++import { TableContainer } from '../style'
++
++import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
++
++type TableProps = {
++  className?: string
++  columnsLength: number
++  rowVirtualizer: Virtualizer<HTMLDivElement, Element>
++  rows: ReactNode | ReactNode[]
++  table: TableType<any>
++  virtualRows: VirtualItem[]
++}
++
++export function SelectableRowsTableWithRef(
++  { className = '', columnsLength, rows, rowVirtualizer, table, virtualRows }: TableProps,
++  ref
++) {
++  const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
++
++  return (
++    <StyledTableContainer ref={ref} className={className}>
++      <TableWithSelectableRows.Table>
++        <TableWithSelectableRows.Head>
++          {table.getHeaderGroups().map(headerGroup => (
++            <TableWithSelectableRowsHeader key={headerGroup.id} headerGroup={headerGroup} />
++          ))}
++        </TableWithSelectableRows.Head>
++        {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
++        <tbody>{rows}</tbody>
++        {after > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={after} name="after" />}
++      </TableWithSelectableRows.Table>
++    </StyledTableContainer>
++  )
++}
++
++export const SelectableRowsTable = forwardRef(SelectableRowsTableWithRef)
++
++const StyledTableContainer = styled(TableContainer)`
++  padding-right: 0;
++  width: 100%;
++`
+Index: frontend/src/components/Table/TableWithSelectableRows/style.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/components/Table/TableWithSelectableRows/style.ts b/frontend/src/components/Table/TableWithSelectableRows/style.ts
+new file mode 100644
+--- /dev/null	(revision f543891dc543522c6137488748bf4f37453ee565)
++++ b/frontend/src/components/Table/TableWithSelectableRows/style.ts	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -0,0 +1,62 @@
++import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
++import styled from 'styled-components'
++
++export const ExpandableRowCell = styled(TableWithSelectableRows.Td)<{
++  $isDraft?: boolean
++}>`
++  cursor: pointer;
++  user-select: none;
++  color: ${p => (p.$isDraft ? p.theme.color.slateGray : p.theme.color.charcoal)};
++  font-style: ${p => (p.$isDraft ? 'italic' : 'normal')};
++`
++
++export const ExpandedRow = styled(TableWithSelectableRows.BodyTr)<{
++  $isDraft?: boolean
++}>`
++  > td {
++    overflow: hidden !important;
++    color: ${p => (p.$isDraft ? p.theme.color.slateGray : p.theme.color.charcoal)};
++  }
++
++  &:hover {
++    > td {
++      /* Hack to disable hover background color in expanded rows */
++      background-color: ${p => p.theme.color.cultured};
++    }
++  }
++`
++
++export const ExpandedRowCell = styled(TableWithSelectableRows.Td).attrs(props => ({
++  ...props,
++  $hasRightBorder: false
++}))`
++  padding: 8px 16px 16px;
++  height: 42px;
++  vertical-align: top;
++  white-space: normal;
++
++  > p:not(:first-child) {
++    margin-top: 16px;
++  }
++
++  max-width: 350px;
++`
++
++export const ExpandedRowLabel = styled.span`
++  color: ${p => p.theme.color.slateGray};
++  display: block;
++  width: 100%;
++`
++export const ExpandedRowValue = styled.span`
++  display: -webkit-box;
++  -webkit-box-orient: vertical;
++  -webkit-line-clamp: 50;
++  overflow: hidden;
++  white-space: pre-wrap;
++`
++
++export const ExpandedRowList = styled.ul`
++  display: flex;
++  flex-direction: column;
++  gap: 16px;
++`
+Index: frontend/src/components/Table/TableWithSelectableRows/utils.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/components/Table/TableWithSelectableRows/utils.ts b/frontend/src/components/Table/TableWithSelectableRows/utils.ts
+--- a/frontend/src/components/Table/TableWithSelectableRows/utils.ts	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/components/Table/TableWithSelectableRows/utils.ts	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -2,6 +2,8 @@
+ 
+ import type { CSSProperties } from 'styled-components'
+ 
++export const UNKNOWN = '-'
++
+ export const createPinnedCellStyle = ({ context, index, rowLength }): CSSProperties | undefined => {
+   const pinPosition = context.column.getIsPinned()
+   const bordersLeft = index !== 0 ? index + 1 : 0
+Index: frontend/src/components/Table/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/components/Table/index.tsx b/frontend/src/components/Table/index.tsx
+--- a/frontend/src/components/Table/index.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/components/Table/index.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,12 +1,26 @@
+ import { StyledChevronIcon } from '@features/commonStyles/icons/ChevronIconButton'
+ import { Icon, SimpleTable } from '@mtes-mct/monitor-ui'
+-import { flexRender } from '@tanstack/react-table'
++import { flexRender, type Row, type Table as TableType } from '@tanstack/react-table'
+ import { forwardRef } from 'react'
+ 
+ import { getPaddingValuesForVirtualizeTable, PaddingForVirtualizeTable } from './PaddingForVirtualizeTable'
+ import { TableContainer } from './style'
+ 
+-export function TableWithRef({ className = '', columnsLength, rows, rowVirtualizer, table, virtualRows }, ref) {
++import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
++
++type TableProps = {
++  className?: string
++  columnsLength: number
++  rowVirtualizer: Virtualizer<HTMLDivElement, Element>
++  rows: Row<any>[]
++  table: TableType<any>
++  virtualRows: VirtualItem[]
++}
++
++export function TableWithRef(
++  { className = '', columnsLength, rows, rowVirtualizer, table, virtualRows }: TableProps,
++  ref
++) {
+   const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
+ 
+   return (
+@@ -40,6 +54,9 @@
+         <tbody>
+           {before > 0 && <PaddingForVirtualizeTable columLength={columnsLength} height={before} name="before" />}
+           {virtualRows?.map(virtualRow => {
++            if (!rows) {
++              return null
++            }
+             const row = rows[virtualRow?.index]
+ 
+             return (
+Index: frontend/src/components/Table/style.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/components/Table/style.ts b/frontend/src/components/Table/style.ts
+--- a/frontend/src/components/Table/style.ts	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/components/Table/style.ts	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,3 +1,4 @@
++import { LinkButton } from '@mtes-mct/monitor-ui'
+ import styled from 'styled-components'
+ 
+ export const TableContainer = styled.div`
+@@ -13,8 +14,21 @@
+ export const ThemesOrTagsContainer = styled.span`
+   color: ${p => p.theme.color.charcoal};
+   font-weight: 500;
++  text-overflow: ellipsis;
++  overflow: hidden;
+ `
+ export const SubThemesOrSubTagsContainer = styled.span`
+   color: ${p => p.theme.color.slateGray};
+   font-weight: 400;
+ `
++
++export const ShowFilters = styled(LinkButton)`
++  font-size: 13px;
++  color: ${p => p.theme.color.charcoal};
++
++  svg {
++    color: ${p => p.theme.color.charcoal} !important;
++    height: 20px !important;
++    width: 20px !important;
++  }
++`
+Index: frontend/src/domain/shared_slices/MissionFilters.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/domain/shared_slices/MissionFilters.ts b/frontend/src/domain/shared_slices/MissionFilters.ts
+--- a/frontend/src/domain/shared_slices/MissionFilters.ts	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/domain/shared_slices/MissionFilters.ts	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -13,6 +13,7 @@
+ 
+ export enum MissionFiltersEnum {
+   ADMINISTRATION_FILTER = 'selectedAdministrationNames',
++  ARE_FILTERS_VISIBLE = 'areFiltersVisible',
+   COMPLETION_STATUS_FILTER = 'selectedCompletionStatus',
+   PERIOD_FILTER = 'selectedPeriod',
+   SEARCH_QUERY_FILTER = 'searchQuery',
+@@ -28,6 +29,7 @@
+ }
+ 
+ type MissionFilterValues = {
++  areFiltersVisible: boolean
+   nbOfFiltersSetted: boolean
+   searchQuery: string | undefined
+   selectedAdministrationNames: string[] | undefined
+@@ -51,6 +53,7 @@
+ }
+ 
+ export const INITIAL_STATE: MissionFiltersState = {
++  areFiltersVisible: false,
+   nbOfFiltersSetted: 0,
+   searchQuery: undefined,
+   selectedAdministrationNames: undefined,
+@@ -82,10 +85,15 @@
+   initialState: INITIAL_STATE,
+   name: 'missionFilters',
+   reducers: {
+-    resetMissionFilters() {
+-      return { ...INITIAL_STATE }
++    resetMissionFilters(state) {
++      return {
++        ...INITIAL_STATE,
++        areFiltersVisible: state.areFiltersVisible
++      }
+     },
+-
++    setFiltersVisibility: (state, action: PayloadAction<boolean>) => {
++      state.areFiltersVisible = action.payload
++    },
+     updateFilters<K extends MissionFiltersEnum>(
+       // TODO There is not `MissionFiltersState` type inference in `createSlice()`.
+       // Investigate why (this should be automatic).
+@@ -116,6 +124,6 @@
+   }
+ })
+ 
+-export const { resetMissionFilters, updateFilters } = missionFiltersSlice.actions
++export const { resetMissionFilters, setFiltersVisibility, updateFilters } = missionFiltersSlice.actions
+ 
+ export const missionFiltersPersistedReducer = persistReducer(persistConfig, missionFiltersSlice.reducer)
+Index: frontend/src/features/Mission/MissionsSearch.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/MissionsSearch.tsx b/frontend/src/features/Mission/MissionsSearch.tsx
+--- a/frontend/src/features/Mission/MissionsSearch.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/MissionsSearch.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -48,6 +48,5 @@
+ 
+ const StyledSearch = styled(TextInput)`
+   border: 1px solid ${p => p.theme.color.lightGray};
+-  margin-bottom: 8px;
+   width: 410px;
+ `
+Index: frontend/src/features/Mission/components/CompletionStatusLabel.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/CompletionStatusLabel.tsx b/frontend/src/features/Mission/components/CompletionStatusLabel.tsx
+--- a/frontend/src/features/Mission/components/CompletionStatusLabel.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/CompletionStatusLabel.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,29 +1,30 @@
++import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
+ import { Icon, THEME } from '@mtes-mct/monitor-ui'
+ import { FrontCompletionStatus, FrontCompletionStatusLabel } from 'domain/entities/missions'
+ import styled from 'styled-components'
+ 
+ export function CompletionStatusLabel({ completion = undefined }: { completion?: FrontCompletionStatus }) {
+   if (!completion) {
+-    return <>-</>
++    return <>{UNKNOWN}</>
+   }
+   switch (completion) {
+     case FrontCompletionStatus.COMPLETED:
+       return (
+-        <CompletionStatusContainer>
++        <CompletionStatusContainer style={{ backgroundColor: THEME.color.mediumSeaGreen25 }}>
+           <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+           <Text $color={THEME.color.mediumSeaGreen}>{FrontCompletionStatusLabel.COMPLETED}</Text>
+         </CompletionStatusContainer>
+       )
+     case FrontCompletionStatus.UP_TO_DATE:
+       return (
+-        <CompletionStatusContainer>
++        <CompletionStatusContainer style={{ backgroundColor: THEME.color.mediumSeaGreen25 }}>
+           <Icon.Confirm color={THEME.color.mediumSeaGreen} />
+           <Text $color={THEME.color.mediumSeaGreen}>{FrontCompletionStatusLabel.UP_TO_DATE}</Text>
+         </CompletionStatusContainer>
+       )
+     case FrontCompletionStatus.TO_COMPLETE_MISSION_ENDED:
+       return (
+-        <CompletionStatusContainer>
++        <CompletionStatusContainer style={{ backgroundColor: THEME.color.maximumRed15 }}>
+           <Icon.AttentionFilled color={THEME.color.maximumRed} />
+           <Text $color={THEME.color.maximumRed}>{FrontCompletionStatusLabel.TO_COMPLETE}</Text>
+         </CompletionStatusContainer>
+@@ -31,7 +32,7 @@
+ 
+     case FrontCompletionStatus.TO_COMPLETE:
+       return (
+-        <CompletionStatusContainer>
++        <CompletionStatusContainer style={{ backgroundColor: THEME.color.gainsboro }}>
+           <Icon.AttentionFilled color={THEME.color.charcoal} />
+           <Text $color={THEME.color.charcoal}>{FrontCompletionStatusLabel.TO_COMPLETE}</Text>
+         </CompletionStatusContainer>
+@@ -45,6 +46,8 @@
+   display: inline-flex;
+   align-items: center;
+   gap: 4px;
++  border-radius: 999px;
++  padding: 0 4px 0 2px;
+ `
+ 
+ const Text = styled.span<{ $color: string }>`
+Index: frontend/src/features/Mission/components/Filters/Table/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/Filters/Table/index.tsx b/frontend/src/features/Mission/components/Filters/Table/index.tsx
+--- a/frontend/src/features/Mission/components/Filters/Table/index.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/Filters/Table/index.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,6 +1,8 @@
+ import { CustomPeriodContainer, TagsContainer } from '@components/style'
++import { ShowFilters } from '@components/Table/style'
+ import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
+ import { MissionSearch } from '@features/Mission/MissionsSearch'
++import { useAppDispatch } from '@hooks/useAppDispatch'
+ import { useAppSelector } from '@hooks/useAppSelector'
+ import {
+   Checkbox,
+@@ -9,11 +11,12 @@
+   CustomSearch,
+   type DateAsStringRange,
+   DateRangePicker,
++  Icon,
+   Select,
+   useNewWindow
+ } from '@mtes-mct/monitor-ui'
+ import { DateRangeEnum } from 'domain/entities/dateRange'
+-import { MissionFiltersEnum } from 'domain/shared_slices/MissionFilters'
++import { MissionFiltersEnum, setFiltersVisibility } from 'domain/shared_slices/MissionFilters'
+ import { forwardRef, memo, useMemo } from 'react'
+ import styled from 'styled-components'
+ 
+@@ -42,7 +45,9 @@
+   ref
+ ) {
+   const { newWindowContainerRef } = useNewWindow()
++  const dispatch = useAppDispatch()
+   const {
++    areFiltersVisible,
+     nbOfFiltersSetted,
+     selectedAdministrationNames,
+     selectedCompletionStatus,
+@@ -58,6 +63,10 @@
+     startedBefore
+   } = useAppSelector(state => state.missionFilters)
+ 
++  const setAreFiltersVisibility = () => {
++    dispatch(setFiltersVisibility(!areFiltersVisible))
++  }
++
+   const { administrations, completion, controlUnits, dates, seaFronts, status, tags, themes, types } = optionsList
+ 
+   const controlUnitCustomSearch = useMemo(
+@@ -70,159 +79,172 @@
+   return (
+     <>
+       <FilterWrapper ref={ref}>
+-        <MissionSearch />
+-        <FilterWrapperLine>
+-          <CheckPicker
+-            data-cy="select-seaFronts-filter"
+-            isLabelHidden
+-            isTransparent
+-            label="Façade"
+-            name="seaFront"
+-            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
+-            options={seaFronts ?? []}
+-            placeholder="Façade"
+-            renderValue={() => selectedSeaFronts && <OptionValue>{`Façade (${selectedSeaFronts.length})`}</OptionValue>}
+-            style={tagPickerStyle}
+-            value={selectedSeaFronts}
+-          />
+-          <CheckPicker
+-            data-cy="select-administration-filter"
+-            isLabelHidden
+-            isTransparent
+-            label="Administration"
+-            name="administration"
+-            onChange={onUpdateAdministrationFilter}
+-            options={administrations ?? []}
+-            placeholder="Administration"
+-            popupWidth={300}
+-            renderValue={() =>
+-              selectedAdministrationNames && (
+-                <OptionValue>{`Administration (${selectedAdministrationNames.length})`}</OptionValue>
+-              )
+-            }
+-            searchable
+-            style={tagPickerStyle}
+-            value={selectedAdministrationNames}
+-          />
+-          <CheckPicker
+-            key={controlUnits?.length}
+-            customSearch={controlUnitCustomSearch}
+-            data-cy="select-units-filter"
+-            isLabelHidden
+-            isTransparent
+-            label="Unité"
+-            name="controlUnit"
+-            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.UNIT_FILTER)}
+-            options={controlUnits ?? []}
+-            placeholder="Unité"
+-            popupWidth={300}
+-            renderValue={() =>
+-              selectedControlUnitIds && <OptionValue>{`Unité (${selectedControlUnitIds.length})`}</OptionValue>
+-            }
+-            style={tagPickerStyle}
+-            value={selectedControlUnitIds}
+-          />
+-        </FilterWrapperLine>
+-        <FilterWrapperLine>
+-          <StyledSelect
+-            cleanable={false}
+-            data-cy="select-period-filter"
+-            isLabelHidden
+-            isTransparent
+-            label="Période"
+-            name="Période"
+-            onChange={onUpdatePeriodFilter}
+-            options={dates ?? []}
+-            placeholder="Date de mission depuis"
+-            style={tagPickerStyle}
+-            value={selectedPeriod}
+-          />
++        <FirstLine>
++          <MissionSearch />
++          <ShowFilters Icon={Icon.FilterBis} onClick={setAreFiltersVisibility}>
++            {areFiltersVisible ? 'Masquer les filtres' : 'Afficher les filtres'}
++          </ShowFilters>
++        </FirstLine>
++        {areFiltersVisible && (
++          <>
++            <FilterWrapperLine>
++              <CheckPicker
++                data-cy="select-seaFronts-filter"
++                isLabelHidden
++                isTransparent
++                label="Façade"
++                name="seaFront"
++                onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.SEA_FRONT_FILTER)}
++                options={seaFronts ?? []}
++                placeholder="Façade"
++                renderValue={() =>
++                  selectedSeaFronts && <OptionValue>{`Façade (${selectedSeaFronts.length})`}</OptionValue>
++                }
++                style={tagPickerStyle}
++                value={selectedSeaFronts}
++              />
++              <CheckPicker
++                data-cy="select-administration-filter"
++                isLabelHidden
++                isTransparent
++                label="Administration"
++                name="administration"
++                onChange={onUpdateAdministrationFilter}
++                options={administrations ?? []}
++                placeholder="Administration"
++                popupWidth={300}
++                renderValue={() =>
++                  selectedAdministrationNames && (
++                    <OptionValue>{`Administration (${selectedAdministrationNames.length})`}</OptionValue>
++                  )
++                }
++                searchable
++                style={tagPickerStyle}
++                value={selectedAdministrationNames}
++              />
++              <CheckPicker
++                key={controlUnits?.length}
++                customSearch={controlUnitCustomSearch}
++                data-cy="select-units-filter"
++                isLabelHidden
++                isTransparent
++                label="Unité"
++                name="controlUnit"
++                onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.UNIT_FILTER)}
++                options={controlUnits ?? []}
++                placeholder="Unité"
++                popupWidth={300}
++                renderValue={() =>
++                  selectedControlUnitIds && <OptionValue>{`Unité (${selectedControlUnitIds.length})`}</OptionValue>
++                }
++                style={tagPickerStyle}
++                value={selectedControlUnitIds}
++              />
++            </FilterWrapperLine>
++            <FilterWrapperLine>
++              <StyledSelect
++                cleanable={false}
++                data-cy="select-period-filter"
++                isLabelHidden
++                isTransparent
++                label="Période"
++                name="Période"
++                onChange={onUpdatePeriodFilter}
++                options={dates ?? []}
++                placeholder="Date de mission depuis"
++                style={tagPickerStyle}
++                value={selectedPeriod}
++              />
+ 
+-          <CheckPicker
+-            data-cy="select-types-filter"
+-            isLabelHidden
+-            isTransparent
+-            label="Type de mission"
+-            name="missionType"
+-            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.TYPE_FILTER)}
+-            options={types ?? []}
+-            placeholder="Type de mission"
+-            renderValue={() =>
+-              selectedMissionTypes && <OptionValue>{`Type (${selectedMissionTypes.length})`}</OptionValue>
+-            }
+-            style={tagPickerStyle}
+-            value={selectedMissionTypes}
+-          />
+-          <CheckPicker
+-            key={`theme${themes?.length}`}
+-            customSearch={themeCustomSearch}
+-            data-cy="mission-theme-filter"
+-            isLabelHidden
+-            isTransparent
+-            label="Thématique"
+-            name="theme"
+-            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
+-            options={themes ?? []}
+-            placeholder="Thématique"
+-            popupWidth={300}
+-            renderValue={() => selectedThemes && <OptionValue>{`Thème (${selectedThemes.length})`}</OptionValue>}
+-            style={tagPickerStyle}
+-            value={selectedThemes}
+-          />
+-          <CheckTreePicker
+-            childrenKey="subTags"
+-            isLabelHidden
+-            isTransparent
+-            label="Tags et sous-tags"
+-            labelKey="name"
+-            name="regulatoryTags"
+-            onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.TAGS_FILTER)}
+-            options={tags}
+-            placeholder="Tags et sous-tags"
+-            renderedChildrenValue="Sous-tags."
+-            renderedValue="Tags"
+-            shouldShowLabels={false}
+-            style={tagPickerStyle}
+-            value={selectedTags}
+-            valueKey="id"
+-          />
+-          <CheckPicker
+-            data-cy="select-statuses-filter"
+-            isLabelHidden
+-            isTransparent
+-            label="Statut de mission"
+-            name="status"
+-            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.STATUS_FILTER)}
+-            options={status ?? []}
+-            placeholder="Statut de mission"
+-            renderValue={() => selectedStatuses && <OptionValue>{`Statut (${selectedStatuses.length})`}</OptionValue>}
+-            style={tagPickerStyle}
+-            value={selectedStatuses}
+-          />
+-          <CheckPicker
+-            data-cy="select-completion-statuses-filter"
+-            isLabelHidden
+-            isTransparent
+-            label="État des données"
+-            name="completion"
+-            onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.COMPLETION_STATUS_FILTER)}
+-            options={completion ?? []}
+-            placeholder="État des données"
+-            renderValue={() =>
+-              selectedCompletionStatus && (
+-                <OptionValue>{`État des données (${selectedCompletionStatus.length})`}</OptionValue>
+-              )
+-            }
+-            style={tagPickerStyle}
+-            value={selectedCompletionStatus}
+-          />
+-          <Checkbox
+-            checked={selectedWithEnvActions}
+-            label="Missions avec actions CACEM"
+-            name="missionsWithEnvActions"
+-            onChange={value => onUpdateSimpleFilter(value ?? false, MissionFiltersEnum.WITH_ENV_ACTIONS_FILTER)}
+-          />
+-        </FilterWrapperLine>
++              <CheckPicker
++                data-cy="select-types-filter"
++                isLabelHidden
++                isTransparent
++                label="Type de mission"
++                name="missionType"
++                onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.TYPE_FILTER)}
++                options={types ?? []}
++                placeholder="Type de mission"
++                renderValue={() =>
++                  selectedMissionTypes && <OptionValue>{`Type (${selectedMissionTypes.length})`}</OptionValue>
++                }
++                style={tagPickerStyle}
++                value={selectedMissionTypes}
++              />
++              <CheckPicker
++                key={`theme${themes?.length}`}
++                customSearch={themeCustomSearch}
++                data-cy="mission-theme-filter"
++                isLabelHidden
++                isTransparent
++                label="Thématique"
++                name="theme"
++                onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.THEME_FILTER)}
++                options={themes ?? []}
++                placeholder="Thématique"
++                popupWidth={300}
++                renderValue={() => selectedThemes && <OptionValue>{`Thème (${selectedThemes.length})`}</OptionValue>}
++                style={tagPickerStyle}
++                value={selectedThemes}
++              />
++              <CheckTreePicker
++                childrenKey="subTags"
++                isLabelHidden
++                isTransparent
++                label="Tags et sous-tags"
++                labelKey="name"
++                name="regulatoryTags"
++                onChange={value => onUpdateSimpleFilter(value, MissionFiltersEnum.TAGS_FILTER)}
++                options={tags}
++                placeholder="Tags et sous-tags"
++                renderedChildrenValue="Sous-tags."
++                renderedValue="Tags"
++                shouldShowLabels={false}
++                style={tagPickerStyle}
++                value={selectedTags}
++                valueKey="id"
++              />
++              <CheckPicker
++                data-cy="select-statuses-filter"
++                isLabelHidden
++                isTransparent
++                label="Statut de mission"
++                name="status"
++                onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.STATUS_FILTER)}
++                options={status ?? []}
++                placeholder="Statut de mission"
++                renderValue={() =>
++                  selectedStatuses && <OptionValue>{`Statut (${selectedStatuses.length})`}</OptionValue>
++                }
++                style={tagPickerStyle}
++                value={selectedStatuses}
++              />
++              <CheckPicker
++                data-cy="select-completion-statuses-filter"
++                isLabelHidden
++                isTransparent
++                label="État des données"
++                name="completion"
++                onChange={(value: any) => onUpdateSimpleFilter(value, MissionFiltersEnum.COMPLETION_STATUS_FILTER)}
++                options={completion ?? []}
++                placeholder="État des données"
++                renderValue={() =>
++                  selectedCompletionStatus && (
++                    <OptionValue>{`État des données (${selectedCompletionStatus.length})`}</OptionValue>
++                  )
++                }
++                style={tagPickerStyle}
++                value={selectedCompletionStatus}
++              />
++              <Checkbox
++                checked={selectedWithEnvActions}
++                label="Missions avec actions env."
++                name="missionsWithEnvActions"
++                onChange={value => onUpdateSimpleFilter(value ?? false, MissionFiltersEnum.WITH_ENV_ACTIONS_FILTER)}
++              />
++            </FilterWrapperLine>
++          </>
++        )}
+       </FilterWrapper>
+       <TagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM || nbOfFiltersSetted > 0}>
+         {selectedPeriod === DateRangeEnum.CUSTOM && (
+@@ -287,3 +309,11 @@
+   text-overflow: ellipsis;
+   white-space: nowrap;
+ `
++
++const FirstLine = styled.div`
++  align-items: center;
++  display: flex;
++  flex-direction: row;
++  gap: 16px;
++  margin-bottom: 8px;
++`
+Index: frontend/src/features/Mission/components/MissionStatusLabel.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionStatusLabel.tsx b/frontend/src/features/Mission/components/MissionStatusLabel.tsx
+--- a/frontend/src/features/Mission/components/MissionStatusLabel.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionStatusLabel.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -7,14 +7,14 @@
+   switch (missionStatus) {
+     case missionStatusLabels.PENDING.code:
+       return (
+-        <StatusWrapper $color={missionStatusLabels.PENDING.color}>
++        <StatusWrapper>
+           <Icon.Clock color={missionStatusLabels.PENDING.color} />
+           {missionStatusLabels.PENDING.libelle}
+         </StatusWrapper>
+       )
+     case missionStatusLabels.ENDED.code:
+       return (
+-        <StatusWrapper $color={missionStatusLabels.ENDED.color}>
++        <StatusWrapper>
+           <Icon.Confirm color={missionStatusLabels.ENDED.color} />
+           {missionStatusLabels.ENDED.libelle}
+         </StatusWrapper>
+@@ -22,7 +22,7 @@
+ 
+     case missionStatusLabels.UPCOMING.code:
+       return (
+-        <StatusWrapper $color={missionStatusLabels.UPCOMING.color}>
++        <StatusWrapper>
+           <Icon.ClockDashed color={missionStatusLabels.UPCOMING.color} />
+           {missionStatusLabels.UPCOMING.libelle}
+         </StatusWrapper>
+@@ -32,11 +32,15 @@
+       return null
+   }
+ }
+-const StatusWrapper = styled.div<{ $color: string }>`
+-  color: ${p => p.$color};
+-  font-weight: 500;
+-  display: flex;
++
++const StatusWrapper = styled.div`
+   align-items: center;
++  background-color: ${p => p.theme.color.white};
++  border-radius: 999px;
++  display: flex;
++  font-weight: 500;
++  padding: 0 4px 0 2px;
++
+   svg {
+     margin-right: 6px;
+   }
+Index: frontend/src/features/Mission/components/MissionsList/Cells/CellActionTags.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/CellActionTags.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/ActionTagsCell.tsx
+rename from frontend/src/features/Mission/components/MissionsList/Cells/CellActionTags.tsx
+rename to frontend/src/features/Mission/components/MissionsList/Cells/ActionTagsCell.tsx
+--- a/frontend/src/features/Mission/components/MissionsList/Cells/CellActionTags.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/ActionTagsCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,3 +1,4 @@
++import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
+ import { displaySubTags } from '@utils/getTagsAsOptions'
+ import {
+   ActionTypeEnum,
+@@ -27,35 +28,40 @@
+       return acc
+     }, {})
+ 
+-  const toTagCell = (tag: TagFromAPI) => ({
+-    component: (
+-      <>
+-        {tag.name} <SubTagsContainer>({displaySubTags([tag])})</SubTagsContainer>
+-      </>
+-    ),
+-    title: `${tag.name} (${displaySubTags(tag.subTags)})`
+-  })
++  const toTagCell = (tag: TagFromAPI) => {
++    const subTags = displaySubTags([tag])
++
++    return {
++      component: (
++        <>
++          {tag.name} {subTags && subTags.length > 0 && <SubTagsContainer>({subTags})</SubTagsContainer>}
++        </>
++      ),
++      title: `${tag.name} ${subTags && subTags.length > 0 ? `(${subTags})` : ''}`
++    }
++  }
+ 
+   return Object.values(groupedTags).flatMap(tag => toTagCell(tag))
+ }
+ 
+-export function CellActionTags({ envActions }: { envActions: EnvAction[] }) {
++export function ActionTagsCell({ envActions }: { envActions: EnvAction[] }) {
+   const cellContent = useMemo(() => getTagsCell(envActions), [envActions])
+   const cellTitle = useMemo(() => cellContent.map(content => content.title).join(' - '), [cellContent])
+ 
+   return cellContent?.length > 0
+-    ? cellContent.map(({ component, title }, index) => (
+-        <TagsAndSubTagsContainer key={title} data-cy="cell-envActions-tags" title={cellTitle}>
++    ? cellContent.map(({ component, title }) => (
++        <TagsAndSubTagsContainer key={title} as="li" data-cy="cell-envActions-tags" title={cellTitle}>
+           {component}
+-          {index < cellContent.length - 1 ? ' - ' : ''}
+         </TagsAndSubTagsContainer>
+       ))
+-    : null
++    : UNKNOWN
+ }
+ 
+ const TagsAndSubTagsContainer = styled.span`
+   color: ${p => p.theme.color.charcoal};
+   font-weight: 500;
++  text-overflow: ellipsis;
++  overflow: hidden;
+ `
+ const SubTagsContainer = styled.span`
+   color: ${p => p.theme.color.slateGray};
+Index: frontend/src/features/Mission/components/MissionsList/Cells/ActionThemeCell.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/ActionThemeCell.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/ActionThemeCell.tsx
+new file mode 100644
+--- /dev/null	(revision f543891dc543522c6137488748bf4f37453ee565)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/ActionThemeCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -0,0 +1,62 @@
++import { SubThemesOrSubTagsContainer, ThemesOrTagsContainer } from '@components/Table/style'
++import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
++import { displaySubThemes } from '@utils/getThemesAsOptions'
++import {
++  ActionTypeEnum,
++  type EnvAction,
++  type EnvActionControl,
++  type EnvActionSurveillance
++} from 'domain/entities/missions'
++import { useMemo } from 'react'
++
++import type { ThemeFromAPI } from 'domain/entities/themes'
++
++const getThemesCell = (envActions: EnvAction[]) => {
++  const groupedThemes = envActions
++    .filter(
++      (a): a is EnvActionControl | EnvActionSurveillance =>
++        a.actionType === ActionTypeEnum.CONTROL || a.actionType === ActionTypeEnum.SURVEILLANCE
++    )
++    .reduce<{ [key: number]: ThemeFromAPI }>((acc, envAction) => {
++      envAction.themes?.forEach(theme => {
++        if (!acc[theme.id]) {
++          acc[theme.id] = { ...theme, subThemes: [] }
++        }
++        acc[theme.id]?.subThemes.push(...theme.subThemes)
++      })
++
++      return acc
++    }, {})
++
++  const toThemeCell = (theme: ThemeFromAPI) => {
++    const subThemes = displaySubThemes([theme])
++
++    return {
++      component: (
++        <>
++          {theme.name}{' '}
++          {subThemes && subThemes.length > 0 && (
++            <SubThemesOrSubTagsContainer>({subThemes})</SubThemesOrSubTagsContainer>
++          )}
++        </>
++      ),
++      title: `${theme.name} ${subThemes && subThemes.length > 0 ? `(${subThemes})` : ''}`
++    }
++  }
++
++  return Object.values(groupedThemes).flatMap(theme => toThemeCell(theme))
++}
++
++export function ActionThemeCell({ envActions }: { envActions: EnvAction[] }) {
++  const cellContent = useMemo(() => getThemesCell(envActions), [envActions])
++  const title = cellContent[0]?.title
++  const component = cellContent[0]?.component
++
++  return component ? (
++    <ThemesOrTagsContainer key={title} data-cy="cell-envActions-theme" title={title}>
++      {component}
++    </ThemesOrTagsContainer>
++  ) : (
++    UNKNOWN
++  )
++}
+Index: frontend/src/features/Mission/components/MissionsList/Cells/CellActionThemes.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/CellActionThemes.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/ActionThemesCell.tsx
+rename from frontend/src/features/Mission/components/MissionsList/Cells/CellActionThemes.tsx
+rename to frontend/src/features/Mission/components/MissionsList/Cells/ActionThemesCell.tsx
+--- a/frontend/src/features/Mission/components/MissionsList/Cells/CellActionThemes.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/ActionThemesCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,4 +1,5 @@
+ import { SubThemesOrSubTagsContainer, ThemesOrTagsContainer } from '@components/Table/style'
++import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
+ import { displaySubThemes } from '@utils/getThemesAsOptions'
+ import {
+   ActionTypeEnum,
+@@ -27,28 +28,38 @@
+       return acc
+     }, {})
+ 
+-  const toThemeCell = (theme: ThemeFromAPI) => ({
+-    component: (
+-      <>
+-        {theme.name} <SubThemesOrSubTagsContainer>({displaySubThemes([theme])})</SubThemesOrSubTagsContainer>
+-      </>
+-    ),
+-    title: `${theme.name} (${theme.subThemes.map(subTheme => subTheme.name).join(', ')})`
+-  })
++  const toThemeCell = (theme: ThemeFromAPI) => {
++    const subThemes = displaySubThemes([theme])
++
++    return {
++      component: (
++        <>
++          {theme.name}{' '}
++          {subThemes && subThemes.length > 0 && (
++            <SubThemesOrSubTagsContainer>({subThemes})</SubThemesOrSubTagsContainer>
++          )}
++        </>
++      ),
++      title: `${theme.name} ${subThemes && subThemes.length > 0 ? `(${subThemes})` : ''}`
++    }
++  }
+ 
+   return Object.values(groupedThemes).flatMap(theme => toThemeCell(theme))
+ }
+ 
+-export function CellActionThemes({ envActions }: { envActions: EnvAction[] }) {
++export function ActionThemesCell({ envActions }: { envActions: EnvAction[] }) {
+   const cellContent = useMemo(() => getThemesCell(envActions), [envActions])
+   const cellTitle = useMemo(() => cellContent.map(content => content.title).join(' - '), [cellContent])
+ 
+-  return cellContent?.length > 0
+-    ? cellContent.map(({ component, title }, index) => (
+-        <ThemesOrTagsContainer key={title} data-cy="cell-envActions-themes" title={cellTitle}>
++  return cellContent?.length > 0 ? (
++    <ul>
++      {cellContent.map(({ component, title }) => (
++        <ThemesOrTagsContainer key={title} as="li" data-cy="cell-envActions-themes" title={cellTitle}>
+           {component}
+-          {index < cellContent.length - 1 ? ' - ' : ''}
+         </ThemesOrTagsContainer>
+-      ))
+-    : null
++      ))}
++    </ul>
++  ) : (
++    UNKNOWN
++  )
+ }
+Index: frontend/src/features/Mission/components/MissionsList/Cells/ActionsCell.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/ActionsCell.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/ActionsCell.tsx
+new file mode 100644
+--- /dev/null	(revision f543891dc543522c6137488748bf4f37453ee565)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/ActionsCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -0,0 +1,36 @@
++import { LocalizeCell } from '@components/Table/LocalizeCell'
++import { editMissionInLocalStore } from '@features/Mission/useCases/editMissionInLocalStore'
++import { useAppDispatch } from '@hooks/useAppDispatch'
++import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
++import styled from 'styled-components'
++
++import type { GeoJSON } from 'domain/types/GeoJSON'
++
++export function ActionsCell({ geom, id }: { geom?: GeoJSON.MultiPolygon; id: number }) {
++  const dispatch = useAppDispatch()
++  const setMission = e => {
++    e.stopPropagation()
++    dispatch(editMissionInLocalStore(id, 'sideWindow'))
++  }
++
++  return (
++    <Wrapper>
++      <LocalizeCell geom={geom} />
++      <StyledIconButton
++        accent={Accent.TERTIARY}
++        data-cy={`edit-mission-${id}`}
++        Icon={Icon.Edit}
++        onClick={setMission}
++        title="Editer"
++      />
++    </Wrapper>
++  )
++}
++
++const StyledIconButton = styled(IconButton)`
++  padding: 0px;
++`
++const Wrapper = styled.div`
++  display: flex;
++  gap: 12px;
++`
+Index: frontend/src/features/Mission/components/MissionsList/Cells/CellCompletionStatus.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/CellCompletionStatus.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/CompletionStatusCell.tsx
+rename from frontend/src/features/Mission/components/MissionsList/Cells/CellCompletionStatus.tsx
+rename to frontend/src/features/Mission/components/MissionsList/Cells/CompletionStatusCell.tsx
+--- a/frontend/src/features/Mission/components/MissionsList/Cells/CellCompletionStatus.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/CompletionStatusCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -2,7 +2,7 @@
+ import { getMissionCompletionStatus } from '@features/Mission/utils'
+ import { useMemo } from 'react'
+ 
+-export function CellCompletionStatus({ row }: { row?: any }) {
++export function CompletionStatusCell({ row }: { row?: any }) {
+   const mission = row.original
+ 
+   const completion = useMemo(() => getMissionCompletionStatus(mission), [mission])
+Index: frontend/src/features/Mission/components/MissionsList/Cells/ControlsCell.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/ControlsCell.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/ControlsCell.tsx
+new file mode 100644
+--- /dev/null	(revision f543891dc543522c6137488748bf4f37453ee565)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/ControlsCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -0,0 +1,50 @@
++import { ExpandedRowList, ExpandedRowValue } from '@components/Table/TableWithSelectableRows/style'
++import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
++import { ControlInfractionsTags } from '@features/Mission/components/ControlInfractionsTags'
++import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
++
++import { TargetTypeLabels } from '../../../../../domain/entities/targetType'
++import { vehicleTypeLabels } from '../../../../../domain/entities/vehicleType'
++
++import type { EnvAction } from '../../../../../domain/entities/missions'
++
++export function ControlsCell({ envActions }: { envActions: EnvAction[] }) {
++  if (envActions.length === 0) {
++    return UNKNOWN
++  }
++
++  return (
++    <ExpandedRowList>
++      {envActions
++        .filter(envAction => envAction.actionType === 'CONTROL')
++        .map(envAction => (
++          <li>
++            <ExpandedRowValue>
++              {envAction.actionStartDateTimeUtc ? (
++                <>Le {getDateAsLocalizedStringVeryCompact(envAction.actionStartDateTimeUtc)}`</>
++              ) : (
++                ''
++              )}
++            </ExpandedRowValue>
++            <ExpandedRowValue>
++              {TargetTypeLabels[envAction.actionTargetType]
++                ? TargetTypeLabels[envAction.actionTargetType]
++                : '(Cible non renseignée)'}{' '}
++              {envAction.vehicleType && vehicleTypeLabels[envAction.vehicleType].label
++                ? vehicleTypeLabels[envAction.vehicleType].label
++                : ''}
++              <ul>
++                {envAction.infractions.map(infraction => (
++                  <li>{infraction.vesselName}</li>
++                ))}
++              </ul>
++              <ControlInfractionsTags
++                actionNumberOfControls={envAction.actionNumberOfControls}
++                infractions={envAction.infractions}
++              />
++            </ExpandedRowValue>
++          </li>
++        ))}
++    </ExpandedRowList>
++  )
++}
+Index: frontend/src/features/Mission/components/MissionsList/Cells/CellEditMission.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/CellEditMission.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/EditMissionCell.tsx
+rename from frontend/src/features/Mission/components/MissionsList/Cells/CellEditMission.tsx
+rename to frontend/src/features/Mission/components/MissionsList/Cells/EditMissionCell.tsx
+--- a/frontend/src/features/Mission/components/MissionsList/Cells/CellEditMission.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/EditMissionCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,18 +1,18 @@
+ import { editMissionInLocalStore } from '@features/Mission/useCases/editMissionInLocalStore'
+ import { useAppDispatch } from '@hooks/useAppDispatch'
+-import { Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
++import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+ import styled from 'styled-components'
+ 
+-export function CellEditMission({ id }: { id: number }) {
++export function EditMissionCell({ id }: { id: number }) {
+   const dispatch = useAppDispatch()
+   const setMission = () => dispatch(editMissionInLocalStore(id, 'sideWindow'))
+ 
+   return (
+     <StyledIconButton
++      accent={Accent.TERTIARY}
+       data-cy={`edit-mission-${id}`}
+       Icon={Icon.Edit}
+       onClick={setMission}
+-      size={Size.SMALL}
+       title="Editer"
+     />
+   )
+Index: frontend/src/features/Mission/components/MissionsList/Cells/MissionTypeCell.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/MissionTypeCell.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/MissionTypeCell.tsx
+new file mode 100644
+--- /dev/null	(revision f543891dc543522c6137488748bf4f37453ee565)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/MissionTypeCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -0,0 +1,25 @@
++import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
++import { MissionTypeEnum } from 'domain/entities/missions'
++
++export function MissionTypeCell({ missionTypes }: { missionTypes: MissionTypeEnum[] }) {
++  return (
++    <span>
++      {missionTypes?.map(missionType => (
++        <IconButton accent={Accent.TERTIARY} color={THEME.color.slateGray} Icon={getIcon(missionType)} />
++      ))}
++    </span>
++  )
++}
++
++function getIcon(missionType: MissionTypeEnum) {
++  switch (missionType) {
++    case MissionTypeEnum.AIR:
++      return Icon.Plane
++    case MissionTypeEnum.LAND:
++      return Icon.Car
++    case MissionTypeEnum.SEA:
++      return Icon.VesselPro
++    default:
++      return Icon.Minus
++  }
++}
+Index: frontend/src/features/Mission/components/MissionsList/Cells/NumberOfControlsCell.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/NumberOfControlsCell.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/NumberOfControlsCell.tsx
+new file mode 100644
+--- /dev/null	(revision f543891dc543522c6137488748bf4f37453ee565)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/NumberOfControlsCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -0,0 +1,27 @@
++import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
++import { getTotalInfraction, getTotalOfControls } from '@features/Mission/utils'
++import { THEME } from '@mtes-mct/monitor-ui'
++import styled from 'styled-components'
++
++export function NumberOfControlsCell({ envActions }) {
++  const numberOfControls = getTotalOfControls(envActions)
++  const totalInfractions = getTotalInfraction(envActions)
++
++  return (
++    <span>
++      {totalInfractions > 0 && <StyledCircle $color={THEME.color.maximumRed} />}
++      {numberOfControls > 0
++        ? `${numberOfControls}${totalInfractions > 0 ? `(${totalInfractions} inf.)` : ''}`
++        : UNKNOWN}
++    </span>
++  )
++}
++
++const StyledCircle = styled.div<{ $color: string }>`
++  height: 10px;
++  width: 10px;
++  margin-right: 6px;
++  background-color: ${p => p.$color};
++  border-radius: 50%;
++  display: inline-block;
++`
+Index: frontend/src/features/Mission/components/MissionsList/Cells/getResourcesCell.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/getResourcesCell.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/ResourcesCell.tsx
+rename from frontend/src/features/Mission/components/MissionsList/Cells/getResourcesCell.tsx
+rename to frontend/src/features/Mission/components/MissionsList/Cells/ResourcesCell.tsx
+--- a/frontend/src/features/Mission/components/MissionsList/Cells/getResourcesCell.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/ResourcesCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,6 +1,6 @@
+-import { type LegacyControlUnit, getControlUnitsAsText } from 'domain/entities/legacyControlUnit'
++import { getControlUnitsAsText, type LegacyControlUnit } from 'domain/entities/legacyControlUnit'
+ 
+-export function getResourcesCell(controlUnits: LegacyControlUnit[]) {
++export function ResourcesCell({ controlUnits }: { controlUnits: LegacyControlUnit[] }) {
+   const controlUnitsAsText = controlUnits && getControlUnitsAsText(controlUnits)
+ 
+   return <span title={controlUnitsAsText}>{controlUnitsAsText}</span>
+Index: frontend/src/features/Mission/components/MissionsList/Cells/CellStatus.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/CellStatus.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/StatusCell.tsx
+rename from frontend/src/features/Mission/components/MissionsList/Cells/CellStatus.tsx
+rename to frontend/src/features/Mission/components/MissionsList/Cells/StatusCell.tsx
+--- a/frontend/src/features/Mission/components/MissionsList/Cells/CellStatus.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/StatusCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,7 +1,7 @@
+ import { MissionStatusLabel } from '@features/Mission/components/MissionStatusLabel'
+ import { getMissionStatus } from 'domain/entities/missions'
+ 
+-export function CellStatus({ row }: { row?: any }) {
++export function StatusCell({ row }: { row?: any }) {
+   const status = getMissionStatus(row.original)
+ 
+   return <MissionStatusLabel missionStatus={status} />
+Index: frontend/src/features/Mission/components/MissionsList/Cells/UnitCell.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/UnitCell.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/UnitCell.tsx
+new file mode 100644
+--- /dev/null	(revision f543891dc543522c6137488748bf4f37453ee565)
++++ b/frontend/src/features/Mission/components/MissionsList/Cells/UnitCell.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -0,0 +1,34 @@
++import { ExpandedRowLabel, ExpandedRowList, ExpandedRowValue } from '@components/Table/TableWithSelectableRows/style'
++import { getIconFromControlUnitResourceType } from '@features/ControlUnit/components/ControlUnitDialog/ControlUnitResourceList/utils'
++import { THEME } from '@mtes-mct/monitor-ui'
++import { type LegacyControlUnit } from 'domain/entities/legacyControlUnit'
++import styled from 'styled-components'
++
++export function UnitCell({ controlUnits }: { controlUnits: LegacyControlUnit[] }) {
++  return (
++    <ExpandedRowList>
++      {controlUnits.map(unit => (
++        <li>
++          <ExpandedRowLabel>{unit.administration}</ExpandedRowLabel>
++          <ExpandedRowValue>{unit.name}</ExpandedRowValue>
++          {unit.resources.map(resource => {
++            const Icon = getIconFromControlUnitResourceType(resource.type)
++
++            return (
++              <ExpandedRowValue>
++                <HAlign>
++                  {Icon ? <Icon color={THEME.color.slateGray} size={16} /> : undefined} {resource.name}
++                </HAlign>
++              </ExpandedRowValue>
++            )
++          })}
++        </li>
++      ))}
++    </ExpandedRowList>
++  )
++}
++
++const HAlign = styled.div`
++  display: flex;
++  align-items: center;
++`
+Index: frontend/src/features/Mission/components/MissionsList/Columns/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Columns/index.tsx b/frontend/src/features/Mission/components/MissionsList/Columns/index.tsx
+--- a/frontend/src/features/Mission/components/MissionsList/Columns/index.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionsList/Columns/index.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,14 +1,13 @@
+ import { DateCell } from '@components/Table/DateCell'
+-import { LocalizeCell } from '@components/Table/LocalizeCell'
+ import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
++import { ActionsCell } from '@features/Mission/components/MissionsList/Cells/ActionsCell'
++import { ActionThemeCell } from '@features/Mission/components/MissionsList/Cells/ActionThemeCell'
+ 
+-import { CellActionThemes } from '../Cells/CellActionThemes'
+-import { CellCompletionStatus } from '../Cells/CellCompletionStatus'
+-import { CellEditMission } from '../Cells/CellEditMission'
+-import { CellStatus } from '../Cells/CellStatus'
+-import { getMissionTypeCell } from '../Cells/getMissionTypeCell'
+-import { getNumberOfControlsCell } from '../Cells/getNumberOfControlsCell'
+-import { getResourcesCell } from '../Cells/getResourcesCell'
++import { CompletionStatusCell } from '../Cells/CompletionStatusCell'
++import { MissionTypeCell } from '../Cells/MissionTypeCell'
++import { NumberOfControlsCell } from '../Cells/NumberOfControlsCell'
++import { ResourcesCell } from '../Cells/ResourcesCell'
++import { StatusCell } from '../Cells/StatusCell'
+ import { sortCompletion, sortNumberOfControls, sortStatus } from '../utils'
+ 
+ import type { Row } from '@tanstack/react-table'
+@@ -20,7 +19,7 @@
+     enableSorting: true,
+     header: () => 'N°',
+     id: 'id',
+-    size: 66 + legacyFirefoxOffset
++    size: 71 + legacyFirefoxOffset
+   },
+   {
+     accessorFn: row => row.startDateTimeUtc,
+@@ -28,7 +27,7 @@
+     enableSorting: true,
+     header: () => 'Début',
+     id: 'startDate',
+-    size: 134 + legacyFirefoxOffset
++    size: 130 + legacyFirefoxOffset
+   },
+   {
+     accessorFn: row => row.endDateTimeUtc,
+@@ -36,79 +35,71 @@
+     enableSorting: true,
+     header: () => 'Fin',
+     id: 'endDate',
+-    size: 134 + legacyFirefoxOffset
++    size: 130 + legacyFirefoxOffset
+   },
+   {
+     accessorFn: row => row.facade,
+-    cell: info => (isFetching ? <StyledSkeletonRow /> : info.getValue()),
++    cell: info => (isFetching ? <StyledSkeletonRow /> : <span>{info.getValue()}</span>),
+     enableSorting: true,
+     header: () => 'Façade',
+     id: 'seaFront',
+-    size: 106 + legacyFirefoxOffset
++    size: 99 + legacyFirefoxOffset
+   },
+   {
+     accessorFn: row => row.missionTypes,
+-    cell: info => (isFetching ? <StyledSkeletonRow /> : getMissionTypeCell(info.getValue())),
++    cell: info => (isFetching ? <StyledSkeletonRow /> : <MissionTypeCell missionTypes={info.getValue()} />),
+     enableSorting: false,
+     header: () => 'Type',
+     id: 'type',
+-    size: 106 + legacyFirefoxOffset
++    size: 108 + legacyFirefoxOffset
+   },
+   {
+     accessorFn: row => row.controlUnits,
+-    cell: info => (isFetching ? <StyledSkeletonRow /> : getResourcesCell(info.getValue())),
++    cell: info => (isFetching ? <StyledSkeletonRow /> : <ResourcesCell controlUnits={info.getValue()} />),
+     enableSorting: false,
+-    header: () => 'Unité (Administration)',
+-    id: 'unitAndAdministration',
+-    size: 312 + legacyFirefoxOffset
++    header: () => 'Unité',
++    id: 'unit',
++    size: 381 + legacyFirefoxOffset
+   },
+-
+   {
+     accessorFn: row => row.envActions,
+-    cell: info => (isFetching ? <StyledSkeletonRow /> : <CellActionThemes envActions={info.getValue()} />),
++    cell: info => (isFetching ? <StyledSkeletonRow /> : <ActionThemeCell envActions={info.getValue()} />),
+     enableSorting: false,
+     header: () => 'Thématiques',
+     id: 'themes',
+-    size: 482 + legacyFirefoxOffset
++    size: 381 + legacyFirefoxOffset
+   },
+   {
+     accessorFn: row => row.envActions,
+-    cell: info => (isFetching ? <StyledSkeletonRow /> : getNumberOfControlsCell(info.getValue())),
+-    header: () => 'Ctr.',
++    cell: info => (isFetching ? <StyledSkeletonRow /> : <NumberOfControlsCell envActions={info.getValue()} />),
++    header: () => 'Contrôles',
+     id: 'envActions',
+-    size: 66 + legacyFirefoxOffset,
++    size: 120 + legacyFirefoxOffset,
+     sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => sortNumberOfControls(rowA, rowB, columnId)
+   },
+   {
+     accessorFn: row => row,
+-    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CellStatus row={row} />),
++    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <StatusCell row={row} />),
+     header: () => 'Statut',
+     id: 'status',
+-    size: 107 + legacyFirefoxOffset,
++    size: 120 + legacyFirefoxOffset,
+     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortStatus(rowA, rowB)
+   },
+   {
+     accessorFn: row => row,
+-    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CellCompletionStatus row={row} />),
++    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CompletionStatusCell row={row} />),
+     header: () => 'État données',
+     id: 'completion',
+-    size: 127 + legacyFirefoxOffset,
++    size: 140 + legacyFirefoxOffset,
+     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
+   },
+   {
+     accessorFn: row => row.geom,
+-    cell: info => (isFetching ? <StyledSkeletonRow /> : <LocalizeCell geom={info.getValue()} />),
+-    enableSorting: false,
+-    header: () => '',
+-    id: 'geom',
+-    size: 52 + legacyFirefoxOffset
+-  },
+-  {
+-    accessorFn: row => row.id,
+-    cell: info => (isFetching ? <StyledSkeletonRow /> : <CellEditMission id={info.getValue()} />),
++    cell: ({ row }) =>
++      isFetching ? <StyledSkeletonRow /> : <ActionsCell geom={row.original.geom} id={row.original.id} />,
+     enableSorting: false,
+     header: () => '',
+-    id: 'edit',
+-    size: 52 + legacyFirefoxOffset
++    id: 'actions',
++    size: 82 + legacyFirefoxOffset
+   }
+ ]
+Index: frontend/src/features/Mission/components/MissionsList/MissionsTable.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/MissionsTable.tsx b/frontend/src/features/Mission/components/MissionsList/MissionsTable.tsx
+--- a/frontend/src/features/Mission/components/MissionsList/MissionsTable.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionsList/MissionsTable.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,5 +1,6 @@
+-import { Table } from '@components/Table'
++import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
+ import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
++import { Row } from '@features/Mission/components/MissionsList/Row'
+ import { useTable } from '@hooks/useTable'
+ import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
+ import { type SortingState } from '@tanstack/react-table'
+@@ -7,10 +8,10 @@
+ import { paths } from 'paths'
+ import { useMemo, useRef, useState } from 'react'
+ import { useLocation } from 'react-router'
+-import styled from 'styled-components'
+ 
+ import { Columns } from './Columns'
+ 
++import type { Row as RowType } from '@tanstack/table-core/build/lib/types'
+ import type { Mission } from 'domain/entities/missions'
+ 
+ type MissionsTableProps = {
+@@ -38,6 +39,9 @@
+   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : missions), [isLoading, missions])
+ 
+   const table = useTable({
++    columnPinning: {
++      right: ['actions']
++    },
+     columns,
+     data: tableData,
+     setSorting,
+@@ -56,22 +60,22 @@
+   const virtualRows = rowVirtualizer.getVirtualItems()
+ 
+   return (
+-    <StyledTable
++    <SelectableRowsTable
+       ref={tableContainerRef}
+       className="missions-table"
+       columnsLength={columns.length}
+-      rows={rows}
++      rows={
++        <>
++          {virtualRows?.map(virtualRow => {
++            const row = rows[virtualRow.index] as RowType<Mission>
++
++            return <Row key={virtualRow.key} row={row} />
++          })}
++        </>
++      }
+       rowVirtualizer={rowVirtualizer}
+       table={table}
+       virtualRows={virtualRows}
+     />
+   )
+ }
+-
+-const StyledTable = styled(Table)`
+-  > table > tbody {
+-    > tr > td:nth-child(11) {
+-      padding: 0;
+-    }
+-  }
+-`
+Index: frontend/src/features/Mission/components/MissionsList/Row.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Row.tsx b/frontend/src/features/Mission/components/MissionsList/Row.tsx
+new file mode 100644
+--- /dev/null	(revision f543891dc543522c6137488748bf4f37453ee565)
++++ b/frontend/src/features/Mission/components/MissionsList/Row.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -0,0 +1,89 @@
++import {
++  ExpandableRowCell,
++  ExpandedRow,
++  ExpandedRowCell,
++  ExpandedRowLabel,
++  ExpandedRowList,
++  ExpandedRowValue
++} from '@components/Table/TableWithSelectableRows/style'
++import { createPinnedCellStyle, UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
++import { ActionTagsCell } from '@features/Mission/components/MissionsList/Cells/ActionTagsCell'
++import { ActionThemesCell } from '@features/Mission/components/MissionsList/Cells/ActionThemesCell'
++import { ControlsCell } from '@features/Mission/components/MissionsList/Cells/ControlsCell'
++import { UnitCell } from '@features/Mission/components/MissionsList/Cells/UnitCell'
++import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
++import { flexRender, type Row as RowType } from '@tanstack/react-table'
++
++import type { Mission } from '../../../../domain/entities/missions'
++
++export function Row({ row }: { row: RowType<Mission> }) {
++  const mission = row.original
++
++  return (
++    <>
++      <TableWithSelectableRows.BodyTr key={row.id} data-cy="mission-row">
++        {row?.getVisibleCells().map((cell, index, rowCells) => {
++          const cellStyle = createPinnedCellStyle({
++            context: cell,
++            index,
++            rowLength: rowCells.length
++          })
++
++          return (
++            <ExpandableRowCell
++              key={cell.id}
++              onClick={() => row.toggleExpanded()}
++              style={{
++                maxWidth: cell.column.getSize(),
++                minWidth: cell.column.getSize(),
++                width: cell.column.getSize(),
++                ...cellStyle
++              }}
++            >
++              {flexRender(cell.column.columnDef.cell, cell.getContext())}
++            </ExpandableRowCell>
++          )
++        })}
++      </TableWithSelectableRows.BodyTr>
++      {row.getIsExpanded() && (
++        <ExpandedRow data-id={`${row.id}-expanded`}>
++          <ExpandedRowCell colSpan={5}>
++            <ExpandedRowList>
++              <li>
++                <ExpandedRowLabel>CACEM: Observations</ExpandedRowLabel>
++                <ExpandedRowValue>{mission.observationsCacem ? mission.observationsCacem : UNKNOWN}</ExpandedRowValue>
++              </li>
++              <li>
++                <ExpandedRowLabel>CNSP: Observations</ExpandedRowLabel>
++                <ExpandedRowValue>{mission.observationsCnsp ? mission.observationsCnsp : UNKNOWN}</ExpandedRowValue>
++              </li>
++            </ExpandedRowList>
++          </ExpandedRowCell>
++          <ExpandedRowCell>
++            <UnitCell controlUnits={mission.controlUnits} />
++          </ExpandedRowCell>
++          <ExpandedRowCell>
++            <ExpandedRowList>
++              <li>
++                <ExpandedRowLabel>Thématiques et sous-thématiques</ExpandedRowLabel>
++                <ActionThemesCell envActions={mission.envActions} />
++              </li>
++              <li>
++                <ExpandedRowLabel>Tags et sous-tags</ExpandedRowLabel>
++                <ActionTagsCell envActions={mission.envActions} />
++              </li>
++            </ExpandedRowList>
++          </ExpandedRowCell>
++          <ExpandedRowCell colSpan={2}>
++            <ExpandedRowLabel>Contrôles</ExpandedRowLabel>
++            <ControlsCell envActions={mission.envActions} />
++          </ExpandedRowCell>
++          <ExpandedRowCell colSpan={3}>
++            <ExpandedRowLabel>Ouvert part</ExpandedRowLabel>
++            <ExpandedRowValue>{mission.openBy}</ExpandedRowValue>
++          </ExpandedRowCell>
++        </ExpandedRow>
++      )}
++    </>
++  )
++}
+Index: frontend/src/features/Mission/components/MissionsList/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/index.tsx b/frontend/src/features/Mission/components/MissionsList/index.tsx
+--- a/frontend/src/features/Mission/components/MissionsList/index.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/Mission/components/MissionsList/index.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -42,8 +42,7 @@
+ 
+ const StyledHeader = styled.div`
+   display: flex;
+-  flex-direction: row;
+-  gap: 32px;
++  justify-content: space-between;
+   margin-bottom: 40px;
+ `
+ 
+Index: frontend/src/features/VigilanceArea/components/VigilanceAreasList/Filters/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/VigilanceArea/components/VigilanceAreasList/Filters/index.tsx b/frontend/src/features/VigilanceArea/components/VigilanceAreasList/Filters/index.tsx
+--- a/frontend/src/features/VigilanceArea/components/VigilanceAreasList/Filters/index.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/VigilanceArea/components/VigilanceAreasList/Filters/index.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -2,6 +2,7 @@
+ import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
+ import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
+ import { CustomPeriodContainer, CustomPeriodLabel, TagsContainer } from '@components/style'
++import { ShowFilters } from '@components/Table/style'
+ import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
+ import {
+   setAreRecentsAreasChecked,
+@@ -18,7 +19,7 @@
+ import { VigilanceArea } from '@features/VigilanceArea/types'
+ import { useAppDispatch } from '@hooks/useAppDispatch'
+ import { useAppSelector } from '@hooks/useAppSelector'
+-import { CheckPicker, getOptionsFromLabelledEnum, Icon, LinkButton, Select } from '@mtes-mct/monitor-ui'
++import { CheckPicker, getOptionsFromLabelledEnum, Icon, Select } from '@mtes-mct/monitor-ui'
+ import { SeaFrontLabels } from 'domain/entities/seaFrontType'
+ import styled from 'styled-components'
+ 
+@@ -111,9 +112,9 @@
+     <Wrapper>
+       <FiltersFirstLine>
+         <SearchFilter />
+-        <StyledLinkButton Icon={Icon.FilterBis} onClick={setFiltersVisibility}>
++        <ShowFilters Icon={Icon.FilterBis} onClick={setFiltersVisibility}>
+           {areFiltersVisible ? 'Masquer les filtres' : 'Afficher les filtres'}
+-        </StyledLinkButton>
++        </ShowFilters>
+       </FiltersFirstLine>
+ 
+       {areFiltersVisible && (
+@@ -232,18 +233,3 @@
+   text-overflow: ellipsis;
+   white-space: nowrap;
+ `
+-export const Separator = styled.div`
+-  border-right: ${p => `1px solid ${p.theme.color.slateGray}`};
+-  height: 50%;
+-  width: 2px;
+-`
+-
+-const StyledLinkButton = styled(LinkButton)`
+-  font-size: 13px;
+-  color: ${p => p.theme.color.charcoal};
+-  svg {
+-    color: ${p => p.theme.color.charcoal} !important;
+-    height: 20px !important;
+-    width: 20px !important;
+-  }
+-`
+Index: frontend/src/features/VigilanceArea/components/VigilanceAreasList/Row.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/VigilanceArea/components/VigilanceAreasList/Row.tsx b/frontend/src/features/VigilanceArea/components/VigilanceAreasList/Row.tsx
+--- a/frontend/src/features/VigilanceArea/components/VigilanceAreasList/Row.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/VigilanceArea/components/VigilanceAreasList/Row.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,7 +1,13 @@
++import {
++  ExpandableRowCell,
++  ExpandedRow,
++  ExpandedRowCell,
++  ExpandedRowLabel,
++  ExpandedRowValue
++} from '@components/Table/TableWithSelectableRows/style'
+ import { createPinnedCellStyle } from '@components/Table/TableWithSelectableRows/utils'
+ import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
+ import { flexRender, type Row as RowType } from '@tanstack/react-table'
+-import styled from 'styled-components'
+ 
+ import { FrequencyCell } from './Cells/FrequencyCell'
+ import { TagsDetailsCell } from './Cells/TagsDetailsCell'
+@@ -26,7 +32,7 @@
+           return (
+             <ExpandableRowCell
+               key={cell.id}
+-              $isDraft={!!vigilanceArea.isDraft}
++              $isDraft={vigilanceArea.isDraft}
+               onClick={() => row.toggleExpanded()}
+               style={{
+                 maxWidth: cell.column.getSize(),
+@@ -41,7 +47,7 @@
+         })}
+       </TableWithSelectableRows.BodyTr>
+       {row.getIsExpanded() && (
+-        <ExpandedRow $isDraft={!!vigilanceArea.isDraft} data-id={`${row.id}-expanded`}>
++        <ExpandedRow $isDraft={vigilanceArea.isDraft} data-id={`${row.id}-expanded`}>
+           <ExpandedRowCell>
+             <ExpandedRowLabel>Commentaire</ExpandedRowLabel>
+             <ExpandedRowValue>{vigilanceArea.comments}</ExpandedRowValue>
+@@ -53,78 +59,22 @@
+             <ExpandedRowLabel>Thématiques et sous-thématiques</ExpandedRowLabel>
+             <ThemesDetailsCell themes={vigilanceArea.themes} />
+           </ExpandedRowCell>
+-          <ExpandedRowCell>
++          <ExpandedRowCell colSpan={2}>
+             <ExpandedRowLabel>Tags et sous-tags</ExpandedRowLabel>
+             <TagsDetailsCell tags={vigilanceArea.tags} />
+           </ExpandedRowCell>
+-          <ExpandedRowCell />
+           <ExpandedRowCell>
+             <ExpandedRowLabel>Dernière validation</ExpandedRowLabel>
+             <ValidationDateDetailsCell date={vigilanceArea.validatedAt} />
+             <ExpandedRowLabel>Dernière modification</ExpandedRowLabel>
+             <ValidationDateDetailsCell date={vigilanceArea.updatedAt} />
+           </ExpandedRowCell>
+-          <ExpandedRowCell>
++          <ExpandedRowCell colSpan={4}>
+             <ExpandedRowLabel>Créée par </ExpandedRowLabel>
+             <ExpandedRowValue>{vigilanceArea.createdBy}</ExpandedRowValue>
+           </ExpandedRowCell>
+-          <ExpandedRowCell />
+-          <ExpandedRowCell />
+         </ExpandedRow>
+       )}
+     </>
+   )
+ }
+-
+-const ExpandableRowCell = styled(TableWithSelectableRows.Td)<{
+-  $isDraft: boolean
+-}>`
+-  cursor: pointer;
+-  user-select: none;
+-  color: ${p => (p.$isDraft ? p.theme.color.slateGray : p.theme.color.charcoal)};
+-  font-style: ${p => (p.$isDraft ? 'italic' : 'normal')};
+-`
+-
+-const ExpandedRow = styled(TableWithSelectableRows.BodyTr)<{
+-  $isDraft: boolean
+-}>`
+-  > td {
+-    overflow: hidden !important;
+-    color: ${p => (p.$isDraft ? p.theme.color.slateGray : p.theme.color.charcoal)};
+-  }
+-
+-  &:hover {
+-    > td {
+-      /* Hack to disable hover background color in expanded rows */
+-      background-color: ${p => p.theme.color.cultured};
+-    }
+-  }
+-`
+-
+-const ExpandedRowCell = styled(TableWithSelectableRows.Td).attrs(props => ({
+-  ...props,
+-  $hasRightBorder: false
+-}))`
+-  padding: 16px 4px 16px 16px;
+-  height: 42px;
+-  vertical-align: top;
+-  white-space: normal;
+-
+-  > p:not(:first-child) {
+-    margin-top: 16px;
+-  }
+-  max-width: 350px;
+-`
+-
+-const ExpandedRowLabel = styled.span`
+-  color: ${p => p.theme.color.slateGray};
+-  display: block;
+-  width: 100%;
+-`
+-const ExpandedRowValue = styled.span`
+-  display: -webkit-box;
+-  -webkit-box-orient: vertical;
+-  -webkit-line-clamp: 50;
+-  overflow: hidden;
+-  white-space: pre-wrap;
+-`
+Index: frontend/src/features/VigilanceArea/components/VigilanceAreasList/VigilanceAreasTable.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/features/VigilanceArea/components/VigilanceAreasList/VigilanceAreasTable.tsx b/frontend/src/features/VigilanceArea/components/VigilanceAreasList/VigilanceAreasTable.tsx
+--- a/frontend/src/features/VigilanceArea/components/VigilanceAreasList/VigilanceAreasTable.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/features/VigilanceArea/components/VigilanceAreasList/VigilanceAreasTable.tsx	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,19 +1,12 @@
+-import {
+-  getPaddingValuesForVirtualizeTable,
+-  PaddingForVirtualizeTable
+-} from '@components/Table/PaddingForVirtualizeTable'
+-import { TableContainer } from '@components/Table/style'
+-import { TableWithSelectableRowsHeader } from '@components/Table/TableWithSelectableRows/Header'
++import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
+ import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
+ import { useTable } from '@hooks/useTable'
+ import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
+-import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
+ import { type Row as RowType, type SortingState } from '@tanstack/react-table'
+ import { isLegacyFirefox } from '@utils/isLegacyFirefox'
+ import { paths } from 'paths'
+ import { useMemo, useRef, useState } from 'react'
+ import { useLocation } from 'react-router'
+-import styled from 'styled-components'
+ 
+ import { Columns } from './Columns'
+ import { Row } from './Row'
+@@ -64,31 +57,23 @@
+ 
+   const virtualRows = rowVirtualizer.getVirtualItems()
+ 
+-  const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
+-
+   return (
+-    <StyledTableContainer ref={tableContainerRef}>
+-      <TableWithSelectableRows.Table>
+-        <TableWithSelectableRows.Head>
+-          {table.getHeaderGroups().map(headerGroup => (
+-            <TableWithSelectableRowsHeader key={headerGroup.id} headerGroup={headerGroup} />
+-          ))}
+-        </TableWithSelectableRows.Head>
+-        {before > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={before} name="before" />}
+-        <tbody>
++    <SelectableRowsTable
++      ref={tableContainerRef}
++      className="vigilance-area-table"
++      columnsLength={columns.length}
++      rows={
++        <>
+           {virtualRows?.map(virtualRow => {
+             const row = rows[virtualRow.index] as RowType<VigilanceArea.VigilanceArea>
+ 
+             return <Row key={virtualRow.key} row={row} />
+           })}
+-        </tbody>
+-        {after > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={after} name="after" />}
+-      </TableWithSelectableRows.Table>
+-    </StyledTableContainer>
++        </>
++      }
++      rowVirtualizer={rowVirtualizer}
++      table={table}
++      virtualRows={virtualRows}
++    />
+   )
+ }
+-
+-const StyledTableContainer = styled(TableContainer)`
+-  padding-right: 0;
+-  width: 100%;
+-`
+Index: frontend/src/utils/getTagsAsOptions.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/utils/getTagsAsOptions.ts b/frontend/src/utils/getTagsAsOptions.ts
+--- a/frontend/src/utils/getTagsAsOptions.ts	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/utils/getTagsAsOptions.ts	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,3 +1,5 @@
++import { uniq } from 'lodash/fp'
++
+ import type { CheckTreePickerOption } from '@mtes-mct/monitor-ui'
+ import type { TagFromAPI, TagOption } from 'domain/entities/tags'
+ 
+@@ -65,6 +67,6 @@
+ export const displayTags = (tags?: TagFromAPI[]) => tags?.map(({ name }) => name).join(', ')
+ 
+ export const displaySubTags = (tags?: TagFromAPI[]) =>
+-  tags?.flatMap(({ subTags }) => subTags.map(({ name }) => name)).join(', ')
++  tags?.flatMap(({ subTags }) => uniq(subTags.map(({ name }) => name))).join(', ')
+ 
+ export const getTagIds = tags => tags?.flatMap(tag => [...(tag.subTags?.map(subTag => subTag.id) ?? [])])
+Index: frontend/src/utils/getThemesAsOptions.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/frontend/src/utils/getThemesAsOptions.ts b/frontend/src/utils/getThemesAsOptions.ts
+--- a/frontend/src/utils/getThemesAsOptions.ts	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ b/frontend/src/utils/getThemesAsOptions.ts	(revision f543891dc543522c6137488748bf4f37453ee565)
+@@ -1,3 +1,5 @@
++import { uniq } from 'lodash/fp'
++
+ import type { Option } from '@mtes-mct/monitor-ui'
+ import type { ThemeFromAPI, ThemeOption } from 'domain/entities/themes'
+ 
+@@ -54,7 +56,7 @@
+ export const displayThemes = (themes?: ThemeFromAPI[]) => themes?.map(({ name }) => name).join(', ')
+ 
+ export const displaySubThemes = (themes?: ThemeFromAPI[]) =>
+-  themes?.flatMap(({ subThemes }) => subThemes.map(({ name }) => name)).join(', ')
++  themes?.flatMap(({ subThemes }) => uniq(subThemes.map(({ name }) => name))).join(', ')
+ 
+ export const getThemeAndSubthemeIds = (themes?: ThemeFromAPI[]) =>
+   themes?.reduce((acc: number[], theme: ThemeFromAPI) => {
+Index: frontend/src/features/Mission/components/MissionsList/Cells/getMissionTypeCell.tsx
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/getMissionTypeCell.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/getMissionTypeCell.tsx
+deleted file mode 100644
+--- a/frontend/src/features/Mission/components/MissionsList/Cells/getMissionTypeCell.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ /dev/null	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
+@@ -1,7 +0,0 @@
+-import { MissionTypeEnum, missionTypeEnum } from 'domain/entities/missions'
+-
+-export function getMissionTypeCell(missionTypes: MissionTypeEnum[]) {
+-  const missionTypesAsText = missionTypes?.map(t => missionTypeEnum[t]?.libelle).join(', ')
+-
+-  return missionTypesAsText
+-}
+Index: frontend/src/features/Mission/components/MissionsList/Cells/getNumberOfControlsCell.tsx
+===================================================================
+diff --git a/frontend/src/features/Mission/components/MissionsList/Cells/getNumberOfControlsCell.tsx b/frontend/src/features/Mission/components/MissionsList/Cells/getNumberOfControlsCell.tsx
+deleted file mode 100644
+--- a/frontend/src/features/Mission/components/MissionsList/Cells/getNumberOfControlsCell.tsx	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
++++ /dev/null	(revision ddbb570fe0c8e5a233a0fcd0a264ca30f3044a3c)
+@@ -1,7 +0,0 @@
+-import { getTotalOfControls } from '@features/Mission/utils'
+-
+-export function getNumberOfControlsCell(envActions) {
+-  const numberOfControls = getTotalOfControls(envActions)
+-
+-  return numberOfControls > 0 ? numberOfControls : '-'
+-}

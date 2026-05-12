@@ -1,9 +1,9 @@
 import { Italic } from '@components/style'
 import { ValidateButton } from '@features/commonComponents/ValidateButton'
 import {
-  customDayjs,
   Accent,
   Button,
+  customDayjs,
   FormikDatePicker,
   FormikTextarea,
   FormikTextInput,
@@ -209,7 +209,12 @@ export function RegulatoryTexts({
             </Link>
             <PeriodText>{getPeriodText(values.date, values.dateFin)}</PeriodText>
           </RefRegTextContainer>
-          <IconButton accent={Accent.TERTIARY} Icon={Icon.EditUnbordered} onClick={() => onChangeRefReg(mainRefReg)} />
+          <IconButton
+            accent={Accent.TERTIARY}
+            Icon={Icon.EditUnbordered}
+            onClick={() => onChangeRefReg(mainRefReg)}
+            title="Editer le texte réglementaire"
+          />
         </RefRegContainer>
       )
     }
@@ -283,8 +288,14 @@ export function RegulatoryTexts({
                     accent={Accent.TERTIARY}
                     Icon={Icon.EditUnbordered}
                     onClick={() => setEditingOtherRefReg(otherRefReg)}
+                    title="Editer le texte réglementaire"
                   />
-                  <IconButton accent={Accent.TERTIARY} Icon={Icon.Delete} onClick={() => deleteOtherRefReg(index)} />
+                  <IconButton
+                    accent={Accent.TERTIARY}
+                    Icon={Icon.Delete}
+                    onClick={() => deleteOtherRefReg(index)}
+                    title="Supprimer le texte réglementaire"
+                  />
                 </ActionButtons>
               </RefRegContainer>
             )
