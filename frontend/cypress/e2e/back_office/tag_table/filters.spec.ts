@@ -1,3 +1,5 @@
+const totalTags = 16
+
 context('Back Office > Tag Table > Filters', () => {
   beforeEach(() => {
     cy.visit(`/backoffice/tags`)
@@ -6,13 +8,13 @@ context('Back Office > Tag Table > Filters', () => {
   })
 
   it('Should show all tags then showing subtags when clicking row', () => {
-    cy.get('tbody > tr').should('have.length', 8)
+    cy.get('tbody > tr').should('have.length', totalTags)
     cy.get('tbody > tr').contains('Mouillage').click()
-    cy.get('tbody > tr').should('have.length', 10)
+    cy.get('tbody > tr').should('have.length', totalTags + 2)
   })
 
   it('Should filter tags matching the search query', () => {
-    cy.get('tbody > tr').should('have.length', 8)
+    cy.get('tbody > tr').should('have.length', totalTags)
     cy.fill('Rechercher dans les tags', 'AMP')
     cy.get('tbody > tr').should('have.length', 1)
   })
@@ -20,7 +22,7 @@ context('Back Office > Tag Table > Filters', () => {
   it('Should filter tags that are out of validity period', () => {
     cy.fill('Validité', 'En cours de validité')
 
-    cy.get('tbody > tr').should('have.length', 7)
+    cy.get('tbody > tr').should('have.length', totalTags - 1)
   })
 
   it('Should filter tags that are out in progress', () => {

@@ -1,4 +1,5 @@
 import { FAKE_MAPBOX_RESPONSE } from './constants'
+import { checkA11y } from './utils/a11y'
 import { visitSideWindow } from './utils/visitSideWindow'
 
 context('Axe core RGAA check that ', () => {
@@ -18,16 +19,7 @@ context('Axe core RGAA check that ', () => {
     cy.wait(['@getAmps', '@getRegulatoryAreas', '@getVigilanceAreas'])
     cy.clickButton('Arbre des couches')
     cy.injectAxe()
-    // @ts-ignore
-    cy.checkA11y(null, {
-      rules: {
-        'color-contrast': { enabled: false }
-      },
-      runOnly: {
-        type: 'tag',
-        values: ['wcag2a', 'wcag2aa']
-      }
-    })
+    checkA11y()
   })
 
   describe('Mission ', () => {
@@ -36,16 +28,7 @@ context('Axe core RGAA check that ', () => {
       cy.clickButton('Afficher les filtres')
       cy.wait('@getMissions')
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
 
     it('with surveillance action opened should respect RGAA criteria', () => {
@@ -56,16 +39,7 @@ context('Axe core RGAA check that ', () => {
       cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
       cy.getDataCy('action-card').eq(0).click()
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
 
     it('with a control action opened should respect RGAA criteria', () => {
@@ -76,16 +50,7 @@ context('Axe core RGAA check that ', () => {
       cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
       cy.getDataCy('action-card').eq(1).click()
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
 
     it('with attached reporting should respect RGAA criteria', () => {
@@ -97,16 +62,7 @@ context('Axe core RGAA check that ', () => {
       cy.getDataCy('edit-mission-34').scrollIntoView().click({ force: true })
       cy.getDataCy('action-card').eq(2).click()
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
   })
 
@@ -119,16 +75,7 @@ context('Axe core RGAA check that ', () => {
       cy.clickButton('Zone de vigilance 1')
       cy.clickButton('Editer')
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
 
     it('list should respect RGAA criteria', () => {
@@ -136,16 +83,7 @@ context('Axe core RGAA check that ', () => {
       cy.clickButton('Zones de vigilance')
       cy.wait(['@getVigilanceAreas'])
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
   })
 
@@ -155,16 +93,7 @@ context('Axe core RGAA check that ', () => {
       cy.clickButton('Signalements')
       cy.wait('@getReportings')
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
 
     it('a reporting form should respect RGAA criteria', () => {
@@ -172,16 +101,7 @@ context('Axe core RGAA check that ', () => {
       cy.clickButton('Chercher des signalements')
       cy.clickButton('Ajouter un signalement')
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa'] // RGAA s’appuie sur WCAG 2.1 A et AA
-        }
-      })
+      checkA11y()
     })
   })
 
@@ -191,16 +111,7 @@ context('Axe core RGAA check that ', () => {
       cy.clickButton('Tableaux de bord')
       cy.wait(['@getDashboards'])
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
 
     it('form should respect RGAA criteria', () => {
@@ -213,16 +124,7 @@ context('Axe core RGAA check that ', () => {
       // Tab should be visible
       cy.getDataCy('dashboard-1').contains('Dashboard 2')
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
   })
 
@@ -230,44 +132,17 @@ context('Axe core RGAA check that ', () => {
     it('administration list should respect RGAA criteria', () => {
       cy.visit(`/backoffice/administrations`)
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
     it('control unit list should respect RGAA criteria', () => {
       cy.visit(`/backoffice/control_units`)
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
     it('stations list should respect RGAA criteria', () => {
       cy.visit(`/backoffice/stations`)
       cy.injectAxe()
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
     it('regulatory areas list should respect RGAA criteria', () => {
       cy.visit(`/backoffice/regulatory_areas`)
@@ -275,35 +150,20 @@ context('Axe core RGAA check that ', () => {
       cy.intercept('GET', `bff/v1/regulatory-areas/134`).as('getRegulatoryArea')
       cy.clickButton('Déplier le contenu des zones PIRC')
       cy.clickButton('Interdiction VNM Molene')
+      checkA11y()
       cy.get('span[title="Article 1"]').click()
       cy.wait('@getRegulatoryArea')
-
       cy.clickButton('Editer la réglementation')
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      // Wait for the zoom
+      cy.wait(500)
+      checkA11y()
     })
+
     it('tag list should respect RGAA criteria', () => {
       cy.visit(`/backoffice/tags`)
       cy.injectAxe()
       cy.clickButton('Éditer ce tag')
-      // @ts-ignore
-      cy.checkA11y(null, {
-        rules: {
-          'color-contrast': { enabled: false }
-        },
-        runOnly: {
-          type: 'tag',
-          values: ['wcag2a', 'wcag2aa']
-        }
-      })
+      checkA11y()
     })
   })
 })

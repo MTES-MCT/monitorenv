@@ -30,8 +30,8 @@
 
 - Debian-based Linux or macOS
 - Docker v25 (with Docker Compose v2)
-- Java Development Kit (JDK) 19
-- Node.js v20 (with npm v10)
+- Java Development Kit (JDK) 21
+- Node.js v24 (with npm v11)
 
 ### First Setup
 
@@ -70,7 +70,8 @@ if you have a mac with apple chipset please check the checkbox in docker dashboa
 ### First Setup
 
 - install pyenv and Poetry (follow online documentation, it changes really often)
-- install the correct python version using ```pyenv install <VERSION>``` (use version defined in pipeline/.python-version)
+- install the correct python version using ```pyenv install <VERSION>``` (use version defined in
+  pipeline/.python-version)
 - run ```make install-pipeline```
 
 ### Local Development

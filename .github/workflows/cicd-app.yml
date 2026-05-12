@@ -102,7 +102,7 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: ./frontend/package-lock.json
-          node-version: 20
+          node-version: 24
 
       - name: Install Node.js dependencies
         run: npm ci
@@ -187,7 +187,7 @@ jobs:
 
   e2e_test:
     name: Run E2E tests
-    needs: [version, build]
+    needs: [ version, build ]
     runs-on: ubuntu-22.04
     strategy:
       # when one test fails, DO NOT cancel the other
@@ -196,7 +196,7 @@ jobs:
       # https://github.com/cypress-io/github-action/issues/48
       fail-fast: false
       matrix:
-        containers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        containers: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
@@ -227,7 +227,7 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: ./frontend/package-lock.json
-          node-version: 20
+          node-version: 24
 
       - name: Setup Firefox
         uses: browser-actions/setup-firefox@latest
@@ -257,7 +257,7 @@ jobs:
 
   e2e_multi_windows_test:
     name: Run E2E multi windows tests
-    needs: [version, build]
+    needs: [ version, build ]
     runs-on: ubuntu-22.04
     if: false
     env:
@@ -285,7 +285,7 @@ jobs:
         with:
           cache: npm
           cache-dependency-path: ./frontend/package-lock.json
-          node-version: 20
+          node-version: 24
 
       - name: Install Node.js dependencies
         run: npm ci
@@ -307,7 +307,7 @@ jobs:
 
   generate_and_upload_source_maps:
     name: Generate and upload source maps to Sentry
-    needs: [version, build, unit_test_backend, unit_test_frontend, e2e_test]
+    needs: [ version, build, unit_test_backend, unit_test_frontend, e2e_test ]
     runs-on: ubuntu-22.04
     env:
       VERSION: ${{ needs.version.outputs.VERSION }}
@@ -352,7 +352,7 @@ jobs:
 
   push_to_registry:
     name: Push to registry
-    needs: [version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps]
+    needs: [ version, unit_test_backend, unit_test_frontend, e2e_test, generate_and_upload_source_maps ]
     # needs: [version, e2e_test, e2e_multi_windows_test, unit_test_frontend, e2e_test]
     runs-on: ubuntu-22.04
     env:
