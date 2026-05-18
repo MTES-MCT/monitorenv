@@ -5,9 +5,9 @@ export const ExpandableRowCell = styled(TableWithSelectableRows.Td)<{
   $isDraft?: boolean
 }>`
   cursor: pointer;
-  user-select: none;
   color: ${p => (p.$isDraft ? p.theme.color.slateGray : p.theme.color.charcoal)};
   font-style: ${p => (p.$isDraft ? 'italic' : 'normal')};
+  user-select: none;
 `
 
 export const ExpandedRow = styled(TableWithSelectableRows.BodyTr)<{
