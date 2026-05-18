@@ -6,12 +6,11 @@ import {
   ExpandedRowValue
 } from '@components/Table/TableWithSelectableRows/style'
 import { createPinnedCellStyle } from '@components/Table/TableWithSelectableRows/utils'
-import { isMatchForRecurringOccurrence } from '@features/layersSelector/utils/getFilteredVigilanceAreasPerPeriod'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { customDayjs, TableWithSelectableRows, THEME } from '@mtes-mct/monitor-ui'
 import { flexRender, type Row as RowType } from '@tanstack/react-table'
 import { getColorWithAlpha } from '@utils/utils'
-import { Fragment, useMemo } from 'react'
+import { Fragment } from 'react'
 import styled from 'styled-components'
 
 import { FrequencyCell } from './Cells/FrequencyCell'
@@ -20,48 +19,8 @@ import { ThemesDetailsCell } from './Cells/ThemesDetailsCell'
 import { ValidationDateDetailsCell } from './Cells/ValidationDateDetailsCell'
 import { BasePeriodCircle } from '../VigilanceAreaForm/Periods/Periods'
 
-const ALL_TIMES_AND_CRITICAL = 'CRITICAL_AT_ALL_TIMES'
-const ALL_TIMES_AND_SIMPLE = 'SIMPLE_AT_ALL_TIMES'
-
 export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>; table: any }) {
   const vigilanceArea: VigilanceArea.VigilanceArea = row.original
-
-  const isVigilanceAreaActive = useMemo(() => {
-    const hasAllTimePeriods = vigilanceArea.periods?.some(period => period.isAtAllTimes)
-    const hasCriticalPeriod = vigilanceArea.periods?.some(period => period.isCritical)
-
-    if (hasAllTimePeriods) {
-      return hasCriticalPeriod ? ALL_TIMES_AND_CRITICAL : ALL_TIMES_AND_SIMPLE
-    }
-
-    const activePeriods = vigilanceArea.periods?.filter(period => {
-      if (!period.frequency) {
-        return false
-      }
-      const startDate = customDayjs(period.startDatePeriod).utc()
-      const endDate = customDayjs(period.endDatePeriod).utc()
-      const endDateFilter = customDayjs().utc().endOf('day')
-      const startDateFilter = customDayjs().utc().startOf('day')
-      const loopStopDate = period.computedEndDate
-        ? customDayjs(period.computedEndDate)
-        : customDayjs(endDate).add(5, 'year')
-
-      return isMatchForRecurringOccurrence(
-        startDate,
-        endDate,
-        startDateFilter,
-        endDateFilter,
-        period.frequency,
-        loopStopDate
-      )
-    })
-
-    if (!activePeriods?.length) {
-      return undefined
-    }
-
-    return activePeriods.some(period => period.isCritical) ? ALL_TIMES_AND_CRITICAL : ALL_TIMES_AND_SIMPLE
-  }, [vigilanceArea])
 
   return (
     <>
@@ -94,12 +53,7 @@ export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>;
               onClick={() => row.toggleExpanded()}
               style={cellStyle}
             >
-              <>
-                {(isVigilanceAreaActive === ALL_TIMES_AND_SIMPLE || isVigilanceAreaActive === ALL_TIMES_AND_CRITICAL) &&
-                  index === 0 && <StyledPeriodCircle $isCritical={isVigilanceAreaActive === ALL_TIMES_AND_CRITICAL} />}
-
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </>
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </ExpandableRowCell>
           )
         })}
@@ -129,22 +83,24 @@ export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>;
           </ExpandedRowCell>
           <ExpandedRowCell>
             <ExpandedRowLabel>Créée par </ExpandedRowLabel>
-            <ExpandedRowValue>{vigilanceArea.createdBy}</ExpandedRowValue>
-          </ExpandedRowCell>
-          <ExpandedRowCell colSpan={3}>
             <ExpandedRowValue>
-              {vigilanceArea.sources?.map(source => {
-                const sourceLabel = source.type === VigilanceArea.VigilanceAreaSourceType.INTERNAL ? 'CACEM' : 'externe'
-
-                return (
-                  <Fragment key={source.id}>
-                    <ExpandedRowLabel>Source {sourceLabel}</ExpandedRowLabel>
-                    <span>{source.name}</span>
-                  </Fragment>
-                )
-              })}
+              <CreationWrapper>
+                <span>{vigilanceArea.createdBy}</span>
+                <span>le {customDayjs(vigilanceArea.createdAt).format('DD/MM/YYYY')}</span>
+              </CreationWrapper>
             </ExpandedRowValue>
+            {vigilanceArea.sources?.map(source => {
+              const sourceLabel = source.type === VigilanceArea.VigilanceAreaSourceType.INTERNAL ? 'CACEM' : 'externe'
+
+              return (
+                <Fragment key={source.id}>
+                  <ExpandedRowLabel>Source {sourceLabel}</ExpandedRowLabel>
+                  <span>{source.name}</span>
+                </Fragment>
+              )
+            })}
           </ExpandedRowCell>
+          <ExpandedRowCell colSpan={2} />
         </ExpandedRow>
       )}
     </>
@@ -153,4 +109,8 @@ export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>;
 
 export const StyledPeriodCircle = styled(BasePeriodCircle)`
   margin-right: 8px;
+`
+const CreationWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `

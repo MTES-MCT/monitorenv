@@ -2,8 +2,7 @@ import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { PeriodsCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/PeriodsCell'
 
 import { ActionsCell } from '../Cells/ActionsCell'
-import { HighlightCell } from '../Cells/HighlightCell'
-import { StatusCell } from '../Cells/StatusCell'
+import { NameCell } from '../Cells/NameCell'
 import { TagsCell } from '../Cells/TagsCell'
 import { ThemesCell } from '../Cells/ThemesCells'
 import { ValidationDateCell } from '../Cells/ValidationDateCell'
@@ -12,7 +11,7 @@ import { VisibilityCell } from '../Cells/VisibilityCell'
 export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = false) => [
   {
     accessorFn: row => row.name,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <HighlightCell text={info.getValue()} />),
+    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <NameCell vigilanceArea={row.original} />),
     enableSorting: true,
     header: () => 'Nom de la zone',
     id: 'name',
@@ -57,14 +56,6 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     header: () => 'Validée le',
     id: 'validatedAt',
     size: 172 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.isDraft,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <StatusCell isDraft={info.getValue()} />),
-    enableSorting: true,
-    header: () => 'Statut',
-    id: 'isDraft',
-    size: 133 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.visibility,
