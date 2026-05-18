@@ -132,7 +132,8 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                     edition_cacem timestamp,
                     observation text,
                     editeur varchar,
-                    source varchar
+                    source varchar,
+                    row_hash varchar
                 )
                 ON COMMIT DROP;"""
             )
@@ -146,6 +147,7 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
             "observation",
             "editeur",
             "source",
+            "row_hash",
         ]
 
         logger.info("Loading to temporary table")
@@ -169,7 +171,8 @@ def update_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                 edition_cacem = tmp.edition_cacem,
                 observation = tmp.observation,
                 editeur = tmp.editeur,
-                source = tmp.source
+                source = tmp.source,
+                row_hash = tmp.row_hash
                 FROM tmp_regulatory_areas tmp
                 WHERE reg.id = tmp.id;
                 """
