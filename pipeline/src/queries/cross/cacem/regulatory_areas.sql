@@ -19,7 +19,11 @@ SELECT
   plan,
   authorization_periods,
   prohibition_periods,
-  additional_ref_reg
+  additional_ref_reg,
+  md5(
+    COALESCE(st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001))::text, '') ||
+    COALESCE(ref_reg::text, '')
+  ) AS row_hash
 FROM prod.reg_cacem
 WHERE 
   geom IS NOT NULL
