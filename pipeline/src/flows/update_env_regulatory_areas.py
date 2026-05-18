@@ -205,9 +205,10 @@ def update_env_regulatory_areas_flow():
 
     monitor_env_hashes = extract_regulatory_areas_hashes()
     cacem_hashes = extract_cacem_regulatory_areas_hashes()
-    outer_hashes = merge_hashes(cacem_hashes, monitor_env_hashes)
+    outer_hashes = merge_hashes(monitor_env_hashes, cacem_hashes)
     inner_merged = merge_hashes(cacem_hashes, monitor_env_hashes, "inner")
 
+    logger.info("outer_hashes : {outer_hashes}")
     ids_to_delete = select_ids_to_delete(outer_hashes)
     logger.info(f"Ids to delete: {ids_to_delete}")
     cond_delete = delete_required(ids_to_delete)
