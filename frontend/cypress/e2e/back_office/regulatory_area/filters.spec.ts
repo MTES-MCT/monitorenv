@@ -48,9 +48,10 @@ context('Back Office > Regulatory Area > Filters', () => {
   })
 
   it('should select a tag', () => {
-    cy.fill('Filtre tags et sous-tags', ['AMP'])
+    cy.fill('Filtre tags et sous-tags', ['Mixte'])
     cy.wait('@getRegulatoryAreas')
-    cy.get('span[title="RNN Iroise"]').should('be.visible')
+    cy.get('span[title="Interdiction VNM Molene"]').should('be.visible')
+    cy.get('span[title="Mouillage Conquet Ile de bannec"]').should('be.visible')
 
     // Reset
     cy.fill('Filtre tags et sous-tags', undefined)

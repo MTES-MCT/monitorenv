@@ -64,7 +64,7 @@ describe('Edit Vigilance Area', () => {
     cy.fill('Filtre tags et sous-tags', ['AMP', 'Dragage', 'Mixte'])
     cy.get('#root').click(1030, 490)
 
-    cy.clickButton("Ajouter la zone réglementaire Réglementation dans la réserve naturelle nationale d'Iroise")
+    cy.clickButton('Ajouter la zone réglementaire Réglementation sur la navigation')
     cy.clickButton('Ajouter la zone réglementaire Article 1')
     cy.getDataCy('regulatory-area-item').should('have.length', 2)
 
@@ -75,7 +75,7 @@ describe('Edit Vigilance Area', () => {
       const updatedVigilanceArea = request.body
       expect(response?.statusCode).equal(200)
 
-      expect(updatedVigilanceArea.linkedRegulatoryAreas[0]).equal(425)
+      expect(updatedVigilanceArea.linkedRegulatoryAreas[0]).equal(625)
       expect(updatedVigilanceArea.linkedRegulatoryAreas[1]).equal(134)
 
       cy.clickButton('Filtrer par type de zones')
@@ -89,7 +89,7 @@ describe('Edit Vigilance Area', () => {
 
       // Reset data
       cy.clickButton('Editer')
-      cy.clickButton('vigilance-area-delete-regulatory-area-425')
+      cy.clickButton('vigilance-area-delete-regulatory-area-625')
       cy.clickButton('vigilance-area-delete-regulatory-area-134')
 
       cy.clickButton('Enregistrer')
