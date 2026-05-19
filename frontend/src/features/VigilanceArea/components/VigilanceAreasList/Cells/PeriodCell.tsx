@@ -1,9 +1,10 @@
 import { Tooltip } from '@components/Tooltip'
-import { StyledPeriodCircle } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/PeriodsCell'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { computeVigilanceAreaPeriod, endingOccurenceText, frequencyText } from '@features/VigilanceArea/utils'
 import { Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
+
+import { BasePeriodCircle } from '../../VigilanceAreaForm/Periods/Periods'
 
 export function PeriodCell({ period }: { period: VigilanceArea.VigilanceAreaPeriod | undefined }) {
   return (
@@ -27,4 +28,8 @@ const StyledCell = styled.span`
   display: flex;
   align-items: center;
   gap: 8px;
+`
+
+const StyledPeriodCircle = styled(BasePeriodCircle)`
+  margin-right: 4px;
 `

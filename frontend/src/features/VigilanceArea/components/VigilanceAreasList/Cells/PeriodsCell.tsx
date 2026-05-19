@@ -1,33 +1,37 @@
-import { Tooltip } from '@components/Tooltip'
-import { BasePeriodCircle } from '@features/VigilanceArea/components/VigilanceAreaForm/Periods/Periods'
-import { PeriodCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/PeriodCell'
+import {
+  computeOccurenceWithinCurrentYear,
+  type DateRange
+} from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import { MonthBox } from './MonthBox'
+
 export function PeriodsCell({ periods }: { periods: VigilanceArea.VigilanceAreaPeriod[] | undefined }) {
+  const occurences = useMemo(
+    () =>
+      (periods ?? [])
+        .reduce((acc: DateRange[][], period) => {
+          acc.push(computeOccurenceWithinCurrentYear(period))
+
+          return acc
+        }, [])
+        .flat(),
+    [periods]
+  )
+
   if (!periods || periods.length === 0) {
     return <span>-</span>
   }
-  const hasSimplePeriod = periods.some(period => !period.isCritical)
-  const hasCriticalPeriod = periods.some(period => period.isCritical)
 
   return (
     <StyledCell>
-      {periods.length > 1 && (
-        <StyledCell>
-          <div>
-            {hasSimplePeriod && <StyledPeriodCircle $isCritical={false} />}
-            {hasCriticalPeriod && <StyledPeriodCircle $isCritical />}
-          </div>
-          Périodes multiples{' '}
-          <StyledTooltip isSideWindow>
-            {periods.map(period => (
-              <PeriodCell key={period.id} period={period} />
-            ))}
-          </StyledTooltip>
-        </StyledCell>
-      )}
-      {periods.length === 1 && <PeriodCell period={periods[0]} />}
+      <PlanningWrapper>
+        {[...Array(12).keys()].map(index => (
+          <MonthBox key={index} dateRanges={occurences} monthIndex={index} />
+        ))}
+      </PlanningWrapper>
     </StyledCell>
   )
 }
@@ -38,13 +42,9 @@ const StyledCell = styled.span`
   gap: 8px;
 `
 
-export const StyledPeriodCircle = styled(BasePeriodCircle)`
-  margin-right: 4px;
-`
-
-const StyledTooltip = styled(Tooltip)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
+const PlanningWrapper = styled.ol`
+  color: ${p => p.theme.color.slateGray};
+  column-gap: 2px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
 `
