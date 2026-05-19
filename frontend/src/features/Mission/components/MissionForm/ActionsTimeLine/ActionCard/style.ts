@@ -87,7 +87,7 @@ export const ActionSummaryWrapper = styled(TransparentButton)<{
 
 export const ContentContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+
   flex-direction: row;
   gap: 8px;
 `
@@ -126,7 +126,7 @@ export const NoteContent = styled.div`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
-  flex: 1;
+  width: 75%;
 `
 
 export const ButtonsWrapper = styled.div`

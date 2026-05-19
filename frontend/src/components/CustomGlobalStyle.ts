@@ -15,6 +15,7 @@ export const CustomGlobalStyle = createGlobalStyle`
   html,
   #root {
     height: 100%;
+    font-size: 13px;
   }
 
 
