@@ -8,7 +8,7 @@ export function VisibilityCell({ visibility }: { visibility: VigilanceArea.Visib
   }
 
   return visibility === VigilanceArea.Visibility.PRIVATE ? (
-    <StyledTag accent={Accent.TERTIARY} Icon={Icon.Unlock}>
+    <StyledTag accent={Accent.TERTIARY} Icon={Icon.Lock}>
       Confidentiel
     </StyledTag>
   ) : (
@@ -18,4 +18,9 @@ export function VisibilityCell({ visibility }: { visibility: VigilanceArea.Visib
 
 const StyledTag = styled(Tag)`
   font-style: normal;
+  > span > svg {
+    height: 14px;
+    margin-top: 3px;
+    width: 14px;
+  }
 `
