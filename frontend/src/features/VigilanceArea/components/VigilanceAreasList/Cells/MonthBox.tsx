@@ -59,7 +59,7 @@ export function MonthBox({ dateRanges, monthIndex }: MonthBoxProps) {
   )
 }
 
-const Box = styled.div`
+const Box = styled.li`
   background-color: ${p => p.theme.color.white};
 
   display: grid;
