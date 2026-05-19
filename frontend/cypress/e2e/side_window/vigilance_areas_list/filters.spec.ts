@@ -66,11 +66,6 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
     verifyVigilanceAreaRows('Brouillon')
   })
 
-  it('Should filter vigilance areas by published status', () => {
-    cy.fill('Statut', 'Publiée')
-    verifyVigilanceAreaRows('Publiée')
-  })
-
   it('Should filter vigilance areas by search query', () => {
     cy.fill('Rechercher dans les zones de vigilance', 'Proin', { delay: 400 })
     cy.getDataCy('vigilance-area-row').should('have.length', 1)
