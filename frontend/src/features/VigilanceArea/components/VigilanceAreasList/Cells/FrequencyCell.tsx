@@ -1,8 +1,8 @@
 import { VigilanceArea } from '@features/VigilanceArea/types'
-import { computeVigilanceAreaPeriod, frequencyText } from '@features/VigilanceArea/utils'
+import { computeVigilanceAreaPeriod } from '@features/VigilanceArea/utils'
 import styled from 'styled-components'
 
-import { StyledPeriodCircle } from './PeriodsCell'
+import { BasePeriodCircle } from '../../VigilanceAreaForm/Periods/Periods'
 
 export function FrequencyCell({ periods }: { periods: VigilanceArea.VigilanceAreaPeriod[] | undefined }) {
   if (!periods || periods.length === 0) {
@@ -11,19 +11,6 @@ export function FrequencyCell({ periods }: { periods: VigilanceArea.VigilanceAre
 
   const simpleVigilanceAreaPeriods = periods.filter(period => !period.isCritical)
   const criticalVigilanceAreaPeriods = periods.filter(period => period.isCritical)
-
-  if (periods.length === 1) {
-    if (periods[0]?.frequency === VigilanceArea.Frequency.NONE || periods[0]?.isAtAllTimes) {
-      return undefined
-    }
-
-    return (
-      <PeriodWrapper>
-        <Title>Récurrence</Title>
-        <span>{frequencyText(periods[0]?.frequency)}</span>
-      </PeriodWrapper>
-    )
-  }
 
   return (
     <Wrapper>
@@ -74,4 +61,8 @@ const PeriodWrapper = styled.span`
 `
 const Title = styled.span`
   color: ${p => p.theme.color.slateGray};
+`
+
+const StyledPeriodCircle = styled(BasePeriodCircle)`
+  margin-right: 4px;
 `

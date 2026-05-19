@@ -4,10 +4,11 @@ import styled from 'styled-components'
 import { MonthBox } from './MonthBox'
 
 type PlanningProps = {
+  isInline?: boolean
   occurences: DateRange[]
 }
 
-const MonthPlanner = [
+export const MonthPlanner = [
   { index: 0, label: 'Janvier' },
   { index: 1, label: 'Février' },
   { index: 2, label: 'Mars' },
@@ -22,28 +23,26 @@ const MonthPlanner = [
   { index: 11, label: 'Déc.' }
 ]
 
-export function Planning({ occurences }: PlanningProps) {
+export function Planning({ isInline = false, occurences }: PlanningProps) {
   return (
-    <PlanningWrapper>
+    <PlanningWrapper $isInline={isInline}>
       {MonthPlanner.map(({ index, label }) => (
         <li key={index}>
-          <MonthBox dateRanges={occurences} label={label} monthIndex={index} />
+          <MonthBox dateRanges={occurences} isInline={isInline} label={label} monthIndex={index} />
         </li>
       ))}
     </PlanningWrapper>
   )
 }
 
-const PlanningWrapper = styled.ol`
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  column-gap: 10px;
-
-  font-size: 11px;
+const PlanningWrapper = styled.ol<{ $isInline: boolean }>`
+  border-bottom: ${p => (p.$isInline ? '0px' : `1px solid ${p.theme.color.lightGray}`)};
   color: ${p => p.theme.color.slateGray};
-
-  padding-bottom: 16px;
-  border-bottom: 1px solid ${p => p.theme.color.lightGray};
+  column-gap: 10px;
+  display: grid;
+  font-size: 11px;
+  grid-template-columns: ${({ $isInline }) => ($isInline ? 'repeat(12, 1fr)' : 'repeat(6, 1fr)')};
+  padding-bottom: ${({ $isInline }) => ($isInline ? '0px' : '16px')};
 
   > li {
     width: fit-content;

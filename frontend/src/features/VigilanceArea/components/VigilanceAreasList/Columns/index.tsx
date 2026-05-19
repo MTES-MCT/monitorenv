@@ -23,7 +23,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Période(s) de vigilance',
     id: 'periods',
-    size: 210 + legacyFirefoxOffset
+    size: 220 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.themes,

@@ -5,11 +5,12 @@ import type { DateRange } from '@features/VigilanceArea/components/VigilanceArea
 
 type MonthBoxProps = {
   dateRanges: DateRange[]
+  isInline?: boolean
   label: string
   monthIndex: number
 }
 
-export function MonthBox({ dateRanges, label, monthIndex }: MonthBoxProps) {
+export function MonthBox({ dateRanges, isInline = false, label, monthIndex }: MonthBoxProps) {
   const isCurrentMonth = customDayjs().utc().month() === monthIndex
   const month = customDayjs().utc().set('month', monthIndex)
 
@@ -52,9 +53,9 @@ export function MonthBox({ dateRanges, label, monthIndex }: MonthBoxProps) {
 
   return (
     <>
-      <Label $isBold={isCurrentMonth}>{label}</Label>
+      {!isInline && <Label $isBold={isCurrentMonth}>{label}</Label>}
       <Wrapper>
-        <Box $dayInMonth={daysInMonth}>
+        <Box $dayInMonth={daysInMonth} $isInline={isInline}>
           {days.map(day => (
             <DayBox
               key={day}
@@ -66,7 +67,7 @@ export function MonthBox({ dateRanges, label, monthIndex }: MonthBoxProps) {
           ))}
           {isCurrentMonth && <BackgroundBox />}
         </Box>
-        {isCurrentMonth && (
+        {isCurrentMonth && !isInline && (
           <IconWrapper>
             <StyledIcon />
           </IconWrapper>
@@ -90,12 +91,12 @@ const Label = styled.span<{ $isBold: boolean }>`
   ${p => p.$isBold && `font-weight: 700; color:${p.theme.color.charcoal}`}
 `
 
-const Box = styled.div<{ $dayInMonth: number }>`
+const Box = styled.div<{ $dayInMonth: number; $isInline: boolean }>`
   display: grid;
   grid-template-columns: repeat(${({ $dayInMonth }) => $dayInMonth}, 1fr);
   border: 1px solid ${p => p.theme.color.gainsboro};
-  width: 52px;
-  height: 26px;
+  width: ${p => (p.$isInline ? '14px' : '52px')};
+  height: ${p => (p.$isInline ? '14px' : '26px')};
   position: relative;
   margin-top: 4px;
 `
