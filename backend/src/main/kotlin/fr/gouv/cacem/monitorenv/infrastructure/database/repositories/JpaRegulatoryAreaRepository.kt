@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
@@ -17,6 +18,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRegulatoryAreaRepository
 import org.locationtech.jts.geom.Geometry
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -38,32 +41,27 @@ class JpaRegulatoryAreaRepository(
             ?.toRegulatoryArea(mapper = mapper, group = group)
     }
 
+    @Cacheable(
+        value = ["regulatory_areas_tiles"],
+        key = "#z + '-' + #x + '-' + #y + '-' + #filters.hashCode()",
+    )
     override fun findAllTiles(
-        controlPlan: String?,
-        query: String?,
-        seaFronts: List<String>?,
-        tags: List<Int>?,
-        themes: List<Int>?,
-        onlyRecentsAreas: Boolean?,
+        filters: SearchFilters?,
         x: Int,
         y: Int,
         z: Int,
     ): ByteArray =
         dbRegulatoryAreaRepository.findAllAsTiles(
-            controlPlan,
-            seaFronts?.toTypedArray(),
-            tags?.toTypedArray(),
-            themes?.toTypedArray(),
-            onlyRecentsAreas,
-            x,
-            y,
-            z,
+            controlPlan = filters?.controlPlan,
+            seaFronts = filters?.seaFronts?.toTypedArray(),
+            tags = filters?.tags?.toTypedArray(),
+            themes = filters?.themes?.toTypedArray(),
+            onlyRecentsAreas = filters?.onlyRecentsAreas,
+            query = filters?.query,
+            x = x,
+            y = y,
+            z = z,
         )
-
-    override fun findAllLayerNames(): Map<String, Long> =
-        dbRegulatoryAreaRepository.findAllLayerNames().associate { row ->
-            row[0] as String to row[1] as Long
-        }
 
     override fun findAllByIds(
         ids: List<Int>,
@@ -90,6 +88,7 @@ class JpaRegulatoryAreaRepository(
     override fun findAllIdsByGeometry(geometry: Geometry): List<Int> =
         dbRegulatoryAreaRepository.findAllIdsByGeom(geometry)
 
+    @CacheEvict(value = ["regulatory_areas_tiles"], allEntries = true)
     @Transactional
     override fun save(regulatoryArea: RegulatoryAreaEntity): RegulatoryAreaEntity {
         val model = RegulatoryAreaModel.fromRegulatoryAreaEntity(regulatoryArea, mapper)

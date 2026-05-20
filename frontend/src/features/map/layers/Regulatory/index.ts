@@ -53,7 +53,7 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
     return regulatoryLayers.reduce<Feature<Geometry>[]>((acc, regulatoryArea) => {
       if (regulatoryArea) {
         const feature = getRegulatoryFeature({
-          code: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code,
+          code: Layers.REGULATORY_ENV.code,
           isolatedLayer,
           layer: regulatoryArea
         })
