@@ -1,3 +1,4 @@
+import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -19,6 +20,10 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
+  const isolatedLayerRef = useRef(isolatedLayer)
+  const regulatoryMetadataLayerIdRef = useRef(regulatoryMetadataLayerId)
 
   const { areRecentsAreasChecked, controlPlan, filteredRegulatoryTags, filteredRegulatoryThemes, globalSearchText } =
     useAppSelector(state => state.layerSearch)
@@ -56,10 +61,17 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       renderBuffer: 4,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: regulatoryPreviewVectorSourceRef.current,
-      style: getRegulatoryLayerStyle
+      style: feature => getRegulatoryLayerStyle(feature, isolatedLayerRef.current, regulatoryMetadataLayerIdRef.current)
     })
   ) as MutableRefObject<VectorTileLayerWithName>
   regulatoryPreviewVectorLayerRef.current.name = Layers.REGULATORY_ENV_PREVIEW.code
+
+  useEffect(() => {
+    isolatedLayerRef.current = isolatedLayer
+    regulatoryMetadataLayerIdRef.current = regulatoryMetadataLayerId
+    // force le re-rendu du layer
+    regulatoryPreviewVectorLayerRef.current.changed()
+  }, [isolatedLayer, regulatoryMetadataLayerId])
 
   useEffect(() => {
     if (!map) {
@@ -67,12 +79,11 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     }
 
     const newSource = new VectorTileSource({
-      format: new MVT({ idProperty: 'id' }),
+      format: new MVT({ idProperty: 'uid' }),
       url: getQueryString('/bff/v1/regulatory-areas/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : apiFilters)
     })
 
     regulatoryPreviewVectorSourceRef.current = newSource
-    regulatoryPreviewVectorLayerRef.current.name = Layers.REGULATORY_ENV_PREVIEW.code
     regulatoryPreviewVectorLayerRef.current.setSource(newSource)
   }, [apiFilters, hasNoFilters, map])
 

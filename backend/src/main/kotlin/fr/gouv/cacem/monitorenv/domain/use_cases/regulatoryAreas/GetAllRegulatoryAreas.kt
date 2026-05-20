@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import org.slf4j.LoggerFactory
 
@@ -11,24 +12,12 @@ class GetAllRegulatoryAreas(
 ) {
     private val logger = LoggerFactory.getLogger(GetAllRegulatoryAreas::class.java)
 
-    fun execute(
-        controlPlan: String?,
-        searchQuery: String?,
-        seaFronts: List<String>?,
-        tags: List<Int>?,
-        themes: List<Int>?,
-        onlyRecentsAreas: Boolean? = false,
-    ): AllRegulatoryAreasAndTotal {
+    fun execute(filters: SearchFilters): AllRegulatoryAreasAndTotal {
         logger.info("Attempt to GET all regulatory areas")
 
         val allAreas =
             regulatoryAreaRepository.findAll(
-                controlPlan = controlPlan,
-                query = searchQuery,
-                seaFronts = seaFronts,
-                tags = tags,
-                themes = themes,
-                onlyRecentsAreas = onlyRecentsAreas,
+                filters = filters,
             )
 
         val totalCount = allAreas.size.toLong()

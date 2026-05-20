@@ -1,14 +1,32 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.*
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasTiles
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.*
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.LayerNamesDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaToCompleteDataOuput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasWithTotalDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 @RestController("regulatoryAreas")
 @RequestMapping("/bff/v1/regulatory-areas")
@@ -46,12 +64,15 @@ class RegulatoryAreas(
     ): RegulatoryAreasWithTotalDataOutput {
         val (regulatoryAreasGrouped, totalCount) =
             getAllRegulatoryAreas.execute(
-                controlPlan = controlPlan,
-                searchQuery = searchQuery,
-                seaFronts = seaFronts,
-                tags = tags,
-                themes = themes,
-                onlyRecentsAreas = onlyRecentsAreas,
+                filters =
+                    SearchFilters(
+                        controlPlan = controlPlan,
+                        query = searchQuery,
+                        seaFronts = seaFronts,
+                        tags = tags,
+                        themes = themes,
+                        onlyRecentsAreas = onlyRecentsAreas,
+                    ),
             )
 
         val groupedDto =
@@ -89,12 +110,15 @@ class RegulatoryAreas(
         @PathVariable z: Int,
     ): ByteArray =
         getAllRegulatoryAreasTiles.execute(
-            controlPlan = controlPlan,
-            searchQuery = searchQuery,
-            seaFronts = seaFronts,
-            tags = tags,
-            themes = themes,
-            onlyRecentsAreas = onlyRecentsAreas,
+            filters =
+                SearchFilters(
+                    controlPlan = controlPlan,
+                    query = searchQuery,
+                    seaFronts = seaFronts,
+                    tags = tags,
+                    themes = themes,
+                    onlyRecentsAreas = onlyRecentsAreas,
+                ),
             x = x,
             y = y,
             z = z,

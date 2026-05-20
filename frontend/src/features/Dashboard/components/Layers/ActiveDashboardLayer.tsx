@@ -13,7 +13,7 @@ import { Layers } from 'domain/entities/layers/constants'
 import { Feature } from 'ol'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { dashboardIcon, getDashboardStyle } from './style'
 import { Dashboard } from '../../types'
