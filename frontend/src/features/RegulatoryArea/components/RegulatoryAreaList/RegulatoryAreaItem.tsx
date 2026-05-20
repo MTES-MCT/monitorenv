@@ -37,12 +37,12 @@ export function RegulatoryAreaItem({
         openedRegulatoryAreaId === regulatoryArea.id ? undefined : regulatoryArea.id
       )
     )
-    if (!regulatoryArea?.bbox) {
+    if (!regulatoryArea?.extent) {
       return
     }
 
     const extent = transformExtent(
-      regulatoryArea?.bbox,
+      regulatoryArea?.extent,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )
@@ -57,7 +57,7 @@ export function RegulatoryAreaItem({
       }
     )
     const extent = transformExtent(
-      regulatoryArea?.bbox,
+      regulatoryArea?.extent,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )

@@ -1,6 +1,6 @@
 import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
 import { FrontendApiError } from '@libs/FrontendApiError'
-import { type EntityState, createEntityAdapter, createSelector, type EntityId } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSelector, type EntityId, type EntityState } from '@reduxjs/toolkit'
 import { boundingExtent, createEmpty } from 'ol/extent'
 import { createCachedSelector } from 're-reselect'
 
@@ -21,11 +21,11 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
       query: id => `/v1/amps/${id}`,
       transformErrorResponse: response => new FrontendApiError(GET_AMP_ERROR_MESSAGE, response),
       transformResponse: (response: AMPFromAPI) => {
-        const bbox = boundingExtent(response.geom.coordinates.flat().flat() as Coordinate[])
+        const extent = boundingExtent(response.geom.coordinates.flat().flat() as Coordinate[])
 
         return {
           ...response,
-          bbox
+          extent
         }
       }
     }),
@@ -36,11 +36,11 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
         AMPAdapter.setAll(
           initialState,
           response.map(amp => {
-            const bbox = boundingExtent(amp.geom.coordinates.flat().flat() as Coordinate[])
+            const extent = boundingExtent(amp.geom.coordinates.flat().flat() as Coordinate[])
 
             return {
               ...amp,
-              bbox
+              extent
             }
           })
         )
