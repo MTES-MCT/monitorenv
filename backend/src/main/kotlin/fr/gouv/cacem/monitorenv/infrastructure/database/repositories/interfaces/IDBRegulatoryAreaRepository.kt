@@ -40,7 +40,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
             SELECT ST_AsMVT(tile, 'REGULATORY_ENV_PREVIEW', 4096, 'geom')
             FROM (
                 WITH filtered_regs AS (
-                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, ST_Area(geom_3857) AS area
+                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, reg.layer_name, ST_Area(geom_3857) AS area
                     FROM regulatory_areas reg
                     LEFT JOIN themes_regulatory_areas thr ON reg.id = thr.regulatory_areas_id
                     LEFT JOIN tags_regulatory_areas tr ON reg.id = tr.regulatory_areas_id
@@ -49,13 +49,24 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                      AND (:controlPlan IS NULL OR plan LIKE CONCAT('%', :controlPlan, '%'))
                      AND (CAST(:themes as int[]) IS NULL OR thr.themes_id = ANY(CAST(:themes as int[])))
                      AND (CAST(:tags as int[]) IS NULL OR tr.tags_id = ANY(CAST(:tags as int[])))
-                    ),
+                     AND (:query IS NULL 
+                        OR UNACCENT(UPPER(poly_name)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
+                        OR UNACCENT(UPPER(layer_name)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
+                        OR UNACCENT(UPPER(ref_reg)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
+                        OR UNACCENT(UPPER(resume)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
+                        )
+                    AND (:onlyRecentsAreas IS FALSE OR (
+                        reg.creation >= CURRENT_TIMESTAMP - INTERVAL '30 days'
+                        OR reg.edition_bo >= CURRENT_TIMESTAMP - INTERVAL '30 days'
+                        OR reg.edition_cacem >= CURRENT_TIMESTAMP - INTERVAL '30 days'
+                        )
+                    )),
                     tags_agg AS (
-                        SELECT 
+                        SELECT
                             tr.regulatory_areas_id,
                             STRING_AGG(DISTINCT
-                                CASE 
-                                    WHEN subtag.id IS NOT NULL 
+                                CASE
+                                    WHEN subtag.id IS NOT NULL
                                     THEN t.name || ',' || subtag.name
                                     ELSE t.name
                                 END
@@ -67,14 +78,16 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                         GROUP BY tr.regulatory_areas_id
                     )
                 SELECT
-                    CONCAT('REGULATORY_ENV_PREVIEW:', filtered_regs.id) as id,
+                    filtered_regs.id as id,
+                    CONCAT('REGULATORY_ENV_PREVIEW:', filtered_regs.id) as uid,
                     filtered_regs.area,
                     filtered_regs.poly_name AS polyname,
+                    filtered_regs.layer_name AS layername,
                     filtered_regs.resume,
                     filtered_regs.plan,
                     ST_AsMVTGeom(filtered_regs.geom_3857, ST_TileEnvelope(:z, :x, :y), 4096, 64, true) AS geom,
-                    true AS isFilled,
-                    tags_agg.tags
+                    tags_agg.tags,
+                    true AS isFilled
                 FROM filtered_regs
                 LEFT JOIN tags_agg ON tags_agg.regulatory_areas_id = filtered_regs.id
             ) AS tile
@@ -88,6 +101,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         tags: Array<Int>? = null,
         themes: Array<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
+        query: String? = null,
         x: Int,
         y: Int,
         z: Int,
