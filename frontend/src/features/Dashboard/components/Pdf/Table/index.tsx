@@ -95,7 +95,7 @@ export function AreaTable({
 }: {
   amps: AMPFromAPI[]
   image: ExportImageType | undefined
-  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
   vigilanceAreas: Dashboard.VigilanceAreaWithImages[]
 }) {
   const groupedRegulatoryAreas = groupConsecutiveByLayerName(regulatoryAreas)

@@ -18,7 +18,10 @@ import type { OverlayItem } from 'domain/types/map'
 export function PinnedOverlay({
   items
 }: {
-  items: OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox>[]
+  items: OverlayItem<
+    RegulatoryOrAMPOrViglanceAreaLayerType,
+    AMPProperties | RegulatoryArea.RegulatoryAreaTilesProperties
+  >[]
 }) {
   const ref = useRef<HTMLDivElement>(null)
 

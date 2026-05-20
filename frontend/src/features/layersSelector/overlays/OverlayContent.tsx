@@ -35,7 +35,7 @@ type OverlayContentProps = {
   items:
     | OverlayItem<
         RegulatoryOrAMPOrViglanceAreaLayerType,
-        AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties
+        AMPProperties | RegulatoryArea.RegulatoryAreaTilesProperties | VigilanceArea.VigilanceAreaProperties
       >[]
     | undefined
 }
@@ -136,7 +136,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
     dispatch(
       mapActions.setIsolateMode({
         id,
-        isFilled: true,
+        isfilled: true,
         type
       })
     )
@@ -153,7 +153,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
     dispatch(
       mapActions.setIsolateMode({
         ...isolatedLayer,
-        isFilled: !isolatedLayer.isFilled
+        isfilled: !isolatedLayer.isfilled
       })
     )
   }
@@ -204,7 +204,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
           const { periods } = item.properties as VigilanceArea.VigilanceAreaProperties
 
-          const isIsolatedLayerFilled = isolatedLayer?.id === id && isolatedLayer?.isFilled
+          const isIsolatedLayerFilled = isolatedLayer?.id === id && isolatedLayer?.isfilled
 
           return (
             <LayerItem

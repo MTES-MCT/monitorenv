@@ -54,6 +54,9 @@ class RegulatoryAreasITests {
     private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
 
     @MockitoBean
+    private lateinit var getAllRegulatoryAreasTiles: GetAllRegulatoryAreasTiles
+
+    @MockitoBean
     private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
 
     @MockitoBean

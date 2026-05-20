@@ -22,7 +22,7 @@ export function RegulatoryAreas({
   regulatoryAreas
 }: {
   images: ExportImageType[]
-  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
 }) {
   return (
     <>

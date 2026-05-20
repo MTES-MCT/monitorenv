@@ -17,7 +17,7 @@ const persistConfig = {
 
 export type IsolatedLayerType = {
   id: number
-  isFilled: boolean
+  isfilled: boolean
   type: RegulatoryOrAMPOrViglanceAreaLayerType
 }
 
