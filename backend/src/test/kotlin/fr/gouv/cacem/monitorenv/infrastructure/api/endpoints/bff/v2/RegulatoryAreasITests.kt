@@ -16,6 +16,14 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAr
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasGroupById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryArea
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasTiles
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
@@ -131,11 +139,15 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = null,
-                    tags = null,
-                    themes = null,
+                    filters =
+                        SearchFilters(
+                            controlPlan = null,
+                            seaFronts = null,
+                            tags = null,
+                            themes = null,
+                            onlyRecentsAreas = null,
+                            query = null,
+                        ),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -318,11 +330,15 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = listOf("NAMO"),
-                    tags = null,
-                    themes = null,
+                    filters =
+                        SearchFilters(
+                            controlPlan = null,
+                            seaFronts = listOf("NAMO"),
+                            tags = null,
+                            themes = null,
+                            onlyRecentsAreas = null,
+                            query = null,
+                        ),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -352,11 +368,15 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = "Querlen",
-                    seaFronts = null,
-                    tags = null,
-                    themes = null,
+                    filters =
+                        SearchFilters(
+                            controlPlan = null,
+                            seaFronts = null,
+                            tags = null,
+                            themes = null,
+                            onlyRecentsAreas = null,
+                            query = "Querlen",
+                        ),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -379,11 +399,15 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = "NonExistent",
-                    seaFronts = null,
-                    tags = null,
-                    themes = null,
+                    filters =
+                        SearchFilters(
+                            controlPlan = null,
+                            seaFronts = null,
+                            tags = null,
+                            themes = null,
+                            onlyRecentsAreas = null,
+                            query = "NonExistent",
+                        ),
                 ),
             ).willReturn(Pair(emptyMap(), 0L))
 
@@ -402,11 +426,15 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = null,
-                    tags = listOf(5),
-                    themes = null,
+                    filters =
+                        SearchFilters(
+                            controlPlan = null,
+                            query = null,
+                            seaFronts = null,
+                            tags = listOf(5),
+                            themes = null,
+                            onlyRecentsAreas = null,
+                        ),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -431,11 +459,15 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = null,
-                    tags = null,
-                    themes = listOf(101),
+                    filters =
+                        SearchFilters(
+                            controlPlan = null,
+                            seaFronts = null,
+                            tags = null,
+                            themes = listOf(101),
+                            onlyRecentsAreas = null,
+                            query = null,
+                        ),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 

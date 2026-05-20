@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryAreaGroup
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
@@ -69,12 +70,15 @@ class RegulatoryAreas(
     ): RegulatoryAreasWithTotalDataOutput {
         val (regulatoryAreasGrouped, totalCount) =
             getAllRegulatoryAreas.execute(
-                controlPlan = controlPlan,
-                searchQuery = searchQuery,
-                seaFronts = seaFronts,
-                tags = tags,
-                themes = themes,
-                onlyRecentsAreas = onlyRecentsAreas,
+                filters =
+                    SearchFilters(
+                        controlPlan = controlPlan,
+                        query = searchQuery,
+                        seaFronts = seaFronts,
+                        tags = tags,
+                        themes = themes,
+                        onlyRecentsAreas = onlyRecentsAreas,
+                    ),
             )
 
         val groupedDto =
@@ -112,12 +116,15 @@ class RegulatoryAreas(
         @PathVariable z: Int,
     ): ByteArray =
         getAllRegulatoryAreasTiles.execute(
-            controlPlan = controlPlan,
-            searchQuery = searchQuery,
-            seaFronts = seaFronts,
-            tags = tags,
-            themes = themes,
-            onlyRecentsAreas = onlyRecentsAreas,
+            filters =
+                SearchFilters(
+                    controlPlan = controlPlan,
+                    query = searchQuery,
+                    seaFronts = seaFronts,
+                    tags = tags,
+                    themes = themes,
+                    onlyRecentsAreas = onlyRecentsAreas,
+                ),
             x = x,
             y = y,
             z = z,
