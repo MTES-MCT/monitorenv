@@ -5,7 +5,10 @@ import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 export const REQUIRED_FIELD = 'Ce champ est obligatoire'
 
 export const RegulatoryAreaFormSchema: Yup.Schema<
-  Omit<RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea, 'isNew' | 'isUpdatedRecently'>
+  Omit<
+    RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea,
+    'isNew' | 'isUpdatedRecently' | 'extent'
+  >
 > = Yup.object().shape({
   additionalRefReg: Yup.array().of(
     Yup.object().shape({

@@ -12,7 +12,7 @@ data class RegulatoryAreasDataOutput(
                 group = RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(regulatoryAreaGroup.group),
                 regulatoryAreas =
                     regulatoryAreaGroup.areas.map {
-                        RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it)
+                        RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it, withGeom = false)
                     },
             )
     }

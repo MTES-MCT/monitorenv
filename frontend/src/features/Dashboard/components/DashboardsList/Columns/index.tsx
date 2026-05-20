@@ -13,7 +13,7 @@ import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { ControlUnit } from '@mtes-mct/monitor-ui'
 
 export const Columns = (
-  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[],
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[],
   controlUnits: ControlUnit.ControlUnit[] | undefined,
   legacyFirefoxOffset: number = 0,
   isFetching: boolean = false

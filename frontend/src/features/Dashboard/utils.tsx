@@ -52,7 +52,7 @@ export async function populateExtractAreaFromApi(
 
 export const extractFeatures = (
   dashboard: Dashboard.Dashboard | undefined,
-  regulatoryLayers: RegulatoryArea.RegulatoryAreaWithBbox[] | undefined,
+  regulatoryLayers: RegulatoryArea.RegulatoryAreaFromAPI[] | undefined,
   ampLayers: EntityState<AMP, number> | undefined,
   vigilanceAreas: EntityState<VigilanceArea.VigilanceAreaLayer, number> | undefined
 ) => {
@@ -62,7 +62,7 @@ export const extractFeatures = (
   if (dashboard?.regulatoryAreaIds) {
     dashboard.regulatoryAreaIds.forEach(layerId => {
       const layer = regulatoryLayers?.find(reg => reg.id === layerId)
-      if (layer?.geom?.coordinates.length) {
+      if (layer?.extent) {
         const feature = getRegulatoryFeature({
           code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
           isolatedLayer: undefined,
@@ -79,7 +79,7 @@ export const extractFeatures = (
   if (dashboard?.ampIds) {
     dashboard.ampIds.forEach(layerId => {
       const layer = ampLayers?.entities[layerId]
-      if (layer?.geom?.coordinates.length) {
+      if (layer?.extent) {
         const feature = getAMPFeature({
           code: Dashboard.featuresCode.DASHBOARD_AMP,
           isolatedLayer: undefined,

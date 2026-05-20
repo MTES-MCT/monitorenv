@@ -33,7 +33,7 @@ export function MyLayerGroup({
   groupName: string
   hasNewLayers?: boolean
   hasRecentlyUpdatedLayers?: boolean
-  layers: AMP[] | RegulatoryArea.RegulatoryAreaWithBbox[]
+  layers: AMP[] | RegulatoryArea.RegulatoryAreaFromAPI[]
   name: string
   onRemoveZone: (event) => void
   setTotalNumberOfZones: (totalNumberOfZones: number) => void
