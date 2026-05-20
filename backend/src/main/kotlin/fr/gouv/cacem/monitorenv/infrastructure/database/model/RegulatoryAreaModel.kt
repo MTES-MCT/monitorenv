@@ -3,12 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.Type
 import org.locationtech.jts.geom.MultiPolygon
@@ -68,15 +63,19 @@ data class RegulatoryAreaModel(
         RegulatoryAreaEntity(
             id = id,
             creation = creation?.atZone(ZoneOffset.UTC),
-            plan = plan,
             date = date?.atZone(ZoneOffset.UTC),
             dateFin = dateFin?.atZone(ZoneOffset.UTC),
             editeur = editeur,
             editionBo = editionBo?.atZone(ZoneOffset.UTC),
             editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
-            facade = facade,
+            extent =
+                geom?.envelopeInternal?.let {
+                    doubleArrayOf(it.minX, it.minY, it.maxX, it.maxY)
+                },
             geom = geom,
+            facade = facade,
             layerName = layerName,
+            plan = plan,
             polyName = polyName,
             observation = observation,
             refReg = refReg,

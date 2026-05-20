@@ -49,6 +49,28 @@ class JpaRegulatoryAreaRepository(
             ).map { it.toRegulatoryArea(mapper) }
             .filter { findBySearchQuery(it, query) }
 
+    override fun findAllTiles(
+        controlPlan: String?,
+        query: String?,
+        seaFronts: List<String>?,
+        tags: List<Int>?,
+        themes: List<Int>?,
+        onlyRecentsAreas: Boolean?,
+        x: Int,
+        y: Int,
+        z: Int,
+    ): ByteArray =
+        dbRegulatoryAreaRepository.findAllAsTiles(
+            controlPlan,
+            seaFronts?.toTypedArray(),
+            tags?.toTypedArray(),
+            themes?.toTypedArray(),
+            onlyRecentsAreas,
+            x,
+            y,
+            z,
+        )
+
     override fun findAllLayerNames(): Map<String, Long> =
         dbRegulatoryAreaRepository.findAllLayerNames().associate { row ->
             row[0] as String to row[1] as Long

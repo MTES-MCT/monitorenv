@@ -24,7 +24,7 @@ export const getVigilanceAreaZoneFeature = (
 
   const isolatedLayerIsVigilanceArea = isolatedLayer?.type.includes('VIGILANCE_AREA') ?? false
   const isLayerFilled = isolatedLayer
-    ? isolatedLayerIsVigilanceArea && isolatedLayer?.id === vigilanceArea.id && isolatedLayer?.isFilled
+    ? isolatedLayerIsVigilanceArea && isolatedLayer?.id === vigilanceArea.id && isolatedLayer?.isfilled
     : true
 
   feature.setId(`${layername}:${vigilanceArea.id}`)
@@ -32,7 +32,7 @@ export const getVigilanceAreaZoneFeature = (
     area,
     ...vigilanceArea,
     geom: null,
-    isFilled: isLayerFilled,
+    isfilled: isLayerFilled,
     isSelected
   })
 
@@ -55,7 +55,7 @@ export const getFormattedGeomForFeature = (geom, vigilanceArea) => {
   feature.setProperties({
     area,
     ...vigilanceArea,
-    isFilled: true,
+    isfilled: true,
     ...(vigilanceArea && { isSelected: true }),
     geom: null
   })

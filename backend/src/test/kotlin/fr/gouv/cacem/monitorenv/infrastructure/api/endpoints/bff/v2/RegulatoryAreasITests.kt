@@ -5,12 +5,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.*
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
@@ -47,6 +42,9 @@ class RegulatoryAreasITests {
 
     @MockitoBean
     private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
+
+    @MockitoBean
+    private lateinit var getAllRegulatoryAreasTiles: GetAllRegulatoryAreasTiles
 
     @MockitoBean
     private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
