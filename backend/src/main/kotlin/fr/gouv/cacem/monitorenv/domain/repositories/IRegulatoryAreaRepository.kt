@@ -14,6 +14,18 @@ interface IRegulatoryAreaRepository {
         onlyRecentsAreas: Boolean? = false,
     ): List<RegulatoryAreaEntity>
 
+    fun findAllTiles(
+        controlPlan: String? = null,
+        query: String? = null,
+        seaFronts: List<String>? = null,
+        tags: List<Int>? = null,
+        themes: List<Int>? = null,
+        onlyRecentsAreas: Boolean? = false,
+        x: Int,
+        y: Int,
+        z: Int,
+    ): ByteArray
+
     fun findAllIdsByGeometry(geometry: Geometry): List<Int>
 
     fun findAllByIds(

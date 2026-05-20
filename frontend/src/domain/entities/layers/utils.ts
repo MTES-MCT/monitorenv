@@ -9,7 +9,10 @@ import type { AMPProperties } from 'domain/entities/AMPs'
 
 export const getTitle = (name?: string | undefined) => (name ? `${name?.replace(/[_]/g, ' ')}` : '')
 
-type GenericLayerType = AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties
+type GenericLayerType =
+  | AMPProperties
+  | RegulatoryArea.RegulatoryAreaTilesProperties
+  | VigilanceArea.VigilanceAreaProperties
 
 const isAMPLayer = (layerType: RegulatoryOrAMPOrViglanceAreaLayerType) =>
   layerType === MonitorEnvLayers.AMP ||
@@ -27,7 +30,7 @@ export const getGroupName = (layer: GenericLayerType, layerType: RegulatoryOrAMP
     return (layer as AMPProperties | VigilanceArea.VigilanceAreaProperties)?.name
   }
 
-  return (layer as RegulatoryArea.RegulatoryAreaWithBbox).layerName
+  return (layer as RegulatoryArea.RegulatoryAreaTilesProperties).layerName
 }
 
 export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
@@ -45,8 +48,8 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
 
     default:
       return getRegulatoryAreaTitle(
-        (layer as RegulatoryArea.RegulatoryAreaWithBbox)?.polyName,
-        (layer as RegulatoryArea.RegulatoryAreaWithBbox)?.resume
+        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyname,
+        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.resume
       )
   }
 }
@@ -66,8 +69,8 @@ export const getLegendKey = (layer: GenericLayerType, layerType: RegulatoryOrAMP
 
     default:
       return getRegulatoryAreaTitle(
-        (layer as RegulatoryArea.RegulatoryAreaWithBbox)?.polyName,
-        (layer as RegulatoryArea.RegulatoryAreaWithBbox)?.resume
+        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyname,
+        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.resume
       )
   }
 }
@@ -86,6 +89,6 @@ export const getLegendType = (layer: GenericLayerType, layerType: RegulatoryOrAM
       return (layer as VigilanceArea.VigilanceAreaProperties).name
 
     default:
-      return displayTags((layer as RegulatoryArea.RegulatoryAreaWithBbox).tags)
+      return (layer as RegulatoryArea.RegulatoryAreaTilesProperties).tags
   }
 }

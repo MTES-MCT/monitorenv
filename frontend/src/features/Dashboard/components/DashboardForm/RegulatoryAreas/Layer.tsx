@@ -7,7 +7,6 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
-import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef } from 'react'
@@ -18,13 +17,12 @@ import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { LayerName, StyledLayer } from '../style'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
-import type { Coordinate } from 'ol/coordinate'
 
 type RegulatoryLayerProps = {
   isPinned?: boolean
   isSelected: boolean
   layerId: number
-  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
 }
 
 export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }: RegulatoryLayerProps) {
@@ -42,11 +40,11 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
       dispatch(dashboardActions.removeItems(payload))
     } else {
       dispatch(dashboardActions.addItems(payload))
-      if (!layer?.bbox) {
+      if (!layer?.extent) {
         return
       }
       const extent = transformExtent(
-        layer?.bbox,
+        layer?.extent,
         new Projection({ code: WSG84_PROJECTION }),
         new Projection({ code: OPENLAYERS_PROJECTION })
       )
@@ -64,13 +62,11 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
     dispatch(
       dashboardActions.setDashboardPanel({ id: layerId, isPinned: isSelected, type: Dashboard.Block.REGULATORY_AREAS })
     )
-    if (!layer?.geom) {
+    if (!layer?.extent) {
       return
     }
-    const bbox = boundingExtent(layer.geom?.coordinates.flat().flat() as Coordinate[])
-
     const extent = transformExtent(
-      bbox,
+      layer?.extent,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )

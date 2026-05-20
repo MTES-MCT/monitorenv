@@ -12,7 +12,7 @@ import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLoading: boolean }) {
   const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasBySeaFront(state, apiFilters)) as Record<
     string,
-    Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
+    Record<string, RegulatoryArea.RegulatoryAreaFromAPI[]>
   >
 
   const allSeaFronts = Object.values(SeaFrontLabels).map(seaFrontLabel => seaFrontLabel.label)

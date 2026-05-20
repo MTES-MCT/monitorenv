@@ -1,13 +1,11 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { createSelector } from '@reduxjs/toolkit'
 import { getQueryString } from '@utils/getQueryStringFormatted'
-import { boundingExtent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { HomeRootState } from '@store/index'
-import type { Coordinate } from 'ol/coordinate'
 import type { StringDigit } from 'type-fest/source/internal'
 
 const GET_REGULATORY_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/les zones réglementaires"
@@ -29,18 +27,10 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       query: () => 'v1/regulatory-areas/layer-names',
       transformErrorResponse: response => new FrontendApiError(GET_LAYER_NAMES_ERROR_MESSAGE, response)
     }),
-    getRegulatoryAreaById: builder.query<RegulatoryArea.RegulatoryAreaWithBbox, number>({
+    getRegulatoryAreaById: builder.query<RegulatoryArea.RegulatoryAreaFromAPI, number>({
       providesTags: (_, __, id) => [{ id, type: 'RegulatoryAreas' }],
       query: id => `v1/regulatory-areas/${id}`,
-      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREA_ERROR_MESSAGE, response),
-      transformResponse: (response: RegulatoryArea.RegulatoryAreaFromAPI) => {
-        const bbox = boundingExtent(response.geom?.coordinates.flat().flat() as Coordinate[])
-
-        return {
-          ...response,
-          bbox
-        }
-      }
+      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREA_ERROR_MESSAGE, response)
     }),
     getRegulatoryAreas: builder.query<RegulatoryArea.RegulatoryAreasFromApi, Filters | void>({
       providesTags: result =>
@@ -55,20 +45,10 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
           : // an error occurred, but we still want to refetch this query when `{ type: 'RegulatoryAreas', id: 'LIST' }` is invalidated
             [{ id: 'LIST', type: 'RegulatoryAreas' }],
       query: filters => getQueryString('v1/regulatory-areas', filters),
-      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response),
-      transformResponse: (response: RegulatoryArea.RegulatoryAreasFromApi): RegulatoryArea.RegulatoryAreasFromApi => ({
-        regulatoryAreasByLayer: response.regulatoryAreasByLayer.map(group => ({
-          group: group.group,
-          regulatoryAreas: group.regulatoryAreas.map(area => ({
-            ...area,
-            bbox: boundingExtent(area.geom?.coordinates.flat().flat() as Coordinate[])
-          }))
-        })),
-        totalCount: response.totalCount
-      })
+      transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response)
     }),
     getRegulatoryAreasByIds: builder.query<
-      RegulatoryArea.RegulatoryAreaWithBbox[],
+      RegulatoryArea.RegulatoryAreaFromAPI[],
       RegulatoryArea.RegulatoryAreaByIdsForApi
     >({
       query: body => ({ body, method: 'POST', url: 'v1/regulatory-areas' }),
@@ -134,7 +114,7 @@ export const getRegulatoryAreasByControlPlan = createSelector(
       })
 
       return acc
-    }, {} as Record<RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM, Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>)
+    }, {} as Record<RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM, Record<string, RegulatoryArea.RegulatoryAreaFromAPI[]>>)
   }
 )
 
@@ -161,7 +141,7 @@ export const getRegulatoryAreasBySeaFront = createSelector(
       })
 
       return acc
-    }, {} as Record<StringDigit, Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>)
+    }, {} as Record<StringDigit, Record<string, RegulatoryArea.RegulatoryAreaFromAPI[]>>)
   }
 )
 
@@ -179,7 +159,7 @@ export const getSelectedRegulatoryAreas = createSelector(
     return (
       selectedRegulatoryLayerIds
         .map(id => flattenedRegulatoryAreas.find(area => area.id === id))
-        .filter((layer): layer is RegulatoryArea.RegulatoryAreaWithBbox => !!layer) ?? emptyArray
+        .filter((layer): layer is RegulatoryArea.RegulatoryAreaFromAPI => !!layer) ?? emptyArray
     )
   }
 )

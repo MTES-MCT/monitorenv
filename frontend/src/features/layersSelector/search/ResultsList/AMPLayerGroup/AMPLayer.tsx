@@ -57,11 +57,11 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
   }
 
   const fitToRegulatoryLayer = () => {
-    if (!layer?.bbox) {
+    if (!layer?.extent) {
       return
     }
     const extent = transformExtent(
-      layer?.bbox,
+      layer?.extent,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )

@@ -34,6 +34,65 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         onlyRecentsAreas: Boolean? = false,
     ): List<RegulatoryAreaModel>
 
+    @Query(
+        value =
+            """
+            SELECT ST_AsMVT(tile, 'REGULATORY_ENV_PREVIEW', 4096, 'geom')
+            FROM (
+                WITH filtered_regs AS (
+                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, ST_Area(geom_3857) AS area
+                    FROM regulatory_areas reg
+                    LEFT JOIN themes_regulatory_areas thr ON reg.id = thr.regulatory_areas_id
+                    LEFT JOIN tags_regulatory_areas tr ON reg.id = tr.regulatory_areas_id
+                    WHERE geom_3857 && ST_TileEnvelope(:z, :x, :y)
+                     AND (CAST(:seaFronts as text[]) IS NULL OR facade = ANY(CAST(:seaFronts as text[])))
+                     AND (:controlPlan IS NULL OR plan LIKE CONCAT('%', :controlPlan, '%'))
+                     AND (CAST(:themes as int[]) IS NULL OR thr.themes_id = ANY(CAST(:themes as int[])))
+                     AND (CAST(:tags as int[]) IS NULL OR tr.tags_id = ANY(CAST(:tags as int[])))
+                    ),
+                    tags_agg AS (
+                        SELECT 
+                            tr.regulatory_areas_id,
+                            STRING_AGG(DISTINCT
+                                CASE 
+                                    WHEN subtag.id IS NOT NULL 
+                                    THEN t.name || ',' || subtag.name
+                                    ELSE t.name
+                                END
+                            , ',') AS tags
+                        FROM tags_regulatory_areas tr
+                        JOIN tags t ON tr.tags_id = t.id
+                        LEFT JOIN tags subtag ON subtag.parent_id = t.id
+                        WHERE tr.regulatory_areas_id IN (SELECT id FROM filtered_regs)
+                        GROUP BY tr.regulatory_areas_id
+                    )
+                SELECT
+                    CONCAT('REGULATORY_ENV_PREVIEW:', filtered_regs.id) as id,
+                    filtered_regs.area,
+                    filtered_regs.poly_name AS polyname,
+                    filtered_regs.resume,
+                    filtered_regs.plan,
+                    ST_AsMVTGeom(filtered_regs.geom_3857, ST_TileEnvelope(:z, :x, :y), 4096, 64, true) AS geom,
+                    true AS isFilled,
+                    tags_agg.tags
+                FROM filtered_regs
+                LEFT JOIN tags_agg ON tags_agg.regulatory_areas_id = filtered_regs.id
+            ) AS tile
+            WHERE geom IS NOT NULL
+        """,
+        nativeQuery = true,
+    )
+    fun findAllAsTiles(
+        controlPlan: String? = null,
+        seaFronts: Array<String>? = null,
+        tags: Array<Int>? = null,
+        themes: Array<Int>? = null,
+        onlyRecentsAreas: Boolean? = false,
+        x: Int,
+        y: Int,
+        z: Int,
+    ): ByteArray
+
     fun findAllByCreationIsNull(): List<RegulatoryAreaModel>
 
     @Query(
