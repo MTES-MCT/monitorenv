@@ -10,12 +10,11 @@ import styled from 'styled-components'
 
 type MonthBoxProps = {
   dateRanges: DateRange[]
-  isInline?: boolean
   label: string
   monthIndex: number
 }
 
-export function MonthBox({ dateRanges, isInline = false, label, monthIndex }: MonthBoxProps) {
+export function MonthBox({ dateRanges, label, monthIndex }: MonthBoxProps) {
   const isCurrentMonth = customDayjs().utc().month() === monthIndex
   const month = customDayjs().utc().set('month', monthIndex)
 
@@ -24,9 +23,9 @@ export function MonthBox({ dateRanges, isInline = false, label, monthIndex }: Mo
 
   return (
     <>
-      {!isInline && <Label $isBold={isCurrentMonth}>{label}</Label>}
+      <Label $isBold={isCurrentMonth}>{label}</Label>
       <Wrapper>
-        <Box $dayInMonth={daysInMonth} $isInline={isInline}>
+        <Box $dayInMonth={daysInMonth}>
           {days.map(day => {
             const isInPeriod = isDayInPeriod(day, month, dateRanges)
             const isCritical = isDayInCriticalPeriod(day, month, dateRanges)
@@ -43,7 +42,7 @@ export function MonthBox({ dateRanges, isInline = false, label, monthIndex }: Mo
           })}
           {isCurrentMonth && <BackgroundBox />}
         </Box>
-        {isCurrentMonth && !isInline && (
+        {isCurrentMonth && (
           <IconWrapper>
             <StyledIcon />
           </IconWrapper>
@@ -67,12 +66,12 @@ const Label = styled.span<{ $isBold: boolean }>`
   ${p => p.$isBold && `font-weight: 700; color:${p.theme.color.charcoal}`}
 `
 
-const Box = styled.div<{ $dayInMonth: number; $isInline: boolean }>`
+const Box = styled.div<{ $dayInMonth: number }>`
   display: grid;
   grid-template-columns: repeat(${({ $dayInMonth }) => $dayInMonth}, 1fr);
   border: 1px solid ${p => p.theme.color.gainsboro};
-  width: ${p => (p.$isInline ? '14px' : '52px')};
-  height: ${p => (p.$isInline ? '14px' : '26px')};
+  width: 52px;
+  height: 26px;
   position: relative;
   margin-top: 4px;
 `

@@ -20,7 +20,7 @@ export function MonthBox({ dateRanges, monthIndex }: MonthBoxProps) {
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
 
   return (
-    <Box>
+    <Box $daysInMonth={daysInMonth}>
       {days.map(day => {
         const isInPeriod = isDayInPeriod(day, month, dateRanges)
         const isCritical = isDayInCriticalPeriod(day, month, dateRanges)
@@ -39,11 +39,10 @@ export function MonthBox({ dateRanges, monthIndex }: MonthBoxProps) {
   )
 }
 
-const Box = styled.li`
+const Box = styled.li<{ $daysInMonth: number }>`
   background-color: ${p => p.theme.color.white};
-
   display: grid;
-  grid-template-columns: repeat(30, 1fr);
+  grid-template-columns: repeat(${p => p.$daysInMonth}, 1fr);
   border: 1px solid ${p => p.theme.color.gainsboro};
   width: 14px;
   height: 14px;
