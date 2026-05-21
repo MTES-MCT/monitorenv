@@ -1,7 +1,12 @@
+import {
+  isDayInCriticalPeriod,
+  isDayInPeriod,
+  isEnd,
+  isStart,
+  type DateRange
+} from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
-
-import type { DateRange } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 
 type MonthBoxProps = {
   dateRanges: DateRange[]
@@ -11,47 +16,22 @@ type MonthBoxProps = {
 export function MonthBox({ dateRanges, monthIndex }: MonthBoxProps) {
   const month = customDayjs().utc().set('month', monthIndex)
 
-  const daysInMonth = 30
+  const daysInMonth = month.daysInMonth()
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
-  const isDayInPeriod = (dayNum: number) => {
-    const dayToCompare = month.set('date', dayNum)
-
-    return dateRanges.some(
-      dateRange =>
-        dayToCompare.isSame(dateRange.start, 'day') ||
-        dayToCompare.isSame(dateRange.end, 'day') ||
-        (dayToCompare.isAfter(dateRange.start) && dayToCompare.isBefore(dateRange.end))
-    )
-  }
-
-  const isDayInCriticalPeriod = (dayNum: number) =>
-    dateRanges.some(dateRange => dateRange.isCritical && isDayInPeriod(dayNum))
-
-  const isStart = (dayNum: number) => {
-    const dayToCompare = month.set('date', dayNum)
-
-    return dateRanges.some(dateRange => dayToCompare.isSame(dateRange.start, 'day'))
-  }
-
-  const isEnd = (dayNum: number) => {
-    const dayToCompare = month.set('date', dayNum)
-
-    return dateRanges.some(dateRange => dayToCompare.isSame(dateRange.end, 'day'))
-  }
 
   return (
     <Box>
       {days.map(day => {
-        const isInPeriod = isDayInPeriod(day)
-        const isCritical = isDayInCriticalPeriod(day)
+        const isInPeriod = isDayInPeriod(day, month, dateRanges)
+        const isCritical = isDayInCriticalPeriod(day, month, dateRanges)
 
         return (
           <DayBox
             key={day}
             $isCritical={isCritical}
-            $isEnd={isEnd(day) || (isInPeriod && day === 30)}
+            $isEnd={isEnd(day, month, dateRanges) || (isInPeriod && day === 30)}
             $isHighlighted={isInPeriod}
-            $isStart={isStart(day) || (isInPeriod && day === 1)}
+            $isStart={isStart(day, month, dateRanges) || (isInPeriod && day === 1)}
           />
         )
       })}
