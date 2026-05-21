@@ -1,4 +1,10 @@
-import { computeOccurenceWithinCurrentYear } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
+import {
+  computeOccurenceWithinCurrentYear,
+  isDayInCriticalPeriod,
+  isDayInPeriod,
+  isEnd,
+  isStart
+} from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { describe, expect, it, jest } from '@jest/globals'
 import { customDayjs } from '@mtes-mct/monitor-ui'
@@ -193,5 +199,207 @@ describe('computeOccurenceWithinCurrentYear should return all occurences that ma
         start: customDayjs('2025-01-05T00:00:00.000Z').utc()
       }
     ])
+  })
+})
+
+describe('isDayInPeriod', () => {
+  const month = customDayjs('2025-06-01T00:00:00.000Z').utc()
+  const dateRanges = [
+    {
+      end: customDayjs('2025-06-15T00:00:00.000Z').utc(),
+      isCritical: false,
+      start: customDayjs('2025-06-10T00:00:00.000Z').utc()
+    }
+  ]
+
+  it('should return true for a day inside the range', () => {
+    expect(isDayInPeriod(12, month, dateRanges)).toBe(true)
+  })
+
+  it('should return true for the start day of the range', () => {
+    expect(isDayInPeriod(10, month, dateRanges)).toBe(true)
+  })
+
+  it('should return true for the end day of the range', () => {
+    expect(isDayInPeriod(15, month, dateRanges)).toBe(true)
+  })
+
+  it('should return false for a day before the range', () => {
+    expect(isDayInPeriod(5, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for a day after the range', () => {
+    expect(isDayInPeriod(20, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for an empty dateRanges array', () => {
+    expect(isDayInPeriod(12, month, [])).toBe(false)
+  })
+
+  it('should return true if day is in at least one of multiple ranges', () => {
+    const multipleRanges = [
+      {
+        end: customDayjs('2025-06-05T00:00:00.000Z').utc(),
+        isCritical: false,
+        start: customDayjs('2025-06-01T00:00:00.000Z').utc()
+      },
+      {
+        end: customDayjs('2025-06-25T00:00:00.000Z').utc(),
+        isCritical: false,
+        start: customDayjs('2025-06-20T00:00:00.000Z').utc()
+      }
+    ]
+    expect(isDayInPeriod(22, month, multipleRanges)).toBe(true)
+  })
+})
+
+describe('isDayInCriticalPeriod', () => {
+  const month = customDayjs('2025-06-01T00:00:00.000Z').utc()
+
+  it('should return true for a day in a critical range', () => {
+    const dateRanges = [
+      {
+        end: customDayjs('2025-06-15T00:00:00.000Z').utc(),
+        isCritical: true,
+        start: customDayjs('2025-06-10T00:00:00.000Z').utc()
+      }
+    ]
+    expect(isDayInCriticalPeriod(12, month, dateRanges)).toBe(true)
+  })
+
+  it('should return false for a day in a non-critical range', () => {
+    const dateRanges = [
+      {
+        end: customDayjs('2025-06-15T00:00:00.000Z').utc(),
+        isCritical: false,
+        start: customDayjs('2025-06-10T00:00:00.000Z').utc()
+      }
+    ]
+    expect(isDayInCriticalPeriod(12, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for a day not in any range', () => {
+    const dateRanges = [
+      {
+        end: customDayjs('2025-06-15T00:00:00.000Z').utc(),
+        isCritical: true,
+        start: customDayjs('2025-06-10T00:00:00.000Z').utc()
+      }
+    ]
+    expect(isDayInCriticalPeriod(5, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for an empty dateRanges array', () => {
+    expect(isDayInCriticalPeriod(12, month, [])).toBe(false)
+  })
+
+  it('should return true if day is in at least one critical range among mixed ranges', () => {
+    const dateRanges = [
+      {
+        end: customDayjs('2025-06-05T00:00:00.000Z').utc(),
+        isCritical: false,
+        start: customDayjs('2025-06-01T00:00:00.000Z').utc()
+      },
+      {
+        end: customDayjs('2025-06-25T00:00:00.000Z').utc(),
+        isCritical: true,
+        start: customDayjs('2025-06-20T00:00:00.000Z').utc()
+      }
+    ]
+    expect(isDayInCriticalPeriod(22, month, dateRanges)).toBe(true)
+  })
+})
+
+describe('isStart', () => {
+  const month = customDayjs('2025-06-01T00:00:00.000Z').utc()
+  const dateRanges = [
+    {
+      end: customDayjs('2025-06-15T00:00:00.000Z').utc(),
+      isCritical: false,
+      start: customDayjs('2025-06-10T00:00:00.000Z').utc()
+    }
+  ]
+
+  it('should return true for the start day of a range', () => {
+    expect(isStart(10, month, dateRanges)).toBe(true)
+  })
+
+  it('should return false for a day inside the range but not the start', () => {
+    expect(isStart(12, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for the end day of the range', () => {
+    expect(isStart(15, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for a day outside the range', () => {
+    expect(isStart(5, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for an empty dateRanges array', () => {
+    expect(isStart(10, month, [])).toBe(false)
+  })
+
+  it('should return true if day matches start of any range', () => {
+    const multipleRanges = [
+      {
+        end: customDayjs('2025-06-05T00:00:00.000Z').utc(),
+        isCritical: false,
+        start: customDayjs('2025-06-01T00:00:00.000Z').utc()
+      },
+      {
+        end: customDayjs('2025-06-25T00:00:00.000Z').utc(),
+        isCritical: false,
+        start: customDayjs('2025-06-20T00:00:00.000Z').utc()
+      }
+    ]
+    expect(isStart(20, month, multipleRanges)).toBe(true)
+  })
+})
+
+describe('isEnd', () => {
+  const month = customDayjs('2025-06-01T00:00:00.000Z').utc()
+  const dateRanges = [
+    {
+      end: customDayjs('2025-06-15T00:00:00.000Z').utc(),
+      isCritical: false,
+      start: customDayjs('2025-06-10T00:00:00.000Z').utc()
+    }
+  ]
+
+  it('should return true for the end day of a range', () => {
+    expect(isEnd(15, month, dateRanges)).toBe(true)
+  })
+
+  it('should return false for a day inside the range but not the end', () => {
+    expect(isEnd(12, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for the start day of the range', () => {
+    expect(isEnd(10, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for a day outside the range', () => {
+    expect(isEnd(20, month, dateRanges)).toBe(false)
+  })
+
+  it('should return false for an empty dateRanges array', () => {
+    expect(isEnd(15, month, [])).toBe(false)
+  })
+
+  it('should return true if day matches end of any range', () => {
+    const multipleRanges = [
+      {
+        end: customDayjs('2025-06-05T00:00:00.000Z').utc(),
+        isCritical: false,
+        start: customDayjs('2025-06-01T00:00:00.000Z').utc()
+      },
+      {
+        end: customDayjs('2025-06-25T00:00:00.000Z').utc(),
+        isCritical: false,
+        start: customDayjs('2025-06-20T00:00:00.000Z').utc()
+      }
+    ]
+    expect(isEnd(5, month, multipleRanges)).toBe(true)
   })
 })

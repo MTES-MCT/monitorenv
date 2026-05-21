@@ -1,7 +1,12 @@
+import {
+  isDayInCriticalPeriod,
+  isDayInPeriod,
+  isEnd,
+  isStart,
+  type DateRange
+} from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import { customDayjs, Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
-
-import type { DateRange } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 
 type MonthBoxProps = {
   dateRanges: DateRange[]
@@ -16,55 +21,26 @@ export function MonthBox({ dateRanges, isInline = false, label, monthIndex }: Mo
 
   const daysInMonth = month.daysInMonth()
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
-  const isDayInPeriod = (dayNum: number) => {
-    const dayToCompare = month.set('date', dayNum)
-
-    return dateRanges.some(
-      dateRange =>
-        dayToCompare.isSame(dateRange.start, 'day') ||
-        dayToCompare.isSame(dateRange.end, 'day') ||
-        (dayToCompare.isAfter(dateRange.start) && dayToCompare.isBefore(dateRange.end))
-    )
-  }
-
-  const isDayInCriticalPeriod = (dayNum: number) => {
-    const dayToCompare = month.set('date', dayNum)
-
-    return dateRanges.some(
-      dateRange =>
-        dateRange.isCritical &&
-        (dayToCompare.isSame(dateRange.start, 'day') ||
-          dayToCompare.isSame(dateRange.end, 'day') ||
-          (dayToCompare.isAfter(dateRange.start) && dayToCompare.isBefore(dateRange.end)))
-    )
-  }
-
-  const isStart = (dayNum: number) => {
-    const dayToCompare = month.set('date', dayNum)
-
-    return dateRanges.some(dateRange => dayToCompare.isSame(dateRange.start, 'day'))
-  }
-
-  const isEnd = (dayNum: number) => {
-    const dayToCompare = month.set('date', dayNum)
-
-    return dateRanges.some(dateRange => dayToCompare.isSame(dateRange.end, 'day'))
-  }
 
   return (
     <>
       {!isInline && <Label $isBold={isCurrentMonth}>{label}</Label>}
       <Wrapper>
         <Box $dayInMonth={daysInMonth} $isInline={isInline}>
-          {days.map(day => (
-            <DayBox
-              key={day}
-              $isCritical={isDayInCriticalPeriod(day)}
-              $isEnd={isEnd(day) || (isDayInPeriod(day) && day === daysInMonth)}
-              $isHighlighted={isDayInPeriod(day)}
-              $isStart={isStart(day) || (isDayInPeriod(day) && day === 1)}
-            />
-          ))}
+          {days.map(day => {
+            const isInPeriod = isDayInPeriod(day, month, dateRanges)
+            const isCritical = isDayInCriticalPeriod(day, month, dateRanges)
+
+            return (
+              <DayBox
+                key={day}
+                $isCritical={isCritical}
+                $isEnd={isEnd(day, month, dateRanges) || (isInPeriod && day === daysInMonth)}
+                $isHighlighted={isInPeriod}
+                $isStart={isStart(day, month, dateRanges) || (isInPeriod && day === 1)}
+              />
+            )
+          })}
           {isCurrentMonth && <BackgroundBox />}
         </Box>
         {isCurrentMonth && !isInline && (

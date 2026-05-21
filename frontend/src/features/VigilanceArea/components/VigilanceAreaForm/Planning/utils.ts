@@ -118,3 +118,30 @@ export function computeOccurenceWithinCurrentYear(period: VigilanceArea.Vigilanc
     }
   ]
 }
+
+export function isDayInPeriod(dayNum: number, month: Dayjs, dateRanges: DateRange[]) {
+  const dayToCompare = month.set('date', dayNum)
+
+  return dateRanges.some(
+    dateRange =>
+      dayToCompare.isSame(dateRange.start, 'day') ||
+      dayToCompare.isSame(dateRange.end, 'day') ||
+      (dayToCompare.isAfter(dateRange.start) && dayToCompare.isBefore(dateRange.end))
+  )
+}
+
+export function isDayInCriticalPeriod(dayNum: number, month: Dayjs, dateRanges: DateRange[]) {
+  return dateRanges.some(dateRange => dateRange.isCritical && isDayInPeriod(dayNum, month, dateRanges))
+}
+
+export function isStart(dayNum: number, month: Dayjs, dateRanges: DateRange[]) {
+  const dayToCompare = month.set('date', dayNum)
+
+  return dateRanges.some(dateRange => dayToCompare.isSame(dateRange.start, 'day'))
+}
+
+export function isEnd(dayNum: number, month: Dayjs, dateRanges: DateRange[]) {
+  const dayToCompare = month.set('date', dayNum)
+
+  return dateRanges.some(dateRange => dayToCompare.isSame(dateRange.end, 'day'))
+}
