@@ -33,29 +33,35 @@ export const getOverlayItemsFromFeatures = (
   features: SerializedFeature<Record<string, any>>[] | undefined,
   isLinkingZonesToVigilanceArea: boolean
 ) =>
-  features?.reduce((acc, feature) => {
-    const type = String(feature.id).split(':')[0]
+  features?.reduce(
+    (acc, feature) => {
+      const type = String(feature.id).split(':')[0]
 
-    if (
-      RegulatoryOrAMPOrViglanceAreaLayerTypeAsList.includes(type as MonitorEnvLayers) &&
-      ((isLinkingZonesToVigilanceArea &&
-        type !== MonitorEnvLayers.VIGILANCE_AREA &&
-        type !== MonitorEnvLayers.VIGILANCE_AREA_PREVIEW) ||
-        !isLinkingZonesToVigilanceArea)
-    ) {
-      const { properties } = feature
+      if (
+        RegulatoryOrAMPOrViglanceAreaLayerTypeAsList.includes(type as MonitorEnvLayers) &&
+        ((isLinkingZonesToVigilanceArea &&
+          type !== MonitorEnvLayers.VIGILANCE_AREA &&
+          type !== MonitorEnvLayers.VIGILANCE_AREA_PREVIEW) ||
+          !isLinkingZonesToVigilanceArea)
+      ) {
+        const { properties } = feature
 
-      acc.push({
-        layerType: type as RegulatoryOrAMPOrViglanceAreaLayerType,
-        properties: properties as
-          | AMPProperties
-          | RegulatoryArea.RegulatoryAreaWithBbox
-          | VigilanceArea.VigilanceAreaProperties
-      })
-    }
+        acc.push({
+          layerType: type as RegulatoryOrAMPOrViglanceAreaLayerType,
+          properties: properties as
+            | AMPProperties
+            | RegulatoryArea.RegulatoryAreaWithBbox
+            | VigilanceArea.VigilanceAreaProperties
+        })
+      }
 
-    return acc
-  }, [] as OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties>[])
+      return acc
+    },
+    [] as OverlayItem<
+      RegulatoryOrAMPOrViglanceAreaLayerType,
+      AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties
+    >[]
+  )
 
 export const getClickedItems = (
   isLinkingZonesToVigilanceArea: boolean,

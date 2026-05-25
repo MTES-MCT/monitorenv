@@ -104,22 +104,25 @@ export function RecentActivityLayerEvents({ map, mapClickEvent }: BaseMapChildre
       // close AMP and regulatory areas list
       dispatch(closeAreaOverlay())
 
-      const items = mapClickEvent?.featureList?.reduce((acc, recentActivityFeature) => {
-        const type = String(recentActivityFeature.id).split(':')[0]
+      const items = mapClickEvent?.featureList?.reduce(
+        (acc, recentActivityFeature) => {
+          const type = String(recentActivityFeature.id).split(':')[0]
 
-        if (type === Layers.RECENT_CONTROLS_ACTIVITY.code || type === Layers.DASHBOARD_RECENT_ACTIVITY.code) {
-          const { properties } = recentActivityFeature
-          if (!properties) {
-            return acc
+          if (type === Layers.RECENT_CONTROLS_ACTIVITY.code || type === Layers.DASHBOARD_RECENT_ACTIVITY.code) {
+            const { properties } = recentActivityFeature
+            if (!properties) {
+              return acc
+            }
+            acc.push({
+              layerType: type,
+              properties: properties as RecentActivity.RecentControlsActivity
+            })
           }
-          acc.push({
-            layerType: type,
-            properties: properties as RecentActivity.RecentControlsActivity
-          })
-        }
 
-        return acc
-      }, [] as OverlayItem<string, RecentActivity.RecentControlsActivity>[])
+          return acc
+        },
+        [] as OverlayItem<string, RecentActivity.RecentControlsActivity>[]
+      )
       dispatch(selectFeaturesList({ coordinates: mapClickEvent.coordinates, items }))
     }
 
