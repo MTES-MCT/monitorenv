@@ -150,9 +150,11 @@ class MissionModel(
             attachedReportings?.filter { it.attachedEnvAction != null }?.fold(
                 mutableListOf<EnvActionAttachedToReportingIds>(),
             ) { listOfActionsAttached, attachedReporting ->
-                require(attachedReporting.id != null)
-
+                val reportingId = attachedReporting.id
                 val actionId = attachedReporting.attachedEnvAction?.id
+
+                require(reportingId != null)
+
                 if (actionId == null) {
                     return@fold listOfActionsAttached
                 }
@@ -161,16 +163,17 @@ class MissionModel(
                     listOfActionsAttached.find { it.first == actionId } != null
 
                 if (!hasActionAlreadyAttachedToReporting) {
-                    val newPair = Pair(actionId, mutableListOf(attachedReporting.id))
+                    val newPair = Pair(actionId, mutableListOf(reportingId))
                     listOfActionsAttached.add(newPair)
                 } else {
                     return@fold listOfActionsAttached
                         .map { actionWithReportings ->
                             if (actionWithReportings.first == actionId) {
                                 val updatedReportingIds =
-                                    actionWithReportings.second.plus(
-                                        attachedReporting.id,
-                                    )
+                                    actionWithReportings.second
+                                        .plus(
+                                            reportingId,
+                                        ).toMutableList()
                                 val updatedAction = Pair(actionId, updatedReportingIds)
 
                                 return@map updatedAction
@@ -205,7 +208,7 @@ class MissionModel(
                     ?.filter { it.detachedFromMissionAtUtc != null }
                     ?.map { it.id as Int }
                     ?: listOf(),
-            envActionsAttachedToReportingIds = envActionsAttachedToReportingIds,
+            envActionsAttachedToReportingIds = envActionsAttachedToReportingIds as MutableList<EnvActionAttachedToReportingIds>?,
         )
     }
 

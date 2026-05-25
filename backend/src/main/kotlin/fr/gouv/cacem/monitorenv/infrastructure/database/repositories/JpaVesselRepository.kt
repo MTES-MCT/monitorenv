@@ -26,15 +26,17 @@ class JpaVesselRepository(
         rowNumber: Int?,
     ): VesselEntity? =
         dbVesselRepository.findByShipIdAndBatchIdAndRowNumber(shipId, batchId, rowNumber)?.let {
+            val ownerBusinessSegment = it.ownerBusinessSegment
             val nafLabel =
-                if (!it.ownerBusinessSegment.isNullOrBlank()) {
-                    dbNafRepository.findByIdOrNull(it.ownerBusinessSegment)?.label
+                if (!ownerBusinessSegment.isNullOrBlank()) {
+                    dbNafRepository.findByIdOrNull(ownerBusinessSegment)?.label
                 } else {
                     null
                 }
+            val ownerLegalStatus = it.ownerLegalStatus
             val legalStatusLabel =
-                if (!it.ownerLegalStatus.isNullOrBlank()) {
-                    dbLegalStatusRepository.findByIdOrNull(it.ownerLegalStatus)?.label
+                if (!ownerLegalStatus.isNullOrBlank()) {
+                    dbLegalStatusRepository.findByIdOrNull(ownerLegalStatus)?.label
                 } else {
                     null
                 }
