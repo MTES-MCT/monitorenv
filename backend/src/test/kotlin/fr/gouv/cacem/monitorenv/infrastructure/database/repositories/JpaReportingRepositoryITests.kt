@@ -640,7 +640,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
         // Then
         assertThat(exception.message)
             .isEqualTo(
-                "Invalid reference to semaphore, control unit or mission: not found in referential",
+                "Invalid combination of mission and/or envAction",
             )
     }
 
