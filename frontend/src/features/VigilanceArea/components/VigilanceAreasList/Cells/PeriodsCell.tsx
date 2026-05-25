@@ -50,11 +50,11 @@ export function PeriodsCell({ periods }: { periods: VigilanceArea.VigilanceAreaP
         createPortal(
           <StyledTooltip $right={refRightPosition} $top={refTopPosition} role="tooltip">
             {periods.map(period => {
-              const idCritical = period.isCritical ? 'Vigilance critique' : 'Vigilance simple'
+              const isCritical = period.isCritical ? 'Vigilance critique' : 'Vigilance simple'
 
               return (
                 <VigilancePeriodWrapper key={period.id}>
-                  <Bold>{idCritical}</Bold>
+                  <Bold>{isCritical}</Bold>
                   {computeVigilanceAreaPeriod(period, true)}
                 </VigilancePeriodWrapper>
               )
