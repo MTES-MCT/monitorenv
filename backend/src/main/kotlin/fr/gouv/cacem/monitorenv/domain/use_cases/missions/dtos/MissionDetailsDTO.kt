@@ -14,7 +14,7 @@ data class MissionDetailsDTO(
     val attachedReportingIds: List<Int>? = listOf(),
     val detachedReportings: List<ReportingEntity>? = listOf(),
     val detachedReportingIds: List<Int>? = listOf(),
-    val envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>? = listOf(),
+    val envActionsAttachedToReportingIds: MutableList<EnvActionAttachedToReportingIds>? = mutableListOf(),
     val hasRapportNavActions: RapportNavMissionActionEntity? = null,
 )
 

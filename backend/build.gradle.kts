@@ -7,7 +7,7 @@ plugins {
     `maven-publish`
     id("org.springframework.boot") version "4.0.6"
     id("io.spring.dependency-management") version "1.1.7"
-    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
     kotlin("jvm") version "2.3.21"
     kotlin("plugin.spring") version "2.3.21"
     kotlin("plugin.allopen") version "2.3.21"
@@ -57,7 +57,7 @@ tasks.withType<KotlinCompile> {
 val ktorVersion = "3.4.3"
 val testcontainersVersion = "1.21.4"
 val sentryVersion = "8.40.0"
-val flywayVersion = "11.17.0"
+val flywayVersion = "12.5.0"
 
 dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.6"))

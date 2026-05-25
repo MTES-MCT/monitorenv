@@ -65,33 +65,23 @@ data class DashboardModel(
         val controlUnits: MutableList<Int> = mutableListOf()
         var inseeCode: String? = null
         dashboardDatas.forEach { datas ->
-            datas.amp.let {
-                if (it?.id != null) {
-                    amps.add(it.id)
-                }
+            datas.amp?.id?.let { ampId ->
+                amps.add(ampId)
             }
-            datas.regulatoryAreaModel.let {
-                if (it?.id != null) {
-                    regulatoryAreas.add(it.id)
-                }
+            datas.regulatoryAreaModel?.id?.let { regAreaId ->
+                regulatoryAreas.add(regAreaId)
             }
-            datas.vigilanceAreaModel.let {
-                if (it?.id != null) {
-                    vigilanceAreas.add(it.id)
-                }
+            datas.vigilanceAreaModel?.id?.let { vigAreaId ->
+                vigilanceAreas.add(vigAreaId)
             }
-            datas.reportingModel.let {
-                if (it?.id != null) {
-                    reportings.add(it.id)
-                }
+            datas.reportingModel?.id?.let { reportingId ->
+                reportings.add(reportingId)
             }
-            datas.controlUnitModel.let {
-                if (it?.id != null) {
-                    controlUnits.add(it.id)
-                }
+            datas.controlUnitModel?.id?.let { controlUnitId ->
+                controlUnits.add(controlUnitId)
             }
-            if (datas.inseeCode != null) {
-                inseeCode = datas.inseeCode
+            datas.inseeCode?.let {
+                inseeCode = it
             }
         }
         return DashboardEntity(
