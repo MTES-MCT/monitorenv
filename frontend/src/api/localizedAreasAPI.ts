@@ -40,14 +40,17 @@ export const getLocalizedAreasIdsGroupedByName = createSelector(
     const localizedAreasEntities = localizedAreas?.data?.entities
     const localizedAreasIds = localizedAreas?.data?.ids
     if (localizedAreasIds && localizedAreasEntities) {
-      return localizedAreasIds?.reduce((acc, layerId) => {
-        const groupName = localizedAreasEntities[layerId]?.groupName
-        if (groupName) {
-          acc[groupName] = [...(acc[groupName] ?? []), layerId]
-        }
+      return localizedAreasIds?.reduce(
+        (acc, layerId) => {
+          const groupName = localizedAreasEntities[layerId]?.groupName
+          if (groupName) {
+            acc[groupName] = [...(acc[groupName] ?? []), layerId]
+          }
 
-        return acc
-      }, {} as { [key: string]: EntityId[] })
+          return acc
+        },
+        {} as { [key: string]: EntityId[] }
+      )
     }
 
     return localizedAreasIdsByName

@@ -56,19 +56,22 @@ export function RecentActivity({
 
   const themesAndControlActions = useMemo(
     () =>
-      recentActivity.reduce((acc, control) => {
-        control.themeIds.forEach(themeId => {
-          const theme = themes.find(({ id }) => id === themeId)?.name ?? 'Thématique non renseignée'
-          if (!acc[theme]) {
-            acc[theme] = 0
-          }
-          acc[theme] += 1
+      recentActivity.reduce(
+        (acc, control) => {
+          control.themeIds.forEach(themeId => {
+            const theme = themes.find(({ id }) => id === themeId)?.name ?? 'Thématique non renseignée'
+            if (!acc[theme]) {
+              acc[theme] = 0
+            }
+            acc[theme] += 1
+
+            return acc
+          })
 
           return acc
-        })
-
-        return acc
-      }, {} as Record<string, number>),
+        },
+        {} as Record<string, number>
+      ),
     [recentActivity, themes]
   )
 

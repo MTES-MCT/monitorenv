@@ -59,7 +59,7 @@ export function ResultList({ searchedText }: ResultListProps) {
   const ampResultsByAMPName = useMemo(
     () =>
       groupBy(
-        !ampsSearchResult && areAmpsResultsOpen ? amps?.ids : ampsSearchResult ?? [],
+        !ampsSearchResult && areAmpsResultsOpen ? amps?.ids : (ampsSearchResult ?? []),
         a => amps?.entities[a]?.name
       ),
     [ampsSearchResult, areAmpsResultsOpen, amps]

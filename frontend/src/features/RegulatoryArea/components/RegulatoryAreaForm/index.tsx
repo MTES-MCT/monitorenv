@@ -78,7 +78,7 @@ export function RegulatoryAreaForm() {
         themes: regulatoryArea?.themes ?? [],
         type: regulatoryArea?.type,
         url: regulatoryArea?.url
-      } as RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea),
+      }) as RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea,
     [regulatoryArea]
   )
 

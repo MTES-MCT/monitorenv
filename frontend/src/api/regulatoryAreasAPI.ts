@@ -116,25 +116,31 @@ export const getRegulatoryAreasByControlPlan = createSelector(
       return {}
     }
 
-    return groups.reduce((acc, group) => {
-      group.regulatoryAreas.forEach(area => {
-        const { layerName, plan } = area
+    return groups.reduce(
+      (acc, group) => {
+        group.regulatoryAreas.forEach(area => {
+          const { layerName, plan } = area
 
-        if (!layerName || !plan) {
-          return
-        }
+          if (!layerName || !plan) {
+            return
+          }
 
-        const plans = plan.split(',').map(p => p.trim())
+          const plans = plan.split(',').map(p => p.trim())
 
-        plans.forEach(planRaw => {
-          acc[planRaw] ??= {}
-          acc[planRaw][layerName] ??= []
-          acc[planRaw][layerName].push(area)
+          plans.forEach(planRaw => {
+            acc[planRaw] ??= {}
+            acc[planRaw][layerName] ??= []
+            acc[planRaw][layerName].push(area)
+          })
         })
-      })
 
-      return acc
-    }, {} as Record<RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM, Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>)
+        return acc
+      },
+      {} as Record<
+        RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM,
+        Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
+      >
+    )
   }
 )
 
@@ -147,21 +153,24 @@ export const getRegulatoryAreasBySeaFront = createSelector(
       return {}
     }
 
-    return groups.reduce((acc, group) => {
-      group.regulatoryAreas.forEach(area => {
-        const { facade, layerName } = area
+    return groups.reduce(
+      (acc, group) => {
+        group.regulatoryAreas.forEach(area => {
+          const { facade, layerName } = area
 
-        if (!facade || !layerName) {
-          return
-        }
+          if (!facade || !layerName) {
+            return
+          }
 
-        acc[facade] ??= {}
-        acc[facade][layerName] ??= []
-        acc[facade][layerName].push(area)
-      })
+          acc[facade] ??= {}
+          acc[facade][layerName] ??= []
+          acc[facade][layerName].push(area)
+        })
 
-      return acc
-    }, {} as Record<StringDigit, Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>)
+        return acc
+      },
+      {} as Record<StringDigit, Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>>
+    )
   }
 )
 

@@ -43,7 +43,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
   },
   {
     accessorFn: row => row.seaFront,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : info.getValue() ?? '-'),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : (info.getValue() ?? '-')),
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',

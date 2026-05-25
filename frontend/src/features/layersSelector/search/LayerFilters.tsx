@@ -119,7 +119,10 @@ export function LayerFilters() {
     dispatch(vigilanceAreaFiltersActions.updateFilters({ key: 'specificPeriod', value: dateRange }))
   }
 
-  const updateVigilanceAreaFilters = <K extends keyof typeof INITIAL_STATE>(key: K, value: typeof INITIAL_STATE[K]) => {
+  const updateVigilanceAreaFilters = <K extends keyof typeof INITIAL_STATE>(
+    key: K,
+    value: (typeof INITIAL_STATE)[K]
+  ) => {
     dispatch(vigilanceAreaFiltersActions.updateFilters({ key, value }))
   }
   const updateControlPlanFilter = (nextControlPlan: string | undefined) => {

@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "20",
+    "node": "24",
     "npm": "10"
   },
   "scripts": {
@@ -109,7 +109,7 @@
     "eslint-plugin-no-null": "1.0.2",
     "eslint-plugin-no-only-tests": "3.4.0",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-prettier": "5.5.5",
     "eslint-plugin-promise": "7.3.0",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "4.6.2",
@@ -122,7 +122,7 @@
     "jest-environment-jsdom": "29.7.0",
     "jest-environment-node": "30.3.0",
     "lint-staged": "15.5.1",
-    "prettier": "2.7.1",
+    "prettier": "3.8.3",
     "puppeteer": "22.12.1",
     "ramda": "0.32.0",
     "type-fest": "4.41.0",

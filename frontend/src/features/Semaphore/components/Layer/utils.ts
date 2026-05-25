@@ -9,19 +9,22 @@ import type { Semaphore } from 'domain/entities/semaphore'
 import type { Feature } from 'ol'
 
 export function getReportingsBySemaphoreId(reportings: (Reporting | undefined)[]) {
-  return reportings.reduce((reportingsBySemaphore, reporting) => {
-    const newReportingsBySemaphore = reportingsBySemaphore
-    reporting?.reportingSources.forEach(({ semaphoreId }) => {
-      if (semaphoreId) {
-        if (!newReportingsBySemaphore[semaphoreId]) {
-          newReportingsBySemaphore[semaphoreId] = []
+  return reportings.reduce(
+    (reportingsBySemaphore, reporting) => {
+      const newReportingsBySemaphore = reportingsBySemaphore
+      reporting?.reportingSources.forEach(({ semaphoreId }) => {
+        if (semaphoreId) {
+          if (!newReportingsBySemaphore[semaphoreId]) {
+            newReportingsBySemaphore[semaphoreId] = []
+          }
+          newReportingsBySemaphore[semaphoreId].push(reporting)
         }
-        newReportingsBySemaphore[semaphoreId].push(reporting)
-      }
-    })
+      })
 
-    return newReportingsBySemaphore
-  }, {} as Record<string, Reporting[]>)
+      return newReportingsBySemaphore
+    },
+    {} as Record<string, Reporting[]>
+  )
 }
 
 export function getSemaphoresPoint(

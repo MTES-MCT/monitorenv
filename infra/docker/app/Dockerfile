@@ -29,7 +29,7 @@ RUN gradle assemble
 ###########################
 # Build frontend with npm #
 ###########################
-FROM node:20-alpine AS build-front
+FROM node:24-alpine AS build-front
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DISABLE_ESLINT_PLUGIN=true
