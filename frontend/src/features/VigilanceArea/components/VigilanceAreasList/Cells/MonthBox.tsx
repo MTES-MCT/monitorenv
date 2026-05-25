@@ -1,8 +1,6 @@
 import {
   isDayInCriticalPeriod,
   isDayInPeriod,
-  isEnd,
-  isStart,
   type DateRange
 } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/utils'
 import { customDayjs } from '@mtes-mct/monitor-ui'
@@ -25,15 +23,7 @@ export function MonthBox({ dateRanges, monthIndex }: MonthBoxProps) {
         const isInPeriod = isDayInPeriod(day, month, dateRanges)
         const isCritical = isDayInCriticalPeriod(day, month, dateRanges)
 
-        return (
-          <DayBox
-            key={day}
-            $isCritical={isCritical}
-            $isEnd={isEnd(day, month, dateRanges) || (isInPeriod && day === 30)}
-            $isHighlighted={isInPeriod}
-            $isStart={isStart(day, month, dateRanges) || (isInPeriod && day === 1)}
-          />
-        )
+        return <DayBox key={day} $isCritical={isCritical} $isHighlighted={isInPeriod} />
       })}
     </Box>
   )
@@ -48,9 +38,9 @@ const Box = styled.li<{ $daysInMonth: number }>`
   height: 14px;
 `
 
-const DayBox = styled.div<{ $isCritical: boolean; $isEnd: boolean; $isHighlighted: boolean; $isStart: boolean }>`
+const DayBox = styled.div<{ $isCritical: boolean; $isHighlighted: boolean }>`
   width: 100%;
   height: 100%;
   opacity: 1;
-  ${({ $isCritical, $isHighlighted }) => $isHighlighted && `background-color: ${$isCritical ? '#E1000F' : '#C25141'};`}
+  ${({ $isCritical, $isHighlighted }) => $isHighlighted && `background-color: ${$isCritical ? '#DC3D49' : '#D7A49D'};`}
 `
