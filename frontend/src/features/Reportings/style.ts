@@ -239,7 +239,9 @@ export const FormContainer = styled.div<{
   width: 500px;
   overflow: hidden;
   display: flex;
-  transition: right 0.5s ease-out, top 0.5s ease-out;
+  transition:
+    right 0.5s ease-out,
+    top 0.5s ease-out;
   z-index: ${p => (p.$context === ReportingContext.SIDE_WINDOW ? '6' : '100')};
 
   ${p => {

@@ -6,20 +6,23 @@ import { getIconFromControlUnitResourceType } from '../../../../ControlUnit/comp
 export function displayControlUnitResourcesFromControlUnit(controlUnit: ControlUnit.ControlUnit, stationId: number) {
   const controlUnitResourceTypeCounts = controlUnit.controlUnitResources
     .filter(controlUnitResource => controlUnitResource.stationId === stationId && !controlUnitResource.isArchived)
-    .reduce((previousControlUnitResourceTypeCounts, controlUnitResource) => {
-      const controlUnitResourceTypeCount = previousControlUnitResourceTypeCounts[controlUnitResource.type]
-      if (!controlUnitResourceTypeCount) {
+    .reduce(
+      (previousControlUnitResourceTypeCounts, controlUnitResource) => {
+        const controlUnitResourceTypeCount = previousControlUnitResourceTypeCounts[controlUnitResource.type]
+        if (!controlUnitResourceTypeCount) {
+          return {
+            ...previousControlUnitResourceTypeCounts,
+            [controlUnitResource.type]: 1
+          }
+        }
+
         return {
           ...previousControlUnitResourceTypeCounts,
-          [controlUnitResource.type]: 1
+          [controlUnitResource.type]: controlUnitResourceTypeCount + 1
         }
-      }
-
-      return {
-        ...previousControlUnitResourceTypeCounts,
-        [controlUnitResource.type]: controlUnitResourceTypeCount + 1
-      }
-    }, {} as Record<string, number>)
+      },
+      {} as Record<string, number>
+    )
 
   return !isEmpty(controlUnitResourceTypeCounts)
     ? Object.entries(controlUnitResourceTypeCounts).map(([type, count]) => (

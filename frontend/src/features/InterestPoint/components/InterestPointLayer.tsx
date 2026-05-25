@@ -109,22 +109,25 @@ export function InterestPointLayer({ map }: BaseMapChildrenProps) {
       if (map) {
         const features = interestPoints
           .filter(item => item.uuid !== currentInterestPoint.uuid)
-          .reduce((feats, interestPoint) => {
-            if (interestPoint.feature) {
-              const nextFeature = new GeoJSON({
-                featureProjection: OPENLAYERS_PROJECTION
-              }).readFeature(interestPoint.feature) as Feature<LineString>
+          .reduce(
+            (feats, interestPoint) => {
+              if (interestPoint.feature) {
+                const nextFeature = new GeoJSON({
+                  featureProjection: OPENLAYERS_PROJECTION
+                }).readFeature(interestPoint.feature) as Feature<LineString>
 
-              const { feature, ...interestPointWithoutFeature } = interestPoint
-              nextFeature.setProperties(interestPointWithoutFeature)
+                const { feature, ...interestPointWithoutFeature } = interestPoint
+                nextFeature.setProperties(interestPointWithoutFeature)
 
-              feats.push(nextFeature)
+                feats.push(nextFeature)
+
+                return feats
+              }
 
               return feats
-            }
-
-            return feats
-          }, [] as Array<Feature<LineString>>)
+            },
+            [] as Array<Feature<LineString>>
+          )
         const { feature: currentFeature, ...currentInterestPointWithoutFeature } = currentInterestPoint
 
         if (currentFeature) {

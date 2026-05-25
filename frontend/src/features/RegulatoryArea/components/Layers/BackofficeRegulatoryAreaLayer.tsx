@@ -24,7 +24,7 @@ export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
   const newRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaBo.newRegulatoryAreaId)
 
   const layerId = useMemo(
-    () => (isOnRegulatoryAreasListPage ? openedRegulatoryAreaId : regulatoryAreaId ?? newRegulatoryAreaId),
+    () => (isOnRegulatoryAreasListPage ? openedRegulatoryAreaId : (regulatoryAreaId ?? newRegulatoryAreaId)),
     [regulatoryAreaId, openedRegulatoryAreaId, newRegulatoryAreaId, isOnRegulatoryAreasListPage]
   )
 
