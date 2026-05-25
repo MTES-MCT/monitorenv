@@ -6,6 +6,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Button, DataTable } from '@mtes-mct/monitor-ui'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useBeforeUnload } from 'react-router'
 import { v4 as uuidv4 } from 'uuid'
 
 import { FilterBar } from './FilterBar'
@@ -36,7 +37,7 @@ export function TagTable() {
       // Put rowId first because it can be overrided by new tags
       rowId: uuidv4(),
       ...tag,
-      subTags: tag.subTags?.map(subTag => ({ ...subTag, parentId: tag.id, rowId: uuidv4() })) ?? []
+      subTags: tag.subTags?.map(subTag => ({ parentId: tag.id, rowId: uuidv4(), ...subTag })) ?? []
     }))
     setTags(formattedTags)
   }, [data, newTags])
@@ -143,6 +144,7 @@ export function TagTable() {
         if (!tagToSave) {
           return
         }
+        const draftSubTags = draftTags.filter(draftTag => draftTag.id && draftTag.parentId === tagToSave.id)
         const tagToApi: TagToAPI = {
           endedAt: tagToSave.endedAt,
           id: tagToSave.id,
@@ -156,7 +158,7 @@ export function TagTable() {
           setTags(previousTags =>
             previousTags.map(tag => {
               if (tag.rowId === rowId) {
-                return { ...tag, ...(savedTag as TagTableType) }
+                return { ...tag, ...(savedTag as TagTableType), subTags: [...tag.subTags, ...draftSubTags] }
               }
 
               return {
@@ -181,6 +183,22 @@ export function TagTable() {
   )
 
   const columns = useMemo(() => TAG_TABLE_COLUMNS, [])
+
+  const beforeUnload = useCallback(
+    event => {
+      if (draftTags.length > 0) {
+        event.preventDefault()
+
+        // eslint-disable-next-line no-return-assign, no-param-reassign
+        return (event.returnValue = 'blocked')
+      }
+
+      return undefined
+    },
+    [draftTags]
+  )
+
+  useBeforeUnload(beforeUnload)
 
   return (
     <BackofficeWrapper>
