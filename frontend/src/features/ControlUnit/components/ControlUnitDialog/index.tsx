@@ -148,7 +148,9 @@ const Wrapper = styled(MapMenuDialog.Container)<{
   position: absolute;
   right: ${p => (p.$isRightMenuOpened ? 56 : 8)}px;
   top: 0;
-  transition: right 0.5s ease-out, top 0.5s ease-out;
+  transition:
+    right 0.5s ease-out,
+    top 0.5s ease-out;
   width: 500px;
   z-index: 2;
 `

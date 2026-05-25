@@ -111,11 +111,14 @@ export const useGetFilteredVigilanceAreasQuery = () => {
         vigilanceAreaSchema
       )
     }
-    const vigilanceAreasEntities = searchedVigilanceAreasInExtent.reduce((acc, vigilanceArea) => {
-      acc[vigilanceArea.id] = vigilanceArea
+    const vigilanceAreasEntities = searchedVigilanceAreasInExtent.reduce(
+      (acc, vigilanceArea) => {
+        acc[vigilanceArea.id] = vigilanceArea
 
-      return acc
-    }, {} as Record<string, VigilanceArea.VigilanceAreaLayer>)
+        return acc
+      },
+      {} as Record<string, VigilanceArea.VigilanceAreaLayer>
+    )
 
     return {
       entities: vigilanceAreasEntities,

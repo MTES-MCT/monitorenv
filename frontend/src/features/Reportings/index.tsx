@@ -107,7 +107,9 @@ const StyledContainer = styled.div<{
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: right 0.5s ease-out, top 0.5s ease-out;
+  transition:
+    right 0.5s ease-out,
+    top 0.5s ease-out;
   z-index: 100;
 
   ${p => {
