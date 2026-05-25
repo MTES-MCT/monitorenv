@@ -20,14 +20,14 @@ export const TAG_TABLE_COLUMNS = [
       <EditableTextCell
         columnId="name"
         initialValue={getValue()}
+        isChild={row.depth === 1}
         isEditing={table.options.meta?.isEditing(row)}
         label="Nom du tag"
         onCommit={value => table.options.meta?.updateData(row.id, 'name', value, row.parentId)}
       />
     ),
     header: () => 'Tag',
-    id: 'name',
-    size: 1135
+    id: 'name'
   },
   {
     accessorFn: row => row.subRows?.length,

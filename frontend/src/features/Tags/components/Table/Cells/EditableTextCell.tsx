@@ -1,16 +1,19 @@
 import { validate } from '@features/Tags/components/Table/utils'
 import { TextInput } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
+import styled from 'styled-components'
 
 export function EditableTextCell({
   columnId,
   initialValue,
+  isChild,
   isEditing,
   label,
   onCommit
 }: {
   columnId: string
   initialValue: string
+  isChild?: boolean
   isEditing: boolean
   label: string
   onCommit: (value: string) => void
@@ -33,6 +36,10 @@ export function EditableTextCell({
       value={value}
     />
   ) : (
-    <span>{value ?? '-'}</span>
+    <Value $isChild={!!isChild}>{value ?? '-'}</Value>
   )
 }
+
+const Value = styled.span<{ $isChild: boolean }>`
+  ${p => p.$isChild && 'padding-left: 16px;'}
+`
