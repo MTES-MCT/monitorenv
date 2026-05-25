@@ -55,14 +55,17 @@ export const ampsAPI = monitorenvPrivateApi.injectEndpoints({
 export const { useGetAMPQuery, useGetAMPsByIdsQuery, useGetAMPsQuery } = ampsAPI
 
 export const getAMPsIdsGroupedByName = createSelector([ampsAPI.endpoints.getAMPs.select()], ampsQuery => {
-  const ampIdsByName = ampsQuery.data?.ids.reduce((acc, id) => {
-    const amp = ampsQuery.data?.entities[id]
-    if (amp) {
-      acc[amp.name] = [...(acc[amp.name] ?? []), id]
-    }
+  const ampIdsByName = ampsQuery.data?.ids.reduce(
+    (acc, id) => {
+      const amp = ampsQuery.data?.entities[id]
+      if (amp) {
+        acc[amp.name] = [...(acc[amp.name] ?? []), id]
+      }
 
-    return acc
-  }, {} as Record<string, EntityId[]>)
+      return acc
+    },
+    {} as Record<string, EntityId[]>
+  )
 
   return ampIdsByName
 })

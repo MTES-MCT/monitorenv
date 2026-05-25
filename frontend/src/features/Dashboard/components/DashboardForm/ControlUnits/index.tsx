@@ -209,7 +209,9 @@ const SelectFilters = styled.div<{ $hasChildren: boolean; $isExpanded: boolean }
   width: 100%;
   visibility: hidden;
   max-height: 0;
-  transition: 0.3s max-height ease-out, 0.3s visibility;
+  transition:
+    0.3s max-height ease-out,
+    0.3s visibility;
 
   ${p =>
     p.$isExpanded && {

@@ -17,25 +17,28 @@ export function RegulatoryAreasTagsCell({ regulatoryAreaIds }: { regulatoryAreaI
     regulatoryAreaId => flattenRegulatoryAreas.find(area => area.id === regulatoryAreaId)?.tags ?? []
   )
 
-  const groupedTagsAndSubtags = tags.reduce((acc, tag) => {
-    if (tag) {
-      const mainTag = tag.name
-      const subTags = tag.subTags?.map(subTag => subTag.name) ?? []
+  const groupedTagsAndSubtags = tags.reduce(
+    (acc, tag) => {
+      if (tag) {
+        const mainTag = tag.name
+        const subTags = tag.subTags?.map(subTag => subTag.name) ?? []
 
-      if (!acc[mainTag]) {
-        acc[mainTag] = []
+        if (!acc[mainTag]) {
+          acc[mainTag] = []
+        }
+        if (subTags) {
+          subTags.forEach(subTag => {
+            if (!acc[mainTag]?.includes(subTag)) {
+              acc[mainTag]?.push(subTag)
+            }
+          })
+        }
       }
-      if (subTags) {
-        subTags.forEach(subTag => {
-          if (!acc[mainTag]?.includes(subTag)) {
-            acc[mainTag]?.push(subTag)
-          }
-        })
-      }
-    }
 
-    return acc
-  }, {} as Record<string, string[]>)
+      return acc
+    },
+    {} as Record<string, string[]>
+  )
 
   const tagsAndSubTags = Object.entries(groupedTagsAndSubtags)
   const title = Object.entries(groupedTagsAndSubtags)
