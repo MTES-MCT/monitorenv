@@ -51,10 +51,10 @@ export function NameCell({ vigilanceArea }: { vigilanceArea: VigilanceArea.Vigil
 
   return (
     <Wrapper>
-      <div>
+      <NameAndStatus>
         {statusAndCriticity && <StyledPeriodCircle $isCritical={statusAndCriticity === ALL_TIMES_AND_CRITICAL} />}
         <HighlightCell text={vigilanceArea.name ?? ''} />
-      </div>
+      </NameAndStatus>
       {vigilanceArea.isDraft && (
         <StyledTag accent={Accent.PRIMARY} Icon={Icon.EditUnbordered}>
           Brouillon
@@ -69,8 +69,13 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  max-width: 450px;
 `
-
+const NameAndStatus = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
 const StyledTag = styled(Tag)`
   font-style: normal;
   margin-left: 8px;

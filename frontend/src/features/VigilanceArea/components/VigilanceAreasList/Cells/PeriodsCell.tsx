@@ -1,3 +1,4 @@
+import { Bold } from '@components/style'
 import {
   computeOccurenceWithinCurrentYear,
   type DateRange
@@ -48,9 +49,16 @@ export function PeriodsCell({ periods }: { periods: VigilanceArea.VigilanceAreaP
       {isVisible &&
         createPortal(
           <StyledTooltip $right={refRightPosition} $top={refTopPosition} role="tooltip">
-            {periods.map(period => (
-              <p key={period.id}>{computeVigilanceAreaPeriod(period, true)}</p>
-            ))}
+            {periods.map(period => {
+              const idCritical = period.isCritical ? 'Vigilance critique' : 'Vigilance simple'
+
+              return (
+                <VigilancePeriodWrapper key={period.id}>
+                  <Bold>{idCritical}</Bold>
+                  {computeVigilanceAreaPeriod(period, true)}
+                </VigilancePeriodWrapper>
+              )
+            })}
           </StyledTooltip>,
           newWindowContainerRef.current
         )}
@@ -86,4 +94,8 @@ const StyledTooltip = styled.div<{
   max-width: 310px;
   pointer-events: none;
   z-index: 5;
+`
+const VigilancePeriodWrapper = styled.p`
+  display: flex;
+  flex-direction: column;
 `
