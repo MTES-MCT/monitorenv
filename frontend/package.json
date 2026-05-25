@@ -122,7 +122,7 @@
     "jest-environment-jsdom": "29.7.0",
     "jest-environment-node": "30.3.0",
     "lint-staged": "15.5.1",
-    "prettier": "2.7.1",
+    "prettier": "3.8.3",
     "puppeteer": "22.12.1",
     "ramda": "0.32.0",
     "type-fest": "4.41.0",
