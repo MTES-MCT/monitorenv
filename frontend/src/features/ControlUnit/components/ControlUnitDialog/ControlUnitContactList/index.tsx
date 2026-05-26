@@ -1,3 +1,5 @@
+import { DeleteModal } from '@components/Modal/DeleteModal'
+import { Bold } from '@components/style'
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { Accent, Button, ControlUnit, Icon, Level } from '@mtes-mct/monitor-ui'
@@ -9,7 +11,6 @@ import { Form } from './Form'
 import { Item } from './Item'
 import { sortControlUnitContactsByQualifiedName } from './utils'
 import { controlUnitContactsAPI } from '../../../../../api/controlUnitContactsAPI'
-import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../../libs/FrontendError'
 import { createOrUpdateControlUnitContact } from '../../../useCases/createOrUpdateControlUnitContact'
@@ -199,11 +200,17 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
       </StyledSectionBody>
 
       {isDeletionConfirmationModalOpen && editedControlUnitContact && (
-        <ConfirmationModal
-          confirmationButtonLabel="Supprimer"
-          message={`Êtes-vous sûr de vouloir supprimer le contact "${controlUnitDisplayName}" ?`}
+        <DeleteModal
+          context="contact-d-unité-de-contrôle"
+          isAbsolute={false}
           onCancel={closeDialogsAndModals}
           onConfirm={confirmDeletion}
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir supprimer </p>
+              <Bold>le contact &quot;{controlUnitDisplayName}&quot; ?</Bold>
+            </>
+          }
           title="Suppression du contact"
         />
       )}

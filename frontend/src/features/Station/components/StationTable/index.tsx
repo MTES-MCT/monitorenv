@@ -1,7 +1,7 @@
+import { DeleteModal } from '@components/Modal/DeleteModal'
 import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
-import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'

@@ -1,6 +1,6 @@
+import { ArchiveModal } from '@components/Modal/ArchiveModal'
+import { DeleteModal } from '@components/Modal/DeleteModal'
 import { Bold } from '@components/style'
-import { ArchiveModal } from '@features/commonComponents/Modals/Archive'
-import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
 import { deleteReporting } from '@features/Reportings/useCases/deleteReporting'
 import { duplicateReporting } from '@features/Reportings/useCases/duplicateReporting'
@@ -118,7 +118,6 @@ export function ButtonsGroupRow({ id }) {
       </ButtonsGroup>
       {isDeleteModalOpen && (
         <DeleteModal
-          cancelButtonText="Annuler"
           context="reportings-table"
           isAbsolute={false}
           onCancel={cancelDeleteReporting}
@@ -132,15 +131,16 @@ export function ButtonsGroupRow({ id }) {
           title="Supprimer le signalement"
         />
       )}
-      <ArchiveModal
-        context="reportings-table"
-        isAbsolute={false}
-        onCancel={cancelArchiveReporting}
-        onConfirm={confirmArchiveReporting}
-        open={isArchiveModalOpen}
-        subTitle="Voulez-vous enregistrer les modifications en cours et archiver le signalement&nbsp;?"
-        title="Enregistrer et archiver le signalement&nbsp;?"
-      />
+      {isArchiveModalOpen && (
+        <ArchiveModal
+          context="reportings-table"
+          isAbsolute={false}
+          onCancel={cancelArchiveReporting}
+          onConfirm={confirmArchiveReporting}
+          subTitle="Voulez-vous enregistrer les modifications en cours et archiver le signalement&nbsp;?"
+          title="Enregistrer et archiver le signalement&nbsp;?"
+        />
+      )}
     </>
   )
 }

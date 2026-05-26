@@ -1,3 +1,6 @@
+import { ArchiveModal } from '@components/Modal/ArchiveModal'
+import { DeleteModal } from '@components/Modal/DeleteModal'
+import { Bold } from '@components/style'
 import { Accent, Button, ControlUnit, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
@@ -11,7 +14,6 @@ import {
   useCreateControlUnitResourceMutation,
   useUpdateControlUnitResourceMutation
 } from '../../../../../api/controlUnitResourcesAPI'
-import { ConfirmationModal } from '../../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../../components/Dialog'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../../libs/FrontendError'
@@ -165,21 +167,27 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
       </StyledSectionBody>
 
       {isArchivingConfirmationModalOpen && editedControlUnitResource && (
-        <ConfirmationModal
-          confirmationButtonLabel="Archiver"
-          message={`Êtes-vous sûr de vouloir archiver le moyen "${editedControlUnitResource.name}" ?`}
+        <ArchiveModal
+          context="control-unit-resource"
           onCancel={closeDialogsAndModals}
           onConfirm={confirmArchiving}
+          subTitle={`Êtes-vous sûr de vouloir archiver le moyen "${editedControlUnitResource.name}" ?`}
           title="Archivage du moyen"
         />
       )}
 
       {isDeletionConfirmationModalOpen && editedControlUnitResource && (
-        <ConfirmationModal
-          confirmationButtonLabel="Supprimer"
-          message={`Êtes-vous sûr de vouloir supprimer le moyen "${editedControlUnitResource.name}" ?`}
+        <DeleteModal
+          context="control-unit-resource"
+          isAbsolute={false}
           onCancel={closeDialogsAndModals}
           onConfirm={confirmDeletion}
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir supprimer </p>
+              <Bold>le moyen &quot;{editedControlUnitResource.name}&quot; ?</Bold>
+            </>
+          }
           title="Suppression du moyen"
         />
       )}

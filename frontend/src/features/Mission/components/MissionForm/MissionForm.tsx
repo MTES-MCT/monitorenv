@@ -1,5 +1,5 @@
+import { DeleteModal } from '@components/Modal/DeleteModal'
 import { Bold } from '@components/style'
-import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import {
   Banner,

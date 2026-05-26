@@ -2,7 +2,6 @@ import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 type DeleteModalProps = {
-  cancelButtonText?: string
   context: string
   isAbsolute?: boolean
   onCancel: () => void
@@ -11,24 +10,14 @@ type DeleteModalProps = {
   title: string
 }
 
-export function DeleteModal({
-  cancelButtonText,
-  context,
-  isAbsolute = true,
-  onCancel,
-  onConfirm,
-  subTitle,
-  title
-}: DeleteModalProps) {
-  const isSubTitleString = typeof subTitle === 'string'
-
+export function DeleteModal({ context, isAbsolute = true, onCancel, onConfirm, subTitle, title }: DeleteModalProps) {
   return (
     <Dialog isAbsolute={isAbsolute}>
       <Dialog.Title onClose={onCancel}>{title}</Dialog.Title>
-      <StyledBody>{isSubTitleString ? <p>{subTitle}</p> : subTitle}</StyledBody>
+      <Dialog.Body>{subTitle}</Dialog.Body>
       <Dialog.Action>
         <Button accent={Accent.SECONDARY} name={`delete-${context}-modal-cancel`} onClick={onCancel}>
-          {cancelButtonText ?? 'Annuler'}
+          Annuler
         </Button>
         <ConfirmDeleteButton accent={Accent.PRIMARY} name={`delete-${context}-modal-confirm`} onClick={onConfirm}>
           Confirmer la suppression
@@ -40,8 +29,5 @@ export function DeleteModal({
 
 const ConfirmDeleteButton = styled(Button)`
   background-color: ${p => p.theme.color.maximumRed};
-`
-
-const StyledBody = styled(Dialog.Body)`
-  font-size: 16px;
+  border-color: ${p => p.theme.color.maximumRed};
 `
