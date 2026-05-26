@@ -1,5 +1,5 @@
+import { DeleteModal } from '@components/Modal/DeleteModal'
 import { Bold } from '@components/style'
-import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelDates'
 import { PlanningForm } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/PlanningForm'
 import { isFormValid } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
@@ -17,11 +17,6 @@ import { isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { PanelComments } from './PanelComments'
-import { PanelImages } from './PanelImages'
-import { PanelInternalCACEMSection } from './PanelInternalCACEMSection'
-import { PanelLinks } from './PanelLinks'
-import { PanelThemesAndTags } from './PanelThemesAndTags'
 import { AMPList } from '../AddAMPs/AMPList'
 import { RegulatoryAreas } from '../AddRegulatoryAreas/RegulatoryAreas'
 import {
@@ -33,6 +28,11 @@ import {
   PanelInlineItemLabel,
   PanelSubPart
 } from '../style'
+import { PanelComments } from './PanelComments'
+import { PanelImages } from './PanelImages'
+import { PanelInternalCACEMSection } from './PanelInternalCACEMSection'
+import { PanelLinks } from './PanelLinks'
+import { PanelThemesAndTags } from './PanelThemesAndTags'
 
 export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: VigilanceArea.VigilanceArea | undefined }) {
   const dispatch = useAppDispatch()

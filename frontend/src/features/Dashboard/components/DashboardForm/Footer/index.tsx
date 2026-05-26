@@ -1,6 +1,6 @@
+import { DeleteModal } from '@components/Modal/DeleteModal'
 import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
-import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { useGenerateBrief } from '@features/Dashboard/hooks/useGenerateBrief'
 import { useGenerateEditableBrief } from '@features/Dashboard/hooks/useGenerateEditableBrief'
 import { deleteDashboard } from '@features/Dashboard/useCases/deleteDashboard'

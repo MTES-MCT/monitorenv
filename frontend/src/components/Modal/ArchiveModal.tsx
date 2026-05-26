@@ -5,37 +5,21 @@ type ArchiveModalProps = {
   isAbsolute?: boolean
   onCancel: () => void
   onConfirm: () => void
-  open: boolean
-  subTitle: string
+  subTitle: string | React.ReactNode
   title: string
 }
 
-export function ArchiveModal({
-  context,
-  isAbsolute = true,
-  onCancel,
-  onConfirm,
-  open,
-  subTitle,
-  title
-}: ArchiveModalProps) {
-  if (!open) {
-    return null
-  }
-
+export function ArchiveModal({ context, isAbsolute = true, onCancel, onConfirm, subTitle, title }: ArchiveModalProps) {
   return (
     <Dialog isAbsolute={isAbsolute}>
       <Dialog.Title>{title}</Dialog.Title>
-      <Dialog.Body>
-        <p>{subTitle}</p>
-      </Dialog.Body>
-
+      <Dialog.Body>{subTitle}</Dialog.Body>
       <Dialog.Action>
         <Button accent={Accent.SECONDARY} name={`archive-${context}-modal-cancel`} onClick={onCancel}>
-          Annuler l&apos;archivage
+          Annuler
         </Button>
         <Button accent={Accent.PRIMARY} name={`archive-${context}-modal-confirm`} onClick={onConfirm}>
-          Enregistrer et archiver
+          Archiver
         </Button>
       </Dialog.Action>
     </Dialog>

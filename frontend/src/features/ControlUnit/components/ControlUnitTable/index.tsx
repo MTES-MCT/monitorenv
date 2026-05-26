@@ -1,7 +1,8 @@
+import { ArchiveModal } from '@components/Modal/ArchiveModal'
+import { DeleteModal } from '@components/Modal/DeleteModal'
 import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
-import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { type ControlUnit, DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -15,7 +16,6 @@ import {
   controlUnitsAPI,
   useGetControlUnitsQuery
 } from '../../../../api/controlUnitsAPI'
-import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -147,14 +147,19 @@ export function ControlUnitTable() {
       />
 
       {isArchivingConfirmationModalOpen && targetedControlUnit && (
-        <ConfirmationModal
-          confirmationButtonLabel="Archiver"
-          message={[
-            `Êtes-vous sûr de vouloir archiver l'unité "${targetedControlUnit.name}" ?`,
-            `Elle n'apparaîtra plus dans MonitorFish et dans MonitorEnv, elle ne sera plus utilisée pour les statistiques.`
-          ].join(' ')}
+        <ArchiveModal
+          context="control-unit"
           onCancel={close}
           onConfirm={() => confirmArchiving(targetedControlUnit)}
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir archiver l&apos;unité &quot;{targetedControlUnit.name}&quot; ?</p>
+              <Bold>
+                Elle n&apos;apparaîtra plus dans MonitorFish et dans MonitorEnv, elle ne sera utilisée que pour les
+                statistiques.
+              </Bold>
+            </>
+          }
           title="Archivage de l'unité"
         />
       )}
