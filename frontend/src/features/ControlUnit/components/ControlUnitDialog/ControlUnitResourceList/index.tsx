@@ -1,5 +1,5 @@
-import { ArchiveModal } from '@components/Modal/ArchiveModal'
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { Accent, Button, ControlUnit, Icon, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
@@ -167,7 +167,7 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
       </StyledSectionBody>
 
       {isArchivingConfirmationModalOpen && editedControlUnitResource && (
-        <ArchiveModal
+        <ArchiveDialog
           context="control-unit-resource"
           onCancel={closeDialogsAndModals}
           onConfirm={confirmArchiving}
@@ -177,7 +177,7 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
       )}
 
       {isDeletionConfirmationModalOpen && editedControlUnitResource && (
-        <DeleteModal
+        <DeleteDialog
           context="control-unit-resource"
           isAbsolute={false}
           onCancel={closeDialogsAndModals}

@@ -1,4 +1,4 @@
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
@@ -200,7 +200,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
       </StyledSectionBody>
 
       {isDeletionConfirmationModalOpen && editedControlUnitContact && (
-        <DeleteModal
+        <DeleteDialog
           context="contact-d-unité-de-contrôle"
           isAbsolute={false}
           onCancel={closeDialogsAndModals}

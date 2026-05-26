@@ -1,5 +1,5 @@
-import { ArchiveModal } from '@components/Modal/ArchiveModal'
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
 import { deleteReporting } from '@features/Reportings/useCases/deleteReporting'
@@ -117,7 +117,7 @@ export function ButtonsGroupRow({ id }) {
         </li>
       </ButtonsGroup>
       {isDeleteModalOpen && (
-        <DeleteModal
+        <DeleteDialog
           context="reportings-table"
           isAbsolute={false}
           onCancel={cancelDeleteReporting}
@@ -132,7 +132,7 @@ export function ButtonsGroupRow({ id }) {
         />
       )}
       {isArchiveModalOpen && (
-        <ArchiveModal
+        <ArchiveDialog
           context="reportings-table"
           isAbsolute={false}
           onCancel={cancelArchiveReporting}

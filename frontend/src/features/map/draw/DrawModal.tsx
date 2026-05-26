@@ -1,3 +1,4 @@
+import { MapInteraction } from '@components/Dialog/MapInteraction'
 import { resetDrawing } from '@features/Dashboard/useCases/resetDrawing'
 import {
   type Coordinates,
@@ -28,7 +29,6 @@ import {
 import { useAppDispatch } from '../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../../utils/routes'
-import { MapInteraction } from '../../commonComponents/Modals/MapInteraction'
 import { COORDINATES_OPTIONS } from '../controls/MapCoordinatesBox'
 
 import type { Coordinate } from 'ol/coordinate'

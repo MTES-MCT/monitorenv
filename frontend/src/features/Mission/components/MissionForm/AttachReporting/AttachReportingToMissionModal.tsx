@@ -1,16 +1,16 @@
+import { MapInteraction } from '@components/Dialog/MapInteraction'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { usePrevious } from '@mtes-mct/monitor-ui'
+import {
+  MapInteractionListenerEnum,
+  updateMapInteractionListeners
+} from 'domain/use_cases/map/updateMapInteractionListeners'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { attachReportingToMissionSliceActions } from './slice'
-import {
-  MapInteractionListenerEnum,
-  updateMapInteractionListeners
-} from '../../../../../domain/use_cases/map/updateMapInteractionListeners'
-import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { getMissionPageRoute } from '../../../../../utils/routes'
-import { MapInteraction } from '../../../../commonComponents/Modals/MapInteraction'
 
 export function AttachReportingToMissionModal() {
   const dispatch = useAppDispatch()

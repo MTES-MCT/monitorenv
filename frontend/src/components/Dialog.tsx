@@ -42,26 +42,8 @@ const StyledDialog = styled(MuiDialog)<{
     min-width: 440px;
 
     /* Dialog.Title */
-    > h4 {
+    > div:first-child {
       ${p => p.$titleBackgroundColor && `background-color: ${p.$titleBackgroundColor};`}
-    }
-
-    /* Dialog.Body */
-    > div:nth-child(2) {
-      padding: 24px 40px 8px;
-    }
-
-    /* Dialog.Action */
-    > div:last-child {
-      padding: 24px 0 32px;
-
-      > .Element-Button {
-        width: 136px;
-
-        &:not(:first-child) {
-          margin-left: 8px;
-        }
-      }
     }
   }
 `

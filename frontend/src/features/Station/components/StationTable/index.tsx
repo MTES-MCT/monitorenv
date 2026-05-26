@@ -1,4 +1,4 @@
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
@@ -98,7 +98,7 @@ export function BaseTable() {
       <DataTable columns={stationTableColumns} data={filteredStations} initialSorting={[{ desc: false, id: 'name' }]} />
 
       {isDeletionConfirmationModalOpen && targetedStation && (
-        <DeleteModal
+        <DeleteDialog
           context="base"
           onCancel={close}
           onConfirm={() => confirmDeletion(targetedStation)}

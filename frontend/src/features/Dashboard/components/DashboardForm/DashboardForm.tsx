@@ -1,4 +1,5 @@
-import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
+import { CancelEditDialog } from '@components/Dialog/CancelEditDialog'
+import { Bold } from '@components/style'
 import { Dashboard } from '@features/Dashboard/types'
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { SideWindowContent } from '@features/SideWindow/style'
@@ -28,6 +29,7 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
   const filters = useAppSelector(state => state.dashboardFilters?.dashboards[key]?.filters)
   const previewSelectionFilter = filters?.previewSelection ?? false
+  const isNew = !dashboard.dashboard.createdAt
 
   const toolbarRef = useRef<HTMLDivElement>(null)
   const toolbarHeight = toolbarRef.current?.clientHeight ?? 0
@@ -98,16 +100,20 @@ export function DashboardForm({ dashboardForm: [key, dashboard], isActive }: Das
 
   return (
     <>
-      <CancelEditDialog
-        onCancel={() => {
-          dispatch(dashboardActions.setIsCancelModalOpen({ isCancelModalOpen: false, key }))
-        }}
-        onConfirm={confirmCancelEdit}
-        open={isCancelModalOpen}
-        subText="Voulez-vous enregistrer les modifications avant de quitter ?"
-        text={`Vous êtes en train d'abandonner l'édition du tableau de bord`}
-        title="Enregistrer les modifications"
-      />
+      {isCancelModalOpen && (
+        <CancelEditDialog
+          onCancel={() => {
+            dispatch(dashboardActions.setIsCancelModalOpen({ isCancelModalOpen: false, key }))
+          }}
+          onConfirm={confirmCancelEdit}
+          text={
+            <>
+              <p>Vous êtes en train d&apos;abandonner</p>
+              <Bold>{`${isNew ? 'la création' : "l'édition"} du tableau de bord.`}</Bold>
+            </>
+          }
+        />
+      )}
       {isActive && (
         <>
           <Toolbar ref={toolbarRef} dashboardForm={[key, dashboard]} geometry={dashboard.dashboard.geom} />

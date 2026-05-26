@@ -1,4 +1,4 @@
-import { MapInteraction } from '@features/commonComponents/Modals/MapInteraction'
+import { MapInteraction } from '@components/Dialog/MapInteraction'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import {

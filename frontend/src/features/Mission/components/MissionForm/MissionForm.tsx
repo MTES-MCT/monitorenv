@@ -1,4 +1,4 @@
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import {
@@ -273,7 +273,7 @@ export function MissionForm({
         />
       )}
       {openModal === ModalTypes.DELETE && (
-        <DeleteModal
+        <DeleteDialog
           context="mission"
           onCancel={returnToEdition}
           onConfirm={validateDeleteMission}
