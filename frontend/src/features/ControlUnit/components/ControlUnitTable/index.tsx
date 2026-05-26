@@ -1,5 +1,7 @@
+import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { type ControlUnit, DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -158,14 +160,16 @@ export function ControlUnitTable() {
       )}
 
       {isDeletionConfirmationModalOpen && targetedControlUnit && (
-        <ConfirmationModal
-          confirmationButtonLabel="Supprimer"
-          message={[
-            `Êtes-vous sûr de vouloir supprimer l'unité "${targetedControlUnit.name}" ?`,
-            `Ceci entraînera la suppression de toutes ses informations (moyens, contacts...).`
-          ].join(' ')}
+        <DeleteModal
+          context="unité-de-contrôle"
           onCancel={close}
           onConfirm={() => confirmDeletion(targetedControlUnit)}
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir supprimer l&apos;unité &quot;{targetedControlUnit.name}&quot; ?</p>
+              <Bold>Ceci entraînera la suppression de toutes ses informations (moyens, contacts...).</Bold>
+            </>
+          }
           title="Suppression de l'unité"
         />
       )}

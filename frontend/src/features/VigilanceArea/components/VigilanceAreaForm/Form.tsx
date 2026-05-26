@@ -1,5 +1,6 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
+import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { ZonePicker } from '@components/ZonePicker'
 import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
@@ -158,8 +159,13 @@ export function Form() {
             isAbsolute={false}
             onCancel={cancelDeleteModal}
             onConfirm={onConfirmDeleteModal}
-            subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
-            title="Supprimer la zone de vigilance&nbsp;?"
+            subTitle={
+              <>
+                <p>Êtes-vous sûr de vouloir </p>
+                <Bold>supprimer la zone de vigilance&nbsp;?</Bold>
+              </>
+            }
+            title="Supprimer la zone de vigilance"
           />,
           document.body
         )}

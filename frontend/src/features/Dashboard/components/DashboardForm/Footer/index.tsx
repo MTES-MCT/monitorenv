@@ -1,4 +1,6 @@
+import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
+import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { useGenerateBrief } from '@features/Dashboard/hooks/useGenerateBrief'
 import { useGenerateEditableBrief } from '@features/Dashboard/hooks/useGenerateEditableBrief'
 import { deleteDashboard } from '@features/Dashboard/useCases/deleteDashboard'
@@ -132,7 +134,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
     <>
       {isSaveDialogOpen && (
         <Dialog isAbsolute>
-          <Dialog.Title as="h2">Enregistrer le tableau de bord</Dialog.Title>
+          <Dialog.Title onClose={() => setIsSaveDialogOpen(false)}>Enregistrer le tableau de bord</Dialog.Title>
           <Dialog.Body $color={THEME.color.gunMetal}>
             <StyledDialogMessage>
               Voulez-vous modifier le nom par défaut du tableau de bord avant de l&apos;enregistrer ?
@@ -145,29 +147,29 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
               value={updatedName}
             />
           </Dialog.Body>
-          <StyledDialogActions>
+          <Dialog.Action>
             <Button accent={Accent.SECONDARY} onClick={() => setIsSaveDialogOpen(false)}>
               Annuler
             </Button>
             <Button Icon={Icon.Save} onClick={save}>
               Enregistrer
             </Button>
-          </StyledDialogActions>
+          </Dialog.Action>
         </Dialog>
       )}
       {isDeleteDialogOpen && (
-        <Dialog isAbsolute>
-          <Dialog.Title as="h2">Supprimer le tableau de bord</Dialog.Title>
-          <Dialog.Body $color={THEME.color.gunMetal}>
-            <StyledDialogMessage>Êtes-vous sûr de vouloir supprimer le tableau de bord ?</StyledDialogMessage>
-          </Dialog.Body>
-          <StyledDialogActions>
-            <Button accent={Accent.SECONDARY} onClick={() => setIsDeleteDialogOpen(false)}>
-              Annuler
-            </Button>
-            <Button onClick={confirmDelete}>Supprimer</Button>
-          </StyledDialogActions>
-        </Dialog>
+        <DeleteModal
+          context="tableau-de-bord"
+          onCancel={() => setIsDeleteDialogOpen(false)}
+          onConfirm={confirmDelete}
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir </p>
+              <Bold>supprimer le tableau&nbsp;?</Bold>
+            </>
+          }
+          title="Suppression du tableau"
+        />
       )}
       <Wrapper>
         <DeleteButton accent={Accent.SECONDARY} Icon={Icon.Delete} onClick={handleDelete}>
@@ -225,16 +227,12 @@ const DeleteButton = styled(Button)`
   }
 `
 const StyledTextInput = styled(TextInput)`
+  margin-top: 24px;
   width: 360px;
-  margin: 24px auto 0;
 `
 
 const StyledDialogMessage = styled.p`
   font-size: 16px;
-`
-
-const StyledDialogActions = styled(Dialog.Action)`
-  align-items: stretch;
 `
 
 const StyledDropdown = styled(Dropdown)`

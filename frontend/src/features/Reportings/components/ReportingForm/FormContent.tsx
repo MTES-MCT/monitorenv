@@ -1,6 +1,6 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import { Italic } from '@components/style'
+import { Bold, Italic } from '@components/style'
 import { AutoSaveTag } from '@features/commonComponents/AutoSaveTag'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { mainWindowActions } from '@features/MainWindow/slice'
@@ -354,8 +354,13 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           isAbsolute={false}
           onCancel={cancelDeleteReporting}
           onConfirm={confirmDeleteReporting}
-          subTitle="Êtes-vous sûr de vouloir supprimer le signalement&nbsp;?"
-          title="Supprimer le signalement&nbsp;?"
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir </p>
+              <Bold>supprimer le signalement&nbsp;?</Bold>
+            </>
+          }
+          title="Supprimer le signalement"
         />
       )}
 

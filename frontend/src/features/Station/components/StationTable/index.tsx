@@ -1,5 +1,7 @@
+import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -8,7 +10,6 @@ import { FilterBar } from './FilterBar'
 import { getStationTableColumns, getFilters } from './utils'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { DELETE_STATION_ERROR_MESSAGE, stationsAPI, useGetStationsQuery } from '../../../../api/stationsAPI'
-import { ConfirmationModal } from '../../../../components/ConfirmationModal'
 import { Dialog } from '../../../../components/Dialog'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -97,11 +98,16 @@ export function BaseTable() {
       <DataTable columns={stationTableColumns} data={filteredStations} initialSorting={[{ desc: false, id: 'name' }]} />
 
       {isDeletionConfirmationModalOpen && targetedStation && (
-        <ConfirmationModal
-          confirmationButtonLabel="Supprimer"
-          message={`Êtes-vous sûr de vouloir supprimer la base "${targetedStation.name}" ?`}
+        <DeleteModal
+          context="base"
           onCancel={close}
           onConfirm={() => confirmDeletion(targetedStation)}
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir supprimer </p>
+              <Bold>la base &quot;{targetedStation.name}&quot; ?</Bold>
+            </>
+          }
           title="Suppression de la base"
         />
       )}
