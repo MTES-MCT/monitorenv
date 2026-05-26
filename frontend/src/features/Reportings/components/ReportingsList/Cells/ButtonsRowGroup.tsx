@@ -1,3 +1,4 @@
+import { Bold } from '@components/style'
 import { ArchiveModal } from '@features/commonComponents/Modals/Archive'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
@@ -122,8 +123,13 @@ export function ButtonsGroupRow({ id }) {
           isAbsolute={false}
           onCancel={cancelDeleteReporting}
           onConfirm={confirmDeleteReporting}
-          subTitle="Êtes-vous sûr de vouloir supprimer le signalement&nbsp;?"
-          title="Supprimer le signalement&nbsp;?"
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir </p>
+              <Bold>supprimer le signalement&nbsp;?</Bold>
+            </>
+          }
+          title="Supprimer le signalement"
         />
       )}
       <ArchiveModal

@@ -1,5 +1,7 @@
+import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -172,11 +174,16 @@ export function AdministrationTable() {
       )}
 
       {isDeletionConfirmationModalOpen && targetedAdministration && (
-        <ConfirmationModal
-          confirmationButtonLabel="Supprimer"
-          message={`Êtes-vous sûr de vouloir supprimer l'administration "${targetedAdministration.name}" ?`}
+        <DeleteModal
+          context="administration"
           onCancel={close}
           onConfirm={() => confirmDeletion(targetedAdministration)}
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir supprimer </p>
+              <Bold>l&apos;administration &quot;{targetedAdministration.name}&quot; ?</Bold>
+            </>
+          }
           title="Suppression de l'administration"
         />
       )}

@@ -1,3 +1,4 @@
+import { Bold } from '@components/style'
 import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelDates'
 import { PlanningForm } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/PlanningForm'
@@ -111,8 +112,13 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
               isAbsolute={false}
               onCancel={cancelDeleteModal}
               onConfirm={onConfirmDeleteModal}
-              subTitle="Êtes-vous sûr de vouloir supprimer la zone de vigilance&nbsp;?"
-              title="Supprimer la zone de vigilance&nbsp;?"
+              subTitle={
+                <>
+                  <p>Êtes-vous sûr de vouloir </p>
+                  <Bold>supprimer cette zone de vigilance&nbsp;?</Bold>
+                </>
+              }
+              title="Supprimer la zone de vigilance"
             />,
             document.body
           )}

@@ -1,3 +1,5 @@
+import { Bold } from '@components/style'
+import { DeleteModal } from '@features/commonComponents/Modals/Delete'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import {
   Banner,
@@ -21,7 +23,6 @@ import { ActionForm } from './ActionForm'
 import { ActionsTimeLine } from './ActionsTimeLine'
 import { CancelEditModal } from './CancelEditModal'
 import { CreateDashboardModal } from './CreateDashboardModal'
-import { DeleteModal } from './DeleteModal'
 import { ExternalActionsModal } from './ExternalActionsModal'
 import { FormikSyncMissionFields } from './FormikSyncMissionFields'
 import { GeneralInformationsForm } from './GeneralInformationsForm'
@@ -271,7 +272,20 @@ export function MissionForm({
           onConfirm={cancelForm}
         />
       )}
-      {openModal === ModalTypes.DELETE && <DeleteModal onCancel={returnToEdition} onConfirm={validateDeleteMission} />}
+      {openModal === ModalTypes.DELETE && (
+        <DeleteModal
+          context="mission"
+          onCancel={returnToEdition}
+          onConfirm={validateDeleteMission}
+          subTitle={
+            <>
+              <p>Êtes-vous sûr de vouloir </p>
+              <Bold>supprimer la mission&nbsp;?</Bold>
+            </>
+          }
+          title="Supprimer la mission"
+        />
+      )}
       {openModal === ModalTypes.ACTIONS && <ExternalActionsModal onClose={returnToEdition} sources={actionsSources} />}
       {openModal === ModalTypes.CREATE_DASHBOARD && (
         <CreateDashboardModal mission={selectedMission} onClose={() => setOpenModal(undefined)} />
