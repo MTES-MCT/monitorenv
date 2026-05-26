@@ -1,3 +1,5 @@
+import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
+import { getControlUnitsByIds, useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { GroupName } from '@features/layersSelector/overlays/OverlayContent'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
@@ -5,10 +7,12 @@ import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { computeVigilanceAreaPeriod } from '@features/VigilanceArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { getGroupName, getLegendKey, getLegendType, getName, getTitle } from 'domain/entities/layers/utils'
 import { layerSidebarActions } from 'domain/shared_slices/LayerSidebar'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { isOutOfPeriod, isWithinPeriod } from '../VigilanceAreaForm/utils'
@@ -21,6 +25,8 @@ export function VigilanceAreaOverlay({
   vigilanceAreaItem: OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, VigilanceArea.VigilanceAreaProperties>
 }) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
+
   const vigilanceArea = vigilanceAreaItem.properties
   const { id, periods, sources, visibility } = vigilanceArea as VigilanceArea.VigilanceArea
 
@@ -30,6 +36,42 @@ export function VigilanceAreaOverlay({
   const legendKey = getLegendKey(vigilanceArea, MonitorEnvLayers.VIGILANCE_AREA)
 
   const vigilanceAreaPeriod = periods?.map(period => computeVigilanceAreaPeriod(period, false))
+  useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+
+  const controlUnitIds = useMemo(
+    () => [
+      ...new Set(
+        sources
+          ?.filter(source => source.type === VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT)
+          .flatMap(source => source.controlUnitContacts?.map(contact => contact.controlUnitId) ?? []) ?? []
+      )
+    ],
+    [sources]
+  )
+
+  const controlUnits = useAppSelector(state => getControlUnitsByIds(state, controlUnitIds))
+  const getControlUnitName = (controlUnitId: number) => {
+    const unit = controlUnits.find(controlUnit => controlUnit.id === controlUnitId)
+
+    if (!unit) {
+      return undefined
+    }
+
+    return `${unit.name} (${unit.administration?.name})`
+  }
+
+  const getSourceName = (source: VigilanceArea.VigilanceAreaSource) => {
+    if (source.type !== VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT) {
+      return source.name
+    }
+
+    const sourceControlUnitIds = [...new Set(source.controlUnitContacts?.map(contact => contact.controlUnitId) ?? [])]
+
+    return sourceControlUnitIds
+      .map(controlUnitId => getControlUnitName(controlUnitId))
+      .filter(name => !!name)
+      .join(', ')
+  }
 
   const handleClick = () => {
     dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
@@ -68,18 +110,23 @@ export function VigilanceAreaOverlay({
         )}
         {periods && periods.length === 1 && <span>{vigilanceAreaPeriod}</span>}
       </PeriodWrapper>
-      <SourcesWrapper>
-        {sources?.map(source => {
-          const sourceLabel = source.type === VigilanceArea.VigilanceAreaSourceType.INTERNAL ? 'CACEM' : 'externe'
+      {isSuperUser && (
+        <SourcesWrapper>
+          {sources?.map(source => {
+            const sourceLabel = source.type === VigilanceArea.VigilanceAreaSourceType.INTERNAL ? 'CACEM' : 'externe'
+            const controlUnitsNames =
+              source.type === VigilanceArea.VigilanceAreaSourceType.CONTROL_UNIT ? getSourceName(source) : undefined
+            const sourceName = controlUnitsNames ?? source.name
 
-          return (
-            <li key={source.id}>
-              <Label>Source {sourceLabel}:</Label>
-              <span> {source.name}</span>
-            </li>
-          )
-        })}
-      </SourcesWrapper>
+            return (
+              <li key={source.id}>
+                <Label>Source {sourceLabel}:</Label>
+                <span> {sourceName || '-'}</span>
+              </li>
+            )
+          })}
+        </SourcesWrapper>
+      )}
     </Wrapper>
   )
 }
