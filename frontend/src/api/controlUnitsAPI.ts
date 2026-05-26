@@ -85,6 +85,7 @@ export const {
   useDeleteControlUnitMutation,
   useGetControlUnitQuery,
   useGetControlUnitsQuery,
+  useLazyGetControlUnitQuery,
   useUpdateControlUnitMutation
 } = controlUnitsAPI
 
