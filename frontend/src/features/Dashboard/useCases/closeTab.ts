@@ -1,6 +1,7 @@
 import { sideWindowActions } from '@features/SideWindow/slice'
 import { getDashboardPageRoute } from '@utils/routes'
 import { sideWindowPaths } from 'domain/entities/sideWindow'
+import { isEqual } from 'lodash'
 import { generatePath } from 'react-router'
 
 import { dashboardActions } from '../slice'
@@ -17,7 +18,7 @@ export const closeTab =
     if (id) {
       const dashboard = getState().dashboard.dashboards[id]?.dashboard
       const unsavedDashboard = getState().dashboard.dashboards[id]?.unsavedDashboard
-      if (dashboard !== unsavedDashboard) {
+      if (!isEqual(dashboard, unsavedDashboard) || !dashboard?.createdAt) {
         dispatch(dashboardActions.setIsCancelModalOpen({ isCancelModalOpen: true, key: id }))
 
         return

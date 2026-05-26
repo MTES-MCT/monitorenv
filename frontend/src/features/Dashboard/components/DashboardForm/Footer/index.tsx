@@ -1,4 +1,4 @@
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { useGenerateBrief } from '@features/Dashboard/hooks/useGenerateBrief'
@@ -158,7 +158,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
         </Dialog>
       )}
       {isDeleteDialogOpen && (
-        <DeleteModal
+        <DeleteDialog
           context="tableau-de-bord"
           onCancel={() => setIsDeleteDialogOpen(false)}
           onConfirm={confirmDelete}

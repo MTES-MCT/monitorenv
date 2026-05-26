@@ -10,7 +10,7 @@ type DeleteModalProps = {
   title: string
 }
 
-export function DeleteModal({ context, isAbsolute = true, onCancel, onConfirm, subTitle, title }: DeleteModalProps) {
+export function DeleteDialog({ context, isAbsolute = true, onCancel, onConfirm, subTitle, title }: DeleteModalProps) {
   return (
     <Dialog isAbsolute={isAbsolute}>
       <Dialog.Title onClose={onCancel}>{title}</Dialog.Title>

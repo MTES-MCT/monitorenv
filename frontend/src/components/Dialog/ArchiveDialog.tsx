@@ -9,7 +9,7 @@ type ArchiveModalProps = {
   title: string
 }
 
-export function ArchiveModal({ context, isAbsolute = true, onCancel, onConfirm, subTitle, title }: ArchiveModalProps) {
+export function ArchiveDialog({ context, isAbsolute = true, onCancel, onConfirm, subTitle, title }: ArchiveModalProps) {
   return (
     <Dialog isAbsolute={isAbsolute}>
       <Dialog.Title>{title}</Dialog.Title>

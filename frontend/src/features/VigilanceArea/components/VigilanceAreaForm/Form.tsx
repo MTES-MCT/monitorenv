@@ -1,10 +1,10 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { CancelEditDialog } from '@components/Dialog/CancelEditDialog'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { ZonePicker } from '@components/ZonePicker'
-import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { Periods } from '@features/VigilanceArea/components/VigilanceAreaForm/Periods/Periods'
 import { NEW_VIGILANCE_AREA_ID } from '@features/VigilanceArea/constants'
 import { vigilanceAreaActions, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
@@ -144,17 +144,19 @@ export function Form() {
           <CancelEditDialog
             onCancel={onCancelEditModal}
             onConfirm={onConfirmEditModal}
-            open={isCancelModalOpen}
-            subText="Voulez-vous enregistrer les modifications avant de quitter ?"
-            text={`Vous êtes en train d'abandonner l'édition de la zone de vigilance: ${values.name}`}
-            title="Enregistrer les modifications"
+            text={
+              <>
+                <p>Vous êtes en train d&apos;abandonner</p>
+                <Bold>{`${values.id ? "l'édition" : 'la création'} de la zone de vigilance  ${values.name}.`}</Bold>
+              </>
+            }
           />,
           document.body
         )}
 
       {isDeleteModalOpen &&
         createPortal(
-          <DeleteModal
+          <DeleteDialog
             context="vigilance-area"
             isAbsolute={false}
             onCancel={cancelDeleteModal}

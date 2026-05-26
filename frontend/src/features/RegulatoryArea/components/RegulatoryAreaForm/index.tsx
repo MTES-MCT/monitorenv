@@ -1,7 +1,8 @@
 import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
+import { CancelEditDialog } from '@components/Dialog/CancelEditDialog'
+import { Bold } from '@components/style'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { Title } from '@features/BackOffice/components/style'
-import { CancelEditDialog } from '@features/commonComponents/Modals/CancelEditModal'
 import { MapAttributionsBox } from '@features/map/controls/MapAttributionsBox'
 import { MapCoordinatesBox } from '@features/map/controls/MapCoordinatesBox'
 import { MapLayer } from '@features/map/layers/MapLayer'
@@ -19,9 +20,9 @@ import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
 
+import { BaseLayerSelector } from '../BaseLayerSelector'
 import { FormContent } from './FormContent'
 import { RegulatoryAreaFormSchema } from './Schema'
-import { BaseLayerSelector } from '../BaseLayerSelector'
 import { BackofficeRegulatoryAreaLayer } from '../Layers/BackofficeRegulatoryAreaLayer'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
@@ -127,10 +128,12 @@ export function RegulatoryAreaForm() {
                 <CancelEditDialog
                   onCancel={() => setIsCancelEditDialogOpen(false)}
                   onConfirm={backToList}
-                  open={isCancelEditDialogOpen}
-                  subText="Voulez-vous enregistrer les modifications avant de quitter ?"
-                  text={`Vous êtes en train d'abandonner l'édition de la zone réglementaire`}
-                  title="Enregistrer les modifications"
+                  text={
+                    <>
+                      <p>Vous êtes en train d&apos;abandonner</p>
+                      <Bold>{`${isEditing ? "l'édition" : 'la création'} de la zone réglementaire.`}</Bold>
+                    </>
+                  }
                 />
               )}
               <form onSubmit={handleSubmit}>

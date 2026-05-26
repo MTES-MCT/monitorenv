@@ -1,4 +1,4 @@
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { PanelDates } from '@features/VigilanceArea/components/VigilanceAreaForm/Panel/PanelDates'
 import { PlanningForm } from '@features/VigilanceArea/components/VigilanceAreaForm/Planning/PlanningForm'
@@ -107,7 +107,7 @@ export function VigilanceAreaPanel({ vigilanceArea }: { vigilanceArea: Vigilance
       <PanelBody>
         {isDeleteModalOpen &&
           createPortal(
-            <DeleteModal
+            <DeleteDialog
               context="vigilance-area"
               isAbsolute={false}
               onCancel={cancelDeleteModal}

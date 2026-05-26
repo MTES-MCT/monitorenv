@@ -1,5 +1,5 @@
-import { ArchiveModal } from '@components/Modal/ArchiveModal'
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
@@ -147,7 +147,7 @@ export function ControlUnitTable() {
       />
 
       {isArchivingConfirmationModalOpen && targetedControlUnit && (
-        <ArchiveModal
+        <ArchiveDialog
           context="control-unit"
           onCancel={close}
           onConfirm={() => confirmArchiving(targetedControlUnit)}
@@ -165,7 +165,7 @@ export function ControlUnitTable() {
       )}
 
       {isDeletionConfirmationModalOpen && targetedControlUnit && (
-        <DeleteModal
+        <DeleteDialog
           context="unité-de-contrôle"
           onCancel={close}
           onConfirm={() => confirmDeletion(targetedControlUnit)}

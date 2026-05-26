@@ -1,6 +1,7 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
-import { DeleteModal } from '@components/Modal/DeleteModal'
+import { CancelEditDialog } from '@components/Dialog/CancelEditDialog'
+import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold, Italic } from '@components/style'
 import { AutoSaveTag } from '@features/commonComponents/AutoSaveTag'
 import { mainWindowActions } from '@features/MainWindow/slice'
@@ -66,7 +67,6 @@ import { useDebouncedCallback } from 'use-debounce'
 
 import { AttachMission } from './AttachMission'
 import { attachMissionToReportingSliceActions } from './AttachMission/slice'
-import { CancelEditDialog } from './FormComponents/Dialog/CancelEditDialog'
 import { Footer } from './FormComponents/Footer'
 import { Position } from './FormComponents/Position'
 import { Source } from './FormComponents/Source'
@@ -341,14 +341,16 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     <StyledFormContainer>
       <FormikEffect onChange={nextValues => validateBeforeOnChange(nextValues)} />
       <FormikSyncReportingFields reportingId={selectedReporting.id} />
-      <CancelEditDialog
-        key={`cancel-edit-modal-${selectedReporting.id}`}
-        onCancel={returnToEdition}
-        onConfirm={confirmCloseReporting}
-        open={isConfirmCancelDialogVisible}
-      />
+      {isConfirmCancelDialogVisible && (
+        <CancelEditDialog
+          key={`cancel-edit-modal-${selectedReporting.id}`}
+          onCancel={returnToEdition}
+          onConfirm={confirmCloseReporting}
+          text="Vous êtes en train d'abandonner l'édition du signalement."
+        />
+      )}
       {isDeleteModalOpen && (
-        <DeleteModal
+        <DeleteDialog
           key={`delete-modal-${selectedReporting.id}`}
           context="reporting"
           isAbsolute={false}
