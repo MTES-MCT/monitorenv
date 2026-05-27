@@ -134,7 +134,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
     dispatch(
       mapActions.setIsolateMode({
         id,
-        isfilled: true,
+        isFilled: true,
         type
       })
     )
@@ -151,7 +151,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
     dispatch(
       mapActions.setIsolateMode({
         ...isolatedLayer,
-        isfilled: !isolatedLayer.isfilled
+        isFilled: !isolatedLayer.isFilled
       })
     )
   }
@@ -202,7 +202,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
 
           const { periods } = item.properties as VigilanceArea.VigilanceAreaProperties
 
-          const isIsolatedLayerFilled = isolatedLayer?.id === id && isolatedLayer?.isfilled
+          const isIsolatedLayerFilled = isolatedLayer?.id === id && isolatedLayer?.isFilled
 
           return (
             <LayerItem

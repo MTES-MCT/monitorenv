@@ -33,7 +33,7 @@ class CaffeineConfiguration(
             listOf(
                 userAuthorizationCache,
                 controlUnitsCache,
-                regulatoryAreasTiles
+                regulatoryAreasTiles,
             ),
         )
 

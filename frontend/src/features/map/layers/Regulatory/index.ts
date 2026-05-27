@@ -22,12 +22,10 @@ export function RegulatoryLayers({ map }: BaseMapChildrenProps) {
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
-  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(
-    { axis: Axis.NORTH_SOUTH, ids: showedRegulatoryLayerIds },
-    {
-      skip: showedRegulatoryLayerIds.length === 0
-    }
-  )
+  const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery({
+    axis: Axis.NORTH_SOUTH,
+    ids: showedRegulatoryLayerIds
+  })
 
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLayerVisible = !isLinkingAMPToVigilanceArea

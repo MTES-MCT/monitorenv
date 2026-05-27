@@ -72,10 +72,10 @@ export namespace RegulatoryArea {
 
   export type RegulatoryAreaTilesProperties = {
     id: number
-    isfilled: boolean
-    layername: string
+    isFilled: boolean
+    layerName: string
     plan: string
-    polyname: string
+    polyName: string
     resume?: string
     tags?: string
   }
