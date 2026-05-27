@@ -61,6 +61,8 @@ class RegulatoryAreas(
         @Parameter(description = "Only recent areas")
         @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
         onlyRecentsAreas: Boolean?,
+        @Parameter(description = "Extent")
+        @RequestParam(name = "extent", required = false) extent: List<Double>?,
     ): RegulatoryAreasWithTotalDataOutput {
         val (regulatoryAreasGrouped, totalCount) =
             getAllRegulatoryAreas.execute(
@@ -72,6 +74,7 @@ class RegulatoryAreas(
                         tags = tags,
                         themes = themes,
                         onlyRecentsAreas = onlyRecentsAreas,
+                        extent = extent,
                     ),
             )
 
@@ -105,6 +108,8 @@ class RegulatoryAreas(
         @Parameter(description = "Only recent areas")
         @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
         onlyRecentsAreas: Boolean?,
+        @Parameter(description = "Extent")
+        @RequestParam(name = "extent", required = false) extent: List<Double>?,
         @PathVariable x: Int,
         @PathVariable y: Int,
         @PathVariable z: Int,
@@ -118,6 +123,7 @@ class RegulatoryAreas(
                     tags = tags,
                     themes = themes,
                     onlyRecentsAreas = onlyRecentsAreas,
+                    extent = extent,
                 ),
             x = x,
             y = y,
