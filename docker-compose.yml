@@ -105,11 +105,6 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - db-data:/var/lib/postgresql/data
-      - "./backend/src/main/resources/db/testdata/reg.csv:/data/reg.csv"
-      - "./backend/src/main/resources/db/testdata/themes.csv:/data/themes.csv"
-      - "./backend/src/main/resources/db/testdata/themes_reg.csv:/data/themes_reg.csv"
-      - "./backend/src/main/resources/db/testdata/tags.csv:/data/tags.csv"
-      - "./backend/src/main/resources/db/testdata/tags_reg.csv:/data/tags_reg.csv"
       - "${MONITORENV_BACKUPS_FOLDER}:/opt/monitorenv_backups"
     ports:
       - ${POSTGRES_PORT}:5432

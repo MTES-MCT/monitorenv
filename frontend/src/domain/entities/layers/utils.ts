@@ -30,7 +30,7 @@ export const getGroupName = (layer: GenericLayerType, layerType: RegulatoryOrAMP
     return (layer as AMPProperties | VigilanceArea.VigilanceAreaProperties)?.name
   }
 
-  return (layer as RegulatoryArea.RegulatoryAreaTilesProperties).layername
+  return (layer as RegulatoryArea.RegulatoryAreaTilesProperties).layerName
 }
 
 export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {
@@ -48,7 +48,7 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
 
     default:
       return getRegulatoryAreaTitle(
-        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyname,
+        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyName,
         (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.resume
       )
   }
@@ -69,7 +69,7 @@ export const getLegendKey = (layer: GenericLayerType, layerType: RegulatoryOrAMP
 
     default:
       return getRegulatoryAreaTitle(
-        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyname,
+        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyName,
         (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.resume
       )
   }

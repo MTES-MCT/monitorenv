@@ -4,7 +4,7 @@ import { GeoJSON } from 'ol/format'
 
 import type { Semaphore } from '../../../../domain/entities/semaphore'
 
-export const getSemaphoreZoneFeature = (semaphore: Semaphore, layername: string) => {
+export const getSemaphoreZoneFeature = (semaphore: Semaphore, layerName: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(semaphore.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -14,7 +14,7 @@ export const getSemaphoreZoneFeature = (semaphore: Semaphore, layername: string)
   const feature = new Feature({
     geometry
   })
-  feature.setId(`${layername}:${semaphore.id}`)
+  feature.setId(`${layerName}:${semaphore.id}`)
   feature.setProperties({
     base: semaphore.base,
     email: semaphore.email,
