@@ -52,7 +52,7 @@ export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrVig
 
     default:
       return getRegulatoryAreaTitle(
-        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyname,
+        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyName,
         (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.resume
       )
   }
@@ -73,7 +73,7 @@ export const getLegendKey = (layer: GenericLayerType, layerType: RegulatoryOrAMP
 
     default:
       return getRegulatoryAreaTitle(
-        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyname,
+        (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.polyName,
         (layer as RegulatoryArea.RegulatoryAreaTilesProperties)?.resume
       )
   }

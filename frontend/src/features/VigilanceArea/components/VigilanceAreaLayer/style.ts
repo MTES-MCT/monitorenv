@@ -10,7 +10,7 @@ const getStyle = (
   color: string,
   isSelected: boolean | undefined,
   asMinimap: boolean,
-  isfilled: boolean = true,
+  isFilled: boolean = true,
   isWithinCriticalPeriod: boolean = false
 ) => {
   const strokeColor = () => {
@@ -26,7 +26,7 @@ const getStyle = (
 
   return new Style({
     fill: new Fill({
-      color: isfilled ? getColorWithAlpha(color, 0.5) : 'transparent'
+      color: isFilled ? getColorWithAlpha(color, 0.5) : 'transparent'
     }),
     stroke: new Stroke({
       color: strokeColor(),
@@ -58,7 +58,7 @@ export const getVigilanceAreaLayerStyle = feature => {
     colorWithAlpha,
     feature.get('isSelected'),
     feature.get('asMinimap'),
-    feature.get('isfilled'),
+    feature.get('isFilled'),
     isWithinCriticalPeriod
   )
 }
