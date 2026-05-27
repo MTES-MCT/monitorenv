@@ -24,6 +24,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                 OR regulatoryArea.editionBo >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
                 OR regulatoryArea.editionCacem >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
             ))
+            AND (:extent IS NULL OR intersects(regulatoryArea.geom, :extent) = true)
             ORDER BY regulatoryArea.layerName
         """,
     )
@@ -33,6 +34,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         tags: List<Int>? = null,
         themes: List<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
+        extent: Geometry? = null,
     ): List<RegulatoryAreaModel>
 
     @Query(
@@ -61,7 +63,11 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                         OR reg.edition_bo >= CURRENT_TIMESTAMP - INTERVAL '30 days'
                         OR reg.edition_cacem >= CURRENT_TIMESTAMP - INTERVAL '30 days'
                         )
-                    )),
+                    )
+                    AND ((:minX IS NULL OR :minY IS NULL OR :maxX IS NULL OR :maxY IS NULL)
+                        OR ST_Intersects(geom_3857, ST_MakeEnvelope(:minX, :minY, :maxX, :maxY, 3857))
+                        )
+                    ),
                     tags_agg AS (
                         SELECT
                             tr.regulatory_areas_id,
@@ -103,6 +109,10 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         themes: Array<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
         query: String? = null,
+        minX: Double? = null,
+        minY: Double? = null,
+        maxX: Double? = null,
+        maxY: Double? = null,
         x: Int,
         y: Int,
         z: Int,
