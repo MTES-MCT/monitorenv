@@ -133,7 +133,7 @@ class MissionModel(
 
                 missionControlUnitModel
                     .unit
-                    .toLegacyControlUnit()
+                    .toLegacyControlUnit(controlResources)
                     .copy(
                         contact = missionControlUnitModel.contact,
                         resources = mappedControlUnitResources?.toList() ?: emptyList(),
@@ -153,14 +153,13 @@ class MissionModel(
                 val reportingId = attachedReporting.id
                 val actionId = attachedReporting.attachedEnvAction?.id
 
-                require(reportingId != null)
+                requireNotNull(reportingId)
 
                 if (actionId == null) {
                     return@fold listOfActionsAttached
                 }
 
-                val hasActionAlreadyAttachedToReporting =
-                    listOfActionsAttached.find { it.first == actionId } != null
+                val hasActionAlreadyAttachedToReporting = listOfActionsAttached.any { it.first == actionId }
 
                 if (!hasActionAlreadyAttachedToReporting) {
                     val newPair = Pair(actionId, mutableListOf(reportingId))
@@ -217,7 +216,7 @@ class MissionModel(
             controlUnits?.map { missionControlUnitModel ->
                 missionControlUnitModel
                     .unit
-                    .toLegacyControlUnit()
+                    .toLegacyControlUnit(controlResources)
                     .copy(
                         contact = missionControlUnitModel.contact,
                     )
