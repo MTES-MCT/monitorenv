@@ -25,18 +25,34 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const isolatedLayerRef = useRef(isolatedLayer)
   const regulatoryMetadataLayerIdRef = useRef(regulatoryMetadataLayerId)
 
-  const { areRecentsAreasChecked, controlPlan, filteredRegulatoryTags, filteredRegulatoryThemes, globalSearchText } =
-    useAppSelector(state => state.layerSearch)
+  const {
+    areRecentsAreasChecked,
+    controlPlan,
+    filteredRegulatoryTags,
+    filteredRegulatoryThemes,
+    globalSearchText,
+    searchExtent,
+    shouldFilterSearchOnMapExtent
+  } = useAppSelector(state => state.layerSearch)
 
   const apiFilters = useMemo(
     () => ({
       controlPlan,
+      extent: shouldFilterSearchOnMapExtent && searchExtent ? searchExtent : undefined,
       onlyRecentsAreas: areRecentsAreasChecked,
       searchQuery: globalSearchText,
       tags: getTagIds(filteredRegulatoryTags),
       themes: getThemeIds(filteredRegulatoryThemes)
     }),
-    [controlPlan, globalSearchText, filteredRegulatoryTags, filteredRegulatoryThemes, areRecentsAreasChecked]
+    [
+      controlPlan,
+      areRecentsAreasChecked,
+      globalSearchText,
+      filteredRegulatoryTags,
+      filteredRegulatoryThemes,
+      shouldFilterSearchOnMapExtent,
+      searchExtent
+    ]
   )
 
   const hasNoFilters = useMemo(
@@ -45,7 +61,8 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       !apiFilters.searchQuery &&
       apiFilters.tags?.length === 0 &&
       apiFilters.themes?.length === 0 &&
-      !apiFilters.onlyRecentsAreas,
+      !apiFilters.onlyRecentsAreas &&
+      apiFilters.extent?.length === 0,
     [apiFilters]
   )
 
@@ -69,7 +86,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     isolatedLayerRef.current = isolatedLayer
     regulatoryMetadataLayerIdRef.current = regulatoryMetadataLayerId
-    // force le re-rendu du layer
+    // force layer rerender
     regulatoryPreviewVectorLayerRef.current.changed()
   }, [isolatedLayer, regulatoryMetadataLayerId])
 
