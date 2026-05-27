@@ -1,20 +1,26 @@
 import { Columns } from '@features/Vessel/components/VesselResume/constants'
+import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
-import { Icon, MapMenuDialog, SimpleTable } from '@mtes-mct/monitor-ui'
+import { Icon, MapMenuDialog, OPENLAYERS_PROJECTION, SimpleTable, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { notUndefined } from '@tanstack/react-virtual'
-import { useMemo, useRef } from 'react'
+import { boundingExtent } from 'ol/extent'
+import { transformExtent } from 'ol/proj'
+import { useCallback, useMemo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { TableBodyEmptyData } from './TableBodyEmptyData'
+import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
 
 import type { Vessel } from '@features/Vessel/types'
+import type { Coordinate } from 'ol/coordinate'
 
 type PositionsProps = {
   positions: Vessel.Position[]
 }
 
 export function PositionsTable({ positions }: PositionsProps) {
+  const dispatch = useAppDispatch()
   const tableContainerRef = useRef<HTMLDivElement>(null)
   const positionsWithIndex = useMemo(
     () =>
@@ -23,6 +29,19 @@ export function PositionsTable({ positions }: PositionsProps) {
         index: positions.length - index
       })),
     [positions]
+  )
+
+  const focusPosition = useCallback(
+    (position: Vessel.Position | undefined) => {
+      if (position?.geom) {
+        const vesselCoordinates = [position.geom.coordinates[0], position.geom.coordinates[1]] as Coordinate
+        if (vesselCoordinates) {
+          const extent = transformExtent(boundingExtent([vesselCoordinates]), WSG84_PROJECTION, OPENLAYERS_PROJECTION)
+          dispatch(setFitToExtent(extent))
+        }
+      }
+    },
+    [dispatch]
   )
 
   const columns = useMemo(() => Columns(false), [])
@@ -108,6 +127,9 @@ export function PositionsTable({ positions }: PositionsProps) {
                     ref={node => rowVirtualizer?.measureElement(node)}
                     data-id={row?.id}
                     data-index={virtualRow?.index}
+                    onClick={() => {
+                      focusPosition(row?.original)
+                    }}
                   >
                     {row?.getVisibleCells().map(cell => (
                       <SimpleTable.Td key={cell.id}>
