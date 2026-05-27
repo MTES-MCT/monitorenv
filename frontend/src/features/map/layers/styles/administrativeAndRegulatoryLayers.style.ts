@@ -195,10 +195,6 @@ export const getRegulatoryLayerStyle = (
   isolateLayer?: IsolatedLayerType,
   metadataId?: string | number
 ) => {
-  if (metadataId === feature.get('id')) {
-    console.log(feature.get('id') === metadataId)
-    console.log(feature.get('id') === isolateLayer?.id)
-  }
   const layerTitle = getRegulatoryAreaTitle(feature.get('polyname'), feature.get('resume'))
   const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('tags'), layerTitle, feature.get('plan'))
 

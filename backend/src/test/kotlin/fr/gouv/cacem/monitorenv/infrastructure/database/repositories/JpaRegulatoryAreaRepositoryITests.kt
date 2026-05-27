@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaGroupRepository
@@ -39,11 +40,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     fun `findAll should return all regulatoryAreas when onlyRecentsArea filter is set to TRUE`() {
         val regulatoryAreas =
             jpaRegulatoryAreaRepository.findAll(
-                controlPlan = null,
-                seaFronts = null,
-                tags = null,
-                themes = null,
-                onlyRecentsAreas = true,
+                filters = SearchFilters(onlyRecentsAreas = true),
             )
         assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(11)
         assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.GROUP }.size).isEqualTo(11)
@@ -54,10 +51,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     fun `findAll should return all regulatoryAreas when seafront filter is set to NAMO`() {
         val regulatoryAreas =
             jpaRegulatoryAreaRepository.findAll(
-                controlPlan = null,
-                seaFronts = listOf("NAMO"),
-                tags = null,
-                themes = null,
+                filters = SearchFilters(seaFronts = listOf("NAMO")),
             )
         assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(12)
     }
@@ -68,10 +62,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         // When
         val regulatoryAreas =
             jpaRegulatoryAreaRepository.findAll(
-                controlPlan = null,
-                seaFronts = listOf("MED"),
-                tags = null,
-                themes = null,
+                filters = SearchFilters(seaFronts = listOf("MED")),
             )
 
         // Then
@@ -84,13 +75,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     fun `findAll should return all regulatoryAreas when tags filter is set to 'subtagMouillage1'`() {
         // When
         val regulatoryAreas =
-            jpaRegulatoryAreaRepository.findAll(
-                controlPlan = null,
-                seaFronts = null,
-                tags = listOf(10),
-                themes = null,
-            )
-
+            jpaRegulatoryAreaRepository.findAll(filters = SearchFilters(tags = listOf(10)))
         // Then
         assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(2)
         assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.GROUP }.size).isEqualTo(2)
@@ -101,12 +86,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     fun `findAll should return all regulatoryAreas when themes filter is set to 'Pêche à pied'`() {
         // When
         val regulatoryAreas =
-            jpaRegulatoryAreaRepository.findAll(
-                controlPlan = null,
-                seaFronts = null,
-                tags = null,
-                themes = listOf(9),
-            )
+            jpaRegulatoryAreaRepository.findAll(filters = SearchFilters(themes = listOf(9)))
 
         // Then
         assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(1)

@@ -139,15 +139,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    filters =
-                        SearchFilters(
-                            controlPlan = null,
-                            seaFronts = null,
-                            tags = null,
-                            themes = null,
-                            onlyRecentsAreas = null,
-                            query = null,
-                        ),
+                    filters = SearchFilters(),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -330,15 +322,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    filters =
-                        SearchFilters(
-                            controlPlan = null,
-                            seaFronts = listOf("NAMO"),
-                            tags = null,
-                            themes = null,
-                            onlyRecentsAreas = null,
-                            query = null,
-                        ),
+                    filters = SearchFilters(seaFronts = listOf("NAMO")),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -368,15 +352,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    filters =
-                        SearchFilters(
-                            controlPlan = null,
-                            seaFronts = null,
-                            tags = null,
-                            themes = null,
-                            onlyRecentsAreas = null,
-                            query = "Querlen",
-                        ),
+                    filters = SearchFilters(query = "Querlen"),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -399,15 +375,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    filters =
-                        SearchFilters(
-                            controlPlan = null,
-                            seaFronts = null,
-                            tags = null,
-                            themes = null,
-                            onlyRecentsAreas = null,
-                            query = "NonExistent",
-                        ),
+                    filters = SearchFilters(query = "NonExistent"),
                 ),
             ).willReturn(Pair(emptyMap(), 0L))
 
@@ -426,15 +394,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    filters =
-                        SearchFilters(
-                            controlPlan = null,
-                            query = null,
-                            seaFronts = null,
-                            tags = listOf(5),
-                            themes = null,
-                            onlyRecentsAreas = null,
-                        ),
+                    filters = SearchFilters(tags = listOf(5)),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -459,15 +419,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    filters =
-                        SearchFilters(
-                            controlPlan = null,
-                            seaFronts = null,
-                            tags = null,
-                            themes = listOf(101),
-                            onlyRecentsAreas = null,
-                            query = null,
-                        ),
+                    filters = SearchFilters(themes = listOf(101)),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 

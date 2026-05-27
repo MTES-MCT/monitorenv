@@ -10,7 +10,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { Layers } from 'domain/entities/layers/constants'
 import VectorLayer from 'ol/layer/Vector'
 import VectorSource from 'ol/source/Vector'
-import { useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 import { Axis } from 'types'
 
 import { getVigilanceAreaLayerStyle } from './style'
@@ -96,7 +96,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: regulatoryAreasVectorSourceRef.current,
-      style: getRegulatoryLayerStyle,
+      style: feature => getRegulatoryLayerStyle(feature),
       zIndex: Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

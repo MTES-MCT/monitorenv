@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import org.locationtech.jts.geom.Geometry
 
 interface IRegulatoryAreaRepository {
-    fun findAll(filters: SearchFilters?): List<RegulatoryAreaEntity>
+    fun findAll(filters: SearchFilters): List<RegulatoryAreaEntity>
 
     fun findAllTiles(
         filters: SearchFilters?,

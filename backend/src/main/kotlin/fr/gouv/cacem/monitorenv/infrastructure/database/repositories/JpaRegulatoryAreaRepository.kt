@@ -19,7 +19,10 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRegulatoryAreaRepository
 import org.apache.commons.lang3.StringUtils
+import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.GeometryFactory
+import org.locationtech.jts.geom.PrecisionModel
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.repository.findByIdOrNull
@@ -38,16 +41,37 @@ class JpaRegulatoryAreaRepository(
     override fun findById(id: Int): RegulatoryAreaEntity? =
         dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea(mapper)
 
-    override fun findAll(filters: SearchFilters?): List<RegulatoryAreaEntity> =
+    override fun findAll(filters: SearchFilters): List<RegulatoryAreaEntity> =
         dbRegulatoryAreaGroupRepository
             .findAll(
-                controlPlan = filters?.controlPlan,
-                seaFronts = filters?.seaFronts,
-                tags = filters?.tags,
-                themes = filters?.themes,
-                onlyRecentsAreas = filters?.onlyRecentsAreas,
+                controlPlan = filters.controlPlan,
+                seaFronts = filters.seaFronts,
+                tags = filters.tags,
+                themes = filters.themes,
+                onlyRecentsAreas = filters.onlyRecentsAreas,
+                extent = filters.extent?.let { extentToPolygon(extent = it) },
             ).flatMap { it.toRegulatoryAreas(mapper) }
-            .filter { findBySearchQuery(it, filters?.query) }
+            .filter { findBySearchQuery(it, filters.query) }
+
+    fun extentToPolygon(extent: List<Double>): Geometry {
+        val minX = extent[0]
+        val minY = extent[1]
+        val maxX = extent[2]
+        val maxY = extent[3]
+
+        val gf = GeometryFactory(PrecisionModel(), 4326)
+
+        val coords: Array<Coordinate?> =
+            arrayOf(
+                Coordinate(minX, minY),
+                Coordinate(maxX, minY),
+                Coordinate(maxX, maxY),
+                Coordinate(minX, maxY),
+                Coordinate(minX, minY),
+            )
+
+        return gf.createPolygon(coords)
+    }
 
     @Cacheable(
         value = ["regulatory_areas_tiles"],
@@ -66,6 +90,10 @@ class JpaRegulatoryAreaRepository(
             themes = filters?.themes?.toTypedArray(),
             onlyRecentsAreas = filters?.onlyRecentsAreas,
             query = filters?.query,
+            minX = filters?.extent?.get(0),
+            minY = filters?.extent?.get(1),
+            maxX = filters?.extent?.get(2),
+            maxY = filters?.extent?.get(3),
             x = x,
             y = y,
             z = z,
