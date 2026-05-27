@@ -8,7 +8,7 @@ const getStyle = (
   color: string,
   metadataIsShowed: boolean | undefined,
   asMinimap: boolean,
-  isfilled: boolean = true
+  isFilled: boolean = true
 ) => {
   const strokeColor = () => {
     if (asMinimap) {
@@ -20,7 +20,7 @@ const getStyle = (
 
   return new Style({
     fill: new Fill({
-      color: isfilled ? getColorWithAlpha(color, 0.7) : 'transparent'
+      color: isFilled ? getColorWithAlpha(color, 0.7) : 'transparent'
     }),
     stroke: new Stroke({
       color: strokeColor(),
@@ -40,5 +40,5 @@ export const getAMPColorWithAlpha = (type: string | null = '', name: string | nu
 export const getAMPLayerStyle = feature => {
   const colorWithAlpha = getAMPColorWithAlpha(feature.get('designation'), feature.get('name'))
 
-  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('asMinimap'), feature.get('isfilled'))
+  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('asMinimap'), feature.get('isFilled'))
 }

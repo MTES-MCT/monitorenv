@@ -272,7 +272,7 @@ function BaseMapNotMemoized({
         const layer = initialMap.getFeaturesAtPixel(layerPixel, {
           hitTolerance: HIT_PIXEL_TO_TOLERANCE * 2,
           layerFilter: l => {
-            const cypressLayer = l as VectorLayerWithName | WebGLVectorLayerWithName
+            const cypressLayer = l as VectorLayerWithName | VectorTileLayerWithName | WebGLVectorLayerWithName
 
             return cypressLayer.name === name || cypressLayer.get('name') === name
           }

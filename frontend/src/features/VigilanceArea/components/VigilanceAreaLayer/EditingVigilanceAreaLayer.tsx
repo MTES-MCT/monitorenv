@@ -64,12 +64,10 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   vectorLayerRef.current.name = Layers.VIGILANCE_AREA.code
 
   // Regulatory Areas Layers
-  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery(
-    { axis: Axis.NORTH_SOUTH, ids: regulatoryAreasToAdd },
-    {
-      skip: regulatoryAreasToAdd.length === 0
-    }
-  )
+  const { data: regulatoryAreas } = useGetRegulatoryAreasByIdsQuery({
+    axis: Axis.NORTH_SOUTH,
+    ids: regulatoryAreasToAdd
+  })
   const regulatoryAreasFeatures = useMemo(() => {
     if (!regulatoryAreas || regulatoryAreasToAdd.length === 0) {
       return []

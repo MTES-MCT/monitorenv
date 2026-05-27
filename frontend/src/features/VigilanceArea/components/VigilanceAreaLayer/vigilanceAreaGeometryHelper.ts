@@ -9,7 +9,7 @@ import type { IsolatedLayerType } from 'domain/shared_slices/Map'
 
 export const getVigilanceAreaZoneFeature = (
   vigilanceArea: VigilanceArea.VigilanceArea,
-  layername: string,
+  layerName: string,
   isolatedLayer: IsolatedLayerType | undefined,
   isSelected?: boolean
 ) => {
@@ -24,15 +24,15 @@ export const getVigilanceAreaZoneFeature = (
 
   const isolatedLayerIsVigilanceArea = isolatedLayer?.type.includes('VIGILANCE_AREA') ?? false
   const isLayerFilled = isolatedLayer
-    ? isolatedLayerIsVigilanceArea && isolatedLayer?.id === vigilanceArea.id && isolatedLayer?.isfilled
+    ? isolatedLayerIsVigilanceArea && isolatedLayer?.id === vigilanceArea.id && isolatedLayer?.isFilled
     : true
 
-  feature.setId(`${layername}:${vigilanceArea.id}`)
+  feature.setId(`${layerName}:${vigilanceArea.id}`)
   feature.setProperties({
     area,
     ...vigilanceArea,
     geom: null,
-    isfilled: isLayerFilled,
+    isFilled: isLayerFilled,
     isSelected
   })
 
@@ -55,7 +55,7 @@ export const getFormattedGeomForFeature = (geom, vigilanceArea) => {
   feature.setProperties({
     area,
     ...vigilanceArea,
-    isfilled: true,
+    isFilled: true,
     ...(vigilanceArea && { isSelected: true }),
     geom: null
   })
