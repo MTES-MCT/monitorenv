@@ -12,12 +12,12 @@ export function getAMPFeature({ code, isolatedLayer, layer }) {
 
   const isolatedLayerTypeIsAmp = isolatedLayer?.type.includes('AMP') ?? false
   const isLayerFilled = isolatedLayer
-    ? isolatedLayerTypeIsAmp && isolatedLayer?.id === layer.id && isolatedLayer?.isfilled
+    ? isolatedLayerTypeIsAmp && isolatedLayer?.id === layer.id && isolatedLayer?.isFilled
     : true
 
   feature.setProperties({
     area,
-    isfilled: isLayerFilled,
+    isFilled: isLayerFilled,
     layerId: layer.id,
     ...layer,
     geom: null

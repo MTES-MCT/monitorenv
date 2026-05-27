@@ -5,7 +5,7 @@ import { GeoJSON } from 'ol/format'
 import type { AtLeast } from '../../../../../types'
 import type { Reporting } from 'domain/entities/reporting'
 
-export const getReportingZoneFeature = (reporting: Reporting | AtLeast<Reporting, 'id'>, layername: string) => {
+export const getReportingZoneFeature = (reporting: Reporting | AtLeast<Reporting, 'id'>, layerName: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(reporting.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -16,7 +16,7 @@ export const getReportingZoneFeature = (reporting: Reporting | AtLeast<Reporting
     geometry
   })
 
-  feature.setId(`${layername}:${reporting.id}`)
+  feature.setId(`${layerName}:${reporting.id}`)
   feature.setProperties({
     ...reporting,
     geom: null
@@ -25,7 +25,7 @@ export const getReportingZoneFeature = (reporting: Reporting | AtLeast<Reporting
   return feature
 }
 
-export const getEditingReportingZoneFeature = (reporting: AtLeast<Reporting, 'id'>, layername: string) => {
+export const getEditingReportingZoneFeature = (reporting: AtLeast<Reporting, 'id'>, layerName: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(reporting.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -35,7 +35,7 @@ export const getEditingReportingZoneFeature = (reporting: AtLeast<Reporting, 'id
   const feature = new Feature({
     geometry
   })
-  feature.setId(`${layername}:${reporting.id}`)
+  feature.setId(`${layerName}:${reporting.id}`)
   feature.setProperties({
     ...reporting,
     geom: null

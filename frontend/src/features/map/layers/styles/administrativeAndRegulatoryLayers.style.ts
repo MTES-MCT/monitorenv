@@ -195,7 +195,7 @@ export const getRegulatoryLayerStyle = (
   isolateLayer?: IsolatedLayerType,
   metadataId?: string | number
 ) => {
-  const layerTitle = getRegulatoryAreaTitle(feature.get('polyname'), feature.get('resume'))
+  const layerTitle = getRegulatoryAreaTitle(feature.get('polyName'), feature.get('resume'))
   const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('tags'), layerTitle, feature.get('plan'))
 
   return getStyle(colorWithAlpha, feature, isolateLayer, metadataId)
@@ -207,10 +207,10 @@ const getStyle = (
   isolatedLayer: IsolatedLayerType | undefined,
   metadataId: string | number | undefined
 ) => {
-  const metadataIsShowed = feature.get('metadataIsShowed') || feature.get('id') === String(metadataId)
+  const metadataIsShowed = feature.get('metadataIsShowed') || feature.get('id') === metadataId
   const isolatedLayerTypeIsRegulatory = isolatedLayer?.type.includes('REGULATORY') ?? false
   const isLayerFilled = isolatedLayer
-    ? isolatedLayerTypeIsRegulatory && isolatedLayer?.id === feature.get('id') && isolatedLayer?.isfilled
+    ? isolatedLayerTypeIsRegulatory && isolatedLayer?.id === feature.get('id') && isolatedLayer?.isFilled
     : true
   const asMinimap = feature.get('asMinimap')
   const plan = feature.get('plan')

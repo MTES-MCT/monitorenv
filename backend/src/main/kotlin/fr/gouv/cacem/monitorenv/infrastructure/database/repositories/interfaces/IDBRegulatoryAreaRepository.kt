@@ -87,13 +87,13 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                     filtered_regs.id as id,
                     CONCAT('REGULATORY_ENV_PREVIEW:', filtered_regs.id) as uid,
                     filtered_regs.area,
-                    filtered_regs.poly_name AS polyname,
-                    filtered_regs.layer_name AS layername,
+                    filtered_regs.poly_name AS "polyName",
+                    filtered_regs.layer_name AS "layerName",
                     filtered_regs.resume,
                     filtered_regs.plan,
                     ST_AsMVTGeom(filtered_regs.geom_3857, ST_TileEnvelope(:z, :x, :y), 4096, 64, true) AS geom,
                     tags_agg.tags,
-                    true AS isFilled
+                    true AS "isFilled"
                 FROM filtered_regs
                 LEFT JOIN tags_agg ON tags_agg.regulatory_areas_id = filtered_regs.id
             ) AS tile

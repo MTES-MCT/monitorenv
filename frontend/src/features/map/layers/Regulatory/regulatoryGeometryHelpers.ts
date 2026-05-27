@@ -19,12 +19,12 @@ export function getRegulatoryFeature({ code, isolatedLayer, layer }: RegulatoryF
 
   const isolatedLayerTypeIsRegulatory = isolatedLayer?.type.includes('REGULATORY') ?? false
   const isLayerFilled = isolatedLayer
-    ? isolatedLayerTypeIsRegulatory && isolatedLayer?.id === layer.id && isolatedLayer?.isfilled
+    ? isolatedLayerTypeIsRegulatory && isolatedLayer?.id === layer.id && isolatedLayer?.isFilled
     : true
 
   feature.setProperties({
     area,
-    isfilled: isLayerFilled,
+    isFilled: isLayerFilled,
     layerId: layer.id,
     ...layer,
     geom: null
