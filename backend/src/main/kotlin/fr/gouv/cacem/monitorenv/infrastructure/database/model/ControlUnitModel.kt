@@ -99,13 +99,21 @@ data class ControlUnitModel(
             controlUnitResources = requireNotNull(controlUnitResources).map { it.toFullControlUnitResource() },
         )
 
-    fun toLegacyControlUnit(): LegacyControlUnitEntity =
+    fun toLegacyControlUnit(
+        missionControlResourceModels: List<MissionControlResourceModel>? = null,
+    ): LegacyControlUnitEntity =
         LegacyControlUnitEntity(
             id = requireNotNull(id),
             administration = administration.name,
             isArchived,
             name,
-            resources = requireNotNull(controlUnitResources).map { it.toLegacyControlUnitResource() },
+            resources =
+                requireNotNull(controlUnitResources)
+                    .filter {
+                        missionControlResourceModels
+                            ?.map { missionControlResource -> missionControlResource.resource.id }
+                            ?.contains(it.id) ?: true
+                    }.map { it.toLegacyControlUnitResource() },
             contact = "",
         )
 
