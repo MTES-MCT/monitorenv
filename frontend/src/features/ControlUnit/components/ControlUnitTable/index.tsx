@@ -1,9 +1,10 @@
 import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
+import { CantDoActionDialog } from '@components/Dialog/CantDoActionDialog'
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
-import { type ControlUnit, DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
+import { type ControlUnit, DataTable, Level } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -16,7 +17,6 @@ import {
   controlUnitsAPI,
   useGetControlUnitsQuery
 } from '../../../../api/controlUnitsAPI'
-import { Dialog } from '../../../../components/Dialog'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -169,23 +169,17 @@ export function ControlUnitTable() {
           context="unité-de-contrôle"
           onCancel={close}
           onConfirm={() => confirmDeletion(targetedControlUnit)}
-          subTitle={
-            <>
-              <p>Êtes-vous sûr de vouloir supprimer l&apos;unité &quot;{targetedControlUnit.name}&quot; ?</p>
-              <Bold>Ceci entraînera la suppression de toutes ses informations (moyens, contacts...).</Bold>
-            </>
-          }
+          textLine1={`Êtes-vous sûr de vouloir supprimer l'unité "${targetedControlUnit.name}" ?`}
+          textLine2="Ceci entraînera la suppression de toutes ses informations (moyens, contacts...)."
           title="Suppression de l'unité"
         />
       )}
 
       {isImpossibleDeletionDialogOpen && (
-        <Dialog
-          color={THEME.color.maximumRed}
-          message={DELETE_CONTROL_UNIT_ERROR_MESSAGE}
+        <CantDoActionDialog
           onClose={close}
-          title="Suppression impossible"
-          titleBackgroundColor={THEME.color.maximumRed}
+          text={DELETE_CONTROL_UNIT_ERROR_MESSAGE[0]}
+          warningText={DELETE_CONTROL_UNIT_ERROR_MESSAGE[1]}
         />
       )}
     </BackofficeWrapper>

@@ -2,7 +2,7 @@ import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
 import { CancelEditDialog } from '@components/Dialog/CancelEditDialog'
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
-import { Bold, Italic } from '@components/style'
+import { Italic } from '@components/style'
 import { AutoSaveTag } from '@features/commonComponents/AutoSaveTag'
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { useSyncFormValuesWithRedux } from '@features/Reportings/hooks/useSyncFormValuesWithRedux'
@@ -356,12 +356,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           isAbsolute={false}
           onCancel={cancelDeleteReporting}
           onConfirm={confirmDeleteReporting}
-          subTitle={
-            <>
-              <p>Êtes-vous sûr de vouloir </p>
-              <Bold>supprimer le signalement&nbsp;?</Bold>
-            </>
-          }
+          textLine2="supprimer le signalement ?"
           title="Supprimer le signalement"
         />
       )}

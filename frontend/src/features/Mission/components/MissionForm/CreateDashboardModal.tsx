@@ -112,7 +112,7 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
 
   return (
     <Dialog data-cy="create-dashboard-modal" isAbsolute>
-      <Dialog.Title>Créer un tableau de bord</Dialog.Title>
+      <Dialog.Title onClose={cancel}>Créer un tableau de bord</Dialog.Title>
       <StyledBody>
         <h5>Informations récupérées</h5>
         <ControlUnitsContainer>

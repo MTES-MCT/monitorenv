@@ -1,9 +1,10 @@
 import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
+import { CantDoActionDialog } from '@components/Dialog/CantDoActionDialog'
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
-import { DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
+import { DataTable, Level } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -16,7 +17,6 @@ import {
   administrationsAPI,
   useGetAdministrationsQuery
 } from '../../../../api/administrationsAPI'
-import { Dialog } from '../../../../components/Dialog'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -183,33 +183,25 @@ export function AdministrationTable() {
           context="administration"
           onCancel={close}
           onConfirm={() => confirmDeletion(targetedAdministration)}
-          subTitle={
-            <>
-              <p>Êtes-vous sûr de vouloir supprimer </p>
-              <Bold>l&apos;administration &quot;{targetedAdministration.name}&quot; ?</Bold>
-            </>
-          }
+          textLine2={`supprimer l'administration "${targetedAdministration.name}" ?`}
           title="Suppression de l'administration"
         />
       )}
 
       {isImpossibleArchivingDialogOpen && (
-        <Dialog
-          color={THEME.color.maximumRed}
-          message={ARCHIVE_ADMINISTRATION_ERROR_MESSAGE}
+        <CantDoActionDialog
           onClose={close}
+          text={ARCHIVE_ADMINISTRATION_ERROR_MESSAGE[0]}
           title="Archivage impossible"
-          titleBackgroundColor={THEME.color.maximumRed}
+          warningText={ARCHIVE_ADMINISTRATION_ERROR_MESSAGE[1]}
         />
       )}
 
       {isImpossibleDeletionDialogOpen && (
-        <Dialog
-          color={THEME.color.maximumRed}
-          message={DELETE_ADMINISTRATION_ERROR_MESSAGE}
+        <CantDoActionDialog
           onClose={close}
-          title="Suppression impossible"
-          titleBackgroundColor={THEME.color.maximumRed}
+          text={DELETE_ADMINISTRATION_ERROR_MESSAGE[0]}
+          warningText={DELETE_ADMINISTRATION_ERROR_MESSAGE[1]}
         />
       )}
     </BackofficeWrapper>

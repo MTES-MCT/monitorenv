@@ -1,5 +1,4 @@
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
-import { Bold } from '@components/style'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import {
   Banner,
@@ -277,12 +276,7 @@ export function MissionForm({
           context="mission"
           onCancel={returnToEdition}
           onConfirm={validateDeleteMission}
-          subTitle={
-            <>
-              <p>Êtes-vous sûr de vouloir </p>
-              <Bold>supprimer la mission&nbsp;?</Bold>
-            </>
-          }
+          textLine2="supprimer la mission ?"
           title="Supprimer la mission"
         />
       )}

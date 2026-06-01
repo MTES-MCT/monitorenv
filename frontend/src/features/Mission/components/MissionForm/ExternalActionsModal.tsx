@@ -1,6 +1,5 @@
-import { Button, Dialog, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { CantDoActionDialog } from '@components/Dialog/CantDoActionDialog'
 import { useMemo } from 'react'
-import styled from 'styled-components'
 
 import { MissionSourceEnum } from '../../../../domain/entities/missions'
 
@@ -26,39 +25,13 @@ export function ExternalActionsModal({ onClose, sources }: ExternalActionsModalP
   }, [isCNSP, isRapportNav])
 
   return (
-    <Dialog data-cy="external-actions-modal" isAbsolute>
-      <Dialog.Title>Suppression impossible</Dialog.Title>
-      <Dialog.Body>
-        <Alert>
-          <Icon.Attention color={THEME.color.maximumRed} size={30} />
-        </Alert>
-        <Text data-cy="external-action-modal-text">{`La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par ${sourceText}.`}</Text>
-        <Bold>
-          {`Si vous souhaitez tout de même la supprimer, veuillez contacter ${sourceText} pour qu'${
-            isCNSP && isRapportNav ? 'ils suppriment' : 'il supprime'
-          } d'abord
-            ses événements.`}
-        </Bold>
-      </Dialog.Body>
-
-      <Dialog.Action>
-        <Button data-cy="external-actions-modal-close" onClick={onClose}>
-          Fermer
-        </Button>
-      </Dialog.Action>
-    </Dialog>
+    <CantDoActionDialog
+      data-cy="external-actions-modal"
+      onClose={onClose}
+      text={`La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par ${sourceText}.`}
+      warningText={`Si vous souhaitez tout de même la supprimer, veuillez contacter ${sourceText} pour qu'${
+        isCNSP && isRapportNav ? 'ils suppriment' : 'il supprime'
+      } d'abord ses événements.`}
+    />
   )
 }
-
-const Alert = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-`
-const Text = styled.p`
-  color: ${props => props.theme.color.maximumRed} !important;
-  padding: 0px 40px;
-`
-const Bold = styled(Text)`
-  font-weight: bold;
-`

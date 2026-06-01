@@ -1,7 +1,7 @@
 import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
+import { CantDoActionDialog } from '@components/Dialog/CantDoActionDialog'
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
-import { Bold } from '@components/style'
-import { Accent, Button, ControlUnit, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Button, ControlUnit, Icon } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
@@ -14,7 +14,6 @@ import {
   useCreateControlUnitResourceMutation,
   useUpdateControlUnitResourceMutation
 } from '../../../../../api/controlUnitResourcesAPI'
-import { Dialog } from '../../../../../components/Dialog'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { FrontendError } from '../../../../../libs/FrontendError'
 import { isEmptyish } from '../../../../../utils/isEmptyish'
@@ -182,23 +181,16 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
           isAbsolute={false}
           onCancel={closeDialogsAndModals}
           onConfirm={confirmDeletion}
-          subTitle={
-            <>
-              <p>Êtes-vous sûr de vouloir supprimer </p>
-              <Bold>le moyen &quot;{editedControlUnitResource.name}&quot; ?</Bold>
-            </>
-          }
+          textLine2={`supprimer le moyen "${editedControlUnitResource.name}" ?`}
           title="Suppression du moyen"
         />
       )}
 
       {isImpossibleDeletionDialogOpen && (
-        <Dialog
-          color={THEME.color.maximumRed}
-          message={DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE}
+        <CantDoActionDialog
           onClose={closeDialogsAndModals}
-          title="Suppression impossible"
-          titleBackgroundColor={THEME.color.maximumRed}
+          text={DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE[0]}
+          warningText={DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE[1]}
         />
       )}
     </Section>

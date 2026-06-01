@@ -10,13 +10,13 @@ import type { Administration } from '../domain/entities/administration'
 export const ARCHIVE_ADMINISTRATION_ERROR_MESSAGE = [
   'Certaines unités de cette administration ne sont pas archivées.',
   'Veuillez les archiver pour pouvoir archiver cette administration.'
-].join(' ')
+]
 const CAN_ARCHIVE_ADMINISTRATION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette administration est archivable."
 const CAN_DELETE_ADMINISTRATION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette administration est supprimable."
 export const DELETE_ADMINISTRATION_ERROR_MESSAGE = [
   'Des unités sont encore rattachées à cette administration.',
   'Veuillez les supprimer avant de pouvoir supprimer cette administration.'
-].join(' ')
+]
 const GET_ADMINISTRATION_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette administration."
 const GET_ADMINISTRATIONS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des administrations."
 
@@ -30,7 +30,7 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.code === ApiErrorCode.UNARCHIVED_CHILD) {
-          return newUserError(ARCHIVE_ADMINISTRATION_ERROR_MESSAGE, 'backoffice')
+          return newUserError(ARCHIVE_ADMINISTRATION_ERROR_MESSAGE.join(' '), 'backoffice')
         }
 
         return new FrontendApiError(ARCHIVE_GENERIC_ERROR_MESSAGE, response)
@@ -67,7 +67,7 @@ export const administrationsAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.code === ApiErrorCode.CANNOT_DELETE_ENTITY) {
-          return newUserError(DELETE_ADMINISTRATION_ERROR_MESSAGE, 'backoffice')
+          return newUserError(DELETE_ADMINISTRATION_ERROR_MESSAGE.join(' '), 'backoffice')
         }
 
         return new FrontendApiError(DELETE_GENERIC_ERROR_MESSAGE, response)

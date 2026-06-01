@@ -1,4 +1,5 @@
 import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
+import styled from 'styled-components'
 
 type CancelEditDialogProps = {
   onCancel: () => void
@@ -7,7 +8,7 @@ type CancelEditDialogProps = {
 }
 export function CancelEditDialog({ onCancel, onConfirm, text }: CancelEditDialogProps) {
   return (
-    <Dialog>
+    <StyledDialog>
       <Dialog.Title onClose={onCancel}>Quitter sans enregistrer</Dialog.Title>
       <Dialog.Body>{text}</Dialog.Body>
 
@@ -17,6 +18,12 @@ export function CancelEditDialog({ onCancel, onConfirm, text }: CancelEditDialog
         </Button>
         <Button onClick={onConfirm}>Quitter sans enregistrer</Button>
       </Dialog.Action>
-    </Dialog>
+    </StyledDialog>
   )
 }
+
+const StyledDialog = styled(Dialog)`
+  > div:nth-child(2) {
+    min-width: 400px !important;
+  }
+`

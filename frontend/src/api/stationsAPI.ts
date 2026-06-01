@@ -8,8 +8,11 @@ import { FrontendApiError } from '../libs/FrontendApiError'
 import type { Station } from '../domain/entities/station'
 
 const CAN_DELETE_STATION_ERROR_MESSAGE = "Nous n'avons pas pu vérifier si cette base est supprimable."
-export const DELETE_STATION_ERROR_MESSAGE =
-  "Cette base est rattachée à des moyens. Veuillez l'en détacher avant de la supprimer ou bien l'archiver."
+export const DELETE_STATION_ERROR_MESSAGE = [
+  'Cette base est rattachée à des moyens.',
+  " Veuillez l'en détacher avant de la supprimer ou bien l'archiver."
+]
+
 const GET_STATION_ERROR_MESSAGE = "Nous n'avons pas pu récupérer cette base."
 const GET_STATIONS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des bases."
 
@@ -39,7 +42,7 @@ export const stationsAPI = monitorenvPublicApi.injectEndpoints({
       }),
       transformErrorResponse: response => {
         if (response.data.code === ApiErrorCode.CANNOT_DELETE_ENTITY) {
-          return newUserError(DELETE_STATION_ERROR_MESSAGE, 'backoffice')
+          return newUserError(DELETE_STATION_ERROR_MESSAGE.join(' '), 'backoffice')
         }
 
         return new FrontendApiError(DELETE_GENERIC_ERROR_MESSAGE, response)

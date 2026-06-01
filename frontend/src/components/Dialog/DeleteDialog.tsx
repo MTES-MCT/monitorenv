@@ -1,3 +1,4 @@
+import { Bold } from '@components/style'
 import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
@@ -6,28 +7,41 @@ type DeleteModalProps = {
   isAbsolute?: boolean
   onCancel: () => void
   onConfirm: () => void
-  subTitle: string | React.ReactNode
+  textLine1?: string | React.ReactNode
+  textLine2: string | React.ReactNode
   title: string
 }
 
-export function DeleteDialog({ context, isAbsolute = true, onCancel, onConfirm, subTitle, title }: DeleteModalProps) {
+export function DeleteDialog({
+  context,
+  isAbsolute = true,
+  onCancel,
+  onConfirm,
+  textLine1,
+  textLine2,
+  title
+}: DeleteModalProps) {
   return (
-    <Dialog isAbsolute={isAbsolute}>
+    <StyledDialog isAbsolute={isAbsolute}>
       <Dialog.Title onClose={onCancel}>{title}</Dialog.Title>
-      <Dialog.Body>{subTitle}</Dialog.Body>
+      <Dialog.Body>
+        <p>{textLine1 ?? 'Êtes-vous sûr de vouloir'}</p>
+        <Bold>{textLine2}</Bold>
+      </Dialog.Body>
       <Dialog.Action>
         <Button accent={Accent.SECONDARY} name={`delete-${context}-modal-cancel`} onClick={onCancel}>
           Annuler
         </Button>
-        <ConfirmDeleteButton accent={Accent.PRIMARY} name={`delete-${context}-modal-confirm`} onClick={onConfirm}>
+        <Button accent={Accent.ERROR} name={`delete-${context}-modal-confirm`} onClick={onConfirm}>
           Confirmer la suppression
-        </ConfirmDeleteButton>
+        </Button>
       </Dialog.Action>
-    </Dialog>
+    </StyledDialog>
   )
 }
 
-const ConfirmDeleteButton = styled(Button)`
-  background-color: ${p => p.theme.color.maximumRed};
-  border-color: ${p => p.theme.color.maximumRed};
+const StyledDialog = styled(Dialog)`
+  > div:nth-child(2) {
+    min-width: 400px !important;
+  }
 `
