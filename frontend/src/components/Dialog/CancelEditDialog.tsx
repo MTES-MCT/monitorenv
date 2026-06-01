@@ -1,14 +1,14 @@
 import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
-import styled from 'styled-components'
 
 type CancelEditDialogProps = {
+  className?: string
   onCancel: () => void
   onConfirm: () => void
   text: string | React.ReactNode
 }
-export function CancelEditDialog({ onCancel, onConfirm, text }: CancelEditDialogProps) {
+export function CancelEditDialog({ className, onCancel, onConfirm, text }: CancelEditDialogProps) {
   return (
-    <StyledDialog>
+    <Dialog className={className}>
       <Dialog.Title onClose={onCancel}>Quitter sans enregistrer</Dialog.Title>
       <Dialog.Body>{text}</Dialog.Body>
 
@@ -16,14 +16,10 @@ export function CancelEditDialog({ onCancel, onConfirm, text }: CancelEditDialog
         <Button accent={Accent.SECONDARY} onClick={onCancel}>
           Annuler
         </Button>
-        <Button onClick={onConfirm}>Quitter sans enregistrer</Button>
+        <Button accent={Accent.CAUTION} onClick={onConfirm}>
+          Quitter sans enregistrer
+        </Button>
       </Dialog.Action>
-    </StyledDialog>
+    </Dialog>
   )
 }
-
-const StyledDialog = styled(Dialog)`
-  > div:nth-child(2) {
-    min-width: 400px !important;
-  }
-`

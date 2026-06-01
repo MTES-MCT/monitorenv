@@ -145,11 +145,11 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
         <StyledTextInput label="Tags" name="tags" plaintext value={dashboardTags} />
       </StyledBody>
       <Dialog.Action>
-        <Button disabled={!geomSource} onClick={confirm}>
-          Créer le tableau de bord
-        </Button>
         <Button accent={Accent.SECONDARY} onClick={cancel}>
           Annuler
+        </Button>
+        <Button disabled={!geomSource} onClick={confirm}>
+          Créer le tableau de bord
         </Button>
       </Dialog.Action>
     </Dialog>

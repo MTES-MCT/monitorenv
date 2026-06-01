@@ -6,7 +6,7 @@ import styled from 'styled-components'
 type CancelEditModalProps = {
   isAutoSaveEnabled: boolean
   isDirty: boolean
-  isMissionFormValid: boolean
+  isFormValid: boolean
   isNew: boolean
   onCancel: () => void
   onConfirm: () => void
@@ -14,26 +14,26 @@ type CancelEditModalProps = {
 export function CancelEditModal({
   isAutoSaveEnabled,
   isDirty,
-  isMissionFormValid,
+  isFormValid,
   isNew,
   onCancel,
   onConfirm
 }: CancelEditModalProps) {
-  const isMissionUnsaved = !isAutoSaveEnabled && isDirty && isMissionFormValid
+  const isReportingUnsaved = !isAutoSaveEnabled && isDirty && isFormValid
   const body = useMemo(() => {
     if (isNew) {
       return (
         <>
           <p>Vous êtes en train d&apos;abandonner</p>
-          <Bold>la création de la mission.</Bold>
+          <Bold>la création du signalement</Bold>
         </>
       )
     }
-    if (isMissionUnsaved) {
+    if (isReportingUnsaved) {
       return (
         <>
           <p>
-            Vous êtes en train d&apos;abandonner <Bold>l&apos;édition de la mission</Bold>
+            Vous êtes en train d&apos;abandonner <Bold>l&apos;édition du signalement</Bold>
           </p>
           <RedText>et l’enregistrement automatique n’est pas actif.</RedText>
           <p>Veuillez enregistrer les modifications avant de quitter.</p>
@@ -44,18 +44,17 @@ export function CancelEditModal({
     return (
       <>
         <p>
-          Vous êtes en train d&apos;abandonner <Bold>l&apos;édition de la mission</Bold>
+          Vous êtes en train d&apos;abandonner <Bold>l&apos;édition du signalement</Bold>
         </p>
         <RedText>et l’enregistrement automatique n’est pas actif.</RedText>
         <p>Si vous souhaitez que les modifications s’enregistrent, merci de corriger les champs en erreur.</p>
       </>
     )
-  }, [isMissionUnsaved, isNew])
+  }, [isReportingUnsaved, isNew])
 
   return (
     <StyledCancelEditDialog
       className="styled-cancel-edit-dialog"
-      data-cy="cancel-edit-modal"
       onCancel={onCancel}
       onConfirm={onConfirm}
       text={body}

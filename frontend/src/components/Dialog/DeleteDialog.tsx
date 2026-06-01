@@ -32,7 +32,7 @@ export function DeleteDialog({
         <Button accent={Accent.SECONDARY} name={`delete-${context}-modal-cancel`} onClick={onCancel}>
           Annuler
         </Button>
-        <Button accent={Accent.ERROR} name={`delete-${context}-modal-confirm`} onClick={onConfirm}>
+        <Button accent={Accent.CAUTION} name={`delete-${context}-modal-confirm`} onClick={onConfirm}>
           Confirmer la suppression
         </Button>
       </Dialog.Action>

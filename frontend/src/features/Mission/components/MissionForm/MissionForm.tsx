@@ -267,6 +267,7 @@ export function MissionForm({
           isAutoSaveEnabled={isAutoSaveEnabled}
           isDirty={dirty}
           isMissionFormValid={isMissionFormValid}
+          isNew={isNewMission}
           onCancel={returnToEdition}
           onConfirm={cancelForm}
         />
