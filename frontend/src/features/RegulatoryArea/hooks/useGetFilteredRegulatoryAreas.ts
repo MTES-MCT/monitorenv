@@ -46,7 +46,7 @@ export const useGetFilteredRegulatoryAreas = () => {
       apiFilters.tags?.length === 0 &&
       apiFilters.themes?.length === 0 &&
       !apiFilters.onlyRecentsAreas &&
-      apiFilters.extent?.length === 0,
+      !apiFilters.extent,
     [apiFilters]
   )
 
