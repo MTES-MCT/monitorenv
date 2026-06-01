@@ -1,8 +1,8 @@
+import { CantDoActionDialog } from '@components/Dialog/CantDoActionDialog'
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
-import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
-import { DataTable, Level, THEME } from '@mtes-mct/monitor-ui'
+import { DataTable, Level } from '@mtes-mct/monitor-ui'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -10,7 +10,6 @@ import { FilterBar } from './FilterBar'
 import { getStationTableColumns, getFilters } from './utils'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '../../../../api/constants'
 import { DELETE_STATION_ERROR_MESSAGE, stationsAPI, useGetStationsQuery } from '../../../../api/stationsAPI'
-import { Dialog } from '../../../../components/Dialog'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { NavButton } from '../../../../ui/NavButton'
@@ -102,23 +101,16 @@ export function BaseTable() {
           context="base"
           onCancel={close}
           onConfirm={() => confirmDeletion(targetedStation)}
-          subTitle={
-            <>
-              <p>Êtes-vous sûr de vouloir supprimer </p>
-              <Bold>la base &quot;{targetedStation.name}&quot; ?</Bold>
-            </>
-          }
+          textLine2={` supprimer la base "${targetedStation.name}" ?`}
           title="Suppression de la base"
         />
       )}
 
       {isImpossibleDeletionDialogOpen && (
-        <Dialog
-          color={THEME.color.maximumRed}
-          message={DELETE_STATION_ERROR_MESSAGE}
+        <CantDoActionDialog
           onClose={close}
-          title="Suppression impossible"
-          titleBackgroundColor={THEME.color.maximumRed}
+          text={DELETE_STATION_ERROR_MESSAGE[0]}
+          warningText={DELETE_STATION_ERROR_MESSAGE[1]}
         />
       )}
     </BackofficeWrapper>

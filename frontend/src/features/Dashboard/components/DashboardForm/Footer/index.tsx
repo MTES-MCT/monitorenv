@@ -1,5 +1,4 @@
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
-import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { useGenerateBrief } from '@features/Dashboard/hooks/useGenerateBrief'
 import { useGenerateEditableBrief } from '@features/Dashboard/hooks/useGenerateEditableBrief'
@@ -162,12 +161,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
           context="tableau-de-bord"
           onCancel={() => setIsDeleteDialogOpen(false)}
           onConfirm={confirmDelete}
-          subTitle={
-            <>
-              <p>Êtes-vous sûr de vouloir </p>
-              <Bold>supprimer le tableau&nbsp;?</Bold>
-            </>
-          }
+          textLine2="supprimer le tableau ?"
           title="Suppression du tableau"
         />
       )}

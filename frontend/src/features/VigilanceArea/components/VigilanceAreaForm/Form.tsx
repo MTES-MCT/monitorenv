@@ -161,12 +161,7 @@ export function Form() {
             isAbsolute={false}
             onCancel={cancelDeleteModal}
             onConfirm={onConfirmDeleteModal}
-            subTitle={
-              <>
-                <p>Êtes-vous sûr de vouloir </p>
-                <Bold>supprimer la zone de vigilance&nbsp;?</Bold>
-              </>
-            }
+            textLine2="supprimer la zone de vigilance ?"
             title="Supprimer la zone de vigilance"
           />,
           document.body

@@ -1,5 +1,4 @@
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
-import { Bold } from '@components/style'
 import { mainWindowActions } from '@features/MainWindow/slice'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { Accent, Button, ControlUnit, Icon, Level } from '@mtes-mct/monitor-ui'
@@ -205,12 +204,7 @@ export function ControlUnitContactList({ controlUnit, onSubmit }: ControlUnitCon
           isAbsolute={false}
           onCancel={closeDialogsAndModals}
           onConfirm={confirmDeletion}
-          subTitle={
-            <>
-              <p>Êtes-vous sûr de vouloir supprimer </p>
-              <Bold>le contact &quot;{controlUnitDisplayName}&quot; ?</Bold>
-            </>
-          }
+          textLine2={`supprimer le contact "${controlUnitDisplayName}" ?`}
           title="Suppression du contact"
         />
       )}

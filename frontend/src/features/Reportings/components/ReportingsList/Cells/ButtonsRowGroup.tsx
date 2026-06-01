@@ -1,6 +1,5 @@
 import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
-import { Bold } from '@components/style'
 import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
 import { deleteReporting } from '@features/Reportings/useCases/deleteReporting'
 import { duplicateReporting } from '@features/Reportings/useCases/duplicateReporting'
@@ -122,12 +121,7 @@ export function ButtonsGroupRow({ id }) {
           isAbsolute={false}
           onCancel={cancelDeleteReporting}
           onConfirm={confirmDeleteReporting}
-          subTitle={
-            <>
-              <p>Êtes-vous sûr de vouloir </p>
-              <Bold>supprimer le signalement&nbsp;?</Bold>
-            </>
-          }
+          textLine2="supprimer le signalement ?"
           title="Supprimer le signalement"
         />
       )}
