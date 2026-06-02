@@ -85,7 +85,7 @@ context('Back Office > Administration Form', () => {
       cy.intercept('DELETE', `/api/v1/administrations/${id}`).as('deleteAdministration')
 
       cy.getTableRowById(id).clickButton('Supprimer cette administration')
-      cy.clickButton('Supprimer')
+      cy.clickButton('Confirmer la suppression')
 
       cy.wait('@deleteAdministration')
 

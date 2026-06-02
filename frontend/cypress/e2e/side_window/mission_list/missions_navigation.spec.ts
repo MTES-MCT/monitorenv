@@ -33,7 +33,7 @@ context('Mission', () => {
 
     // we close the first mission and display the confirm cancel modal
     cy.clickButton('Fermer Nouvelle mission - Cross Etel')
-    cy.clickButton("Retourner à l'édition")
+    cy.clickButton('Annuler')
 
     // navigate between reportings and missions
     cy.clickButton('Signalements')
@@ -72,7 +72,7 @@ context('Mission', () => {
 
     // we close the first mission and display the confirm cancel modal
     cy.clickButton('Fermer Nouvelle mission - Cross Etel')
-    cy.clickButton("Retourner à l'édition")
+    cy.clickButton('Annuler')
 
     // navigate between reportings and missions
     cy.clickButton('Signalements')

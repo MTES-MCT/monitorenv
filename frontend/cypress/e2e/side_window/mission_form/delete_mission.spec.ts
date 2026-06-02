@@ -80,7 +80,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
       expect(response && response.body.sources[0]).equal('MONITORFISH')
       expect(response && response.body.sources[1]).equal('RAPPORT_NAV')
 
-      cy.getDataCy('external-action-modal-text').contains(
+      cy.contains(
         "La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par le CNSP et l'unité."
       )
     })

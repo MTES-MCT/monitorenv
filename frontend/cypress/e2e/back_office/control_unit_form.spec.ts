@@ -104,7 +104,7 @@ context('Back Office > Control Unit Form', () => {
       cy.intercept('DELETE', `/api/v2/control_units/${id}`).as('deleteControlUnit')
 
       cy.getTableRowById(id).clickButton('Supprimer cette unité de contrôle')
-      cy.clickButton('Supprimer')
+      cy.clickButton('Confirmer la suppression')
 
       cy.wait('@deleteControlUnit')
 
