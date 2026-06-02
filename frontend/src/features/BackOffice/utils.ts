@@ -101,3 +101,13 @@ export function isTagListPage(path: string) {
     path
   )
 }
+
+export function isMissionTagListPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.MISSION_TAG_LIST]}`
+    },
+    path
+  )
+}

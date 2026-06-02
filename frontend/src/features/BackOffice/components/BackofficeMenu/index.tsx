@@ -3,6 +3,7 @@ import {
   isAdministrationPage,
   isControlUnitListPage,
   isControlUnitPage,
+  isMissionTagListPage,
   isRegulatoryAreaListPage,
   isRegulatoryAreaPage,
   isStationListPage,
@@ -55,6 +56,13 @@ export function BackOfficeMenu() {
       >
         <Icon.Tag />
         {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.TAG_LIST]}
+      </StyledNavLink>
+      <StyledNavLink
+        $isActive={isMissionTagListPage(locationPath)}
+        to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.MISSION_TAG_LIST]}`}
+      >
+        <Icon.MissionAction />
+        {BACK_OFFICE_MENU_LABEL[BackOfficeMenuKey.MISSION_TAG_LIST]}
       </StyledNavLink>
     </Wrapper>
   )

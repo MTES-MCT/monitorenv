@@ -1,5 +1,6 @@
 import { EnvironmentBox, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
 import { BannerStack } from '@features/BackOffice/components/BannerStack'
+import { MissionTagTable } from '@features/MissionTags/components/Table'
 import { RegulatoryAreaForm } from '@features/RegulatoryArea/components/RegulatoryAreaForm'
 import { RegulatoryAreaList } from '@features/RegulatoryArea/components/RegulatoryAreaList'
 import { TagTable } from '@features/Tags/components/Table'
@@ -61,6 +62,7 @@ export function BackOfficePage() {
             path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}/:stationId`}
           />
           <Route element={<TagTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.TAG_LIST]} />
+          <Route element={<MissionTagTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.MISSION_TAG_LIST]} />
         </Routes>
       </>
     </Wrapper>

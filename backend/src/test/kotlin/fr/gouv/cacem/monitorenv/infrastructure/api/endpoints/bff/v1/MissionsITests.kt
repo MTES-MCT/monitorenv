@@ -26,8 +26,11 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionTags
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.SaveMissionTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionTagFixture.Companion.aMissionTagEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
@@ -83,6 +86,12 @@ class MissionsITests {
 
     @MockitoBean
     private lateinit var getEngagedControlUnits: GetEngagedControlUnits
+
+    @MockitoBean
+    private lateinit var saveMissionTag: SaveMissionTag
+
+    @MockitoBean
+    private lateinit var getMissionTags: GetMissionTags
 
     @Autowired
     private lateinit var jsonMapper: JsonMapper
@@ -791,5 +800,36 @@ class MissionsITests {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].controlUnit.name", equalTo("Control Unit Name")))
             .andExpect(jsonPath("$[0].missionSources[0]", equalTo("MONITORFISH")))
+    }
+
+    @Test
+    fun `Should get all mission tags`() {
+        // Given
+        given(getMissionTags.execute()).willReturn(listOf(aMissionTagEntity()))
+
+        // When
+        mockMvc
+            .perform(get("/bff/v1/missions/tags"))
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].id", equalTo(1)))
+            .andExpect(jsonPath("$[0].name", equalTo("test")))
+            .andExpect(jsonPath("$[0].isArchived", equalTo(false)))
+    }
+
+    @Test
+    fun `Should save a mission tag`() {
+        // Given
+        val missionTagEntity = aMissionTagEntity()
+        given(saveMissionTag.execute(missionTagEntity)).willReturn(missionTagEntity)
+
+        // When
+        mockMvc
+            .perform(get("/bff/v1/missions/tag"))
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].id", equalTo(1)))
+            .andExpect(jsonPath("$[0].name", equalTo("test")))
+            .andExpect(jsonPath("$[0].isArchived", equalTo(false)))
     }
 }
