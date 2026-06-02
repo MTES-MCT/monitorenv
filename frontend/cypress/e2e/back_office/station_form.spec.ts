@@ -85,7 +85,7 @@ context('Back Office > Station Form', () => {
     cy.intercept('DELETE', `/api/v1/stations/*`).as('deleteStation')
 
     cy.getTableRowByText(nextBaseName).clickButton('Supprimer cette base')
-    cy.clickButton('Supprimer')
+    cy.clickButton('Confirmer la suppression')
 
     cy.wait('@deleteStation')
 

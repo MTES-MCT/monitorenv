@@ -115,7 +115,7 @@ context('Main Window > Control Unit Dialog > Resource List', () => {
       .parents('[data-cy="ControlUnitDialog-control-unit-resource"]')
       .clickButton('Éditer ce moyen')
     cy.clickButton('Supprimer ce moyen')
-    cy.clickButton('Supprimer')
+    cy.clickButton('Confirmer la suppression')
 
     cy.wait('@deleteControlUnitResource')
 

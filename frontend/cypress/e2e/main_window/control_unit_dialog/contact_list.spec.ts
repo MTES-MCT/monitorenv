@@ -115,7 +115,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
         .filter(`[data-id="${newControlUnitContactId}"]`)
         .clickButton('Éditer ce contact')
       cy.clickButton('Supprimer ce contact')
-      cy.clickButton('Supprimer')
+      cy.clickButton('Confirmer la suppression')
 
       // Warning banner
       cy.get('.Component-Banner')
