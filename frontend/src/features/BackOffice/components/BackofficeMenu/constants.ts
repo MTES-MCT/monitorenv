@@ -3,6 +3,7 @@ export enum BackOfficeMenuKey {
   CONTROL_UNIT_CONTACT_LIST = 'CONTROL_UNIT_CONTACT_LIST',
   CONTROL_UNIT_LIST = 'CONTROL_UNIT_LIST',
   CONTROL_UNIT_RESOURCE_LIST = 'CONTROL_UNIT_RESOURCE_LIST',
+  MISSION_TAG_LIST = 'MISSION_TAG_LIST',
   REGULATORY_AREA_LIST = 'REGULATORY_AREA_LIST',
   STATION_LIST = 'STATION_LIST',
   TAG_LIST = 'TAG_LIST'
@@ -15,7 +16,8 @@ export const BACK_OFFICE_MENU_LABEL: Record<BackOfficeMenuKey, string> = {
   [BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]: 'Moyens',
   [BackOfficeMenuKey.CONTROL_UNIT_LIST]: 'Unités de contrôle',
   [BackOfficeMenuKey.STATION_LIST]: 'Bases',
-  [BackOfficeMenuKey.TAG_LIST]: 'Tags'
+  [BackOfficeMenuKey.TAG_LIST]: 'Tags',
+  [BackOfficeMenuKey.MISSION_TAG_LIST]: 'Étiquettes de mission'
 }
 
 export const BACK_OFFICE_MENU_PATH: Record<BackOfficeMenuKey, string> = {
@@ -25,5 +27,6 @@ export const BACK_OFFICE_MENU_PATH: Record<BackOfficeMenuKey, string> = {
   [BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]: '/control_unit_resources',
   [BackOfficeMenuKey.CONTROL_UNIT_LIST]: '/control_units',
   [BackOfficeMenuKey.STATION_LIST]: '/stations',
-  [BackOfficeMenuKey.TAG_LIST]: '/tags'
+  [BackOfficeMenuKey.TAG_LIST]: '/tags',
+  [BackOfficeMenuKey.MISSION_TAG_LIST]: '/mission_tags'
 }

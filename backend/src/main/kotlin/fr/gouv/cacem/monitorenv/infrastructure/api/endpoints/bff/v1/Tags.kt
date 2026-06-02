@@ -39,7 +39,7 @@ class Tags(
     ): List<TagOutput> = getTagsByRegulatoryAreas.execute(ids).map { TagOutput.fromTagEntity(it) }
 
     @PutMapping("", consumes = ["application/json"])
-    @Operation(summary = "create or update the given dashboard")
+    @Operation(summary = "create or update the given tag")
     fun put(
         @RequestBody tagInput: CreaterOrUpdateTagInput,
     ): TagOutput = TagOutput.fromTagEntity(saveTag.execute(tagInput.toTagEntity(), tagInput.parentId))

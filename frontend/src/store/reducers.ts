@@ -15,6 +15,7 @@ import { mainWindowReducer } from '@features/MainWindow/slice'
 import { attachReportingToMissionsSliceReducer } from '@features/Mission/components/MissionForm/AttachReporting/slice'
 import { missionFormsSliceReducer } from '@features/Mission/components/MissionForm/slice'
 import { missionSliceReducer } from '@features/Mission/slice'
+import { missiontagTablePersistedReducer } from '@features/MissionTags/components/Table/slice'
 import { recentActivityPersitedReducer } from '@features/RecentActivity/slice'
 import { regulatoryAreaTablePersistedReducer } from '@features/RegulatoryArea/components/RegulatoryAreaList/slice'
 import { regulatoryAreaBoReducer } from '@features/RegulatoryArea/slice'
@@ -69,6 +70,7 @@ export const homeReducers = {
   [layerSidebarSlice.name]: layerSidebarSlice.reducer,
   missionFilters: missionFiltersPersistedReducer,
   missionForms: missionFormsSliceReducer,
+  missionTagTable: missiontagTablePersistedReducer,
   recentActivity: recentActivityPersitedReducer,
   regulatory: regulatorySlicePersistedReducer,
   regulatoryAreaBo: regulatoryAreaBoReducer,

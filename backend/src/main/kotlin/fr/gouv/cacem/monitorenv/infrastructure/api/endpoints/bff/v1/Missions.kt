@@ -9,9 +9,14 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionTags
+import fr.gouv.cacem.monitorenv.domain.use_cases.missions.SaveMissionTag
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreaterOrUpdateMissionTagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionTagDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionTagDataOutput.Companion.fromMissionTagEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionsDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -41,6 +46,8 @@ class Missions(
     private val deleteMission: DeleteMission,
     private val getEngagedControlUnits: GetEngagedControlUnits,
     private val canDeleteMission: CanDeleteMission,
+    private val saveMissionTag: SaveMissionTag,
+    private val getMissionTags: GetMissionTags,
 ) {
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
@@ -175,4 +182,14 @@ class Missions(
 
         return ResponseEntity.status(returnCode).body(MissionDataOutput.fromMissionDTO(mission))
     }
+
+    @GetMapping("/tags")
+    @Operation(summary = "Get all mission tags")
+    fun getMissionTags(): List<MissionTagDataOutput> = getMissionTags.execute().map { fromMissionTagEntity(it) }
+
+    @PutMapping("/tags", consumes = ["application/json"])
+    @Operation(summary = "create or update the given mission tag")
+    fun put(
+        @RequestBody missionTagInput: CreaterOrUpdateMissionTagInput,
+    ): MissionTagDataOutput = fromMissionTagEntity(saveMissionTag.execute(missionTagInput.toMissionTagEntity()))
 }

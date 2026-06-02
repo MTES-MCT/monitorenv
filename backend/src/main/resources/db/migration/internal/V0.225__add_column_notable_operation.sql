@@ -1,0 +1,2 @@
+ALTER TABLE missions
+    ADD COLUMN is_noteworthy BOOLEAN DEFAULT FALSE;
