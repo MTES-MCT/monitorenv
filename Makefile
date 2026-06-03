@@ -126,6 +126,10 @@ docker-tag-app:
 	docker tag monitorenv-app:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
 docker-push-app:
 	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-app:$(VERSION)
+docker-tag-latest:
+	docker tag monitorenv-app:$(VERSION) ghcr.io/mtes-mct/monitorenv/monitorenv-app:latest
+docker-push-latest:
+	docker push ghcr.io/mtes-mct/monitorenv/monitorenv-app:latest
 test-init-infra-env:
 	npm i @import-meta-env/prepare@0.1.13 && npx import-meta-env-prepare -u -x ./.env.infra.example -p ./.env.test.defaults
 test-run-infra-for-frontend:
