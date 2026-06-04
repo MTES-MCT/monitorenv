@@ -62,16 +62,16 @@ INSERT INTO prod.reg_cacem (
     'source1',
     'obs1',
     'type1',
-    '2025-01-01', /* date */
-    '2025-12-31', /* date_fin */
-    '2025-06-06', /* edition_cacem */
-    '2025-01-10', /* edition_bo */
+    '2025-01-01 00:00:00', /* date */
+    '2025-12-31 00:00:00', /* date_fin */
+    '2025-06-06 00:00:00', /* edition_cacem */
+    '2025-01-10 00:00:00', /* edition_bo */
     'resume1',
     'poly_name1',
     'plan1',
     'période d''autorisation1',
     'période de prohibition1',
-    null,
+    '[{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}]',
     'theme1,theme2',
     'tag1,tag2'
 );
