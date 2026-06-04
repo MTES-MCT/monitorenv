@@ -1,13 +1,13 @@
 import { Button, Dialog } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-type CancelEditDialogProps = {
+type ForbiddenActionDialogProps = {
   onClose: () => void
   text: string | React.ReactNode
   title?: string
   warningText?: string | React.ReactNode
 }
-export function CantDoActionDialog({ onClose, text, title, warningText, ...props }: CancelEditDialogProps) {
+export function ForbiddenActionDialog({ onClose, text, title, warningText, ...props }: ForbiddenActionDialogProps) {
   return (
     <Dialog {...props}>
       <Dialog.Title onClose={onClose}>{title ?? 'Suppression impossible'}</Dialog.Title>

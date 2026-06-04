@@ -1,6 +1,6 @@
 import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
-import { CantDoActionDialog } from '@components/Dialog/CantDoActionDialog'
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
+import { ForbiddenActionDialog } from '@components/Dialog/ForbiddenActionDialog'
 import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
@@ -189,7 +189,7 @@ export function AdministrationTable() {
       )}
 
       {isImpossibleArchivingDialogOpen && (
-        <CantDoActionDialog
+        <ForbiddenActionDialog
           onClose={close}
           text={ARCHIVE_ADMINISTRATION_ERROR_MESSAGE[0]}
           title="Archivage impossible"
@@ -198,7 +198,7 @@ export function AdministrationTable() {
       )}
 
       {isImpossibleDeletionDialogOpen && (
-        <CantDoActionDialog
+        <ForbiddenActionDialog
           onClose={close}
           text={DELETE_ADMINISTRATION_ERROR_MESSAGE[0]}
           warningText={DELETE_ADMINISTRATION_ERROR_MESSAGE[1]}

@@ -1,6 +1,6 @@
 import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
-import { CantDoActionDialog } from '@components/Dialog/CantDoActionDialog'
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
+import { ForbiddenActionDialog } from '@components/Dialog/ForbiddenActionDialog'
 import { Accent, Button, ControlUnit, Icon } from '@mtes-mct/monitor-ui'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
@@ -187,7 +187,7 @@ export function ControlUnitResourceList({ controlUnit }: ControlUnitResourceList
       )}
 
       {isImpossibleDeletionDialogOpen && (
-        <CantDoActionDialog
+        <ForbiddenActionDialog
           onClose={closeDialogsAndModals}
           text={DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE[0]}
           warningText={DELETE_CONTROL_UNIT_RESOURCE_ERROR_MESSAGE[1]}
