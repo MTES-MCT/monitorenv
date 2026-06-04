@@ -1,4 +1,6 @@
+import ast
 from io import BytesIO
+import json
 from unittest.mock import patch
 
 import geopandas as gpd
@@ -32,7 +34,7 @@ def regulatory_areas_open_data():
                 "ref_reg1_edited",
             ],
             "edition": [
-                pd.to_datetime("2025-01-10"),
+                pd.to_datetime("2025-01-10 00:00:00"),
             ],
             "editeur": [
                 "editeur1",
@@ -44,10 +46,10 @@ def regulatory_areas_open_data():
                 "obs1",
             ],
             "date": [
-                pd.to_datetime("2025-01-01"),
+                pd.to_datetime("2025-01-01 00:00:00"),
             ],
             "date_fin": [
-                pd.to_datetime("2025-12-31"),
+                pd.to_datetime("2025-12-31 00:00:00"),
             ],
             "type": [
                 "type1",
@@ -74,7 +76,7 @@ def regulatory_areas_open_data():
                 "période de prohibition1",
             ],
             "additional_ref_reg": [
-                None,
+                [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}],
             ],
             "themes": [
                 "theme1,theme2",
@@ -113,10 +115,10 @@ def regulatory_areas_for_csv():
                 "obs1",
             ],
             "date": [
-                pd.to_datetime("2025-01-01"),
+                pd.to_datetime("2025-01-01 00:00:00"),
             ],
             "date_fin": [
-                pd.to_datetime("2025-12-31"),
+                pd.to_datetime("2025-12-31 00:00:00"),
             ],
             "type": [
                 "type1",
@@ -140,7 +142,7 @@ def regulatory_areas_for_csv():
                 "période de prohibition1",
             ],
             "additional_ref_reg": [
-                None,
+                [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}],
             ],
             "themes": [
                 "theme1,theme2",
@@ -154,7 +156,7 @@ def regulatory_areas_for_csv():
 
 @pytest.fixture
 def regulatory_areas_for_geopackage():
-    return gpd.GeoDataFrame(
+    gdf = gpd.GeoDataFrame(
         {
             "id": [
                 1,
@@ -170,7 +172,7 @@ def regulatory_areas_for_geopackage():
                 "ref_reg1_edited",
             ],
             "edition": [
-                pd.to_datetime("2025-01-10"),
+                "2025-01-10 00:00:00",
             ],
             "source": [
                 "source1",
@@ -179,10 +181,10 @@ def regulatory_areas_for_geopackage():
                 "obs1",
             ],
             "date": [
-                pd.to_datetime("2025-01-01"),
+                "2025-01-01 00:00:00",
             ],
             "date_fin": [
-                pd.to_datetime("2025-12-31"),
+                "2025-12-31 00:00:00",
             ],
             "type": [
                 "type1",
@@ -205,7 +207,9 @@ def regulatory_areas_for_geopackage():
             "prohibition_periods": [
                 "période de prohibition1",
             ],
-            "additional_ref_reg": [None],
+            "additional_ref_reg": [
+                [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}],
+            ],
             "themes": [
                 "theme1,theme2",
             ],
@@ -214,12 +218,18 @@ def regulatory_areas_for_geopackage():
             ],
         },
     )
+    for col in ["edition", "date", "date_fin"]:
+        gdf[col] = gdf[col].astype("datetime64[ms]")
+    return gdf
 
 def test_extract_regulatory_areas_open_data(
     create_cacem_tables, reset_test_data, regulatory_areas_open_data
 ):
     
     regulatory_areas = extract_regulatory_areas_open_data()
+    regulatory_areas["additional_ref_reg"] = regulatory_areas["additional_ref_reg"].apply(json.dumps)
+    regulatory_areas_open_data["additional_ref_reg"] = regulatory_areas_open_data["additional_ref_reg"].apply(json.dumps)
+
     pd.testing.assert_frame_equal(regulatory_areas, regulatory_areas_open_data)
 
 
@@ -232,8 +242,11 @@ def test_get_regulatory_areas_for_geopackage(
     regulatory_areas_open_data, regulatory_areas_for_geopackage
 ):
     regulatory_areas = get_regulatory_areas_for_geopackage(regulatory_areas_open_data)
-    pd.testing.assert_frame_equal(regulatory_areas, regulatory_areas_for_geopackage)
 
+    regulatory_areas["additional_ref_reg"] = regulatory_areas["additional_ref_reg"].apply(json.loads)
+    regulatory_areas_for_geopackage["additional_ref_reg"] = regulatory_areas_for_geopackage["additional_ref_reg"].apply(json.dumps).apply(json.loads)
+
+    pd.testing.assert_frame_equal(regulatory_areas, regulatory_areas_for_geopackage)
 
 
 @patch("src.flows.regulatory_areas_open_data.update_resource")
@@ -264,14 +277,8 @@ def test_flow(
         csv_file_object, parse_dates=["date", "date_fin", "edition"]
     )
 
-    df_from_csv_file_object["additional_ref_reg"] = (
-        df_from_csv_file_object["additional_ref_reg"].astype("Int64")
-    )
-
-    regulatory_areas_for_csv["additional_ref_reg"] = (
-        regulatory_areas_for_csv["additional_ref_reg"].astype("Int64")
-    )
-
+    df_from_csv_file_object["additional_ref_reg"] = df_from_csv_file_object["additional_ref_reg"].apply(ast.literal_eval)
+    regulatory_areas_for_csv["additional_ref_reg"] = regulatory_areas_for_csv["additional_ref_reg"]
     pd.testing.assert_frame_equal(
         df_from_csv_file_object.convert_dtypes(),
         regulatory_areas_for_csv.convert_dtypes(),
@@ -297,8 +304,12 @@ def test_flow(
 
     gdf_from_geopackage_file_object = pd.concat(gdfs).reset_index(drop=True)
 
+    gdf_from_geopackage_file_object["additional_ref_reg"] = (
+        gdf_from_geopackage_file_object["additional_ref_reg"]
+        .apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+    )
+
     pd.testing.assert_frame_equal(
         normalize_gdf(gdf_from_geopackage_file_object),
         normalize_gdf(regulatory_areas_for_geopackage),
-        check_dtype=False,
     )

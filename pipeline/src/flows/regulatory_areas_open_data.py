@@ -1,3 +1,5 @@
+import json
+
 import geopandas as gpd
 import pandas as pd
 from prefect import flow, task
@@ -86,7 +88,17 @@ def get_regulatory_areas_for_geopackage(
         "tags"
     ]
 
-    return regulatory_areas[columns].copy(deep=True)
+    gdf = regulatory_areas[columns].copy(deep=True)
+    
+    # Normalize date columns to ensure they are in the correct format for the Geopackage
+    for col in ["edition", "date", "date_fin"]:
+        if col in gdf.columns:
+            gdf[col] = gdf[col].astype("datetime64[ms]")
+            
+    # Convert the 'additional_ref_reg' column to JSON strings to ensure compatibility with Geopackage        
+    gdf["additional_ref_reg"] = gdf["additional_ref_reg"].apply(json.dumps)
+
+    return gdf
 
 
 @flow(name="Monitorenv - Regulatory Areas open data")
