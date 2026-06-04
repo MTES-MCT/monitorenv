@@ -1,4 +1,4 @@
-import { CantDoActionDialog } from '@components/Dialog/CantDoActionDialog'
+import { ForbiddenActionDialog } from '@components/Dialog/ForbiddenActionDialog'
 import { useMemo } from 'react'
 
 import { MissionSourceEnum } from '../../../../domain/entities/missions'
@@ -25,7 +25,7 @@ export function ExternalActionsModal({ onClose, sources }: ExternalActionsModalP
   }, [isCNSP, isRapportNav])
 
   return (
-    <CantDoActionDialog
+    <ForbiddenActionDialog
       data-cy="external-actions-modal"
       onClose={onClose}
       text={

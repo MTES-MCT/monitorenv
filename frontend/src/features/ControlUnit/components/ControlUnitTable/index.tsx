@@ -1,6 +1,6 @@
 import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
-import { CantDoActionDialog } from '@components/Dialog/CantDoActionDialog'
 import { DeleteDialog } from '@components/Dialog/DeleteDialog'
+import { ForbiddenActionDialog } from '@components/Dialog/ForbiddenActionDialog'
 import { Bold } from '@components/style'
 import { BackofficeWrapper, Title } from '@features/BackOffice/components/style'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
@@ -176,7 +176,7 @@ export function ControlUnitTable() {
       )}
 
       {isImpossibleDeletionDialogOpen && (
-        <CantDoActionDialog
+        <ForbiddenActionDialog
           onClose={close}
           text={DELETE_CONTROL_UNIT_ERROR_MESSAGE[0]}
           warningText={DELETE_CONTROL_UNIT_ERROR_MESSAGE[1]}
