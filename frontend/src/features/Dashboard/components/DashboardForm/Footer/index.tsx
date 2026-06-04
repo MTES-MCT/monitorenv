@@ -135,9 +135,9 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
         <Dialog isAbsolute>
           <Dialog.Title onClose={() => setIsSaveDialogOpen(false)}>Enregistrer le tableau de bord</Dialog.Title>
           <Dialog.Body $color={THEME.color.gunMetal}>
-            <StyledDialogMessage>
-              Voulez-vous modifier le nom par défaut du tableau de bord avant de l&apos;enregistrer ?
-            </StyledDialogMessage>
+            <p>
+              Voulez-vous modifier le nom par défaut <br /> du tableau de bord avant de l&apos;enregistrer ?
+            </p>
             <StyledTextInput
               isLabelHidden
               label="Nom du tableau de bord"
@@ -158,7 +158,7 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
       )}
       {isDeleteDialogOpen && (
         <DeleteDialog
-          context="tableau-de-bord"
+          context="dashboard"
           onCancel={() => setIsDeleteDialogOpen(false)}
           onConfirm={confirmDelete}
           textLine2="supprimer le tableau ?"
@@ -223,10 +223,6 @@ const DeleteButton = styled(Button)`
 const StyledTextInput = styled(TextInput)`
   margin-top: 24px;
   width: 360px;
-`
-
-const StyledDialogMessage = styled.p`
-  font-size: 16px;
 `
 
 const StyledDropdown = styled(Dropdown)`

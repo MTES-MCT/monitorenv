@@ -156,7 +156,6 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
   )
 }
 const StyledBody = styled(Dialog.Body)`
-  text-align: left;
   gap: 32px;
 `
 

@@ -53,7 +53,7 @@ export function CancelEditModal({
   }, [isMissionUnsaved, isNew])
 
   return (
-    <StyledCancelEditDialog
+    <CancelEditDialog
       className="styled-cancel-edit-dialog"
       data-cy="cancel-edit-modal"
       onCancel={onCancel}
@@ -66,10 +66,4 @@ export function CancelEditModal({
 const RedText = styled(Bold)`
   color: ${p => p.theme.color.maximumRed};
   padding-bottom: 4px;
-`
-
-const StyledCancelEditDialog = styled(CancelEditDialog)`
-  > div:nth-child(2) {
-    min-width: 500px !important;
-  }
 `

@@ -7,9 +7,9 @@ type CancelEditDialogProps = {
   title?: string
   warningText?: string | React.ReactNode
 }
-export function CantDoActionDialog({ onClose, text, title, warningText }: CancelEditDialogProps) {
+export function CantDoActionDialog({ onClose, text, title, warningText, ...props }: CancelEditDialogProps) {
   return (
-    <Dialog>
+    <Dialog {...props}>
       <Dialog.Title onClose={onClose}>{title ?? 'Suppression impossible'}</Dialog.Title>
       <Dialog.Body>
         <p>{text}</p>
