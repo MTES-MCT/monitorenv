@@ -1,6 +1,5 @@
 import { Bold } from '@components/style'
 import { Accent, Button, Dialog } from '@mtes-mct/monitor-ui'
-import styled from 'styled-components'
 
 type DeleteModalProps = {
   context: string
@@ -22,7 +21,7 @@ export function DeleteDialog({
   title
 }: DeleteModalProps) {
   return (
-    <StyledDialog isAbsolute={isAbsolute}>
+    <Dialog isAbsolute={isAbsolute}>
       <Dialog.Title onClose={onCancel}>{title}</Dialog.Title>
       <Dialog.Body>
         <p>{textLine1 ?? 'Êtes-vous sûr de vouloir'}</p>
@@ -36,12 +35,6 @@ export function DeleteDialog({
           Confirmer la suppression
         </Button>
       </Dialog.Action>
-    </StyledDialog>
+    </Dialog>
   )
 }
-
-const StyledDialog = styled(Dialog)`
-  > div:nth-child(2) {
-    min-width: 400px !important;
-  }
-`

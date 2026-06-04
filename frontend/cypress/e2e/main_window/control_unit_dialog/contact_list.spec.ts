@@ -360,7 +360,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
           .filter(`[data-id="${firstControlUnitContactId}"]`)
           .clickButton('Éditer ce contact')
         cy.clickButton('Supprimer ce contact')
-        cy.clickButton('Supprimer')
+        cy.clickButton('Confirmer la suppression')
 
         cy.wait('@deleteFirstControlUnitContact')
 
@@ -372,7 +372,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
           .filter(`[data-id="${secondControlUnitContactId}"]`)
           .clickButton('Éditer ce contact')
         cy.clickButton('Supprimer ce contact')
-        cy.clickButton('Supprimer')
+        cy.clickButton('Confirmer la suppression')
 
         cy.wait('@deleteSecondControlUnitContact')
       })

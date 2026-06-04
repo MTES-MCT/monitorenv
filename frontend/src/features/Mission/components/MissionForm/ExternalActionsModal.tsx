@@ -28,10 +28,18 @@ export function ExternalActionsModal({ onClose, sources }: ExternalActionsModalP
     <CantDoActionDialog
       data-cy="external-actions-modal"
       onClose={onClose}
-      text={`La mission ne peut pas être supprimée, car elle comporte des événements ajoutés par ${sourceText}.`}
-      warningText={`Si vous souhaitez tout de même la supprimer, veuillez contacter ${sourceText} pour qu'${
-        isCNSP && isRapportNav ? 'ils suppriment' : 'il supprime'
-      } d'abord ses événements.`}
+      text={
+        <>
+          <p>La mission ne peut pas être supprimée, car elle comporte des événements</p>
+          <p>ajoutés par {sourceText}.</p>
+        </>
+      }
+      warningText={
+        <>
+          <p>Si vous souhaitez tout de même la supprimer, veuillez contacter {sourceText}</p>
+          <p>pour qu&apos;{isCNSP && isRapportNav ? 'ils suppriment' : 'il supprime'} d&apos;abord ses événements.</p>
+        </>
+      }
     />
   )
 }
