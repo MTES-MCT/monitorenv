@@ -13,36 +13,39 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionNoteDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionSurveillanceDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionTagDataOutput.Companion.fromMissionTagEntity
 import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.adapters.RapportNavMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
 data class MissionDataOutput(
-    val id: Int,
-    val missionTypes: List<MissionTypeEnum>,
-    val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
-    val openBy: String? = null,
-    val completedBy: String? = null,
-    val observationsCacem: String? = null,
-    val observationsCnsp: String? = null,
-    val facade: String? = null,
-    val geom: MultiPolygon? = null,
-    val startDateTimeUtc: ZonedDateTime,
-    val endDateTimeUtc: ZonedDateTime? = null,
-    val createdAtUtc: ZonedDateTime? = null,
-    val updatedAtUtc: ZonedDateTime? = null,
-    val envActions: List<EnvActionDataOutput>? = null,
-    val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
-    val missionSource: MissionSourceEnum,
-    val hasMissionOrder: Boolean,
-    val isUnderJdp: Boolean,
-    val attachedReportingIds: List<Int>? = listOf(),
     val attachedReportings: List<MissionAttachedReportingDataOutput>? = listOf(),
+    val attachedReportingIds: List<Int>? = listOf(),
+    val completedBy: String? = null,
+    val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
+    val createdAtUtc: ZonedDateTime? = null,
     val detachedReportingIds: List<Int>? = listOf(),
     val detachedReportings: List<MissionDetachedReportingDataOutput>? = listOf(),
-    val isGeometryComputedFromControls: Boolean,
+    val endDateTimeUtc: ZonedDateTime? = null,
+    val envActions: List<EnvActionDataOutput>? = null,
+    val facade: String? = null,
+    val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
+    val geom: MultiPolygon? = null,
+    val hasMissionOrder: Boolean,
     val hasRapportNavActions: RapportNavMissionActionDataOutput? = null,
+    val id: Int,
+    val isGeometryComputedFromControls: Boolean,
+    val isNoteworthy: Boolean?,
+    val isUnderJdp: Boolean,
+    val missionTypes: List<MissionTypeEnum>,
+    val missionSource: MissionSourceEnum,
+    val missionTags: List<MissionTagDataOutput>,
+    val observationsCacem: String? = null,
+    val observationsCnsp: String? = null,
+    val openBy: String? = null,
+    val startDateTimeUtc: ZonedDateTime,
+    val updatedAtUtc: ZonedDateTime? = null,
 ) {
     companion object {
         fun fromMissionDTO(dto: MissionDetailsDTO): MissionDataOutput {
@@ -107,7 +110,9 @@ data class MissionDataOutput(
                             .fromMonitorFishMissionActionEntity(it)
                     },
                 missionSource = dto.mission.missionSource,
+                missionTags = dto.mission.missionTags.map { fromMissionTagEntity(it) },
                 hasMissionOrder = dto.mission.hasMissionOrder,
+                isNoteworthy = dto.mission.isNoteworthy,
                 isUnderJdp = dto.mission.isUnderJdp,
                 attachedReportingIds = dto.attachedReportingIds,
                 attachedReportings =
@@ -152,7 +157,9 @@ data class MissionDataOutput(
                         )
                     },
                 missionSource = mission.missionSource,
+                missionTags = mission.missionTags.map { fromMissionTagEntity(it) },
                 hasMissionOrder = mission.hasMissionOrder,
+                isNoteworthy = mission.isNoteworthy,
                 isUnderJdp = mission.isUnderJdp,
                 isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
             )

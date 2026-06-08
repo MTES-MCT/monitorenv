@@ -1,8 +1,8 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions
+package fr.gouv.cacem.monitorenv.domain.use_cases.missionTag
 
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionTagsRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionTagFixture.Companion.aMissionTagEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.fixtures.MissionTagFixture.Companion.aMissionTagEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

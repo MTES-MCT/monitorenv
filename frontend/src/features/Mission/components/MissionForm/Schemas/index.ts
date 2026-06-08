@@ -97,6 +97,8 @@ export const NewMissionSchema: Yup.ObjectSchema<
       .required(HIDDEN_ERROR),
     envActions: Yup.array().of(NewEnvActionSchema).ensure(),
     geom: Yup.mixed<GeoJSON.MultiPolygon>().optional(),
+    isNoteworthy: Yup.boolean().optional(),
+    missionTags: Yup.array().optional().ensure(),
     missionTypes: Yup.array().min(1).required('Type de mission requis'),
     observationsCacem: Yup.string().optional(),
     observationsCnsp: Yup.string().optional(),

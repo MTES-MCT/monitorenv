@@ -15,6 +15,10 @@ class JpaMissionTagsRepository(
     override fun findAll(): List<MissionTagEntity> = dbMissionTagsRepository.findAll().map { it.toMissiontagEntity() }
 
     @Transactional
+    override fun findAllUnarchived(): List<MissionTagEntity> =
+        dbMissionTagsRepository.findAllByIsArchivedIsFalse().map { it.toMissiontagEntity() }
+
+    @Transactional
     override fun save(missionTagEntity: MissionTagEntity): MissionTagEntity =
         dbMissionTagsRepository.save(MissionTagModel.fromMissionTagEntity(missionTagEntity)).toMissiontagEntity()
 }

@@ -1,6 +1,7 @@
 import { HumanDateCell } from '@components/Table/Cells/HumanDateCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { ActionsCell } from '@features/Mission/components/MissionsList/Cells/ActionsCell'
+import { MissionTagsCell } from '@features/Mission/components/MissionsList/Cells/MissionTagsCell'
 import { ThemesCell } from '@features/Mission/components/MissionsList/Cells/ThemesCell'
 import { getAllThemes } from '@features/Mission/utils'
 
@@ -99,6 +100,14 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     header: () => 'État données',
     id: 'completion',
     size: 146 + legacyFirefoxOffset,
+    sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
+  },
+  {
+    accessorFn: row => row,
+    cell: ({ getValue }) => (isFetching ? <StyledSkeletonRow /> : <MissionTagsCell mission={getValue()} />),
+    header: () => 'Étiquettes',
+    id: 'missionTags',
+    size: 230 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortCompletion(rowA, rowB)
   },
   {

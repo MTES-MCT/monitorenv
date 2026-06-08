@@ -12,12 +12,14 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.EnvActionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlResourceModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionControlUnitModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionModel
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.MissionTagMissionModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBEnvActionRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlResourceRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionControlUnitRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBMissionTagMissionsRepository
 import org.apache.commons.lang3.StringUtils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -36,6 +38,7 @@ class JpaMissionRepository(
     private val dbEnvActionRepository: IDBEnvActionRepository,
     private val dbMissionRepository: IDBMissionRepository,
     private val dbThemeRepository: JpaThemeRepository,
+    private val dbMissionTagMissionRepository: IDBMissionTagMissionsRepository,
     private val mapper: JsonMapper,
 ) : IMissionRepository {
     override fun count(): Long = dbMissionRepository.count()
@@ -187,6 +190,10 @@ class JpaMissionRepository(
 
         val savedControlResources = saveControlResources(mission, missionModel)
         savedMission.controlResources?.addAll(savedControlResources)
+
+        val saveMissionTagMissions = saveMissionTagMissions(mission, missionModel)
+        savedMission.missionTags?.addAll(saveMissionTagMissions)
+
         dbMissionRepository.flush()
 
         return savedMission.toMissionDTO(mapper)
@@ -245,6 +252,16 @@ class JpaMissionRepository(
 
         return savedEnvActions
     }
+
+    private fun saveMissionTagMissions(
+        mission: MissionEntity,
+        missionModel: MissionModel,
+    ): List<MissionTagMissionModel> =
+        dbMissionTagMissionRepository.saveAll(
+            mission.missionTags.map {
+                MissionTagMissionModel.fromMissionTagEntity(it, missionModel)
+            },
+        )
 
     override fun addLegacyControlPlans(mission: MissionEntity) {
         mission.envActions?.forEach { envAction ->

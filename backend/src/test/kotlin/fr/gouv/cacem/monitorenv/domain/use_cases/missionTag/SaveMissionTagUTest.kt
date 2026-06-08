@@ -1,9 +1,9 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions
+package fr.gouv.cacem.monitorenv.domain.use_cases.missionTag
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionTagsRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionTagFixture.Companion.aMissionTagEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.fixtures.MissionTagFixture.Companion.aMissionTagEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,7 +17,7 @@ class SaveMissionTagUTest {
     private val saveMissionTag = SaveMissionTag(missionTagsRepository)
 
     @Test
-    fun `execute udpate a mission tag and log it`(log: CapturedOutput) {
+    fun `execute update a mission tag and log it`(log: CapturedOutput) {
         // Given
         val missionTag = aMissionTagEntity()
         given(missionTagsRepository.save(missionTag)).willReturn(missionTag)

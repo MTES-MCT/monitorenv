@@ -128,36 +128,40 @@ class CreateOrPatchEnvActionsUTests {
         val missionToUpdate =
             MissionEntity(
                 id = 100,
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                createdAtUtc = null,
                 envActions = envActions,
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 facade = "Outre-Mer",
                 geom = polygon,
                 hasMissionOrder = false,
                 isDeleted = false,
-                isGeometryComputedFromControls = false,
+                isNoteworthy = true,
                 isUnderJdp = false,
+                isGeometryComputedFromControls = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 missionTypes = listOf(MissionTypeEnum.LAND),
+                missionTags = listOf(),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                createdAtUtc = null,
                 updatedAtUtc = null,
             )
 
         val expectedUpdatedMission =
             MissionEntity(
                 id = 100,
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                createdAtUtc = null,
                 envActions = updatedEnvActions,
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 facade = "Outre-Mer",
                 geom = polygon,
                 hasMissionOrder = false,
                 isDeleted = false,
-                isGeometryComputedFromControls = false,
+                isNoteworthy = true,
                 isUnderJdp = false,
+                isGeometryComputedFromControls = false,
                 missionSource = MissionSourceEnum.MONITORENV,
                 missionTypes = listOf(MissionTypeEnum.LAND),
+                missionTags = listOf(),
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                createdAtUtc = null,
                 updatedAtUtc = null,
             )
 

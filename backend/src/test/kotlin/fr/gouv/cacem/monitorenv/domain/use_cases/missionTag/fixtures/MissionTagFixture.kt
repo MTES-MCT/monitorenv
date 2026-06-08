@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures
+package fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.fixtures
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTagEntity
 

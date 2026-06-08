@@ -62,6 +62,5 @@ const StyledTableContainer = styled.div`
 `
 
 const StyledTable = styled(TableWithSelectableRows.Table)`
-  table-layout: auto;
   width: 100%;
 `

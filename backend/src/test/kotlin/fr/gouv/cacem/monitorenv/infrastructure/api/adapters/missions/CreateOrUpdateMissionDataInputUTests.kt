@@ -76,6 +76,7 @@ class CreateOrUpdateMissionDataInputUTests {
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 missionSource = MissionSourceEnum.MONITORENV,
+                missionTags = listOf(),
                 attachedReportingIds = listOf(),
                 envActions = listOf(envActionControl, envActionSurveillance, envActionNote),
                 isGeometryComputedFromControls = false,

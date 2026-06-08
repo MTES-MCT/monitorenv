@@ -1,6 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.given
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -25,7 +29,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 @ExtendWith(SpringExtension::class)
 @ExtendWith(OutputCaptureExtension::class)
@@ -49,6 +53,9 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     private val getFullMission: GetFullMission = mock()
 
     @Mock
+    private val saveMissionTagMission: SaveMissionTagMission = mock()
+
+    @Mock
     private val applicationEventPublisher: ApplicationEventPublisher = mock()
 
     val wktReader = WKTReader()
@@ -69,7 +76,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 attachedReportingIds = attachedReportingIds,
             )
 
-        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate.copy(id = 100))
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
@@ -85,6 +92,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
                 eventPublisher = applicationEventPublisher,
+                saveMissionTagMission = saveMissionTagMission,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = attachedReportingIds,
@@ -110,7 +118,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     fun `execute should throw BackendUsageException when try to attach reporting that has already be attached`() {
         val missionToCreate = aMissionEntity()
         val attachedReportingIds = listOf(5)
-        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate.copy(id = 100))
         given(reportingRepository.findById(5)).willReturn(getReportingDTOWithAttachedMission(5))
 
         // Then
@@ -122,6 +130,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
                 eventPublisher = applicationEventPublisher,
+                saveMissionTagMission = saveMissionTagMission,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = attachedReportingIds,
@@ -145,18 +154,20 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         val missionToCreate =
             MissionEntity(
                 id = 100,
-                missionTypes = listOf(MissionTypeEnum.LAND),
+                createdAtUtc = null,
+                envActions = listOf(envActionControl),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 facade = "Outre-Mer",
                 geom = polygon,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
+                isDeleted = false,
+                isNoteworthy = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
-                envActions = listOf(envActionControl),
-                createdAtUtc = null,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                missionTags = mutableListOf(),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 updatedAtUtc = null,
             )
         val attachedReportingIds = listOf(1, 2, 3)
@@ -166,25 +177,27 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 mission =
                     MissionEntity(
                         id = 100,
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        facade = "Outre-Mer",
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        createdAtUtc = null,
                         endDateTimeUtc =
                             ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORENV,
+                        facade = "Outre-Mer",
                         hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
-                        createdAtUtc = null,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        missionTags = listOf(),
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                         updatedAtUtc = null,
                     ),
                 attachedReportingIds = attachedReportingIds,
             )
         val envActionAttachedToReportingIds = Pair(envActionControl.id, listOf(1))
 
-        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
@@ -201,6 +214,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
                 eventPublisher = applicationEventPublisher,
+                saveMissionTagMission = saveMissionTagMission,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = attachedReportingIds,
@@ -214,14 +228,14 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         verify(reportingRepository, times(1))
             .detachDanglingEnvActions(
                 missionId = 100,
-                envActionIds = listOf(envActionControl.id).mapNotNull { it },
+                envActionIds = listOf(envActionControl.id).map { it },
             )
         verify(reportingRepository, times(1)).attachReportingsToMission(attachedReportingIds, 100)
         verify(
             reportingRepository,
             times(1),
         ).attachEnvActionsToReportings(
-            envActionAttachedToReportingIds.first!!,
+            envActionAttachedToReportingIds.first,
             envActionAttachedToReportingIds.second,
         )
         assertThat(createdMissionDTO).isEqualTo(expectedCreatedMission)
@@ -248,7 +262,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
         val expectedCreatedMission = MissionDetailsDTO(mission = aMissionEntity())
 
-        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate)
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate)
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
         given(getFullMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(false, expectedCreatedMission))
@@ -262,6 +276,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
                 eventPublisher = applicationEventPublisher,
+                saveMissionTagMission = saveMissionTagMission,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = listOf(),
@@ -279,7 +294,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
 
         val expectedCreatedMission = MissionDetailsDTO(aMissionEntity(100))
 
-        given(createOrUpdateMission.execute(anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate.copy(id = 100))
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
         given(getFullMission.execute(100)).willReturn(expectedCreatedMission)
@@ -293,6 +308,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 getFullMissionWithFishAndRapportNavActions = getFullMissionWithFishAndRapportNavActions,
                 getFullMission = getFullMission,
                 eventPublisher = applicationEventPublisher,
+                saveMissionTagMission = saveMissionTagMission,
             ).execute(
                 mission = missionToCreate,
                 attachedReportingIds = listOf(),

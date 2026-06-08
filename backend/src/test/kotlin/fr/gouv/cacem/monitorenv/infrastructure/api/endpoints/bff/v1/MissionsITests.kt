@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
+import com.nhaarman.mockitokotlin2.any
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
@@ -20,21 +21,24 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.GetMissionTags
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.GetUnarchivedMissionTags
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.SaveMissionTag
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.fixtures.MissionTagFixture.Companion.aMissionTagEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithActionsAndAttachedReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionTags
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.SaveMissionTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionTagFixture.Companion.aMissionTagEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreaterOrUpdateMissionTagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionTagInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -93,6 +97,9 @@ class MissionsITests {
     @MockitoBean
     private lateinit var getMissionTags: GetMissionTags
 
+    @MockitoBean
+    private lateinit var getUnarchivedMissionTags: GetUnarchivedMissionTags
+
     @Autowired
     private lateinit var jsonMapper: JsonMapper
 
@@ -112,21 +119,22 @@ class MissionsITests {
                 mission =
                     MissionEntity(
                         id = 10,
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        facade = "Outre-Mer",
-                        geom = polygon,
-                        observationsCacem = null,
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                         endDateTimeUtc =
                             ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORENV,
+                        facade = "Outre-Mer",
+                        geom = polygon,
                         hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        missionTags = listOf(aMissionTagEntity()),
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                     ),
             )
         val newMissionRequest =
@@ -138,6 +146,7 @@ class MissionsITests {
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 missionSource = MissionSourceEnum.MONITORENV,
+                missionTags = listOf(MissionTagInput(id = 1, name = "test", isArchived = false)),
                 attachedReportingIds = listOf(),
                 isGeometryComputedFromControls = false,
             )
@@ -173,15 +182,17 @@ class MissionsITests {
                 mission =
                     MissionEntity(
                         id = 10,
+                        createdAtUtc = null,
+                        hasMissionOrder = false,
+                        isDeleted = false,
+                        isUnderJdp = false,
+                        isNoteworthy = false,
+                        isGeometryComputedFromControls = false,
+                        missionSource = MissionSourceEnum.MONITORFISH,
                         missionTypes = listOf(MissionTypeEnum.SEA),
+                        missionTags = listOf(),
                         startDateTimeUtc =
                             ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORFISH,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
-                        isGeometryComputedFromControls = false,
-                        createdAtUtc = null,
                         updatedAtUtc = null,
                     ),
             )
@@ -243,7 +254,6 @@ class MissionsITests {
                 mission =
                     MissionEntity(
                         id = 10,
-                        missionTypes = listOf(MissionTypeEnum.SEA),
                         controlUnits =
                             listOf(
                                 LegacyControlUnitEntity(
@@ -264,23 +274,26 @@ class MissionsITests {
                                     isArchived = false,
                                 ),
                             ),
-                        openBy = "OpenBy",
                         completedBy = "CompletedBy",
-                        facade = "Outre-Mer",
-                        geom = polygon,
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        createdAtUtc = null,
+                        envActions = listOf(controlEnvAction),
                         endDateTimeUtc =
                             ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        observationsCacem = "obs cacem",
-                        observationsCnsp = "obs cnsp",
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORENV,
+                        facade = "Outre-Mer",
+                        geom = polygon,
                         hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
-                        envActions = listOf(controlEnvAction),
-                        createdAtUtc = null,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        missionTags = listOf(),
+                        observationsCacem = "obs cacem",
+                        observationsCnsp = "obs cnsp",
+                        openBy = "OpenBy",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                         updatedAtUtc = null,
                     ),
                 attachedReportingIds = listOf(1),
@@ -468,7 +481,6 @@ class MissionsITests {
                 mission =
                     MissionEntity(
                         id = 10,
-                        missionTypes = listOf(MissionTypeEnum.SEA),
                         controlUnits =
                             listOf(
                                 LegacyControlUnitEntity(
@@ -489,23 +501,26 @@ class MissionsITests {
                                     isArchived = false,
                                 ),
                             ),
-                        openBy = "OpenBy",
                         completedBy = "CompletedBy",
-                        facade = "Outre-Mer",
-                        geom = polygon,
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        createdAtUtc = null,
+                        envActions = listOf(controlEnvAction),
                         endDateTimeUtc =
                             ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        observationsCacem = "obs cacem",
-                        observationsCnsp = "obs cnsp",
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORENV,
+                        facade = "Outre-Mer",
+                        geom = polygon,
                         hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
-                        envActions = listOf(controlEnvAction),
-                        createdAtUtc = null,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        missionTags = listOf(),
+                        observationsCacem = "obs cacem",
+                        observationsCnsp = "obs cnsp",
+                        openBy = "OpenBy",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                         updatedAtUtc = null,
                     ),
                 attachedReportingIds = listOf(1),
@@ -696,16 +711,18 @@ class MissionsITests {
                 mission =
                     MissionEntity(
                         id = 14,
+                        createdAtUtc = null,
+                        hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
                         missionTypes = listOf(MissionTypeEnum.SEA),
+                        missionTags = listOf(),
                         observationsCacem = "updated observationsCacem",
                         startDateTimeUtc =
                             ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORENV,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
-                        isGeometryComputedFromControls = false,
-                        createdAtUtc = null,
                         updatedAtUtc = null,
                     ),
             )
@@ -732,6 +749,7 @@ class MissionsITests {
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 envActions = listOf(envAction),
                 missionSource = MissionSourceEnum.MONITORENV,
+                missionTags = listOf(),
                 attachedReportingIds = listOf(1),
                 isGeometryComputedFromControls = false,
             )
@@ -756,11 +774,32 @@ class MissionsITests {
             // Then
             .andExpect(status().isOk)
             .andExpect(
+                jsonPath("$.id", equalTo(expectedUpdatedMission.mission.id)),
+            ).andExpect(
+                jsonPath("$.createdAtUtc", equalTo(expectedUpdatedMission.mission.createdAtUtc)),
+            ).andExpect(
+                jsonPath("$.hasMissionOrder", equalTo(expectedUpdatedMission.mission.hasMissionOrder)),
+            ).andExpect(jsonPath("$.isNoteworthy", equalTo(expectedUpdatedMission.mission.isUnderJdp)))
+            .andExpect(
+                jsonPath("$.isUnderJdp", equalTo(expectedUpdatedMission.mission.isUnderJdp)),
+            ).andExpect(
                 jsonPath(
-                    "$.observationsCacem",
-                    equalTo(expectedUpdatedMission.mission.observationsCacem),
+                    "$.isGeometryComputedFromControls",
+                    equalTo(expectedUpdatedMission.mission.isGeometryComputedFromControls),
                 ),
-            )
+            ).andExpect(
+                jsonPath("$.missionSource", equalTo(expectedUpdatedMission.mission.missionSource.name)),
+            ).andExpect(
+                jsonPath("$.missionTypes", equalTo(expectedUpdatedMission.mission.missionTypes.map { it.name })),
+            ).andExpect(
+                jsonPath("$.missionTags", equalTo(expectedUpdatedMission.mission.missionTags)),
+            ).andExpect(
+                jsonPath("$.observationsCacem", equalTo(expectedUpdatedMission.mission.observationsCacem)),
+            ).andExpect(
+                jsonPath("$.startDateTimeUtc", equalTo(expectedUpdatedMission.mission.startDateTimeUtc.toString())),
+            ).andExpect(
+                jsonPath("$.updatedAtUtc", equalTo(expectedUpdatedMission.mission.updatedAtUtc)),
+            ).andExpect(jsonPath("$.isDeleted").doesNotExist())
     }
 
     @Test
@@ -820,16 +859,21 @@ class MissionsITests {
     @Test
     fun `Should save a mission tag`() {
         // Given
+        val inputData = CreaterOrUpdateMissionTagInput(id = null, name = "test", isArchived = false)
         val missionTagEntity = aMissionTagEntity()
-        given(saveMissionTag.execute(missionTagEntity)).willReturn(missionTagEntity)
+        given(saveMissionTag.execute(any())).willReturn(missionTagEntity)
 
         // When
         mockMvc
-            .perform(get("/bff/v1/missions/tag"))
+            .perform(
+                put("/bff/v1/missions/tags")
+                    .content(jsonMapper.writeValueAsString(inputData))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
             // Then
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$[0].id", equalTo(1)))
-            .andExpect(jsonPath("$[0].name", equalTo("test")))
-            .andExpect(jsonPath("$[0].isArchived", equalTo(false)))
+            .andExpect(jsonPath("$.id", equalTo(1)))
+            .andExpect(jsonPath("$.name", equalTo("test")))
+            .andExpect(jsonPath("$.isArchived", equalTo(false)))
     }
 }

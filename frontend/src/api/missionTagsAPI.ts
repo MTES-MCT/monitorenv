@@ -13,6 +13,10 @@ export const missionTagsAPI = monitorenvPrivateApi.injectEndpoints({
       query: () => `/v1/missions/tags`,
       transformErrorResponse: response => new FrontendApiError(GET_MISSIONS_TAGS_ERROR_MESSAGE, response)
     }),
+    getUnarchivedMissionsTags: builder.query<EntityState<MissionTagFromAPI, number>, void>({
+      query: () => `/v1/missions/tags/unarchived`,
+      transformErrorResponse: response => new FrontendApiError(GET_MISSIONS_TAGS_ERROR_MESSAGE, response)
+    }),
     saveMissionTag: builder.mutation<MissionTagFromAPI, MissionTagToAPI>({
       query: tag => ({
         body: tag,
@@ -25,4 +29,4 @@ export const missionTagsAPI = monitorenvPrivateApi.injectEndpoints({
   })
 })
 
-export const { useGetMissionsTagsQuery } = missionTagsAPI
+export const { useGetMissionsTagsQuery, useGetUnarchivedMissionsTagsQuery } = missionTagsAPI

@@ -51,6 +51,8 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.fill('Unité 1', 'Cross Etel')
     cy.wait(500)
+    cy.fill('Étiquette de mission', ['Mission tag 1', 'Mission tag 2'])
+    cy.wait(500)
 
     cy.getDataCy('add-control-administration').contains('DIRM / DM')
     cy.getDataCy('add-control-unit').contains('Cross Etel')
@@ -66,6 +68,10 @@ context('Side Window > Mission Form > Main Form', () => {
               id: 10011,
               name: 'Cross Etel'
             }
+          ],
+          missionTags: [
+            { id: 1, isArchived: false, name: 'Mission tag 1' },
+            { id: 2, isArchived: false, name: 'Mission tag 2' }
           ],
           missionTypes: ['SEA', 'LAND']
         }

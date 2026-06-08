@@ -12,7 +12,7 @@ import { ControlsCell } from '@features/Mission/components/MissionsList/Cells/Co
 import { ThemesCell } from '@features/Mission/components/MissionsList/Cells/ThemesCell'
 import { UnitCell } from '@features/Mission/components/MissionsList/Cells/UnitCell'
 import { getAllThemes } from '@features/Mission/utils'
-import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
+import { TableWithSelectableRows, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { flexRender, type Row as RowType } from '@tanstack/react-table'
 import styled from 'styled-components'
 
@@ -74,9 +74,24 @@ export function Row({ row }: { row: RowType<Mission> }) {
             <ExpandedRowLabel>Contrôles</ExpandedRowLabel>
             <ControlsCell envActions={mission.envActions} />
           </ExpandedRowCell>
-          <ExpandedRowCell colSpan={3}>
+          <ExpandedRowCell>
             <ExpandedRowLabel>Ouvert part</ExpandedRowLabel>
             <ExpandedRowValue>{mission.openBy ?? UNKNOWN}</ExpandedRowValue>
+          </ExpandedRowCell>
+          <ExpandedRowCell colSpan={2}>
+            <ExpandedRowLabel>Étiquettes de mission</ExpandedRowLabel>
+            <ul>
+              {mission.isNoteworthy && (
+                <Tag backgroundColor={THEME.color.charcoal} color={THEME.color.white}>
+                  Opération marquante
+                </Tag>
+              )}
+              {mission.missionTags?.map(missionTag => (
+                <li key={missionTag.id}>
+                  <Tag backgroundColor={THEME.color.white}>{missionTag.name}</Tag>
+                </li>
+              ))}
+            </ul>
           </ExpandedRowCell>
         </ExpandedRow>
       )}
