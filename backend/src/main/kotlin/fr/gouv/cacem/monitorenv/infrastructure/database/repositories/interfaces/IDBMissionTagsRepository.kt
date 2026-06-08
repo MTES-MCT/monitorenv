@@ -5,4 +5,6 @@ import org.hibernate.annotations.DynamicUpdate
 import org.springframework.data.jpa.repository.JpaRepository
 
 @DynamicUpdate
-interface IDBMissionTagsRepository : JpaRepository<MissionTagModel, Int>
+interface IDBMissionTagsRepository : JpaRepository<MissionTagModel, Int> {
+    fun findAllByIsArchivedIsFalse(): List<MissionTagModel>
+}

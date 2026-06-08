@@ -2,6 +2,8 @@ import { useGetMissionsQuery } from '@api/missionsAPI'
 import { isMissionPartOfSelectedAdministrationNames } from '@features/Mission/useCases/filters/isMissionPartOfSelectedAdministrationNames'
 import { isMissionPartOfSelectedCompletionStatus } from '@features/Mission/useCases/filters/isMissionPartOfSelectedCompletionStatus'
 import { isMissionPartOfSelectedControlUnitIds } from '@features/Mission/useCases/filters/isMissionPartOfSelectedControlUnitIds'
+import { isMissionPartOfSelectedIsNoteworthy } from '@features/Mission/useCases/filters/isMissionPartOfSelectedIsNoteworthy'
+import { isMissionPartOfSelectedMissionTags } from '@features/Mission/useCases/filters/isMissionPartOfSelectedMissionTags'
 import { isMissionPartOfSelectedThemes } from '@features/Mission/useCases/filters/isMissionPartOfSelectedTheme'
 import { isMissionPartOfSelectedWithEnvActions } from '@features/Mission/useCases/filters/isMissionPartOfSelectedWithEnvActions'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -18,6 +20,8 @@ export const useGetFilteredMissionsQuery = () => {
     selectedAdministrationNames,
     selectedCompletionStatus,
     selectedControlUnitIds,
+    selectedIsNoteworthy,
+    selectedMissionTagIds,
     selectedMissionTypes,
     selectedPeriod,
     selectedSeaFronts,
@@ -75,7 +79,9 @@ export const useGetFilteredMissionsQuery = () => {
         isMissionPartOfSelectedThemes(mission, selectedThemes) &&
         isMissionPartOfSelectedTags(mission, selectedTags) &&
         isMissionPartOfSelectedCompletionStatus(mission, selectedCompletionStatus) &&
-        isMissionPartOfSelectedWithEnvActions(mission, selectedWithEnvActions)
+        isMissionPartOfSelectedIsNoteworthy(mission, selectedIsNoteworthy) &&
+        isMissionPartOfSelectedWithEnvActions(mission, selectedWithEnvActions) &&
+        isMissionPartOfSelectedMissionTags(mission, selectedMissionTagIds)
     )
   }, [
     missions,
@@ -84,7 +90,9 @@ export const useGetFilteredMissionsQuery = () => {
     selectedThemes,
     selectedTags,
     selectedCompletionStatus,
-    selectedWithEnvActions
+    selectedWithEnvActions,
+    selectedMissionTagIds,
+    selectedIsNoteworthy
   ])
 
   return { isError, isFetching, isLoading, missions: filteredMissions }

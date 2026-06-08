@@ -82,9 +82,7 @@ interface IDBMissionRepository : JpaRepository<MissionModel, Int> {
                     )
                 )
             )
-            AND (:missionSources IS NULL
-                OR mission.missionSource IN (:missionSources)
-            )
+            AND (:missionSources IS NULL OR mission.missionSource IN (:missionSources))
         ORDER BY mission.startDateTimeUtc DESC
         """,
     )

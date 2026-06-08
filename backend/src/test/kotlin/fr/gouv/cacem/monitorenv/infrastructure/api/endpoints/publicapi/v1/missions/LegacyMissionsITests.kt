@@ -96,19 +96,20 @@ class LegacyMissionsITests {
         val expectedNewMission =
             MissionEntity(
                 id = 10,
-                missionTypes = listOf(MissionTypeEnum.LAND),
+                createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 facade = "Outre-Mer",
                 geom = polygon,
-                observationsCnsp = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
                 hasMissionOrder = true,
+                isDeleted = false,
+                isNoteworthy = false,
                 isUnderJdp = true,
                 isGeometryComputedFromControls = false,
+                missionSource = MissionSourceEnum.MONITORFISH,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                missionTags = listOf(),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                updatedAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
             )
         val newMissionRequest =
             CreateOrUpdateMissionDataInput(
@@ -129,6 +130,7 @@ class LegacyMissionsITests {
         given(
             createOrUpdateMission.execute(
                 mission = newMissionRequest.toMissionEntity(),
+                fromPublicAPI = true,
             ),
         ).willReturn(expectedNewMission)
         // When
@@ -156,18 +158,19 @@ class LegacyMissionsITests {
         val expectedFirstMission =
             MissionEntity(
                 id = 10,
-                missionTypes = listOf(MissionTypeEnum.SEA),
+                createdAtUtc = null,
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 facade = "Outre-Mer",
                 geom = polygon,
-                observationsCnsp = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
                 hasMissionOrder = false,
+                isDeleted = false,
+                isNoteworthy = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
-                createdAtUtc = null,
+                missionSource = MissionSourceEnum.MONITORFISH,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                missionTags = listOf(),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 updatedAtUtc = null,
             )
         given(
@@ -205,18 +208,19 @@ class LegacyMissionsITests {
         val expectedFirstMission =
             MissionEntity(
                 id = 10,
-                missionTypes = listOf(MissionTypeEnum.SEA),
+                createdAtUtc = null,
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 facade = "Outre-Mer",
                 geom = polygon,
-                observationsCnsp = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
                 hasMissionOrder = false,
+                isDeleted = false,
+                isNoteworthy = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
-                createdAtUtc = null,
+                missionSource = MissionSourceEnum.MONITORFISH,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                missionTags = listOf(),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 updatedAtUtc = null,
             )
         given(
@@ -241,15 +245,17 @@ class LegacyMissionsITests {
                 mission =
                     MissionEntity(
                         id = 10,
-                        missionTypes = listOf(MissionTypeEnum.SEA),
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORFISH,
+                        createdAtUtc = null,
                         hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
-                        createdAtUtc = null,
+                        missionSource = MissionSourceEnum.MONITORFISH,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        missionTags = listOf(),
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                         updatedAtUtc = null,
                     ),
             )
@@ -277,16 +283,18 @@ class LegacyMissionsITests {
         val expectedUpdatedMission =
             MissionEntity(
                 id = 14,
+                createdAtUtc = null,
+                hasMissionOrder = true,
+                isDeleted = false,
+                isNoteworthy = false,
+                isUnderJdp = true,
+                isGeometryComputedFromControls = false,
+                missionSource = MissionSourceEnum.MONITORFISH,
                 missionTypes = listOf(MissionTypeEnum.SEA),
+                missionTags = listOf(),
                 observationsCacem = "updated observations",
                 observationsCnsp = "updated observations",
                 startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORFISH,
-                hasMissionOrder = true,
-                isUnderJdp = true,
-                isGeometryComputedFromControls = false,
-                createdAtUtc = null,
                 updatedAtUtc = null,
             )
 
@@ -307,6 +315,7 @@ class LegacyMissionsITests {
         given(
             createOrUpdateMission.execute(
                 mission = requestBody.toMissionEntity(),
+                fromPublicAPI = true,
             ),
         ).willReturn(expectedUpdatedMission)
         // When
@@ -407,20 +416,21 @@ class LegacyMissionsITests {
                 mission =
                     MissionEntity(
                         id = 132,
-                        missionTypes = listOf(MissionTypeEnum.SEA),
-                        facade = "Outre-Mer",
-                        geom = polygon,
-                        observationsCnsp = null,
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        createdAtUtc = null,
                         endDateTimeUtc =
                             ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        missionSource = MissionSourceEnum.MONITORFISH,
+                        facade = "Outre-Mer",
+                        geom = polygon,
                         hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
-                        createdAtUtc = null,
+                        missionSource = MissionSourceEnum.MONITORFISH,
+                        missionTypes = listOf(MissionTypeEnum.SEA),
+                        missionTags = listOf(),
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                         updatedAtUtc = null,
                     ),
             )

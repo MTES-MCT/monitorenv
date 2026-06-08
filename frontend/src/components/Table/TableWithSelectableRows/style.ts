@@ -37,8 +37,6 @@ export const ExpandedRowCell = styled(TableWithSelectableRows.Td).attrs(props =>
   > p:not(:first-child) {
     margin-top: 16px;
   }
-
-  max-width: 350px;
 `
 
 export const ExpandedRowLabel = styled.span`

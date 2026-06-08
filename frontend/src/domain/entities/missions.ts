@@ -1,6 +1,7 @@
 import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
 
 import type { LegacyControlUnit, LegacyControlUnitForm } from './legacyControlUnit'
+import type { MissionTagFromAPI } from './missionTags'
 import type { DetachedReportingForTimeline, Reporting, ReportingForTimeline } from './reporting'
 import type { SeaFrontEnum } from './seaFrontType'
 import type { TagFromAPI } from './tags'
@@ -251,8 +252,10 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   hasRapportNavActions: RapportNavMissionAction.MissionAction
   id: number
   isGeometryComputedFromControls: boolean
+  isNoteworthy?: boolean
   isUnderJdp?: boolean
   missionSource: MissionSourceEnum
+  missionTags?: MissionTagFromAPI[]
   missionTypes: MissionTypeEnum[]
   observationsCacem?: string
   observationsCnsp?: string

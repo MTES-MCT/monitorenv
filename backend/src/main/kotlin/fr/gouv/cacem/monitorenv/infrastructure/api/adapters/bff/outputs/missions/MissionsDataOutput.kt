@@ -5,27 +5,30 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionTagDataOutput.Companion.fromMissionTagEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
 data class MissionsDataOutput(
-    val id: Int,
-    val missionTypes: List<MissionTypeEnum>,
-    val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
-    val openBy: String? = null,
+    val attachedReportingIds: List<Int>? = listOf(),
     val completedBy: String? = null,
-    val observationsCacem: String? = null,
-    val observationsCnsp: String? = null,
+    val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
+    val id: Int,
+    val endDateTimeUtc: ZonedDateTime? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
-    val startDateTimeUtc: ZonedDateTime,
-    val endDateTimeUtc: ZonedDateTime? = null,
     val envActions: List<EnvActionDataOutput>? = null,
-    val missionSource: MissionSourceEnum,
     val hasMissionOrder: Boolean,
-    val isUnderJdp: Boolean,
-    val attachedReportingIds: List<Int>? = listOf(),
     val isGeometryComputedFromControls: Boolean,
+    val isNoteworthy: Boolean?,
+    val isUnderJdp: Boolean,
+    val missionSource: MissionSourceEnum,
+    val missionTags: List<MissionTagDataOutput>,
+    val missionTypes: List<MissionTypeEnum>,
+    val observationsCacem: String? = null,
+    val observationsCnsp: String? = null,
+    val openBy: String? = null,
+    val startDateTimeUtc: ZonedDateTime,
 ) {
     companion object {
         fun fromMissionListDTO(dto: MissionListDTO): MissionsDataOutput {
@@ -51,10 +54,12 @@ data class MissionsDataOutput(
                         )
                     },
                 missionSource = dto.mission.missionSource,
+                missionTags = dto.mission.missionTags.map { fromMissionTagEntity(it) },
                 hasMissionOrder = dto.mission.hasMissionOrder,
                 isUnderJdp = dto.mission.isUnderJdp,
                 attachedReportingIds = dto.attachedReportingIds,
                 isGeometryComputedFromControls = dto.mission.isGeometryComputedFromControls,
+                isNoteworthy = dto.mission.isNoteworthy,
             )
         }
     }

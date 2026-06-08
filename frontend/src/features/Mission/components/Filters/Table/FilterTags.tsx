@@ -1,5 +1,6 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { useGetUnarchivedMissionsTagsQuery } from '@api/missionTagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
 import { CustomPeriodContainer } from '@components/style'
 import { MissionDateRangeLabel } from '@features/Mission/components/MissionsList/type'
@@ -18,6 +19,7 @@ import {
 } from 'domain/shared_slices/MissionFilters'
 import styled from 'styled-components'
 
+import type { MissionTagFromAPI } from '../../../../../domain/entities/missionTags'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
@@ -33,6 +35,8 @@ export function FilterTags({
     selectedAdministrationNames,
     selectedCompletionStatus,
     selectedControlUnitIds,
+    selectedIsNoteworthy,
+    selectedMissionTagIds,
     selectedMissionTypes,
     selectedPeriod,
     selectedSeaFronts,
@@ -45,6 +49,7 @@ export function FilterTags({
   } = useAppSelector(state => state.missionFilters)
 
   const controlUnits = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { data: missionTagsEntities } = useGetUnarchivedMissionsTagsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const dateRange: [string, string] = [
     startedAfter ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
@@ -176,6 +181,22 @@ export function FilterTags({
             {String(`Données ${FrontCompletionStatusLabel[completionStatus].toLowerCase()}`)}
           </SingleTag>
         ))}
+        {selectedMissionTagIds?.map(missionTagId => {
+          const matchingMissionTag: MissionTagFromAPI | undefined = Object.values(missionTagsEntities ?? []).find(
+            missionTag => missionTag.id === missionTagId
+          )
+
+          return (
+            matchingMissionTag && (
+              <SingleTag
+                key={missionTagId}
+                onDelete={() => onDeleteTag(missionTagId, MissionFiltersEnum.MISSION_TAG_FILTER, selectedMissionTagIds)}
+              >
+                {matchingMissionTag.name}
+              </SingleTag>
+            )
+          )
+        })}
         {selectedWithEnvActions && (
           <SingleTag
             onDelete={() =>
@@ -183,6 +204,15 @@ export function FilterTags({
             }
           >
             Mission avec actions env.
+          </SingleTag>
+        )}
+        {selectedIsNoteworthy && (
+          <SingleTag
+            onDelete={() =>
+              onDeleteTag(selectedIsNoteworthy, MissionFiltersEnum.IS_NOTEWORTHY_FILTER, selectedIsNoteworthy)
+            }
+          >
+            Opération marquante
           </SingleTag>
         )}
       </StyledContainer>

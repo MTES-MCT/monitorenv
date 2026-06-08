@@ -14,12 +14,13 @@ import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
 import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionWithEnvActionsValidator
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
-import java.util.*
+import java.util.UUID
 
 @UseCase
 class CreateOrUpdateMissionWithActionsAndAttachedReporting(
     private val createOrUpdateMission: CreateOrUpdateMission,
     private val createOrUpdateEnvActions: CreateOrUpdateEnvActions,
+    private val saveMissionTagMission: SaveMissionTagMission,
     private val reportingRepository: IReportingRepository,
     private val getFullMissionWithFishAndRapportNavActions: GetFullMissionWithFishAndRapportNavActions,
     private val getFullMission: GetFullMission,
@@ -47,13 +48,15 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
             )
         }
 
-        val savedMission = createOrUpdateMission.execute(mission)
+        val savedMission = createOrUpdateMission.execute(mission, fromPublicAPI = false)
         require(savedMission.id != null) { "The mission id is null" }
 
         createOrUpdateEnvActions.execute(
             savedMission,
             mission.envActions,
         )
+
+        saveMissionTagMission.execute(mission = savedMission, missionTags = mission.missionTags)
 
         attachedReportingIds.forEach {
             reportingRepository.findById(it)?.let { reporting ->

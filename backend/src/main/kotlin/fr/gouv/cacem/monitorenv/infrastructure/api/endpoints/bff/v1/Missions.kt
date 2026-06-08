@@ -3,14 +3,15 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.GetMissionTags
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.GetUnarchivedMissionTags
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.SaveMissionTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMissionWithActionsAndAttachedReporting
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.DeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionTags
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.SaveMissionTag
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreaterOrUpdateMissionTagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.LegacyControlUnitAndMissionSourcesDataOutput
@@ -48,6 +49,7 @@ class Missions(
     private val canDeleteMission: CanDeleteMission,
     private val saveMissionTag: SaveMissionTag,
     private val getMissionTags: GetMissionTags,
+    private val getUnarchivedMissionTags: GetUnarchivedMissionTags,
 ) {
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a new mission")
@@ -186,6 +188,11 @@ class Missions(
     @GetMapping("/tags")
     @Operation(summary = "Get all mission tags")
     fun getMissionTags(): List<MissionTagDataOutput> = getMissionTags.execute().map { fromMissionTagEntity(it) }
+
+    @GetMapping("/tags/unarchived")
+    @Operation(summary = "Get all unarchived mission tags")
+    fun getUnarchivedMissionTags(): List<MissionTagDataOutput> =
+        getUnarchivedMissionTags.execute().map { fromMissionTagEntity(it) }
 
     @PutMapping("/tags", consumes = ["application/json"])
     @Operation(summary = "create or update the given mission tag")

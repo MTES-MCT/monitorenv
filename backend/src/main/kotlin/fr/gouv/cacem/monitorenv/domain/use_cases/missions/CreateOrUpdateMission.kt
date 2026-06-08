@@ -26,6 +26,7 @@ class CreateOrUpdateMission(
     fun execute(
         @UseCaseValidation<MissionEntity>(validator = MissionValidator::class)
         mission: MissionEntity,
+        fromPublicAPI: Boolean,
     ): MissionEntity {
         try {
             logger.info("Attempt to CREATE or UPDATE mission ${mission.id}")
@@ -45,11 +46,21 @@ class CreateOrUpdateMission(
             val storedMission = normalizedMission.id?.let { id -> missionRepository.findById(id) }
 
             val missionToSave =
-                normalizedMission.copy(
-                    facade = facade,
-                    observationsByUnit = storedMission?.observationsByUnit,
-                    envActions = storedMission?.envActions,
-                )
+                if (fromPublicAPI) {
+                    normalizedMission.copy(
+                        envActions = storedMission?.envActions,
+                        facade = facade,
+                        isNoteworthy = storedMission?.isNoteworthy,
+                        missionTags = storedMission?.missionTags ?: mutableListOf(),
+                        observationsByUnit = storedMission?.observationsByUnit,
+                    )
+                } else {
+                    normalizedMission.copy(
+                        facade = facade,
+                        observationsByUnit = storedMission?.observationsByUnit,
+                    )
+                }
+
             val savedMission = missionRepository.save(missionToSave)
 
             if (mission.id != null) {

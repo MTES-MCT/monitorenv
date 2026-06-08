@@ -114,7 +114,7 @@ class LegacyMissions(
         createMissionDataInput: CreateOrUpdateMissionDataInput,
     ): MissionDataOutput {
         val newMission = createMissionDataInput.toMissionEntity()
-        val createdMission = createOrUpdateMission.execute(mission = newMission)
+        val createdMission = createOrUpdateMission.execute(mission = newMission, fromPublicAPI = true)
         return MissionDataOutput.fromMissionEntity(createdMission)
     }
 
@@ -144,6 +144,7 @@ class LegacyMissions(
         return createOrUpdateMission
             .execute(
                 mission = updateMissionDataInput.toMissionEntity(),
+                fromPublicAPI = true,
             ).let { MissionDataOutput.fromMissionEntity(it) }
     }
 

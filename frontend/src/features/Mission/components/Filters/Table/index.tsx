@@ -1,3 +1,4 @@
+import { useGetUnarchivedMissionsTagsQuery } from '@api/missionTagsAPI'
 import { TagsContainer } from '@components/style'
 import { ShowFilters } from '@components/Table/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
@@ -10,12 +11,13 @@ import {
   CheckTreePicker,
   CustomSearch,
   type DateAsStringRange,
+  getOptionsFromIdAndName,
   Icon,
   Select
 } from '@mtes-mct/monitor-ui'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { MissionFiltersEnum, setFiltersVisibility } from 'domain/shared_slices/MissionFilters'
-import { forwardRef, memo, useMemo } from 'react'
+import { forwardRef, memo, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
@@ -49,6 +51,8 @@ export function TableMissionsFiltersWithRef(
     selectedAdministrationNames,
     selectedCompletionStatus,
     selectedControlUnitIds,
+    selectedIsNoteworthy,
+    selectedMissionTagIds,
     selectedMissionTypes,
     selectedPeriod,
     selectedSeaFronts,
@@ -70,6 +74,19 @@ export function TableMissionsFiltersWithRef(
   )
 
   const themeCustomSearch = useMemo(() => new CustomSearch(themes ?? [], ['label']), [themes])
+
+  const { data: missionTagsEntities } = useGetUnarchivedMissionsTagsQuery(undefined)
+
+  const missionTagsData = useMemo(() => Object.values(missionTagsEntities ?? []), [missionTagsEntities])
+
+  const missionTagOptions = useMemo(() => getOptionsFromIdAndName(missionTagsData), [missionTagsData])
+
+  const updateMissionTags = useCallback(
+    missionTagIds => {
+      onUpdateSimpleFilter(missionTagIds, MissionFiltersEnum.MISSION_TAG_FILTER)
+    },
+    [onUpdateSimpleFilter]
+  )
 
   return (
     <>
@@ -231,11 +248,33 @@ export function TableMissionsFiltersWithRef(
                 style={tagPickerStyle}
                 value={selectedCompletionStatus}
               />
+              <CheckPicker
+                isLabelHidden
+                isTransparent
+                label="Étiquette de mission"
+                name="missionTags"
+                onChange={nextMissionTags => updateMissionTags(nextMissionTags)}
+                options={missionTagOptions ?? []}
+                placeholder="Étiquette de mission"
+                renderValue={() =>
+                  selectedMissionTagIds && (
+                    <OptionValue>{`Étiquette de mission (${selectedMissionTagIds.length})`}</OptionValue>
+                  )
+                }
+                style={tagPickerStyle}
+                value={selectedMissionTagIds}
+              />
               <Checkbox
                 checked={selectedWithEnvActions}
                 label="Missions avec actions env."
                 name="missionsWithEnvActions"
                 onChange={value => onUpdateSimpleFilter(value ?? false, MissionFiltersEnum.WITH_ENV_ACTIONS_FILTER)}
+              />
+              <Checkbox
+                checked={selectedIsNoteworthy}
+                label="Opération marquante"
+                name="isNoteworthy"
+                onChange={value => onUpdateSimpleFilter(value ?? false, MissionFiltersEnum.IS_NOTEWORTHY_FILTER)}
               />
             </FilterWrapperLine>
           </>

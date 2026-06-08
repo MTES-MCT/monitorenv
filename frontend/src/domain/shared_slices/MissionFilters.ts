@@ -15,6 +15,8 @@ export enum MissionFiltersEnum {
   ADMINISTRATION_FILTER = 'selectedAdministrationNames',
   ARE_FILTERS_VISIBLE = 'areFiltersVisible',
   COMPLETION_STATUS_FILTER = 'selectedCompletionStatus',
+  IS_NOTEWORTHY_FILTER = 'selectedIsNoteworthy',
+  MISSION_TAG_FILTER = 'selectedMissionTagIds',
   PERIOD_FILTER = 'selectedPeriod',
   SEARCH_QUERY_FILTER = 'searchQuery',
   SEA_FRONT_FILTER = 'selectedSeaFronts',
@@ -35,6 +37,8 @@ export type MissionFilterValues = {
   selectedAdministrationNames: string[] | undefined
   selectedCompletionStatus: string[] | undefined
   selectedControlUnitIds: number[] | undefined
+  selectedIsNoteworthy: boolean
+  selectedMissionTagIds: number[] | undefined
   selectedMissionTypes: string[] | undefined
   selectedPeriod: DateRangeEnum
   selectedSeaFronts: string[] | undefined
@@ -59,6 +63,8 @@ export const INITIAL_STATE: MissionFiltersState = {
   selectedAdministrationNames: undefined,
   selectedCompletionStatus: undefined,
   selectedControlUnitIds: undefined,
+  selectedIsNoteworthy: false,
+  selectedMissionTagIds: undefined,
   selectedMissionTypes: undefined,
   selectedPeriod: DAY_OPTION.value,
   selectedSeaFronts: undefined,

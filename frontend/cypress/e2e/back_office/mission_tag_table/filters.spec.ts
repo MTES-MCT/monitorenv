@@ -3,8 +3,6 @@ const totalMissionTags = 5
 context('Back Office > Tag Table > Filters', () => {
   beforeEach(() => {
     cy.visit(`/backoffice/mission_tags`)
-    cy.intercept('GET', `/bff/v1/missions/tags`).as('getMissionTags')
-    cy.wait('@getMissionTags')
   })
 
   it('Should show all mission tags ', () => {

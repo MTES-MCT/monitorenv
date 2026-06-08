@@ -81,11 +81,19 @@ class MissionModel(
     @Column(name = "deleted", nullable = false) val isDeleted: Boolean,
     @Column(name = "is_geometry_computed_from_controls", nullable = false)
     val isGeometryComputedFromControls: Boolean,
+    val isNoteworthy: Boolean? = false,
     @Column(name = "is_under_jdp", nullable = false) val isUnderJdp: Boolean,
     @Column(name = "mission_source", nullable = false, columnDefinition = "mission_source_type")
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val missionSource: MissionSourceEnum,
+    @OneToMany(
+        mappedBy = "mission",
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        orphanRemoval = true,
+    )
+    var missionTags: MutableList<MissionTagMissionModel>? = mutableListOf(),
     @Column(name = "mission_types", columnDefinition = "text[]")
     @Enumerated(EnumType.STRING)
     val missionTypes: List<MissionTypeEnum>,
@@ -102,25 +110,29 @@ class MissionModel(
     ): MissionEntity =
         MissionEntity(
             id = id,
-            completedBy = completedBy,
             controlUnits = mappedControlUnits ?: emptyList(),
-            endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
+            completedBy = completedBy,
             createdAtUtc = createdAtUtc?.atZone(UTC),
-            updatedAtUtc = updatedAtUtc?.atZone(UTC),
             envActions = envActions?.map { it.toActionEntity(jsonMapper) },
+            endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
             facade = facade,
             geom = geom,
             hasMissionOrder = hasMissionOrder,
             isDeleted = isDeleted,
-            isGeometryComputedFromControls = isGeometryComputedFromControls,
+            isNoteworthy = isNoteworthy,
             isUnderJdp = isUnderJdp,
+            isGeometryComputedFromControls = isGeometryComputedFromControls,
             missionSource = missionSource,
             missionTypes = missionTypes,
-            observationsByUnit = observationsByUnit,
+            missionTags =
+                missionTags?.filter { !it.missionTag.isArchived }?.map { it.toMissionTagEntity() }
+                    ?: emptyList(),
             observationsCacem = observationsCacem,
+            observationsByUnit = observationsByUnit,
             observationsCnsp = observationsCnsp,
             openBy = openBy,
             startDateTimeUtc = startDateTimeUtc.atZone(UTC),
+            updatedAtUtc = updatedAtUtc?.atZone(UTC),
         )
 
     fun toMissionEntity(jsonMapper: JsonMapper): MissionEntity {
@@ -248,7 +260,9 @@ class MissionModel(
                     isDeleted = false,
                     isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
                     isUnderJdp = mission.isUnderJdp,
+                    isNoteworthy = mission.isNoteworthy,
                     missionSource = mission.missionSource,
+                    missionTags = mutableListOf(),
                     missionTypes = mission.missionTypes,
                     observationsByUnit = mission.observationsByUnit,
                     observationsCacem = mission.observationsCacem,

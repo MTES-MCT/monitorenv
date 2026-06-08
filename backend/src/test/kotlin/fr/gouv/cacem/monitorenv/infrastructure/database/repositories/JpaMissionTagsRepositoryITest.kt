@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionTagFixture.Companion.aMissionTagEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.fixtures.MissionTagFixture.Companion.aMissionTagEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +21,19 @@ class JpaMissionTagsRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(missionTags.size).isEqualTo(totalMissionTags)
+    }
+
+    @Test
+    @Transactional
+    fun `findAll should return all unarchived mission tags`() {
+        // Given
+        val totalUnarchivedMissionTags = 3
+
+        // When
+        val missionTags = jpaMissionTagsRepository.findAllUnarchived()
+
+        // Then
+        assertThat(missionTags.size).isEqualTo(totalUnarchivedMissionTags)
     }
 
     @Test

@@ -23,7 +23,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Période(s) de vigilance',
     id: 'periods',
-    size: 220 + legacyFirefoxOffset
+    size: 210 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.themes,
@@ -63,7 +63,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Visibilité',
     id: 'visibility',
-    size: 106 + legacyFirefoxOffset
+    size: 133 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.geom,

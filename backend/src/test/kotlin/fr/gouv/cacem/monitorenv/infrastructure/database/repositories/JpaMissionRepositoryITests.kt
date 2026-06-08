@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitRes
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
+import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteEntity
@@ -21,10 +22,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.InfractionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.infraction.SeizureTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.fixtures.MissionTagFixture.Companion.aMissionTagEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
-import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.api.BeforeEach
@@ -58,9 +59,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
     @Autowired
     private lateinit var jpaEnvActionRepository: JpaEnvActionRepository
-
-    @Autowired
-    private lateinit var entityManager: EntityManager
 
     @BeforeEach
     fun setUp() {
@@ -174,8 +172,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
 
         jpaMissionRepository.delete(id)
         // Then
-        entityManager.flush()
-        entityManager.clear()
 
         val missionDeleted = jpaMissionRepository.findById(id)
 
@@ -496,21 +492,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 mission =
                     MissionEntity(
                         id = 10,
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        openBy = "KIM",
-                        completedBy = "TRA",
-                        facade = "NAMO",
-                        observationsCacem =
-                            "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-03-21T12:11:13Z"),
-                        endDateTimeUtc = null,
-                        geom = polygon,
-                        isDeleted = false,
-                        envActions = listOf(),
-                        missionSource = MissionSourceEnum.MONITORENV,
-                        hasMissionOrder = false,
-                        isUnderJdp = false,
                         controlUnits =
                             listOf(
                                 LegacyControlUnitEntity(
@@ -547,8 +528,23 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                         ),
                                 ),
                             ),
-                        isGeometryComputedFromControls = false,
+                        completedBy = "TRA",
                         createdAtUtc = null,
+                        facade = "NAMO",
+                        geom = polygon,
+                        hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
+                        isUnderJdp = false,
+                        isGeometryComputedFromControls = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        missionTags = listOf(),
+                        observationsCacem =
+                            "Remain vote several ok. Bring American play woman challenge. Throw low law positive seven.",
+                        openBy = "KIM",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-03-21T12:11:13Z"),
                         updatedAtUtc = null,
                     ),
             )
@@ -638,12 +634,25 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             )
         val newMission =
             MissionEntity(
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                hasMissionOrder = false,
-                isUnderJdp = false,
+                controlUnits =
+                    listOf(
+                        LegacyControlUnitEntity(
+                            id = 10121,
+                            name = "PAM Jeanne Barret",
+                            administration = "DIRM / DM",
+                            isArchived = false,
+                            resources =
+                                listOf(
+                                    LegacyControlUnitResourceEntity(
+                                        id = 8,
+                                        controlUnitId = 10121,
+                                        name = "PAM Jeanne Barret",
+                                        type = ControlUnitResourceType.PATROL_BOAT,
+                                    ),
+                                ),
+                        ),
+                    ),
+                createdAtUtc = null,
                 envActions =
                     listOf(
                         EnvActionControlEntity(
@@ -692,27 +701,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             observations = noteObservations,
                         ),
                     ),
-                controlUnits =
-                    listOf(
-                        LegacyControlUnitEntity(
-                            id = 10121,
-                            name = "PAM Jeanne Barret",
-                            administration = "DIRM / DM",
-                            isArchived = false,
-                            resources =
-                                listOf(
-                                    LegacyControlUnitResourceEntity(
-                                        id = 8,
-                                        controlUnitId = 10121,
-                                        name = "PAM Jeanne Barret",
-                                        type = ControlUnitResourceType.PATROL_BOAT,
-                                    ),
-                                ),
-                        ),
-                    ),
+                hasMissionOrder = false,
+                isDeleted = false,
+                isNoteworthy = false,
+                isUnderJdp = false,
                 isGeometryComputedFromControls = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                missionTags = listOf(),
                 observationsByUnit = noteObservationsByUnit,
-                createdAtUtc = null,
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 updatedAtUtc = null,
             )
 
@@ -816,12 +814,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // Given
         val newMission =
             MissionEntity(
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                hasMissionOrder = false,
-                isUnderJdp = false,
                 controlUnits =
                     listOf(
                         LegacyControlUnitEntity(
@@ -840,8 +832,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                 ),
                         ),
                     ),
-                isGeometryComputedFromControls = false,
                 createdAtUtc = null,
+                hasMissionOrder = false,
+                isDeleted = false,
+                isNoteworthy = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                missionTags = listOf(),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 updatedAtUtc = null,
             )
         val createdMission = jpaMissionRepository.save(newMission)
@@ -1037,12 +1037,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         // Given
         val newMission =
             MissionEntity(
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                hasMissionOrder = false,
-                isUnderJdp = false,
                 controlUnits =
                     listOf(
                         LegacyControlUnitEntity(
@@ -1061,8 +1055,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                                 ),
                         ),
                     ),
-                isGeometryComputedFromControls = false,
                 createdAtUtc = null,
+                hasMissionOrder = false,
+                isDeleted = false,
+                isNoteworthy = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                missionTags = listOf(),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 updatedAtUtc = null,
             )
 
@@ -1074,16 +1076,11 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     }
 
     @Test
+    @Transactional
     fun `save should throw an exception When the unit id is not found`() {
         // Given
         val newMission =
             MissionEntity(
-                missionTypes = listOf(MissionTypeEnum.SEA),
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
-                hasMissionOrder = false,
-                isUnderJdp = false,
                 controlUnits =
                     listOf(
                         LegacyControlUnitEntity(
@@ -1094,8 +1091,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                             resources = listOf(),
                         ),
                     ),
-                isGeometryComputedFromControls = false,
                 createdAtUtc = null,
+                hasMissionOrder = false,
+                isDeleted = false,
+                isNoteworthy = false,
+                isUnderJdp = false,
+                isGeometryComputedFromControls = false,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                missionTags = listOf(),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 updatedAtUtc = null,
             )
 
@@ -1180,22 +1185,22 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missionToUpdate =
             MissionEntity(
                 id = id,
-                missionTypes = listOf(MissionTypeEnum.LAND),
-                openBy = "John Smith",
                 completedBy = "Carol Tim",
+                createdAtUtc = null,
+                envActions = envActions,
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 facade = "MEMN",
                 geom = polygon,
-                observationsCacem = null,
-                observationsCnsp = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                envActions = envActions,
-                missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
+                isDeleted = false,
+                isNoteworthy = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
-                createdAtUtc = null,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                missionTags = listOf(aMissionTagEntity()),
+                openBy = "John Smith",
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 updatedAtUtc = null,
             )
         val expectedUpdatedMission =
@@ -1203,24 +1208,31 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 mission =
                     MissionEntity(
                         id = id,
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        openBy = "John Smith",
                         completedBy = "Carol Tim",
-                        facade = "MEMN",
-                        geom = polygon,
-                        observationsCacem = null,
-                        observationsCnsp = null,
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        createdAtUtc = null,
+                        envActions = envActions,
                         endDateTimeUtc =
                             ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        isDeleted = false,
-                        envActions = envActions,
-                        missionSource = MissionSourceEnum.MONITORENV,
+                        facade = "MEMN",
+                        geom = polygon,
                         hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
-                        createdAtUtc = null,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        missionTags =
+                            listOf(
+                                MissionTagEntity(
+                                    id = 1,
+                                    name = "Mission tag 1",
+                                    isArchived = false,
+                                ),
+                            ),
+                        openBy = "John Smith",
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                         updatedAtUtc = null,
                     ),
             )
@@ -1270,20 +1282,20 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val missionToUpdate =
             MissionEntity(
                 id = id,
-                missionTypes = listOf(MissionTypeEnum.LAND),
+                createdAtUtc = null,
+                envActions = listOf(envAction),
+                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
                 facade = "NAMO",
                 geom = polygon,
-                observationsCacem = null,
-                observationsCnsp = null,
-                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
-                endDateTimeUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                isDeleted = false,
-                envActions = listOf(envAction),
-                missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
+                isDeleted = false,
+                isNoteworthy = false,
                 isUnderJdp = false,
                 isGeometryComputedFromControls = false,
-                createdAtUtc = null,
+                missionSource = MissionSourceEnum.MONITORENV,
+                missionTypes = listOf(MissionTypeEnum.LAND),
+                missionTags = listOf(),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                 updatedAtUtc = null,
             )
         val expectedUpdatedMission =
@@ -1291,23 +1303,23 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 mission =
                     MissionEntity(
                         id = id,
-                        missionTypes = listOf(MissionTypeEnum.LAND),
-                        facade = "NAMO",
-                        geom = polygon,
-                        observationsCacem = null,
-                        observationsCnsp = null,
-                        startDateTimeUtc =
-                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        createdAtUtc = null,
+                        envActions = listOf(envAction),
                         endDateTimeUtc =
                             ZonedDateTime.parse("2022-01-23T20:29:03Z"),
-                        createdAtUtc = null,
-                        updatedAtUtc = null,
-                        isDeleted = false,
-                        envActions = listOf(envAction),
-                        missionSource = MissionSourceEnum.MONITORENV,
+                        facade = "NAMO",
+                        geom = polygon,
                         hasMissionOrder = false,
+                        isDeleted = false,
+                        isNoteworthy = false,
                         isUnderJdp = false,
                         isGeometryComputedFromControls = false,
+                        missionSource = MissionSourceEnum.MONITORENV,
+                        missionTypes = listOf(MissionTypeEnum.LAND),
+                        missionTags = listOf(),
+                        startDateTimeUtc =
+                            ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                        updatedAtUtc = null,
                     ),
             )
         // When

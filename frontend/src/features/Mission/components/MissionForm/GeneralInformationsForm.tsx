@@ -1,17 +1,18 @@
 import { CompletionStatusTag } from '@features/Mission/components/CompletionStatusTag'
+import { MissionTagsField } from '@features/Mission/components/MissionForm/MissionTagsField'
 import {
   Accent,
   Button,
+  customDayjs,
   DatePicker,
   FieldError,
   FormikCheckbox,
   FormikDatePicker,
   FormikMultiCheckbox,
-  FormikTextInput,
   FormikTextarea,
+  FormikTextInput,
   Message,
   MultiRadio,
-  customDayjs,
   useNewWindow
 } from '@mtes-mct/monitor-ui'
 import { FieldArray, useFormikContext } from 'formik'
@@ -21,10 +22,10 @@ import styled from 'styled-components'
 import {
   ActionTypeEnum,
   FrontCompletionStatus,
-  type Mission,
-  MissionSourceEnum,
   getMissionStatus,
   hasMissionOrderLabels,
+  type Mission,
+  MissionSourceEnum,
   missionTypeEnum
 } from '../../../../domain/entities/missions'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
@@ -79,7 +80,6 @@ export function GeneralInformationsForm({
     }
     setFieldValue('startDateTimeUtc', date)
   }
-
   const missionStatus = useMemo(() => getMissionStatus(values), [values])
 
   return (
@@ -93,49 +93,52 @@ export function GeneralInformationsForm({
       <Separator />
 
       <StyledFormWrapper>
-        <DatesAndTagsContainer>
-          <div>
-            <StyledDatePickerContainer>
-              <DatePicker
-                baseContainer={newWindowContainerRef.current}
-                data-cy="mission-start-date-time"
-                defaultValue={values?.startDateTimeUtc || undefined}
-                isCompact
-                isErrorMessageHidden
-                isRequired
-                isStringDate
-                label="Date de début (UTC)"
-                name="startDateTimeUtc"
-                onChange={updateMissionDateTime}
-                withTime
-              />
+        <div>
+          <DatesAndTagsContainer>
+            <div>
+              <StyledDatePickerContainer>
+                <DatePicker
+                  baseContainer={newWindowContainerRef.current}
+                  data-cy="mission-start-date-time"
+                  defaultValue={values?.startDateTimeUtc || undefined}
+                  isCompact
+                  isErrorMessageHidden
+                  isRequired
+                  isStringDate
+                  label="Date de début (UTC)"
+                  name="startDateTimeUtc"
+                  onChange={updateMissionDateTime}
+                  withTime
+                />
 
-              <StyledFormikDatePicker
-                baseContainer={newWindowContainerRef.current}
-                data-cy="mission-end-date-time"
-                isCompact
-                isEndDate
-                isErrorMessageHidden
-                isRequired
-                isStringDate
-                label="Date de fin (UTC)"
-                name="endDateTimeUtc"
-                withTime
-              />
-            </StyledDatePickerContainer>
-            {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
-            {errors.startDateTimeUtc && errors.startDateTimeUtc !== HIDDEN_ERROR && (
-              <FieldError>{errors.startDateTimeUtc}</FieldError>
-            )}
-            {errors.endDateTimeUtc && errors.endDateTimeUtc !== HIDDEN_ERROR && (
-              <FieldError>{errors.endDateTimeUtc}</FieldError>
-            )}
-          </div>
-          <StyledTagsContainer>
-            <MissionStatusTag status={missionStatus} />
-            <CompletionStatusTag completion={missionCompletion} />
-          </StyledTagsContainer>
-        </DatesAndTagsContainer>
+                <StyledFormikDatePicker
+                  baseContainer={newWindowContainerRef.current}
+                  data-cy="mission-end-date-time"
+                  isCompact
+                  isEndDate
+                  isErrorMessageHidden
+                  isRequired
+                  isStringDate
+                  label="Date de fin (UTC)"
+                  name="endDateTimeUtc"
+                  withTime
+                />
+              </StyledDatePickerContainer>
+              {/* We simply want to display an error if the dates are not consistent, not if it's just a "field required" error. */}
+              {errors.startDateTimeUtc && errors.startDateTimeUtc !== HIDDEN_ERROR && (
+                <FieldError>{errors.startDateTimeUtc}</FieldError>
+              )}
+              {errors.endDateTimeUtc && errors.endDateTimeUtc !== HIDDEN_ERROR && (
+                <FieldError>{errors.endDateTimeUtc}</FieldError>
+              )}
+            </div>
+            <StyledTagsContainer>
+              <MissionStatusTag status={missionStatus} />
+              <CompletionStatusTag completion={missionCompletion} />
+            </StyledTagsContainer>
+          </DatesAndTagsContainer>
+          <NoteworthyCheckbox label="Opération marquante" name="isNoteworthy" />
+        </div>
 
         <div>
           <StyledMissionType>
@@ -180,6 +183,8 @@ export function GeneralInformationsForm({
             </StyledMessage>
           )}
         </div>
+
+        <MissionTagsField />
 
         <StyledObservationsContainer>
           <FormikTextarea isErrorMessageHidden label="CACEM : orientations, observations" name="observationsCacem" />
@@ -273,4 +278,8 @@ const StyledAuthorContainer = styled.div`
   .Field-TextInput {
     width: 120px;
   }
+`
+
+const NoteworthyCheckbox = styled(FormikCheckbox)`
+  margin-top: 12px;
 `

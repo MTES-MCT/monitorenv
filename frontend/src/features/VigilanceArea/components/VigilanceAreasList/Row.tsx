@@ -81,7 +81,7 @@ export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>;
             <ExpandedRowLabel>Dernière modification</ExpandedRowLabel>
             <ValidationDateDetailsCell date={vigilanceArea.updatedAt} />
           </ExpandedRowCell>
-          <ExpandedRowCell>
+          <ExpandedRowCell colSpan={2}>
             <ExpandedRowLabel>Créée par </ExpandedRowLabel>
             <ExpandedRowValue>
               <CreationWrapper>
@@ -100,7 +100,6 @@ export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>;
               )
             })}
           </ExpandedRowCell>
-          <ExpandedRowCell colSpan={2} />
         </ExpandedRow>
       )}
     </>

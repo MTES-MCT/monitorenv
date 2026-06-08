@@ -254,4 +254,30 @@ context('Side Window > Mission List > Filter Bar', () => {
     cy.getDataCy('infraction-form-registrationNumber').should('have.value', 'BALTIK')
     cy.getDataCy('quit-edit-mission').click()
   })
+
+  it('Should filter missions by mission tag', () => {
+    const currentYear = encodeURIComponent(customDayjs().utc().startOf('year').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentYear}`).as('getMissionsForCurrentYear')
+    cy.fill('Étiquette de mission', ['Mission tag 1'])
+
+    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Mission tag 1')
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').each(row => {
+      cy.wrap(row).click()
+      cy.getDataCy('mission-row-expanded').should('contain', 'Mission tag 1')
+    })
+  })
+
+  it('Should filter missions by noteworthy mission', () => {
+    const currentYear = encodeURIComponent(customDayjs().utc().startOf('year').toISOString())
+    cy.intercept('GET', `/bff/v1/missions?&startedAfterDateTime=${currentYear}`).as('getMissionsForCurrentYear')
+    cy.fill('Opération marquante', true)
+
+    cy.getDataCy('missions-filter-tags').find('.Component-SingleTag > span').contains('Opération marquante')
+    cy.getDataCy('mission-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('mission-row').each(row => {
+      cy.wrap(row).click()
+      cy.getDataCy('mission-row-expanded').should('contain', 'Opération marquante')
+    })
+  })
 })
