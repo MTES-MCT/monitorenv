@@ -1,3 +1,4 @@
+import ReactMarkdown from 'react-markdown'
 import styled from 'styled-components'
 
 export const Elem = styled.li``
@@ -39,7 +40,7 @@ export const Value = styled.td`
   font-weight: 500;
 `
 
-export const BeautifyValue = styled.span`
+export const BeautifyValue = styled(ReactMarkdown)`
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 50;

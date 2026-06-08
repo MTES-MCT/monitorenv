@@ -1,4 +1,5 @@
 import { useGetLayerNamesQuery, useGetRegulatoryAreasToCompleteQuery } from '@api/regulatoryAreasAPI'
+import { MarkdownEditor } from '@components/MarkdownEditor'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
@@ -12,7 +13,6 @@ import {
   Checkbox,
   CustomSearch,
   FormikSelect,
-  FormikTextarea,
   FormikTextInput,
   getOptionsFromLabelledEnum,
   Icon,
@@ -306,7 +306,13 @@ export function Identification({
           </InformationMessage>
         </div>
         <div>
-          <FormikTextarea label="Résumé" name="resume" rows={4} />
+          <Label $isRequired>Résumé</Label>
+          <MarkdownEditor
+            onChange={val => {
+              setFieldValue('resume', val)
+            }}
+            value={values?.resume ?? ''}
+          />
           <InformationMessage>
             Le résumé concerne tout ce qui n’est pas une période. Les périodes sont à renseigner plus bas.
           </InformationMessage>

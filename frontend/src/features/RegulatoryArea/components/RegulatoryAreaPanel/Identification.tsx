@@ -47,7 +47,7 @@ export function Identification({
           <Field>
             <Key>Résumé</Key>
             <Value data-cy="regulatory-layers-metadata-resume">
-              <BeautifyValue>{resume || <NoValue>-</NoValue>}</BeautifyValue>
+              <BeautifyValue>{resume ?? String(<NoValue>-</NoValue>)}</BeautifyValue>
             </Value>
           </Field>
           <Field>
