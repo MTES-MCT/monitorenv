@@ -4,10 +4,10 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateContr
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitContact
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContactById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateControlUnitContactDataInputV1
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInputV2
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.ControlUnitContactDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullControlUnitContactDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateControlUnitContactDataInputV1
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateOrUpdateControlUnitContactDataInputV2
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.controlUnits.ControlUnitContactDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.controlUnits.FullControlUnitContactDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.utils.validateId
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag

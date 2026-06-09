@@ -12,7 +12,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.administration.DeleteAdministra
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrationById
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.GetAdministrations
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.dtos.FullAdministrationDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateAdministrationDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.administrations.CreateOrUpdateAdministrationDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Administrations
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test

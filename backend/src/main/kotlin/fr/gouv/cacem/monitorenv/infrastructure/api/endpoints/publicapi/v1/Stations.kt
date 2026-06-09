@@ -1,15 +1,27 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1
 
-import fr.gouv.cacem.monitorenv.domain.use_cases.station.*
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateStationDataInput
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.CanDeleteStation
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.CreateOrUpdateStation
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.DeleteStation
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.GetStationById
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.GetStations
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.stations.CreateOrUpdateStationDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.BooleanDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.FullStationDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.StationDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.stations.FullStationDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.stations.StationDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/stations")
