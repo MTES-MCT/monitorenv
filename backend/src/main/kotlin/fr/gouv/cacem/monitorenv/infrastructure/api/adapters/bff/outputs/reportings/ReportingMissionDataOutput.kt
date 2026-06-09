@@ -1,17 +1,18 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlUnits.LegacyControlUnitDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlUnits.LegacyControlUnitDataOutput.Companion.fromLegacyControlUnit
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
 data class ReportingMissionDataOutput(
     val id: Int,
     val missionTypes: List<MissionTypeEnum>,
-    val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
+    val controlUnits: List<LegacyControlUnitDataOutput>? = listOf(),
     val openBy: String? = null,
     val completedBy: String? = null,
     val observationsCacem: String? = null,
@@ -32,7 +33,7 @@ data class ReportingMissionDataOutput(
             return ReportingMissionDataOutput(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
-                controlUnits = mission.controlUnits,
+                controlUnits = mission.controlUnits.map { fromLegacyControlUnit(it) },
                 openBy = mission.openBy,
                 completedBy = mission.completedBy,
                 observationsCacem = mission.observationsCacem,
