@@ -1,6 +1,7 @@
 import { HumanDateCell } from '@components/Table/Cells/HumanDateCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { ActionsCell } from '@features/Mission/components/MissionsList/Cells/ActionsCell'
+import { SeaFrontCell } from '@features/Mission/components/MissionsList/Cells/SeaFrontCell'
 import { ThemesCell } from '@features/Mission/components/MissionsList/Cells/ThemesCell'
 import { getAllThemes } from '@features/Mission/utils'
 
@@ -41,7 +42,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
   },
   {
     accessorFn: row => row.facade,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <span>{info.getValue()}</span>),
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <SeaFrontCell facade={info.getValue()} />),
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
