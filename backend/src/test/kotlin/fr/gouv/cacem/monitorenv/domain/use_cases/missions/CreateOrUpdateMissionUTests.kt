@@ -195,7 +195,7 @@ class CreateOrUpdateMissionUTests {
     }
 
     @Test
-    fun `should return the mission to update with computed facade with rapportnav speicific data when it comes from private api`(
+    fun `should return the mission to update with computed facade with rapportNav specific data when it comes from private api`(
         log: CapturedOutput,
     ) {
         // Given

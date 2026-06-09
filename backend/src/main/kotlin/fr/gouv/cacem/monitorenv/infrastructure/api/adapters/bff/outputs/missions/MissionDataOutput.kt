@@ -20,6 +20,7 @@ import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
 data class MissionDataOutput(
+    val id: Int,
     val attachedReportings: List<MissionAttachedReportingDataOutput>? = listOf(),
     val attachedReportingIds: List<Int>? = listOf(),
     val completedBy: String? = null,
@@ -34,7 +35,6 @@ data class MissionDataOutput(
     val geom: MultiPolygon? = null,
     val hasMissionOrder: Boolean,
     val hasRapportNavActions: RapportNavMissionActionDataOutput? = null,
-    val id: Int,
     val isGeometryComputedFromControls: Boolean,
     val isNoteworthy: Boolean?,
     val isUnderJdp: Boolean,

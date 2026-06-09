@@ -264,6 +264,8 @@ export function TableMissionsFiltersWithRef(
                 style={tagPickerStyle}
                 value={selectedMissionTagIds}
               />
+            </FilterWrapperLine>
+            <FilterWrapperLine>
               <Checkbox
                 checked={selectedWithEnvActions}
                 label="Missions avec actions env."

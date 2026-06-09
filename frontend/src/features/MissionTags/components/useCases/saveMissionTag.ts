@@ -12,7 +12,7 @@ export const saveMissionTag =
     if (data) {
       dispatch(
         addBackOfficeBanner({
-          children: "L'étiquette de mission a bien été enregistré",
+          children: "L'étiquette de mission a bien été enregistrée",
           isClosable: true,
           isFixed: true,
           level: Level.SUCCESS,
@@ -23,7 +23,7 @@ export const saveMissionTag =
     if (error) {
       dispatch(
         addBackOfficeBanner({
-          children: "L'étiquette de mission n'a pas pu être enregistré",
+          children: "L'étiquette de mission n'a pas pu être enregistrée",
           isClosable: true,
           isFixed: true,
           level: Level.ERROR,

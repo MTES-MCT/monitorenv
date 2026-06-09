@@ -40,10 +40,8 @@ function isValidTagName(value?: string) {
 }
 
 export function validate(columnId: string, value: string): string {
-  if (columnId === 'name') {
-    if (!isValidTagName(value)) {
-      return 'Le nom est requis'
-    }
+  if (columnId === 'name' && !isValidTagName(value)) {
+    return 'Le nom est requis'
   }
 
   return ''

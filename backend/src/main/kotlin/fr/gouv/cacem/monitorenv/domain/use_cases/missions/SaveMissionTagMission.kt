@@ -16,15 +16,14 @@ class SaveMissionTagMission(
         mission: MissionEntity,
         missionTags: List<MissionTagEntity>,
     ): MissionEntity {
-//        logger.info(
-//            "Attempt to ${if (missionTagEntity.id === null) "create a mission tag" else "update with id ${missionTagEntity.id}"}",
-//        )
-        val missionToSave =
-            mission.copy(
-                missionTags = missionTags,
-            )
+        logger.info(
+            "Attempt to CREATE or UPDATE mission ${mission.id} with mission tags ${missionTags.map { it.id }}",
+        )
+        val missionToSave = mission.copy(missionTags = missionTags)
         val savedMission = missionRepository.save(missionToSave)
-//        logger.info("Mission Tag ${missionTagEntity.id} saved")
+        logger.info(
+            "Mission ${savedMission.mission.id} with mission tags ${missionTags.map { it.id }} created or updated",
+        )
 
         return savedMission.mission
     }
