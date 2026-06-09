@@ -1,8 +1,8 @@
 import { createSelector, createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { storage } from '@store/storage'
 import { isGeometryValid } from '@utils/geometryValidation'
 import { InteractionType } from 'domain/entities/map/constants'
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import { NEW_VIGILANCE_AREA_ID } from './constants'
 

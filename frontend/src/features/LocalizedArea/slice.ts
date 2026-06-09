@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { storage } from '@store/storage'
 import { concat, uniq, without } from 'lodash'
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 const persistConfig = {
   key: 'localizedArea',

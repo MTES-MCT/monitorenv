@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { storage } from '@store/storage'
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import type { MeasurementType } from '../entities/map/constants'
 import type { Measurement } from '@features/map/layers/measurement'

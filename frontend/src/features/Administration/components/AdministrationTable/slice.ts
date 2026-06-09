@@ -1,7 +1,7 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { storage } from '@store/storage'
 import { set } from 'lodash/fp'
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import type { FiltersState } from './types'
 

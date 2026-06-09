@@ -2,10 +2,8 @@
 import importMetaEnv from '@import-meta-env/unplugin'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import react from '@vitejs/plugin-react'
-import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import svgr from 'vite-plugin-svgr'
-import viteTsconfigPaths from 'vite-tsconfig-paths'
 
 // https://vitejs.dev/config/
 // eslint-disable-next-line import/no-default-export
@@ -18,10 +16,11 @@ export default defineConfig(({ mode }) => {
       outDir: './build',
       sourcemap: true
     },
-
+    resolve: {
+      tsconfigPaths: true
+    },
     plugins: [
       react(),
-      viteTsconfigPaths(),
       svgr(),
       importMetaEnv.vite({
         env: './.env',
@@ -34,12 +33,8 @@ export default defineConfig(({ mode }) => {
         authToken: env.FRONTEND_SENTRY_AUTH_TOKEN
       })
     ],
-    resolve: {
-      alias: {
-        '#minpath': path.resolve(__dirname, 'node_modules/vfile/lib/minpath.browser.js'),
-        '#minproc': path.resolve(__dirname, 'node_modules/vfile/lib/minproc.browser.js'),
-        '#minurl': path.resolve(__dirname, 'node_modules/vfile/lib/minurl.browser.js')
-      }
+    optimizeDeps: {
+      include: ['redux-persist/lib/storage']
     },
 
     server: {

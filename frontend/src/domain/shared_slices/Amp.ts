@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { storage } from '@store/storage'
 import _ from 'lodash'
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 const persistConfig = {
   key: 'amp',

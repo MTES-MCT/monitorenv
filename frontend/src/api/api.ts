@@ -1,4 +1,10 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import {
+  createApi,
+  fetchBaseQuery,
+  type BaseQueryFn,
+  type FetchArgs,
+  type FetchBaseQueryError
+} from '@reduxjs/toolkit/query/react'
 import { normalizeRtkBaseQuery } from '@utils/normalizeRtkBaseQuery'
 
 import type { BackendApiErrorResponse } from './types'
@@ -11,20 +17,15 @@ const monitorenvPrivateApiQuery = fetchBaseQuery({
   baseUrl: '/bff',
   credentials: 'include'
 })
-export const monitorenvPrivateApi = createApi({
-  baseQuery: async (args, api, extraOptions) => {
-    const result = await normalizeRtkBaseQuery(monitorenvPrivateApiQuery)(args, api, extraOptions)
-    if (result.error) {
-      return {
-        error: {
-          data: result.error.data as BackendApiErrorResponse,
-          status: result.error.status
-        }
-      }
-    }
 
-    return result
-  },
+type BackendBaseQueryError = Omit<FetchBaseQueryError, 'data'> & { data: BackendApiErrorResponse }
+type BackendBaseQueryFn = BaseQueryFn<string | FetchArgs, unknown, BackendBaseQueryError>
+
+const makeBaseQuery = (baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>): BackendBaseQueryFn =>
+  normalizeRtkBaseQuery(baseQuery) as BackendBaseQueryFn
+
+export const monitorenvPrivateApi = createApi({
+  baseQuery: makeBaseQuery(monitorenvPrivateApiQuery),
   endpoints: () => ({}),
   reducerPath: 'monitorenvPrivateApi',
   tagTypes: [
@@ -49,19 +50,7 @@ const monitorenvPublicApiQuery = fetchBaseQuery({
   baseUrl: '/api'
 })
 export const monitorenvPublicApi = createApi({
-  baseQuery: async (args, api, extraOptions) => {
-    const result = await normalizeRtkBaseQuery(monitorenvPublicApiQuery)(args, api, extraOptions)
-    if (result.error) {
-      return {
-        error: {
-          data: result.error.data as BackendApiErrorResponse,
-          status: result.error.status
-        }
-      }
-    }
-
-    return result
-  },
+  baseQuery: makeBaseQuery(monitorenvPublicApiQuery),
   endpoints: () => ({}),
   reducerPath: 'monitorenvPublicApi',
   tagTypes: ['Administrations', 'ControlUnits', 'Stations']
