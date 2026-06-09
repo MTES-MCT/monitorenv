@@ -151,9 +151,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache-app
-          key: ${{ runner.os }}-single-buildx-${{ hashFiles('frontend/package-lock.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-single-buildx-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-single-buildx-${{ hashFiles('frontend/package-lock.json') }}-${{ runner.os }}-single-buildx-
+            ${{ runner.os }}-single-buildx
 
       - name: Build image
         uses: docker/build-push-action@v6
@@ -240,7 +240,7 @@ jobs:
       - uses: cypress-io/github-action@v7
         with:
           browser: firefox
-          cache-key: cypress-${{ hashFiles('./frontend/package-lock.json') }}
+          cache-key: cypress-${{ hashFiles('package-lock.json') }}
           config-file: config/cypress.config.ts
           env: PORT=8880
           install: true
