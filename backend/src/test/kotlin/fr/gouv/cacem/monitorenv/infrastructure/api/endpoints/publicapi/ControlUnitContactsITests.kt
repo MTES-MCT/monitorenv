@@ -9,8 +9,8 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitCo
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContactById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateControlUnitContactDataInputV1
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInputV2
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateControlUnitContactDataInputV1
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateOrUpdateControlUnitContactDataInputV2
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito

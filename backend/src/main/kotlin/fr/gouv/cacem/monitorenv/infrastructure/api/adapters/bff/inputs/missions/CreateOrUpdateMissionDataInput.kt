@@ -1,19 +1,19 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.ActionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.EnvActionAttachedToReportingIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.controlUnits.ControlUnitDataInput
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
 data class CreateOrUpdateMissionDataInput(
     val id: Int? = null,
     val attachedReportingIds: List<Int>,
-    val controlUnits: List<LegacyControlUnitEntity> = listOf(),
+    val controlUnits: List<ControlUnitDataInput> = listOf(),
     val completedBy: String? = null,
     val envActions: List<EnvActionDataInput>? = null,
     val facade: String? = null,
@@ -37,8 +37,8 @@ data class CreateOrUpdateMissionDataInput(
 
         return MissionEntity(
             id = this.id,
-            controlUnits = this.controlUnits,
             completedBy = this.completedBy,
+            controlUnits = this.controlUnits.map { it.toLegacyControlUnit() },
             createdAtUtc = null,
             envActions = this.envActions?.map { it.toEnvActionEntity() },
             endDateTimeUtc = this.endDateTimeUtc,

@@ -10,7 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.station.DeleteStation
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.GetStationById
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.GetStations
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.dtos.FullStationDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateStationDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.stations.CreateOrUpdateStationDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiStationsController
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
