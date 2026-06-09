@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -13,6 +12,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionNoteDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionSurveillanceDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlUnits.LegacyControlUnitDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlUnits.LegacyControlUnitDataOutput.Companion.fromLegacyControlUnit
 import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.adapters.RapportNavMissionActionDataOutput
 import org.locationtech.jts.geom.MultiPolygon
@@ -21,7 +22,7 @@ import java.time.ZonedDateTime
 data class MissionDataOutput(
     val id: Int,
     val missionTypes: List<MissionTypeEnum>,
-    val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
+    val controlUnits: List<LegacyControlUnitDataOutput>? = listOf(),
     val openBy: String? = null,
     val completedBy: String? = null,
     val observationsCacem: String? = null,
@@ -51,7 +52,7 @@ data class MissionDataOutput(
             return MissionDataOutput(
                 id = dto.mission.id,
                 missionTypes = dto.mission.missionTypes,
-                controlUnits = dto.mission.controlUnits,
+                controlUnits = dto.mission.controlUnits.map { fromLegacyControlUnit(it) },
                 openBy = dto.mission.openBy,
                 completedBy = dto.mission.completedBy,
                 observationsCacem = dto.mission.observationsCacem,
@@ -133,7 +134,7 @@ data class MissionDataOutput(
             return MissionDataOutput(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
-                controlUnits = mission.controlUnits,
+                controlUnits = mission.controlUnits.map { fromLegacyControlUnit(it) },
                 openBy = mission.openBy,
                 completedBy = mission.completedBy,
                 observationsCacem = mission.observationsCacem,
