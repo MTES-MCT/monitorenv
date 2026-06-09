@@ -43,7 +43,7 @@ const codePreview = {
   value: 'preview'
 }
 
-export function MarkdownEditor({ onChange, value }: { onChange: (value?: string) => void; value: string }) {
+export function MarkdownEditor({ onChange, value, ...props }: { onChange: (value?: string) => void; value: string }) {
   return (
     <StyledMDEditor
       commands={[bold, italic, unorderedListCommand]}
@@ -54,6 +54,7 @@ export function MarkdownEditor({ onChange, value }: { onChange: (value?: string)
       preview="edit"
       toolbarBottom
       value={value}
+      {...props}
       visibleDragbar={false}
     />
   )

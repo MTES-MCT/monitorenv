@@ -308,6 +308,7 @@ export function Identification({
         <div>
           <Label $isRequired>Résumé</Label>
           <MarkdownEditor
+            data-cy="resume-markdown-editor"
             onChange={val => {
               setFieldValue('resume', val)
             }}
