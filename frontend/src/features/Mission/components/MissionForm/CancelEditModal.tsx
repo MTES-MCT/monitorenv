@@ -47,13 +47,17 @@ export function CancelEditModal({
           Vous êtes en train d&apos;abandonner <Bold>l&apos;édition de la mission</Bold>
         </p>
         <RedText>et l’enregistrement automatique n’est pas actif.</RedText>
-        <p>Si vous souhaitez que les modifications s’enregistrent, merci de corriger les champs en erreur.</p>
+        <p>
+          Si vous souhaitez que les modifications s’enregistrent, <br />
+          merci de corriger les champs en erreur.
+        </p>
       </>
     )
   }, [isMissionUnsaved, isNew])
 
   return (
-    <CancelEditDialog
+    <StyledCancelEditDialog
+      $isNew={isNew}
       className="styled-cancel-edit-dialog"
       data-cy="cancel-edit-modal"
       onCancel={onCancel}
@@ -62,6 +66,12 @@ export function CancelEditModal({
     />
   )
 }
+
+const StyledCancelEditDialog = styled(CancelEditDialog)<{ $isNew: boolean }>`
+  > div:nth-child(2) {
+    width: ${p => (p.$isNew ? '400px' : '580px')};
+  }
+`
 
 const RedText = styled(Bold)`
   color: ${p => p.theme.color.maximumRed};

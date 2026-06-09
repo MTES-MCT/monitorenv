@@ -111,7 +111,7 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
   const dashboardTags = firstEnvAction?.tags?.map(tag => tag.name).join(', ') || EMPTY_VALUE
 
   return (
-    <Dialog data-cy="create-dashboard-modal" isAbsolute>
+    <StyledDialog data-cy="create-dashboard-modal" isAbsolute>
       <Dialog.Title onClose={cancel}>Créer un tableau de bord</Dialog.Title>
       <StyledBody>
         <h5>Informations récupérées</h5>
@@ -152,9 +152,16 @@ export function CreateDashboardModal({ mission, onClose }: CreateDashboardModalP
           Créer le tableau de bord
         </Button>
       </Dialog.Action>
-    </Dialog>
+    </StyledDialog>
   )
 }
+
+const StyledDialog = styled(Dialog)`
+  > div:nth-child(2) {
+    width: 580px;
+  }
+`
+
 const StyledBody = styled(Dialog.Body)`
   gap: 32px;
 `
