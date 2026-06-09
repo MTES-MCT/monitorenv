@@ -49,9 +49,10 @@ context('Side Window > Mission Form > Main Form', () => {
 
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
 
-    cy.fill('Unité 1', 'Cross Etel')
-    cy.wait(500)
     cy.fill('Étiquette de mission', ['Mission tag 1', 'Mission tag 2'])
+    cy.wait(500)
+
+    cy.fill('Unité 1', 'Cross Etel')
     cy.wait(500)
 
     cy.getDataCy('add-control-administration').contains('DIRM / DM')

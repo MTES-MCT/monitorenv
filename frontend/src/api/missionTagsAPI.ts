@@ -24,7 +24,7 @@ export const missionTagsAPI = monitorenvPrivateApi.injectEndpoints({
         url: `/v1/missions/tags`
       }),
       transformErrorResponse: response =>
-        new FrontendApiError("L'étiquette de mission n'a pas pu être enregistré", response)
+        new FrontendApiError("L'étiquette de mission n'a pas pu être enregistrée", response)
     })
   })
 })
