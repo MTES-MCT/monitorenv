@@ -161,8 +161,8 @@ export function Footer({ dashboardForm: [key, dashboard] }: FooterProps) {
           context="dashboard"
           onCancel={() => setIsDeleteDialogOpen(false)}
           onConfirm={confirmDelete}
-          textLine2="supprimer le tableau ?"
-          title="Suppression du tableau"
+          textLine2="supprimer le tableau de bord ?"
+          title="Supprimer le tableau de bord"
         />
       )}
       <Wrapper>
