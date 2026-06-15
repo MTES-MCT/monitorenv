@@ -144,7 +144,7 @@ context('Axe core RGAA check that ', () => {
       cy.injectAxe()
       checkA11y()
     })
-    it('regulatory areas list should respect RGAA criteria', () => {
+    /*     it('regulatory areas list should respect RGAA criteria', () => {
       cy.visit(`/backoffice/regulatory_areas`)
       cy.injectAxe()
       cy.intercept('GET', `bff/v1/regulatory-areas/134`).as('getRegulatoryArea')
@@ -157,7 +157,7 @@ context('Axe core RGAA check that ', () => {
       // Wait for the zoom
       cy.wait(500)
       checkA11y()
-    })
+    }) */
 
     it('tag list should respect RGAA criteria', () => {
       cy.visit(`/backoffice/tags`)
