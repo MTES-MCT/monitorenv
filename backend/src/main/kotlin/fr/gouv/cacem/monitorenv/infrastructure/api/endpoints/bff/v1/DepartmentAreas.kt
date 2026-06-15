@@ -2,12 +2,16 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreaByInseeCode
 import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetDepartmentAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.departmentArea.GetRegionArea
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.DepartmentAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.RegionAreaDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.websocket.server.PathParam
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 class DepartmentAreas(
     private val getDepartmentAreas: GetDepartmentAreas,
     private val getDepartmentAreaById: GetDepartmentAreaByInseeCode,
+    private val getRegionArea: GetRegionArea,
 ) {
     @GetMapping("/{departmentAreaInseeCode}")
     @Operation(summary = "Get an department area by its ID (INSEE code)")
@@ -36,5 +41,15 @@ class DepartmentAreas(
         val foundDepartmentAreas = getDepartmentAreas.execute()
 
         return foundDepartmentAreas.map { DepartmentAreaDataOutput.fromDepartmentArea(it) }
+    }
+
+    @PostMapping(value = [""], consumes = ["application/json"])
+    @Operation(summary = "Get région from a list of department areas")
+    fun getAll(
+        @RequestBody departmentsIds: List<String>,
+    ): RegionAreaDataOutput {
+        val region = getRegionArea.execute(departmentsIds)
+
+        return RegionAreaDataOutput.fromRegionArea(region)
     }
 }

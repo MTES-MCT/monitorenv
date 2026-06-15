@@ -54,4 +54,26 @@ class JpaDepartmentAreasRepositoryTests : AbstractDBTests() {
         // Then
         assertThat(requestedDepartment).isNull()
     }
+
+    @Test
+    @Transactional
+    fun `findRegionFromDepartmentIds Should return region from department ids`() {
+        // Given
+        val departmentIds = listOf("44", "85")
+        val result = jpaDepartmentAreasRepository.findRegionFromDepartmentIds(departmentIds)
+
+        // Then
+        assertThat(result).isInstanceOf(MultiPolygon::class.java)
+    }
+
+    @Test
+    @Transactional
+    fun `findRegionFromDepartmentIds Should return null from department ids when no result`() {
+        // Given
+        val departmentIds = listOf("2A", "2B")
+        val result = jpaDepartmentAreasRepository.findRegionFromDepartmentIds(departmentIds)
+
+        // Then
+        assertThat(result).isNull()
+    }
 }

@@ -25,6 +25,7 @@ export const getAdministrativeVectorLayer = layerId => {
   const layerDefinition: any = find(flatten(administrativeLayers as any), (l: any) => l.code === layerId)
   const code = layerDefinition?.groupCode || layerDefinition?.code
   const zone = layerDefinition?.groupCode ? layerDefinition?.code : undefined
+
   const layer = new VectorImageLayer({
     className: 'administrative',
     declutter: true,

@@ -18,4 +18,7 @@ class JpaDepartmentAreaRepository(
 
     override fun findDepartmentFromGeometry(geometry: Geometry): String? =
         dbDepartmentAreasRepository.findDepartmentFromGeometry(geometry)
+
+    override fun findRegionFromDepartmentIds(departmentIds: List<String>) =
+        dbDepartmentAreasRepository.findRegionFromDepartmentIds(departmentIds)
 }

@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.DepartmentAreaModel
 import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.MultiPolygon
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
@@ -50,4 +51,21 @@ interface IDBDepartmentAreaRepository : JpaRepository<DepartmentAreaModel, Int> 
         nativeQuery = true,
     )
     fun findDepartmentFromGeometry(geometry: Geometry): String?
+
+    @Query(
+        value =
+            """
+                SELECT
+                ST_Multi(
+                    ST_Buffer(
+                      ST_Union(ST_MakeValid(geometry)),
+                      0
+                    )
+                  )
+                FROM departments_areas
+                WHERE insee_dep IN (:ids)
+            """,
+        nativeQuery = true,
+    )
+    fun findRegionFromDepartmentIds(ids: List<String>): MultiPolygon?
 }

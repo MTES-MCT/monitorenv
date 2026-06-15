@@ -1,8 +1,10 @@
+import { useLazyGetRegionAreaQuery } from '@api/departmentAreasAPI'
 import { useGetLayerNamesQuery, useGetRegulatoryAreasToCompleteQuery } from '@api/regulatoryAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
 import { ValidateButton } from '@features/commonComponents/ValidateButton'
+import { regions } from '@features/RegulatoryArea/constants'
 import { regulatoryAreaBoActions } from '@features/RegulatoryArea/slice'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -24,13 +26,18 @@ import {
 } from '@mtes-mct/monitor-ui'
 import { parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
+import { Layers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
 import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { useFormikContext } from 'formik'
+import GeometryFactory from 'jsts/org/locationtech/jts/geom/GeometryFactory'
+import GeoJSONReader from 'jsts/org/locationtech/jts/io/GeoJSONReader'
+import GeoJSONWriter from 'jsts/org/locationtech/jts/io/GeoJSONWriter'
+import UnaryUnionOp from 'jsts/org/locationtech/jts/operation/union/UnaryUnionOp'
 import { boundingExtent } from 'ol/extent'
 import { transformExtent } from 'ol/proj'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { SubTitle } from './style'
@@ -41,6 +48,23 @@ import type { ThemeOption } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Coordinate } from 'ol/coordinate'
 
+const geoserverURL = import.meta.env.FRONTEND_GEOSERVER_REMOTE_URL
+
+const geometryFactory = new GeometryFactory()
+const reader = new GeoJSONReader(geometryFactory)
+const writer = new GeoJSONWriter()
+
+function mergeDepartmentsToRegion(departments) {
+  const geometries = departments.map(dep => reader.read(dep.geometry))
+
+  const collection = geometries[0].getFactory().createGeometryCollection(geometries)
+  const merged = UnaryUnionOp.union(collection)
+
+  console.log('merged', merged)
+
+  return writer.write(merged)
+}
+
 export function Identification({
   isEditing,
   onChangeRefReg
@@ -50,7 +74,8 @@ export function Identification({
 }) {
   const dispatch = useAppDispatch()
   const { errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
-
+  console.log('values', values)
+  console.log('errors', errors)
   const { data: layerNames } = useGetLayerNamesQuery()
   const { data: regulatoryAreasToComplete } = useGetRegulatoryAreasToCompleteQuery(undefined, { skip: isEditing })
 
@@ -59,6 +84,8 @@ export function Identification({
   const [newLayerNameLocation, setNewLayerNameLocation] = useState<string | undefined>(undefined)
   const [isNewLayerNameValid, setIsNewLayerNameValid] = useState(true)
 
+  const [departmentsWithGeom, setDepartmentsWithGeom] = useState<GeoJSON.Feature[] | undefined>(undefined)
+  const [getRegion] = useLazyGetRegionAreaQuery()
   const layerNamesOptions = useMemo(() => {
     const layersNamesFromApi = Object.keys(layerNames?.layerNames || {})
     const formattedLayerNames = layersNamesFromApi
@@ -178,6 +205,64 @@ export function Identification({
     isStrict: true
   })
 
+  const regionsAsOptions = regions.map(region => ({
+    label: region.nom,
+    value: region.code
+  }))
+  useEffect(() => {
+    const fetchDepartmentsFeatures = async () => {
+      const wfsUrl =
+        `${geoserverURL}/geoserver/wfs?service=WFS&` +
+        `version=1.1.0&request=GetFeature&typename=${import.meta.env.FRONTEND_GEOSERVER_NAMESPACE}:${
+          Layers.DEPARTMENTS.code
+        }&` +
+        `outputFormat=application/json&srsname=${WSG84_PROJECTION}`
+
+      const features = await fetch(wfsUrl)
+        .then(response => response.json())
+        .then((data: GeoJSON.FeatureCollection) => data.features)
+        .catch(() => undefined)
+
+      setDepartmentsWithGeom(features)
+    }
+
+    fetchDepartmentsFeatures()
+  }, [])
+
+  const setRegionGeom = async (regionCode: string | undefined) => {
+    const region = regions.find(r => r.code === regionCode)
+    const departmentIds = region?.departements ?? []
+
+    getRegion(departmentIds)
+      .unwrap()
+      .then(result => {
+        console.log('result', result)
+        setFieldValue('geom', { coordinates: [...result.geom.coordinates], type: 'MultiPolygon' })
+        setFieldValue('refReg', `Région ${region?.nom}`)
+        setFieldValue('url', 'https://www.google.fr')
+        setFieldValue('id', '12')
+      })
+
+    /*     const departmentAggregation = departmentsWithGeom?.filter(department => {
+      if (region?.departements.includes(department.properties?.insee_dep as string) && department.geometry) {
+        return true
+      }
+
+      return false
+    })
+
+    if (departmentAggregation?.length === 0) {
+      return
+    }
+    let aggregatedGeom = mergeDepartmentsToRegion(departmentAggregation)
+    aggregatedGeom = {
+      ...aggregatedGeom,
+      type: 'MultiPolygon'
+    }
+ */
+    // console.log('aggregatedGeom', aggregatedGeom)
+  }
+
   return (
     <>
       <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
@@ -243,6 +328,14 @@ export function Identification({
         )}
         <InlineFieldsContainer>
           <Select
+            label="Géométrie"
+            name="geom"
+            onChange={setRegionGeom}
+            options={regionsAsOptions}
+            style={{ width: '30%' }}
+            value={regionsAsOptions.find(option => option.value === values.id)?.value}
+          />
+          {/*  <Select
             key={geomOptions.length}
             customSearch={geomCustomSearch}
             disabled={isEditing}
@@ -256,7 +349,7 @@ export function Identification({
             renderMenuItem={renderMenuItem}
             style={{ width: '30%' }}
             value={geomOptions.find(option => option.value.id === values.id)?.value}
-          />
+          /> */}
           <FormikSelect
             isErrorMessageHidden
             isRequired

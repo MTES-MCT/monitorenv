@@ -16,8 +16,16 @@ export const departmentAreasAPI = monitorenvPrivateApi.injectEndpoints({
     getDepartmentAreas: builder.query<DepartmentArea.DepartmentArea[], void>({
       query: () => `/v1/department_areas`,
       transformErrorResponse: response => new FrontendApiError(GET_DEPARTMENT_AREAS_ERROR_MESSAGE, response)
+    }),
+
+    getRegionArea: builder.query({
+      query: departmentIds => ({
+        body: departmentIds,
+        method: 'POST',
+        url: `/v1/department_areas`
+      })
     })
   })
 })
 
-export const { useGetDepartmentAreaQuery, useGetDepartmentAreasQuery } = departmentAreasAPI
+export const { useGetDepartmentAreaQuery, useGetDepartmentAreasQuery, useLazyGetRegionAreaQuery } = departmentAreasAPI
