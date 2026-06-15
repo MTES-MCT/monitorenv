@@ -67,6 +67,10 @@ const StyledMDEditor = styled(MDEditor)`
   box-shadow: none;
   padding-bottom: 0px;
 
+  .w-md-editor-toolbar {
+    background-color: ${p => p.theme.color.white};
+  }
+
   .w-md-editor-text-input {
     color: ${p => p.theme.color.gunMetal};
     font-family: inherit !important;

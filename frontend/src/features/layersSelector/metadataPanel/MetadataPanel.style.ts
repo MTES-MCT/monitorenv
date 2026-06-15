@@ -45,7 +45,11 @@ export const BeautifyValue = styled(ReactMarkdown)`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 50;
   overflow: hidden;
-  white-space: pre-wrap;
+
+  ul {
+    list-style: disc;
+    padding-left: 12px;
+  }
 `
 
 export const Section = styled.div`
