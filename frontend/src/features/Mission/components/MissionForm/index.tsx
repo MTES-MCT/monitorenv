@@ -77,6 +77,7 @@ export function MissionFormWrapper() {
             engagedControlUnit={selectedMission?.engagedControlUnit ?? undefined}
             id={activeMissionId}
             isNewMission={missionIsNewMission}
+            isTagsWarningMessageVisible={isTagsWarningMessageVisible}
             selectedMission={selectedMission?.missionForm}
           />
         </Form>

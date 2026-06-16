@@ -62,6 +62,7 @@ type MissionFormProps = {
   engagedControlUnit: ControlUnit.EngagedControlUnit | undefined
   id: number | string
   isNewMission: boolean
+  isTagsWarningMessageVisible: boolean
   selectedMission: AtLeast<Partial<Mission>, 'id'> | Partial<NewMission> | undefined
 }
 
@@ -70,6 +71,7 @@ export function MissionForm({
   engagedControlUnit,
   id,
   isNewMission,
+  isTagsWarningMessageVisible,
   selectedMission
 }: MissionFormProps) {
   const dispatch = useAppDispatch()
@@ -296,7 +298,11 @@ export function MissionForm({
           <ActionsTimeLine currentActionId={activeActionId} setCurrentActionId={handleSetCurrentActionId} />
         </SecondColumn>
         <ThirdColumn>
-          <ActionForm currentActionId={activeActionId} setCurrentActionId={handleSetCurrentActionId} />
+          <ActionForm
+            currentActionId={activeActionId}
+            isTagsWarningMessageVisible={isTagsWarningMessageVisible}
+            setCurrentActionId={handleSetCurrentActionId}
+          />
         </ThirdColumn>
       </Wrapper>
 

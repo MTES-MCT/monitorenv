@@ -27,7 +27,6 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
   const dispatch = useAppDispatch()
   const selectedReportingIdOnMap = useAppSelector(state => state.reporting.selectedReportingIdOnMap)
 
-  const displayReportingsOverlay = useAppSelector(state => state.global.layers.displayReportingsOverlay)
   const [hoveredOptions, setHoveredOptions] = useState(OPTIONS)
   const [selectedOptions, setSelectedOptions] = useState(OPTIONS)
 
@@ -71,7 +70,7 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
     <>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-selected"
-        feature={displayReportingsOverlay && canOverlayBeOpened ? feature : undefined}
+        feature={canOverlayBeOpened ? feature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
         options={selectedOptions}
@@ -81,7 +80,7 @@ export function ReportingOverlay({ currentFeatureOver, map, mapClickEvent }: Bas
       </OverlayPositionOnCentroid>
       <OverlayPositionOnCentroid
         appClassName="overlay-reporting-hover"
-        feature={displayReportingsOverlay && displayHoveredFeature ? hoveredFeature : undefined}
+        feature={displayHoveredFeature ? hoveredFeature : undefined}
         map={map}
         mapClickEvent={mapClickEvent}
         options={hoveredOptions}
