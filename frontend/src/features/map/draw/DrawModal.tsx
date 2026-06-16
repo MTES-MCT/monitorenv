@@ -179,8 +179,6 @@ export function DrawModal() {
       if (!isEditingInInputRef.current) {
         isEditingInInputRef.current = true
         dispatch(setIsGeometryDrawOnMap(false))
-
-        return
       }
 
       isEditingInInputRef.current = true
@@ -191,7 +189,7 @@ export function DrawModal() {
 
       const [latitude, longitude] = nextCoordinates
 
-      if (!latitude || !longitude) {
+      if (latitude === undefined || longitude === undefined) {
         return
       }
 

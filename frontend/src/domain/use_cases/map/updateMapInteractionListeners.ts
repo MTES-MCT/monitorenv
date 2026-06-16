@@ -31,8 +31,8 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
 
     case MapInteractionListenerEnum.ATTACH_REPORTING:
       openDrawLayerModal(dispatch, false)
-      dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(true))
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(false))
+      dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(true))
       dispatch(closeAreaOverlay())
       dispatch(resetInteraction())
       break
@@ -51,8 +51,7 @@ const openDrawLayerModal = (dispatch, hideSidebarAndInterestPoint = true) => {
   dispatch(
     setDisplayedItems({
       layers: {
-        displayInterestPointLayer: hideSidebarAndInterestPoint,
-        displayReportingsOverlay: false
+        displayInterestPointLayer: hideSidebarAndInterestPoint
       },
       menus: {
         displayDashboard: false,

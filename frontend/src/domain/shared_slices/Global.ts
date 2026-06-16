@@ -43,7 +43,6 @@ type GlobalStateType = {
     displayReportingSelectedLayer: boolean
     displayReportingToAttachLayer: boolean
     displayReportingsLayer: boolean
-    displayReportingsOverlay: boolean
 
     displaySemaphoresLayer: boolean
     displayStationLayer: boolean
@@ -109,7 +108,6 @@ const initialLayers = {
   displayReportingEditingLayer: true,
   displayReportingSelectedLayer: true,
   displayReportingsLayer: true,
-  displayReportingsOverlay: true,
   displayReportingToAttachLayer: true,
   displaySemaphoresLayer: true,
   displayStationLayer: false,

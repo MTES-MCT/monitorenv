@@ -10,7 +10,7 @@ import {
   type Option
 } from '@mtes-mct/monitor-ui'
 import { useField, useFormikContext } from 'formik'
-import { useEffect } from 'react'
+import { Fragment, useEffect } from 'react'
 import styled from 'styled-components'
 
 import type { EnvActionSurveillance, Mission } from 'domain/entities/missions'
@@ -78,8 +78,8 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
       {awareness?.isRisingAwareness && (
         <AwarenessWrapper data-cy="surveillance-awareness-fields">
           <>
-            {awareness.details?.map((_, index) => (
-              <>
+            {awareness.details?.map((details, index) => (
+              <Fragment key={`${details.nbPerson}-${details.themeId}`}>
                 {index !== 0 && <Separator />}
                 <Details>
                   <NbPerson
@@ -109,7 +109,7 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
                     />
                   )}
                 </Details>
-              </>
+              </Fragment>
             ))}
           </>
           {themes?.value && themes?.value?.length !== awareness.details?.length && (
