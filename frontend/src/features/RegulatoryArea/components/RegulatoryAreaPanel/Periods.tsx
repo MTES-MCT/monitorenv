@@ -26,7 +26,7 @@ export function Periods({ authorizationPeriods, prohibitionPeriods }: PeriodsPro
             <StyledIcon color={THEME.color.maximumRed} size={10} />
             Période d&apos;interdiction
           </SectionTitle>
-          <ReactMarkdown>{prohibitionPeriods}</ReactMarkdown>
+          <ReactMarkdown components={{ ul: List }}>{prohibitionPeriods}</ReactMarkdown>
         </StyledSection>
       )}
     </PeriodsWrapper>

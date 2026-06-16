@@ -6,4 +6,4 @@ const createNoopStorage = () => ({
   setItem: (_key: string, value: unknown) => Promise.resolve(value)
 })
 
-export const storage = typeof window !== 'undefined' ? createWebStorage('local') : createNoopStorage()
+export const storage = typeof globalThis.window === 'undefined' ? createNoopStorage() : createWebStorage('local')

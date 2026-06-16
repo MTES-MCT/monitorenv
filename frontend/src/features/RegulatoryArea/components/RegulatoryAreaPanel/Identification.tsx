@@ -4,6 +4,7 @@ import {
   Field,
   Fields,
   Key,
+  MarkdownList,
   NoValue,
   Value,
   Zone
@@ -47,7 +48,7 @@ export function Identification({
           <Field>
             <Key>Résumé</Key>
             <Value data-cy="regulatory-layers-metadata-resume">
-              <BeautifyValue>{resume ?? String(<NoValue>-</NoValue>)}</BeautifyValue>
+              <BeautifyValue components={{ ul: MarkdownList }}>{resume ?? String(<NoValue>-</NoValue>)}</BeautifyValue>
             </Value>
           </Field>
           <Field>
