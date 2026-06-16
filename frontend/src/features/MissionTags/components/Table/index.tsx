@@ -19,7 +19,9 @@ export function MissionTagTable() {
   const dispatch = useAppDispatch()
   const { filtersState } = useAppSelector(store => store.missionTagTable)
 
-  const { data } = useGetMissionsTagsQuery(undefined)
+  const { data } = useGetMissionsTagsQuery(undefined, {
+    refetchOnMountOrArgChange: true
+  })
 
   const [missionTags, setMissionTags] = useState<MissionTagTableType[]>([])
   const [draftMissionTags, setDraftMissionTags] = useState<MissionTagTableType[]>([])
