@@ -5,7 +5,7 @@ import { saveTag } from '@features/Tags/components/useCases/saveTag'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Button, DataTable } from '@mtes-mct/monitor-ui'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useBeforeUnload } from 'react-router'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -155,9 +155,8 @@ export function TagTable() {
           startedAt: tagToSave.startedAt
         }
         const savedTag = await dispatch(saveTag(tagToApi))
-        if (savedTag) {
-          // Updating table
-          setTags(previousTags =>
+        const updateTable = (setTable: React.Dispatch<React.SetStateAction<TagTableType[]>>) => {
+          setTable(previousTags =>
             previousTags.map(tag => {
               if (tag.rowId === rowId) {
                 return { ...tag, ...(savedTag as TagTableType), subTags: [...tag.subTags, ...draftSubTags] }
@@ -176,8 +175,16 @@ export function TagTable() {
             })
           )
         }
-      }
 
+        if (savedTag) {
+          // Updating table
+          if (!tagToApi.id) {
+            updateTable(setNewTags)
+          } else {
+            updateTable(setTags)
+          }
+        }
+      }
       handleSave()
       removeDraftRow(rowId)
     },

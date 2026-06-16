@@ -5,7 +5,7 @@ import { saveMissionTag } from '@features/MissionTags/components/useCases/saveMi
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Button, DataTable } from '@mtes-mct/monitor-ui'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useBeforeUnload } from 'react-router'
 import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
@@ -122,9 +122,8 @@ export function MissionTagTable() {
           name: tagToSave.name ?? ''
         }
         const savedMissionTag = await dispatch(saveMissionTag(missionTagToApi))
-        if (savedMissionTag) {
-          // Updating table
-          setMissionTags(previousTags =>
+        function updateTable(setTable: React.Dispatch<React.SetStateAction<MissionTagTableType[]>>) {
+          setTable(previousTags =>
             previousTags.map(missionTag => {
               if (missionTag.rowId === rowId) {
                 return { ...missionTag, ...(savedMissionTag as MissionTagTableType) }
@@ -133,6 +132,14 @@ export function MissionTagTable() {
               return missionTag
             })
           )
+        }
+
+        if (savedMissionTag) {
+          if (!missionTagToApi.id) {
+            updateTable(setNewMissionTags)
+          } else {
+            updateTable(setMissionTags)
+          }
         }
       }
 
