@@ -19,7 +19,9 @@ export function TagTable() {
   const { filtersState } = useAppSelector(store => store.tagTable)
 
   const [startDate, endDate] = ['2000-01-01T00:00:00.000Z', '2999-12-31T23:59:59.000Z']
-  const { data } = useGetTagsQuery([startDate, endDate], undefined)
+  const { data } = useGetTagsQuery([startDate, endDate], {
+    refetchOnMountOrArgChange: true
+  })
 
   const [tags, setTags] = useState<TagTableType[]>([])
   const [draftTags, setDraftTags] = useState<TagTableType[]>([])
