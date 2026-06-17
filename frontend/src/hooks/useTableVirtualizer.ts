@@ -14,6 +14,10 @@ export function useTableVirtualizer({ estimateSize, ref, rows }: UseTableVirtual
     estimateSize: () => estimateSize,
     getItemKey: useCallback((index: number) => `${rows[index]?.id}`, [rows]),
     getScrollElement: () => ref.current,
+    measureElement:
+      typeof window !== 'undefined' && navigator.userAgent.indexOf('Firefox') === -1
+        ? element => element?.getBoundingClientRect().height
+        : undefined,
     overscan: 5,
     scrollPaddingEnd: 40,
     scrollPaddingStart: 40

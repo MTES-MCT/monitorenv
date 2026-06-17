@@ -53,7 +53,7 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
   const { rows } = table.getRowModel()
 
   const rowVirtualizer = useTableVirtualizer({
-    estimateSize: 30,
+    estimateSize: 45,
     ref: tableContainerRef,
     rows
   })
@@ -70,7 +70,7 @@ export function MissionsTable({ isFetching, isLoading, missions }: MissionsTable
           {virtualRows?.map(virtualRow => {
             const row = rows[virtualRow.index] as RowType<Mission>
 
-            return <Row key={virtualRow.key} row={row} />
+            return <Row key={virtualRow.key} row={row} rowVirtualizer={rowVirtualizer} virtualRow={virtualRow} />
           })}
         </>
       }

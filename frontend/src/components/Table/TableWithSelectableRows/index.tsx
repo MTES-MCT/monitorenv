@@ -25,8 +25,8 @@ export function SelectableRowsTableWithRef(
   const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
 
   return (
-    <StyledTableWrapper ref={ref} className={className}>
-      <StyledTableContainer data-cy="scrollable-container">
+    <StyledTableWrapper className={className}>
+      <StyledTableContainer ref={ref} data-cy="scrollable-container">
         <StyledTable>
           <TableWithSelectableRows.Head>
             {table.getHeaderGroups().map(headerGroup => (
@@ -51,14 +51,15 @@ export function SelectableRowsTableWithRef(
 export const SelectableRowsTable = forwardRef(SelectableRowsTableWithRef)
 
 const StyledTableWrapper = styled.div`
+  height: 100%;
   overflow: hidden;
   width: 100%;
 `
 
 const StyledTableContainer = styled.div`
+  height: 100%;
   overflow: auto;
   width: 100%;
-  height: 100%;
 `
 
 const StyledTable = styled(TableWithSelectableRows.Table)`
