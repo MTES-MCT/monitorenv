@@ -61,6 +61,7 @@ class CanDeleteAdministrationUTests {
                     listOf(
                         ControlUnitEntity(
                             id = 0,
+                            administration = null,
                             administrationId = 1,
                             areaNote = null,
                             departmentAreaInseeCode = null,

@@ -21,5 +21,6 @@ data class FullControlUnitDTO(
             isArchived = controlUnit.isArchived,
             name = controlUnit.name,
             resources = controlUnitResources.map { it.toLegacyControlUnitResource() },
+            contact = controlUnit.contact,
         )
 }

@@ -38,7 +38,13 @@ data class CreateOrUpdateMissionDataInput(
         return MissionEntity(
             id = this.id,
             completedBy = this.completedBy,
-            controlUnits = this.controlUnits.map { it.toLegacyControlUnit() },
+            controlUnits = this.controlUnits.map { it.toControlUnit() },
+            controlResources =
+                controlUnits.flatMap {
+                    it.resources.map { resource ->
+                        resource.toControlUnitResource()
+                    }
+                },
             createdAtUtc = null,
             envActions = this.envActions?.map { it.toEnvActionEntity() },
             endDateTimeUtc = this.endDateTimeUtc,

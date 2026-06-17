@@ -78,6 +78,12 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                         ControlUnitEntity(
                             id = 10020,
                             administrationId = 6,
+                            administration =
+                                AdministrationEntity(
+                                    id = 6,
+                                    name = "Gendarmerie Nationale",
+                                    isArchived = false,
+                                ),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -86,6 +92,12 @@ class JpaAdministrationRepositoryITests : AbstractDBTests() {
                         ),
                         ControlUnitEntity(
                             id = 10021,
+                            administration =
+                                AdministrationEntity(
+                                    id = 6,
+                                    name = "Gendarmerie Nationale",
+                                    isArchived = false,
+                                ),
                             administrationId = 6,
                             areaNote = null,
                             departmentAreaInseeCode = null,

@@ -15,6 +15,7 @@ data class CreateOrUpdateControlUnitDataInput(
         ControlUnitEntity(
             id = this.id,
             areaNote = this.areaNote,
+            administration = null,
             administrationId = this.administrationId,
             departmentAreaInseeCode = this.departmentAreaInseeCode,
             isArchived = this.isArchived,

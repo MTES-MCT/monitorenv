@@ -26,6 +26,7 @@ export const useGetFilteredRegulatoryAreas = () => {
     }),
     [controlPlan, globalSearchText, filteredRegulatoryTags, filteredRegulatoryThemes, areRecentsAreasChecked]
   )
+
   const hasNoFilters = useMemo(
     () =>
       !apiFilters.controlPlan &&

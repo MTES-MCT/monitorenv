@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -35,9 +34,9 @@ data class ControlUnitModel(
     @Column(name = "area_note")
     val areaNote: String? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
-    val controlUnitContacts: List<ControlUnitContactModel>? = mutableListOf(),
+    val controlUnitContacts: MutableList<ControlUnitContactModel>? = mutableListOf(),
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "controlUnit")
-    val controlUnitResources: List<ControlUnitResourceModel>? = mutableListOf(),
+    val controlUnitResources: MutableList<ControlUnitResourceModel>? = mutableListOf(),
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_area_insee_dep")
     val departmentArea: DepartmentAreaModel? = null,
@@ -63,8 +62,8 @@ data class ControlUnitModel(
             controlUnit: ControlUnitEntity,
             administrationModel: AdministrationModel,
             departmentAreaModel: DepartmentAreaModel? = null,
-            controlUnitContactModels: List<ControlUnitContactModel>? = null,
-            controlUnitResourceModels: List<ControlUnitResourceModel>? = null,
+            controlUnitContactModels: MutableList<ControlUnitContactModel>? = null,
+            controlUnitResourceModels: MutableList<ControlUnitResourceModel>? = null,
         ): ControlUnitModel =
             ControlUnitModel(
                 id = controlUnit.id,
@@ -79,17 +78,6 @@ data class ControlUnitModel(
             )
     }
 
-    fun toControlUnit(): ControlUnitEntity =
-        ControlUnitEntity(
-            id,
-            administrationId = requireNotNull(administration.id),
-            areaNote,
-            departmentAreaInseeCode = departmentArea?.inseeCode,
-            isArchived,
-            name,
-            termsNote,
-        )
-
     fun toFullControlUnit(): FullControlUnitDTO =
         FullControlUnitDTO(
             administration = administration.toAdministration(),
@@ -99,22 +87,17 @@ data class ControlUnitModel(
             controlUnitResources = requireNotNull(controlUnitResources).map { it.toFullControlUnitResource() },
         )
 
-    fun toLegacyControlUnit(
-        missionControlResourceModels: List<MissionControlResourceModel>? = null,
-    ): LegacyControlUnitEntity =
-        LegacyControlUnitEntity(
+    fun toControlUnit(contact: String? = null): ControlUnitEntity =
+        ControlUnitEntity(
             id = requireNotNull(id),
-            administration = administration.name,
-            isArchived,
-            name,
-            resources =
-                requireNotNull(controlUnitResources)
-                    .filter {
-                        missionControlResourceModels
-                            ?.map { missionControlResource -> missionControlResource.resource.id }
-                            ?.contains(it.id) ?: true
-                    }.map { it.toLegacyControlUnitResource() },
-            contact = "",
+            administrationId = administration.id,
+            administration = administration.toAdministration(),
+            areaNote = areaNote,
+            contact = contact,
+            departmentAreaInseeCode = departmentArea?.inseeCode,
+            isArchived = isArchived,
+            name = name,
+            termsNote = termsNote,
         )
 
     @Override

@@ -1,7 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.entities.mission
 
 import fr.gouv.cacem.monitorenv.domain.entities.Patchable
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
@@ -9,7 +10,9 @@ import java.time.ZonedDateTime
 data class MissionEntity(
     val id: Int? = null,
     @Patchable
-    var controlUnits: List<LegacyControlUnitEntity> = listOf(),
+    var controlUnits: List<ControlUnitEntity> = listOf(),
+    @Patchable
+    var controlResources: List<ControlUnitResourceEntity> = listOf(),
     val completedBy: String? = null,
     val createdAtUtc: ZonedDateTime?,
     val envActions: List<EnvActionEntity>? = listOf(),

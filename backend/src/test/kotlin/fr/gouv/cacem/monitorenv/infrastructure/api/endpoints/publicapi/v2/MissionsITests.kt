@@ -5,12 +5,11 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.rapportnav.RapportNavMissionActionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
@@ -20,6 +19,9 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionAndSourceAct
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.PatchMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.LegacyControlUnitDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.LegacyControlUnitResourceDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.missions.PatchableMissionDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -75,59 +77,73 @@ class MissionsITest {
         val observationsByUnit = "patchedObservations"
         val startDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2024-04-11T07:00:00Z")
         val endDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2024-04-22T07:00:00Z")
-        val missionTypes = listOf(MissionTypeEnum.AIR)
-        val controlUnit =
+        val missionTypes = mutableListOf(MissionTypeEnum.AIR)
+        val controlUnitsInput =
             listOf(
-                LegacyControlUnitEntity(
+                LegacyControlUnitDataInput(
                     id = 2,
                     administration = "Gendarmerie Nationale",
                     isArchived = false,
                     name = "BN Toulon",
+                    contact = null,
                     resources =
                         listOf(
-                            LegacyControlUnitResourceEntity(
+                            LegacyControlUnitResourceDataInput(
                                 id = 1,
                                 controlUnitId = 2,
                                 name = "Vedette",
                                 type = ControlUnitResourceType.FAST_BOAT,
                             ),
                         ),
+                ),
+            )
+        val controlUnit =
+            listOf(
+                ControlUnitEntity(
+                    id = 2,
+                    administrationId = null,
+                    administration = null,
+                    isArchived = false,
+                    name = "BN Toulon",
                     contact = null,
+                ),
+            )
+        val controlResources =
+            listOf(
+                ControlUnitResourceEntity(
+                    id = 1,
+                    controlUnitId = 2,
+                    name = "Vedette",
+                    type = ControlUnitResourceType.FAST_BOAT,
+                    stationId = 1,
+                    isArchived = false,
                 ),
             )
         val isUnderJdp = false
 
         val partialMissionAsJson =
-            """
-            { "observationsByUnit": "$observationsByUnit", "startDateTimeUtc": "$startDateTimeUtc", "endDateTimeUtc": "$endDateTimeUtc", "controlUnits": ${
-                jsonMapper.writeValueAsString(
-                    controlUnit,
-                )
-            }, "missionTypes": ${jsonMapper.writeValueAsString(missionTypes)},
-             "isUnderJdp": "$isUnderJdp"}
-            """.trimIndent()
+            PatchableMissionDataInput(
+                controlUnits = controlUnitsInput,
+                endDateTimeUtc = Optional.of(endDateTimeUtc),
+                missionTypes = missionTypes,
+                observationsByUnit = Optional.of(observationsByUnit),
+                startDateTimeUtc = startDateTimeUtc,
+                isUnderJdp = isUnderJdp,
+            )
 
         val patchedMission =
             aMissionEntity(
                 id = id,
                 controlUnits = controlUnit,
+                controlResources = controlResources,
                 missionTypes = missionTypes,
                 startDateTimeUtc = startDateTimeUtc,
                 endDateTimeUtc = endDateTimeUtc,
                 observationsByUnit = observationsByUnit,
                 isUnderJdp = isUnderJdp,
             )
-        val patchableMissionEntity =
-            PatchableMissionEntity(
-                controlUnits = controlUnit,
-                missionTypes = missionTypes,
-                observationsByUnit = Optional.of(observationsByUnit),
-                startDateTimeUtc = startDateTimeUtc,
-                endDateTimeUtc = Optional.of(endDateTimeUtc),
-                isUnderJdp = isUnderJdp,
-            )
 
-        given(patchMission.execute(id, patchableMissionEntity))
+        given(patchMission.execute(any(), any()))
             .willReturn(MissionDetailsDTO(mission = patchedMission))
 
         // When
@@ -135,7 +151,7 @@ class MissionsITest {
             .perform(
                 patch("/api/v2/missions/$id")
                     .characterEncoding("utf-8")
-                    .content(partialMissionAsJson)
+                    .content(jsonMapper.writeValueAsString(partialMissionAsJson))
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then
@@ -153,7 +169,7 @@ class MissionsITest {
             ).andExpect(
                 jsonPath(
                     "$.controlUnits[0].resources[0].id",
-                    equalTo(patchedMission.controlUnits[0].resources[0].id),
+                    equalTo(patchedMission.controlResources[0].id),
                 ),
             ).andExpect(
                 jsonPath(

@@ -1,10 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,22 +23,8 @@ class GetLegacyControlUnitsUTest {
         val fullControlUnits =
             listOf(
                 FullControlUnitDTO(
-                    administration =
-                        AdministrationEntity(
-                            id = 0,
-                            name = "Admin 1",
-                            isArchived = false,
-                        ),
-                    controlUnit =
-                        ControlUnitEntity(
-                            id = 1,
-                            administrationId = 0,
-                            areaNote = "Area 1",
-                            departmentAreaInseeCode = "A1",
-                            isArchived = false,
-                            name = "CU 1",
-                            termsNote = "Terms 1",
-                        ),
+                    administration = anAdministration(),
+                    controlUnit = aControlUnit(),
                     departmentArea = null,
                     controlUnitContacts = listOf(),
                     controlUnitResources = listOf(),

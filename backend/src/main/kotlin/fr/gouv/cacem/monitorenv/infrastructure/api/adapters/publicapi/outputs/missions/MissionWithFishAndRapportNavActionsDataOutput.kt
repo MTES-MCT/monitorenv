@@ -42,8 +42,13 @@ data class MissionWithFishAndRapportNavActionsDataOutput(
                 missionTypes = missionDto.mission.missionTypes,
                 controlUnits =
                     missionDto.mission.controlUnits.map {
-                        LegacyControlUnitDataOutput.fromLegacyControlUnit(
+                        LegacyControlUnitDataOutput.fromControlUnit(
                             it,
+                            resources =
+                                missionDto.mission.controlResources.filter { resource ->
+                                    resource.controlUnitId ==
+                                        it.id
+                                },
                         )
                     },
                 openBy = missionDto.mission.openBy,

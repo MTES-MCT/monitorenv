@@ -53,6 +53,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                     controlUnit =
                         ControlUnitEntity(
                             id = 10000,
+                            administration =
+                                AdministrationEntity(
+                                    id = 1005,
+                                    name = "DDTM",
+                                    isArchived = false,
+                                ),
                             administrationId = 1005,
                             areaNote = null,
                             departmentAreaInseeCode = null,
@@ -88,6 +94,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                     ControlUnitEntity(
                                         id = 10000,
                                         administrationId = 1005,
+                                        administration =
+                                            AdministrationEntity(
+                                                id = 1005,
+                                                name = "DDTM",
+                                                isArchived = false,
+                                            ),
                                         areaNote = null,
                                         departmentAreaInseeCode =
                                         null,
@@ -121,6 +133,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                 controlUnit =
                                     ControlUnitEntity(
                                         id = 10000,
+                                        administration =
+                                            AdministrationEntity(
+                                                id = 1005,
+                                                name = "DDTM",
+                                                isArchived = false,
+                                            ),
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
@@ -156,6 +174,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                     ControlUnitEntity(
                                         id = 10000,
                                         administrationId = 1005,
+                                        administration =
+                                            AdministrationEntity(
+                                                id = 1005,
+                                                name = "DDTM",
+                                                isArchived = false,
+                                            ),
                                         areaNote = null,
                                         departmentAreaInseeCode =
                                         null,
@@ -190,6 +214,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                     ControlUnitEntity(
                                         id = 10000,
                                         administrationId = 1005,
+                                        administration =
+                                            AdministrationEntity(
+                                                id = 1005,
+                                                name = "DDTM",
+                                                isArchived = false,
+                                            ),
                                         areaNote = null,
                                         departmentAreaInseeCode =
                                         null,
@@ -236,6 +266,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ControlUnitEntity(
                             id = 10121,
                             administrationId = 1009,
+                            administration = AdministrationEntity(id = 1009, name = "DIRM / DM", isArchived = false),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -257,6 +288,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                     ControlUnitEntity(
                                         id = 10121,
                                         administrationId = 1009,
+                                        administration =
+                                            AdministrationEntity(
+                                                id = 1009,
+                                                name = "DIRM / DM",
+                                                isArchived = false,
+                                            ),
                                         areaNote = null,
                                         isArchived = false,
                                         name = "PAM Jeanne Barret",
@@ -299,6 +336,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                         ControlUnitEntity(
                             id = 10000,
                             administrationId = 1005,
+                            administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -339,6 +377,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                 controlUnit =
                                     ControlUnitEntity(
                                         id = 10000,
+                                        administration =
+                                            AdministrationEntity(
+                                                id = 1005,
+                                                name = "DDTM",
+                                                isArchived = false,
+                                            ),
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
@@ -373,6 +417,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                 controlUnit =
                                     ControlUnitEntity(
                                         id = 10000,
+                                        administration =
+                                            AdministrationEntity(
+                                                id = 1005,
+                                                name = "DDTM",
+                                                isArchived = false,
+                                            ),
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
@@ -400,6 +450,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                 controlUnit =
                                     ControlUnitEntity(
                                         id = 10000,
+                                        administration =
+                                            AdministrationEntity(
+                                                id = 1005,
+                                                name = "DDTM",
+                                                isArchived = false,
+                                            ),
                                         administrationId = 1005,
                                         areaNote = null,
                                         departmentAreaInseeCode =
@@ -435,6 +491,12 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                     ControlUnitEntity(
                                         id = 10000,
                                         administrationId = 1005,
+                                        administration =
+                                            AdministrationEntity(
+                                                id = 1005,
+                                                name = "DDTM",
+                                                isArchived = false,
+                                            ),
                                         areaNote = null,
                                         departmentAreaInseeCode =
                                         null,
@@ -477,6 +539,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
 
         val newControlUnit =
             ControlUnitEntity(
+                administration = AdministrationEntity(id = 1, isArchived = false, name = "Affaires Maritimes"),
                 administrationId = 1,
                 areaNote = "Area Note",
                 departmentAreaInseeCode = "50",
@@ -495,6 +558,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         val nextControlUnit =
             ControlUnitEntity(
                 id = 10177,
+                administration = AdministrationEntity(id = 1, isArchived = false, name = "Affaires Maritimes"),
                 administrationId = 1,
                 areaNote = "Updated Area Note",
                 departmentAreaInseeCode = "85",

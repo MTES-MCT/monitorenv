@@ -2,10 +2,10 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -25,22 +25,8 @@ class GetEngagedControlUnitsUTests {
 
     @Test
     fun `execute() should return engaged control units`(log: CapturedOutput) {
-        val firstControlUnit =
-            LegacyControlUnitEntity(
-                id = 123,
-                administration = "Admin",
-                resources = listOf(),
-                isArchived = false,
-                name = "Control Unit Name",
-            )
-        val secondControlUnit =
-            LegacyControlUnitEntity(
-                id = 123,
-                administration = "Admin",
-                resources = listOf(),
-                isArchived = false,
-                name = "Control Unit Name",
-            )
+        val firstControlUnit = aControlUnit(name = "First control unit")
+        val secondControlUnit = aControlUnit(name = "Second control unit")
         val firstMission =
             MissionListDTO(
                 mission =
@@ -111,7 +97,7 @@ class GetEngagedControlUnitsUTests {
         val controlUnits = GetEngagedControlUnits(getFullMissions).execute()
 
         assertThat(controlUnits).hasSize(1)
-        assertThat(controlUnits.first().first.name).isEqualTo("Control Unit Name")
+        assertThat(controlUnits.first().first.name).isEqualTo("First control unit")
         assertThat(controlUnits.first().second.first()).isEqualTo(MissionSourceEnum.MONITORENV)
         assertThat(controlUnits.first().second.last()).isEqualTo(MissionSourceEnum.MONITORFISH)
         assertThat(log.out).contains("Attempt to GET all engaged control units")
