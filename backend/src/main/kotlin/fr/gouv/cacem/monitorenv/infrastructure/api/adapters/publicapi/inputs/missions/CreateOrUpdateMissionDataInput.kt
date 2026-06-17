@@ -30,7 +30,13 @@ data class CreateOrUpdateMissionDataInput(
         MissionEntity(
             id = id,
             missionTypes = missionTypes,
-            controlUnits = controlUnits.map { it.toLegacyControlUnit() },
+            controlUnits = controlUnits.map { it.toControlUnitEntity() },
+            controlResources =
+                controlUnits.flatMap {
+                    it.resources.map { resource ->
+                        resource.toControlUnitResource()
+                    }
+                },
             openBy = openBy,
             completedBy = completedBy,
             observationsCacem = observationsCacem,

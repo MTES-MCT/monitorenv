@@ -1,12 +1,12 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitContactFixture.Companion.aControlUnitContact
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,26 +29,8 @@ class GetControlUnitContactByIdUTests {
         val controlUnitContactId = 1
         val fullControlUnitContact =
             FullControlUnitContactDTO(
-                controlUnit =
-                    ControlUnitEntity(
-                        id = 0,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Control Unit Name",
-                        termsNote = null,
-                    ),
-                controlUnitContact =
-                    ControlUnitContactEntity(
-                        id = 1,
-                        controlUnitId = 0,
-                        email = null,
-                        name = "Control Unit Contact Name",
-                        isEmailSubscriptionContact = false,
-                        isSmsSubscriptionContact = false,
-                        phone = null,
-                    ),
+                controlUnit = aControlUnit(),
+                controlUnitContact = aControlUnitContact(),
             )
 
         given(controlUnitContactRepository.findById(controlUnitContactId)).willReturn(fullControlUnitContact)

@@ -3,14 +3,19 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.repositories.*
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateFullMissionEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
@@ -81,22 +86,8 @@ class CreateOrUpdateReportingUTests {
             )
         val fullControlUnit =
             FullControlUnitDTO(
-                administration =
-                    AdministrationEntity(
-                        id = 1,
-                        isArchived = false,
-                        name = "administration 1",
-                    ),
-                controlUnit =
-                    ControlUnitEntity(
-                        id = 1,
-                        administrationId = 2,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "control unit 1",
-                        termsNote = null,
-                    ),
+                administration = anAdministration(),
+                controlUnit = aControlUnit(),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
             )

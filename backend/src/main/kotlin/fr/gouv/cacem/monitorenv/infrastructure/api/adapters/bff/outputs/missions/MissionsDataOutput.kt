@@ -5,7 +5,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlUnits.LegacyControlUnitDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlUnits.LegacyControlUnitDataOutput.Companion.fromLegacyControlUnit
 import org.locationtech.jts.geom.MultiPolygon
 import java.time.ZonedDateTime
 
@@ -35,7 +34,17 @@ data class MissionsDataOutput(
             return MissionsDataOutput(
                 id = dto.mission.id,
                 missionTypes = dto.mission.missionTypes,
-                controlUnits = dto.mission.controlUnits.map { fromLegacyControlUnit(it) },
+                controlUnits =
+                    dto.mission.controlUnits.map {
+                        LegacyControlUnitDataOutput.fromControlUnit(
+                            it,
+                            resources =
+                                dto.mission.controlResources.filter { resource ->
+                                    resource.controlUnitId ==
+                                        it.id
+                                },
+                        )
+                    },
                 openBy = dto.mission.openBy,
                 completedBy = dto.mission.completedBy,
                 observationsCacem = dto.mission.observationsCacem,

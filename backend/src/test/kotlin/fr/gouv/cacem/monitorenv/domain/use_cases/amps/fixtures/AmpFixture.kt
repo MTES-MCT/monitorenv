@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.domain.use_cases.amp.fixtures
+package fr.gouv.cacem.monitorenv.domain.use_cases.amps.fixtures
 
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import org.locationtech.jts.geom.MultiPolygon

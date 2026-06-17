@@ -7,11 +7,11 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.CanDeleteMissionResponse
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.BypassActionCheckAndDeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
@@ -374,13 +374,7 @@ class LegacyMissionsITests {
             .willReturn(
                 listOf(
                     Pair(
-                        LegacyControlUnitEntity(
-                            id = 123,
-                            administration = "Admin",
-                            resources = listOf(),
-                            isArchived = false,
-                            name = "Control Unit Name",
-                        ),
+                        aControlUnit(name = "Control Unit Name"),
                         listOf(MissionSourceEnum.MONITORFISH),
                     ),
                 ),

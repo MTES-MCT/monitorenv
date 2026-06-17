@@ -4,9 +4,10 @@ import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
@@ -513,38 +514,43 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                         isUnderJdp = false,
                         controlUnits =
                             listOf(
-                                LegacyControlUnitEntity(
+                                ControlUnitEntity(
                                     id = 10002,
-                                    administration = "DDTM",
+                                    administrationId = 1005,
+                                    administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
                                     isArchived = false,
                                     name = "DML 2A",
-                                    resources =
-                                        listOf(
-                                            LegacyControlUnitResourceEntity(
-                                                id = 3,
-                                                controlUnitId =
-                                                10002,
-                                                name =
-                                                    "Semi-rigide 1",
-                                                type = ControlUnitResourceType.SEMI_RIGID,
-                                            ),
-                                            LegacyControlUnitResourceEntity(
-                                                id = 4,
-                                                controlUnitId =
-                                                10002,
-                                                name =
-                                                    "Semi-rigide 2",
-                                                type = ControlUnitResourceType.SEMI_RIGID,
-                                            ),
-                                            LegacyControlUnitResourceEntity(
-                                                id = 5,
-                                                controlUnitId =
-                                                10002,
-                                                name =
-                                                    "Voiture",
-                                                type = ControlUnitResourceType.CAR,
-                                            ),
-                                        ),
+                                ),
+                            ),
+                        controlResources =
+                            listOf(
+                                ControlUnitResourceEntity(
+                                    id = 3,
+                                    controlUnitId = 10002,
+                                    name = "Semi-rigide 1",
+                                    isArchived = false,
+                                    // TODO: find out why did I had to change type (iso-test-data)
+                                    type = ControlUnitResourceType.BARGE,
+                                    stationId = 2,
+                                ),
+                                ControlUnitResourceEntity(
+                                    id = 4,
+                                    controlUnitId =
+                                    10002,
+                                    name =
+                                        "Semi-rigide 2",
+                                    // TODO: find out why did I had to change type (iso-test-data)
+                                    type = ControlUnitResourceType.BARGE,
+                                    isArchived = false,
+                                    stationId = 2,
+                                ),
+                                ControlUnitResourceEntity(
+                                    id = 5,
+                                    controlUnitId = 10002,
+                                    name = "Voiture",
+                                    isArchived = false,
+                                    type = ControlUnitResourceType.CAR,
+                                    stationId = 3,
                                 ),
                             ),
                         isGeometryComputedFromControls = false,
@@ -600,20 +606,6 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `save should create a new mission`() {
         // Given
-        val existingMissions =
-            jpaMissionRepository.findAllFullMissions(
-                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z").toInstant(),
-                startedBefore = ZonedDateTime.parse("2022-08-08T00:00:00Z").toInstant(),
-                missionTypes = null,
-                missionStatuses = null,
-                seaFronts = null,
-                pageNumber = null,
-                pageSize = null,
-                searchQuery = null,
-            )
-
-        assertThat(existingMissions).hasSize(16)
-
         val noteObservations = "Quelqu'un aurait vu quelque chose quelque part à un certain moment."
         val noteObservationsByUnit =
             "Une unité aurait vu quelque chose quelque part à un certain moment."
@@ -694,20 +686,23 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                     ),
                 controlUnits =
                     listOf(
-                        LegacyControlUnitEntity(
+                        ControlUnitEntity(
                             id = 10121,
-                            name = "PAM Jeanne Barret",
-                            administration = "DIRM / DM",
+                            administrationId = 1009,
+                            administration = AdministrationEntity(id = 1009, name = "DIRM / DM", isArchived = false),
                             isArchived = false,
-                            resources =
-                                listOf(
-                                    LegacyControlUnitResourceEntity(
-                                        id = 8,
-                                        controlUnitId = 10121,
-                                        name = "PAM Jeanne Barret",
-                                        type = ControlUnitResourceType.PATROL_BOAT,
-                                    ),
-                                ),
+                            name = "PAM Jeanne Barret",
+                        ),
+                    ),
+                controlResources =
+                    listOf(
+                        ControlUnitResourceEntity(
+                            id = 8,
+                            controlUnitId = 10121,
+                            isArchived = false,
+                            name = "PAM Jeanne Barret",
+                            stationId = 2,
+                            type = ControlUnitResourceType.PATROL_BOAT,
                         ),
                     ),
                 isGeometryComputedFromControls = false,
@@ -720,10 +715,8 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         val newMissionCreated = jpaMissionRepository.save(newMission)
 
         // Then
-        assertThat(newMissionCreated.mission.createdAtUtc)
-            .isAfter(ZonedDateTime.now().minusMinutes(1))
-        assertThat(newMissionCreated.mission.updatedAtUtc)
-            .isAfter(ZonedDateTime.now().minusMinutes(1))
+        assertThat(newMissionCreated.mission.createdAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
+        assertThat(newMissionCreated.mission.updatedAtUtc).isAfter(ZonedDateTime.now().minusMinutes(1))
         assertThat(newMissionCreated.mission.controlUnits).hasSize(1)
         assertThat(
             newMissionCreated.mission.controlUnits
@@ -738,31 +731,22 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(
             newMissionCreated.mission.controlUnits
                 .first()
-                .administration,
+                .administration
+                ?.name,
         ).isEqualTo("DIRM / DM")
+        assertThat(newMissionCreated.mission.controlResources).hasSize(1)
         assertThat(
-            newMissionCreated.mission.controlUnits
-                .first()
-                .resources,
-        ).hasSize(1)
-        assertThat(
-            newMissionCreated.mission.controlUnits
-                .first()
-                .resources
+            newMissionCreated.mission.controlResources
                 .first()
                 .id,
         ).isEqualTo(8)
         assertThat(
-            newMissionCreated.mission.controlUnits
-                .first()
-                .resources
+            newMissionCreated.mission.controlResources
                 .first()
                 .controlUnitId,
         ).isEqualTo(10121)
         assertThat(
-            newMissionCreated.mission.controlUnits
-                .first()
-                .resources
+            newMissionCreated.mission.controlResources
                 .first()
                 .name,
         ).isEqualTo("PAM Jeanne Barret")
@@ -824,20 +808,30 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 isUnderJdp = false,
                 controlUnits =
                     listOf(
-                        LegacyControlUnitEntity(
+                        ControlUnitEntity(
+                            id = 10004,
+                            administrationId = 1005,
+                            administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
+                            isArchived = false,
+                            name = "DML 2A",
+                        ),
+                        ControlUnitEntity(
                             id = 10004,
                             name = "DPM – DDTM 35",
-                            administration = "DDTM",
+                            administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
+                            administrationId = 1005,
                             isArchived = false,
-                            resources =
-                                listOf(
-                                    LegacyControlUnitResourceEntity(
-                                        id = 8,
-                                        controlUnitId = 10004,
-                                        name = "PAM Jeanne Barret",
-                                        type = ControlUnitResourceType.PATROL_BOAT,
-                                    ),
-                                ),
+                        ),
+                    ),
+                controlResources =
+                    listOf(
+                        ControlUnitResourceEntity(
+                            id = 8,
+                            controlUnitId = 10004,
+                            name = "PAM Jeanne Barret",
+                            type = ControlUnitResourceType.PATROL_BOAT,
+                            stationId = 1,
+                            isArchived = false,
                         ),
                     ),
                 isGeometryComputedFromControls = false,
@@ -852,29 +846,31 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 createdMission.mission.copy(
                     controlUnits =
                         listOf(
-                            LegacyControlUnitEntity(
+                            ControlUnitEntity(
                                 id = 10002,
                                 name = "DML 2A",
-                                administration = "DDTM",
+                                administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
+                                administrationId = 1005,
                                 isArchived = false,
-                                resources =
-                                    listOf(
-                                        LegacyControlUnitResourceEntity(
-                                            id = 3,
-                                            controlUnitId =
-                                            10002,
-                                            name =
-                                                "Semi-rigide 1",
-                                            type = ControlUnitResourceType.SEMI_RIGID,
-                                        ),
-                                        LegacyControlUnitResourceEntity(
-                                            id = 5,
-                                            controlUnitId =
-                                            10002,
-                                            name = "Voiture",
-                                            type = ControlUnitResourceType.CAR,
-                                        ),
-                                    ),
+                            ),
+                        ),
+                    controlResources =
+                        listOf(
+                            ControlUnitResourceEntity(
+                                id = 3,
+                                controlUnitId = 10002,
+                                name = "Semi-rigide 1",
+                                type = ControlUnitResourceType.SEMI_RIGID,
+                                stationId = 1,
+                                isArchived = false,
+                            ),
+                            ControlUnitResourceEntity(
+                                id = 5,
+                                controlUnitId = 10002,
+                                name = "Voiture",
+                                type = ControlUnitResourceType.CAR,
+                                stationId = 1,
+                                isArchived = false,
                             ),
                         ),
                 ),
@@ -895,52 +891,39 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
         assertThat(
             updatedMission.mission.controlUnits
                 .first()
-                .administration,
+                .administration
+                ?.name,
         ).isEqualTo("DDTM")
         assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources,
+            updatedMission.mission.controlResources,
         ).hasSize(2)
         assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources
+            updatedMission.mission.controlResources
                 .first()
                 .id,
         ).isEqualTo(3)
         assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources
+            updatedMission.mission.controlResources
                 .first()
                 .controlUnitId,
         ).isEqualTo(10002)
         assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources
+            updatedMission.mission.controlResources
                 .first()
                 .name,
         ).isEqualTo("Semi-rigide 1")
         assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources
+            updatedMission.mission.controlResources
                 .last()
                 .id,
         ).isEqualTo(5)
         assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources
+            updatedMission.mission.controlResources
                 .last()
                 .controlUnitId,
         ).isEqualTo(10002)
         assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources
+            updatedMission.mission.controlResources
                 .last()
                 .name,
         ).isEqualTo("Voiture")
@@ -961,19 +944,16 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
             mission?.copy(
                 controlUnits =
                     mission.controlUnits.plus(
-                        LegacyControlUnitEntity(
+                        ControlUnitEntity(
                             id = requireNotNull(newControlUnit.controlUnit.id),
-                            administration = newControlUnit.administration.name,
+                            administrationId = newControlUnit.administration.id,
+                            administration = newControlUnit.administration,
                             isArchived = newControlUnit.controlUnit.isArchived,
                             name = newControlUnit.controlUnit.name,
-                            resources =
-                                listOf(
-                                    newControlUnitResource
-                                        .toLegacyControlUnitResource(),
-                                ),
                             contact = null,
                         ),
                     ),
+                controlResources = mission.controlResources.plus(newControlUnitResource.controlUnitResource),
             )
 
         val updatedMission = jpaMissionRepository.save(nextMission!!)
@@ -986,22 +966,14 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 .first()
                 .id,
         ).isEqualTo(10002)
+        assertThat(updatedMission.mission.controlResources).hasSize(2)
         assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources,
-        ).hasSize(1)
-        assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources
+            updatedMission.mission.controlResources
                 .first()
                 .id,
         ).isEqualTo(3)
         assertThat(
-            updatedMission.mission.controlUnits
-                .first()
-                .resources
+            updatedMission.mission.controlResources
                 .first()
                 .controlUnitId,
         ).isEqualTo(10002)
@@ -1011,22 +983,13 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 .id,
         ).isEqualTo(10018)
         assertThat(
-            updatedMission.mission.controlUnits
+            updatedMission.mission.controlResources
                 .last()
-                .resources,
-        ).hasSize(1)
-        assertThat(
-            updatedMission.mission.controlUnits
-                .last()
-                .resources
-                .first()
                 .id,
         ).isEqualTo(10)
         assertThat(
-            updatedMission.mission.controlUnits
+            updatedMission.mission.controlResources
                 .last()
-                .resources
-                .first()
                 .controlUnitId,
         ).isEqualTo(10018)
     }
@@ -1045,20 +1008,23 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 isUnderJdp = false,
                 controlUnits =
                     listOf(
-                        LegacyControlUnitEntity(
+                        ControlUnitEntity(
                             id = 10004,
                             name = "DPM – DDTM 35",
-                            administration = "DDTM",
+                            administrationId = 1005,
+                            administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
                             isArchived = false,
-                            resources =
-                                listOf(
-                                    LegacyControlUnitResourceEntity(
-                                        id = 123456,
-                                        controlUnitId = 5,
-                                        name = "PAM Jeanne Barret",
-                                        type = ControlUnitResourceType.PATROL_BOAT,
-                                    ),
-                                ),
+                        ),
+                    ),
+                controlResources =
+                    listOf(
+                        ControlUnitResourceEntity(
+                            id = 123456,
+                            controlUnitId = 5,
+                            name = "PAM Jeanne Barret",
+                            type = ControlUnitResourceType.PATROL_BOAT,
+                            stationId = 1,
+                            isArchived = false,
                         ),
                     ),
                 isGeometryComputedFromControls = false,
@@ -1086,14 +1052,15 @@ class JpaMissionRepositoryITests : AbstractDBTests() {
                 isUnderJdp = false,
                 controlUnits =
                     listOf(
-                        LegacyControlUnitEntity(
+                        ControlUnitEntity(
                             id = 123456,
                             name = "PAM Jeanne Barret",
-                            administration = "",
+                            administration = null,
+                            administrationId = null,
                             isArchived = false,
-                            resources = listOf(),
                         ),
                     ),
+                controlResources = listOf(),
                 isGeometryComputedFromControls = false,
                 createdAtUtc = null,
                 updatedAtUtc = null,

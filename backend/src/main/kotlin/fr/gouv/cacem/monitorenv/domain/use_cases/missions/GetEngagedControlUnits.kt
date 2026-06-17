@@ -1,7 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.ControlUnitToMissionSources
 import org.slf4j.LoggerFactory
@@ -37,17 +37,17 @@ class GetEngagedControlUnits(
                 }.groupBy { it.first.id }
                 .map {
                     entry: Map.Entry<
-                        Int,
+                        Int?,
                         List<
                             Pair<
-                                LegacyControlUnitEntity,
+                                ControlUnitEntity,
                                 MissionSourceEnum,
                             >,
                         >,
                     >,
                     ->
                     // As we grouped by controlUnit, all control units in
-                    // Pair<LegacyControlUnitEntity, MissionSourceEnum> are equals
+                    // Pair<ControlUnitEntity, MissionSourceEnum> are equals
                     val controlUnit = entry.value.first().first
 
                     val missionSources = entry.value.map { it.second }.distinct()

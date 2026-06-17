@@ -27,7 +27,7 @@ data class AdministrationModel(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "administration")
-    val controlUnits: List<ControlUnitModel>? = mutableListOf(),
+    val controlUnits: MutableList<ControlUnitModel>? = mutableListOf(),
     @Column(name = "is_archived", nullable = false)
     val isArchived: Boolean,
     @Column(name = "name", nullable = false, unique = true)
@@ -45,7 +45,7 @@ data class AdministrationModel(
          */
         fun fromAdministration(
             administration: AdministrationEntity,
-            controlUnitModels: List<ControlUnitModel>? = mutableListOf(),
+            controlUnitModels: MutableList<ControlUnitModel>? = mutableListOf(),
         ): AdministrationModel =
             AdministrationModel(
                 id = administration.id,

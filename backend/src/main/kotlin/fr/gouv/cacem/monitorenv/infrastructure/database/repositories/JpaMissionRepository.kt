@@ -197,16 +197,15 @@ class JpaMissionRepository(
         missionModel: MissionModel,
     ): List<MissionControlResourceModel> {
         val controlResources =
-            mission.controlUnits.flatMap { controlUnit ->
-                controlUnit.resources.map { controlUnitResource ->
-                    val controlUnitResourceModel =
-                        dbControlUnitResourceRepository.getReferenceById(controlUnitResource.id)
+            mission.controlResources.mapNotNull { controlUnitResource ->
+                val id = controlUnitResource.id ?: return@mapNotNull null
+                val controlUnitResourceModel =
+                    dbControlUnitResourceRepository.getReferenceById(id)
 
-                    MissionControlResourceModel(
-                        resource = controlUnitResourceModel,
-                        mission = missionModel,
-                    )
-                }
+                MissionControlResourceModel(
+                    resource = controlUnitResourceModel,
+                    mission = missionModel,
+                )
             }
 
         return dbMissionControlResourceRepository.saveAll(controlResources)
@@ -217,11 +216,13 @@ class JpaMissionRepository(
         missionModel: MissionModel,
     ): List<MissionControlUnitModel> {
         val controlUnits =
-            mission.controlUnits.map { controlUnit ->
-                MissionControlUnitModel.fromLegacyControlUnit(
-                    controlUnit,
-                    dbControlUnitRepository.getReferenceById(controlUnit.id),
-                    missionModel,
+            mission.controlUnits.mapNotNull { controlUnit ->
+                val id = controlUnit.id ?: return@mapNotNull null
+
+                MissionControlUnitModel.fromControlUnit(
+                    controlUnit = dbControlUnitRepository.getReferenceById(id),
+                    mission = missionModel,
+                    contact = controlUnit.contact,
                 )
             }
 
