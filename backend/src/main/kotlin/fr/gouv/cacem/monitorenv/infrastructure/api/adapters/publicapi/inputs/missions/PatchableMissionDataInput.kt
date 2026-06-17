@@ -16,7 +16,11 @@ data class PatchableMissionDataInput(
 ) {
     fun toPatchableMissionEntity(): PatchableMissionEntity =
         PatchableMissionEntity(
-            controlUnits = controlUnits?.map { it.toLegacyControlUnit() },
+            controlUnits = controlUnits?.map { it.toControlUnitEntity() },
+            controlResources =
+                controlUnits
+                    ?.flatMap { controlUnit -> controlUnit.resources }
+                    ?.map { it.toControlUnitResource() },
             endDateTimeUtc = endDateTimeUtc,
             missionTypes = missionTypes,
             observationsByUnit = observationsByUnit,

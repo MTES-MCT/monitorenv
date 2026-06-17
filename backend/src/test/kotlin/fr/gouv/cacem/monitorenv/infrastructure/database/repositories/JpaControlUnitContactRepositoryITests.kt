@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
@@ -52,6 +53,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnit =
                     ControlUnitEntity(
                         id = 10000,
+                        administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
                         administrationId = 1005,
                         areaNote = null,
                         departmentAreaInseeCode = null,
@@ -77,6 +79,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnit =
                     ControlUnitEntity(
                         id = 10003,
+                        administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
                         administrationId = 1005,
                         areaNote = null,
                         departmentAreaInseeCode = null,
@@ -108,6 +111,7 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnit =
                     ControlUnitEntity(
                         id = 10000,
+                        administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
                         administrationId = 1005,
                         areaNote = null,
                         departmentAreaInseeCode = null,

@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
 import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.ArchiveControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CanDeleteControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitResource
@@ -150,6 +151,7 @@ class ControlUnitResourcesITests {
                     ControlUnitEntity(
                         id = 0,
                         administrationId = 0,
+                        administration = anAdministration(),
                         areaNote = null,
                         departmentAreaInseeCode = null,
                         isArchived = false,
@@ -196,6 +198,7 @@ class ControlUnitResourcesITests {
                         ControlUnitEntity(
                             id = 0,
                             administrationId = 0,
+                            administration = anAdministration(),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -226,6 +229,7 @@ class ControlUnitResourcesITests {
                         ControlUnitEntity(
                             id = 0,
                             administrationId = 0,
+                            administration = anAdministration(),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,

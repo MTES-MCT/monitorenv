@@ -39,7 +39,13 @@ data class MissionWithRapportNavActionsDataOutput(
             return MissionWithRapportNavActionsDataOutput(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
-                controlUnits = mission.controlUnits.map { LegacyControlUnitDataOutput.fromLegacyControlUnit(it) },
+                controlUnits =
+                    mission.controlUnits.map {
+                        LegacyControlUnitDataOutput.fromControlUnit(
+                            it,
+                            resources = mission.controlResources.filter { resource -> resource.controlUnitId == it.id },
+                        )
+                    },
                 openBy = mission.openBy,
                 completedBy = mission.completedBy,
                 observationsByUnit = mission.observationsByUnit,
@@ -72,8 +78,13 @@ data class MissionWithRapportNavActionsDataOutput(
                 missionTypes = missionDto.mission.missionTypes,
                 controlUnits =
                     missionDto.mission.controlUnits.map {
-                        LegacyControlUnitDataOutput.fromLegacyControlUnit(
+                        LegacyControlUnitDataOutput.fromControlUnit(
                             it,
+                            resources =
+                                missionDto.mission.controlResources.filter { resource ->
+                                    resource.controlUnitId ==
+                                        it.id
+                                },
                         )
                     },
                 openBy = missionDto.mission.openBy,

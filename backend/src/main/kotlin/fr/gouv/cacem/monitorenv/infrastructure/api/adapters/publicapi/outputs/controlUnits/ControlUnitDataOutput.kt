@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUni
 data class ControlUnitDataOutput(
     val id: Int,
     val areaNote: String? = null,
-    val administrationId: Int,
+    val administrationId: Int?,
     val departmentAreaInseeCode: String? = null,
     val isArchived: Boolean,
     val name: String,
@@ -24,6 +24,7 @@ data class ControlUnitDataOutput(
                 termsNote = controlUnit.termsNote,
             )
 
+        // TODO(16/06/2026): to remove ?
         fun fromFullControlUnit(fullControlUnit: FullControlUnitDTO): ControlUnitDataOutput =
             ControlUnitDataOutput(
                 id = requireNotNull(fullControlUnit.controlUnit.id),

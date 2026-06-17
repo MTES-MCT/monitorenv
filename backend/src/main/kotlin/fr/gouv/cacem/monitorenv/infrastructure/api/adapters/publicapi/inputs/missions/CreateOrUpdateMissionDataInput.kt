@@ -29,7 +29,13 @@ data class CreateOrUpdateMissionDataInput(
     fun toMissionEntity(): MissionEntity =
         MissionEntity(
             id = id,
-            controlUnits = controlUnits.map { it.toLegacyControlUnit() },
+            controlUnits = controlUnits.map { it.toControlUnitEntity() },
+            controlResources =
+                controlUnits.flatMap {
+                    it.resources.map { resource ->
+                        resource.toControlUnitResource()
+                    }
+                },
             completedBy = completedBy,
             createdAtUtc = createdAtUtc,
             endDateTimeUtc = endDateTimeUtc,
