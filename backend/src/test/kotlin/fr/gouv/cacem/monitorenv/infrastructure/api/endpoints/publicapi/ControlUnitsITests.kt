@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.ArchiveControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CanDeleteControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnit
@@ -109,6 +110,7 @@ class ControlUnitsITests {
             ControlUnitEntity(
                 id = 1,
                 administrationId = 0,
+                administration = anAdministration(),
                 areaNote = null,
                 departmentAreaInseeCode = null,
                 isArchived = false,
@@ -154,6 +156,7 @@ class ControlUnitsITests {
                     ControlUnitEntity(
                         id = 1,
                         administrationId = 0,
+                        administration = anAdministration(),
                         areaNote = null,
                         departmentAreaInseeCode = null,
                         isArchived = false,
@@ -190,6 +193,7 @@ class ControlUnitsITests {
                         ControlUnitEntity(
                             id = 1,
                             administrationId = 0,
+                            administration = anAdministration(),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -210,6 +214,7 @@ class ControlUnitsITests {
                         ControlUnitEntity(
                             id = 2,
                             administrationId = 0,
+                            administration = anAdministration(),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -237,6 +242,7 @@ class ControlUnitsITests {
             ControlUnitEntity(
                 id = 1,
                 administrationId = 0,
+                administration = anAdministration(),
                 areaNote = null,
                 departmentAreaInseeCode = null,
                 isArchived = false,

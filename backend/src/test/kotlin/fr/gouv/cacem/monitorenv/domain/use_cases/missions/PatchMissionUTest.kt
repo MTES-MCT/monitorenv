@@ -1,15 +1,14 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.mappers.PatchEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitResourceFixture.Companion.aControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionWithEnvActionsValidator
@@ -42,28 +41,12 @@ class PatchMissionUTest {
         val tomorrow = ZonedDateTime.now().plusDays(1)
         val patchedObservationsByUnit = "patched observations"
         val patchedIsUnderJdp = false
-        val controlUnit =
-            listOf(
-                LegacyControlUnitEntity(
-                    id = 2,
-                    administration = "Gendarmerie Nationale",
-                    isArchived = false,
-                    name = "BN Toulon",
-                    resources =
-                        listOf(
-                            LegacyControlUnitResourceEntity(
-                                id = 1,
-                                controlUnitId = 2,
-                                name = "Vedette",
-                                type = ControlUnitResourceType.FAST_BOAT,
-                            ),
-                        ),
-                    contact = null,
-                ),
-            )
+        val controlUnits = listOf(aControlUnit())
+        val controlUnitResources = listOf(aControlUnitResource())
         val patchableMission =
             PatchableMissionEntity(
-                controlUnits = controlUnit,
+                controlUnits = controlUnits,
+                controlResources = controlUnitResources,
                 missionTypes = listOf(MissionTypeEnum.SEA),
                 observationsByUnit = Optional.of(patchedObservationsByUnit),
                 startDateTimeUtc = today,
@@ -74,7 +57,8 @@ class PatchMissionUTest {
         val missionPatched =
             aMissionEntity(
                 id = id,
-                controlUnits = controlUnit,
+                controlUnits = controlUnits,
+                controlResources = controlUnitResources,
                 observationsByUnit = patchedObservationsByUnit,
                 startDateTimeUtc = today,
                 endDateTimeUtc = tomorrow,
@@ -108,6 +92,7 @@ class PatchMissionUTest {
         val patchableMission =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
                 missionTypes = null,
                 observationsByUnit = null,
                 startDateTimeUtc = null,

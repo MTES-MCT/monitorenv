@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.NearbyUnit
@@ -59,7 +61,13 @@ class JpaControlUnitRepository(
     @CacheEvict(value = ["control_units"], allEntries = true)
     @Transactional
     override fun save(controlUnit: ControlUnitEntity): ControlUnitEntity {
-        val administration = dbAdministrationRepository.getReferenceById(controlUnit.administrationId)
+        val administrationId =
+            controlUnit.administrationId ?: controlUnit.administration?.id
+                ?: throw BackendUsageException(
+                    BackendUsageErrorCode.ENTITY_NOT_SAVED,
+                    "Control unit adminsitration is mandatory before saving it",
+                )
+        val administration = dbAdministrationRepository.getReferenceById(administrationId)
         val departmentAreaModel =
             controlUnit.departmentAreaInseeCode?.let { dbDepartmentAreaRepository.findByInseeCode(it) }
         val controlUnitModel =

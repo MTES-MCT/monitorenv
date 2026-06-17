@@ -2,6 +2,7 @@
 
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
@@ -50,6 +51,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 controlUnit =
                     ControlUnitEntity(
                         id = 10000,
+                        administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
                         administrationId = 1005,
                         areaNote = null,
                         departmentAreaInseeCode = null,
@@ -84,6 +86,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                     ControlUnitEntity(
                         id = 10018,
                         administrationId = 1008,
+                        administration = AdministrationEntity(id = 1008, name = "DREAL / DEAL", isArchived = false),
                         areaNote = null,
                         departmentAreaInseeCode = null,
                         isArchived = false,
@@ -122,6 +125,7 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 controlUnit =
                     ControlUnitEntity(
                         id = 10000,
+                        administration = AdministrationEntity(id = 1005, name = "DDTM", isArchived = false),
                         administrationId = 1005,
                         areaNote = null,
                         departmentAreaInseeCode = null,

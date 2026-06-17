@@ -3,8 +3,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,15 +22,7 @@ class CreateOrUpdateControlUnitUTests {
 
     @Test
     fun `execute should return save() result`(log: CapturedOutput) {
-        val newControlUnit =
-            ControlUnitEntity(
-                administrationId = 2,
-                areaNote = null,
-                departmentAreaInseeCode = null,
-                isArchived = false,
-                name = "Control Unit Name",
-                termsNote = null,
-            )
+        val newControlUnit = aControlUnit()
 
         val expectatedControlUnit = newControlUnit.copy(id = 0)
 

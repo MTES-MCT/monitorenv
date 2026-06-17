@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.amps
 
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.repositories.IAMPRepository
-import fr.gouv.cacem.monitorenv.domain.use_cases.amp.fixtures.AmpFixture.Companion.anAmp
+import fr.gouv.cacem.monitorenv.domain.use_cases.amps.fixtures.AmpFixture.Companion.anAmp
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

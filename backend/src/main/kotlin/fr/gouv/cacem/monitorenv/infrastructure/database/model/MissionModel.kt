@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -45,7 +44,7 @@ class MissionModel(
     val id: Int? = null,
     @OneToMany(mappedBy = "mission", fetch = FetchType.LAZY)
     @OrderBy("id")
-    val attachedReportings: List<ReportingModel>? = listOf(),
+    val attachedReportings: MutableList<ReportingModel>? = mutableListOf(),
     @OneToMany(
         mappedBy = "mission",
         cascade = [CascadeType.ALL],
@@ -104,17 +103,19 @@ class MissionModel(
     @Column(name = "start_datetime_utc") val startDateTimeUtc: Instant,
     @Column(name = "updated_at_utc") @UpdateTimestamp var updatedAtUtc: Instant?,
 ) {
-    private fun buildMissionEntity(
-        mappedControlUnits: List<LegacyControlUnitEntity>? = null,
-        jsonMapper: JsonMapper,
-    ): MissionEntity =
+    fun toMissionEntity(jsonMapper: JsonMapper): MissionEntity =
         MissionEntity(
             id = id,
-            controlUnits = mappedControlUnits ?: emptyList(),
             completedBy = completedBy,
+            controlUnits =
+                controlUnits?.map { it.unit.toControlUnit(contact = it.contact) }?.sortedBy { id }
+                    ?: listOf(),
+            controlResources =
+                controlResources?.map { it.resource.toControlUnitResource() }?.sortedBy { id }
+                    ?: listOf(),
+            endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
             createdAtUtc = createdAtUtc?.atZone(UTC),
             envActions = envActions?.map { it.toActionEntity(jsonMapper) },
-            endDateTimeUtc = endDateTimeUtc?.atZone(UTC),
             facade = facade,
             geom = geom,
             hasMissionOrder = hasMissionOrder,
@@ -134,28 +135,6 @@ class MissionModel(
             startDateTimeUtc = startDateTimeUtc.atZone(UTC),
             updatedAtUtc = updatedAtUtc?.atZone(UTC),
         )
-
-    fun toMissionEntity(jsonMapper: JsonMapper): MissionEntity {
-        val mappedControlUnits =
-            controlUnits?.map { missionControlUnitModel ->
-                val mappedControlUnitResources =
-                    controlResources?.map { it.toLegacyControlUnitResource() }?.filter {
-                        it.controlUnitId == missionControlUnitModel.unit.id
-                    }
-
-                missionControlUnitModel
-                    .unit
-                    .toLegacyControlUnit(controlResources)
-                    .copy(
-                        contact = missionControlUnitModel.contact,
-                        resources = mappedControlUnitResources?.toList() ?: emptyList(),
-                    )
-            }
-
-        return buildMissionEntity(mappedControlUnits, jsonMapper)
-    }
-
-    fun toMissionEntityWithoutControlUnit(jsonMapper: JsonMapper): MissionEntity = buildMissionEntity(null, jsonMapper)
 
     fun toMissionDTO(jsonMapper: JsonMapper): MissionDetailsDTO {
         val envActionsAttachedToReportingIds =
@@ -223,23 +202,9 @@ class MissionModel(
         )
     }
 
-    private fun toMissionsEntity(jsonMapper: JsonMapper): MissionEntity {
-        val mappedControlUnits =
-            controlUnits?.map { missionControlUnitModel ->
-                missionControlUnitModel
-                    .unit
-                    .toLegacyControlUnit(controlResources)
-                    .copy(
-                        contact = missionControlUnitModel.contact,
-                    )
-            }
-
-        return buildMissionEntity(mappedControlUnits, jsonMapper)
-    }
-
     fun toMissionListDTO(jsonMapper: JsonMapper): MissionListDTO =
         MissionListDTO(
-            mission = this.toMissionsEntity(jsonMapper),
+            mission = this.toMissionEntity(jsonMapper),
             attachedReportingIds =
                 this.attachedReportings
                     ?.filter { it.detachedFromMissionAtUtc == null }
