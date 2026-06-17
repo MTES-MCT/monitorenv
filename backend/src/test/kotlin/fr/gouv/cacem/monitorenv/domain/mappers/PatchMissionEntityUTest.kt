@@ -1,12 +1,10 @@
 package fr.gouv.cacem.monitorenv.domain.mappers
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.PatchableMissionEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aLegacyControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -24,11 +22,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = null,
+                isUnderJdp = false,
                 missionTypes = null,
                 observationsByUnit = Optional.of(observationsByUnit),
                 startDateTimeUtc = null,
-                endDateTimeUtc = null,
-                isUnderJdp = false,
             )
 
         // When
@@ -45,11 +44,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = null,
+                isUnderJdp = false,
                 missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
-                endDateTimeUtc = null,
-                isUnderJdp = false,
             )
 
         // When
@@ -67,11 +67,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = Optional.empty(),
+                isUnderJdp = false,
                 missionTypes = null,
                 observationsByUnit = null,
                 startDateTimeUtc = null,
-                endDateTimeUtc = Optional.empty(),
-                isUnderJdp = false,
             )
 
         // When
@@ -90,11 +91,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = Optional.of(endDateTimeUtc),
+                isUnderJdp = false,
                 missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = startDateTimeUtc,
-                endDateTimeUtc = Optional.of(endDateTimeUtc),
-                isUnderJdp = false,
             )
 
         // When
@@ -118,11 +120,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = null,
+                isUnderJdp = false,
                 missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
-                endDateTimeUtc = null,
-                isUnderJdp = false,
             )
 
         // When
@@ -140,11 +143,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = Optional.empty(),
+                isUnderJdp = false,
                 missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
-                endDateTimeUtc = Optional.empty(),
-                isUnderJdp = false,
             )
 
         // When
@@ -161,11 +165,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = Optional.empty(),
+                isUnderJdp = false,
                 missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
-                endDateTimeUtc = Optional.empty(),
-                isUnderJdp = false,
             )
 
         // When
@@ -186,11 +191,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = null,
+                isUnderJdp = null,
                 missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
-                endDateTimeUtc = null,
-                isUnderJdp = null,
             )
 
         // When
@@ -208,11 +214,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = null,
+                isUnderJdp = null,
                 missionTypes = missionTypes,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
-                endDateTimeUtc = null,
-                isUnderJdp = null,
             )
 
         // When
@@ -229,11 +236,12 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = Optional.empty(),
+                isUnderJdp = null,
                 missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
-                endDateTimeUtc = Optional.empty(),
-                isUnderJdp = null,
             )
 
         // When
@@ -249,31 +257,23 @@ class PatchMissionEntityUTest {
         val missionEntity = MissionFixture.aMissionEntity()
         val controlUnit =
             listOf(
-                LegacyControlUnitEntity(
+                ControlUnitEntity(
                     id = 2,
-                    administration = "Gendarmerie Nationale",
+                    administrationId = null,
+                    administration = null,
                     isArchived = false,
                     name = "BN Toulon",
-                    resources =
-                        listOf(
-                            LegacyControlUnitResourceEntity(
-                                id = 1,
-                                controlUnitId = 2,
-                                name = "Vedette",
-                                type = ControlUnitResourceType.FAST_BOAT,
-                            ),
-                        ),
-                    contact = null,
                 ),
             )
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = controlUnit,
+                controlResources = null,
+                endDateTimeUtc = null,
+                isUnderJdp = null,
                 missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
-                endDateTimeUtc = null,
-                isUnderJdp = null,
             )
 
         // When
@@ -290,17 +290,18 @@ class PatchMissionEntityUTest {
         val patchableMissionEntity =
             PatchableMissionEntity(
                 controlUnits = null,
+                controlResources = null,
+                endDateTimeUtc = Optional.empty(),
+                isUnderJdp = null,
                 missionTypes = null,
                 observationsByUnit = Optional.empty(),
                 startDateTimeUtc = null,
-                endDateTimeUtc = Optional.empty(),
-                isUnderJdp = null,
             )
 
         // When
         patchEntity.execute(missionEntity, patchableMissionEntity)
 
         // Then
-        assertThat(missionEntity.controlUnits).isEqualTo(listOf(aLegacyControlUnit()))
+        assertThat(missionEntity.controlUnits).isEqualTo(listOf(aControlUnit()))
     }
 }

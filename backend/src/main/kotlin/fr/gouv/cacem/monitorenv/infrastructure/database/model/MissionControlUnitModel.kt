@@ -28,6 +28,7 @@ data class MissionControlUnitModel(
     var unit: ControlUnitModel,
 ) {
     companion object {
+        @Deprecated(message = "TO REMOVE", level = DeprecationLevel.ERROR)
         fun fromLegacyControlUnit(
             legacyControlUnit: LegacyControlUnitEntity,
             controlUnit: ControlUnitModel,
@@ -36,6 +37,16 @@ data class MissionControlUnitModel(
             unit = controlUnit,
             mission = missionModel,
             contact = legacyControlUnit.contact,
+        )
+
+        fun fromControlUnit(
+            controlUnit: ControlUnitModel,
+            mission: MissionModel,
+            contact: String?,
+        ) = MissionControlUnitModel(
+            unit = controlUnit,
+            mission = mission,
+            contact = contact,
         )
     }
 }

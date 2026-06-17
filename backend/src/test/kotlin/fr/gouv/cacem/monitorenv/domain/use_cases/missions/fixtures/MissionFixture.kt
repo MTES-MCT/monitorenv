@@ -1,11 +1,12 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aLegacyControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionListDTO
 import java.time.ZonedDateTime
@@ -17,7 +18,8 @@ class MissionFixture {
             id: Int? = Random.nextInt(),
             startDateTimeUtc: ZonedDateTime = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
             endDateTimeUtc: ZonedDateTime? = ZonedDateTime.now().plusDays(1),
-            controlUnits: List<LegacyControlUnitEntity> = listOf(aLegacyControlUnit()),
+            controlUnits: List<ControlUnitEntity> = listOf(aControlUnit()),
+            controlResources: List<ControlUnitResourceEntity> = listOf(),
             observationsByUnit: String? = null,
             missionTypes: List<MissionTypeEnum> = listOf(MissionTypeEnum.LAND),
             openBy: String? = null,
@@ -28,22 +30,23 @@ class MissionFixture {
             MissionEntity(
                 id = id,
                 controlUnits = controlUnits,
-                observationsByUnit = observationsByUnit,
-                openBy = openBy,
+                controlResources = controlResources,
+                createdAtUtc = null,
                 completedBy = completedBy,
-                missionTypes = missionTypes,
+                endDateTimeUtc = endDateTimeUtc,
+                envActions = envActions,
                 facade = "Outre-Mer",
                 geom = null,
-                startDateTimeUtc = startDateTimeUtc,
-                endDateTimeUtc = endDateTimeUtc,
-                isDeleted = false,
-                missionSource = MissionSourceEnum.MONITORENV,
                 hasMissionOrder = false,
                 isUnderJdp = isUnderJdp,
                 isGeometryComputedFromControls = false,
+                isDeleted = false,
+                missionTypes = missionTypes,
+                missionSource = MissionSourceEnum.MONITORENV,
+                observationsByUnit = observationsByUnit,
+                openBy = openBy,
+                startDateTimeUtc = startDateTimeUtc,
                 updatedAtUtc = null,
-                createdAtUtc = null,
-                envActions = envActions,
             )
 
         fun aMissionDetailsDTO(

@@ -33,8 +33,8 @@ class GetNearbyUnitsUTest {
         val expectedNearbyUnits =
             listOf(
                 NearbyUnit(
-                    controlUnit = ControlUnitFixture.Companion.aLegacyControlUnit(),
-                    missions = listOf(MissionFixture.Companion.aMissionEntity()),
+                    controlUnit = ControlUnitFixture.aControlUnit(),
+                    missions = listOf(MissionFixture.aMissionEntity()),
                 ),
             )
         given(controlUnitRepository.findNearbyUnits(geom, from, to)).willReturn(

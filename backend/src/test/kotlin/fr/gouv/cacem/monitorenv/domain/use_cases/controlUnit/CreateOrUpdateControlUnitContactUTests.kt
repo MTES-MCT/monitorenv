@@ -53,6 +53,7 @@ class CreateOrUpdateControlUnitContactUTests {
                 controlUnit =
                     ControlUnitEntity(
                         id = 2,
+                        administration = null,
                         administrationId = 6,
                         areaNote = null,
                         departmentAreaInseeCode = null,
@@ -110,6 +111,7 @@ class CreateOrUpdateControlUnitContactUTests {
                 controlUnit =
                     ControlUnitEntity(
                         id = 2,
+                        administration = null,
                         administrationId = 3,
                         areaNote = null,
                         departmentAreaInseeCode = null,
@@ -179,6 +181,7 @@ class CreateOrUpdateControlUnitContactUTests {
                 controlUnit =
                     ControlUnitEntity(
                         id = 5,
+                        administration = null,
                         administrationId = 6,
                         areaNote = null,
                         departmentAreaInseeCode = null,
@@ -288,6 +291,7 @@ class CreateOrUpdateControlUnitContactUTests {
                 controlUnit =
                     ControlUnitEntity(
                         id = 5,
+                        administration = null,
                         administrationId = 6,
                         areaNote = null,
                         departmentAreaInseeCode = null,
@@ -384,6 +388,7 @@ class CreateOrUpdateControlUnitContactUTests {
                 controlUnit =
                     ControlUnitEntity(
                         id = 2,
+                        administration = null,
                         administrationId = 6,
                         areaNote = null,
                         departmentAreaInseeCode = null,

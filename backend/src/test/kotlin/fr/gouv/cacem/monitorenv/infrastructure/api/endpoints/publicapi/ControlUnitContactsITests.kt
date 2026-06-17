@@ -4,13 +4,14 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitContact
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContactById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateControlUnitContactDataInputV1
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateControlUnitContactDataInputV2
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateControlUnitContactDataInputV1
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateOrUpdateControlUnitContactDataInputV2
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
@@ -168,6 +169,7 @@ class ControlUnitContactsITests {
                     ControlUnitEntity(
                         id = 2,
                         administrationId = 3,
+                        administration = anAdministration(),
                         areaNote = null,
                         departmentAreaInseeCode = null,
                         isArchived = false,
@@ -207,6 +209,7 @@ class ControlUnitContactsITests {
                         ControlUnitEntity(
                             id = 2,
                             administrationId = 3,
+                            administration = anAdministration(),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -229,6 +232,7 @@ class ControlUnitContactsITests {
                         ControlUnitEntity(
                             id = 5,
                             administrationId = 6,
+                            administration = anAdministration(),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -278,6 +282,7 @@ class ControlUnitContactsITests {
                     ControlUnitEntity(
                         id = 2,
                         administrationId = 3,
+                        administration = anAdministration(),
                         areaNote = "Area Note",
                         departmentAreaInseeCode = "12345",
                         isArchived = false,
@@ -347,6 +352,7 @@ class ControlUnitContactsITests {
                     ControlUnitEntity(
                         id = 2,
                         administrationId = 3,
+                        administration = anAdministration(),
                         areaNote = "Area Note",
                         departmentAreaInseeCode = "12345",
                         isArchived = false,

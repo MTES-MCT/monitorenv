@@ -1,14 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitResourceFixture.Companion.aControlUnitResource
+import fr.gouv.cacem.monitorenv.domain.use_cases.station.fixtures.StationFixture.Companion.aStationEntity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,34 +30,9 @@ class GetControlUnitResourceByIdUTests {
         val controlUnitResourceId = 1
         val fullControlUnitResource =
             FullControlUnitResourceDTO(
-                controlUnit =
-                    ControlUnitEntity(
-                        id = 0,
-                        administrationId = 0,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "Control Unit Name",
-                        termsNote = null,
-                    ),
-                controlUnitResource =
-                    ControlUnitResourceEntity(
-                        id = 1,
-                        controlUnitId = 0,
-                        isArchived = false,
-                        name = "Control Unit Resource Name",
-                        note = null,
-                        photo = null,
-                        stationId = 0,
-                        type = ControlUnitResourceType.BARGE,
-                    ),
-                station =
-                    StationEntity(
-                        id = 0,
-                        latitude = 0.0,
-                        longitude = 0.0,
-                        name = "Station Name",
-                    ),
+                controlUnit = aControlUnit(),
+                controlUnitResource = aControlUnitResource(),
+                station = aStationEntity(),
             )
 
         given(controlUnitResourceRepository.findById(controlUnitResourceId)).willReturn(fullControlUnitResource)

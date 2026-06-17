@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.GetRecentControlsActivity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.recentActivity.RecentControlsActivityDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.recentActivity.RecentControlsActivityDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.recentActivities.RecentControlsActivityDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.PostMapping
