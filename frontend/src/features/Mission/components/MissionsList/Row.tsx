@@ -14,16 +14,32 @@ import { UnitCell } from '@features/Mission/components/MissionsList/Cells/UnitCe
 import { getAllThemes } from '@features/Mission/utils'
 import { TableWithSelectableRows, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { flexRender, type Row as RowType } from '@tanstack/react-table'
+import { Fragment } from 'react'
 import styled from 'styled-components'
 
 import type { Mission } from '../../../../domain/entities/missions'
+import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
-export function Row({ row }: { row: RowType<Mission> }) {
+export function Row({
+  row,
+  rowVirtualizer,
+  virtualRow
+}: {
+  row: RowType<Mission>
+  rowVirtualizer: Virtualizer<HTMLDivElement, Element>
+  virtualRow: VirtualItem
+}) {
   const mission = row.original
 
   return (
-    <>
-      <StyledTr key={row.id} data-cy="mission-row">
+    <Fragment key={row.id}>
+      <StyledTr
+        ref={(node: HTMLTableRowElement | null) => {
+          rowVirtualizer.measureElement(node)
+        }}
+        data-cy="mission-row"
+        data-index={virtualRow.index}
+      >
         {row?.getVisibleCells().map((cell, index, rowCells) => {
           const cellStyle = createPinnedCellStyle({
             context: cell,
@@ -95,7 +111,7 @@ export function Row({ row }: { row: RowType<Mission> }) {
           </ExpandedRowCell>
         </ExpandedRow>
       )}
-    </>
+    </Fragment>
   )
 }
 
