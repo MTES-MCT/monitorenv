@@ -46,7 +46,7 @@ export const TAG_TABLE_COLUMNS = [
           />
         </HAlign>
       ) : (
-        <span>{getValue() || row.depth === 0 ? getValue() : '-'}</span>
+        <>{row.depth !== 1 && <span>{getValue() ? getValue() : '-'}</span>}</>
       ),
     header: () => 'Sous-tags',
     id: 'subTagsCount',

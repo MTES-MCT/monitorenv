@@ -2,8 +2,8 @@ const totalTags = 16
 
 context('Back Office > Tag Table > Filters', () => {
   beforeEach(() => {
-    cy.visit(`/backoffice/tags`)
     cy.intercept('GET', `/bff/v1/tags*`).as('getTags')
+    cy.visit(`/backoffice/tags`)
     cy.wait('@getTags')
   })
 

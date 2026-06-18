@@ -1,6 +1,8 @@
 context('Back Office > Tag Table > Row actions', () => {
   beforeEach(() => {
     cy.visit(`/backoffice/mission_tags`)
+    cy.intercept('GET', `/bff/v1/missions/tags`).as('getMissionTags')
+    cy.wait('@getMissionTags')
   })
 
   it('Should edit the tag when clicking on Edit', () => {
@@ -44,6 +46,18 @@ context('Back Office > Tag Table > Row actions', () => {
     cy.get('button[title="Sauvegarder cette étiquette de mission"]').should('not.be.disabled')
   })
 
+  it('Should not be possible to save if the tag name is already taken', () => {
+    cy.get('tbody > tr')
+      .first()
+      .within(() => {
+        cy.get('button[title="Éditer cette étiquette de mission"]').click({ force: true })
+      })
+    cy.fill("Nom de l'étiquette de mission", 'Mission tag 2')
+    cy.get('button[title="Sauvegarder cette étiquette de mission"]').should('be.disabled')
+    cy.fill("Nom de l'étiquette de mission", 'Mission tag 2 bis')
+    cy.get('button[title="Sauvegarder cette étiquette de mission"]').should('not.be.disabled')
+  })
+
   it('Should add a new mission tag', () => {
     cy.intercept('PUT', `/bff/v1/missions/tags`).as('saveMissionTag')
     cy.clickButton('Ajouter une étiquette de mission')
@@ -53,9 +67,8 @@ context('Back Office > Tag Table > Row actions', () => {
       .within(() => {
         cy.fill("Nom de l'étiquette de mission", 'New mission tag')
         cy.fill('Statut', 'Actif')
-        cy.clickButton('Sauvegarder cette étiquette de mission')
         // Disabling saving because we cant rollback
-        // cy.get('button[title="Sauvegarder cette étiquette de mission"]').should('not.be.disabled')
+        // cy.clickButton('Sauvegarder cette étiquette de mission')
       })
 
     // Disabling saving because we cant delete a tag (rollback)

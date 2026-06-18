@@ -1,6 +1,8 @@
 context('Back Office > Tag Table > Row actions', () => {
   beforeEach(() => {
+    cy.intercept('GET', `/bff/v1/tags*`).as('getTags')
     cy.visit(`/backoffice/tags`)
+    cy.wait('@getTags')
   })
 
   it('Should edit the tag when clicking on Edit', () => {
@@ -52,7 +54,7 @@ context('Back Office > Tag Table > Row actions', () => {
   })
 
   it('Should add subtag when clicking on Edit on parent tag', () => {
-    cy.intercept('PUT', `/bff/v1/tags`).as('saveTag')
+    cy.wait(200)
     cy.get('tbody > tr')
       .contains('AMP')
       .closest('tr')
@@ -124,7 +126,6 @@ context('Back Office > Tag Table > Row actions', () => {
   })
 
   it('Should add a new tag', () => {
-    cy.intercept('PUT', `/bff/v1/tags`).as('saveTag')
     cy.clickButton('Ajouter un nouveau tag')
     cy.get('tbody > tr')
       .last()

@@ -25,7 +25,6 @@ export function MissionTagTable() {
 
   const [missionTags, setMissionTags] = useState<MissionTagTableType[]>([])
   const [draftMissionTags, setDraftMissionTags] = useState<MissionTagTableType[]>([])
-  const [newMissionTags, setNewMissionTags] = useState<MissionTagTableType[]>([])
 
   useEffect(() => {
     const entityTags = Object.values(data ?? [])
@@ -34,13 +33,13 @@ export function MissionTagTable() {
       return
     }
 
-    const formattedTags = [...newMissionTags, ...entityTags].map(tag => ({
+    const formattedTags = [...entityTags].map(tag => ({
       // Put rowId first because it can be overrided by new missionTags
       rowId: uuidv4(),
       ...tag
     }))
     setMissionTags(formattedTags)
-  }, [data, newMissionTags])
+  }, [data])
 
   const missionTagsDataTable = useMemo(() => {
     const filters = getFilters(missionTags, filtersState)
@@ -55,7 +54,7 @@ export function MissionTagTable() {
       name: undefined,
       rowId: uuidv4()
     }
-    setNewMissionTags(previousTags => [...previousTags, newTag])
+    setMissionTags(previousTags => [...previousTags, newTag])
     setDraftMissionTags(previousTags => [...previousTags, newTag])
   }, [])
 
@@ -102,9 +101,9 @@ export function MissionTagTable() {
     (rowId: string) => {
       const missionTagToValidate = getDraftMissionTag(rowId)
 
-      return missionTagToValidate && isMissionTagValid(missionTagToValidate)
+      return missionTagToValidate && isMissionTagValid(missionTagToValidate, missionTags)
     },
-    [getDraftMissionTag]
+    [getDraftMissionTag, missionTags]
   )
 
   const onEdit = useCallback((rowId: string) => addDraftRow(rowId), [addDraftRow])
@@ -135,11 +134,7 @@ export function MissionTagTable() {
         }
 
         if (savedMissionTag) {
-          if (!missionTagToApi.id) {
-            updateTable(setNewMissionTags)
-          } else {
-            updateTable(setMissionTags)
-          }
+          updateTable(setMissionTags)
         }
       }
 

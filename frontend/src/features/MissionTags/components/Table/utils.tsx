@@ -1,4 +1,4 @@
-import { CustomSearch, type Filter } from '@mtes-mct/monitor-ui'
+import { CustomSearch, type Filter, normalizeString } from '@mtes-mct/monitor-ui'
 
 import type { FiltersState } from './types'
 import type { MissionTagTable } from '../../../../domain/entities/missionTags'
@@ -47,6 +47,13 @@ export function validate(columnId: string, value: string): string {
   return ''
 }
 
-export function isMissionTagValid(tag: MissionTagTable) {
-  return isValidTagName(tag.name)
+export function isMissionTagValid(missionTagToValidate: MissionTagTable, missionTags: MissionTagTable[]) {
+  return (
+    isValidTagName(missionTagToValidate.name) &&
+    !missionTags.some(
+      missionTag =>
+        missionTag.rowId !== missionTagToValidate.rowId &&
+        normalizeString(missionTag.name)?.toLowerCase() === normalizeString(missionTagToValidate.name)?.toLowerCase()
+    )
+  )
 }
