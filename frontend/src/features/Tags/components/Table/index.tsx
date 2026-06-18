@@ -25,7 +25,6 @@ export function TagTable() {
 
   const [tags, setTags] = useState<TagTableType[]>([])
   const [draftTags, setDraftTags] = useState<TagTableType[]>([])
-  const [newTags, setNewTags] = useState<TagTableType[]>([])
   const [expanded, setExpanded] = useState({})
 
   useEffect(() => {
@@ -35,14 +34,14 @@ export function TagTable() {
       return
     }
 
-    const formattedTags = [...newTags, ...entityTags].map(tag => ({
+    const formattedTags = [...entityTags].map(tag => ({
       // Put rowId first because it can be overrided by new tags
       rowId: uuidv4(),
       ...tag,
       subTags: tag.subTags?.map(subTag => ({ parentId: tag.id, rowId: uuidv4(), ...subTag })) ?? []
     }))
     setTags(formattedTags)
-  }, [data, newTags])
+  }, [data])
 
   const tagsDataTable = useMemo(() => {
     const filters = getFilters(tags, filtersState)
@@ -64,7 +63,7 @@ export function TagTable() {
       startedAt: undefined,
       subTags: []
     }
-    setNewTags(previousTags => [...previousTags, newTag])
+    setTags(previousTags => [...previousTags, newTag])
     setDraftTags(previousTags => [...previousTags, newTag])
   }, [])
 
@@ -177,12 +176,7 @@ export function TagTable() {
         }
 
         if (savedTag) {
-          // Updating table
-          if (!tagToApi.id) {
-            updateTable(setNewTags)
-          } else {
-            updateTable(setTags)
-          }
+          updateTable(setTags)
         }
       }
       handleSave()
