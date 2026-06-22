@@ -10,6 +10,7 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { useMemo } from 'react'
+import { useDebounce } from 'use-debounce'
 
 import { TWO_MINUTES } from '../../../constants'
 import { isMissionPartOfSelectedTags } from '../useCases/filters/isMissionPartOfSelectedTags'
@@ -40,12 +41,7 @@ export const useGetFilteredMissionsQuery = () => {
 
   const hasCustomPeriodWithoutDates = selectedPeriod === DateRangeEnum.CUSTOM && (!startedAfter || !startedBefore)
 
-  const {
-    data: missions,
-    isError,
-    isFetching,
-    isLoading
-  } = useGetMissionsQuery(
+  const [debouncedSearchFilters] = useDebounce(
     {
       missionStatus: selectedStatuses,
       missionTypes: selectedMissionTypes,
@@ -55,8 +51,15 @@ export const useGetFilteredMissionsQuery = () => {
       startedBeforeDateTime: datesForApi.startedBeforeDate,
       withEnvActions: selectedWithEnvActions
     },
-    { pollingInterval: TWO_MINUTES, skip: hasCustomPeriodWithoutDates }
+    300
   )
+
+  const {
+    data: missions,
+    isError,
+    isFetching,
+    isLoading
+  } = useGetMissionsQuery(debouncedSearchFilters, { pollingInterval: TWO_MINUTES, skip: hasCustomPeriodWithoutDates })
 
   const filteredMissions = useMemo(() => {
     if (!missions) {
