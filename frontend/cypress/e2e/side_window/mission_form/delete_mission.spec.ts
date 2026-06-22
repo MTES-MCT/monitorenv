@@ -16,6 +16,7 @@ context('Side Window > Mission Form > Delete Mission', () => {
 
   it('A mission should be deleted if no action created in MonitorFish', () => {
     // Given
+    cy.wait(300)
     cy.getDataCy('Missions-numberOfDisplayedMissions').then($el => {
       const numberOfMissions = parseInt($el.text(), 10)
       cy.wrap(numberOfMissions).as('numberOfMissions')
