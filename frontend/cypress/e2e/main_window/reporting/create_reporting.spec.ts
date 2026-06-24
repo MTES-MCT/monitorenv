@@ -133,7 +133,7 @@ context('Reporting', () => {
 
     cy.clickButton('Lier à une mission existante')
     cy.get('#root').click(582, 546, { timeout: 10000 })
-    cy.clickButton('Lier à la mission')
+    cy.clickButton('Lier à la mission').wait(500)
 
     // Then
     cy.wait('@updateReporting').then(interception => {
