@@ -54,10 +54,10 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.4.3"
+val ktorVersion = "3.5.0"
 val testcontainersVersion = "1.21.4"
-val sentryVersion = "8.40.0"
-val flywayVersion = "12.5.0"
+val sentryVersion = "8.43.0"
+val flywayVersion = "12.7.0"
 
 dependencies {
     implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.6"))
@@ -77,13 +77,13 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.hibernate.orm:hibernate-spatial:7.3.2.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-73:3.15.2")
-    implementation("org.geolatte:geolatte-geom:1.11")
+    implementation("org.hibernate.orm:hibernate-spatial:7.4.0.Final")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-73:3.15.3")
+    implementation("org.geolatte:geolatte-geom:1.12")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
     // Jackson
@@ -101,7 +101,7 @@ dependencies {
     implementation("io.sentry:sentry-log4j2:$sentryVersion")
 
     // Cache
-    implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.4")
 
     // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
@@ -137,7 +137,7 @@ dependencies {
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:5.3.2")
     testImplementation("net.ttddyy:datasource-proxy:1.11.0")
-    testImplementation("io.mockk:mockk:1.14.9")
+    testImplementation("io.mockk:mockk:1.14.11")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     testImplementation("org.springframework.kafka:spring-kafka-test") {
         exclude(group = "ch.qos.logback", module = "logback-classic")
