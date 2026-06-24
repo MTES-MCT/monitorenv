@@ -176,9 +176,10 @@ export function DrawModal() {
 
   const handleSelectCoordinates = useCallback(
     (nextCoordinates: Coordinates | undefined) => {
+      let mustZoomToFeature = true
       if (!isEditingInInputRef.current) {
-        isEditingInInputRef.current = true
         dispatch(setIsGeometryDrawOnMap(false))
+        mustZoomToFeature = false
       }
 
       isEditingInInputRef.current = true
@@ -200,7 +201,7 @@ export function DrawModal() {
 
       dispatch(addFeatureToDrawedFeature(nextFeature))
       const extent = nextFeature.getGeometry()?.getExtent()
-      if (extent) {
+      if (extent && mustZoomToFeature) {
         dispatch(setFitToExtent(extent))
       }
     },

@@ -138,15 +138,17 @@ context('Side Window > Mission Form > Mission actions', () => {
     cy.fill('La surveillance a donné lieu à des actions de prévention', true)
 
     cy.getDataCy('surveillance-awareness-select-0').click({ force: true })
-
+    cy.get('div[role="option"]').contains('Épave').click() // id 105
     cy.getDataCy('surveillance-awareness-fields').within(() => {
       cy.get('div[role="option"]').then(options => {
         const actual = [...options].map(option => option.textContent)
         expect(actual).to.deep.eq(['Épave', 'Rejet', 'Réserve naturelle'])
       })
-      cy.get('div[role="option"]').contains('Épave').click() // id 105
-      cy.fill('Nb de personnes informées', 5)
     })
+
+    cy.fill('Nb de personnes informées', undefined)
+    cy.fill('Nb de personnes informées', 5, { delay: 500 })
+
     cy.clickButton('Ajouter une thématique de surveillance')
     cy.getDataCy('surveillance-awareness-nb-person-1').type('3')
     cy.getDataCy('surveillance-awareness-select-1').click()
@@ -158,10 +160,14 @@ context('Side Window > Mission Form > Mission actions', () => {
         body: {
           envActions: [
             {
+              id: 'c52c6f20-e495-4b29-b3df-d7edfb67fdd7',
+              // eslint-disable-next-line sort-keys-fix/sort-keys-fix
               awareness: {
                 details: [
-                  { nbPerson: 5, themeId: 105 },
-                  { nbPerson: 3, themeId: 102 }
+                  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+                  { themeId: 105, nbPerson: 5 },
+                  // eslint-disable-next-line sort-keys-fix/sort-keys-fix
+                  { themeId: 102, nbPerson: 3 }
                 ],
                 isRisingAwareness: true
               }
