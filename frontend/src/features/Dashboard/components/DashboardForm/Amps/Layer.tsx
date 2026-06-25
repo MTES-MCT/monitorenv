@@ -52,11 +52,11 @@ export function Layer({ isPinned = false, isSelected, layerId }: AmpLayerProps) 
 
   const toggleZoneMetadata = () => {
     dispatch(dashboardActions.setDashboardPanel({ id: layerId, isPinned: isSelected, type: Dashboard.Block.AMP }))
-    if (!layer?.bbox) {
+    if (!layer?.extent) {
       return
     }
     const extent = transformExtent(
-      layer?.bbox,
+      layer?.extent,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )

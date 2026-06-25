@@ -37,9 +37,7 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
       axis: String(axis),
       ids: dashboard.regulatoryAreaIds
     },
-    {
-      skip: dashboard.regulatoryAreaIds.length === 0
-    }
+    { skip: dashboard.regulatoryAreaIds.length === 0 }
   )
 
   const { data: amps } = useGetAMPsByIdsQuery(

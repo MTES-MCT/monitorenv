@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
@@ -14,7 +15,12 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRegulatoryAreaRepository
 import org.apache.commons.lang3.StringUtils
+import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.GeometryFactory
+import org.locationtech.jts.geom.PrecisionModel
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -30,24 +36,63 @@ class JpaRegulatoryAreaRepository(
     override fun findById(id: Int): RegulatoryAreaEntity? =
         dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea(mapper)
 
-    override fun findAll(
-        controlPlan: String?,
-        query: String?,
-        seaFronts: List<String>?,
-        tags: List<Int>?,
-        themes: List<Int>?,
-        onlyRecentsAreas: Boolean?,
-    ): List<RegulatoryAreaEntity> =
+    override fun findAll(filters: SearchFilters): List<RegulatoryAreaEntity> =
         dbRegulatoryAreaRepository
             .findAll(
-                controlPlan = controlPlan,
-                seaFronts = seaFronts,
-                tags = tags,
-                themes = themes,
-                onlyRecentsAreas =
-                onlyRecentsAreas,
+                controlPlan = filters.controlPlan,
+                seaFronts = filters.seaFronts,
+                tags = filters.tags,
+                themes = filters.themes,
+                onlyRecentsAreas = filters.onlyRecentsAreas,
+                extent = filters.extent?.let { extentToPolygon(extent = it) },
             ).map { it.toRegulatoryArea(mapper) }
-            .filter { findBySearchQuery(it, query) }
+            .filter { findBySearchQuery(it, filters.query) }
+
+    fun extentToPolygon(extent: List<Double>): Geometry {
+        val minX = extent[0]
+        val minY = extent[1]
+        val maxX = extent[2]
+        val maxY = extent[3]
+
+        val gf = GeometryFactory(PrecisionModel(), 4326)
+
+        val coords: Array<Coordinate?> =
+            arrayOf(
+                Coordinate(minX, minY),
+                Coordinate(maxX, minY),
+                Coordinate(maxX, maxY),
+                Coordinate(minX, maxY),
+                Coordinate(minX, minY),
+            )
+
+        return gf.createPolygon(coords)
+    }
+
+    @Cacheable(
+        value = ["regulatory_areas_tiles"],
+        key = "#z + '-' + #x + '-' + #y + '-' + #filters.hashCode()",
+    )
+    override fun findAllTiles(
+        filters: SearchFilters?,
+        x: Int,
+        y: Int,
+        z: Int,
+    ): ByteArray =
+        dbRegulatoryAreaRepository.findAllAsTiles(
+            controlPlan = filters?.controlPlan,
+            seaFronts = filters?.seaFronts?.toTypedArray(),
+            tags = filters?.tags?.toTypedArray(),
+            themes = filters?.themes?.toTypedArray(),
+            onlyRecentsAreas = filters?.onlyRecentsAreas,
+            query = filters?.query,
+            minX = filters?.extent?.get(0),
+            minY = filters?.extent?.get(1),
+            maxX = filters?.extent?.get(2),
+            maxY = filters?.extent?.get(3),
+            x = x,
+            y = y,
+            z = z,
+        )
 
     override fun findAllLayerNames(): Map<String, Long> =
         dbRegulatoryAreaRepository.findAllLayerNames().associate { row ->
@@ -69,6 +114,7 @@ class JpaRegulatoryAreaRepository(
     override fun findAllIdsByGeometry(geometry: Geometry): List<Int> =
         dbRegulatoryAreaRepository.findAllIdsByGeom(geometry)
 
+    @CacheEvict(value = ["regulatory_areas_tiles"], allEntries = true)
     @Transactional
     override fun save(regulatoryArea: RegulatoryAreaEntity): RegulatoryAreaEntity {
         val model = RegulatoryAreaModel.Companion.fromRegulatoryAreaEntity(regulatoryArea, mapper)
@@ -83,26 +129,6 @@ class JpaRegulatoryAreaRepository(
     }
 
     override fun count(): Long = dbRegulatoryAreaRepository.count()
-
-    private fun findBySearchQuery(
-        regulatoryArea: RegulatoryAreaEntity,
-        searchQuery: String?,
-    ): Boolean {
-        if (searchQuery.isNullOrBlank()) {
-            return true
-        }
-
-        return listOf(
-            regulatoryArea.layerName,
-            regulatoryArea.refReg,
-            regulatoryArea.resume,
-            regulatoryArea.polyName,
-        ).any { field ->
-            !field.isNullOrBlank() &&
-                normalizeField(field)
-                    .contains(normalizeField(searchQuery), ignoreCase = true)
-        }
-    }
 
     private fun saveTags(
         regulatoryAreaModel: RegulatoryAreaModel,
@@ -130,6 +156,26 @@ class JpaRegulatoryAreaRepository(
             regulatoryAreaTheme.id = ThemeRegulatoryAreaPk(regulatoryAreaTheme.theme.id, regulatoryAreaModel.id)
         }
         return dbThemeRegulatoryAreaRepository.saveAll(themeModels)
+    }
+
+    private fun findBySearchQuery(
+        regulatoryArea: RegulatoryAreaEntity,
+        searchQuery: String?,
+    ): Boolean {
+        if (searchQuery.isNullOrBlank()) {
+            return true
+        }
+
+        return listOf(
+            regulatoryArea.layerName,
+            regulatoryArea.refReg,
+            regulatoryArea.resume,
+            regulatoryArea.polyName,
+        ).any { field ->
+            !field.isNullOrBlank() &&
+                normalizeField(field)
+                    .contains(normalizeField(searchQuery), ignoreCase = true)
+        }
     }
 
     private fun normalizeField(input: String): String = StringUtils.stripAccents(input.replace(" ", ""))

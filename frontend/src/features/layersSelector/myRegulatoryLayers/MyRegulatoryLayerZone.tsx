@@ -19,7 +19,7 @@ import { MyLayerZone } from '../utils/MyLayerZone'
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 type RegulatoryLayerZoneProps = {
-  regulatoryZone: RegulatoryArea.RegulatoryAreaWithBbox
+  regulatoryZone: RegulatoryArea.RegulatoryAreaFromAPI
 }
 export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps) {
   const dispatch = useAppDispatch()
@@ -43,7 +43,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
 
   return (
     <MyLayerZone
-      bbox={regulatoryZone.bbox}
+      bbox={regulatoryZone.extent}
       displayedName={displayedName}
       hasMetadata={!!layerTitle}
       hideLayer={() => dispatch(hideRegulatoryLayer(regulatoryZone.id))}

@@ -1,77 +1,108 @@
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
-import { useGetFilteredRegulatoryAreas } from '@features/RegulatoryArea/hooks/useGetFilteredRegulatoryAreas'
+import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import { getIsLinkingAMPToVigilanceArea } from '@features/VigilanceArea/slice'
-import { Feature } from 'ol'
-import VectorLayer from 'ol/layer/Vector'
-import VectorSource from 'ol/source/Vector'
+import { useAppSelector } from '@hooks/useAppSelector'
+import { getQueryString } from '@utils/getQueryStringFormatted'
+import { getTagIds } from '@utils/getTagsAsOptions'
+import { getThemeIds } from '@utils/getThemesAsOptions'
+import MVT from 'ol/format/MVT'
+import VectorTileLayer from 'ol/layer/VectorTile'
+import VectorTileSource from 'ol/source/VectorTile'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
 
-import { getRegulatoryFeature } from './regulatoryGeometryHelpers'
 import { Layers } from '../../../../domain/entities/layers/constants'
-import { useAppSelector } from '../../../../hooks/useAppSelector'
-import { getRegulatoryLayerStyle } from '../styles/administrativeAndRegulatoryLayers.style'
 
-import type { BaseMapChildrenProps } from '../../BaseMap'
-import type { VectorLayerWithName } from 'domain/types/layer'
-import type { Geometry } from 'ol/geom'
-
-export const metadataIsShowedPropertyName = 'metadataIsShowed'
+import type { VectorTileLayerWithName } from '../../../../domain/types/layer'
+import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 
 export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
-  const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const isRegulatorySearchResultsVisible = useAppSelector(state => state.layerSearch.isRegulatorySearchResultsVisible)
-
-  const { flattenRegulatoryAreas } = useGetFilteredRegulatoryAreas()
-
-  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
-
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
+  const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
+  const isolatedLayerRef = useRef(isolatedLayer)
+  const regulatoryMetadataLayerIdRef = useRef(regulatoryMetadataLayerId)
 
-  const regulatoryPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<
-    VectorSource<Feature<Geometry>>
-  >
+  const {
+    areRecentsAreasChecked,
+    controlPlan,
+    filteredRegulatoryTags,
+    filteredRegulatoryThemes,
+    globalSearchText,
+    searchExtent,
+    shouldFilterSearchOnMapExtent
+  } = useAppSelector(state => state.layerSearch)
+
+  const apiFilters = useMemo(
+    () => ({
+      controlPlan,
+      extent: shouldFilterSearchOnMapExtent && searchExtent ? searchExtent : undefined,
+      onlyRecentsAreas: areRecentsAreasChecked,
+      searchQuery: globalSearchText,
+      tags: getTagIds(filteredRegulatoryTags),
+      themes: getThemeIds(filteredRegulatoryThemes)
+    }),
+    [
+      controlPlan,
+      areRecentsAreasChecked,
+      globalSearchText,
+      filteredRegulatoryTags,
+      filteredRegulatoryThemes,
+      shouldFilterSearchOnMapExtent,
+      searchExtent
+    ]
+  )
+
+  const hasNoFilters = useMemo(
+    () =>
+      !apiFilters.controlPlan &&
+      !apiFilters.searchQuery &&
+      apiFilters.tags?.length === 0 &&
+      apiFilters.themes?.length === 0 &&
+      !apiFilters.onlyRecentsAreas &&
+      apiFilters.extent?.length === 0,
+    [apiFilters]
+  )
+
+  const regulatoryPreviewVectorSourceRef = useRef(
+    new VectorTileSource({
+      format: new MVT(),
+      url: getQueryString('/bff/v1/regulatory-areas/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : apiFilters)
+    })
+  ) as MutableRefObject<VectorTileSource>
+
   const regulatoryPreviewVectorLayerRef = useRef(
-    new VectorLayer({
+    new VectorTileLayer({
       renderBuffer: 4,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: regulatoryPreviewVectorSourceRef.current,
-      style: getRegulatoryLayerStyle
+      style: feature => getRegulatoryLayerStyle(feature, isolatedLayerRef.current, regulatoryMetadataLayerIdRef.current)
     })
-  ) as MutableRefObject<VectorLayerWithName>
+  ) as MutableRefObject<VectorTileLayerWithName>
   regulatoryPreviewVectorLayerRef.current.name = Layers.REGULATORY_ENV_PREVIEW.code
 
-  const regulatoryLayersFeatures = useMemo(() => {
-    if (!flattenRegulatoryAreas) {
-      return undefined
-    }
-
-    return flattenRegulatoryAreas.reduce<Feature<Geometry>[]>((acc, regulatoryArea) => {
-      if (regulatoryArea && regulatoryArea.geom) {
-        const feature = getRegulatoryFeature({
-          code: Layers.REGULATORY_ENV_PREVIEW.code,
-          isolatedLayer,
-          layer: regulatoryArea
-        })
-        if (feature) {
-          const metadataIsShowed = regulatoryArea.id === regulatoryMetadataLayerId
-          feature.set(metadataIsShowedPropertyName, metadataIsShowed)
-          acc.push(feature)
-        }
-      }
-
-      return acc
-    }, [])
-  }, [flattenRegulatoryAreas, isolatedLayer, regulatoryMetadataLayerId])
+  useEffect(() => {
+    isolatedLayerRef.current = isolatedLayer
+    regulatoryMetadataLayerIdRef.current = regulatoryMetadataLayerId
+    // force layer rerender
+    regulatoryPreviewVectorLayerRef.current.changed()
+  }, [isolatedLayer, regulatoryMetadataLayerId])
 
   useEffect(() => {
-    regulatoryPreviewVectorSourceRef.current?.clear(true)
-    if (regulatoryLayersFeatures) {
-      regulatoryPreviewVectorSourceRef.current?.addFeatures(regulatoryLayersFeatures)
+    if (!map) {
+      return
     }
-  }, [regulatoryLayersFeatures])
+
+    const newSource = new VectorTileSource({
+      format: new MVT({ idProperty: 'uid' }),
+      url: getQueryString('/bff/v1/regulatory-areas/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : apiFilters)
+    })
+
+    regulatoryPreviewVectorSourceRef.current = newSource
+    regulatoryPreviewVectorLayerRef.current.setSource(newSource)
+  }, [apiFilters, hasNoFilters, map])
 
   useEffect(() => {
     if (map) {
@@ -81,11 +112,11 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
 
   useEffect(() => {
     if (map) {
-      map.getLayers().push(regulatoryPreviewVectorLayerRef.current)
+      const regRef = regulatoryPreviewVectorLayerRef.current
+      map.getLayers().push(regRef)
 
       return () => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        map.removeLayer(regulatoryPreviewVectorLayerRef.current)
+        map.removeLayer(regRef)
       }
     }
 

@@ -1,8 +1,10 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasTiles
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
@@ -36,6 +38,7 @@ class RegulatoryAreas(
     private val createOrUpdateRegulatoryArea: CreateOrUpdateRegulatoryArea,
     private val getAllRegulatoryAreasToComplete: GetAllRegulatoryAreasToComplete,
     private val getRegulatoryAreaByIds: GetRegulatoryAreaByIds,
+    private val getAllRegulatoryAreasTiles: GetAllRegulatoryAreasTiles,
 ) {
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
@@ -58,25 +61,74 @@ class RegulatoryAreas(
         @Parameter(description = "Only recent areas")
         @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
         onlyRecentsAreas: Boolean?,
+        @Parameter(description = "Extent")
+        @RequestParam(name = "extent", required = false) extent: List<Double>?,
     ): RegulatoryAreasWithTotalDataOutput {
         val (regulatoryAreasGrouped, totalCount) =
             getAllRegulatoryAreas.execute(
-                controlPlan = controlPlan,
-                searchQuery = searchQuery,
-                seaFronts = seaFronts,
-                tags = tags,
-                themes = themes,
-                onlyRecentsAreas = onlyRecentsAreas,
+                filters =
+                    SearchFilters(
+                        controlPlan = controlPlan,
+                        query = searchQuery,
+                        seaFronts = seaFronts,
+                        tags = tags,
+                        themes = themes,
+                        onlyRecentsAreas = onlyRecentsAreas,
+                        extent = extent,
+                    ),
             )
 
         val groupedDto =
-            regulatoryAreasGrouped.map { RegulatoryAreasDataOutput.Companion.fromRegulatoryAreaEntity(it) }
+            regulatoryAreasGrouped.map { RegulatoryAreasDataOutput.fromRegulatoryAreaEntity(it) }
 
         return RegulatoryAreasWithTotalDataOutput(
             totalCount = totalCount,
             regulatoryAreasByLayer = groupedDto,
         )
     }
+
+    @GetMapping(value = ["/tiles/{z}/{x}/{y}"], produces = ["application/x-protobuf"])
+    @Operation(summary = "Get regulatory Areas")
+    fun getAllTiles(
+        @Parameter(description = "Control Plan")
+        @RequestParam(name = "controlPlan", required = false)
+        controlPlan: String?,
+        @Parameter(description = "Themes")
+        @RequestParam(name = "themes", required = false)
+        themes: List<Int>?,
+        @Parameter(description = "Tags")
+        @RequestParam(name = "tags", required = false)
+        tags: List<Int>?,
+        @Parameter(description = "Search query")
+        @RequestParam(name = "searchQuery", required = false)
+        searchQuery: String?,
+        @Parameter(description = "Façades")
+        @RequestParam(name = "seaFronts", required = false)
+        seaFronts: List<String>?,
+        @Parameter(description = "Only recent areas")
+        @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
+        onlyRecentsAreas: Boolean?,
+        @Parameter(description = "Extent")
+        @RequestParam(name = "extent", required = false) extent: List<Double>?,
+        @PathVariable x: Int,
+        @PathVariable y: Int,
+        @PathVariable z: Int,
+    ): ByteArray =
+        getAllRegulatoryAreasTiles.execute(
+            filters =
+                SearchFilters(
+                    controlPlan = controlPlan,
+                    query = searchQuery,
+                    seaFronts = seaFronts,
+                    tags = tags,
+                    themes = themes,
+                    onlyRecentsAreas = onlyRecentsAreas,
+                    extent = extent,
+                ),
+            x = x,
+            y = y,
+            z = z,
+        )
 
     @PostMapping("")
     @Operation(summary = "Get regulatory areas by ids")
@@ -86,7 +138,7 @@ class RegulatoryAreas(
     ): List<RegulatoryAreaDataOutput> =
         getRegulatoryAreaByIds
             .execute(body.ids, body.axis)
-            .map { RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it) }
+            .map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
 
     @GetMapping("/{regulatoryAreaId}")
     @Operation(summary = "Get regulatory area by Id")
@@ -96,7 +148,7 @@ class RegulatoryAreas(
         regulatoryAreaId: Int,
     ): RegulatoryAreaDataOutput? =
         getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)?.let {
-            RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it)
+            RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it)
         }
 
     @PutMapping("", consumes = ["application/json"])
@@ -104,7 +156,7 @@ class RegulatoryAreas(
     fun put(
         @RequestBody regulatoryAreaDataInput: RegulatoryAreaDataInput,
     ): RegulatoryAreaDataOutput =
-        RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(
+        RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
             createOrUpdateRegulatoryArea.execute(regulatoryAreaDataInput.toRegulatoryAreaEntity()),
         )
 
@@ -112,13 +164,13 @@ class RegulatoryAreas(
     @Operation(summary = "Get all regulatory areas group names")
     fun getLayerNames(): LayerNamesDataOutput? =
         getAllLayerNames.execute().let {
-            LayerNamesDataOutput.Companion.fromGroupNames(it)
+            LayerNamesDataOutput.fromGroupNames(it)
         }
 
     @GetMapping("/to-complete")
     @Operation(summary = "Get all regulatory areas to complete")
     fun getRegulatoryAreasToComplete(): List<RegulatoryAreaToCompleteDataOuput> =
         getAllRegulatoryAreasToComplete.execute().map {
-            RegulatoryAreaToCompleteDataOuput.Companion.fromRegulatoryAreaToCompleteEntity(it)
+            RegulatoryAreaToCompleteDataOuput.fromRegulatoryAreaToCompleteEntity(it)
         }
 }
