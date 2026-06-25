@@ -20,10 +20,10 @@ export function getFilters(data: MissionTagTable[], filtersState: FiltersState):
   if (filtersState.status) {
     const isValid: Filter<MissionTagTable> = tags => {
       if (filtersState.status === 'ARCHIVED') {
-        return tags.filter(tag => tag.isArchived)
+        return tags.filter(tag => !tag.id || tag.isArchived)
       }
       if (filtersState.status === 'ACTIVE') {
-        return tags.filter(tag => !tag.isArchived)
+        return tags.filter(tag => !tag.id || !tag.isArchived)
       }
 
       return tags
