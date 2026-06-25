@@ -1,9 +1,9 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { missionFiltersMigrations } from '@store/migrations/missionsFilters'
+import { storage } from '@store/storage'
 import { isEqual } from 'lodash'
 import { createMigrate, persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import { DateRangeEnum, DAY_OPTION } from '../entities/dateRange'
 

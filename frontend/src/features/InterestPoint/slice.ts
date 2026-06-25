@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { storage } from '@store/storage'
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 import { v4 as uuidv4 } from 'uuid'
 
 import type { NewInterestPoint, InterestPoint } from './types'

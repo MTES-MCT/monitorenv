@@ -8,7 +8,6 @@ import styled from 'styled-components'
 import { useDebounce } from 'use-debounce'
 
 import type { Vessel } from '@features/Vessel/types'
-import type { RsuiteDataItem } from '@mtes-mct/monitor-ui/types/internals'
 
 type SearchVesselsProps = {
   disabled?: boolean
@@ -85,7 +84,7 @@ export function SearchVessel({
       placeholder="Rechercher un navire"
       renderMenu={node => <StyledMenu>{node}</StyledMenu>}
       renderMenuItem={(_, item) => {
-        const rsuiteItem = item as RsuiteDataItem
+        const rsuiteItem = item
         const vessel = rsuiteItem.optionValue as unknown as Vessel.Identity
 
         return (

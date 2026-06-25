@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { storage } from '@store/storage'
 import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import { type RegulatoryOrAMPOrViglanceAreaLayerType } from '../entities/layers/constants'
 import { CoordinatesFormat, DistanceUnit } from '../entities/map/constants'

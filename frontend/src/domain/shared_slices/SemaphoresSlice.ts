@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { storage } from '@store/storage'
 import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import type { Semaphore } from '../entities/semaphore'
 

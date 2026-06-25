@@ -3,7 +3,7 @@ import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { Row } from '@features/Mission/components/MissionsList/Row'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
-import { type SortingState } from '@tanstack/react-table'
+import { type Row as RowType, type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
 import { useMemo, useRef, useState } from 'react'
@@ -11,7 +11,6 @@ import { useLocation } from 'react-router'
 
 import { Columns } from './Columns'
 
-import type { Row as RowType } from '@tanstack/table-core/build/lib/types'
 import type { Mission } from 'domain/entities/missions'
 
 type MissionsTableProps = {
