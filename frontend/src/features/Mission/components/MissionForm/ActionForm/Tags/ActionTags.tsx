@@ -1,10 +1,11 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions, parseOptionsToTags } from '@utils/getTagsAsOptions'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import type { EnvActionControl, EnvActionSurveillance, Mission } from '../../../../../../domain/entities/missions'
 import type { TagFromAPI } from 'domain/entities/tags'
 
 type ActionTagsProps = {
@@ -12,8 +13,12 @@ type ActionTagsProps = {
 }
 export function ActionTags({ actionIndex }: ActionTagsProps) {
   const [currentTags, , helpers] = useField<TagFromAPI[]>(`envActions[${actionIndex}].tags`)
+  const {
+    values: { envActions, startDateTimeUtc }
+  } = useFormikContext<Mission<EnvActionSurveillance | EnvActionControl>>()
+  const startDate = envActions[actionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
 
-  const { data } = useGetTagsQuery()
+  const { data } = useGetTagsQuery([startDate, startDate])
 
   const tagsOptions = useMemo(() => getTagsAsOptions(Object.values(data ?? [])), [data])
 
