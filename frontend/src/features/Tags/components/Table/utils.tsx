@@ -23,15 +23,14 @@ export function getFilters(data: TagTable[], filtersState: FiltersState): Filter
       if (filtersState.validity === 'IN_PROGRESS') {
         return tags.filter(
           tag =>
-            tag.startedAt &&
-            now.isAfter(customDayjs(tag.startedAt)) &&
-            (!tag.endedAt || now.isBetween(customDayjs(tag.startedAt), customDayjs(tag.endedAt)))
+            !tag.id ||
+            (tag.startedAt &&
+              now.isAfter(customDayjs(tag.startedAt)) &&
+              (!tag.endedAt || now.isBetween(customDayjs(tag.startedAt), customDayjs(tag.endedAt))))
         )
       }
       if (filtersState.validity === 'OUTDATED') {
-        return tags.filter(
-          tag => tag.startedAt && tag.endedAt && !now.isBetween(customDayjs(tag.startedAt), customDayjs(tag.endedAt))
-        )
+        return tags.filter(tag => !tag.id || (tag.startedAt && tag.endedAt && now.isAfter(customDayjs(tag.endedAt))))
       }
 
       return tags
