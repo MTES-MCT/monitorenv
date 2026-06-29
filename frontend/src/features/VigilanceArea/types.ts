@@ -1,7 +1,7 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import { ControlUnit } from '@mtes-mct/monitor-ui'
 
-import type { ImageApi, Link } from '@components/Form/types'
+import type { FileApi, Link } from '@components/Form/types'
 import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'
@@ -13,7 +13,7 @@ export namespace VigilanceArea {
     createdBy?: string
     geom?: GeoJSON.MultiPolygon
     id?: number
-    images?: ImageApi[]
+    images?: FileApi[]
     isDraft: boolean
     linkedAMPs?: number[]
     linkedRegulatoryAreas?: number[]
@@ -35,7 +35,7 @@ export namespace VigilanceArea {
     createdBy?: string
     geom?: GeoJSON.MultiPolygon
     id: number
-    images?: ImageApi[]
+    images?: FileApi[]
     isDraft: boolean
     linkedAMPs?: number[]
     linkedRegulatoryAreas?: number[]

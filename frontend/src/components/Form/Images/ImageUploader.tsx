@@ -2,11 +2,11 @@ import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindow
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button, Icon, Label, Level, Size, useNewWindow } from '@mtes-mct/monitor-ui'
-import { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { Orientation, type ImageApi } from '../types'
-import { useImageConverter } from './hook/useImageConverter'
+import { type FileApi, Orientation } from '../types'
+import { useFileConverter } from './hook/useFileConverter'
 import { ImageViewer } from './ImageViewer'
 import { areFilesValid, compressImage, createInMemoryImage, IMAGES_INFORMATIONS_TEXT } from './utils'
 
@@ -14,20 +14,20 @@ export const IMAGES_WIDTH_LANDSCAPE = '122px'
 export const IMAGES_WIDTH_PORTRAIT = '57px'
 
 type ImageUploaderProps = {
-  images?: ImageApi[]
+  files?: FileApi[]
   isSideWindow?: boolean
-  onDelete: (images: ImageApi[]) => void
-  onUpload: (images: ImageApi[]) => void
+  onDelete: (files: FileApi[]) => void
+  onUpload: (files: FileApi[]) => void
 }
 
-export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload }: ImageUploaderProps) {
+export function ImageUploader({ files, isSideWindow = false, onDelete, onUpload }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const dispatch = useAppDispatch()
 
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
   const [imagesText, setImagesText] = useState<string>(IMAGES_INFORMATIONS_TEXT)
-  const imagesFront = useImageConverter(images, isSideWindow)
+  const imagesFront = useFileConverter(files, isSideWindow)
   const { newWindowContainerRef } = useNewWindow()
 
   const handleFileChange = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,7 +44,7 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
     }
 
     const uploadImages = async (filesToUpload: FileList) => {
-      const compressedImages: ImageApi[] = []
+      const compressedImages: FileApi[] = []
       try {
         await Promise.all(
           Array.from(filesToUpload).map(async file => {
@@ -71,7 +71,7 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
           })
         )
 
-        onUpload([...(images ?? []), ...compressedImages])
+        onUpload([...(files ?? []), ...compressedImages])
       } catch (error) {
         const errorMessage = "Un problème est survenu lors de l'ajout de la photo. Veuillez recommencer"
         dispatch(
@@ -94,7 +94,7 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
       }
     }
 
-    if (!areFilesValid(current.files.length + (images ?? []).length, setImagesText)) {
+    if (!areFilesValid(current.files.length + (files ?? []).length, setImagesText)) {
       return
     }
 
@@ -102,7 +102,7 @@ export function ImageUploader({ images, isSideWindow = false, onDelete, onUpload
   }
 
   const deleteImage = (indexToRemove: number) => {
-    const updatedImages = (images ?? []).filter((__, index) => index !== indexToRemove)
+    const updatedImages = (files ?? []).filter((__, index) => index !== indexToRemove)
     areFilesValid(updatedImages.length, setImagesText)
     onDelete(updatedImages)
   }

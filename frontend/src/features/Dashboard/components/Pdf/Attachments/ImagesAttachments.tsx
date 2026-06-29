@@ -1,4 +1,4 @@
-import { Orientation, type ImageFront } from '@components/Form/types'
+import { Orientation, type Thumbnail } from '@components/Form/types'
 import { Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 
 import { Headings } from '../Layout/Headings'
@@ -28,7 +28,7 @@ export function ImagesAttachments({
   withPageTitle
 }: {
   briefName: string
-  images?: ImageFront[]
+  images?: Thumbnail[]
   withPageTitle: boolean
 }) {
   return (

@@ -6,7 +6,7 @@ import type { ExportImageType } from './hooks/useExportImages'
 import type { AMP, AMPFromAPI } from '../../domain/entities/AMPs'
 import type { Reporting } from '../../domain/entities/reporting'
 import type { ThemeFromAPI } from '../../domain/entities/themes'
-import type { ImageApi, ImageFront, Link } from '@components/Form/types'
+import type { FileApi, Link, Thumbnail } from '@components/Form/types'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'
@@ -44,7 +44,7 @@ export namespace Dashboard {
     createdAt?: string
     geom?: GeoJSON.Geometry
     id: string
-    images: ImageApi[]
+    images: FileApi[]
     inseeCode?: string
     links: Link[]
     name: string
@@ -56,7 +56,7 @@ export namespace Dashboard {
   }
 
   export type VigilanceAreaWithImages = Omit<VigilanceArea.VigilanceArea, 'images'> & {
-    images: ImageFront[]
+    images: Thumbnail[]
   }
 
   export type Brief = {
@@ -64,7 +64,7 @@ export namespace Dashboard {
     allLinkedRegulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
     amps: AMPFromAPI[]
     attachments: {
-      images?: ImageFront[]
+      images?: Thumbnail[]
       links: Link[]
     }
     comments?: string
@@ -89,7 +89,7 @@ export namespace Dashboard {
     createdAt?: string
     geom?: GeoJSON.Geometry
     id?: string
-    images: ImageApi[]
+    images: FileApi[]
     inseeCode?: string
     links: Link[]
     name: string
@@ -199,7 +199,7 @@ export namespace Dashboard {
     comments?: string
     id: number
     image?: string
-    imagesAttachments?: ImageApi[]
+    imagesAttachments?: FileApi[]
     linkedAMPs?: string
     linkedRegulatoryAreas?: string
     links?: Link[]

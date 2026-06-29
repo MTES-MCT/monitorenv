@@ -1,3 +1,4 @@
+import { AdditionalInformation } from '@features/Vessel/components/VesselResume/Resume/Observations'
 import { VesselIdentity } from '@features/Vessel/components/VesselResume/styles'
 import { UNKNOWN } from '@features/Vessel/components/VesselResume/utils'
 import { Vessel } from '@features/Vessel/types'
@@ -53,6 +54,7 @@ export function Summary({ vessel }: SummaryProps) {
           </>
         )}
       </VesselType>
+      <AdditionalInformation vessel={vessel} />
     </>
   )
 }

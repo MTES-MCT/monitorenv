@@ -6,8 +6,7 @@ import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
 import { useGetVigilanceAreasByIdsQuery } from '@api/vigilanceAreasAPI'
-import { useImageConverter } from '@components/Form/Images/hook/useImageConverter'
-import { convertImagesForFront } from '@components/Form/Images/utils'
+import { convertImagesToThumbnails } from '@components/Form/Images/utils'
 import { renderPDF } from '@features/Dashboard/components/Pdf/renderPdf'
 import { useExportImages } from '@features/Dashboard/hooks/useExportImages'
 import { RecentActivity } from '@features/RecentActivity/types'
@@ -17,6 +16,7 @@ import { uniq } from 'lodash'
 import { useMemo, useState } from 'react'
 import { Axis } from 'types'
 
+import { useFileConverter } from '../../../components/Form/Images/hook/useFileConverter'
 import { getRecentActivityFilters } from '../components/DashboardForm/slice'
 
 import type { Dashboard } from '@features/Dashboard/types'
@@ -76,15 +76,15 @@ export function useGenerateBrief(dashboard: Dashboard.Dashboard) {
   const [getRecentControlsActivity] = useGetRecentControlsActivityMutation()
 
   const { getImages, loading: loadingImages } = useExportImages()
-  const attachementImages = useImageConverter(dashboard.images)
+  const attachementImages = useFileConverter(dashboard.images)
 
   const getVigilanceAreasWithFormattedImages = async () => {
     const formattedVigilancesAreas =
-      (await vigilanceAreas?.map(async vigilanceArea => {
-        const images = await convertImagesForFront(vigilanceArea.images ?? [], document.body)
+      vigilanceAreas?.map(async vigilanceArea => {
+        const images = await convertImagesToThumbnails(vigilanceArea.images ?? [], document.body)
 
         return { ...vigilanceArea, images }
-      })) ?? []
+      }) ?? []
 
     return Promise.all(formattedVigilancesAreas)
   }

@@ -1,22 +1,27 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import type { GeoJSON } from '../../domain/types/GeoJSON'
+import type { FileApi } from '@components/Form/types'
 
 export namespace Vessel {
-  export interface Identity {
+  export interface VesselId {
     batchId?: number
+    rowNumber?: number
+    shipId: number
+  }
+  export interface Identity extends VesselId {
     category?: string
     flag?: string
     id: number
     immatriculation?: string
     imo?: string
     mmsi?: string
-    rowNumber?: number
-    shipId: number
     shipName?: string
   }
 
   export interface Vessel extends Identity {
+    additionalInformation?: AdditionalInformation
     commercialName?: string
+    files?: Vessel.File[]
     leisureType?: string
     length?: number
     ownerBusinessSegmentLabel?: string
@@ -73,4 +78,11 @@ export namespace Vessel {
     status?: string
     timestamp: string
   }
+
+  export interface AdditionalInformation {
+    id?: number
+    observations?: string
+  }
+
+  export interface File extends FileApi {}
 }
