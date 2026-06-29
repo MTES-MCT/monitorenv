@@ -25,11 +25,13 @@ export function MissionFormBottomBar({
   const allowEditMission =
     values?.missionSource === undefined ||
     values?.missionSource === MissionSourceEnum.MONITORENV ||
-    values?.missionSource === MissionSourceEnum.MONITORFISH
+    values?.missionSource === MissionSourceEnum.MONITORFISH ||
+    values?.missionSource === MissionSourceEnum.RAPPORT_NAV
 
   const allowDeleteMission = !missionIsNewMission && allowEditMission
 
-  const isFromMonitorFish = values.missionSource === MissionSourceEnum.MONITORFISH
+  const isFromMonitorFishOrRapportNav =
+    values.missionSource === MissionSourceEnum.MONITORFISH || values.missionSource === MissionSourceEnum.RAPPORT_NAV
 
   const formattedUpdatedDate = useMemo(
     () => values.updatedAtUtc && humanizePastDate(values.updatedAtUtc),
@@ -42,7 +44,7 @@ export function MissionFormBottomBar({
         <StyledButton
           accent={Accent.SECONDARY}
           data-cy="delete-mission"
-          disabled={isFromMonitorFish}
+          disabled={isFromMonitorFishOrRapportNav}
           Icon={Icon.Delete}
           onClick={onDeleteMission}
           type="button"
