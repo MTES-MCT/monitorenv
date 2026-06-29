@@ -7,7 +7,7 @@ export function PhotoUploader() {
 
   return (
     <ImageUploader
-      images={values.images}
+      files={values.images}
       onDelete={images => setFieldValue('images', images)}
       onUpload={images => setFieldValue('images', images)}
     />

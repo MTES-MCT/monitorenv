@@ -11,7 +11,7 @@ import { Dashboard } from './types'
 import { filterReportings } from './useCases/filters/filterReportings'
 
 import type { DashboardFilters, VigilanceAreaFilters } from './components/DashboardForm/slice'
-import type { ImageApi, Link } from '@components/Form/types'
+import type { FileApi, Link } from '@components/Form/types'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
@@ -368,7 +368,7 @@ export const dashboardSlice = createSlice({
       state.geometry = action.payload
       state.isGeometryValid = action.payload ? isGeometryValid(action.payload) : true
     },
-    setImages(state, action: PayloadAction<ImageApi[]>) {
+    setImages(state, action: PayloadAction<FileApi[]>) {
       const id = state.activeDashboardId
 
       if (!id || !state.dashboards[id]) {

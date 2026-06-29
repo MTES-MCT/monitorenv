@@ -9,8 +9,10 @@ class VesselFixture {
             mmsi: String? = null,
         ): VesselEntity =
             VesselEntity(
+                additionalInformation = null,
                 batchId = null,
                 id = 1,
+                files = emptyList(),
                 shipId = shipId,
                 status = null,
                 category = null,

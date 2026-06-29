@@ -6,6 +6,7 @@ import {
   initialHistory,
   useGetHistoryOfInfractions
 } from '@features/Reportings/components/ReportingForm/hooks/useGetHistoryOfInfractions'
+import { AdditionalInformation } from '@features/Vessel/components/VesselResume/AdditionalInformation/AdditionalInformation'
 import { History } from '@features/Vessel/components/VesselResume/History/History'
 import { Owner } from '@features/Vessel/components/VesselResume/Owner'
 import { VesselSettings } from '@features/Vessel/components/VesselResume/Positions/VesselSettings'
@@ -40,7 +41,7 @@ import { Flag } from '../VesselSearch/VesselSearchItem'
 import type { Reporting } from '../../../../domain/entities/reporting'
 import type { Coordinate } from 'ol/coordinate'
 
-export type ResumePages = 'RESUME' | 'OWNER' | 'HISTORY'
+export type ResumePages = 'RESUME' | 'OWNER' | 'HISTORY' | 'ADDITIONAL_INFORMATION'
 export type ActiveButtons = 'TRACKING'
 
 const MINIMUM_AIS_VESSEL_SIZE = 15
@@ -222,6 +223,7 @@ export function Resume({ batchId, onClose, rowNumber, shipId }: ResumeProps) {
             {page === 'HISTORY' && (
               <History envActions={allHistory?.envActions ?? []} reportings={reportings} vessel={vessel} />
             )}
+            {page === 'ADDITIONAL_INFORMATION' && <AdditionalInformation vessel={vessel} />}
           </Body>
         </>
       </StyledMapMenuDialogContainer>

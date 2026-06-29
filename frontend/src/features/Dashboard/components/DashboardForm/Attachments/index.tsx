@@ -7,10 +7,10 @@ import styled from 'styled-components'
 
 import { Accordion, Title, TitleContainer } from '../Accordion'
 
-import type { ImageApi, Link } from '@components/Form/types'
+import type { FileApi, Link } from '@components/Form/types'
 
 type AttachmentsProps = {
-  images: ImageApi[]
+  images: FileApi[]
   isExpanded: boolean
   links: Link[]
   setExpandedAccordion: () => void
@@ -27,11 +27,11 @@ export const Attachments = forwardRef<HTMLDivElement, AttachmentsProps>(
       dispatch(dashboardActions.setLinks(updatedLink))
     }
 
-    const handleDeleteImage = (updatedImages: ImageApi[]) => {
+    const handleDeleteImage = (updatedImages: FileApi[]) => {
       dispatch(dashboardActions.setImages(updatedImages))
     }
 
-    const handleUploadImage = (updatedImages: ImageApi[]) => {
+    const handleUploadImage = (updatedImages: FileApi[]) => {
       dispatch(dashboardActions.setImages(updatedImages))
     }
 
@@ -48,7 +48,7 @@ export const Attachments = forwardRef<HTMLDivElement, AttachmentsProps>(
       >
         <StyledContainer>
           <Links links={links} onDelete={handleDeleteLink} onValidate={handleValidateLink} />
-          <ImageUploader images={images} isSideWindow onDelete={handleDeleteImage} onUpload={handleUploadImage} />
+          <ImageUploader files={images} isSideWindow onDelete={handleDeleteImage} onUpload={handleUploadImage} />
         </StyledContainer>
       </Accordion>
     )
