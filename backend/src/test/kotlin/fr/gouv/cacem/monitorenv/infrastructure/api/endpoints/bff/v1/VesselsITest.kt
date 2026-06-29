@@ -1,14 +1,18 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.GetVesselByShipId
+import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.SaveVesselAdditionalInformation
+import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.SaveVesselFiles
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.SearchVessels
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.VesselFixture.Companion.aVessel
+import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.VesselFixture.Companion.aVesselAdditionalInformation
+import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.VesselFixture.Companion.aVesselFile
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vessel.VesselFileDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -17,11 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
+import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.json.JsonMapper
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -35,6 +42,15 @@ class VesselsITest {
 
     @MockitoBean
     private lateinit var searchVessels: SearchVessels
+
+    @MockitoBean
+    private lateinit var saveVesselAdditionalInformation: SaveVesselAdditionalInformation
+
+    @MockitoBean
+    private lateinit var saveVesselFiles: SaveVesselFiles
+
+    @Autowired
+    private lateinit var jsonMapper: JsonMapper
 
     @Test
     fun `Should search for a vessel`() {
@@ -62,15 +78,13 @@ class VesselsITest {
     }
 
     @Test
-    fun `Should find a vessel byt its id`() {
+    fun `Should find a vessel by its id`() {
         // Given
         val id = 1
         val vessel = aVessel()
         given(
             getVesselByShipId.execute(
-                eq(id),
-                eq(1),
-                eq(1),
+                any(),
                 any(),
                 any(),
             ),
@@ -113,7 +127,11 @@ class VesselsITest {
         // Given
         val id = 1
         given(
-            getVesselByShipId.execute(eq(id), eq(null), eq(null), any(), any()),
+            getVesselByShipId.execute(
+                any(),
+                any(),
+                any(),
+            ),
         ).willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND))
 
         // When
@@ -121,5 +139,60 @@ class VesselsITest {
             .perform(get("/bff/v1/vessels/$id"))
             // Then
             .andExpect(status().isNotFound)
+    }
+
+    @Test
+    fun `Should save a vessel additional information`() {
+        // Given
+        val vesselAdditionalInformation = aVesselAdditionalInformation()
+        given(saveVesselAdditionalInformation.execute(any(), any())).willReturn(vesselAdditionalInformation)
+
+        // When
+        api
+            .perform(
+                put("/bff/v1/vessels/additional_information")
+                    .content(jsonMapper.writeValueAsString(vesselAdditionalInformation))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .param("shipId", "3")
+                    .param("batchId", "1")
+                    .param("rowNumber", "2"),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", equalTo(vesselAdditionalInformation.id)))
+            .andExpect(jsonPath("$.observations", equalTo(vesselAdditionalInformation.observations)))
+    }
+
+    @Test
+    fun `Should save a vessel files`() {
+        val vesselFiles = listOf(aVesselFile())
+        given(
+            saveVesselFiles.execute(any(), any()),
+        ).willReturn(vesselFiles)
+
+        // When
+        api
+            .perform(
+                put("/bff/v1/vessels/files")
+                    .content(
+                        jsonMapper.writeValueAsString(
+                            listOf(
+                                VesselFileDataInput(
+                                    id = 1,
+                                    content = "TEST".toByteArray(),
+                                    mimeType = "images/jpeg",
+                                    name = "fichier1",
+                                    size = 1024,
+                                ),
+                            ),
+                        ),
+                    ).contentType(MediaType.APPLICATION_JSON)
+                    .param("shipId", "123")
+                    .param("batchId", "1")
+                    .param("rowNumber", "2"),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].id", equalTo(1)))
     }
 }

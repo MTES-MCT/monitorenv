@@ -1,9 +1,9 @@
-import { useImageConverter } from '@components/Form/Images/hook/useImageConverter'
 import { IMAGES_WIDTH_LANDSCAPE, IMAGES_WIDTH_PORTRAIT } from '@components/Form/Images/ImageUploader'
 import { ImageViewer } from '@components/Form/Images/ImageViewer'
-import { Orientation, type ImageApi } from '@components/Form/types'
+import { type FileApi, Orientation } from '@components/Form/types'
 import { useState } from 'react'
 
+import { useFileConverter } from '../../../../../components/Form/Images/hook/useFileConverter'
 import { PanelImageContainer, StyledImageButton } from '../style'
 
 export function PanelImages({
@@ -11,12 +11,12 @@ export function PanelImages({
   isSideWindow = false,
   vigilanceAreaName
 }: {
-  images: ImageApi[]
+  images: FileApi[]
   isSideWindow?: boolean
   vigilanceAreaName: string | undefined
 }) {
   const [imageViewerCurrentIndex, setImageViewerCurrentIndex] = useState<number>(-1)
-  const imagesFront = useImageConverter(images, isSideWindow)
+  const imagesFront = useFileConverter(images, isSideWindow)
 
   const openImageViewer = (currentIndex: number) => {
     setImageViewerCurrentIndex(currentIndex)

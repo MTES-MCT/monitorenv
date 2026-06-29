@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures
 
+import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselAdditionalInformationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselEntity
+import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselFileEntity
 
 class VesselFixture {
     companion object {
@@ -9,8 +11,10 @@ class VesselFixture {
             mmsi: String? = null,
         ): VesselEntity =
             VesselEntity(
+                additionalInformation = null,
                 batchId = null,
                 id = 1,
+                files = emptyList(),
                 shipId = shipId,
                 status = null,
                 category = null,
@@ -41,6 +45,17 @@ class VesselFixture {
                 positions = mutableListOf(),
                 rowNumber = null,
                 umsGrossTonnage = null,
+            )
+
+        fun aVesselAdditionalInformation() = VesselAdditionalInformationEntity(id = 1, observations = "observations")
+
+        fun aVesselFile() =
+            VesselFileEntity(
+                id = 1,
+                name = "fichier",
+                mimeType = "image/jpeg",
+                size = 1024,
+                content = "TEST".toByteArray(),
             )
     }
 }

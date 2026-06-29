@@ -1,6 +1,10 @@
-import { type ImageApi, type ImageFront, Orientation } from '../types'
+import { type FileApi, Orientation, type Thumbnail } from '../types'
+
+import type { UploadMode } from './FileUploader'
 
 export const IMAGES_INFORMATIONS_TEXT = '5 photos maximum. Formats autorisés: jpeg, png, webp'
+export const FILES_INFORMATIONS_TEXT = '5 fichiers maximum. Formats autorisés: jpeg, png, webp, pdf'
+export const DOCS_INFORMATIONS_TEXT = '5 documents maximum. Formats autorisés: PDF'
 const IMAGES_INFORMATIONS_LIMIT_MAX_ERROR = "Vous avez atteint le nombre maximum d'images"
 const IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR = 'Vous ne pouvez charger que 5 images au total'
 
@@ -20,18 +24,19 @@ function isValidBase64(str: string): boolean {
 
   return true
 }
-export async function convertImagesForFront(images: ImageApi[], ref: HTMLElement): Promise<ImageFront[]> {
+export async function convertImagesToThumbnails(files: FileApi[], ref: HTMLElement): Promise<Thumbnail[]> {
   const processedImages = await Promise.all(
-    images.map(async image => {
+    files.map(async file => {
       try {
-        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp']
-        if (!allowedMimeTypes.includes(image.mimeType)) {
+        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
+        if (!allowedMimeTypes.includes(file.mimeType)) {
           throw new Error('Invalid MIME type')
         }
-        if (!isValidBase64(image.content)) {
+        if (!isValidBase64(file.content)) {
           throw new Error('Invalid base64 content')
         }
-        const base64Image = `data:${image.mimeType};base64,${image.content}`
+        const base64Image = `data:${file.mimeType};base64,${file.content}`
+
         const { container, img } = createInMemoryImage(ref)
         img.src = base64Image
 
@@ -41,8 +46,9 @@ export async function convertImagesForFront(images: ImageApi[], ref: HTMLElement
 
         return {
           image: base64Image,
-          name: image.name,
-          orientation: naturalWidth > naturalHeight ? Orientation.LANDSCAPE : Orientation.PORTRAIT
+          name: file.name,
+          orientation: naturalWidth > naturalHeight ? Orientation.LANDSCAPE : Orientation.PORTRAIT,
+          type: file.mimeType
         }
       } catch (error) {
         return undefined
@@ -66,7 +72,11 @@ export const compressImage = (img: HTMLImageElement, type: string, quality = 0.3
   return canvas.toDataURL(type, quality)
 }
 
-export const areFilesValid = (numberOfFiles: number, callback?: (message: string) => void) => {
+export const areFilesValid = (
+  numberOfFiles: number,
+  callback?: (message: string) => void,
+  mode: UploadMode = 'IMAGES'
+) => {
   if (numberOfFiles > 5) {
     if (callback) {
       callback(IMAGES_INFORMATIONS_REACHED_LIMIT_ERROR)
@@ -83,7 +93,19 @@ export const areFilesValid = (numberOfFiles: number, callback?: (message: string
   }
 
   if (callback) {
-    callback(IMAGES_INFORMATIONS_TEXT)
+    switch (mode) {
+      case 'IMAGES':
+        callback(IMAGES_INFORMATIONS_TEXT)
+        break
+      case 'FILES':
+        callback(FILES_INFORMATIONS_TEXT)
+        break
+      case 'DOCUMENTS':
+        callback(DOCS_INFORMATIONS_TEXT)
+        break
+      default:
+        break
+    }
   }
 
   return true
@@ -111,4 +133,46 @@ export const createInMemoryImage = (ref: HTMLElement, file?: File) => {
   ref.appendChild(container)
 
   return { container, img }
+}
+
+export const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = () => {
+      const result = reader.result as string
+      resolve(result.split(',')[1] ?? '')
+    }
+
+    reader.onerror = reject
+
+    reader.readAsDataURL(file)
+  })
+
+export const getUploadParameters = (mode: UploadMode) => {
+  switch (mode) {
+    case 'IMAGES':
+      return {
+        acceptedFiles: 'image/png, image/jpeg, image/webp',
+        suffixMessage: 'une image',
+        title: 'Image',
+        warningMessage: IMAGES_INFORMATIONS_TEXT
+      }
+    case 'DOCUMENTS':
+      return {
+        acceptedFiles: 'application/pdf',
+        suffixMessage: 'un document',
+        title: 'Document',
+        warningMessage: DOCS_INFORMATIONS_TEXT
+      }
+    case 'FILES':
+      return {
+        acceptedFiles: 'image/png, image/jpeg, image/webp, .pdf',
+        suffixMessage: 'un fichier',
+        title: 'Fichier',
+        warningMessage: FILES_INFORMATIONS_TEXT
+      }
+    default:
+      return undefined
+  }
 }

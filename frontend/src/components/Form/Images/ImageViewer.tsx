@@ -4,11 +4,11 @@ import { useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
 
-import type { ImageFront } from '../types'
+import type { Thumbnail } from '../types'
 
 interface ImageViewerProps {
   currentIndex?: number
-  images: ImageFront[]
+  images: Thumbnail[]
   isSideWindow?: boolean
   onClose: () => void
 }
@@ -59,7 +59,12 @@ export function ImageViewer({ currentIndex, images, isSideWindow = false, onClos
 
         <Content>
           <Slide>
-            <StyledImage alt={images[localCurrentIndex]?.name} src={images[localCurrentIndex]?.image} />
+            {images[localCurrentIndex]?.type.includes('images/') && (
+              <StyledImage alt={images[localCurrentIndex]?.name} src={images[localCurrentIndex]?.image} />
+            )}
+            {images[localCurrentIndex]?.type.includes('application/pdf') && (
+              <iframe src={images[localCurrentIndex]?.image} title={images[localCurrentIndex]?.name} />
+            )}
           </Slide>
         </Content>
         {images.length > 1 && (
