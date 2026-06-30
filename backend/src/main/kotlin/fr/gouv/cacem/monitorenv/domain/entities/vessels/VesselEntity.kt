@@ -4,9 +4,11 @@ import fr.gouv.cacem.monitorenv.domain.entities.positions.AISPositionEntity
 import java.math.BigDecimal
 
 data class VesselEntity(
+    val additionalInformation: VesselAdditionalInformationEntity?,
     val category: String?,
     val commercialName: String?,
-    val batchId: Int?,
+    override val batchId: Int?,
+    val files: List<VesselFileEntity>,
     val flag: String?,
     val id: Int,
     val isBanned: Boolean,
@@ -30,10 +32,10 @@ data class VesselEntity(
     val ownerStartDate: String?,
     val portOfRegistry: String?,
     val professionalType: String?,
-    val rowNumber: Int?,
-    val shipId: Int,
+    override val rowNumber: Int?,
+    override val shipId: Int,
     val shipName: String?,
     val status: String?,
     val positions: MutableList<AISPositionEntity>,
     val umsGrossTonnage: BigDecimal?,
-)
+) : VesselIdEntity(batchId = batchId, rowNumber = rowNumber, shipId = shipId)

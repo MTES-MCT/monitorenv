@@ -3,16 +3,16 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vessels
 import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselEntity
 
 data class VesselIdentityDataOutput(
+    val id: Int,
+    val batchId: Int?,
     val category: String?,
     val flag: String?,
-    val id: Int,
     val imo: String?,
     val immatriculation: String?,
     val mmsi: String?,
+    val rowNumber: Int?,
     val shipId: Int,
     val shipName: String?,
-    val batchId: Int?,
-    val rowNumber: Int?,
 ) {
     companion object {
         fun fromVessel(vessel: VesselEntity): VesselIdentityDataOutput =

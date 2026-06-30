@@ -68,9 +68,7 @@ class VesselsITest {
         val vessel = aVessel()
         given(
             getVesselByShipId.execute(
-                eq(id),
-                eq(1),
-                eq(1),
+                any(),
                 any(),
                 any(),
             ),

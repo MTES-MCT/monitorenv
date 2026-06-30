@@ -2,7 +2,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { isEmpty } from 'lodash'
 import * as Yup from 'yup'
 
-import type { ImageApi } from '@components/Form/types'
+import type { FileApi } from '@components/Form/types'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const VigilanceAreaSourceSchema: Yup.Schema<Omit<VigilanceArea.VigilanceAreaSource, 'id'>> = Yup.object()
@@ -91,7 +91,7 @@ export const DraftSchema: Yup.Schema<Omit<VigilanceArea.VigilanceArea, 'computed
         .optional(),
       geom: Yup.mixed<GeoJSON.MultiPolygon>().optional(),
       id: Yup.number().optional(),
-      images: Yup.array<ImageApi>().optional(),
+      images: Yup.array<FileApi>().optional(),
       isDraft: Yup.boolean().required(),
       linkedAMPs: Yup.array().optional(),
       linkedRegulatoryAreas: Yup.array().optional(),
@@ -122,7 +122,7 @@ export const PublishedSchema: Yup.Schema<
       })
       .required(),
     id: Yup.number().optional(),
-    images: Yup.array<ImageApi>().optional(),
+    images: Yup.array<FileApi>().optional(),
     isDraft: Yup.boolean().required(),
     linkedAMPs: Yup.array().optional(),
     linkedRegulatoryAreas: Yup.array().optional(),

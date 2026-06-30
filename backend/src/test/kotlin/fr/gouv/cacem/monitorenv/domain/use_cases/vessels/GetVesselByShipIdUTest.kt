@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.vessels
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.mock
+import fr.gouv.cacem.monitorenv.domain.entities.vessels.VesselIdEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IAISPositionRepository
@@ -25,12 +26,15 @@ class GetVesselByShipIdUTest {
     val getVesselByShipId = GetVesselByShipId(vesselRepository, aisPositionRepository)
 
     @Test
-    fun `execute should retrieve a vessel by id and last positions by shipId`(log: CapturedOutput) {
+    fun `execute should retrieve a vessel by id and last positions, files and additional information by shipId`(
+        log: CapturedOutput,
+    ) {
         // Given
-        val vesselId = 1
+        val shipId = 1
+        val vesselId = VesselIdEntity(batchId = null, rowNumber = null, shipId = shipId)
 
         val expectedVessel = aVessel(mmsi = "1")
-        given(vesselRepository.findVesselByShipId(vesselId, null, null)).willReturn(expectedVessel)
+        given(vesselRepository.findVesselByVesselId(shipId, null, null)).willReturn(expectedVessel)
         val aisPositions = mutableListOf(AisPositionFixture.aPosition())
         val from = ZonedDateTime.now().minusHours(12)
         val to = ZonedDateTime.now()
@@ -43,7 +47,7 @@ class GetVesselByShipIdUTest {
         ).willReturn(aisPositions)
 
         // When
-        val vessel = getVesselByShipId.execute(vesselId, null, null, from, to)
+        val vessel = getVesselByShipId.execute(vesselId, from, to)
 
         // Then
         assertThat(vessel).isEqualTo(expectedVessel.copy(positions = aisPositions))
@@ -53,13 +57,14 @@ class GetVesselByShipIdUTest {
     @Test
     fun `execute should retrieve a vessel by id and not last positions by shipId when it is null`(log: CapturedOutput) {
         // Given
-        val vesselId = 1
+        val shipId = 1
+        val vesselId = VesselIdEntity(batchId = null, rowNumber = null, shipId = shipId)
 
         val expectedVessel = aVessel(mmsi = null)
-        given(vesselRepository.findVesselByShipId(vesselId, null, null)).willReturn(expectedVessel)
+        given(vesselRepository.findVesselByVesselId(shipId, null, null)).willReturn(expectedVessel)
 
         // When
-        val vessel = getVesselByShipId.execute(vesselId, null, null)
+        val vessel = getVesselByShipId.execute(vesselId)
 
         // Then
         verifyNoInteractions(aisPositionRepository)
@@ -70,13 +75,14 @@ class GetVesselByShipIdUTest {
     @Test
     fun `execute should throw a BackendUsageException when vessel is not found`() {
         // Given
-        val vesselId = 1
+        val shipId = 1
+        val vesselId = VesselIdEntity(batchId = null, rowNumber = null, shipId = shipId)
 
-        given(vesselRepository.findVesselByShipId(vesselId, null, null)).willReturn(null)
+        given(vesselRepository.findVesselByVesselId(shipId, null, null)).willReturn(null)
 
         // When
         val backendUsageException =
-            assertThrows<BackendUsageException> { getVesselByShipId.execute(vesselId, null, null) }
+            assertThrows<BackendUsageException> { getVesselByShipId.execute(vesselId) }
 
         // Then
         assertThat(backendUsageException.message).isEqualTo("vessel $vesselId not found")

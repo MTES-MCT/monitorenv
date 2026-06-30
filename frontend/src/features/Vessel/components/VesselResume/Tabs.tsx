@@ -1,3 +1,4 @@
+import { Tab } from '@features/Vessel/components/VesselResume/Tab'
 import { Icon } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -9,65 +10,83 @@ type TabProps = {
 }
 
 export function Tabs({ onTabChange }: TabProps) {
-  const [tabOpen, setTabOpen] = useState<ResumePages>('RESUME')
+  const [openedTab, setOpenedTab] = useState<ResumePages>('RESUME')
 
   const changeTab = (tab: ResumePages) => {
-    setTabOpen(tab)
+    setOpenedTab(tab)
     onTabChange(tab)
   }
 
   return (
     <TabList role="tablist">
-      <Tab $isActive={tabOpen === 'RESUME'} onClick={() => changeTab('RESUME')} role="tab">
-        <Icon.Resume size={30} />
-        Résumé
-      </Tab>
-      <Tab $isActive={tabOpen === 'OWNER'} onClick={() => changeTab('OWNER')} role="tab">
-        <Icon.Identity size={30} />
-        Propriétaire(s)
-      </Tab>
-      <Tab $isActive={tabOpen === 'HISTORY'} onClick={() => changeTab('HISTORY')} role="tab">
-        <Icon.Control size={30} />
-        Antécédents
-      </Tab>
+      <Tab icon={Icon.Resume} onTabClick={page => changeTab(page)} openedTab={openedTab} page="RESUME" title="Résumé" />
+      <Tab
+        icon={Icon.Identity}
+        onTabClick={page => changeTab(page)}
+        openedTab={openedTab}
+        page="OWNER"
+        title="Propriétaire(s)"
+      />
+      <Tab
+        icon={Icon.Control}
+        onTabClick={page => changeTab(page)}
+        openedTab={openedTab}
+        page="HISTORY"
+        title="Antécédents"
+      />
+      <StyledTab
+        $isActive={openedTab === 'ADDITIONAL_INFORMATION'}
+        icon={Icon.Document}
+        onTabClick={page => changeTab(page)}
+        openedTab={openedTab}
+        page="ADDITIONAL_INFORMATION"
+        title="Info(s) complément."
+      />
     </TabList>
   )
 }
 
-const Tab = styled.button<{
-  $isActive: boolean
-  $isLast?: boolean
-}>`
-  align-items: center;
-  background: ${p => (p.$isActive ? p.theme.color.blueGray : p.theme.color.charcoal)};
-  color: ${p => (p.$isActive ? p.theme.color.white : p.theme.color.lightGray)};
-  display: flex;
-  flex-direction: column;
-  font-size: 10px;
-  gap: 8px;
-  justify-content: center;
-  padding: 12px 0 8px;
-
-  &:hover,
-  &:focus {
-    color: ${p => p.theme.color.white};
-    background: ${p => p.theme.color.blueYonder};
-    ${p => (p.$isLast ? null : `border-right: 1px solid ${p.theme.color.lightGray};`)}
-  }
-
-  &:active {
-    color: ${p => p.theme.color.white};
-    background: ${p => p.theme.color.blueGray};
-    ${p => (p.$isLast ? null : `border-right: 1px solid ${p.theme.color.lightGray};`)}
-  }
-`
-
 const TabList = styled.div`
   border-top: 1px solid ${p => p.theme.color.lightGray};
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 
   button:not(:last-child) {
     ${p => `border-right: 1px solid ${p.theme.color.lightGray};`}
+  }
+`
+
+const StyledTab = styled(Tab)<{ $isActive: boolean }>`
+  > span {
+    svg {
+      background: ${p => (p.$isActive ? p.theme.color.white : p.theme.color.lightGray)};
+      color: ${p => (p.$isActive ? p.theme.color.blueYonder : p.theme.color.charcoal)};
+    }
+  }
+
+  &:hover,
+  &:focus {
+    ${p => `border-right: 1px solid ${p.theme.color.lightGray};`}
+  }
+
+  &:active {
+    ${p => `border-right: 1px solid ${p.theme.color.lightGray};`}
+  }
+
+  &:hover,
+  &:focus {
+    svg {
+      color: ${p => p.theme.color.blueYonder};
+    }
+  }
+
+  &:active {
+    svg {
+      color: ${p => p.theme.color.blueGray};
+    }
+  }
+
+  svg {
+    color: ${p => p.$isActive && p.theme.color.white};
   }
 `

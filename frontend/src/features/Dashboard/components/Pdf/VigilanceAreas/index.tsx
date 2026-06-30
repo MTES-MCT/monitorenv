@@ -1,4 +1,4 @@
-import { type ImageFront, Orientation } from '@components/Form/types'
+import { Orientation, type Thumbnail } from '@components/Form/types'
 import { Dashboard } from '@features/Dashboard/types'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { EMPTY_VALUE } from '@features/VigilanceArea/constants'
@@ -18,8 +18,8 @@ import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { AMPFromAPI } from 'domain/entities/AMPs'
 
-function chunkArray(array: ImageFront[], size: number) {
-  const result: ImageFront[][] = []
+function chunkArray(array: Thumbnail[], size: number) {
+  const result: Thumbnail[][] = []
   for (let i = 0; i < array.length; i += size) {
     const slicedImages = array.slice(i, i + size)
     result.push(slicedImages)

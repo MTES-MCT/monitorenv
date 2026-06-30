@@ -37,7 +37,8 @@ export const monitorenvPrivateApi = createApi({
     'RegulatoryAreas',
     'Reportings',
     'Tags',
-    'VigilanceAreas'
+    'VigilanceAreas',
+    'Vessels'
   ]
 })
 

@@ -4,6 +4,9 @@ VALUES (nextval('vessels_id_seq'), '11', 'A', 'PRO', false, 'IMO1111', '12345678
         'MICHEL',
         '1998-07-12', '82 STADE DE FRANCE', '0102030405', 'email@gmail.com', 'COMPANY NAME 1', 'FRANCE', '45.40Z',
         '3120', '2000-01-01', 2, 1, '0123456', 9.23);
+INSERT INTO public.vessels_additional_information (id, batch_id, row_number, ship_id, observations)
+VALUES (nextval('vessels_additional_information_id_seq'), 2, 1, 11,
+        'Observations: taille non conforme - supérieur à 12m');
 INSERT INTO public.vessels
 VALUES (nextval('vessels_id_seq'), '11', 'A', 'PRO', false, 'IMO1111', '123456789',
         'IMMAT111111', 'OLD SHIPNAME 1', 'DZA', 'ALGER', null, 'Porte-conteneur', 'COMMERCIAL NAME', 12.12, null,
