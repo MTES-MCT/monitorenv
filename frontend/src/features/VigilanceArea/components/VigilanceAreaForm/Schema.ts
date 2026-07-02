@@ -2,7 +2,7 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { isEmpty } from 'lodash'
 import * as Yup from 'yup'
 
-import type { FileApi } from '@components/Form/types'
+import type { FileApi } from '@mtes-mct/monitor-ui'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const VigilanceAreaSourceSchema: Yup.Schema<Omit<VigilanceArea.VigilanceAreaSource, 'id'>> = Yup.object()

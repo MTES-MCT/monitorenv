@@ -1,8 +1,10 @@
-import { Orientation, type Thumbnail } from '@components/Form/types'
 import { Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 
+import { Orientation } from '../../../../../types'
 import { Headings } from '../Layout/Headings'
 import { layoutStyle } from '../style'
+
+import type { Thumbnail } from '@mtes-mct/monitor-ui'
 
 export const style = StyleSheet.create({
   imageContainer: {

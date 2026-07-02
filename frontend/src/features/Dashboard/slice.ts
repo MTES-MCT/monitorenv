@@ -11,8 +11,9 @@ import { Dashboard } from './types'
 import { filterReportings } from './useCases/filters/filterReportings'
 
 import type { DashboardFilters, VigilanceAreaFilters } from './components/DashboardForm/slice'
-import type { FileApi, Link } from '@components/Form/types'
+import type { Link } from '@components/Form/types'
 import type { NearbyUnit } from '@features/Dashboard/components/DashboardForm/NearbyUnits/types'
+import type { FileApi } from '@mtes-mct/monitor-ui'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 
 export const initialDashboard: DashboardType = {
