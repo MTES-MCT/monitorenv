@@ -1,7 +1,7 @@
 /* eslint-disable typescript-sort-keys/string-enum */
-import { ControlUnit } from '@mtes-mct/monitor-ui'
+import { ControlUnit, type FileApi } from '@mtes-mct/monitor-ui'
 
-import type { FileApi, Link } from '@components/Form/types'
+import type { Link } from '@components/Form/types'
 import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 import type { GeoJSON } from 'domain/types/GeoJSON'

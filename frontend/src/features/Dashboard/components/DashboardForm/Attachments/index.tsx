@@ -1,13 +1,15 @@
-import { ImageUploader } from '@components/Form/Images/ImageUploader'
 import { Links } from '@components/Form/Links/Links'
 import { dashboardActions } from '@features/Dashboard/slice'
+import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { forwardRef } from 'react'
+import { FileUploader, Level, UploadMode } from '@mtes-mct/monitor-ui'
+import { forwardRef, useCallback } from 'react'
 import styled from 'styled-components'
 
 import { Accordion, Title, TitleContainer } from '../Accordion'
 
-import type { FileApi, Link } from '@components/Form/types'
+import type { Link } from '@components/Form/types'
+import type { FileApi } from '@mtes-mct/monitor-ui'
 
 type AttachmentsProps = {
   images: FileApi[]
@@ -35,6 +37,21 @@ export const Attachments = forwardRef<HTMLDivElement, AttachmentsProps>(
       dispatch(dashboardActions.setImages(updatedImages))
     }
 
+    const handleUploadError = useCallback(
+      (errorMessage: string) => {
+        dispatch(
+          addSideWindowBanner({
+            children: errorMessage,
+            isClosable: true,
+            isFixed: true,
+            level: Level.ERROR,
+            withAutomaticClosing: true
+          })
+        )
+      },
+      [dispatch]
+    )
+
     return (
       <Accordion
         isExpanded={isExpanded}
@@ -48,7 +65,13 @@ export const Attachments = forwardRef<HTMLDivElement, AttachmentsProps>(
       >
         <StyledContainer>
           <Links links={links} onDelete={handleDeleteLink} onValidate={handleValidateLink} />
-          <ImageUploader files={images} isSideWindow onDelete={handleDeleteImage} onUpload={handleUploadImage} />
+          <FileUploader
+            files={images}
+            mode={UploadMode.IMAGES}
+            onDelete={handleDeleteImage}
+            onError={handleUploadError}
+            onUpload={handleUploadImage}
+          />
         </StyledContainer>
       </Accordion>
     )

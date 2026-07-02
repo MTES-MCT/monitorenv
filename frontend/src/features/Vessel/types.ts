@@ -1,6 +1,6 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import type { GeoJSON } from '../../domain/types/GeoJSON'
-import type { FileApi } from '@components/Form/types'
+import type { FileApi } from '@mtes-mct/monitor-ui'
 
 export namespace Vessel {
   export interface VesselId {

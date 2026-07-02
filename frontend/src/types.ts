@@ -30,3 +30,8 @@ export enum AxisLabel {
   EAST_WEST = 'Est-Ouest',
   WEST_EAST = 'Ouest-Est'
 }
+
+export enum Orientation {
+  LANDSCAPE = 'landscape',
+  PORTRAIT = 'portrait'
+}

@@ -1,10 +1,11 @@
-import { IMAGES_WIDTH_LANDSCAPE, IMAGES_WIDTH_PORTRAIT } from '@components/Form/Images/ImageUploader'
-import { ImageViewer } from '@components/Form/Images/ImageViewer'
-import { type FileApi, Orientation } from '@components/Form/types'
+import { type FileApi, ImageViewer, useFileConverter } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 
-import { useFileConverter } from '../../../../../components/Form/Images/hook/useFileConverter'
+import { Orientation } from '../../../../../types'
 import { PanelImageContainer, StyledImageButton } from '../style'
+
+const IMAGES_WIDTH_LANDSCAPE = '122px'
+const IMAGES_WIDTH_PORTRAIT = '57px'
 
 export function PanelImages({
   images,

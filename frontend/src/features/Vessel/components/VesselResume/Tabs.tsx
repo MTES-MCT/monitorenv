@@ -57,36 +57,23 @@ const TabList = styled.div`
 `
 
 const StyledTab = styled(Tab)<{ $isActive: boolean }>`
-  > span {
-    svg {
-      background: ${p => (p.$isActive ? p.theme.color.white : p.theme.color.lightGray)};
-      color: ${p => (p.$isActive ? p.theme.color.blueYonder : p.theme.color.charcoal)};
-    }
-  }
-
   &:hover,
   &:focus {
     ${p => `border-right: 1px solid ${p.theme.color.lightGray};`}
-  }
-
-  &:active {
-    ${p => `border-right: 1px solid ${p.theme.color.lightGray};`}
-  }
-
-  &:hover,
-  &:focus {
     svg {
       color: ${p => p.theme.color.blueYonder};
     }
   }
 
   &:active {
+    ${p => `border-right: 1px solid ${p.theme.color.lightGray};`}
     svg {
       color: ${p => p.theme.color.blueGray};
     }
   }
 
   svg {
-    color: ${p => p.$isActive && p.theme.color.white};
+    background: ${p => (p.$isActive ? p.theme.color.white : p.theme.color.lightGray)};
+    color: ${p => (p.$isActive ? p.theme.color.blueGray : p.theme.color.charcoal)};
   }
 `
