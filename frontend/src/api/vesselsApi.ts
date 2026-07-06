@@ -3,6 +3,7 @@ import { FrontendApiError } from '@libs/FrontendApiError'
 import { getQueryString } from '@utils/getQueryStringFormatted'
 
 import type { Vessel } from '@features/Vessel/types'
+import type { FileApi } from '@mtes-mct/monitor-ui'
 
 const GET_VESSEL_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les informations de ce navire."
 const SEARCH_VESSELS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les navires correspondants à cette recherche."
@@ -33,7 +34,7 @@ export const vesselsApi = monitorenvPrivateApi.injectEndpoints({
       transformErrorResponse: response =>
         new FrontendApiError(SAVE_VESSELS_ADDITIONAL_INFORMATION_ERROR_MESSAGE, response)
     }),
-    saveVesselFile: builder.mutation<Vessel.File[], { files: Vessel.File[]; vesselId: Vessel.VesselId }>({
+    saveVesselFile: builder.mutation<FileApi[], { files: FileApi[]; vesselId: Vessel.VesselId }>({
       invalidatesTags: () => [{ type: 'Vessels' }],
       query: ({ files, vesselId }) => ({
         body: files,

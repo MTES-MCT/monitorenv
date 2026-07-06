@@ -17,7 +17,7 @@ export const saveVesselAdditionalInformation =
     if (error) {
       dispatch(
         addMainWindowBanner({
-          children: "Les informations additionelles n'ont pu être enregistré",
+          children: "Les informations additionelles n'ont pas pu être enregistrées",
           isClosable: true,
           isFixed: true,
           level: Level.ERROR,

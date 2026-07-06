@@ -21,7 +21,7 @@ export namespace Vessel {
   export interface Vessel extends Identity {
     additionalInformation?: AdditionalInformation
     commercialName?: string
-    files?: Vessel.File[]
+    files?: FileApi[]
     leisureType?: string
     length?: number
     ownerBusinessSegmentLabel?: string
@@ -83,6 +83,4 @@ export namespace Vessel {
     id?: number
     observations?: string
   }
-
-  export interface File extends FileApi {}
 }
