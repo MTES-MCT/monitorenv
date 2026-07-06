@@ -3,7 +3,7 @@ import { Vessel } from '@features/Vessel/types'
 import { saveVesselAdditionalInformation } from '@features/Vessel/useCases/saveVesselAdditionalInformation'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Textarea } from '@mtes-mct/monitor-ui'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useDebouncedCallback } from 'use-debounce'
 
@@ -14,6 +14,14 @@ type AdditionalInformationProps = {
 export function AdditionalInformation({ vessel }: AdditionalInformationProps) {
   const dispatch = useAppDispatch()
   const [observations, setObservations] = useState(vessel.additionalInformation?.observations)
+  const vesselId: Vessel.VesselId = useMemo(
+    () => ({
+      batchId: vessel.batchId,
+      rowNumber: vessel.rowNumber,
+      shipId: vessel.shipId
+    }),
+    [vessel]
+  )
 
   useEffect(() => {
     setObservations(vessel.additionalInformation?.observations)
@@ -25,11 +33,6 @@ export function AdditionalInformation({ vessel }: AdditionalInformationProps) {
   }
 
   const save = useDebouncedCallback((nextObservations: string | undefined) => {
-    const vesselId: Vessel.VesselId = {
-      batchId: vessel.batchId,
-      rowNumber: vessel.rowNumber,
-      shipId: vessel.shipId
-    }
     const additionalInformationToSave: Vessel.AdditionalInformation = {
       id: vessel.additionalInformation?.id,
       observations: nextObservations

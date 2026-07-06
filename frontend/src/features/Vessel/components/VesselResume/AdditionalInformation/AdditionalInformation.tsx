@@ -45,6 +45,7 @@ export function AdditionalInformation({ vessel }: AdditionalInformationProps) {
     <AttachmentsSection>
       <header>Pièce(s) jointe(s)</header>
       <StyledFileUploader
+        key="images"
         files={vessel.files}
         mode="IMAGES"
         onDelete={onUpload}
@@ -52,6 +53,7 @@ export function AdditionalInformation({ vessel }: AdditionalInformationProps) {
         onUpload={onUpload}
       />
       <StyledFileUploader
+        key="documents"
         files={vessel.files}
         mode="DOCUMENTS"
         onDelete={onUpload}
