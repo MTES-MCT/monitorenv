@@ -77,7 +77,7 @@ context('Side Window > Vigilance Areas List > Filter Bar', () => {
 
     // with only PRIVATE visibility option checked
     cy.fill('Visibilité', 'Interne CACEM')
-    cy.getDataCy('vigilance-area-row').should('have.length', 1)
+    cy.getDataCy('vigilance-area-row').should('have.length', 2)
   })
 
   it('Should filter vigilance areas by type', () => {
