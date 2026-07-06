@@ -1,11 +1,11 @@
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { reportingsFiltersMigrations } from '@store/migrations/reportingsFilters'
+import { storage } from '@store/storage'
 import { DateRangeEnum } from 'domain/entities/dateRange'
 import { StatusFilterEnum } from 'domain/entities/reporting'
 import { isEqual } from 'lodash'
 import { createMigrate, persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'

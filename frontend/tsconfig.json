@@ -13,9 +13,8 @@
     "exactOptionalPropertyTypes": false,
     "incremental": true,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    // https://github.com/cypress-io/cypress/issues/26308#issuecomment-1666236726
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "paths": {
       "@api/*": ["api/*"],

@@ -1,4 +1,6 @@
-import { FormikTextarea, Icon, Label, THEME } from '@mtes-mct/monitor-ui'
+import { MarkdownEditor } from '@components/MarkdownEditor'
+import { Icon, Label, THEME } from '@mtes-mct/monitor-ui'
+import { useField } from 'formik'
 import { useState } from 'react'
 import styled from 'styled-components'
 
@@ -8,6 +10,8 @@ import { SubTitle } from './style'
 
 export function FormContent({ isEditing }: { isEditing: boolean }) {
   const [editingMainRefReg, setEditingMainRefReg] = useState<MainRefReg | undefined>(undefined)
+  const [authorizationField, , authorizationHelpers] = useField('authorizationPeriods')
+  const [prohibitionField, , prohibitionHelpers] = useField('prohibitionPeriods')
 
   return (
     <>
@@ -21,11 +25,11 @@ export function FormContent({ isEditing }: { isEditing: boolean }) {
             <StyledIcon color={THEME.color.mediumSeaGreen} size={10} />
             Période d&apos;autorisation
           </Label>
-          <FormikTextarea
-            isLabelHidden
-            label="Période autorisée"
-            name="authorizationPeriods"
-            placeholder="Détail de la période d’autorisation"
+          <MarkdownEditor
+            onChange={val => {
+              authorizationHelpers.setValue(val)
+            }}
+            value={authorizationField.value}
           />
         </Period>
         <Period>
@@ -33,11 +37,11 @@ export function FormContent({ isEditing }: { isEditing: boolean }) {
             <StyledIcon color={THEME.color.maximumRed} size={10} />
             Période d&apos;interdiction
           </Label>
-          <FormikTextarea
-            isLabelHidden
-            label="Période d'interdiction"
-            name="prohibitionPeriods"
-            placeholder="Détail de la période d’interdiction"
+          <MarkdownEditor
+            onChange={val => {
+              prohibitionHelpers.setValue(val ?? '')
+            }}
+            value={prohibitionField.value}
           />
         </Period>
       </PeriodContainer>

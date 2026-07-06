@@ -1,20 +1,23 @@
 import { FrontendError } from '@libs/FrontendError'
 import { isObject, nullify, undefine } from '@mtes-mct/monitor-ui'
 
-import type { BaseQueryEnhancer, FetchArgs } from '@reduxjs/toolkit/dist/query'
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
-export const normalizeRtkBaseQuery: BaseQueryEnhancer<unknown, {}, {} | void> =
-  baseQuery => async (args: string | FetchArgs, api) => {
+export const normalizeRtkBaseQuery =
+  (
+    baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError>
+  ): BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> =>
+  async (args, api, extraOptions) => {
     try {
       const argsWithNullifiedBody =
-        typeof args === 'object' && isObject(args.body)
+        typeof args === 'object' && isObject((args as FetchArgs).body)
           ? {
-              ...args,
-              body: nullify(args.body)
+              ...(args as FetchArgs),
+              body: nullify((args as FetchArgs).body)
             }
           : args
 
-      const result = await baseQuery(argsWithNullifiedBody, api, {})
+      const result = await baseQuery(argsWithNullifiedBody, api, extraOptions)
 
       const normalizedResult = result.data
         ? ({

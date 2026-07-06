@@ -1,8 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { controlUnitsFiltersMigrations } from '@store/migrations/controlUnitsFilters'
+import { storage } from '@store/storage'
 import { isEqual } from 'lodash'
 import { createMigrate, persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 
 import type { FiltersState } from './types'
 
