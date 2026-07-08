@@ -44,22 +44,24 @@ export function AdditionalInformation({ vessel }: AdditionalInformationProps) {
   return (
     <AttachmentsSection>
       <header>Pièce(s) jointe(s)</header>
-      <StyledFileUploader
-        key="images"
-        files={vessel.files}
-        mode="IMAGES"
-        onDelete={onUpload}
-        onError={onError}
-        onUpload={onUpload}
-      />
-      <StyledFileUploader
-        key="documents"
-        files={vessel.files}
-        mode="DOCUMENTS"
-        onDelete={onUpload}
-        onError={onError}
-        onUpload={onUpload}
-      />
+      <Wrapper>
+        <FileUploader
+          key="images"
+          files={vessel.files}
+          mode="IMAGES"
+          onDelete={onUpload}
+          onError={onError}
+          onUpload={onUpload}
+        />
+        <FileUploader
+          key="documents"
+          files={vessel.files}
+          mode="DOCUMENTS"
+          onDelete={onUpload}
+          onError={onError}
+          onUpload={onUpload}
+        />
+      </Wrapper>
     </AttachmentsSection>
   )
 }
@@ -74,6 +76,9 @@ const AttachmentsSection = styled.section`
   }
 `
 
-const StyledFileUploader = styled(FileUploader)`
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 16px 20px;
 `
