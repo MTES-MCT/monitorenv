@@ -1,3 +1,4 @@
+import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetTrigramsQuery } from '@api/vigilanceAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
@@ -20,7 +21,6 @@ import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckPicker, getOptionsFromLabelledEnum, Icon, Select } from '@mtes-mct/monitor-ui'
-import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import styled from 'styled-components'
 
 import { FilterTags } from './FiltersTag'
@@ -52,7 +52,10 @@ export function VigilanceAreasFilters() {
     visibility: visibilityFilter
   } = useAppSelector(state => state.vigilanceAreaFilters)
 
-  const seaFrontsAsOptions = Object.values(SeaFrontLabels)
+  const { data } = useGetFacadesQuery()
+  const facadesAsOptions = data
+    ?.map(({ facade }) => ({ label: facade, value: facade }))
+    .sort((a, b) => a.label.localeCompare(b.label))
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
   const statusOptions = getOptionsFromLabelledEnum(VigilanceArea.StatusLabel)
 
@@ -149,7 +152,7 @@ export function VigilanceAreasFilters() {
             label="Façade"
             name="seaFront"
             onChange={updateSeaFrontFilter}
-            options={seaFrontsAsOptions ?? []}
+            options={facadesAsOptions ?? []}
             placeholder="Façade"
             renderValue={() => seaFrontFilter && <OptionValue>{`Façade (${seaFrontFilter.length})`}</OptionValue>}
             style={{ width: 165 }}

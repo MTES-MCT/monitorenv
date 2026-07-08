@@ -11,8 +11,6 @@ import {
 import { displaySubTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 
-import { SeaFrontLabel } from '../../../../domain/entities/seaFrontType'
-
 import type { TagFromAPI } from 'domain/entities/tags'
 import type { ThemeFromAPI } from 'domain/entities/themes'
 
@@ -86,9 +84,7 @@ export function Identification({
           )}
           <Field>
             <Key>Façade</Key>
-            <Value data-cy="regulatory-layers-metadata-facade">
-              {facade ? SeaFrontLabel[facade] : <NoValue>-</NoValue>}
-            </Value>
+            <Value data-cy="regulatory-layers-metadata-facade">{facade ?? <NoValue>-</NoValue>}</Value>
           </Field>
         </Body>
       </Fields>

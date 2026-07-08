@@ -70,12 +70,12 @@ export function TableReportingsFiltersWithRef(
   } = useAppSelector(state => state.reportingFilters)
   const {
     dateRangeOptions,
-    seaFrontsOptions,
+    facadesOptions,
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
     tagsOptions,
-    targetTypeOtions,
+    targetTypeOptions,
     themesOptions,
     typeOptions
   } = optionsList
@@ -202,7 +202,7 @@ export function TableReportingsFiltersWithRef(
             menuStyle={{ maxWidth: '200%' }}
             name="targetType"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TARGET_TYPE_FILTER)}
-            options={targetTypeOtions}
+            options={targetTypeOptions}
             placeholder="Type de cible"
             renderValue={() =>
               targetTypeFilter && <OptionValue>{`Type de cible (${targetTypeFilter.length})`}</OptionValue>
@@ -253,7 +253,7 @@ export function TableReportingsFiltersWithRef(
             label="Façade"
             name="seaFront"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SEA_FRONT_FILTER)}
-            options={seaFrontsOptions}
+            options={facadesOptions}
             placeholder="Façade"
             renderValue={() => seaFrontFilter && <OptionValue>{`Façade (${seaFrontFilter.length})`}</OptionValue>}
             size="sm"

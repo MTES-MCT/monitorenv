@@ -1,10 +1,10 @@
+import { useGetFacadesQuery } from '@api/facadesAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { OptionValue } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckPicker, Select, TextInput } from '@mtes-mct/monitor-ui'
-import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { debounce } from 'lodash'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
@@ -14,14 +14,17 @@ import { regulatoryAreaTableActions } from './slice'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
-const SEA_FRONT_OPTIONS = Object.values(SeaFrontLabels)
-
 export function RegulatoryAreaFilters() {
   const dispatch = useAppDispatch()
 
   const filters = useAppSelector(store => store.regulatoryAreaTable.filtersState)
 
   const [searchQuery, setSearchQuery] = useState(filters.searchQuery)
+
+  const { data } = useGetFacadesQuery()
+  const facadesAsOptions = data
+    ?.map(({ facade }) => ({ label: facade, value: facade }))
+    .sort((a, b) => a.label.localeCompare(b.label))
 
   const onQuery = (nextQuery: string | undefined) => {
     dispatch(regulatoryAreaTableActions.setFilter({ key: 'searchQuery', value: nextQuery }))
@@ -90,7 +93,7 @@ export function RegulatoryAreaFilters() {
           label="Façade"
           name="seaFront"
           onChange={updateSeaFrontFilter}
-          options={SEA_FRONT_OPTIONS ?? []}
+          options={facadesAsOptions ?? []}
           placeholder="Façade"
           renderValue={() => filters.seaFronts && <OptionValue>{`Façade (${filters.seaFronts.length})`}</OptionValue>}
           style={{ flex: 1 }}

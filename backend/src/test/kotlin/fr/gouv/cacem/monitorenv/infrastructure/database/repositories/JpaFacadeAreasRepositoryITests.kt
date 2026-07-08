@@ -8,7 +8,7 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
-class JpaFacadeAreasRepositoryTests : AbstractDBTests() {
+class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
     @Autowired
     private lateinit var jpaFacadeAreasRepository: JpaFacadeAreasRepository
 
@@ -55,5 +55,16 @@ class JpaFacadeAreasRepositoryTests : AbstractDBTests() {
         val requestedFacade = jpaFacadeAreasRepository.findFacadeFromGeometry(geometry)
         // Then
         assertThat(requestedFacade).isNull()
+    }
+
+    @Test
+    fun `findAll should return all facades`() {
+        // Given
+
+        // When
+        val facades = jpaFacadeAreasRepository.findAll()
+
+        // Then
+        assertThat(facades).hasSize(8)
     }
 }

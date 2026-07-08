@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
+import fr.gouv.cacem.monitorenv.domain.entities.seafront.FacadeEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -16,4 +17,6 @@ data class FacadeAreasModel(
     val facade: String,
     @Column(name = "geometry")
     val geometry: MultiPolygon? = null,
-)
+) {
+    fun toFacadeEntity() = FacadeEntity(id = id, facade = facade)
+}

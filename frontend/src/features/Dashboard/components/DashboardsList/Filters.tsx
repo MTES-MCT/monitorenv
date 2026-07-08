@@ -1,5 +1,6 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
+import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { Italic, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
@@ -20,7 +21,6 @@ import { getTagsAsOptionsLegacy } from '@utils/getTagsAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { DateRangeEnum, dateRangeOptions } from 'domain/entities/dateRange'
 import { getTitle } from 'domain/entities/layers/utils'
-import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { isArray } from 'lodash'
 import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
@@ -35,7 +35,11 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
     state => state.dashboardFilters.filters
   )
   const nbOfFiltersSetted = useAppSelector(state => state.dashboardFilters.nbOfFiltersSetted)
-  const seaFrontsAsOptions = Object.values(SeaFrontLabels)
+
+  const { data } = useGetFacadesQuery()
+  const facadesAsOptions = data
+    ?.map(({ facade }) => ({ label: facade, value: facade }))
+    .sort((a, b) => a.label.localeCompare(b.label))
 
   const { data: allControlUnits } = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
   const activeControlUnitsOptions = useMemo(
@@ -164,7 +168,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
             label="Façade"
             name="seaFront"
             onChange={updateSeaFrontFilter}
-            options={seaFrontsAsOptions ?? []}
+            options={facadesAsOptions ?? []}
             placeholder="Façade"
             renderValue={() => seaFronts && <OptionValue>{`Façade (${seaFronts.length})`}</OptionValue>}
             style={{ width: 181 }}

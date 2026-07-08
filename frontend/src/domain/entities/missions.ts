@@ -3,7 +3,6 @@ import { customDayjs, THEME } from '@mtes-mct/monitor-ui'
 import type { LegacyControlUnit, LegacyControlUnitForm } from './legacyControlUnit'
 import type { MissionTagFromAPI } from './missionTags'
 import type { DetachedReportingForTimeline, Reporting, ReportingForTimeline } from './reporting'
-import type { SeaFrontEnum } from './seaFrontType'
 import type { TagFromAPI } from './tags'
 import type { TargetTypeEnum } from './targetType'
 import type { ThemeFromAPI } from './themes'
@@ -245,7 +244,7 @@ export type Mission<EnvAction = EnvActionControl | EnvActionSurveillance | EnvAc
   detachedReportings?: []
   endDateTimeUtc: string
   envActions: EnvAction[]
-  facade: SeaFrontEnum
+  facade: string
   fishActions: FishMissionAction.MissionAction[]
   geom?: GeoJSON.MultiPolygon
   hasMissionOrder?: boolean

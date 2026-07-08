@@ -1,5 +1,6 @@
 import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
+import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetLegacyControlUnitsQuery } from '@api/legacyControlUnitsAPI'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
@@ -18,7 +19,6 @@ import { getThemesAsOptionsCheckPicker } from '@utils/getThemesAsOptions'
 import { isNotArchived } from '@utils/isNotArchived'
 import { type DateRangeEnum } from 'domain/entities/dateRange'
 import { FrontCompletionStatusLabel, MissionStatusLabel, MissionTypeLabel } from 'domain/entities/missions'
-import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { MissionFiltersEnum, resetMissionFilters, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { type MutableRefObject, useCallback, useMemo, useRef } from 'react'
 
@@ -47,7 +47,7 @@ export type MissionOptionsListType = {
 
 const missionStatusesAsOptions = getOptionsFromLabelledEnum(MissionStatusLabel)
 const missionTypesAsOptions = getOptionsFromLabelledEnum(MissionTypeLabel)
-const seaFrontsAsOptions = Object.values(SeaFrontLabels)
+
 const completionStatusAsOptions = getOptionsFromLabelledEnum(FrontCompletionStatusLabel)
 
 export function MissionFilters({ context }: { context: MissionFilterContext }) {
@@ -98,19 +98,24 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     return getOptionsFromIdAndName(selectableControlUnits) ?? []
   }, [legacyControlUnits, selectedAdministrationNames])
 
+  const { data: facades } = useGetFacadesQuery()
+  const facadesAsOptions = (facades ?? [])
+    .map(({ facade }) => ({ label: facade, value: facade }))
+    .sort((a, b) => a.label.localeCompare(b.label))
+
   const optionsList = useMemo(
     () => ({
       administrations: activeAdministrations,
       completion: completionStatusAsOptions,
       controlUnits: controlUnitsAsOptions,
       dates: missionDateRangeOptions,
-      seaFronts: seaFrontsAsOptions,
+      seaFronts: facadesAsOptions,
       status: missionStatusesAsOptions,
       tags: tagsAsOptions,
       themes: themesAsOptions,
       types: missionTypesAsOptions
     }),
-    [activeAdministrations, controlUnitsAsOptions, tagsAsOptions, themesAsOptions]
+    [activeAdministrations, controlUnitsAsOptions, facadesAsOptions, tagsAsOptions, themesAsOptions]
   )
 
   const updatePeriodFilter = useCallback(

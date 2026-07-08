@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
+import fr.gouv.cacem.monitorenv.domain.entities.seafront.FacadeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBFacadeAreasRepository
 import org.locationtech.jts.geom.Geometry
@@ -11,4 +12,6 @@ class JpaFacadeAreasRepository(
 ) : IFacadeAreasRepository {
     override fun findFacadeFromGeometry(geometry: Geometry): String? =
         dbFacadeAreasRepository.findFacadeFromGeometry(geometry)
+
+    override fun findAll(): List<FacadeEntity> = dbFacadeAreasRepository.findAll().map { it.toFacadeEntity() }
 }
