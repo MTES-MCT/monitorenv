@@ -1,5 +1,6 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants.ts'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI.ts'
+import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetSemaphoresQuery } from '@api/semaphoresAPI.ts'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
@@ -22,7 +23,6 @@ import {
   ReportingTypeLabels,
   StatusFilterLabels
 } from '../../../domain/entities/reporting'
-import { SeaFrontLabels } from '../../../domain/entities/seaFrontType'
 import { ReportingTargetTypeLabels } from '../../../domain/entities/targetType'
 
 import type { TagOption } from '../../../domain/entities/tags'
@@ -35,21 +35,21 @@ export enum ReportingFilterContext {
 
 export type ReportingsOptionsListType = {
   dateRangeOptions: Option<string>[]
-  seaFrontsOptions: Option<string>[]
+  facadesOptions: Option<string>[]
   sourceOptions: Option<SourceFilterProps>[]
   sourceTypeOptions: Option<string>[]
   statusOptions: Option<string>[]
   tagsOptions: TagOption[]
-  targetTypeOtions: Option<string>[]
+  targetTypeOptions: Option<string>[]
   themesOptions: ThemeOption[]
   typeOptions: Option<string>[]
 }
 const dateRangeOptions = getOptionsFromLabelledEnum(ReportingDateRangeLabels)
 const typeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
 const sourceTypeOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
-const seaFrontsOptions = Object.values(SeaFrontLabels)
+
 const statusOptions = getOptionsFromLabelledEnum(StatusFilterLabels)
-const targetTypeOtions = getOptionsFromLabelledEnum(ReportingTargetTypeLabels)
+const targetTypeOptions = getOptionsFromLabelledEnum(ReportingTargetTypeLabels)
 
 export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { context?: string }) {
   const dispatch = useAppDispatch()
@@ -139,19 +139,24 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       .value()
   }, [unitListAsOptions, semaphoresAsOptions, sourceTypeFilter])
 
+  const { data } = useGetFacadesQuery()
+  const facadesAsOptions = (data ?? [])
+    .map(({ facade }) => ({ label: facade, value: facade }))
+    .sort((a, b) => a.label.localeCompare(b.label))
+
   const optionsList = useMemo(
     () => ({
       dateRangeOptions,
-      seaFrontsOptions,
+      facadesOptions: facadesAsOptions,
       sourceOptions,
       sourceTypeOptions,
       statusOptions,
       tagsOptions,
-      targetTypeOtions,
+      targetTypeOptions,
       themesOptions,
       typeOptions
     }),
-    [sourceOptions, tagsOptions, themesOptions]
+    [facadesAsOptions, sourceOptions, tagsOptions, themesOptions]
   )
 
   const updatePeriodFilter = useCallback(

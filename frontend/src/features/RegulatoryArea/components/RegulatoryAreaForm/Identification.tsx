@@ -1,3 +1,4 @@
+import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetLayerNamesQuery, useGetRegulatoryAreasToCompleteQuery } from '@api/regulatoryAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
@@ -25,7 +26,6 @@ import {
 import { parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
-import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { useFormikContext } from 'formik'
 import { boundingExtent } from 'ol/extent'
@@ -100,7 +100,10 @@ export function Identification({
     return options
   }, [regulatoryAreasToComplete, isEditing, values.geom, values.id, values.refReg])
 
-  const seaFrontsAsOptions = Object.values(SeaFrontLabels)
+  const { data } = useGetFacadesQuery()
+  const facadesAsOptions = data
+    ?.map(({ facade }) => ({ label: facade, value: facade }))
+    .sort((a, b) => a.label.localeCompare(b.label))
   const regulatoryTypeOptions = getOptionsFromLabelledEnum(RegulatoryArea.RegulatoryAreaTypeLabel).sort((a, b) =>
     a.label.localeCompare(b.label)
   )
@@ -262,7 +265,7 @@ export function Identification({
             isRequired
             label="Façade"
             name="facade"
-            options={seaFrontsAsOptions}
+            options={facadesAsOptions ?? []}
             searchable
             style={{ width: '30%' }}
           />

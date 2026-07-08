@@ -1,5 +1,4 @@
 import { ReportingSourceLabels } from '../../../../src/domain/entities/reporting'
-import { SeaFrontLabel } from '../../../../src/domain/entities/seaFrontType'
 
 context('Reportings', () => {
   beforeEach(() => {
@@ -105,7 +104,7 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by sea-fronts', () => {
-    cy.fill('Façade', [SeaFrontLabel.NAMO])
+    cy.fill('Façade', ['NAMO'])
     cy.getDataCy('reportings-filter-tags').find('.Component-SingleTag > span').contains('Façade NAMO')
 
     cy.wait('@getReportings')

@@ -1,8 +1,8 @@
 import { HumanDateCell } from '@components/Table/Cells/HumanDateCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { ActionsCell } from '@features/Mission/components/MissionsList/Cells/ActionsCell'
-import { SeaFrontCell } from '@features/Mission/components/MissionsList/Cells/SeaFrontCell'
 import { MissionTagsCell } from '@features/Mission/components/MissionsList/Cells/MissionTagsCell'
+import { SeaFrontCell } from '@features/Mission/components/MissionsList/Cells/SeaFrontCell'
 import { ThemesCell } from '@features/Mission/components/MissionsList/Cells/ThemesCell'
 import { getAllThemes } from '@features/Mission/utils'
 

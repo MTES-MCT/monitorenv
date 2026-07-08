@@ -78,7 +78,7 @@ export function MapReportingsFiltersWithRef(
     sourceTypeOptions,
     statusOptions,
     tagsOptions,
-    targetTypeOtions,
+    targetTypeOptions,
     themesOptions,
     typeOptions
   } = optionsList
@@ -240,7 +240,7 @@ export function MapReportingsFiltersWithRef(
           label="Type de cible"
           name="targetType"
           onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.TARGET_TYPE_FILTER)}
-          options={targetTypeOtions}
+          options={targetTypeOptions}
           placeholder="Cible"
           renderValue={() => targetTypeFilter && <OptionValue>{`Cible (${targetTypeFilter.length})`}</OptionValue>}
           value={targetTypeFilter}

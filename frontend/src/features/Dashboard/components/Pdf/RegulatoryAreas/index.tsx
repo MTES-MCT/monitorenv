@@ -7,7 +7,6 @@ import { displayTags } from '@utils/getTagsAsOptions'
 import { displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 
-import { SeaFrontLabel } from '../../../../../domain/entities/seaFrontType'
 import { Dot } from '../icons/Dot'
 import { AreaImage } from '../Layout/AreaImage'
 import { AreaLink } from '../Layout/AreaLink'
@@ -94,7 +93,7 @@ export function RegulatoryAreas({
                       <Text>Façade</Text>
                     </View>
                     <View style={areaStyle.details}>
-                      <Text>{regulatoryArea.facade ? SeaFrontLabel[regulatoryArea.facade] : '-'}</Text>
+                      <Text>{regulatoryArea.facade ?? '-'}</Text>
                     </View>
                   </View>
                 </View>

@@ -1,7 +1,5 @@
-import { SeaFrontLabel } from '../../../../../domain/entities/seaFrontType'
-
 export function SeaFrontCell({ facade }: { facade: string }) {
-  const label = facade ? SeaFrontLabel[facade] : '-'
+  const label = facade ?? '-'
 
   return <span title={label}>{label}</span>
 }
