@@ -48,12 +48,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
             )
         }
 
-        val savedMission = createOrUpdateMission.execute(mission, fromPublicAPI = false)
-        require(savedMission.id != null) { "The mission id is null" }
+        var savedMission = createOrUpdateMission.execute(mission, fromPublicAPI = false)
 
-        createOrUpdateEnvActions.execute(savedMission, mission.envActions)
+        savedMission = createOrUpdateEnvActions.execute(savedMission, mission.envActions)
 
-        saveMissionTagMission.execute(mission = savedMission, missionTags = mission.missionTags)
+        savedMission = saveMissionTagMission.execute(mission = savedMission, missionTags = mission.missionTags)
 
         attachedReportingIds.forEach {
             reportingRepository.findById(it)?.let { reporting ->
@@ -72,7 +71,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReporting(
                 }
             }
         }
-
+        require(savedMission.id != null) { "The mission id is null" }
         reportingRepository.attachReportingsToMission(attachedReportingIds, savedMission.id)
 
         attachedReportingIds.forEach {
