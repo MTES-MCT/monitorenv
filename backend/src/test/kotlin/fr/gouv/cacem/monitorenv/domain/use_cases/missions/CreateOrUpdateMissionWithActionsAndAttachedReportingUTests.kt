@@ -69,6 +69,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
         // Given
         val missionToCreate = aMissionEntity()
         val attachedReportingIds = listOf(1, 2, 3)
+        val savedMission = missionToCreate.copy(id = 100)
 
         val expectedCreatedMission =
             MissionDetailsDTO(
@@ -76,9 +77,11 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 attachedReportingIds = attachedReportingIds,
             )
 
-        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
+        given(createOrUpdateEnvActions.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
+        given(saveMissionTagMission.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
         given(missionRepository.save(anyOrNull()))
-            .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
+            .willReturn(MissionDetailsDTO(mission = savedMission))
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
         given(reportingRepository.findById(2)).willReturn(getReportingDTO(2))
         given(reportingRepository.findById(3)).willReturn(getReportingDTO(3))
@@ -118,7 +121,10 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     fun `execute should throw BackendUsageException when try to attach reporting that has already be attached`() {
         val missionToCreate = aMissionEntity()
         val attachedReportingIds = listOf(5)
-        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        val savedMission = missionToCreate.copy(id = 100)
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
+        given(createOrUpdateEnvActions.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
+        given(saveMissionTagMission.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
         given(reportingRepository.findById(5)).willReturn(getReportingDTOWithAttachedMission(5))
 
         // Then
@@ -171,6 +177,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 updatedAtUtc = null,
             )
         val attachedReportingIds = listOf(1, 2, 3)
+        val savedMission = missionToCreate.copy(id = 100)
 
         val expectedCreatedMission =
             MissionDetailsDTO(
@@ -197,7 +204,9 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
             )
         val envActionAttachedToReportingIds = Pair(envActionControl.id, listOf(1))
 
-        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate)
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
+        given(createOrUpdateEnvActions.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
+        given(saveMissionTagMission.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
         given(reportingRepository.findById(1)).willReturn(getReportingDTO(1))
@@ -258,13 +267,15 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     @Test
     fun `Should return status 206 if fish api doesn't responds`() {
         // Given
-        val missionToCreate = aMissionEntity(id = 100)
+        val missionToUpdate = aMissionEntity(id = 100)
 
         val expectedCreatedMission = MissionDetailsDTO(mission = aMissionEntity())
 
-        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate)
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToUpdate)
+        given(createOrUpdateEnvActions.execute(anyOrNull(), anyOrNull())).willReturn(missionToUpdate)
+        given(saveMissionTagMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToUpdate)
         given(missionRepository.save(anyOrNull()))
-            .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
+            .willReturn(MissionDetailsDTO(mission = missionToUpdate))
         given(getFullMissionWithFishAndRapportNavActions.execute(100)).willReturn(Pair(false, expectedCreatedMission))
 
         // When
@@ -278,7 +289,7 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
                 eventPublisher = applicationEventPublisher,
                 saveMissionTagMission = saveMissionTagMission,
             ).execute(
-                mission = missionToCreate,
+                mission = missionToUpdate,
                 attachedReportingIds = listOf(),
                 envActionsAttachedToReportingIds = listOf(),
             )
@@ -291,12 +302,15 @@ class CreateOrUpdateMissionWithActionsAndAttachedReportingUTests {
     @Test
     fun `Should create a mission doesn't call getFullMissionWithFishAndRapportNavActions`() {
         val missionToCreate = aMissionEntity(id = null)
+        val savedMission = missionToCreate.copy(id = 100)
 
         val expectedCreatedMission = MissionDetailsDTO(aMissionEntity(100))
 
-        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(missionToCreate.copy(id = 100))
+        given(createOrUpdateMission.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
+        given(createOrUpdateEnvActions.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
+        given(saveMissionTagMission.execute(anyOrNull(), anyOrNull())).willReturn(savedMission)
         given(missionRepository.save(anyOrNull()))
-            .willReturn(MissionDetailsDTO(mission = missionToCreate.copy(id = 100)))
+            .willReturn(MissionDetailsDTO(mission = savedMission))
         given(getFullMission.execute(100)).willReturn(expectedCreatedMission)
 
         // When
