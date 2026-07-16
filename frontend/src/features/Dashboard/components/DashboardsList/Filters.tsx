@@ -2,7 +2,6 @@ import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { Italic, TagsContainer } from '@components/style'
-import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { StyledSelect } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -25,6 +24,7 @@ import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { useGetSeaFrontsQuery } from '../../../../api/seaFrontsAPI'
+import { ResetButton } from '../../../commonComponents/ResetButton'
 import { dashboardFiltersActions, type DashboardsListFilters } from '../DashboardForm/slice'
 
 type Orientation = 'row' | 'column'
@@ -156,7 +156,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
               <span>{`${nbOfFiltersSetted} ${pluralize('filtre', nbOfFiltersSetted)} actif${
                 nbOfFiltersSetted > 1 ? 's' : ''
               }`}</span>
-              <ReinitializeFiltersButton onClick={resetFilter} />
+              <ResetButton onClick={resetFilter} />
             </FiltersText>
           ) : (
             <StyledItalic>Aucun filtre actif</StyledItalic>
@@ -232,7 +232,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
         <TagsContainer>
           {[specificPeriodDatePicker, seaFrontTags, controlUnitTags, regulatoryTagsTags]}
 
-          {nbOfFiltersSetted > 0 && <ReinitializeFiltersButton onClick={resetFilter} />}
+          {nbOfFiltersSetted > 0 && <ResetButton onClick={resetFilter} />}
         </TagsContainer>
       )}
     </Wrapper>

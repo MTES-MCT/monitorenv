@@ -3,15 +3,15 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulat
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 
 data class RegulatoryAreasDataOutput(
-    val group: String,
+    val group: RegulatoryAreaDataOutput,
     val regulatoryAreas: List<RegulatoryAreaDataOutput>,
 ) {
     companion object {
         fun fromRegulatoryAreaEntity(
-            entry: Map.Entry<String?, List<RegulatoryAreaEntity>>,
+            entry: Map.Entry<RegulatoryAreaEntity, List<RegulatoryAreaEntity>>,
         ): RegulatoryAreasDataOutput =
             RegulatoryAreasDataOutput(
-                group = entry.key ?: "UNKNOWN",
+                group = RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(entry.key),
                 regulatoryAreas =
                     entry.value.map {
                         RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it)

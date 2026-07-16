@@ -6,6 +6,8 @@ export const StyledBackofficeWrapper = styled(BackofficeWrapper)`
   display: flex;
   flex: 1;
   flex-direction: row;
+  gap: 0;
+  overflow: hidden;
   padding: 0;
   position: relative;
 `
@@ -14,6 +16,6 @@ export const RegulatoryWrapper = styled.div`
   flex-basis: 50%;
   flex-direction: column;
   overflow-y: auto;
-  padding: 24px 40px;
+  padding: 24px 40px 0;
 `
 export const MapContainer = styled(BaseMap)``

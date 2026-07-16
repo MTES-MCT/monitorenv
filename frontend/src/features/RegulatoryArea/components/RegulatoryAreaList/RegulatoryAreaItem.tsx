@@ -10,7 +10,8 @@ import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
+import styled from 'styled-components'
 
 import { regulatoryAreaTableActions } from './slice'
 
@@ -19,6 +20,7 @@ import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox }) {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
   const layerTitle = getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume) ?? 'AUCUN NOM'
 
@@ -42,7 +44,9 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
   }
 
   const onEdit = () => {
-    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${regulatoryArea.id}`)
+    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${regulatoryArea.id}`, {
+      state: { from: location.pathname }
+    })
     const extent = transformExtent(
       regulatoryArea?.bbox,
       new Projection({ code: WSG84_PROJECTION }),
@@ -67,15 +71,17 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
         />
         <LayerSelector.Name title={layerTitle}>{layerTitle}</LayerSelector.Name>
       </StyledTransparentButton>
-      <LayerSelector.IconGroup>
-        <IconButton
-          accent={Accent.TERTIARY}
-          color={THEME.color.slateGray}
-          Icon={Icon.Edit}
-          onClick={onEdit}
-          title="Editer la réglementation"
-        />
-      </LayerSelector.IconGroup>
+      <StyledIconButton
+        accent={Accent.TERTIARY}
+        color={THEME.color.slateGray}
+        Icon={Icon.Edit}
+        onClick={onEdit}
+        title="Editer la réglementation"
+      />
     </LayerSelector.Layer>
   )
 }
+
+const StyledIconButton = styled(IconButton)`
+  margin-right: 8px;
+`

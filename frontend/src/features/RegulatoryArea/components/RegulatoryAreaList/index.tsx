@@ -68,7 +68,7 @@ export function RegulatoryAreaList() {
 
   return (
     <StyledBackofficeWrapper>
-      <RegulatoryWrapper>
+      <StyledRegulatoryWrapper>
         <TitleContainer>
           <Title>Zones réglementaires</Title>
           <Button Icon={Icon.Plus} onClick={createRegulatoryArea}>
@@ -81,7 +81,7 @@ export function RegulatoryAreaList() {
         ) : (
           <ControlPlanTable apiFilters={apiFilters} isLoading={isLoading || isFetching} />
         )}
-      </RegulatoryWrapper>
+      </StyledRegulatoryWrapper>
 
       <>
         <BaseLayerSelector />
@@ -98,4 +98,8 @@ export function RegulatoryAreaList() {
 const StyledRegulatoryAreasPanel = styled(RegulatoryAreasPanel)`
   left: 51%;
   top: 12px;
+`
+
+const StyledRegulatoryWrapper = styled(RegulatoryWrapper)`
+  padding: 24px 40px;
 `

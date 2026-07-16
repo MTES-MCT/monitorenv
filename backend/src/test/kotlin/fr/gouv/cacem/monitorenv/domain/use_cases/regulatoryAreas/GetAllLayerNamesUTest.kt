@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
+
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaGroupRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -10,8 +11,8 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 
 @ExtendWith(OutputCaptureExtension::class)
 class GetAllLayerNamesUTest {
-    private val regulatoryAreaRepository: IRegulatoryAreaRepository = mock()
-    private val getAllLayerNames = GetAllLayerNames(regulatoryAreaRepository)
+    private val regulatoryAreaGroupRepository: IRegulatoryAreaGroupRepository = mock()
+    private val getAllLayerNames = GetAllLayerNames(regulatoryAreaGroupRepository)
 
     @Test
     fun `execute should return all layer names`(log: CapturedOutput) {
@@ -23,7 +24,7 @@ class GetAllLayerNamesUTest {
                 "Layer3" to 4L,
             )
 
-        given(regulatoryAreaRepository.findAllLayerNames()).willReturn(expectedLayerNames)
+        given(regulatoryAreaGroupRepository.findAllLayerNames()).willReturn(expectedLayerNames)
 
         // When
         val layerNames = getAllLayerNames.execute()
@@ -37,7 +38,7 @@ class GetAllLayerNamesUTest {
     @Test
     fun `execute should return empty list when no layer names exist`(log: CapturedOutput) {
         // Given
-        given(regulatoryAreaRepository.findAllLayerNames()).willReturn(emptyMap())
+        given(regulatoryAreaGroupRepository.findAllLayerNames()).willReturn(emptyMap())
 
         // When
         val layerNames = getAllLayerNames.execute()
@@ -55,7 +56,7 @@ class GetAllLayerNamesUTest {
             mapOf(
                 "SingleLayer" to 1L,
             )
-        given(regulatoryAreaRepository.findAllLayerNames()).willReturn(expectedLayerNames)
+        given(regulatoryAreaGroupRepository.findAllLayerNames()).willReturn(expectedLayerNames)
 
         // When
         val layerNames = getAllLayerNames.execute()

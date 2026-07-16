@@ -1,15 +1,16 @@
 import { Icon } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
-interface ReinitializeFiltersButtonProps {
+interface ResetButtonProps {
+  label?: string
   onClick: () => void
 }
 
-export function ReinitializeFiltersButton({ onClick }: ReinitializeFiltersButtonProps) {
+export function ResetButton({ label = 'Réinitialiser les filtres', onClick }: ResetButtonProps) {
   return (
     <ResetFiltersButton onClick={onClick}>
       <Icon.Load size={14} />
-      <span>Réinitialiser les filtres</span>
+      <span>{label}</span>
     </ResetFiltersButton>
   )
 }
