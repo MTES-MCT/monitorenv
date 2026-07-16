@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 
 interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> {
@@ -37,21 +38,11 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     fun findAllByCreationIsNull(): List<RegulatoryAreaModel>
 
     @Query(
-        """
-        SELECT regulatoryArea.layerName, COUNT(regulatoryArea)
-        FROM RegulatoryAreaModel regulatoryArea
-        WHERE regulatoryArea.layerName IS NOT NULL
-        GROUP BY regulatoryArea.layerName
-        ORDER BY regulatoryArea.layerName
-    """,
-    )
-    fun findAllLayerNames(): List<Array<Any>>
-
-    @Query(
         value =
             """
             SELECT r.id FROM RegulatoryAreaModel r
             WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), ST_Buffer(st_setsrid(:geometry, 4326), 0))
+            AND r.areaType = 'ZONE'
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
@@ -76,4 +67,12 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         ids: List<Int>,
         axis: String,
     ): List<RegulatoryAreaModel>
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE RegulatoryAreaModel SET layerName = :layerName, place = :place WHERE id IN (:ids)")
+    fun updateGroupTypeAndPlace(
+        layerName: String?,
+        place: String?,
+        ids: List<Int>,
+    )
 }

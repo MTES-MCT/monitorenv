@@ -1,13 +1,17 @@
 import { Italic } from '@components/style'
 import { ValidateButton } from '@features/commonComponents/ValidateButton'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import {
   Accent,
   Button,
   customDayjs,
+  CustomSearch,
   FormikDatePicker,
+  FormikSelect,
   FormikTextarea,
   FormikTextInput,
   getLocalizedDayjs,
+  getOptionsFromLabelledEnum,
   Icon,
   IconButton,
   Label
@@ -19,8 +23,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { REQUIRED_FIELD } from './Schema'
 import { SubTitle } from './style'
-
-import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
 export type MainRefReg = {
   date?: string
@@ -39,6 +41,12 @@ export function RegulatoryTexts({
   const [editingOtherRefReg, setEditingOtherRefReg] = useState<RegulatoryArea.AdditionalRegulatoryText | undefined>(
     undefined
   )
+  const regulatoryTypeOptions = getOptionsFromLabelledEnum(RegulatoryArea.RegulatoryAreaTypeLabel).sort((a, b) =>
+    a.label.localeCompare(b.label)
+  )
+  const typeCustomSearch = new CustomSearch(regulatoryTypeOptions ?? [], ['label'], {
+    isStrict: true
+  })
 
   const validateRefReg = async () => {
     if (values.refReg && values.url && values.date) {
@@ -230,7 +238,17 @@ export function RegulatoryTexts({
           Ajouter un texte supplémentaire
         </Button>
       </SubTitleContainer>
-      {renderMainRegulatoryText()}
+      <Fields>
+        <FormikSelect
+          customSearch={typeCustomSearch}
+          isErrorMessageHidden
+          isRequired
+          label="Type d’acte administratif"
+          name="type"
+          options={regulatoryTypeOptions}
+        />
+        {renderMainRegulatoryText()}
+      </Fields>
       {(values?.additionalRefReg?.length || editingOtherRefReg) && <Separator />}
       <OtherRefRegContainer>
         {values?.additionalRefReg &&
@@ -318,6 +336,11 @@ const StyledSubTitle = styled(SubTitle)`
   margin-bottom: 0;
   margin-top: 0;
 `
+const Fields = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`
 const RefRegTextContainer = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
@@ -396,7 +419,7 @@ const StyledFormikDatePicker = styled(FormikDatePicker)`
   .Field-DatePicker__CalendarPicker {
     > .rs-picker-popup {
       left: unset !important;
-      right: 0px;
+      right: 0;
     }
   }
 `

@@ -2,7 +2,6 @@ import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
 import { CustomPeriodContainer, Italic } from '@components/style'
-import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { FrontendError } from '@libs/FrontendError'
@@ -26,6 +25,8 @@ import { FrontCompletionStatusLabel, missionTypeEnum } from 'domain/entities/mis
 import { MissionFiltersEnum, type MissionFiltersState, updateFilters } from 'domain/shared_slices/MissionFilters'
 import { forwardRef, memo, useMemo } from 'react'
 import styled from 'styled-components'
+
+import { ResetButton } from '../../../../commonComponents/ResetButton'
 
 import type { MissionOptionsListType } from '..'
 import type { TagFromAPI, TagOption } from 'domain/entities/tags'
@@ -135,7 +136,7 @@ function MapMissionsFiltersWithRef(
             <span>{`${nbOfFiltersSetted} ${pluralize('filtre', nbOfFiltersSetted)} actif${
               nbOfFiltersSetted > 1 ? 's' : ''
             }`}</span>
-            <ReinitializeFiltersButton onClick={onResetFilters} />
+            <ResetButton onClick={onResetFilters} />
           </FiltersText>
         ) : (
           <StyledItalic>Aucun filtre actif</StyledItalic>

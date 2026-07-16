@@ -23,4 +23,5 @@ SELECT
     themes,
     tags
 FROM prod.reg_cacem
-WHERE poly_name IS NOT NULL;
+WHERE poly_name IS NOT NULL
+AND area_type = 'ZONE';

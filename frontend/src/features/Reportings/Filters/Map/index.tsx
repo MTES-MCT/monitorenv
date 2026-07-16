@@ -1,5 +1,4 @@
 import { CustomPeriodContainer, Italic } from '@components/style'
-import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import {
   Checkbox,
   CheckPicker,
@@ -24,6 +23,7 @@ import {
 import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { ResetButton } from '../../../commonComponents/ResetButton'
 import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
 import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
 
@@ -122,7 +122,7 @@ export function MapReportingsFiltersWithRef(
             <span>{`${nbOfFiltersSetted} ${pluralize('filtre', nbOfFiltersSetted)} actif${
               nbOfFiltersSetted > 1 ? 's' : ''
             }`}</span>
-            <ReinitializeFiltersButton onClick={resetFilters} />
+            <ResetButton onClick={resetFilters} />
           </FiltersText>
         ) : (
           <StyledItalic>Aucun filtre actif</StyledItalic>

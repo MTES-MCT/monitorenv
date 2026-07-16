@@ -4,29 +4,32 @@ export enum BackOfficeMenuKey {
   CONTROL_UNIT_LIST = 'CONTROL_UNIT_LIST',
   CONTROL_UNIT_RESOURCE_LIST = 'CONTROL_UNIT_RESOURCE_LIST',
   MISSION_TAG_LIST = 'MISSION_TAG_LIST',
+  REGULATORY_AREA_GROUP = 'REGULATORY_AREA_GROUP',
   REGULATORY_AREA_LIST = 'REGULATORY_AREA_LIST',
   STATION_LIST = 'STATION_LIST',
   TAG_LIST = 'TAG_LIST'
 }
 
 export const BACK_OFFICE_MENU_LABEL: Record<BackOfficeMenuKey, string> = {
-  [BackOfficeMenuKey.REGULATORY_AREA_LIST]: 'Zones réglementaires',
   [BackOfficeMenuKey.ADMINISTRATION_LIST]: 'Administrations',
   [BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]: 'Contacts',
   [BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]: 'Moyens',
   [BackOfficeMenuKey.CONTROL_UNIT_LIST]: 'Unités de contrôle',
+  [BackOfficeMenuKey.MISSION_TAG_LIST]: 'Étiquettes de mission',
+  [BackOfficeMenuKey.REGULATORY_AREA_LIST]: 'Zones réglementaires',
+  [BackOfficeMenuKey.REGULATORY_AREA_GROUP]: 'Groupe de réglementations',
   [BackOfficeMenuKey.STATION_LIST]: 'Bases',
-  [BackOfficeMenuKey.TAG_LIST]: 'Tags',
-  [BackOfficeMenuKey.MISSION_TAG_LIST]: 'Étiquettes de mission'
+  [BackOfficeMenuKey.TAG_LIST]: 'Tags'
 }
 
 export const BACK_OFFICE_MENU_PATH: Record<BackOfficeMenuKey, string> = {
-  [BackOfficeMenuKey.REGULATORY_AREA_LIST]: '/regulatory_areas',
   [BackOfficeMenuKey.ADMINISTRATION_LIST]: '/administrations',
+  [BackOfficeMenuKey.CONTROL_UNIT_LIST]: '/control_units',
   [BackOfficeMenuKey.CONTROL_UNIT_CONTACT_LIST]: '/control_unit_contacts',
   [BackOfficeMenuKey.CONTROL_UNIT_RESOURCE_LIST]: '/control_unit_resources',
-  [BackOfficeMenuKey.CONTROL_UNIT_LIST]: '/control_units',
+  [BackOfficeMenuKey.MISSION_TAG_LIST]: '/mission_tags',
+  [BackOfficeMenuKey.REGULATORY_AREA_LIST]: '/regulatory_areas',
+  [BackOfficeMenuKey.REGULATORY_AREA_GROUP]: '/regulatory_area_group',
   [BackOfficeMenuKey.STATION_LIST]: '/stations',
-  [BackOfficeMenuKey.TAG_LIST]: '/tags',
-  [BackOfficeMenuKey.MISSION_TAG_LIST]: '/mission_tags'
+  [BackOfficeMenuKey.TAG_LIST]: '/tags'
 }

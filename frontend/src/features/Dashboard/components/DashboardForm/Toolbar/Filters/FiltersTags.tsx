@@ -1,11 +1,11 @@
 import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
-import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { VigilanceArea } from '@features/VigilanceArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { type DateAsStringRange, DateRangePicker, SingleTag } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
+import { ResetButton } from '../../../../../commonComponents/ResetButton'
 import { dashboardFiltersActions } from '../../slice'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -92,7 +92,7 @@ export function FiltersTags({ dashboardKey: id }: FiltersTagsProps) {
         </SingleTag>
       ))}
 
-      <ReinitializeFiltersButton onClick={resetFilters} />
+      <ResetButton onClick={resetFilters} />
     </TagsContainer>
   )
 }

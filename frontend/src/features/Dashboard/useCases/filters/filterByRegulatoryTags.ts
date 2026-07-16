@@ -6,7 +6,7 @@ import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 export function filterByRegulatoryTags(
   regulatoryTagsFilter: string[],
   dashboard: Dashboard.DashboardFromApi,
-  regulatoryAreas: RegulatoryArea.RegulatoryAreasGroup[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaGroup[]
 ): boolean {
   if (regulatoryTagsFilter.length === 0) {
     return true

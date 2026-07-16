@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import com.nhaarman.mockitokotlin2.given
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture
 import org.assertj.core.api.Assertions.assertThat
@@ -18,7 +19,9 @@ class GetAllRegulatoryAreasUTest {
     @Test
     fun `execute should return all regulatory areas`(log: CapturedOutput) {
         // Given
-        val expectedRegulatoryAreas = RegulatoryAreaFixture.aRegulatoryArea()
+        val expectedRegulatoryAreas = RegulatoryAreaFixture.aRegulatoryArea(layerName = "Layername 1")
+        val expectedRegulatoryAreaGroup =
+            RegulatoryAreaFixture.aRegulatoryArea(areaType = AreaTypeEnum.GROUP, layerName = "Layername 1")
         given(
             regulatoryAreaRepository.findAll(
                 controlPlan = null,
@@ -26,7 +29,7 @@ class GetAllRegulatoryAreasUTest {
                 tags = null,
                 themes = null,
             ),
-        ).willReturn(listOf(expectedRegulatoryAreas))
+        ).willReturn(listOf(expectedRegulatoryAreas, expectedRegulatoryAreaGroup))
 
         // When
         val (regulatoryAreas, totalCount) =
@@ -40,7 +43,7 @@ class GetAllRegulatoryAreasUTest {
 
         // Then
         assertThat(regulatoryAreas)
-            .isEqualTo(mapOf("Layername 1" to listOf(expectedRegulatoryAreas)))
+            .isEqualTo(mapOf(expectedRegulatoryAreaGroup to listOf(expectedRegulatoryAreas)))
         assertThat(totalCount).isEqualTo(1)
         assertThat(log.out).contains("Attempt to GET all regulatory areas")
         assertThat(log.out).contains("Found $totalCount regulatory areas across ${regulatoryAreas.size} layers")
@@ -51,9 +54,29 @@ class GetAllRegulatoryAreasUTest {
         // Given
         val regulatoryAreas =
             listOf(
-                RegulatoryAreaFixture.aRegulatoryArea(id = 1, layerName = "Layer1", plan = "PIRC"),
-                RegulatoryAreaFixture.aRegulatoryArea(id = 2, layerName = "Layer2", plan = "PIRC"),
-                RegulatoryAreaFixture.aRegulatoryArea(id = 3, layerName = "Layer1", plan = "PSCEM"),
+                RegulatoryAreaFixture.aRegulatoryArea(
+                    id = 1,
+                    layerName = "Layer1",
+                    plan = "PSCEM",
+                ),
+                RegulatoryAreaFixture.aRegulatoryArea(
+                    id = 2,
+                    layerName = "Layer2",
+                    plan = "PIRC",
+                ),
+                RegulatoryAreaFixture.aRegulatoryArea(id = 3, layerName = "Layer1", plan = "PIRC"),
+                RegulatoryAreaFixture.aRegulatoryArea(
+                    id = 4,
+                    areaType = AreaTypeEnum.GROUP,
+                    layerName = "Layer1",
+                    plan = "PSCEM",
+                ),
+                RegulatoryAreaFixture.aRegulatoryArea(
+                    id = 5,
+                    areaType = AreaTypeEnum.GROUP,
+                    layerName = "Layer2",
+                    plan = "PIRC",
+                ),
             )
         given(
             regulatoryAreaRepository.findAll(
@@ -76,8 +99,8 @@ class GetAllRegulatoryAreasUTest {
 
         // Then
         assertThat(groupedRegulatoryAreas).hasSize(2)
-        assertThat(groupedRegulatoryAreas["Layer1"]).hasSize(2)
-        assertThat(groupedRegulatoryAreas["Layer2"]).hasSize(1)
+        assertThat(groupedRegulatoryAreas.filter { it.key.layerName == "Layer1" }.flatMap { it.value }).hasSize(2)
+        assertThat(groupedRegulatoryAreas.filter { it.key.layerName == "Layer2" }.flatMap { it.value }).hasSize(1)
 
         assertThat(totalCount).isEqualTo(3)
 

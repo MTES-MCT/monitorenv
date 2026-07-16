@@ -168,8 +168,8 @@ export function ResultList({ searchedText }: ResultListProps) {
             <SubList $isExpanded={areRegulatoryResultsOpen} data-cy="regulatory-result-list">
               {groupedRegulatoryAreas?.map(({ group, regulatoryAreas }) => (
                 <RegulatoryLayerGroup
-                  key={group}
-                  groupName={group}
+                  key={group.id}
+                  groupName={group.layerName}
                   layers={regulatoryAreas}
                   searchedText={searchedText}
                 />

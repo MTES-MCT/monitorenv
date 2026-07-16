@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.config.UseCase
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import org.slf4j.LoggerFactory
@@ -31,8 +32,15 @@ class GetAllRegulatoryAreas(
                 onlyRecentsAreas = onlyRecentsAreas,
             )
 
-        val totalCount = allAreas.size.toLong()
-        val groupedAreas = allAreas.groupBy { it.layerName }
+        val groups = allAreas.filter { it.areaType == AreaTypeEnum.GROUP }
+        val areas = allAreas.filter { it.areaType == AreaTypeEnum.ZONE }
+
+        val groupedAreas =
+            groups
+                .associateWith { group -> areas.filter { it.layerName == group.layerName } }
+                .filterValues { it.isNotEmpty() }
+
+        val totalCount = groupedAreas.flatMap { it.value }.count().toLong()
 
         logger.info("Found $totalCount regulatory areas across ${groupedAreas.size} layers")
 
@@ -40,4 +48,4 @@ class GetAllRegulatoryAreas(
     }
 }
 
-typealias AllRegulatoryAreasAndTotal = Pair<Map<String?, List<RegulatoryAreaEntity>>, Long>
+typealias AllRegulatoryAreasAndTotal = Pair<Map<RegulatoryAreaEntity, List<RegulatoryAreaEntity>>, Long>

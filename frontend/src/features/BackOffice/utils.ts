@@ -32,6 +32,16 @@ export function isRegulatoryAreaPage(path: string) {
   )
 }
 
+export function isRegulatoryAreaGroupPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP]}/:groupId`
+    },
+    path
+  )
+}
+
 export function isAdministrationListPage(path: string) {
   return !!matchPath(
     {

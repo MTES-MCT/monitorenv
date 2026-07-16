@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
@@ -21,7 +22,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     fun `findAll Should return all regulatoryAreas`() {
         // When
         val regulatoryAreas = jpaRegulatoryAreaRepository.findAll()
-        assertThat(regulatoryAreas).hasSize(13)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(13)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.GROUP }.size).isEqualTo(13)
     }
 
     @Test
@@ -35,8 +37,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 themes = null,
                 onlyRecentsAreas = true,
             )
-        println("regulatoryAreas : $regulatoryAreas")
-        assertThat(regulatoryAreas.size).isEqualTo(11)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(11)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.GROUP }.size).isEqualTo(11)
     }
 
     @Test
@@ -49,8 +51,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 tags = null,
                 themes = null,
             )
-        println("regulatoryAreas : $regulatoryAreas")
-        assertThat(regulatoryAreas.size).isEqualTo(12)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(12)
     }
 
     @Test
@@ -66,7 +67,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
             )
 
         // Then
-        assertThat(regulatoryAreas.size).isEqualTo(1)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(1)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.GROUP }.size).isEqualTo(1)
     }
 
     @Test
@@ -82,7 +84,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
             )
 
         // Then
-        assertThat(regulatoryAreas.size).isEqualTo(2)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(2)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.GROUP }.size).isEqualTo(2)
     }
 
     @Test
@@ -98,7 +101,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
             )
 
         // Then
-        assertThat(regulatoryAreas.size).isEqualTo(1)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(1)
+        assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.GROUP }.size).isEqualTo(1)
     }
 
     @Test
@@ -197,27 +201,6 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     }
 
     @Test
-    fun `findAllLayerNames should return all layer names`() {
-        // When
-        val layerNames = jpaRegulatoryAreaRepository.findAllLayerNames()
-
-        println("Layer names: $layerNames")
-        // Then
-        assertThat(layerNames).hasSize(9)
-        assertThat(layerNames.keys).containsExactlyInAnyOrder(
-            "Dragage_port_de_Brest",
-            "Granulats_Marins_Le_Minou",
-            "Interdiction_VNM_Molene",
-            "Mouillage_Conquet_Ile_de_bannec",
-            "Mouillage_interdiction_port_Camaret",
-            "RNN_Iroise",
-            "ZMEL_anse_illien_Ploumoguer",
-            "ZMEL_Cale_Querlen",
-            "ZMEL_maison_blanche",
-        )
-    }
-
-    @Test
     fun `findAllToComplete should return all regulatory areas to create`() {
         // When
         val regulatoryAreasToComplete = jpaRegulatoryAreaRepository.findAllToComplete()
@@ -248,7 +231,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
         val regulatoryArea =
             RegulatoryAreaEntity(
-                id = 9999,
+                id = 697,
+                areaType = AreaTypeEnum.ZONE,
                 layerName = "Test_Area",
                 facade = "NAMO",
                 refReg = "Arrêté test pour création",
@@ -268,6 +252,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 dateFin = null,
                 editionCacem = null,
                 authorizationPeriods = null,
+                place = null,
                 prohibitionPeriods = null,
                 type = null,
                 additionalRefReg = null,
@@ -275,7 +260,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
         val savedRegulatoryArea = jpaRegulatoryAreaRepository.save(regulatoryArea)
 
-        assertThat(savedRegulatoryArea.id).isEqualTo(9999)
+        assertThat(savedRegulatoryArea.id).isEqualTo(697)
         assertThat(savedRegulatoryArea.layerName).isEqualTo("Test_Area")
         assertThat(savedRegulatoryArea.facade).isEqualTo("NAMO")
         assertThat(savedRegulatoryArea.refReg).isEqualTo("Arrêté test pour création")

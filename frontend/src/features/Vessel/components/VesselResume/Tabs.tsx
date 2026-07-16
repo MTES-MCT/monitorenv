@@ -61,7 +61,7 @@ const StyledTab = styled(Tab)<{ $isActive: boolean }>`
   &:focus {
     ${p => `border-right: 1px solid ${p.theme.color.lightGray};`}
     svg {
-      color: ${p => p.theme.color.blueYonder};
+      color: ${p => p.theme.color.blueGray};
     }
   }
 
