@@ -42,7 +42,7 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
 
   const { layer } = useGetRegulatoryAreasQuery(undefined, {
     selectFromResult: result => {
-      const layerGroup = result?.currentData?.regulatoryAreasByLayer.find(group => group.group === groupName)
+      const layerGroup = result?.currentData?.regulatoryAreasByLayer.find(group => group.group.layerName === groupName)
 
       return {
         layer: layerGroup?.regulatoryAreas.find(area => area.id === layerId)

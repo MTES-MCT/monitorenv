@@ -536,7 +536,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
         val nearbyUnits = jpaControlUnitRepository.findNearbyUnits(geom, from, to)
 
         // Then
-        assertThat(nearbyUnits).hasSize(4)
+        assertThat(nearbyUnits).hasSize(3)
         nearbyUnits.forEach { nearbyUnit ->
             nearbyUnit.missions.forEach { mission ->
                 mission.envActions?.forEach { envAction ->

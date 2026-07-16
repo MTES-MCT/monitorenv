@@ -15,7 +15,16 @@ export const RegulatoryAreaFormSchema: Yup.Schema<
       startDate: Yup.string().optional()
     })
   ),
-  authorizationPeriods: Yup.string().optional(),
+  authorizationPeriods: Yup.string().test(
+    'required-if-no-resume',
+    'Renseignez une période ou un résumé',
+    (authorizationPeriods, context) => {
+      const { prohibitionPeriods } = context.parent
+      const { resume } = context.parent
+
+      return prohibitionPeriods || authorizationPeriods || resume
+    }
+  ),
   creation: Yup.string().optional(),
   date: Yup.string().required(),
   dateFin: Yup.string().optional(),
@@ -34,9 +43,23 @@ export const RegulatoryAreaFormSchema: Yup.Schema<
   observations: Yup.string().optional(),
   plan: Yup.string().required(),
   polyName: Yup.string().required('Le nom de la zone réglementée est obligatoire'),
-  prohibitionPeriods: Yup.string().optional(),
+  prohibitionPeriods: Yup.string().test(
+    'required-if-no-resume',
+    'Renseignez une période ou un résumé',
+    (prohibitionPeriods, context) => {
+      const { authorizationPeriods } = context.parent
+      const { resume } = context.parent
+
+      return prohibitionPeriods || authorizationPeriods || resume
+    }
+  ),
   refReg: Yup.string().required('La référence réglementaire est obligatoire'),
-  resume: Yup.string().optional(),
+  resume: Yup.string().test('required-if-no-periods', 'Renseignez au une période ou un résumé', (resume, context) => {
+    const { prohibitionPeriods } = context.parent
+    const { authorizationPeriods } = context.parent
+
+    return prohibitionPeriods || authorizationPeriods || resume
+  }),
   source: Yup.string().optional(),
   tags: Yup.array()
     .ensure()

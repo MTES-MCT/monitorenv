@@ -8,17 +8,13 @@ import { RegulatoryAreaGroup } from './RegulatoryAreaGroup'
 import { ControlPlanWrapper, GroupTitle, StyledIconButton, StyledLoadingIcon, Title } from './style'
 
 export function ControlPlanTable({ apiFilters, isLoading }: { apiFilters: any; isLoading: boolean }) {
-  const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasByControlPlan(state, apiFilters)) as Record<
-    RegulatoryArea.RegulatoryAreaControlPlan.PSCEM | RegulatoryArea.RegulatoryAreaControlPlan.PIRC,
-    Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
-  >
-
+  const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasByControlPlan(state, apiFilters))
   const [controlPlansExtented, setControlPlansExtented] = useState<string[]>([])
 
-  const PIRCRegulatoryAreas = Object.entries(groupedRegulatoryAreas?.PIRC ?? [])
+  const PIRCRegulatoryAreas = groupedRegulatoryAreas?.PIRC
   const isPIRCGroupOpen = controlPlansExtented.includes(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)
 
-  const PSCEMRegulatoryAreas = Object.entries(groupedRegulatoryAreas?.PSCEM ?? [])
+  const PSCEMRegulatoryAreas = groupedRegulatoryAreas?.PSCEM
   const isPSCEMGroupOpen = controlPlansExtented.includes(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)
 
   const openOrCloseGroup = (value: string | undefined) => {
@@ -47,7 +43,7 @@ export function ControlPlanTable({ apiFilters, isLoading }: { apiFilters: any; i
 
   return (
     <ControlPlanWrapper>
-      {PIRCRegulatoryAreas.length > 0 && (
+      {PIRCRegulatoryAreas && PIRCRegulatoryAreas.length > 0 && (
         <>
           <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PIRC)}>
             <Title>PIRC</Title>
@@ -60,13 +56,13 @@ export function ControlPlanTable({ apiFilters, isLoading }: { apiFilters: any; i
             />
           </GroupTitle>
           {isPIRCGroupOpen &&
-            PIRCRegulatoryAreas?.map(([key, regulatoryAreas]) => (
-              <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
+            PIRCRegulatoryAreas?.map(regulatoryAreasGroup => (
+              <RegulatoryAreaGroup key={regulatoryAreasGroup.group.id} group={regulatoryAreasGroup} />
             ))}
         </>
       )}
 
-      {PSCEMRegulatoryAreas.length > 0 && (
+      {PSCEMRegulatoryAreas && PSCEMRegulatoryAreas.length > 0 && (
         <>
           <GroupTitle onClick={() => openOrCloseGroup(RegulatoryArea.RegulatoryAreaControlPlan.PSCEM)}>
             <Title>PSCEM</Title>
@@ -79,8 +75,8 @@ export function ControlPlanTable({ apiFilters, isLoading }: { apiFilters: any; i
             />
           </GroupTitle>
           {isPSCEMGroupOpen &&
-            PSCEMRegulatoryAreas?.map(([key, regulatoryAreas]) => (
-              <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
+            PSCEMRegulatoryAreas?.map(regulatoryAreasGroup => (
+              <RegulatoryAreaGroup key={regulatoryAreasGroup.group.id} group={regulatoryAreasGroup} />
             ))}
         </>
       )}

@@ -15,7 +15,7 @@ context('Back Office > Regulatory Area > Edit Regulatory Area', () => {
 
     cy.clickButton('Editer la réglementation')
     cy.fill('Titre de la zone réglementaire', 'Article 1')
-    cy.clickButton('Enregistrer la réglementation')
+    cy.clickButton('Enregistrer les modifications')
 
     cy.getDataCy('back-office-banner-stack').should('be.visible')
     cy.getDataCy('back-office-banner-stack').contains('La zone réglementaire "Article 1" a bien été enregistrée.')

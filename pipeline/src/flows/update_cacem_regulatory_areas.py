@@ -178,4 +178,3 @@ def update_cacem_regulatory_areas_flow(
         new_regulatory_areas = extract_env_regulatory_areas(ids_to_update)
         update_cacem_regulatory_areas(new_regulatory_areas)
 
-

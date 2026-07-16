@@ -1,5 +1,5 @@
 import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
-import { isRegulatoryAreaListPage } from '@features/BackOffice/utils'
+import { isRegulatoryAreaGroupPage, isRegulatoryAreaListPage } from '@features/BackOffice/utils'
 import { getRegulatoryFeature } from '@features/map/layers/Regulatory/regulatoryGeometryHelpers'
 import { getRegulatoryLayerStyle } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
 import VectorLayer from 'ol/layer/Vector'
@@ -18,14 +18,15 @@ import type { Geometry } from 'ol/geom'
 export function BackofficeRegulatoryAreaLayer({ map }: BaseMapChildrenProps) {
   const { regulatoryAreaId } = useParams()
   const location = useLocation()
-  const isOnRegulatoryAreasListPage = isRegulatoryAreaListPage(location.pathname)
+  const isOnRegulatoryAreasListOrGroupPage =
+    isRegulatoryAreaListPage(location.pathname) || isRegulatoryAreaGroupPage(location.pathname)
 
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
   const newRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaBo.newRegulatoryAreaId)
 
   const layerId = useMemo(
-    () => (isOnRegulatoryAreasListPage ? openedRegulatoryAreaId : regulatoryAreaId ?? newRegulatoryAreaId),
-    [regulatoryAreaId, openedRegulatoryAreaId, newRegulatoryAreaId, isOnRegulatoryAreasListPage]
+    () => (isOnRegulatoryAreasListOrGroupPage ? openedRegulatoryAreaId : regulatoryAreaId ?? newRegulatoryAreaId),
+    [regulatoryAreaId, openedRegulatoryAreaId, newRegulatoryAreaId, isOnRegulatoryAreasListOrGroupPage]
   )
 
   const { data: regulatoryArea } = useGetRegulatoryAreaByIdQuery(Number(layerId), {
