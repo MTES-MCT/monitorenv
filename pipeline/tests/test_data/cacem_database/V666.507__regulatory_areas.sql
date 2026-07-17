@@ -72,7 +72,7 @@ INSERT INTO prod.reg_cacem (
     'période d''autorisation1',
     'période de prohibition1',
     '[{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}]',
-    'theme1,theme2',
+    'AMP sans réglementation particulière,Pêche à pied',
     'tag1,tag2'
 );
 

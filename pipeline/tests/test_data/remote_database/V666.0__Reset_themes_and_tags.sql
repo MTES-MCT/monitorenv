@@ -26,6 +26,20 @@ SELECT DISTINCT subtheme, theme_id, '2025-01-01 00:00:00'::timestamp, '2025-12-3
 FROM control_plan_sub_themes
 where year = 2025 ORDER BY ID;
 
-INSERT INTO themes (name, parent_id, started_at, ended_at, control_plan_tags_id)
-SELECT DISTINCT tag, theme_id, '2023-01-01 00:00:00'::timestamp, '2099-12-31 23:59:59'::timestamp, id
-FROM control_plan_tags ORDER BY ID;
+INSERT INTO tags (id, name, parent_id, started_at, ended_at)
+VALUES(
+  1,
+ 'tag1',
+  NULL,
+  '2023-01-01 00:00:00'::timestamp,
+  '2099-12-31 23:59:59'::timestamp
+);
+
+INSERT INTO tags (id, name, parent_id, started_at, ended_at)
+VALUES(
+  2,
+ 'tag2',
+  NULL,
+  '2023-01-01 00:00:00'::timestamp,
+  '2099-12-31 23:59:59'::timestamp
+);
