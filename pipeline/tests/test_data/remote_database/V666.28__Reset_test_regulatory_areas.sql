@@ -35,7 +35,7 @@ VALUES
   (
     1,
     'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))',
-    'url1',
+    'url1',        
     'layer_name1',
     'MED',
     'ref_reg1',
@@ -116,9 +116,14 @@ VALUES
 INSERT INTO
   themes_regulatory_areas (regulatory_areas_id, themes_id)
 VALUES
-  (1, 101);
+  (1, 2);
 
 INSERT INTO
   themes_regulatory_areas (regulatory_areas_id, themes_id)
 VALUES
-  (1, 296);
+  (1, 9);
+
+INSERT INTO
+  tags_regulatory_areas (regulatory_areas_id, tags_id)
+VALUES
+  (1, 1);

@@ -15,6 +15,8 @@ SELECT
         COALESCE(resume::text, '') ||
         COALESCE(authorization_periods::text, '') ||
         COALESCE(prohibition_periods::text, '') ||
-        COALESCE(additional_ref_reg::text, '')
+        COALESCE(additional_ref_reg::text, '') ||
+        COALESCE(themes::text, '') ||
+        COALESCE(tags::text, '')
   ) AS cacem_row_hash
 FROM prod.reg_cacem;
