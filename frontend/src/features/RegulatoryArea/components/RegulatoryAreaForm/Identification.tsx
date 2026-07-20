@@ -45,21 +45,46 @@ export function Identification() {
   const [isNewLayerNameValid, setIsNewLayerNameValid] = useState(true)
   const [isModifyingLayerName, setIsModifyingLayerName] = useState(false)
 
+  function formatLayerName(layerName: string, place?: string) {
+    if (!!place?.trim() && !layerName?.includes(place ?? '')) {
+      return `${layerName} - ${place}`
+    }
+
+    return layerName
+  }
+
   const layerNamesOptions = useMemo(() => {
     const layersNamesFromApi = Object.keys(layerNames?.layerNames || {})
     const formattedLayerNames = layersNamesFromApi
       .filter(layerName => layerName && layerName.trim() !== '')
-      .map(layerName => ({
-        label: getTitle(layerName),
-        value: layerName
-      }))
+      .map(layerNameWithPlace => {
+        const [name, location] = layerNameWithPlace.split(' - ')
 
-    if (values.layerName && !formattedLayerNames?.some(layer => layer.value === values.layerName)) {
-      formattedLayerNames.push({ label: getTitle(values.layerName), value: values.layerName })
+        return {
+          label: getTitle(layerNameWithPlace),
+          value: {
+            layerName: name,
+            location
+          }
+        }
+      })
+
+    if (
+      values.layerName &&
+      !formattedLayerNames?.some(layer => layer.value.layerName && values.layerName?.includes(layer.value.layerName))
+    ) {
+      const formattedLayerName = formatLayerName(values.layerName, values.location)
+      formattedLayerNames.push({
+        label: formattedLayerName,
+        value: {
+          layerName: values.layerName,
+          location: values?.location
+        }
+      })
     }
 
     return formattedLayerNames.sort((a, b) => a.label.localeCompare(b.label))
-  }, [layerNames, values.layerName])
+  }, [layerNames?.layerNames, values.layerName, values.location])
 
   const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
     setFieldValue('themes', parseOptionsToThemes(nextThemes))
@@ -83,6 +108,7 @@ export function Identification() {
 
   const createNewLayerName = () => {
     setFieldValue('layerName', undefined)
+    setFieldValue('location', undefined)
     setNewLayerNameType(undefined)
     setNewLayerNameLocation(undefined)
     setIsCreatingNewLayerName(true)
@@ -98,7 +124,8 @@ export function Identification() {
 
       return
     }
-    setFieldValue('layerName', `${newLayerNameType} - ${newLayerNameLocation}`)
+    setFieldValue('layerName', newLayerNameType)
+    setFieldValue('location', newLayerNameLocation)
     setIsCreatingNewLayerName(false)
     setIsNewLayerNameValid(true)
   }
@@ -111,8 +138,9 @@ export function Identification() {
     setIsModifyingLayerName(true)
   }
 
-  const onChangeLayerName = (nextValue: string | undefined) => {
-    setFieldValue('layerName', nextValue)
+  const onChangeLayerName = (nextValue?: { layerName: string | undefined; location: string | undefined }) => {
+    setFieldValue('layerName', nextValue?.layerName)
+    setFieldValue('location', nextValue?.location)
   }
 
   const allThemesAndSubthemes = useMemo(
@@ -133,7 +161,7 @@ export function Identification() {
                 name="layerName"
                 readOnly
                 style={{ flex: 1 }}
-                value={getTitle(values.layerName)}
+                value={getTitle(formatLayerName(values.layerName, values.location))}
               />
               <ResetButton label="Changer la zone de groupe" onClick={onModifyGroup} />
             </>
@@ -150,6 +178,7 @@ export function Identification() {
                 name="layerName"
                 onChange={onChangeLayerName}
                 options={layerNamesOptions}
+                optionValueKey="layerName"
                 renderExtraFooter={() => (
                   <ExtraFooterContainer onClick={createNewLayerName} type="button">
                     <Icon.Plus />
@@ -157,7 +186,15 @@ export function Identification() {
                   </ExtraFooterContainer>
                 )}
                 style={{ flex: 1 }}
-                value={values.layerName}
+                value={
+                  layerNamesOptions.find(
+                    layer =>
+                      layer.value.layerName &&
+                      values.layerName &&
+                      formatLayerName(values.layerName, values.location).includes(layer.value.layerName) &&
+                      layer.value.location === values.location
+                  )?.value
+                }
               />
               <Tooltip>Le nom du groupe doit permettre de connaître le lieu et le sujet de la réglementation.</Tooltip>
             </>

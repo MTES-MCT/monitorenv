@@ -18,7 +18,7 @@ context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
     cy.get('#PIRCType').click()
     cy.fill('URL du lien', 'https://www.google.com')
     cy.fill('Type', 'New group')
-    cy.fill('Lieu', 'Place')
+    cy.fill('Lieu', 'Location')
     cy.clickButton('Valider')
     cy.intercept('PUT', '/bff/v1/regulatory-areas').as('createRegulatoryArea')
 
@@ -38,7 +38,7 @@ context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
       cy.wait(300)
       cy.clickButton('Fermer')
       cy.clickButton('Déplier le contenu des zones PIRC')
-      cy.get('span[title="New Group Place"]').should('be.visible')
+      cy.get('span[title="New group - Location"]').should('be.visible')
     })
   })
 })
