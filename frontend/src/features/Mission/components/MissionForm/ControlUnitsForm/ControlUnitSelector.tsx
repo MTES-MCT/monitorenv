@@ -29,6 +29,8 @@ import { isNotArchived } from '../../../../../utils/isNotArchived'
 import { getMissionPageRoute } from '../../../../../utils/routes'
 import { getActiveMission, missionFormsActions } from '../slice'
 
+import type { LegacyControlUnit } from 'domain/entities/legacyControlUnit'
+
 type ControlUnitSelectorProps = {
   controlUnitIndex: number
   onAddControlUnit: () => void
@@ -47,6 +49,9 @@ export function ControlUnitSelector({
 
   const activeMission = useAppSelector(state => getActiveMission(state.missionForms))
   const engagedControlUnit = activeMission?.engagedControlUnit
+
+  const [controlUnitsField] = useField<LegacyControlUnit[]>(`controlUnits`)
+  const selectedControlUnits = useMemo(() => controlUnitsField.value.map(unit => unit.id), [controlUnitsField.value])
 
   const [administrationField, administrationMeta, administrationHelpers] = useField<string>(
     `controlUnits.${controlUnitIndex}.administration`
@@ -92,7 +97,16 @@ export function ControlUnitSelector({
     .filter(unit => (administrationField.value ? administrationField.value === unit.administration : true))
     .sort()
 
-  const unitListAsOption = useMemo(() => getOptionsFromIdAndName(unitList), [unitList])
+  const unitListAsOption = useMemo(
+    () =>
+      unitList.map(unit => ({
+        isDisabled: selectedControlUnits.includes(unit.id),
+        label: unit.name,
+        value: unit.id
+      })),
+    [unitList, selectedControlUnits]
+  )
+
   const controlUnitCustomSearch = useMemo(
     () =>
       new CustomSearch(unitListAsOption ?? [], ['label'], {
@@ -230,7 +244,7 @@ export function ControlUnitSelector({
       <div>
         <SelectAndZoomContainer>
           <StyledSelect
-            key={unitList.length}
+            key={JSON.stringify(unitListAsOption)}
             customSearch={unitList.length > 10 ? controlUnitCustomSearch : undefined}
             data-cy="add-control-unit"
             error={unitNameMeta.error}

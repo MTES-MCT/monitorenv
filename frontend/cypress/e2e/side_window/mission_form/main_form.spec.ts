@@ -55,8 +55,13 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.fill('Unité 1', 'Cross Etel')
     cy.wait(500)
 
-    cy.getDataCy('add-control-administration').contains('DIRM / DM')
-    cy.getDataCy('add-control-unit').contains('Cross Etel')
+    cy.clickButton('Ajouter une autre unité')
+    cy.fill('Administration 2', 'DIRM / DM')
+    cy.getDataCy('add-control-unit').last().click()
+
+    // ControlUnit should be disabled because it is already selected in the first control unit
+    cy.get('.rs-picker-select-menu-item-disabled > span').contains('Cross Etel')
+    cy.get('.rs-picker-select-menu-item-disabled').should('exist')
 
     // Then
     cy.waitForLastRequest(
