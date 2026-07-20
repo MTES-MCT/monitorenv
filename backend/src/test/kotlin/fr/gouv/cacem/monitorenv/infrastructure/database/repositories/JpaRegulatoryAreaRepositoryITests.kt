@@ -252,7 +252,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
                 dateFin = null,
                 editionCacem = null,
                 authorizationPeriods = null,
-                place = null,
+                location = null,
                 prohibitionPeriods = null,
                 type = null,
                 additionalRefReg = null,

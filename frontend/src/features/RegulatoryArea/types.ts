@@ -18,8 +18,8 @@ export namespace RegulatoryArea {
     isNew: boolean
     isUpdatedRecently: boolean
     layerName: string
+    location?: string
     observations?: string
-    place?: string
     plan: string
     polyName: string
     prohibitionPeriods?: string
@@ -76,7 +76,7 @@ export namespace RegulatoryArea {
 
   export type RegulatoryAreaGroupToApi = {
     id?: number
-    place?: string
+    location?: string
     regulatoryAreaIds?: number[]
     type?: string
   }

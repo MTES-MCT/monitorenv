@@ -81,11 +81,13 @@ export function RegulatoryAreaGroupForm() {
 
   const [isCancelEditDialogOpen, setIsCancelEditDialogOpen] = useState(false)
 
+  const [layerName, layerLocation] = regulatoryAreaGroup?.group.layerName.split(' - ') ?? []
+
   const initialValues: RegulatoryArea.RegulatoryAreaGroupToApi = {
     id: regulatoryAreaGroup?.group.id,
-    place: regulatoryAreaGroup?.group.place,
+    location: layerLocation,
     regulatoryAreaIds: regulatoryAreaGroup?.regulatoryAreas.map(({ id }) => id) ?? [],
-    type: getTitle(regulatoryAreaGroup?.group.layerName)
+    type: getTitle(layerName)
   }
 
   const backToList = () => {
@@ -110,8 +112,8 @@ export function RegulatoryAreaGroupForm() {
   }
 
   const createRegulatoryArea = (type: string) => {
-    const layerName = type.trim().replaceAll(' ', '_')
-    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?layerName=${layerName}`, {
+    const groupName = type.trim().replaceAll(' ', '_')
+    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?layerName=${groupName}`, {
       state: { from: location.pathname }
     })
   }
@@ -173,7 +175,7 @@ export function RegulatoryAreaGroupForm() {
               </SubTitleWrapper>
               <Fields>
                 <FormikTextInput isErrorMessageHidden label="Type" name="type" />
-                <FormikTextInput isErrorMessageHidden label="Lieu" name="place" />
+                <FormikTextInput isErrorMessageHidden label="Lieu" name="location" />
               </Fields>
               <SubTitleWrapper>
                 <StyledSubTitle>RÉGLEMENTATIONS APPARTEMENT AU GROUPE</StyledSubTitle>

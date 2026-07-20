@@ -111,7 +111,9 @@ class JpaRegulatoryAreaRepository(
                 dbRegulatoryAreaGroupRepository.findAllByGroupName(groupName = regulatoryArea.layerName)
             dbRegulatoryAreaGroupRepository.deleteAllByRegulatoryAreaId(regulatoryArea.id)
 
-            if (newRegulatoryAreaGroup.isEmpty()) {
+            val isNotAttachedToGroup =
+                newRegulatoryAreaGroup.find { it.group.layerName == regulatoryArea.layerName } == null
+            if (isNotAttachedToGroup) {
                 val group =
                     RegulatoryAreaModel
                         .fromRegulatoryAreaEntity(regulatoryArea, mapper)

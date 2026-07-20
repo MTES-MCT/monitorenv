@@ -71,6 +71,7 @@ export function RegulatoryAreaForm() {
         geom: regulatoryArea?.geom,
         id: regulatoryArea?.id,
         layerName: regulatoryArea?.layerName ?? layerName,
+        location: regulatoryArea?.location,
         observations: regulatoryArea?.observations,
         plan: regulatoryArea?.plan ?? [],
         polyName: regulatoryArea?.polyName,
@@ -96,13 +97,7 @@ export function RegulatoryAreaForm() {
   }
 
   const saveRegulatoryArea = async (values: RegulatoryArea.RegulatoryAreaFromAPI) => {
-    const currentDate = customDayjs().toISOString()
-    const regulatoryAreaToSave = {
-      ...values,
-      creation: values.creation ? values.creation : currentDate,
-      editionBo: currentDate
-    }
-    const savedRegulatoryArea = await dispatch(createOrUpdateRegulatoryArea(regulatoryAreaToSave))
+    const savedRegulatoryArea = await dispatch(createOrUpdateRegulatoryArea(values))
     if (savedRegulatoryArea) {
       navigate(
         `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${savedRegulatoryArea.id}`,

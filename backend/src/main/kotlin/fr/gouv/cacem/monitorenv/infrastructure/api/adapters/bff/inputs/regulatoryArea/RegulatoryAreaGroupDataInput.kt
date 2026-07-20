@@ -4,10 +4,10 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaGro
 
 data class RegulatoryAreaGroupDataInput(
     val id: Int,
-    val place: String?,
+    val location: String?,
     val regulatoryAreaIds: List<Int>,
     val type: String?,
 ) {
     fun toRegulatoryAreaGroup(): RegulatoryAreaGroupEntity =
-        RegulatoryAreaGroupEntity(id = id, place = place, regulatoryAreaIds = regulatoryAreaIds, type = type)
+        RegulatoryAreaGroupEntity(id = id, location = location, regulatoryAreaIds = regulatoryAreaIds, type = type)
 }

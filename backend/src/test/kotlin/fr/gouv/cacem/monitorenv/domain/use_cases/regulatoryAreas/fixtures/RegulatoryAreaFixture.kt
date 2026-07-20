@@ -21,7 +21,7 @@ class RegulatoryAreaFixture {
                 themes = listOf(),
                 facade = facade,
                 layerName = layerName,
-                place = null,
+                location = null,
                 plan = plan,
             )
 
@@ -34,7 +34,7 @@ class RegulatoryAreaFixture {
         fun aRegulatoryAreaGroupEntity(): RegulatoryAreaGroupEntity =
             RegulatoryAreaGroupEntity(
                 id = 1,
-                place = null,
+                location = null,
                 type = "Layer 1",
                 regulatoryAreaIds = listOf(2, 3),
             )

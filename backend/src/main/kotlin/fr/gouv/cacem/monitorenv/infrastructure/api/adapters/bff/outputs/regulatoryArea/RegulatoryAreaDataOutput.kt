@@ -21,10 +21,10 @@ data class RegulatoryAreaDataOutput(
     val isNew: Boolean = false,
     val isUpdatedRecently: Boolean = false,
     val layerName: String? = null,
+    val location: String?,
     val observation: String? = null,
     val additionalRefReg: List<AdditionalRefRegEntity>? = listOf(),
     val plan: String? = null,
-    val place: String?,
     val polyName: String? = null,
     val prohibitionPeriods: String? = null,
     val refReg: String? = null,
@@ -49,9 +49,21 @@ data class RegulatoryAreaDataOutput(
                 geom = regulatoryArea.geom,
                 isNew = regulatoryArea.isNew(),
                 isUpdatedRecently = regulatoryArea.isRecentlyUpdated(),
-                layerName = regulatoryArea.layerName,
+                layerName =
+                    if (!regulatoryArea.location.isNullOrBlank() &&
+                        regulatoryArea.layerName?.contains(
+                            regulatoryArea.location,
+                        ) == true
+                    ) {
+                        regulatoryArea.layerName
+                    } else {
+                        listOfNotNull(
+                            regulatoryArea.layerName,
+                            regulatoryArea.location,
+                        ).joinToString(" - ")
+                    },
+                location = regulatoryArea.location,
                 observation = regulatoryArea.observation,
-                place = regulatoryArea.place,
                 plan = regulatoryArea.plan,
                 polyName = regulatoryArea.polyName,
                 refReg = regulatoryArea.refReg,
