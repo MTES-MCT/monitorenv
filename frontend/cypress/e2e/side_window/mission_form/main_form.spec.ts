@@ -44,8 +44,6 @@ context('Side Window > Mission Form > Main Form', () => {
     // with good date
     const correctEndDate = getFutureDate(7, 'day')
     cy.fill('Date de fin (UTC)', correctEndDate)
-    cy.get('[name="missionTypes0"]').click({ force: true })
-    cy.get('[name="missionTypes1"]').click({ force: true })
 
     cy.intercept('PUT', '/bff/v1/missions').as('createMission')
 
@@ -63,6 +61,8 @@ context('Side Window > Mission Form > Main Form', () => {
     cy.get('.rs-picker-select-menu-item-disabled > span').contains('Cross Etel')
     cy.get('.rs-picker-select-menu-item-disabled').should('exist')
 
+    cy.get('[name="missionTypes0"]').click({ force: true })
+    cy.get('[name="missionTypes1"]').click({ force: true })
     // Then
     cy.waitForLastRequest(
       '@createMission',
