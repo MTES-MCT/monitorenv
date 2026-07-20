@@ -4,9 +4,9 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
 import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
 import fr.gouv.cacem.monitorenv.domain.validators.mission.MissionValidator
@@ -15,7 +15,7 @@ import org.springframework.context.ApplicationEventPublisher
 
 @UseCase
 class CreateOrUpdateMission(
-    private val facadeRepository: IFacadeAreasRepository,
+    private val seaFrontRepository: ISeaFrontRepository,
     private val missionRepository: IMissionRepository,
     private val postgisFunctionRepository: IPostgisFunctionRepository,
     private val eventPublisher: ApplicationEventPublisher,
@@ -41,7 +41,7 @@ class CreateOrUpdateMission(
 
             val facade =
                 normalizedMission.geom?.let { nonNullGeom ->
-                    facadeRepository.findFacadeFromGeometry(nonNullGeom)
+                    seaFrontRepository.findSeaFrontFromGeometry(nonNullGeom)
                 }
             val storedMission = normalizedMission.id?.let { id -> missionRepository.findById(id) }
 

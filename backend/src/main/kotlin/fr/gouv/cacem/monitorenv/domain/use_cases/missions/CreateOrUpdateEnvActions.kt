@@ -9,15 +9,15 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import org.slf4j.LoggerFactory
 
 @UseCase
 class CreateOrUpdateEnvActions(
     private val departmentRepository: IDepartmentAreaRepository,
-    private val facadeRepository: IFacadeAreasRepository,
+    private val seaFrontRepository: ISeaFrontRepository,
     private val missionRepository: IMissionRepository,
     private val postgisFunctionRepository: IPostgisFunctionRepository,
 ) {
@@ -44,7 +44,7 @@ class CreateOrUpdateEnvActions(
                             geom = normalizedControlPoint,
                             facade =
                                 normalizedControlPoint?.let { nonNullGeom ->
-                                    facadeRepository.findFacadeFromGeometry(nonNullGeom)
+                                    seaFrontRepository.findSeaFrontFromGeometry(nonNullGeom)
                                 },
                             department =
                                 normalizedControlPoint?.let { nonNullGeom ->
@@ -66,7 +66,7 @@ class CreateOrUpdateEnvActions(
                             geom = normalizedGeometry,
                             facade =
                                 normalizedGeometry?.let { geom ->
-                                    facadeRepository.findFacadeFromGeometry(geom)
+                                    seaFrontRepository.findSeaFrontFromGeometry(geom)
                                 },
                             department =
                                 normalizedGeometry?.let { geom ->

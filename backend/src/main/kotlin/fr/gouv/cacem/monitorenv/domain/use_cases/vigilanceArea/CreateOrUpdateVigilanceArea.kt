@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IVigilanceAreaRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.SaveDashboard
 import fr.gouv.cacem.monitorenv.domain.validators.UseCaseValidation
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory
 @UseCase
 class CreateOrUpdateVigilanceArea(
     private val vigilanceAreaRepository: IVigilanceAreaRepository,
-    private val facadeAreasRepository: IFacadeAreasRepository,
+    private val facadeAreasRepository: ISeaFrontRepository,
 ) {
     private val logger = LoggerFactory.getLogger(SaveDashboard::class.java)
 
@@ -26,7 +26,7 @@ class CreateOrUpdateVigilanceArea(
         try {
             val seaFront =
                 vigilanceArea.geom?.let { nonNullGeom ->
-                    facadeAreasRepository.findFacadeFromGeometry(nonNullGeom)
+                    facadeAreasRepository.findSeaFrontFromGeometry(nonNullGeom)
                 }
             val vigilanceAreaToSave = vigilanceArea.copy(seaFront = seaFront)
 

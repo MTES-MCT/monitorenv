@@ -12,9 +12,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.fixtures.MissionTagFixture.Companion.aMissionTagEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
@@ -41,7 +41,7 @@ class CreateOrUpdateMissionUTests {
     private val missionRepository: IMissionRepository = mock()
 
     @Mock
-    private val facadeAreasRepository: IFacadeAreasRepository = mock()
+    private val seaFrontRepository: ISeaFrontRepository = mock()
 
     @Mock
     private val postgisFunctionRepository: IPostgisFunctionRepository = mock()
@@ -136,7 +136,7 @@ class CreateOrUpdateMissionUTests {
             )
 
         given(postgisFunctionRepository.normalizeMultipolygon(polygon)).willReturn(polygon)
-        given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
+        given(seaFrontRepository.findSeaFrontFromGeometry(anyOrNull())).willReturn("La Face Ade")
         val storedMission =
             missionToUpdate.copy(
                 facade = "La Face Ade",
@@ -164,7 +164,7 @@ class CreateOrUpdateMissionUTests {
         val createdMission =
             CreateOrUpdateMission(
                 missionRepository = missionRepository,
-                facadeRepository = facadeAreasRepository,
+                seaFrontRepository = seaFrontRepository,
                 eventPublisher = applicationEventPublisher,
                 postgisFunctionRepository = postgisFunctionRepository,
             ).execute(
@@ -173,7 +173,7 @@ class CreateOrUpdateMissionUTests {
             )
 
         // Then
-        verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == polygon })
+        verify(seaFrontRepository, times(1)).findSeaFrontFromGeometry(argThat { this == polygon })
         verify(postgisFunctionRepository, times(1)).normalizeMultipolygon(argThat { this == polygon })
 
         verify(missionRepository, times(1))
@@ -244,7 +244,7 @@ class CreateOrUpdateMissionUTests {
             )
 
         given(postgisFunctionRepository.normalizeMultipolygon(polygon)).willReturn(polygon)
-        given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
+        given(seaFrontRepository.findSeaFrontFromGeometry(anyOrNull())).willReturn("La Face Ade")
         val storedMission =
             missionToUpdate.copy(
                 facade = "La Face Ade",
@@ -267,7 +267,7 @@ class CreateOrUpdateMissionUTests {
         val createdMission =
             CreateOrUpdateMission(
                 missionRepository = missionRepository,
-                facadeRepository = facadeAreasRepository,
+                seaFrontRepository = seaFrontRepository,
                 eventPublisher = applicationEventPublisher,
                 postgisFunctionRepository = postgisFunctionRepository,
             ).execute(
@@ -276,7 +276,7 @@ class CreateOrUpdateMissionUTests {
             )
 
         // Then
-        verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == polygon })
+        verify(seaFrontRepository, times(1)).findSeaFrontFromGeometry(argThat { this == polygon })
         verify(postgisFunctionRepository, times(1)).normalizeMultipolygon(argThat { this == polygon })
 
         verify(missionRepository, times(1))
@@ -333,7 +333,7 @@ class CreateOrUpdateMissionUTests {
                 updatedAtUtc = ZonedDateTime.now(),
             )
 
-        given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
+        given(seaFrontRepository.findSeaFrontFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(missionRepository.findById(100))
             .willReturn(missionToUpdate.copy(createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")))
         given(missionRepository.save(anyOrNull()))
@@ -343,7 +343,7 @@ class CreateOrUpdateMissionUTests {
         val createdMission =
             CreateOrUpdateMission(
                 missionRepository = missionRepository,
-                facadeRepository = facadeAreasRepository,
+                seaFrontRepository = seaFrontRepository,
                 eventPublisher = applicationEventPublisher,
                 postgisFunctionRepository = postgisFunctionRepository,
             ).execute(
@@ -360,7 +360,7 @@ class CreateOrUpdateMissionUTests {
         // Given
         val missionToUpdate = aMissionEntity()
 
-        given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
+        given(seaFrontRepository.findSeaFrontFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(missionRepository.findById(100))
             .willReturn(missionToUpdate.copy(createdAtUtc = ZonedDateTime.parse("2022-01-23T20:29:03Z")))
         given(missionRepository.save(anyOrNull())).willThrow(RuntimeException("Save failed"))
@@ -369,7 +369,7 @@ class CreateOrUpdateMissionUTests {
         assertThatThrownBy {
             CreateOrUpdateMission(
                 missionRepository = missionRepository,
-                facadeRepository = facadeAreasRepository,
+                seaFrontRepository = seaFrontRepository,
                 eventPublisher = applicationEventPublisher,
                 postgisFunctionRepository = postgisFunctionRepository,
             ).execute(

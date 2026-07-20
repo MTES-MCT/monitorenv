@@ -9,7 +9,12 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.repositories.*
+import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateFullMissionEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
@@ -45,7 +50,7 @@ class CreateOrUpdateReportingUTests {
     private val semaphoreRepository: ISemaphoreRepository = mock()
 
     @Mock
-    private val facadeRepository: IFacadeAreasRepository = mock()
+    private val seaFrontRepository: ISeaFrontRepository = mock()
 
     @Mock
     private val missionRepository: IMissionRepository = mock()
@@ -105,7 +110,7 @@ class CreateOrUpdateReportingUTests {
             .willReturn(reportingWithSemaphoreDTO)
         given(reportingRepository.save(aReportingWithControlUnit))
             .willReturn(reportingWithControlUnitDTO)
-        given(facadeRepository.findFacadeFromGeometry(aReportingWithSemaphore.geom!!)).willReturn("Facade 1")
+        given(seaFrontRepository.findSeaFrontFromGeometry(aReportingWithSemaphore.geom!!)).willReturn("Facade 1")
         given(semaphoreRepository.findById(1)).willReturn(semaphore)
         given(controlUnitRepository.findFullControlUnitById(1)).willReturn(fullControlUnit)
         given(postgisFunctionRepository.normalizeGeometry(aReportingWithSemaphore.geom!!)).willReturn(
@@ -117,7 +122,7 @@ class CreateOrUpdateReportingUTests {
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
                 missionRepository = missionRepository,
-                facadeRepository = facadeRepository,
+                seaFrontRepository = seaFrontRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
             ).execute(aReportingWithSemaphore)
@@ -132,7 +137,7 @@ class CreateOrUpdateReportingUTests {
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
                 missionRepository = missionRepository,
-                facadeRepository = facadeRepository,
+                seaFrontRepository = seaFrontRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
             ).execute(aReportingWithControlUnit)
@@ -167,7 +172,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     missionRepository = missionRepository,
-                    facadeRepository = facadeRepository,
+                    seaFrontRepository = seaFrontRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
                 ).execute(reporting)
@@ -203,7 +208,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     missionRepository = missionRepository,
-                    facadeRepository = facadeRepository,
+                    seaFrontRepository = seaFrontRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
                 ).execute(reporting)
@@ -269,7 +274,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     missionRepository = missionRepository,
-                    facadeRepository = facadeRepository,
+                    seaFrontRepository = seaFrontRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
                 ).execute(reportingWithControlUnitId)
@@ -286,7 +291,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     missionRepository = missionRepository,
-                    facadeRepository = facadeRepository,
+                    seaFrontRepository = seaFrontRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
                 ).execute(reportingWithSemaphoreId)
@@ -303,7 +308,7 @@ class CreateOrUpdateReportingUTests {
                 CreateOrUpdateReporting(
                     reportingRepository = reportingRepository,
                     missionRepository = missionRepository,
-                    facadeRepository = facadeRepository,
+                    seaFrontRepository = seaFrontRepository,
                     postgisFunctionRepository = postgisFunctionRepository,
                     eventPublisher = applicationEventPublisher,
                 ).execute(reportingWithoutSourceName)
@@ -329,7 +334,7 @@ class CreateOrUpdateReportingUTests {
             CreateOrUpdateReporting(
                 reportingRepository = reportingRepository,
                 missionRepository = missionRepository,
-                facadeRepository = facadeRepository,
+                seaFrontRepository = seaFrontRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
                 eventPublisher = applicationEventPublisher,
             ).execute(reportingWithNewAttachedMission)
@@ -356,7 +361,7 @@ class CreateOrUpdateReportingUTests {
         given(postgisFunctionRepository.normalizeGeometry(reporting.geom!!)).willReturn(
             reporting.geom,
         )
-        given(facadeRepository.findFacadeFromGeometry(reporting.geom!!)).willReturn("Facade 1")
+        given(seaFrontRepository.findSeaFrontFromGeometry(reporting.geom!!)).willReturn("Facade 1")
         given(reportingRepository.findById(reporting.id))
             .willReturn(
                 ReportingDetailsDTO(
@@ -376,7 +381,7 @@ class CreateOrUpdateReportingUTests {
         CreateOrUpdateReporting(
             reportingRepository = reportingRepository,
             missionRepository = missionRepository,
-            facadeRepository = facadeRepository,
+            seaFrontRepository = seaFrontRepository,
             postgisFunctionRepository = postgisFunctionRepository,
             eventPublisher = applicationEventPublisher,
         ).execute(reporting)

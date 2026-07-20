@@ -2,8 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
-import fr.gouv.cacem.monitorenv.domain.entities.seafront.FacadeEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.facade.GetFacades
+import fr.gouv.cacem.monitorenv.domain.entities.seafront.SeaFrontEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.facade.GetSeaFronts
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -19,24 +19,24 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = [(Facades::class)])
-class FacadesITest {
+@WebMvcTest(value = [(SeaFront::class)])
+class SeaFrontITest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @MockitoBean
-    private lateinit var getFacades: GetFacades
+    private lateinit var getSeaFronts: GetSeaFronts
 
     @Test
     fun `Should get all facades`() {
         // Given
-        val expectedFacades = listOf(FacadeEntity(id = 1, facade = "NAMO"))
+        val expectedFacades = listOf(SeaFrontEntity(id = 1, facade = "NAMO"))
 
-        given(getFacades.execute()).willReturn(expectedFacades)
+        given(getSeaFronts.execute()).willReturn(expectedFacades)
 
         // When & Then
         mockMvc
-            .perform(get("/bff/v1/facades"))
+            .perform(get("/bff/v1/sea-fronts"))
             .andExpect(status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id", equalTo(1)))
             .andExpect(MockMvcResultMatchers.jsonPath("$.[0].facade", equalTo("NAMO")))

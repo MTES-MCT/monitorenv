@@ -1,4 +1,3 @@
-import { useGetFacadesQuery } from '@api/facadesAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { OptionValue } from '@features/Reportings/Filters/style'
@@ -10,6 +9,7 @@ import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
 import { regulatoryAreaTableActions } from './slice'
+import { useGetSeaFrontsQuery } from '../../../../api/seaFrontsAPI'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
@@ -21,8 +21,8 @@ export function RegulatoryAreaFilters() {
 
   const [searchQuery, setSearchQuery] = useState(filters.searchQuery)
 
-  const { data } = useGetFacadesQuery()
-  const facadesAsOptions = data
+  const { data } = useGetSeaFrontsQuery()
+  const seaFrontsAsOptions = data
     ?.map(({ facade }) => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
@@ -93,7 +93,7 @@ export function RegulatoryAreaFilters() {
           label="Façade"
           name="seaFront"
           onChange={updateSeaFrontFilter}
-          options={facadesAsOptions ?? []}
+          options={seaFrontsAsOptions ?? []}
           placeholder="Façade"
           renderValue={() => filters.seaFronts && <OptionValue>{`Façade (${filters.seaFronts.length})`}</OptionValue>}
           style={{ flex: 1 }}

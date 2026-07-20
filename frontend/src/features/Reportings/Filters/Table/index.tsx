@@ -70,7 +70,7 @@ export function TableReportingsFiltersWithRef(
   } = useAppSelector(state => state.reportingFilters)
   const {
     dateRangeOptions,
-    facadesOptions,
+    seaFrontsOptions,
     sourceOptions,
     sourceTypeOptions,
     statusOptions,
@@ -253,7 +253,7 @@ export function TableReportingsFiltersWithRef(
             label="Façade"
             name="seaFront"
             onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.SEA_FRONT_FILTER)}
-            options={facadesOptions}
+            options={seaFrontsOptions}
             placeholder="Façade"
             renderValue={() => seaFrontFilter && <OptionValue>{`Façade (${seaFrontFilter.length})`}</OptionValue>}
             size="sm"
