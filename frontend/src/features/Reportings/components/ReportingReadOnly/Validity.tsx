@@ -7,16 +7,21 @@ export function Validity({ reporting }: { reporting: Reporting }) {
   const reportingStatus = getReportingStatus(reporting)
 
   const localizedCreatedAt = getLocalizedDayjs(reporting.createdAt ?? customDayjs().toISOString())
-  const formattedCreatedAt = localizedCreatedAt.format('DD/MM/YYYY à HH:mm')
+  const formattedCreatedAt = customDayjs(localizedCreatedAt).format('DD/MM/YYYY à HH:mm')
 
-  const endOfValidity = localizedCreatedAt.add(reporting.validityTime ?? 0, 'hour')
-  const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
+  const endOfValidity = customDayjs(reporting.createdAt).add(reporting.validityTime ?? 0, 'hour')
+  const localizedEndOfValidity = getLocalizedDayjs(reporting.createdAt ?? customDayjs().toISOString()).add(
+    reporting.validityTime ?? 0,
+    'hour'
+  )
+
+  const formattedEndOfValidity = localizedEndOfValidity.format('DD/MM/YYYY à HH:mm')
 
   const timeLeft = getTimeLeft(endOfValidity)
 
   let remainingMinutes = 0
   if (timeLeft < 1 && timeLeft > 0) {
-    remainingMinutes = endOfValidity.diff(getLocalizedDayjs(customDayjs().toISOString()), 'minute')
+    remainingMinutes = endOfValidity.diff(customDayjs().toISOString(), 'minute')
   }
 
   return (
