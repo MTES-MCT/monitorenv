@@ -10,7 +10,7 @@ context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
     cy.fill('Titre de la zone réglementaire', 'Nouvelle zone réglementaire')
     cy.getDataCy('group-select').click()
     cy.clickButton('Ajouter un nouveau groupe')
-    cy.fill('Géométrie', '456')
+    cy.fill('Géométrie', '789')
     cy.fill('Façade', 'NAMO')
     cy.fill('Type d’acte administratif', 'Arrêté inter-préfectoral')
     cy.fill('Tags et sous-tags', ['AMP'])

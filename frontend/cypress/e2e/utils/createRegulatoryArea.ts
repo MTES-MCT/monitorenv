@@ -1,7 +1,11 @@
-export function createRegulatoryArea(groupName: string = 'RNN Iroise', title: string = 'Nouvelle zone réglementaire') {
+export function createRegulatoryArea(
+  id: string,
+  groupName: string = 'RNN Iroise',
+  title: string = 'Nouvelle zone réglementaire'
+) {
   cy.fill('Titre de la zone réglementaire', title)
   cy.fill('Groupe de réglementation', groupName)
-  cy.fill('Géométrie', '123')
+  cy.fill('Géométrie', id)
   cy.fill('Façade', 'NAMO')
   cy.fill('Type d’acte administratif', 'Arrêté inter-préfectoral')
   cy.fill('Tags et sous-tags', ['AMP'])

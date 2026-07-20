@@ -205,7 +205,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         // When
         val regulatoryAreasToComplete = jpaRegulatoryAreaRepository.findAllToComplete()
         // Then
-        assertThat(regulatoryAreasToComplete).hasSize(2)
+        assertThat(regulatoryAreasToComplete).hasSize(4)
         assertThat(regulatoryAreasToComplete[0].id).isEqualTo(123)
         assertThat(regulatoryAreasToComplete[0].geom).isNotNull()
         assertThat(
