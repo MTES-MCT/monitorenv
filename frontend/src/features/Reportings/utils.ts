@@ -140,7 +140,9 @@ export function sortTargetDetails(targetDetailsA: TargetDataProps, targetDetails
 }
 
 export function getTimeLeft(endOfValidity: string | Dayjs | Date) {
-  return customDayjs(endOfValidity).diff(customDayjs(), 'hour', true)
+  const now = customDayjs()
+
+  return customDayjs(endOfValidity).diff(now, 'hour', true)
 }
 
 export function getTargetName({ target, targetType, vehicleType }) {

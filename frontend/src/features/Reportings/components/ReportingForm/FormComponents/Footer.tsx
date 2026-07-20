@@ -5,7 +5,7 @@ import { reopenReporting } from '@features/Reportings/useCases/reopenReporting'
 import { getTimeLeft, isNewReporting } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, customDayjs, getLocalizedDayjs, Icon, IconButton, Level, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, customDayjs, Icon, IconButton, Level, pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { formatCoordinatesAsText } from '@utils/coordinates'
 import { getReportingStatus, type Reporting, ReportingStatusEnum } from 'domain/entities/reporting'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
@@ -63,10 +63,7 @@ export function Footer({
   }, [values])
 
   const handleReopen = () => {
-    const endOfValidity = getLocalizedDayjs(values?.createdAt ?? customDayjs().toISOString()).add(
-      values?.validityTime ?? 0,
-      'hour'
-    )
+    const endOfValidity = customDayjs(values?.createdAt).add(values?.validityTime ?? 0, 'hour')
     const timeLeft = getTimeLeft(endOfValidity)
 
     if (timeLeft < 0) {
