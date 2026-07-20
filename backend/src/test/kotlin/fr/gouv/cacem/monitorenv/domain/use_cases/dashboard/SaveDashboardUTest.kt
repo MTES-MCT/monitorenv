@@ -5,7 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IDashboardRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -19,7 +19,7 @@ import java.util.UUID
 @ExtendWith(OutputCaptureExtension::class)
 class SaveDashboardUTest {
     private val dashboardRepository: IDashboardRepository = mock()
-    private val facadeAreasRepository: IFacadeAreasRepository = mock()
+    private val facadeAreasRepository: ISeaFrontRepository = mock()
 
     private val saveDashboard = SaveDashboard(dashboardRepository, facadeAreasRepository)
 
@@ -29,7 +29,7 @@ class SaveDashboardUTest {
         val dashboard = aDashboard()
         val id = UUID.randomUUID()
         val seaFront = "MED"
-        given(facadeAreasRepository.findFacadeFromGeometry(dashboard.geom)).willReturn(seaFront)
+        given(facadeAreasRepository.findSeaFrontFromGeometry(dashboard.geom)).willReturn(seaFront)
         val dashboardWithFacade = dashboard.copy(seaFront = seaFront)
         given(dashboardRepository.save(dashboardWithFacade)).willReturn(dashboardWithFacade.copy(id = id))
 
@@ -39,7 +39,7 @@ class SaveDashboardUTest {
         // Then
         assertThat(savedDashboard.id).isEqualTo(id)
         verify(dashboardRepository).save(dashboardWithFacade)
-        verify(facadeAreasRepository).findFacadeFromGeometry(dashboard.geom)
+        verify(facadeAreasRepository).findSeaFrontFromGeometry(dashboard.geom)
 
         assertThat(log.out).contains("Attempt to CREATE or UPDATE dashboard ${dashboard.id}")
         assertThat(log.out).contains("Dashboard ${savedDashboard.id} created or updated")

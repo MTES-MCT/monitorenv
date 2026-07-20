@@ -1,6 +1,5 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants.ts'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI.ts'
-import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetSemaphoresQuery } from '@api/semaphoresAPI.ts'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
@@ -16,6 +15,7 @@ import { type MutableRefObject, useCallback, useMemo, useRef } from 'react'
 import { MapReportingsFilters } from './Map'
 import { reportingsFiltersActions, ReportingsFiltersEnum, type SourceFilterProps } from './slice'
 import { TableReportingsFilters } from './Table'
+import { useGetSeaFrontsQuery } from '../../../api/seaFrontsAPI'
 import { ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
 import {
   ReportingSourceEnum,
@@ -35,7 +35,7 @@ export enum ReportingFilterContext {
 
 export type ReportingsOptionsListType = {
   dateRangeOptions: Option<string>[]
-  facadesOptions: Option<string>[]
+  seaFrontsOptions: Option<string>[]
   sourceOptions: Option<SourceFilterProps>[]
   sourceTypeOptions: Option<string>[]
   statusOptions: Option<string>[]
@@ -139,15 +139,15 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       .value()
   }, [unitListAsOptions, semaphoresAsOptions, sourceTypeFilter])
 
-  const { data } = useGetFacadesQuery()
-  const facadesAsOptions = (data ?? [])
+  const { data } = useGetSeaFrontsQuery()
+  const seaFrontsOptions = (data ?? [])
     .map(({ facade }) => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
   const optionsList = useMemo(
     () => ({
       dateRangeOptions,
-      facadesOptions: facadesAsOptions,
+      seaFrontsOptions,
       sourceOptions,
       sourceTypeOptions,
       statusOptions,
@@ -156,7 +156,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       themesOptions,
       typeOptions
     }),
-    [facadesAsOptions, sourceOptions, tagsOptions, themesOptions]
+    [seaFrontsOptions, sourceOptions, tagsOptions, themesOptions]
   )
 
   const updatePeriodFilter = useCallback(

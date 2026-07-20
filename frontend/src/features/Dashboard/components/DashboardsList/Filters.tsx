@@ -1,6 +1,5 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
-import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { Italic, TagsContainer } from '@components/style'
 import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
@@ -25,6 +24,7 @@ import { isArray } from 'lodash'
 import { Fragment, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { useGetSeaFrontsQuery } from '../../../../api/seaFrontsAPI'
 import { dashboardFiltersActions, type DashboardsListFilters } from '../DashboardForm/slice'
 
 type Orientation = 'row' | 'column'
@@ -36,8 +36,8 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
   )
   const nbOfFiltersSetted = useAppSelector(state => state.dashboardFilters.nbOfFiltersSetted)
 
-  const { data } = useGetFacadesQuery()
-  const facadesAsOptions = data
+  const { data } = useGetSeaFrontsQuery()
+  const seaFrontsAsOptions = data
     ?.map(({ facade }) => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
@@ -168,7 +168,7 @@ export function Filters({ orientation = 'row' }: { orientation?: Orientation }) 
             label="Façade"
             name="seaFront"
             onChange={updateSeaFrontFilter}
-            options={facadesAsOptions ?? []}
+            options={seaFrontsAsOptions ?? []}
             placeholder="Façade"
             renderValue={() => seaFronts && <OptionValue>{`Façade (${seaFronts.length})`}</OptionValue>}
             style={{ width: 181 }}

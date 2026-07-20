@@ -4,10 +4,10 @@ import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateFullMissionEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.events.UpdateReportingEvent
@@ -20,7 +20,7 @@ import org.springframework.context.ApplicationEventPublisher
 @UseCase
 class CreateOrUpdateReporting(
     private val reportingRepository: IReportingRepository,
-    private val facadeRepository: IFacadeAreasRepository,
+    private val seaFrontRepository: ISeaFrontRepository,
     private val missionRepository: IMissionRepository,
     private val postgisFunctionRepository: IPostgisFunctionRepository,
     private val eventPublisher: ApplicationEventPublisher,
@@ -69,7 +69,7 @@ class CreateOrUpdateReporting(
 
         val seaFront =
             normalizedGeometry?.let { nonNullGeometry ->
-                facadeRepository.findFacadeFromGeometry(nonNullGeometry)
+                seaFrontRepository.findSeaFrontFromGeometry(nonNullGeometry)
             }
 
         val savedReporting =

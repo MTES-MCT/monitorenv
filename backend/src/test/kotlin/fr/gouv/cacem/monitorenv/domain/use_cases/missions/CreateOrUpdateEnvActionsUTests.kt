@@ -12,9 +12,9 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionNoteE
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.EnvActionControlEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionSurveillance.EnvActionSurveillanceEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IDepartmentAreaRepository
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IMissionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -40,7 +40,7 @@ class CreateOrPatchEnvActionsUTests {
     private val missionRepository: IMissionRepository = mock()
 
     @Mock
-    private val facadeAreasRepository: IFacadeAreasRepository = mock()
+    private val facadeAreasRepository: ISeaFrontRepository = mock()
 
     @Mock
     private val postgisFunctionRepository: IPostgisFunctionRepository = mock()
@@ -167,7 +167,7 @@ class CreateOrPatchEnvActionsUTests {
 
         given(postgisFunctionRepository.normalizeGeometry(point)).willReturn(point)
         given(postgisFunctionRepository.normalizeGeometry(polygon)).willReturn(polygon)
-        given(facadeAreasRepository.findFacadeFromGeometry(anyOrNull())).willReturn("La Face Ade")
+        given(facadeAreasRepository.findSeaFrontFromGeometry(anyOrNull())).willReturn("La Face Ade")
         given(departmentRepository.findDepartmentFromGeometry(anyOrNull())).willReturn("Quequ'part")
         given(missionRepository.save(anyOrNull()))
             .willReturn(MissionDetailsDTO(mission = expectedUpdatedMission))
@@ -177,7 +177,7 @@ class CreateOrPatchEnvActionsUTests {
             CreateOrUpdateEnvActions(
                 departmentRepository = departmentRepository,
                 missionRepository = missionRepository,
-                facadeRepository = facadeAreasRepository,
+                seaFrontRepository = facadeAreasRepository,
                 postgisFunctionRepository = postgisFunctionRepository,
             ).execute(
                 mission = missionToUpdate,
@@ -185,7 +185,7 @@ class CreateOrPatchEnvActionsUTests {
             )
 
         // Then
-        verify(facadeAreasRepository, times(1)).findFacadeFromGeometry(argThat { this == point })
+        verify(facadeAreasRepository, times(1)).findSeaFrontFromGeometry(argThat { this == point })
         verify(departmentRepository, times(1)).findDepartmentFromGeometry(argThat { this == polygon })
         verify(departmentRepository, times(1)).findDepartmentFromGeometry(argThat { this == point })
         verify(postgisFunctionRepository, times(1)).normalizeGeometry(argThat { this == point })

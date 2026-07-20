@@ -1,4 +1,3 @@
-import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetTrigramsQuery } from '@api/vigilanceAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
@@ -26,6 +25,7 @@ import styled from 'styled-components'
 import { FilterTags } from './FiltersTag'
 import { SearchFilter } from './SearchFilter'
 import { vigilanceAreaFiltersActions } from './slice'
+import { useGetSeaFrontsQuery } from '../../../../../api/seaFrontsAPI'
 import { PeriodFilter } from '../../PeriodFilter'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -52,8 +52,8 @@ export function VigilanceAreasFilters() {
     visibility: visibilityFilter
   } = useAppSelector(state => state.vigilanceAreaFilters)
 
-  const { data } = useGetFacadesQuery()
-  const facadesAsOptions = data
+  const { data } = useGetSeaFrontsQuery()
+  const seaFrontsAsOptions = data
     ?.map(({ facade }) => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
@@ -152,7 +152,7 @@ export function VigilanceAreasFilters() {
             label="Façade"
             name="seaFront"
             onChange={updateSeaFrontFilter}
-            options={facadesAsOptions ?? []}
+            options={seaFrontsAsOptions ?? []}
             placeholder="Façade"
             renderValue={() => seaFrontFilter && <OptionValue>{`Façade (${seaFrontFilter.length})`}</OptionValue>}
             style={{ width: 165 }}

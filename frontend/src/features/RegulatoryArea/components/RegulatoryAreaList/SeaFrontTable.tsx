@@ -1,5 +1,5 @@
-import { useGetFacadesQuery } from '@api/facadesAPI'
 import { getRegulatoryAreasBySeaFront } from '@api/regulatoryAreasAPI'
+import { useGetSeaFrontsQuery } from '@api/seaFrontsAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon } from '@mtes-mct/monitor-ui'
 import { Fragment, useState } from 'react'
@@ -15,8 +15,8 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
     Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
   >
 
-  const { data } = useGetFacadesQuery()
-  const facades = data?.map(({ facade }) => facade).sort((a, b) => a.localeCompare(b))
+  const { data } = useGetSeaFrontsQuery()
+  const seaFronts = data?.map(({ facade }) => facade).sort((a, b) => a.localeCompare(b))
 
   const [seaFrontsExtented, setSeaFrontsExtented] = useState<string[]>([])
 
@@ -32,7 +32,7 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
   if (isLoading) {
     return (
       <ControlPlanWrapper>
-        {facades?.map(facade => (
+        {seaFronts?.map(facade => (
           <GroupTitle key={facade}>
             <Title>{facade}</Title>
             <StyledLoadingIcon />
@@ -44,7 +44,7 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
 
   return (
     <ControlPlanWrapper>
-      {facades?.map(facade => {
+      {seaFronts?.map(facade => {
         if (!groupedRegulatoryAreas[facade]) {
           return null
         }
@@ -52,7 +52,7 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
         return (
           <Fragment key={facade}>
             <GroupTitle onClick={() => openOrCloseGroup(facade)}>
-              <Title>{facades}</Title>
+              <Title>{seaFronts}</Title>
               <StyledIconButton
                 $isExpanded={seaFrontsExtented.includes(facade)}
                 accent={Accent.TERTIARY}

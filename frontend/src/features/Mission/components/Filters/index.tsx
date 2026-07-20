@@ -1,6 +1,5 @@
 import { useGetAdministrationsQuery } from '@api/administrationsAPI'
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
-import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetLegacyControlUnitsQuery } from '@api/legacyControlUnitsAPI'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
@@ -24,6 +23,7 @@ import { type MutableRefObject, useCallback, useMemo, useRef } from 'react'
 
 import { MapMissionsFilters } from './Map'
 import { TableMissionsFilters } from './Table'
+import { useGetSeaFrontsQuery } from '../../../../api/seaFrontsAPI'
 import { missionDateRangeOptions } from '../MissionsList/type'
 
 import type { TagOption } from '../../../../domain/entities/tags'
@@ -98,8 +98,8 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
     return getOptionsFromIdAndName(selectableControlUnits) ?? []
   }, [legacyControlUnits, selectedAdministrationNames])
 
-  const { data: facades } = useGetFacadesQuery()
-  const facadesAsOptions = (facades ?? [])
+  const { data: seaFronts } = useGetSeaFrontsQuery()
+  const seaFrontsAsOptions = (seaFronts ?? [])
     .map(({ facade }) => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
@@ -109,13 +109,13 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
       completion: completionStatusAsOptions,
       controlUnits: controlUnitsAsOptions,
       dates: missionDateRangeOptions,
-      seaFronts: facadesAsOptions,
+      seaFronts: seaFrontsAsOptions,
       status: missionStatusesAsOptions,
       tags: tagsAsOptions,
       themes: themesAsOptions,
       types: missionTypesAsOptions
     }),
-    [activeAdministrations, controlUnitsAsOptions, facadesAsOptions, tagsAsOptions, themesAsOptions]
+    [activeAdministrations, controlUnitsAsOptions, seaFrontsAsOptions, tagsAsOptions, themesAsOptions]
   )
 
   const updatePeriodFilter = useCallback(

@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 
 class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
     @Autowired
-    private lateinit var jpaFacadeAreasRepository: JpaFacadeAreasRepository
+    private lateinit var jpaFacadeAreasRepository: JpaSeaFrontRepository
 
     @Test
     @Transactional
@@ -22,7 +22,7 @@ class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
         val geometry = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val requestedFacade = jpaFacadeAreasRepository.findFacadeFromGeometry(geometry)
+        val requestedFacade = jpaFacadeAreasRepository.findSeaFrontFromGeometry(geometry)
         // Then
         assertThat(requestedFacade).isEqualTo("NAMO")
     }
@@ -37,7 +37,7 @@ class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
         val geometry = wktReader.read(multipointString) as MultiPoint
 
         // When
-        val requestedFacade = jpaFacadeAreasRepository.findFacadeFromGeometry(geometry)
+        val requestedFacade = jpaFacadeAreasRepository.findSeaFrontFromGeometry(geometry)
         // Then
         assertThat(requestedFacade).isEqualTo("SA")
     }
@@ -52,7 +52,7 @@ class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
         val geometry = wktReader.read(multipointString) as MultiPoint
 
         // When
-        val requestedFacade = jpaFacadeAreasRepository.findFacadeFromGeometry(geometry)
+        val requestedFacade = jpaFacadeAreasRepository.findSeaFrontFromGeometry(geometry)
         // Then
         assertThat(requestedFacade).isNull()
     }

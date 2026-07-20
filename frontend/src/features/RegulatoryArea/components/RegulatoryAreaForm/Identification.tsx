@@ -1,4 +1,3 @@
-import { useGetFacadesQuery } from '@api/facadesAPI'
 import { useGetLayerNamesQuery, useGetRegulatoryAreasToCompleteQuery } from '@api/regulatoryAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
@@ -34,6 +33,7 @@ import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { SubTitle } from './style'
+import { useGetSeaFrontsQuery } from '../../../../api/seaFrontsAPI'
 
 import type { MainRefReg } from './RegulatoryTexts'
 import type { TagOption } from 'domain/entities/tags'
@@ -100,8 +100,8 @@ export function Identification({
     return options
   }, [regulatoryAreasToComplete, isEditing, values.geom, values.id, values.refReg])
 
-  const { data } = useGetFacadesQuery()
-  const facadesAsOptions = data
+  const { data } = useGetSeaFrontsQuery()
+  const seaFrontsAsOptions = data
     ?.map(({ facade }) => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
   const regulatoryTypeOptions = getOptionsFromLabelledEnum(RegulatoryArea.RegulatoryAreaTypeLabel).sort((a, b) =>
@@ -265,7 +265,7 @@ export function Identification({
             isRequired
             label="Façade"
             name="facade"
-            options={facadesAsOptions ?? []}
+            options={seaFrontsAsOptions ?? []}
             searchable
             style={{ width: '30%' }}
           />

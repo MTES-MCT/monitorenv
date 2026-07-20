@@ -2,27 +2,27 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.facade
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.mock
-import fr.gouv.cacem.monitorenv.domain.entities.seafront.FacadeEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.IFacadeAreasRepository
+import fr.gouv.cacem.monitorenv.domain.entities.seafront.SeaFrontEntity
+import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 
-class GetFacadesUTest {
-    private val facadeRepository: IFacadeAreasRepository = mock()
-    private val getFacades = GetFacades(facadeRepository)
+class GetSeaFrontUTest {
+    private val seaFrontRepository: ISeaFrontRepository = mock()
+    private val getSeaFronts = GetSeaFronts(seaFrontRepository)
 
     @ExtendWith(OutputCaptureExtension::class)
     @Test
     fun `execute should return all facades`(log: CapturedOutput) {
         // Given
-        val expectedFacades = listOf(FacadeEntity(id = 1, facade = "NAMO"))
-        given(facadeRepository.findAll()).willReturn(expectedFacades)
+        val expectedFacades = listOf(SeaFrontEntity(id = 1, facade = "NAMO"))
+        given(seaFrontRepository.findAll()).willReturn(expectedFacades)
 
         // When
-        val missionTags = getFacades.execute()
+        val missionTags = getSeaFronts.execute()
 
         // Then
         assertThat(missionTags).containsAll(expectedFacades)

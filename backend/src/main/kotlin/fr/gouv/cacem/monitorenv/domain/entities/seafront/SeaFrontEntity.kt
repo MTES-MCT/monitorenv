@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.entities.seafront
 
-data class FacadeEntity(
+data class SeaFrontEntity(
     val id: Int,
     val facade: String,
 )
