@@ -7,7 +7,7 @@ CREATE TABLE regulatory_areas_group
 );
 ALTER TABLE regulatory_areas
     ADD COLUMN area_type regulatory_areas_type default 'ZONE',
-    ADD COLUMN place     VARCHAR;
+    ADD COLUMN location  VARCHAR;
 
 WITH original_areas AS MATERIALIZED (
     -- Snapshot des zones existantes AVANT la création des groupes

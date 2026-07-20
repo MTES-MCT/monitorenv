@@ -69,10 +69,10 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     ): List<RegulatoryAreaModel>
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("UPDATE RegulatoryAreaModel SET layerName = :layerName, place = :place WHERE id IN (:ids)")
-    fun updateGroupTypeAndPlace(
+    @Query("UPDATE RegulatoryAreaModel SET layerName = :layerName, location = :location WHERE id IN (:ids)")
+    fun updateGroupTypeAndLocation(
         layerName: String?,
-        place: String?,
+        location: String?,
         ids: List<Int>,
     )
 }

@@ -38,7 +38,7 @@ context('Back Office > Regulatory Area > Edit Regulatory Area Group', () => {
 
     cy.getDataCy('back-office-banner-stack').should('be.visible')
     cy.getDataCy('back-office-banner-stack').contains(
-      'La zone réglementaire "Interdiction VNM Molene" a bien été enregistrée.'
+      'La zone réglementaire "Nouvelle interdiction VNM Molene" a bien été enregistrée.'
     )
     cy.clickButton('Fermer')
 

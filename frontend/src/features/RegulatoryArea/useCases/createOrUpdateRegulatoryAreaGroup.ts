@@ -9,12 +9,13 @@ export const createOrUpdateRegulatoryAreaGroup =
   (regulatoryAreaGroup: RegulatoryArea.RegulatoryAreaGroupToApi): HomeAppThunk =>
   async dispatch => {
     try {
-      const groupToSave = { ...regulatoryAreaGroup, type: regulatoryAreaGroup.type?.trim().replaceAll(' ', '_') }
-      const response = await dispatch(regulatoryAreasAPI.endpoints.saveRegulatoryAreaGroup.initiate(groupToSave))
+      const response = await dispatch(
+        regulatoryAreasAPI.endpoints.saveRegulatoryAreaGroup.initiate(regulatoryAreaGroup)
+      )
       if ('data' in response) {
         dispatch(
           addBackOfficeBanner({
-            children: `Le groupe de réglementations "${regulatoryAreaGroup.type} ${regulatoryAreaGroup.place}" a bien été enregistré.`,
+            children: `Le groupe de réglementations "${regulatoryAreaGroup.type} ${regulatoryAreaGroup.location}" a bien été enregistré.`,
             isClosable: true,
             isFixed: true,
             level: Level.SUCCESS,
@@ -25,7 +26,7 @@ export const createOrUpdateRegulatoryAreaGroup =
     } catch (error) {
       dispatch(
         addBackOfficeBanner({
-          children: `Nous n'avons pas pu enregistrer la groupe de réglementations "${regulatoryAreaGroup.type} ${regulatoryAreaGroup.place}".`,
+          children: `Nous n'avons pas pu enregistrer la groupe de réglementations "${regulatoryAreaGroup.type} ${regulatoryAreaGroup.location}".`,
           isClosable: true,
           isFixed: true,
           level: Level.ERROR,

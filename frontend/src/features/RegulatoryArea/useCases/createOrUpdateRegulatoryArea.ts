@@ -1,6 +1,6 @@
 import { regulatoryAreasAPI } from '@api/regulatoryAreasAPI'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
-import { Level } from '@mtes-mct/monitor-ui'
+import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 
 import { regulatoryAreaBoActions } from '../slice'
 
@@ -14,7 +14,14 @@ export const createOrUpdateRegulatoryArea =
   async dispatch => {
     const regulatoryAreaEndpoint = regulatoryAreasAPI.endpoints.saveRegulatoryArea
     try {
-      const response = await dispatch(regulatoryAreaEndpoint.initiate(regulatoryArea))
+      const currentDate = customDayjs().toISOString()
+      const regulatoryAreaToSave = {
+        ...regulatoryArea,
+        creation: regulatoryArea.creation ? regulatoryArea.creation : currentDate,
+        editionBo: currentDate
+      }
+
+      const response = await dispatch(regulatoryAreaEndpoint.initiate(regulatoryAreaToSave))
       if ('data' in response) {
         dispatch(
           addBackOfficeBanner({

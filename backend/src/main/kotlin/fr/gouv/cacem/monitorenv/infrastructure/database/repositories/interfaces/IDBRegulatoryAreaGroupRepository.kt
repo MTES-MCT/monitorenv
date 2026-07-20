@@ -59,25 +59,21 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
     fun findAllByGroupName(groupName: String): List<RegulatoryAreaGroupModel>
 
     @Query(
-        value =
-            """
-            SELECT regulatoryAreaGroup from RegulatoryAreaGroupModel regulatoryAreaGroup
-            LEFT JOIN RegulatoryAreaModel regulatoryArea
-            WHERE regulatoryArea.id = :id
-            AND regulatoryAreaGroup.regulatoryArea.creation IS NOT NULL
-        """,
-    )
-    fun findAllByRegulatoryAreaId(id: Int): List<RegulatoryAreaGroupModel>
-
-    @Query(
         """
-        SELECT regulatoryArea.layerName, COUNT(regulatoryArea)
+        SELECT
+            CASE
+                WHEN regulatoryArea.location IS NOT NULL
+                     AND regulatoryArea.layerName NOT LIKE '%' || regulatoryArea.location || '%'
+                THEN regulatoryArea.layerName || ' - ' || regulatoryArea.location
+                ELSE regulatoryArea.layerName
+            END AS layerNameWithLocation,
+            COUNT(regulatoryArea)
         FROM RegulatoryAreaGroupModel regulatoryAreaGroup
         LEFT JOIN RegulatoryAreaModel regulatoryArea ON regulatoryAreaGroup.regulatoryArea.id = regulatoryArea.id
         WHERE regulatoryArea.layerName IS NOT NULL
         AND regulatoryArea.areaType = 'ZONE'
-        GROUP BY regulatoryArea.layerName
-        ORDER BY regulatoryArea.layerName
+        GROUP BY layerNameWithLocation
+        ORDER BY layerNameWithLocation
     """,
     )
     fun findAllLayerNames(): List<Array<Any>>

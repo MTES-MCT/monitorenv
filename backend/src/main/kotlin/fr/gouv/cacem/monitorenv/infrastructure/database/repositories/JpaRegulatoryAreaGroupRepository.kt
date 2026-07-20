@@ -38,9 +38,9 @@ class JpaRegulatoryAreaGroupRepository(
     @Transactional
     override fun save(regulatoryAreaGroup: RegulatoryAreaGroupEntity): RegulatoryAreaGroupDTO {
         val idsToUpdate = regulatoryAreaGroup.regulatoryAreaIds + regulatoryAreaGroup.id
-        dbRegulatoryAreaRepository.updateGroupTypeAndPlace(
+        dbRegulatoryAreaRepository.updateGroupTypeAndLocation(
             layerName = regulatoryAreaGroup.type,
-            place = regulatoryAreaGroup.place,
+            location = regulatoryAreaGroup.location,
             ids = idsToUpdate,
         )
         dbRegulatoryAreaGroupRepository.deleteAllByGroupId(regulatoryAreaGroup.id)

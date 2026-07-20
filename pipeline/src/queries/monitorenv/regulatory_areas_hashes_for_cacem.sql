@@ -28,6 +28,6 @@ LEFT JOIN tags_regulatory_areas trt
        ON trt.regulatory_areas_id = ra.id
 LEFT JOIN tags tag
        ON tag.id = trt.tags_id
-WHERE area_type = 'ZONE';
+WHERE area_type = 'ZONE'
 GROUP BY ra.id;
 
