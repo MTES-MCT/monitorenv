@@ -530,7 +530,7 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                 "MULTIPOLYGON (((-0.627871351299246 49.39331585788091, -0.15993305232445923 49.39331585788091, -0.15993305232445923 49.613595287389444, -0.627871351299246 49.613595287389444, -0.627871351299246 49.39331585788091)))",
             )
         val from = ZonedDateTime.parse("2026-01-01T00:00:00Z")
-        val to = ZonedDateTime.parse("2027-01-01T00:00:00Z")
+        val to = ZonedDateTime.parse("2077-01-01T00:00:00Z")
 
         // When
         val nearbyUnits = jpaControlUnitRepository.findNearbyUnits(geom, from, to)
