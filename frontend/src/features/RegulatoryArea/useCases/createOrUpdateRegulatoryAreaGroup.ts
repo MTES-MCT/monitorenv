@@ -9,9 +9,8 @@ export const createOrUpdateRegulatoryAreaGroup =
   (regulatoryAreaGroup: RegulatoryArea.RegulatoryAreaGroupToApi): HomeAppThunk =>
   async dispatch => {
     try {
-      const response = await dispatch(
-        regulatoryAreasAPI.endpoints.saveRegulatoryAreaGroup.initiate(regulatoryAreaGroup)
-      )
+      const groupToSave = { ...regulatoryAreaGroup, type: regulatoryAreaGroup.type?.trim().replaceAll(' ', '_') }
+      const response = await dispatch(regulatoryAreasAPI.endpoints.saveRegulatoryAreaGroup.initiate(groupToSave))
       if ('data' in response) {
         dispatch(
           addBackOfficeBanner({

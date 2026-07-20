@@ -33,12 +33,12 @@ context('Back Office > Regulatory Area > Edit Regulatory Area Group', () => {
     cy.clickButton('Editer le groupe de réglementation Interdiction VNM Molene')
     cy.clickButton('Enregistrer les modifications')
     cy.clickButton('Saisir une nouvelle réglementation')
-    createRegulatoryArea('Interdiction VNM Molene', 'Nouvelle interdiction VNM Molene')
+    createRegulatoryArea('101112', 'Interdiction VNM Molene', 'Nouvelle interdiction VNM Molene')
     cy.clickButton('Créer la réglementation')
 
     cy.getDataCy('back-office-banner-stack').should('be.visible')
     cy.getDataCy('back-office-banner-stack').contains(
-      'Le groupe de réglementations "Interdiction VNM Molene" a bien été enregistré.'
+      'La zone réglementaire "Interdiction VNM Molene" a bien été enregistrée.'
     )
     cy.clickButton('Fermer')
 
