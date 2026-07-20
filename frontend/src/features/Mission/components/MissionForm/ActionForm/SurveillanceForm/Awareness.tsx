@@ -50,9 +50,9 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
     }
   }
 
-  const addAwerenessDetail = () => {
-    const newAvereness = [...awareness.details, { nbPerson: undefined, themeId: undefined }]
-    setFieldValue(`${formPath}.awareness.details`, newAvereness)
+  const addAwarenessDetail = () => {
+    const newAwareness = [...awareness.details, { nbPerson: undefined, themeId: undefined }]
+    setFieldValue(`${formPath}.awareness.details`, newAwareness)
   }
 
   const removeAwarenessDetail = index => {
@@ -78,8 +78,9 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
       {awareness?.isRisingAwareness && (
         <AwarenessWrapper data-cy="surveillance-awareness-fields">
           <>
-            {awareness.details?.map((details, index) => (
-              <Fragment key={`${details.nbPerson}-${details.themeId}`}>
+            {awareness.details?.map((_, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Fragment key={index}>
                 {index !== 0 && <Separator />}
                 <Details>
                   <NbPerson
@@ -113,7 +114,7 @@ export function Awareness({ awarenessOptions, formPath }: AwarenessProps) {
             ))}
           </>
           {themes?.value && themes?.value?.length !== awareness.details?.length && (
-            <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={addAwerenessDetail}>
+            <Button accent={Accent.SECONDARY} Icon={Icon.Plus} onClick={addAwarenessDetail}>
               Ajouter une thématique de surveillance
             </Button>
           )}
