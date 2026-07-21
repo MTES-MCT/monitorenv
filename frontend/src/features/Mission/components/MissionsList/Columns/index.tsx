@@ -29,7 +29,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     accessorFn: row => row.startDateTimeUtc,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <HumanDateCell date={info.getValue()} />),
     enableSorting: true,
-    header: () => 'Début',
+    header: () => 'Début (UTC)',
     id: 'startDate',
     size: 140 + legacyFirefoxOffset
   },
@@ -37,7 +37,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching = false) => 
     accessorFn: row => row.endDateTimeUtc,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <HumanDateCell date={info.getValue()} />),
     enableSorting: true,
-    header: () => 'Fin',
+    header: () => 'Fin (UTC)',
     id: 'endDate',
     size: 140 + legacyFirefoxOffset
   },
