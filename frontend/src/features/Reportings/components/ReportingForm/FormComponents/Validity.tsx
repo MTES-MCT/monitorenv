@@ -19,12 +19,11 @@ export function Validity({ mustIncreaseValidity, reportingContext }: ValidityPro
   const reportingStatus = getReportingStatus(values)
   const createdAt = values.createdAt ?? customDayjs().toISOString()
 
-  const endOfValidity = customDayjs(createdAt).add(values?.validityTime ?? 0, 'hour')
-
-  const localizedEndOfValidity = customDayjs(createdAt)
+  const endOfValidity = customDayjs(createdAt)
     .utc()
     .add(values?.validityTime ?? 0, 'hour')
-  const formattedEndOfValidity = localizedEndOfValidity.format('DD/MM/YYYY à HH:mm')
+
+  const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
 
   const timeLeft = getTimeLeft(endOfValidity)
 
