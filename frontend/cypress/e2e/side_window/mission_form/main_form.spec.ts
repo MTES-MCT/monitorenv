@@ -60,6 +60,7 @@ context('Side Window > Mission Form > Main Form', () => {
     // ControlUnit should be disabled because it is already selected in the first control unit
     cy.get('.rs-picker-select-menu-item-disabled > span').contains('Cross Etel')
     cy.get('.rs-picker-select-menu-item-disabled').should('exist')
+    cy.clickButton("Supprimer l'unité")
 
     cy.get('[name="missionTypes0"]').click({ force: true })
     cy.get('[name="missionTypes1"]').click({ force: true })
