@@ -7,4 +7,6 @@ interface ISeaFrontRepository {
     fun findSeaFrontFromGeometry(geometry: Geometry): String?
 
     fun findAll(): List<SeaFrontEntity>
+
+    fun findAllFacade(): List<String>
 }

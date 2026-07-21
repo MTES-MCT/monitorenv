@@ -102,7 +102,7 @@ export function Identification({
 
   const { data } = useGetSeaFrontsQuery()
   const seaFrontsAsOptions = data
-    ?.map(({ facade }) => ({ label: facade, value: facade }))
+    ?.map(facade => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
   const regulatoryTypeOptions = getOptionsFromLabelledEnum(RegulatoryArea.RegulatoryAreaTypeLabel).sort((a, b) =>
     a.label.localeCompare(b.label)

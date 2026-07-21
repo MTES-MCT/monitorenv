@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
-import fr.gouv.cacem.monitorenv.domain.entities.seafront.SeaFrontEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.facade.GetSeaFronts
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -30,7 +29,7 @@ class SeaFrontITest {
     @Test
     fun `Should get all facades`() {
         // Given
-        val expectedFacades = listOf(SeaFrontEntity(id = 1, facade = "NAMO"))
+        val expectedFacades = listOf("NAMO")
 
         given(getSeaFronts.execute()).willReturn(expectedFacades)
 
@@ -38,7 +37,6 @@ class SeaFrontITest {
         mockMvc
             .perform(get("/bff/v1/sea-fronts"))
             .andExpect(status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.[0].id", equalTo(1)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.[0].facade", equalTo("NAMO")))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.[0]", equalTo("NAMO")))
     }
 }

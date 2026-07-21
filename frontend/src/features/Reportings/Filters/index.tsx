@@ -141,7 +141,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
 
   const { data } = useGetSeaFrontsQuery()
   const seaFrontsOptions = (data ?? [])
-    .map(({ facade }) => ({ label: facade, value: facade }))
+    .map(facade => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
   const optionsList = useMemo(

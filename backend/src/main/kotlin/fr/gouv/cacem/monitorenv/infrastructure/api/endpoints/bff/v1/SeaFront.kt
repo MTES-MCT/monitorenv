@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.facade.GetSeaFronts
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.facades.SeaFrontDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,5 +15,5 @@ class SeaFront(
 ) {
     @GetMapping("")
     @Operation(summary = "Get all sea fronts")
-    fun get(): List<SeaFrontDataOutput> = getAllSeaFronts.execute().map { SeaFrontDataOutput.fromSeafront(it) }
+    fun get(): List<String> = getAllSeaFronts.execute()
 }

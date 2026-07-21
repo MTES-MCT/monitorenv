@@ -100,7 +100,7 @@ export function MissionFilters({ context }: { context: MissionFilterContext }) {
 
   const { data: seaFronts } = useGetSeaFrontsQuery()
   const seaFrontsAsOptions = (seaFronts ?? [])
-    .map(({ facade }) => ({ label: facade, value: facade }))
+    .map(facade => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
   const optionsList = useMemo(

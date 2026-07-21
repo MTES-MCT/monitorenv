@@ -8,9 +8,9 @@ import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 
-class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
+class JpaSeaFrontRepositoryITests : AbstractDBTests() {
     @Autowired
-    private lateinit var jpaFacadeAreasRepository: JpaSeaFrontRepository
+    private lateinit var jpaSeaFrontRepository: JpaSeaFrontRepository
 
     @Test
     @Transactional
@@ -22,7 +22,7 @@ class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
         val geometry = wktReader.read(multipolygonString) as MultiPolygon
 
         // When
-        val requestedFacade = jpaFacadeAreasRepository.findSeaFrontFromGeometry(geometry)
+        val requestedFacade = jpaSeaFrontRepository.findSeaFrontFromGeometry(geometry)
         // Then
         assertThat(requestedFacade).isEqualTo("NAMO")
     }
@@ -37,7 +37,7 @@ class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
         val geometry = wktReader.read(multipointString) as MultiPoint
 
         // When
-        val requestedFacade = jpaFacadeAreasRepository.findSeaFrontFromGeometry(geometry)
+        val requestedFacade = jpaSeaFrontRepository.findSeaFrontFromGeometry(geometry)
         // Then
         assertThat(requestedFacade).isEqualTo("SA")
     }
@@ -52,7 +52,7 @@ class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
         val geometry = wktReader.read(multipointString) as MultiPoint
 
         // When
-        val requestedFacade = jpaFacadeAreasRepository.findSeaFrontFromGeometry(geometry)
+        val requestedFacade = jpaSeaFrontRepository.findSeaFrontFromGeometry(geometry)
         // Then
         assertThat(requestedFacade).isNull()
     }
@@ -62,7 +62,18 @@ class JpaFacadeAreasRepositoryITests : AbstractDBTests() {
         // Given
 
         // When
-        val facades = jpaFacadeAreasRepository.findAll()
+        val facades = jpaSeaFrontRepository.findAll()
+
+        // Then
+        assertThat(facades).hasSize(8)
+    }
+
+    @Test
+    fun `findAll should return all facades name`() {
+        // Given
+
+        // When
+        val facades = jpaSeaFrontRepository.findAllFacade()
 
         // Then
         assertThat(facades).hasSize(8)
