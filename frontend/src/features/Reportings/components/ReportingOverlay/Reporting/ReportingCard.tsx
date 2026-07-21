@@ -8,17 +8,7 @@ import {
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { useTracking } from '@hooks/useTracking'
-import {
-  Accent,
-  Button,
-  customDayjs,
-  getLocalizedDayjs,
-  Icon,
-  IconButton,
-  Size,
-  Tag,
-  THEME
-} from '@mtes-mct/monitor-ui'
+import { Accent, Button, customDayjs, Icon, IconButton, Size, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 import { ControlStatusEnum, ReportingTypeEnum, ReportingTypeLabels } from 'domain/entities/reporting'
 import { ReportingTargetTypeLabels } from 'domain/entities/targetType'
@@ -103,7 +93,7 @@ export function ReportingCard({
     vehicleType
   } = feature.getProperties()
 
-  const creationDate = getLocalizedDayjs(createdAt).format('DD MMM YYYY à HH:mm')
+  const creationDate = customDayjs(createdAt).utc().format('DD MMM YYYY à HH:mm')
   const endOfValidity = customDayjs(createdAt).add(validityTime || 0, 'hour')
   const timeLeft = getTimeLeft(endOfValidity)
 

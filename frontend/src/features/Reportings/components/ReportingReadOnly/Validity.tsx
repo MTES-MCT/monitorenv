@@ -1,19 +1,18 @@
 import { getTimeLeft } from '@features/Reportings/utils'
-import { TextInput, customDayjs, getLocalizedDayjs } from '@mtes-mct/monitor-ui'
+import { TextInput, customDayjs } from '@mtes-mct/monitor-ui'
 import { ReportingStatusEnum, getReportingStatus, type Reporting } from 'domain/entities/reporting'
 import styled from 'styled-components'
 
 export function Validity({ reporting }: { reporting: Reporting }) {
   const reportingStatus = getReportingStatus(reporting)
 
-  const localizedCreatedAt = getLocalizedDayjs(reporting.createdAt ?? customDayjs().toISOString())
-  const formattedCreatedAt = customDayjs(localizedCreatedAt).format('DD/MM/YYYY à HH:mm')
+  const localizedCreatedAt = customDayjs(reporting.createdAt).utc()
+  const formattedCreatedAt = localizedCreatedAt.format('DD/MM/YYYY à HH:mm')
 
   const endOfValidity = customDayjs(reporting.createdAt).add(reporting.validityTime ?? 0, 'hour')
-  const localizedEndOfValidity = getLocalizedDayjs(reporting.createdAt ?? customDayjs().toISOString()).add(
-    reporting.validityTime ?? 0,
-    'hour'
-  )
+  const localizedEndOfValidity = customDayjs(reporting.createdAt)
+    .utc()
+    .add(reporting.validityTime ?? 0, 'hour')
 
   const formattedEndOfValidity = localizedEndOfValidity.format('DD/MM/YYYY à HH:mm')
 
