@@ -40,7 +40,7 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
   return (
     <ControlPlanWrapper>
       {seaFronts?.map(seaFront => {
-        if (!groupedRegulatoryAreas[seaFront]) {
+        if (!groupedRegulatoryAreas?.[seaFront]) {
           return null
         }
 
