@@ -73,29 +73,13 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                             STRING_AGG(DISTINCT
                                 CASE
                                     WHEN subtag.id IS NOT NULL
-                                    THEN t.name || ',' || subtag.name
+                                    THEN t.name || ', ' || subtag.name
                                     ELSE t.name
                                 END
                             , ',') AS tags
                         FROM tags_regulatory_areas tr
                         JOIN tags t ON tr.tags_id = t.id
                         LEFT JOIN tags subtag ON subtag.parent_id = t.id
-                        WHERE tr.regulatory_areas_id IN (SELECT id FROM filtered_regs)
-                        GROUP BY tr.regulatory_areas_id
-                    ),
-                    themes_agg AS (
-                        SELECT
-                            tr.regulatory_areas_id,
-                            STRING_AGG(DISTINCT
-                                CASE
-                                    WHEN subthemes.id IS NOT NULL
-                                    THEN t.name || ',' || subthemes.name
-                                    ELSE t.name
-                                END
-                            , ',') AS themes
-                        FROM themes_regulatory_areas tr
-                        JOIN themes t ON tr.themes_id = t.id
-                        LEFT JOIN themes subthemes ON subthemes.parent_id = t.id
                         WHERE tr.regulatory_areas_id IN (SELECT id FROM filtered_regs)
                         GROUP BY tr.regulatory_areas_id
                     )
@@ -108,12 +92,10 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                     filtered_regs.resume as "resume",
                     filtered_regs.plan as "plan",
                     ST_AsMVTGeom(filtered_regs.geom_3857, ST_TileEnvelope(:z, :x, :y), 4096, 64, true) AS geom,
-                    themes_agg.themes as "themes",
                     tags_agg.tags as "tags",
                     true AS "isFilled"
                 FROM filtered_regs
                 LEFT JOIN tags_agg ON tags_agg.regulatory_areas_id = filtered_regs.id
-                LEFT JOIN themes_agg ON themes_agg.regulatory_areas_id = filtered_regs.id
             ) AS tile
             WHERE geom IS NOT NULL
         """,
