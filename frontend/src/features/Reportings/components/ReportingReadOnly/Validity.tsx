@@ -6,15 +6,13 @@ import styled from 'styled-components'
 export function Validity({ reporting }: { reporting: Reporting }) {
   const reportingStatus = getReportingStatus(reporting)
 
-  const localizedCreatedAt = customDayjs(reporting.createdAt).utc()
-  const formattedCreatedAt = localizedCreatedAt.format('DD/MM/YYYY à HH:mm')
+  const formattedCreatedAt = customDayjs(reporting.createdAt).utc().format('DD/MM/YYYY à HH:mm')
 
-  const endOfValidity = customDayjs(reporting.createdAt).add(reporting.validityTime ?? 0, 'hour')
-  const localizedEndOfValidity = customDayjs(reporting.createdAt)
+  const endOfValidity = customDayjs(reporting.createdAt)
     .utc()
     .add(reporting.validityTime ?? 0, 'hour')
 
-  const formattedEndOfValidity = localizedEndOfValidity.format('DD/MM/YYYY à HH:mm')
+  const formattedEndOfValidity = endOfValidity.format('DD/MM/YYYY à HH:mm')
 
   const timeLeft = getTimeLeft(endOfValidity)
 

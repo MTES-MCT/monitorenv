@@ -94,7 +94,9 @@ export function ReportingCard({
   } = feature.getProperties()
 
   const creationDate = customDayjs(createdAt).utc().format('DD MMM YYYY à HH:mm')
-  const endOfValidity = customDayjs(createdAt).add(validityTime || 0, 'hour')
+  const endOfValidity = customDayjs(createdAt)
+    .utc()
+    .add(validityTime || 0, 'hour')
   const timeLeft = getTimeLeft(endOfValidity)
 
   const targetName = useMemo(() => {
