@@ -24,13 +24,11 @@ import { deleteThemeTag } from '@utils/deleteThemeTag'
 import { parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
-import { setFitToExtent } from 'domain/shared_slices/Map'
 import { useFormikContext } from 'formik'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { SubTitle } from './style'
-import { useGetSeaFrontsQuery } from '../../../../api/seaFrontsAPI'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
