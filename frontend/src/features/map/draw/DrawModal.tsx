@@ -183,6 +183,10 @@ export function DrawModal() {
       }
 
       isEditingInInputRef.current = true
+      if (!mustZoomToFeature) {
+        return
+      }
+
       setInputCoordinates(nextCoordinates)
       if (!nextCoordinates) {
         return
@@ -201,7 +205,7 @@ export function DrawModal() {
 
       dispatch(addFeatureToDrawedFeature(nextFeature))
       const extent = nextFeature.getGeometry()?.getExtent()
-      if (extent && mustZoomToFeature) {
+      if (extent) {
         dispatch(setFitToExtent(extent))
       }
     },
