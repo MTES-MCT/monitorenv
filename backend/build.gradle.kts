@@ -5,15 +5,15 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
     `java-library`
     `maven-publish`
-    id("org.springframework.boot") version "4.0.6"
+    id("org.springframework.boot") version "4.1.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    kotlin("jvm") version "2.3.21"
-    kotlin("plugin.spring") version "2.3.21"
-    kotlin("plugin.allopen") version "2.3.21"
-    kotlin("plugin.noarg") version "2.3.21"
-    kotlin("plugin.jpa") version "2.3.21"
-    kotlin("plugin.serialization") version "2.3.21"
+    kotlin("jvm") version "2.4.0"
+    kotlin("plugin.spring") version "2.4.0"
+    kotlin("plugin.allopen") version "2.4.0"
+    kotlin("plugin.noarg") version "2.4.0"
+    kotlin("plugin.jpa") version "2.4.0"
+    kotlin("plugin.serialization") version "2.4.0"
 }
 
 repositories {
@@ -54,13 +54,13 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.4.3"
+val ktorVersion = "3.5.1"
 val testcontainersVersion = "1.21.4"
-val sentryVersion = "8.40.0"
-val flywayVersion = "12.5.0"
+val sentryVersion = "8.46.0"
+val flywayVersion = "12.10.0"
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.6"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.1.0"))
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -77,18 +77,18 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("org.hibernate.orm:hibernate-spatial:7.3.2.Final")
-    implementation("io.hypersistence:hypersistence-utils-hibernate-73:3.15.2")
-    implementation("org.geolatte:geolatte-geom:1.11")
+    implementation("org.hibernate.orm:hibernate-spatial:7.4.3.Final")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-73:3.15.4")
+    implementation("org.geolatte:geolatte-geom:1.12")
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
     // Jackson
     implementation("tools.jackson.module:jackson-module-kotlin")
-    implementation("org.n52.jackson:jackson-datatype-jts:3.0.1")
+    implementation("org.n52.jackson:jackson-datatype-jts:3.0.2")
 
     // HTTP Clients (Ktor)
     implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -101,7 +101,7 @@ dependencies {
     implementation("io.sentry:sentry-log4j2:$sentryVersion")
 
     // Cache
-    implementation("com.github.ben-manes.caffeine:caffeine:3.2.3")
+    implementation("com.github.ben-manes.caffeine:caffeine:3.2.4")
 
     // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
@@ -135,9 +135,9 @@ dependencies {
     testImplementation("org.testcontainers:kafka:$testcontainersVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
-    testImplementation("com.squareup.okhttp3:mockwebserver:5.3.2")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.4.0")
     testImplementation("net.ttddyy:datasource-proxy:1.11.0")
-    testImplementation("io.mockk:mockk:1.14.9")
+    testImplementation("io.mockk:mockk:1.14.11")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     testImplementation("org.springframework.kafka:spring-kafka-test") {
         exclude(group = "ch.qos.logback", module = "logback-classic")
