@@ -36,10 +36,12 @@ context('Back Office > Regulatory Area > Edit Regulatory Area Group', () => {
     createRegulatoryArea('101112', 'Interdiction VNM Molene', 'Nouvelle interdiction VNM Molene')
     cy.clickButton('Créer la réglementation')
 
+    cy.url().should('include', `/regulatory_areas/101112`)
     cy.getDataCy('back-office-banner-stack').should('be.visible')
     cy.getDataCy('back-office-banner-stack').contains(
       'La zone réglementaire "Nouvelle interdiction VNM Molene" a bien été enregistrée.'
     )
+    cy.wait(500)
     cy.clickButton('Fermer')
 
     cy.clickButton('Déplier le contenu des zones PIRC')

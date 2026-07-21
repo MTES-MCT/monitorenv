@@ -1,9 +1,9 @@
 import { useGetRegulatoryAreasToCompleteQuery } from '@api/regulatoryAreasAPI'
+import { useGetSeaFrontsQuery } from '@api/seaFrontsAPI'
 import { regulatoryAreaBoActions } from '@features/RegulatoryArea/slice'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { CustomSearch, FormikSelect, OPENLAYERS_PROJECTION, Select, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
-import { SeaFrontLabels } from 'domain/entities/seaFrontType'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { useFormikContext } from 'formik'
 import { boundingExtent } from 'ol/extent'
@@ -62,7 +62,10 @@ export function Localisation({
     return options
   }, [regulatoryAreaDefaultGeom, regulatoryAreasToComplete, values.id])
 
-  const seaFrontsAsOptions = Object.values(SeaFrontLabels)
+  const { data: seaFronts } = useGetSeaFrontsQuery()
+  const seaFrontsAsOptions = (seaFronts ?? [])
+    .map(facade => ({ label: facade, value: facade }))
+    .sort((a, b) => a.label.localeCompare(b.label))
 
   const setGeometryAndRefReg = (nextGeom: { geom: GeoJSON.MultiPolygon; id: number; refReg: string } | undefined) => {
     if (!nextGeom || nextGeom.geom.coordinates.length === 0) {
