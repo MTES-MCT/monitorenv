@@ -39,4 +39,7 @@ interface IDBFacadeAreasRepository : CrudRepository<FacadeAreasModel, Int> {
         nativeQuery = true,
     )
     fun findFacadeFromGeometry(geometry: Geometry): String?
+
+    @Query(value = "SELECT DISTINCT facade.facade FROM FacadeAreasModel facade")
+    fun findAllFacade(): List<String>
 }

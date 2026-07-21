@@ -54,7 +54,7 @@ export function VigilanceAreasFilters() {
 
   const { data } = useGetSeaFrontsQuery()
   const seaFrontsAsOptions = data
-    ?.map(({ facade }) => ({ label: facade, value: facade }))
+    ?.map(facade => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
   const visibilityOptions = getOptionsFromLabelledEnum(VigilanceArea.VisibilityLabel)
   const statusOptions = getOptionsFromLabelledEnum(VigilanceArea.StatusLabel)

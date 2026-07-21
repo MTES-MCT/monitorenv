@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.facade
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.mock
-import fr.gouv.cacem.monitorenv.domain.entities.seafront.SeaFrontEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,8 +17,8 @@ class GetSeaFrontUTest {
     @Test
     fun `execute should return all facades`(log: CapturedOutput) {
         // Given
-        val expectedFacades = listOf(SeaFrontEntity(id = 1, facade = "NAMO"))
-        given(seaFrontRepository.findAll()).willReturn(expectedFacades)
+        val expectedFacades = listOf("NAMO")
+        given(seaFrontRepository.findAllFacade()).willReturn(expectedFacades)
 
         // When
         val missionTags = getSeaFronts.execute()

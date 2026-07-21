@@ -8,10 +8,12 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class JpaSeaFrontRepository(
-    private val dbFacadeAreasRepository: IDBFacadeAreasRepository,
+    private val dbSeafrontRepository: IDBFacadeAreasRepository,
 ) : ISeaFrontRepository {
     override fun findSeaFrontFromGeometry(geometry: Geometry): String? =
-        dbFacadeAreasRepository.findFacadeFromGeometry(geometry)
+        dbSeafrontRepository.findFacadeFromGeometry(geometry)
 
-    override fun findAll(): List<SeaFrontEntity> = dbFacadeAreasRepository.findAll().map { it.toFacadeEntity() }
+    override fun findAll(): List<SeaFrontEntity> = dbSeafrontRepository.findAll().map { it.toFacadeEntity() }
+
+    override fun findAllFacade(): List<String> = dbSeafrontRepository.findAllFacade()
 }

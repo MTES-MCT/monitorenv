@@ -16,7 +16,7 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
   >
 
   const { data } = useGetSeaFrontsQuery()
-  const seaFronts = data?.map(({ facade }) => facade).sort((a, b) => a.localeCompare(b))
+  const seaFronts = data?.map(facade => facade).sort((a, b) => a.localeCompare(b))
 
   const [seaFrontsExtented, setSeaFrontsExtented] = useState<string[]>([])
 

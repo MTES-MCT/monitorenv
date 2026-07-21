@@ -23,7 +23,7 @@ export function RegulatoryAreaFilters() {
 
   const { data } = useGetSeaFrontsQuery()
   const seaFrontsAsOptions = data
-    ?.map(({ facade }) => ({ label: facade, value: facade }))
+    ?.map(facade => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
   const onQuery = (nextQuery: string | undefined) => {
