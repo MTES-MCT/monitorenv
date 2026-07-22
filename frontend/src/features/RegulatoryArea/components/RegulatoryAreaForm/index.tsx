@@ -98,7 +98,7 @@ export function RegulatoryAreaForm() {
 
   const saveRegulatoryArea = async (values: RegulatoryArea.RegulatoryAreaFromAPI) => {
     const savedRegulatoryArea = await dispatch(createOrUpdateRegulatoryArea(values))
-    if (savedRegulatoryArea) {
+    if (savedRegulatoryArea?.id && !location.pathname.includes(`${savedRegulatoryArea.id}`)) {
       navigate(
         `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${savedRegulatoryArea.id}`,
         { state: { from: location.state?.from } }
