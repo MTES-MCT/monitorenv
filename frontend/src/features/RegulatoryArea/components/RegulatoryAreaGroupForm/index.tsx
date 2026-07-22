@@ -111,10 +111,15 @@ export function RegulatoryAreaGroupForm() {
     dispatch(regulatoryAreaTableActions.setOpenRegulatoryAreaId(undefined))
   }
 
-  const createRegulatoryArea = (type: string) => {
-    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?layerName=${type}`, {
-      state: { from: location.pathname }
-    })
+  const createRegulatoryArea = () => {
+    navigate(
+      `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?layerName=${layerName}${
+        layerLocation && `&location=${layerLocation}`
+      }`,
+      {
+        state: { from: location.pathname }
+      }
+    )
   }
 
   useEffect(() => {
@@ -139,7 +144,7 @@ export function RegulatoryAreaGroupForm() {
         validateOnChange={false}
         validationSchema={RegulatoryAreaGroupFormSchema}
       >
-        {({ dirty, handleSubmit, values }) => (
+        {({ dirty, handleSubmit }) => (
           <RegulatoryWrapper>
             <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
               Revenir à la liste des zones réglementaires
@@ -173,12 +178,12 @@ export function RegulatoryAreaGroupForm() {
                 />
               </SubTitleWrapper>
               <Fields>
-                <FormikTextInput isErrorMessageHidden label="Type" name="type" />
-                <FormikTextInput isErrorMessageHidden label="Lieu" name="location" />
+                <FormikTextInput isErrorMessageHidden isRequired label="Type" name="type" />
+                <FormikTextInput isErrorMessageHidden isRequired label="Lieu" name="location" />
               </Fields>
               <SubTitleWrapper>
                 <StyledSubTitle>RÉGLEMENTATIONS APPARTEMENT AU GROUPE</StyledSubTitle>
-                <Button Icon={Icon.Plus} onClick={() => createRegulatoryArea(values.type ?? '')}>
+                <Button Icon={Icon.Plus} onClick={createRegulatoryArea}>
                   Saisir une nouvelle réglementation
                 </Button>
               </SubTitleWrapper>
@@ -274,4 +279,10 @@ const GroupList = styled(LayerSelector.GroupList)`
 
 const OutlinedSelect = styled(Select)`
   border: 1px solid ${p => p.theme.color.lightGray};
+
+  .rs-picker-select-menu-item:hover {
+    background-color: ${p => p.theme.color.white} !important;
+    color: ${p => p.theme.color.charcoal} !important;
+    cursor: default;
+  }
 `
