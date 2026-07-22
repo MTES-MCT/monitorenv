@@ -21,6 +21,7 @@ SELECT
     prohibition_periods,
     additional_ref_reg,
     themes,
-    tags
+    tags,
+    location
 FROM prod.reg_cacem
 WHERE poly_name IS NOT NULL;

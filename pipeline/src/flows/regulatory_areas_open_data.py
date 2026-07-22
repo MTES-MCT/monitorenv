@@ -55,6 +55,7 @@ def get_regulatory_areas_for_csv(regulatory_areas: gpd.GeoDataFrame) -> pd.DataF
         "additional_ref_reg",
         "themes",
         "tags",
+        "location"
     ]
 
     return pd.DataFrame(regulatory_areas[columns])
@@ -85,7 +86,8 @@ def get_regulatory_areas_for_geopackage(
         "prohibition_periods",
         "additional_ref_reg",
         "themes",
-        "tags"
+        "tags",
+        "location"
     ]
 
     gdf = regulatory_areas[columns].copy(deep=True)
