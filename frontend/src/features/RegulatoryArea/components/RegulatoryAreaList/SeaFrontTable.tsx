@@ -32,9 +32,9 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
   if (isLoading) {
     return (
       <ControlPlanWrapper>
-        {seaFronts?.map(facade => (
-          <GroupTitle key={facade}>
-            <Title>{facade}</Title>
+        {seaFronts?.map(seaFront => (
+          <GroupTitle key={seaFront}>
+            <Title>{seaFront}</Title>
             <StyledLoadingIcon />
           </GroupTitle>
         ))}
@@ -44,29 +44,29 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
 
   return (
     <ControlPlanWrapper>
-      {seaFronts?.map(facade => {
-        if (!groupedRegulatoryAreas[facade]) {
+      {seaFronts?.map(seaFront => {
+        if (!groupedRegulatoryAreas[seaFront]) {
           return null
         }
 
         return (
-          <Fragment key={facade}>
-            <GroupTitle onClick={() => openOrCloseGroup(facade)}>
-              <Title>{seaFronts}</Title>
+          <Fragment key={seaFront}>
+            <GroupTitle onClick={() => openOrCloseGroup(seaFront)}>
+              <Title>{seaFront}</Title>
               <StyledIconButton
-                $isExpanded={seaFrontsExtented.includes(facade)}
+                $isExpanded={seaFrontsExtented.includes(seaFront)}
                 accent={Accent.TERTIARY}
                 Icon={Icon.Chevron}
-                onClick={() => openOrCloseGroup(facade)}
+                onClick={() => openOrCloseGroup(seaFront)}
                 title={
-                  seaFrontsExtented.includes(facade)
-                    ? `Replier le contenu de la façade ${facade}`
-                    : `Déplier le contenu de la façade ${facade}`
+                  seaFrontsExtented.includes(seaFront)
+                    ? `Replier le contenu de la façade ${seaFront}`
+                    : `Déplier le contenu de la façade ${seaFront}`
                 }
               />
             </GroupTitle>
-            {seaFrontsExtented.includes(facade) &&
-              Object.entries(groupedRegulatoryAreas[facade]).map(([key, regulatoryAreas]) => (
+            {seaFrontsExtented.includes(seaFront) &&
+              Object.entries(groupedRegulatoryAreas[seaFront]).map(([key, regulatoryAreas]) => (
                 <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
               ))}
           </Fragment>
