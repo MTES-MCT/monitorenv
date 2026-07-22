@@ -112,8 +112,7 @@ export function RegulatoryAreaGroupForm() {
   }
 
   const createRegulatoryArea = (type: string) => {
-    const groupName = type.trim().replaceAll(' ', '_')
-    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?layerName=${groupName}`, {
+    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?layerName=${type}`, {
       state: { from: location.pathname }
     })
   }

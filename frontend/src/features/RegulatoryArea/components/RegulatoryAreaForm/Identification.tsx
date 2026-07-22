@@ -154,13 +154,10 @@ export function Identification() {
         <FieldWithTooltip>
           {values.layerName && !isModifyingLayerName ? (
             <>
-              <StyledTextInput
-                label="Groupe de réglementation"
-                name="layerName"
-                readOnly
-                style={{ flex: 1 }}
-                value={getTitle(formatLayerName(values.layerName, values.location))}
-              />
+              <div>
+                <Label>Groupe de réglementation</Label>
+                <span>{getTitle(formatLayerName(values.layerName, values.location))}</span>
+              </div>
               <ResetButton label="Changer la zone de groupe" onClick={onModifyGroup} />
             </>
           ) : (
@@ -386,19 +383,6 @@ const SmallInlineFields = styled(InlineFields)`
 
 const FieldWithTooltip = styled(InlineFields)`
   align-items: end;
-`
-
-const StyledTextInput = styled(TextInput)`
-  input {
-    padding: 0;
-    border: none !important;
-
-    &:hover,
-    &:focus,
-    &:active {
-      border: none !important;
-    }
-  }
 `
 
 const ExtraFooterContainer = styled.button`
