@@ -46,6 +46,7 @@ export function RegulatoryAreaForm() {
   const { regulatoryAreaId } = useParams()
   const [searchParams] = useSearchParams()
   const layerName = searchParams.get('layerName')
+  const layerLocation = searchParams.get('location')
 
   const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
@@ -71,7 +72,7 @@ export function RegulatoryAreaForm() {
         geom: regulatoryArea?.geom,
         id: regulatoryArea?.id,
         layerName: regulatoryArea?.layerName ?? layerName,
-        location: regulatoryArea?.location,
+        location: regulatoryArea?.location ?? layerLocation,
         observations: regulatoryArea?.observations,
         plan: regulatoryArea?.plan ?? [],
         polyName: regulatoryArea?.polyName,
@@ -84,7 +85,7 @@ export function RegulatoryAreaForm() {
         type: regulatoryArea?.type,
         url: regulatoryArea?.url
       } as RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea),
-    [layerName, regulatoryArea]
+    [layerName, layerLocation, regulatoryArea]
   )
 
   const backToList = () => {

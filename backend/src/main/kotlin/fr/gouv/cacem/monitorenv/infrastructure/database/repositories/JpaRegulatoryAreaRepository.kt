@@ -23,6 +23,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import tools.jackson.databind.json.JsonMapper
+import java.time.ZonedDateTime
 
 @Repository
 class JpaRegulatoryAreaRepository(
@@ -115,9 +116,33 @@ class JpaRegulatoryAreaRepository(
                 newRegulatoryAreaGroup.find { it.group.layerName == regulatoryArea.layerName } == null
             if (isNotAttachedToGroup) {
                 val group =
-                    RegulatoryAreaModel
-                        .fromRegulatoryAreaEntity(regulatoryArea, mapper)
-                        .copy(id = null, areaType = AreaTypeEnum.GROUP)
+                    RegulatoryAreaModel(
+                        id = null,
+                        areaType = AreaTypeEnum.GROUP,
+                        geom = regulatoryArea.geom,
+                        creation = ZonedDateTime.now().toInstant(),
+                        date = null,
+                        dateFin = null,
+                        editeur = null,
+                        editionBo = null,
+                        editionCacem = null,
+                        facade = null,
+                        layerName = regulatoryArea.layerName,
+                        location = regulatoryArea.location,
+                        observation = null,
+                        plan = null,
+                        polyName = null,
+                        refReg = null,
+                        resume = null,
+                        source = null,
+                        tags = listOf(),
+                        themes = listOf(),
+                        type = null,
+                        url = null,
+                        additionalRefReg = null,
+                        authorizationPeriods = null,
+                        prohibitionPeriods = null,
+                    )
                 val savedGroup = dbRegulatoryAreaRepository.save(group)
                 dbRegulatoryAreaGroupRepository.save(
                     RegulatoryAreaGroupModel(
