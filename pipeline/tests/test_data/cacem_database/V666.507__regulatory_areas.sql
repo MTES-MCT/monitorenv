@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS prod.reg_cacem
     prohibition_periods     character varying,
     additional_ref_reg      jsonb,
     themes                  character varying,
-    tags                    character varying
+    tags                    character varying,
+    location                character varying
 );
 
 INSERT INTO prod.reg_cacem (
@@ -50,7 +51,8 @@ INSERT INTO prod.reg_cacem (
     prohibition_periods,
     additional_ref_reg,
     themes,
-    tags
+    tags,
+    location
 ) VALUES (
     1,
     'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))',
@@ -73,7 +75,8 @@ INSERT INTO prod.reg_cacem (
     'période de prohibition1',
     '[{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}]',
     'AMP sans réglementation particulière,Pêche à pied',
-    'tag1,tag2'
+    'tag1,tag2',
+    'location1'
 );
 
 /* NEW REGULATORY AREAS */

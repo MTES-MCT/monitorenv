@@ -84,6 +84,9 @@ def regulatory_areas_open_data():
             "tags": [
                 "tag1,tag2",
             ],
+            "location": [
+                "location1"
+            ],
         },
     )
 
@@ -150,6 +153,9 @@ def regulatory_areas_for_csv():
             "tags": [
                 "tag1,tag2",
             ],
+            "location": [
+                "location1"
+            ],
         },
     )
 
@@ -215,6 +221,9 @@ def regulatory_areas_for_geopackage():
             ],
             "tags": [
                 "tag1,tag2",
+            ],
+            "location": [
+                "location1"
             ],
         },
     )
