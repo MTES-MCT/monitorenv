@@ -9,6 +9,7 @@ context('Back Office > Regulatory Area > Create Regulatory Area', () => {
   it('should create a regulatory area', () => {
     cy.intercept('GET', `bff/v1/regulatory-areas/*`).as('getRegulatoryArea')
     cy.clickButton('Saisir une nouvelle réglementation')
+    cy.fill('Groupe de réglementation', 'RNN Iroise')
     createRegulatoryArea('123')
 
     cy.clickButton('Créer la réglementation')
