@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetNearbyUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.NearbyUnit
-import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aLegacyControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture.Companion.aMissionEntity
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -38,7 +38,7 @@ class ControlUnitsITests {
     fun `getNearbyUnits() should return a control unit with mission whose action are within geometry and date range`() {
         val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
 
-        val controlUnit = aLegacyControlUnit()
+        val controlUnit = aControlUnit()
 
         val from = "2025-01-01T00:00:00Z"
         val to = "2025-01-08T00:00:00Z"

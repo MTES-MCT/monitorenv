@@ -10,10 +10,10 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionWithRapportNavActions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionsByIds
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.LegacyControlUnitAndMissionSourcesDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.MissionWithRapportNavActionsDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.missions.CreateOrUpdateMissionDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.controlUnits.LegacyControlUnitAndMissionSourcesDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.missions.MissionDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.missions.MissionWithRapportNavActionsDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag

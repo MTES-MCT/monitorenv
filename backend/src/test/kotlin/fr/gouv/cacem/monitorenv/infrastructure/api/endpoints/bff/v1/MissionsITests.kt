@@ -5,9 +5,9 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.ActionCompletionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
@@ -21,6 +21,8 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionContr
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.GetMissionTags
 import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.GetUnarchivedMissionTags
 import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.SaveMissionTag
@@ -256,21 +258,22 @@ class MissionsITests {
                         id = 10,
                         controlUnits =
                             listOf(
-                                LegacyControlUnitEntity(
+                                ControlUnitEntity(
                                     id = 1,
+                                    administration = anAdministration(),
+                                    administrationId = 0,
+                                    isArchived = false,
                                     name = "CU1",
-                                    administration = "Admin 1",
-                                    resources =
-                                        listOf(
-                                            LegacyControlUnitResourceEntity(
-                                                id = 2,
-                                                controlUnitId =
-                                                1,
-                                                name =
-                                                    "Ressource 2",
-                                                type = ControlUnitResourceType.FAST_BOAT,
-                                            ),
-                                        ),
+                                ),
+                            ),
+                        controlResources =
+                            listOf(
+                                ControlUnitResourceEntity(
+                                    id = 2,
+                                    controlUnitId = 1,
+                                    name = "Ressource 2",
+                                    type = ControlUnitResourceType.FAST_BOAT,
+                                    stationId = 1,
                                     isArchived = false,
                                 ),
                             ),
@@ -483,21 +486,22 @@ class MissionsITests {
                         id = 10,
                         controlUnits =
                             listOf(
-                                LegacyControlUnitEntity(
+                                ControlUnitEntity(
                                     id = 1,
                                     name = "CU1",
-                                    administration = "Admin 1",
-                                    resources =
-                                        listOf(
-                                            LegacyControlUnitResourceEntity(
-                                                id = 2,
-                                                controlUnitId =
-                                                1,
-                                                name =
-                                                    "Ressource 2",
-                                                type = ControlUnitResourceType.FAST_BOAT,
-                                            ),
-                                        ),
+                                    administration = anAdministration(),
+                                    administrationId = 0,
+                                    isArchived = false,
+                                ),
+                            ),
+                        controlResources =
+                            listOf(
+                                ControlUnitResourceEntity(
+                                    id = 2,
+                                    controlUnitId = 1,
+                                    name = "Ressource 2",
+                                    type = ControlUnitResourceType.FAST_BOAT,
+                                    stationId = 1,
                                     isArchived = false,
                                 ),
                             ),
@@ -820,13 +824,7 @@ class MissionsITests {
             .willReturn(
                 listOf(
                     Pair(
-                        LegacyControlUnitEntity(
-                            id = 123,
-                            administration = "Admin",
-                            resources = listOf(),
-                            isArchived = false,
-                            name = "Control Unit Name",
-                        ),
+                        aControlUnit(name = "Control Unit Name"),
                         listOf(MissionSourceEnum.MONITORFISH),
                     ),
                 ),

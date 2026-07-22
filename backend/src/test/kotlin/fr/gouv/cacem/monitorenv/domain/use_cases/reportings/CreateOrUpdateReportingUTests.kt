@@ -3,8 +3,6 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.reportings
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
@@ -15,7 +13,9 @@ import fr.gouv.cacem.monitorenv.domain.repositories.IPostgisFunctionRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISeaFrontRepository
 import fr.gouv.cacem.monitorenv.domain.repositories.ISemaphoreRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateFullMissionEvent
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.fixtures.MissionFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
@@ -86,22 +86,8 @@ class CreateOrUpdateReportingUTests {
             )
         val fullControlUnit =
             FullControlUnitDTO(
-                administration =
-                    AdministrationEntity(
-                        id = 1,
-                        isArchived = false,
-                        name = "administration 1",
-                    ),
-                controlUnit =
-                    ControlUnitEntity(
-                        id = 1,
-                        administrationId = 2,
-                        areaNote = null,
-                        departmentAreaInseeCode = null,
-                        isArchived = false,
-                        name = "control unit 1",
-                        termsNote = null,
-                    ),
+                administration = anAdministration(),
+                controlUnit = aControlUnit(),
                 controlUnitContacts = listOf(),
                 controlUnitResources = listOf(),
             )
@@ -113,7 +99,7 @@ class CreateOrUpdateReportingUTests {
         given(seaFrontRepository.findSeaFrontFromGeometry(aReportingWithSemaphore.geom!!)).willReturn("Facade 1")
         given(semaphoreRepository.findById(1)).willReturn(semaphore)
         given(controlUnitRepository.findFullControlUnitById(1)).willReturn(fullControlUnit)
-        given(postgisFunctionRepository.normalizeGeometry(aReportingWithSemaphore.geom!!)).willReturn(
+        given(postgisFunctionRepository.normalizeGeometry(aReportingWithSemaphore.geom)).willReturn(
             aReportingWithSemaphore.geom,
         )
 
@@ -128,7 +114,7 @@ class CreateOrUpdateReportingUTests {
             ).execute(aReportingWithSemaphore)
 
         // Then
-        verify(postgisFunctionRepository, times(1)).normalizeGeometry(aReportingWithSemaphore.geom!!)
+        verify(postgisFunctionRepository, times(1)).normalizeGeometry(aReportingWithSemaphore.geom)
         verify(reportingRepository, times(1)).save(aReportingWithSemaphore)
         assertThat(createdReportingWithSemaphore).isEqualTo(reportingWithSemaphoreDTO)
 
@@ -361,7 +347,7 @@ class CreateOrUpdateReportingUTests {
         given(postgisFunctionRepository.normalizeGeometry(reporting.geom!!)).willReturn(
             reporting.geom,
         )
-        given(seaFrontRepository.findSeaFrontFromGeometry(reporting.geom!!)).willReturn("Facade 1")
+        given(seaFrontRepository.findSeaFrontFromGeometry(reporting.geom)).willReturn("Facade 1")
         given(reportingRepository.findById(reporting.id))
             .willReturn(
                 ReportingDetailsDTO(

@@ -177,9 +177,7 @@ class ReportingModel(
             attachedMission =
                 if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
                 ) {
-                    mission?.toMissionEntityWithoutControlUnit(
-                        jsonMapper,
-                    )
+                    mission?.toMissionEntity(jsonMapper)
                 } else {
                     null
                 },

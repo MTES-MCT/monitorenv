@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
@@ -13,6 +12,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionNoteDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.actions.EnvActionSurveillanceDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlUnits.LegacyControlUnitDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionTagDataOutput.Companion.fromMissionTagEntity
 import fr.gouv.cacem.monitorenv.infrastructure.monitorfish.adapters.MonitorFishMissionActionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.rapportnav.adapters.RapportNavMissionActionDataOutput
@@ -24,7 +24,7 @@ data class MissionDataOutput(
     val attachedReportings: List<MissionAttachedReportingDataOutput>? = listOf(),
     val attachedReportingIds: List<Int>? = listOf(),
     val completedBy: String? = null,
-    val controlUnits: List<LegacyControlUnitEntity>? = listOf(),
+    val controlUnits: List<LegacyControlUnitDataOutput>? = listOf(),
     val createdAtUtc: ZonedDateTime? = null,
     val detachedReportingIds: List<Int>? = listOf(),
     val detachedReportings: List<MissionDetachedReportingDataOutput>? = listOf(),
@@ -54,7 +54,17 @@ data class MissionDataOutput(
             return MissionDataOutput(
                 id = dto.mission.id,
                 missionTypes = dto.mission.missionTypes,
-                controlUnits = dto.mission.controlUnits,
+                controlUnits =
+                    dto.mission.controlUnits.map {
+                        LegacyControlUnitDataOutput.fromControlUnit(
+                            it,
+                            resources =
+                                dto.mission.controlResources.filter { resource ->
+                                    resource.controlUnitId ==
+                                        it.id
+                                },
+                        )
+                    },
                 openBy = dto.mission.openBy,
                 completedBy = dto.mission.completedBy,
                 observationsCacem = dto.mission.observationsCacem,
@@ -138,7 +148,13 @@ data class MissionDataOutput(
             return MissionDataOutput(
                 id = mission.id,
                 missionTypes = mission.missionTypes,
-                controlUnits = mission.controlUnits,
+                controlUnits =
+                    mission.controlUnits.map {
+                        LegacyControlUnitDataOutput.fromControlUnit(
+                            it,
+                            resources = mission.controlResources.filter { resource -> resource.controlUnitId == it.id },
+                        )
+                    },
                 openBy = mission.openBy,
                 completedBy = mission.completedBy,
                 observationsCacem = mission.observationsCacem,
