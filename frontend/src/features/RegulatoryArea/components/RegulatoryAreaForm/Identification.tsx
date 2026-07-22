@@ -235,63 +235,57 @@ export function Identification() {
             <ValidateButton onClick={validateLayerName}>Valider</ValidateButton>
           </CreateLayerNameContainer>
         )}
-        <div>
-          <InlineFields>
-            <Fields>
-              <RegulatoryThemesFilter
-                error={errors.themes}
-                isErrorMessageHidden
-                isLabelHidden={false}
-                isRequired
-                isTransparent={false}
-                label="Thématiques et sous-thématiques"
-                onChange={setThemes}
-                value={values?.themes ?? []}
-              />
-              <SmallInlineFields>
-                {allThemesAndSubthemes?.map(theme => (
-                  <SingleTag
-                    key={theme.id}
-                    onDelete={() => {
-                      const updatedTags = deleteThemeTag(values?.themes ?? [], theme)
-                      setFieldValue('themes', updatedTags)
-                    }}
-                  >
-                    {theme.name}
-                  </SingleTag>
-                ))}
-              </SmallInlineFields>
-            </Fields>
-            <Fields>
-              <RegulatoryTagsFilter
-                error={errors.tags}
-                isErrorMessageHidden
-                isLabelHidden={false}
-                isRequired
-                isTransparent={false}
-                label="Tags et sous-tags"
-                onChange={setTags}
-                value={values?.tags ?? []}
-              />
-              <SmallInlineFields>
-                {allTagsAndSubtags?.map(tag => (
-                  <SingleTag
-                    key={tag.id}
-                    onDelete={() => {
-                      const updatedTags = deleteTagTag(values?.tags ?? [], tag)
-                      setFieldValue('tags', updatedTags)
-                    }}
-                  >
-                    {tag.name}
-                  </SingleTag>
-                ))}
-              </SmallInlineFields>
-            </Fields>
-          </InlineFields>
-          <InformationMessage>
-            Sélectionner au moins une thématique/sous-thématique ou un tag/sous-tag
-          </InformationMessage>
-        </div>
+        <InlineFields>
+          <Fields>
+            <RegulatoryThemesFilter
+              error={errors.themes}
+              isErrorMessageHidden
+              isLabelHidden={false}
+              isRequired
+              isTransparent={false}
+              label="Thématiques et sous-thématiques"
+              onChange={setThemes}
+              value={values?.themes ?? []}
+            />
+            <SmallInlineFields>
+              {allThemesAndSubthemes?.map(theme => (
+                <SingleTag
+                  key={theme.id}
+                  onDelete={() => {
+                    const updatedTags = deleteThemeTag(values?.themes ?? [], theme)
+                    setFieldValue('themes', updatedTags)
+                  }}
+                >
+                  {theme.name}
+                </SingleTag>
+              ))}
+            </SmallInlineFields>
+          </Fields>
+          <Fields>
+            <RegulatoryTagsFilter
+              error={errors.tags}
+              isErrorMessageHidden
+              isLabelHidden={false}
+              isTransparent={false}
+              label="Tags et sous-tags"
+              onChange={setTags}
+              value={values?.tags ?? []}
+            />
+            <SmallInlineFields>
+              {allTagsAndSubtags?.map(tag => (
+                <SingleTag
+                  key={tag.id}
+                  onDelete={() => {
+                    const updatedTags = deleteTagTag(values?.tags ?? [], tag)
+                    setFieldValue('tags', updatedTags)
+                  }}
+                >
+                  {tag.name}
+                </SingleTag>
+              ))}
+            </SmallInlineFields>
+          </Fields>
+        </InlineFields>
         <div>
           <FormikTextarea isErrorMessageHidden isRequired label="Résumé" name="resume" rows={4} />
           <InformationMessage>
