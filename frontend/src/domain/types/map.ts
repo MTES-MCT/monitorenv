@@ -1,6 +1,7 @@
 import { OPENLAYERS_PROJECTION } from '@mtes-mct/monitor-ui'
 import Feature, { type FeatureLike } from 'ol/Feature'
 import { GeoJSON } from 'ol/format'
+import RenderFeature, { toFeature } from 'ol/render/Feature'
 
 import { type InteractionListener, type InteractionType } from '../entities/map/constants'
 
@@ -33,11 +34,13 @@ export type SerializedFeature<T> = {
 const parser = new GeoJSON({ featureProjection: OPENLAYERS_PROJECTION })
 
 export function getGeoJSONFromFeature<P>(feature: Feature<Geometry> | FeatureLike | undefined) {
-  if (!feature || !(feature instanceof Feature)) {
+  if (!feature) {
     return undefined
   }
 
-  return parser.writeFeatureObject(feature) as SerializedFeature<P>
+  const resolvedFeature = feature instanceof RenderFeature ? toFeature(feature) : feature
+
+  return parser.writeFeatureObject(resolvedFeature) as SerializedFeature<P>
 }
 
 export const getGeoJSONFromFeatureList = (features: (Feature<Geometry> | FeatureLike | undefined)[]) =>

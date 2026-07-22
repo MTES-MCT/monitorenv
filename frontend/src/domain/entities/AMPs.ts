@@ -12,6 +12,6 @@ export type AMPFromAPI = {
   updatedAt?: string
   urlLegicem: string | undefined
 }
-export type AMP = AMPFromAPI & { bbox: Extent }
+export type AMP = AMPFromAPI & { extent: Extent }
 
 export type AMPProperties = Omit<AMP, 'geometry' | 'geom'>

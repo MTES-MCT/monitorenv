@@ -25,7 +25,7 @@ import type { VigilanceArea } from '@features/VigilanceArea/types'
 
 type RegulatoryAreaItemProps = {
   isReadOnly: boolean
-  regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox | undefined
+  regulatoryArea: RegulatoryArea.RegulatoryAreaFromAPI | undefined
 }
 export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAreaItemProps) {
   const dispatch = useAppDispatch()

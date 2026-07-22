@@ -15,6 +15,7 @@ data class RegulatoryAreaEntity(
     val editeur: String? = null,
     val editionBo: ZonedDateTime? = null,
     val editionCacem: ZonedDateTime? = null,
+    val extent: DoubleArray? = null,
     val facade: String? = null,
     val geom: MultiPolygon? = null,
     val layerName: String? = null,

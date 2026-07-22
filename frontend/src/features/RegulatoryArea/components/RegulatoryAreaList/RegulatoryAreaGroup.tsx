@@ -13,7 +13,7 @@ export function RegulatoryAreaGroup({
   regulatoryAreas
 }: {
   groupName: string
-  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
 }) {
   const { data: layerNames } = useGetLayerNamesQuery()
 

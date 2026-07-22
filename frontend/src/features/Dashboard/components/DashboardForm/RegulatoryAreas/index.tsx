@@ -21,7 +21,7 @@ type RegulatoriesAreasProps = {
   columnWidth: number
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
-  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
   selectedRegulatoryAreaIds: number[]
   setExpandedAccordion: () => void
 }

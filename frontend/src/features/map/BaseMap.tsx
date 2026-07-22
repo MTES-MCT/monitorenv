@@ -43,7 +43,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { useAppSelector } from '../../hooks/useAppSelector'
 import { useClickOutsideWhenOpened } from '../../hooks/useClickOutsideWhenOpened'
 
-import type { VectorLayerWithName, WebGLVectorLayerWithName } from '../../domain/types/layer'
+import type { VectorLayerWithName, VectorTileLayerWithName, WebGLVectorLayerWithName } from '../../domain/types/layer'
 
 export type BaseMapChildrenProps = {
   currentFeatureListOver?: SerializedFeature<Record<string, any>>[]
@@ -184,7 +184,7 @@ function BaseMapNotMemoized({
           const features = current_map.getFeaturesAtPixel(event.pixel, {
             hitTolerance: HIT_PIXEL_TO_TOLERANCE,
             layerFilter: layer => {
-              const typedLayer = layer as VectorLayerWithName | WebGLVectorLayerWithName
+              const typedLayer = layer as VectorLayerWithName | WebGLVectorLayerWithName | VectorTileLayerWithName
 
               const layerName = typedLayer.name ?? typedLayer.get('name')
 
@@ -272,7 +272,7 @@ function BaseMapNotMemoized({
         const layer = initialMap.getFeaturesAtPixel(layerPixel, {
           hitTolerance: HIT_PIXEL_TO_TOLERANCE * 2,
           layerFilter: l => {
-            const cypressLayer = l as VectorLayerWithName | WebGLVectorLayerWithName
+            const cypressLayer = l as VectorLayerWithName | VectorTileLayerWithName | WebGLVectorLayerWithName
 
             return cypressLayer.name === name || cypressLayer.get('name') === name
           }

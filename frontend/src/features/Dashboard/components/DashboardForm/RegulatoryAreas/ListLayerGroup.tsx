@@ -19,7 +19,7 @@ type ResultListLayerGroupProps = {
   groupName: string
   isSelected?: boolean
   layerIds: number[]
-  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
   selectedRegulatoryAreaIds: number[]
 }
 

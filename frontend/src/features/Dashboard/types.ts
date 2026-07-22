@@ -20,7 +20,7 @@ export namespace Dashboard {
     // TODO(24/09/2024): uniformize data naming (properties and types) from api
     amps: AMPFromAPI[]
     inseeCode: string
-    regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+    regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
     reportings: Reporting[]
     tags: TagFromAPI[]
     themes: ThemeFromAPI[]
@@ -61,7 +61,7 @@ export namespace Dashboard {
 
   export type Brief = {
     allLinkedAMPs: AMPFromAPI[]
-    allLinkedRegulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+    allLinkedRegulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
     amps: AMPFromAPI[]
     attachments: {
       images?: Thumbnail[]
@@ -74,7 +74,7 @@ export namespace Dashboard {
     recentActivity: RecentActivity.RecentControlsActivity[]
     recentActivityControlUnits: ControlUnit.ControlUnit[]
     recentActivityFilters: RecentActivityFilters
-    regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+    regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
     reportings: Reporting[]
     selectedControlUnits: ControlUnit.ControlUnit[]
     themes: ThemeFromAPI[]
@@ -111,7 +111,7 @@ export namespace Dashboard {
     'reportings' | 'amps' | 'vigilanceAreas' | 'regulatoryAreas'
   > & {
     amps: AMP[]
-    regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+    regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
     reportings: Reporting[]
     vigilanceAreas: VigilanceArea.VigilanceAreaLayer[]
   }

@@ -82,7 +82,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
         // Regulatory Areas
         if (regulatoryAreas) {
           const regulatoryAreasFeatures = regulatoryAreas.reduce((feats: Feature[], layer) => {
-            if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+            if (layer && layer?.extent) {
               const feature = getRegulatoryFeature({
                 code: Dashboard.featuresCode.DASHBOARD_REGULATORY_AREAS,
                 isolatedLayer,
@@ -111,7 +111,7 @@ export function DashboardPreviewLayer({ map }: BaseMapChildrenProps) {
           }
           const features = ampToDisplay.reduce((feats: Feature[], layerId) => {
             const layer = ampLayers.entities[layerId]
-            if (layer && layer?.geom && layer?.geom?.coordinates.length > 0) {
+            if (layer && layer?.extent) {
               const feature = getAMPFeature({ code: Dashboard.featuresCode.DASHBOARD_AMP, isolatedLayer, layer })
               if (!feature) {
                 return feats
