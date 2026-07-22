@@ -1,3 +1,5 @@
+import { createRegulatoryArea } from '../../utils/createRegulatoryArea'
+
 context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
   beforeEach(() => {
     cy.intercept('GET', `bff/v1/regulatory-areas*`).as('getRegulatoryAreas')
@@ -10,13 +12,7 @@ context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
     cy.fill('Titre de la zone réglementaire', 'Nouvelle zone réglementaire')
     cy.getDataCy('group-select').click()
     cy.clickButton('Ajouter un nouveau groupe')
-    cy.fill('Géométrie', '789')
-    cy.fill('Façade', 'NAMO')
-    cy.fill('Type d’acte administratif', 'Arrêté inter-préfectoral')
-    cy.fill('Tags et sous-tags', ['AMP'])
-    cy.fill('Résumé', 'Résumé de la nouvelle zone réglementaire')
-    cy.get('#PIRCType').click()
-    cy.fill('URL du lien', 'https://www.google.com')
+    createRegulatoryArea('789', 'Nouvelle zone réglementaire')
     cy.fill('Type', 'New group')
     cy.fill('Lieu', 'Location')
     cy.clickButton('Valider')

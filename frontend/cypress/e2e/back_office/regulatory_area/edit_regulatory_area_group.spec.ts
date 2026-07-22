@@ -1,3 +1,5 @@
+import { createRegulatoryArea } from '../../utils/createRegulatoryArea'
+
 context('Back Office > Regulatory Area > Edit Regulatory Area Group', () => {
   beforeEach(() => {
     cy.intercept('GET', `bff/v1/regulatory-areas*`).as('getRegulatoryAreas')
@@ -20,25 +22,13 @@ context('Back Office > Regulatory Area > Edit Regulatory Area Group', () => {
     cy.getDataCy('back-office-banner-stack').contains(
       'Le groupe de réglementations "Interdiction VNM Molene" a bien été enregistré.'
     )
-    // Rollback
-    cy.get('input[name="type"]').clear()
-    cy.fill('Type', 'Interdiction VNM Molene')
-    cy.fill('Lieu', undefined)
-    cy.clickButton('Enregistrer les modifications')
   })
   it('should add a new regulatory area to the group and display it', () => {
     cy.clickButton('Déplier le contenu des zones PIRC')
     cy.clickButton('Editer le groupe de réglementation Interdiction VNM Molene')
     cy.clickButton('Enregistrer les modifications')
     cy.clickButton('Saisir une nouvelle réglementation')
-    cy.fill('Titre de la zone réglementaire', 'Nouvelle interdiction VNM Molene')
-    cy.fill('Géométrie', '101112')
-    cy.fill('Façade', 'NAMO')
-    cy.fill('Type d’acte administratif', 'Arrêté inter-préfectoral')
-    cy.fill('Tags et sous-tags', ['AMP'])
-    cy.fill('Résumé', 'Résumé de la nouvelle zone réglementaire')
-    cy.get('#PIRCType').click()
-    cy.fill('URL du lien', 'https://www.google.com')
+    createRegulatoryArea('101112', 'Nouvelle interdiction VNM Molene')
     cy.clickButton('Créer la réglementation')
 
     cy.url().should('include', `/regulatory_areas/101112`)
