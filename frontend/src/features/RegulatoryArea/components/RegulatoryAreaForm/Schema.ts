@@ -61,20 +61,8 @@ export const RegulatoryAreaFormSchema: Yup.Schema<
     return prohibitionPeriods || authorizationPeriods || resume
   }),
   source: Yup.string().optional(),
-  tags: Yup.array()
-    .ensure()
-    .test('required-if-no-themes', 'Renseignez au moins un thème ou un tag', (tags, context) => {
-      const { themes } = context.parent
-
-      return (tags && tags.length > 0) || (themes && themes.length > 0)
-    }),
-  themes: Yup.array()
-    .ensure()
-    .test('required-if-no-tags', 'Renseignez au moins un thème ou un tag', (themes, context) => {
-      const { tags } = context.parent
-
-      return (themes && themes.length > 0) || (tags && tags.length > 0)
-    }),
+  tags: Yup.array().ensure(),
+  themes: Yup.array().min(1, 'une thématique est obligatoire'),
   type: Yup.string().required('Le type de la zone réglementée est obligatoire'),
   url: Yup.string().required("L'url de la zone réglementée est obligatoire")
 })
