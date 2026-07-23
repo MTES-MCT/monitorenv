@@ -1,5 +1,6 @@
 import { regulatoryAreasAPI } from '@api/regulatoryAreasAPI'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { Level } from '@mtes-mct/monitor-ui'
 
 import type { RegulatoryArea } from '../types'
@@ -15,7 +16,10 @@ export const createOrUpdateRegulatoryAreaGroup =
       if ('data' in response) {
         dispatch(
           addBackOfficeBanner({
-            children: `Le groupe de réglementations "${regulatoryAreaGroup.type} ${regulatoryAreaGroup.location}" a bien été enregistré.`,
+            children: `Le groupe de réglementations "${formatLayerName(
+              regulatoryAreaGroup.type,
+              regulatoryAreaGroup.location
+            )}" a bien été enregistré.`,
             isClosable: true,
             isFixed: true,
             level: Level.SUCCESS,
