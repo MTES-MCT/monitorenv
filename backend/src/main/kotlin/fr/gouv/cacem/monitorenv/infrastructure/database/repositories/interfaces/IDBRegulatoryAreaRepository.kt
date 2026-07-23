@@ -75,4 +75,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
         location: String?,
         ids: List<Int>,
     )
+
+    @Query("SELECT GREATEST(COALESCE(MAX(id), 0) + 1, 1000000) from RegulatoryAreaModel")
+    fun findNextId(): Int
 }
