@@ -17,7 +17,9 @@ SELECT
         COALESCE(ra.prohibition_periods::text, '') ||
         COALESCE(ra.additional_ref_reg::text, '') ||
         COALESCE(STRING_AGG(DISTINCT t.name, ',' ORDER BY t.name)::text, '') ||
-        COALESCE(STRING_AGG(DISTINCT tag.name, ',' ORDER BY tag.name)::text, '')
+        COALESCE(STRING_AGG(DISTINCT tag.name, ',' ORDER BY tag.name)::text, '') ||
+        COALESCE(ra.location::text, '') ||
+        COALESCE(ra.area_type::text, '')
   ) AS monitorenv_row_hash
 FROM public.regulatory_areas ra
 LEFT JOIN themes_regulatory_areas tra

@@ -12,13 +12,19 @@ context('Back Office > Regulatory Area > Edit Regulatory Area', () => {
     cy.get('span[title="Article 1"]').click()
     cy.wait('@getRegulatoryArea')
     cy.getDataCy('regulatory-area-panel').should('be.visible')
-
     cy.clickButton('Editer la réglementation')
+
+    cy.intercept('PUT', '/bff/v1/regulatory-areas').as('createRegulatoryArea')
     cy.fill('Titre de la zone réglementaire', 'Article 1')
     cy.fill('Thématiques et sous-thématiques', ['Réglementation de la réserve naturelle'])
     cy.clickButton('Enregistrer les modifications')
-
-    cy.getDataCy('back-office-banner-stack').should('be.visible')
-    cy.getDataCy('back-office-banner-stack').contains('La zone réglementaire "Article 1" a bien été enregistrée.')
+    cy.wait('@createRegulatoryArea').then(({ response }) => {
+      if (!response) {
+        assert.fail('response is undefined.')
+      }
+      assert.equal(response.statusCode, 200)
+      cy.getDataCy('back-office-banner-stack').should('be.visible')
+      cy.getDataCy('back-office-banner-stack').contains('La zone réglementaire "Article 1" a bien été enregistrée.')
+    })
   })
 })

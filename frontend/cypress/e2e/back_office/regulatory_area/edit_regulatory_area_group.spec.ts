@@ -7,7 +7,7 @@ context('Back Office > Regulatory Area > Edit Regulatory Area Group', () => {
     cy.wait('@getRegulatoryAreas')
   })
   it('should display the details of a regulatory area group and edit it', () => {
-    cy.intercept('GET', `bff/v1/regulatory-areas/groups/4`).as('getRegulatoryAreaGroup')
+    cy.intercept('GET', `bff/v1/regulatory-areas/groups/1000002`).as('getRegulatoryAreaGroup')
     cy.clickButton('Déplier le contenu des zones PIRC')
     cy.get('span[title="Interdiction VNM Molene"]').should('be.visible')
 
