@@ -5,6 +5,7 @@ import { Tooltip } from '@components/Tooltip'
 import { ResetButton } from '@features/commonComponents/ResetButton'
 import { ValidateButton } from '@features/commonComponents/ValidateButton'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import {
   Accent,
   Button,
@@ -43,14 +44,6 @@ export function Identification() {
   const [isNewLayerNameValid, setIsNewLayerNameValid] = useState(true)
   const [isModifyingLayerName, setIsModifyingLayerName] = useState(false)
 
-  function formatLayerName(layerName: string, place?: string) {
-    if (!!place?.trim() && !layerName?.includes(place ?? '')) {
-      return `${layerName} - ${place}`
-    }
-
-    return layerName
-  }
-
   const layerNamesOptions = useMemo(() => {
     const layersNamesFromApi = Object.keys(layerNames?.layerNames || {})
     const formattedLayerNames = layersNamesFromApi
@@ -71,7 +64,7 @@ export function Identification() {
       values.layerName &&
       !formattedLayerNames?.some(layer => layer.value.layerName && values.layerName?.includes(layer.value.layerName))
     ) {
-      const formattedLayerName = formatLayerName(values.layerName, values.location)
+      const formattedLayerName = formatLayerName(values.layerName, values.location) ?? ''
       formattedLayerNames.push({
         label: formattedLayerName,
         value: {
@@ -186,7 +179,7 @@ export function Identification() {
                     layer =>
                       layer.value.layerName &&
                       values.layerName &&
-                      formatLayerName(values.layerName, values.location).includes(layer.value.layerName) &&
+                      formatLayerName(values.layerName, values.location)?.includes(layer.value.layerName) &&
                       layer.value.location === values.location
                   )?.value
                 }

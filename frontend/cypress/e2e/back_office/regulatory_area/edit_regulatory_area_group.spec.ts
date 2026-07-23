@@ -20,12 +20,12 @@ context('Back Office > Regulatory Area > Edit Regulatory Area Group', () => {
 
     cy.getDataCy('back-office-banner-stack').should('be.visible')
     cy.getDataCy('back-office-banner-stack').contains(
-      'Le groupe de réglementations "Interdiction VNM Molene" a bien été enregistré.'
+      'Le groupe de réglementations "Interdiction VNM - Molene" a bien été enregistré.'
     )
   })
   it('should add a new regulatory area to the group and display it', () => {
     cy.clickButton('Déplier le contenu des zones PIRC')
-    cy.clickButton('Editer le groupe de réglementation Interdiction VNM Molene')
+    cy.clickButton('Editer le groupe de réglementation Interdiction VNM - Molene')
     cy.clickButton('Enregistrer les modifications')
     cy.clickButton('Saisir une nouvelle réglementation')
     createRegulatoryArea('101112', 'Nouvelle interdiction VNM Molene')
@@ -43,7 +43,7 @@ context('Back Office > Regulatory Area > Edit Regulatory Area Group', () => {
     cy.clickButton('Revenir à la liste des zones réglementaires')
 
     cy.clickButton('Déplier le contenu des zones PIRC')
-    cy.clickButton('Interdiction VNM Molene')
+    cy.clickButton('Interdiction VNM - Molene')
     cy.get('span[title="Nouvelle interdiction VNM Molene"]').should('be.visible')
   })
 })
