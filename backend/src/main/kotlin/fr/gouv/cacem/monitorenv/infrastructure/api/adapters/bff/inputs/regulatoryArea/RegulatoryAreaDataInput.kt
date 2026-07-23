@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
@@ -21,6 +22,7 @@ data class RegulatoryAreaDataInput(
     val layerName: String? = null,
     val observation: String? = null,
     val additionalRefReg: List<AdditionalRefRegEntity>? = listOf(),
+    val location: String?,
     val plan: String? = null,
     val polyName: String? = null,
     val prohibitionPeriods: String? = null,
@@ -35,6 +37,7 @@ data class RegulatoryAreaDataInput(
     fun toRegulatoryAreaEntity(): RegulatoryAreaEntity =
         RegulatoryAreaEntity(
             id = this.id,
+            areaType = AreaTypeEnum.ZONE,
             authorizationPeriods = this.authorizationPeriods,
             creation = this.creation,
             date = this.date,
@@ -47,6 +50,7 @@ data class RegulatoryAreaDataInput(
             layerName = this.layerName,
             observation = this.observation,
             additionalRefReg = this.additionalRefReg,
+            location = location,
             plan = this.plan,
             polyName = this.polyName,
             prohibitionPeriods = this.prohibitionPeriods,

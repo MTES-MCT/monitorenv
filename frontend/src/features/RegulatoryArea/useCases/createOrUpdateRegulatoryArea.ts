@@ -1,20 +1,27 @@
 import { regulatoryAreasAPI } from '@api/regulatoryAreasAPI'
-import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
-import { Level } from '@mtes-mct/monitor-ui'
+import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 
 import { regulatoryAreaBoActions } from '../slice'
 
 import type { RegulatoryArea } from '../types'
 import type { HomeAppThunk } from '@store/index'
-import type { NavigateFunction } from 'react-router'
 
 export const createOrUpdateRegulatoryArea =
-  (regulatoryArea: RegulatoryArea.RegulatoryAreaFromAPI, navigate: NavigateFunction): HomeAppThunk =>
+  (
+    regulatoryArea: RegulatoryArea.RegulatoryAreaFromAPI
+  ): HomeAppThunk<Promise<RegulatoryArea.RegulatoryAreaFromAPI | undefined>> =>
   async dispatch => {
     const regulatoryAreaEndpoint = regulatoryAreasAPI.endpoints.saveRegulatoryArea
     try {
-      const response = await dispatch(regulatoryAreaEndpoint.initiate(regulatoryArea))
+      const currentDate = customDayjs().toISOString()
+      const regulatoryAreaToSave = {
+        ...regulatoryArea,
+        creation: regulatoryArea.creation ? regulatoryArea.creation : currentDate,
+        editionBo: currentDate
+      }
+
+      const response = await dispatch(regulatoryAreaEndpoint.initiate(regulatoryAreaToSave))
       if ('data' in response) {
         dispatch(
           addBackOfficeBanner({
@@ -26,7 +33,19 @@ export const createOrUpdateRegulatoryArea =
           })
         )
         dispatch(regulatoryAreaBoActions.setNewRegulatoryAreaId(undefined))
-        navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
+
+        return response.data
+      }
+      if ('error' in response) {
+        dispatch(
+          addBackOfficeBanner({
+            children: `Nous n'avons pas pu enregistrer la zone réglementaire "${regulatoryArea.polyName}".`,
+            isClosable: true,
+            isFixed: true,
+            level: Level.ERROR,
+            withAutomaticClosing: true
+          })
+        )
       }
     } catch (error) {
       dispatch(
@@ -39,4 +58,6 @@ export const createOrUpdateRegulatoryArea =
         })
       )
     }
+
+    return undefined
   }

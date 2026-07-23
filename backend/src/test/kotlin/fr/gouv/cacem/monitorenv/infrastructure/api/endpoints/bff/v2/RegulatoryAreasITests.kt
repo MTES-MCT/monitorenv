@@ -4,13 +4,17 @@ import com.nhaarman.mockitokotlin2.argThat
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryAreaGroup
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasGroupById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
@@ -63,6 +67,12 @@ class RegulatoryAreasITests {
     @MockitoBean
     private lateinit var getRegulatoryAreaByIds: GetRegulatoryAreaByIds
 
+    @MockitoBean
+    private lateinit var getRegulatoryAreasGroupById: GetRegulatoryAreasGroupById
+
+    @MockitoBean
+    private lateinit var createOrUpdateRegulatoryAreaGroup: CreateOrUpdateRegulatoryAreaGroup
+
     @Autowired
     private lateinit var mapper: JsonMapper
 
@@ -92,10 +102,10 @@ class RegulatoryAreasITests {
             editeur = "Alexis Pré",
             source = "",
             observation = "",
-            tags = listOf(TagFixture.Companion.aTag(name = "Mouillage", id = 5)),
+            tags = listOf(TagFixture.aTag(name = "Mouillage", id = 5)),
             themes =
                 listOf(
-                    ThemeFixture.Companion.aTheme(
+                    ThemeFixture.aTheme(
                         name = "Zone de mouillage et d'équipement léger (ZMEL)",
                         id = 101,
                     ),
@@ -104,12 +114,16 @@ class RegulatoryAreasITests {
             dateFin = ZonedDateTime.parse("2035-07-01T04:50:09Z"),
             plan = "PIRC",
             polyName = "Zone au sud de la cale",
+            location = null,
             resume = "Descriptif de la zone réglementaire",
+            areaType = AreaTypeEnum.ZONE,
         )
 
     @Test
     fun `Should get all regulatory Areas`() {
         // Given
+        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
+
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
@@ -119,7 +133,7 @@ class RegulatoryAreasITests {
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
@@ -129,7 +143,7 @@ class RegulatoryAreasITests {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "regulatoryAreasByLayer.[0].group",
+                    "regulatoryAreasByLayer.[0].group.layerName",
                     Matchers.equalTo("ZMEL_Cale_Querlen"),
                 ),
             ).andExpect(
@@ -267,8 +281,10 @@ class RegulatoryAreasITests {
                 themes = listOf(),
                 date = null,
                 dateFin = null,
+                location = null,
                 plan = null,
                 polyName = null,
+                areaType = AreaTypeEnum.ZONE,
                 resume = null,
             )
         BDDMockito.given(getAllRegulatoryAreasToComplete.execute()).willReturn(listOf(regulatoryArea))
@@ -284,6 +300,8 @@ class RegulatoryAreasITests {
     @Test
     fun `Should filter regulatory areas by seaFronts`() {
         // Given
+        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
+
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
@@ -293,7 +311,7 @@ class RegulatoryAreasITests {
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
@@ -302,7 +320,7 @@ class RegulatoryAreasITests {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(
                 MockMvcResultMatchers.jsonPath(
-                    "regulatoryAreasByLayer[0].group",
+                    "regulatoryAreasByLayer[0].group.layerName",
                     Matchers.equalTo("ZMEL_Cale_Querlen"),
                 ),
             ).andExpect(
@@ -316,6 +334,8 @@ class RegulatoryAreasITests {
     @Test
     fun `Should filter regulatory areas by searchQuery`() {
         // Given
+        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
+
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
@@ -325,7 +345,7 @@ class RegulatoryAreasITests {
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
@@ -365,6 +385,7 @@ class RegulatoryAreasITests {
     @Test
     fun `Should filter regulatory areas by tags`() {
         // Given
+        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
@@ -374,7 +395,7 @@ class RegulatoryAreasITests {
                     tags = listOf(5),
                     themes = null,
                 ),
-            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
@@ -392,6 +413,8 @@ class RegulatoryAreasITests {
     @Test
     fun `Should filter regulatory areas by themes`() {
         // Given
+        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
+
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
@@ -401,7 +424,7 @@ class RegulatoryAreasITests {
                     tags = null,
                     themes = listOf(101),
                 ),
-            ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
         // When
         mockMvc
@@ -422,6 +445,7 @@ class RegulatoryAreasITests {
         val regulatoryAreaToComplete =
             RegulatoryAreaEntity(
                 id = 9999,
+                areaType = AreaTypeEnum.ZONE,
                 geom = polygon,
                 url = url,
                 creation = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
@@ -437,6 +461,7 @@ class RegulatoryAreasITests {
                 themes = listOf(ThemeFixture.Companion.aTheme(id = 9, name = "AMP")),
                 date = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
                 dateFin = ZonedDateTime.parse("2034-01-01T00:00:00Z"),
+                location = null,
                 plan = "PIRC",
                 polyName = "New Zone",
                 resume = "New zone description",
@@ -484,6 +509,7 @@ class RegulatoryAreasITests {
                             endedAt = null,
                         ),
                     ),
+                location = null,
             )
 
         BDDMockito
@@ -540,6 +566,7 @@ class RegulatoryAreasITests {
                 themes = listOf(ThemeFixture.Companion.aTheme(id = 9, name = "AMP")),
                 date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
                 dateFin = ZonedDateTime.parse("2040-07-01T04:50:09Z"),
+                location = null,
                 plan = "PIRC",
                 polyName = "Zone mise à jour",
                 resume = "Description mise à jour",
@@ -547,6 +574,7 @@ class RegulatoryAreasITests {
                 authorizationPeriods = null,
                 prohibitionPeriods = null,
                 additionalRefReg = null,
+                areaType = AreaTypeEnum.ZONE,
             )
 
         val requestBody =
@@ -593,6 +621,7 @@ class RegulatoryAreasITests {
                 date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
                 dateFin = ZonedDateTime.parse("2040-07-01T04:50:09Z"),
                 plan = "PIRC",
+                location = null,
                 polyName = "Zone mise à jour",
                 resume = "Description mise à jour",
                 type = "AMP",
@@ -636,6 +665,7 @@ class RegulatoryAreasITests {
         val regulatoryArea2 =
             RegulatoryAreaEntity(
                 id = 18,
+                areaType = AreaTypeEnum.ZONE,
                 geom = polygon,
                 url = "https://example.com/area-18",
                 creation = ZonedDateTime.parse("2022-01-15T10:30:00Z"),
@@ -657,6 +687,7 @@ class RegulatoryAreasITests {
                     ),
                 date = ZonedDateTime.parse("2022-01-01T00:00:00Z"),
                 dateFin = ZonedDateTime.parse("2032-01-01T00:00:00Z"),
+                location = null,
                 plan = "AMP",
                 polyName = "Zone protégée test",
                 resume = "Zone de protection marine",

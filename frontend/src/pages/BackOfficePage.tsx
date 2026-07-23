@@ -1,21 +1,21 @@
 import { EnvironmentBox, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
+import { AdministrationForm } from '@features/Administration/components/AdministrationForm'
+import { AdministrationTable } from '@features/Administration/components/AdministrationTable'
+import { BackOfficeMenu } from '@features/BackOffice/components/BackofficeMenu'
+import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { BannerStack } from '@features/BackOffice/components/BannerStack'
+import { ControlUnitForm } from '@features/ControlUnit/components/ControlUnitForm'
+import { ControlUnitTable } from '@features/ControlUnit/components/ControlUnitTable'
 import { MissionTagTable } from '@features/MissionTags/components/Table'
 import { RegulatoryAreaForm } from '@features/RegulatoryArea/components/RegulatoryAreaForm'
+import { RegulatoryAreaGroupForm } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm'
 import { RegulatoryAreaList } from '@features/RegulatoryArea/components/RegulatoryAreaList'
+import { StationForm } from '@features/Station/components/StationForm'
+import { BaseTable } from '@features/Station/components/StationTable'
 import { TagTable } from '@features/Tags/components/Table'
 import { getEnvironmentData } from '@utils/getEnvironmentData'
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
-
-import { AdministrationForm } from '../features/Administration/components/AdministrationForm'
-import { AdministrationTable } from '../features/Administration/components/AdministrationTable'
-import { BackOfficeMenu } from '../features/BackOffice/components/BackofficeMenu'
-import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '../features/BackOffice/components/BackofficeMenu/constants'
-import { ControlUnitForm } from '../features/ControlUnit/components/ControlUnitForm'
-import { ControlUnitTable } from '../features/ControlUnit/components/ControlUnitTable'
-import { StationForm } from '../features/Station/components/StationForm'
-import { BaseTable } from '../features/Station/components/StationTable'
 
 const { isEnvironmentBoxVisible } = getEnvironmentData()
 
@@ -36,6 +36,10 @@ export function BackOfficePage() {
           <Route
             element={<RegulatoryAreaForm />}
             path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/:regulatoryAreaId`}
+          />
+          <Route
+            element={<RegulatoryAreaGroupForm />}
+            path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP]}/:groupId`}
           />
           <Route
             element={<RegulatoryAreaForm />}

@@ -1,14 +1,18 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryAreaGroup
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasGroupById
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaGroupDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.LayerNamesDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataGroupOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaToCompleteDataOuput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasDataOutput
@@ -34,8 +38,10 @@ class RegulatoryAreas(
     private val getRegulatoryAreaById: GetRegulatoryAreaById,
     private val getAllLayerNames: GetAllLayerNames,
     private val createOrUpdateRegulatoryArea: CreateOrUpdateRegulatoryArea,
+    private val createOrUpdateRegulatoryAreaGroup: CreateOrUpdateRegulatoryAreaGroup,
     private val getAllRegulatoryAreasToComplete: GetAllRegulatoryAreasToComplete,
     private val getRegulatoryAreaByIds: GetRegulatoryAreaByIds,
+    private val getRegulatoryAreasGroupById: GetRegulatoryAreasGroupById,
 ) {
     @GetMapping("")
     @Operation(summary = "Get regulatory Areas")
@@ -70,7 +76,7 @@ class RegulatoryAreas(
             )
 
         val groupedDto =
-            regulatoryAreasGrouped.map { RegulatoryAreasDataOutput.Companion.fromRegulatoryAreaEntity(it) }
+            regulatoryAreasGrouped.map { RegulatoryAreasDataOutput.fromRegulatoryAreaEntity(it) }
 
         return RegulatoryAreasWithTotalDataOutput(
             totalCount = totalCount,
@@ -86,7 +92,7 @@ class RegulatoryAreas(
     ): List<RegulatoryAreaDataOutput> =
         getRegulatoryAreaByIds
             .execute(body.ids, body.axis)
-            .map { RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it) }
+            .map { RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it) }
 
     @GetMapping("/{regulatoryAreaId}")
     @Operation(summary = "Get regulatory area by Id")
@@ -96,7 +102,7 @@ class RegulatoryAreas(
         regulatoryAreaId: Int,
     ): RegulatoryAreaDataOutput? =
         getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)?.let {
-            RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(it)
+            RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it)
         }
 
     @PutMapping("", consumes = ["application/json"])
@@ -104,7 +110,7 @@ class RegulatoryAreas(
     fun put(
         @RequestBody regulatoryAreaDataInput: RegulatoryAreaDataInput,
     ): RegulatoryAreaDataOutput =
-        RegulatoryAreaDataOutput.Companion.fromRegulatoryAreaEntity(
+        RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
             createOrUpdateRegulatoryArea.execute(regulatoryAreaDataInput.toRegulatoryAreaEntity()),
         )
 
@@ -112,13 +118,33 @@ class RegulatoryAreas(
     @Operation(summary = "Get all regulatory areas group names")
     fun getLayerNames(): LayerNamesDataOutput? =
         getAllLayerNames.execute().let {
-            LayerNamesDataOutput.Companion.fromGroupNames(it)
+            LayerNamesDataOutput.fromGroupNames(it)
         }
 
     @GetMapping("/to-complete")
     @Operation(summary = "Get all regulatory areas to complete")
     fun getRegulatoryAreasToComplete(): List<RegulatoryAreaToCompleteDataOuput> =
         getAllRegulatoryAreasToComplete.execute().map {
-            RegulatoryAreaToCompleteDataOuput.Companion.fromRegulatoryAreaToCompleteEntity(it)
+            RegulatoryAreaToCompleteDataOuput.fromRegulatoryAreaToCompleteEntity(it)
         }
+
+    @GetMapping("/groups/{id}")
+    @Operation(summary = "Get all regulatory areas group by group id")
+    fun getGroupById(
+        @Parameter(description = "Group id")
+        @PathVariable id: Int,
+    ): RegulatoryAreaDataGroupOutput =
+        RegulatoryAreaDataGroupOutput.fromRegulatoryAreaGroup(getRegulatoryAreasGroupById.execute(id))
+
+    @PutMapping("/groups")
+    @Operation(summary = "Get all regulatory areas group names")
+    fun saveGroup(
+        @RequestBody
+        group: RegulatoryAreaGroupDataInput,
+    ): RegulatoryAreaDataGroupOutput =
+        RegulatoryAreaDataGroupOutput.fromRegulatoryAreaGroup(
+            createOrUpdateRegulatoryAreaGroup.execute(
+                regulatoryAreaGroup = group.toRegulatoryAreaGroup(),
+            ),
+        )
 }

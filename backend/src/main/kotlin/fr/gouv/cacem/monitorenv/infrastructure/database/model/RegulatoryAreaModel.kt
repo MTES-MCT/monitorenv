@@ -1,16 +1,21 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.Hibernate
+import org.hibernate.annotations.JdbcType
 import org.hibernate.annotations.Type
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType
 import org.locationtech.jts.geom.MultiPolygon
 import org.n52.jackson.datatype.jts.GeometryDeserializer
 import org.n52.jackson.datatype.jts.GeometrySerializer
@@ -28,6 +33,10 @@ data class RegulatoryAreaModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     val id: Int,
+    @Column(name = "area_type", columnDefinition = "regulatory_areas_type")
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType::class)
+    val areaType: AreaTypeEnum,
     @Column(name = "creation") val creation: Instant?,
     @Column(name = "date") val date: Instant?,
     @Column(name = "date_fin") val dateFin: Instant?,
@@ -39,7 +48,8 @@ data class RegulatoryAreaModel(
     @JsonDeserialize(contentUsing = GeometryDeserializer::class)
     @Column(name = "geom")
     val geom: MultiPolygon?,
-    @Column(name = "layer_name") val layerName: String?,
+    @Column(name = "layer_name") var layerName: String?,
+    @Column(name = "location") val location: String?,
     @Column(name = "observation") val observation: String?,
     @Column(name = "plan") val plan: String?,
     @Column(name = "poly_name") val polyName: String?,
@@ -67,6 +77,7 @@ data class RegulatoryAreaModel(
     fun toRegulatoryArea(mapper: JsonMapper) =
         RegulatoryAreaEntity(
             id = id,
+            areaType = areaType,
             creation = creation?.atZone(ZoneOffset.UTC),
             plan = plan,
             date = date?.atZone(ZoneOffset.UTC),
@@ -77,13 +88,14 @@ data class RegulatoryAreaModel(
             facade = facade,
             geom = geom,
             layerName = layerName,
+            location = location,
             polyName = polyName,
             observation = observation,
             refReg = refReg,
             resume = resume,
             source = source,
-            tags = TagRegulatoryAreaModel.Companion.toTagEntities(tags),
-            themes = ThemeRegulatoryAreaModel.Companion.toThemeEntities(themes),
+            tags = TagRegulatoryAreaModel.toTagEntities(tags),
+            themes = ThemeRegulatoryAreaModel.toThemeEntities(themes),
             type = type,
             url = url,
             additionalRefReg =
@@ -108,6 +120,7 @@ data class RegulatoryAreaModel(
         ): RegulatoryAreaModel =
             RegulatoryAreaModel(
                 id = regulatoryArea.id,
+                areaType = AreaTypeEnum.ZONE,
                 creation = regulatoryArea.creation?.toInstant(),
                 plan = regulatoryArea.plan,
                 date = regulatoryArea.date?.toInstant(),
@@ -119,6 +132,7 @@ data class RegulatoryAreaModel(
                 geom = regulatoryArea.geom,
                 layerName = regulatoryArea.layerName,
                 observation = regulatoryArea.observation,
+                location = regulatoryArea.location,
                 polyName = regulatoryArea.polyName,
                 refReg = regulatoryArea.refReg,
                 resume = regulatoryArea.resume,

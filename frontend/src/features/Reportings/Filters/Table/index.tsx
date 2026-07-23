@@ -1,5 +1,4 @@
 import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
-import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import { useAppSelector } from '@hooks/useAppSelector.ts'
 import {
   Checkbox,
@@ -17,6 +16,7 @@ import { forwardRef, memo, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../../../domain/entities/reporting'
+import { ResetButton } from '../../../commonComponents/ResetButton'
 import { ReportingSearch } from '../ReportingSearch'
 import { ReportingsFiltersEnum, type SourceFilterProps } from '../slice'
 import { OptionValue, Separator, StyledSelect, StyledStatusFilter, StyledTagsContainer } from '../style'
@@ -284,7 +284,7 @@ export function TableReportingsFiltersWithRef(
 
         <FilterTags />
 
-        {nbOfFiltersSetted > 0 && <ReinitializeFiltersButton onClick={resetFilters} />}
+        {nbOfFiltersSetted > 0 && <ResetButton onClick={resetFilters} />}
       </StyledTagsContainer>
     </>
   )

@@ -7,13 +7,8 @@ import { Fragment, useState } from 'react'
 import { RegulatoryAreaGroup } from './RegulatoryAreaGroup'
 import { ControlPlanWrapper, GroupTitle, StyledIconButton, StyledLoadingIcon, Title } from './style'
 
-import type { RegulatoryArea } from '@features/RegulatoryArea/types'
-
 export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLoading: boolean }) {
-  const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasBySeaFront(state, apiFilters)) as Record<
-    string,
-    Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
-  >
+  const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasBySeaFront(state, apiFilters))
 
   const { data } = useGetSeaFrontsQuery()
   const seaFronts = data?.map(facade => facade).sort((a, b) => a.localeCompare(b))
@@ -45,7 +40,7 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
   return (
     <ControlPlanWrapper>
       {seaFronts?.map(seaFront => {
-        if (!groupedRegulatoryAreas[seaFront]) {
+        if (!groupedRegulatoryAreas?.[seaFront]) {
           return null
         }
 
@@ -66,8 +61,8 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
               />
             </GroupTitle>
             {seaFrontsExtented.includes(seaFront) &&
-              Object.entries(groupedRegulatoryAreas[seaFront]).map(([key, regulatoryAreas]) => (
-                <RegulatoryAreaGroup key={key} groupName={key} regulatoryAreas={regulatoryAreas} />
+              Object.entries(groupedRegulatoryAreas[seaFront]).map(([, regulatoryAreasGroup]) => (
+                <RegulatoryAreaGroup key={regulatoryAreasGroup.group.id} group={regulatoryAreasGroup} />
               ))}
           </Fragment>
         )

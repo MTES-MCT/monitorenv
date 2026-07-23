@@ -3,7 +3,6 @@ import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { TagsContainer } from '@components/style'
 import { ShowFilters } from '@components/Table/style'
-import { ReinitializeFiltersButton } from '@features/commonComponents/ReinitializeFiltersButton'
 import {
   setAreRecentsAreasChecked,
   setFilteredRegulatoryTags,
@@ -26,6 +25,7 @@ import { FilterTags } from './FiltersTag'
 import { SearchFilter } from './SearchFilter'
 import { vigilanceAreaFiltersActions } from './slice'
 import { useGetSeaFrontsQuery } from '../../../../../api/seaFrontsAPI'
+import { ResetButton } from '../../../../commonComponents/ResetButton'
 import { PeriodFilter } from '../../PeriodFilter'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -188,7 +188,7 @@ export function VigilanceAreasFilters() {
         <TagsContainer>
           <FilterTags />
 
-          <ReinitializeFiltersButton onClick={resetFilters} />
+          <ResetButton onClick={resetFilters} />
         </TagsContainer>
       )}
     </Wrapper>

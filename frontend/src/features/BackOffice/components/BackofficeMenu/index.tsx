@@ -4,6 +4,7 @@ import {
   isControlUnitListPage,
   isControlUnitPage,
   isMissionTagListPage,
+  isRegulatoryAreaGroupPage,
   isRegulatoryAreaListPage,
   isRegulatoryAreaPage,
   isStationListPage,
@@ -22,7 +23,11 @@ export function BackOfficeMenu() {
   return (
     <Wrapper>
       <StyledNavLink
-        $isActive={isRegulatoryAreaPage(locationPath) || isRegulatoryAreaListPage(locationPath)}
+        $isActive={
+          isRegulatoryAreaPage(locationPath) ||
+          isRegulatoryAreaListPage(locationPath) ||
+          isRegulatoryAreaGroupPage(locationPath)
+        }
         to={`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`}
       >
         <Icon.MapLayers />

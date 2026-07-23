@@ -17,7 +17,7 @@ import { Accent, Button, customDayjs, Icon, LinkButton } from '@mtes-mct/monitor
 import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
 import { useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router'
 import styled from 'styled-components'
 
 import { BaseLayerSelector } from '../BaseLayerSelector'
@@ -41,8 +41,12 @@ const mapChildrensComponents = [
 
 export function RegulatoryAreaForm() {
   const navigate = useNavigate()
+  const location = useLocation()
   const dispatch = useAppDispatch()
   const { regulatoryAreaId } = useParams()
+  const [searchParams] = useSearchParams()
+  const layerName = searchParams.get('layerName')
+  const layerLocation = searchParams.get('location')
 
   const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
@@ -67,7 +71,8 @@ export function RegulatoryAreaForm() {
         facade: regulatoryArea?.facade,
         geom: regulatoryArea?.geom,
         id: regulatoryArea?.id,
-        layerName: regulatoryArea?.layerName,
+        layerName: regulatoryArea?.layerName ?? layerName,
+        location: regulatoryArea?.location ?? layerLocation,
         observations: regulatoryArea?.observations,
         plan: regulatoryArea?.plan ?? [],
         polyName: regulatoryArea?.polyName,
@@ -80,22 +85,26 @@ export function RegulatoryAreaForm() {
         type: regulatoryArea?.type,
         url: regulatoryArea?.url
       } as RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea),
-    [regulatoryArea]
+    [layerName, layerLocation, regulatoryArea]
   )
 
   const backToList = () => {
     dispatch(regulatoryAreaBoActions.setNewRegulatoryAreaId(undefined))
-    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
+    if (location.state?.from) {
+      navigate(location.state?.from)
+    } else {
+      navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
+    }
   }
 
-  const saveRegulatoryArea = (values: RegulatoryArea.RegulatoryAreaFromAPI) => {
-    const currentDate = customDayjs().toISOString()
-    const regulatoryAreaToSave = {
-      ...values,
-      creation: values.creation ? values.creation : currentDate,
-      editionBo: currentDate
+  const saveRegulatoryArea = async (values: RegulatoryArea.RegulatoryAreaFromAPI) => {
+    const savedRegulatoryArea = await dispatch(createOrUpdateRegulatoryArea(values))
+    if (savedRegulatoryArea?.id && !location.pathname.includes(`${savedRegulatoryArea.id}`)) {
+      navigate(
+        `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${savedRegulatoryArea.id}`,
+        { state: { from: location.state?.from } }
+      )
     }
-    dispatch(createOrUpdateRegulatoryArea(regulatoryAreaToSave, navigate))
   }
 
   const cancelEdition = (isDirty: boolean) => {
@@ -120,7 +129,10 @@ export function RegulatoryAreaForm() {
           {({ dirty, handleSubmit, values }) => (
             <>
               <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
-                Revenir à la liste des zones réglementaires
+                {location.state?.from &&
+                (location.state.from as string).includes(BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP])
+                  ? 'Revenir au groupe de la réglementations'
+                  : 'Revenir à la liste des zones réglementaires'}
               </StyledLinkButton>
 
               <Title>Saisir une zone réglementaire</Title>
@@ -141,10 +153,10 @@ export function RegulatoryAreaForm() {
 
                 <Footer>
                   <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>
-                    Annuler
+                    Fermer
                   </Button>
                   <Button disabled={!dirty || !values?.geom} type="submit">
-                    {isEditing ? 'Enregistrer la réglementation' : 'Créer la réglementation'}
+                    {isEditing ? 'Enregistrer les modifications' : 'Créer la réglementation'}
                   </Button>
                 </Footer>
               </form>
@@ -165,6 +177,7 @@ export function RegulatoryAreaForm() {
 
 const StyledLinkButton = styled(LinkButton)`
   margin-bottom: 24px;
+
   > span {
     svg {
       transform: rotate(90deg);
@@ -179,9 +192,8 @@ const Footer = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-left: -40px;
-  margin-right: -40px;
   padding: 16px 20px;
-  position: absolute;
-  width: 50%;
+  position: sticky;
+  width: 100%;
+  z-index: 6;
 `

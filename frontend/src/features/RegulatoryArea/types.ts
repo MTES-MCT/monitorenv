@@ -18,6 +18,7 @@ export namespace RegulatoryArea {
     isNew: boolean
     isUpdatedRecently: boolean
     layerName: string
+    location?: string
     observations?: string
     plan: string
     polyName: string
@@ -64,25 +65,25 @@ export namespace RegulatoryArea {
   }
 
   export type RegulatoryAreasFromApi = {
-    regulatoryAreasByLayer: RegulatoryAreasGroup[]
+    regulatoryAreasByLayer: RegulatoryAreaGroup[]
     totalCount: number
   }
 
-  export type RegulatoryAreasGroup = {
-    group: string
+  export type RegulatoryAreaGroup = {
+    group: RegulatoryAreaWithBbox
     regulatoryAreas: RegulatoryAreaWithBbox[]
+  }
+
+  export type RegulatoryAreaGroupToApi = {
+    id?: number
+    location?: string
+    regulatoryAreaIds?: number[]
+    type?: string
   }
 
   export enum RegulatoryAreaControlPlan {
     PIRC = 'PIRC',
     PSCEM = 'PSCEM'
-  }
-
-  export type MainRefReg = {
-    date?: string
-    dateFin?: string
-    refReg?: string
-    url?: string
   }
 
   export enum RegulatoryAreaType {
@@ -109,6 +110,7 @@ export namespace RegulatoryArea {
     REGIONAL_PREFECT_ORDER = 'Arrêté du préfet de région',
     REGULATION = 'Règlement'
   }
+
   export const RegulatoryAreaTypeLabel = {
     [RegulatoryAreaType.AGREEMENT]: 'Convention',
     [RegulatoryAreaType.BROCHURE]: 'Plaquette',
