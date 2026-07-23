@@ -115,9 +115,10 @@ class JpaRegulatoryAreaRepository(
             val isNotAttachedToGroup =
                 newRegulatoryAreaGroup.find { it.group.layerName == regulatoryArea.layerName } == null
             if (isNotAttachedToGroup) {
+                val id = dbRegulatoryAreaRepository.findNextId()
                 val group =
                     RegulatoryAreaModel(
-                        id = null,
+                        id = id,
                         areaType = AreaTypeEnum.GROUP,
                         geom = regulatoryArea.geom,
                         creation = ZonedDateTime.now().toInstant(),
