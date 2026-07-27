@@ -15,10 +15,10 @@ context('LayerTree > Regulatory Layers', () => {
   })
   it('A regulatory area should be consulted', () => {
     cy.getDataCy('regulatory-result-list-button').click()
-    cy.clickButton('Dragage port de Brest')
+    cy.clickButton('Dragage - port de Brest')
     cy.clickButton('Autorisation de dragage pendant les travaux')
     cy.getDataCy('regulatory-area-panel').should('be.visible')
-    cy.get('[data-cy="regulatory-area-panel"] > header > span').contains('Dragage port de Brest')
+    cy.get('[data-cy="regulatory-area-panel"] > header > span').contains('Dragage - port de Brest')
     cy.getDataCy('regulatory-layers-metadata-polyName').contains('Autorisation de dragage pendant les travaux')
     cy.getDataCy('regulatory-layers-metadata-resume').contains(
       "Zone de dragage concernant l'accès maritime au Polder 124"
@@ -40,16 +40,16 @@ context('LayerTree > Regulatory Layers', () => {
     cy.getDataCy('regulatory-result-list-button').contains('2 résultats').click()
 
     cy.log("zoom on the regulation's zone and show metadata")
-    cy.clickButton('ZMEL Cale Querlen')
+    cy.clickButton('ZMEL - Cale Querlen')
     cy.clickButton('Autorisation temporaire du domaine public')
-    cy.getDataCy('regulatory-area-panel').contains('ZMEL Cale Querlen').click()
+    cy.getDataCy('regulatory-area-panel').contains('ZMEL - Cale Querlen').click()
     cy.wait(1000) // let OL do the rendering
 
     cy.getFeaturesFromLayer(Layers.REGULATORY_ENV_PREVIEW.code, PAGE_CENTER_PIXELS).should(features => {
       expect(features).to.have.length(2)
-      expect(features?.[0]?.get('layerName')).to.equal('ZMEL_Cale_Querlen')
+      expect(features?.[0]?.get('layerName')).to.equal('ZMEL - Cale Querlen')
       expect(features?.[0]?.get('id')).to.equal(17)
-      expect(features?.[1]?.get('layerName')).to.equal('ZMEL_Cale_Querlen')
+      expect(features?.[1]?.get('layerName')).to.equal('ZMEL - Cale Querlen')
       expect(features?.[1]?.get('id')).to.equal(697)
     })
 

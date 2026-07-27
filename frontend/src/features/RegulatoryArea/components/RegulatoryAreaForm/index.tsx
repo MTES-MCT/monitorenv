@@ -131,11 +131,11 @@ export function RegulatoryAreaForm() {
               <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
                 {location.state?.from &&
                 (location.state.from as string).includes(BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP])
-                  ? 'Revenir au groupe de la réglementations'
+                  ? 'Revenir au groupe de réglementations'
                   : 'Revenir à la liste des zones réglementaires'}
               </StyledLinkButton>
 
-              <Title>Saisir une zone réglementaire</Title>
+              <Title>{regulatoryAreaId ? 'Modifier une réglementation' : 'Saisir une nouvelle réglementation'}</Title>
               {isCancelEditDialogOpen && (
                 <CancelEditDialog
                   onCancel={() => setIsCancelEditDialogOpen(false)}

@@ -151,11 +151,11 @@ context('Side Window > Dashboard > Edit Dashboard', () => {
     // Selected regulatoryAreas should be visible
     cy.getDataCy('dashboard-selected-regulatory-result-group')
       .first()
-      .contains('Interdiction VNM Molene')
+      .contains('Interdiction VNM - Molene')
       .should('be.visible')
-    cy.getDataCy('dashboard-selected-regulatory-result-group').contains('RNN Iroise').should('be.visible')
+    cy.getDataCy('dashboard-selected-regulatory-result-group').contains('RNN - Iroise').should('be.visible')
     cy.getDataCy('dashboard-selected-regulatory-result-group')
-      .contains('Mouillage Conquet Ile de bannec')
+      .contains('Mouillage - Conquet Ile de bannec')
       .should('be.visible')
 
     // Selected vigilanceAreas should be visible

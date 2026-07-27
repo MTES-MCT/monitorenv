@@ -37,8 +37,12 @@ class GetAllRegulatoryAreas(
 
         val groupedAreas =
             groups
-                .associateWith { group -> areas.filter { it.layerName == group.layerName } }
-                .filterValues { it.isNotEmpty() }
+                .associateWith { group ->
+                    areas.filter {
+                        it.layerName == group.layerName &&
+                            it.location == group.location
+                    }
+                }.filterValues { it.isNotEmpty() }
 
         val totalCount = groupedAreas.flatMap { it.value }.count().toLong()
 

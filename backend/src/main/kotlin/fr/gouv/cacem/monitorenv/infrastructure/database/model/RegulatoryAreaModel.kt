@@ -86,7 +86,7 @@ data class RegulatoryAreaModel(
             editionBo = editionBo?.atZone(ZoneOffset.UTC),
             editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
             facade = facade,
-            geom = geom,
+            geom = if (areaType === AreaTypeEnum.ZONE) geom else null,
             layerName = layerName,
             location = location,
             polyName = polyName,

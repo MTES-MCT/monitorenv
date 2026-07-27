@@ -52,8 +52,19 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
         value =
             """
             SELECT regulatoryAreaGroup from RegulatoryAreaGroupModel regulatoryAreaGroup
-            WHERE regulatoryAreaGroup.regulatoryArea.layerName = :groupName
-            AND regulatoryAreaGroup.regulatoryArea.creation IS NOT NULL
+            WHERE (
+                CASE
+                    WHEN regulatoryAreaGroup.group.location IS NOT NULL
+                         AND regulatoryAreaGroup.group.layerName NOT LIKE CONCAT('%', regulatoryAreaGroup.group.location, '%')
+                    THEN CONCAT(
+                        regulatoryAreaGroup.group.layerName,
+                        ' - ',
+                        regulatoryAreaGroup.group.location
+                    )
+                    ELSE regulatoryAreaGroup.group.layerName
+                END
+            ) = :groupName
+            AND regulatoryAreaGroup.group.creation IS NOT NULL
         """,
     )
     fun findAllByGroupName(groupName: String): List<RegulatoryAreaGroupModel>

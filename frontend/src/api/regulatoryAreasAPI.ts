@@ -42,30 +42,13 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       }
     }),
     getRegulatoryAreaGroupById: builder.query<RegulatoryArea.RegulatoryAreaGroup, number>({
-      providesTags: () => [{ id: 'GROUP', type: 'RegulatoryAreas' }],
+      providesTags: () => [{ id: 'GROUP_BY_ID', type: 'RegulatoryAreas' }],
       query: id => `v1/regulatory-areas/groups/${id}`,
       transformErrorResponse: response =>
         new FrontendApiError("Nous n'avons pas pu récupérer le groupe de reglementation", response),
       transformResponse: (response: RegulatoryArea.RegulatoryAreaGroup): RegulatoryArea.RegulatoryAreaGroup => ({
         group: {
-          ...response.group,
-          bbox: boundingExtent(response.group.geom?.coordinates.flat().flat() as Coordinate[])
-        },
-        regulatoryAreas: response.regulatoryAreas.map(area => ({
-          ...area,
-          bbox: boundingExtent(area.geom?.coordinates.flat().flat() as Coordinate[])
-        }))
-      })
-    }),
-    getRegulatoryAreaGroupByName: builder.query<RegulatoryArea.RegulatoryAreaGroup, string>({
-      providesTags: () => [{ id: 'GROUP', type: 'RegulatoryAreas' }],
-      query: name => `v1/regulatory-areas/groups?name=${name}`,
-      transformErrorResponse: response =>
-        new FrontendApiError("Nous n'avons pas pu récupérer le groupe de reglementation", response),
-      transformResponse: (response: RegulatoryArea.RegulatoryAreaGroup): RegulatoryArea.RegulatoryAreaGroup => ({
-        group: {
-          ...response.group,
-          bbox: boundingExtent(response.group.geom?.coordinates.flat().flat() as Coordinate[])
+          ...response.group
         },
         regulatoryAreas: response.regulatoryAreas.map(area => ({
           ...area,
@@ -90,8 +73,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       transformResponse: (response: RegulatoryArea.RegulatoryAreasFromApi): RegulatoryArea.RegulatoryAreasFromApi => ({
         regulatoryAreasByLayer: response.regulatoryAreasByLayer.map(group => ({
           group: {
-            ...group.group,
-            bbox: boundingExtent(group.group.geom?.coordinates.flat().flat() as Coordinate[])
+            ...group.group
           },
           regulatoryAreas: group.regulatoryAreas.map(area => ({
             ...area,
@@ -122,7 +104,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
         { id, type: 'RegulatoryAreas' },
         { id: 'LIST', type: 'RegulatoryAreas' },
         { id: 'TO_COMPLETE', type: 'RegulatoryAreas' },
-        { id: 'GROUP', type: 'RegulatoryAreas' },
+        { id: 'GROUP_BY_ID', type: 'RegulatoryAreas' },
         { id: 'LAYERS_NAME', type: 'RegulatoryAreas' }
       ],
       query: regulatoryArea => ({
@@ -138,7 +120,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       invalidatesTags: () => [
         { id: 'LIST', type: 'RegulatoryAreas' },
         { id: 'TO_COMPLETE', type: 'RegulatoryAreas' },
-        { id: 'GROUP', type: 'RegulatoryAreas' },
+        { id: 'GROUP_BY_ID', type: 'RegulatoryAreas' },
         { id: 'LAYERS_NAME', type: 'RegulatoryAreas' }
       ],
       query: regulatoryAreaGroup => ({

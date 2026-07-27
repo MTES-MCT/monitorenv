@@ -44,6 +44,18 @@ export function Identification() {
   const [isNewLayerNameValid, setIsNewLayerNameValid] = useState(true)
   const [isModifyingLayerName, setIsModifyingLayerName] = useState(false)
 
+  const groupNameAsOption = useMemo(() => {
+    const formattedLayerName = formatLayerName(values.layerName, values.location) ?? ''
+
+    return {
+      label: getTitle(formattedLayerName),
+      value: {
+        layerName: values.layerName,
+        location: values.location
+      }
+    }
+  }, [values.layerName, values.location])
+
   const layerNamesOptions = useMemo(() => {
     const layersNamesFromApi = Object.keys(layerNames?.layerNames || {})
     const formattedLayerNames = layersNamesFromApi
@@ -60,22 +72,12 @@ export function Identification() {
         }
       })
 
-    if (
-      values.layerName &&
-      !formattedLayerNames?.some(layer => layer.value.layerName && values.layerName?.includes(layer.value.layerName))
-    ) {
-      const formattedLayerName = formatLayerName(values.layerName, values.location) ?? ''
-      formattedLayerNames.push({
-        label: formattedLayerName,
-        value: {
-          layerName: values.layerName,
-          location: values?.location
-        }
-      })
+    if (values.layerName && !formattedLayerNames?.find(option => option.label === groupNameAsOption.label)) {
+      formattedLayerNames.push(groupNameAsOption)
     }
 
     return formattedLayerNames.sort((a, b) => a.label.localeCompare(b.label))
-  }, [layerNames?.layerNames, values.layerName, values.location])
+  }, [groupNameAsOption, layerNames?.layerNames, values.layerName])
 
   const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
     setFieldValue('themes', parseOptionsToThemes(nextThemes))
@@ -132,6 +134,7 @@ export function Identification() {
   const onChangeLayerName = (nextValue?: { layerName: string | undefined; location: string | undefined }) => {
     setFieldValue('layerName', nextValue?.layerName)
     setFieldValue('location', nextValue?.location)
+    setIsModifyingLayerName(false)
   }
 
   const allThemesAndSubthemes = useMemo(
@@ -176,11 +179,7 @@ export function Identification() {
                 style={{ flex: 1 }}
                 value={
                   layerNamesOptions.find(
-                    layer =>
-                      layer.value.layerName &&
-                      values.layerName &&
-                      formatLayerName(values.layerName, values.location)?.includes(layer.value.layerName) &&
-                      layer.value.location === values.location
+                    layer => layer.value.layerName === values.layerName && layer.value.location === values.location
                   )?.value
                 }
               />
@@ -280,7 +279,7 @@ export function Identification() {
           </Fields>
         </InlineFields>
         <div>
-          <FormikTextarea isErrorMessageHidden isRequired label="Résumé" name="resume" rows={4} />
+          <FormikTextarea isErrorMessageHidden label="Résumé" name="resume" rows={4} />
           <InformationMessage>
             Le résumé concerne tout ce qui n’est pas une période. Si la réglementation ne concerne que des périodes,
             alors le résumé n’est pas nécessaire.
@@ -288,7 +287,7 @@ export function Identification() {
         </div>
         <PeriodContainer>
           <Period>
-            <Label $isRequired>
+            <Label>
               <StyledIcon color={THEME.color.mediumSeaGreen} size={10} />
               Période d&apos;autorisation
             </Label>
@@ -302,7 +301,7 @@ export function Identification() {
             />
           </Period>
           <Period>
-            <Label $isRequired>
+            <Label>
               <StyledIcon color={THEME.color.maximumRed} size={10} />
               Période d&apos;interdiction
             </Label>
