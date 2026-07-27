@@ -22,6 +22,7 @@ const ResetFiltersButton = styled.button`
   margin-bottom: 8px;
   text-decoration: underline;
   > span {
+    white-space: nowrap;
     font-size: 13px;
   }
   padding: 0;

@@ -119,7 +119,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         require(requestedRegulatoryArea !== null)
         assertThat(requestedRegulatoryArea.id).isEqualTo(300)
         assertThat(requestedRegulatoryArea.url).isEqualTo("https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044019134")
-        assertThat(requestedRegulatoryArea.layerName).isEqualTo("RNN_Iroise")
+        assertThat(requestedRegulatoryArea.layerName).isEqualTo("RNN - Iroise")
         assertThat(requestedRegulatoryArea.facade).isEqualTo("NAMO")
         assertThat(
             requestedRegulatoryArea.refReg,
@@ -150,7 +150,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         assertThat(
             requestedRegulatoryArea[0].url,
         ).isEqualTo("https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044019134")
-        assertThat(requestedRegulatoryArea[0].layerName).isEqualTo("RNN_Iroise")
+        assertThat(requestedRegulatoryArea[0].layerName).isEqualTo("RNN - Iroise")
         assertThat(requestedRegulatoryArea[0].facade).isEqualTo("NAMO")
         assertThat(
             requestedRegulatoryArea[0].refReg,
@@ -317,7 +317,7 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
         val updatedRegulatoryArea =
             existingRegulatoryArea.copy(
-                layerName = "RNN_Iroise",
+                layerName = "RNN - Iroise",
                 resume = "Mise à jour de la zone",
                 tags = listOf(aTag(id = 5), aTag(id = 6)),
                 themes = listOf(aTheme(id = 9)),
@@ -326,13 +326,13 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         val savedRegulatoryArea = jpaRegulatoryAreaRepository.save(updatedRegulatoryArea)
 
         assertThat(savedRegulatoryArea.id).isEqualTo(300)
-        assertThat(savedRegulatoryArea.layerName).isEqualTo("RNN_Iroise")
+        assertThat(savedRegulatoryArea.layerName).isEqualTo("RNN - Iroise")
         assertThat(savedRegulatoryArea.resume).isEqualTo("Mise à jour de la zone")
         assertThat(savedRegulatoryArea.tags).hasSize(2)
         assertThat(savedRegulatoryArea.tags.map { it.id }).containsExactlyInAnyOrder(5, 6)
         assertThat(savedRegulatoryArea.themes).hasSize(1)
         assertThat(savedRegulatoryArea.themes[0].id).isEqualTo(9)
-        val newGroup = idbRegulatoryAreaGroupRepository.findAllByGroupName("RNN_Iroise")
+        val newGroup = idbRegulatoryAreaGroupRepository.findAllByGroupName("RNN - Iroise")
         assertThat(newGroup).hasSize(2)
         assertThat(newGroup[0].group.id).isEqualTo(1000005)
         assertThat(newGroup[0].regulatoryArea.id).isEqualTo(425)

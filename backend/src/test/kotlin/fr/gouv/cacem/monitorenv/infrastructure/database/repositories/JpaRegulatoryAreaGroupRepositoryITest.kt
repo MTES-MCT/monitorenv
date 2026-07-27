@@ -13,19 +13,18 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
         // When
         val layerNames = jpaRegulatoryAreaGroupRepository.findAllLayerNames()
 
-        println("Layer names: $layerNames")
         // Then
         assertThat(layerNames).hasSize(9)
         assertThat(layerNames.keys).containsExactlyInAnyOrder(
-            "Dragage_port_de_Brest",
-            "Granulats_Marins_Le_Minou",
-            "Interdiction_VNM_Molene",
-            "Mouillage_Conquet_Ile_de_bannec",
-            "Mouillage_interdiction_port_Camaret",
-            "RNN_Iroise",
-            "ZMEL_anse_illien_Ploumoguer",
-            "ZMEL_Cale_Querlen",
-            "ZMEL_maison_blanche",
+            "Dragage - port de Brest",
+            "Granulats Marins - Le Minou",
+            "Interdiction VNM - Molene",
+            "Mouillage - Conquet Ile de bannec",
+            "Mouillage interdiction - port Camaret",
+            "RNN - Iroise",
+            "ZMEL - anse illien Ploumoguer",
+            "ZMEL - Cale Querlen",
+            "ZMEL - maison blanche",
         )
     }
 }

@@ -12,8 +12,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulator
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaGroupDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.LayerNamesDataOutput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataGroupOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaGroupDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaToCompleteDataOuput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreasWithTotalDataOutput
@@ -133,16 +133,19 @@ class RegulatoryAreas(
     fun getGroupById(
         @Parameter(description = "Group id")
         @PathVariable id: Int,
-    ): RegulatoryAreaDataGroupOutput =
-        RegulatoryAreaDataGroupOutput.fromRegulatoryAreaGroup(getRegulatoryAreasGroupById.execute(id))
+    ): RegulatoryAreaGroupDataOutput =
+        RegulatoryAreaGroupDataOutput.fromRegulatoryAreaGroup(
+            getRegulatoryAreasGroupById.execute(id),
+            withLocationResolution = false,
+        )
 
     @PutMapping("/groups")
-    @Operation(summary = "Get all regulatory areas group names")
+    @Operation(summary = "create or update the given regulatory areas group")
     fun saveGroup(
         @RequestBody
         group: RegulatoryAreaGroupDataInput,
-    ): RegulatoryAreaDataGroupOutput =
-        RegulatoryAreaDataGroupOutput.fromRegulatoryAreaGroup(
+    ): RegulatoryAreaGroupDataOutput =
+        RegulatoryAreaGroupDataOutput.fromRegulatoryAreaGroup(
             createOrUpdateRegulatoryAreaGroup.execute(
                 regulatoryAreaGroup = group.toRegulatoryAreaGroup(),
             ),

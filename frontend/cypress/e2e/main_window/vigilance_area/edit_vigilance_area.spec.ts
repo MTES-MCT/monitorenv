@@ -84,7 +84,7 @@ describe('Edit Vigilance Area', () => {
       cy.clickButton('Ajouter la zone à Mes zones réglementaires')
       // check if the regulatory area is added
       cy.clickButton('Mes zones réglementaires')
-      cy.clickButton('Interdiction VNM Molene')
+      cy.clickButton('Interdiction VNM - Molene')
       cy.getDataCy('my-zone-Article 1').should('exist')
 
       // Reset data

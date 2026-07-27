@@ -149,7 +149,7 @@ context('Axe core RGAA check that ', () => {
       cy.injectAxe()
       cy.intercept('GET', `bff/v1/regulatory-areas/134`).as('getRegulatoryArea')
       cy.clickButton('Déplier le contenu des zones PIRC')
-      cy.clickButton('Interdiction VNM Molene')
+      cy.clickButton('Interdiction VNM - Molene')
       checkA11y()
       cy.get('span[title="Article 1"]').click()
       cy.wait('@getRegulatoryArea')

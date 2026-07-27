@@ -3,6 +3,7 @@ import { CancelEditDialog } from '@components/Dialog/CancelEditDialog'
 import { Bold } from '@components/style'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { Title } from '@features/BackOffice/components/style'
+import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { MapAttributionsBox } from '@features/map/controls/MapAttributionsBox'
 import { MapCoordinatesBox } from '@features/map/controls/MapCoordinatesBox'
@@ -19,20 +20,9 @@ import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@featu
 import { createOrUpdateRegulatoryAreaGroup } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryAreaGroup'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import {
-  Accent,
-  Button,
-  FormikTextInput,
-  Icon,
-  LinkButton,
-  OPENLAYERS_PROJECTION,
-  Select,
-  WSG84_PROJECTION
-} from '@mtes-mct/monitor-ui'
+import { Accent, Button, FormikTextInput, Icon, LinkButton, Select } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { Formik } from 'formik'
-import { transformExtent } from 'ol/proj'
-import Projection from 'ol/proj/Projection'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
@@ -81,13 +71,11 @@ export function RegulatoryAreaGroupForm() {
 
   const [isCancelEditDialogOpen, setIsCancelEditDialogOpen] = useState(false)
 
-  const [layerName, layerLocation] = regulatoryAreaGroup?.group.layerName.split(' - ') ?? []
-
   const initialValues: RegulatoryArea.RegulatoryAreaGroupToApi = {
     id: regulatoryAreaGroup?.group.id,
-    location: layerLocation,
+    location: regulatoryAreaGroup?.group.location,
     regulatoryAreaIds: regulatoryAreaGroup?.regulatoryAreas.map(({ id }) => id) ?? [],
-    type: getTitle(layerName)
+    type: regulatoryAreaGroup?.group.layerName
   }
 
   const backToList = () => {
@@ -113,9 +101,9 @@ export function RegulatoryAreaGroupForm() {
 
   const createRegulatoryArea = () => {
     navigate(
-      `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?layerName=${layerName}${
-        layerLocation && `&location=${layerLocation}`
-      }`,
+      `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?layerName=${
+        regulatoryAreaGroup?.group.layerName
+      }${regulatoryAreaGroup?.group.location ? `&location=${regulatoryAreaGroup?.group.location}` : ''}`,
       {
         state: { from: location.pathname }
       }
@@ -123,17 +111,13 @@ export function RegulatoryAreaGroupForm() {
   }
 
   useEffect(() => {
-    if (!regulatoryAreaGroup?.group.bbox) {
+    if (!regulatoryAreaGroup?.regulatoryAreas) {
       return
     }
 
-    const extent = transformExtent(
-      regulatoryAreaGroup?.group.bbox,
-      new Projection({ code: WSG84_PROJECTION }),
-      new Projection({ code: OPENLAYERS_PROJECTION })
-    )
+    const extent = getExtentOfLayersGroup(regulatoryAreaGroup.regulatoryAreas)
     dispatch(setFitToExtent(extent))
-  }, [dispatch, regulatoryAreaGroup?.group.bbox])
+  }, [dispatch, regulatoryAreaGroup?.regulatoryAreas])
 
   return (
     <StyledBackofficeWrapper>

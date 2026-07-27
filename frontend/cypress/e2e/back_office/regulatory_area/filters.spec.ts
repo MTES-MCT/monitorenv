@@ -10,8 +10,8 @@ context('Back Office > Regulatory Area > Filters', () => {
   it('should filter regulatory areas by search query', () => {
     cy.fill('Rechercher dans les zones réglementaires', 'querlen')
     cy.wait('@getRegulatoryAreas')
-    cy.get('span[title="ZMEL Cale Querlen"]').should('be.visible')
-    cy.get('span[title="ZMEL Cale Querlen"]').should('have.length', 2)
+    cy.get('span[title="ZMEL - Cale Querlen"]').should('be.visible')
+    cy.get('span[title="ZMEL - Cale Querlen"]').should('have.length', 2)
 
     // Reset field
     cy.fill('Rechercher dans les zones réglementaires', undefined)
@@ -31,7 +31,7 @@ context('Back Office > Regulatory Area > Filters', () => {
   it('should filter by sea front', () => {
     cy.fill('Façade', ['MED'])
     cy.wait('@getRegulatoryAreas')
-    cy.get('span[title="Interdiction VNM Molene"]').should('be.visible')
+    cy.get('span[title="Interdiction VNM - Molene"]').should('be.visible')
 
     // Reset
     cy.fill('Façade', undefined)
@@ -40,8 +40,8 @@ context('Back Office > Regulatory Area > Filters', () => {
   it('should select a theme', () => {
     cy.fill('Filtre thématiques et sous-thématiques', ['Pêche à pied de loisir'])
     cy.wait('@getRegulatoryAreas')
-    cy.get('span[title="ZMEL Cale Querlen"]').should('be.visible')
-    cy.get('span[title="ZMEL Cale Querlen"]').should('have.length', 2)
+    cy.get('span[title="ZMEL - Cale Querlen"]').should('be.visible')
+    cy.get('span[title="ZMEL - Cale Querlen"]').should('have.length', 2)
 
     // Reset
     cy.fill('Filtre thématiques et sous-thématiques', undefined)
@@ -50,8 +50,8 @@ context('Back Office > Regulatory Area > Filters', () => {
   it('should select a tag', () => {
     cy.fill('Filtre tags et sous-tags', ['Mixte'])
     cy.wait('@getRegulatoryAreas')
-    cy.get('span[title="Interdiction VNM Molene"]').should('be.visible')
-    cy.get('span[title="Mouillage Conquet Ile de bannec"]').should('be.visible')
+    cy.get('span[title="Interdiction VNM - Molene"]').should('be.visible')
+    cy.get('span[title="Mouillage - Conquet Ile de bannec"]').should('be.visible')
 
     // Reset
     cy.fill('Filtre tags et sous-tags', undefined)

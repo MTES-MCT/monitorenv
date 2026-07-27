@@ -7,8 +7,8 @@ context('Back Office > Regulatory Area > Edit Regulatory Area', () => {
   it('should display the details of a regulatory area and edit it', () => {
     cy.intercept('GET', `bff/v1/regulatory-areas/134`).as('getRegulatoryArea')
     cy.clickButton('Déplier le contenu des zones PIRC')
-    cy.clickButton('Interdiction VNM Molene')
-    cy.get('span[title="Interdiction VNM Molene"]').should('be.visible')
+    cy.clickButton('Interdiction VNM - Molene')
+    cy.get('span[title="Interdiction VNM - Molene"]').should('be.visible')
     cy.get('span[title="Article 1"]').click()
     cy.wait('@getRegulatoryArea')
     cy.getDataCy('regulatory-area-panel').should('be.visible')
