@@ -93,6 +93,8 @@ class MissionsITest {
                                 controlUnitId = 2,
                                 name = "Vedette",
                                 type = ControlUnitResourceType.FAST_BOAT,
+                                radioFrequency = null,
+                                registrationId = null,
                             ),
                         ),
                 ),
@@ -117,6 +119,8 @@ class MissionsITest {
                     type = ControlUnitResourceType.FAST_BOAT,
                     stationId = 1,
                     isArchived = false,
+                    radioFrequency = null,
+                    registrationId = null,
                 ),
             )
         val isUnderJdp = false

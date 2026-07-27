@@ -16,6 +16,9 @@ class CreateOrUpdateControlUnitResource(
     fun execute(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceEntity {
         try {
             logger.info("Attempt to CREATE or UPDATE control unit resource ${controlUnitResource.id}")
+            if (controlUnitResource.id != null) {
+                mergeExistingData(id = controlUnitResource.id, controlUnitResource = controlUnitResource)
+            }
             val controlUnitResourceEntity = controlUnitResourceRepository.save(controlUnitResource)
             logger.info("Control unit resource ${controlUnitResourceEntity.id} created or updated")
 
@@ -27,4 +30,15 @@ class CreateOrUpdateControlUnitResource(
             throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, errorMessage)
         }
     }
+
+    private fun mergeExistingData(
+        id: Int,
+        controlUnitResource: ControlUnitResourceEntity,
+    ): ControlUnitResourceEntity? =
+        controlUnitResourceRepository.findById(id)?.let { existingResource ->
+            controlUnitResource.apply {
+                radioFrequency = existingResource.controlUnitResource.radioFrequency
+                registrationId = existingResource.controlUnitResource.registrationId
+            }
+        }
 }

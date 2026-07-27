@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
+import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.PatchableControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.ArchiveControlUnitResource
@@ -14,8 +15,10 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateContr
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResourceById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.PatchControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateOrUpdateControlUnitResourceDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.PatchableControlUnitResourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ControlUnitResources
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
@@ -31,12 +34,14 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
+import java.util.Optional
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -62,6 +67,9 @@ class ControlUnitResourcesITests {
 
     @MockitoBean
     private val getControlUnitResources: GetControlUnitResources = mock()
+
+    @MockitoBean
+    private val patchControlUnitResource: PatchControlUnitResource = mock()
 
     @Autowired
     private lateinit var jsonMapper: JsonMapper
@@ -102,6 +110,8 @@ class ControlUnitResourcesITests {
                 name = "Resource Name",
                 note = null,
                 photo = null,
+                radioFrequency = null,
+                registrationId = null,
                 stationId = 0,
                 type = ControlUnitResourceType.BARGE,
             )
@@ -113,6 +123,8 @@ class ControlUnitResourcesITests {
                 name = "Resource Name",
                 note = null,
                 photo = null,
+                radioFrequency = null,
+                registrationId = null,
                 stationId = 0,
                 type = ControlUnitResourceType.BARGE,
             )
@@ -166,6 +178,8 @@ class ControlUnitResourcesITests {
                         name = "Resource Name",
                         note = null,
                         photo = null,
+                        radioFrequency = null,
+                        registrationId = null,
                         stationId = 0,
                         type = ControlUnitResourceType.BARGE,
                     ),
@@ -213,6 +227,8 @@ class ControlUnitResourcesITests {
                             name = "Resource Name",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             stationId = 0,
                             type = ControlUnitResourceType.BARGE,
                         ),
@@ -244,6 +260,8 @@ class ControlUnitResourcesITests {
                             name = "Resource Name 2",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             stationId = 0,
                             type = ControlUnitResourceType.BARGE,
                         ),
@@ -277,6 +295,8 @@ class ControlUnitResourcesITests {
                 name = "Updated Resource Name",
                 note = null,
                 photo = null,
+                radioFrequency = null,
+                registrationId = null,
                 stationId = 0,
                 type = ControlUnitResourceType.BARGE,
             )
@@ -289,6 +309,8 @@ class ControlUnitResourcesITests {
                 name = "Updated Resource Name",
                 note = null,
                 photo = null,
+                radioFrequency = null,
+                registrationId = null,
                 stationId = 0,
                 type = ControlUnitResourceType.BARGE,
             )
@@ -301,6 +323,53 @@ class ControlUnitResourcesITests {
         mockMvc
             .perform(
                 put("/api/v1/control_unit_resources/1")
+                    .content(requestBody)
+                    .contentType(MediaType.APPLICATION_JSON),
+            ).andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `patch should patch a control unit resource given its id`() {
+        val id = 1
+        val expectedUpdatedControlUnitResource =
+            ControlUnitResourceEntity(
+                id = id,
+                controlUnitId = 0,
+                isArchived = false,
+                name = "Updated Resource Name",
+                note = null,
+                photo = null,
+                radioFrequency = null,
+                registrationId = null,
+                stationId = 0,
+                type = ControlUnitResourceType.BARGE,
+            )
+
+        val patchableControlUnitResourceInput =
+            PatchableControlUnitResourceDataInput(
+                registrationId = Optional.of("registrationId"),
+                radioFrequency = Optional.of("radioFrequency"),
+            )
+        val patchableControlUnitResource =
+            PatchableControlUnitResourceEntity(
+                registrationId = Optional.of("registrationId"),
+                radioFrequency = Optional.of("radioFrequency"),
+            )
+        val requestBody = jsonMapper.writeValueAsString(patchableControlUnitResourceInput)
+
+        given(
+            patchControlUnitResource.execute(
+                id = id,
+                patchableControlUnitResource = patchableControlUnitResource,
+            ),
+        ).willReturn(
+            expectedUpdatedControlUnitResource,
+        )
+
+        mockMvc
+            .perform(
+                patch("/api/v1/control_unit_resources/$id")
                     .content(requestBody)
                     .contentType(MediaType.APPLICATION_JSON),
             ).andDo(MockMvcResultHandlers.print())

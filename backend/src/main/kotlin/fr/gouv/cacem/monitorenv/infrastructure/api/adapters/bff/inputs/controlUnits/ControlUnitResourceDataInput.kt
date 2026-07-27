@@ -18,6 +18,8 @@ data class ControlUnitResourceDataInput(
             isArchived = false,
             note = null,
             photo = null,
+            radioFrequency = null,
+            registrationId = null,
             stationId = null,
         )
 }

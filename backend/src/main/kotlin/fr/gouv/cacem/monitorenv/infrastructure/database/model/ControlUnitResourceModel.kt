@@ -28,6 +28,9 @@ data class ControlUnitResourceModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
+    @Column(name = "created_at_utc", nullable = false, updatable = false)
+    @CreationTimestamp
+    val createdAtUtc: Instant? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = false)
     val controlUnit: ControlUnitModel,
@@ -39,6 +42,10 @@ data class ControlUnitResourceModel(
     val note: String? = null,
     @Column(name = "photo")
     val photo: ByteArray? = null,
+    @Column
+    val radioFrequency: String?,
+    @Column
+    val registrationId: String?,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "base_id", nullable = false)
     val station: StationModel,
@@ -46,9 +53,6 @@ data class ControlUnitResourceModel(
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType::class)
     val type: ControlUnitResourceType,
-    @Column(name = "created_at_utc", nullable = false, updatable = false)
-    @CreationTimestamp
-    val createdAtUtc: Instant? = null,
     @Column(name = "updated_at_utc", nullable = false)
     @UpdateTimestamp
     val updatedAtUtc: Instant? = null,
@@ -91,6 +95,8 @@ data class ControlUnitResourceModel(
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
+                radioFrequency = controlUnitResource.radioFrequency,
+                registrationId = controlUnitResource.registrationId,
                 station = stationModel,
                 type = controlUnitResource.type,
             )
@@ -113,14 +119,16 @@ data class ControlUnitResourceModel(
 
     fun toControlUnitResource(): ControlUnitResourceEntity =
         ControlUnitResourceEntity(
-            id,
+            id = id,
             controlUnitId = requireNotNull(controlUnit.id),
-            isArchived,
-            name,
-            note,
-            photo,
+            isArchived = isArchived,
+            name = name,
+            note = note,
+            photo = photo,
+            radioFrequency = radioFrequency,
+            registrationId = registrationId,
             stationId = requireNotNull(station.id),
-            type,
+            type = type,
         )
 
     fun toFullControlUnitResource(): FullControlUnitResourceDTO =
