@@ -117,6 +117,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         name = "Semi-rigide 1",
                                         note = null,
                                         photo = null,
+                                        radioFrequency = null,
+                                        registrationId = null,
                                         type =
                                             ControlUnitResourceType
                                                 .BARGE,
@@ -157,6 +159,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         name = "Semi-rigide 2",
                                         note = null,
                                         photo = null,
+                                        radioFrequency = null,
+                                        registrationId = null,
                                         type =
                                             ControlUnitResourceType
                                                 .BARGE,
@@ -197,6 +201,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         note = null,
                                         photo = null,
                                         stationId = 1,
+                                        radioFrequency = null,
+                                        registrationId = null,
                                         type =
                                             ControlUnitResourceType
                                                 .CAR,
@@ -237,6 +243,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         note = null,
                                         photo = null,
                                         stationId = 2,
+                                        radioFrequency = null,
+                                        registrationId = null,
                                         type =
                                             ControlUnitResourceType
                                                 .DRONE,
@@ -308,6 +316,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         name = "PAM Jeanne Barret",
                                         note = null,
                                         photo = null,
+                                        radioFrequency = null,
+                                        registrationId = null,
                                         type =
                                             ControlUnitResourceType
                                                 .FRIGATE,
@@ -401,6 +411,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         name = "Semi-rigide 1",
                                         note = null,
                                         photo = null,
+                                        radioFrequency = null,
+                                        registrationId = null,
                                         type =
                                             ControlUnitResourceType
                                                 .BARGE,
@@ -441,6 +453,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         name = "Semi-rigide 2",
                                         note = null,
                                         photo = null,
+                                        radioFrequency = null,
+                                        registrationId = null,
                                         type =
                                             ControlUnitResourceType
                                                 .BARGE,
@@ -474,6 +488,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         note = null,
                                         photo = null,
                                         stationId = 1,
+                                        radioFrequency = null,
+                                        registrationId = null,
                                         type =
                                             ControlUnitResourceType
                                                 .CAR,
@@ -513,6 +529,8 @@ class JpaControlUnitRepositoryITests : AbstractDBTests() {
                                         name = "Drone",
                                         note = null,
                                         photo = null,
+                                        radioFrequency = null,
+                                        registrationId = null,
                                         stationId = 2,
                                         type =
                                             ControlUnitResourceType

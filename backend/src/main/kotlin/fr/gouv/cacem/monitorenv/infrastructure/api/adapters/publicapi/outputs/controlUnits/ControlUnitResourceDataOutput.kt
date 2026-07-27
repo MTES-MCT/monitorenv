@@ -9,6 +9,8 @@ data class ControlUnitResourceDataOutput(
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = null,
+    val radioFrequency: String?,
+    val registrationId: String?,
     val stationId: Int?,
     val type: String,
 ) {
@@ -21,6 +23,8 @@ data class ControlUnitResourceDataOutput(
                 name = controlUnitResource.name,
                 note = controlUnitResource.note,
                 photo = controlUnitResource.photo,
+                radioFrequency = controlUnitResource.radioFrequency,
+                registrationId = controlUnitResource.registrationId,
                 stationId = controlUnitResource.stationId,
                 type = controlUnitResource.type.name,
             )

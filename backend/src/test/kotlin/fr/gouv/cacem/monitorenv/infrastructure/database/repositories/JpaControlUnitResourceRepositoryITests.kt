@@ -68,6 +68,8 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
+                        radioFrequency = null,
+                        registrationId = null,
                         type = ControlUnitResourceType.BARGE,
                     ),
             ),
@@ -102,6 +104,8 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                         name = "ARIOLA",
                         note = null,
                         photo = null,
+                        radioFrequency = null,
+                        registrationId = null,
                         type = ControlUnitResourceType.FRIGATE,
                     ),
             ),
@@ -142,6 +146,8 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                         name = "Semi-rigide 1",
                         note = null,
                         photo = null,
+                        radioFrequency = null,
+                        registrationId = null,
                         type = ControlUnitResourceType.BARGE,
                     ),
             ),
@@ -162,6 +168,8 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 name = "Resource Name",
                 note = "Resource Note",
                 photo = null,
+                radioFrequency = null,
+                registrationId = null,
                 type = ControlUnitResourceType.BARGE,
             )
 
@@ -181,6 +189,8 @@ class JpaControlUnitResourceRepositoryITests : AbstractDBTests() {
                 name = "Updated Resource Name",
                 note = "Updated Resource Note",
                 photo = null,
+                radioFrequency = null,
+                registrationId = null,
                 type = ControlUnitResourceType.FRIGATE,
             )
 

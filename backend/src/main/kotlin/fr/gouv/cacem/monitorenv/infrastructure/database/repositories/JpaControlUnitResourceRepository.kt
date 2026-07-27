@@ -56,6 +56,15 @@ class JpaControlUnitResourceRepository(
             )
         }
         val stationModel = dbStationRepository.getReferenceById(controlUnitResource.stationId)
+        if (controlUnitResource.id != null &&
+            (controlUnitResource.radioFrequency.isNullOrEmpty() || controlUnitResource.registrationId.isNullOrEmpty())
+        ) {
+            val existingResource = dbControlUnitResourceRepository.findByIdOrNull(controlUnitResource.id)
+            existingResource?.let {
+                controlUnitResource.registrationId = existingResource.registrationId
+                controlUnitResource.radioFrequency = existingResource.radioFrequency
+            }
+        }
         val controlUnitResourceModel =
             ControlUnitResourceModel.fromControlUnitResource(
                 controlUnitResource,

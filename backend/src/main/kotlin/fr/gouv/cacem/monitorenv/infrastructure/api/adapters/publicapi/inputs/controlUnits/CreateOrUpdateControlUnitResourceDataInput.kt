@@ -10,6 +10,8 @@ data class CreateOrUpdateControlUnitResourceDataInput(
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = null,
+    val radioFrequency: String?,
+    val registrationId: String?,
     val stationId: Int,
     val type: ControlUnitResourceType,
 ) {
@@ -21,6 +23,8 @@ data class CreateOrUpdateControlUnitResourceDataInput(
             name = this.name,
             note = this.note,
             photo = this.photo,
+            radioFrequency = this.radioFrequency,
+            registrationId = this.registrationId,
             stationId = this.stationId,
             type = this.type,
         )

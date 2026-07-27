@@ -70,6 +70,8 @@ class CanDeleteStationUTests {
                             name = "Control Unit Resource Name",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.BARGE,
                         ),
                     ),

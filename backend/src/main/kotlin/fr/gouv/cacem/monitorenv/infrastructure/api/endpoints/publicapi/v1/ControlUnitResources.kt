@@ -6,7 +6,9 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateContr
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitResource
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResourceById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitResources
+import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.PatchControlUnitResource
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateOrUpdateControlUnitResourceDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.PatchableControlUnitResourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.BooleanDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.controlUnits.ControlUnitResourceDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.outputs.controlUnits.FullControlUnitResourceDataOutput
@@ -16,6 +18,7 @@ import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -34,6 +37,7 @@ class ControlUnitResources(
     private val deleteControlUnitResource: DeleteControlUnitResource,
     private val getControlUnitResources: GetControlUnitResources,
     private val getControlUnitResourceById: GetControlUnitResourceById,
+    private val patchControlUnitResource: PatchControlUnitResource,
 ) {
     @PutMapping("/{controlUnitResourceId}/archive")
     @Operation(summary = "Archive a control unit resource")
@@ -69,8 +73,7 @@ class ControlUnitResources(
     @DeleteMapping("/{controlUnitResourceId}")
     @Operation(summary = "Delete a control unit resource")
     fun delete(
-        @PathParam("Control unit resource ID")
-        @PathVariable(name = "controlUnitResourceId")
+        @PathVariable @PathParam("Control unit resource ID")
         controlUnitResourceId: Int,
     ) {
         deleteControlUnitResource.execute(controlUnitResourceId)
@@ -114,4 +117,21 @@ class ControlUnitResources(
 
         return ControlUnitResourceDataOutput.fromControlUnitResource(updatedControlUnitResource)
     }
+
+    @PatchMapping(value = ["/{controlUnitResourceId}"])
+    @Operation(
+        summary = "Patch an existing controlUnitResource",
+        description = "Retrieve the controlUnitResource with given id and patch it with input data",
+    )
+    fun patch(
+        @PathVariable(name = "controlUnitResourceId")
+        id: Int,
+        @RequestBody patchableControlUnitResourceDataInput: PatchableControlUnitResourceDataInput,
+    ): ControlUnitResourceDataOutput =
+        ControlUnitResourceDataOutput.fromControlUnitResource(
+            patchControlUnitResource.execute(
+                id,
+                patchableControlUnitResourceDataInput.toControlUnitResourceEntity(),
+            ),
+        )
 }

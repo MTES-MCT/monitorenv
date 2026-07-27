@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 
 data class LegacyControlUnitDataInput(
     val id: Int,
@@ -14,17 +13,6 @@ data class LegacyControlUnitDataInput(
     val resources: List<LegacyControlUnitResourceDataInput>,
     val contact: String? = null,
 ) {
-    @Deprecated(message = "TO REMOVE", level = DeprecationLevel.ERROR)
-    fun toLegacyControlUnit() =
-        LegacyControlUnitEntity(
-            id = id,
-            administration = administration,
-            isArchived = isArchived,
-            name = name,
-            resources = resources.map { it.toLegacyControlUnitResource() },
-            contact = contact,
-        )
-
     fun toControlUnitEntity() =
         ControlUnitEntity(
             id = id,

@@ -38,6 +38,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "Semi-rigide 1",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.BARGE,
                         ),
                         ControlUnitResourceEntity(
@@ -48,6 +50,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "Semi-rigide 2",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.BARGE,
                         ),
                         ControlUnitResourceEntity(
@@ -57,6 +61,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "Voiture",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             stationId = 1,
                             type = ControlUnitResourceType.CAR,
                         ),
@@ -83,6 +89,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "Voiture",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.CAR,
                         ),
                         ControlUnitResourceEntity(
@@ -93,6 +101,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "Semi-rigide",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.BARGE,
                         ),
                         ControlUnitResourceEntity(
@@ -103,6 +113,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "PAM Jeanne Barret",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.FRIGATE,
                         ),
                         ControlUnitResourceEntity(
@@ -113,6 +125,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "PAM Themis",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.FRIGATE,
                         ),
                         ControlUnitResourceEntity(
@@ -123,6 +137,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "ALTAIR",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.FRIGATE,
                         ),
                         ControlUnitResourceEntity(
@@ -133,6 +149,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "PHEROUSA",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.FRIGATE,
                         ),
                         ControlUnitResourceEntity(
@@ -143,6 +161,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "ARIOLA",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.FRIGATE,
                         ),
                     ),
@@ -174,6 +194,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "Semi-rigide 1",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.BARGE,
                         ),
                         ControlUnitResourceEntity(
@@ -184,6 +206,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "Semi-rigide 2",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.BARGE,
                         ),
                         ControlUnitResourceEntity(
@@ -194,6 +218,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             name = "AR VECHEN",
                             note = null,
                             photo = null,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.FRIGATE,
                         ),
                         ControlUnitResourceEntity(
@@ -204,6 +230,8 @@ class JpaStationRepositoryITests : AbstractDBTests() {
                             note = null,
                             photo = null,
                             stationId = 2,
+                            radioFrequency = null,
+                            registrationId = null,
                             type = ControlUnitResourceType.DRONE,
                         ),
                     ),

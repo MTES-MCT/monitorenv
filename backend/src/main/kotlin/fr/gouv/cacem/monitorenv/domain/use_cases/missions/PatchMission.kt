@@ -17,7 +17,7 @@ class PatchMission(
     private val patchEntity: PatchEntity<MissionEntity, PatchableMissionEntity>,
     private val missionWithEnvActionsValidator: MissionWithEnvActionsValidator,
 ) {
-    private val logger = LoggerFactory.getLogger(GetFullMissionWithFishAndRapportNavActions::class.java)
+    private val logger = LoggerFactory.getLogger(PatchMission::class.java)
 
     fun execute(
         id: Int,
