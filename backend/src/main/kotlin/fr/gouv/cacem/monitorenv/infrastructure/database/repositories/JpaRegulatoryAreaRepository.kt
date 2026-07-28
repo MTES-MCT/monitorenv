@@ -111,6 +111,7 @@ class JpaRegulatoryAreaRepository(
             regulatoryArea.refReg,
             regulatoryArea.resume,
             regulatoryArea.polyName,
+            regulatoryArea.location,
         ).any { field ->
             !field.isNullOrBlank() &&
                 normalizeField(field)
