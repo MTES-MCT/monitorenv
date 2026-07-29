@@ -282,7 +282,6 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `save should update regulatory area and create a new regulatory area group when it doesnt exist`() {
         val existingRegulatoryArea = jpaRegulatoryAreaRepository.findById(300)
-        println("Existing regulatory area before update: $existingRegulatoryArea")
         require(existingRegulatoryArea != null)
 
         val updatedRegulatoryArea =
@@ -310,9 +309,8 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save should update regulatory area and attach it to regulatory area group`() {
+    fun `save should update regulatory area and attach it to regulatory area group without location`() {
         val existingRegulatoryArea = jpaRegulatoryAreaRepository.findById(300)
-        println("Existing regulatory area before update: $existingRegulatoryArea")
         require(existingRegulatoryArea != null)
 
         val updatedRegulatoryArea =
@@ -341,9 +339,40 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
+    fun `save should update regulatory area and attach it to regulatory area group with location`() {
+        val existingRegulatoryArea = jpaRegulatoryAreaRepository.findById(300)
+        require(existingRegulatoryArea != null)
+
+        val updatedRegulatoryArea =
+            existingRegulatoryArea.copy(
+                layerName = "RNN",
+                resume = "Mise à jour de la zone",
+                tags = listOf(aTag(id = 5), aTag(id = 6)),
+                themes = listOf(aTheme(id = 9)),
+                location = "Iroise",
+            )
+
+        val savedRegulatoryArea = jpaRegulatoryAreaRepository.save(updatedRegulatoryArea)
+
+        assertThat(savedRegulatoryArea.id).isEqualTo(300)
+        assertThat(savedRegulatoryArea.layerName).isEqualTo("RNN")
+        assertThat(savedRegulatoryArea.location).isEqualTo("Iroise")
+        assertThat(savedRegulatoryArea.resume).isEqualTo("Mise à jour de la zone")
+        assertThat(savedRegulatoryArea.tags).hasSize(2)
+        assertThat(savedRegulatoryArea.tags.map { it.id }).containsExactlyInAnyOrder(5, 6)
+        assertThat(savedRegulatoryArea.themes).hasSize(1)
+        assertThat(savedRegulatoryArea.themes[0].id).isEqualTo(9)
+        val newGroup = idbRegulatoryAreaGroupRepository.findAllByGroupName("RNN - Iroise")
+        assertThat(newGroup).hasSize(2)
+        assertThat(newGroup[0].group.id).isEqualTo(1000005)
+        assertThat(newGroup[0].regulatoryArea.id).isEqualTo(425)
+        assertThat(newGroup[1].regulatoryArea.id).isEqualTo(updatedRegulatoryArea.id)
+    }
+
+    @Test
+    @Transactional
     fun `save should create a new regulatory area group when it does not exist`() {
         val existingRegulatoryArea = jpaRegulatoryAreaRepository.findById(300)
-        println("Existing regulatory area before update: $existingRegulatoryArea")
         require(existingRegulatoryArea != null)
 
         val updatedRegulatoryArea =

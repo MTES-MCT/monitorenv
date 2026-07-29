@@ -13,6 +13,7 @@ class RegulatoryAreaFixture {
             facade: String = "NAMO",
             layerName: String? = "Layername 1",
             plan: String = "PIRC",
+            location: String? = null,
         ): RegulatoryAreaEntity =
             RegulatoryAreaEntity(
                 id = id,
@@ -21,7 +22,7 @@ class RegulatoryAreaFixture {
                 themes = listOf(),
                 facade = facade,
                 layerName = layerName,
-                location = null,
+                location = location,
                 plan = plan,
             )
 
