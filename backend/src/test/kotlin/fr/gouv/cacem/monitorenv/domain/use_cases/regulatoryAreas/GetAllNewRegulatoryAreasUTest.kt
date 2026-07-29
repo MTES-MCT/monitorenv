@@ -50,7 +50,7 @@ class GetAllRegulatoryAreasUTest {
     }
 
     @Test
-    fun `execute should group regulatory areas by control plan`(log: CapturedOutput) {
+    fun `execute should group regulatory areas by layer name and location`(log: CapturedOutput) {
         // Given
         val regulatoryAreas =
             listOf(
@@ -58,24 +58,33 @@ class GetAllRegulatoryAreasUTest {
                     id = 1,
                     layerName = "Layer1",
                     plan = "PSCEM",
+                    location = "Location1",
                 ),
                 RegulatoryAreaFixture.aRegulatoryArea(
                     id = 2,
-                    layerName = "Layer2",
+                    layerName = "Layer2 - Location2",
                     plan = "PIRC",
+                    location = null,
                 ),
-                RegulatoryAreaFixture.aRegulatoryArea(id = 3, layerName = "Layer1", plan = "PIRC"),
+                RegulatoryAreaFixture.aRegulatoryArea(
+                    id = 3,
+                    layerName = "Layer1 - Location1",
+                    plan = "PIRC",
+                    location = null,
+                ),
                 RegulatoryAreaFixture.aRegulatoryArea(
                     id = 4,
                     areaType = AreaTypeEnum.GROUP,
-                    layerName = "Layer1",
+                    layerName = "Layer1 - Location1",
                     plan = "PSCEM",
+                    location = null,
                 ),
                 RegulatoryAreaFixture.aRegulatoryArea(
                     id = 5,
                     areaType = AreaTypeEnum.GROUP,
                     layerName = "Layer2",
                     plan = "PIRC",
+                    location = "Location2",
                 ),
             )
         given(
@@ -99,7 +108,11 @@ class GetAllRegulatoryAreasUTest {
 
         // Then
         assertThat(groupedRegulatoryAreas).hasSize(2)
-        assertThat(groupedRegulatoryAreas.filter { it.key.layerName == "Layer1" }.flatMap { it.value }).hasSize(2)
+        assertThat(
+            groupedRegulatoryAreas
+                .filter { it.key.layerName == "Layer1 - Location1" }
+                .flatMap { it.value },
+        ).hasSize(2)
         assertThat(groupedRegulatoryAreas.filter { it.key.layerName == "Layer2" }.flatMap { it.value }).hasSize(1)
 
         assertThat(totalCount).isEqualTo(3)

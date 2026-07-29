@@ -39,8 +39,11 @@ class GetAllRegulatoryAreas(
             groups
                 .associateWith { group ->
                     areas.filter {
-                        it.layerName == group.layerName &&
-                            it.location == group.location
+                        listOfNotNull(it.layerName, it.location).joinToString(" - ") ==
+                            listOfNotNull(
+                                group.layerName,
+                                group.location,
+                            ).joinToString(" - ")
                     }
                 }.filterValues { it.isNotEmpty() }
 
