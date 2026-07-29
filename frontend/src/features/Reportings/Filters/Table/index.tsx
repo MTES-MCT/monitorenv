@@ -226,6 +226,7 @@ export function TableReportingsFiltersWithRef(
             style={{ width: 310 }}
             value={themeFilter}
             valueKey="id"
+            withAllChildrenInResults
           />
           <CheckTreePicker
             key={`reportings-tags-${tagsOptions.length}`}
@@ -245,6 +246,7 @@ export function TableReportingsFiltersWithRef(
             style={{ width: 310 }}
             value={tagFilter}
             valueKey="id"
+            withAllChildrenInResults
           />
 
           <CheckPicker

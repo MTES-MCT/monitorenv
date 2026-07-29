@@ -74,11 +74,11 @@ export function ActionThemes({ actionId, actionIndex, actionType }: ActionThemeP
     <ActionThemeWrapper data-cy="envaction-theme-element">
       <CheckTreePicker
         key={themesOptions.length}
+        canSelectMultipleParents={actionType === ActionTypeEnum.SURVEILLANCE}
         childrenKey="subThemes"
         error={error.error}
         isErrorMessageHidden
         isLight
-        isMultiSelect={actionType === ActionTypeEnum.SURVEILLANCE}
         isRequired
         label={label}
         labelKey="name"
@@ -88,6 +88,7 @@ export function ActionThemes({ actionId, actionIndex, actionType }: ActionThemeP
         options={themesOptions}
         value={envActions[actionIndex]?.themes}
         valueKey="id"
+        withAllChildrenInResults
       />
     </ActionThemeWrapper>
   )

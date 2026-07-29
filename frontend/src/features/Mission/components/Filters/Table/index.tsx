@@ -215,6 +215,7 @@ export function TableMissionsFiltersWithRef(
                 style={tagPickerStyle}
                 value={selectedTags}
                 valueKey="id"
+                withAllChildrenInResults
               />
               <CheckPicker
                 data-cy="select-statuses-filter"
