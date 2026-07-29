@@ -50,6 +50,7 @@ const Name = styled.span`
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 `
 
 const ZonesNumber = styled.span`

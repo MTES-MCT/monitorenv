@@ -42,7 +42,6 @@ export const Value = styled.td`
 export const BeautifyValue = styled.span`
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 50;
   overflow: hidden;
   white-space: pre-wrap;
 `

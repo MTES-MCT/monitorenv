@@ -123,6 +123,7 @@ const StyledResponsiveNav = styled(RsuiteNavBar)`
       }
       .rs-dropdown-menu {
         border-radius: 0px !important;
+        padding: 0;
         .rs-dropdown-item {
           color: ${p => p.theme.color.slateGray};
           display: flex;
@@ -136,6 +137,9 @@ const StyledResponsiveNav = styled(RsuiteNavBar)`
             background-color: ${p => p.theme.color.blueGray25};
             color: ${p => p.theme.color.gunMetal};
           }
+        }
+        .rs-navbar-item {
+          width: 100% !important;
         }
       }
     }
