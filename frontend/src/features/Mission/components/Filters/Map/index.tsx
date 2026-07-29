@@ -322,6 +322,7 @@ function MapMissionsFiltersWithRef(
           shouldShowLabels={false}
           value={selectedTags}
           valueKey="id"
+          withAllChildrenInResults
         />
         <TagsWrapper>
           {selectedTags?.map(tag => (

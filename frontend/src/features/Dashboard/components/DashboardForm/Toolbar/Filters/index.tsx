@@ -156,6 +156,7 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
         style={{ width: '310px' }}
         value={filters?.tags}
         valueKey="id"
+        withAllChildrenInResults
       />
       <CheckTreePicker
         key={`themes-${themesAsOptions.length}`}
@@ -173,6 +174,7 @@ export function DashboardFilters({ dashboard, dashboardKey: id }: FiltersProps) 
         style={{ width: '310px' }}
         value={filters?.themes}
         valueKey="id"
+        withAllChildrenInResults
       />
       <Select
         isLabelHidden

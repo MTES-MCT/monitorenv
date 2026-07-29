@@ -38,6 +38,7 @@ export function ActionTags({ actionIndex }: ActionTagsProps) {
         renderedValue="Tags"
         value={getTagsAsOptions(currentTags.value)}
         valueKey="id"
+        withAllChildrenInResults
       />
     </Wrapper>
   )

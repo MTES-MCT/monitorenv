@@ -1,7 +1,7 @@
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getTagsAsOptions } from '@utils/getTagsAsOptions'
-import { useMemo, type CSSProperties } from 'react'
+import { type CSSProperties, useMemo } from 'react'
 
 import type { TagFromAPI, TagOption } from '../domain/entities/tags'
 
@@ -54,6 +54,7 @@ export function RegulatoryTagsFilter({
       style={style}
       value={value}
       valueKey="id"
+      withAllChildrenInResults
     />
   )
 }

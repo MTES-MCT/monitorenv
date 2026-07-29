@@ -414,10 +414,10 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         <StyledThemeContainer>
           <CheckTreePicker
             key={themesOptions.length}
+            canSelectMultipleParents={false}
             childrenKey="subThemes"
             error={errors.theme}
             isErrorMessageHidden
-            isMultiSelect={false}
             isRequired
             label="Thématiques et sous-thématiques"
             labelKey="name"
@@ -459,6 +459,7 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
             renderedValue="Tags"
             value={values.tags}
             valueKey="id"
+            withAllChildrenInResults
           />
         </StyledThemeContainer>
 
