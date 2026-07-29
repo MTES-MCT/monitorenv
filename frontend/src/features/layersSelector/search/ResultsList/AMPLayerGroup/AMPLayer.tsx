@@ -53,6 +53,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
       dispatch(closeMetadataPanel())
     } else {
       dispatch(openAMPMetadataPanel(layerId))
+      fitToRegulatoryLayer()
     }
   }
 
@@ -83,7 +84,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
     <LayerSelector.Layer ref={ref} $isNew={layer?.isNew} $metadataIsShown={metadataIsShown}>
       <StyledTransparentButton onClick={toggleZoneMetadata}>
         <LayerLegend layerType={MonitorEnvLayers.AMP} legendKey={layer?.name} type={layer?.type} />
-        <LayerSelector.Name data-cy="amp-layer-type" onClick={fitToRegulatoryLayer} title={layer?.type ?? 'aucun'}>
+        <LayerSelector.Name data-cy="amp-layer-type" title={layer?.type ?? 'aucun'}>
           <Highlighter
             autoEscape
             highlightClassName="highlight"

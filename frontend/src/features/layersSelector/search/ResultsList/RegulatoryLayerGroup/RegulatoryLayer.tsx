@@ -68,6 +68,7 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
       dispatch(closeMetadataPanel())
     } else {
       dispatch(openRegulatoryMetadataPanel(layerId))
+      fitToRegulatoryLayer()
     }
   }
 
@@ -121,7 +122,7 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
           plan={layer?.plan}
           type={layer?.tags?.map(({ name }) => name).join(', ') ?? 'aucun'}
         />
-        <LayerSelector.Name onClick={fitToRegulatoryLayer} title={layerTitle}>
+        <LayerSelector.Name title={layerTitle}>
           <Highlighter
             autoEscape
             highlightClassName="highlight"
