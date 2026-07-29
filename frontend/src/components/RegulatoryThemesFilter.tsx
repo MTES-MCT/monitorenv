@@ -54,6 +54,7 @@ export function RegulatoryThemesFilter({
       style={style}
       value={value}
       valueKey="id"
+      withAllChildrenInResults
     />
   )
 }
