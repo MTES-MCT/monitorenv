@@ -2,6 +2,7 @@ import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { getTitle } from 'domain/entities/layers/utils'
 import React, { useMemo, useState } from 'react'
@@ -15,7 +16,11 @@ export function RegulatoryAreaGroup({ group }: { group: RegulatoryArea.Regulator
   const navigate = useNavigate()
   const { data: layerNames } = useGetLayerNamesQuery()
 
-  const totalNumberOfZones = useMemo(() => layerNames?.layerNames[group.group.layerName] ?? 0, [layerNames, group])
+  const totalNumberOfZones = useMemo(() => {
+    const formattedLayerName = formatLayerName(group.group.layerName, group.group.location)
+
+    return layerNames?.layerNames[formattedLayerName ?? ''] ?? 0
+  }, [layerNames, group])
 
   const layerGroupName = getTitle(group.group.layerName)
   const [isGroupNameOpen, setIsGroupNameOpen] = useState(false)
@@ -40,7 +45,7 @@ export function RegulatoryAreaGroup({ group }: { group: RegulatoryArea.Regulator
         $isRecentlyUpdated={hasLeastOneRecentlyUpdatedLayer}
         onClick={openGroupName}
       >
-        <StyledTransparentButton $width="70%">
+        <StyledTransparentButton>
           <LayerSelector.GroupName title={layerGroupName}>{layerGroupName}</LayerSelector.GroupName>
         </StyledTransparentButton>
         <LayerSelector.IconGroup>

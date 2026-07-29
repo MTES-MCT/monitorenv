@@ -79,7 +79,7 @@ export function MyLayerGroup({
         $isRecentlyUpdated={hasRecentlyUpdatedLayers}
         onClick={toggleZonesAreOpen}
       >
-        <StyledTransparentButton $width="70%" onClick={handleClickOnGroupName}>
+        <StyledTransparentButton onClick={handleClickOnGroupName}>
           <LayerSelector.GroupName data-cy={`${name}-layer-topic`} title={groupName}>
             {groupName}
           </LayerSelector.GroupName>

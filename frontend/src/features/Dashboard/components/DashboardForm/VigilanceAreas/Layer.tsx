@@ -69,7 +69,7 @@ export function Layer({ isPinned = false, isSelected = false, vigilanceArea }: V
       $withBorderBottom
       onClick={toggleZoneMetadata}
     >
-      <StyledTransparentButton $width="70%">
+      <StyledTransparentButton>
         <LayerLegend
           border={isWithinPeriod(vigilanceArea?.periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
           isDisabled={isOutOfPeriod(vigilanceArea?.periods)}

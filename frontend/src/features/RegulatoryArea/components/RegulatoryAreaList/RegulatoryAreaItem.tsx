@@ -62,7 +62,7 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
       $isRecentlyUpdated={regulatoryArea.isUpdatedRecently}
       $metadataIsShown={openedRegulatoryAreaId === regulatoryArea.id}
     >
-      <StyledTransparentButton $width="70%" onClick={openMetadata}>
+      <ReStyledTransparentButton onClick={openMetadata}>
         <LayerLegend
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layerTitle}
@@ -70,7 +70,7 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
           type={regulatoryArea.type}
         />
         <LayerSelector.Name title={layerTitle}>{layerTitle}</LayerSelector.Name>
-      </StyledTransparentButton>
+      </ReStyledTransparentButton>
       <StyledIconButton
         accent={Accent.TERTIARY}
         color={THEME.color.slateGray}
@@ -84,4 +84,12 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
 
 const StyledIconButton = styled(IconButton)`
   margin-right: 8px;
+`
+
+const ReStyledTransparentButton = styled(StyledTransparentButton)`
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 `

@@ -110,7 +110,7 @@ export function MyLayerZone({
 
   return (
     <LayerSelector.Layer $isNew={isNew} $isRecentlyUpdated={isRecentlyUpdated} $metadataIsShown={metadataIsShown}>
-      <StyledTransparentButton $width="70%" onClick={handleClickOnLayerName}>
+      <StyledTransparentButton onClick={handleClickOnLayerName}>
         <LayerLegend layerType={layerType} legendKey={name} plan={plan} type={type} />
         <LayerSelector.Name data-cy={`my-zone-${displayedName}`} title={displayedName}>
           {displayedName}
