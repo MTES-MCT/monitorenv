@@ -278,7 +278,7 @@ function BaseMapNotMemoized({
           }
         })
 
-        return layer ?? []
+        return (layer ?? []).sort((a, b) => a.get('id') - b.get('id'))
       }
     }
   }
