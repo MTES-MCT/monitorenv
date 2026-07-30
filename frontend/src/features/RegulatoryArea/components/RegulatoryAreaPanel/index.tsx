@@ -2,6 +2,7 @@ import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
 import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
@@ -44,8 +45,10 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
                 plan={regulatoryMetadata.plan}
                 type={displayTags(regulatoryMetadata.tags)}
               />
-              <RegulatoryZoneName title={getTitle(regulatoryMetadata.layerName)}>
-                {getTitle(regulatoryMetadata.layerName)}
+              <RegulatoryZoneName
+                title={getTitle(formatLayerName(regulatoryMetadata.layerName, regulatoryMetadata.location))}
+              >
+                {getTitle(formatLayerName(regulatoryMetadata.layerName, regulatoryMetadata.location))}
               </RegulatoryZoneName>
               <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onClose} />
             </Header>

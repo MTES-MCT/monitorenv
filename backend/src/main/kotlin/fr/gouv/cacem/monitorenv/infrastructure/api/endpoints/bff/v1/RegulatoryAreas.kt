@@ -97,8 +97,8 @@ class RegulatoryAreas(
     @GetMapping("/{regulatoryAreaId}")
     @Operation(summary = "Get regulatory area by Id")
     fun get(
+        @PathVariable
         @PathParam("regulatoryArea id")
-        @PathVariable(name = "regulatoryAreaId")
         regulatoryAreaId: Int,
     ): RegulatoryAreaDataOutput? =
         getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)?.let {
@@ -136,7 +136,6 @@ class RegulatoryAreas(
     ): RegulatoryAreaGroupDataOutput =
         RegulatoryAreaGroupDataOutput.fromRegulatoryAreaGroup(
             getRegulatoryAreasGroupById.execute(id),
-            withLocationResolution = false,
         )
 
     @PutMapping("/groups")

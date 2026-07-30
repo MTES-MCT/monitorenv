@@ -79,15 +79,13 @@ class JpaRegulatoryAreaRepository(
         val savedTags = saveTags(savedModel, regulatoryArea.tags)
         val savedThemes = saveThemes(savedModel, regulatoryArea.themes)
 
-        if (regulatoryArea.layerName != null) {
+        if (regulatoryArea.layerName != null && regulatoryArea.location != null) {
             val existingRegulatoryAreaGroup =
-                dbRegulatoryAreaGroupRepository.findAllByGroupName(
-                    groupName =
-                        listOfNotNull(
-                            regulatoryArea.layerName,
-                            regulatoryArea.location,
-                        ).joinToString(" - "),
+                dbRegulatoryAreaGroupRepository.findAllByLayerNameAndLocation(
+                    layerName = regulatoryArea.layerName,
+                    location = regulatoryArea.location,
                 )
+
             saveRegulatoryAreasGroup(regulatoryArea, existingRegulatoryAreaGroup)
         }
 
@@ -107,11 +105,10 @@ class JpaRegulatoryAreaRepository(
         }
 
         return listOf(
-            regulatoryArea.layerName,
+            listOfNotNull(regulatoryArea.layerName, regulatoryArea.location).joinToString(" - "),
             regulatoryArea.refReg,
             regulatoryArea.resume,
             regulatoryArea.polyName,
-            regulatoryArea.location,
         ).any { field ->
             !field.isNullOrBlank() &&
                 normalizeField(field)

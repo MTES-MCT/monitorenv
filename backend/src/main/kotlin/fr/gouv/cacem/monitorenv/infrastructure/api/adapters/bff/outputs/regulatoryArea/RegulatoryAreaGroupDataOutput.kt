@@ -7,15 +7,11 @@ data class RegulatoryAreaGroupDataOutput(
     val regulatoryAreas: List<RegulatoryAreaDataOutput>,
 ) {
     companion object {
-        fun fromRegulatoryAreaGroup(
-            regulatoryAreaGroup: RegulatoryAreaGroupDTO,
-            withLocationResolution: Boolean = true,
-        ): RegulatoryAreaGroupDataOutput =
+        fun fromRegulatoryAreaGroup(regulatoryAreaGroup: RegulatoryAreaGroupDTO): RegulatoryAreaGroupDataOutput =
             RegulatoryAreaGroupDataOutput(
                 group =
                     RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(
                         regulatoryAreaGroup.group,
-                        withLocationResolution = withLocationResolution,
                     ),
                 regulatoryAreas =
                     regulatoryAreaGroup.areas.map {

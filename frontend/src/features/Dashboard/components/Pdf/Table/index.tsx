@@ -1,5 +1,6 @@
 import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
@@ -77,7 +78,7 @@ function groupConsecutiveByLayerName(regulatoryAreas: RegulatoryArea.RegulatoryA
       if (lastGroup && lastGroup.layerName === area.layerName) {
         lastGroup.layers.push(area)
       } else {
-        acc.push({ layerName: area.layerName, layers: [area] })
+        acc.push({ layerName: formatLayerName(area.layerName, area.location), layers: [area] })
       }
 
       return acc

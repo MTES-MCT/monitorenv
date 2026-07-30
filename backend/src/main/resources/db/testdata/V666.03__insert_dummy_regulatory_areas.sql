@@ -469,7 +469,7 @@ $$
         VALUES (697,
                 '0106000020E61000000100000001030000000100000005000000FEEA55BCF63312C0BD25582F0A274840E62E16E75B3312C0AA6C84AA2127484019F3D214263212C08075CE591327484031A51A8BBF3212C0B47A13E9FB264840FEEA55BCF63312C0BD25582F0A274840',
                 'http://extranet.legicem.metier.developpement-durable.gouv.fr/zmel-roscanvel-a3474.html?id_rub=1098',
-                'ZMEL - Cale Querlen',
+                'ZMEL – Cale Querlen',
                 'NAMO',
                 'Arrêté inter-préfectoral N°2020118-0003 autorisant l''occupation temporaire du domaine public maritime par une zone de mouillages et d''équipements légers au lit-dit "Cale de Quérlen" sur le littoral de la commune de Roscanvel',
                 NOW() - INTERVAL '1 day',

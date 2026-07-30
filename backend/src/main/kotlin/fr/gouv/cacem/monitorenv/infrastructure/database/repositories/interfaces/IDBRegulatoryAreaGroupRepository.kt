@@ -52,22 +52,15 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
         value =
             """
             SELECT regulatoryAreaGroup from RegulatoryAreaGroupModel regulatoryAreaGroup
-            WHERE (
-                CASE
-                    WHEN regulatoryAreaGroup.group.location IS NOT NULL
-                         AND regulatoryAreaGroup.group.layerName NOT LIKE CONCAT('%', regulatoryAreaGroup.group.location, '%')
-                    THEN CONCAT(
-                        regulatoryAreaGroup.group.layerName,
-                        ' - ',
-                        regulatoryAreaGroup.group.location
-                    )
-                    ELSE regulatoryAreaGroup.group.layerName
-                END
-            ) = :groupName
-            AND regulatoryAreaGroup.group.creation IS NOT NULL
+            WHERE regulatoryAreaGroup.group.layerName = :layerName
+                AND regulatoryAreaGroup.group.location = :location
+                AND regulatoryAreaGroup.group.creation IS NOT NULL
         """,
     )
-    fun findAllByGroupName(groupName: String): List<RegulatoryAreaGroupModel>
+    fun findAllByLayerNameAndLocation(
+        layerName: String,
+        location: String,
+    ): List<RegulatoryAreaGroupModel>
 
     @Query(
         """

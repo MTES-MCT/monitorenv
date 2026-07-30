@@ -4,7 +4,6 @@ import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/c
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
 import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
-import { getTitle } from 'domain/entities/layers/utils'
 import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
@@ -16,13 +15,13 @@ export function RegulatoryAreaGroup({ group }: { group: RegulatoryArea.Regulator
   const navigate = useNavigate()
   const { data: layerNames } = useGetLayerNamesQuery()
 
-  const totalNumberOfZones = useMemo(() => {
-    const formattedLayerName = formatLayerName(group.group.layerName, group.group.location)
+  const layerGroupName = formatLayerName(group.group.layerName, group.group.location)
 
-    return layerNames?.layerNames[formattedLayerName ?? ''] ?? 0
-  }, [layerNames, group])
+  const totalNumberOfZones: number = useMemo(
+    () => layerNames?.layerNames[layerGroupName ?? ''] ?? 0,
+    [layerNames, layerGroupName]
+  )
 
-  const layerGroupName = getTitle(group.group.layerName)
   const [isGroupNameOpen, setIsGroupNameOpen] = useState(false)
 
   const hasLeastOneNewLayer = group.regulatoryAreas.some(layer => layer.isNew)

@@ -62,22 +62,22 @@ class GetAllRegulatoryAreasUTest {
                 ),
                 RegulatoryAreaFixture.aRegulatoryArea(
                     id = 2,
-                    layerName = "Layer2 - Location2",
+                    layerName = "Layer2",
                     plan = "PIRC",
-                    location = null,
+                    location = "Location2",
                 ),
                 RegulatoryAreaFixture.aRegulatoryArea(
                     id = 3,
-                    layerName = "Layer1 - Location1",
+                    layerName = "Layer1",
                     plan = "PIRC",
-                    location = null,
+                    location = "Location1",
                 ),
                 RegulatoryAreaFixture.aRegulatoryArea(
                     id = 4,
                     areaType = AreaTypeEnum.GROUP,
-                    layerName = "Layer1 - Location1",
+                    layerName = "Layer1",
                     plan = "PSCEM",
-                    location = null,
+                    location = "Location1",
                 ),
                 RegulatoryAreaFixture.aRegulatoryArea(
                     id = 5,
@@ -110,10 +110,14 @@ class GetAllRegulatoryAreasUTest {
         assertThat(groupedRegulatoryAreas).hasSize(2)
         assertThat(
             groupedRegulatoryAreas
-                .filter { it.key.layerName == "Layer1 - Location1" }
+                .filter { it.key.layerName == "Layer1" && it.key.location == "Location1" }
                 .flatMap { it.value },
         ).hasSize(2)
-        assertThat(groupedRegulatoryAreas.filter { it.key.layerName == "Layer2" }.flatMap { it.value }).hasSize(1)
+        assertThat(
+            groupedRegulatoryAreas
+                .filter { it.key.layerName == "Layer2" && it.key.location == "Location2" }
+                .flatMap { it.value },
+        ).hasSize(1)
 
         assertThat(totalCount).isEqualTo(3)
 

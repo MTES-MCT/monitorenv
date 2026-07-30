@@ -1,5 +1,6 @@
 import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
@@ -42,7 +43,9 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
 
   const { layer } = useGetRegulatoryAreasQuery(undefined, {
     selectFromResult: result => {
-      const layerGroup = result?.currentData?.regulatoryAreasByLayer.find(group => group.group.layerName === groupName)
+      const layerGroup = result?.currentData?.regulatoryAreasByLayer.find(
+        group => formatLayerName(group.group.layerName, group.group.location) === groupName
+      )
 
       return {
         layer: layerGroup?.regulatoryAreas.find(area => area.id === layerId)
