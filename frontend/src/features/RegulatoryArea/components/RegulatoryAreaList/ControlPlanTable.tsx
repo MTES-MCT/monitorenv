@@ -10,7 +10,7 @@ import { ControlPlanWrapper, GroupTitle, StyledIconButton, StyledLoadingIcon, Ti
 export function ControlPlanTable({ apiFilters, isLoading }: { apiFilters: any; isLoading: boolean }) {
   const groupedRegulatoryAreas = useAppSelector(state => getRegulatoryAreasByControlPlan(state, apiFilters)) as Record<
     RegulatoryArea.RegulatoryAreaControlPlan.PSCEM | RegulatoryArea.RegulatoryAreaControlPlan.PIRC,
-    Record<string, RegulatoryArea.RegulatoryAreaWithBbox[]>
+    Record<string, RegulatoryArea.RegulatoryAreaFromAPI[]>
   >
 
   const [controlPlansExtented, setControlPlansExtented] = useState<string[]>([])

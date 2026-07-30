@@ -16,7 +16,7 @@ type MetadataPanelSliceState = {
   layerOverlayIsOpen: boolean
   layerOverlayItems: OverlayItem<
     RegulatoryOrAMPOrViglanceAreaLayerType,
-    AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox
+    AMPProperties | RegulatoryArea.RegulatoryAreaTilesProperties
   >[]
   metadataLayerId: number | string | undefined
   metadataLayerType:

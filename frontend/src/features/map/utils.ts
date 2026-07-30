@@ -49,13 +49,13 @@ export const getOverlayItemsFromFeatures = (
         layerType: type as RegulatoryOrAMPOrViglanceAreaLayerType,
         properties: properties as
           | AMPProperties
-          | RegulatoryArea.RegulatoryAreaWithBbox
+          | RegulatoryArea.RegulatoryAreaTilesProperties
           | VigilanceArea.VigilanceAreaProperties
       })
     }
 
     return acc
-  }, [] as OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties>[])
+  }, [] as OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryArea.RegulatoryAreaTilesProperties | VigilanceArea.VigilanceAreaProperties>[])
 
 export const getClickedItems = (
   isLinkingZonesToVigilanceArea: boolean,
@@ -71,6 +71,7 @@ export const getHighestPriorityFeatures = (features: FeatureLike[], priorityOrde
   const highestPriorityFeatureTypes = priorityOrderTypes.find(layerTypes =>
     features.some(feature => layerTypes.some(layerType => String(feature.getId()).includes(layerType)))
   )
+
   if (!highestPriorityFeatureTypes) {
     return []
   }

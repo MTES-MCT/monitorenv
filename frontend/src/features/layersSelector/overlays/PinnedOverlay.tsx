@@ -1,7 +1,7 @@
 import { getIsLinkingZonesToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { IconButton, Icon, Size, Accent } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton, Size } from '@mtes-mct/monitor-ui'
 import { type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
 import { mapActions } from 'domain/shared_slices/Map'
 import { closeAreaOverlay } from 'domain/use_cases/map/closeAreaOverlay'
@@ -18,7 +18,10 @@ import type { OverlayItem } from 'domain/types/map'
 export function PinnedOverlay({
   items
 }: {
-  items: OverlayItem<RegulatoryOrAMPOrViglanceAreaLayerType, AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox>[]
+  items: OverlayItem<
+    RegulatoryOrAMPOrViglanceAreaLayerType,
+    AMPProperties | RegulatoryArea.RegulatoryAreaTilesProperties
+  >[]
 }) {
   const ref = useRef<HTMLDivElement>(null)
 

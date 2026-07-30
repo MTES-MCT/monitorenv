@@ -17,7 +17,7 @@ export function HoveredOverlay({
   items:
     | OverlayItem<
         RegulatoryOrAMPOrViglanceAreaLayerType,
-        AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties
+        AMPProperties | RegulatoryArea.RegulatoryAreaTilesProperties | VigilanceArea.VigilanceAreaProperties
       >[]
     | undefined
   pixel: number[] | undefined

@@ -24,7 +24,7 @@ export function RegulatoryLayerGroup({
   setTotalNumberOfZones
 }: {
   groupName: string
-  layers: RegulatoryArea.RegulatoryAreaWithBbox[]
+  layers: RegulatoryArea.RegulatoryAreaFromAPI[]
   setTotalNumberOfZones: (totalNumberOfZones: number) => void
 }) {
   const dispatch = useAppDispatch()

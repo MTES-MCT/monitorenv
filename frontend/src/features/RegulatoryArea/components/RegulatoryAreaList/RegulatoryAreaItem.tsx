@@ -16,7 +16,7 @@ import { regulatoryAreaTableActions } from './slice'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
-export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox }) {
+export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: RegulatoryArea.RegulatoryAreaFromAPI }) {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
@@ -29,12 +29,12 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
         openedRegulatoryAreaId === regulatoryArea.id ? undefined : regulatoryArea.id
       )
     )
-    if (!regulatoryArea?.bbox) {
+    if (!regulatoryArea?.extent) {
       return
     }
 
     const extent = transformExtent(
-      regulatoryArea?.bbox,
+      regulatoryArea?.extent,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )
@@ -44,7 +44,7 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
   const onEdit = () => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${regulatoryArea.id}`)
     const extent = transformExtent(
-      regulatoryArea?.bbox,
+      regulatoryArea?.extent,
       new Projection({ code: WSG84_PROJECTION }),
       new Projection({ code: OPENLAYERS_PROJECTION })
     )

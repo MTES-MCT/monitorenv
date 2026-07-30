@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import com.nhaarman.mockitokotlin2.given
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture
 import org.assertj.core.api.Assertions.assertThat
@@ -21,21 +22,30 @@ class GetAllRegulatoryAreasUTest {
         val expectedRegulatoryAreas = RegulatoryAreaFixture.aRegulatoryArea()
         given(
             regulatoryAreaRepository.findAll(
-                controlPlan = null,
-                seaFronts = null,
-                tags = null,
-                themes = null,
+                filters =
+                    SearchFilters(
+                        controlPlan = null,
+                        seaFronts = null,
+                        tags = null,
+                        themes = null,
+                        onlyRecentsAreas = null,
+                        query = null,
+                    ),
             ),
         ).willReturn(listOf(expectedRegulatoryAreas))
 
         // When
         val (regulatoryAreas, totalCount) =
             getAllRegulatoryAreas.execute(
-                controlPlan = null,
-                searchQuery = null,
-                seaFronts = null,
-                tags = null,
-                themes = null,
+                filters =
+                    SearchFilters(
+                        controlPlan = null,
+                        seaFronts = null,
+                        tags = null,
+                        themes = null,
+                        onlyRecentsAreas = null,
+                        query = null,
+                    ),
             )
 
         // Then
@@ -57,21 +67,30 @@ class GetAllRegulatoryAreasUTest {
             )
         given(
             regulatoryAreaRepository.findAll(
-                controlPlan = null,
-                seaFronts = null,
-                tags = null,
-                themes = null,
+                filters =
+                    SearchFilters(
+                        controlPlan = null,
+                        seaFronts = null,
+                        tags = null,
+                        themes = null,
+                        onlyRecentsAreas = null,
+                        query = null,
+                    ),
             ),
         ).willReturn(regulatoryAreas)
 
         // When
         val (groupedRegulatoryAreas, totalCount) =
             getAllRegulatoryAreas.execute(
-                controlPlan = null,
-                searchQuery = null,
-                seaFronts = null,
-                tags = null,
-                themes = null,
+                filters =
+                    SearchFilters(
+                        controlPlan = null,
+                        seaFronts = null,
+                        tags = null,
+                        themes = null,
+                        onlyRecentsAreas = null,
+                        query = null,
+                    ),
             )
 
         // Then

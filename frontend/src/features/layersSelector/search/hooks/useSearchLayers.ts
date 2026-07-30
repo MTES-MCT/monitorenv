@@ -5,7 +5,7 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import Fuse, { type Expression } from 'fuse.js'
 import { debounce } from 'lodash'
-import { useCallback, useEffect, useMemo, useRef, type MutableRefObject } from 'react'
+import { type MutableRefObject, useCallback, useEffect, useMemo, useRef } from 'react'
 
 import { setAMPsSearchResult } from '../slice'
 import { areArraysEqual } from './utils'
@@ -81,10 +81,10 @@ export function useSearchLayers() {
         ].filter(Boolean) as Expression[]
 
         searchedAMPs = fuseAMPs.search({ $and: filterExpression })
-        itemSchema = { bboxPath: 'item.bbox', idPath: 'item.id' }
+        itemSchema = { bboxPath: 'item.extent', idPath: 'item.id' }
       } else {
         searchedAMPs = amps?.entities ? Object.values(amps.entities) : undefined
-        itemSchema = { bboxPath: 'bbox', idPath: 'id' }
+        itemSchema = { bboxPath: 'extent', idPath: 'id' }
       }
 
       const recentAreasAMPs = areRecentsAreasChecked

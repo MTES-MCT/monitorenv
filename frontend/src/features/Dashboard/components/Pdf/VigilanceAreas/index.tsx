@@ -72,7 +72,7 @@ export function VigilanceAreas({
 }: {
   images: ExportImageType[]
   linkedAMPs: AMPFromAPI[]
-  linkedRegulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+  linkedRegulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
   vigilanceAreas: Dashboard.VigilanceAreaWithImages[]
 }) {
   return (

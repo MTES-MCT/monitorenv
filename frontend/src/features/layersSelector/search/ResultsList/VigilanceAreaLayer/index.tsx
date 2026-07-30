@@ -51,6 +51,7 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
     if (metadataIsShown) {
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(undefined))
     } else {
+      fitToVigilanceAreaLayer()
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
       if (!isSuperUser) {
         trackEvent({
@@ -110,7 +111,7 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
           legendKey={layer?.comments}
           type={layer?.name ?? 'aucun'}
         />
-        <LayerSelector.Name onClick={fitToVigilanceAreaLayer} title={layer?.name}>
+        <LayerSelector.Name title={layer?.name}>
           <Highlighter
             autoEscape
             highlightClassName="highlight"

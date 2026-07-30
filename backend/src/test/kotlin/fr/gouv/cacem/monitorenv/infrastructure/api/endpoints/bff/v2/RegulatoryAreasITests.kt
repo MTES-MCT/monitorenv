@@ -5,9 +5,11 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasTiles
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
@@ -47,6 +49,9 @@ class RegulatoryAreasITests {
 
     @MockitoBean
     private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
+
+    @MockitoBean
+    private lateinit var getAllRegulatoryAreasTiles: GetAllRegulatoryAreasTiles
 
     @MockitoBean
     private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
@@ -113,11 +118,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = null,
-                    tags = null,
-                    themes = null,
+                    filters = SearchFilters(),
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -287,11 +288,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = listOf("NAMO"),
-                    tags = null,
-                    themes = null,
+                    filters = SearchFilters(seaFronts = listOf("NAMO")),
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -319,11 +316,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = "Querlen",
-                    seaFronts = null,
-                    tags = null,
-                    themes = null,
+                    filters = SearchFilters(query = "Querlen"),
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -346,11 +339,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = "NonExistent",
-                    seaFronts = null,
-                    tags = null,
-                    themes = null,
+                    filters = SearchFilters(query = "NonExistent"),
                 ),
             ).willReturn(Pair(emptyMap(), 0L))
 
@@ -368,11 +357,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = null,
-                    tags = listOf(5),
-                    themes = null,
+                    filters = SearchFilters(tags = listOf(5)),
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
@@ -395,11 +380,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = null,
-                    tags = null,
-                    themes = listOf(101),
+                    filters = SearchFilters(themes = listOf(101)),
                 ),
             ).willReturn(Pair(mapOf("ZMEL_Cale_Querlen" to listOf(regulatoryArea)), 1L))
 
