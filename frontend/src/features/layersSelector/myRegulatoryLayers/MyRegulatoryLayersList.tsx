@@ -1,4 +1,5 @@
 import { getSelectedRegulatoryAreas } from '@api/regulatoryAreasAPI'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { useMountTransition } from '@hooks/useMountTransition'
 import { groupBy, isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
@@ -18,7 +19,7 @@ export function RegulatoryLayersList() {
     () =>
       groupBy(
         selectedRegulatoryLayers.sort((a, b) => a?.layerName?.localeCompare(b?.layerName)),
-        r => r?.layerName
+        r => formatLayerName(r.layerName, r.location)
       ),
     [selectedRegulatoryLayers]
   )

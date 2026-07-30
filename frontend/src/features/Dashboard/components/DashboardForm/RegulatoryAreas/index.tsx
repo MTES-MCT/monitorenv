@@ -1,5 +1,6 @@
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { pluralize } from '@mtes-mct/monitor-ui'
@@ -46,11 +47,11 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
     )
     const selectedRegulatoryAreasByLayerName = groupBy(
       [...(selectedRegulatoryAreas ?? [])].sort((a, b) => (a?.layerName ?? '').localeCompare(b?.layerName ?? '')) ?? [],
-      regulatory => regulatory.layerName
+      regulatory => formatLayerName(regulatory.layerName, regulatory.location)
     )
     const regulatoryAreasByLayerName = groupBy(
       [...regulatoryAreas].sort((a, b) => (a?.layerName ?? '').localeCompare(b?.layerName ?? '')) ?? [],
-      regulatory => regulatory.layerName
+      regulatory => formatLayerName(regulatory.layerName, regulatory.location)
     )
     useEffect(() => {
       if (isSelectedAccordionOpen) {

@@ -1,3 +1,11 @@
+/*
+ Replace all weird dash
+ */
+UPDATE regulatory_areas
+SET layer_name = regexp_replace(layer_name, '[\s\u00A0\u202F]*[‐‑‒–—―−][\s\u00A0\u202F]*', ' - ', 'g')
+WHERE location IS NULL
+  AND layer_name IS NOT NULL;
+
 WITH original_areas AS MATERIALIZED (SELECT id, layer_name, geom
                                      FROM regulatory_areas),
      grouped_reg AS (SELECT layer_name,
@@ -31,3 +39,13 @@ SELECT o.id,
 FROM original_areas o
          JOIN new_groups g
               ON g.layer_name = o.layer_name;
+
+
+/*
+ Spliting regulatory areas between layer_name and location.
+ */
+UPDATE regulatory_areas
+SET layer_name = COALESCE(substring(layer_name FROM '^(.+?) -'), layer_name),
+    location   = COALESCE(substring(layer_name FROM '^.+? - (.+)$'), location)
+WHERE location IS NULL
+  AND layer_name IS NOT NULL;

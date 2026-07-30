@@ -36,53 +36,34 @@ data class RegulatoryAreaDataOutput(
     val url: String? = null,
 ) {
     companion object {
-        fun fromRegulatoryAreaEntity(
-            regulatoryArea: RegulatoryAreaEntity,
-            withLocationResolution: Boolean = true,
-        ) = RegulatoryAreaDataOutput(
-            id = regulatoryArea.id,
-            creation = regulatoryArea.creation,
-            date = regulatoryArea.date,
-            dateFin = regulatoryArea.dateFin,
-            editeur = regulatoryArea.editeur,
-            editionBo = regulatoryArea.editionBo,
-            editionCacem = regulatoryArea.editionCacem,
-            facade = regulatoryArea.facade,
-            geom = regulatoryArea.geom,
-            isNew = regulatoryArea.isNew(),
-            isUpdatedRecently = regulatoryArea.isRecentlyUpdated(),
-            layerName =
-                if (!withLocationResolution) {
-                    regulatoryArea.layerName
-                } else {
-                    if (regulatoryArea.location.isNullOrBlank() ||
-                        (
-                            regulatoryArea.location.isNotBlank() &&
-                                regulatoryArea.layerName?.contains(regulatoryArea.location) == true
-                        )
-                    ) {
-                        regulatoryArea.layerName
-                    } else {
-                        listOfNotNull(
-                            regulatoryArea.layerName,
-                            regulatoryArea.location,
-                        ).joinToString(" - ")
-                    }
-                },
-            location = regulatoryArea.location,
-            observation = regulatoryArea.observation,
-            plan = regulatoryArea.plan,
-            polyName = regulatoryArea.polyName,
-            refReg = regulatoryArea.refReg,
-            resume = regulatoryArea.resume,
-            source = regulatoryArea.source,
-            tags = regulatoryArea.tags.map { TagOutput.fromTagEntity(it) },
-            themes = regulatoryArea.themes.map { ThemeOutput.fromThemeEntity(it) },
-            type = regulatoryArea.type,
-            url = regulatoryArea.url,
-            additionalRefReg = regulatoryArea.additionalRefReg,
-            authorizationPeriods = regulatoryArea.authorizationPeriods,
-            prohibitionPeriods = regulatoryArea.prohibitionPeriods,
-        )
+        fun fromRegulatoryAreaEntity(regulatoryArea: RegulatoryAreaEntity) =
+            RegulatoryAreaDataOutput(
+                id = regulatoryArea.id,
+                creation = regulatoryArea.creation,
+                date = regulatoryArea.date,
+                dateFin = regulatoryArea.dateFin,
+                editeur = regulatoryArea.editeur,
+                editionBo = regulatoryArea.editionBo,
+                editionCacem = regulatoryArea.editionCacem,
+                facade = regulatoryArea.facade,
+                geom = regulatoryArea.geom,
+                isNew = regulatoryArea.isNew(),
+                isUpdatedRecently = regulatoryArea.isRecentlyUpdated(),
+                layerName = regulatoryArea.layerName,
+                location = regulatoryArea.location,
+                observation = regulatoryArea.observation,
+                plan = regulatoryArea.plan,
+                polyName = regulatoryArea.polyName,
+                refReg = regulatoryArea.refReg,
+                resume = regulatoryArea.resume,
+                source = regulatoryArea.source,
+                tags = regulatoryArea.tags.map { TagOutput.fromTagEntity(it) },
+                themes = regulatoryArea.themes.map { ThemeOutput.fromThemeEntity(it) },
+                type = regulatoryArea.type,
+                url = regulatoryArea.url,
+                additionalRefReg = regulatoryArea.additionalRefReg,
+                authorizationPeriods = regulatoryArea.authorizationPeriods,
+                prohibitionPeriods = regulatoryArea.prohibitionPeriods,
+            )
     }
 }

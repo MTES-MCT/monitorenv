@@ -1,4 +1,5 @@
 import { Dashboard } from '@features/Dashboard/types'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
@@ -27,7 +28,9 @@ export const getGroupName = (layer: GenericLayerType, layerType: RegulatoryOrAMP
     return (layer as AMPProperties | VigilanceArea.VigilanceAreaProperties)?.name
   }
 
-  return (layer as RegulatoryArea.RegulatoryAreaWithBbox).layerName
+  const regulatoryArea = layer as RegulatoryArea.RegulatoryAreaWithBbox
+
+  return formatLayerName(regulatoryArea.layerName, regulatoryArea.location)
 }
 
 export const getName = (layer: GenericLayerType, layerType: RegulatoryOrAMPOrViglanceAreaLayerType) => {

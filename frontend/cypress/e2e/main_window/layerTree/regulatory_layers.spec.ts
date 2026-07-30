@@ -47,9 +47,11 @@ context('LayerTree > Regulatory Layers', () => {
 
     cy.getFeaturesFromLayer(Layers.REGULATORY_ENV_PREVIEW.code, PAGE_CENTER_PIXELS).should(features => {
       expect(features).to.have.length(2)
-      expect(features?.[0]?.get('layerName')).to.equal('ZMEL - Cale Querlen')
+      expect(features?.[0]?.get('layerName')).to.equal('ZMEL')
+      expect(features?.[0]?.get('location')).to.equal('Cale Querlen')
       expect(features?.[0]?.get('id')).to.equal(17)
-      expect(features?.[1]?.get('layerName')).to.equal('ZMEL - Cale Querlen')
+      expect(features?.[1]?.get('layerName')).to.equal('ZMEL')
+      expect(features?.[1]?.get('location')).to.equal('Cale Querlen')
       expect(features?.[1]?.get('id')).to.equal(697)
     })
 

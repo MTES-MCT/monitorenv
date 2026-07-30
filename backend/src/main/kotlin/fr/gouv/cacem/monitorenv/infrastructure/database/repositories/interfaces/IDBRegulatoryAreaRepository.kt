@@ -42,7 +42,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
             """
             SELECT r.id FROM RegulatoryAreaModel r
             WHERE ST_INTERSECTS(st_setsrid(r.geom, 4326), ST_Buffer(st_setsrid(:geometry, 4326), 0))
-            AND r.areaType = 'ZONE'
+            AND r.areaType = 'ZONE' ORDER BY r.id
         """,
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
@@ -69,7 +69,9 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     ): List<RegulatoryAreaModel>
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query("UPDATE RegulatoryAreaModel SET layerName = :layerName, location = :location WHERE id IN (:ids)")
+    @Query(
+        "UPDATE RegulatoryAreaModel SET layerName = :layerName, location = :location, editionBo = CURRENT_TIMESTAMP WHERE id IN (:ids)",
+    )
     fun updateGroupTypeAndLocation(
         layerName: String?,
         location: String?,

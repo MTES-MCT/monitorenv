@@ -1,6 +1,7 @@
 import { LoadingIcon } from '@components/style'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { useGetFilteredRegulatoryAreas } from '@features/RegulatoryArea/hooks/useGetFilteredRegulatoryAreas'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -169,7 +170,7 @@ export function ResultList({ searchedText }: ResultListProps) {
               {groupedRegulatoryAreas?.map(({ group, regulatoryAreas }) => (
                 <RegulatoryLayerGroup
                   key={group.id}
-                  groupName={group.layerName}
+                  groupName={formatLayerName(group.layerName, group.location)}
                   layers={regulatoryAreas}
                   searchedText={searchedText}
                 />

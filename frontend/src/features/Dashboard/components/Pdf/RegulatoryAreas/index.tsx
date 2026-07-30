@@ -1,5 +1,6 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Text, View } from '@react-pdf/renderer'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
@@ -51,7 +52,7 @@ export function RegulatoryAreas({
                       }
                     ]}
                   />
-                  <Text> {getTitle(regulatoryArea.layerName)}</Text>
+                  <Text> {getTitle(formatLayerName(regulatoryArea.layerName, regulatoryArea.location))}</Text>
                 </View>
                 <View style={[areaStyle.content, { rowGap: 3 }]}>
                   {regulatoryArea.polyName?.length > 0 && (

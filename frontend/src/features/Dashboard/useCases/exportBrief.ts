@@ -14,6 +14,7 @@ import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/admi
 import { getAllThemes, getTotalInfraction, getTotalNbControls, getTotalPV } from '@features/Mission/utils'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { getDatesFromFilters } from '@features/RecentActivity/utils'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { getFormattedReportingId } from '@features/Reportings/utils'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
@@ -168,7 +169,7 @@ export const exportBrief =
         color: getRegulatoryEnvColorWithAlpha(displayTags(regulatoryArea.tags), layerTitle, regulatoryArea.plan),
         facade: regulatoryArea.facade,
         id: regulatoryArea.id,
-        layerName: getTitle(regulatoryArea.layerName),
+        layerName: getTitle(formatLayerName(regulatoryArea.layerName, regulatoryArea.location)),
         polyName: getTitle(regulatoryArea.polyName),
         prohibitionPeriods: regulatoryArea.prohibitionPeriods,
         refReg: regulatoryArea.refReg,

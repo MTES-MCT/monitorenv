@@ -18,6 +18,7 @@ SELECT
         COALESCE(additional_ref_reg::text, '') ||
         COALESCE(themes::text, '') ||
         COALESCE(tags::text, '') ||
-        COALESCE(location::text, '')
+        COALESCE(location::text, '') ||
+        COALESCE(area_type::text, '')
   ) AS cacem_row_hash
 FROM prod.reg_cacem;
