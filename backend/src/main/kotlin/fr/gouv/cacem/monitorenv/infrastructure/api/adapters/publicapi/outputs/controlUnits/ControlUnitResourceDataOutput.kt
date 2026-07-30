@@ -9,7 +9,7 @@ data class ControlUnitResourceDataOutput(
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = null,
-    val stationId: Int,
+    val stationId: Int?,
     val type: String,
 ) {
     companion object {

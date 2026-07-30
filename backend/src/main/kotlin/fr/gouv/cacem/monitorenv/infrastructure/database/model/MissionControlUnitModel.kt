@@ -1,6 +1,5 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -28,17 +27,6 @@ data class MissionControlUnitModel(
     var unit: ControlUnitModel,
 ) {
     companion object {
-        @Deprecated(message = "TO REMOVE", level = DeprecationLevel.ERROR)
-        fun fromLegacyControlUnit(
-            legacyControlUnit: LegacyControlUnitEntity,
-            controlUnit: ControlUnitModel,
-            missionModel: MissionModel,
-        ) = MissionControlUnitModel(
-            unit = controlUnit,
-            mission = missionModel,
-            contact = legacyControlUnit.contact,
-        )
-
         fun fromControlUnit(
             controlUnit: ControlUnitModel,
             mission: MissionModel,
