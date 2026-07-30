@@ -65,7 +65,7 @@ class JpaControlUnitRepository(
             controlUnit.administrationId ?: controlUnit.administration?.id
                 ?: throw BackendUsageException(
                     BackendUsageErrorCode.ENTITY_NOT_SAVED,
-                    "Control unit adminsitration is mandatory before saving it",
+                    "Control unit administration is mandatory before saving it",
                 )
         val administration = dbAdministrationRepository.getReferenceById(administrationId)
         val departmentAreaModel =

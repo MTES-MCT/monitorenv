@@ -152,8 +152,6 @@ class Missions(
         return missions.map { MissionsDataOutput.fromMissionListDTO(it) }
     }
 
-    // TODO Return a ControlUnitDataOutput once the LegacyControlUnitEntity to ControlUnitEntity
-    // migration is done
     @GetMapping("/engaged_control_units")
     @Operation(summary = "Get engaged control units")
     fun getEngagedControlUnits(): List<LegacyControlUnitAndMissionSourcesDataOutput> =

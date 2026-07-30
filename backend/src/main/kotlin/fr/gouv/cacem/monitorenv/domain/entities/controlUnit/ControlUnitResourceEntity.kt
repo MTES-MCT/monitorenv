@@ -7,7 +7,7 @@ data class ControlUnitResourceEntity(
     val name: String,
     val note: String? = null,
     val photo: ByteArray? = null,
-    val stationId: Int,
+    val stationId: Int?,
     val type: ControlUnitResourceType,
 ) {
     override fun equals(other: Any?): Boolean {
@@ -39,7 +39,7 @@ data class ControlUnitResourceEntity(
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
-        result = 31 * result + stationId
+        result = 31 * result + (stationId ?: 0)
         result = 31 * result + type.hashCode()
 
         return result

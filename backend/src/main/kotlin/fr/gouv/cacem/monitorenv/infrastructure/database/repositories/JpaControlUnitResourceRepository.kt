@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitResourceRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ControlUnitResourceModel
@@ -47,6 +49,12 @@ class JpaControlUnitResourceRepository(
     @Transactional
     override fun save(controlUnitResource: ControlUnitResourceEntity): ControlUnitResourceEntity {
         val controlUnitModel = dbControlUnitRepository.getReferenceById(controlUnitResource.controlUnitId)
+        if (controlUnitResource.stationId == null) {
+            throw BackendUsageException(
+                BackendUsageErrorCode.ENTITY_NOT_SAVED,
+                "Control unit resource station is mandatory before saving it",
+            )
+        }
         val stationModel = dbStationRepository.getReferenceById(controlUnitResource.stationId)
         val controlUnitResourceModel =
             ControlUnitResourceModel.fromControlUnitResource(

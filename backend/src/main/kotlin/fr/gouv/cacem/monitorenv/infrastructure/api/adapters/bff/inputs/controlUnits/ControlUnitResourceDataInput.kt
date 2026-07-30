@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.controlU
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 
 data class ControlUnitResourceDataInput(
     val id: Int,
@@ -10,14 +9,6 @@ data class ControlUnitResourceDataInput(
     val name: String,
     val type: ControlUnitResourceType,
 ) {
-    fun toLegacyControlUnitResource() =
-        LegacyControlUnitResourceEntity(
-            id = id,
-            name = name,
-            controlUnitId = controlUnitId,
-            type = type,
-        )
-
     fun toControlUnitResource() =
         ControlUnitResourceEntity(
             id = id,
@@ -27,7 +18,6 @@ data class ControlUnitResourceDataInput(
             isArchived = false,
             note = null,
             photo = null,
-            // TODO: ???
-            stationId = 1,
+            stationId = null,
         )
 }
