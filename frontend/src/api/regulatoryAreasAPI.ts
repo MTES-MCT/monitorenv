@@ -8,6 +8,7 @@ import { monitorenvPrivateApi } from './api'
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { HomeRootState } from '@store/index'
 import type { Coordinate } from 'ol/coordinate'
+import type { StringDigit } from 'type-fest/source/internal'
 
 const GET_REGULATORY_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/les zones réglementaires"
 const GET_REGULATORY_AREA_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zones réglementaire"
@@ -152,41 +153,41 @@ export const getRegulatoryAreasByControlPlan = createSelector(
       return undefined
     }
 
-    return groups.reduce((acc, group) => {
-      const areasByPlan = new Map<string, RegulatoryArea.RegulatoryAreaWithBbox[]>()
+    return groups.reduce(
+      (acc, group) => {
+        const areasByPlan = new Map<string, RegulatoryArea.RegulatoryAreaWithBbox[]>()
 
-      group.regulatoryAreas?.forEach(regulatoryArea => {
-        const { plan } = regulatoryArea
+        group.regulatoryAreas?.forEach(regulatoryArea => {
+          const { plan } = regulatoryArea
 
-        if (!plan) {
-          return
-        }
+          if (!plan) {
+            return
+          }
 
-        const plans = plan.split(',').map(p => p.trim())
+          const plans = plan.split(',').map(p => p.trim())
 
-        plans.forEach(planRaw => {
-          const areas = areasByPlan.get(planRaw) ?? []
-          areas.push(regulatoryArea)
-          areasByPlan.set(planRaw, areas)
+          plans.forEach(planRaw => {
+            const areas = areasByPlan.get(planRaw) ?? []
+            areas.push(regulatoryArea)
+            areasByPlan.set(planRaw, areas)
+          })
         })
-      })
 
-      areasByPlan.forEach(
-        (areas, planRaw) => {
+        areasByPlan.forEach((areas, planRaw) => {
           acc[planRaw] ??= []
           acc[planRaw].push({
             ...group,
             regulatoryAreas: areas
           })
+        })
 
-          return acc
-        },
-        {} as Record<
-          RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM,
-          Record<string, RegulatoryArea.RegulatoryAreaGroup[]>
-        >
-      )
-    })
+        return acc
+      },
+      {} as Record<
+        RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM,
+        RegulatoryArea.RegulatoryAreaGroup[]
+      >
+    )
   }
 )
 
@@ -225,10 +226,7 @@ export const getRegulatoryAreasBySeaFront = createSelector(
 
         return acc
       },
-      {} as Record<
-        RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM,
-        RegulatoryArea.RegulatoryAreaGroup[]
-      >
+      {} as Record<StringDigit, RegulatoryArea.RegulatoryAreaGroup[]>
     )
   }
 )
