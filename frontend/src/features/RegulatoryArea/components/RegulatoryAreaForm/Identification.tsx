@@ -187,19 +187,6 @@ export function Identification() {
             </>
           )}
         </FieldWithTooltip>
-        <FieldWithTooltip>
-          <FormikTextInput
-            isErrorMessageHidden
-            isRequired
-            label="Titre de la zone réglementaire"
-            name="polyName"
-            style={{ flex: 1 }}
-          />
-          <Tooltip>
-            Le titre de la zone doit être le plus explicite possible que le rendre intelligible à tous, même à des
-            utilisateurs non experts sur différents sujets (ex : biodiversité), tels que les utilisateurs de MonitorExt.
-          </Tooltip>
-        </FieldWithTooltip>
 
         {isCreatingNewLayerName && (
           <CreateLayerNameContainer>
@@ -227,6 +214,20 @@ export function Identification() {
             <ValidateButton onClick={validateLayerName}>Valider</ValidateButton>
           </CreateLayerNameContainer>
         )}
+
+        <FieldWithTooltip>
+          <FormikTextInput
+            isErrorMessageHidden
+            isRequired
+            label="Titre de la zone réglementaire"
+            name="polyName"
+            style={{ flex: 1 }}
+          />
+          <Tooltip>
+            Le titre de la zone doit être le plus explicite possible que le rendre intelligible à tous, même à des
+            utilisateurs non experts sur différents sujets (ex : biodiversité), tels que les utilisateurs de MonitorExt.
+          </Tooltip>
+        </FieldWithTooltip>
         <InlineFields>
           <Fields>
             <RegulatoryThemesFilter

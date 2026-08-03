@@ -61,7 +61,7 @@ export function SeaFrontTable({ apiFilters, isLoading }: { apiFilters: any; isLo
               />
             </GroupTitle>
             {seaFrontsExtented.includes(seaFront) &&
-              Object.entries(groupedRegulatoryAreas[seaFront]).map(([, regulatoryAreasGroup]) => (
+              groupedRegulatoryAreas[seaFront].map(regulatoryAreasGroup => (
                 <RegulatoryAreaGroup key={regulatoryAreasGroup.group.id} group={regulatoryAreasGroup} />
               ))}
           </Fragment>
