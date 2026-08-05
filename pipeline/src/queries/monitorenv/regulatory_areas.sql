@@ -14,10 +14,11 @@ SELECT
     ra.plan,
     ra.authorization_periods,
     ra.prohibition_periods,
+    ra.location,
+    ra.area_type,
     ra.additional_ref_reg,
     STRING_AGG(DISTINCT t.name, ',' ORDER BY t.name) AS themes,
-    STRING_AGG(DISTINCT tag.name, ',' ORDER BY tag.name) AS tags,
-    ra.location
+    STRING_AGG(DISTINCT tag.name, ',' ORDER BY tag.name) AS tags
 FROM regulatory_areas ra
 LEFT JOIN themes_regulatory_areas tra
        ON tra.regulatory_areas_id = ra.id
