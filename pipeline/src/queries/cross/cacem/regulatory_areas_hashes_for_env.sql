@@ -5,4 +5,5 @@ FROM
   prod.reg_cacem
 WHERE
   geom IS NOT NULL
-  AND ref_reg IS NOT NULL;
+  AND ref_reg IS NOT NULL
+  AND area_type = 'ZONE';

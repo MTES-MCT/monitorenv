@@ -21,6 +21,7 @@ SELECT
   prohibition_periods,
   additional_ref_reg,
   location,
+  area_type,
   md5(
     COALESCE(st_multi(ST_SimplifyPreserveTopology(ST_CurveToLine(geom), 0.00001))::text, '') ||
     COALESCE(ref_reg::text, '')

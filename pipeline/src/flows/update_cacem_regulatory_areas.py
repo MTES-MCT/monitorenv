@@ -15,7 +15,7 @@ from src.shared_tasks.update_queries import (
     update_required,
 )
 
-from src.generic_tasks import extract
+from src.generic_tasks import extract, load
 
 @task
 def extract_cacem_regulatory_areas_hashes() -> pd.DataFrame:
@@ -41,6 +41,15 @@ def extract_monitorenv_regulatory_areas_hashes() -> pd.DataFrame:
     return extract(
         db_name="monitorenv_remote",
         query_filepath="monitorenv/regulatory_areas_hashes_for_cacem.sql",
+    )
+
+
+@task
+def extract_monitorenv_regulatory_areas_groups() -> pd.DataFrame:
+    """Extract regulatory areas groups from monitorenv for CACEM upsert."""
+    return extract(
+        db_name="monitorenv_remote",
+        query_filepath="monitorenv/regulatory_areas_groups_for_cacem.sql",
     )
 
 @task
@@ -89,6 +98,8 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                     authorization_periods   character varying,
                     prohibition_periods     character varying,
                     additional_ref_reg      jsonb,
+                    location                character varying,
+                    area_type               character varying,
                     themes                  character varying,
                     tags                    character varying
                 )
@@ -112,6 +123,8 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
            "authorization_periods",
            "prohibition_periods",
            "additional_ref_reg",
+           "location",
+           "area_type",
            "themes",
            "tags",
         ]
@@ -146,6 +159,8 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                 authorization_periods = tmp.authorization_periods,
                 prohibition_periods = tmp.prohibition_periods,
                 additional_ref_reg = tmp.additional_ref_reg,
+                location = tmp.location,
+                area_type = tmp.area_type,
                 themes = tmp.themes,
                 tags = tmp.tags
                 FROM tmp_regulatory_areas tmp
@@ -153,6 +168,21 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
                 """
             )
         )
+
+
+@task
+def load_new_regulatory_areas_groups(new_regulatory_areas_groups: pd.DataFrame):
+    """Upsert monitorenv regulatory areas groups into CACEM."""
+    load(
+        new_regulatory_areas_groups,
+        table_name="reg_cacem",
+        schema="prod",
+        db_name="cacem_local",
+        logger=get_run_logger(),
+        how="upsert",
+        table_id_column="id",
+        df_id_column="id",
+    )
 
 
 
@@ -164,17 +194,20 @@ def update_cacem_regulatory_areas_flow(
     if is_integration:
         logger.info("Running in integration mode - no update will be performed")
         return
-    
 
     cacem_hashes = extract_cacem_regulatory_areas_hashes()
     monitor_env_hashes = extract_monitorenv_regulatory_areas_hashes()
-
     inner_merged = merge_hashes(cacem_hashes, monitor_env_hashes, "inner")
 
+    new_regulatory_areas_groups = extract_monitorenv_regulatory_areas_groups()
+    load_new_regulatory_areas_groups(new_regulatory_areas_groups)
+    
     ids_to_update = select_ids_to_update(inner_merged)
     logger.info(f"Ids to update: {ids_to_update}")
     cond_update = update_required(ids_to_update)
     if cond_update is True:
         new_regulatory_areas = extract_env_regulatory_areas(ids_to_update)
         update_cacem_regulatory_areas(new_regulatory_areas)
+
+
 

@@ -28,6 +28,8 @@ INSERT INTO
     plan,
     authorization_periods,
     prohibition_periods,
+    location,
+    area_type,
     additional_ref_reg,
     row_hash
   )
@@ -56,6 +58,8 @@ VALUES
     'plan1',
     'période d''autorisation1',
     'période de prohibition1',
+    'location1',
+    'ZONE',
     '[{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}]',
     md5(COALESCE(st_multi (ST_SimplifyPreserveTopology (ST_CurveToLine ('MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))'::geometry), 0.00001))::text, '') || COALESCE('ref_reg1'::text, ''))
   );
@@ -81,6 +85,8 @@ INSERT INTO
     plan,
     authorization_periods,
     prohibition_periods,
+    location,
+    area_type,
     additional_ref_reg,
     row_hash
   )
@@ -109,6 +115,8 @@ VALUES
     'plan2',
     'période d''autorisation2',
     'période de prohibition2',
+    'location2',
+    'ZONE',
     null,
     md5(COALESCE(st_multi (ST_SimplifyPreserveTopology (ST_CurveToLine ('MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))'::geometry), 0.00001))::text, '') || COALESCE('ref_reg2'::text, ''))
   );

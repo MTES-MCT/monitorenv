@@ -2,8 +2,8 @@ import pandas as pd
 
 from src.db_config import create_engine
 from src.read_query import read_query
-from src.generic_tasks import load
 from src.flows.update_cacem_regulatory_areas import (
+    load_new_regulatory_areas_groups,
     update_cacem_regulatory_areas,
     update_cacem_regulatory_areas_flow
 )
@@ -17,6 +17,27 @@ def test_update_cacem_regulatory_areas_flow(
     state = update_cacem_regulatory_areas_flow(return_state=True)
 
     assert state.is_completed()
+
+
+def test_load_new_regulatory_areas_groups_uses_upsert_on_id(monkeypatch):
+    captured = {}
+
+    def fake_load(df, **kwargs):
+        captured["df"] = df
+        captured["kwargs"] = kwargs
+
+    monkeypatch.setattr("src.flows.update_cacem_regulatory_areas.load", fake_load)
+
+    new_regulatory_areas_groups = pd.DataFrame({"id": [1]})
+
+    load_new_regulatory_areas_groups(new_regulatory_areas_groups)
+
+    assert captured["kwargs"]["how"] == "upsert"
+    assert captured["kwargs"]["table_id_column"] == "id"
+    assert captured["kwargs"]["df_id_column"] == "id"
+    assert captured["kwargs"]["table_name"] == "reg_cacem"
+    assert captured["kwargs"]["schema"] == "prod"
+    assert captured["kwargs"]["db_name"] == "cacem_local"
 
 
 
@@ -50,6 +71,8 @@ def test_update_cacem_regulatory_areas_replace_tags(reset_test_data):
             "authorization_periods": [None],
             "prohibition_periods": [None],
             "additional_ref_reg": [None],
+            "location": [None],
+            "area_type": [None],
             "themes": [None],
             "tags": ["D,E"],
         }
