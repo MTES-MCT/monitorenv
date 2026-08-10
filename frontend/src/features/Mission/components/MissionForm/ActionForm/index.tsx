@@ -12,10 +12,9 @@ import type { Reporting } from '../../../../../domain/entities/reporting'
 
 type ActionFormProps = {
   currentActionId: string | undefined
-  isTagsWarningMessageVisible: boolean
   setCurrentActionId: (actionId: string | undefined) => void
 }
-export function ActionForm({ currentActionId, isTagsWarningMessageVisible, setCurrentActionId }: ActionFormProps) {
+export function ActionForm({ currentActionId, setCurrentActionId }: ActionFormProps) {
   const [attachedReportingsField] = useField<Reporting[]>('attachedReportings')
   const reportingActionIndex = (attachedReportingsField.value ?? []).findIndex(
     reporting => reporting.id === currentActionId
@@ -59,7 +58,7 @@ export function ActionForm({ currentActionId, isTagsWarningMessageVisible, setCu
     switch (actionTypeField.value) {
       case ActionTypeEnum.CONTROL:
         return (
-          <FormWrapper $isScrollDisabled={isTagsWarningMessageVisible}>
+          <FormWrapper>
             <ControlForm
               key={actionIdField.value}
               currentActionId={currentActionId}
@@ -69,7 +68,7 @@ export function ActionForm({ currentActionId, isTagsWarningMessageVisible, setCu
         )
       case ActionTypeEnum.SURVEILLANCE:
         return (
-          <FormWrapper $isScrollDisabled={isTagsWarningMessageVisible}>
+          <FormWrapper>
             <SurveillanceForm key={actionIdField.value} currentActionId={currentActionId} remove={removeAction} />
           </FormWrapper>
         )
@@ -92,14 +91,14 @@ export function ActionForm({ currentActionId, isTagsWarningMessageVisible, setCu
   )
 }
 
-const FormWrapper = styled.div<{ $isScrollDisabled?: boolean }>`
+const FormWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   padding: 32px 19px 32px 32px;
   color: ${p => p.theme.color.slateGray};
   background-color: ${p => p.theme.color.gainsboro};
-  overflow-y: ${p => (p.$isScrollDisabled ? 'hidden' : 'auto')};
+  overflow-y: auto;
 `
 const ReportingFormWrapper = styled.div`
   height: 100%;

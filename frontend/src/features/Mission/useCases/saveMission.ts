@@ -50,15 +50,12 @@ export const saveMission =
 
         // We save the new properties : `id`, `createdAt`, `updatedAt` after a mission creation/update
         if (missionIsNewMission) {
-          const tagsWarningMessageHasBeenShown = selectedMissions[values.id]?.tagsWarningMessageHasBeenShown ?? {}
-
           await dispatch(
             missionFormsActions.setCreatedMission({
               createdMission: {
                 engagedControlUnit: undefined,
                 isFormDirty: false,
-                missionForm: missionUpdated,
-                tagsWarningMessageHasBeenShown: { ...tagsWarningMessageHasBeenShown }
+                missionForm: missionUpdated
               },
               previousId: values.id
             })
