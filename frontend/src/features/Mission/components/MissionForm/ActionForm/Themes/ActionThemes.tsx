@@ -1,10 +1,8 @@
 import { useGetThemesQuery } from '@api/themesAPI'
-import { useAppDispatch } from '@hooks/useAppDispatch'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { CheckTreePicker } from '@mtes-mct/monitor-ui'
 import { getThemesAsOptions, parseOptionsToThemes, sortThemes } from '@utils/getThemesAsOptions'
 import { useField, useFormikContext } from 'formik'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import {
@@ -13,29 +11,21 @@ import {
   type EnvActionSurveillance,
   type Mission
 } from '../../../../../../domain/entities/missions'
-import { getTagsWarningMessageHasBeenShownForActionId, missionFormsActions } from '../../slice'
 
 import type { ThemeFromAPI, ThemeOption } from 'domain/entities/themes'
 
 export const GENERAL_SURVEILLANCE = 'Surveillance générale'
 
 type ActionThemeProps = {
-  actionId: string
   actionIndex: number
   actionType: ActionTypeEnum
 }
-export function ActionThemes({ actionId, actionIndex, actionType }: ActionThemeProps) {
-  const dispatch = useAppDispatch()
-  const [isMounted, setIsMounted] = useState(false)
-
-  const tagsWarningMessageHasBeenShown = useAppSelector(state =>
-    getTagsWarningMessageHasBeenShownForActionId(state.missionForms, actionId)
-  )
-
+export function ActionThemes({ actionIndex, actionType }: ActionThemeProps) {
   const {
     setFieldValue,
     values: { envActions, startDateTimeUtc }
   } = useFormikContext<Mission<EnvActionSurveillance | EnvActionControl>>()
+
   const [, error] = useField<ThemeFromAPI[]>(`envActions[${actionIndex}].themes`)
 
   const startDate = envActions[actionIndex]?.actionStartDateTimeUtc ?? (startDateTimeUtc || new Date().toISOString())
@@ -61,15 +51,6 @@ export function ActionThemes({ actionId, actionIndex, actionType }: ActionThemeP
     setFieldValue(`envActions[${actionIndex}].themes`, parseOptionsToThemes(option))
   }
 
-  const onBlur = () => {
-    if (!tagsWarningMessageHasBeenShown && isMounted) {
-      dispatch(missionFormsActions.setTagsWarningMessageHasBeenShown({ actionId, hasBeenShown: false }))
-    }
-    if (!isMounted) {
-      setIsMounted(true)
-    }
-  }
-
   return (
     <ActionThemeWrapper data-cy="envaction-theme-element">
       <CheckTreePicker
@@ -83,7 +64,6 @@ export function ActionThemes({ actionId, actionIndex, actionType }: ActionThemeP
         label={label}
         labelKey="name"
         name={`envActions[${actionIndex}].themes`}
-        onBlur={onBlur}
         onChange={onChange}
         options={themesOptions}
         value={envActions[actionIndex]?.themes}
