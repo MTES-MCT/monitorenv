@@ -29,7 +29,6 @@ data class LegacyControlUnitResourceDataInput(
             isArchived = false,
             note = null,
             photo = null,
-            // TODO: ???
-            stationId = 1,
+            stationId = null,
         )
 }
