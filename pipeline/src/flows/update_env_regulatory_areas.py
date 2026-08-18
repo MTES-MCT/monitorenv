@@ -74,6 +74,15 @@ def delete(ids_to_delete: set):
     )
 
     delete_rows(
+        table_name="regulatory_areas_group",
+        schema="public",
+        db_name="monitorenv_remote",
+        table_id_column="regulatory_area_id",
+        ids_to_delete=ids_to_delete,
+        logger=logger,
+    )
+
+    delete_rows(
         table_name="regulatory_areas",
         schema="public",
         db_name="monitorenv_remote",
