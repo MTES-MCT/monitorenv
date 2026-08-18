@@ -40,7 +40,6 @@ data class ControlUnitResourceEntity(
         var result = id ?: 0
         result = 31 * result + controlUnitId
         result = 31 * result + isArchived.hashCode()
-        result = 31 * result + stationId
         result = 31 * result + name.hashCode()
         result = 31 * result + (note?.hashCode() ?: 0)
         result = 31 * result + (photo?.contentHashCode() ?: 0)
