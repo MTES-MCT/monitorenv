@@ -13,12 +13,23 @@ class JpaUserAuthorizationRepository(
     private val dbUserAuthorizationRepository: IDBUserAuthorizationRepository,
 ) : IUserAuthorizationRepository {
     @Cacheable(value = ["user_authorization"])
-    override fun findByHashedEmail(hashedEmail: String): UserAuthorization =
-        dbUserAuthorizationRepository.findByHashedEmail(hashedEmail).toUserAuthorization()
+    override fun findByHashedEmail(hashedEmail: String): UserAuthorization? =
+        dbUserAuthorizationRepository.findByHashedEmail(hashedEmail)?.toUserAuthorization()
 
     @Modifying
     override fun save(user: UserAuthorization) {
         dbUserAuthorizationRepository.save(UserAuthorizationModel.fromUserAuthorization(user))
+    }
+
+    @Modifying
+    override fun saveAll(users: List<UserAuthorization>) {
+        dbUserAuthorizationRepository.saveAll(
+            users.map { userAuthorization ->
+                UserAuthorizationModel.fromUserAuthorization(
+                    userAuthorization,
+                )
+            },
+        )
     }
 
     @Modifying

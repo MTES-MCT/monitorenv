@@ -23,19 +23,18 @@ class GetAuthorizedUser(
         val hashedEmail = hash(email)
         logger.info("Attempt to GET user $hashedEmail")
 
-        return try {
-            val userEntity = userAuthorizationRepository.findByHashedEmail(hashedEmail)
-            logger.info("Found user $hashedEmail")
-            AuthorizedUser(
-                email = email,
-                isSuperUser = userEntity.isSuperUser,
-            )
-        } catch (e: Exception) {
+        val userEntity = userAuthorizationRepository.findByHashedEmail(hashedEmail)
+        if (userEntity == null) {
             logger.info("User $hashedEmail not found, defaulting to superUser=false")
-            AuthorizedUser(
+            return AuthorizedUser(
                 email = email,
                 isSuperUser = false,
             )
         }
+        logger.info("Found user $hashedEmail")
+        return AuthorizedUser(
+            email = email,
+            isSuperUser = userEntity.isSuperUser,
+        )
     }
 }
