@@ -106,6 +106,9 @@ dependencies {
     // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
 
+    // CSV
+    implementation("org.apache.commons:commons-csv:1.11.0")
+
     // JodConverter
     implementation("org.jodconverter:jodconverter-local-lo:4.4.11")
     // the two following apoche poi dependencies should have the same version

@@ -50,7 +50,7 @@ class UserAuthorizationCheckFilter(
 
         val isSuperUserPath =
             protectedPathsAPIProperties.superUserPaths
-                ?.any { request.requestURI.contains(it) } ?: false
+                .any { request.requestURI.contains(it) } ?: false
 
         val isAuthorized = getIsAuthorizedUser.execute(email, isSuperUserPath)
         if (!isAuthorized) {
