@@ -1,13 +1,12 @@
-import { VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import {
   Accent,
   getCoordinates,
   Icon,
   IconButton,
+  OPENLAYERS_PROJECTION,
   Size,
-  usePrevious,
-  OPENLAYERS_PROJECTION
+  usePrevious
 } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash/fp'
 import LineString from 'ol/geom/LineString'
@@ -56,9 +55,6 @@ export function InterestPointOverlay({
   const { coordinatesFormat } = useAppSelector(state => state.map)
 
   const hasMapInteraction = useHasMapInteraction()
-  const isDrawingVigilanceArea = useAppSelector(
-    state => state.vigilanceArea.formTypeOpen === VigilanceAreaFormTypeOpen.DRAW
-  )
 
   const ref = createRef<HTMLDivElement>()
   const currentOffset = useRef(initialOffsetValue)
@@ -150,7 +146,7 @@ export function InterestPointOverlay({
     return noop
   }, [coordinates, map, ref])
 
-  const isDisabled = !!hasMapInteraction || isDrawingVigilanceArea
+  const isDisabled = hasMapInteraction
 
   return (
     <WrapperToBeKeptForDOMManagement>
@@ -173,7 +169,6 @@ export function InterestPointOverlay({
               <IconButton
                 accent={Accent.TERTIARY}
                 data-cy="interest-point-delete"
-                disabled={isDisabled}
                 Icon={Icon.Delete}
                 onClick={() => deleteInterestPoint(uuid)}
                 size={Size.SMALL}

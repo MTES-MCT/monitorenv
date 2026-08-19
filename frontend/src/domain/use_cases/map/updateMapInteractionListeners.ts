@@ -18,7 +18,6 @@ export const updateMapInteractionListeners = (listener: MapInteractionListenerEn
       openDrawLayerModal(dispatch)
       dispatch(attachMissionToReportingSliceActions.setIsMissionAttachmentInProgress(false))
       dispatch(attachReportingToMissionSliceActions.setIsReportingAttachmentInProgress(false))
-      dispatch(closeAreaOverlay())
       break
 
     case MapInteractionListenerEnum.ATTACH_MISSION:
