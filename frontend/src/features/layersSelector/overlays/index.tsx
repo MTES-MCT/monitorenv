@@ -1,5 +1,5 @@
 import { getHoveredItems } from '@features/map/utils'
-import { getIsLinkingZonesToVigilanceArea, VigilanceAreaFormTypeOpen } from '@features/VigilanceArea/slice'
+import { getIsLinkingZonesToVigilanceArea } from '@features/VigilanceArea/slice'
 import { useAppSelector, useShallowEqualSelector } from '@hooks/useAppSelector'
 import { useHasMapInteraction } from '@hooks/useHasMapInteraction'
 import { Layers } from 'domain/entities/layers/constants'
@@ -22,9 +22,7 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
   }))
 
   const hasMapListener = useHasMapInteraction()
-  const isDrawingVigilanceArea = useAppSelector(
-    state => state.vigilanceArea.formTypeOpen === VigilanceAreaFormTypeOpen.DRAW
-  )
+
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
   const hoveredItems = useMemo(
@@ -33,12 +31,7 @@ export function LayersOverlay({ currentFeatureListOver, map, pixel }: BaseMapChi
   )
 
   const isHoveredOverlayVisible =
-    !layerOverlayIsOpen &&
-    !hasMapListener &&
-    hoveredItems &&
-    hoveredItems.length > 0 &&
-    pixel &&
-    !isDrawingVigilanceArea
+    !layerOverlayIsOpen && !hasMapListener && hoveredItems && hoveredItems.length > 0 && pixel
 
   return (
     <>

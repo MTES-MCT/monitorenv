@@ -151,10 +151,6 @@ export function LayerEvents({ map, mapClickEvent }: BaseMapChildrenProps) {
   )
 
   useEffect(() => {
-    if (numberOfClickedFeatures === 0) {
-      dispatch(closeAreaOverlay())
-    }
-
     if (isLinkingZonesToVigilanceArea && mapClickEvent.coordinates) {
       dispatch(closeMetadataPanel())
       dispatch(openLayerOverlay(mapClickEvent.coordinates))
