@@ -1,12 +1,16 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas
 
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
+
 data class LayerNamesDataOutput(
-    val layerNames: Map<String, Long>,
+    val total: Int,
+    val group: RegulatoryAreaDataOutput,
 ) {
     companion object {
-        fun fromGroupNames(layerNames: Map<String, Long>) =
+        fun fromGroupNames(regulatoryAreasGroupWithTotal: RegulatoryAreaGroupWithTotalDTO) =
             LayerNamesDataOutput(
-                layerNames = layerNames,
+                group = RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(regulatoryAreasGroupWithTotal.group),
+                total = regulatoryAreasGroupWithTotal.total,
             )
     }
 }

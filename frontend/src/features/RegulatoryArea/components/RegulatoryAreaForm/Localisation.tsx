@@ -1,5 +1,5 @@
 import { useGetRegulatoryAreasToCompleteQuery } from '@api/regulatoryAreasAPI'
-import { useGetSeaFrontsQuery } from '@api/seaFrontsAPI'
+import { useGetSeaFrontsQuery, useLazyComputeSeaFrontFromGeometryQuery } from '@api/seaFrontsAPI'
 import { regulatoryAreaBoActions } from '@features/RegulatoryArea/slice'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -11,23 +11,16 @@ import { transformExtent } from 'ol/proj'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { SubTitle } from './style'
-
-import type { MainRefReg } from './RegulatoryTexts'
 import type { GeoJSON } from 'domain/types/GeoJSON'
 import type { Coordinate } from 'ol/coordinate'
 
-export function Localisation({
-  isEditing,
-  onChangeRefReg
-}: {
-  isEditing: boolean
-  onChangeRefReg: (refReg: MainRefReg) => void
-}) {
+export function Localisation({ isEditing }: { isEditing: boolean }) {
   const dispatch = useAppDispatch()
   const { setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
 
   const { data: regulatoryAreasToComplete } = useGetRegulatoryAreasToCompleteQuery(undefined, { skip: isEditing })
+
+  const [computeSeaFrontFromGeom] = useLazyComputeSeaFrontFromGeometryQuery()
 
   const regulatoryAreaDefaultGeom = useMemo(() => {
     if (values.geom && values.id && values.refReg) {
@@ -67,14 +60,18 @@ export function Localisation({
     .map(facade => ({ label: facade, value: facade }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
-  const setGeometryAndRefReg = (nextGeom: { geom: GeoJSON.MultiPolygon; id: number; refReg: string } | undefined) => {
+  const setGeometryAndRefReg = async (
+    nextGeom: { geom: GeoJSON.MultiPolygon; id: number; refReg: string } | undefined
+  ) => {
     if (!nextGeom || nextGeom.geom.coordinates.length === 0) {
       return
     }
     setFieldValue('geom', nextGeom.geom)
     setFieldValue('id', nextGeom.id)
     setFieldValue('refReg', nextGeom.refReg)
-    onChangeRefReg({ date: values.date, dateFin: values.dateFin, refReg: nextGeom.refReg })
+    const newSeaFront = await computeSeaFrontFromGeom(nextGeom.geom).unwrap()
+    setFieldValue('facade', newSeaFront?.seaFront)
+
     dispatch(regulatoryAreaBoActions.setNewRegulatoryAreaId(nextGeom?.id))
     const extent = transformExtent(
       boundingExtent(nextGeom.geom.coordinates.flat().flat() as Coordinate[]),
@@ -97,7 +94,6 @@ export function Localisation({
 
   return (
     <>
-      <SubTitle>LOCALISATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
       <InlineFieldsContainer>
         <Select
           key={geomOptions.length}

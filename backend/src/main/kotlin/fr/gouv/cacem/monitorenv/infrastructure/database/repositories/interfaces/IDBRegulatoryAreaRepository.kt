@@ -72,7 +72,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     @Query(
         "UPDATE RegulatoryAreaModel SET layerName = :layerName, location = :location, editionBo = CURRENT_TIMESTAMP WHERE id IN (:ids)",
     )
-    fun updateGroupTypeAndLocation(
+    fun updateLayerNameAndLocationByIds(
         layerName: String?,
         location: String?,
         ids: List<Int>,
@@ -80,4 +80,19 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
 
     @Query("SELECT GREATEST(COALESCE(MAX(id), 0) + 1, 1000000) from RegulatoryAreaModel")
     fun findNextId(): Int
+
+    @Query(
+        value =
+            """
+            SELECT regulatoryArea from RegulatoryAreaModel regulatoryArea
+            WHERE regulatoryArea.layerName = :layerName
+                AND regulatoryArea.location = :location
+                AND regulatoryArea.areaType = 'GROUP'
+                AND regulatoryArea.creation IS NOT NULL
+        """,
+    )
+    fun findAllGroupByLayerNameAndLocation(
+        layerName: String,
+        location: String,
+    ): List<RegulatoryAreaModel>
 }

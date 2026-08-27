@@ -23,13 +23,13 @@ export namespace RegulatoryArea {
     plan: string
     polyName: string
     prohibitionPeriods?: string
-    refReg: string
+    refReg?: string
     resume?: string
     source?: string
     tags?: TagFromAPI[]
     themes?: ThemeFromAPI[]
-    type: string
-    url: string
+    type?: string
+    url?: string
   }
 
   export type NewRegulatoryArea = RegulatoryArea.RegulatoryAreaFromAPI & {
@@ -39,9 +39,6 @@ export namespace RegulatoryArea {
     layerName?: string
     plan?: string
     polyName?: string
-    refReg?: string
-    type?: string
-    url?: string
   }
 
   export type RegulatoryAreaToComplete = {
@@ -75,10 +72,21 @@ export namespace RegulatoryArea {
   }
 
   export type RegulatoryAreaGroupToApi = {
+    additionalRefReg?: AdditionalRegulatoryText[]
+    date?: string
+    dateFin?: string
     id?: number
+    layerName?: string
     location?: string
+    refReg?: string
     regulatoryAreaIds?: number[]
     type?: string
+    url?: string
+  }
+
+  export type RegulatoryAreaGroupWithTotal = {
+    group: RegulatoryAreaFromAPI
+    total: number
   }
 
   export enum RegulatoryAreaControlPlan {

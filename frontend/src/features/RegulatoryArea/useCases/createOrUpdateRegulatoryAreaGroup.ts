@@ -1,13 +1,16 @@
 import { regulatoryAreasAPI } from '@api/regulatoryAreasAPI'
 import { addBackOfficeBanner } from '@features/BackOffice/useCases/addBackOfficeBanner'
-import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { Level } from '@mtes-mct/monitor-ui'
+
+import { formatLayerName } from '../utils'
 
 import type { RegulatoryArea } from '../types'
 import type { HomeAppThunk } from '@store/index'
 
 export const createOrUpdateRegulatoryAreaGroup =
-  (regulatoryAreaGroup: RegulatoryArea.RegulatoryAreaGroupToApi): HomeAppThunk =>
+  (
+    regulatoryAreaGroup: RegulatoryArea.RegulatoryAreaGroupToApi
+  ): HomeAppThunk<Promise<RegulatoryArea.RegulatoryAreaGroup | undefined>> =>
   async dispatch => {
     try {
       const response = await dispatch(
@@ -17,7 +20,7 @@ export const createOrUpdateRegulatoryAreaGroup =
         dispatch(
           addBackOfficeBanner({
             children: `Le groupe de réglementations "${formatLayerName(
-              regulatoryAreaGroup.type,
+              regulatoryAreaGroup.layerName,
               regulatoryAreaGroup.location
             )}" a bien été enregistré.`,
             isClosable: true,
@@ -26,11 +29,24 @@ export const createOrUpdateRegulatoryAreaGroup =
             withAutomaticClosing: true
           })
         )
+
+        return response.data
+      }
+      if ('error' in response) {
+        dispatch(
+          addBackOfficeBanner({
+            children: `Nous n'avons pas pu enregistrer la groupe de réglementations "${regulatoryAreaGroup.layerName} ${regulatoryAreaGroup.location}".`,
+            isClosable: true,
+            isFixed: true,
+            level: Level.ERROR,
+            withAutomaticClosing: true
+          })
+        )
       }
     } catch (error) {
       dispatch(
         addBackOfficeBanner({
-          children: `Nous n'avons pas pu enregistrer la groupe de réglementations "${regulatoryAreaGroup.type} ${regulatoryAreaGroup.location}".`,
+          children: `Nous n'avons pas pu enregistrer la groupe de réglementations "${regulatoryAreaGroup.layerName} ${regulatoryAreaGroup.location}".`,
           isClosable: true,
           isFixed: true,
           level: Level.ERROR,
@@ -38,4 +54,6 @@ export const createOrUpdateRegulatoryAreaGroup =
         })
       )
     }
+
+    return undefined
   }

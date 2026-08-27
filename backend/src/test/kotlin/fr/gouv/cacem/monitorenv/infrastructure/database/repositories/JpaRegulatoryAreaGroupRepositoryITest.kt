@@ -15,7 +15,7 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
 
         // Then
         assertThat(layerNames).hasSize(9)
-        assertThat(layerNames.keys).containsExactlyInAnyOrder(
+        assertThat(layerNames.map { it.group.layerName + " - " + it.group.location }).containsExactlyInAnyOrder(
             "Dragage - port de Brest",
             "Granulats Marins - Le Minou",
             "Interdiction VNM - Molene",

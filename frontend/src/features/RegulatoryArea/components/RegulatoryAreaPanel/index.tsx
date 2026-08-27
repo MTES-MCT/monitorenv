@@ -2,7 +2,6 @@ import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
 import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import { RegulatorySummary } from '@features/layersSelector/metadataPanel/RegulatorySummary'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
-import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
@@ -14,6 +13,7 @@ import styled from 'styled-components'
 
 import { Identification } from './Identification'
 import { Periods } from './Periods'
+import { formatLayerName } from '../../utils'
 
 const FOUR_HOURS = 4 * 60 * 60 * 1000
 

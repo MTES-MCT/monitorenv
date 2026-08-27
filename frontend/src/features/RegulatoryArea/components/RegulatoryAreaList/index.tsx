@@ -9,7 +9,7 @@ import { ZoomListener } from '@features/map/ZoomListener'
 import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@features/RegulatoryArea/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Button, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
 import { getTagIds } from '@utils/getTagsAsOptions'
 import { getThemeIds } from '@utils/getThemesAsOptions'
 import { useMemo } from 'react'
@@ -65,15 +65,28 @@ export function RegulatoryAreaList() {
   const createRegulatoryArea = () => {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new`)
   }
+  const createRegulatoryAreaGroup = () => {
+    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP]}/new`)
+  }
 
   return (
     <StyledBackofficeWrapper>
       <StyledRegulatoryWrapper>
         <TitleContainer>
           <Title>Zones réglementaires</Title>
-          <Button Icon={Icon.Plus} onClick={createRegulatoryArea}>
-            Saisir une nouvelle réglementation
-          </Button>
+          <div>
+            <Button
+              accent={Accent.SECONDARY}
+              Icon={Icon.Plus}
+              onClick={createRegulatoryAreaGroup}
+              style={{ marginRight: '8px' }}
+            >
+              Créer un groupe de reg.
+            </Button>
+            <Button Icon={Icon.Plus} onClick={createRegulatoryArea}>
+              Saisir une nouvelle réglementation
+            </Button>
+          </div>
         </TitleContainer>
         <RegulatoryAreaFilters />
         {filters.groupBy === 'SEA_FRONT' ? (

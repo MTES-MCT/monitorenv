@@ -286,38 +286,6 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save should update regulatory area and create a new regulatory area group when it doesnt exist`() {
-        val existingRegulatoryArea = jpaRegulatoryAreaRepository.findById(300)
-        require(existingRegulatoryArea != null)
-
-        val nextGroupId = idbRegulatoryAreaRepository.findNextId()
-        val updatedRegulatoryArea =
-            existingRegulatoryArea.copy(
-                layerName = "Updated RNN",
-                resume = "Mise à jour de la zone",
-                tags = listOf(aTag(id = 5), aTag(id = 6)),
-                themes = listOf(aTheme(id = 9)),
-                location = "Iroise",
-            )
-
-        val savedRegulatoryArea = jpaRegulatoryAreaRepository.save(updatedRegulatoryArea)
-
-        assertThat(savedRegulatoryArea.id).isEqualTo(300)
-        assertThat(savedRegulatoryArea.layerName).isEqualTo("Updated RNN")
-        assertThat(savedRegulatoryArea.location).isEqualTo("Iroise")
-        assertThat(savedRegulatoryArea.resume).isEqualTo("Mise à jour de la zone")
-        assertThat(savedRegulatoryArea.tags).hasSize(2)
-        assertThat(savedRegulatoryArea.tags.map { it.id }).containsExactlyInAnyOrder(5, 6)
-        assertThat(savedRegulatoryArea.themes).hasSize(1)
-        assertThat(savedRegulatoryArea.themes[0].id).isEqualTo(9)
-        val newGroup = idbRegulatoryAreaGroupRepository.findAllByLayerNameAndLocation("Updated RNN", "Iroise")
-        assertThat(newGroup).hasSize(1)
-        assertThat(newGroup[0].group.id).isEqualTo(nextGroupId)
-        assertThat(newGroup[0].regulatoryArea.id).isEqualTo(updatedRegulatoryArea.id)
-    }
-
-    @Test
-    @Transactional
     fun `save should update regulatory area and attach it to regulatory area group`() {
         val existingRegulatoryArea = jpaRegulatoryAreaRepository.findById(300)
         require(existingRegulatoryArea != null)

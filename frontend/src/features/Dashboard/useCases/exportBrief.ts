@@ -14,7 +14,6 @@ import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/admi
 import { getAllThemes, getTotalInfraction, getTotalNbControls, getTotalPV } from '@features/Mission/utils'
 import { RecentActivity } from '@features/RecentActivity/types'
 import { getDatesFromFilters } from '@features/RecentActivity/utils'
-import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { getFormattedReportingId } from '@features/Reportings/utils'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
@@ -30,6 +29,7 @@ import { getTitle } from 'domain/entities/layers/utils'
 import { type Reporting, ReportingTypeEnum } from 'domain/entities/reporting'
 import { vesselTypeLabel } from 'domain/entities/vesselType'
 
+import { formatLayerName } from '../../RegulatoryArea/utils'
 import { getImage, getMinimap } from '../components/Pdf/utils'
 import { Dashboard } from '../types'
 

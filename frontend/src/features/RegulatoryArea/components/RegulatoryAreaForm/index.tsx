@@ -1,4 +1,4 @@
-import { useGetRegulatoryAreaByIdQuery } from '@api/regulatoryAreasAPI'
+import { useGetRegulatoryAreaByIdQuery, useGetRegulatoryAreaGroupByIdQuery } from '@api/regulatoryAreasAPI'
 import { CancelEditDialog } from '@components/Dialog/CancelEditDialog'
 import { Bold } from '@components/style'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
@@ -45,8 +45,7 @@ export function RegulatoryAreaForm() {
   const dispatch = useAppDispatch()
   const { regulatoryAreaId } = useParams()
   const [searchParams] = useSearchParams()
-  const layerName = searchParams.get('layerName')
-  const layerLocation = searchParams.get('location')
+  const groupId = searchParams.get('groupId')
 
   const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
@@ -55,6 +54,10 @@ export function RegulatoryAreaForm() {
   const isEditing = !!regulatoryAreaId
   const { currentData: regulatoryArea } = useGetRegulatoryAreaByIdQuery(
     regulatoryAreaId && regulatoryAreaId !== 'new' ? Number(regulatoryAreaId) : skipToken
+  )
+
+  const { data: regulatoryAreaGroup } = useGetRegulatoryAreaGroupByIdQuery(
+    groupId && !Number.isNaN(+groupId) ? +groupId : skipToken
   )
 
   const initialValues = useMemo(
@@ -71,8 +74,8 @@ export function RegulatoryAreaForm() {
         facade: regulatoryArea?.facade,
         geom: regulatoryArea?.geom,
         id: regulatoryArea?.id,
-        layerName: regulatoryArea?.layerName ?? layerName,
-        location: regulatoryArea?.location ?? layerLocation,
+        layerName: regulatoryArea?.layerName ?? regulatoryAreaGroup?.group.layerName,
+        location: regulatoryArea?.location ?? regulatoryAreaGroup?.group.location,
         observations: regulatoryArea?.observations,
         plan: regulatoryArea?.plan ?? [],
         polyName: regulatoryArea?.polyName,
@@ -85,7 +88,7 @@ export function RegulatoryAreaForm() {
         type: regulatoryArea?.type,
         url: regulatoryArea?.url
       }) as RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea,
-    [layerName, layerLocation, regulatoryArea]
+    [regulatoryArea, regulatoryAreaGroup?.group.layerName, regulatoryAreaGroup?.group.location]
   )
 
   const backToList = () => {
@@ -139,7 +142,7 @@ export function RegulatoryAreaForm() {
               {isCancelEditDialogOpen && (
                 <CancelEditDialog
                   onCancel={() => setIsCancelEditDialogOpen(false)}
-                  onConfirm={backToList}
+                  onConfirm={() => backToList()}
                   text={
                     <>
                       <p>Vous êtes en train d&apos;abandonner</p>
@@ -148,8 +151,8 @@ export function RegulatoryAreaForm() {
                   }
                 />
               )}
-              <form onSubmit={handleSubmit}>
-                <FormContent isEditing={isEditing} />
+              <StyledForm onSubmit={handleSubmit}>
+                <FormContent groupId={groupId} isEditing={isEditing} />
 
                 <Footer>
                   <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>
@@ -159,7 +162,7 @@ export function RegulatoryAreaForm() {
                     {isEditing ? 'Enregistrer les modifications' : 'Créer la réglementation'}
                   </Button>
                 </Footer>
-              </form>
+              </StyledForm>
             </>
           )}
         </Formik>
@@ -185,7 +188,15 @@ const StyledLinkButton = styled(LinkButton)`
   }
 `
 
-const Footer = styled.div`
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 24px;
+  min-height: 0;
+`
+
+const Footer = styled.footer`
   background-color: ${p => p.theme.color.white};
   border-top: 1px solid ${p => p.theme.color.lightGray};
   bottom: 0;

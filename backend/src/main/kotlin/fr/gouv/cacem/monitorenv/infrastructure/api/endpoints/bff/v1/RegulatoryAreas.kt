@@ -11,9 +11,9 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAr
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaGroupDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryArea.RegulatoryAreaGroupDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.LayerNamesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.RegulatoryAreaDataOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.RegulatoryAreaGroupDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.RegulatoryAreaToCompleteDataOuput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.RegulatoryAreasDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas.RegulatoryAreasWithTotalDataOutput
@@ -116,8 +116,8 @@ class RegulatoryAreas(
 
     @GetMapping("/layer-names")
     @Operation(summary = "Get all regulatory areas group names")
-    fun getLayerNames(): LayerNamesDataOutput? =
-        getAllLayerNames.execute().let {
+    fun getLayerNames(): List<LayerNamesDataOutput> =
+        getAllLayerNames.execute().map {
             LayerNamesDataOutput.fromGroupNames(it)
         }
 

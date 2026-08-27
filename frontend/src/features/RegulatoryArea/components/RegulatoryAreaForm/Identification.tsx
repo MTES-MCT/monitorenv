@@ -2,13 +2,10 @@ import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
 import { Tooltip } from '@components/Tooltip'
+import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { ResetButton } from '@features/commonComponents/ResetButton'
-import { ValidateButton } from '@features/commonComponents/ValidateButton'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
-import { formatLayerName } from '@features/RegulatoryArea/utils'
 import {
-  Accent,
-  Button,
   Checkbox,
   CustomSearch,
   FormikTextarea,
@@ -17,7 +14,6 @@ import {
   Label,
   Select,
   SingleTag,
-  TextInput,
   THEME
 } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
@@ -27,57 +23,39 @@ import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useFormikContext } from 'formik'
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
 import { SubTitle } from './style'
+import { formatLayerName } from '../../utils'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
-export function Identification() {
+export function Identification({ onChangeGroup }: { onChangeGroup: (id: number | undefined) => void }) {
+  const navigate = useNavigate()
   const { errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
   const { data: layerNames } = useGetLayerNamesQuery()
 
-  const [isCreatingNewLayerName, setIsCreatingNewLayerName] = useState(false)
-  const [newLayerNameType, setNewLayerNameType] = useState<string | undefined>(undefined)
-  const [newLayerNameLocation, setNewLayerNameLocation] = useState<string | undefined>(undefined)
-  const [isNewLayerNameValid, setIsNewLayerNameValid] = useState(true)
   const [isModifyingLayerName, setIsModifyingLayerName] = useState(false)
 
-  const groupNameAsOption = useMemo(() => {
-    const formattedLayerName = formatLayerName(values.layerName, values.location) ?? ''
-
-    return {
-      label: getTitle(formattedLayerName),
-      value: {
-        layerName: values.layerName,
-        location: values.location
-      }
-    }
-  }, [values.layerName, values.location])
-
-  const layerNamesOptions = useMemo(() => {
-    const layersNamesFromApi = Object.keys(layerNames?.layerNames || {})
-    const formattedLayerNames = layersNamesFromApi
-      .filter(layerName => layerName && layerName.trim() !== '')
-      .map(layerNameWithPlace => {
-        const [name, location] = layerNameWithPlace.split(' - ')
+  const layerNameOptions = useMemo(() => {
+    const formattedLayerNames = (layerNames ?? [])
+      ?.filter(regulatoryArea => regulatoryArea.group.layerName && regulatoryArea.group.layerName.trim() !== '')
+      .map(regulatoryArea => {
+        const formattedLayerName = formatLayerName(regulatoryArea.group.layerName, regulatoryArea.group.location)
 
         return {
-          label: getTitle(layerNameWithPlace),
+          label: getTitle(formattedLayerName),
           value: {
-            layerName: name,
-            location
+            groupId: regulatoryArea.group.id,
+            layerName: formattedLayerName
           }
         }
       })
 
-    if (values.layerName && !formattedLayerNames?.find(option => option.label === groupNameAsOption.label)) {
-      formattedLayerNames.push(groupNameAsOption)
-    }
-
     return formattedLayerNames.sort((a, b) => a.label.localeCompare(b.label))
-  }, [groupNameAsOption, layerNames?.layerNames, values.layerName])
+  }, [layerNames])
 
   const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
     setFieldValue('themes', parseOptionsToThemes(nextThemes))
@@ -99,42 +77,31 @@ export function Identification() {
     setFieldValue('plan', updatedControlPlansString)
   }
 
-  const createNewLayerName = () => {
-    setFieldValue('layerName', undefined)
-    setFieldValue('location', undefined)
-    setNewLayerNameType(undefined)
-    setNewLayerNameLocation(undefined)
-    setIsCreatingNewLayerName(true)
+  const createNewGroup = () => {
+    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP]}/new`)
   }
 
-  const cancelNewLayerName = () => {
-    setIsCreatingNewLayerName(false)
-  }
-
-  const validateLayerName = () => {
-    if (!newLayerNameType || !newLayerNameLocation) {
-      setIsNewLayerNameValid(false)
-
-      return
-    }
-    setFieldValue('layerName', newLayerNameType)
-    setFieldValue('location', newLayerNameLocation)
-    setIsCreatingNewLayerName(false)
-    setIsNewLayerNameValid(true)
-  }
-
-  const layerNameCustomSearch = new CustomSearch(layerNamesOptions ?? [], ['label'], {
+  const layerNameCustomSearch = new CustomSearch(layerNameOptions ?? [], ['label'], {
     isStrict: true
   })
 
-  const onModifyGroup = () => {
+  const changeGroup = () => {
     setIsModifyingLayerName(true)
   }
 
-  const onChangeLayerName = (nextValue?: { layerName: string | undefined; location: string | undefined }) => {
-    setFieldValue('layerName', nextValue?.layerName)
-    setFieldValue('location', nextValue?.location)
+  const modifyGroup = () => {
+    const groupId = layerNames?.find(
+      group => group.group.layerName === values.layerName && group.group.location === values.location
+    )?.group.id
+    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP]}/${groupId}`)
+  }
+
+  const onChangeLayerName = (nextValue?: { groupId: number | undefined; layerName: string | undefined }) => {
+    const nameAndLocation = nextValue?.layerName?.split(' - ')
+    setFieldValue('layerName', nameAndLocation?.[0])
+    setFieldValue('location', nameAndLocation?.[1])
     setIsModifyingLayerName(false)
+    onChangeGroup(nextValue?.groupId)
   }
 
   const allThemesAndSubthemes = useMemo(
@@ -154,32 +121,34 @@ export function Identification() {
                 <Label>Groupe de réglementation</Label>
                 <span>{getTitle(formatLayerName(values.layerName, values.location))}</span>
               </div>
-              <ResetButton label="Changer la zone de groupe" onClick={onModifyGroup} />
+              <InlineButtons>
+                <ResetButton label="Changer la zone de groupe" onClick={changeGroup} />
+                <ResetButton label="Modifier info. du groupe" onClick={modifyGroup} />
+              </InlineButtons>
             </>
           ) : (
             <>
               <Select
-                key={layerNamesOptions.length}
+                key={layerNameOptions.length}
                 customSearch={layerNameCustomSearch}
                 data-cy="group-select"
-                disabled={isCreatingNewLayerName}
                 isErrorMessageHidden
                 isRequired
                 label="Groupe de réglementation"
                 name="layerName"
                 onChange={onChangeLayerName}
-                options={layerNamesOptions}
+                options={layerNameOptions}
                 optionValueKey="layerName"
                 renderExtraFooter={() => (
-                  <ExtraFooterContainer onClick={createNewLayerName} type="button">
+                  <ExtraFooterContainer onClick={createNewGroup} type="button">
                     <Icon.Plus />
                     Ajouter un nouveau groupe
                   </ExtraFooterContainer>
                 )}
                 style={{ flex: 1 }}
                 value={
-                  layerNamesOptions.find(
-                    layer => layer.value.layerName === values.layerName && layer.value.location === values.location
+                  layerNameOptions.find(
+                    layer => layer.value.layerName === formatLayerName(values.layerName, values.location)
                   )?.value
                 }
               />
@@ -187,33 +156,6 @@ export function Identification() {
             </>
           )}
         </FieldWithTooltip>
-
-        {isCreatingNewLayerName && (
-          <CreateLayerNameContainer>
-            <TextInput
-              error={!isNewLayerNameValid && !newLayerNameType ? 'Champ requis' : undefined}
-              isErrorMessageHidden
-              isRequired
-              label="Type"
-              name="newLayerNameType"
-              onChange={nextValue => setNewLayerNameType(nextValue)}
-              value={newLayerNameType}
-            />
-            <TextInput
-              error={!isNewLayerNameValid && !newLayerNameLocation ? 'Champ requis' : undefined}
-              isErrorMessageHidden
-              isRequired
-              label="Lieu"
-              name="newLayerNameLocation"
-              onChange={nextValue => setNewLayerNameLocation(nextValue)}
-              value={newLayerNameLocation}
-            />
-            <Button accent={Accent.SECONDARY} onClick={cancelNewLayerName}>
-              Annuler
-            </Button>
-            <ValidateButton onClick={validateLayerName}>Valider</ValidateButton>
-          </CreateLayerNameContainer>
-        )}
 
         <FieldWithTooltip>
           <FormikTextInput
@@ -361,6 +303,11 @@ const InlineFields = styled(Fields)`
   justify-content: space-between;
 `
 
+const InlineButtons = styled.div`
+  display: flex;
+  gap: 16px;
+`
+
 const SmallInlineFields = styled(InlineFields)`
   gap: 4px;
   flex-wrap: wrap;
@@ -391,16 +338,6 @@ const ControlPlanContainer = styled.div`
   align-items: center;
   display: flex;
   gap: 24px;
-`
-
-const CreateLayerNameContainer = styled.div`
-  align-items: end;
-  display: flex;
-  gap: 8px;
-
-  > .Field-TextInput {
-    flex: 1;
-  }
 `
 
 const PeriodContainer = styled.div`

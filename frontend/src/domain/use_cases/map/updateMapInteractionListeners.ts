@@ -1,7 +1,7 @@
+import { attachReportingToMissionSliceActions } from '@features/Mission/components/MissionForm/AttachReporting/slice'
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 
 import { closeAreaOverlay } from './closeAreaOverlay'
-import { attachReportingToMissionSliceActions } from '../../../features/Mission/components/MissionForm/AttachReporting/slice'
 import { resetInteraction } from '../../shared_slices/Draw'
 import { restorePreviousDisplayedItems, setDisplayedItems } from '../../shared_slices/Global'
 

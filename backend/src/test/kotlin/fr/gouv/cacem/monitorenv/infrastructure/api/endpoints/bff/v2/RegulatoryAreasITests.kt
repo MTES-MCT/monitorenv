@@ -14,6 +14,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulator
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasGroupById
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
@@ -233,7 +234,13 @@ class RegulatoryAreasITests {
     @Test
     fun `Should get all layer names`() {
         // Given
-        val layerNames = mapOf("ZMEL_Cale_Querlen" to 1L, "AMP_Zone_1" to 1L, "PIRC_Area_2" to 1L)
+        val layerNames =
+            listOf(
+                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen"), total = 1),
+                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "AMP_Zone_1"), total = 1),
+                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "PIRC_Area_2"), total = 1),
+            )
+
         BDDMockito.given(getAllLayerNames.execute()).willReturn(layerNames)
 
         // When
@@ -242,22 +249,25 @@ class RegulatoryAreasITests {
             // Then
             .andDo(MockMvcResultHandlers.print())
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.layerNames.ZMEL_Cale_Querlen").value(1))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.layerNames.AMP_Zone_1").value(1))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.layerNames.PIRC_Area_2").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].group.layerName").value("ZMEL_Cale_Querlen"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].total").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[1].group.layerName").value("AMP_Zone_1"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[1].total").value(1))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[2].group.layerName").value("PIRC_Area_2"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[2].total").value(1))
     }
 
     @Test
     fun `Should get empty list when no layer names exist`() {
         // Given
-        BDDMockito.given(getAllLayerNames.execute()).willReturn(mapOf())
+        BDDMockito.given(getAllLayerNames.execute()).willReturn(emptyList())
 
         // When
         mockMvc
             .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/layer-names"))
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.layerNames").isEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
     }
 
     @Test

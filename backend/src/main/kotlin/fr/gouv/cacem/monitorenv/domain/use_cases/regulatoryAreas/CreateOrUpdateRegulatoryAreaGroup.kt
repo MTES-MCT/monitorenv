@@ -15,14 +15,14 @@ class CreateOrUpdateRegulatoryAreaGroup(
     private val logger = LoggerFactory.getLogger(CreateOrUpdateRegulatoryAreaGroup::class.java)
 
     fun execute(regulatoryAreaGroup: RegulatoryAreaGroupEntity): RegulatoryAreaGroupDTO {
-        logger.info("Attempt to CREATE or UPDATE regulatory area group ${regulatoryAreaGroup.type}")
+        logger.info("Attempt to CREATE or UPDATE regulatory area group ${regulatoryAreaGroup.layerName}")
 
         try {
             val savedRegulatoryAreaGroup = regulatoryAreaGroupRepository.save(regulatoryAreaGroup)
-            logger.info("Regulatory Area group ${regulatoryAreaGroup.type} created or updated")
+            logger.info("Regulatory Area group ${regulatoryAreaGroup.layerName} created or updated")
             return savedRegulatoryAreaGroup
         } catch (e: Exception) {
-            val errorMessage = "Regulatory Area group ${regulatoryAreaGroup.type} couldn't be saved"
+            val errorMessage = "Regulatory Area group ${regulatoryAreaGroup.layerName} couldn't be saved"
             logger.error(errorMessage, e)
             throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_SAVED, message = errorMessage)
         }

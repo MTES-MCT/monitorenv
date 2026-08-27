@@ -1,8 +1,9 @@
 import { Dashboard } from '@features/Dashboard/types'
-import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers, type RegulatoryOrAMPOrViglanceAreaLayerType } from 'domain/entities/layers/constants'
+
+import { formatLayerName } from '../../../features/RegulatoryArea/utils'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { VigilanceArea } from '@features/VigilanceArea/types'

@@ -1,7 +1,6 @@
 import { LoadingIcon } from '@components/style'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { useGetFilteredRegulatoryAreas } from '@features/RegulatoryArea/hooks/useGetFilteredRegulatoryAreas'
-import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import {
   getIsLinkingAMPToVigilanceArea,
@@ -21,6 +20,7 @@ import { VigilanceAreaLayer } from './VigilanceAreaLayer'
 import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
+import { formatLayerName } from '../../../RegulatoryArea/utils'
 import {
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
