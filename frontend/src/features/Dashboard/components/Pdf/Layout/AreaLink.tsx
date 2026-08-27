@@ -1,12 +1,12 @@
 import { THEME } from '@mtes-mct/monitor-ui'
-import { View, Link, Text } from '@react-pdf/renderer'
+import { Link, Text, View } from '@react-pdf/renderer'
 
 import { ExternalLink } from '../icons/ExternalLink'
 import { areaStyle, layoutStyle } from '../style'
 
 type AreaLinkProps = {
   text: string | undefined
-  url: string
+  url: string | undefined
 }
 export function AreaLink({ text, url }: AreaLinkProps) {
   return (

@@ -58,14 +58,14 @@ data class RegulatoryAreaModel(
     @Column(name = "source") val source: String?,
     @OneToMany(
         mappedBy = "regulatoryArea",
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
     )
-    var tags: List<TagRegulatoryAreaModel>,
+    val tags: List<TagRegulatoryAreaModel>,
     @OneToMany(
         mappedBy = "regulatoryArea",
-        fetch = FetchType.LAZY,
+        fetch = FetchType.EAGER,
     )
-    var themes: List<ThemeRegulatoryAreaModel>,
+    val themes: List<ThemeRegulatoryAreaModel>,
     @Column(name = "type") val type: String?,
     @Column(name = "url") val url: String?,
     @Type(JsonBinaryType::class)

@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import com.nhaarman.mockitokotlin2.given
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaGroupRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryArea
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -18,10 +20,10 @@ class GetAllLayerNamesUTest {
     fun `execute should return all layer names`(log: CapturedOutput) {
         // Given
         val expectedLayerNames =
-            mapOf(
-                "Layer1" to 2L,
-                "Layer2" to 3L,
-                "Layer3" to 4L,
+            listOf(
+                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "Layer1"), total = 2),
+                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "Layer2"), total = 3),
+                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "Layer3"), total = 4),
             )
 
         given(regulatoryAreaGroupRepository.findAllLayerNames()).willReturn(expectedLayerNames)
@@ -38,7 +40,7 @@ class GetAllLayerNamesUTest {
     @Test
     fun `execute should return empty list when no layer names exist`(log: CapturedOutput) {
         // Given
-        given(regulatoryAreaGroupRepository.findAllLayerNames()).willReturn(emptyMap())
+        given(regulatoryAreaGroupRepository.findAllLayerNames()).willReturn(emptyList())
 
         // When
         val layerNames = getAllLayerNames.execute()
@@ -53,8 +55,8 @@ class GetAllLayerNamesUTest {
     fun `execute should return single layer name`(log: CapturedOutput) {
         // Given
         val expectedLayerNames =
-            mapOf(
-                "SingleLayer" to 1L,
+            listOf(
+                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "SingleLayer"), total = 1),
             )
         given(regulatoryAreaGroupRepository.findAllLayerNames()).willReturn(expectedLayerNames)
 
@@ -63,7 +65,7 @@ class GetAllLayerNamesUTest {
 
         // Then
         assertThat(layerNames).hasSize(1)
-        assertThat(layerNames).containsExactlyEntriesOf(expectedLayerNames)
+        assertThat(layerNames).isEqualTo(expectedLayerNames)
         assertThat(log.out).contains("Attempt to GET all regulatory areas layer names")
         assertThat(log.out).contains("Found 1 layer names")
     }

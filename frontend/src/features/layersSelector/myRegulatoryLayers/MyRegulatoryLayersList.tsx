@@ -1,11 +1,11 @@
 import { getSelectedRegulatoryAreas } from '@api/regulatoryAreasAPI'
-import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { useMountTransition } from '@hooks/useMountTransition'
 import { groupBy, isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 
 import { RegulatoryLayerGroup } from './MyRegulatoryLayerGroup'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { formatLayerName } from '../../RegulatoryArea/utils'
 import { LayerSelector } from '../utils/LayerSelector.style'
 
 export function RegulatoryLayersList() {

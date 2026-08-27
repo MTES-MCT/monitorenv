@@ -11,6 +11,7 @@ import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { Layer } from './Layer'
+import { formatLayerName } from '../../../../RegulatoryArea/utils'
 import { getPinIcon, getSelectionState } from '../ToggleSelectAll/utils'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
@@ -34,8 +35,11 @@ export function ListLayerGroup({
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
   const { data: regulatoryAreasLayerNames } = useGetLayerNamesQuery()
   const totalNumberOfZones = useMemo(
-    () => regulatoryAreasLayerNames?.layerNames[groupName] ?? 0,
-    [regulatoryAreasLayerNames, groupName]
+    () =>
+      regulatoryAreasLayerNames?.find(
+        regulatoryArea => formatLayerName(regulatoryArea.group.layerName, regulatoryArea.group.location) === groupName
+      )?.total ?? 0,
+    [groupName, regulatoryAreasLayerNames]
   )
   const zonesSelected = intersection(selectedRegulatoryAreaIds, layerIds)
   const topicSelectionState = getSelectionState(zonesSelected, layerIds)

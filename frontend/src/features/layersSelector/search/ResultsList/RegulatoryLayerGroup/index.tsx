@@ -11,6 +11,7 @@ import {
 } from '../../../../../domain/shared_slices/Regulatory'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { formatLayerName } from '../../../../RegulatoryArea/utils'
 import { ResultListLayerGroup } from '../ResultListLayerGroup'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
@@ -31,9 +32,13 @@ export function RegulatoryLayerGroup({
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
   const totalNumberOfZones = useMemo(
-    () => regulatoryAreasLayerNames?.layerNames[groupName] ?? 0,
-    [regulatoryAreasLayerNames, groupName]
+    () =>
+      regulatoryAreasLayerNames?.find(
+        regulatoryArea => formatLayerName(regulatoryArea.group.layerName, regulatoryArea.group.location) === groupName
+      )?.total ?? 0,
+    [groupName, regulatoryAreasLayerNames]
   )
+
   const groupExtent = useMemo(() => getExtentOfLayersGroup(layers) ?? createEmpty(), [layers])
   const layerIds = useMemo(() => layers.map(layer => layer.id), [layers])
 

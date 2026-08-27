@@ -19,7 +19,6 @@ export const Title = styled.h1`
 export const BackofficeWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   overflow-y: auto;
   padding: 24px;
   gap: 16px;

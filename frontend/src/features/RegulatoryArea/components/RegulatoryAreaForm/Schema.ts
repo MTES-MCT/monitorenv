@@ -26,7 +26,7 @@ export const RegulatoryAreaFormSchema: Yup.Schema<
     }
   ),
   creation: Yup.string().optional(),
-  date: Yup.string().required(),
+  date: Yup.string().optional(),
   dateFin: Yup.string().optional(),
   editeur: Yup.string().optional(),
   editionBo: Yup.string().optional(),
@@ -53,7 +53,7 @@ export const RegulatoryAreaFormSchema: Yup.Schema<
       return prohibitionPeriods || authorizationPeriods || resume
     }
   ),
-  refReg: Yup.string().required('La référence réglementaire est obligatoire'),
+  refReg: Yup.string().optional(),
   resume: Yup.string().test('required-if-no-periods', 'Renseignez au une période ou un résumé', (resume, context) => {
     const { prohibitionPeriods } = context.parent
     const { authorizationPeriods } = context.parent
@@ -63,6 +63,6 @@ export const RegulatoryAreaFormSchema: Yup.Schema<
   source: Yup.string().optional(),
   tags: Yup.array().ensure(),
   themes: Yup.array().min(1, 'une thématique est obligatoire'),
-  type: Yup.string().required('Le type de la zone réglementée est obligatoire'),
-  url: Yup.string().required("L'url de la zone réglementée est obligatoire")
+  type: Yup.string().optional(),
+  url: Yup.string().optional()
 })

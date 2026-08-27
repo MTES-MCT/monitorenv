@@ -2,12 +2,12 @@ import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
-import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { RegulatoryAreaItem } from './RegulatoryAreaItem'
+import { formatLayerName } from '../../utils'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
@@ -17,9 +17,13 @@ export function RegulatoryAreaGroup({ group }: { group: RegulatoryArea.Regulator
 
   const layerGroupName = formatLayerName(group.group.layerName, group.group.location)
 
-  const totalNumberOfZones: number = useMemo(
-    () => layerNames?.layerNames[layerGroupName ?? ''] ?? 0,
-    [layerNames, layerGroupName]
+  const totalNumberOfZones = useMemo(
+    () =>
+      layerNames?.find(
+        regulatoryArea =>
+          formatLayerName(regulatoryArea.group.layerName, regulatoryArea.group.location) === layerGroupName
+      )?.total ?? 0,
+    [layerGroupName, layerNames]
   )
 
   const [isGroupNameOpen, setIsGroupNameOpen] = useState(false)
@@ -60,7 +64,7 @@ export function RegulatoryAreaGroup({ group }: { group: RegulatoryArea.Regulator
       </LayerSelector.GroupWrapper>
       <LayerSelector.GroupList $isOpen={isGroupNameOpen} $length={group.regulatoryAreas?.length}>
         {group.regulatoryAreas?.map(regulatoryArea => (
-          <RegulatoryAreaItem key={regulatoryArea.id} regulatoryArea={regulatoryArea} />
+          <RegulatoryAreaItem key={regulatoryArea.id} groupId={group.group.id} regulatoryArea={regulatoryArea} />
         ))}
       </LayerSelector.GroupList>
     </>

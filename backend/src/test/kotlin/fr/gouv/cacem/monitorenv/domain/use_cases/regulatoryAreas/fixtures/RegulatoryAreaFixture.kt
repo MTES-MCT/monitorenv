@@ -36,8 +36,14 @@ class RegulatoryAreaFixture {
             RegulatoryAreaGroupEntity(
                 id = 1,
                 location = null,
-                type = "Layer 1",
+                layerName = "Layer 1",
                 regulatoryAreaIds = listOf(2, 3),
+                date = null,
+                dateFin = null,
+                type = null,
+                url = null,
+                refReg = null,
+                additionalRefReg = null,
             )
     }
 }

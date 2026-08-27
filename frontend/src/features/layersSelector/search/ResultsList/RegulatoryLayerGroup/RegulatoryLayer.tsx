@@ -1,6 +1,5 @@
 import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
-import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { getIsLinkingRegulatoryToVigilanceArea, vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
@@ -17,6 +16,7 @@ import {
 } from '../../../../../domain/shared_slices/Regulatory'
 import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../../hooks/useAppSelector'
+import { formatLayerName } from '../../../../RegulatoryArea/utils'
 import {
   closeMetadataPanel,
   getDisplayedMetadataRegulatoryLayerId,

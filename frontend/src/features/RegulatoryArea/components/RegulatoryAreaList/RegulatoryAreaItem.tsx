@@ -17,7 +17,13 @@ import { regulatoryAreaTableActions } from './slice'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
-export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox }) {
+export function RegulatoryAreaItem({
+  groupId,
+  regulatoryArea
+}: {
+  groupId: number | undefined
+  regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox
+}) {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const location = useLocation()
@@ -44,9 +50,12 @@ export function RegulatoryAreaItem({ regulatoryArea }: { regulatoryArea: Regulat
   }
 
   const onEdit = () => {
-    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${regulatoryArea.id}`, {
-      state: { from: location.pathname }
-    })
+    navigate(
+      `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/${regulatoryArea.id}?groupId=${groupId}`,
+      {
+        state: { from: location.pathname }
+      }
+    )
     const extent = transformExtent(
       regulatoryArea?.bbox,
       new Projection({ code: WSG84_PROJECTION }),

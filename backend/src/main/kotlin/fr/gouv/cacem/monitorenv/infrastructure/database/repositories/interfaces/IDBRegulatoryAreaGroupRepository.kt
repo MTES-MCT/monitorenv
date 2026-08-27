@@ -64,21 +64,11 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
 
     @Query(
         """
-        SELECT
-            CASE
-                WHEN regulatoryArea.location IS NOT NULL
-                     AND regulatoryArea.layerName NOT LIKE '%' || regulatoryArea.location || '%'
-                THEN regulatoryArea.layerName || ' - ' || regulatoryArea.location
-                ELSE regulatoryArea.layerName
-            END AS layerNameWithLocation,
-            COUNT(regulatoryArea)
+        SELECT regulatoryAreaGroup
         FROM RegulatoryAreaGroupModel regulatoryAreaGroup
-        LEFT JOIN RegulatoryAreaModel regulatoryArea ON regulatoryAreaGroup.regulatoryArea.id = regulatoryArea.id
-        WHERE regulatoryArea.layerName IS NOT NULL
-        AND regulatoryArea.areaType = 'ZONE'
-        GROUP BY layerNameWithLocation
-        ORDER BY layerNameWithLocation
+        WHERE regulatoryAreaGroup.group.layerName IS NOT NULL
+        ORDER BY regulatoryAreaGroup.group.layerName
     """,
     )
-    fun findAllLayerNames(): List<Array<Any>>
+    fun findAllLayerNames(): List<RegulatoryAreaGroupModel>
 }

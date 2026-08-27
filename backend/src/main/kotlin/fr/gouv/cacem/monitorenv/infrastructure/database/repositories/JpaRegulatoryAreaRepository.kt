@@ -23,7 +23,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import tools.jackson.databind.json.JsonMapper
-import java.time.ZonedDateTime
 
 @Repository
 class JpaRegulatoryAreaRepository(
@@ -78,16 +77,7 @@ class JpaRegulatoryAreaRepository(
 
         val savedTags = saveTags(savedModel, regulatoryArea.tags)
         val savedThemes = saveThemes(savedModel, regulatoryArea.themes)
-
-        if (regulatoryArea.layerName != null && regulatoryArea.location != null) {
-            val existingRegulatoryAreaGroup =
-                dbRegulatoryAreaGroupRepository.findAllByLayerNameAndLocation(
-                    layerName = regulatoryArea.layerName,
-                    location = regulatoryArea.location,
-                )
-
-            saveRegulatoryAreasGroup(regulatoryArea, existingRegulatoryAreaGroup)
-        }
+        saveRegulatoryAreasGroup(regulatoryArea)
 
         return savedModel
             .copy(tags = savedTags, themes = savedThemes)
@@ -116,73 +106,31 @@ class JpaRegulatoryAreaRepository(
         }
     }
 
-    private fun saveRegulatoryAreasGroup(
-        regulatoryArea: RegulatoryAreaEntity,
-        existingRegulatoryAreaGroup: List<RegulatoryAreaGroupModel>,
-    ) {
-        if (existingRegulatoryAreaGroup.isEmpty()) {
-            val id = dbRegulatoryAreaRepository.findNextId()
-            val group =
-                RegulatoryAreaModel(
-                    id = id,
-                    areaType = AreaTypeEnum.GROUP,
-                    geom = regulatoryArea.geom,
-                    creation = ZonedDateTime.now().toInstant(),
-                    date = null,
-                    dateFin = null,
-                    editeur = null,
-                    editionBo = null,
-                    editionCacem = null,
-                    facade = null,
+    private fun saveRegulatoryAreasGroup(regulatoryArea: RegulatoryAreaEntity) {
+        if (regulatoryArea.layerName != null && regulatoryArea.location != null) {
+            val existingRegulatoryAreaGroup =
+                dbRegulatoryAreaRepository.findAllGroupByLayerNameAndLocation(
                     layerName = regulatoryArea.layerName,
                     location = regulatoryArea.location,
-                    observation = null,
-                    plan = null,
-                    polyName = null,
-                    refReg = null,
-                    resume = null,
-                    source = null,
-                    tags = listOf(),
-                    themes = listOf(),
-                    type = null,
-                    url = null,
-                    additionalRefReg = null,
-                    authorizationPeriods = null,
-                    prohibitionPeriods = null,
                 )
-            val savedGroup = dbRegulatoryAreaRepository.save(group)
-            dbRegulatoryAreaGroupRepository.save(
-                RegulatoryAreaGroupModel(
-                    id =
-                        RegulatoryAreaGroupPk(
-                            regulatoryAreaId = regulatoryArea.id,
-                            groupId = savedGroup.id,
+            if (existingRegulatoryAreaGroup.size == 1) {
+                existingRegulatoryAreaGroup.first().let { group ->
+                    dbRegulatoryAreaGroupRepository.save(
+                        RegulatoryAreaGroupModel(
+                            id =
+                                RegulatoryAreaGroupPk(
+                                    regulatoryAreaId = regulatoryArea.id,
+                                    groupId = group.id,
+                                ),
+                            regulatoryArea =
+                                RegulatoryAreaModel.fromRegulatoryAreaEntity(
+                                    regulatoryArea = regulatoryArea,
+                                    mapper = mapper,
+                                ),
+                            group = group,
                         ),
-                    regulatoryArea =
-                        RegulatoryAreaModel.fromRegulatoryAreaEntity(
-                            regulatoryArea = regulatoryArea,
-                            mapper = mapper,
-                        ),
-                    group = savedGroup,
-                ),
-            )
-        } else {
-            existingRegulatoryAreaGroup.firstOrNull()?.group?.let { group ->
-                dbRegulatoryAreaGroupRepository.save(
-                    RegulatoryAreaGroupModel(
-                        id =
-                            RegulatoryAreaGroupPk(
-                                regulatoryAreaId = regulatoryArea.id,
-                                groupId = group.id,
-                            ),
-                        regulatoryArea =
-                            RegulatoryAreaModel.fromRegulatoryAreaEntity(
-                                regulatoryArea = regulatoryArea,
-                                mapper = mapper,
-                            ),
-                        group = group,
-                    ),
-                )
+                    )
+                }
             }
         }
     }

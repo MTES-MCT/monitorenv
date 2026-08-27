@@ -1,4 +1,5 @@
 import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { vigilanceAreaActions } from '@features/VigilanceArea/slice'
 import { getTitle } from 'domain/entities/layers/utils'
 import { intersection } from 'lodash'
@@ -37,7 +38,13 @@ export function RegulatoryLayerGroup({
   )
 
   const { data: layerNames } = useGetLayerNamesQuery()
-  const totalNumberOfZones = useMemo(() => layerNames?.layerNames[groupName] ?? 0, [layerNames, groupName])
+  const totalNumberOfZones = useMemo(
+    () =>
+      layerNames?.find(
+        regulatoryArea => formatLayerName(regulatoryArea.group.layerName, regulatoryArea.group.location) === groupName
+      )?.total ?? 0,
+    [groupName, layerNames]
+  )
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
 
