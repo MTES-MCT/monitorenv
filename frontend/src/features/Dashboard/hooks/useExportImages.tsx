@@ -66,7 +66,8 @@ const getBaseSource = (backgroundMap: BaseLayer | undefined) => {
         crossOrigin: 'anonymous',
         maxZoom: 19,
         urls: ['a', 'b', 'c', 'd'].map(
-          subdomain => `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`
+          subdomain =>
+            `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png?key=${import.meta.env.FRONTEND_CARTO_KEY}`
         )
       })
   }
@@ -79,7 +80,8 @@ const initialMap = new OpenLayerMap({
         crossOrigin: 'anonymous',
         maxZoom: 19,
         urls: ['a', 'b', 'c', 'd'].map(
-          subdomain => `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`
+          subdomain =>
+            `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png?key=${import.meta.env.FRONTEND_CARTO_KEY}`
         )
       })
     })

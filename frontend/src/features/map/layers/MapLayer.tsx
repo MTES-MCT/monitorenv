@@ -18,7 +18,8 @@ export function MapLayer({ map, selectedBaseLayer }: MapLayerProps) {
         source: new XYZ({
           maxZoom: 19,
           urls: ['a', 'b', 'c', 'd'].map(
-            subdomain => `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png`
+            subdomain =>
+              `https://${subdomain}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png?key=${import.meta.env.FRONTEND_CARTO_KEY}`
           )
         }),
         zIndex: 0
