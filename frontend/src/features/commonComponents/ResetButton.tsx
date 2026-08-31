@@ -1,4 +1,4 @@
-import { Icon } from '@mtes-mct/monitor-ui'
+import { Icon, LinkButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 interface ResetButtonProps {
@@ -8,23 +8,21 @@ interface ResetButtonProps {
 
 export function ResetButton({ label = 'Réinitialiser les filtres', onClick }: ResetButtonProps) {
   return (
-    <ResetFiltersButton onClick={onClick}>
-      <Icon.Load size={14} />
+    <StyledLinkButton Icon={Icon.Load} onClick={onClick}>
       <span>{label}</span>
-    </ResetFiltersButton>
+    </StyledLinkButton>
   )
 }
 
-const ResetFiltersButton = styled.button`
-  align-items: end;
-  display: flex;
-  gap: 4px;
-  margin-bottom: 8px;
-  text-decoration: underline;
-  > span {
-    white-space: nowrap;
-    font-size: 13px;
+const StyledLinkButton = styled(LinkButton)`
+  color: ${p => p.theme.color.charcoal} !important;
+  svg,
+  span {
+    color: ${p => p.theme.color.charcoal};
   }
-  padding: 0;
-  background: transparent;
+  &:hover svg,
+  &:active svg,
+  &:focus svg {
+    color: ${p => p.theme.color.charcoal};
+  }
 `
