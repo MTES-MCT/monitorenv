@@ -11,19 +11,19 @@ context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
     cy.intercept('PUT', '/bff/v1/regulatory-areas/groups').as('createRegulatoryAreaGroup')
     cy.contains('button', 'Ajouter une réglementation').should('be.disabled')
     createRegulatoryAreaGroup()
-    // cy.clickButton('Créer le groupe')
-    // cy.wait('@createRegulatoryAreaGroup').then(({ response }) => {
-    //   if (!response) {
-    //     assert.fail('response is undefined.')
-    //   }
-    //   assert.equal(response.statusCode, 200)
-    //   cy.getDataCy('back-office-banner-stack').should('be.visible')
-    //   cy.getDataCy('back-office-banner-stack').contains(
-    //     'Le groupe de réglementations "Nouveau groupe - Quelque part" a bien été enregistré.'
-    //   )
-    //   cy.url().should('include', `/regulatory_area_group/1000010`)
-    //   cy.contains('button', 'Ajouter une réglementation').should('not.be.disabled')
-    // })
+    cy.clickButton('Créer le groupe')
+    cy.wait('@createRegulatoryAreaGroup').then(({ response }) => {
+      if (!response) {
+        assert.fail('response is undefined.')
+      }
+      assert.equal(response.statusCode, 200)
+      cy.getDataCy('back-office-banner-stack').should('be.visible')
+      cy.getDataCy('back-office-banner-stack').contains(
+        'Le groupe de réglementations "Nouveau groupe - Quelque part" a bien été enregistré.'
+      )
+      cy.url().should('include', `/regulatory_area_group/1000010`)
+      cy.contains('button', 'Ajouter une réglementation').should('not.be.disabled')
+    })
   })
   it('should navigate to regulatory area group from regulatory area form', () => {
     cy.intercept('GET', `bff/v1/regulatory-areas/*`).as('getRegulatoryArea')

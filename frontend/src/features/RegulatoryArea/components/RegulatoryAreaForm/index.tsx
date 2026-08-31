@@ -142,7 +142,7 @@ export function RegulatoryAreaForm() {
               {isCancelEditDialogOpen && (
                 <CancelEditDialog
                   onCancel={() => setIsCancelEditDialogOpen(false)}
-                  onConfirm={() => backToList()}
+                  onConfirm={backToList}
                   text={
                     <>
                       <p>Vous êtes en train d&apos;abandonner</p>
@@ -152,7 +152,7 @@ export function RegulatoryAreaForm() {
                 />
               )}
               <StyledForm onSubmit={handleSubmit}>
-                <FormContent groupId={groupId} isEditing={isEditing} />
+                <FormContent isEditing={isEditing} />
 
                 <Footer>
                   <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>

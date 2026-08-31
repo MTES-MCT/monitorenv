@@ -217,7 +217,7 @@ export function RegulatoryAreaGroupForm() {
                         Associer <Bold>par défaut</Bold> des éléments à{' '}
                         <Bold>toutes les réglementations présentes dans le groupe</Bold>
                       </Information>
-                      <Checkbox
+                      <ReadOnlyCheckbox
                         checked
                         label="Textes réglementaires (dont type d’acte administratif)"
                         name="regulatoryText"
@@ -227,7 +227,7 @@ export function RegulatoryAreaGroupForm() {
                     </CommonPropertiesWrapper>
                   </section>
 
-                  <RegulatoryTexts />
+                  <RegulatoryTexts isNew={isNew} />
                 </FormContent>
 
                 <Footer>
@@ -342,4 +342,9 @@ const Information = styled.p`
 
 const NoRegulatoryAreas = styled(Information)`
   font-style: italic;
+`
+const ReadOnlyCheckbox = styled(Checkbox)`
+  label:hover {
+    color: ${p => p.theme.color.gunMetal} !important;
+  }
 `

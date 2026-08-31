@@ -1,6 +1,9 @@
 import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { getDisplayedMetadataRegulatoryLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getExtentOfLayersGroup } from '@features/layersSelector/utils/getExtentOfLayersGroup'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
+import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { createEmpty } from 'ol/extent'
 import { useMemo } from 'react'
 
@@ -9,9 +12,6 @@ import {
   addRegulatoryZonesToMyLayers,
   removeRegulatoryZonesFromMyLayers
 } from '../../../../../domain/shared_slices/Regulatory'
-import { useAppDispatch } from '../../../../../hooks/useAppDispatch'
-import { useAppSelector } from '../../../../../hooks/useAppSelector'
-import { formatLayerName } from '../../../../RegulatoryArea/utils'
 import { ResultListLayerGroup } from '../ResultListLayerGroup'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
