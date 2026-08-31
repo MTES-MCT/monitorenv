@@ -24,10 +24,10 @@ class JpaRegulatoryAreaGroupRepository(
 ) : IRegulatoryAreaGroupRepository {
     @Transactional
     override fun findAllLayerNames(): List<RegulatoryAreaGroupWithTotalDTO> =
-        dbRegulatoryAreaGroupRepository.findAllLayerNames().groupBy { it.group.id }.map { (_, regulatoryAreas) ->
+        dbRegulatoryAreaGroupRepository.findAllLayerNames().map { regulatoryAreas ->
             RegulatoryAreaGroupWithTotalDTO(
-                group = regulatoryAreas.first().group.toRegulatoryArea(mapper),
-                total = regulatoryAreas.size,
+                group = regulatoryAreas.group.toRegulatoryArea(mapper),
+                total = regulatoryAreas.total,
             )
         }
 

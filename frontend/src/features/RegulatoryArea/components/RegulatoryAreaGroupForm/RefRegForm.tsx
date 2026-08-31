@@ -10,6 +10,7 @@ import {
   Accent,
   Button,
   FormikDatePicker,
+  FormikTextarea,
   FormikTextInput,
   Icon,
   IconButton,
@@ -90,14 +91,14 @@ export function RefRegForm({ isNew }: { isNew: boolean }) {
             <Tooltip linkText="En savoir plus" linkTextColor={THEME.color.charcoal} orientation="BOTTOM_LEFT">
               <ul>
                 {duplicateUrls.map(group => (
-                  <li>{formatLayerName(group.group.layerName, group.group.location)}</li>
+                  <li key={group.group.id}>{formatLayerName(group.group.layerName, group.group.location)}</li>
                 ))}
               </ul>
             </Tooltip>
           </Duplicates>
         )}
 
-        <FormikTextInput isLight label="Titre de la réglementation" name="refReg" />
+        <FormikTextarea isLight label="Titre de la réglementation" name="refReg" />
         <RefRegSecondLine>
           <FormikTextInput
             isErrorMessageHidden
@@ -181,8 +182,8 @@ export const DateContainer = styled.div`
 `
 
 export const PeriodText = styled.p`
-  font-size: 13px;
   color: ${p => p.theme.color.slateGray};
+  font-size: 13px;
   margin-top: 6px;
   > span {
     color: ${p => p.theme.color.gunMetal};
@@ -199,11 +200,12 @@ const StyledFormikDatePicker = styled(FormikDatePicker)`
 `
 
 const Duplicates = styled.dl`
-  margin: 0;
   display: flex;
   gap: 4px;
+  margin: 0;
   dt {
     color: ${p => p.theme.color.slateGray};
+    font-size: 11px;
     font-style: italic;
   }
 `

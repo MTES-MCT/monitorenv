@@ -32,4 +32,18 @@ context('Back Office > Regulatory Area > Create Regulatory Area Group', () => {
     cy.clickButton('Ajouter un nouveau groupe')
     cy.url().should('include', `/regulatory_area_group/new`)
   })
+  it('should warn when a regulatory Area Group has duplicates type, location or ref reg url', () => {
+    cy.clickButton('Créer un groupe de reg.')
+    cy.intercept('PUT', '/bff/v1/regulatory-areas/groups').as('createRegulatoryAreaGroup')
+    cy.contains('button', 'Ajouter une réglementation').should('be.disabled')
+    cy.fill('Type', 'ZMEL')
+    cy.fill('Lieu', 'anse illien Ploumoguer')
+    cy.contains('1 autre groupe avec ce même lieu et type existe déjà. Êtes-vous sûr de vouloir en créer un autre ?')
+    cy.fill(
+      'URL du lien',
+      'http://extranet.legicem.metier.developpement-durable.gouv.fr/fichier/pdf/aip_2006-0303_anse_ilien_ploumoguer_cle217d9b-1.pdf?arg=7879&cle=84fe8cc602b2e2300ece27ca96f340a3e00f58a4&file=pdf%2Faip_2006-0303_anse_ilien_ploumoguer_cle217d9b-1.pdf'
+    )
+    cy.fill('Début de validité', [2027, 1, 1, 0, 0])
+    cy.contains('1 autre groupe avec cette référence réglementaire')
+  })
 })

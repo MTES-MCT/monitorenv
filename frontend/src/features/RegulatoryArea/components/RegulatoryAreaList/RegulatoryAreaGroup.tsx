@@ -2,12 +2,12 @@ import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
 import { StyledTransparentButton } from '@components/style'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.style'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { RegulatoryAreaItem } from './RegulatoryAreaItem'
-import { formatLayerName } from '../../utils'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 
