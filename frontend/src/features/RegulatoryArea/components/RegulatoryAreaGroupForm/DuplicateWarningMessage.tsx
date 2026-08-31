@@ -3,6 +3,7 @@ import { Bold } from '@components/style'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { Accent, Button, Level, Message } from '@mtes-mct/monitor-ui'
+import { removeAccents } from '@utils/removeAccents'
 import { useFormikContext } from 'formik'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -11,16 +12,16 @@ import styled from 'styled-components'
 export function DuplicateWarningMessage({ id, layerName, location }: RegulatoryArea.RegulatoryAreaGroupToApi) {
   const navigate = useNavigate()
   const { setFieldError } = useFormikContext<RegulatoryArea.RegulatoryAreaGroupToApi>()
-  const [hasSeveralDuplicates, setHasSeveralDuplicates] = useState<boolean>(false)
-  const [hasOneDuplicate, setHasOneDuplicate] = useState<boolean>(false)
+  const [nbDuplicates, setNbDuplicates] = useState<number>(0)
   const { data: layerNames } = useGetLayerNamesQuery()
 
   const duplicatesCount = useMemo(
     () =>
       layerNames?.filter(
         group =>
-          group.group.layerName.toLowerCase().trim() === layerName?.toLowerCase().trim() &&
-          group.group.location?.toLowerCase().trim() === location?.toLowerCase().trim() &&
+          removeAccents(group.group.layerName.toLowerCase().trim()) ===
+            removeAccents(layerName?.toLowerCase().trim()) &&
+          removeAccents(group.group.location?.toLowerCase().trim()) === removeAccents(location?.toLowerCase().trim()) &&
           group.group.id !== id
       )?.length ?? 0,
     [layerNames, layerName, location, id]
@@ -30,9 +31,8 @@ export function DuplicateWarningMessage({ id, layerName, location }: RegulatoryA
     if (duplicatesCount >= 1) {
       setFieldError('layerName', 'Type and location already exists')
       setFieldError('location', 'Type and location already exists')
-      setHasOneDuplicate(duplicatesCount === 1)
-      setHasSeveralDuplicates(duplicatesCount > 1)
     }
+    setNbDuplicates(duplicatesCount)
   }, [duplicatesCount, setFieldError])
 
   const goToGroup = () => {
@@ -42,19 +42,21 @@ export function DuplicateWarningMessage({ id, layerName, location }: RegulatoryA
         group.group.location?.toLowerCase().trim() === location?.toLowerCase().trim()
     )?.group.id
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP]}/${groupId}`)
-    setHasSeveralDuplicates(false)
-    setHasOneDuplicate(false)
   }
 
   const validateDuplicate = () => {
     setFieldError('layerName', undefined)
     setFieldError('location', undefined)
-    setHasOneDuplicate(false)
+    setNbDuplicates(0)
+  }
+
+  const backToList = () => {
+    navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
   }
 
   return (
     <>
-      {hasOneDuplicate && (
+      {nbDuplicates === 1 && (
         <Message level={Level.WARNING} style={{ marginTop: '16px' }}>
           <p>
             <strong>Attention</strong>
@@ -72,7 +74,7 @@ export function DuplicateWarningMessage({ id, layerName, location }: RegulatoryA
           </Actions>
         </Message>
       )}
-      {hasSeveralDuplicates && (
+      {nbDuplicates > 1 && (
         <Message level={Level.WARNING} style={{ marginTop: '16px' }}>
           <p>
             <strong>Attention</strong>
@@ -81,7 +83,7 @@ export function DuplicateWarningMessage({ id, layerName, location }: RegulatoryA
             Êtes-vous sûr de vouloir en créer un autre ?
           </p>
           <Actions>
-            <Button accent={Accent.WARNING} onClick={() => {}}>
+            <Button accent={Accent.WARNING} onClick={backToList}>
               Non, annuler la création du groupe
             </Button>
           </Actions>

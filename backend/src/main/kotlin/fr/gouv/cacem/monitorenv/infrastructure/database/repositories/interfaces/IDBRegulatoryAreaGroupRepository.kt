@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupPk
+import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.projections.RegulatoryAreaGroupWithTotal
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
@@ -64,11 +65,17 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
 
     @Query(
         """
-        SELECT regulatoryAreaGroup
-        FROM RegulatoryAreaGroupModel regulatoryAreaGroup
-        WHERE regulatoryAreaGroup.group.layerName IS NOT NULL
-        ORDER BY regulatoryAreaGroup.group.layerName
+        SELECT new fr.gouv.cacem.monitorenv.infrastructure.database.repositories.projections.RegulatoryAreaGroupWithTotal(
+            ra,
+            COUNT(rag.id.regulatoryAreaId)
+        )
+        FROM RegulatoryAreaModel ra
+        LEFT JOIN RegulatoryAreaGroupModel rag ON rag.id.groupId = ra.id
+        WHERE ra.areaType = 'GROUP'
+        and ra.layerName IS NOT NULL
+        GROUP BY ra
+        ORDER BY ra.layerName
     """,
     )
-    fun findAllLayerNames(): List<RegulatoryAreaGroupModel>
+    fun findAllLayerNames(): List<RegulatoryAreaGroupWithTotal>
 }

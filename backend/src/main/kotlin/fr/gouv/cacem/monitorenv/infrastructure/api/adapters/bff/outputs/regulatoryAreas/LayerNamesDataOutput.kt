@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulat
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
 
 data class LayerNamesDataOutput(
-    val total: Int,
+    val total: Long,
     val group: RegulatoryAreaDataOutput,
 ) {
     companion object {

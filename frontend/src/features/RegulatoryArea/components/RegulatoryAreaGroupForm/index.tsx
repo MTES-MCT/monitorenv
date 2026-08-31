@@ -148,99 +148,97 @@ export function RegulatoryAreaGroupForm() {
         validationSchema={RegulatoryAreaGroupFormSchema}
       >
         {({ dirty, handleSubmit, values }) => (
-          <>
-            <RegulatoryWrapper>
-              <header>
-                <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
-                  Revenir à la liste des zones réglementaires
-                </StyledLinkButton>
-                <Title>{isNew ? 'Créer un nouveau' : 'Modifier un'} groupe de réglementations</Title>
-                {isCancelEditDialogOpen && (
-                  <CancelEditDialog
-                    onCancel={() => setIsCancelEditDialogOpen(false)}
-                    onConfirm={backToList}
-                    text={
-                      <>
-                        <p>Vous êtes en train d&apos;abandonner</p>
-                        <Bold>{isNew ? 'la création' : "l'édition"} du groupe de réglementations.</Bold>
-                      </>
-                    }
-                  />
-                )}
-              </header>
-              <StyledForm onSubmit={handleSubmit}>
-                <FormContent>
-                  <section>
-                    <SubTitleWrapper>
-                      <StyledSubTitle>NOM DU GROUPE DE RÉGLEMENTATIONS</StyledSubTitle>
-                      <OutlinedSelect
-                        isLabelHidden
-                        isLight
-                        label="Consulter la liste des groupes existants"
-                        name="name"
-                        onChange={() => {}}
-                        options={layerNameOptions}
-                        placeholder="Consulter la liste des groupes existants"
-                        searchable
-                        value={undefined}
-                      />
-                    </SubTitleWrapper>
-                    <Fields>
-                      <FormikTextInput isErrorMessageHidden isRequired label="Type" name="layerName" />
-                      <FormikTextInput isErrorMessageHidden isRequired label="Lieu" name="location" />
-                    </Fields>
-                    <DuplicateWarningMessage id={values.id} layerName={values.layerName} location={values.location} />
-                  </section>
-                  <section>
-                    <SubTitleWrapper>
-                      <StyledSubTitle>RÉGLEMENTATIONS APPARTEMENT AU GROUPE</StyledSubTitle>
-                      <Button disabled={isNew} Icon={Icon.Plus} onClick={createRegulatoryArea}>
-                        Ajouter une réglementation
-                      </Button>
-                    </SubTitleWrapper>
-                    {regulatoryAreaGroup?.regulatoryAreas?.length ? (
-                      <GroupList $isOpen $length={regulatoryAreaGroup?.regulatoryAreas?.length ?? 0}>
-                        {regulatoryAreaGroup?.regulatoryAreas.map(area => (
-                          <RegulatoryAreaItem key={area.id} groupId={values.id} regulatoryArea={area} />
-                        ))}
-                      </GroupList>
-                    ) : (
-                      <NoRegulatoryAreas>Aucune réglementation appartenant au groupe</NoRegulatoryAreas>
-                    )}
-                  </section>
-                  <section>
-                    <SubTitleWrapper>
-                      <StyledSubTitle>IMPACT DU GROUPE SUR LES RÉGLEMENTATIONS PRÉSENTES DEDANS</StyledSubTitle>
-                    </SubTitleWrapper>
-                    <CommonPropertiesWrapper>
-                      <Information>
-                        Associer <Bold>par défaut</Bold> des éléments à{' '}
-                        <Bold>toutes les réglementations présentes dans le groupe</Bold>
-                      </Information>
-                      <ReadOnlyCheckbox
-                        checked
-                        label="Textes réglementaires (dont type d’acte administratif)"
-                        name="regulatoryText"
-                        onChange={() => {}}
-                        readOnly
-                      />
-                    </CommonPropertiesWrapper>
-                  </section>
+          <RegulatoryWrapper>
+            <header>
+              <StyledLinkButton Icon={Icon.Chevron} onClick={() => cancelEdition(dirty)}>
+                Revenir à la liste des zones réglementaires
+              </StyledLinkButton>
+              <Title>{isNew ? 'Créer un nouveau' : 'Modifier un'} groupe de réglementations</Title>
+              {isCancelEditDialogOpen && (
+                <CancelEditDialog
+                  onCancel={() => setIsCancelEditDialogOpen(false)}
+                  onConfirm={backToList}
+                  text={
+                    <>
+                      <p>Vous êtes en train d&apos;abandonner</p>
+                      <Bold>{isNew ? 'la création' : "l'édition"} du groupe de réglementations.</Bold>
+                    </>
+                  }
+                />
+              )}
+            </header>
+            <StyledForm onSubmit={handleSubmit}>
+              <FormContent>
+                <section>
+                  <SubTitleWrapper>
+                    <StyledSubTitle>NOM DU GROUPE DE RÉGLEMENTATIONS</StyledSubTitle>
+                    <OutlinedSelect
+                      isLabelHidden
+                      isLight
+                      label="Consulter la liste des groupes existants"
+                      name="name"
+                      onChange={() => {}}
+                      options={layerNameOptions}
+                      placeholder="Consulter la liste des groupes existants"
+                      searchable
+                      value={undefined}
+                    />
+                  </SubTitleWrapper>
+                  <Fields>
+                    <FormikTextInput isErrorMessageHidden isRequired label="Type" name="layerName" />
+                    <FormikTextInput isErrorMessageHidden isRequired label="Lieu" name="location" />
+                  </Fields>
+                  <DuplicateWarningMessage id={values.id} layerName={values.layerName} location={values.location} />
+                </section>
+                <section>
+                  <SubTitleWrapper>
+                    <StyledSubTitle>RÉGLEMENTATIONS APPARTEMENT AU GROUPE</StyledSubTitle>
+                    <Button disabled={isNew} Icon={Icon.Plus} onClick={createRegulatoryArea}>
+                      Ajouter une réglementation
+                    </Button>
+                  </SubTitleWrapper>
+                  {regulatoryAreaGroup?.regulatoryAreas?.length ? (
+                    <GroupList $isOpen $length={regulatoryAreaGroup?.regulatoryAreas?.length ?? 0}>
+                      {regulatoryAreaGroup?.regulatoryAreas.map(area => (
+                        <RegulatoryAreaItem key={area.id} groupId={values.id} regulatoryArea={area} />
+                      ))}
+                    </GroupList>
+                  ) : (
+                    <NoRegulatoryAreas>Aucune réglementation appartenant au groupe</NoRegulatoryAreas>
+                  )}
+                </section>
+                <section>
+                  <SubTitleWrapper>
+                    <StyledSubTitle>IMPACT DU GROUPE SUR LES RÉGLEMENTATIONS PRÉSENTES DEDANS</StyledSubTitle>
+                  </SubTitleWrapper>
+                  <CommonPropertiesWrapper>
+                    <Information>
+                      Associer <Bold>par défaut</Bold> des éléments à{' '}
+                      <Bold>toutes les réglementations présentes dans le groupe</Bold>
+                    </Information>
+                    <ReadOnlyCheckbox
+                      checked
+                      label="Textes réglementaires (dont type d’acte administratif)"
+                      name="regulatoryText"
+                      onChange={() => {}}
+                      readOnly
+                    />
+                  </CommonPropertiesWrapper>
+                </section>
 
-                  <RegulatoryTexts isNew={isNew} />
-                </FormContent>
+                <RegulatoryTexts isNew={isNew} />
+              </FormContent>
 
-                <Footer>
-                  <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>
-                    Fermer
-                  </Button>
-                  <Button disabled={!dirty} type="submit">
-                    {isNew ? 'Créer le groupe' : 'Enregistrer les modifications'}
-                  </Button>
-                </Footer>
-              </StyledForm>
-            </RegulatoryWrapper>
-          </>
+              <Footer>
+                <Button accent={Accent.SECONDARY} onClick={() => cancelEdition(dirty)}>
+                  Fermer
+                </Button>
+                <Button disabled={!dirty} type="submit">
+                  {isNew ? 'Créer le groupe' : 'Enregistrer les modifications'}
+                </Button>
+              </Footer>
+            </StyledForm>
+          </RegulatoryWrapper>
         )}
       </Formik>
       <>
@@ -313,9 +311,9 @@ const StyledForm = styled.form`
 
 const FormContent = styled.div`
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 24px;
-  flex: 1;
 `
 
 const GroupList = styled(LayerSelector.GroupList)`
