@@ -18,7 +18,7 @@ def load_3_miles_areas(
         table_name="3_miles_areas",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
@@ -56,7 +56,7 @@ def load_12_miles_areas(
         table_name="12_miles_areas",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
@@ -75,7 +75,7 @@ def load_eez_areas(
         table_name="eez_areas",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
@@ -92,7 +92,7 @@ def load_aem_areas(aem_areas: pd.DataFrame):
         table_name="aem_areas",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
@@ -109,7 +109,7 @@ def load_departments_areas(departments_areas: pd.DataFrame):
         table_name="departments_areas",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
@@ -126,7 +126,7 @@ def load_saltwater_limit_areas(saltwater_limit_areas: pd.DataFrame):
         table_name="saltwater_limit_areas",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
@@ -147,7 +147,7 @@ def load_transversal_sea_limit_areas(
         table_name="transversal_sea_limit_areas",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
@@ -164,7 +164,7 @@ def load_territorial_seas(territorial_seas: pd.DataFrame):
         table_name="territorial_seas",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
@@ -181,7 +181,7 @@ def load_straight_baseline(straight_baseline: pd.DataFrame):
         table_name="straight_baseline",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
@@ -198,7 +198,7 @@ def load_low_water_line(low_water_line: pd.DataFrame):
         table_name="low_water_line",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
