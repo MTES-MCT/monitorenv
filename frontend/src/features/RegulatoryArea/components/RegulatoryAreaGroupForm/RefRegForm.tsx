@@ -1,18 +1,28 @@
 import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
+import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { ValidateButton } from '@features/commonComponents/ValidateButton'
 import { REQUIRED_FIELD } from '@features/RegulatoryArea/components/RegulatoryAreaForm/Schema'
 import { ReadOnlyRefRegText } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/ReadOnlyRefRegText'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { formatLayerName } from '@features/RegulatoryArea/utils'
-import { Accent, Button, FormikDatePicker, FormikTextInput, Icon, IconButton, pluralize } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Button,
+  FormikDatePicker,
+  FormikTextInput,
+  Icon,
+  IconButton,
+  pluralize,
+  THEME
+} from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 
 import type { MainRefReg } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/RegulatoryTexts'
 
-export function RefRegForm() {
+export function RefRegForm({ isNew }: { isNew: boolean }) {
   const { setFieldError, setFieldValue, values } = useFormikContext<
     RegulatoryArea.RegulatoryAreaGroupToApi | RegulatoryArea.RegulatoryAreaFromAPI
   >()
@@ -22,13 +32,21 @@ export function RefRegForm() {
     refReg: values.refReg,
     url: values.url
   }
+  const [isEditing, setIsEditing] = useState(isNew)
   const { data: layerNames } = useGetLayerNamesQuery()
+  const [duplicateUrls, setDuplicateUrls] = useState<RegulatoryArea.RegulatoryAreaGroupWithTotal[]>([])
 
   const [editingMainRefReg, setEditingMainRefReg] = useState<MainRefReg | undefined>(mainRefReg)
+
+  const editRefReg = () => {
+    setEditingMainRefReg(mainRefReg)
+    setIsEditing(true)
+  }
 
   const validateRefReg = async () => {
     if (values.refReg && values.url && values.date) {
       setEditingMainRefReg(undefined)
+      setIsEditing(false)
 
       return
     }
@@ -47,24 +65,29 @@ export function RefRegForm() {
     setFieldValue('refReg', editingMainRefReg?.refReg)
     setFieldValue('url', editingMainRefReg?.url)
     setEditingMainRefReg(undefined)
+    setIsEditing(false)
   }
 
-  const duplicateUrls = useMemo(
-    () => layerNames?.filter(group => group.group.url === values.url && group.group.id !== values.id) ?? [],
-    [layerNames, values.id, values.url]
-  )
+  const computeDuplicateUrls = () => {
+    setDuplicateUrls(
+      layerNames?.filter(group => values.url && group.group.url === values.url && group.group.id !== values.id) ?? []
+    )
+  }
 
-  if (editingMainRefReg) {
+  if (isEditing) {
     return (
       <EditingRefRegContainer>
         {duplicateUrls.length > 0 && (
           <Duplicates>
             <dt>Détection de doublons :</dt>
             <dd>
-              {duplicateUrls.length} {pluralize('autre', duplicateUrls.length)}{' '}
-              {pluralize('groupe', duplicateUrls.length)} avec cette référence réglementaire
+              <Bold>
+                {duplicateUrls.length} {pluralize('autre', duplicateUrls.length)}{' '}
+                {pluralize('groupe', duplicateUrls.length)}
+              </Bold>{' '}
+              avec cette référence réglementaire
             </dd>
-            <Tooltip linkText="en savoir plus" orientation="BOTTOM_RIGHT">
+            <Tooltip linkText="En savoir plus" linkTextColor={THEME.color.charcoal} orientation="BOTTOM_LEFT">
               <ul>
                 {duplicateUrls.map(group => (
                   <li>{formatLayerName(group.group.layerName, group.group.location)}</li>
@@ -82,7 +105,8 @@ export function RefRegForm() {
             isRequired
             label="URL du lien"
             name="url"
-            style={{ width: '65%' }}
+            onBlur={computeDuplicateUrls}
+            style={{ flex: 1 }}
           />
           <DateContainer>
             <FormikDatePicker
@@ -111,7 +135,7 @@ export function RefRegForm() {
       <IconButton
         accent={Accent.TERTIARY}
         Icon={Icon.EditUnbordered}
-        onClick={() => setEditingMainRefReg(mainRefReg)}
+        onClick={editRefReg}
         title="Editer le texte réglementaire"
       />
     </ReadOnlyRefRegText>
@@ -137,8 +161,7 @@ export const EditingRefRegContainer = styled(RefRegContainer)`
 
 export const RefRegSecondLine = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  gap: 16px;
 `
 
 export const RefRegText = styled.p`
@@ -180,7 +203,7 @@ const Duplicates = styled.dl`
   display: flex;
   gap: 4px;
   dt {
-    color: ${p => p.theme.color.slateGray}
+    color: ${p => p.theme.color.slateGray};
     font-style: italic;
   }
 `

@@ -22,7 +22,7 @@ import { parseOptionsToTags } from '@utils/getTagsAsOptions'
 import { parseOptionsToThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useFormikContext } from 'formik'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
@@ -32,7 +32,7 @@ import { formatLayerName } from '../../utils'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
-export function Identification({ onChangeGroup }: { onChangeGroup: (id: number | undefined) => void }) {
+export function Identification({ onSelectGroup }: { onSelectGroup: (id: number | undefined) => void }) {
   const navigate = useNavigate()
   const { errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
   const { data: layerNames } = useGetLayerNamesQuery()
@@ -56,6 +56,17 @@ export function Identification({ onChangeGroup }: { onChangeGroup: (id: number |
 
     return formattedLayerNames.sort((a, b) => a.label.localeCompare(b.label))
   }, [layerNames])
+
+  const groupNameOption = useMemo(
+    () =>
+      layerNameOptions.find(layer => layer.value.layerName === formatLayerName(values.layerName, values.location))
+        ?.value,
+    [layerNameOptions, values.layerName, values.location]
+  )
+
+  useEffect(() => {
+    onSelectGroup(groupNameOption?.groupId)
+  }, [groupNameOption?.groupId, onSelectGroup])
 
   const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
     setFieldValue('themes', parseOptionsToThemes(nextThemes))
@@ -101,7 +112,6 @@ export function Identification({ onChangeGroup }: { onChangeGroup: (id: number |
     setFieldValue('layerName', nameAndLocation?.[0])
     setFieldValue('location', nameAndLocation?.[1])
     setIsModifyingLayerName(false)
-    onChangeGroup(nextValue?.groupId)
   }
 
   const allThemesAndSubthemes = useMemo(
@@ -146,11 +156,7 @@ export function Identification({ onChangeGroup }: { onChangeGroup: (id: number |
                   </ExtraFooterContainer>
                 )}
                 style={{ flex: 1 }}
-                value={
-                  layerNameOptions.find(
-                    layer => layer.value.layerName === formatLayerName(values.layerName, values.location)
-                  )?.value
-                }
+                value={groupNameOption}
               />
               <Tooltip>Le nom du groupe doit permettre de connaître le lieu et le sujet de la réglementation.</Tooltip>
             </>

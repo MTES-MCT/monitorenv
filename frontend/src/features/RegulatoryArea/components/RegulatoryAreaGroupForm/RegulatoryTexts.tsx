@@ -16,7 +16,7 @@ export type MainRefReg = {
   url?: string
 }
 
-export function RegulatoryTexts() {
+export function RegulatoryTexts({ isNew }: { isNew: boolean }) {
   const { setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaGroupToApi>()
   const [editingOtherRefReg, setEditingOtherRefReg] = useState<RegulatoryArea.AdditionalRegulatoryText | undefined>(
     undefined
@@ -56,7 +56,7 @@ export function RegulatoryTexts() {
           name="type"
           options={regulatoryTypeOptions}
         />
-        <RefRegForm />
+        <RefRegForm isNew={isNew} />
         <OtherRefRegForm editingOtherRefReg={editingOtherRefReg} setEditingOtherRefReg={setEditingOtherRefReg} />
       </Fields>
     </div>

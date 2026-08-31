@@ -58,7 +58,7 @@ export function OtherRefRegForm({ editingOtherRefReg, setEditingOtherRefReg }: O
 
   return (
     <>
-      {(values?.additionalRefReg?.length || editingOtherRefReg) && <Separator />}
+      {((values?.additionalRefReg?.length ?? 0) > 1 || editingOtherRefReg) && <Separator />}
 
       {values?.additionalRefReg && values?.additionalRefReg.length > 0 && (
         <OtherRefRegContainer>

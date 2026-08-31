@@ -27,7 +27,8 @@ context('LayerTree > Search zone', () => {
     cy.clickButton('Définir la zone de recherche et afficher les tracés')
     cy.wait(500)
 
-    cy.getDataCy('regulatory-result-list-button').contains('13 résultats')
+    // 13 or 14 results depending if it passes after creating a new group from backoffice
+    cy.getDataCy('regulatory-result-list-button').contains(/1[34] résultats/)
     cy.get('#isRegulatorySearchResultsVisible').should('not.be.checked')
 
     cy.getDataCy('amp-results-list-button').contains('20 résultats')

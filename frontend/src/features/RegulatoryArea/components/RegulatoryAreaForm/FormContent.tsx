@@ -6,10 +6,8 @@ import { useState } from 'react'
 
 import { Identification } from './Identification'
 
-export function FormContent({ groupId, isEditing }: { groupId: string | null; isEditing: boolean }) {
-  const [currentGroupId, setCurrentGroupId] = useState(
-    groupId != null && !Number.isNaN(+groupId) ? +groupId : undefined
-  )
+export function FormContent({ isEditing }: { isEditing: boolean }) {
+  const [currentGroupId, setCurrentGroupId] = useState<number | undefined>(undefined)
 
   const { data: regulatoryAreaGroup } = useGetRegulatoryAreaGroupByIdQuery(
     currentGroupId && !Number.isNaN(+currentGroupId) ? +currentGroupId : skipToken
@@ -17,7 +15,7 @@ export function FormContent({ groupId, isEditing }: { groupId: string | null; is
 
   return (
     <>
-      <Identification onChangeGroup={setCurrentGroupId} />
+      <Identification onSelectGroup={setCurrentGroupId} />
       <Localisation isEditing={isEditing} />
       {regulatoryAreaGroup && <RegulatoryTexts regulatoryAreaGroup={regulatoryAreaGroup} />}
     </>

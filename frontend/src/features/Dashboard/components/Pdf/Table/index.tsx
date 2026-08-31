@@ -1,5 +1,6 @@
 import { getAMPColorWithAlpha } from '@features/map/layers/AMP/AMPLayers.style'
 import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/administrativeAndRegulatoryLayers.style'
+import { formatLayerName } from '@features/RegulatoryArea/utils'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
@@ -7,7 +8,6 @@ import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 
-import { formatLayerName } from '../../../../RegulatoryArea/utils'
 import { layoutStyle } from '../style'
 
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'

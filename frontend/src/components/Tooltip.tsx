@@ -11,6 +11,7 @@ type TooltipType = {
   iconSize?: number
   isSideWindow?: boolean
   linkText?: string
+  linkTextColor?: string
   orientation?: 'BOTTOM_RIGHT' | 'TOP_LEFT' | 'BOTTOM_LEFT'
 }
 
@@ -22,6 +23,7 @@ export function Tooltip({
   iconSize = 18,
   isSideWindow = false,
   linkText = undefined,
+  linkTextColor = THEME.color.gunMetal,
   orientation = 'BOTTOM_RIGHT'
 }: TooltipType) {
   const ref = useRef<HTMLDivElement>(null)
@@ -43,7 +45,7 @@ export function Tooltip({
             onFocus={() => setIsVisible(true)}
             onMouseLeave={() => setIsVisible(false)}
             onMouseOver={() => setIsVisible(true)}
-            style={{ cursor: 'pointer' }}
+            style={{ color: linkTextColor, cursor: 'pointer' }}
             tabIndex={0}
           >
             {linkText}

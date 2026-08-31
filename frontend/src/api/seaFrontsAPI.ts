@@ -6,8 +6,8 @@ import { monitorenvPrivateApi } from './api'
 import type { GeoJSON } from '../domain/types/GeoJSON'
 
 const GET_SEA_FRONTS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la liste des façades."
-const COMPUTE_SEA_FRONTS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer calculer la façade."
-type SeaFront = { seaFront: String }
+const COMPUTE_SEA_FRONTS_ERROR_MESSAGE = "Nous n'avons pas pu calculer la façade."
+type SeaFront = { seaFront: string }
 
 export const seaFrontsAPI = monitorenvPrivateApi.injectEndpoints({
   endpoints: builder => ({
