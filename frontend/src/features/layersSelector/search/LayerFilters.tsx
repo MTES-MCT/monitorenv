@@ -1,8 +1,8 @@
 import { useGetAMPsQuery } from '@api/ampsAPI'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
-import { TransparentButton } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
+import { ResetButton } from '@features/commonComponents/ResetButton'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { PeriodFilter } from '@features/VigilanceArea/components/PeriodFilter'
 import {
@@ -348,9 +348,7 @@ export function LayerFilters() {
         </TagWrapper>
       )}
 
-      {(hasFilters || !!controlPlan || areRecentsAreasChecked) && (
-        <ResetFilters onClick={handleResetFilters}>Réinitialiser les filtres</ResetFilters>
-      )}
+      {(hasFilters || !!controlPlan || areRecentsAreasChecked) && <ResetButton onClick={handleResetFilters} />}
     </FiltersWrapper>
   )
 }
@@ -370,11 +368,6 @@ const TagWrapper = styled.div`
   flex-wrap: wrap;
   gap: 4px;
   margin-top: 8px;
-`
-const ResetFilters = styled(TransparentButton)`
-  color: ${p => p.theme.color.slateGray};
-  display: flex;
-  text-decoration: underline;
 `
 
 const OptionValue = styled.span`
