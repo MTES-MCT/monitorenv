@@ -10,6 +10,7 @@ DELETE FROM regulatory_areas;
 INSERT INTO
   public.regulatory_areas (
     id,
+    creation,
     geom,
     url,
     layer_name,
@@ -36,6 +37,8 @@ INSERT INTO
 VALUES
   (
     1,
+    '2025-01-01',
+     /* creation */
     'MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))',
     'url1',        
     'layer_name1',
@@ -67,6 +70,7 @@ VALUES
 INSERT INTO
   public.regulatory_areas (
     id,
+    creation,
     geom,
     url,
     layer_name,
@@ -93,6 +97,8 @@ INSERT INTO
 VALUES
   (
     2,
+    '2025-01-01',
+    /* creation */
     'MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))',
     'url2',
     'layer_name2',
@@ -135,3 +141,7 @@ INSERT INTO
   tags_regulatory_areas (regulatory_areas_id, tags_id)
 VALUES
   (1, 1);
+INSERT INTO
+  tags_regulatory_areas (regulatory_areas_id, tags_id)
+VALUES
+  (1, 3);

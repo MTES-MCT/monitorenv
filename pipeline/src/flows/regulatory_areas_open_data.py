@@ -23,11 +23,11 @@ from src.shared_tasks.datagouv import (
 @task
 def extract_regulatory_areas_open_data() -> gpd.GeoDataFrame:
     return extract(
-        "cacem_local",
-        "cross/cacem/regulatory_areas_open_data.sql",
+        "monitorenv_remote",
+        "monitorenv/regulatory_areas_open_data.sql",
         backend="geopandas",
         geom_col="geometry",
-        parse_dates=["edition", "date_fin", "date"],
+        parse_dates=["creation", "edition", "date_fin", "date"], 
     )
 
 
@@ -36,6 +36,7 @@ def get_regulatory_areas_for_csv(regulatory_areas: gpd.GeoDataFrame) -> pd.DataF
 
     columns = [
         "id",
+        "creation",
         "url",
         "layer_name",
         "facade",
@@ -54,7 +55,9 @@ def get_regulatory_areas_for_csv(regulatory_areas: gpd.GeoDataFrame) -> pd.DataF
         "prohibition_periods",
         "additional_ref_reg",
         "themes",
+        "sub_themes",
         "tags",
+        "sub_tags",
         "location"
     ]
 
@@ -68,6 +71,7 @@ def get_regulatory_areas_for_geopackage(
 
     columns = [
         "id",
+        "creation",
         "url",
         "layer_name",
         "facade",
@@ -86,14 +90,16 @@ def get_regulatory_areas_for_geopackage(
         "prohibition_periods",
         "additional_ref_reg",
         "themes",
+        "sub_themes",
         "tags",
+        "sub_tags",
         "location"
     ]
 
     gdf = regulatory_areas[columns].copy(deep=True)
     
     # Normalize date columns to ensure they are in the correct format for the Geopackage
-    for col in ["edition", "date", "date_fin"]:
+    for col in ["creation", "edition", "date", "date_fin"]:
         if col in gdf.columns:
             gdf[col] = gdf[col].astype("datetime64[ms]")
             
