@@ -43,3 +43,12 @@ VALUES(
   '2023-01-01 00:00:00'::timestamp,
   '2099-12-31 23:59:59'::timestamp
 );
+
+INSERT INTO tags (id, name, parent_id, started_at, ended_at)
+VALUES(
+  3,
+ 'sub-tag1',
+  1,
+  '2023-01-01 00:00:00'::timestamp,
+  '2099-12-31 23:59:59'::timestamp
+);
