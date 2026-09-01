@@ -1,4 +1,5 @@
 import { ValidateButton } from '@features/commonComponents/ValidateButton'
+import { SubSubTitle } from '@features/RegulatoryArea/components/RegulatoryAreaForm/style'
 import { ReadOnlyOtherRefRegText } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/ReadOnlyOtherRefRegText'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { Accent, Button, FormikDatePicker, FormikTextarea, Icon, IconButton } from '@mtes-mct/monitor-ui'
@@ -57,8 +58,13 @@ export function OtherRefRegForm({ editingOtherRefReg, setEditingOtherRefReg }: O
   }
 
   return (
-    <>
-      {((values?.additionalRefReg?.length ?? 0) > 1 || editingOtherRefReg) && <Separator />}
+    <section>
+      {((values?.additionalRefReg?.length ?? 0) >= 1 || editingOtherRefReg) && (
+        <div>
+          <Separator />
+          <SubSubTitle>Textes supplémentaires</SubSubTitle>
+        </div>
+      )}
 
       {values?.additionalRefReg && values?.additionalRefReg.length > 0 && (
         <OtherRefRegContainer>
@@ -130,7 +136,7 @@ export function OtherRefRegForm({ editingOtherRefReg, setEditingOtherRefReg }: O
           })}
         </OtherRefRegContainer>
       )}
-    </>
+    </section>
   )
 }
 
@@ -138,10 +144,10 @@ const ActionButtons = styled.div`
   display: flex;
   gap: 8px;
 `
-const OtherRefRegContainer = styled.div`
+export const OtherRefRegContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 `
 
 const Separator = styled.div`

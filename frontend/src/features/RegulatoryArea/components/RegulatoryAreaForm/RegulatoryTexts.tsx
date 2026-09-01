@@ -1,4 +1,4 @@
-import { SubTitle } from '@features/RegulatoryArea/components/RegulatoryAreaForm/style'
+import { SubSubTitle, SubTitle } from '@features/RegulatoryArea/components/RegulatoryAreaForm/style'
 import { SubTitleWrapper } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/index'
 import { ReadOnlyOtherRefRegText } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/ReadOnlyOtherRefRegText'
 import { ReadOnlyRefRegText } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/ReadOnlyRefRegText'
@@ -6,6 +6,8 @@ import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { Button, getOptionsFromLabelledEnum, Select } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash'
 import styled from 'styled-components'
+
+import { OtherRefRegContainer } from '../RegulatoryAreaGroupForm/OtherRefRegForm'
 
 export function RegulatoryTexts({ regulatoryAreaGroup }: { regulatoryAreaGroup: RegulatoryArea.RegulatoryAreaGroup }) {
   const regulatoryTypeOptions = getOptionsFromLabelledEnum(RegulatoryArea.RegulatoryAreaTypeLabel).sort((a, b) =>
@@ -36,15 +38,24 @@ export function RegulatoryTexts({ regulatoryAreaGroup }: { regulatoryAreaGroup: 
           refReg={regulatoryAreaGroup.group.refReg}
           url={regulatoryAreaGroup.group.url}
         />
-        {regulatoryAreaGroup.group?.additionalRefReg?.length && <Separator />}
-        {regulatoryAreaGroup.group.additionalRefReg?.map(otherRefReg => (
-          <ReadOnlyOtherRefRegText
-            key={otherRefReg.id}
-            endDate={otherRefReg.endDate}
-            refReg={otherRefReg.refReg}
-            startDate={otherRefReg.startDate}
-          />
-        ))}
+        <section>
+          {regulatoryAreaGroup.group?.additionalRefReg?.length && (
+            <div>
+              <Separator />
+              <SubSubTitle>Textes supplémentaires</SubSubTitle>
+            </div>
+          )}
+          <OtherRefRegContainer>
+            {regulatoryAreaGroup.group.additionalRefReg?.map(otherRefReg => (
+              <ReadOnlyOtherRefRegText
+                key={otherRefReg.id}
+                endDate={otherRefReg.endDate}
+                refReg={otherRefReg.refReg}
+                startDate={otherRefReg.startDate}
+              />
+            ))}
+          </OtherRefRegContainer>
+        </section>
       </Fields>
     </div>
   )
@@ -55,6 +66,7 @@ const StyledSubTitle = styled(SubTitle)`
   margin-bottom: 0;
   margin-top: 0;
 `
+
 const Fields = styled.div`
   display: flex;
   flex-direction: column;

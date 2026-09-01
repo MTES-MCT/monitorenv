@@ -72,23 +72,25 @@ export function RegulatoryAreaList() {
   return (
     <StyledBackofficeWrapper>
       <StyledRegulatoryWrapper>
-        <TitleContainer>
-          <Title>Zones réglementaires</Title>
-          <div>
-            <Button
-              accent={Accent.SECONDARY}
-              Icon={Icon.Plus}
-              onClick={createRegulatoryAreaGroup}
-              style={{ marginRight: '8px' }}
-            >
-              Créer un groupe de reg.
-            </Button>
-            <Button Icon={Icon.Plus} onClick={createRegulatoryArea}>
-              Saisir une nouvelle réglementation
-            </Button>
-          </div>
-        </TitleContainer>
-        <RegulatoryAreaFilters />
+        <StickyContainer>
+          <TitleContainer>
+            <Title>Zones réglementaires</Title>
+            <div>
+              <Button
+                accent={Accent.SECONDARY}
+                Icon={Icon.Plus}
+                onClick={createRegulatoryAreaGroup}
+                style={{ marginRight: '8px' }}
+              >
+                Créer un groupe de reg.
+              </Button>
+              <Button Icon={Icon.Plus} onClick={createRegulatoryArea}>
+                Saisir une nouvelle réglementation
+              </Button>
+            </div>
+          </TitleContainer>
+          <RegulatoryAreaFilters />
+        </StickyContainer>
         {filters.groupBy === 'SEA_FRONT' ? (
           <SeaFrontTable apiFilters={apiFilters} isLoading={isLoading || isFetching} />
         ) : (
@@ -115,4 +117,11 @@ const StyledRegulatoryAreasPanel = styled(RegulatoryAreasPanel)`
 
 const StyledRegulatoryWrapper = styled(RegulatoryWrapper)`
   padding: 24px 40px;
+`
+
+const StickyContainer = styled.div`
+  background: ${p => p.theme.color.white};
+  position: sticky;
+  top: 0;
+  padding-bottom: 32px;
 `

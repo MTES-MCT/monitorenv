@@ -40,7 +40,7 @@ export function RegulatoryTexts({ isNew }: { isNew: boolean }) {
   }
 
   return (
-    <div>
+    <section>
       <SubTitleWrapper>
         <StyledSubTitle>TEXTE(S) RÉGLEMENTAIRE(S) EN VIGUEUR</StyledSubTitle>
         <Button disabled={!values.refReg} onClick={addOtherRefReg}>
@@ -59,7 +59,7 @@ export function RegulatoryTexts({ isNew }: { isNew: boolean }) {
         <RefRegForm isNew={isNew} />
         <OtherRefRegForm editingOtherRefReg={editingOtherRefReg} setEditingOtherRefReg={setEditingOtherRefReg} />
       </Fields>
-    </div>
+    </section>
   )
 }
 
