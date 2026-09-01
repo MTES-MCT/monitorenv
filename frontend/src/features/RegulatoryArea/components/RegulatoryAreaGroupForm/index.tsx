@@ -95,6 +95,8 @@ export function RegulatoryAreaGroupForm() {
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}`)
   }
 
+  const [navigateCallback, setNavigateCallback] = useState(() => backToList)
+
   const saveRegulatoryAreaGroup = async (group: RegulatoryArea.RegulatoryAreaGroupToApi) => {
     const savedRegulatoryAreaGroup = await dispatch(createOrUpdateRegulatoryAreaGroup(group))
     if (savedRegulatoryAreaGroup?.group.id && !location.pathname.includes(`${savedRegulatoryAreaGroup.group.id}`)) {
@@ -110,6 +112,7 @@ export function RegulatoryAreaGroupForm() {
   const cancelEdition = (isDirty: boolean) => {
     if (isDirty) {
       setIsCancelEditDialogOpen(true)
+      setNavigateCallback(() => backToList)
     } else {
       closePanel()
       backToList()
@@ -120,13 +123,26 @@ export function RegulatoryAreaGroupForm() {
     dispatch(regulatoryAreaTableActions.setOpenRegulatoryAreaId(undefined))
   }
 
-  const createRegulatoryArea = () => {
-    navigate(
-      `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?groupId=${regulatoryAreaGroup?.group.id}`,
-      {
-        state: { from: location.pathname }
-      }
-    )
+  const createRegulatoryArea = (isDirty: boolean) => {
+    if (isDirty) {
+      setIsCancelEditDialogOpen(true)
+      setNavigateCallback(
+        () => () =>
+          navigate(
+            `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?groupId=${regulatoryAreaGroup?.group.id}`,
+            {
+              state: { from: location.pathname }
+            }
+          )
+      )
+    } else {
+      navigate(
+        `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_LIST]}/new?groupId=${regulatoryAreaGroup?.group.id}`,
+        {
+          state: { from: location.pathname }
+        }
+      )
+    }
   }
 
   useEffect(() => {
@@ -157,7 +173,7 @@ export function RegulatoryAreaGroupForm() {
               {isCancelEditDialogOpen && (
                 <CancelEditDialog
                   onCancel={() => setIsCancelEditDialogOpen(false)}
-                  onConfirm={backToList}
+                  onConfirm={navigateCallback}
                   text={
                     <>
                       <p>Vous êtes en train d&apos;abandonner</p>
@@ -193,7 +209,7 @@ export function RegulatoryAreaGroupForm() {
                 <section>
                   <SubTitleWrapper>
                     <StyledSubTitle>RÉGLEMENTATIONS APPARTEMENT AU GROUPE</StyledSubTitle>
-                    <Button disabled={isNew} Icon={Icon.Plus} onClick={createRegulatoryArea}>
+                    <Button disabled={isNew} Icon={Icon.Plus} onClick={() => createRegulatoryArea(dirty)}>
                       Ajouter une réglementation
                     </Button>
                   </SubTitleWrapper>

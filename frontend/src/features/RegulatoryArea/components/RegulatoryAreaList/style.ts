@@ -5,7 +5,6 @@ import styled from 'styled-components'
 export const ControlPlanWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding-top: 32px;
 `
 export const GroupTitle = styled.div`
   align-items: center;

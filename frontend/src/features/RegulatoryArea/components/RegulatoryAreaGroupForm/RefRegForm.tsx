@@ -18,8 +18,9 @@ import {
   THEME
 } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useDebounce } from 'use-debounce'
 
 import type { MainRefReg } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/RegulatoryTexts'
 
@@ -33,6 +34,7 @@ export function RefRegForm({ isNew }: { isNew: boolean }) {
     refReg: values.refReg,
     url: values.url
   }
+  const [debouncedUrl] = useDebounce(values.url, 300)
   const [isEditing, setIsEditing] = useState(isNew)
   const { data: layerNames } = useGetLayerNamesQuery()
   const [duplicateUrls, setDuplicateUrls] = useState<RegulatoryArea.RegulatoryAreaGroupWithTotal[]>([])
@@ -69,46 +71,53 @@ export function RefRegForm({ isNew }: { isNew: boolean }) {
     setIsEditing(false)
   }
 
-  const computeDuplicateUrls = () => {
-    setDuplicateUrls(
-      layerNames?.filter(group => values.url && group.group.url === values.url && group.group.id !== values.id) ?? []
-    )
-  }
+  const shouldComputeDuplicateUrls = !!(debouncedUrl && debouncedUrl.length > 0)
+
+  useEffect(() => {
+    if (!shouldComputeDuplicateUrls) {
+      return
+    }
+    const computeDuplicateUrls = () => {
+      setDuplicateUrls(
+        layerNames?.filter(group => debouncedUrl && group.group.url === debouncedUrl && group.group.id !== values.id) ??
+          []
+      )
+    }
+    computeDuplicateUrls()
+  }, [debouncedUrl, layerNames, shouldComputeDuplicateUrls, values.id])
 
   if (isEditing) {
     return (
       <EditingRefRegContainer>
-        {duplicateUrls.length > 0 && (
-          <Duplicates>
-            <dt>Détection de doublons :</dt>
+        <Duplicates>
+          <dt>Détection de doublons : {!shouldComputeDuplicateUrls && 'entrer un lien pour lancer la recherche'}</dt>
+          {shouldComputeDuplicateUrls && (
             <dd>
-              <Bold>
-                {duplicateUrls.length} {pluralize('autre', duplicateUrls.length)}{' '}
-                {pluralize('groupe', duplicateUrls.length)}
-              </Bold>{' '}
-              avec cette référence réglementaire
+              {duplicateUrls?.length === 0 ? (
+                'Aucun autre groupe avec cette référence réglementaire'
+              ) : (
+                <>
+                  <Bold>
+                    {duplicateUrls.length} {pluralize('autre', duplicateUrls.length)}{' '}
+                    {pluralize('groupe', duplicateUrls.length)}
+                  </Bold>{' '}
+                  avec cette référence réglementaire
+                  <Tooltip linkText="En savoir plus" linkTextColor={THEME.color.charcoal} orientation="BOTTOM_LEFT">
+                    <ul>
+                      {duplicateUrls.map(group => (
+                        <li key={group.group.id}>{formatLayerName(group.group.layerName, group.group.location)}</li>
+                      ))}
+                    </ul>
+                  </Tooltip>
+                </>
+              )}
             </dd>
-            <Tooltip linkText="En savoir plus" linkTextColor={THEME.color.charcoal} orientation="BOTTOM_LEFT">
-              <ul>
-                {duplicateUrls.map(group => (
-                  <li key={group.group.id}>{formatLayerName(group.group.layerName, group.group.location)}</li>
-                ))}
-              </ul>
-            </Tooltip>
-          </Duplicates>
-        )}
+          )}
+        </Duplicates>
 
-        <FormikTextarea isLight label="Titre de la réglementation" name="refReg" />
+        <FormikTextarea isLight isRequired label="Titre de la réglementation" name="refReg" />
         <RefRegSecondLine>
-          <FormikTextInput
-            isErrorMessageHidden
-            isLight
-            isRequired
-            label="URL du lien"
-            name="url"
-            onBlur={computeDuplicateUrls}
-            style={{ flex: 1 }}
-          />
+          <FormikTextInput isErrorMessageHidden isLight isRequired label="URL du lien" name="url" style={{ flex: 1 }} />
           <DateContainer>
             <FormikDatePicker
               isErrorMessageHidden
@@ -158,6 +167,7 @@ export const RefRegContainer = styled.div`
 
 export const EditingRefRegContainer = styled(RefRegContainer)`
   flex-direction: column;
+  gap: 16px;
 `
 
 export const RefRegSecondLine = styled.div`
@@ -200,6 +210,7 @@ const StyledFormikDatePicker = styled(FormikDatePicker)`
 `
 
 const Duplicates = styled.dl`
+  align-items: baseline;
   display: flex;
   gap: 4px;
   margin: 0;
@@ -207,5 +218,11 @@ const Duplicates = styled.dl`
     color: ${p => p.theme.color.slateGray};
     font-size: 11px;
     font-style: italic;
+    font-weight: 500;
+  }
+  dd {
+    display: flex;
+    gap: 8px;
+    margin: 0;
   }
 `
