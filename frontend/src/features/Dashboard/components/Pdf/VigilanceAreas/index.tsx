@@ -140,7 +140,9 @@ export function VigilanceAreas({
                                     )}`
                                   : EMPTY_VALUE}
                               </Text>
-                              <Text>{frequencyText(period?.frequency)}</Text>
+                              <Text>
+                                {frequencyText(period?.frequency, period?.startDatePeriod, period?.endDatePeriod)}
+                              </Text>
                               <Text>{endingOccurenceText(period?.endingCondition, period?.computedEndDate)}</Text>
                             </>
                           )}

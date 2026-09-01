@@ -146,7 +146,7 @@ export const exportBrief =
         periods: vigilanceArea.periods?.map(period => ({
           ...period,
           endingOccurenceDate: endingOccurenceText(period.endingCondition, period.computedEndDate),
-          frequency: frequencyText(period.frequency)
+          frequency: frequencyText(period.frequency, period.startDatePeriod, period.endDatePeriod)
         })),
         themes: displayThemes(vigilanceArea.themes),
         visibility: VigilanceArea.VisibilityLabel[vigilanceArea?.visibility ?? VigilanceArea.VisibilityLabel.PUBLIC]
