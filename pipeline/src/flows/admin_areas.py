@@ -37,7 +37,7 @@ def load_6_miles_areas(
         table_name="6_miles_areas",
         schema="public",
         db_name="monitorenv_remote",
-        logger=get_run_logger("logger"),
+        logger=get_run_logger(),
         how="replace",
     )
 
