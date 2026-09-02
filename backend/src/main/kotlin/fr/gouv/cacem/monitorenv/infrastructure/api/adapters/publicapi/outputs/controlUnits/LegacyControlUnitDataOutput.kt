@@ -32,6 +32,7 @@ data class LegacyControlUnitDataOutput(
                 id = controlUnit.id,
                 administration = controlUnit.administration?.name ?: "",
                 name = controlUnit.name,
+                contact = controlUnit.contact,
                 isArchived = controlUnit.isArchived,
                 resources =
                     resources.map {
