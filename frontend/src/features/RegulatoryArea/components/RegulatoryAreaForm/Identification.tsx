@@ -1,6 +1,8 @@
 import { useGetLayerNamesQuery } from '@api/regulatoryAreasAPI'
+import { CancelEditDialog } from '@components/Dialog/CancelEditDialog'
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
+import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { ResetButton } from '@features/commonComponents/ResetButton'
@@ -32,12 +34,19 @@ import { formatLayerName } from '../../utils'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
-export function Identification({ onSelectGroup }: { onSelectGroup: (id: number | undefined) => void }) {
+export function Identification({
+  isEditing,
+  onSelectGroup
+}: {
+  isEditing: boolean
+  onSelectGroup: (id: number | undefined) => void
+}) {
   const navigate = useNavigate()
-  const { errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
+  const { dirty, errors, setFieldValue, values } = useFormikContext<RegulatoryArea.RegulatoryAreaFromAPI>()
   const { data: layerNames } = useGetLayerNamesQuery()
 
   const [isModifyingLayerName, setIsModifyingLayerName] = useState(false)
+  const [isCancelEditDialogOpen, setIsCancelEditDialogOpen] = useState(false)
 
   const layerNameOptions = useMemo(() => {
     const formattedLayerNames = (layerNames ?? [])
@@ -100,11 +109,19 @@ export function Identification({ onSelectGroup }: { onSelectGroup: (id: number |
     setIsModifyingLayerName(true)
   }
 
-  const modifyGroup = () => {
+  const goToGroup = () => {
     const groupId = layerNames?.find(
       group => group.group.layerName === values.layerName && group.group.location === values.location
     )?.group.id
     navigate(`/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.REGULATORY_AREA_GROUP]}/${groupId}`)
+  }
+
+  const modifyGroup = () => {
+    if (dirty) {
+      setIsCancelEditDialogOpen(true)
+    } else {
+      goToGroup()
+    }
   }
 
   const onChangeLayerName = (nextValue?: { groupId: number | undefined; layerName: string | undefined }) => {
@@ -122,6 +139,18 @@ export function Identification({ onSelectGroup }: { onSelectGroup: (id: number |
 
   return (
     <>
+      {isCancelEditDialogOpen && (
+        <CancelEditDialog
+          onCancel={() => setIsCancelEditDialogOpen(false)}
+          onConfirm={goToGroup}
+          text={
+            <>
+              <p>Vous êtes en train d&apos;abandonner</p>
+              <Bold>{`${isEditing ? "l'édition" : 'la création'} de la zone réglementaire.`}</Bold>
+            </>
+          }
+        />
+      )}
       <SubTitle>IDENTIFICATION DE LA ZONE RÉGLEMENTAIRE</SubTitle>
       <FieldsWrapper>
         <FieldWithTooltip>

@@ -203,7 +203,7 @@ const Footer = styled.footer`
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  padding: 16px 20px;
+  padding: 16px 0;
   position: sticky;
   width: 100%;
   z-index: 6;
