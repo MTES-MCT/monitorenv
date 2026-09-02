@@ -51,7 +51,7 @@ export const CustomGlobalStyle = createGlobalStyle`
   }
 
   .active-tab {
-    background-color: #707785;
+    background-color: #5E667C;
   }
 
   .collapsed {

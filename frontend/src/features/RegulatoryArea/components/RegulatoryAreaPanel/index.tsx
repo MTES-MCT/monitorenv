@@ -83,7 +83,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
 
 const Wrapper = styled.div`
   background-color: ${p => p.theme.color.white};
-  box-shadow: 0px 3px 5px #70778540;
+  box-shadow: 0px 3px 5px #5e667c40;
   position: absolute;
   width: 400px;
   z-index: 2;

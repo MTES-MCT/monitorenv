@@ -208,7 +208,7 @@ export function SemaphoreCard({ feature, selected = false }: SemaphoreCardProps)
 
 const Wrapper = styled.div`
   padding: 10px;
-  box-shadow: 0px 3px 6px #70778540;
+  box-shadow: 0px 3px 6px #5e667c40;
   border-radius: 1px;
   background-color: ${p => p.theme.color.white};
   display: flex;

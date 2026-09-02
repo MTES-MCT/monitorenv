@@ -49,7 +49,7 @@ export function Accordion({
 }
 
 export const AccordionContainer = styled.div`
-  box-shadow: 0px 3px 6px #70778540;
+  box-shadow: 0px 3px 6px #5e667c40;
   width: 100%;
 `
 export const StyledIconButton = styled(IconButton)<{ $isExpanded: boolean }>`

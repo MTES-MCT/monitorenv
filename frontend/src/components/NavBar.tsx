@@ -64,7 +64,7 @@ export function NavBar({ children, name, onSelect }: NavBarProps) {
 const StyledResponsiveNav = styled(RsuiteNavBar)`
   > .rs-navbar-nav {
     display: flex;
-    box-shadow: 0px 3px 4px #7077854d;
+    box-shadow: 0px 3px 4px #5e667c4d;
     height: 48px;
     width: 100%;
     background: ${p => p.theme.color.white};

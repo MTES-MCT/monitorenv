@@ -14,7 +14,7 @@ import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
-import { forwardRef, type ComponentProps } from 'react'
+import { type ComponentProps, forwardRef } from 'react'
 import styled from 'styled-components'
 
 export const AmpsPanel = forwardRef<HTMLDivElement, { layerId: number; onClose: () => void } & ComponentProps<'div'>>(
@@ -61,7 +61,7 @@ export const AmpsPanel = forwardRef<HTMLDivElement, { layerId: number; onClose: 
 
 const Wrapper = styled.div`
   background-color: ${p => p.theme.color.white};
-  box-shadow: 0px 3px 5px #70778540;
+  box-shadow: 0px 3px 5px #5e667c40;
   position: absolute;
   width: 400px;
   z-index: 2;

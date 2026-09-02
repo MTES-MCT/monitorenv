@@ -6,7 +6,7 @@ import { editMissionInLocalStore } from '@features/Mission/useCases/editMissionI
 import { getMissionCompletionStatus, humanizeMissionTypes } from '@features/Mission/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Button, Icon, IconButton, Size, customDayjs as dayjs, pluralize } from '@mtes-mct/monitor-ui'
+import { Accent, Button, customDayjs as dayjs, Icon, IconButton, pluralize, Size } from '@mtes-mct/monitor-ui'
 import { removeOverlayStroke } from 'domain/shared_slices/Global'
 import { closeAllOverlays } from 'domain/use_cases/map/closeAllOverlays'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -182,7 +182,7 @@ export function MissionCard({ feature, isOnlyHoverable = false, selected = false
 
 const Wrapper = styled.div`
   padding: 10px;
-  box-shadow: 0px 3px 6px #70778540;
+  box-shadow: 0px 3px 6px #5e667c40;
   background-color: ${p => p.theme.color.white};
   display: flex;
   flex-direction: column;

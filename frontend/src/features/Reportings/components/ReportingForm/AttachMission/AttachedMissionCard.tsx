@@ -96,7 +96,7 @@ export function AttachedMissionCard({
 
 const Wrapper = styled.div<{ $isReadOnly: boolean }>`
   padding: 10px;
-  box-shadow: 0px 3px 6px #70778529;
+  box-shadow: 0px 3px 6px #5e667c29;
   background-color: ${p => p.theme.color.cultured};
   display: flex;
   flex-direction: column;
