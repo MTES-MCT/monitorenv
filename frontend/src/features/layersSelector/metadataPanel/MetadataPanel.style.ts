@@ -106,7 +106,7 @@ export const Wrapper = styled.div<{ $regulatoryMetadataPanelIsOpen: boolean }>`
   opacity: ${p => (p.$regulatoryMetadataPanelIsOpen ? 1 : 0)};
   padding: 0;
   transition: all 0.5s;
-  box-shadow: 0 3px 5px #70778540;
+  box-shadow: 0 3px 5px #5e667c40;
 `
 
 export const Name = styled.span`
