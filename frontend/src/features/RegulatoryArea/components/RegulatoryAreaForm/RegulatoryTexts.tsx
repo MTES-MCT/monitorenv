@@ -39,7 +39,7 @@ export function RegulatoryTexts({ regulatoryAreaGroup }: { regulatoryAreaGroup: 
           url={regulatoryAreaGroup.group.url}
         />
         <section>
-          {regulatoryAreaGroup.group?.additionalRefReg?.length && (
+          {(regulatoryAreaGroup.group?.additionalRefReg?.length ?? 0) > 0 && (
             <div>
               <Separator />
               <SubSubTitle>Textes supplémentaires</SubSubTitle>

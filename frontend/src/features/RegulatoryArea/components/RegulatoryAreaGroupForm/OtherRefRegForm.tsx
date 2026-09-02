@@ -59,7 +59,7 @@ export function OtherRefRegForm({ editingOtherRefReg, setEditingOtherRefReg }: O
 
   return (
     <section>
-      {((values?.additionalRefReg?.length ?? 0) >= 1 || editingOtherRefReg) && (
+      {((values?.additionalRefReg?.length ?? 0) > 0 || editingOtherRefReg) && (
         <div>
           <Separator />
           <SubSubTitle>Textes supplémentaires</SubSubTitle>
