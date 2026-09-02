@@ -21,6 +21,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetMissionsByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.dtos.MissionDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.events.UpdateMissionEvent
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.LegacyControlUnitDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.missions.CreateOrUpdateMissionDataInput
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.equalTo
@@ -333,6 +334,52 @@ class LegacyMissionsITests {
                     equalTo(expectedUpdatedMission.observationsCnsp),
                 ),
             )
+    }
+
+    @Test
+    fun `Should return the control unit contact When updating a mission`() {
+        // Given
+        val requestBody =
+            CreateOrUpdateMissionDataInput(
+                id = 14,
+                missionTypes = listOf(MissionTypeEnum.SEA),
+                controlUnits =
+                    listOf(
+                        LegacyControlUnitDataInput(
+                            id = 1,
+                            administration = "DIRM / DM",
+                            isArchived = false,
+                            name = "Cross Etel",
+                            resources = listOf(),
+                            contact = "Tel. 06 88 65 66 66",
+                        ),
+                    ),
+                startDateTimeUtc = ZonedDateTime.parse("2022-01-15T04:50:09Z"),
+                missionSource = MissionSourceEnum.MONITORFISH,
+                hasMissionOrder = true,
+                isUnderJdp = true,
+                isGeometryComputedFromControls = false,
+                createdAtUtc = null,
+                updatedAtUtc = null,
+            )
+        val expectedUpdatedMission = requestBody.toMissionEntity()
+        given(
+            createOrUpdateMission.execute(
+                mission = expectedUpdatedMission,
+                fromPublicAPI = true,
+            ),
+        ).willReturn(expectedUpdatedMission)
+
+        // When
+        mockMvc
+            .perform(
+                post("/api/v1/missions/14")
+                    .content(jsonMapper.writeValueAsString(requestBody))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.controlUnits[0].contact", equalTo("Tel. 06 88 65 66 66")))
     }
 
     @Test
