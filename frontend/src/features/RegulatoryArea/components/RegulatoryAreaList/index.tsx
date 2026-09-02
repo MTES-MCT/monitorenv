@@ -116,12 +116,13 @@ const StyledRegulatoryAreasPanel = styled(RegulatoryAreasPanel)`
 `
 
 const StyledRegulatoryWrapper = styled(RegulatoryWrapper)`
-  padding: 24px 40px;
+  padding: 0 40px 24px;
 `
 
 const StickyContainer = styled.div`
   background: ${p => p.theme.color.white};
   position: sticky;
   top: 0;
+  padding-top: 24px;
   padding-bottom: 32px;
 `

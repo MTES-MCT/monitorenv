@@ -15,7 +15,7 @@ export function FormContent({ isEditing }: { isEditing: boolean }) {
 
   return (
     <>
-      <Identification onSelectGroup={setCurrentGroupId} />
+      <Identification isEditing={isEditing} onSelectGroup={setCurrentGroupId} />
       <Localisation isEditing={isEditing} />
       {regulatoryAreaGroup && <RegulatoryTexts regulatoryAreaGroup={regulatoryAreaGroup} />}
     </>
