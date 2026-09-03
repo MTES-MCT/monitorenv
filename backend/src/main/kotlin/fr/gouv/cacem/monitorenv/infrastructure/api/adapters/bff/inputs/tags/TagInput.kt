@@ -13,6 +13,7 @@ data class TagInput(
     fun toTagEntity(): TagEntity =
         TagEntity(
             id = id,
+            codeFao = null,
             name = name,
             startedAt = startedAt,
             endedAt = endedAt,

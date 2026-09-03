@@ -5,6 +5,7 @@ import java.time.ZonedDateTime
 
 data class TagOutput(
     val id: Int?,
+    val codeFao: String?,
     val name: String,
     val startedAt: ZonedDateTime?,
     val endedAt: ZonedDateTime?,
@@ -14,6 +15,7 @@ data class TagOutput(
         fun fromTagEntity(tagEntity: TagEntity): TagOutput =
             TagOutput(
                 id = tagEntity.id,
+                codeFao = tagEntity.codeFao,
                 name = tagEntity.name,
                 startedAt = tagEntity.startedAt,
                 endedAt = tagEntity.endedAt,

@@ -1,12 +1,14 @@
+import { useGetSpeciesQuery } from '@api/speciesAPI'
 import { useGetTagsQuery } from '@api/tagsAPI'
 import { BackofficeWrapper, Title, TitleContainer } from '@features/BackOffice/components/style'
 import { TAG_TABLE_COLUMNS } from '@features/Tags/components/Table/Columns/constants'
 import { saveTag } from '@features/Tags/components/useCases/saveTag'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Button, DataTable } from '@mtes-mct/monitor-ui'
+import { Button, CustomSearch, DataTable } from '@mtes-mct/monitor-ui'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useBeforeUnload } from 'react-router'
+import styled from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
 
 import { FilterBar } from './FilterBar'
@@ -22,6 +24,7 @@ export function TagTable() {
   const { data } = useGetTagsQuery([startDate, endDate], {
     refetchOnMountOrArgChange: true
   })
+  const { data: species } = useGetSpeciesQuery()
 
   const [tags, setTags] = useState<TagTableType[]>([])
   const [draftTags, setDraftTags] = useState<TagTableType[]>([])
@@ -54,8 +57,23 @@ export function TagTable() {
     }))
   }, [filtersState, tags])
 
+  const speciesOptions = useMemo(
+    () =>
+      species
+        ?.map(specy => ({ label: `${specy.code} - ${specy.name}`, value: specy.code }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    [species]
+  )
+
+  const customSearch = new CustomSearch(speciesOptions ?? [], ['label'], {
+    cacheKey: 'TAG_SPECIES',
+    isStrict: true,
+    withCacheInvalidation: true
+  })
+
   const addNewTag = useCallback(() => {
     const newTag: TagTableType = {
+      codeFao: undefined,
       endedAt: undefined,
       id: undefined,
       name: undefined,
@@ -147,6 +165,7 @@ export function TagTable() {
         }
         const draftSubTags = draftTags.filter(draftTag => draftTag.id && draftTag.parentId === tagToSave.id)
         const tagToApi: TagToAPI = {
+          codeFao: tagToSave.codeFao,
           endedAt: tagToSave.endedAt,
           id: tagToSave.id,
           name: tagToSave.name,
@@ -210,25 +229,40 @@ export function TagTable() {
         <Button onClick={addNewTag}>Ajouter un nouveau tag</Button>
       </TitleContainer>
       <FilterBar />
-      <DataTable
-        columns={columns}
-        data={tagsDataTable}
-        initialSorting={[{ desc: false, id: 'name' }]}
-        tableOptions={{
-          getRowId: row => row.rowId,
-          meta: {
-            getDraftTag,
-            isEditing,
-            isValid,
-            onAddSubTag,
-            onEdit,
-            onSubmit,
-            updateData
-          },
-          onExpandedChange: setExpanded,
-          state: { expanded }
-        }}
-      />
+      <Wrapper>
+        <DataTable
+          columns={columns}
+          data={tagsDataTable}
+          initialSorting={[{ desc: false, id: 'name' }]}
+          tableOptions={{
+            getRowId: row => row.rowId,
+            meta: {
+              customSearch,
+              getDraftTag,
+              isEditing,
+              isValid,
+              onAddSubTag,
+              onEdit,
+              onSubmit,
+              speciesOptions,
+              updateData
+            },
+            onExpandedChange: setExpanded,
+            state: { expanded }
+          }}
+        />
+      </Wrapper>
     </BackofficeWrapper>
   )
 }
+
+const Wrapper = styled.div`
+  overflow-y: auto;
+  width: 100%;
+  table {
+    width: 100%;
+  }
+  td:nth-child(2) {
+    overflow: visible !important;
+  }
+`
