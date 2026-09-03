@@ -15,6 +15,7 @@ export function ResetButton({ label = 'Réinitialiser les filtres', onClick }: R
 }
 
 const StyledLinkButton = styled(LinkButton)`
+  white-space: nowrap;
   color: ${p => p.theme.color.charcoal} !important;
   svg,
   span {
