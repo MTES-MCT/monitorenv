@@ -20,6 +20,8 @@ data class TagModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int?,
+    @Column
+    val codeFao: String?,
     @Column(nullable = false)
     val name: String,
     @Column(nullable = false)
@@ -37,6 +39,7 @@ data class TagModel(
     fun toTagEntity(): TagEntity =
         TagEntity(
             id = id,
+            codeFao = codeFao,
             name = name,
             startedAt = startedAt,
             endedAt = endedAt,
@@ -51,6 +54,7 @@ data class TagModel(
             val tagModel =
                 TagModel(
                     id = tagEntity.id,
+                    codeFao = tagEntity.codeFao,
                     name = tagEntity.name,
                     parent = parent,
                     startedAt = tagEntity.startedAt,
@@ -71,6 +75,7 @@ data class TagModel(
         other as TagModel
 
         if (id != other.id) return false
+        if (codeFao != other.codeFao) return false
         if (name != other.name) return false
         if (startedAt != other.startedAt) return false
         if (endedAt != other.endedAt) return false
@@ -82,6 +87,7 @@ data class TagModel(
     override fun hashCode(): Int {
         var result = id
         result = 31 * (result ?: 0) + name.hashCode()
+        result = 31 * result + codeFao.hashCode()
         result = 31 * result + (startedAt?.hashCode() ?: 0)
         result = 31 * result + (endedAt?.hashCode() ?: 0)
         return result

@@ -12,9 +12,11 @@ class TagFixture {
             startedAt: ZonedDateTime = ZonedDateTime.now(),
             endedAt: ZonedDateTime? = null,
             subTags: List<TagEntity> = listOf(),
+            codeFao: String? = null,
         ): TagEntity =
             TagEntity(
                 id = id,
+                codeFao = codeFao,
                 name = name,
                 startedAt = startedAt,
                 endedAt = endedAt,

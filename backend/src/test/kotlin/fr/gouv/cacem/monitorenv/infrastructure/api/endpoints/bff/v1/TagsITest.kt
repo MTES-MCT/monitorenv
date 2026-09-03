@@ -132,9 +132,11 @@ class TagsITest {
         val tagName = "tag1"
         val startedAt = ZonedDateTime.parse("2025-01-01T12:00:00Z")
         val endedAt = ZonedDateTime.parse("2025-12-31T12:00:00Z")
+        val codeFao = "ABC"
         val tagInput =
             CreaterOrUpdateTagInput(
                 id = id,
+                codeFao = codeFao,
                 name = tagName,
                 startedAt = startedAt,
                 endedAt = endedAt,
@@ -144,6 +146,7 @@ class TagsITest {
         val tag =
             aTag(
                 id = id,
+                codeFao = codeFao,
                 name = tagName,
                 startedAt = startedAt,
                 endedAt = endedAt,
@@ -159,6 +162,7 @@ class TagsITest {
             // Then
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id", equalTo(id)))
+            .andExpect(jsonPath("$.codeFao", equalTo(codeFao)))
             .andExpect(jsonPath("$.name", equalTo(tagName)))
             .andExpect(jsonPath("$.startedAt", equalTo("2025-01-01T12:00:00Z")))
             .andExpect(jsonPath("$.endedAt", equalTo("2025-12-31T12:00:00Z")))
