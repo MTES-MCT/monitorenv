@@ -1,3 +1,4 @@
+import { EditableSelectCell } from '@features/Tags/components/Table/Cells/EditableSelectCell'
 import { EditableTextCell } from '@features/Tags/components/Table/Cells/EditableTextCell'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
@@ -15,16 +16,25 @@ export const TAG_TABLE_COLUMNS = [
     size: 38
   },
   {
-    accessorFn: row => row.name,
+    accessorFn: row => ({ codeFao: row.codeFao, name: row.name }),
     cell: ({ getValue, row, table }) => (
-      <EditableTextCell
-        columnId="name"
-        initialValue={getValue()}
-        isChild={row.depth === 1}
-        isEditing={table.options.meta?.isEditing(row)}
-        label="Nom du tag"
-        onCommit={value => table.options.meta?.updateData(row.id, 'name', value, row.parentId)}
-      />
+      <HAlign>
+        <EditableTextCell
+          columnId="name"
+          initialValue={getValue().name}
+          isChild={row.depth === 1}
+          isEditing={table.options.meta?.isEditing(row)}
+          label="Nom du tag"
+          onCommit={value => table.options.meta?.updateData(row.id, 'name', value, row.parentId)}
+        />
+        <EditableSelectCell
+          customSearch={table.options.meta?.customSearch}
+          initialValue={getValue().codeFao}
+          isEditing={table.options.meta?.isEditing(row)}
+          onCommit={value => table.options.meta?.updateData(row.id, 'codeFao', value, row.parentId)}
+          options={table.options.meta?.speciesOptions}
+        />
+      </HAlign>
     ),
     header: () => 'Tag',
     id: 'name'
@@ -121,11 +131,12 @@ const StyledChevron = styled(Icon.Chevron)<{ $isExpanded: boolean }>`
   transition: all 0.5s;
 `
 
-const HAlign = styled.span`
+const HAlign = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: row;
+  gap: 4px;
   justify-content: space-between;
-  align-items: center;
 `
 
 const StyledIconButton = styled(IconButton)`

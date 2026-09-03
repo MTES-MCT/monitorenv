@@ -1,8 +1,9 @@
 context('Back Office > Tag Table > Row actions', () => {
   beforeEach(() => {
     cy.intercept('GET', `/bff/v1/tags*`).as('getTags')
+    cy.intercept('GET', `/bff/v1/species`).as('getSpecies')
     cy.visit(`/backoffice/tags`)
-    cy.wait('@getTags')
+    cy.wait(['@getTags', '@getSpecies'])
   })
 
   it('Should edit the tag when clicking on Edit', () => {
@@ -11,6 +12,7 @@ context('Back Office > Tag Table > Row actions', () => {
     cy.get('@row').within(() => cy.get('button[title="Éditer ce tag"]').click({ force: true }))
     cy.get('input[name="name"]').clear()
     cy.get('input[name="name"]').type('New AMP')
+    cy.fill('Code FAO', 'ZZW - Aster, oreille de cochon')
     // Started At
     cy.get('input[id="startedAtDay"]').type('01', { force: true })
     cy.get('input[id="startedAtMonth"]').type('01', { force: true })
@@ -26,6 +28,7 @@ context('Back Office > Tag Table > Row actions', () => {
         assert.fail('response is undefined.')
       }
       assert.deepEqual(request.body, {
+        codeFao: 'ZZW',
         endedAt: '2099-12-31T23:59:59.000Z',
         id: 2,
         name: 'New AMP',
@@ -42,6 +45,7 @@ context('Back Office > Tag Table > Row actions', () => {
 
     cy.get('input[name="name"]').clear()
     cy.get('input[name="name"]').type('AMP')
+    cy.fill('Code FAO', undefined)
     // Started At
     cy.get('input[id="startedAtDay"]').type('01', { force: true })
     cy.get('input[id="startedAtMonth"]').type('01', { force: true })
@@ -67,6 +71,7 @@ context('Back Office > Tag Table > Row actions', () => {
       .eq(2)
       .within(() => {
         cy.get('input[name="name"]').type('New subTag')
+        cy.fill('Code FAO', 'ZZW - Aster, oreille de cochon')
         // Started At
         cy.get('input[id="startedAtDay"]').type('01', { force: true })
         cy.get('input[id="startedAtMonth"]').type('01', { force: true })
@@ -132,6 +137,7 @@ context('Back Office > Tag Table > Row actions', () => {
       .scrollIntoView()
       .within(() => {
         cy.get('input[name="name"]').type('ZZZ New tag')
+        cy.fill('Code FAO', 'ZZW - Aster, oreille de cochon')
         // Started At
         cy.get('input[id="startedAtDay"]').type('01', { force: true })
         cy.get('input[id="startedAtMonth"]').type('01', { force: true })

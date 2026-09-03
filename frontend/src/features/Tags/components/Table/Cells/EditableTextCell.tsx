@@ -33,6 +33,7 @@ export function EditableTextCell({
         onCommit(nextValue ?? '')
       }}
       onClick={e => e.stopPropagation()}
+      style={{ width: '100%' }}
       value={value}
     />
   ) : (

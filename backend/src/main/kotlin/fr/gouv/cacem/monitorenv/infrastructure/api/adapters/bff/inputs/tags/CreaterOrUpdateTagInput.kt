@@ -6,6 +6,7 @@ import java.util.Collections.emptyList
 
 data class CreaterOrUpdateTagInput(
     val id: Int?,
+    val codeFao: String?,
     val endedAt: ZonedDateTime?,
     val name: String,
     val parentId: Int?,
@@ -14,6 +15,7 @@ data class CreaterOrUpdateTagInput(
     fun toTagEntity(): TagEntity =
         TagEntity(
             id = id,
+            codeFao = codeFao,
             name = name,
             startedAt = startedAt,
             endedAt = endedAt,
