@@ -125,4 +125,5 @@ const StickyContainer = styled.div`
   top: 0;
   padding-top: 24px;
   padding-bottom: 32px;
+  z-index: 1;
 `
