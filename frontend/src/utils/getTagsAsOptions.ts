@@ -13,13 +13,15 @@ export const getTagsAsOptions = (tags: TagFromAPI[], childrenKey: string = 'subT
               [childrenKey]:
                 tag.subTags.length === 0
                   ? undefined
-                  : tag.subTags.map(({ id, name }) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name))
+                  : tag.subTags
+                      .map(({ codeFao, id, name }) => ({ id, name: codeFao ? `${name} (${codeFao})` : name }))
+                      .sort((a, b) => a.name.localeCompare(b.name))
             }
 
       return {
         ...subTags,
         id: tag.id,
-        name: tag.name
+        name: tag.codeFao ? `${tag.name} (${tag.codeFao})` : tag.name
       }
     })
     .sort((a, b) => a.name.localeCompare(b.name))
