@@ -26,7 +26,12 @@ export const endingOccurenceText = (
   return capitalize ? capitalizeFirstLetter(text) : text
 }
 
-export const frequencyText = (frequency?: VigilanceArea.Frequency, capitalize = true) => {
+export const frequencyText = (
+  frequency: VigilanceArea.Frequency | undefined,
+  startDate: string | undefined,
+  endDate: string | undefined,
+  capitalize = true
+) => {
   switch (frequency) {
     case VigilanceArea.Frequency.ALL_YEARS: {
       const text = 'se répète tous les ans'
@@ -39,7 +44,12 @@ export const frequencyText = (frequency?: VigilanceArea.Frequency, capitalize = 
       return capitalize ? capitalizeFirstLetter(text) : text
     }
     case VigilanceArea.Frequency.ALL_WEEKS: {
-      const text = 'se répète toutes les semaines'
+      let text = 'Se répète toutes les semaines'
+      if (startDate && endDate) {
+        const startDay = capitalizeFirstLetter(customDayjs(startDate).format('dddd'))
+        const endDay = capitalizeFirstLetter(customDayjs(endDate).format('dddd'))
+        text = `Se répète tous les ${startDay} et ${endDay}`
+      }
 
       return capitalize ? capitalizeFirstLetter(text) : text
     }
@@ -62,7 +72,7 @@ export function computeVigilanceAreaPeriod(
     return `${[
       `${period?.startDatePeriod ? `Du ${customDayjs(period?.startDatePeriod).utc().format('DD/MM/YY')}` : ''}
       ${period?.endDatePeriod ? `au ${customDayjs(period?.endDatePeriod).utc().format('DD/MM/YY')}` : ''}`,
-      withReccurenceText ? frequencyText(period?.frequency, false) : '',
+      withReccurenceText ? frequencyText(period?.frequency, period?.startDatePeriod, period?.endDatePeriod, false) : '',
       withReccurenceText ? endingOccurenceText(period?.endingCondition, period?.computedEndDate, false) : ''
     ]
       .filter(Boolean)
