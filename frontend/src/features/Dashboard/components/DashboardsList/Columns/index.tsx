@@ -48,7 +48,8 @@ export const Columns = (
     enableSorting: true,
     header: () => 'Mis à jour le ...',
     id: 'updatedAt',
-    size: 212 + legacyFirefoxOffset
+    size: 212 + legacyFirefoxOffset,
+    sortUndefined: 'last' as const
   },
   {
     accessorFn: row => row.controlUnitIds,
