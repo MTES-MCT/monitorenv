@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture
@@ -28,29 +28,14 @@ class GetAllRegulatoryAreasUTest {
             )
         given(
             regulatoryAreaGroupRepository.findAll(
- SearchFilters(
-                        controlPlan = null,
-                        seaFronts = null,
-                        tags = null,
-                        themes = null,
-                        onlyRecentsAreas = null,
-                        query = null,
-                    ),
+                SearchFilters(),
             ),
         ).willReturn(listOf(expectedRegulatoryAreaGroup))
 
         // When
         val (regulatoryAreas, totalCount) =
             getAllRegulatoryAreas.execute(
-                filters =
-                    SearchFilters(
-                        controlPlan = null,
-                        seaFronts = null,
-                        tags = null,
-                        themes = null,
-                        onlyRecentsAreas = null,
-                        query = null,
-                    ),
+                filters = SearchFilters(),
             )
 
         // Then
@@ -89,10 +74,7 @@ class GetAllRegulatoryAreasUTest {
             )
         given(
             regulatoryAreaGroupRepository.findAll(
-                controlPlan = null,
-                seaFronts = null,
-                tags = null,
-                themes = null,
+                SearchFilters(),
             ),
         ).willReturn(
             listOf(
@@ -124,15 +106,7 @@ class GetAllRegulatoryAreasUTest {
         // When
         val (groupedRegulatoryAreas, totalCount) =
             getAllRegulatoryAreas.execute(
-                filters =
-                    SearchFilters(
-                        controlPlan = null,
-                        seaFronts = null,
-                        tags = null,
-                        themes = null,
-                        onlyRecentsAreas = null,
-                        query = null,
-                    ),
+                filters = SearchFilters(),
             )
 
         // Then

@@ -87,9 +87,9 @@ data class RegulatoryAreaModel(
         editionBo = editionBo?.atZone(ZoneOffset.UTC),
         editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
         extent =
-                        geom?.envelopeInternal?.let {
-                            doubleArrayOf(it.minX, it.minY, it.maxX, it.maxY)
-                        },
+            geom?.envelopeInternal?.let {
+                doubleArrayOf(it.minX, it.minY, it.maxX, it.maxY)
+            },
         facade = facade,
         geom = if (areaType === AreaTypeEnum.ZONE) geom else null,
         layerName = layerName,
