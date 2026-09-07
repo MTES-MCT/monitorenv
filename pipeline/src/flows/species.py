@@ -20,12 +20,12 @@ def extract_species() -> pd.DataFrame:
 
 
 @task
-def load_species(facade_areas: pd.DataFrame):
+def load_species(species: pd.DataFrame):
 
     logger = get_run_logger()
 
     load(
-        facade_areas,
+        species,
         table_name="species",
         schema="public",
         db_name="monitorenv_remote",

@@ -34,6 +34,7 @@ export function EditableSelectCell({
         placeholder="Code FAO"
         style={{ width: '250px' }}
         value={value}
+        virtualized
       />
     </Wrapper>
   ) : (
