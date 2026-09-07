@@ -71,7 +71,6 @@ context('Back Office > Tag Table > Row actions', () => {
       .eq(2)
       .within(() => {
         cy.get('input[name="name"]').type('New subTag')
-        cy.fill('Code FAO', 'ZZW - Aster, oreille de cochon')
         // Started At
         cy.get('input[id="startedAtDay"]').type('01', { force: true })
         cy.get('input[id="startedAtMonth"]').type('01', { force: true })
