@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaGroupEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
@@ -12,6 +13,10 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaMode
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
 import org.apache.commons.lang3.StringUtils
+import org.locationtech.jts.geom.Coordinate
+import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.GeometryFactory
+import org.locationtech.jts.geom.PrecisionModel
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -24,23 +29,17 @@ class JpaRegulatoryAreaGroupRepository(
     private val dbRegulatoryAreaGroupRepository: IDBRegulatoryAreaGroupRepository,
     private val mapper: JsonMapper,
 ) : IRegulatoryAreaGroupRepository {
-    override fun findAll(
-        controlPlan: String?,
-        query: String?,
-        seaFronts: List<String>?,
-        tags: List<Int>?,
-        themes: List<Int>?,
-        onlyRecentsAreas: Boolean?,
-    ): List<RegulatoryAreaGroupDTO> {
+    override fun findAll(filters: SearchFilters): List<RegulatoryAreaGroupDTO> {
         val groups =
             dbRegulatoryAreaGroupRepository
                 .findAll(
-                    controlPlan = controlPlan,
-                    seaFronts = seaFronts,
-                    tags = tags,
-                    themes = themes,
+                    controlPlan = filters.controlPlan,
+                    seaFronts = filters.seaFronts,
+                    tags = filters.tags,
+                    themes = filters.themes,
                     onlyRecentsAreas =
-                    onlyRecentsAreas,
+                        filters.onlyRecentsAreas,
+                    extent = filters.extent?.let { extentToPolygon(extent = it) },
                 )
         return groups
             .groupBy { it.group }
@@ -50,9 +49,29 @@ class JpaRegulatoryAreaGroupRepository(
                     areas =
                         entries
                             .map { it.regulatoryArea.toRegulatoryArea(mapper = mapper, group = it.group) }
-                            .filter { findBySearchQuery(it, query) },
+                            .filter { findBySearchQuery(it, filters.query) },
                 )
-            }.filter { findBySearchQuery(it.group, query) }
+            }.filter { it.areas.isNotEmpty() }
+    }
+
+    fun extentToPolygon(extent: List<Double>): Geometry {
+        val minX = extent[0]
+        val minY = extent[1]
+        val maxX = extent[2]
+        val maxY = extent[3]
+
+        val gf = GeometryFactory(PrecisionModel(), 4326)
+
+        val coords: Array<Coordinate?> =
+            arrayOf(
+                Coordinate(minX, minY),
+                Coordinate(maxX, minY),
+                Coordinate(maxX, maxY),
+                Coordinate(minX, maxY),
+                Coordinate(minX, minY),
+            )
+
+        return gf.createPolygon(coords)
     }
 
     private fun findBySearchQuery(
