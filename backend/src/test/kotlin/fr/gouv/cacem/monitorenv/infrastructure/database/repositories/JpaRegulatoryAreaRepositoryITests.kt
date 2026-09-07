@@ -30,7 +30,10 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return all regulatoryAreas`() {
         // When
-        val regulatoryAreas = jpaRegulatoryAreaRepository.findAll()
+        val regulatoryAreas =
+            jpaRegulatoryAreaRepository.findAll(
+                SearchFilters(),
+            )
         assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.ZONE }.size).isEqualTo(13)
         assertThat(regulatoryAreas.filter { it.areaType == AreaTypeEnum.GROUP }.size).isEqualTo(13)
     }

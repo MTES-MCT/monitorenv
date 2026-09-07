@@ -36,18 +36,9 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       providesTags: () => [{ id: 'GROUP_BY_ID', type: 'RegulatoryAreas' }],
       query: id => `v1/regulatory-areas/groups/${id}`,
       transformErrorResponse: response =>
-        new FrontendApiError("Nous n'avons pas pu récupérer le groupe de reglementation", response),
-      transformResponse: (response: RegulatoryArea.RegulatoryAreaGroup): RegulatoryArea.RegulatoryAreaGroup => ({
-        group: {
-          ...response.group
-        },
-        regulatoryAreas: response.regulatoryAreas.map(area => ({
-          ...area,
-          bbox: boundingExtent(area.geom?.coordinates.flat().flat() as Coordinate[])
-        }))
-      })
+        new FrontendApiError("Nous n'avons pas pu récupérer le groupe de reglementation", response)
     }),
-    getRegulatoryAreas: builder.query<RegulatoryArea.RegulatoryAreasFromApi, Filters | void>({
+    getRegulatoryAreas: builder.query<RegulatoryArea.RegulatoryAreasFromAPI, Filters | void>({
       providesTags: result =>
         result?.regulatoryAreasByLayer
           ? // successful query
@@ -133,7 +124,7 @@ export const getRegulatoryAreasByControlPlan = createSelector(
 
     return groups.reduce(
       (acc, group) => {
-        const areasByPlan = new Map<string, RegulatoryArea.RegulatoryAreaWithBbox[]>()
+        const areasByPlan = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
 
         group.regulatoryAreas?.forEach(regulatoryArea => {
           const { plan } = regulatoryArea
@@ -180,7 +171,7 @@ export const getRegulatoryAreasBySeaFront = createSelector(
 
     return groups.reduce(
       (acc, group) => {
-        const areasByFacade = new Map<string, RegulatoryArea.RegulatoryAreaWithBbox[]>()
+        const areasByFacade = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
 
         group.regulatoryAreas?.forEach(regulatoryArea => {
           const { facade } = regulatoryArea

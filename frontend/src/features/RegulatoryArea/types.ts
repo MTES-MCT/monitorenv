@@ -60,20 +60,21 @@ export namespace RegulatoryArea {
     startDate?: string
   }
 
-  export type RegulatoryAreasFromApi = {
+  export type RegulatoryAreasFromAPI = {
     regulatoryAreasByLayer: RegulatoryAreaGroup[]
     totalCount: number
   }
 
   export type RegulatoryAreaGroup = {
-    group: RegulatoryAreaWithBbox
-    regulatoryAreas: RegulatoryAreaWithBbox[]
+    group: RegulatoryAreaFromAPI
+    regulatoryAreas: RegulatoryAreaFromAPI[]
   }
 
   export type RegulatoryAreaTilesProperties = {
     id: number
     isFilled: boolean
     layerName: string
+    location: string
     plan: string
     polyName: string
     resume?: string

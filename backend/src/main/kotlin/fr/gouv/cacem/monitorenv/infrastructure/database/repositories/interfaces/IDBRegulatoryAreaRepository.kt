@@ -43,11 +43,12 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
             SELECT ST_AsMVT(tile, 'REGULATORY_ENV_PREVIEW', 4096, 'geom')
             FROM (
                 WITH filtered_regs AS (
-                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, reg.layer_name, ST_Area(geom_3857) AS area
+                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, reg.layer_name, reg.location, ST_Area(geom_3857) AS area
                     FROM regulatory_areas reg
                     LEFT JOIN themes_regulatory_areas thr ON reg.id = thr.regulatory_areas_id
                     LEFT JOIN tags_regulatory_areas tr ON reg.id = tr.regulatory_areas_id
                     WHERE geom_3857 && ST_TileEnvelope(:z, :x, :y)
+                     AND area_type = 'ZONE'
                      AND (CAST(:seaFronts as text[]) IS NULL OR facade = ANY(CAST(:seaFronts as text[])))
                      AND (:controlPlan IS NULL OR plan LIKE CONCAT('%', :controlPlan, '%'))
                      AND (CAST(:themes as int[]) IS NULL OR thr.themes_id = ANY(CAST(:themes as int[])))
@@ -90,6 +91,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                     filtered_regs.area,
                     filtered_regs.poly_name AS "polyName",
                     filtered_regs.layer_name AS "layerName",
+                    filtered_regs.location AS "location",
                     filtered_regs.resume as "resume",
                     filtered_regs.plan as "plan",
                     ST_AsMVTGeom(filtered_regs.geom_3857, ST_TileEnvelope(:z, :x, :y), 4096, 64, true) AS geom,

@@ -22,7 +22,7 @@ export function RegulatoryAreaItem({
   regulatoryArea
 }: {
   groupId: number | undefined
-  regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox
+  regulatoryArea: RegulatoryArea.RegulatoryAreaFromAPI
 }) {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
