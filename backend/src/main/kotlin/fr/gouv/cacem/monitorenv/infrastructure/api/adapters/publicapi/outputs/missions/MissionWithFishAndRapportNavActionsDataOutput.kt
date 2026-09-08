@@ -12,24 +12,26 @@ import java.time.ZonedDateTime
 
 data class MissionWithFishAndRapportNavActionsDataOutput(
     override val id: Int,
-    override val missionTypes: List<MissionTypeEnum>,
-    override val controlUnits: List<LegacyControlUnitDataOutput>? = listOf(),
-    override val openBy: String? = null,
+    override val createdAtUtc: ZonedDateTime? = null,
     override val completedBy: String? = null,
+    override val controlUnits: List<LegacyControlUnitDataOutput>? = listOf(),
+    override val endDateTimeUtc: ZonedDateTime? = null,
+    override val envActions: List<MissionEnvActionDataOutput>? = null,
+    override val facade: String? = null,
+    override val geom: MultiPolygon? = null,
+    override val hasMissionOrder: Boolean,
+    override val isNoteworthy: Boolean?,
+    override val isUnderJdp: Boolean,
+    override val isGeometryComputedFromControls: Boolean,
+    override val missionSource: MissionSourceEnum,
+    override val missionTags: List<MissionTagDataOutput>,
+    override val missionTypes: List<MissionTypeEnum>,
     override val observationsByUnit: String? = null,
     override val observationsCacem: String? = null,
     override val observationsCnsp: String? = null,
-    override val facade: String? = null,
-    override val geom: MultiPolygon? = null,
+    override val openBy: String? = null,
     override val startDateTimeUtc: ZonedDateTime,
-    override val endDateTimeUtc: ZonedDateTime? = null,
-    override val createdAtUtc: ZonedDateTime? = null,
     override val updatedAtUtc: ZonedDateTime? = null,
-    override val envActions: List<MissionEnvActionDataOutput>? = null,
-    override val missionSource: MissionSourceEnum,
-    override val hasMissionOrder: Boolean,
-    override val isUnderJdp: Boolean,
-    override val isGeometryComputedFromControls: Boolean,
     val hasRapportNavActions: RapportNavMissionActionDataOutput? = null,
     val fishActions: List<MonitorFishMissionActionDataOutput>? = listOf(),
 ) : MissionOutput {
@@ -84,6 +86,8 @@ data class MissionWithFishAndRapportNavActionsDataOutput(
                             it,
                         )
                     },
+                missionTags = missionDto.mission.missionTags.map { MissionTagDataOutput.fromMissionTagEntity(it) },
+                isNoteworthy = missionDto.mission.isNoteworthy,
             )
         }
     }

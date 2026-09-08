@@ -9,22 +9,24 @@ import java.time.ZonedDateTime
 
 interface MissionOutput {
     val id: Int
-    val missionTypes: List<MissionTypeEnum>
-    val controlUnits: List<LegacyControlUnitDataOutput>?
-    val openBy: String?
     val completedBy: String?
+    val controlUnits: List<LegacyControlUnitDataOutput>?
+    val endDateTimeUtc: ZonedDateTime?
+    val facade: String?
+    val geom: MultiPolygon?
+    val envActions: List<MissionEnvActionDataOutput>?
+    val hasMissionOrder: Boolean
+    val isGeometryComputedFromControls: Boolean
+    val isNoteworthy: Boolean?
+    val isUnderJdp: Boolean
+    val missionSource: MissionSourceEnum
+    val missionTags: List<MissionTagDataOutput>
+    val missionTypes: List<MissionTypeEnum>
+    val openBy: String?
     val observationsByUnit: String?
     val observationsCacem: String?
     val observationsCnsp: String?
-    val facade: String?
-    val geom: MultiPolygon?
     val startDateTimeUtc: ZonedDateTime
-    val endDateTimeUtc: ZonedDateTime?
     val createdAtUtc: ZonedDateTime?
     val updatedAtUtc: ZonedDateTime?
-    val envActions: List<MissionEnvActionDataOutput>?
-    val missionSource: MissionSourceEnum
-    val hasMissionOrder: Boolean
-    val isUnderJdp: Boolean
-    val isGeometryComputedFromControls: Boolean
 }
