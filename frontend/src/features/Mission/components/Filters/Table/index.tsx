@@ -1,4 +1,5 @@
-import { useGetUnarchivedMissionsTagsQuery } from '@api/missionTagsAPI'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
+import { useGetMissionsTagsQuery } from '@api/missionTagsAPI'
 import { TagsContainer } from '@components/style'
 import { ShowFilters } from '@components/Table/style'
 import { MissionSearch } from '@features/Mission/MissionsSearch'
@@ -75,7 +76,7 @@ export function TableMissionsFiltersWithRef(
 
   const themeCustomSearch = useMemo(() => new CustomSearch(themes ?? [], ['label']), [themes])
 
-  const { data: missionTagsEntities } = useGetUnarchivedMissionsTagsQuery(undefined)
+  const { data: missionTagsEntities } = useGetMissionsTagsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const missionTagsData = useMemo(() => Object.values(missionTagsEntities ?? []), [missionTagsEntities])
 

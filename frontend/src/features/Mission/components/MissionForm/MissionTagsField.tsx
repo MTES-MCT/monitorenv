@@ -1,4 +1,5 @@
-import { useGetUnarchivedMissionsTagsQuery } from '@api/missionTagsAPI'
+import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
+import { useGetMissionsTagsQuery } from '@api/missionTagsAPI'
 import { getOptionsFromIdAndName, MultiSelect } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
 import { useCallback, useMemo } from 'react'
@@ -8,7 +9,7 @@ import { type Mission } from '../../../../domain/entities/missions'
 export function MissionTagsField() {
   const { setFieldValue, values } = useFormikContext<Mission>()
 
-  const { data: missionTagsEntities } = useGetUnarchivedMissionsTagsQuery(undefined)
+  const { data: missionTagsEntities } = useGetMissionsTagsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const missionTagsData = useMemo(() => Object.values(missionTagsEntities ?? []), [missionTagsEntities])
 

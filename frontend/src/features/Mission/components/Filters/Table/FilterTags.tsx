@@ -1,6 +1,6 @@
 import { RTK_DEFAULT_QUERY_OPTIONS } from '@api/constants'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
-import { useGetUnarchivedMissionsTagsQuery } from '@api/missionTagsAPI'
+import { useGetMissionsTagsQuery } from '@api/missionTagsAPI'
 import { useGetThemesQuery } from '@api/themesAPI'
 import { CustomPeriodContainer } from '@components/style'
 import { MissionDateRangeLabel } from '@features/Mission/components/MissionsList/type'
@@ -49,7 +49,7 @@ export function FilterTags({
   } = useAppSelector(state => state.missionFilters)
 
   const controlUnits = useGetControlUnitsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
-  const { data: missionTagsEntities } = useGetUnarchivedMissionsTagsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
+  const { data: missionTagsEntities } = useGetMissionsTagsQuery(undefined, RTK_DEFAULT_QUERY_OPTIONS)
 
   const dateRange: [string, string] = [
     startedAfter ?? `${customDayjs().format('YYYY-MM-DD')}T00:00:00.00000Z`,
