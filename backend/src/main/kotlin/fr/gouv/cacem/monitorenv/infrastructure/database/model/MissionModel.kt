@@ -125,9 +125,7 @@ class MissionModel(
             isGeometryComputedFromControls = isGeometryComputedFromControls,
             missionSource = missionSource,
             missionTypes = missionTypes,
-            missionTags =
-                missionTags?.filter { !it.missionTag.isArchived }?.map { it.toMissionTagEntity() }
-                    ?: emptyList(),
+            missionTags = missionTags?.map { it.toMissionTagEntity() } ?: emptyList(),
             observationsCacem = observationsCacem,
             observationsByUnit = observationsByUnit,
             observationsCnsp = observationsCnsp,

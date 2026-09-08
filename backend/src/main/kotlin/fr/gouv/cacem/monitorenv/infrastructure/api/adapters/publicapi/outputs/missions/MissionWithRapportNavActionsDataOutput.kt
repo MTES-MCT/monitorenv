@@ -12,24 +12,26 @@ import java.time.ZonedDateTime
 
 data class MissionWithRapportNavActionsDataOutput(
     override val id: Int,
-    override val missionTypes: List<MissionTypeEnum>,
-    override val controlUnits: List<LegacyControlUnitDataOutput>? = listOf(),
-    override val openBy: String? = null,
+    override val createdAtUtc: ZonedDateTime? = null,
     override val completedBy: String? = null,
+    override val controlUnits: List<LegacyControlUnitDataOutput>? = null,
+    override val endDateTimeUtc: ZonedDateTime? = null,
+    override val facade: String? = null,
+    override val geom: MultiPolygon? = null,
+    override val envActions: List<MissionEnvActionDataOutput>? = null,
+    override val hasMissionOrder: Boolean,
+    override val isGeometryComputedFromControls: Boolean,
+    override val isNoteworthy: Boolean? = null,
+    override val isUnderJdp: Boolean,
+    override val missionSource: MissionSourceEnum,
+    override val missionTags: List<MissionTagDataOutput>,
+    override val missionTypes: List<MissionTypeEnum>,
+    override val openBy: String?,
     override val observationsByUnit: String? = null,
     override val observationsCacem: String? = null,
     override val observationsCnsp: String? = null,
-    override val facade: String? = null,
-    override val geom: MultiPolygon? = null,
     override val startDateTimeUtc: ZonedDateTime,
-    override val endDateTimeUtc: ZonedDateTime? = null,
-    override val createdAtUtc: ZonedDateTime? = null,
     override val updatedAtUtc: ZonedDateTime? = null,
-    override val envActions: List<MissionEnvActionDataOutput>? = null,
-    override val missionSource: MissionSourceEnum,
-    override val hasMissionOrder: Boolean,
-    override val isUnderJdp: Boolean,
-    override val isGeometryComputedFromControls: Boolean,
     val hasRapportNavActions: RapportNavMissionActionDataOutput? = null,
 ) : MissionOutput {
     companion object {
@@ -57,6 +59,9 @@ data class MissionWithRapportNavActionsDataOutput(
                 endDateTimeUtc = mission.endDateTimeUtc,
                 createdAtUtc = mission.createdAtUtc,
                 updatedAtUtc = mission.updatedAtUtc,
+                isUnderJdp = mission.isUnderJdp,
+                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
+                isNoteworthy = mission.isNoteworthy,
                 envActions =
                     mission.envActions?.map {
                         MissionEnvActionDataOutput.fromEnvActionEntity(
@@ -64,9 +69,8 @@ data class MissionWithRapportNavActionsDataOutput(
                         )
                     },
                 missionSource = mission.missionSource,
+                missionTags = mission.missionTags.map { MissionTagDataOutput.fromMissionTagEntity(it) },
                 hasMissionOrder = mission.hasMissionOrder,
-                isUnderJdp = mission.isUnderJdp,
-                isGeometryComputedFromControls = mission.isGeometryComputedFromControls,
             )
         }
 
@@ -114,6 +118,8 @@ data class MissionWithRapportNavActionsDataOutput(
                             it,
                         )
                     },
+                missionTags = missionDto.mission.missionTags.map { MissionTagDataOutput.fromMissionTagEntity(it) },
+                isNoteworthy = missionDto.mission.isNoteworthy,
             )
         }
     }

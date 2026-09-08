@@ -12,6 +12,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionEntity
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionSourceEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.fixtures.ControlUnitFixture.Companion.aControlUnit
+import fr.gouv.cacem.monitorenv.domain.use_cases.missionTag.fixtures.MissionTagFixture.Companion.aMissionTagEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.BypassActionCheckAndDeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CanDeleteMission
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.CreateOrUpdateMission
@@ -469,7 +470,7 @@ class LegacyMissionsITests {
                         isGeometryComputedFromControls = false,
                         missionSource = MissionSourceEnum.MONITORFISH,
                         missionTypes = listOf(MissionTypeEnum.SEA),
-                        missionTags = listOf(),
+                        missionTags = listOf(aMissionTagEntity()),
                         startDateTimeUtc =
                             ZonedDateTime.parse("2022-01-15T04:50:09Z"),
                         updatedAtUtc = null,
@@ -505,43 +506,60 @@ class LegacyMissionsITests {
         assertThat(missionUpdateEvent)
             .containsIgnoringWhitespaces(
                 """
-            {
-              "id": 132,
-              "missionTypes": [
-                "SEA"
-              ],
-              "controlUnits": [],
-              "openBy": null,
-              "completedBy": null,
-              "observationsByUnit": null,
-              "observationsCacem": null,
-              "observationsCnsp": null,
-              "facade": "Outre-Mer",
-              "geom": {
-                "type": "MultiPolygon",
-                "coordinates": [
+        {
+          "id": 132,
+          "createdAtUtc": null,
+          "completedBy": null,
+          "controlUnits": [],
+          "endDateTimeUtc": "2022-01-23T20:29:03Z",
+          "facade": "Outre-Mer",
+          "geom": {
+            "type": "MultiPolygon",
+            "coordinates": [
+              [
+                [
                   [
-                    [
-                      [-4.54877817, 48.30555988],
-                      [-4.54997332, 48.30597601],
-                      [-4.54998501, 48.30718823],
-                      [-4.5487929, 48.30677461],
-                      [-4.54877817, 48.30555988]
-                    ]
+                    -4.54877817,
+                    48.30555988
+                  ],
+                  [
+                    -4.54997332,
+                    48.30597601
+                  ],
+                  [
+                    -4.54998501,
+                    48.30718823
+                  ],
+                  [
+                    -4.5487929,
+                    48.30677461
+                  ],
+                  [
+                    -4.54877817,
+                    48.30555988
                   ]
                 ]
-              },
-              "startDateTimeUtc": "2022-01-15T04:50:09Z",
-              "endDateTimeUtc": "2022-01-23T20:29:03Z",
-              "createdAtUtc": null,
-              "updatedAtUtc": null,
-              "envActions": [],
-              "missionSource": "MONITORFISH",
-              "hasMissionOrder": false,
-              "isUnderJdp": false,
-              "isGeometryComputedFromControls": false,
-              "hasRapportNavActions": null
-            }""",
+              ]
+            ]
+          },
+          "envActions": [],
+          "hasMissionOrder": false,
+          "isGeometryComputedFromControls": false,
+          "isNoteworthy": false,
+          "isUnderJdp": false,
+          "missionSource": "MONITORFISH",
+          "missionTags": [{"id": 1, "isArchived": false, "name": "test"}],
+          "missionTypes": [
+            "SEA"
+          ],
+          "openBy": null,
+          "observationsByUnit": null,
+          "observationsCacem": null,
+          "observationsCnsp": null,
+          "startDateTimeUtc": "2022-01-15T04:50:09Z",
+          "updatedAtUtc": null,
+          "hasRapportNavActions": null
+        }""",
             )
     }
 }
