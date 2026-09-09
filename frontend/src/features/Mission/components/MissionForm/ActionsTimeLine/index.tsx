@@ -5,8 +5,8 @@ import styled from 'styled-components'
 
 import { ActionCard } from './ActionCard'
 import {
-  ActionTypeEnum,
   type ActionsTypeForTimeLine,
+  ActionTypeEnum,
   type EnvAction,
   type Mission,
   type NewMission
@@ -180,7 +180,7 @@ export function ActionsTimeLine({ currentActionId, setCurrentActionId }) {
 
               return (
                 <ActionCard
-                  key={action.id}
+                  key={`${action.id} ${action.timelineDate}`}
                   action={action}
                   duplicateAction={e => handleDuplicateAction(e, action.id)}
                   hasError={!!envActionsErrors}
