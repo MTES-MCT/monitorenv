@@ -1,7 +1,7 @@
 import { reportingsAPI } from '@api/reportingsAPI'
 import { attachReportingToMissionSliceActions } from '@features/Mission/components/MissionForm/AttachReporting/slice'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
-import { Level } from '@mtes-mct/monitor-ui'
+import { customDayjs, Level } from '@mtes-mct/monitor-ui'
 
 export const attachReportingFromMap = (reportingId: number) => async (dispatch, getState) => {
   const { attachedReportings } = getState().attachReportingToMission
@@ -24,6 +24,7 @@ export const attachReportingFromMap = (reportingId: number) => async (dispatch, 
         ...attachedReportings,
         {
           ...reportingResponse,
+          attachedToMissionAtUtc: customDayjs().utc().format(),
           missionId
         }
       ])
