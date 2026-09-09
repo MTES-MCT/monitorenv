@@ -76,7 +76,7 @@ class RegulatoryAreas(
             )
 
         val groupedDto =
-            regulatoryAreasGrouped.map { RegulatoryAreasDataOutput.fromRegulatoryAreaEntity(it) }
+            regulatoryAreasGrouped.map { RegulatoryAreasDataOutput.fromRegulatoryAreaGroupDTO(it) }
 
         return RegulatoryAreasWithTotalDataOutput(
             totalCount = totalCount,

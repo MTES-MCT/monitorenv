@@ -26,10 +26,13 @@ class RegulatoryAreaFixture {
                 plan = plan,
             )
 
-        fun aRegulatoryAreaGroupDTO(): RegulatoryAreaGroupDTO =
+        fun aRegulatoryAreaGroupDTO(
+            layerName: String? = "Layername 1",
+            areas: List<RegulatoryAreaEntity>? = null,
+        ): RegulatoryAreaGroupDTO =
             RegulatoryAreaGroupDTO(
-                group = aRegulatoryArea(),
-                areas = listOf(aRegulatoryArea()),
+                group = aRegulatoryArea(layerName = layerName),
+                areas = areas ?: listOf(aRegulatoryArea(layerName = layerName)),
             )
 
         fun aRegulatoryAreaGroupEntity(): RegulatoryAreaGroupEntity =

@@ -1,7 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
@@ -17,7 +16,6 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBTagRegulatoryAreaRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRegulatoryAreaRepository
-import org.apache.commons.lang3.StringUtils
 import org.locationtech.jts.geom.Geometry
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
@@ -32,33 +30,29 @@ class JpaRegulatoryAreaRepository(
     private val dbThemeRegulatoryAreaRepository: IDBThemeRegulatoryAreaRepository,
     private val mapper: JsonMapper,
 ) : IRegulatoryAreaRepository {
-    override fun findById(id: Int): RegulatoryAreaEntity? =
-        dbRegulatoryAreaRepository.findByIdOrNull(id)?.toRegulatoryArea(mapper)
+    override fun findById(id: Int): RegulatoryAreaEntity? {
+        val group = dbRegulatoryAreaGroupRepository.findAllByRegulatoryAreaId(id).firstOrNull()?.group
 
-    override fun findAll(
-        controlPlan: String?,
-        query: String?,
-        seaFronts: List<String>?,
-        tags: List<Int>?,
-        themes: List<Int>?,
-        onlyRecentsAreas: Boolean?,
-    ): List<RegulatoryAreaEntity> =
-        dbRegulatoryAreaGroupRepository
-            .findAll(
-                controlPlan = controlPlan,
-                seaFronts = seaFronts,
-                tags = tags,
-                themes = themes,
-                onlyRecentsAreas =
-                onlyRecentsAreas,
-            ).flatMap { it.toRegulatoryAreas(mapper) }
-            .filter { findBySearchQuery(it, query) }
+        return dbRegulatoryAreaRepository
+            .findByIdOrNull(id)
+            ?.toRegulatoryArea(mapper = mapper, group = group)
+    }
 
     override fun findAllByIds(
         ids: List<Int>,
         axis: AxisEnum,
-    ): List<RegulatoryAreaEntity> =
-        dbRegulatoryAreaRepository.findAllCompleteByIds(ids, axis.toString()).map { it.toRegulatoryArea(mapper) }
+    ): List<RegulatoryAreaEntity> {
+        val groups = dbRegulatoryAreaGroupRepository.findAllCompleteByIds(ids, axis.toString())
+        val groupedRegulatoryAreas = groups.groupBy { it.group.id }
+        return groupedRegulatoryAreas.flatMap { (_, entries) ->
+            entries.map {
+                it.regulatoryArea.toRegulatoryArea(
+                    mapper = mapper,
+                    group = it.group,
+                )
+            }
+        }
+    }
 
     @Transactional
     override fun findAllToComplete(): List<RegulatoryAreaEntity> =
@@ -85,26 +79,6 @@ class JpaRegulatoryAreaRepository(
     }
 
     override fun count(): Long = dbRegulatoryAreaRepository.count()
-
-    private fun findBySearchQuery(
-        regulatoryArea: RegulatoryAreaEntity,
-        searchQuery: String?,
-    ): Boolean {
-        if (searchQuery.isNullOrBlank() || regulatoryArea.areaType == AreaTypeEnum.GROUP) {
-            return true
-        }
-
-        return listOf(
-            listOfNotNull(regulatoryArea.layerName, regulatoryArea.location).joinToString(" - "),
-            regulatoryArea.refReg,
-            regulatoryArea.resume,
-            regulatoryArea.polyName,
-        ).any { field ->
-            !field.isNullOrBlank() &&
-                normalizeField(field)
-                    .contains(normalizeField(searchQuery), ignoreCase = true)
-        }
-    }
 
     private fun saveRegulatoryAreasGroup(regulatoryArea: RegulatoryAreaEntity) {
         if (regulatoryArea.layerName != null && regulatoryArea.location != null) {
@@ -162,6 +136,4 @@ class JpaRegulatoryAreaRepository(
         }
         return dbThemeRegulatoryAreaRepository.saveAll(themeModels)
     }
-
-    private fun normalizeField(input: String): String = StringUtils.stripAccents(input.replace(" ", ""))
 }
