@@ -5,15 +5,6 @@ import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEnt
 import org.locationtech.jts.geom.Geometry
 
 interface IRegulatoryAreaRepository {
-    fun findAll(
-        controlPlan: String? = null,
-        query: String? = null,
-        seaFronts: List<String>? = null,
-        tags: List<Int>? = null,
-        themes: List<Int>? = null,
-        onlyRecentsAreas: Boolean? = false,
-    ): List<RegulatoryAreaEntity>
-
     fun findAllIdsByGeometry(geometry: Geometry): List<Int>
 
     fun findAllByIds(

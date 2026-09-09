@@ -74,44 +74,46 @@ data class RegulatoryAreaModel(
     @Column(name = "authorization_periods") val authorizationPeriods: String?,
     @Column(name = "prohibition_periods") val prohibitionPeriods: String?,
 ) {
-    fun toRegulatoryArea(mapper: JsonMapper) =
-        RegulatoryAreaEntity(
-            id = id,
-            areaType = areaType,
-            creation = creation?.atZone(ZoneOffset.UTC),
-            plan = plan,
-            date = date?.atZone(ZoneOffset.UTC),
-            dateFin = dateFin?.atZone(ZoneOffset.UTC),
-            editeur = editeur,
-            editionBo = editionBo?.atZone(ZoneOffset.UTC),
-            editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
-            facade = facade,
-            geom = if (areaType === AreaTypeEnum.ZONE) geom else null,
-            layerName = layerName,
-            location = location,
-            polyName = polyName,
-            observation = observation,
-            refReg = refReg,
-            resume = resume,
-            source = source,
-            tags = TagRegulatoryAreaModel.toTagEntities(tags),
-            themes = ThemeRegulatoryAreaModel.toThemeEntities(themes),
-            type = type,
-            url = url,
-            additionalRefReg =
-                additionalRefReg.let {
-                    mapper.convertValue(
-                        it,
-                        object : TypeReference<
-                            List<
-                                AdditionalRefRegEntity,
-                            >,
-                        >() {},
-                    )
-                },
-            authorizationPeriods = authorizationPeriods,
-            prohibitionPeriods = prohibitionPeriods,
-        )
+    fun toRegulatoryArea(
+        mapper: JsonMapper,
+        group: RegulatoryAreaModel? = null,
+    ) = RegulatoryAreaEntity(
+        id = id,
+        areaType = areaType,
+        creation = creation?.atZone(ZoneOffset.UTC),
+        plan = plan,
+        date = (group?.date ?: date)?.atZone(ZoneOffset.UTC),
+        dateFin = (group?.dateFin ?: dateFin)?.atZone(ZoneOffset.UTC),
+        editeur = editeur,
+        editionBo = editionBo?.atZone(ZoneOffset.UTC),
+        editionCacem = editionCacem?.atZone(ZoneOffset.UTC),
+        facade = facade,
+        geom = if (areaType === AreaTypeEnum.ZONE) geom else null,
+        layerName = layerName,
+        location = location,
+        polyName = polyName,
+        observation = observation,
+        refReg = group?.refReg ?: refReg,
+        resume = resume,
+        source = source,
+        tags = TagRegulatoryAreaModel.toTagEntities(tags),
+        themes = ThemeRegulatoryAreaModel.toThemeEntities(themes),
+        type = group?.type ?: type,
+        url = group?.url ?: url,
+        additionalRefReg =
+            (group?.additionalRefReg ?: additionalRefReg).let {
+                mapper.convertValue(
+                    it,
+                    object : TypeReference<
+                        List<
+                            AdditionalRefRegEntity,
+                        >,
+                    >() {},
+                )
+            },
+        authorizationPeriods = authorizationPeriods,
+        prohibitionPeriods = prohibitionPeriods,
+    )
 
     companion object {
         fun fromRegulatoryAreaEntity(
@@ -141,7 +143,7 @@ data class RegulatoryAreaModel(
                 url = regulatoryArea.url,
                 tags = listOf(),
                 themes = listOf(),
-                additionalRefReg = regulatoryArea.additionalRefReg.let { mapper.valueToTree<JsonNode>(it) },
+                additionalRefReg = regulatoryArea.additionalRefReg.let { mapper.valueToTree(it) },
                 authorizationPeriods = regulatoryArea.authorizationPeriods,
                 prohibitionPeriods = regulatoryArea.prohibitionPeriods,
             )

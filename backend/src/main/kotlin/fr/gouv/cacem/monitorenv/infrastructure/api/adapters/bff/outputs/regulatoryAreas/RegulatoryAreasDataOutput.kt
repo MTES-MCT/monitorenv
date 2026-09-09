@@ -1,19 +1,17 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulatoryAreas
 
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupDTO
 
 data class RegulatoryAreasDataOutput(
     val group: RegulatoryAreaDataOutput,
     val regulatoryAreas: List<RegulatoryAreaDataOutput>,
 ) {
     companion object {
-        fun fromRegulatoryAreaEntity(
-            entry: Map.Entry<RegulatoryAreaEntity, List<RegulatoryAreaEntity>>,
-        ): RegulatoryAreasDataOutput =
+        fun fromRegulatoryAreaGroupDTO(regulatoryAreaGroup: RegulatoryAreaGroupDTO): RegulatoryAreasDataOutput =
             RegulatoryAreasDataOutput(
-                group = RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(entry.key),
+                group = RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(regulatoryAreaGroup.group),
                 regulatoryAreas =
-                    entry.value.map {
+                    regulatoryAreaGroup.areas.map {
                         RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it)
                     },
             )

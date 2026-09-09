@@ -1,14 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas
 
 import fr.gouv.cacem.monitorenv.config.UseCase
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
-import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaGroupRepository
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupDTO
 import org.slf4j.LoggerFactory
 
 @UseCase
 class GetAllRegulatoryAreas(
-    private val regulatoryAreaRepository: IRegulatoryAreaRepository,
+    private val regulatoryAreaGroupRepository: IRegulatoryAreaGroupRepository,
 ) {
     private val logger = LoggerFactory.getLogger(GetAllRegulatoryAreas::class.java)
 
@@ -22,8 +21,8 @@ class GetAllRegulatoryAreas(
     ): AllRegulatoryAreasAndTotal {
         logger.info("Attempt to GET all regulatory areas")
 
-        val allAreas =
-            regulatoryAreaRepository.findAll(
+        val allGroups =
+            regulatoryAreaGroupRepository.findAll(
                 controlPlan = controlPlan,
                 query = searchQuery,
                 seaFronts = seaFronts,
@@ -32,23 +31,12 @@ class GetAllRegulatoryAreas(
                 onlyRecentsAreas = onlyRecentsAreas,
             )
 
-        val groups = allAreas.filter { it.areaType == AreaTypeEnum.GROUP }
-        val areas = allAreas.filter { it.areaType == AreaTypeEnum.ZONE }
+        val totalCount = allGroups.flatMap { it.areas }.count().toLong()
 
-        val groupedAreas =
-            groups
-                .associateWith { group ->
-                    areas.filter {
-                        it.layerName == group.layerName && it.location == group.location
-                    }
-                }.filterValues { it.isNotEmpty() }
+        logger.info("Found $totalCount regulatory areas across ${allGroups.size} layers")
 
-        val totalCount = groupedAreas.flatMap { it.value }.count().toLong()
-
-        logger.info("Found $totalCount regulatory areas across ${groupedAreas.size} layers")
-
-        return Pair(groupedAreas, totalCount)
+        return Pair(allGroups, totalCount)
     }
 }
 
-typealias AllRegulatoryAreasAndTotal = Pair<Map<RegulatoryAreaEntity, List<RegulatoryAreaEntity>>, Long>
+typealias AllRegulatoryAreasAndTotal = Pair<List<RegulatoryAreaGroupDTO>, Long>

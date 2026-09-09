@@ -47,27 +47,6 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     )
     fun findAllIdsByGeom(geometry: Geometry): List<Int>
 
-    @Query(
-        value =
-            """
-            SELECT *
-            FROM regulatory_areas regulatoryArea
-            WHERE regulatoryArea.id IN (:ids)
-            AND regulatoryArea.creation IS NOT NULL
-            ORDER BY
-                CASE WHEN :axis = 'NORTH_SOUTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom)) END DESC,
-                CASE WHEN :axis = 'SOUTH_NORTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom)) END ASC,
-                CASE WHEN :axis = 'WEST_EAST'   THEN ST_X(ST_PointOnSurface(regulatoryArea.geom)) END ASC,
-                CASE WHEN :axis = 'EAST_WEST'   THEN ST_X(ST_PointOnSurface(regulatoryArea.geom)) END DESC,
-            ST_Y(ST_PointOnSurface(regulatoryArea.geom)) DESC
-        """,
-        nativeQuery = true,
-    )
-    fun findAllCompleteByIds(
-        ids: List<Int>,
-        axis: String,
-    ): List<RegulatoryAreaModel>
-
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(
         "UPDATE RegulatoryAreaModel SET layerName = :layerName, location = :location, editionBo = CURRENT_TIMESTAMP WHERE id IN (:ids)",

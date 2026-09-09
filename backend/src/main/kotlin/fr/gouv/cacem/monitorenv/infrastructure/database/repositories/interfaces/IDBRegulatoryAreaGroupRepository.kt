@@ -14,7 +14,7 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
     @Query(
         value =
             """
-            SELECT regulatoryAreaGroup from RegulatoryAreaGroupModel regulatoryAreaGroup
+            SELECT regulatoryAreaGroup FROM RegulatoryAreaGroupModel regulatoryAreaGroup
             LEFT JOIN regulatoryAreaGroup.regulatoryArea regulatoryArea
             LEFT JOIN regulatoryArea.themes th
             LEFT JOIN regulatoryArea.tags tg
@@ -42,8 +42,28 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
     @Query(
         value =
             """
-            SELECT regulatoryAreaGroup from RegulatoryAreaGroupModel regulatoryAreaGroup
-            WHERE regulatoryAreaGroup.group.id = :id
+            SELECT regulatoryAreaGroup FROM RegulatoryAreaGroupModel regulatoryAreaGroup
+            LEFT JOIN regulatoryAreaGroup.regulatoryArea regulatoryArea
+            WHERE regulatoryArea.id IN (:ids)
+            AND regulatoryArea.creation IS NOT NULL
+            ORDER BY
+                CASE WHEN :axis = 'NORTH_SOUTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom)) END DESC,
+                CASE WHEN :axis = 'SOUTH_NORTH' THEN ST_Y(ST_PointOnSurface(regulatoryArea.geom)) END ASC,
+                CASE WHEN :axis = 'WEST_EAST'   THEN ST_X(ST_PointOnSurface(regulatoryArea.geom)) END ASC,
+                CASE WHEN :axis = 'EAST_WEST'   THEN ST_X(ST_PointOnSurface(regulatoryArea.geom)) END DESC,
+            ST_Y(ST_PointOnSurface(regulatoryArea.geom)) DESC
+        """,
+    )
+    fun findAllCompleteByIds(
+        ids: List<Int>,
+        axis: String,
+    ): List<RegulatoryAreaGroupModel>
+
+    @Query(
+        value =
+            """
+            SELECT regulatoryAreaGroup FROM RegulatoryAreaGroupModel regulatoryAreaGroup
+            WHERE regulatoryAreaGroup.group.id IN (:id)
             AND regulatoryAreaGroup.regulatoryArea.creation IS NOT NULL
         """,
     )
@@ -52,7 +72,17 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
     @Query(
         value =
             """
-            SELECT regulatoryAreaGroup from RegulatoryAreaGroupModel regulatoryAreaGroup
+            SELECT regulatoryAreaGroup FROM RegulatoryAreaGroupModel regulatoryAreaGroup
+            WHERE regulatoryAreaGroup.regulatoryArea.id = :id
+            AND regulatoryAreaGroup.regulatoryArea.creation IS NOT NULL
+        """,
+    )
+    fun findAllByRegulatoryAreaId(id: Int): List<RegulatoryAreaGroupModel>
+
+    @Query(
+        value =
+            """
+            SELECT regulatoryAreaGroup FROM RegulatoryAreaGroupModel regulatoryAreaGroup
             WHERE regulatoryAreaGroup.group.layerName = :layerName
                 AND regulatoryAreaGroup.group.location = :location
                 AND regulatoryAreaGroup.group.creation IS NOT NULL

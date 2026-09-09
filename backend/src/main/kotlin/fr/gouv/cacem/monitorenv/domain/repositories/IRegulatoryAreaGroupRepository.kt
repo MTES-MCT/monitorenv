@@ -5,6 +5,15 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.Regulatory
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
 
 interface IRegulatoryAreaGroupRepository {
+    fun findAll(
+        controlPlan: String? = null,
+        query: String? = null,
+        seaFronts: List<String>? = null,
+        tags: List<Int>? = null,
+        themes: List<Int>? = null,
+        onlyRecentsAreas: Boolean? = false,
+    ): List<RegulatoryAreaGroupDTO>
+
     fun findGroupById(id: Int): RegulatoryAreaGroupDTO?
 
     fun findAllLayerNames(): List<RegulatoryAreaGroupWithTotalDTO>

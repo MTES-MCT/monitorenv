@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaGroupEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupDTO
@@ -10,6 +11,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGrou
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
+import org.apache.commons.lang3.StringUtils
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -22,7 +24,59 @@ class JpaRegulatoryAreaGroupRepository(
     private val dbRegulatoryAreaGroupRepository: IDBRegulatoryAreaGroupRepository,
     private val mapper: JsonMapper,
 ) : IRegulatoryAreaGroupRepository {
-    @Transactional
+    override fun findAll(
+        controlPlan: String?,
+        query: String?,
+        seaFronts: List<String>?,
+        tags: List<Int>?,
+        themes: List<Int>?,
+        onlyRecentsAreas: Boolean?,
+    ): List<RegulatoryAreaGroupDTO> {
+        val groups =
+            dbRegulatoryAreaGroupRepository
+                .findAll(
+                    controlPlan = controlPlan,
+                    seaFronts = seaFronts,
+                    tags = tags,
+                    themes = themes,
+                    onlyRecentsAreas =
+                    onlyRecentsAreas,
+                )
+        return groups
+            .groupBy { it.group }
+            .map { (group, entries) ->
+                RegulatoryAreaGroupDTO(
+                    group = group.toRegulatoryArea(mapper = mapper),
+                    areas =
+                        entries
+                            .map { it.regulatoryArea.toRegulatoryArea(mapper = mapper, group = it.group) }
+                            .filter { findBySearchQuery(it, query) },
+                )
+            }
+    }
+
+    private fun findBySearchQuery(
+        regulatoryArea: RegulatoryAreaEntity,
+        searchQuery: String?,
+    ): Boolean {
+        if (searchQuery.isNullOrBlank() || regulatoryArea.areaType == AreaTypeEnum.GROUP) {
+            return true
+        }
+
+        return listOf(
+            listOfNotNull(regulatoryArea.layerName, regulatoryArea.location).joinToString(" - "),
+            regulatoryArea.refReg,
+            regulatoryArea.resume,
+            regulatoryArea.polyName,
+        ).any { field ->
+            !field.isNullOrBlank() &&
+                normalizeField(field)
+                    .contains(normalizeField(searchQuery), ignoreCase = true)
+        }
+    }
+
+    private fun normalizeField(input: String): String = StringUtils.stripAccents(input.replace(" ", ""))
+
     override fun findAllLayerNames(): List<RegulatoryAreaGroupWithTotalDTO> =
         dbRegulatoryAreaGroupRepository.findAllLayerNames().map { regulatoryAreas ->
             RegulatoryAreaGroupWithTotalDTO(
@@ -40,7 +94,7 @@ class JpaRegulatoryAreaGroupRepository(
 
         return RegulatoryAreaGroupDTO(
             group = regulatoryAreaGroup.toRegulatoryArea(mapper),
-            areas = regulatoryAreas.map { it.regulatoryArea.toRegulatoryArea(mapper) },
+            areas = regulatoryAreas.map { it.regulatoryArea.toRegulatoryArea(mapper, group = regulatoryAreaGroup) },
         )
     }
 
@@ -103,7 +157,13 @@ class JpaRegulatoryAreaGroupRepository(
                 }
             val savedRegulatoryAreaGroup = dbRegulatoryAreaGroupRepository.saveAll(regulatoryAreaGroupModels)
             val group = savedRegulatoryAreaGroup.first().group.toRegulatoryArea(mapper)
-            val areas = savedRegulatoryAreaGroup.map { it.regulatoryArea.toRegulatoryArea(mapper) }
+            val areas =
+                savedRegulatoryAreaGroup.map {
+                    it.regulatoryArea.toRegulatoryArea(
+                        mapper,
+                        savedRegulatoryAreaGroup.first().group,
+                    )
+                }
 
             return RegulatoryAreaGroupDTO(group = group, areas = areas)
         }

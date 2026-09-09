@@ -16,6 +16,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAr
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasGroupById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryArea
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryAreaGroupDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
@@ -123,7 +124,8 @@ class RegulatoryAreasITests {
     @Test
     fun `Should get all regulatory Areas`() {
         // Given
-        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
+        val regulatoryAreaGroup =
+            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
 
         BDDMockito
             .given(
@@ -134,7 +136,7 @@ class RegulatoryAreasITests {
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(listOf(regulatoryAreaGroup), 1L))
 
         // When
         mockMvc
@@ -310,7 +312,8 @@ class RegulatoryAreasITests {
     @Test
     fun `Should filter regulatory areas by seaFronts`() {
         // Given
-        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
+        val regulatoryAreaGroup =
+            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
 
         BDDMockito
             .given(
@@ -321,7 +324,7 @@ class RegulatoryAreasITests {
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(listOf(regulatoryAreaGroup), 1L))
 
         // When
         mockMvc
@@ -344,7 +347,8 @@ class RegulatoryAreasITests {
     @Test
     fun `Should filter regulatory areas by searchQuery`() {
         // Given
-        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
+        val regulatoryAreaGroup =
+            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
 
         BDDMockito
             .given(
@@ -355,7 +359,7 @@ class RegulatoryAreasITests {
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(listOf(regulatoryAreaGroup), 1L))
 
         // When
         mockMvc
@@ -382,7 +386,7 @@ class RegulatoryAreasITests {
                     tags = null,
                     themes = null,
                 ),
-            ).willReturn(Pair(emptyMap(), 0L))
+            ).willReturn(Pair(listOf(), 0L))
 
         // When
         mockMvc
@@ -395,7 +399,9 @@ class RegulatoryAreasITests {
     @Test
     fun `Should filter regulatory areas by tags`() {
         // Given
-        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
+        val regulatoryAreaGroup =
+            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
+
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
@@ -405,7 +411,7 @@ class RegulatoryAreasITests {
                     tags = listOf(5),
                     themes = null,
                 ),
-            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(listOf(regulatoryAreaGroup), 1L))
 
         // When
         mockMvc
@@ -423,7 +429,8 @@ class RegulatoryAreasITests {
     @Test
     fun `Should filter regulatory areas by themes`() {
         // Given
-        val regulatoryAreaGroup = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen")
+        val regulatoryAreaGroup =
+            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
 
         BDDMockito
             .given(
@@ -434,7 +441,7 @@ class RegulatoryAreasITests {
                     tags = null,
                     themes = listOf(101),
                 ),
-            ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
+            ).willReturn(Pair(listOf(regulatoryAreaGroup), 1L))
 
         // When
         mockMvc
