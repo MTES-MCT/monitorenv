@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   }
 })
 
-function groupConsecutiveByLayerName(regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]) {
+function groupConsecutiveByLayerName(regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]) {
   return regulatoryAreas.reduce(
     (acc, area) => {
       const lastGroup = acc.at(-1)
@@ -83,7 +83,7 @@ function groupConsecutiveByLayerName(regulatoryAreas: RegulatoryArea.RegulatoryA
 
       return acc
     },
-    [] as { layerName: string; layers: RegulatoryArea.RegulatoryAreaWithBbox[] }[]
+    [] as { layerName: string; layers: RegulatoryArea.RegulatoryAreaFromAPI[] }[]
   )
 }
 
@@ -95,7 +95,7 @@ export function AreaTable({
 }: {
   amps: AMPFromAPI[]
   image: ExportImageType | undefined
-  regulatoryAreas: RegulatoryArea.RegulatoryAreaWithBbox[]
+  regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
   vigilanceAreas: Dashboard.VigilanceAreaWithImages[]
 }) {
   const groupedRegulatoryAreas = groupConsecutiveByLayerName(regulatoryAreas)

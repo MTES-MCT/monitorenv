@@ -1,6 +1,8 @@
 import type { WebGLVector } from 'ol/layer'
 import type VectorLayer from 'ol/layer/Vector'
+import type VectorTileLayer from 'ol/layer/VectorTile'
 import type VectorSource from 'ol/source/Vector'
+import type VectorTileSource from 'ol/source/VectorTile'
 
 export type LayerToFeatures = {
   area: number
@@ -11,6 +13,10 @@ export type LayerToFeatures = {
 }
 
 export type VectorLayerWithName = VectorLayer<VectorSource> & {
+  name?: string
+}
+
+export type VectorTileLayerWithName = VectorTileLayer<VectorTileSource> & {
   name?: string
 }
 

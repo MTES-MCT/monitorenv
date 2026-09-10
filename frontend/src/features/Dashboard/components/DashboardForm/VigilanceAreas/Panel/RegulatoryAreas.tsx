@@ -11,7 +11,6 @@ import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
 import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
-import { boundingExtent } from 'ol/extent'
 import { Projection, transformExtent } from 'ol/proj'
 import styled from 'styled-components'
 import { Axis } from 'types'
@@ -19,7 +18,6 @@ import { Axis } from 'types'
 import { ButtonsContainer, Container, Name, StyledButton } from './style'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
-import type { Coordinate } from 'ol/coordinate'
 
 export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: number[] }) {
   const dispatch = useAppDispatch()
@@ -61,7 +59,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
     }
   }
 
-  const showRegulatoryAreaLayer = (event, regulatoryArea: RegulatoryArea.RegulatoryAreaWithBbox | undefined) => {
+  const showRegulatoryAreaLayer = (event, regulatoryArea: RegulatoryArea.RegulatoryAreaFromAPI | undefined) => {
     event.stopPropagation()
 
     if (!regulatoryArea?.id) {
@@ -71,13 +69,12 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
       dispatch(dashboardActions.removeRegulatoryIdToDisplay(regulatoryArea.id))
     } else {
       dispatch(dashboardActions.addRegulatoryIdToDisplay(regulatoryArea.id))
-      if (!regulatoryArea?.geom) {
+      if (!regulatoryArea?.extent) {
         return
       }
 
-      const bbox = boundingExtent(regulatoryArea.geom?.coordinates.flat().flat() as Coordinate[])
       const extent = transformExtent(
-        bbox,
+        regulatoryArea?.extent,
         new Projection({ code: WSG84_PROJECTION }),
         new Projection({ code: OPENLAYERS_PROJECTION })
       )

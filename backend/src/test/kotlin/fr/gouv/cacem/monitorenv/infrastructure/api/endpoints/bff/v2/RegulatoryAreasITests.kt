@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v2
 
 import com.nhaarman.mockitokotlin2.argThat
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
@@ -6,10 +6,12 @@ import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryAreaGroup
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllLayerNames
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasTiles
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetAllRegulatoryAreasToComplete
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
@@ -22,6 +24,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulator
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.RegulatoryAreas
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -52,6 +55,9 @@ class RegulatoryAreasITests {
 
     @MockitoBean
     private lateinit var getAllRegulatoryAreas: GetAllRegulatoryAreas
+
+    @MockitoBean
+    private lateinit var getAllRegulatoryAreasTiles: GetAllRegulatoryAreasTiles
 
     @MockitoBean
     private lateinit var getRegulatoryAreaById: GetRegulatoryAreaById
@@ -128,11 +134,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = null,
-                    tags = null,
-                    themes = null,
+                    filters = SearchFilters(),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -315,11 +317,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = listOf("NAMO"),
-                    tags = null,
-                    themes = null,
+                    filters = SearchFilters(seaFronts = listOf("NAMO")),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -349,11 +347,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = "Querlen",
-                    seaFronts = null,
-                    tags = null,
-                    themes = null,
+                    filters = SearchFilters(query = "Querlen"),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -376,11 +370,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = "NonExistent",
-                    seaFronts = null,
-                    tags = null,
-                    themes = null,
+                    filters = SearchFilters(query = "NonExistent"),
                 ),
             ).willReturn(Pair(emptyMap(), 0L))
 
@@ -399,11 +389,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = null,
-                    tags = listOf(5),
-                    themes = null,
+                    filters = SearchFilters(tags = listOf(5)),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -428,11 +414,7 @@ class RegulatoryAreasITests {
         BDDMockito
             .given(
                 getAllRegulatoryAreas.execute(
-                    controlPlan = null,
-                    searchQuery = null,
-                    seaFronts = null,
-                    tags = null,
-                    themes = listOf(101),
+                    filters = SearchFilters(themes = listOf(101)),
                 ),
             ).willReturn(Pair(mapOf(regulatoryAreaGroup to listOf(regulatoryArea)), 1L))
 
@@ -467,8 +449,8 @@ class RegulatoryAreasITests {
                 editeur = "Test Editor",
                 source = "Test Source",
                 observation = "Test observation",
-                tags = listOf(TagFixture.Companion.aTag(id = 5, name = "Mouillage")),
-                themes = listOf(ThemeFixture.Companion.aTheme(id = 9, name = "AMP")),
+                tags = listOf(TagFixture.aTag(id = 5, name = "Mouillage")),
+                themes = listOf(ThemeFixture.aTheme(id = 9, name = "AMP")),
                 date = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
                 dateFin = ZonedDateTime.parse("2034-01-01T00:00:00Z"),
                 location = null,
@@ -570,10 +552,10 @@ class RegulatoryAreasITests {
                 observation = "Updated observation",
                 tags =
                     listOf(
-                        TagFixture.Companion.aTag(id = 5, name = "Mouillage"),
-                        TagFixture.Companion.aTag(id = 6, name = "Extraction granulats"),
+                        TagFixture.aTag(id = 5, name = "Mouillage"),
+                        TagFixture.aTag(id = 6, name = "Extraction granulats"),
                     ),
-                themes = listOf(ThemeFixture.Companion.aTheme(id = 9, name = "AMP")),
+                themes = listOf(ThemeFixture.aTheme(id = 9, name = "AMP")),
                 date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
                 dateFin = ZonedDateTime.parse("2040-07-01T04:50:09Z"),
                 location = null,
@@ -687,10 +669,10 @@ class RegulatoryAreasITests {
                 editeur = "Jean Dupont",
                 source = "",
                 observation = "",
-                tags = listOf(TagFixture.Companion.aTag(name = "AMP", id = 3)),
+                tags = listOf(TagFixture.aTag(name = "AMP", id = 3)),
                 themes =
                     listOf(
-                        ThemeFixture.Companion.aTheme(
+                        ThemeFixture.aTheme(
                             name = "Aire Marine Protégée",
                             id = 102,
                         ),

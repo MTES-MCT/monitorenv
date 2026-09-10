@@ -1,7 +1,6 @@
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
-import { displayTags } from '@utils/getTagsAsOptions'
 import { getCenter } from 'ol/extent'
 import { Point } from 'ol/geom'
 import { Style } from 'ol/style'
@@ -12,7 +11,8 @@ import Text from 'ol/style/Text'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 
-import type { Feature } from 'ol'
+import type { IsolatedLayerType } from '../../../../domain/shared_slices/Map'
+import type { FeatureLike } from 'ol/Feature'
 
 const blueMarine = '#7B9FCC'
 const darkPeriwinkle = '#767AB2'
@@ -190,20 +190,28 @@ export const getAdministrativeLayersStyle = (code: String) => {
   }
 }
 
-export const getRegulatoryLayerStyle = feature => {
+export const getRegulatoryLayerStyle = (
+  feature: FeatureLike,
+  isolateLayer?: IsolatedLayerType,
+  metadataId?: string | number
+) => {
   const layerTitle = getRegulatoryAreaTitle(feature.get('polyName'), feature.get('resume'))
-  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(
-    displayTags(feature.get('tags')),
-    layerTitle,
-    feature.get('plan')
-  )
+  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('tags'), layerTitle, feature.get('plan'))
 
-  return getStyle(colorWithAlpha, feature)
+  return getStyle(colorWithAlpha, feature, isolateLayer, metadataId)
 }
 
-const getStyle = (color: string, feature: Feature) => {
-  const metadataIsShowed = feature.get('metadataIsShowed')
-  const isLayerFilled = feature.get('isFilled')
+const getStyle = (
+  color: string,
+  feature: FeatureLike,
+  isolatedLayer: IsolatedLayerType | undefined,
+  metadataId: string | number | undefined
+) => {
+  const metadataIsShowed = feature.get('metadataIsShowed') || feature.get('id') === metadataId
+  const isolatedLayerTypeIsRegulatory = isolatedLayer?.type.includes('REGULATORY') ?? false
+  const isLayerFilled = isolatedLayer
+    ? isolatedLayerTypeIsRegulatory && isolatedLayer?.id === feature.get('id') && isolatedLayer?.isFilled
+    : true
   const asMinimap = feature.get('asMinimap')
   const plan = feature.get('plan')
 

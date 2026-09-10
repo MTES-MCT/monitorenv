@@ -12,8 +12,9 @@ export namespace RegulatoryArea {
     editeur?: string
     editionBo?: string
     editionCacem?: string
+    extent: number[]
     facade: string
-    geom: GeoJSON.MultiPolygon
+    geom?: GeoJSON.MultiPolygon
     id: number
     isNew: boolean
     isUpdatedRecently: boolean
@@ -47,8 +48,6 @@ export namespace RegulatoryArea {
     refReg: string
   }
 
-  export type RegulatoryAreaWithBbox = RegulatoryAreaFromAPI & { bbox: number[] }
-
   export type RegulatoryAreaByIdsForApi = {
     axis?: string
     ids: number[]
@@ -61,14 +60,25 @@ export namespace RegulatoryArea {
     startDate?: string
   }
 
-  export type RegulatoryAreasFromApi = {
+  export type RegulatoryAreasFromAPI = {
     regulatoryAreasByLayer: RegulatoryAreaGroup[]
     totalCount: number
   }
 
   export type RegulatoryAreaGroup = {
-    group: RegulatoryAreaWithBbox
-    regulatoryAreas: RegulatoryAreaWithBbox[]
+    group: RegulatoryAreaFromAPI
+    regulatoryAreas: RegulatoryAreaFromAPI[]
+  }
+
+  export type RegulatoryAreaTilesProperties = {
+    id: number
+    isFilled: boolean
+    layerName: string
+    location: string
+    plan: string
+    polyName: string
+    resume?: string
+    tags?: string
   }
 
   export type RegulatoryAreaGroupToApi = {

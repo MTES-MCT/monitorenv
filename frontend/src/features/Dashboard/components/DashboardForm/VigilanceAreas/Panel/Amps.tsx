@@ -59,11 +59,11 @@ export function Amps({ ampIds }: { ampIds: number[] }) {
       dispatch(dashboardActions.removeAmpIdToDisplay(amp.id))
     } else {
       dispatch(dashboardActions.addAmpIdToDisplay(amp.id))
-      if (!amp?.bbox) {
+      if (!amp?.extent) {
         return
       }
       const extent = transformExtent(
-        amp?.bbox,
+        amp?.extent,
         new Projection({ code: WSG84_PROJECTION }),
         new Projection({ code: OPENLAYERS_PROJECTION })
       )

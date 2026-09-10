@@ -28,7 +28,7 @@ export function BackofficeRegulatoryAreaGroupLayer({ map }: BaseMapChildrenProps
       renderBuffer: 4,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: regulatoryVectorSourceRef.current,
-      style: getRegulatoryLayerStyle
+      style: feature => getRegulatoryLayerStyle(feature, undefined, openedRegulatoryAreaId)
     })
   ) as MutableRefObject<VectorLayerWithName>
   regulatoryVectorLayerRef.current.name = Layers.REGULATORY_ENV.code

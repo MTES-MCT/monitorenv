@@ -22,7 +22,7 @@ export function RegulatoryLayerGroup({
   searchedText
 }: {
   groupName: string
-  layers: RegulatoryArea.RegulatoryAreaWithBbox[]
+  layers: RegulatoryArea.RegulatoryAreaFromAPI[]
   searchedText: string
 }) {
   const dispatch = useAppDispatch()

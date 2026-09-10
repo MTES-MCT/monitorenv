@@ -9,7 +9,7 @@ import type { IsolatedLayerType } from 'domain/shared_slices/Map'
 
 export const getVigilanceAreaZoneFeature = (
   vigilanceArea: VigilanceArea.VigilanceArea,
-  layername: string,
+  layerName: string,
   isolatedLayer: IsolatedLayerType | undefined,
   isSelected?: boolean
 ) => {
@@ -27,7 +27,7 @@ export const getVigilanceAreaZoneFeature = (
     ? isolatedLayerIsVigilanceArea && isolatedLayer?.id === vigilanceArea.id && isolatedLayer?.isFilled
     : true
 
-  feature.setId(`${layername}:${vigilanceArea.id}`)
+  feature.setId(`${layerName}:${vigilanceArea.id}`)
   feature.setProperties({
     area,
     ...vigilanceArea,

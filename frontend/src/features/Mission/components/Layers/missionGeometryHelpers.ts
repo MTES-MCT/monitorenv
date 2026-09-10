@@ -17,7 +17,7 @@ import { type Geometry } from 'ol/geom'
 import { selectedMissionControlStyle, selectedMissionSurveillanceStyle } from './missions.style'
 import { getTotalOfControls, getTotalOfSurveillances } from '../../utils'
 
-export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, layername: string) => {
+export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, layerName: string) => {
   const geoJSON = new GeoJSON()
   const geometry = geoJSON.readGeometry(mission.geom, {
     dataProjection: WSG84_PROJECTION,
@@ -27,7 +27,7 @@ export const getMissionZoneFeature = (mission: Partial<Mission | NewMission>, la
   const feature = new Feature({
     geometry
   })
-  feature.setId(`${layername}:${mission.id}`)
+  feature.setId(`${layerName}:${mission.id}`)
   feature.setProperties({
     attachedReportingIds: mission.attachedReportingIds,
     attachedReportings: mission.attachedReportings,

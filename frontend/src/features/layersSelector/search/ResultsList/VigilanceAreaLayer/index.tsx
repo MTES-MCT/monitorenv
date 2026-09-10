@@ -51,6 +51,7 @@ export function VigilanceAreaLayer({ layer, searchedText }: RegulatoryLayerProps
     if (metadataIsShown) {
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(undefined))
     } else {
+      fitToVigilanceAreaLayer()
       dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(layerId))
       fitToVigilanceAreaLayer()
       if (!isSuperUser) {

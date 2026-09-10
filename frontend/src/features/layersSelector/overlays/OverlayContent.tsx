@@ -35,7 +35,7 @@ type OverlayContentProps = {
   items:
     | OverlayItem<
         RegulatoryOrAMPOrViglanceAreaLayerType,
-        AMPProperties | RegulatoryArea.RegulatoryAreaWithBbox | VigilanceArea.VigilanceAreaProperties
+        AMPProperties | RegulatoryArea.RegulatoryAreaTilesProperties | VigilanceArea.VigilanceAreaProperties
       >[]
     | undefined
 }
@@ -81,38 +81,36 @@ export function OverlayContent({ items }: OverlayContentProps) {
   const isLinkingAmpToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLinkingZonesToVigilanceArea = useAppSelector(state => getIsLinkingZonesToVigilanceArea(state))
 
-  const handleClick =
-    (type: RegulatoryOrAMPOrViglanceAreaLayerType, id: number, isDisabled: boolean = false) =>
-    () => {
-      if (isDisabled) {
-        return
-      }
-      if (isAmpLayer(type)) {
-        dispatch(openAMPMetadataPanel(id))
-        dispatch(layerSidebarActions.toggleAmpResults(true))
+  const handleClick = (type: RegulatoryOrAMPOrViglanceAreaLayerType, id: number, isDisabled: boolean = false) => {
+    if (isDisabled) {
+      return
+    }
+    if (isAmpLayer(type)) {
+      dispatch(openAMPMetadataPanel(id))
+      dispatch(layerSidebarActions.toggleAmpResults(true))
 
-        if (editingVigilanceAreaId) {
-          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
-        }
-      }
-      if (isRegulatoryLayer(type)) {
-        dispatch(openRegulatoryMetadataPanel(id))
-        dispatch(layerSidebarActions.toggleRegulatoryResults(true))
-
-        if (editingVigilanceAreaId) {
-          dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
-        }
-      }
-      if (
-        type === MonitorEnvLayers.VIGILANCE_AREA ||
-        type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW ||
-        type === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
-      ) {
-        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
-        dispatch(closeMetadataPanel())
-        dispatch(layerSidebarActions.toggleVigilanceAreaResults(true))
+      if (editingVigilanceAreaId) {
+        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
       }
     }
+    if (isRegulatoryLayer(type)) {
+      dispatch(openRegulatoryMetadataPanel(id))
+      dispatch(layerSidebarActions.toggleRegulatoryResults(true))
+
+      if (editingVigilanceAreaId) {
+        dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(editingVigilanceAreaId))
+      }
+    }
+    if (
+      type === MonitorEnvLayers.VIGILANCE_AREA ||
+      type === MonitorEnvLayers.VIGILANCE_AREA_PREVIEW ||
+      type === Dashboard.Layer.DASHBOARD_VIGILANCE_AREAS
+    ) {
+      dispatch(vigilanceAreaActions.setSelectedVigilanceAreaId(id))
+      dispatch(closeMetadataPanel())
+      dispatch(layerSidebarActions.toggleVigilanceAreaResults(true))
+    }
+  }
 
   const addRegulatoryToVigilanceArea = (e, id) => {
     e.stopPropagation()
@@ -140,7 +138,7 @@ export function OverlayContent({ items }: OverlayContentProps) {
         type
       })
     )
-    handleClick(type, id)()
+    handleClick(type, id)
   }
 
   const updateFillingMode = e => {
@@ -211,7 +209,9 @@ export function OverlayContent({ items }: OverlayContentProps) {
               key={id}
               $isSelected={isSelected}
               $withMargin={items.length === 1}
-              onClick={handleClick(item.layerType, id, isDisabled)}
+              onClick={() => {
+                handleClick(item.layerType, id, isDisabled)
+              }}
             >
               <Wrapper>
                 <LayerLegend
