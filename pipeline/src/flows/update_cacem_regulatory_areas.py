@@ -173,9 +173,9 @@ def update_cacem_regulatory_areas(new_regulatory_areas: pd.DataFrame):
 @task
 def load_new_regulatory_areas_groups(new_regulatory_areas_groups: pd.DataFrame):
     new_regulatory_areas_groups["additional_ref_reg"] = (
-    new_regulatory_areas_groups["additional_ref_reg"]
-    .map(to_json, na_action="ignore")
-    .fillna("null")
+        new_regulatory_areas_groups["additional_ref_reg"]
+        .map(to_json, na_action="ignore")
+        .fillna("null")
     )
     """Upsert monitorenv regulatory areas groups into CACEM."""
     load(

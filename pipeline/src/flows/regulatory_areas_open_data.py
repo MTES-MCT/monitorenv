@@ -2,7 +2,7 @@ import json
 
 import geopandas as gpd
 import pandas as pd
-from prefect import flow, task
+from prefect import flow, task, get_run_logger
 
 from config import (
     IS_INTEGRATION,
@@ -120,6 +120,8 @@ def regulatory_areas_open_data_flow(
 ):
 
     regulatory_areas = extract_regulatory_areas_open_data()
+    logger = get_run_logger()
+    logger.info(f"Number of regulatory areas extracted: {len(regulatory_areas)}")
 
     regulatory_areas_for_csv = get_regulatory_areas_for_csv(regulatory_areas)
     regulatory_areas_for_geopackage = get_regulatory_areas_for_geopackage(regulatory_areas)
