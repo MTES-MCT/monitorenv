@@ -10,7 +10,7 @@ geopandas = "^1.1.1"
 python-dotenv = "^1.2.2"
 pandas = "^2.3.3"
 geoalchemy2 = "^0.18.1"
-simplejson = "^3.20.2"
+simplejson = "^4.1.1"
 pytz = "^2025.2"
 prefect = {version = "3.6.9", extras = ["docker"]}
 coverage = "^7.12.0"
