@@ -75,7 +75,7 @@
     "yup": "1.7.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "9.9.0",
+    "@faker-js/faker": "10.5.0",
     "@import-meta-env/cli": "^0.7.4",
     "@import-meta-env/prepare": "0.2.3",
     "@import-meta-env/unplugin": "^0.6.3",
