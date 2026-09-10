@@ -15,6 +15,7 @@ WITH facades_intersection_areas AS (
         facade_areas_subdivided.geometry
     )
     WHERE missions.mission_source IN ('MONITORENV', 'MONITORFISH')
+    AND env_actions.action_start_datetime_utc::TIMESTAMPTZ >= :date
     GROUP BY env_actions.id, facade_areas_subdivided.facade
 ),
 

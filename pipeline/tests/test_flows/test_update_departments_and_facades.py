@@ -1,3 +1,4 @@
+from datetime import date
 from uuid import UUID
 
 import pandas as pd
@@ -60,7 +61,7 @@ def test_flow(reset_test_data):
     )
     initial_actions = read_query("monitorenv_remote", actions_query)
 
-    state = update_departments_and_facades_flow(return_state=True)
+    state = update_departments_and_facades_flow(return_state=True, date=date(2022, 1, 1))
     assert state.is_completed()
 
     final_missions = read_query("monitorenv_remote", missions_query)

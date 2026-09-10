@@ -9,12 +9,13 @@ WITH departments_intersection_areas AS (
     LEFT JOIN departments_areas
     ON ST_Intersects(
         ST_MakeValid(
-            CASE WHEN env_actions.action_type = 'SURVEILLANCE' AND env_actions.value->>'cover_mission_zone' = 'true' THEN COALESCE(missions.geom, env_actions.geom)
+            CASE WHEN missions.is_geometry_computed_from_controls IS FALSE THEN COALESCE(missions.geom, env_actions.geom)
             ELSE COALESCE(env_actions.geom, missions.geom) END
         ),
         departments_areas.geometry
     )
     WHERE missions.mission_source IN ('MONITORENV', 'MONITORFISH')
+    AND env_actions.action_start_datetime_utc::TIMESTAMPTZ >= :date
     GROUP BY env_actions.id, departments_areas.insee_dep
 ),
 
@@ -37,4 +38,4 @@ env_actions_departments AS (
 UPDATE env_actions
 SET department = env_actions_departments.insee_dep
 FROM env_actions_departments
-WHERE env_actions.id = env_actions_departments.id;
+WHERE env_actions.id = env_actions_departments.id
