@@ -28,7 +28,30 @@ def test_load_new_regulatory_areas_groups_uses_upsert_on_id(monkeypatch):
 
     monkeypatch.setattr("src.flows.update_cacem_regulatory_areas.load", fake_load)
 
-    new_regulatory_areas_groups = pd.DataFrame({"id": [1]})
+    id = 1
+    new_regulatory_areas_groups = pd.DataFrame(
+        {
+            "id": [id],
+            "url": [None],
+            "layer_name": [None],
+            "facade": [None],
+            "creation": [None],
+            "edition_bo": [None],
+            "date": [None],
+            "date_fin": [None],
+            "type": [None],
+            "resume": [None],
+            "poly_name": [None],
+            "plan": [None],
+            "authorization_periods": [None],
+            "prohibition_periods": [None],
+            "additional_ref_reg": [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}],
+            "location": [None],
+            "area_type": [None],
+            "themes": [None],
+            "tags": [None],
+        }
+    )
 
     load_new_regulatory_areas_groups(new_regulatory_areas_groups)
 
@@ -38,6 +61,17 @@ def test_load_new_regulatory_areas_groups_uses_upsert_on_id(monkeypatch):
     assert captured["kwargs"]["table_name"] == "reg_cacem"
     assert captured["kwargs"]["schema"] == "prod"
     assert captured["kwargs"]["db_name"] == "cacem_local"
+
+    result = read_query(
+        db="cacem_local",
+        query=f"""
+        SELECT prod.reg_cacem.*
+        FROM prod.reg_cacem
+        WHERE id = {id}
+        """
+    )
+
+    assert result.iloc[0]["additional_ref_reg"] == [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}]
 
 
 
