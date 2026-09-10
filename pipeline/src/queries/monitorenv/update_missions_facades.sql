@@ -7,6 +7,7 @@ WITH facades_intersection_areas AS (
     LEFT JOIN facade_areas_subdivided
     ON ST_Intersects(ST_MakeValid(missions.geom), facade_areas_subdivided.geometry)
     WHERE mission_source IN ('MONITORENV', 'MONITORFISH')
+    AND missions.start_datetime_utc::TIMESTAMPTZ >= :date
     GROUP BY missions.id, facade_areas_subdivided.facade
 ),
 
