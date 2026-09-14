@@ -111,7 +111,9 @@ EMAIL_ALL_UNITS = (
 # data.gouv.fr configuration
 DATAGOUV_API_ENDPOINT = "https://www.data.gouv.fr/api/1"
 DATAGOUV_API_KEY = get_key(DOTENV_PATH, "DATAGOUV_API_KEY")
-
+DATAGOUV_SPECIES_URL = (
+    "https://www.data.gouv.fr/fr/datasets/r/32616122-6931-4875-8e26-a57832012419"
+)
 # data.gouv.fr resource ids
 REGULATORY_AREAS_DATASET_ID = "682ae3040ebe621687ec64ad"
 REGULATORY_AREAS_CSV_RESOURCE_ID = "c9fe6865-602f-452c-ab31-e1d25222c158"
