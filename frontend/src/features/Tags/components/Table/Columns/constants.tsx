@@ -27,13 +27,15 @@ export const TAG_TABLE_COLUMNS = [
           label="Nom du tag"
           onCommit={value => table.options.meta?.updateData(row.id, 'name', value, row.parentId)}
         />
-        <EditableSelectCell
-          customSearch={table.options.meta?.customSearch}
-          initialValue={getValue().codeFao}
-          isEditing={table.options.meta?.isEditing(row)}
-          onCommit={value => table.options.meta?.updateData(row.id, 'codeFao', value, row.parentId)}
-          options={table.options.meta?.speciesOptions}
-        />
+        {row.depth === 1 && (
+          <EditableSelectCell
+            customSearch={table.options.meta?.customSearch}
+            initialValue={getValue().codeFao}
+            isEditing={table.options.meta?.isEditing(row)}
+            onCommit={value => table.options.meta?.updateData(row.id, 'codeFao', value, row.parentId)}
+            options={table.options.meta?.speciesOptions}
+          />
+        )}
       </HAlign>
     ),
     header: () => 'Tag',
