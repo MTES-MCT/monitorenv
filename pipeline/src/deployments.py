@@ -35,6 +35,7 @@ from src.flows.localized_areas import localized_areas_flow
 from src.flows.marpol import marpol_flow
 from src.flows.refresh_materialized_view import refresh_materialized_view_flow
 from src.flows.regulatory_areas_open_data import regulatory_areas_open_data_flow
+from src.flows.species import species_flow
 from src.flows.update_env_regulatory_areas import update_env_regulatory_areas_flow
 from src.flows.update_cacem_regulatory_areas import update_cacem_regulatory_areas_flow
 from src.flows.remove_broken_missions_resources_links import (
@@ -139,6 +140,7 @@ flows_to_deploy = [
     FlowAndSchedules(flow=vessel_repository_flow),
     FlowAndSchedules(flow=last_positions_flow),
     FlowAndSchedules(flow=natinfs_themes_flow),
+    FlowAndSchedules(flow=species_flow)
 ]
 
 deployments = []
