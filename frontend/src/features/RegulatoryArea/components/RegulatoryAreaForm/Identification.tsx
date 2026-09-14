@@ -56,26 +56,25 @@ export function Identification({
 
         return {
           label: getTitle(formattedLayerName),
-          value: {
-            groupId: regulatoryArea.group.id,
-            layerName: formattedLayerName
-          }
+          value: regulatoryArea.group.id
         }
       })
 
     return formattedLayerNames.sort((a, b) => a.label.localeCompare(b.label))
   }, [layerNames])
 
-  const groupNameOption = useMemo(
+  const selectedGroupId = useMemo(
     () =>
-      layerNameOptions.find(layer => layer.value.layerName === formatLayerName(values.layerName, values.location))
-        ?.value,
-    [layerNameOptions, values.layerName, values.location]
+      layerNames?.find(
+        groupWithTotal =>
+          groupWithTotal.group.layerName === values.layerName && groupWithTotal.group.location === values.location
+      )?.group.id,
+    [layerNames, values.layerName, values.location]
   )
 
   useEffect(() => {
-    onSelectGroup(groupNameOption?.groupId)
-  }, [groupNameOption?.groupId, onSelectGroup])
+    onSelectGroup(selectedGroupId)
+  }, [selectedGroupId, onSelectGroup])
 
   const setThemes = (nextThemes: ThemeOption[] | undefined = []) => {
     setFieldValue('themes', parseOptionsToThemes(nextThemes))
@@ -124,10 +123,10 @@ export function Identification({
     }
   }
 
-  const onChangeLayerName = (nextValue?: { groupId: number | undefined; layerName: string | undefined }) => {
-    const nameAndLocation = nextValue?.layerName?.split(' - ')
-    setFieldValue('layerName', nameAndLocation?.[0])
-    setFieldValue('location', nameAndLocation?.[1])
+  const onChangeLayerName = (nextValue?: number | undefined) => {
+    const groupFound = layerNames?.find(groupWithTotal => groupWithTotal.group.id === nextValue)?.group
+    setFieldValue('layerName', groupFound?.layerName)
+    setFieldValue('location', groupFound?.location)
     setIsModifyingLayerName(false)
   }
 
@@ -177,7 +176,6 @@ export function Identification({
                 name="layerName"
                 onChange={onChangeLayerName}
                 options={layerNameOptions}
-                optionValueKey="layerName"
                 renderExtraFooter={() => (
                   <ExtraFooterContainer onClick={createNewGroup} type="button">
                     <Icon.Plus />
@@ -185,7 +183,7 @@ export function Identification({
                   </ExtraFooterContainer>
                 )}
                 style={{ flex: 1 }}
-                value={groupNameOption}
+                value={selectedGroupId}
               />
               <Tooltip>Le nom du groupe doit permettre de connaître le lieu et le sujet de la réglementation.</Tooltip>
             </>
