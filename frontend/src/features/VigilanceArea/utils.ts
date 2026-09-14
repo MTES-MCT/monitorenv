@@ -25,6 +25,45 @@ export const endingOccurenceText = (
 
   return capitalize ? capitalizeFirstLetter(text) : text
 }
+function getUniqueDayNames(startDate: string, endDate: string): string[] {
+  const days: string[] = []
+  let current = customDayjs(startDate).utc()
+  const end = customDayjs(endDate).utc()
+
+  while (current.isSameOrBefore(end, 'day')) {
+    const dayName = capitalizeFirstLetter(current.format('dddd'))
+    if (!days.includes(dayName)) {
+      days.push(dayName)
+    }
+    current = current.add(1, 'day')
+  }
+
+  return days
+}
+
+function formatDaysList(days: string[]): string {
+  if (days.length >= 7) {
+    return 'Se répète tous les jours'
+  }
+  if (days.length === 1) {
+    return `Se répète tous les ${days[0]}`
+  }
+
+  const last = days.at(-1)
+  const rest = days.slice(0, -1).join(', ')
+
+  return `Se répète tous les ${rest} et ${last}`
+}
+
+function computeWeeklyText(startDate: string | undefined, endDate: string | undefined): string {
+  if (!startDate || !endDate) {
+    return 'Se répète toutes les semaines'
+  }
+
+  const days = getUniqueDayNames(startDate, endDate)
+
+  return formatDaysList(days)
+}
 
 export const frequencyText = (
   frequency: VigilanceArea.Frequency | undefined,
@@ -44,12 +83,7 @@ export const frequencyText = (
       return capitalize ? capitalizeFirstLetter(text) : text
     }
     case VigilanceArea.Frequency.ALL_WEEKS: {
-      let text = 'Se répète toutes les semaines'
-      if (startDate && endDate) {
-        const startDay = capitalizeFirstLetter(customDayjs(startDate).format('dddd'))
-        const endDay = capitalizeFirstLetter(customDayjs(endDate).format('dddd'))
-        text = `Se répète tous les ${startDay} et ${endDay}`
-      }
+      const text = computeWeeklyText(startDate, endDate)
 
       return capitalize ? capitalizeFirstLetter(text) : text
     }

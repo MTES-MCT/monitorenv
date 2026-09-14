@@ -139,7 +139,7 @@ def load_species(species: pd.DataFrame):
     )
 
 
-@flow(name="MonitorEnv - Species")
+@flow(name="Monitorenv - Species")
 def species_flow():
     species = extract_species(url=DATAGOUV_SPECIES_URL, proxies=PROXIES)
     species = transform_species(species)
