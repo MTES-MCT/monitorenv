@@ -1,5 +1,5 @@
-import { Accent, CustomSearch, Select, Tag } from '@mtes-mct/monitor-ui'
-import { useState } from 'react'
+import { Accent, CustomSearch, type Option, Select, Tag } from '@mtes-mct/monitor-ui'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 export function EditableSelectCell({
@@ -13,9 +13,10 @@ export function EditableSelectCell({
   initialValue: string
   isEditing: boolean
   onCommit: (value: string | undefined) => void
-  options: any[]
+  options: Option[]
 }) {
   const [value, setValue] = useState<string | undefined>(initialValue)
+  const selectedOption = useMemo(() => options.find(option => option.value === value), [options, value])
 
   return isEditing ? (
     <Wrapper>
@@ -38,7 +39,7 @@ export function EditableSelectCell({
       />
     </Wrapper>
   ) : (
-    value && <Tag accent={Accent.PRIMARY}>{value}</Tag>
+    selectedOption && <Tag accent={Accent.PRIMARY}>{selectedOption.label}</Tag>
   )
 }
 
