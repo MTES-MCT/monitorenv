@@ -52,14 +52,14 @@ class JpaRegulatoryAreaGroupRepository(
                             .map { it.regulatoryArea.toRegulatoryArea(mapper = mapper, group = it.group) }
                             .filter { findBySearchQuery(it, query) },
                 )
-            }
+            }.filter { findBySearchQuery(it.group, query) }
     }
 
     private fun findBySearchQuery(
         regulatoryArea: RegulatoryAreaEntity,
         searchQuery: String?,
     ): Boolean {
-        if (searchQuery.isNullOrBlank() || regulatoryArea.areaType == AreaTypeEnum.GROUP) {
+        if (searchQuery.isNullOrBlank()) {
             return true
         }
 
