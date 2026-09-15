@@ -35,6 +35,6 @@ LEFT JOIN tags_regulatory_areas trt
        ON trt.regulatory_areas_id = ra.id
 LEFT JOIN tags tag
        ON tag.id = trt.tags_id
-WHERE ra.poly_name IS NOT NULL
+WHERE ra.layer_name IS NOT NULL
 and ra.area_type = 'ZONE'
 GROUP BY ra.id;
