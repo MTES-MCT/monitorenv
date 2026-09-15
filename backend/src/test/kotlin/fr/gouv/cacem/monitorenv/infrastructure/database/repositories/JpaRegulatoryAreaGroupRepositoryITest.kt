@@ -46,6 +46,21 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
 
     @Test
     @Transactional
+    fun `findAll should return all regulatoryAreas when query filter is set to Dragage`() {
+        val regulatoryAreas =
+            jpaRegulatoryAreaGroupRepository.findAll(
+                controlPlan = null,
+                seaFronts = null,
+                tags = null,
+                themes = null,
+                query = "Dragage",
+            )
+        assertThat(regulatoryAreas).hasSize(1)
+        assertThat(regulatoryAreas[0].areas).hasSize(2)
+    }
+
+    @Test
+    @Transactional
     fun `findAll should return all regulatoryAreas when seafront filter is set to MED`() {
         // When
         val regulatoryAreas =
