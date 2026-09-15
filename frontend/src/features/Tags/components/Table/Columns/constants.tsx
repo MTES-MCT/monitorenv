@@ -16,7 +16,7 @@ export const TAG_TABLE_COLUMNS = [
     size: 38
   },
   {
-    accessorFn: row => ({ codeFao: row.codeFao, name: row.name }),
+    accessorFn: row => ({ codeFao: row.codeFao, name: row.name, subTags: row.subTags }),
     cell: ({ getValue, row, table }) => (
       <HAlign>
         <EditableTextCell
@@ -27,7 +27,7 @@ export const TAG_TABLE_COLUMNS = [
           label="Nom du tag"
           onCommit={value => table.options.meta?.updateData(row.id, 'name', value, row.parentId)}
         />
-        {row.depth === 1 && (
+        {(row.depth === 1 || !getValue().subTags?.length) && (
           <EditableSelectCell
             customSearch={table.options.meta?.customSearch}
             initialValue={getValue().codeFao}

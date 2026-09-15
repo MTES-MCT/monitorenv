@@ -65,7 +65,7 @@ export function TagTable() {
     [species]
   )
 
-  const customSearch = new CustomSearch(speciesOptions ?? [], ['label'], {
+  const customSearch = new CustomSearch(speciesOptions ?? [], ['label', 'value'], {
     cacheKey: 'TAG_SPECIES',
     isStrict: true,
     withCacheInvalidation: true

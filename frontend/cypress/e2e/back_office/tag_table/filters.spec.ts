@@ -3,8 +3,9 @@ const totalTags = 16
 context('Back Office > Tag Table > Filters', () => {
   beforeEach(() => {
     cy.intercept('GET', `/bff/v1/tags*`).as('getTags')
+    cy.intercept('GET', `/bff/v1/species`).as('getSpecies')
     cy.visit(`/backoffice/tags`)
-    cy.wait('@getTags')
+    cy.wait(['@getTags', '@getSpecies'])
   })
 
   it('Should show all tags then showing subtags when clicking row', () => {

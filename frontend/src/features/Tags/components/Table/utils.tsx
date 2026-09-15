@@ -4,7 +4,7 @@ import type { FiltersState } from './types'
 import type { TagTable } from '../../../../domain/entities/tags'
 
 export function getFilters(data: TagTable[], filtersState: FiltersState): Filter<TagTable>[] {
-  const customSearch = new CustomSearch(data, ['name', 'subTags.name'], {
+  const customSearch = new CustomSearch(data, ['name', 'subTags.name', 'codeFao', 'subTags.codeFao'], {
     cacheKey: 'BACK_OFFICE_TAG_LIST',
     isStrict: true,
     withCacheInvalidation: true
