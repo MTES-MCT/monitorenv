@@ -13,10 +13,10 @@ export function EditableSelectCell({
   initialValue: string
   isEditing: boolean
   onCommit: (value: string | undefined) => void
-  options: Option[]
+  options: Option[] | undefined
 }) {
   const [value, setValue] = useState<string | undefined>(initialValue)
-  const selectedOption = useMemo(() => options.find(option => option.value === value), [options, value])
+  const selectedOption = useMemo(() => options?.find(option => option.value === value), [options, value])
 
   return isEditing ? (
     <Wrapper>
@@ -31,7 +31,7 @@ export function EditableSelectCell({
           setValue(nextValue)
           onCommit(nextValue)
         }}
-        options={options}
+        options={options ?? []}
         placeholder="Code FAO"
         style={{ width: '250px' }}
         value={value}
