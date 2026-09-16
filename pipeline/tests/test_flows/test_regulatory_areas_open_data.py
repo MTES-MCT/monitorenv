@@ -69,10 +69,8 @@ def regulatory_areas_open_data():
                 None,
             ],
             "location": ["location1", "location2"],
-            "themes": ["AMP sans réglementation particulière,Pêche à pied", ""],
-            "sub_themes": ["", ""],
-            "tags": ["tag1", ""],
-            "sub_tags": ["sub-tag1", ""],
+            "themes": [{'Pêche à pied': [], 'AMP sans réglementation particulière': []}, {}],
+            "tags": [{'tag1': ['sub-tag1']}, {}],
         },
         geometry="geometry",
     )
@@ -125,10 +123,8 @@ def regulatory_areas_for_csv():
                 [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}],
                 None,
             ],
-            "themes": ["AMP sans réglementation particulière,Pêche à pied", ""],
-            "sub_themes": ["", ""],
-            "tags": ["tag1", ""],
-            "sub_tags": ["sub-tag1", ""],
+            "themes": [{'Pêche à pied': [], 'AMP sans réglementation particulière': []}, {}],
+            "tags": [{'tag1': ['sub-tag1']}, {}],
             "location": ["location1", "location2"],
         }
     )
@@ -181,10 +177,8 @@ def regulatory_areas_for_geopackage():
                 [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}],
                 None,
             ],
-            "themes": ["AMP sans réglementation particulière,Pêche à pied",  ""],
-            "sub_themes": ["", ""],
-            "tags": ["tag1", ""],
-            "sub_tags": ["sub-tag1", ""],
+            "themes": [{'Pêche à pied': [], 'AMP sans réglementation particulière': []}, {}],
+            "tags": [{'tag1': ['sub-tag1']}, {}],
             "location": ["location1", "location2"],
         },
         geometry="geometry",
@@ -225,10 +219,8 @@ def test_extract_regulatory_areas_open_data_themes_and_tags(
     row1 = regulatory_areas.loc[1]
     row2 = regulatory_areas.loc[2]
 
-    assert row1["themes"] == "AMP sans réglementation particulière,Pêche à pied"
-    assert row1["sub_themes"] == ""
-    assert row1["tags"] == "tag1"
-    assert row1["sub_tags"] == "sub-tag1"
+    assert row1["themes"] == {'AMP sans réglementation particulière': [], 'Pêche à pied': []}
+    assert row1["tags"] == {'tag1': ['sub-tag1']}
 
 
 def test_get_regulatory_areas_for_csv(regulatory_areas_open_data, regulatory_areas_for_csv):
@@ -241,10 +233,15 @@ def test_get_regulatory_areas_for_geopackage(
 ):
     regulatory_areas = get_regulatory_areas_for_geopackage(regulatory_areas_open_data)
 
-    # get_regulatory_areas_for_geopackage serializes additional_ref_reg (jsonb) to a JSON string
+    # get_regulatory_areas_for_geopackage serializes additional_ref_reg, themes and tags (jsonb) to a JSON string
     regulatory_areas["additional_ref_reg"] = regulatory_areas["additional_ref_reg"].apply(json.loads)
     regulatory_areas_for_geopackage["additional_ref_reg"] = regulatory_areas_for_geopackage["additional_ref_reg"].apply(json.dumps).apply(json.loads)
 
+    regulatory_areas["themes"] = regulatory_areas["themes"].apply(json.loads)
+    regulatory_areas_for_geopackage["themes"] = regulatory_areas_for_geopackage["themes"].apply(json.dumps).apply(json.loads)
+
+    regulatory_areas["tags"] = regulatory_areas["tags"].apply(json.loads)
+    regulatory_areas_for_geopackage["tags"] = regulatory_areas_for_geopackage["tags"].apply(json.dumps).apply(json.loads)
     pd.testing.assert_frame_equal(regulatory_areas, regulatory_areas_for_geopackage)
 
 
@@ -281,10 +278,12 @@ def test_flow(
     df_from_csv_file_object["additional_ref_reg"] = df_from_csv_file_object["additional_ref_reg"].apply(
         lambda x: ast.literal_eval(x) if isinstance(x, str) else None
     )
-
-    # GDAL's GPKG driver writes empty strings as NULL, so they must be restored before comparison
-    for col in ["themes", "sub_themes", "tags", "sub_tags"]:
-        df_from_csv_file_object[col] = df_from_csv_file_object[col].fillna("")
+    df_from_csv_file_object["themes"] = df_from_csv_file_object["themes"].apply(
+        lambda x: ast.literal_eval(x) if isinstance(x, str) else None
+    )
+    df_from_csv_file_object["tags"] = df_from_csv_file_object["tags"].apply(
+        lambda x: ast.literal_eval(x) if isinstance(x, str) else None
+    )
 
 
     pd.testing.assert_frame_equal(
@@ -312,14 +311,16 @@ def test_flow(
 
     gdf_from_geopackage_file_object = pd.concat(gdfs).reset_index(drop=True)
 
-    # additional_ref_reg (jsonb) was serialized to a JSON string; "null" means None
+    # additional_ref_reg, themes and tags (jsonb) was serialized to a JSON string; "null" means None
     gdf_from_geopackage_file_object["additional_ref_reg"] = gdf_from_geopackage_file_object["additional_ref_reg"].apply(
         lambda x: json.loads(x) if isinstance(x, str) else None
     )
-
-    # GDAL's GPKG driver writes empty strings as NULL, so they must be restored before comparison
-    for col in ["themes", "sub_themes", "tags", "sub_tags"]:
-        gdf_from_geopackage_file_object[col] = gdf_from_geopackage_file_object[col].fillna("")
+    gdf_from_geopackage_file_object["themes"] = gdf_from_geopackage_file_object["themes"].apply(
+        lambda x: json.loads(x) if isinstance(x, str) else None
+    )
+    gdf_from_geopackage_file_object["tags"] = gdf_from_geopackage_file_object["tags"].apply(
+        lambda x: json.loads(x) if isinstance(x, str) else None
+    )
 
     pd.testing.assert_frame_equal(
         normalize_gdf(gdf_from_geopackage_file_object),
