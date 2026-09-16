@@ -55,9 +55,7 @@ def get_regulatory_areas_for_csv(regulatory_areas: gpd.GeoDataFrame) -> pd.DataF
         "prohibition_periods",
         "additional_ref_reg",
         "themes",
-        "sub_themes",
         "tags",
-        "sub_tags",
         "location"
     ]
 
@@ -90,9 +88,7 @@ def get_regulatory_areas_for_geopackage(
         "prohibition_periods",
         "additional_ref_reg",
         "themes",
-        "sub_themes",
         "tags",
-        "sub_tags",
         "location"
     ]
 
@@ -105,6 +101,8 @@ def get_regulatory_areas_for_geopackage(
             
     # Convert the 'additional_ref_reg' column to JSON strings to ensure compatibility with Geopackage        
     gdf["additional_ref_reg"] = gdf["additional_ref_reg"].apply(json.dumps)
+    gdf["themes"] = gdf["themes"].apply(json.dumps)
+    gdf["tags"] = gdf["tags"].apply(json.dumps)
 
     return gdf
 
