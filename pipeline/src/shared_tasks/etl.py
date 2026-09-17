@@ -9,7 +9,7 @@ from src.db_config import create_engine
 
 
 @task
-def run_sql_script(sql_filepath: Path) -> pd.DataFrame:
+def run_sql_script(sql_filepath: Path, params: dict = None) -> pd.DataFrame:
 
     logger = get_run_logger()
     with open(sql_filepath, "r") as sql_file:
@@ -19,7 +19,7 @@ def run_sql_script(sql_filepath: Path) -> pd.DataFrame:
 
     logger.info(f"Executing {sql_filepath}.")
     with e.begin() as con:
-        con.execute(query)
+        con.execute(query, params or {})
 
 
 @task
