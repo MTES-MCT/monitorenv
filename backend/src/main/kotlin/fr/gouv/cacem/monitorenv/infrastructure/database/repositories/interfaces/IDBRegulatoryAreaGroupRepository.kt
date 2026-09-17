@@ -30,11 +30,15 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
                 OR regulatoryArea.editionCacem >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
             ))
             AND (:extent IS NULL OR intersects(regulatoryArea.geom, :extent) = true)
-            ORDER BY regulatoryArea.layerName
+            AND (:lastModificationFrom IS NULL OR regulatoryArea.editionBo <= CAST(CAST(:lastModificationFrom AS text) AS timestamp))
+            AND (:lastModificationTo IS NULL OR regulatoryArea.editionBo >= CAST(CAST(:lastModificationTo AS text) AS timestamp))
+            ORDER BY regulatoryAreaGroup.group.layerName, regulatoryAreaGroup.group.location
         """,
     )
     fun findAll(
         controlPlan: String? = null,
+        lastModificationFrom: String? = null,
+        lastModificationTo: String? = null,
         seaFronts: List<String>? = null,
         tags: List<Int>? = null,
         themes: List<Int>? = null,

@@ -439,6 +439,74 @@ class RegulatoryAreasITests {
     }
 
     @Test
+    fun `Should filter regulatory areas by last modification dates`() {
+        // Given
+        val regulatoryAreaGroup =
+            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
+
+        BDDMockito
+            .given(
+                getAllRegulatoryAreas.execute(
+                    controlPlan = null,
+                    lastModificationFrom = "2020-01-01T00:00:00.000Z",
+                    lastModificationTo = null,
+                    searchQuery = null,
+                    seaFronts = null,
+                    tags = null,
+                    themes = null,
+                    sortBy = null,
+                ),
+            ).willReturn(Pair(listOf(regulatoryAreaGroup), 1L))
+
+        // When
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?lastModificationFrom=2020-01-01T00:00:00.000Z"),
+            )
+            // Then
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(
+                MockMvcResultMatchers.jsonPath(
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].themes[0].name",
+                    Matchers.equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
+                ),
+            )
+    }
+
+    @Test
+    fun `Should sort regulatory areas`() {
+        // Given
+        val regulatoryAreaGroup =
+            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
+
+        BDDMockito
+            .given(
+                getAllRegulatoryAreas.execute(
+                    controlPlan = null,
+                    lastModificationFrom = null,
+                    lastModificationTo = null,
+                    searchQuery = null,
+                    seaFronts = null,
+                    tags = null,
+                    themes = null,
+                    sortBy = "ALPHA_ASC",
+                ),
+            ).willReturn(Pair(listOf(regulatoryAreaGroup), 1L))
+
+        // When
+        mockMvc
+            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?sortBy=ALPHA_ASC"))
+            // Then
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(
+                MockMvcResultMatchers.jsonPath(
+                    "regulatoryAreasByLayer[0].regulatoryAreas[0].themes[0].name",
+                    Matchers.equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
+                ),
+            )
+    }
+
+    @Test
     fun `Should create new regulatory area`() {
         // Given
         val regulatoryAreaToComplete =
