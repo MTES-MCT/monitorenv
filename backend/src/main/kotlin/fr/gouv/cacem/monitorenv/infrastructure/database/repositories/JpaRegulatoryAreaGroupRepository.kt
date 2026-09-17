@@ -12,6 +12,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaMode
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
 import org.apache.commons.lang3.StringUtils
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -27,20 +28,49 @@ class JpaRegulatoryAreaGroupRepository(
     override fun findAll(
         controlPlan: String?,
         query: String?,
+        lastModificationFrom: String?,
+        lastModificationTo: String?,
         seaFronts: List<String>?,
+        sortBy: String?,
         tags: List<Int>?,
         themes: List<Int>?,
         onlyRecentsAreas: Boolean?,
     ): List<RegulatoryAreaGroupDTO> {
+        val sortBy =
+            when (sortBy) {
+                "ALPHA_ASC" -> Sort.by(Sort.Direction.ASC, "regulatoryArea.polyName")
+                "CREATE_ASC" ->
+                    Sort.by(
+                        Sort.Direction.ASC,
+                        "regulatoryArea.creation",
+                        "regulatoryArea.editionBo",
+                        "regulatoryArea.editionCacem",
+                    )
+
+                "CREATE_DESC" ->
+                    Sort.by(
+                        Sort.Direction.DESC,
+                        "regulatoryArea.creation",
+                        "regulatoryArea.editionBo",
+                        "regulatoryArea.editionCacem",
+                    )
+
+                else -> {
+                    null
+                }
+            }
         val groups =
             dbRegulatoryAreaGroupRepository
                 .findAll(
                     controlPlan = controlPlan,
+                    lastModificationFrom = lastModificationFrom,
+                    lastModificationTo = lastModificationTo,
                     seaFronts = seaFronts,
                     tags = tags,
                     themes = themes,
                     onlyRecentsAreas =
                     onlyRecentsAreas,
+                    sortBy = sortBy,
                 )
         return groups
             .groupBy { it.group }
@@ -52,7 +82,7 @@ class JpaRegulatoryAreaGroupRepository(
                             .map { it.regulatoryArea.toRegulatoryArea(mapper = mapper, group = it.group) }
                             .filter { findBySearchQuery(it, query) },
                 )
-            }.filter { findBySearchQuery(it.group, query) }
+            }.filter { it.areas.isNotEmpty() }
     }
 
     private fun findBySearchQuery(

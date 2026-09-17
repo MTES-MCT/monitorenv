@@ -14,7 +14,7 @@ context('Back Office > Regulatory Area > Filters', () => {
     cy.get('span[title="ZMEL - Cale Querlen"]').should('have.length', 2)
 
     // Reset field
-    cy.fill('Rechercher dans les zones réglementaires', undefined)
+    cy.clickButton('Réinitialiser les filtres')
   })
 
   it('should group by control plan or sea front', () => {
@@ -34,7 +34,7 @@ context('Back Office > Regulatory Area > Filters', () => {
     cy.get('span[title="Interdiction VNM - Molene"]').should('be.visible')
 
     // Reset
-    cy.fill('Façade', undefined)
+    cy.clickButton('Réinitialiser les filtres')
   })
 
   it('should select a theme', () => {
@@ -44,7 +44,7 @@ context('Back Office > Regulatory Area > Filters', () => {
     cy.get('span[title="ZMEL - Cale Querlen"]').should('have.length', 2)
 
     // Reset
-    cy.fill('Filtre thématiques et sous-thématiques', undefined)
+    cy.clickButton('Réinitialiser les filtres')
   })
 
   it('should select a tag', () => {
@@ -54,6 +54,44 @@ context('Back Office > Regulatory Area > Filters', () => {
     cy.get('span[title="Mouillage - Conquet Ile de bannec"]').should('be.visible')
 
     // Reset
-    cy.fill('Filtre tags et sous-tags', undefined)
+    cy.clickButton('Réinitialiser les filtres')
+  })
+
+  it('should filter by last modification date', () => {
+    cy.contains('button', 'Dragage - port de Brest').should('be.visible')
+    cy.contains('button', 'Dragage - port de Brest')
+      .parent()
+      .within(() => cy.contains('2/2'))
+    cy.fill('Dernière modification', 'Il y a plus d’un mois')
+    cy.wait('@getRegulatoryAreas')
+    cy.contains('button', 'Dragage - port de Brest').should('be.visible')
+    cy.contains('button', 'Dragage - port de Brest')
+      .parent()
+      .within(() => cy.contains('1/2'))
+
+    // Reset
+    cy.clickButton('Réinitialiser les filtres')
+  })
+
+  it('should filter by specific regulatory filters', () => {
+    cy.fill('Aide à la gestion des réglementations', 'Reg. sans thématique associée')
+    cy.contains('button', 'Interdiction VNM - Molene').should('be.visible')
+    cy.contains('button', 'Mouillage interdiction - port Camaret').should('be.visible')
+    cy.contains('button', 'Dragage - port de Brest').should('be.visible')
+    cy.contains('button', 'RNN - Iroise').should('be.visible')
+    cy.contains('button', 'ZMEL - anse illien Ploumoguer').should('be.visible')
+    cy.contains('button', 'ZMEL - Cale Querlen').should('be.visible')
+    cy.contains('button', 'ZMEL - maison blanche').should('be.visible')
+    cy.contains('button', 'Mouillage - Conquet Ile de bannec').should('be.visible')
+
+    cy.fill('Aide à la gestion des réglementations', 'Reg. sans tag associée')
+    cy.contains('button', 'Mouillage interdiction - port Camaret').should('be.visible')
+    cy.contains('button', 'RNN - Iroise').should('be.visible')
+
+    cy.fill('Aide à la gestion des réglementations', 'Reg. dont la date de validité est dépassée')
+    cy.contains('button', 'ZMEL - anse illien Ploumoguer').should('be.visible')
+
+    // Reset
+    cy.clickButton('Réinitialiser les filtres')
   })
 })
