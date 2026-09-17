@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
     @Autowired
@@ -57,6 +59,53 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
             )
         assertThat(regulatoryAreas).hasSize(1)
         assertThat(regulatoryAreas[0].areas).hasSize(2)
+    }
+
+    @Test
+    @Transactional
+    fun `findAll should return all regulatoryAreas when lastModification filter is set to in a month`() {
+        val lastModificationFrom = ZonedDateTime.now().minusDays(30)
+        val regulatoryAreas =
+            jpaRegulatoryAreaGroupRepository.findAll(
+                controlPlan = null,
+                lastModificationFrom = lastModificationFrom.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                lastModificationTo = null,
+                seaFronts = null,
+                tags = null,
+                themes = null,
+                query = null,
+            )
+        assertThat(regulatoryAreas).hasSize(4)
+        assertThat(regulatoryAreas.flatMap { it.areas }.map { it.editionBo }).allMatch {
+            it?.isBefore(
+                lastModificationFrom,
+            ) == true
+        }
+    }
+
+    @Test
+    @Transactional
+    fun `findAll should return all regulatoryAreas when lastModification custom filter is set`() {
+        val lastModificationFrom = ZonedDateTime.now().plusDays(1)
+        val lastModificationTo = ZonedDateTime.now().minusDays(1)
+        val regulatoryAreas =
+            jpaRegulatoryAreaGroupRepository.findAll(
+                controlPlan = null,
+                lastModificationFrom = lastModificationFrom.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                lastModificationTo = lastModificationTo.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                seaFronts = null,
+                tags = null,
+                themes = null,
+                query = null,
+            )
+        assertThat(regulatoryAreas).hasSize(3)
+        assertThat(regulatoryAreas.flatMap { it.areas }).hasSize(4)
+        assertThat(regulatoryAreas.flatMap { it.areas }.map { it.editionBo }).allMatch {
+            it?.isBefore(
+                lastModificationFrom,
+            ) == true &&
+                it.isAfter(lastModificationTo)
+        }
     }
 
     @Test

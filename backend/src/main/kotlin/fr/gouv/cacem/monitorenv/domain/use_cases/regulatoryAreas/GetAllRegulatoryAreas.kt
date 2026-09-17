@@ -13,8 +13,11 @@ class GetAllRegulatoryAreas(
 
     fun execute(
         controlPlan: String?,
+        lastModificationFrom: String?,
+        lastModificationTo: String?,
         searchQuery: String?,
         seaFronts: List<String>?,
+        sortBy: String?,
         tags: List<Int>?,
         themes: List<Int>?,
         onlyRecentsAreas: Boolean? = false,
@@ -25,7 +28,10 @@ class GetAllRegulatoryAreas(
             regulatoryAreaGroupRepository.findAll(
                 controlPlan = controlPlan,
                 query = searchQuery,
+                lastModificationFrom = lastModificationFrom,
+                lastModificationTo = lastModificationTo,
                 seaFronts = seaFronts,
+                sortBy = sortBy,
                 tags = tags,
                 themes = themes,
                 onlyRecentsAreas = onlyRecentsAreas,

@@ -38,10 +38,13 @@ class GetAllRegulatoryAreasUTest {
         val (regulatoryAreas, totalCount) =
             getAllRegulatoryAreas.execute(
                 controlPlan = null,
+                lastModificationFrom = null,
+                lastModificationTo = null,
                 searchQuery = null,
                 seaFronts = null,
                 tags = null,
                 themes = null,
+                sortBy = null,
             )
 
         // Then
@@ -116,10 +119,13 @@ class GetAllRegulatoryAreasUTest {
         val (groupedRegulatoryAreas, totalCount) =
             getAllRegulatoryAreas.execute(
                 controlPlan = null,
+                lastModificationFrom = null,
+                lastModificationTo = null,
                 searchQuery = null,
                 seaFronts = null,
                 tags = null,
                 themes = null,
+                sortBy = null,
             )
 
         // Then

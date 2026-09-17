@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.projections.RegulatoryAreaGroupWithTotal
+import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
@@ -28,15 +29,20 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
                 OR regulatoryArea.editionBo >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
                 OR regulatoryArea.editionCacem >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
             ))
-            ORDER BY regulatoryArea.layerName
+            AND (:lastModificationFrom IS NULL OR regulatoryArea.editionBo <= CAST(CAST(:lastModificationFrom AS text) AS timestamp))
+            AND (:lastModificationTo IS NULL OR regulatoryArea.editionBo >= CAST(CAST(:lastModificationTo AS text) AS timestamp))
+            ORDER BY regulatoryAreaGroup.group.layerName, regulatoryAreaGroup.group.location
         """,
     )
     fun findAll(
         controlPlan: String? = null,
+        lastModificationFrom: String? = null,
+        lastModificationTo: String? = null,
         seaFronts: List<String>? = null,
         tags: List<Int>? = null,
         themes: List<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
+        sortBy: Sort? = null,
     ): List<RegulatoryAreaGroupModel>
 
     @Query(

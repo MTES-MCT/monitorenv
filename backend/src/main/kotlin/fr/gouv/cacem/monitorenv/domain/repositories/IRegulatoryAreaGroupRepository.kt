@@ -8,7 +8,10 @@ interface IRegulatoryAreaGroupRepository {
     fun findAll(
         controlPlan: String? = null,
         query: String? = null,
+        lastModificationFrom: String? = null,
+        lastModificationTo: String? = null,
         seaFronts: List<String>? = null,
+        sortBy: String? = null,
         tags: List<Int>? = null,
         themes: List<Int>? = null,
         onlyRecentsAreas: Boolean? = false,
