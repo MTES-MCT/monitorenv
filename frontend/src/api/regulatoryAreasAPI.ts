@@ -1,4 +1,5 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSelector } from '@reduxjs/toolkit'
 import { getQueryString } from '@utils/getQueryStringFormatted'
 
@@ -13,6 +14,8 @@ const GET_REGULATORY_AREA_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zo
 const GET_LAYER_NAMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les noms de groupes de zones réglementaires"
 type Filters = {
   controlPlan?: string
+  lastModificationFrom?: string
+  lastModificationTo?: string
   onlyRecentsAreas?: boolean
   seaFronts?: string[]
   searchQuery?: string
@@ -113,10 +116,52 @@ export const {
   useGetRegulatoryAreasToCompleteQuery
 } = regulatoryAreasAPI
 
+export const getBackofficeFilters = (state: HomeRootState) => state.regulatoryAreaTable.filtersState
+
+export const getBackofficeFilteredRegulatoryAreas = createSelector(
+  [
+    state => getBackofficeFilters(state),
+    (state, filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)
+  ],
+  (filters, result) => {
+    const { data } = result
+    if (!filters.regHelper) {
+      return data
+    }
+    switch (filters.regHelper) {
+      case 'WITHOUT_THEME':
+        return {
+          ...data,
+          regulatoryAreasByLayer: data?.regulatoryAreasByLayer.map(group => ({
+            ...group,
+            regulatoryAreas: group.regulatoryAreas.filter(regArea => !regArea.themes || regArea.themes.length === 0)
+          }))
+        }
+      case 'WITHOUT_TAG':
+        return {
+          ...data,
+          regulatoryAreasByLayer: data?.regulatoryAreasByLayer.map(group => ({
+            ...group,
+            regulatoryAreas: group.regulatoryAreas.filter(regArea => !regArea.tags || regArea.tags.length === 0)
+          }))
+        }
+      case 'OUTDATED':
+        return {
+          ...data,
+          regulatoryAreasByLayer: data?.regulatoryAreasByLayer.filter(
+            group => group.group.dateFin && customDayjs().startOf('day').isAfter(customDayjs(group.group.dateFin))
+          )
+        }
+      default:
+        return data
+    }
+  }
+)
+
 export const getRegulatoryAreasByControlPlan = createSelector(
-  [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],
+  [getBackofficeFilteredRegulatoryAreas],
   regulatoryAreas => {
-    const groups = regulatoryAreas?.data?.regulatoryAreasByLayer
+    const groups = regulatoryAreas?.regulatoryAreasByLayer
 
     if (!groups) {
       return undefined
@@ -160,45 +205,42 @@ export const getRegulatoryAreasByControlPlan = createSelector(
   }
 )
 
-export const getRegulatoryAreasBySeaFront = createSelector(
-  [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],
-  regulatoryAreas => {
-    const groups = regulatoryAreas?.data?.regulatoryAreasByLayer
+export const getRegulatoryAreasBySeaFront = createSelector([getBackofficeFilteredRegulatoryAreas], regulatoryAreas => {
+  const groups = regulatoryAreas?.regulatoryAreasByLayer
 
-    if (!groups) {
-      return undefined
-    }
+  if (!groups) {
+    return undefined
+  }
 
     return groups.reduce(
       (acc, group) => {
         const areasByFacade = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
 
-        group.regulatoryAreas?.forEach(regulatoryArea => {
-          const { facade } = regulatoryArea
+      group.regulatoryAreas?.forEach(regulatoryArea => {
+        const { facade } = regulatoryArea
 
-          if (!facade) {
-            return
-          }
+        if (!facade) {
+          return
+        }
 
-          const areas = areasByFacade.get(facade) ?? []
-          areas.push(regulatoryArea)
-          areasByFacade.set(facade, areas)
+        const areas = areasByFacade.get(facade) ?? []
+        areas.push(regulatoryArea)
+        areasByFacade.set(facade, areas)
+      })
+
+      areasByFacade.forEach((areas, facade) => {
+        acc[facade] ??= []
+        acc[facade].push({
+          ...group,
+          regulatoryAreas: areas
         })
+      })
 
-        areasByFacade.forEach((areas, facade) => {
-          acc[facade] ??= []
-          acc[facade].push({
-            ...group,
-            regulatoryAreas: areas
-          })
-        })
-
-        return acc
-      },
-      {} as Record<StringDigit, RegulatoryArea.RegulatoryAreaGroup[]>
-    )
-  }
-)
+      return acc
+    },
+    {} as Record<StringDigit, RegulatoryArea.RegulatoryAreaGroup[]>
+  )
+})
 
 export const getSelectedRegulatoryAreas = createSelector(
   [
