@@ -56,27 +56,16 @@ export function RegulatoryAreaList() {
       lastModificationTo: to,
       seaFronts: filters.seaFronts,
       searchQuery: filters.searchQuery,
-      sortBy: filters.sortBy,
       tags: getTagIds(filters.tags),
       themes: getThemeIds(filters.themes)
     }
-  }, [
-    filters.from,
-    filters.period,
-    filters.seaFronts,
-    filters.searchQuery,
-    filters.sortBy,
-    filters.tags,
-    filters.themes,
-    filters.to
-  ])
+  }, [filters.from, filters.period, filters.seaFronts, filters.searchQuery, filters.tags, filters.themes, filters.to])
   const hasNoFilters = useMemo(
     () =>
       !apiFilters.searchQuery &&
       apiFilters.tags?.length === 0 &&
       apiFilters.themes?.length === 0 &&
       apiFilters.seaFronts?.length === 0 &&
-      !apiFilters.sortBy &&
       !apiFilters.lastModificationFrom,
     [apiFilters]
   )

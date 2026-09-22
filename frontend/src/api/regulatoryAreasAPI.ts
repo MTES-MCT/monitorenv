@@ -1,6 +1,7 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSelector } from '@reduxjs/toolkit'
+import { compareDates, maxDate } from '@utils/dates.utils'
 import { getQueryString } from '@utils/getQueryStringFormatted'
 
 import { monitorenvPrivateApi } from './api'
@@ -159,54 +160,97 @@ export const getBackofficeFilteredRegulatoryAreas = createSelector(
   }
 )
 
-export const getRegulatoryAreasByControlPlan = createSelector(
-  [getBackofficeFilteredRegulatoryAreas],
-  regulatoryAreas => {
-    const groups = regulatoryAreas?.regulatoryAreasByLayer
+function sortRegulatoryAreasByLayer(
+  regulatoryAreasByLayer: RegulatoryArea.RegulatoryAreaGroup[] | undefined,
+  sortBy: string | undefined
+): RegulatoryArea.RegulatoryAreaGroup[] | undefined {
+  if (!regulatoryAreasByLayer) {
+    return regulatoryAreasByLayer
+  }
+  if (sortBy !== 'CREATE_ASC' && sortBy !== 'CREATE_DESC') {
+    return regulatoryAreasByLayer
+  }
 
-    if (!groups) {
-      return undefined
+  const withSortedAreas = regulatoryAreasByLayer.map(group => ({
+    ...group,
+    regulatoryAreas: [...group.regulatoryAreas].sort((a, b) => {
+      const byCreation = compareDates(a.creation, b.creation, sortBy === 'CREATE_ASC' ? 'ASC' : 'DESC')
+      if (byCreation !== 0) {
+        return byCreation
+      }
+
+      return compareDates(a.editionBo, b.editionBo, sortBy === 'CREATE_ASC' ? 'ASC' : 'DESC')
+    })
+  }))
+
+  return [...withSortedAreas].sort((groupA, groupB) => {
+    const maxCreationA = maxDate(groupA.regulatoryAreas.map(a => a.creation))
+    const maxCreationB = maxDate(groupB.regulatoryAreas.map(a => a.creation))
+    const byCreation = compareDates(maxCreationA, maxCreationB, sortBy === 'CREATE_ASC' ? 'ASC' : 'DESC')
+    if (byCreation !== 0) {
+      return byCreation
     }
+
+    const maxEditionA = maxDate(groupA.regulatoryAreas.map(a => a.editionBo))
+    const maxEditionB = maxDate(groupB.regulatoryAreas.map(a => a.editionBo))
+
+    return compareDates(maxEditionA, maxEditionB, sortBy === 'CREATE_ASC' ? 'ASC' : 'DESC')
+  })
+}
+
+export const getBackofficeSortedRegulatoryAreas = createSelector(
+  [getBackofficeFilters, getBackofficeFilteredRegulatoryAreas],
+  (filters, filtered) => ({
+    ...filtered,
+    regulatoryAreasByLayer: sortRegulatoryAreasByLayer(filtered?.regulatoryAreasByLayer, filters.sortBy)
+  })
+)
+
+export const getRegulatoryAreasByControlPlan = createSelector([getBackofficeSortedRegulatoryAreas], regulatoryAreas => {
+  const groups = regulatoryAreas?.regulatoryAreasByLayer
+
+  if (!groups) {
+    return undefined
+  }
 
     return groups.reduce(
       (acc, group) => {
         const areasByPlan = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
 
-        group.regulatoryAreas?.forEach(regulatoryArea => {
-          const { plan } = regulatoryArea
+      group.regulatoryAreas?.forEach(regulatoryArea => {
+        const { plan } = regulatoryArea
 
-          if (!plan) {
-            return
-          }
+        if (!plan) {
+          return
+        }
 
-          const plans = plan.split(',').map(p => p.trim())
+        const plans = plan.split(',').map(p => p.trim())
 
-          plans.forEach(planRaw => {
-            const areas = areasByPlan.get(planRaw) ?? []
-            areas.push(regulatoryArea)
-            areasByPlan.set(planRaw, areas)
-          })
+        plans.forEach(planRaw => {
+          const areas = areasByPlan.get(planRaw) ?? []
+          areas.push(regulatoryArea)
+          areasByPlan.set(planRaw, areas)
         })
+      })
 
-        areasByPlan.forEach((areas, planRaw) => {
-          acc[planRaw] ??= []
-          acc[planRaw].push({
-            ...group,
-            regulatoryAreas: areas
-          })
+      areasByPlan.forEach((areas, planRaw) => {
+        acc[planRaw] ??= []
+        acc[planRaw].push({
+          ...group,
+          regulatoryAreas: areas
         })
+      })
 
-        return acc
-      },
-      {} as Record<
-        RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM,
-        RegulatoryArea.RegulatoryAreaGroup[]
-      >
-    )
-  }
-)
+      return acc
+    },
+    {} as Record<
+      RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM,
+      RegulatoryArea.RegulatoryAreaGroup[]
+    >
+  )
+})
 
-export const getRegulatoryAreasBySeaFront = createSelector([getBackofficeFilteredRegulatoryAreas], regulatoryAreas => {
+export const getRegulatoryAreasBySeaFront = createSelector([getBackofficeSortedRegulatoryAreas], regulatoryAreas => {
   const groups = regulatoryAreas?.regulatoryAreasByLayer
 
   if (!groups) {

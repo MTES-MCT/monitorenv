@@ -30,7 +30,7 @@ const INITIAL_STATE: RegulatoryAreaTableState = {
     regHelper: undefined,
     seaFronts: undefined,
     searchQuery: undefined,
-    sortBy: undefined,
+    sortBy: 'ALPHA_ASC',
     tags: undefined,
     themes: undefined,
     to: undefined
