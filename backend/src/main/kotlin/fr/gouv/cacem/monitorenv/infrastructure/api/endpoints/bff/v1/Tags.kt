@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.GetTags
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.GetTagsByRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.SaveTag
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.CreaterOrUpdateTagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.CreateOrUpdateTagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -41,6 +41,6 @@ class Tags(
     @PutMapping("", consumes = ["application/json"])
     @Operation(summary = "create or update the given tag")
     fun put(
-        @RequestBody tagInput: CreaterOrUpdateTagInput,
+        @RequestBody tagInput: CreateOrUpdateTagInput,
     ): TagOutput = TagOutput.fromTagEntity(saveTag.execute(tagInput.toTagEntity(), tagInput.parentId))
 }

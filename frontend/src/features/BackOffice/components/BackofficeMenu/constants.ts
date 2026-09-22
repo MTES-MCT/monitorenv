@@ -7,7 +7,8 @@ export enum BackOfficeMenuKey {
   REGULATORY_AREA_GROUP = 'REGULATORY_AREA_GROUP',
   REGULATORY_AREA_LIST = 'REGULATORY_AREA_LIST',
   STATION_LIST = 'STATION_LIST',
-  TAG_LIST = 'TAG_LIST'
+  TAG_LIST = 'TAG_LIST',
+  THEME_LIST = 'THEME_LIST'
 }
 
 export const BACK_OFFICE_MENU_LABEL: Record<BackOfficeMenuKey, string> = {
@@ -19,7 +20,8 @@ export const BACK_OFFICE_MENU_LABEL: Record<BackOfficeMenuKey, string> = {
   [BackOfficeMenuKey.REGULATORY_AREA_LIST]: 'Zones réglementaires',
   [BackOfficeMenuKey.REGULATORY_AREA_GROUP]: 'Groupe de réglementations',
   [BackOfficeMenuKey.STATION_LIST]: 'Bases',
-  [BackOfficeMenuKey.TAG_LIST]: 'Tags'
+  [BackOfficeMenuKey.TAG_LIST]: 'Tags',
+  [BackOfficeMenuKey.THEME_LIST]: 'Thématiques'
 }
 
 export const BACK_OFFICE_MENU_PATH: Record<BackOfficeMenuKey, string> = {
@@ -31,5 +33,6 @@ export const BACK_OFFICE_MENU_PATH: Record<BackOfficeMenuKey, string> = {
   [BackOfficeMenuKey.REGULATORY_AREA_LIST]: '/regulatory_areas',
   [BackOfficeMenuKey.REGULATORY_AREA_GROUP]: '/regulatory_area_group',
   [BackOfficeMenuKey.STATION_LIST]: '/stations',
-  [BackOfficeMenuKey.TAG_LIST]: '/tags'
+  [BackOfficeMenuKey.TAG_LIST]: '/tags',
+  [BackOfficeMenuKey.THEME_LIST]: '/themes'
 }

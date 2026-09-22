@@ -7,7 +7,7 @@ import kotlin.random.Random
 class ThemeFixture {
     companion object {
         fun aTheme(
-            id: Int = Random.nextInt(),
+            id: Int? = Random.nextInt(),
             name: String = "theme",
             startedAt: ZonedDateTime? = ZonedDateTime.now(),
             endedAt: ZonedDateTime? = null,

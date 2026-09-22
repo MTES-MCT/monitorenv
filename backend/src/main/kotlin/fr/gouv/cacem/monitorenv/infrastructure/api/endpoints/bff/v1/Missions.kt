@@ -13,7 +13,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetEngagedControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissionWithFishAndRapportNavActions
 import fr.gouv.cacem.monitorenv.domain.use_cases.missions.GetFullMissions
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreaterOrUpdateMissionTagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionTagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.controlUnits.LegacyControlUnitAndMissionSourcesDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionDataOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.missions.MissionTagDataOutput
@@ -195,6 +195,6 @@ class Missions(
     @PutMapping("/tags", consumes = ["application/json"])
     @Operation(summary = "create or update the given mission tag")
     fun put(
-        @RequestBody missionTagInput: CreaterOrUpdateMissionTagInput,
+        @RequestBody missionTagInput: CreateOrUpdateMissionTagInput,
     ): MissionTagDataOutput = fromMissionTagEntity(saveMissionTag.execute(missionTagInput.toMissionTagEntity()))
 }

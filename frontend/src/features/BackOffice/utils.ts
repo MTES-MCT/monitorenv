@@ -102,6 +102,16 @@ export function isStationPage(path: string) {
   )
 }
 
+export function isThemeListPage(path: string) {
+  return !!matchPath(
+    {
+      end: true,
+      path: `/backoffice${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.THEME_LIST]}`
+    },
+    path
+  )
+}
+
 export function isTagListPage(path: string) {
   return !!matchPath(
     {

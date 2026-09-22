@@ -13,6 +13,7 @@ import { RegulatoryAreaList } from '@features/RegulatoryArea/components/Regulato
 import { StationForm } from '@features/Station/components/StationForm'
 import { BaseTable } from '@features/Station/components/StationTable'
 import { TagTable } from '@features/Tags/components/Table'
+import { ThemeTable } from '@features/Themes/components/Table'
 import { getEnvironmentData } from '@utils/getEnvironmentData'
 import { Route, Routes } from 'react-router'
 import styled from 'styled-components'
@@ -65,6 +66,7 @@ export function BackOfficePage() {
             element={<StationForm />}
             path={`${BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.STATION_LIST]}/:stationId`}
           />
+          <Route element={<ThemeTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.THEME_LIST]} />
           <Route element={<TagTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.TAG_LIST]} />
           <Route element={<MissionTagTable />} path={BACK_OFFICE_MENU_PATH[BackOfficeMenuKey.MISSION_TAG_LIST]} />
         </Routes>

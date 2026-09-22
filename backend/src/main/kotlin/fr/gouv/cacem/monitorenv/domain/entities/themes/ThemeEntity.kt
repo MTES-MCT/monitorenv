@@ -3,7 +3,7 @@ package fr.gouv.cacem.monitorenv.domain.entities.themes
 import java.time.ZonedDateTime
 
 data class ThemeEntity(
-    val id: Int,
+    val id: Int?,
     val name: String,
     val startedAt: ZonedDateTime?,
     val endedAt: ZonedDateTime?,
@@ -23,7 +23,7 @@ data class ThemeEntity(
     }
 
     override fun hashCode(): Int {
-        var result = id
+        var result = id ?: 0
         result = 31 * result + name.hashCode()
         result = 31 * result + (startedAt?.hashCode() ?: 0)
         result = 31 * result + (endedAt?.hashCode() ?: 0)
