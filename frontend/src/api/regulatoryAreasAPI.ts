@@ -90,7 +90,8 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       RegulatoryArea.RegulatoryAreaGroup,
       RegulatoryArea.RegulatoryAreaGroupToApi
     >({
-      invalidatesTags: () => [
+      invalidatesTags: result => [
+        ...(result?.regulatoryAreas ?? []).map(({ id }) => ({ id, type: 'RegulatoryAreas' as const })),
         { id: 'LIST', type: 'RegulatoryAreas' },
         { id: 'TO_COMPLETE', type: 'RegulatoryAreas' },
         { id: 'GROUP_BY_ID', type: 'RegulatoryAreas' },
