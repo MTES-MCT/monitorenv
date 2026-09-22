@@ -269,7 +269,7 @@ class JpaMissionRepository(
             if (envAction is EnvActionControlEntity) {
                 val controlPlans =
                     envAction.themes.map { theme ->
-                        val themeAndSubThemesIds = listOf(theme.id).plus(theme.subThemes.map { it.id })
+                        val themeAndSubThemesIds = listOfNotNull(theme.id).plus(theme.subThemes.mapNotNull { it.id })
                         return@map dbThemeRepository.findEnvActionControlPlanByIds(
                             themeAndSubThemesIds,
                         )
@@ -279,7 +279,7 @@ class JpaMissionRepository(
             if (envAction is EnvActionSurveillanceEntity) {
                 val controlPlans =
                     envAction.themes.map { theme ->
-                        val themeAndSubThemesIds = listOf(theme.id).plus(theme.subThemes.map { it.id })
+                        val themeAndSubThemesIds = listOfNotNull(theme.id).plus(theme.subThemes.mapNotNull { it.id })
                         return@map dbThemeRepository.findEnvActionControlPlanByIds(
                             themeAndSubThemesIds,
                         )

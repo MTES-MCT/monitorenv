@@ -4,7 +4,9 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.GetThemes
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.GetThemesByRegulatoryAreas
+import fr.gouv.cacem.monitorenv.domain.use_cases.themes.SaveTheme
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.themes.CreateOrUpdateThemeInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.Themes
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -18,6 +20,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
@@ -35,6 +38,9 @@ class ThemesITest {
 
     @MockitoBean
     private lateinit var getThemes: GetThemes
+
+    @MockitoBean
+    private lateinit var saveTheme: SaveTheme
 
     @MockitoBean
     private lateinit var getThemesByRegulatoryAreas: GetThemesByRegulatoryAreas
@@ -81,7 +87,7 @@ class ThemesITest {
     }
 
     @Test
-    fun `Should get all tags by regulatory area ids`() {
+    fun `Should get all themes by regulatory area ids`() {
         // Given
         val ids = listOf(1, 2)
         val themes =
@@ -120,5 +126,43 @@ class ThemesITest {
             .andExpect(jsonPath("$[0].subThemes[0].name", equalTo("subTheme1")))
             .andExpect(jsonPath("$[0].subThemes[0].startedAt", equalTo("2024-01-01T12:00:00Z")))
             .andExpect(jsonPath("$[0].subThemes[0].endedAt", equalTo("2026-12-31T12:00:00Z")))
+    }
+
+    @Test
+    fun `Should save tag and return entity`() {
+        // Given
+        val id = 1
+        val themeName = "theme1"
+        val startedAt = ZonedDateTime.parse("2025-01-01T12:00:00Z")
+        val endedAt = ZonedDateTime.parse("2025-12-31T12:00:00Z")
+        val tagInput =
+            CreateOrUpdateThemeInput(
+                id = id,
+                name = themeName,
+                startedAt = startedAt,
+                endedAt = endedAt,
+            )
+
+        val tag =
+            aTheme(
+                id = id,
+                name = themeName,
+                startedAt = startedAt,
+                endedAt = endedAt,
+            )
+        given(saveTheme.execute(tag)).willReturn(tag)
+        // When
+        mockMvc
+            .perform(
+                put("/api/v1/themes")
+                    .content(jsonMapper.writeValueAsString(tagInput))
+                    .contentType(MediaType.APPLICATION_JSON),
+            )
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", equalTo(id)))
+            .andExpect(jsonPath("$.name", equalTo(themeName)))
+            .andExpect(jsonPath("$.startedAt", equalTo("2025-01-01T12:00:00Z")))
+            .andExpect(jsonPath("$.endedAt", equalTo("2025-12-31T12:00:00Z")))
     }
 }

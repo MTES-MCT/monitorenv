@@ -4,7 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import java.time.ZonedDateTime
 import java.util.Collections.emptyList
 
-data class CreaterOrUpdateTagInput(
+data class CreateOrUpdateTagInput(
     val id: Int?,
     val codeFao: String?,
     val endedAt: ZonedDateTime?,
