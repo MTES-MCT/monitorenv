@@ -4,6 +4,8 @@ services:
     image: $MONITORENV_IMAGE:$MONITORENV_VERSION
     container_name: monitorenv_backend
     user: "monitorenv:${MONITORENV_LOGS_AND_BACKUPS_GID}"
+    labels:
+      io.portainer.accesscontrol.teams: "monitorfish"
     environment:
       - ENV_DB_URL=jdbc:postgresql://db:5432/$POSTGRES_DB?user=$POSTGRES_USER&password=$POSTGRES_PASSWORD
       - FLYWAY_MIGRATION_PATH=${FLYWAY_MIGRATION_PATH}
@@ -100,6 +102,8 @@ services:
     container_name: monitorenv_database
     shm_size: '128mb'
     user: ":${MONITORENV_LOGS_AND_BACKUPS_GID}"
+    labels:
+      io.portainer.accesscontrol.teams: "monitorfish"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -123,6 +127,8 @@ services:
     container_name: monitorenv_geoserver
     profiles: [ dev, production ]
     image: kartoza/geoserver:2.18.0
+    labels:
+      io.portainer.accesscontrol.teams: "monitorfish"
     environment:
       - GEOSERVER_ADMIN_PASSWORD=${GEOSERVER_ADMIN_PASSWORD}
       - GEOSERVER_ADMIN_USER=${GEOSERVER_ADMIN_USER}
@@ -144,6 +150,8 @@ services:
     container_name: monitorenv_keycloak
     profiles: [ dev ]
     image: quay.io/keycloak/keycloak:latest
+    labels:
+      io.portainer.accesscontrol.teams: "monitorfish"
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
@@ -210,6 +218,8 @@ services:
     container_name: kafka
     profiles: [ dev, test ]
     image: confluentinc/cp-kafka:8.1.0
+    labels:
+      io.portainer.accesscontrol.teams: "monitorfish"
     ports:
       - "9093:9093"
     volumes:
