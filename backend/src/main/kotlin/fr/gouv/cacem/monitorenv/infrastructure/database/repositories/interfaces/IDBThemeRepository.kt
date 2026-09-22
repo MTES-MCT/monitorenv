@@ -11,6 +11,7 @@ interface IDBThemeRepository : JpaRepository<ThemeModel, Int> {
             LEFT JOIN FETCH theme.subThemes subThemes
         WHERE theme.parent IS NULL AND theme.startedAt <= :endedAt AND (theme.endedAt IS NULL OR theme.endedAt > :startedAt)
         AND (subThemes IS NULL OR (subThemes.startedAt <= :endedAt AND (subThemes.endedAt IS NULL OR subThemes.endedAt > :startedAt)))
+ORDER BY theme.name, subThemes.name
             """,
     )
     fun findAllWithin(

@@ -23,7 +23,7 @@ class JpaThemeRepositoryITest : AbstractDBTests() {
     @Test
     fun `findAllWithin should return all themes with subThemes within validity range time`() {
         // Given
-        val expectedThemesSize = 19
+        val expectedThemesSize = 20
         val startedAt = ZonedDateTime.parse("2024-01-01T00:00:00Z")
         val endedAt = ZonedDateTime.parse("2024-12-31T23:59:59Z")
 
@@ -99,7 +99,7 @@ class JpaThemeRepositoryITest : AbstractDBTests() {
         vigilanceAreasThemes.forEach { vigilanceAreaTheme ->
             // Clear cache otherwise we have not all subthemes
             entityManager.clear()
-            val baseTheme = dbThemeRepository.findByIdOrNull(vigilanceAreaTheme.id)
+            val baseTheme = dbThemeRepository.findByIdOrNull(vigilanceAreaTheme.id!!)
             assertThat(baseTheme?.subThemes).hasSizeGreaterThanOrEqualTo(vigilanceAreaTheme.subThemes.size)
             assertThat(
                 vigilanceAreaTheme.endedAt == null || vigilanceAreaTheme.endedAt.isAfter(ZonedDateTime.now()),
@@ -125,7 +125,7 @@ class JpaThemeRepositoryITest : AbstractDBTests() {
         regulatoryAreasThemes.forEach { regulatoryAreaTheme ->
             // Clear cache otherwise we have not all subthemes
             entityManager.clear()
-            val baseTheme = dbThemeRepository.findByIdOrNull(regulatoryAreaTheme.id)
+            val baseTheme = dbThemeRepository.findByIdOrNull(regulatoryAreaTheme.id!!)
             assertThat(baseTheme?.subThemes).hasSizeGreaterThanOrEqualTo(regulatoryAreaTheme.subThemes.size)
             assertThat(
                 regulatoryAreaTheme.endedAt == null || regulatoryAreaTheme.endedAt.isAfter(ZonedDateTime.now()),

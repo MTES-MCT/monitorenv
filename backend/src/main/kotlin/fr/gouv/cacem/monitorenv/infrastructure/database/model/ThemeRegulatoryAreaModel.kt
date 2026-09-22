@@ -64,6 +64,6 @@ data class ThemeRegulatoryAreaModel(
 
 @Embeddable
 data class ThemeRegulatoryAreaPk(
-    val themeId: Int,
+    val themeId: Int?,
     val regulatoryAreaId: Int?,
 ) : Serializable

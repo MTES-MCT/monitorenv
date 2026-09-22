@@ -27,3 +27,6 @@ INSERT INTO themes (name, parent_id, started_at, ended_at, control_plan_tags_id)
 SELECT DISTINCT tag, theme_id, '2023-01-01 00:00:00'::timestamp, '2099-12-31 23:59:59'::timestamp, id
 FROM control_plan_tags
 ORDER BY control_plan_tags.id;
+
+INSERT INTO themes (name, parent_id, started_at, ended_at)
+VALUES ('Out of validity', null, '2023-01-01 00:00:00'::timestamp, '2024-12-31 23:59:59'::timestamp)

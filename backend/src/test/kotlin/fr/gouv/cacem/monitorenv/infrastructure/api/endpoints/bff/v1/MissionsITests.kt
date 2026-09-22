@@ -39,7 +39,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetail
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.EnvActionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreaterOrUpdateMissionTagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionTagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionTagInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -861,7 +861,7 @@ class MissionsITests {
     @Test
     fun `Should save a mission tag`() {
         // Given
-        val inputData = CreaterOrUpdateMissionTagInput(id = null, name = "test", isArchived = false)
+        val inputData = CreateOrUpdateMissionTagInput(id = null, name = "test", isArchived = false)
         val missionTagEntity = aMissionTagEntity()
         given(saveMissionTag.execute(any())).willReturn(missionTagEntity)
 

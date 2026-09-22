@@ -20,7 +20,7 @@ data class ThemeModel(
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Int?,
     @Column(nullable = false)
     val name: String,
     @Column(nullable = false)
@@ -82,7 +82,7 @@ data class ThemeModel(
     }
 
     override fun hashCode(): Int {
-        var result = id
+        var result = id ?: 0
         result = 31 * result + name.hashCode()
         result = 31 * result + (startedAt?.hashCode() ?: 0)
         result = 31 * result + (endedAt?.hashCode() ?: 0)

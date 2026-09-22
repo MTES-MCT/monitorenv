@@ -63,7 +63,7 @@ data class ThemeVigilanceAreaModel(
 
     @Embeddable
     data class ThemeVigilanceAreaPk(
-        val themeId: Int,
+        val themeId: Int?,
         val vigilanceAreaId: Int?,
     ) : Serializable
 }

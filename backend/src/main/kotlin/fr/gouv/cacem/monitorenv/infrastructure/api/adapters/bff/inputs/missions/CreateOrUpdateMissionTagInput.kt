@@ -2,7 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.mission.MissionTagEntity
 
-data class CreaterOrUpdateMissionTagInput(
+data class CreateOrUpdateMissionTagInput(
     val id: Int?,
     val name: String,
     val isArchived: Boolean,

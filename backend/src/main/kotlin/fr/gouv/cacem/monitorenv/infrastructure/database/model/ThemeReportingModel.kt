@@ -60,6 +60,6 @@ data class ThemeReportingModel(
 
 @Embeddable
 data class ThemeReportingPk(
-    val themeId: Int,
+    val themeId: Int?,
     val reportingId: Int?,
 ) : Serializable
