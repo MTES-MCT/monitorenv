@@ -34,6 +34,8 @@ class JpaRegulatoryAreaGroupRepository(
             dbRegulatoryAreaGroupRepository
                 .findAll(
                     controlPlan = filters.controlPlan,
+                    lastModificationFrom = filters.lastModificationFrom,
+                    lastModificationTo = filters.lastModificationTo,
                     seaFronts = filters.seaFronts,
                     tags = filters.tags,
                     themes = filters.themes,

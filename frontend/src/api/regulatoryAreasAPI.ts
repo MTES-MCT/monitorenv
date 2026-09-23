@@ -4,7 +4,6 @@ import { createSelector } from '@reduxjs/toolkit'
 import { maxDate } from '@utils/dates.utils'
 import { getQueryString } from '@utils/getQueryStringFormatted'
 import { orderBy } from 'lodash'
-import { boundingExtent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
 
@@ -185,10 +184,10 @@ function sortRegulatoryAreasByLayer(
     regulatoryAreas: orderBy(
       group.regulatoryAreas,
       [
-        (a: RegulatoryArea.RegulatoryAreaWithBbox) => dateKeys(a.creation)[0],
-        (a: RegulatoryArea.RegulatoryAreaWithBbox) => dateKeys(a.creation)[1],
-        (a: RegulatoryArea.RegulatoryAreaWithBbox) => dateKeys(a.editionBo)[0],
-        (a: RegulatoryArea.RegulatoryAreaWithBbox) => dateKeys(a.editionBo)[1]
+        (a: RegulatoryArea.RegulatoryAreaFromAPI) => dateKeys(a.creation)[0],
+        (a: RegulatoryArea.RegulatoryAreaFromAPI) => dateKeys(a.creation)[1],
+        (a: RegulatoryArea.RegulatoryAreaFromAPI) => dateKeys(a.editionBo)[0],
+        (a: RegulatoryArea.RegulatoryAreaFromAPI) => dateKeys(a.editionBo)[1]
       ],
       ['asc', dir, 'asc', dir]
     )
@@ -197,10 +196,18 @@ function sortRegulatoryAreasByLayer(
   return orderBy(
     withSortedAreas,
     [
-      group => dateKeys(maxDate(group.regulatoryAreas.map(a => a.creation)))[0],
-      group => dateKeys(maxDate(group.regulatoryAreas.map(a => a.creation)))[1],
-      group => dateKeys(maxDate(group.regulatoryAreas.map(a => a.editionBo)))[0],
-      group => dateKeys(maxDate(group.regulatoryAreas.map(a => a.editionBo)))[1]
+      group => {
+        const maxCreation = maxDate(group.regulatoryAreas.map(a => a.creation))
+        const maxEdition = maxDate(group.regulatoryAreas.map(a => a.editionBo))
+
+        return dateKeys(maxDate([maxCreation, maxEdition]))[0]
+      },
+      group => {
+        const maxCreation = maxDate(group.regulatoryAreas.map(a => a.creation))
+        const maxEdition = maxDate(group.regulatoryAreas.map(a => a.editionBo))
+
+        return dateKeys(maxDate([maxCreation, maxEdition]))[1]
+      }
     ],
     ['asc', dir, 'asc', dir]
   )
@@ -221,9 +228,9 @@ export const getRegulatoryAreasByControlPlan = createSelector([getBackofficeSort
     return undefined
   }
 
-    return groups.reduce(
-      (acc, group) => {
-        const areasByPlan = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
+  return groups.reduce(
+    (acc, group) => {
+      const areasByPlan = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
 
       group.regulatoryAreas?.forEach(regulatoryArea => {
         const { plan } = regulatoryArea
@@ -265,9 +272,9 @@ export const getRegulatoryAreasBySeaFront = createSelector([getBackofficeSortedR
     return undefined
   }
 
-    return groups.reduce(
-      (acc, group) => {
-        const areasByFacade = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
+  return groups.reduce(
+    (acc, group) => {
+      const areasByFacade = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
 
       group.regulatoryAreas?.forEach(regulatoryArea => {
         const { facade } = regulatoryArea
