@@ -1,6 +1,9 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSelector } from '@reduxjs/toolkit'
+import { maxDate } from '@utils/dates.utils'
 import { getQueryString } from '@utils/getQueryStringFormatted'
+import { orderBy } from 'lodash'
 
 import { monitorenvPrivateApi } from './api'
 
@@ -13,6 +16,8 @@ const GET_REGULATORY_AREA_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zo
 const GET_LAYER_NAMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les noms de groupes de zones réglementaires"
 type Filters = {
   controlPlan?: string
+  lastModificationFrom?: string
+  lastModificationTo?: string
   onlyRecentsAreas?: boolean
   seaFronts?: string[]
   searchQuery?: string
@@ -87,7 +92,8 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       RegulatoryArea.RegulatoryAreaGroup,
       RegulatoryArea.RegulatoryAreaGroupToApi
     >({
-      invalidatesTags: () => [
+      invalidatesTags: result => [
+        ...(result?.regulatoryAreas ?? []).map(({ id }) => ({ id, type: 'RegulatoryAreas' as const })),
         { id: 'LIST', type: 'RegulatoryAreas' },
         { id: 'TO_COMPLETE', type: 'RegulatoryAreas' },
         { id: 'GROUP_BY_ID', type: 'RegulatoryAreas' },
@@ -113,92 +119,188 @@ export const {
   useGetRegulatoryAreasToCompleteQuery
 } = regulatoryAreasAPI
 
-export const getRegulatoryAreasByControlPlan = createSelector(
-  [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],
-  regulatoryAreas => {
-    const groups = regulatoryAreas?.data?.regulatoryAreasByLayer
+export const getBackofficeFilters = (state: HomeRootState) => state.regulatoryAreaTable.filtersState
 
-    if (!groups) {
-      return undefined
+export const getBackofficeFilteredRegulatoryAreas = createSelector(
+  [
+    state => getBackofficeFilters(state),
+    (state, filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)
+  ],
+  (filters, result) => {
+    const { data } = result
+    if (!filters.regHelper) {
+      return data
     }
-
-    return groups.reduce(
-      (acc, group) => {
-        const areasByPlan = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
-
-        group.regulatoryAreas?.forEach(regulatoryArea => {
-          const { plan } = regulatoryArea
-
-          if (!plan) {
-            return
-          }
-
-          const plans = plan.split(',').map(p => p.trim())
-
-          plans.forEach(planRaw => {
-            const areas = areasByPlan.get(planRaw) ?? []
-            areas.push(regulatoryArea)
-            areasByPlan.set(planRaw, areas)
-          })
-        })
-
-        areasByPlan.forEach((areas, planRaw) => {
-          acc[planRaw] ??= []
-          acc[planRaw].push({
+    switch (filters.regHelper) {
+      case 'WITHOUT_THEME':
+        return {
+          ...data,
+          regulatoryAreasByLayer: data?.regulatoryAreasByLayer.map(group => ({
             ...group,
-            regulatoryAreas: areas
-          })
-        })
-
-        return acc
-      },
-      {} as Record<
-        RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM,
-        RegulatoryArea.RegulatoryAreaGroup[]
-      >
-    )
+            regulatoryAreas: group.regulatoryAreas.filter(regArea => !regArea.themes || regArea.themes.length === 0)
+          }))
+        }
+      case 'WITHOUT_TAG':
+        return {
+          ...data,
+          regulatoryAreasByLayer: data?.regulatoryAreasByLayer.map(group => ({
+            ...group,
+            regulatoryAreas: group.regulatoryAreas.filter(regArea => !regArea.tags || regArea.tags.length === 0)
+          }))
+        }
+      case 'OUTDATED':
+        return {
+          ...data,
+          regulatoryAreasByLayer: data?.regulatoryAreasByLayer.filter(
+            group => group.group.dateFin && customDayjs().startOf('day').isAfter(customDayjs(group.group.dateFin))
+          )
+        }
+      default:
+        return data
+    }
   }
 )
 
-export const getRegulatoryAreasBySeaFront = createSelector(
-  [(state, filters: Filters) => regulatoryAreasAPI.endpoints.getRegulatoryAreas.select(filters)(state)],
-  regulatoryAreas => {
-    const groups = regulatoryAreas?.data?.regulatoryAreasByLayer
+function sortRegulatoryAreasByLayer(
+  regulatoryAreasByLayer: RegulatoryArea.RegulatoryAreaGroup[] | undefined,
+  sortBy: string | undefined
+): RegulatoryArea.RegulatoryAreaGroup[] | undefined {
+  if (!regulatoryAreasByLayer) {
+    return regulatoryAreasByLayer
+  }
+  if (sortBy !== 'CREATE_ASC' && sortBy !== 'CREATE_DESC') {
+    return regulatoryAreasByLayer
+  }
 
-    if (!groups) {
-      return undefined
-    }
+  const dir: 'asc' | 'desc' = sortBy === 'CREATE_ASC' ? 'asc' : 'desc'
 
-    return groups.reduce(
-      (acc, group) => {
-        const areasByFacade = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
+  const dateKeys = (date: string | undefined): [number, number] => [
+    date === undefined ? 1 : 0,
+    date ? customDayjs(date).valueOf() : 0
+  ]
 
-        group.regulatoryAreas?.forEach(regulatoryArea => {
-          const { facade } = regulatoryArea
+  const withSortedAreas = regulatoryAreasByLayer.map(group => ({
+    ...group,
+    regulatoryAreas: orderBy(
+      group.regulatoryAreas,
+      [
+        (a: RegulatoryArea.RegulatoryAreaFromAPI) => dateKeys(a.creation)[0],
+        (a: RegulatoryArea.RegulatoryAreaFromAPI) => dateKeys(a.creation)[1],
+        (a: RegulatoryArea.RegulatoryAreaFromAPI) => dateKeys(a.editionBo)[0],
+        (a: RegulatoryArea.RegulatoryAreaFromAPI) => dateKeys(a.editionBo)[1]
+      ],
+      ['asc', dir, 'asc', dir]
+    )
+  }))
 
-          if (!facade) {
-            return
-          }
+  return orderBy(
+    withSortedAreas,
+    [
+      group => {
+        const maxCreation = maxDate(group.regulatoryAreas.map(a => a.creation))
+        const maxEdition = maxDate(group.regulatoryAreas.map(a => a.editionBo))
 
-          const areas = areasByFacade.get(facade) ?? []
+        return dateKeys(maxDate([maxCreation, maxEdition]))[0]
+      },
+      group => {
+        const maxCreation = maxDate(group.regulatoryAreas.map(a => a.creation))
+        const maxEdition = maxDate(group.regulatoryAreas.map(a => a.editionBo))
+
+        return dateKeys(maxDate([maxCreation, maxEdition]))[1]
+      }
+    ],
+    ['asc', dir, 'asc', dir]
+  )
+}
+
+export const getBackofficeSortedRegulatoryAreas = createSelector(
+  [getBackofficeFilters, getBackofficeFilteredRegulatoryAreas],
+  (filters, filtered) => ({
+    ...filtered,
+    regulatoryAreasByLayer: sortRegulatoryAreasByLayer(filtered?.regulatoryAreasByLayer, filters.sortBy)
+  })
+)
+
+export const getRegulatoryAreasByControlPlan = createSelector([getBackofficeSortedRegulatoryAreas], regulatoryAreas => {
+  const groups = regulatoryAreas?.regulatoryAreasByLayer
+
+  if (!groups) {
+    return undefined
+  }
+
+  return groups.reduce(
+    (acc, group) => {
+      const areasByPlan = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
+
+      group.regulatoryAreas?.forEach(regulatoryArea => {
+        const { plan } = regulatoryArea
+
+        if (!plan) {
+          return
+        }
+
+        const plans = plan.split(',').map(p => p.trim())
+
+        plans.forEach(planRaw => {
+          const areas = areasByPlan.get(planRaw) ?? []
           areas.push(regulatoryArea)
-          areasByFacade.set(facade, areas)
+          areasByPlan.set(planRaw, areas)
         })
+      })
 
-        areasByFacade.forEach((areas, facade) => {
-          acc[facade] ??= []
-          acc[facade].push({
-            ...group,
-            regulatoryAreas: areas
-          })
+      areasByPlan.forEach((areas, planRaw) => {
+        acc[planRaw] ??= []
+        acc[planRaw].push({
+          ...group,
+          regulatoryAreas: areas
         })
+      })
 
-        return acc
-      },
-      {} as Record<StringDigit, RegulatoryArea.RegulatoryAreaGroup[]>
-    )
+      return acc
+    },
+    {} as Record<
+      RegulatoryArea.RegulatoryAreaControlPlan.PIRC | RegulatoryArea.RegulatoryAreaControlPlan.PSCEM,
+      RegulatoryArea.RegulatoryAreaGroup[]
+    >
+  )
+})
+
+export const getRegulatoryAreasBySeaFront = createSelector([getBackofficeSortedRegulatoryAreas], regulatoryAreas => {
+  const groups = regulatoryAreas?.regulatoryAreasByLayer
+
+  if (!groups) {
+    return undefined
   }
-)
+
+  return groups.reduce(
+    (acc, group) => {
+      const areasByFacade = new Map<string, RegulatoryArea.RegulatoryAreaFromAPI[]>()
+
+      group.regulatoryAreas?.forEach(regulatoryArea => {
+        const { facade } = regulatoryArea
+
+        if (!facade) {
+          return
+        }
+
+        const areas = areasByFacade.get(facade) ?? []
+        areas.push(regulatoryArea)
+        areasByFacade.set(facade, areas)
+      })
+
+      areasByFacade.forEach((areas, facade) => {
+        acc[facade] ??= []
+        acc[facade].push({
+          ...group,
+          regulatoryAreas: areas
+        })
+      })
+
+      return acc
+    },
+    {} as Record<StringDigit, RegulatoryArea.RegulatoryAreaGroup[]>
+  )
+})
 
 export const getSelectedRegulatoryAreas = createSelector(
   [

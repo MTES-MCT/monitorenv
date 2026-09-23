@@ -64,6 +64,12 @@ class RegulatoryAreas(
         @Parameter(description = "Façades")
         @RequestParam(name = "seaFronts", required = false)
         seaFronts: List<String>?,
+        @Parameter(description = "Last modification From")
+        @RequestParam(name = "lastModificationFrom", required = false)
+        lastModificationFrom: String?,
+        @Parameter(description = "Last modification To")
+        @RequestParam(name = "lastModificationTo", required = false)
+        lastModificationTo: String?,
         @Parameter(description = "Only recent areas")
         @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
         onlyRecentsAreas: Boolean?,
@@ -75,6 +81,8 @@ class RegulatoryAreas(
                 filters =
                     SearchFilters(
                         controlPlan = controlPlan,
+                        lastModificationFrom = lastModificationFrom,
+                        lastModificationTo = lastModificationTo,
                         query = searchQuery,
                         seaFronts = seaFronts,
                         tags = tags,

@@ -7,6 +7,7 @@ import { MapLayer } from '@features/map/layers/MapLayer'
 import { MapExtentController } from '@features/map/MapExtentController'
 import { ZoomListener } from '@features/map/ZoomListener'
 import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@features/RegulatoryArea/style'
+import { getDatesFromFilters } from '@features/RegulatoryArea/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
@@ -43,17 +44,29 @@ export function RegulatoryAreaList() {
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
   const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
-  const apiFilters = useMemo(
-    () => ({
+  const apiFilters = useMemo(() => {
+    const { from, to } = getDatesFromFilters({
+      from: filters.from,
+      periodFilter: filters.period,
+      to: filters.to
+    })
+
+    return {
+      lastModificationFrom: from,
+      lastModificationTo: to,
       seaFronts: filters.seaFronts,
       searchQuery: filters.searchQuery,
       tags: getTagIds(filters.tags),
       themes: getThemeIds(filters.themes)
-    }),
-    [filters.seaFronts, filters.searchQuery, filters.tags, filters.themes]
-  )
+    }
+  }, [filters.from, filters.period, filters.seaFronts, filters.searchQuery, filters.tags, filters.themes, filters.to])
   const hasNoFilters = useMemo(
-    () => !apiFilters.searchQuery && apiFilters.tags?.length === 0 && apiFilters.themes?.length === 0,
+    () =>
+      !apiFilters.searchQuery &&
+      apiFilters.tags?.length === 0 &&
+      apiFilters.themes?.length === 0 &&
+      apiFilters.seaFronts?.length === 0 &&
+      !apiFilters.lastModificationFrom,
     [apiFilters]
   )
 

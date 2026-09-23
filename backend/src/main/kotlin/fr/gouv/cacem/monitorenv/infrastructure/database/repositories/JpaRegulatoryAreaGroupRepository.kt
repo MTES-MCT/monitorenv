@@ -34,6 +34,8 @@ class JpaRegulatoryAreaGroupRepository(
             dbRegulatoryAreaGroupRepository
                 .findAll(
                     controlPlan = filters.controlPlan,
+                    lastModificationFrom = filters.lastModificationFrom,
+                    lastModificationTo = filters.lastModificationTo,
                     seaFronts = filters.seaFronts,
                     tags = filters.tags,
                     themes = filters.themes,
@@ -132,7 +134,7 @@ class JpaRegulatoryAreaGroupRepository(
                 date = regulatoryAreaGroup.date?.toInstant(),
                 dateFin = regulatoryAreaGroup.dateFin?.toInstant(),
                 editeur = null,
-                editionBo = null,
+                editionBo = ZonedDateTime.now().toInstant(),
                 editionCacem = null,
                 facade = null,
                 layerName = regulatoryAreaGroup.layerName,
