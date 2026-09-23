@@ -57,13 +57,9 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
         val lastModificationFrom = ZonedDateTime.now().minusDays(30)
         val regulatoryAreas =
             jpaRegulatoryAreaGroupRepository.findAll(
-                controlPlan = null,
-                lastModificationFrom = lastModificationFrom.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                lastModificationTo = null,
-                seaFronts = null,
-                tags = null,
-                themes = null,
-                query = null,
+                SearchFilters(
+                    lastModificationFrom = lastModificationFrom.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                ),
             )
         assertThat(regulatoryAreas).hasSize(4)
         assertThat(regulatoryAreas.flatMap { it.areas }.map { it.editionBo }).allMatch {
@@ -80,13 +76,10 @@ class JpaRegulatoryAreaGroupRepositoryITest : AbstractDBTests() {
         val lastModificationTo = ZonedDateTime.now().minusDays(1)
         val regulatoryAreas =
             jpaRegulatoryAreaGroupRepository.findAll(
-                controlPlan = null,
-                lastModificationFrom = lastModificationFrom.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                lastModificationTo = lastModificationTo.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                seaFronts = null,
-                tags = null,
-                themes = null,
-                query = null,
+                SearchFilters(
+                    lastModificationFrom = lastModificationFrom.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                    lastModificationTo = lastModificationTo.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                ),
             )
         assertThat(regulatoryAreas).hasSize(3)
         assertThat(regulatoryAreas.flatMap { it.areas }).hasSize(4)
