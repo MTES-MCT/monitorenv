@@ -65,5 +65,5 @@ export const monitorenvPublicApi = createApi({
   },
   endpoints: () => ({}),
   reducerPath: 'monitorenvPublicApi',
-  tagTypes: ['Administrations', 'ControlUnits', 'Stations']
+  tagTypes: ['Administrations', 'ControlUnits', 'Stations', 'Themes']
 })

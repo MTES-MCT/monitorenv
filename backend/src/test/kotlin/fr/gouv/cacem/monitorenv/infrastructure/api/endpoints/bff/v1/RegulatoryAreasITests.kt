@@ -15,8 +15,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAr
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreaByIds
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.GetRegulatoryAreasGroupById
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.dtos.RegulatoryAreaGroupWithTotalDTO
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryArea
-import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture.Companion.aRegulatoryAreaGroupDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.fixtures.RegulatoryAreaFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaByIdsDataInput
@@ -125,7 +124,10 @@ class RegulatoryAreasITests {
     fun `Should get all regulatory Areas`() {
         // Given
         val regulatoryAreaGroup =
-            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
+            RegulatoryAreaFixture.aRegulatoryAreaGroupDTO(
+                layerName = "ZMEL_Cale_Querlen",
+                areas = listOf(regulatoryArea),
+            )
 
         BDDMockito
             .given(
@@ -238,9 +240,18 @@ class RegulatoryAreasITests {
         // Given
         val layerNames =
             listOf(
-                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "ZMEL_Cale_Querlen"), total = 1),
-                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "AMP_Zone_1"), total = 1),
-                RegulatoryAreaGroupWithTotalDTO(group = aRegulatoryArea(layerName = "PIRC_Area_2"), total = 1),
+                RegulatoryAreaGroupWithTotalDTO(
+                    group = RegulatoryAreaFixture.aRegulatoryArea(layerName = "ZMEL_Cale_Querlen"),
+                    total = 1,
+                ),
+                RegulatoryAreaGroupWithTotalDTO(
+                    group = RegulatoryAreaFixture.aRegulatoryArea(layerName = "AMP_Zone_1"),
+                    total = 1,
+                ),
+                RegulatoryAreaGroupWithTotalDTO(
+                    group = RegulatoryAreaFixture.aRegulatoryArea(layerName = "PIRC_Area_2"),
+                    total = 1,
+                ),
             )
 
         BDDMockito.given(getAllLayerNames.execute()).willReturn(layerNames)
@@ -313,7 +324,10 @@ class RegulatoryAreasITests {
     fun `Should filter regulatory areas by seaFronts`() {
         // Given
         val regulatoryAreaGroup =
-            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
+            RegulatoryAreaFixture.aRegulatoryAreaGroupDTO(
+                layerName = "ZMEL_Cale_Querlen",
+                areas = listOf(regulatoryArea),
+            )
 
         BDDMockito
             .given(
@@ -348,7 +362,10 @@ class RegulatoryAreasITests {
     fun `Should filter regulatory areas by searchQuery`() {
         // Given
         val regulatoryAreaGroup =
-            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
+            RegulatoryAreaFixture.aRegulatoryAreaGroupDTO(
+                layerName = "ZMEL_Cale_Querlen",
+                areas = listOf(regulatoryArea),
+            )
 
         BDDMockito
             .given(
@@ -400,7 +417,10 @@ class RegulatoryAreasITests {
     fun `Should filter regulatory areas by tags`() {
         // Given
         val regulatoryAreaGroup =
-            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
+            RegulatoryAreaFixture.aRegulatoryAreaGroupDTO(
+                layerName = "ZMEL_Cale_Querlen",
+                areas = listOf(regulatoryArea),
+            )
 
         BDDMockito
             .given(
@@ -430,7 +450,10 @@ class RegulatoryAreasITests {
     fun `Should filter regulatory areas by themes`() {
         // Given
         val regulatoryAreaGroup =
-            aRegulatoryAreaGroupDTO(layerName = "ZMEL_Cale_Querlen", areas = listOf(regulatoryArea))
+            RegulatoryAreaFixture.aRegulatoryAreaGroupDTO(
+                layerName = "ZMEL_Cale_Querlen",
+                areas = listOf(regulatoryArea),
+            )
 
         BDDMockito
             .given(
@@ -474,8 +497,8 @@ class RegulatoryAreasITests {
                 editeur = "Test Editor",
                 source = "Test Source",
                 observation = "Test observation",
-                tags = listOf(TagFixture.Companion.aTag(id = 5, name = "Mouillage")),
-                themes = listOf(ThemeFixture.Companion.aTheme(id = 9, name = "AMP")),
+                tags = listOf(TagFixture.aTag(id = 5, name = "Mouillage")),
+                themes = listOf(ThemeFixture.aTheme(id = 9, name = "AMP")),
                 date = ZonedDateTime.parse("2024-01-01T00:00:00Z"),
                 dateFin = ZonedDateTime.parse("2034-01-01T00:00:00Z"),
                 location = null,
@@ -577,10 +600,10 @@ class RegulatoryAreasITests {
                 observation = "Updated observation",
                 tags =
                     listOf(
-                        TagFixture.Companion.aTag(id = 5, name = "Mouillage"),
-                        TagFixture.Companion.aTag(id = 6, name = "Extraction granulats"),
+                        TagFixture.aTag(id = 5, name = "Mouillage"),
+                        TagFixture.aTag(id = 6, name = "Extraction granulats"),
                     ),
-                themes = listOf(ThemeFixture.Companion.aTheme(id = 9, name = "AMP")),
+                themes = listOf(ThemeFixture.aTheme(id = 9, name = "AMP")),
                 date = ZonedDateTime.parse("2020-07-01T04:50:09Z"),
                 dateFin = ZonedDateTime.parse("2040-07-01T04:50:09Z"),
                 location = null,
@@ -694,10 +717,10 @@ class RegulatoryAreasITests {
                 editeur = "Jean Dupont",
                 source = "",
                 observation = "",
-                tags = listOf(TagFixture.Companion.aTag(name = "AMP", id = 3)),
+                tags = listOf(TagFixture.aTag(name = "AMP", id = 3)),
                 themes =
                     listOf(
-                        ThemeFixture.Companion.aTheme(
+                        ThemeFixture.aTheme(
                             name = "Aire Marine Protégée",
                             id = 102,
                         ),

@@ -1,9 +1,16 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
-import jakarta.persistence.*
+import jakarta.persistence.Embeddable
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.MapsId
+import jakarta.persistence.Table
 import java.io.Serializable
-import java.util.*
+import java.util.UUID
 
 @Entity
 @Table(name = "themes_env_actions")
@@ -48,8 +55,8 @@ data class ThemeEnvActionModel(
             val parents = themes.map { it.theme }.filter { it.parent === null }
 
             return parents.map { parent ->
-                val subTags = themes.filter { it.theme.parent?.id == parent.id }.map { it.theme }
-                parent.subThemes = subTags
+                val subThemes = themes.filter { it.theme.parent?.id == parent.id }.map { it.theme }
+                parent.subThemes = subThemes
                 return@map parent.toThemeEntity()
             }
         }
@@ -58,6 +65,6 @@ data class ThemeEnvActionModel(
 
 @Embeddable
 data class ThemeEnvActionPk(
-    val themeId: Int,
+    val themeId: Int?,
     val envActionId: UUID,
 ) : Serializable

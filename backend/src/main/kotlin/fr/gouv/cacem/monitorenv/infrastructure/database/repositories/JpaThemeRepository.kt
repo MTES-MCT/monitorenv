@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.EnvActionControlPlanEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import fr.gouv.cacem.monitorenv.domain.repositories.IThemeRepository
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBThemeRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -53,4 +54,7 @@ class JpaThemeRepository(
         dbThemeRepository.findAllById(ids).map {
             it.toThemeEntity()
         }
+
+    override fun save(theme: ThemeEntity): ThemeEntity =
+        dbThemeRepository.save(ThemeModel.fromThemeEntity(themeEntity = theme)).toThemeEntity()
 }

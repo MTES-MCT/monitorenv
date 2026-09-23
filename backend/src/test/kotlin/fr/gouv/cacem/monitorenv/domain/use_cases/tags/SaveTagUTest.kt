@@ -17,7 +17,7 @@ class SaveTagUTest {
     private val saveTag = SaveTag(tagRepository)
 
     @Test
-    fun `execute udpate a tag and log it`(log: CapturedOutput) {
+    fun `execute should update a tag and log it`(log: CapturedOutput) {
         // Given
         val tag = aTag()
         given(tagRepository.save(tag, null)).willReturn(tag)

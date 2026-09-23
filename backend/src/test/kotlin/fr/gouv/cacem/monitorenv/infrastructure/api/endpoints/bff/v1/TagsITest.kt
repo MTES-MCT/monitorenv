@@ -6,7 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.tags.GetTags
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.GetTagsByRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.SaveTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.CreaterOrUpdateTagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.CreateOrUpdateTagInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
@@ -134,7 +134,7 @@ class TagsITest {
         val endedAt = ZonedDateTime.parse("2025-12-31T12:00:00Z")
         val codeFao = "ABC"
         val tagInput =
-            CreaterOrUpdateTagInput(
+            CreateOrUpdateTagInput(
                 id = id,
                 codeFao = codeFao,
                 name = tagName,
