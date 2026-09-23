@@ -39,13 +39,11 @@ data class RegulatoryAreaEntity(
                 ZonedDateTime.now().minusDays(30),
             )
 
-    fun isRecentlyUpdated(): Boolean {
-        val mostRecentUpdatedDate = listOfNotNull(editionBo, editionCacem).maxOrNull()
-        return mostRecentUpdatedDate != null &&
-            mostRecentUpdatedDate.isAfter(
+    fun isRecentlyUpdated(): Boolean =
+        editionBo != null &&
+            editionBo.isAfter(
                 ZonedDateTime.now().minusDays(30),
             )
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

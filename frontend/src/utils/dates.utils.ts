@@ -6,21 +6,8 @@ export function maxDate(dates: (string | undefined)[]): string | undefined {
     return undefined
   }
 
-  return filteredDates.reduce((max, date) => (customDayjs(date).isAfter(customDayjs(max)) ? date : max))
-}
-
-export function compareDates(a: string | undefined, b: string | undefined, direction: 'ASC' | 'DESC' = 'ASC'): number {
-  if (!a && !b) {
-    return 0
-  }
-  if (!a) {
-    return 1
-  }
-  if (!b) {
-    return -1
-  }
-
-  return direction === 'ASC'
-    ? customDayjs(a).valueOf() - customDayjs(b).valueOf()
-    : customDayjs(b).valueOf() - customDayjs(a).valueOf()
+  return filteredDates.reduce(
+    (max, date) => (customDayjs(date).isAfter(customDayjs(max)) ? date : max),
+    filteredDates[0]
+  )
 }

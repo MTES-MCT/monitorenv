@@ -1,8 +1,10 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
 import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSelector } from '@reduxjs/toolkit'
-import { compareDates, maxDate } from '@utils/dates.utils'
+import { maxDate } from '@utils/dates.utils'
 import { getQueryString } from '@utils/getQueryStringFormatted'
+import { orderBy } from 'lodash'
+import { boundingExtent } from 'ol/extent'
 
 import { monitorenvPrivateApi } from './api'
 
@@ -171,31 +173,37 @@ function sortRegulatoryAreasByLayer(
     return regulatoryAreasByLayer
   }
 
+  const dir: 'asc' | 'desc' = sortBy === 'CREATE_ASC' ? 'asc' : 'desc'
+
+  const dateKeys = (date: string | undefined): [number, number] => [
+    date === undefined ? 1 : 0,
+    date ? customDayjs(date).valueOf() : 0
+  ]
+
   const withSortedAreas = regulatoryAreasByLayer.map(group => ({
     ...group,
-    regulatoryAreas: [...group.regulatoryAreas].sort((a, b) => {
-      const byCreation = compareDates(a.creation, b.creation, sortBy === 'CREATE_ASC' ? 'ASC' : 'DESC')
-      if (byCreation !== 0) {
-        return byCreation
-      }
-
-      return compareDates(a.editionBo, b.editionBo, sortBy === 'CREATE_ASC' ? 'ASC' : 'DESC')
-    })
+    regulatoryAreas: orderBy(
+      group.regulatoryAreas,
+      [
+        (a: RegulatoryArea.RegulatoryAreaWithBbox) => dateKeys(a.creation)[0],
+        (a: RegulatoryArea.RegulatoryAreaWithBbox) => dateKeys(a.creation)[1],
+        (a: RegulatoryArea.RegulatoryAreaWithBbox) => dateKeys(a.editionBo)[0],
+        (a: RegulatoryArea.RegulatoryAreaWithBbox) => dateKeys(a.editionBo)[1]
+      ],
+      ['asc', dir, 'asc', dir]
+    )
   }))
 
-  return [...withSortedAreas].sort((groupA, groupB) => {
-    const maxCreationA = maxDate(groupA.regulatoryAreas.map(a => a.creation))
-    const maxCreationB = maxDate(groupB.regulatoryAreas.map(a => a.creation))
-    const byCreation = compareDates(maxCreationA, maxCreationB, sortBy === 'CREATE_ASC' ? 'ASC' : 'DESC')
-    if (byCreation !== 0) {
-      return byCreation
-    }
-
-    const maxEditionA = maxDate(groupA.regulatoryAreas.map(a => a.editionBo))
-    const maxEditionB = maxDate(groupB.regulatoryAreas.map(a => a.editionBo))
-
-    return compareDates(maxEditionA, maxEditionB, sortBy === 'CREATE_ASC' ? 'ASC' : 'DESC')
-  })
+  return orderBy(
+    withSortedAreas,
+    [
+      group => dateKeys(maxDate(group.regulatoryAreas.map(a => a.creation)))[0],
+      group => dateKeys(maxDate(group.regulatoryAreas.map(a => a.creation)))[1],
+      group => dateKeys(maxDate(group.regulatoryAreas.map(a => a.editionBo)))[0],
+      group => dateKeys(maxDate(group.regulatoryAreas.map(a => a.editionBo)))[1]
+    ],
+    ['asc', dir, 'asc', dir]
+  )
 }
 
 export const getBackofficeSortedRegulatoryAreas = createSelector(
