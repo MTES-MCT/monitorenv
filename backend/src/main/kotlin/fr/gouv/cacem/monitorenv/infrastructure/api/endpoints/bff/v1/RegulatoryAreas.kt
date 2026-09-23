@@ -81,6 +81,8 @@ class RegulatoryAreas(
                 filters =
                     SearchFilters(
                         controlPlan = controlPlan,
+                        lastModificationFrom = lastModificationFrom,
+                        lastModificationTo = lastModificationTo,
                         query = searchQuery,
                         seaFronts = seaFronts,
                         tags = tags,
