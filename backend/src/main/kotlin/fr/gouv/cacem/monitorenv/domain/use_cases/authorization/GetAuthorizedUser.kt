@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.authorization
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.authorization.AuthorizedUser
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
+import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.hash
 import fr.gouv.cacem.monitorenv.domain.repositories.IUserAuthorizationRepository
 import org.slf4j.LoggerFactory
@@ -25,11 +27,8 @@ class GetAuthorizedUser(
 
         val userEntity = userAuthorizationRepository.findByHashedEmail(hashedEmail)
         if (userEntity == null) {
-            logger.info("User $hashedEmail not found, defaulting to superUser=false")
-            return AuthorizedUser(
-                email = email,
-                isSuperUser = false,
-            )
+            logger.info("User $hashedEmail not found, rejecting user")
+            throw BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND, "User $hashedEmail not found")
         }
         logger.info("Found user $hashedEmail")
         return AuthorizedUser(
