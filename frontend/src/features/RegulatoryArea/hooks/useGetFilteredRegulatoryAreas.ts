@@ -13,6 +13,7 @@ export const useGetFilteredRegulatoryAreas = () => {
     filteredRegulatoryTags,
     filteredRegulatoryThemes,
     globalSearchText,
+    scales,
     searchExtent,
     shouldFilterSearchOnMapExtent
   } = useAppSelector(state => state.layerSearch)
@@ -25,12 +26,14 @@ export const useGetFilteredRegulatoryAreas = () => {
           ? transformExtent(searchExtent, OPENLAYERS_PROJECTION, WSG84_PROJECTION)
           : undefined,
       onlyRecentsAreas: areRecentsAreasChecked,
+      scales,
       searchQuery: globalSearchText,
       tags: getTagIds(filteredRegulatoryTags),
       themes: getThemeIds(filteredRegulatoryThemes)
     }),
     [
       controlPlan,
+      scales,
       areRecentsAreasChecked,
       globalSearchText,
       filteredRegulatoryTags,
@@ -47,7 +50,8 @@ export const useGetFilteredRegulatoryAreas = () => {
       apiFilters.tags?.length === 0 &&
       apiFilters.themes?.length === 0 &&
       !apiFilters.onlyRecentsAreas &&
-      !apiFilters.extent,
+      !apiFilters.extent &&
+      !apiFilters.scales,
     [apiFilters]
   )
 

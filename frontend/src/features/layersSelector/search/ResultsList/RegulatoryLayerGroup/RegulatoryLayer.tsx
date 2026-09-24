@@ -123,6 +123,7 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layerTitle ?? 'aucun'}
           plan={layer?.plan}
+          scale={layer?.scale}
           type={layer?.tags?.map(({ name }) => name).join(', ') ?? 'aucun'}
         />
         <LayerSelector.Name title={layerTitle}>

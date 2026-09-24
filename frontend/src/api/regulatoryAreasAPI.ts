@@ -14,6 +14,7 @@ const GET_LAYER_NAMES_ERROR_MESSAGE = "Nous n'avons pas pu récupérer les noms 
 type Filters = {
   controlPlan?: string
   onlyRecentsAreas?: boolean
+  scales?: RegulatoryArea.Scale[]
   seaFronts?: string[]
   searchQuery?: string
   tags?: number[]

@@ -25,6 +25,7 @@ import {
   CustomSearch,
   type DateAsStringRange,
   DateRangePicker,
+  getOptionsFromLabelledEnum,
   type Option,
   Select,
   SingleTag
@@ -43,7 +44,8 @@ import {
   setFilteredRegulatoryTags,
   setFilteredRegulatoryThemes,
   setIsAmpSearchResultsVisible,
-  setIsRegulatorySearchResultsVisible
+  setIsRegulatorySearchResultsVisible,
+  setScales
 } from './slice'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -70,6 +72,7 @@ export function LayerFilters() {
   const filteredRegulatoryTags = useAppSelector(state => state.layerSearch.filteredRegulatoryTags)
   const filteredRegulatoryThemes = useAppSelector(state => state.layerSearch.filteredRegulatoryThemes)
   const filteredAmpTypes = useAppSelector(state => state.layerSearch.filteredAmpTypes)
+  const scales = useAppSelector(state => state.layerSearch.scales)
   const controlPlan = useAppSelector(state => state.layerSearch.controlPlan)
   const areRecentsAreasChecked = useAppSelector(state => state.layerSearch.areRecentsAreasChecked)
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.vigilanceAreaFilters.period)
@@ -77,6 +80,7 @@ export function LayerFilters() {
   const { data: amps } = useGetAMPsQuery()
   const ampTypes = useMemo(() => getAmpsAsOptions(amps ?? []), [amps])
   const AMPCustomSearch = useMemo(() => new CustomSearch(ampTypes as Array<Option>, ['label']), [ampTypes])
+  const scaleOptions = getOptionsFromLabelledEnum(RegulatoryArea.ScaleLabel)
 
   const {
     createdBy,
@@ -89,6 +93,9 @@ export function LayerFilters() {
 
   const updateFilteredAmpTypes = nextAmpThemes => {
     dispatch(setFilteredAmpTypes(nextAmpThemes ?? []))
+  }
+  const updateScales = nextScales => {
+    dispatch(setScales(nextScales ?? []))
   }
   const deleteAmpType = (ampThemeToDelete: string) => () => {
     if (filteredAmpTypes.length === 1) {
@@ -246,6 +253,22 @@ export function LayerFilters() {
           <Tooltip>Ce champ est utilisé uniquement comme critère de recherche pour les zones de vigilance.</Tooltip>
         </SelectContainer>
       )}
+      <SelectContainer>
+        <StyledCheckPicker
+          key={String(scaleOptions.length)}
+          isLabelHidden
+          isTransparent
+          label="Échelle de la réglementation"
+          name="scales"
+          onChange={updateScales}
+          options={scaleOptions}
+          placeholder="Échelle de la réglementation"
+          renderValue={() => filteredAmpTypes && <OptionValue>{`Échelle (${scales.length})`}</OptionValue>}
+          value={scales}
+        />
+
+        <Tooltip>Ce champ est utilisé comme critère de recherche uniquement pour les AMP.</Tooltip>
+      </SelectContainer>
       <li>
         <Checkbox
           checked={areRecentsAreasChecked}

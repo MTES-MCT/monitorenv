@@ -43,6 +43,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
                 layerType={MonitorEnvLayers.REGULATORY_ENV}
                 legendKey={layerTitle}
                 plan={regulatoryMetadata.plan}
+                scale={regulatoryMetadata.scale}
                 type={displayTags(regulatoryMetadata.tags)}
               />
               <RegulatoryZoneName

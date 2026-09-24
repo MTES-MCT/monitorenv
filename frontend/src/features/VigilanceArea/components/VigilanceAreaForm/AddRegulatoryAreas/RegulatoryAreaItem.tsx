@@ -125,6 +125,7 @@ export function RegulatoryAreaItem({ isReadOnly, regulatoryArea }: RegulatoryAre
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layerTitle ?? 'aucun'}
           plan={regulatoryArea?.plan}
+          scale={regulatoryArea?.scale}
           type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
         />
         <span title={layerTitle}>{layerTitle}</span>

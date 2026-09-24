@@ -76,6 +76,7 @@ export function RegulatoryAreaItem({
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layerTitle}
           plan={regulatoryArea.plan}
+          scale={regulatoryArea.scale}
           type={regulatoryArea.type}
         />
         <LayerSelector.Name title={layerTitle}>{layerTitle}</LayerSelector.Name>

@@ -26,6 +26,7 @@ export namespace RegulatoryArea {
     prohibitionPeriods?: string
     refReg?: string
     resume?: string
+    scale?: Scale
     source?: string
     tags?: TagFromAPI[]
     themes?: ThemeFromAPI[]
@@ -78,6 +79,7 @@ export namespace RegulatoryArea {
     plan: string
     polyName: string
     resume?: string
+    scale?: Scale
     tags?: string
   }
 
@@ -153,4 +155,18 @@ export namespace RegulatoryArea {
     [RegulatoryAreaType.REGIONAL_PREFECT_ORDER]: 'Arrêté du préfet de région',
     [RegulatoryAreaType.REGULATION]: 'Règlement'
   } as const
+
+  export enum Scale {
+    CUSTOM = 'CUSTOM',
+    NATIONAL = 'NATIONAL',
+    PARC_AND_RESERVE = 'PARC_AND_RESERVE',
+    REGIONAL = 'REGIONAL'
+  }
+
+  export enum ScaleLabel {
+    CUSTOM = 'Reg. tracé spécifique',
+    NATIONAL = 'Reg. internationale et nationale',
+    PARC_AND_RESERVE = 'Reg. réserve naturelle et parc',
+    REGIONAL = 'Reg. régionale, façade et bassin'
+  }
 }
