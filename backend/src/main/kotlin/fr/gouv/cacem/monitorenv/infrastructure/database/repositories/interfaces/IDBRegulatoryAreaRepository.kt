@@ -10,40 +10,10 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     @Query(
         value =
             """
-            SELECT DISTINCT regulatoryArea
-            FROM RegulatoryAreaModel regulatoryArea
-            LEFT JOIN regulatoryArea.themes th
-            LEFT JOIN regulatoryArea.tags tg
-            WHERE (:seaFronts IS NULL OR regulatoryArea.facade IN (:seaFronts))
-            AND (:themes IS NULL OR th.theme.id IN :themes)
-            AND (:tags IS NULL OR tg.tag.id IN :tags)
-            AND (:controlPlan IS NULL OR regulatoryArea.plan LIKE %:controlPlan%)
-            AND regulatoryArea.creation IS NOT NULL
-            AND (:onlyRecentsAreas IS FALSE OR (
-                regulatoryArea.creation >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
-                OR regulatoryArea.editionBo >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
-                OR regulatoryArea.editionCacem >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
-            ))
-            AND (:extent IS NULL OR intersects(regulatoryArea.geom, :extent) = true)
-            ORDER BY regulatoryArea.layerName
-        """,
-    )
-    fun findAll(
-        controlPlan: String? = null,
-        seaFronts: List<String>? = null,
-        tags: List<Int>? = null,
-        themes: List<Int>? = null,
-        onlyRecentsAreas: Boolean? = false,
-        extent: Geometry? = null,
-    ): List<RegulatoryAreaModel>
-
-    @Query(
-        value =
-            """
             SELECT ST_AsMVT(tile, 'REGULATORY_ENV_PREVIEW', 4096, 'geom')
             FROM (
                 WITH filtered_regs AS (
-                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, reg.layer_name, reg.location, ST_Area(geom_3857) AS area
+                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, reg.layer_name, reg.location, reg.scale, ST_Area(geom_3857) AS area
                     FROM regulatory_areas reg
                     LEFT JOIN themes_regulatory_areas thr ON reg.id = thr.regulatory_areas_id
                     LEFT JOIN tags_regulatory_areas tr ON reg.id = tr.regulatory_areas_id
@@ -65,6 +35,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                         OR reg.edition_cacem >= CURRENT_TIMESTAMP - INTERVAL '30 days'
                         )
                     )
+                     AND (CAST(:scales as text[]) IS NULL OR CAST(reg.scale as text) = ANY(CAST(:scales as text[])))
                     AND ((:minX IS NULL OR :minY IS NULL OR :maxX IS NULL OR :maxY IS NULL)
                         OR ST_Intersects(geom_3857, ST_MakeEnvelope(:minX, :minY, :maxX, :maxY, 3857))
                         )
@@ -92,6 +63,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                     filtered_regs.poly_name AS "polyName",
                     filtered_regs.layer_name AS "layerName",
                     filtered_regs.location AS "location",
+                    filtered_regs.scale AS "scale",
                     filtered_regs.resume as "resume",
                     filtered_regs.plan as "plan",
                     ST_AsMVTGeom(filtered_regs.geom_3857, ST_TileEnvelope(:z, :x, :y), 4096, 64, true) AS geom,
@@ -107,6 +79,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
     fun findAllAsTiles(
         controlPlan: String? = null,
         seaFronts: Array<String>? = null,
+        scales: Array<String>? = null,
         tags: Array<Int>? = null,
         themes: Array<Int>? = null,
         onlyRecentsAreas: Boolean? = false,

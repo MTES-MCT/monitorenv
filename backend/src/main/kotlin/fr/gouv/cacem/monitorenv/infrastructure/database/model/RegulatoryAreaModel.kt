@@ -3,6 +3,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.ScaleEnum
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -55,6 +56,10 @@ data class RegulatoryAreaModel(
     @Column(name = "poly_name") val polyName: String?,
     @Column(name = "ref_reg") val refReg: String?,
     @Column(name = "resume") val resume: String?,
+    @Column(name = "scale", columnDefinition = "regulatory_area_scale")
+    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType::class)
+    val scale: ScaleEnum?,
     @Column(name = "source") val source: String?,
     @OneToMany(
         mappedBy = "regulatoryArea",
@@ -99,6 +104,7 @@ data class RegulatoryAreaModel(
         observation = observation,
         refReg = group?.refReg ?: refReg,
         resume = resume,
+        scale = scale,
         source = source,
         tags = TagRegulatoryAreaModel.toTagEntities(tags),
         themes = ThemeRegulatoryAreaModel.toThemeEntities(themes),
@@ -150,6 +156,7 @@ data class RegulatoryAreaModel(
                 additionalRefReg = regulatoryArea.additionalRefReg.let { mapper.valueToTree(it) },
                 authorizationPeriods = regulatoryArea.authorizationPeriods,
                 prohibitionPeriods = regulatoryArea.prohibitionPeriods,
+                scale = regulatoryArea.scale,
             )
     }
 

@@ -195,6 +195,24 @@ export const getRegulatoryLayerStyle = (
   isolateLayer?: IsolatedLayerType,
   metadataId?: string | number
 ) => {
+  if (feature.get('scale') === RegulatoryArea.Scale.NATIONAL) {
+    return new Style({
+      fill: new Fill({
+        color: 'transparent'
+      })
+    })
+  }
+  if (feature.get('scale') === RegulatoryArea.Scale.REGIONAL) {
+    return new Style({
+      fill: new Fill({
+        color: 'transparent'
+      }),
+      stroke: new Stroke({
+        color: THEME.color.yaleBlue,
+        width: 2
+      })
+    })
+  }
   const layerTitle = getRegulatoryAreaTitle(feature.get('polyName'), feature.get('resume'))
   const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('tags'), layerTitle, feature.get('plan'))
 

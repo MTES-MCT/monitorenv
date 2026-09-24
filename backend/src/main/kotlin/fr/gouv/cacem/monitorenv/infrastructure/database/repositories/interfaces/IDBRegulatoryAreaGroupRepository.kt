@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces
 
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.ScaleEnum
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGroupPk
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.projections.RegulatoryAreaGroupWithTotal
@@ -29,12 +30,14 @@ interface IDBRegulatoryAreaGroupRepository : JpaRepository<RegulatoryAreaGroupMo
                 OR regulatoryArea.editionBo >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
                 OR regulatoryArea.editionCacem >= DATEADD(DAY, -30, CURRENT_TIMESTAMP)
             ))
+            AND (:scales IS NULL OR regulatoryArea.scale IN (:scales))
             AND (:extent IS NULL OR intersects(regulatoryArea.geom, :extent) = true)
             ORDER BY regulatoryArea.layerName
         """,
     )
     fun findAll(
         controlPlan: String? = null,
+        scales: List<ScaleEnum>? = null,
         seaFronts: List<String>? = null,
         tags: List<Int>? = null,
         themes: List<Int>? = null,

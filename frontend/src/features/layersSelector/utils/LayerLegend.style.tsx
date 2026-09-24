@@ -1,7 +1,8 @@
 import { Dashboard } from '@features/Dashboard/types'
 import { getLocalizedAreaColorWithAlpha } from '@features/LocalizedArea/utils'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/components/VigilanceAreaLayer/style'
-import { Size } from '@mtes-mct/monitor-ui'
+import { Icon, Size, THEME } from '@mtes-mct/monitor-ui'
 import styled from 'styled-components'
 
 import {
@@ -17,17 +18,29 @@ export function LayerLegend({
   layerType,
   legendKey,
   plan = undefined,
+  scale,
   size = Size.SMALL,
   type
 }: {
   border?: string
   isDisabled?: boolean
-  layerType: RegulatoryOrAMPOrViglanceAreaLayerType | MonitorEnvLayers.LOCALIZED_AREAS
+  layerType?: RegulatoryOrAMPOrViglanceAreaLayerType | MonitorEnvLayers.LOCALIZED_AREAS
   legendKey?: string
   plan?: string
+  scale?: RegulatoryArea.Scale
   size?: Size
   type?: string
 }) {
+  switch (scale) {
+    case RegulatoryArea.Scale.NATIONAL:
+      return <Icon.PinpointHide color={THEME.color.slateGray} />
+    case RegulatoryArea.Scale.REGIONAL:
+      return (
+        <Rectangle $border={`1px solid ${THEME.color.yaleBlue}`} $size={size} $vectorLayerColor={THEME.color.white} />
+      )
+    default:
+      break
+  }
   switch (layerType) {
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
@@ -54,7 +67,9 @@ export function LayerLegend({
     case MonitorEnvLayers.LOCALIZED_AREAS:
       return <Rectangle $size={size} $vectorLayerColor={getLocalizedAreaColorWithAlpha(type)} />
     default:
-      return <Rectangle $size={size} />
+      return (
+        <Rectangle $border={`1px solid ${THEME.color.yaleBlue}`} $size={size} $vectorLayerColor={THEME.color.white} />
+      )
   }
 }
 

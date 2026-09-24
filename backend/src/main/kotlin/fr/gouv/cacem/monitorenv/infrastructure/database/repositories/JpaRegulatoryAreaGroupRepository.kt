@@ -34,6 +34,7 @@ class JpaRegulatoryAreaGroupRepository(
             dbRegulatoryAreaGroupRepository
                 .findAll(
                     controlPlan = filters.controlPlan,
+                    scales = filters.scales,
                     seaFronts = filters.seaFronts,
                     tags = filters.tags,
                     themes = filters.themes,
@@ -150,6 +151,7 @@ class JpaRegulatoryAreaGroupRepository(
                 additionalRefReg = regulatoryAreaGroup.additionalRefReg.let { mapper.valueToTree(it) },
                 authorizationPeriods = null,
                 prohibitionPeriods = null,
+                scale = null,
             )
         val savedGroup = dbRegulatoryAreaRepository.save(groupToSave)
 

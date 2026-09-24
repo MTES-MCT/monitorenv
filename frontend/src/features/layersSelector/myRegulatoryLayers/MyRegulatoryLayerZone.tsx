@@ -56,6 +56,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
       name={layerTitle ?? 'AUCUN NOM'}
       plan={regulatoryZone.plan}
       removeZone={handleRemoveZone}
+      scale={regulatoryZone.scale}
       showLayer={() => dispatch(showRegulatoryLayer(regulatoryZone.id))}
       toggleZoneMetadata={toggleRegulatoryZoneMetadata}
       type={regulatoryZone.tags?.map(({ name }) => name).join(', ') ?? 'aucun'}
