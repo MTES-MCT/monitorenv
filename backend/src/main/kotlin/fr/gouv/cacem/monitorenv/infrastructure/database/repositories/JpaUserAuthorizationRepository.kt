@@ -4,6 +4,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.authorization.UserAuthorization
 import fr.gouv.cacem.monitorenv.domain.repositories.IUserAuthorizationRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.UserAuthorizationModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBUserAuthorizationRepository
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.stereotype.Repository
@@ -16,11 +17,13 @@ class JpaUserAuthorizationRepository(
     override fun findByHashedEmail(hashedEmail: String): UserAuthorization? =
         dbUserAuthorizationRepository.findByHashedEmail(hashedEmail)?.toUserAuthorization()
 
+    @CacheEvict(value = ["user_authorization"])
     @Modifying
     override fun save(user: UserAuthorization) {
         dbUserAuthorizationRepository.save(UserAuthorizationModel.fromUserAuthorization(user))
     }
 
+    @CacheEvict(value = ["user_authorization"])
     @Modifying
     override fun saveAll(users: List<UserAuthorization>) {
         dbUserAuthorizationRepository.saveAll(
@@ -32,6 +35,7 @@ class JpaUserAuthorizationRepository(
         )
     }
 
+    @CacheEvict(value = ["user_authorization"])
     @Modifying
     override fun delete(hashedEmail: String) {
         dbUserAuthorizationRepository.deleteById(hashedEmail)
