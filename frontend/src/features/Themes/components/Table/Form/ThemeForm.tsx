@@ -42,9 +42,7 @@ export function ThemeForm({ onCancel, onSubmit, theme }: ThemeFormProps) {
     >
       {({ handleSubmit, values }) => (
         <form onSubmit={handleSubmit}>
-          <Dialog.Title>
-            {values.id ? 'Modifier une thématique / sous-thématique' : 'Ajouter une thématique'}
-          </Dialog.Title>
+          <Dialog.Title>{values.id ? 'Modifier une thématique' : 'Ajouter une thématique'}</Dialog.Title>
           <Dialog.Body style={{ paddingTop: 0, width: '968px' }}>
             {values.id && (
               <Message Icon={Icon.AttentionFilled} iconColor={messageColor} style={{ marginTop: '24px' }}>

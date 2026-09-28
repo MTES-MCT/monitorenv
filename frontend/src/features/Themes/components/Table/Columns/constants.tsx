@@ -62,63 +62,63 @@ export const THEME_TABLE_COLUMNS = [
 
 export const SUBTHEME_TABLE_COLUMNS = [
   {
-    accessorFn: row => row.name,
-    cell: ({ row }) => (
+    accessorFn: row => row.index,
+    cell: ({ getValue }) => (
       <FormikTextInput
         isErrorMessageHidden
         isLabelHidden
-        label={`Sous-thématique ${row.index}`}
-        name={`subThemes[${row.index}].name`}
+        label={`Sous-thématique ${getValue()}`}
+        name={`subThemes[${getValue()}].name`}
         placeholder="Nom de la sous-thématique"
         style={{ width: '100%' }}
       />
     ),
     header: () => 'Sous-thématique',
     id: 'name',
-    size: 459
+    size: 549
   },
   {
-    accessorFn: row => row.startedAt,
-    cell: ({ row }) => (
-      <FormikDatePicker
+    accessorFn: row => row.index,
+    cell: ({ getValue }) => (
+      <StyledFormikDatePicker
         isErrorMessageHidden
         isLabelHidden
         isRequired
         isStringDate
-        label={`Début de validité de la sous-thématique ${row.index}`}
-        name={`subThemes[${row.index}].startedAt`}
+        label={`Début de validité de la sous-thématique ${getValue()}`}
+        name={`subThemes[${getValue()}].startedAt`}
       />
     ),
     header: () => 'Début validité',
     id: 'startedAt',
-    size: 119
+    size: 100
   },
   {
-    accessorFn: row => row.endedAt,
-    cell: ({ row }) => (
-      <FormikDatePicker
+    accessorFn: row => row.index,
+    cell: ({ getValue }) => (
+      <StyledFormikDatePicker
         isEndDate
         isErrorMessageHidden
         isLabelHidden
         isStringDate
-        label={`Fin de validité de la sous-thématique ${row.index}`}
-        name={`subThemes[${row.index}].endedAt`}
+        label={`Fin de validité de la sous-thématique ${getValue()}`}
+        name={`subThemes[${getValue()}].endedAt`}
       />
     ),
     header: () => 'Fin validité',
     id: 'endedAt',
-    size: 115
+    size: 100
   },
   {
-    accessorFn: row => row.id,
-    cell: ({ row, table }) =>
+    accessorFn: row => row.index,
+    cell: ({ getValue, row, table }) =>
       row.depth === 0 && (
         <DeleteButton
           accent={Accent.TERTIARY}
           Icon={Icon.Delete}
           onClick={e => {
             e.stopPropagation()
-            table.options.meta?.onDelete(row.id)
+            table.options.meta?.onDelete(getValue())
           }}
           title="Supprimer cette sous-thématique"
         />
@@ -144,4 +144,8 @@ const DeleteButton = styled(StyledIconButton)`
 `
 const Value = styled.span<{ $isChild: boolean }>`
   ${p => p.$isChild && 'padding-left: 16px;'}
+`
+
+const StyledFormikDatePicker = styled(FormikDatePicker)`
+  background-color: ${p => p.theme.color.gainsboro};
 `

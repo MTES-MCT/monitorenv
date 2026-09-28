@@ -3,6 +3,23 @@ import { customDayjs, CustomSearch, type Filter } from '@mtes-mct/monitor-ui'
 import type { FiltersState } from './types'
 import type { TagTable } from '../../../../domain/entities/tags'
 
+function isTagInProgress(tag: TagTable) {
+  const now = customDayjs()
+
+  return (
+    !tag.id ||
+    (tag.startedAt &&
+      now.isAfter(customDayjs(tag.startedAt)) &&
+      (!tag.endedAt || now.isBetween(customDayjs(tag.startedAt), customDayjs(tag.endedAt))))
+  )
+}
+
+function isTagOutOfValidity(tag: TagTable) {
+  const now = customDayjs()
+
+  return !tag.id || (tag.startedAt && tag.endedAt && now.isAfter(customDayjs(tag.endedAt)))
+}
+
 export function getFilters(data: TagTable[], filtersState: FiltersState): Filter<TagTable>[] {
   const customSearch = new CustomSearch(data, ['name', 'subTags.name', 'codeFao', 'subTags.codeFao'], {
     cacheKey: 'BACK_OFFICE_TAG_LIST',
@@ -19,18 +36,15 @@ export function getFilters(data: TagTable[], filtersState: FiltersState): Filter
 
   if (filtersState.validity) {
     const isValid: Filter<TagTable> = tags => {
-      const now = customDayjs()
       if (filtersState.validity === 'IN_PROGRESS') {
-        return tags.filter(
-          tag =>
-            !tag.id ||
-            (tag.startedAt &&
-              now.isAfter(customDayjs(tag.startedAt)) &&
-              (!tag.endedAt || now.isBetween(customDayjs(tag.startedAt), customDayjs(tag.endedAt))))
-        )
+        return tags
+          .filter(tag => isTagInProgress(tag))
+          .map(tag => ({ ...tag, subTags: tag.subTags.filter(subTag => isTagInProgress(subTag)) }))
       }
       if (filtersState.validity === 'OUTDATED') {
-        return tags.filter(tag => !tag.id || (tag.startedAt && tag.endedAt && now.isAfter(customDayjs(tag.endedAt))))
+        return tags
+          .filter(tag => isTagOutOfValidity(tag))
+          .map(tag => ({ ...tag, subTags: tag.subTags.filter(subTag => isTagOutOfValidity(subTag)) }))
       }
 
       return tags

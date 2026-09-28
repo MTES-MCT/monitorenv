@@ -6,8 +6,8 @@ export const BaseThemeSchema: Yup.Schema<Omit<ThemeTable, 'parentId' | 'subRows'
   Yup.object().shape({
     endedAt: Yup.string()
       .optional()
-      .test('is-after-start', 'La date de fin doit être après la date de début', function (value) {
-        const { startedAt } = this.parent
+      .test('is-after-start', 'La date de fin doit être après la date de début', (value, context) => {
+        const { startedAt } = context.parent
         if (!value || !startedAt) {
           return true
         }

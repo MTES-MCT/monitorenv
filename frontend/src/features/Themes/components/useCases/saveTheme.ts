@@ -9,7 +9,7 @@ export const saveTheme = (theme: ThemeToAPI) => async dispatch => {
   if (data) {
     dispatch(
       addBackOfficeBanner({
-        children: 'La thématique a bien été enregistré',
+        children: 'La thématique a bien été enregistrée',
         isClosable: true,
         isFixed: true,
         level: Level.SUCCESS,
@@ -20,7 +20,7 @@ export const saveTheme = (theme: ThemeToAPI) => async dispatch => {
   if (error) {
     dispatch(
       addBackOfficeBanner({
-        children: "La thématique n'a pas pu être enregistré",
+        children: "La thématique n'a pas pu être enregistrée",
         isClosable: true,
         isFixed: true,
         level: Level.ERROR,
