@@ -30,10 +30,7 @@ export function RequireAuth({ children, redirect = false, requireSuperUser = fal
       </Wrapper>
     )
   }
-  if (!user) {
-    return handleRedirect(paths.login, redirect)
-  }
-  if (requireSuperUser && !user?.isSuperUser) {
+  if (!user || (requireSuperUser && !user?.isSuperUser)) {
     return handleRedirect(paths.register, redirect)
   }
 
