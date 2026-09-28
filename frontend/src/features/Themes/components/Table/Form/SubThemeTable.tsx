@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import type { ThemeTable } from 'domain/entities/themes'
 
 type ThemeFormProps = {
-  onAdd: <X extends any = any>(obj: X) => void
+  onAdd?: <X extends any = any>(obj: X) => void
   onDelete: <X extends any = any>(index: number) => X | undefined
   subThemes: ThemeTable[]
 }
@@ -51,24 +51,23 @@ export function SubThemeTable({ onAdd, onDelete, subThemes }: ThemeFormProps) {
           {rows.map(row => (
             <SimpleTable.BodyTr key={row.id} data-id={row?.id} data-index={row?.index}>
               {row?.getVisibleCells().map(cell => (
-                <SimpleTable.Td key={cell.id}>
-                  <SimpleTable.SortContainer>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </SimpleTable.SortContainer>
-                </SimpleTable.Td>
+                <StyledTd key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</StyledTd>
               ))}
             </SimpleTable.BodyTr>
           ))}
         </tbody>
       </StyledTable>
-      <CellButton accent={Accent.TERTIARY} Icon={Icon.Plus} onClick={onAdd} type="button">
-        Ajouter une sous-thématique
-      </CellButton>
+      {onAdd && (
+        <CellButton accent={Accent.TERTIARY} Icon={Icon.Plus} onClick={onAdd} type="button">
+          Ajouter une sous-thématique
+        </CellButton>
+      )}
     </>
   )
 }
 
 const StyledTable = styled(SimpleTable.Table)`
+  width: 100%;
   td:nth-child(n + 1) {
     overflow: visible !important;
   }
@@ -82,6 +81,12 @@ const StyledHeader = styled(SimpleTable.Head)`
       color: ${p => p.theme.color.maximumRed};
     }
   }
+`
+
+const StyledTd = styled(SimpleTable.Td)`
+  padding: 4px;
+  text-align: center;
+  vertical-align: middle;
 `
 
 const CellButton = styled(Button)`
