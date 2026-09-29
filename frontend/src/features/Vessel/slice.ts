@@ -10,7 +10,7 @@ type VesselId = {
 type SelectedVessel = {
   batchId: number | undefined
   displayedPositions: Vessel.Position[] | undefined
-  hasReportings: boolean | undefined
+  hasReportingsWithInfractions: boolean | undefined
   rowNumber: number | undefined
   shipId: number | undefined
 }
@@ -28,7 +28,7 @@ const INITIAL_STATE: VesselState = {
   selectedVessel: {
     batchId: undefined,
     displayedPositions: undefined,
-    hasReportings: undefined,
+    hasReportingsWithInfractions: undefined,
     rowNumber: undefined,
     shipId: undefined
   }
@@ -41,8 +41,8 @@ export const vesselSlice = createSlice({
     setDisplayedPositions: (state, action: PayloadAction<Vessel.Position[] | undefined>): void => {
       state.selectedVessel.displayedPositions = action.payload
     },
-    setHasReportings: (state, action: PayloadAction<boolean | undefined>): void => {
-      state.selectedVessel.hasReportings = action.payload
+    setHasReportingsWithInfractions: (state, action: PayloadAction<boolean | undefined>): void => {
+      state.selectedVessel.hasReportingsWithInfractions = action.payload
     },
     setSelectedFeatureId: (state, action: PayloadAction<string | number | undefined>): void => {
       state.selectedPosition.featureId = action.payload
