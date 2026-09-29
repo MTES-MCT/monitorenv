@@ -72,6 +72,9 @@ RUN apk update && \
     apk add --no-cache libreoffice && \
     rm -rf /var/cache/apk/*
 
+# Install curl for health check
+RUN apk add --no-cache curl
+
 RUN adduser -D monitorenv
 USER monitorenv
 
