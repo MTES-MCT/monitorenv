@@ -18,7 +18,7 @@ import type { BaseMapChildrenProps } from '@features/map/BaseMap'
 import type { FeatureLike } from 'ol/Feature'
 
 export function AISPositionsLayer({ map }: BaseMapChildrenProps) {
-  const { displayedPositions, hasReportings } = useAppSelector(state => state.vessel.selectedVessel)
+  const { displayedPositions, hasReportingsWithInfractions } = useAppSelector(state => state.vessel.selectedVessel)
   const overlayCoordinates = useAppSelector(state => state.global.overlayCoordinates)
 
   const vectorSourceRef = useRef(new VectorSource()) as React.MutableRefObject<VectorSource<Feature<Geometry>>>
@@ -107,7 +107,7 @@ export function AISPositionsLayer({ map }: BaseMapChildrenProps) {
         vesselFeature.setProperties({
           ...lastPosition,
           geom: null,
-          hasReportings
+          hasReportings: hasReportingsWithInfractions
         })
 
         if (vesselFeature) {
@@ -115,7 +115,7 @@ export function AISPositionsLayer({ map }: BaseMapChildrenProps) {
         }
       }
     }
-  }, [hasReportings, map, displayedPositions, overlayCoordinates])
+  }, [hasReportingsWithInfractions, map, displayedPositions, overlayCoordinates])
 
   useEffect(() => {
     map.getLayers().push(vectorLayerRef.current)

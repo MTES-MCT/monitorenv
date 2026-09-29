@@ -16,7 +16,7 @@ context('Search Places', () => {
     cy.getDataCy('vessel-resume-SHIPNAME 1')
       .should('be.visible')
       .within(() => {
-        cy.contains('1 signalement en cours')
+        cy.contains('1 observation en cours')
         cy.contains('Latitude')
         cy.contains('47° 38.400′ N')
         cy.contains('Longitude')
