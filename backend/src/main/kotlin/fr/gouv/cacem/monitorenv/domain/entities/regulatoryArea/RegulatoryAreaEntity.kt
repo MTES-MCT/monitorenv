@@ -27,6 +27,7 @@ data class RegulatoryAreaEntity(
     val prohibitionPeriods: String? = null,
     val refReg: String? = null,
     val resume: String? = null,
+    val scale: ScaleEnum? = null,
     val source: String? = null,
     val tags: List<TagEntity>,
     val themes: List<ThemeEntity>,
@@ -74,6 +75,7 @@ data class RegulatoryAreaEntity(
         if (prohibitionPeriods != other.prohibitionPeriods) return false
         if (refReg != other.refReg) return false
         if (resume != other.resume) return false
+        if (scale != other.scale) return false
         if (source != other.source) return false
         if (tags != other.tags) return false
         if (themes != other.themes) return false
@@ -106,6 +108,7 @@ data class RegulatoryAreaEntity(
         result = 31 * result + (refReg?.hashCode() ?: 0)
         result = 31 * result + (resume?.hashCode() ?: 0)
         result = 31 * result + (source?.hashCode() ?: 0)
+        result = 31 * result + (scale?.hashCode() ?: 0)
         result = 31 * result + tags.hashCode()
         result = 31 * result + themes.hashCode()
         result = 31 * result + (type?.hashCode() ?: 0)

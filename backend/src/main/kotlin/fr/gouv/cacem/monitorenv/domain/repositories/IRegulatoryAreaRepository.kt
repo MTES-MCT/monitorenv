@@ -7,7 +7,7 @@ import org.locationtech.jts.geom.Geometry
 
 interface IRegulatoryAreaRepository {
     fun findAllTiles(
-        filters: SearchFilters?,
+        filters: SearchFilters,
         x: Int,
         y: Int,
         z: Int,

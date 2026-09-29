@@ -55,6 +55,7 @@ export function LayersSidebar() {
     filteredRegulatoryTags,
     filteredRegulatoryThemes,
     globalSearchText,
+    scales,
     searchExtent
   } = useAppSelector(state => state.layerSearch)
 
@@ -83,7 +84,8 @@ export function LayersSidebar() {
     (globalSearchText ? 1 : 0) +
     (controlPlan ? 1 : 0) +
     (searchExtent ? 1 : 0) +
-    (areRecentsAreasChecked ? 1 : 0)
+    (areRecentsAreasChecked ? 1 : 0) +
+    (scales.length > 0 ? 1 : 0)
 
   const numberOfFilters = nbOfFiltersSetted + numberOfMapFilters
 

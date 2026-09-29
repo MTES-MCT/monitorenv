@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.regulat
 
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AdditionalRefRegEntity
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.ScaleEnum
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
 import org.locationtech.jts.geom.MultiPolygon
@@ -31,6 +32,7 @@ data class RegulatoryAreaDataOutput(
     val refReg: String? = null,
     val resume: String? = null,
     val source: String? = null,
+    val scale: ScaleEnum? = null,
     val tags: List<TagOutput>,
     val themes: List<ThemeOutput>,
     val type: String? = null,
@@ -60,6 +62,7 @@ data class RegulatoryAreaDataOutput(
             polyName = regulatoryArea.polyName,
             refReg = regulatoryArea.refReg,
             resume = regulatoryArea.resume,
+            scale = regulatoryArea.scale,
             source = regulatoryArea.source,
             tags = regulatoryArea.tags.map { TagOutput.fromTagEntity(it) },
             themes = regulatoryArea.themes.map { ThemeOutput.fromThemeEntity(it) },

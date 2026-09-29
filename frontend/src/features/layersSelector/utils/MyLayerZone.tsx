@@ -1,4 +1,5 @@
 import { StyledTransparentButton } from '@components/style'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingZonesToVigilanceArea,
@@ -31,6 +32,7 @@ type MyLayerZoneProps = {
   name: string
   plan?: string
   removeZone: () => void
+  scale?: RegulatoryArea.Scale
   showLayer: () => void
   toggleZoneMetadata?: () => void
   type: string | undefined
@@ -50,6 +52,7 @@ export function MyLayerZone({
   name,
   plan,
   removeZone,
+  scale,
   showLayer,
   toggleZoneMetadata,
   type
@@ -111,7 +114,7 @@ export function MyLayerZone({
   return (
     <LayerSelector.Layer $isNew={isNew} $isRecentlyUpdated={isRecentlyUpdated} $metadataIsShown={metadataIsShown}>
       <StyledTransparentButton onClick={handleClickOnLayerName}>
-        <LayerLegend layerType={layerType} legendKey={name} plan={plan} type={type} />
+        <LayerLegend layerType={layerType} legendKey={name} plan={plan} scale={scale} type={type} />
         <LayerSelector.Name data-cy={`my-zone-${displayedName}`} title={displayedName}>
           {displayedName}
         </LayerSelector.Name>

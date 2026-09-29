@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.ScaleEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryArea
 import fr.gouv.cacem.monitorenv.domain.use_cases.regulatoryAreas.CreateOrUpdateRegulatoryAreaGroup
@@ -67,6 +68,9 @@ class RegulatoryAreas(
         @Parameter(description = "Only recent areas")
         @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
         onlyRecentsAreas: Boolean?,
+        @Parameter(description = "Scales")
+        @RequestParam(name = "scales", required = false)
+        scales: List<ScaleEnum>?,
         @Parameter(description = "Extent")
         @RequestParam(name = "extent", required = false) extent: List<Double>?,
     ): RegulatoryAreasWithTotalDataOutput {
@@ -76,6 +80,7 @@ class RegulatoryAreas(
                     SearchFilters(
                         controlPlan = controlPlan,
                         query = searchQuery,
+                        scales = scales,
                         seaFronts = seaFronts,
                         tags = tags,
                         themes = themes,
@@ -114,6 +119,9 @@ class RegulatoryAreas(
         @Parameter(description = "Only recent areas")
         @RequestParam(name = "onlyRecentsAreas", required = false, defaultValue = "false")
         onlyRecentsAreas: Boolean?,
+        @Parameter(description = "Scales")
+        @RequestParam(name = "scales", required = false)
+        scales: List<ScaleEnum>?,
         @Parameter(description = "Extent")
         @RequestParam(name = "extent", required = false) extent: List<Double>?,
         @PathVariable x: Int,
@@ -125,6 +133,7 @@ class RegulatoryAreas(
                 SearchFilters(
                     controlPlan = controlPlan,
                     query = searchQuery,
+                    scales = scales,
                     seaFronts = seaFronts,
                     tags = tags,
                     themes = themes,

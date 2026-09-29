@@ -1,5 +1,6 @@
 import { Tooltip } from '@components/Tooltip'
 import { Dashboard } from '@features/Dashboard/types'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { isOutOfPeriod, isWithinPeriod } from '@features/VigilanceArea/components/VigilanceAreaForm/utils'
 import { VigilanceAreaOverlay } from '@features/VigilanceArea/components/VigilanceAreaOverlay'
 import {
@@ -27,7 +28,6 @@ import {
 } from '../metadataPanel/slice'
 import { LayerLegend } from '../utils/LayerLegend.style'
 
-import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { AMPProperties } from 'domain/entities/AMPs'
 import type { OverlayItem } from 'domain/types/map'
 
@@ -214,15 +214,21 @@ export function OverlayContent({ items }: OverlayContentProps) {
               }}
             >
               <Wrapper>
-                <LayerLegend
-                  border={isWithinPeriod(periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
-                  isDisabled={isOutOfPeriod(periods) || isDisabled}
-                  layerType={item.layerType}
-                  legendKey={legendKey}
-                  plan={(item.properties as any)?.plan}
-                  size={Size.NORMAL}
-                  type={legendType}
-                />
+                {(item.properties as RegulatoryArea.RegulatoryAreaTilesProperties).scale ===
+                RegulatoryArea.Scale.NATIONAL ? (
+                  <Icon.PinpointHide />
+                ) : (
+                  <LayerLegend
+                    border={isWithinPeriod(periods, true) ? `2px solid ${THEME.color.maximumRed}` : undefined}
+                    isDisabled={isOutOfPeriod(periods) || isDisabled}
+                    layerType={item.layerType}
+                    legendKey={legendKey}
+                    plan={(item.properties as any)?.plan}
+                    scale={(item.properties as RegulatoryArea.RegulatoryAreaTilesProperties).scale}
+                    size={Size.NORMAL}
+                    type={legendType}
+                  />
+                )}
 
                 <GroupName $isDisabled={isDisabled} title={getTitle(groupName)}>
                   {getTitle(groupName)}

@@ -31,6 +31,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     filteredRegulatoryTags,
     filteredRegulatoryThemes,
     globalSearchText,
+    scales,
     searchExtent,
     shouldFilterSearchOnMapExtent
   } = useAppSelector(state => state.layerSearch)
@@ -40,6 +41,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       controlPlan,
       extent: shouldFilterSearchOnMapExtent && searchExtent ? searchExtent : undefined,
       onlyRecentsAreas: areRecentsAreasChecked,
+      scales,
       searchQuery: globalSearchText,
       tags: getTagIds(filteredRegulatoryTags),
       themes: getThemeIds(filteredRegulatoryThemes)
@@ -51,6 +53,7 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       filteredRegulatoryTags,
       filteredRegulatoryThemes,
       shouldFilterSearchOnMapExtent,
+      scales,
       searchExtent
     ]
   )
@@ -62,7 +65,8 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
       apiFilters.tags?.length === 0 &&
       apiFilters.themes?.length === 0 &&
       !apiFilters.onlyRecentsAreas &&
-      apiFilters.extent?.length === 0,
+      apiFilters.extent?.length === 0 &&
+      apiFilters.scales?.length === 0,
     [apiFilters]
   )
 

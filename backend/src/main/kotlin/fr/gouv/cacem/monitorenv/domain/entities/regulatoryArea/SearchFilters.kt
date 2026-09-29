@@ -7,5 +7,6 @@ data class SearchFilters(
     val tags: List<Int>? = null,
     val themes: List<Int>? = null,
     val onlyRecentsAreas: Boolean? = false,
+    val scales: List<ScaleEnum>? = null,
     val extent: List<Double>? = null,
 )

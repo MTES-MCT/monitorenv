@@ -1,3 +1,4 @@
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -14,6 +15,7 @@ type LayerSearchState = {
   isAmpSearchResultsVisible: boolean
   isRegulatorySearchResultsVisible: boolean
   isVigilanceAreaSearchResultsVisible: boolean
+  scales: RegulatoryArea.Scale[]
   searchExtent: number[] | undefined
   shouldFilterSearchOnMapExtent: boolean
 }
@@ -28,6 +30,7 @@ const initialState: LayerSearchState = {
   isAmpSearchResultsVisible: false,
   isRegulatorySearchResultsVisible: false,
   isVigilanceAreaSearchResultsVisible: false,
+  scales: [],
   searchExtent: undefined,
   shouldFilterSearchOnMapExtent: false
 }
@@ -45,6 +48,7 @@ const layerSearchSlice = createSlice({
       state.isAmpSearchResultsVisible = false
       state.isVigilanceAreaSearchResultsVisible = false
       state.areRecentsAreasChecked = false
+      state.scales = []
     },
     resetSearch(state) {
       return { state, ...initialState }
@@ -55,42 +59,36 @@ const layerSearchSlice = createSlice({
     setAreRecentsAreasChecked(state, action: PayloadAction<boolean>) {
       state.areRecentsAreasChecked = action.payload
     },
-
     setControlPlan(state, action: PayloadAction<string | undefined>) {
       state.controlPlan = action.payload
     },
-
     setFilteredAmpTypes(state, action: PayloadAction<string[]>) {
       state.filteredAmpTypes = action.payload
     },
-
     setFilteredRegulatoryTags(state, action: PayloadAction<TagOption[]>) {
       state.filteredRegulatoryTags = action.payload
     },
-
     setFilteredRegulatoryThemes(state, action: PayloadAction<ThemeOption[]>) {
       state.filteredRegulatoryThemes = action.payload
     },
-
     setGlobalSearchText(state, action: PayloadAction<string>) {
       state.globalSearchText = action.payload
     },
-
     setIsAmpSearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isAmpSearchResultsVisible = action.payload
     },
     setIsRegulatorySearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isRegulatorySearchResultsVisible = action.payload
     },
-
     setIsVigilanceAreaSearchResultsVisible(state, action: PayloadAction<boolean>) {
       state.isVigilanceAreaSearchResultsVisible = action.payload
     },
-
+    setScales(state, action: PayloadAction<RegulatoryArea.Scale[]>) {
+      state.scales = action.payload
+    },
     setSearchExtent(state, action: PayloadAction<number[] | undefined>) {
       state.searchExtent = action.payload
     },
-
     setShouldFilterSearchOnMapExtent(state, action: PayloadAction<boolean>) {
       state.shouldFilterSearchOnMapExtent = action.payload
     }
@@ -110,6 +108,7 @@ export const {
   setIsAmpSearchResultsVisible,
   setIsRegulatorySearchResultsVisible,
   setIsVigilanceAreaSearchResultsVisible,
+  setScales,
   setSearchExtent,
   setShouldFilterSearchOnMapExtent
 } = layerSearchSlice.actions
