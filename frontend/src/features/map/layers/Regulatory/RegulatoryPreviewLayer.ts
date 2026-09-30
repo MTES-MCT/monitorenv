@@ -56,23 +56,23 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     ]
   )
 
-  const [debouceFilters] = useDebounce(apiFilters, 500)
+  const [debounceFilters] = useDebounce(apiFilters, 500)
 
   const hasNoFilters = useMemo(
     () =>
-      !debouceFilters.controlPlan &&
-      !debouceFilters.searchQuery &&
-      debouceFilters.tags?.length === 0 &&
-      debouceFilters.themes?.length === 0 &&
-      !debouceFilters.onlyRecentsAreas &&
-      debouceFilters.extent?.length === 0,
-    [debouceFilters]
+      !debounceFilters.controlPlan &&
+      !debounceFilters.searchQuery &&
+      debounceFilters.tags?.length === 0 &&
+      debounceFilters.themes?.length === 0 &&
+      !debounceFilters.onlyRecentsAreas &&
+      debounceFilters.extent?.length === 0,
+    [debounceFilters]
   )
 
   const regulatoryPreviewVectorSourceRef = useRef(
     new VectorTileSource({
       format: new MVT(),
-      url: getQueryString('/bff/v1/regulatory-areas/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : debouceFilters)
+      url: getQueryString('/bff/v1/regulatory-areas/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : debounceFilters)
     })
   ) as MutableRefObject<VectorTileSource>
 
@@ -85,33 +85,6 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     })
   ) as MutableRefObject<VectorTileLayerWithName>
   regulatoryPreviewVectorLayerRef.current.name = Layers.REGULATORY_ENV_PREVIEW.code
-
-  useEffect(() => {
-    if (!map) {
-      return () => {}
-    }
-    const view = map.getView()
-
-    const baseFn = regulatoryPreviewVectorSourceRef.current.getTileUrlFunction()
-
-    const gatedFn: typeof baseFn = (coord, ratio, proj) =>
-      view.getAnimating() ? undefined : baseFn(coord, ratio, proj)
-
-    regulatoryPreviewVectorSourceRef.current.setTileUrlFunction(gatedFn)
-
-    // à la fin de l'animation, on relance le chargement
-    const onMoveEnd = () => {
-      if (!view.getAnimating()) {
-        regulatoryPreviewVectorSourceRef.current.setTileUrlFunction(gatedFn) // vide le cache et recharge les tuiles visibles
-      }
-    }
-    map.on('moveend', onMoveEnd)
-
-    return () => {
-      map.un('moveend', onMoveEnd)
-      regulatoryPreviewVectorSourceRef.current.setTileUrlFunction(baseFn)
-    }
-  }, [map])
 
   useEffect(() => {
     isolatedLayerRef.current = isolatedLayer
