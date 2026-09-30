@@ -42,65 +42,64 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
             """
             SELECT ST_AsMVT(tile, 'REGULATORY_ENV_PREVIEW', 4096, 'geom')
             FROM (
-                WITH filtered_regs AS (
-                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, reg.layer_name, reg.location, ST_Area(geom_3857) AS area
-                    FROM regulatory_areas reg
-                    LEFT JOIN themes_regulatory_areas thr ON reg.id = thr.regulatory_areas_id
-                    LEFT JOIN tags_regulatory_areas tr ON reg.id = tr.regulatory_areas_id
-                    WHERE geom_3857 && ST_TileEnvelope(:z, :x, :y)
-                     AND area_type = 'ZONE'
-                     AND (CAST(:seaFronts as text[]) IS NULL OR facade = ANY(CAST(:seaFronts as text[])))
-                     AND (:controlPlan IS NULL OR plan LIKE CONCAT('%', :controlPlan, '%'))
-                     AND (CAST(:themes as int[]) IS NULL OR thr.themes_id = ANY(CAST(:themes as int[])))
-                     AND (CAST(:tags as int[]) IS NULL OR tr.tags_id = ANY(CAST(:tags as int[])))
-                     AND (:query IS NULL 
-                        OR UNACCENT(UPPER(poly_name)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
-                        OR UNACCENT(UPPER(layer_name)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
-                        OR UNACCENT(UPPER(ref_reg)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
-                        OR UNACCENT(UPPER(resume)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
-                        )
-                    AND (:onlyRecentsAreas IS FALSE OR (
-                        reg.creation >= CURRENT_TIMESTAMP - INTERVAL '30 days'
-                        OR reg.edition_bo >= CURRENT_TIMESTAMP - INTERVAL '30 days'
-                        OR reg.edition_cacem >= CURRENT_TIMESTAMP - INTERVAL '30 days'
-                        )
-                    )
-                    AND ((:minX IS NULL OR :minY IS NULL OR :maxX IS NULL OR :maxY IS NULL)
-                        OR ST_Intersects(geom_3857, ST_MakeEnvelope(:minX, :minY, :maxX, :maxY, 3857))
-                        )
-                    ),
-                    tags_agg AS (
-                        SELECT
-                            tr.regulatory_areas_id,
-                            STRING_AGG(DISTINCT
-                                CASE
-                                    WHEN subtag.id IS NOT NULL
-                                    THEN t.name || ', ' || subtag.name
-                                    ELSE t.name
-                                END
-                            , ',') AS tags
-                        FROM tags_regulatory_areas tr
-                        JOIN tags t ON tr.tags_id = t.id
-                        LEFT JOIN tags subtag ON subtag.parent_id = t.id
-                        WHERE tr.regulatory_areas_id IN (SELECT id FROM filtered_regs)
-                        GROUP BY tr.regulatory_areas_id
-                    )
                 SELECT
-                    filtered_regs.id as id,
-                    CONCAT('REGULATORY_ENV_PREVIEW:', filtered_regs.id) as uid,
-                    filtered_regs.area,
-                    filtered_regs.poly_name AS "polyName",
-                    filtered_regs.layer_name AS "layerName",
-                    filtered_regs.location AS "location",
-                    filtered_regs.resume as "resume",
-                    filtered_regs.plan as "plan",
-                    ST_AsMVTGeom(filtered_regs.geom_3857, ST_TileEnvelope(:z, :x, :y), 4096, 64, true) AS geom,
-                    tags_agg.tags as "tags",
-                    true AS "isFilled"
-                FROM filtered_regs
-                LEFT JOIN tags_agg ON tags_agg.regulatory_areas_id = filtered_regs.id
-            ) AS tile
-            WHERE geom IS NOT NULL
+                    reg.id                                          AS "id",
+                    CONCAT('REGULATORY_ENV_PREVIEW:', reg.id)       AS "uid",
+                    reg.area                                        AS "area",
+                    reg.poly_name                                   AS "polyName",
+                    reg.layer_name                                  AS "layerName",
+                    reg.location                                    AS "location",
+                    reg.resume                                      AS "resume",
+                    reg.plan                                        AS "plan",
+                    g.geom                                          AS "geom",
+                    (SELECT STRING_AGG(DISTINCT
+                                CASE WHEN subtag.id IS NOT NULL
+                                     THEN t.name || ', ' || subtag.name
+                                     ELSE t.name END, ',')
+                       FROM tags_regulatory_areas tr
+                       JOIN tags t ON t.id = tr.tags_id
+                       LEFT JOIN tags subtag ON subtag.parent_id = t.id
+                      WHERE tr.regulatory_areas_id = reg.id)        AS "tags",
+                    true                                            AS "isFilled"
+                FROM regulatory_areas reg
+                CROSS JOIN LATERAL (
+                    SELECT ST_AsMVTGeom(
+                               ST_Simplify(reg.geom_3857, 156543.03 / power(2, CAST(:z AS int)) / 4),  
+                               ST_TileEnvelope(:z, :x, :y),                                            
+                               4096, 64, true) AS geom
+                    OFFSET 0
+                ) g
+                WHERE reg.geom_3857 && ST_TileEnvelope(:z, :x, :y)                                     
+                  AND reg.area_type = 'ZONE'
+                  AND g.geom IS NOT NULL
+            
+                  AND (CAST(:seaFronts AS text[]) IS NULL OR reg.facade = ANY(CAST(:seaFronts AS text[])))
+                  AND (:controlPlan IS NULL OR reg.plan LIKE CONCAT('%', :controlPlan, '%'))
+            
+                  AND (CAST(:themes AS int[]) IS NULL OR EXISTS (
+                        SELECT 1 FROM themes_regulatory_areas thr
+                         WHERE thr.regulatory_areas_id = reg.id
+                           AND thr.themes_id = ANY(CAST(:themes AS int[]))))
+            
+                  AND (CAST(:tags AS int[]) IS NULL OR EXISTS (
+                        SELECT 1 FROM tags_regulatory_areas tr2
+                         WHERE tr2.regulatory_areas_id = reg.id
+                           AND tr2.tags_id = ANY(CAST(:tags AS int[]))))
+            
+                  AND (:query IS NULL
+                       OR UNACCENT(UPPER(reg.poly_name))  LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
+                       OR UNACCENT(UPPER(reg.layer_name)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
+                       OR UNACCENT(UPPER(reg.ref_reg))    LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
+                       OR UNACCENT(UPPER(reg.resume))     LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%'))
+            
+                  AND (:onlyRecentsAreas IS FALSE OR (
+                        reg.creation      >= CURRENT_TIMESTAMP - INTERVAL '30 days'
+                     OR reg.edition_bo    >= CURRENT_TIMESTAMP - INTERVAL '30 days'
+                     OR reg.edition_cacem >= CURRENT_TIMESTAMP - INTERVAL '30 days'))
+            
+                  AND ((:minX IS NULL OR :minY IS NULL OR :maxX IS NULL OR :maxY IS NULL)
+                       OR ST_Intersects(reg.geom_3857, ST_MakeEnvelope(:minX, :minY, :maxX, :maxY, 3857)))
+            ) AS tile;
         """,
         nativeQuery = true,
     )
