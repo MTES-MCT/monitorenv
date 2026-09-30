@@ -4,7 +4,6 @@ import { useAppSelector } from '../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from './BaseMap'
 
-const DEFAULT_MAP_ANIMATION_DURATION = 1000
 const MAX_ZOOM_LEVEL = 14
 
 export function MapExtentController({ map }: BaseMapChildrenProps) {
@@ -14,7 +13,7 @@ export function MapExtentController({ map }: BaseMapChildrenProps) {
   useEffect(() => {
     if (fitToExtent && fitToExtent[0] !== Infinity) {
       const options = {
-        duration: DEFAULT_MAP_ANIMATION_DURATION,
+        duration: 0,
         maxZoom: MAX_ZOOM_LEVEL,
         padding: [30, 30, 30, 30]
       }
