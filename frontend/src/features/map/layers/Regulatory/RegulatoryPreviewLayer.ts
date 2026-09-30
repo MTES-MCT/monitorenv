@@ -9,6 +9,7 @@ import MVT from 'ol/format/MVT'
 import VectorTileLayer from 'ol/layer/VectorTile'
 import VectorTileSource from 'ol/source/VectorTile'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { useDebounce } from 'use-debounce'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 
@@ -55,21 +56,23 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     ]
   )
 
+  const [debouceFilters] = useDebounce(apiFilters, 500)
+
   const hasNoFilters = useMemo(
     () =>
-      !apiFilters.controlPlan &&
-      !apiFilters.searchQuery &&
-      apiFilters.tags?.length === 0 &&
-      apiFilters.themes?.length === 0 &&
-      !apiFilters.onlyRecentsAreas &&
-      apiFilters.extent?.length === 0,
-    [apiFilters]
+      !debouceFilters.controlPlan &&
+      !debouceFilters.searchQuery &&
+      debouceFilters.tags?.length === 0 &&
+      debouceFilters.themes?.length === 0 &&
+      !debouceFilters.onlyRecentsAreas &&
+      debouceFilters.extent?.length === 0,
+    [debouceFilters]
   )
 
   const regulatoryPreviewVectorSourceRef = useRef(
     new VectorTileSource({
       format: new MVT(),
-      url: getQueryString('/bff/v1/regulatory-areas/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : apiFilters)
+      url: getQueryString('/bff/v1/regulatory-areas/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : debouceFilters)
     })
   ) as MutableRefObject<VectorTileSource>
 
@@ -82,6 +85,33 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     })
   ) as MutableRefObject<VectorTileLayerWithName>
   regulatoryPreviewVectorLayerRef.current.name = Layers.REGULATORY_ENV_PREVIEW.code
+
+  useEffect(() => {
+    if (!map) {
+      return () => {}
+    }
+    const view = map.getView()
+
+    const baseFn = regulatoryPreviewVectorSourceRef.current.getTileUrlFunction()
+
+    const gatedFn: typeof baseFn = (coord, ratio, proj) =>
+      view.getAnimating() ? undefined : baseFn(coord, ratio, proj)
+
+    regulatoryPreviewVectorSourceRef.current.setTileUrlFunction(gatedFn)
+
+    // à la fin de l'animation, on relance le chargement
+    const onMoveEnd = () => {
+      if (!view.getAnimating()) {
+        regulatoryPreviewVectorSourceRef.current.setTileUrlFunction(gatedFn) // vide le cache et recharge les tuiles visibles
+      }
+    }
+    map.on('moveend', onMoveEnd)
+
+    return () => {
+      map.un('moveend', onMoveEnd)
+      regulatoryPreviewVectorSourceRef.current.setTileUrlFunction(baseFn)
+    }
+  }, [map])
 
   useEffect(() => {
     isolatedLayerRef.current = isolatedLayer
