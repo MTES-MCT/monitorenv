@@ -2,7 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitResourceType
-import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.LegacyControlUnitResourceEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitResourceDTO
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -136,14 +135,6 @@ data class ControlUnitResourceModel(
             station = station.toStation(),
             controlUnit = controlUnit.toControlUnit(),
             controlUnitResource = toControlUnitResource(),
-        )
-
-    fun toLegacyControlUnitResource(): LegacyControlUnitResourceEntity =
-        LegacyControlUnitResourceEntity(
-            id = requireNotNull(id),
-            controlUnitId = requireNotNull(controlUnit.id),
-            name = name,
-            type = type,
         )
 
     @Override
