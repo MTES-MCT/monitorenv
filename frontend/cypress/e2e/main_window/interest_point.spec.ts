@@ -61,23 +61,21 @@ context('InterestPoint', () => {
       cy.fill('Unités des coordonnées', 'DMS')
 
       cy.get('#root').click(490, 580)
-      cy.getDataCy('interest-point-save').click()
-      cy.getDataCy('interest-point-edit').click()
+      cy.clickButton('Créer le point')
+      cy.clickButton('Editer')
 
       // The interest point is moved to the East side
       cy.getDataCy('dms-coordinates-input').type('{backspace}E')
-      cy.getDataCy('interest-point-save').click()
+      cy.clickButton('Enregistrer le point')
 
       // Then
       cy.get('#root').click(536, 600)
       cy.getDataCy('save-interest-point').should('not.exist')
 
-      cy.getDataCy('interest-point-edit').should('not.be.visible')
-      // Force because the interest point is not in the DOM anymore
-      cy.getDataCy('interest-point-edit').click({ force: true })
+      cy.clickButton('Editer')
       cy.getDataCy('dms-coordinates-input').should('have.value', '47° 42′ 07″ N 007° 54′ 51″ E')
       cy.get('.rs-radio').should('have.class', 'rs-radio-checked')
-      cy.getDataCy('interest-point-save').click()
+      cy.clickButton('Enregistrer le point')
 
       cy.getDataCy('interest-point-coordinates').contains('47° 42′')
       cy.getDataCy('interest-point-coordinates').contains('N')
