@@ -205,7 +205,7 @@ describe('filterVigilanceAreas', () => {
 
   it('filters areas within current quarter', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.CURRENT_QUARTER)
-    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite, last3Months])
+    expect(result).toEqual([todayMin2Days, today, quarter, year, allYear, infinite])
   })
 
   it('filters areas within current year', () => {
@@ -220,12 +220,12 @@ describe('filterVigilanceAreas', () => {
 
   it('filters areas within last three months', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.LAST_THREE_MONTHS)
-    expect(result).toEqual([todayMin2Days, quarter, year, allYear, infinite, last3Months])
+    expect(result).toEqual([todayMin2Days, year, allYear, infinite, last3Months])
   })
 
   it('filters areas within last twelve months', () => {
     const result = getFilterVigilanceAreasPerPeriod(areas, VigilanceArea.VigilanceAreaFilterPeriod.LAST_TWELVE_MONTHS)
-    expect(result).toEqual([todayMin2Days, quarter, year, allYear, infinite, last3Months, last12Months])
+    expect(result).toEqual([todayMin2Days, year, allYear, infinite, last3Months, last12Months])
   })
   it('filters areas with vigilance area one complete year', () => {
     const vigilanceAreaOneCompleteYear = {
