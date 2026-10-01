@@ -22,7 +22,9 @@ import {
   customDayjs,
   Icon,
   IconButton,
+  Level,
   MapMenuDialog,
+  Message,
   OPENLAYERS_PROJECTION,
   pluralize,
   WSG84_PROJECTION
@@ -34,11 +36,11 @@ import { transformExtent } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { type Reporting, ReportingTypeEnum } from '../../../../domain/entities/reporting'
 import { ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { Flag } from '../VesselSearch/VesselSearchItem'
 
-import type { Reporting } from '../../../../domain/entities/reporting'
 import type { Coordinate } from 'ol/coordinate'
 
 export type ResumePages = 'RESUME' | 'OWNER' | 'HISTORY' | 'ADDITIONAL_INFORMATION'
@@ -115,10 +117,22 @@ export function Resume({ batchId, onClose, rowNumber, shipId }: ResumeProps) {
     focusLastPosition(vessel?.positions?.[0])
   }, [focusLastPosition, vessel?.positions])
 
-  const currentNbReportings = useMemo(
+  const currentNbObservations = useMemo(
     () =>
-      reportings.filter(reporting =>
-        customDayjs().isBefore(customDayjs(reporting.createdAt).add(reporting.validityTime, 'hours'))
+      reportings.filter(
+        reporting =>
+          customDayjs().isBefore(customDayjs(reporting.createdAt).add(reporting.validityTime, 'hours')) &&
+          reporting.reportType === ReportingTypeEnum.OBSERVATION
+      ).length,
+    [reportings]
+  )
+
+  const currentNbReportingsInfraction = useMemo(
+    () =>
+      reportings.filter(
+        reporting =>
+          customDayjs().isBefore(customDayjs(reporting.createdAt).add(reporting.validityTime, 'hours')) &&
+          reporting.reportType === ReportingTypeEnum.INFRACTION_SUSPICION
       ).length,
     [reportings]
   )
@@ -129,8 +143,31 @@ export function Resume({ batchId, onClose, rowNumber, shipId }: ResumeProps) {
   }
 
   useEffect(() => {
-    dispatch(vesselAction.setHasReportings(currentNbReportings > 0))
-  }, [currentNbReportings, dispatch])
+    dispatch(vesselAction.setHasReportingsWithInfractions(currentNbReportingsInfraction > 0))
+  }, [currentNbReportingsInfraction, dispatch])
+
+  const currentReportingText = useMemo(() => {
+    if (currentNbObservations > 0 && currentNbReportingsInfraction > 0) {
+      return {
+        level: Level.ERROR,
+        message: `${currentNbReportingsInfraction} ${pluralize('suspicion', currentNbReportingsInfraction)} d'infraction et ${currentNbObservations} ${pluralize('observation', currentNbObservations)} en cours`
+      }
+    }
+    if (currentNbObservations > 0 && currentNbReportingsInfraction === 0) {
+      return {
+        level: Level.INFO,
+        message: `${currentNbObservations} ${pluralize('observation', currentNbObservations)} en cours`
+      }
+    }
+    if (currentNbReportingsInfraction > 0) {
+      return {
+        level: Level.ERROR,
+        message: `${currentNbReportingsInfraction} ${pluralize('suspicion', currentNbReportingsInfraction)} d'infraction en cours`
+      }
+    }
+
+    return undefined
+  }, [currentNbObservations, currentNbReportingsInfraction])
 
   if (!vessel) {
     return null
@@ -190,12 +227,9 @@ export function Resume({ batchId, onClose, rowNumber, shipId }: ResumeProps) {
           <Body>
             {page === 'RESUME' && (
               <>
-                {currentNbReportings > 0 && (
-                  <CurrentReportingBanner>
-                    <Icon.AttentionFilled />
-                    <Bold>
-                      {currentNbReportings} {pluralize('signalement', currentNbReportings)} en cours
-                    </Bold>
+                {currentReportingText && (
+                  <CurrentReportingBanner Icon={Icon.AttentionFilled} level={currentReportingText.level}>
+                    <Bold>{currentReportingText?.message}</Bold>
                   </CurrentReportingBanner>
                 )}
 
@@ -295,10 +329,18 @@ export const AisInformationMessage = styled.div`
   padding: 16px 20px;
 `
 
-const CurrentReportingBanner = styled.div`
-  background-color: ${p => p.theme.color.maximumRed15};
+const CurrentReportingBanner = styled(Message)`
+  ${p =>
+    p.level === Level.ERROR &&
+    `background-color: ${p.theme.color.maximumRed15};
   border: 1px solid #ebacb0;
-  color: ${p => p.theme.color.maximumRed};
+  color: ${p.theme.color.maximumRed};
+  `}
+  ${p =>
+    p.level === Level.INFO &&
+    `
+  color: ${p.theme.color.blueYonder};
+  `}
   display: flex;
   gap: 8px;
   padding: 10px 20px;
