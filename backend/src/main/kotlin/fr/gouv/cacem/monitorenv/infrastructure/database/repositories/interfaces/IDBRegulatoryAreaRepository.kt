@@ -43,7 +43,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
             SELECT ST_AsMVT(tile, 'REGULATORY_ENV_PREVIEW', 4096, 'geom')
             FROM (
                 WITH filtered_regs AS (
-                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, reg.layer_name, reg.location, ST_Area(geom_3857) AS area
+                    SELECT reg.id, reg.geom_3857, reg.poly_name, reg.resume, reg.plan, reg.layer_name, reg.location, reg.area AS "area"
                     FROM regulatory_areas reg
                     LEFT JOIN themes_regulatory_areas thr ON reg.id = thr.regulatory_areas_id
                     LEFT JOIN tags_regulatory_areas tr ON reg.id = tr.regulatory_areas_id

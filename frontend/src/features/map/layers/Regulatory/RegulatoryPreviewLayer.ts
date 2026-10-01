@@ -9,6 +9,7 @@ import MVT from 'ol/format/MVT'
 import VectorTileLayer from 'ol/layer/VectorTile'
 import VectorTileSource from 'ol/source/VectorTile'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { useDebounce } from 'use-debounce'
 
 import { Layers } from '../../../../domain/entities/layers/constants'
 
@@ -55,21 +56,23 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
     ]
   )
 
+  const [debounceFilters] = useDebounce(apiFilters, 500)
+
   const hasNoFilters = useMemo(
     () =>
-      !apiFilters.controlPlan &&
-      !apiFilters.searchQuery &&
-      apiFilters.tags?.length === 0 &&
-      apiFilters.themes?.length === 0 &&
-      !apiFilters.onlyRecentsAreas &&
-      apiFilters.extent?.length === 0,
-    [apiFilters]
+      !debounceFilters.controlPlan &&
+      !debounceFilters.searchQuery &&
+      debounceFilters.tags?.length === 0 &&
+      debounceFilters.themes?.length === 0 &&
+      !debounceFilters.onlyRecentsAreas &&
+      debounceFilters.extent?.length === 0,
+    [debounceFilters]
   )
 
   const regulatoryPreviewVectorSourceRef = useRef(
     new VectorTileSource({
       format: new MVT(),
-      url: getQueryString('/bff/v1/regulatory-areas/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : apiFilters)
+      url: getQueryString('/bff/v1/regulatory-areas/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : debounceFilters)
     })
   ) as MutableRefObject<VectorTileSource>
 
