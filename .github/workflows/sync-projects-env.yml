@@ -1,0 +1,205 @@
+name: Sync issues between projects
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+  issues:
+    types: [opened, edited, reopened]
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  sync-projects:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get issue data
+        id: issue_data
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue || context.payload.pull_request;
+            if (issue) {
+              console.log('Issue/PR:', issue.number, issue.title);
+              core.setOutput('issue_number', issue.number);
+              core.setOutput('issue_id', issue.node_id);
+            } else {
+              core.setOutput('scheduled', 'true');
+            }
+
+      - name: Check if issue is in "Retours CACEM" project
+        id: check_project
+        uses: actions/github-script@v7
+        env:
+          RETOURS_CACEM_PROJECT_ID: 'PVT_kwDOATQgMs4AlUlg'
+          TARGET_STATUS: 'Pris en compte – À développer'
+        with:
+          script: |
+            const { data } = await github.graphql(`
+              query {
+                node(id: "${process.env.RETOURS_CACEM_PROJECT_ID}") {
+                  ... on ProjectV2 {
+                    items(first: 100) {
+                      nodes {
+                        id
+                        content {
+                          ... on Issue {
+                            number
+                          }
+                          ... on PullRequest {
+                            number
+                          }
+                        }
+                        fieldValues(first: 20) {
+                          nodes {
+                            ... on ProjectV2ItemFieldSingleSelectValue {
+                              field {
+                                name
+                              }
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `);
+            
+            const issueNumber = ${{ steps.issue_data.outputs.issue_number }};
+            const isScheduled = ${{ steps.issue_data.outputs.scheduled }} === 'true';
+            
+            if (!isScheduled && !issueNumber) {
+              core.setOutput('items_found', '[]');
+              return;
+            }
+            
+            let itemsToSync = [];
+            
+            data.node.items.nodes.forEach(item => {
+              const statusField = item.fieldValues.nodes.find(f => f.field?.name === 'Status');
+              const status = statusField?.name || '';
+              
+              if (status === process.env.TARGET_STATUS) {
+                const itemNumber = item.content?.number;
+                if (isScheduled || itemNumber === issueNumber) {
+                  itemsToSync.push({
+                    number: itemNumber,
+                    id: item.id,
+                    itemId: item.id
+                  });
+                }
+              }
+            });
+            
+            console.log('Items to sync:', JSON.stringify(itemsToSync));
+            core.setOutput('items_found', JSON.stringify(itemsToSync));
+
+      - name: Add issues to "Kanban MonitorEnv" project
+        if: steps.check_project.outputs.items_found != '[]'
+        uses: actions/github-script@v7
+        env:
+          KANBAN_MONITORENV_PROJECT_ID: 'PVT_kwDOATQgMs4AjOvV'
+        with:
+          script: |
+            const itemsToSync = JSON.parse('${{ steps.check_project.outputs.items_found }}');
+            
+            if (!itemsToSync || itemsToSync.length === 0) {
+              console.log('No items to sync');
+              return;
+            }
+            
+            // Get project fields once
+            const { data: projectData } = await github.graphql(`
+              query {
+                node(id: "${process.env.KANBAN_MONITORENV_PROJECT_ID}") {
+                  ... on ProjectV2 {
+                    fields(first: 20) {
+                      nodes {
+                        ... on ProjectV2SingleSelectField {
+                          id
+                          name
+                          options {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `);
+            
+            const statusField = projectData.node.fields.nodes.find(f => f.name === 'Status');
+            const todoOption = statusField?.options.find(o => o.name === 'Todo');
+            
+            if (!statusField || !todoOption) {
+              console.log('Status field or Todo option not found');
+              return;
+            }
+            
+            // Process each item
+            for (const item of itemsToSync) {
+              try {
+                // Get the issue/PR node ID from the repository
+                const { data: issueData } = await github.graphql(`
+                  query {
+                    repository(owner: "MTES-MCT", name: "monitorenv") {
+                      issueOrPullRequest(number: ${item.number}) {
+                        ... on Issue {
+                          id
+                        }
+                        ... on PullRequest {
+                          id
+                        }
+                      }
+                    }
+                  }
+                `);
+                
+                const contentId = issueData.repository.issueOrPullRequest?.id;
+                if (!contentId) {
+                  console.log('Could not find issue/PR #' + item.number);
+                  continue;
+                }
+                
+                // Add item to project
+                const { data: addData } = await github.graphql(`
+                  mutation {
+                    addProjectV2ItemById(input: {
+                      projectId: "${process.env.KANBAN_MONITORENV_PROJECT_ID}"
+                      contentId: "${contentId}"
+                    }) {
+                      item {
+                        id
+                      }
+                    }
+                  }
+                `);
+                
+                const itemId = addData.addProjectV2ItemById.item.id;
+                console.log('Added issue #' + item.number + ' to Kanban MonitorEnv');
+                
+                // Set the status to "Todo"
+                await github.graphql(`
+                  mutation {
+                    updateProjectV2ItemFieldValue(input: {
+                      projectId: "${process.env.KANBAN_MONITORENV_PROJECT_ID}"
+                      itemId: "${itemId}"
+                      fieldId: "${statusField.id}"
+                      value: {
+                        singleSelectOptionId: "${todoOption.id}"
+                      }
+                    }) {
+                      projectV2Item {
+                        id
+                      }
+                    }
+                  }
+                `);
+                console.log('Set status to Todo for issue #' + item.number);
+              } catch (error) {
+                console.log('Error processing issue #' + item.number + ':', error.message);
+              }
+            }
