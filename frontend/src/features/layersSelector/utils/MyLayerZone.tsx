@@ -20,6 +20,7 @@ import { useAppDispatch } from '../../../hooks/useAppDispatch'
 type MyLayerZoneProps = {
   bbox: number[]
   displayedName: string
+  hasGeomChangedRecently?: boolean
   hasMetadata: boolean
   hideLayer: () => void
   id: number
@@ -39,6 +40,7 @@ type MyLayerZoneProps = {
 export function MyLayerZone({
   bbox,
   displayedName,
+  hasGeomChangedRecently,
   hasMetadata,
   hideLayer,
   id,
@@ -109,7 +111,12 @@ export function MyLayerZone({
   }
 
   return (
-    <LayerSelector.Layer $isNew={isNew} $isRecentlyUpdated={isRecentlyUpdated} $metadataIsShown={metadataIsShown}>
+    <LayerSelector.Layer
+      $hasGeomChangedRecently={hasGeomChangedRecently}
+      $isNew={isNew}
+      $isRecentlyUpdated={isRecentlyUpdated}
+      $metadataIsShown={metadataIsShown}
+    >
       <StyledTransparentButton onClick={handleClickOnLayerName}>
         <LayerLegend layerType={layerType} legendKey={name} plan={plan} type={type} />
         <LayerSelector.Name data-cy={`my-zone-${displayedName}`} title={displayedName}>

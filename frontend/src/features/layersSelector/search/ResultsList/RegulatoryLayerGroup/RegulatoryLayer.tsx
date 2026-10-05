@@ -113,6 +113,7 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
   return (
     <LayerSelector.Layer
       ref={ref}
+      $hasGeomChangedRecently={layer?.hasGeomChangedRecently}
       $isNew={layer?.isNew}
       $isRecentlyUpdated={layer?.isUpdatedRecently}
       $metadataIsShown={metadataIsShown}

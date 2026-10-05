@@ -50,6 +50,7 @@ export function RegulatoryLayerGroup({
 
   const hasLeastOneNewLayer = layers.some(layer => layer.isNew)
   const hasLeastOneRecentlyUpdatedLayer = layers.some(layer => layer.isUpdatedRecently)
+  const hasLeastOneGeomChanged = layers.some(layer => layer.hasGeomChangedRecently)
 
   const handleRemoveZone = useCallback(
     e => {
@@ -81,6 +82,7 @@ export function RegulatoryLayerGroup({
     <MyLayerGroup
       addZonesToVigilanceArea={addZonesToVigilanceArea}
       groupName={getTitle(groupName)}
+      hasLeastOneGeomChanged={hasLeastOneGeomChanged}
       hasNewLayers={hasLeastOneNewLayer}
       hasRecentlyUpdatedLayers={hasLeastOneRecentlyUpdatedLayer}
       layers={layers}

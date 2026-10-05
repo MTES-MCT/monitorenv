@@ -47,12 +47,14 @@ export function RegulatoryLayerGroup({
 
   const hasLeastOneNewLayer = layers.some(layer => layer.isNew)
   const hasLeastOneRecentlyUpdatedLayer = layers.some(layer => layer.isUpdatedRecently)
+  const hasLeastOneGeomChanged = layers.some(layer => layer.hasGeomChangedRecently)
 
   return (
     <ResultListLayerGroup
       addLayers={handleAddLayers}
       groupExtent={groupExtent}
       groupName={groupName}
+      hasLeastOneGeomChanged={hasLeastOneGeomChanged}
       hasNewLayers={hasLeastOneNewLayer}
       hasRecentlyUpdatedLayers={hasLeastOneRecentlyUpdatedLayer}
       layerIds={layerIds}

@@ -67,6 +67,7 @@ export function RegulatoryAreaItem({
 
   return (
     <LayerSelector.Layer
+      $hasGeomChangedRecently={regulatoryArea.hasGeomChangedRecently}
       $isNew={regulatoryArea.isNew}
       $isRecentlyUpdated={regulatoryArea.isUpdatedRecently}
       $metadataIsShown={openedRegulatoryAreaId === regulatoryArea.id}

@@ -25,6 +25,7 @@ type ResultListLayerGroupProps = {
   addLayers: (layerIds: number[]) => void
   groupExtent: Extent
   groupName: string
+  hasLeastOneGeomChanged?: boolean
   hasNewLayers?: boolean
   hasRecentlyUpdatedLayers?: boolean
   layerIdToDisplay: number | undefined
@@ -40,6 +41,7 @@ export function ResultListLayerGroup({
   addLayers,
   groupExtent,
   groupName,
+  hasLeastOneGeomChanged,
   hasNewLayers,
   hasRecentlyUpdatedLayers,
   layerIds,
@@ -101,6 +103,7 @@ export function ResultListLayerGroup({
   return (
     <>
       <LayerSelector.GroupWrapper
+        $hasLeastOneGeomChanged={hasLeastOneGeomChanged}
         $isNew={hasNewLayers}
         $isOpen={forceZonesAreOpen || zonesAreOpen}
         $isRecentlyUpdated={hasRecentlyUpdatedLayers}
