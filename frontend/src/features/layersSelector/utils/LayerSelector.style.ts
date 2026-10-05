@@ -11,6 +11,7 @@ const IconGroup = styled.div`
 `
 
 const Layer = styled.li<{
+  $hasGeomChangedRecently?: boolean
   $isNew?: boolean
   $isRecentlyUpdated?: boolean
   $metadataIsShown?: boolean
@@ -25,6 +26,9 @@ const Layer = styled.li<{
     }
     if (p.$isRecentlyUpdated) {
       return `4px solid ${getColorWithAlpha(p.theme.color.blueGray, 0.4)}`
+    }
+    if (p.$hasGeomChangedRecently) {
+      return `4px solid ${p.theme.color.arylideYellow}`
     }
 
     return '4px solid transparent'
@@ -64,6 +68,7 @@ const ZonesNumber = styled.span`
 `
 
 const GroupWrapper = styled.div<{
+  $hasLeastOneGeomChanged?: boolean
   $isNew?: boolean
   $isOpen: boolean
   $isPadded?: boolean
@@ -77,6 +82,9 @@ const GroupWrapper = styled.div<{
     }
     if (p.$isRecentlyUpdated) {
       return `4px solid ${getColorWithAlpha(p.theme.color.blueGray, 0.4)}`
+    }
+    if (p.$hasLeastOneGeomChanged) {
+      return `4px solid ${p.theme.color.arylideYellow}`
     }
 
     return '4px solid transparent'

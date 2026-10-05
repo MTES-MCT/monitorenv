@@ -7,7 +7,7 @@ export const REQUIRED_FIELD = 'Ce champ est obligatoire'
 export const RegulatoryAreaFormSchema: Yup.Schema<
   Omit<
     RegulatoryArea.RegulatoryAreaFromAPI | RegulatoryArea.NewRegulatoryArea,
-    'isNew' | 'isUpdatedRecently' | 'extent'
+    'hasGeomChangedRecently' | 'isNew' | 'isUpdatedRecently' | 'extent'
   >
 > = Yup.object().shape({
   additionalRefReg: Yup.array().of(

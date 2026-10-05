@@ -45,6 +45,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
     <MyLayerZone
       bbox={regulatoryZone.extent}
       displayedName={displayedName}
+      hasGeomChangedRecently={regulatoryZone.hasGeomChangedRecently}
       hasMetadata={!!layerTitle}
       hideLayer={() => dispatch(hideRegulatoryLayer(regulatoryZone.id))}
       id={regulatoryZone.id}
