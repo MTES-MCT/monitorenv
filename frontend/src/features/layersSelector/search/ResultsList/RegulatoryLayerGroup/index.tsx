@@ -28,6 +28,7 @@ export function RegulatoryLayerGroup({
   const dispatch = useAppDispatch()
   const { data: regulatoryAreasLayerNames } = useGetLayerNamesQuery()
 
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
   const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
 
@@ -54,7 +55,7 @@ export function RegulatoryLayerGroup({
       addLayers={handleAddLayers}
       groupExtent={groupExtent}
       groupName={groupName}
-      hasLeastOneGeomChanged={hasLeastOneGeomChanged}
+      hasLeastOneGeomChanged={hasLeastOneGeomChanged && isSuperUser}
       hasNewLayers={hasLeastOneNewLayer}
       hasRecentlyUpdatedLayers={hasLeastOneRecentlyUpdatedLayer}
       layerIds={layerIds}
