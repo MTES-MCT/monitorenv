@@ -1,4 +1,4 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
@@ -113,23 +113,27 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
   const isAMPLayerVisible =
     !!(ampIdsToBeDisplayed && ampIdsToBeDisplayed?.length > 0) && !!selectedVigilanceAreaId && isLayerVisible
-  const { data: ampLayers } = useGetAMPsQuery()
+
+  const { data: amps } = useGetAMPsByIdsQuery(
+    { axis: Axis.NORTH_SOUTH, ids: selectedVigilanceArea?.linkedAMPs ?? [] },
+    {
+      skip: !selectedVigilanceAreaId || selectedVigilanceArea?.linkedAMPs?.length === 0
+    }
+  )
   const ampFeatures = useMemo(() => {
     const linkedAMPs = selectedVigilanceArea?.linkedAMPs ?? []
-    if (!ampLayers || linkedAMPs.length === 0) {
+    if (!amps || linkedAMPs.length === 0) {
       return []
     }
 
-    return linkedAMPs.reduce((feats: Feature[], AMPLayerId) => {
-      const AMPlayer = ampLayers.entities[AMPLayerId]
-      const isAMPShouldBeDisplayed =
-        ampIdsToBeDisplayed?.includes(AMPLayerId) && !showedPinnedAMPLayerIds.includes(AMPLayerId)
+    return amps.reduce((feats: Feature[], amp) => {
+      const isAMPShouldBeDisplayed = ampIdsToBeDisplayed?.includes(amp.id) && !showedPinnedAMPLayerIds.includes(amp.id)
 
-      if (AMPlayer && isAMPShouldBeDisplayed) {
+      if (amp && isAMPShouldBeDisplayed) {
         const feature = getAMPFeature({
           code: Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
           isolatedLayer,
-          layer: AMPlayer
+          layer: amp
         })
         if (!feature) {
           return feats
@@ -139,14 +143,14 @@ export function SelectedVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
 
       return feats
     }, [])
-  }, [ampLayers, selectedVigilanceArea?.linkedAMPs, ampIdsToBeDisplayed, showedPinnedAMPLayerIds, isolatedLayer])
+  }, [amps, selectedVigilanceArea?.linkedAMPs, ampIdsToBeDisplayed, showedPinnedAMPLayerIds, isolatedLayer])
 
   const ampVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
   const ampVectorLayerRef = useRef(
     new VectorLayer({
       renderBuffer: 7,
       source: ampVectorSourceRef.current,
-      style: getAMPLayerStyle,
+      style: feature => getAMPLayerStyle(feature),
       zIndex: Layers.AMP_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>

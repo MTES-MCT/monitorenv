@@ -12,11 +12,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaGrou
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.RegulatoryAreaModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaGroupRepository
 import fr.gouv.cacem.monitorenv.infrastructure.database.repositories.interfaces.IDBRegulatoryAreaRepository
+import fr.gouv.cacem.monitorenv.utils.GeometryUtils.Companion.extentToPolygon
 import org.apache.commons.lang3.StringUtils
-import org.locationtech.jts.geom.Coordinate
-import org.locationtech.jts.geom.Geometry
-import org.locationtech.jts.geom.GeometryFactory
-import org.locationtech.jts.geom.PrecisionModel
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -54,26 +51,6 @@ class JpaRegulatoryAreaGroupRepository(
                             .filter { findBySearchQuery(it, filters.query) },
                 )
             }.filter { it.areas.isNotEmpty() }
-    }
-
-    fun extentToPolygon(extent: List<Double>): Geometry {
-        val minX = extent[0]
-        val minY = extent[1]
-        val maxX = extent[2]
-        val maxY = extent[3]
-
-        val gf = GeometryFactory(PrecisionModel(), 4326)
-
-        val coords: Array<Coordinate?> =
-            arrayOf(
-                Coordinate(minX, minY),
-                Coordinate(maxX, minY),
-                Coordinate(maxX, maxY),
-                Coordinate(minX, maxY),
-                Coordinate(minX, minY),
-            )
-
-        return gf.createPolygon(coords)
     }
 
     private fun findBySearchQuery(

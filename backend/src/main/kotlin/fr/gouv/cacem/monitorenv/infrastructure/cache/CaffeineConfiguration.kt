@@ -19,6 +19,7 @@ class CaffeineConfiguration(
     val userAuthorization = "user_authorization"
     val controlUnits = "control_units"
     val regulatoryAreaTiles = "regulatory_areas_tiles"
+    val ampsTiles = "amps_tiles"
 
     @Bean
     fun cacheManager(ticker: Ticker): CacheManager? {
@@ -27,6 +28,7 @@ class CaffeineConfiguration(
         val userAuthorizationCache = buildMinutesCache(userAuthorization, ticker, cacheInMinutes)
         val controlUnitsCache = buildMinutesCache(controlUnits, ticker, cacheInMinutes)
         val regulatoryAreasTiles = buildMinutesCache(regulatoryAreaTiles, ticker, cacheInMinutes)
+        val ampsTiles = buildMinutesCache(ampsTiles, ticker, cacheInMinutes)
 
         val manager = SimpleCacheManager()
         manager.setCaches(
@@ -34,6 +36,7 @@ class CaffeineConfiguration(
                 userAuthorizationCache,
                 controlUnitsCache,
                 regulatoryAreasTiles,
+                ampsTiles,
             ),
         )
 

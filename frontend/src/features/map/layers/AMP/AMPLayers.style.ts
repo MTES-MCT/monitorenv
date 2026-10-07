@@ -4,6 +4,9 @@ import { Fill, Stroke, Style } from 'ol/style'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { getColorWithAlpha, stringToColorInGroup } from '../../../../utils/utils'
 
+import type { IsolatedLayerType } from '../../../../domain/shared_slices/Map'
+import type { FeatureLike } from 'ol/Feature'
+
 const getStyle = (
   color: string,
   metadataIsShowed: boolean | undefined,
@@ -37,8 +40,17 @@ export const getAMPColorWithAlpha = (type: string | null = '', name: string | nu
   return getColorWithAlpha(stringToColorInGroup(`${type}`, `${name}`, Layers.AMP.code), 0.6)
 }
 
-export const getAMPLayerStyle = feature => {
+export const getAMPLayerStyle = (
+  feature: FeatureLike,
+  isolatedLayer?: IsolatedLayerType,
+  metadataId?: string | number | undefined
+) => {
+  const metadataIsShowed = feature.get('metadataIsShowed') || feature.get('id') === metadataId
+  const isolatedLayerTypeIsAmp = isolatedLayer?.type?.includes('AMP') ?? false
+  const isLayerFilled = isolatedLayer
+    ? isolatedLayerTypeIsAmp && isolatedLayer?.id === feature.get('id') && isolatedLayer?.isFilled
+    : true
   const colorWithAlpha = getAMPColorWithAlpha(feature.get('designation'), feature.get('name'))
 
-  return getStyle(colorWithAlpha, feature.get('metadataIsShowed'), feature.get('asMinimap'), feature.get('isFilled'))
+  return getStyle(colorWithAlpha, metadataIsShowed, feature.get('asMinimap'), isLayerFilled)
 }

@@ -10,6 +10,7 @@ import { debounce, isEmpty } from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { useGetFilteredAmps } from './hooks/useGetFilteredAmps'
 import { LayerFilters } from './LayerFilters'
 import { ResultList } from './ResultsList'
 import { SearchInput } from './SearchInput'
@@ -19,9 +20,9 @@ import { setGlobalSearchText } from './slice'
 export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
   const dispatch = useAppDispatch()
 
-  const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
+  const { totalCount: totalCountAmps } = useGetFilteredAmps()
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
-  const { totalCount } = useGetFilteredRegulatoryAreas()
+  const { totalCount: totalCountRegulatoryArea } = useGetFilteredRegulatoryAreas()
 
   const [query, setQuery] = useState<string | undefined>(undefined)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
@@ -48,8 +49,8 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
 
   const allowResetResults =
     shouldFilterSearchOnMapExtent &&
-    (totalCount !== 0 ||
-      !isEmpty(ampsSearchResult) ||
+    (totalCountRegulatoryArea !== 0 ||
+      totalCountAmps !== 0 ||
       (!isEmpty(vigilanceAreas.ids) &&
         filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS))
 

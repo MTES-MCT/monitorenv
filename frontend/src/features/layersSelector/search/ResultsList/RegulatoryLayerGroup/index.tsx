@@ -40,7 +40,6 @@ export function RegulatoryLayerGroup({
   )
 
   const groupExtent = useMemo(() => getExtentOfLayersGroup(layers) ?? createEmpty(), [layers])
-  const layerIds = useMemo(() => layers.map(layer => layer.id), [layers])
 
   const handleAddLayers = ids => dispatch(addRegulatoryZonesToMyLayers(ids))
   const handleRemoveLayers = ids => dispatch(removeRegulatoryZonesFromMyLayers(ids))
@@ -55,8 +54,8 @@ export function RegulatoryLayerGroup({
       groupName={groupName}
       hasNewLayers={hasLeastOneNewLayer}
       hasRecentlyUpdatedLayers={hasLeastOneRecentlyUpdatedLayer}
-      layerIds={layerIds}
       layerIdToDisplay={regulatoryMetadataLayerId as number}
+      layers={layers}
       layerType={MonitorEnvLayers.REGULATORY_ENV}
       removeLayers={handleRemoveLayers}
       searchedText={searchedText}

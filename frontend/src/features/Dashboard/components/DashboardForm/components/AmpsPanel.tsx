@@ -1,4 +1,4 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPByIdQuery } from '@api/ampsAPI'
 import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import {
   Body,
@@ -19,11 +19,7 @@ import styled from 'styled-components'
 
 export const AmpsPanel = forwardRef<HTMLDivElement, { layerId: number; onClose: () => void } & ComponentProps<'div'>>(
   ({ layerId, onClose, ...props }, ref) => {
-    const { layer: ampMetadata } = useGetAMPsQuery(undefined, {
-      selectFromResult: result => ({
-        layer: result?.currentData?.entities[layerId]
-      })
-    })
+    const { data: ampMetadata } = useGetAMPByIdQuery(layerId)
 
     return (
       // eslint-disable-next-line react/jsx-props-no-spreading

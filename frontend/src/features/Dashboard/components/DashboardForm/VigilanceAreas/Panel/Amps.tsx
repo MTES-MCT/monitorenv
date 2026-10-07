@@ -1,4 +1,4 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
@@ -12,6 +12,7 @@ import { Projection, transformExtent } from 'ol/proj'
 import styled from 'styled-components'
 
 import { ButtonsContainer, Container, Name, StyledButton } from './style'
+import { Axis } from '../../../../../../types'
 import { AmpsPanel } from '../../components/AmpsPanel'
 
 import type { AMP } from 'domain/entities/AMPs'
@@ -19,9 +20,7 @@ import type { AMP } from 'domain/entities/AMPs'
 export function Amps({ ampIds }: { ampIds: number[] }) {
   const dispatch = useAppDispatch()
 
-  const { data: ampLayers } = useGetAMPsQuery()
-
-  const amps = ampIds.map(amp => ampLayers?.entities[amp])
+  const { data: amps } = useGetAMPsByIdsQuery({ axis: String(Axis.NORTH_SOUTH), ids: ampIds })
 
   const activeDashboardId = useAppSelector(state => state.dashboard.activeDashboardId)
   const ampIdsToDisplay = useAppSelector(state =>

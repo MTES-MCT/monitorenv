@@ -3,7 +3,7 @@ import { BaseLayer } from 'domain/entities/layers/BaseLayer'
 
 import type { RecentActivityFilters } from './components/DashboardForm/slice'
 import type { ExportImageType } from './hooks/useExportImages'
-import type { AMP, AMPFromAPI } from '../../domain/entities/AMPs'
+import type { AMP } from '../../domain/entities/AMPs'
 import type { Reporting } from '../../domain/entities/reporting'
 import type { ThemeFromAPI } from '../../domain/entities/themes'
 import type { Link } from '@components/Form/types'
@@ -18,7 +18,7 @@ import type { GeoJSON } from 'domain/types/GeoJSON'
 export namespace Dashboard {
   export interface ExtractedArea {
     // TODO(24/09/2024): uniformize data naming (properties and types) from api
-    amps: AMPFromAPI[]
+    amps: AMP[]
     inseeCode: string
     regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
     reportings: Reporting[]
@@ -60,9 +60,9 @@ export namespace Dashboard {
   }
 
   export type Brief = {
-    allLinkedAMPs: AMPFromAPI[]
+    allLinkedAMPs: AMP[]
     allLinkedRegulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
-    amps: AMPFromAPI[]
+    amps: AMP[]
     attachments: {
       images?: Thumbnail[]
       links: Link[]

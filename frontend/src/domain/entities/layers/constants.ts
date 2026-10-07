@@ -208,13 +208,13 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     zIndex: 935
   },
   [MonitorEnvLayers.AMP]: {
-    code: 'AMP',
+    code: MonitorEnvLayers.AMP,
     name: 'environment_amp_areas',
     type: LayerType.REGULATORY,
     zIndex: 925
   },
   [MonitorEnvLayers.AMP_PREVIEW]: {
-    code: 'AMP',
+    code: MonitorEnvLayers.AMP_PREVIEW,
     name: 'environment_amp_areas',
     type: LayerType.REGULATORY,
     zIndex: 935

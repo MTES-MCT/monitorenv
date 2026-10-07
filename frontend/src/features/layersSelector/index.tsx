@@ -1,4 +1,3 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { LocalizedAreas } from '@features/LocalizedArea'
 import { NumberOfFilters } from '@features/map/shared/style'
@@ -25,6 +24,7 @@ import { AmpLayers } from './myAmps'
 import { RegulatoryLayers } from './myRegulatoryLayers'
 import { MyVigilanceAreas } from './myVigilanceAreas'
 import { LayerSearch } from './search'
+import { useGetFilteredAmps } from './search/hooks/useGetFilteredAmps'
 import { MonitorEnvLayers } from '../../domain/entities/layers/constants'
 import { restorePreviousDisplayedItems, setDisplayedItems } from '../../domain/shared_slices/Global'
 
@@ -59,7 +59,7 @@ export function LayersSidebar() {
   } = useAppSelector(state => state.layerSearch)
 
   const regulatoryAreas = useGetFilteredRegulatoryAreas()
-  const amps = useGetAMPsQuery()
+  const amps = useGetFilteredAmps()
 
   const dispatch = useAppDispatch()
 

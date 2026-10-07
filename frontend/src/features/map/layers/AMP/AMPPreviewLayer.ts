@@ -1,84 +1,86 @@
 import { getDisplayedMetadataAMPLayerId } from '@features/layersSelector/metadataPanel/slice'
 import { getIsLinkingRegulatoryToVigilanceArea } from '@features/VigilanceArea/slice'
-import { Feature } from 'ol'
-import VectorLayer from 'ol/layer/Vector'
-import VectorSource from 'ol/source/Vector'
+import { getQueryString } from '@utils/getQueryStringFormatted'
+import MVT from 'ol/format/MVT'
+import VectorTileLayer from 'ol/layer/VectorTile'
+import VectorTileSource from 'ol/source/VectorTile'
 import { type MutableRefObject, useEffect, useMemo, useRef } from 'react'
+import { useDebounce } from 'use-debounce'
 
-import { getAMPFeature } from './AMPGeometryHelpers'
 import { getAMPLayerStyle } from './AMPLayers.style'
-import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { Layers } from '../../../../domain/entities/layers/constants'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 
 import type { BaseMapChildrenProps } from '../../BaseMap'
-import type { VectorLayerWithName } from 'domain/types/layer'
-import type { Geometry } from 'ol/geom'
-
-export const metadataIsShowedPropertyName = 'metadataIsShowed'
+import type { VectorTileLayerWithName } from 'domain/types/layer'
 
 export function AMPPreviewLayer({ map }: BaseMapChildrenProps) {
   const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
-  const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
-  const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
-  const showedAmpLayerIds = useAppSelector(state => state.amp.showedAmpLayerIds)
-  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
-
+  const ampMetadataLayerIdRef = useRef(ampMetadataLayerId)
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
+  const isolatedLayerRef = useRef(isolatedLayer)
 
-  const { data: ampLayers } = useGetAMPsQuery()
   const { isLayersSidebarVisible } = useAppSelector(state => state.global.visibility)
-
+  const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
+  const isLinkingRegulatoryToVigilanceArea = useAppSelector(state => getIsLinkingRegulatoryToVigilanceArea(state))
   const isLayerVisible = isLayersSidebarVisible && isAmpSearchResultsVisible && !isLinkingRegulatoryToVigilanceArea
 
-  const ampPreviewVectorSourceRef = useRef(new VectorSource()) as MutableRefObject<VectorSource<Feature<Geometry>>>
+  const { areRecentsAreasChecked, globalSearchText, searchExtent, shouldFilterSearchOnMapExtent } = useAppSelector(
+    state => state.layerSearch
+  )
+
+  const apiFilters = useMemo(
+    () => ({
+      extent: shouldFilterSearchOnMapExtent && searchExtent ? searchExtent : undefined,
+      onlyRecentsAreas: areRecentsAreasChecked,
+      searchQuery: globalSearchText
+    }),
+    [areRecentsAreasChecked, globalSearchText, shouldFilterSearchOnMapExtent, searchExtent]
+  )
+
+  const [debounceFilters] = useDebounce(apiFilters, 500)
+
+  const hasNoFilters = useMemo(
+    () => !debounceFilters.searchQuery && !debounceFilters.onlyRecentsAreas && debounceFilters.extent?.length === 0,
+    [debounceFilters]
+  )
+
+  const ampPreviewVectorSourceRef = useRef(
+    new VectorTileSource({
+      format: new MVT(),
+      url: getQueryString('/bff/v1/amps/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : debounceFilters)
+    })
+  ) as MutableRefObject<VectorTileSource>
   const ampPreviewVectorLayerRef = useRef(
-    new VectorLayer({
+    new VectorTileLayer({
       renderBuffer: 4,
       renderOrder: (a, b) => b.get('area') - a.get('area'),
       source: ampPreviewVectorSourceRef.current,
-      style: getAMPLayerStyle
+      style: feature => getAMPLayerStyle(feature, isolatedLayerRef.current, ampMetadataLayerIdRef.current)
     })
-  ) as MutableRefObject<VectorLayerWithName>
+  ) as MutableRefObject<VectorTileLayerWithName>
   ampPreviewVectorLayerRef.current.name = Layers.AMP_PREVIEW.code
 
-  const ampLayersFeatures = useMemo(() => {
-    let ampFeatures: Feature[] = []
-
-    if (ampsSearchResult || ampLayers?.entities) {
-      const ampsToDisplay = ampsSearchResult ?? ampLayers?.ids ?? []
-
-      ampFeatures = ampsToDisplay.reduce((amplayers, id) => {
-        if (showedAmpLayerIds.includes(id)) {
-          return amplayers
-        }
-        const layer = ampLayers?.entities[id]
-
-        if (layer && layer.geom) {
-          const feature = getAMPFeature({ code: Layers.AMP_PREVIEW.code, isolatedLayer, layer })
-
-          if (feature) {
-            const metadataIsShowed = layer.id === ampMetadataLayerId
-            feature.set(metadataIsShowedPropertyName, metadataIsShowed)
-
-            amplayers.push(feature)
-          }
-        }
-
-        return amplayers
-      }, [] as Feature[])
-    }
-
-    return ampFeatures
-  }, [ampLayers?.entities, ampLayers?.ids, ampMetadataLayerId, ampsSearchResult, isolatedLayer, showedAmpLayerIds])
+  useEffect(() => {
+    isolatedLayerRef.current = isolatedLayer
+    ampMetadataLayerIdRef.current = ampMetadataLayerId
+    // force layer rerender
+    ampPreviewVectorLayerRef.current.changed()
+  }, [isolatedLayer, ampMetadataLayerId])
 
   useEffect(() => {
-    ampPreviewVectorSourceRef.current?.clear(true)
-
-    if (ampLayersFeatures) {
-      ampPreviewVectorSourceRef.current?.addFeatures(ampLayersFeatures)
+    if (!map) {
+      return
     }
-  }, [ampLayersFeatures])
+
+    const newSource = new VectorTileSource({
+      format: new MVT({ idProperty: 'uid' }),
+      url: getQueryString('/bff/v1/amps/tiles/{z}/{x}/{y}', hasNoFilters ? undefined : apiFilters)
+    })
+
+    ampPreviewVectorSourceRef.current = newSource
+    ampPreviewVectorLayerRef.current.setSource(newSource)
+  }, [apiFilters, hasNoFilters, map])
 
   useEffect(() => {
     ampPreviewVectorLayerRef.current?.setVisible(isLayerVisible)

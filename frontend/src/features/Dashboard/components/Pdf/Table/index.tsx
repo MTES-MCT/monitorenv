@@ -13,7 +13,7 @@ import { layoutStyle } from '../style'
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
 import type { Dashboard } from '@features/Dashboard/types'
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
-import type { AMPFromAPI } from 'domain/entities/AMPs'
+import type { AMP } from 'domain/entities/AMPs'
 
 const maxHeightCell = 30
 const minHeightCell = 20
@@ -93,7 +93,7 @@ export function AreaTable({
   regulatoryAreas,
   vigilanceAreas
 }: {
-  amps: AMPFromAPI[]
+  amps: AMP[]
   image: ExportImageType | undefined
   regulatoryAreas: RegulatoryArea.RegulatoryAreaFromAPI[]
   vigilanceAreas: Dashboard.VigilanceAreaWithImages[]

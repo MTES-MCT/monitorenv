@@ -1,4 +1,4 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { dashboardActions, getOpenedPanel } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -8,6 +8,7 @@ import { groupBy } from 'lodash'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
+import { Axis } from '../../../../../types'
 import { Accordion, Title, TitleContainer } from '../Accordion'
 import { SelectedAccordion } from '../SelectedAccordion'
 import { ResultNumber, SelectedLayerList, StyledLayerList } from '../style'
@@ -16,10 +17,10 @@ import { ListLayerGroup } from './ListLayerGroup'
 import { AmpPanel } from './Panel'
 import { getSelectionState, handleSelection } from '../ToggleSelectAll/utils'
 
-import type { AMP, AMPFromAPI } from 'domain/entities/AMPs'
+import type { AMP } from '../../../../../domain/entities/AMPs'
 
 type AmpsProps = {
-  amps: AMPFromAPI[]
+  amps: AMP[]
   columnWidth: number
   isExpanded: boolean
   isSelectedAccordionOpen: boolean
@@ -32,22 +33,17 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
     const openPanel = useAppSelector(state => getOpenedPanel(state.dashboard, Dashboard.Block.AMP))
 
     const [isExpandedSelectedAccordion, setExpandedSelectedAccordion] = useState(false)
+    const { data } = useGetAMPsByIdsQuery({ axis: String(Axis.NORTH_SOUTH), ids: selectedAmpIds })
 
-    const ampsByLayerName = groupBy(
+    const ampsGroupedByName = groupBy(
       [...amps].sort((a, b) => a.name.localeCompare(b.name)),
       r => r.name
     )
 
-    const { selectedAmpByLayerName } = useGetAMPsQuery(undefined, {
-      selectFromResult: ({ data }) => ({
-        selectedAmpByLayerName: groupBy(
-          Object.values(data?.entities ?? [])
-            .filter(amp => selectedAmpIds.includes(amp.id))
-            .sort((a, b) => a.name.localeCompare(b.name)),
-          amp => amp.name
-        )
-      })
-    })
+    const selectedAmpByName = groupBy(
+      [...(data ?? [])].sort((a, b) => a.name.localeCompare(b.name)),
+      r => r.name
+    )
 
     useEffect(() => {
       if (isSelectedAccordionOpen) {
@@ -96,23 +92,19 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
           titleRef={ref}
         >
           <StyledLayerList
-            $baseLayersLength={Object.values(ampsByLayerName).length}
+            $baseLayersLength={Object.values(ampsGroupedByName).length}
             $maxHeight={100}
             $showBaseLayers={isExpanded}
             data-cy="dashboard-amp-list"
           >
-            {Object.entries(ampsByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
-              const layersId = layerIdsInGroup.map((layerId: AMPFromAPI) => layerId.id)
-
-              return (
-                <ListLayerGroup
-                  key={layerGroupName}
-                  groupName={layerGroupName}
-                  layerIds={layersId}
-                  selectedAmpIds={selectedAmpIds}
-                />
-              )
-            })}
+            {Object.entries(ampsGroupedByName).map(([groupName, ampsGrouped]) => (
+              <ListLayerGroup
+                key={groupName}
+                amps={ampsGrouped}
+                groupName={groupName}
+                selectedAmpIds={selectedAmpIds}
+              />
+            ))}
           </StyledLayerList>
         </Accordion>
         <SelectedAccordion
@@ -125,19 +117,15 @@ export const Amps = forwardRef<HTMLDivElement, AmpsProps>(
           )}`}
         >
           <SelectedLayerList>
-            {Object.entries(selectedAmpByLayerName).map(([layerGroupName, layerIdsInGroup]) => {
-              const layersId = layerIdsInGroup.map((layerId: AMP) => layerId.id)
-
-              return (
-                <ListLayerGroup
-                  key={layerGroupName}
-                  groupName={layerGroupName}
-                  isSelected
-                  layerIds={layersId}
-                  selectedAmpIds={selectedAmpIds}
-                />
-              )
-            })}
+            {Object.entries(selectedAmpByName).map(([groupName, ampsGrouped]) => (
+              <ListLayerGroup
+                key={groupName}
+                amps={ampsGrouped}
+                groupName={groupName}
+                isSelected
+                selectedAmpIds={selectedAmpIds}
+              />
+            ))}
           </SelectedLayerList>
         </SelectedAccordion>
       </div>
