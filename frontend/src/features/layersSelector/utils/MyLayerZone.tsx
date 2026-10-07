@@ -58,6 +58,7 @@ export function MyLayerZone({
 }: MyLayerZoneProps) {
   const dispatch = useAppDispatch()
 
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
   const ampLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
 
@@ -112,7 +113,7 @@ export function MyLayerZone({
 
   return (
     <LayerSelector.Layer
-      $hasGeomChangedRecently={hasGeomChangedRecently}
+      $hasGeomChangedRecently={hasGeomChangedRecently && isSuperUser}
       $isNew={isNew}
       $isRecentlyUpdated={isRecentlyUpdated}
       $metadataIsShown={metadataIsShown}

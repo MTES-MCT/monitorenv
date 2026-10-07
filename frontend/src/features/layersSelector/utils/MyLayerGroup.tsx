@@ -45,6 +45,7 @@ export function MyLayerGroup({
   zonesLinkedToVigilanceArea: number[]
 }) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(zonesAreShowed)
@@ -75,7 +76,7 @@ export function MyLayerGroup({
   return (
     <li>
       <LayerSelector.GroupWrapper
-        $hasLeastOneGeomChanged={hasLeastOneGeomChanged}
+        $hasLeastOneGeomChanged={hasLeastOneGeomChanged && isSuperUser}
         $isNew={hasNewLayers}
         $isOpen={zonesAreOpen}
         $isPadded

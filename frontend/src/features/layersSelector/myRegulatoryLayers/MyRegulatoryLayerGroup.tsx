@@ -29,6 +29,7 @@ export function RegulatoryLayerGroup({
   setTotalNumberOfZones: (totalNumberOfZones: number) => void
 }) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const groupLayerIds = layers.map(l => l.id)
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
 
@@ -82,7 +83,7 @@ export function RegulatoryLayerGroup({
     <MyLayerGroup
       addZonesToVigilanceArea={addZonesToVigilanceArea}
       groupName={getTitle(groupName)}
-      hasLeastOneGeomChanged={hasLeastOneGeomChanged}
+      hasLeastOneGeomChanged={hasLeastOneGeomChanged && isSuperUser}
       hasNewLayers={hasLeastOneNewLayer}
       hasRecentlyUpdatedLayers={hasLeastOneRecentlyUpdatedLayer}
       layers={layers}

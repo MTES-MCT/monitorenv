@@ -23,6 +23,7 @@ type RegulatoryLayerZoneProps = {
 }
 export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps) {
   const dispatch = useAppDispatch()
+  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const showedRegulatoryLayerIds = useAppSelector(state => state.regulatory.showedRegulatoryLayerIds)
   const metadataIsShown = useAppSelector(state => getMetadataIsOpenForRegulatoryLayerId(state, regulatoryZone.id))
   const regulatoryZoneIsShowed = showedRegulatoryLayerIds.includes(regulatoryZone.id)
@@ -45,7 +46,7 @@ export function RegulatoryLayerZone({ regulatoryZone }: RegulatoryLayerZoneProps
     <MyLayerZone
       bbox={regulatoryZone.extent}
       displayedName={displayedName}
-      hasGeomChangedRecently={regulatoryZone.hasGeomChangedRecently}
+      hasGeomChangedRecently={regulatoryZone.hasGeomChangedRecently && isSuperUser}
       hasMetadata={!!layerTitle}
       hideLayer={() => dispatch(hideRegulatoryLayer(regulatoryZone.id))}
       id={regulatoryZone.id}
