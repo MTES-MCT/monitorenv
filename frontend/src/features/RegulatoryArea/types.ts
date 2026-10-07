@@ -15,6 +15,7 @@ export namespace RegulatoryArea {
     extent: number[]
     facade: string
     geom?: GeoJSON.MultiPolygon
+    hasGeomChangedRecently: boolean
     id: number
     isNew: boolean
     isUpdatedRecently: boolean
