@@ -1,4 +1,4 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
 import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
@@ -11,6 +11,7 @@ import styled from 'styled-components'
 
 import { LinkedAMPs } from './LinkedAMPs'
 import { LinkedControlUnits } from './LinkedControlUnits'
+import { Axis } from '../../../../types'
 
 import type { LocalizedArea } from '../../types'
 
@@ -18,11 +19,13 @@ export function LocalizedAreaPanel({ localizedArea }: { localizedArea?: Localize
   const dispatch = useAppDispatch()
   const { metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
-  const { amps } = useGetAMPsQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      amps: Object.values(data?.entities ?? []).filter(amp => localizedArea?.ampIds?.includes(amp.id))
-    })
-  })
+  const { data: amps } = useGetAMPsByIdsQuery(
+    {
+      axis: Axis.NORTH_SOUTH,
+      ids: localizedArea?.ampIds ?? []
+    },
+    { skip: localizedArea?.ampIds?.length === 0 }
+  )
   const { controlUnits } = useGetControlUnitsQuery(undefined, {
     selectFromResult: ({ data }) => ({
       controlUnits: data?.filter(controlUnit => localizedArea?.controlUnitIds?.includes(controlUnit.id))
@@ -49,7 +52,7 @@ export function LocalizedAreaPanel({ localizedArea }: { localizedArea?: Localize
         <IconButton accent={Accent.TERTIARY} Icon={Icon.Close} onClick={onCloseIconClicked} />
       </Header>
       <Content>
-        <LinkedAMPs amps={amps} />
+        <LinkedAMPs amps={amps ?? []} />
         <Separator />
         <LinkedControlUnits controlUnits={controlUnits ?? []} />
       </Content>

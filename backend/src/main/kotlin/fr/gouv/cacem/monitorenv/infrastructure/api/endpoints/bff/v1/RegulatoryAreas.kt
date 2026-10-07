@@ -102,7 +102,7 @@ class RegulatoryAreas(
     }
 
     @GetMapping(value = ["/tiles/{z}/{x}/{y}"], produces = ["application/x-protobuf"])
-    @Operation(summary = "Get regulatory Areas")
+    @Operation(summary = "Get regulatory Areas tiles")
     fun getAllTiles(
         @Parameter(description = "Control Plan")
         @RequestParam(name = "controlPlan", required = false)
@@ -161,7 +161,7 @@ class RegulatoryAreas(
         @PathParam("regulatoryArea id")
         regulatoryAreaId: Int,
     ): RegulatoryAreaDataOutput? =
-        getRegulatoryAreaById.execute(regulatoryAreaId = regulatoryAreaId)?.let {
+        getRegulatoryAreaById.execute(id = regulatoryAreaId)?.let {
             RegulatoryAreaDataOutput.fromRegulatoryAreaEntity(it)
         }
 

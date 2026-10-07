@@ -31,6 +31,10 @@ data class AMPModel(
     fun toAMP() =
         AMPEntity(
             id = id,
+            extent =
+                geom.envelopeInternal?.let {
+                    doubleArrayOf(it.minX, it.minY, it.maxX, it.maxY)
+                },
             geom = geom,
             name = name,
             designation = designation,

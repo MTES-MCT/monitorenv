@@ -9,9 +9,9 @@ import { areaStyle, layoutStyle } from '../style'
 import { getImage, getMinimap } from '../utils'
 
 import type { ExportImageType } from '@features/Dashboard/hooks/useExportImages'
-import type { AMPFromAPI } from 'domain/entities/AMPs'
+import type { AMP } from 'domain/entities/AMPs'
 
-export function Amps({ amps, images }: { amps: AMPFromAPI[]; images: ExportImageType[] }) {
+export function Amps({ amps, images }: { amps: AMP[]; images: ExportImageType[] }) {
   return (
     <>
       <View style={layoutStyle.header2}>

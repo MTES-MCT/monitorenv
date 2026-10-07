@@ -1,20 +1,18 @@
 import { chain } from 'lodash'
 
 import type { Option } from '@mtes-mct/monitor-ui'
-import type { EntityState } from '@reduxjs/toolkit'
-import type { AMP, AMPFromAPI } from 'domain/entities/AMPs'
+import type { AMP } from 'domain/entities/AMPs'
 
-export function getAmpsAsOptions(amps: AMPFromAPI[] | EntityState<AMP, number>): Option<string>[] {
+export function getAmpsAsOptions(amps: AMP[]): Option[] {
   if (!amps) {
     return []
   }
-  const ampsToChain = 'entities' in amps ? amps.entities : amps
 
-  return chain(ampsToChain)
+  return chain(amps)
     .map(l => l?.type?.trim())
     .uniq()
     .filter(l => !!l)
     .map(l => ({ label: l, value: l }))
     .sortBy('label')
-    .value() as Option<string>[]
+    .value() as Option[]
 }

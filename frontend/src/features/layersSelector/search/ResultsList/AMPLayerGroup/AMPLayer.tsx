@@ -12,7 +12,6 @@ import Projection from 'ol/proj/Projection'
 import { createRef, useEffect } from 'react'
 import Highlighter from 'react-highlight-words'
 
-import { useGetAMPsQuery } from '../../../../../api/ampsAPI'
 import { MonitorEnvLayers } from '../../../../../domain/entities/layers/constants'
 import { addAmpZonesToMyLayers, removeAmpZonesFromMyLayers } from '../../../../../domain/shared_slices/Amp'
 import { setFitToExtent } from '../../../../../domain/shared_slices/Map'
@@ -21,30 +20,26 @@ import { useAppSelector } from '../../../../../hooks/useAppSelector'
 import { LayerLegend } from '../../../utils/LayerLegend.style'
 import { LayerSelector } from '../../../utils/LayerSelector.style'
 
-export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedText: string }) {
+import type { AMP } from '../../../../../domain/entities/AMPs'
+
+export function AMPLayer({ layer, searchedText }: { layer: AMP; searchedText: string }) {
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLLIElement>()
 
   const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const ampsLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.ampToAdd)
-
-  const { layer } = useGetAMPsQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      layer: data?.entities[layerId]
-    })
-  })
   const ampMetadataLayerId = useAppSelector(state => getDisplayedMetadataAMPLayerId(state))
 
-  const isZoneSelected = selectedAmpLayerIds.includes(layerId)
-  const metadataIsShown = useAppSelector(state => getMetadataIsOpenForAMPLayerId(state, layerId))
+  const isZoneSelected = selectedAmpLayerIds.includes(layer.id)
+  const metadataIsShown = useAppSelector(state => getMetadataIsOpenForAMPLayerId(state, layer.id))
 
   const handleSelectZone = e => {
     e.stopPropagation()
     if (isZoneSelected) {
-      dispatch(removeAmpZonesFromMyLayers([layerId]))
+      dispatch(removeAmpZonesFromMyLayers([layer.id]))
     } else {
-      dispatch(addAmpZonesToMyLayers([layerId]))
+      dispatch(addAmpZonesToMyLayers([layer.id]))
     }
   }
 
@@ -52,7 +47,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
     if (metadataIsShown) {
       dispatch(closeMetadataPanel())
     } else {
-      dispatch(openAMPMetadataPanel(layerId))
+      dispatch(openAMPMetadataPanel(layer.id))
       fitToRegulatoryLayer()
     }
   }
@@ -71,14 +66,14 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
 
   const addAMPToVigilanceArea = e => {
     e.stopPropagation()
-    dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea([layerId]))
+    dispatch(vigilanceAreaActions.addAmpIdsToVigilanceArea([layer.id]))
   }
 
   useEffect(() => {
-    if (ampMetadataLayerId === layerId && ref?.current) {
+    if (ampMetadataLayerId === layer.id && ref?.current) {
       ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
-  }, [ampMetadataLayerId, ref, layerId])
+  }, [ampMetadataLayerId, ref, layer.id])
 
   return (
     <LayerSelector.Layer ref={ref} $isNew={layer?.isNew} $metadataIsShown={metadataIsShown}>
@@ -99,7 +94,7 @@ export function AMPLayer({ layerId, searchedText }: { layerId: number; searchedT
           <IconButton
             accent={Accent.TERTIARY}
             data-cy="amp-zone-add"
-            disabled={ampsLinkedToVigilanceAreaForm.includes(layerId)}
+            disabled={ampsLinkedToVigilanceAreaForm.includes(layer.id)}
             Icon={Icon.Plus}
             onClick={addAMPToVigilanceArea}
             title="Ajouter la zone AMP à la zone de vigilance"

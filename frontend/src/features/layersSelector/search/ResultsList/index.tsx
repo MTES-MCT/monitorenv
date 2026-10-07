@@ -1,5 +1,6 @@
 import { LoadingIcon } from '@components/style'
 import { closeMetadataPanel } from '@features/layersSelector/metadataPanel/slice'
+import { useGetFilteredAmps } from '@features/RegulatoryArea/hooks/useGetFilteredAmps'
 import { useGetFilteredRegulatoryAreas } from '@features/RegulatoryArea/hooks/useGetFilteredRegulatoryAreas'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import {
@@ -17,7 +18,6 @@ import styled from 'styled-components'
 import { AMPLayerGroup } from './AMPLayerGroup'
 import { RegulatoryLayerGroup } from './RegulatoryLayerGroup'
 import { VigilanceAreaLayer } from './VigilanceAreaLayer'
-import { useGetAMPsQuery } from '../../../../api/ampsAPI'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { formatLayerName } from '../../../RegulatoryArea/utils'
@@ -34,7 +34,6 @@ type ResultListProps = {
 export function ResultList({ searchedText }: ResultListProps) {
   const dispatch = useAppDispatch()
 
-  const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
   const isAmpSearchResultsVisible = useAppSelector(state => state.layerSearch.isAmpSearchResultsVisible)
   const areAmpsResultsOpen = useAppSelector(state => state.layerSidebar.areAmpsResultsOpen)
 
@@ -53,26 +52,23 @@ export function ResultList({ searchedText }: ResultListProps) {
     isFetching: isFetchingRegulatoryAreas,
     isLoading: isLoadingRegulatoryAreas,
     regulatoryAreas: groupedRegulatoryAreas,
-    totalCount
+    totalCount: totalCountRegulatoryAreas
   } = useGetFilteredRegulatoryAreas()
 
-  const { data: amps, isFetching: isFetchingAmps, isLoading: isLoadingAmps } = useGetAMPsQuery()
-  const ampResultsByAMPName = useMemo(
-    () =>
-      groupBy(
-        !ampsSearchResult && areAmpsResultsOpen ? amps?.ids : (ampsSearchResult ?? []),
-        a => amps?.entities[a]?.name
-      ),
-    [ampsSearchResult, areAmpsResultsOpen, amps]
-  )
+  const {
+    amps,
+    isFetching: isFetchingAmps,
+    isLoading: isLoadingAmps,
+    totalCount: totalCountAmps
+  } = useGetFilteredAmps()
+
+  const ampResultsByAMPName = useMemo(() => groupBy(amps, a => a.name), [amps])
 
   const sortedAmpResultsByName = useMemo(
     () =>
       Object.fromEntries(Object.entries(ampResultsByAMPName).sort(([nameA], [nameB]) => nameA.localeCompare(nameB))),
     [ampResultsByAMPName]
   )
-
-  const totalAmps = ampsSearchResult?.length ?? amps?.ids?.length ?? 0
 
   const {
     isFetching: isFetchingVigilanceAreas,
@@ -156,7 +152,7 @@ export function ResultList({ searchedText }: ResultListProps) {
                     <LoadingIcon $color={THEME.color.slateGray} $size={14} />
                   ) : (
                     <NumberOfResults>
-                      ({totalCount} {pluralize('résultat', totalCount)})
+                      ({totalCountRegulatoryAreas} {pluralize('résultat', totalCountRegulatoryAreas)})
                     </NumberOfResults>
                   )}
                 </Title>
@@ -192,7 +188,7 @@ export function ResultList({ searchedText }: ResultListProps) {
                     <LoadingIcon $color={THEME.color.slateGray} $size={14} />
                   ) : (
                     <NumberOfResults>
-                      ({totalAmps} {pluralize('résultat', totalAmps)})
+                      ({totalCountAmps} {pluralize('résultat', totalCountAmps)})
                     </NumberOfResults>
                   )}
                 </Title>
@@ -203,8 +199,8 @@ export function ResultList({ searchedText }: ResultListProps) {
           </HeaderAMP>
           {(hasTransitionAmp || areAmpsResultsOpen) && (
             <SubListAMP $isExpanded={hasTransitionAmp && areAmpsResultsOpen} data-cy="amp-result-list">
-              {Object.entries(sortedAmpResultsByName).map(([ampName, ampIdsInGroup]) => (
-                <AMPLayerGroup key={ampName} groupName={ampName} layerIds={ampIdsInGroup} searchedText={searchedText} />
+              {Object.entries(sortedAmpResultsByName).map(([ampName, ampsInGroup]) => (
+                <AMPLayerGroup key={ampName} groupName={ampName} layers={ampsInGroup} searchedText={searchedText} />
               ))}
             </SubListAMP>
           )}

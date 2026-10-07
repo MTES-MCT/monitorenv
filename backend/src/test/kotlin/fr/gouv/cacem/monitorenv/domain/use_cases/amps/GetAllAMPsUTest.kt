@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.amps
 
 import com.nhaarman.mockitokotlin2.given
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.repositories.IAMPRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.fixtures.AmpFixture.Companion.anAmp
 import org.assertj.core.api.Assertions.assertThat
@@ -19,10 +20,10 @@ class GetAllAMPsUTest {
     fun `execute should return all amps`(log: CapturedOutput) {
         // Given
         val expectedAmps = listOf(anAmp(), anAmp())
-        given(ampRepository.findAll()).willReturn(expectedAmps)
+        given(ampRepository.findAll(SearchFilters())).willReturn(expectedAmps)
 
         // When
-        val amps = getAllAMPs.execute()
+        val amps = getAllAMPs.execute(SearchFilters())
 
         // Then
         assertThat(amps).isEqualTo(expectedAmps)

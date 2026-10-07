@@ -1,4 +1,5 @@
 import { StyledTransparentButton } from '@components/style'
+import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import {
   getIsLinkingAMPToVigilanceArea,
   getIsLinkingZonesToVigilanceArea,
@@ -19,6 +20,7 @@ import { RegulatoryLayer } from './RegulatoryLayerGroup/RegulatoryLayer'
 import { MonitorEnvLayers } from '../../../../domain/entities/layers/constants'
 import { LayerSelector } from '../../utils/LayerSelector.style'
 
+import type { AMP } from '../../../../domain/entities/AMPs'
 import type { Extent } from 'ol/extent'
 
 type ResultListLayerGroupProps = {
@@ -28,8 +30,8 @@ type ResultListLayerGroupProps = {
   hasNewLayers?: boolean
   hasRecentlyUpdatedLayers?: boolean
   layerIdToDisplay: number | undefined
-  layerIds: number[]
-  layerType: MonitorEnvLayers.REGULATORY_ENV | MonitorEnvLayers.AMP | MonitorEnvLayers.VIGILANCE_AREA
+  layerType: MonitorEnvLayers.REGULATORY_ENV | MonitorEnvLayers.AMP
+  layers: (AMP | RegulatoryArea.RegulatoryAreaFromAPI)[]
   removeLayers: (layerIds: number[]) => void
   searchedText: string
   selectedLayerIds: number[]
@@ -42,8 +44,8 @@ export function ResultListLayerGroup({
   groupName,
   hasNewLayers,
   hasRecentlyUpdatedLayers,
-  layerIds,
   layerIdToDisplay,
+  layers,
   layerType,
   removeLayers,
   searchedText,
@@ -52,6 +54,7 @@ export function ResultListLayerGroup({
 }: ResultListLayerGroupProps) {
   const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
+  const layerIds = layers.map(({ id }) => id)
 
   const zonesSelected = intersection(selectedLayerIds, layerIds)
   const allTopicZonesAreChecked = zonesSelected?.length === layerIds?.length
@@ -142,11 +145,15 @@ export function ResultListLayerGroup({
           $length={layerIds?.length}
         >
           {layerType === MonitorEnvLayers.REGULATORY_ENV &&
-            layerIds?.map(layerId => (
-              <RegulatoryLayer key={layerId} groupName={groupName} layerId={layerId} searchedText={searchedText} />
+            layers?.map(layer => (
+              <RegulatoryLayer
+                key={layer.id}
+                layer={layer as RegulatoryArea.RegulatoryAreaFromAPI}
+                searchedText={searchedText}
+              />
             ))}
           {layerType === MonitorEnvLayers.AMP &&
-            layerIds?.map(layerId => <AMPLayer key={layerId} layerId={layerId} searchedText={searchedText} />)}
+            layers?.map(layer => <AMPLayer key={layer.id} layer={layer as AMP} searchedText={searchedText} />)}
         </LayerSelector.SubGroup>
       )}
     </>
