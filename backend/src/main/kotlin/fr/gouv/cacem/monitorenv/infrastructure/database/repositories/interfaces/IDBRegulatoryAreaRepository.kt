@@ -150,13 +150,13 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
             """
             SELECT regulatoryArea from RegulatoryAreaModel regulatoryArea
             WHERE regulatoryArea.layerName = :layerName
-                AND regulatoryArea.location = :location
+                AND (:location IS NULL OR regulatoryArea.location = :location)
                 AND regulatoryArea.areaType = 'GROUP'
                 AND regulatoryArea.creation IS NOT NULL
         """,
     )
     fun findAllGroupByLayerNameAndLocation(
         layerName: String,
-        location: String,
+        location: String?,
     ): List<RegulatoryAreaModel>
 }

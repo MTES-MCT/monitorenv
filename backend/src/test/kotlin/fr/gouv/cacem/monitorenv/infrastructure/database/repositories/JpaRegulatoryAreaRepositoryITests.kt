@@ -230,13 +230,14 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
 
     @Test
     @Transactional
-    fun `save should create a new regulatory area group when it does not exist`() {
+    fun `save should be part of a group when it exists`() {
         val existingRegulatoryArea = jpaRegulatoryAreaRepository.findById(300)
         require(existingRegulatoryArea != null)
 
         val updatedRegulatoryArea =
             existingRegulatoryArea.copy(
-                layerName = "Updated_RNN_Iroise",
+                layerName = "RNN",
+                location = "Iroise",
                 resume = "Mise à jour de la zone",
                 tags = listOf(aTag(id = 5), aTag(id = 6)),
                 themes = listOf(aTheme(id = 9)),
@@ -245,12 +246,21 @@ class JpaRegulatoryAreaRepositoryITests : AbstractDBTests() {
         val savedRegulatoryArea = jpaRegulatoryAreaRepository.save(updatedRegulatoryArea)
 
         assertThat(savedRegulatoryArea.id).isEqualTo(300)
-        assertThat(savedRegulatoryArea.layerName).isEqualTo("Updated_RNN_Iroise")
+        assertThat(savedRegulatoryArea.layerName).isEqualTo("RNN")
+        assertThat(savedRegulatoryArea.location).isEqualTo("Iroise")
         assertThat(savedRegulatoryArea.resume).isEqualTo("Mise à jour de la zone")
         assertThat(savedRegulatoryArea.tags).hasSize(2)
         assertThat(savedRegulatoryArea.tags.map { it.id }).containsExactlyInAnyOrder(5, 6)
         assertThat(savedRegulatoryArea.themes).hasSize(1)
         assertThat(savedRegulatoryArea.themes[0].id).isEqualTo(9)
+
+        val groups =
+            idbRegulatoryAreaGroupRepository.findAllByLayerNameAndLocation(
+                layerName = "RNN",
+                location = "Iroise",
+            )
+
+        assertThat(groups).hasSize(2)
     }
 
     @Test
