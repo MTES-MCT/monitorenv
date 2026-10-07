@@ -111,7 +111,7 @@ class JpaRegulatoryAreaRepository(
     override fun count(): Long = dbRegulatoryAreaRepository.count()
 
     private fun saveRegulatoryAreasGroup(regulatoryArea: RegulatoryAreaEntity) {
-        if (regulatoryArea.layerName != null && regulatoryArea.location != null) {
+        if (regulatoryArea.layerName != null) {
             val existingRegulatoryAreaGroup =
                 dbRegulatoryAreaRepository.findAllGroupByLayerNameAndLocation(
                     layerName = regulatoryArea.layerName,
