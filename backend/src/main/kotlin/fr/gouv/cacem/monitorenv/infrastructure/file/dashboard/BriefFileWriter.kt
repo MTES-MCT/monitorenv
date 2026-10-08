@@ -26,7 +26,6 @@ import java.io.File
 import java.math.BigInteger
 import java.util.Base64
 import javax.imageio.ImageIO
-import kotlin.collections.forEach
 
 abstract class BriefFileWriter : IBriefFileWriter {
     private val logger = LoggerFactory.getLogger(BriefFileWriter::class.java)
@@ -101,7 +100,7 @@ abstract class BriefFileWriter : IBriefFileWriter {
             BufferedImage(mainImage.width, mainImage.height, BufferedImage.TYPE_INT_ARGB).apply {
                 val g = createGraphics()
                 g.drawImage(mainImage, 0, 0, null)
-                val x = mainImage.width - borderedOverlay.width - 10
+                val x = 10
                 val y = mainImage.height - borderedOverlay.height - 10
                 g.drawImage(borderedOverlay, x, y, null)
                 g.dispose()
@@ -352,8 +351,7 @@ abstract class BriefFileWriter : IBriefFileWriter {
         item: DetailWithImagesRenderable,
     ) {
         if (item is EditableBriefVigilanceAreaEntity &&
-            item.imagesAttachments != null &&
-            item.imagesAttachments.isNotEmpty()
+            !item.imagesAttachments.isNullOrEmpty()
         ) {
             item.imagesAttachments.forEach { image ->
                 ByteArrayConverter.createImageFromByteArray(image, paragraph)
