@@ -14,7 +14,7 @@ WITH departments_intersection_areas AS (
         ),
         departments_areas.geometry
     )
-    WHERE missions.mission_source IN ('MONITORENV', 'MONITORFISH')
+    WHERE missions.mission_source IN ('MONITORENV', 'MONITORFISH', 'RAPPORT_NAV')
     AND env_actions.action_start_datetime_utc::TIMESTAMPTZ >= :date
     GROUP BY env_actions.id, departments_areas.insee_dep
 ),
