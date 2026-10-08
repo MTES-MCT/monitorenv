@@ -147,8 +147,8 @@ export const areaStyle = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 2.5,
     bottom: 7.4,
+    left: 10,
     position: 'absolute',
-    right: 7.4,
     width: 93
   },
   wrapper: {

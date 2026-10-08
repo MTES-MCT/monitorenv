@@ -148,7 +148,7 @@ export function useExportImages() {
       const view = inMemoryMap.getView()
 
       view.fit(extent, {
-        padding: padding ?? [30, 30, 30, 200]
+        padding: padding ?? [100, 100, 100, 400]
       })
       inMemoryMap.once('rendercomplete', () => {
         resolve()
@@ -333,7 +333,7 @@ export function useExportImages() {
       layersVectorSourceRef.current.clear()
       dashboardFeature.setStyle([measurementStyle()])
       layersVectorSourceRef.current.addFeatures([...recentActivityFeatures, dashboardFeature])
-      await zoomToFeatures([dashboardFeature], [30, 200, 30, 30])
+      await zoomToFeatures([dashboardFeature], [100, 400, 100, 100])
       mapRef.current
         ?.getTargetElement()
         .querySelectorAll('canvas')
@@ -356,7 +356,7 @@ export function useExportImages() {
         layersVectorSourceRef.current.addFeatures([...recentActivityFeaturesByControlUnit, dashboardFeature])
 
         // eslint-disable-next-line no-await-in-loop
-        await zoomToFeatures([dashboardFeature], [30, 200, 30, 30])
+        await zoomToFeatures([dashboardFeature], [100, 400, 100, 100])
 
         const canvases = mapRef.current.getViewport().querySelectorAll('canvas')
         // eslint-disable-next-line no-restricted-syntax
