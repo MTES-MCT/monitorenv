@@ -14,19 +14,22 @@ import styled from 'styled-components'
 import { Layer } from './Layer'
 import { getPinIcon, getSelectionState } from '../ToggleSelectAll/utils'
 
+import type { AMP } from '../../../../../domain/entities/AMPs'
+
 type ResultListLayerGroupProps = {
+  amps: AMP[]
   groupName: string
   isSelected?: boolean
-  layerIds: number[]
   selectedAmpIds: number[]
 }
 
-export function ListLayerGroup({ groupName, isSelected = false, layerIds, selectedAmpIds }: ResultListLayerGroupProps) {
+export function ListLayerGroup({ amps, groupName, isSelected = false, selectedAmpIds }: ResultListLayerGroupProps) {
   const dispatch = useAppDispatch()
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
   const totalNumberOfZones = useAppSelector(state => getNumberOfAMPByGroupName(state, groupName))
 
+  const layerIds = amps.map(amp => amp.id)
   const zonesSelected = intersection(selectedAmpIds, layerIds)
   const topicSelectionState = getSelectionState(zonesSelected, layerIds)
 
@@ -78,8 +81,8 @@ export function ListLayerGroup({ groupName, isSelected = false, layerIds, select
         </LayerSelector.IconGroup>
       </StyledGroupWrapper>
       <LayerSelector.SubGroup $isOpen={zonesAreOpen} $length={layerIds?.length}>
-        {layerIds?.map(layerId => (
-          <Layer key={layerId} isPinned={selectedAmpIds.includes(layerId)} isSelected={isSelected} layerId={layerId} />
+        {amps?.map(amp => (
+          <Layer key={amp.id} amp={amp} isPinned={selectedAmpIds.includes(amp.id)} isSelected={isSelected} />
         ))}
       </LayerSelector.SubGroup>
     </li>

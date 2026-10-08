@@ -19,7 +19,12 @@ export const selectDashboardOnMap =
       const { data: reportings } = await dispatch(
         reportingsAPI.endpoints.getReportingsByIds.initiate(dashboard.reportingIds)
       )
-      const { data: amps } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
+      const { data: amps } = await dispatch(
+        ampsAPI.endpoints.getAMPsByIds.initiate({
+          axis: Axis.NORTH_SOUTH,
+          ids: dashboard.ampIds
+        })
+      )
 
       const { data: regulatoryAreas } = await dispatch(
         regulatoryAreasAPI.endpoints.getRegulatoryAreasByIds.initiate({
@@ -29,15 +34,13 @@ export const selectDashboardOnMap =
       )
       const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
 
-      const filteredAmps = Object.values(amps?.entities ?? []).filter(amp => dashboard.ampIds.includes(amp.id))
-
       const filteredVigilanceAreas = Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
         dashboard.vigilanceAreaIds.includes(vigilanceArea.id)
       )
       dispatch(
         dashboardActions.setSelectedDashboardOnMap({
           ...dashboard,
-          amps: filteredAmps,
+          amps: amps ?? [],
           regulatoryAreas: regulatoryAreas ?? [],
           reportings: Object.values(reportings?.entities ?? []),
           vigilanceAreas: filteredVigilanceAreas

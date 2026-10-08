@@ -21,9 +21,10 @@ export function RegulatoryPreviewLayer({ map }: BaseMapChildrenProps) {
   const isLinkingAMPToVigilanceArea = useAppSelector(state => getIsLinkingAMPToVigilanceArea(state))
   const isLayersSidebarVisible = useAppSelector(state => state.global.visibility.isLayersSidebarVisible)
   const isLayerVisible = isLayersSidebarVisible && isRegulatorySearchResultsVisible && !isLinkingAMPToVigilanceArea
+
   const isolatedLayer = useAppSelector(state => state.map.isolatedLayer)
-  const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const isolatedLayerRef = useRef(isolatedLayer)
+  const regulatoryMetadataLayerId = useAppSelector(state => getDisplayedMetadataRegulatoryLayerId(state))
   const regulatoryMetadataLayerIdRef = useRef(regulatoryMetadataLayerId)
 
   const {

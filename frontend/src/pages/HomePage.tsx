@@ -1,7 +1,6 @@
 import { EnvironmentBox, getEnvironmentBorderStyle } from '@components/EnvironmentBox'
 import { Menu } from '@components/Menu'
 import { MapFocusForDashboardBanner } from '@features/Dashboard/components/MapFocusForDashboardBanner'
-import { useSearchLayers } from '@features/layersSelector/search/hooks/useSearchLayers'
 import { BannerStack } from '@features/MainWindow/components/BannerStack'
 import { AttachMissionToReportingModal } from '@features/Reportings/components/ReportingForm/AttachMission/AttachMissionToReportingModal'
 import { REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES } from '@features/Reportings/components/ReportingForm/constants'
@@ -95,7 +94,7 @@ export function HomePage() {
     dispatch(reportingActions.updateUnactiveReporting(omit(reportingEvent, REPORTING_EVENT_UNSYNCHRONIZED_PROPERTIES)))
   }, [dispatch, reportingEvent])
 
-  useSearchLayers()
+  // useSearchLayers()
 
   return (
     <>

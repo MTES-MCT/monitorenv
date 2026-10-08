@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -16,7 +17,7 @@ class JpaAMPRepositoryTests : AbstractDBTests() {
     @Transactional
     fun `findAll Should return all amps`() {
         // When
-        val amps = jpaAMPRepository.findAll()
+        val amps = jpaAMPRepository.findAll(SearchFilters())
         assertThat(amps).hasSize(20)
     }
 

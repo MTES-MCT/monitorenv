@@ -1,7 +1,7 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
 import { dashboardActions } from '@features/Dashboard/slice'
 import { LocalizedAreas } from '@features/LocalizedArea'
 import { NumberOfFilters } from '@features/map/shared/style'
+import { useGetFilteredAmps } from '@features/RegulatoryArea/hooks/useGetFilteredAmps'
 import { useGetFilteredRegulatoryAreas } from '@features/RegulatoryArea/hooks/useGetFilteredRegulatoryAreas'
 import { VigilanceAreaForm } from '@features/VigilanceArea/components/VigilanceAreaForm'
 import {
@@ -59,7 +59,7 @@ export function LayersSidebar() {
   } = useAppSelector(state => state.layerSearch)
 
   const regulatoryAreas = useGetFilteredRegulatoryAreas()
-  const amps = useGetAMPsQuery()
+  const amps = useGetFilteredAmps()
 
   const dispatch = useAppDispatch()
 

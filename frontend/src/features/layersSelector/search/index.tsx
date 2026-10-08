@@ -1,4 +1,5 @@
 import { NumberOfFilters } from '@features/map/shared/style'
+import { useGetFilteredAmps } from '@features/RegulatoryArea/hooks/useGetFilteredAmps'
 import { useGetFilteredRegulatoryAreas } from '@features/RegulatoryArea/hooks/useGetFilteredRegulatoryAreas'
 import { useGetFilteredVigilanceAreasQuery } from '@features/VigilanceArea/hooks/useGetFilteredVigilanceAreasQuery'
 import { VigilanceArea } from '@features/VigilanceArea/types'
@@ -19,9 +20,9 @@ import { setGlobalSearchText } from './slice'
 export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
   const dispatch = useAppDispatch()
 
-  const ampsSearchResult = useAppSelector(state => state.layerSearch.ampsSearchResult)
+  const { totalCount: totalCountAmps } = useGetFilteredAmps()
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
-  const { totalCount } = useGetFilteredRegulatoryAreas()
+  const { totalCount: totalCountRegulatoryArea } = useGetFilteredRegulatoryAreas()
 
   const [query, setQuery] = useState<string | undefined>(undefined)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
@@ -48,8 +49,8 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
 
   const allowResetResults =
     shouldFilterSearchOnMapExtent &&
-    (totalCount !== 0 ||
-      !isEmpty(ampsSearchResult) ||
+    (totalCountRegulatoryArea !== 0 ||
+      totalCountAmps !== 0 ||
       (!isEmpty(vigilanceAreas.ids) &&
         filteredVigilanceAreaPeriod !== VigilanceArea.VigilanceAreaFilterPeriod.NEXT_THREE_MONTHS))
 
