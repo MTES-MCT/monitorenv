@@ -9,7 +9,7 @@ from src.flows.update_departments_and_facades import (
 from src.read_query import read_query
 
 
-def test_flow(reset_test_data):
+def test_update_facade_and_department_for_missions_and_envaction(reset_test_data):
 
     expected_initial_missions = pd.DataFrame(
         {
@@ -61,7 +61,7 @@ def test_flow(reset_test_data):
     )
     initial_actions = read_query("monitorenv_remote", actions_query)
 
-    state = update_departments_and_facades_flow(return_state=True, date=date(2022, 1, 1))
+    state = update_departments_and_facades_flow(return_state=True, domain_object="Missions et env_actions", date=date(2022, 1, 1))
     assert state.is_completed()
 
     final_missions = read_query("monitorenv_remote", missions_query)
@@ -72,3 +72,58 @@ def test_flow(reset_test_data):
 
     pd.testing.assert_frame_equal(expected_initial_actions, initial_actions)
     pd.testing.assert_frame_equal(expected_final_actions, final_actions)
+
+def test_update_facade_and_department_for_regulatory_areas(reset_test_data):
+
+    expected_initial_regulatory_areas = pd.DataFrame(
+        {
+            "id": [1, 2],
+            "facade": ["MED", "NAMO"],
+        }
+    )
+
+    expected_final_regulatory_areas = pd.DataFrame(
+        {
+            "id": [1, 2],
+            "facade": ["Facade A", None],
+        }
+    )
+
+    query = "SELECT id, facade FROM regulatory_areas ORDER BY id"
+    initial_regulatory_areas = read_query("monitorenv_remote", query)
+
+    state = update_departments_and_facades_flow(return_state=True, domain_object="Zones réglementaires")
+    assert state.is_completed()
+
+    final_regulatory_areas = read_query("monitorenv_remote", query)
+
+    pd.testing.assert_frame_equal(expected_initial_regulatory_areas, initial_regulatory_areas)
+    pd.testing.assert_frame_equal(expected_final_regulatory_areas, final_regulatory_areas)
+
+
+def test_update_facade_and_department_for_vigilance_areas(reset_test_data):
+
+    expected_initial_vigilance_areas = pd.DataFrame(
+        {
+            "id": [1],
+            "sea_front": ["MED"],
+        }
+    )
+
+    expected_final_vigilance_areas = pd.DataFrame(
+        {
+            "id": [1],
+            "sea_front": ["Facade A"],
+        }
+    )
+
+    query = "SELECT id, sea_front FROM vigilance_areas ORDER BY id"
+    initial_vigilance_areas = read_query("monitorenv_remote", query)
+
+    state = update_departments_and_facades_flow(return_state=True, domain_object="Zones de vigilances")
+    assert state.is_completed()
+
+    final_vigilance_areas = read_query("monitorenv_remote", query)
+
+    pd.testing.assert_frame_equal(expected_initial_vigilance_areas, initial_vigilance_areas)
+    pd.testing.assert_frame_equal(expected_final_vigilance_areas, final_vigilance_areas)
