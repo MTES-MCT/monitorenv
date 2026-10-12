@@ -130,7 +130,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
     })
   })
 
-  it('Should open the mission list of the unit within last 6 months period', () => {
+  it('Should open the mission list of the unit within last week', () => {
     goToMainWindowAndOpenControlUnit(10018)
     cy.window().then(win => {
       cy.stub(win, 'open').as('open')
@@ -139,12 +139,12 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
     cy.visit(`/side_window`).wait(1000)
 
-    const sixMonthsAgo = customDayjs().subtract(6, 'month').format('DD/MM/YYYY').split('/')
+    const lastWeek = customDayjs().subtract(1, 'week').format('DD/MM/YYYY').split('/')
     const today = customDayjs().utc().format('DD/MM/YYYY').split('/')
     cy.contains('Unité DREAL Pays-de-La-Loire').should('be.visible')
-    cy.get('[id="missionDateRangeStartDay"]').should('have.value', sixMonthsAgo[0])
-    cy.get('[id="missionDateRangeStartMonth"]').should('have.value', sixMonthsAgo[1])
-    cy.get('[id="missionDateRangeStartYear"]').should('have.value', sixMonthsAgo[2])
+    cy.get('[id="missionDateRangeStartDay"]').should('have.value', lastWeek[0])
+    cy.get('[id="missionDateRangeStartMonth"]').should('have.value', lastWeek[1])
+    cy.get('[id="missionDateRangeStartYear"]').should('have.value', lastWeek[2])
 
     cy.get('[id="missionDateRangeEndDay"]').should('have.value', today[0])
     cy.get('[id="missionDateRangeEndMonth"]').should('have.value', today[1])
