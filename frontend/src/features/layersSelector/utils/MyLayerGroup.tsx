@@ -17,7 +17,6 @@ export function MyLayerGroup({
   addZonesToVigilanceArea,
   children,
   groupName,
-  hasLeastOneGeomChanged,
   hasNewLayers,
   hasRecentlyUpdatedLayers,
   layers,
@@ -32,7 +31,6 @@ export function MyLayerGroup({
   addZonesToVigilanceArea: () => void
   children: React.ReactNode
   groupName: string
-  hasLeastOneGeomChanged?: boolean
   hasNewLayers?: boolean
   hasRecentlyUpdatedLayers?: boolean
   layers: AMP[] | RegulatoryArea.RegulatoryAreaFromAPI[]
@@ -45,7 +43,6 @@ export function MyLayerGroup({
   zonesLinkedToVigilanceArea: number[]
 }) {
   const dispatch = useAppDispatch()
-  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
 
   const groupLayerIds = layers.map(l => l.id)
   const [zonesAreOpen, setZonesAreOpen] = useState(zonesAreShowed)
@@ -76,7 +73,6 @@ export function MyLayerGroup({
   return (
     <li>
       <LayerSelector.GroupWrapper
-        $hasLeastOneGeomChanged={hasLeastOneGeomChanged && isSuperUser}
         $isNew={hasNewLayers}
         $isOpen={zonesAreOpen}
         $isPadded
