@@ -25,7 +25,6 @@ export function RegulatoryAreaItem({
   regulatoryArea: RegulatoryArea.RegulatoryAreaFromAPI
 }) {
   const dispatch = useAppDispatch()
-  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const navigate = useNavigate()
   const location = useLocation()
   const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
@@ -68,7 +67,7 @@ export function RegulatoryAreaItem({
 
   return (
     <LayerSelector.Layer
-      $hasGeomChangedRecently={regulatoryArea.hasGeomChangedRecently && isSuperUser}
+      $isBackoffice
       $isNew={regulatoryArea.isNew}
       $isRecentlyUpdated={regulatoryArea.isUpdatedRecently}
       $metadataIsShown={openedRegulatoryAreaId === regulatoryArea.id}

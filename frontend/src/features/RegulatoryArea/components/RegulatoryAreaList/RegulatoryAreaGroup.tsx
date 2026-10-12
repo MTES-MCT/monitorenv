@@ -42,6 +42,7 @@ export function RegulatoryAreaGroup({ group }: { group: RegulatoryArea.Regulator
   return (
     <>
       <LayerSelector.GroupWrapper
+        $isBackoffice
         $isNew={hasLeastOneNewLayer}
         $isOpen={isGroupNameOpen}
         $isPadded

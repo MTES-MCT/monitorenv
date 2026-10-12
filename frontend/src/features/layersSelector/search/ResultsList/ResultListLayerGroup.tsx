@@ -25,7 +25,6 @@ type ResultListLayerGroupProps = {
   addLayers: (layerIds: number[]) => void
   groupExtent: Extent
   groupName: string
-  hasLeastOneGeomChanged?: boolean
   hasNewLayers?: boolean
   hasRecentlyUpdatedLayers?: boolean
   layerIdToDisplay: number | undefined
@@ -41,7 +40,6 @@ export function ResultListLayerGroup({
   addLayers,
   groupExtent,
   groupName,
-  hasLeastOneGeomChanged,
   hasNewLayers,
   hasRecentlyUpdatedLayers,
   layerIds,
@@ -53,7 +51,6 @@ export function ResultListLayerGroup({
   totalNumberOfZones
 }: ResultListLayerGroupProps) {
   const dispatch = useAppDispatch()
-  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const [zonesAreOpen, setZonesAreOpen] = useState(false)
 
   const zonesSelected = intersection(selectedLayerIds, layerIds)
@@ -104,7 +101,6 @@ export function ResultListLayerGroup({
   return (
     <>
       <LayerSelector.GroupWrapper
-        $hasLeastOneGeomChanged={hasLeastOneGeomChanged && isSuperUser}
         $isNew={hasNewLayers}
         $isOpen={forceZonesAreOpen || zonesAreOpen}
         $isRecentlyUpdated={hasRecentlyUpdatedLayers}

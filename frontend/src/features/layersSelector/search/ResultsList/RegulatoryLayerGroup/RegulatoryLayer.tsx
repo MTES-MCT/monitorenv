@@ -36,7 +36,6 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
   const dispatch = useAppDispatch()
   const ref = createRef<HTMLLIElement>()
 
-  const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const selectedRegulatoryLayerIds = useAppSelector(state => state.regulatory.selectedRegulatoryLayerIds)
 
   const regulatoryAreasLinkedToVigilanceAreaForm = useAppSelector(state => state.vigilanceArea.regulatoryAreasToAdd)
@@ -114,9 +113,8 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
   return (
     <LayerSelector.Layer
       ref={ref}
-      $hasGeomChangedRecently={layer?.hasGeomChangedRecently && isSuperUser}
       $isNew={layer?.isNew}
-      $isRecentlyUpdated={layer?.isUpdatedRecently}
+      $isRecentlyUpdated={layer?.isUpdatedRecently || layer?.hasGeomChangedRecently}
       $metadataIsShown={metadataIsShown}
       data-cy="regulatory-result-zone"
     >

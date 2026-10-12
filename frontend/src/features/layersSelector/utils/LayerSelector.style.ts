@@ -11,7 +11,7 @@ const IconGroup = styled.div`
 `
 
 const Layer = styled.li<{
-  $hasGeomChangedRecently?: boolean
+  $isBackoffice?: boolean
   $isNew?: boolean
   $isRecentlyUpdated?: boolean
   $metadataIsShown?: boolean
@@ -24,10 +24,10 @@ const Layer = styled.li<{
     if (p.$isNew) {
       return `4px solid ${p.theme.color.blueGray}`
     }
-    if (p.$isRecentlyUpdated) {
+    if (!p.$isBackoffice && p.$isRecentlyUpdated) {
       return `4px solid ${getColorWithAlpha(p.theme.color.blueGray, 0.4)}`
     }
-    if (p.$hasGeomChangedRecently) {
+    if (p.$isBackoffice && p.$isRecentlyUpdated) {
       return `4px solid ${p.theme.color.arylideYellow}`
     }
 
@@ -68,7 +68,7 @@ const ZonesNumber = styled.span`
 `
 
 const GroupWrapper = styled.div<{
-  $hasLeastOneGeomChanged?: boolean
+  $isBackoffice?: boolean
   $isNew?: boolean
   $isOpen: boolean
   $isPadded?: boolean
@@ -78,13 +78,10 @@ const GroupWrapper = styled.div<{
   border-bottom: ${p => (p.$isOpen ? 0 : 1)}px solid ${p => p.theme.color.lightGray};
   border-left: ${p => {
     if (p.$isNew) {
-      return `4px solid ${p.theme.color.blueGray}`
+      return `4px solid ${p.$isBackoffice ? p.theme.color.arylideYellow : p.theme.color.blueGray}`
     }
     if (p.$isRecentlyUpdated) {
-      return `4px solid ${getColorWithAlpha(p.theme.color.blueGray, 0.4)}`
-    }
-    if (p.$hasLeastOneGeomChanged) {
-      return `4px solid ${p.theme.color.arylideYellow}`
+      return `4px solid ${getColorWithAlpha(p.$isBackoffice ? p.theme.color.arylideYellow : p.theme.color.blueGray, 0.4)}`
     }
 
     return '4px solid transparent'
