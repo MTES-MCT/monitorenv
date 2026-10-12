@@ -276,13 +276,13 @@ export function useExportImages() {
         layersVectorSourceRef.current.clear()
         layersVectorSourceRef.current.addFeature(minimapFeature)
         layersVectorSourceRef.current.addFeature(dashboardFeature)
-        const featureGeom = minimapFeature.getGeometry()?.getExtent()
-        if (featureGeom) {
-          const width = getWidth(featureGeom)
-          const height = getHeight(featureGeom)
-          const marginRatio = 0.1
+        const featureExtent = minimapFeature.getGeometry()?.getExtent()
+        if (featureExtent) {
+          const width = getWidth(featureExtent)
+          const height = getHeight(featureExtent)
+          const marginRatio = 0.05
           const margin = Math.max(width, height) * marginRatio
-          const extendWithMargin = buffer(featureGeom, margin)
+          const extendWithMargin = buffer(featureExtent, margin)
           const square = new Feature(fromExtent(extendWithMargin))
           square.setStyle(
             new Style({
@@ -293,10 +293,9 @@ export function useExportImages() {
             })
           )
           layersVectorSourceRef.current.addFeature(square)
+          // eslint-disable-next-line no-await-in-loop
+          await zoomToFeatures([square, dashboardFeature], [30, 30, 30, 30])
         }
-
-        // eslint-disable-next-line no-await-in-loop
-        await zoomToFeatures([dashboardFeature, minimapFeature], [30, 30, 30, 30])
 
         const canvases = mapRef.current.getViewport().querySelectorAll('canvas')
         // eslint-disable-next-line no-restricted-syntax
