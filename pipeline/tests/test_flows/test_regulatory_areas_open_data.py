@@ -1,3 +1,4 @@
+import re
 import ast
 from io import BytesIO
 import json
@@ -11,6 +12,7 @@ from src.flows.regulatory_areas_open_data import (
     extract_regulatory_areas_open_data,
     get_regulatory_areas_for_csv,
     get_regulatory_areas_for_geopackage,
+    get_regulatory_areas_for_geoplateforme_csv,
     regulatory_areas_open_data_flow,
 )
 from tests.test_shared_tasks.test_datagouv import make_square_multipolygon
@@ -187,6 +189,60 @@ def regulatory_areas_for_geopackage():
         gdf[col] = pd.to_datetime(gdf[col]).astype("datetime64[ms]")
     return gdf
 
+
+@pytest.fixture
+def regulatory_areas_for_geoplateforme_csv() -> pd.DataFrame:
+    return pd.DataFrame(
+        {
+            "id": [1, 2],
+            "creation": [
+                pd.to_datetime("2025-01-01 00:00:00"),
+                pd.to_datetime("2025-01-01 00:00:00"),
+            ],
+            "url": ["url1", "url2"],
+            "layer_name": ["layer_name1", "layer_name2"],
+            "facade": ["MED", "NAMO"],
+            "ref_reg": ["ref_reg1", "ref_reg2"],
+            "edition": [
+                pd.to_datetime("2025-06-06 00:00:00"),
+                pd.to_datetime("2025-07-21 00:00:00"),
+            ],
+            "source": ["source1", "source2"],
+            "observation": ["obs1", "obs2"],
+            "date": [
+                pd.to_datetime("2025-01-01 00:00:00"),
+                pd.to_datetime("2025-01-12 00:00:00"),
+            ],
+            "date_fin": [
+                pd.to_datetime("2025-12-31 00:00:00"),
+                pd.to_datetime("2026-04-12 00:00:00"),
+            ],
+            "type": ["type1", "type2"],
+            "wkt": [
+                "MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))",
+                "MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))",
+            ],
+            "resume": ["resume1", "resume2"],
+            "poly_name": ["poly_name1 qui est différent du CACEM", "poly_name2 qui est différent du CACEM"],
+            "plan": ["plan1", "plan2"],
+            "authorization_periods": [
+                "période d'autorisation1",
+                "période d'autorisation2",
+            ],
+            "prohibition_periods": [
+                "période de prohibition1",
+                "période de prohibition2",
+            ],
+            "additional_ref_reg": [
+                [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}],
+                None,
+            ],
+            "themes": [{'Pêche à pied': [], 'AMP sans réglementation particulière': []}, {}],
+            "tags": [{'tag1': ['sub-tag1']}, {}],
+            "location": ["location1", "location2"],
+        }
+    )
+
 def test_extract_regulatory_areas_open_data(
     create_cacem_tables, reset_test_data, regulatory_areas_open_data
 ):
@@ -244,14 +300,29 @@ def test_get_regulatory_areas_for_geopackage(
     regulatory_areas_for_geopackage["tags"] = regulatory_areas_for_geopackage["tags"].apply(json.dumps).apply(json.loads)
     pd.testing.assert_frame_equal(regulatory_areas, regulatory_areas_for_geopackage)
 
+def test_get_regulatory_areas_for_geoplateforme_csv(
+    regulatory_areas_open_data, regulatory_areas_for_geoplateforme_csv
+):
+    regulatory_areas = get_regulatory_areas_for_geoplateforme_csv(regulatory_areas_open_data)
+    pd.testing.assert_frame_equal(regulatory_areas, regulatory_areas_for_geoplateforme_csv)
 
+
+@patch("src.flows.regulatory_areas_open_data.delete_data_store_stored_data")
+@patch("src.flows.regulatory_areas_open_data.swap_configuration_stored_data")
+@patch("src.flows.regulatory_areas_open_data.run_data_store_workflow")
+@patch("src.flows.regulatory_areas_open_data.deliver_to_data_store")
 @patch("src.flows.regulatory_areas_open_data.update_resource")
 def test_flow(
     mock_update_resource,
+    mock_deliver_to_data_store,
+    mock_run_data_store_workflow,
+    mock_swap_configuration_stored_data,
+    mock_delete_data_store_stored_data,
     create_cacem_tables,
     reset_test_data,
     regulatory_areas_for_csv,
     regulatory_areas_for_geopackage,
+    regulatory_areas_for_geoplateforme_csv,
 ):
 
     state = regulatory_areas_open_data_flow(return_state=True)
@@ -325,4 +396,74 @@ def test_flow(
     pd.testing.assert_frame_equal(
         normalize_gdf(gdf_from_geopackage_file_object),
         normalize_gdf(regulatory_areas_for_geopackage),
+    )
+
+    # Check the Géoplateforme delivery
+    mock_deliver_to_data_store.assert_called_once()
+    delivery_kwargs = mock_deliver_to_data_store.call_args.kwargs
+    delivered_files = delivery_kwargs.pop("files")
+    assert delivery_kwargs == {
+        "upload_name": "regulatory_areas_cacem",
+        "description": "Zones réglementaires du CACEM",
+        "srs": "EPSG:4326",
+        "tags": {"source": "monitorenv"},
+        "comments": None,
+        "mock_update": False,
+    }
+
+    [(delivered_file_name, delivered_file_object)] = delivered_files.items()
+    assert delivered_file_name == "regulatory_areas_cacem.csv"
+    assert isinstance(delivered_file_object, BytesIO)
+
+    df_from_csv_file_object = pd.read_csv(
+        delivered_file_object, parse_dates=["creation", "date", "date_fin", "edition"]
+    )
+
+    # get_regulatory_areas_for_csv doesn't JSON-serialize additional_ref_reg (jsonb), so pandas
+    # writes it to CSV using Python's repr (single quotes); NaN means None
+    df_from_csv_file_object["additional_ref_reg"] = df_from_csv_file_object["additional_ref_reg"].apply(
+        lambda x: ast.literal_eval(x) if isinstance(x, str) else None
+    )
+    df_from_csv_file_object["themes"] = df_from_csv_file_object["themes"].apply(
+        lambda x: ast.literal_eval(x) if isinstance(x, str) else None
+    )
+    df_from_csv_file_object["tags"] = df_from_csv_file_object["tags"].apply(
+        lambda x: ast.literal_eval(x) if isinstance(x, str) else None
+    )
+    pd.testing.assert_frame_equal(
+        df_from_csv_file_object.convert_dtypes(),
+        regulatory_areas_for_geoplateforme_csv.convert_dtypes(),
+    )
+
+    # Check the Géoplateforme workflow run
+    mock_run_data_store_workflow.assert_called_once()
+    workflow_kwargs = mock_run_data_store_workflow.call_args.kwargs
+    assert workflow_kwargs["step"] == "creation-base"
+    assert (
+        workflow_kwargs["workflow_file"].name == "regulatory_areas_workflow.jsonc"
+    ), workflow_kwargs["workflow_file"]
+    assert workflow_kwargs["workflow_file"].exists()
+    params = workflow_kwargs["params"]
+    assert params["upload_name"] == "regulatory_areas_cacem"
+    assert params["datasheet_name"] == "Zones réglementaires CACEM"
+    assert params["producer"] == "MonitorEnv"
+    assert params["production_year"].isdigit()
+    # A new stored data is created at each run, suffixed with the run date.
+    stored_data_name = params["stored_data_name"]
+    assert re.fullmatch(
+        r"regulatory_areas_cacem_\d{8}T\d{6}", stored_data_name
+    ), stored_data_name
+    assert workflow_kwargs["mock_update"] is False
+
+    # The geoservice is pointed at the stored data just created, then the previous one
+    # is deleted, so that the published data never accumulates.
+    mock_swap_configuration_stored_data.assert_called_once_with(
+        configuration_id="geoplateforme_configuration_id",
+        offering_id="geoplateforme_offering_id",
+        stored_data_name=stored_data_name,
+        mock_update=False,
+    )
+    mock_delete_data_store_stored_data.assert_called_once_with(
+        stored_data_id=mock_swap_configuration_stored_data.return_value,
+        mock_update=False,
     )

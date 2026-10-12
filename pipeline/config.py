@@ -14,6 +14,7 @@ env_file = ".env.test" if TEST else ".env"
 ROOT_DIRECTORY = Path(__file__).parent
 DOTENV_PATH = ROOT_DIRECTORY / env_file
 LIBRARY_LOCATION = ROOT_DIRECTORY / Path("src")
+STATIC_LOCATION = LIBRARY_LOCATION / Path("static")
 QUERIES_LOCATION = LIBRARY_LOCATION / Path("queries")
 TEST_DATA_LOCATION = ROOT_DIRECTORY / Path("tests/test_data")
 
@@ -122,6 +123,41 @@ REGULATORY_AREAS_GEOPACKAGE_RESOURCE_ID = (
 )
 REGULATORY_AREAS_CSV_RESOURCE_TITLE = "regulatory_areas.csv"
 REGULATORY_AREAS_GEOPACKAGE_RESOURCE_TITLE = "regulatory_areas.gpkg"
+
+# Géoplateforme configuration
+GEOPLATEFORME_API_ROOT_URL = "https://data.geopf.fr/api"
+GEOPLATEFORME_TOKEN_URL = (
+    "https://sso.geopf.fr/realms/geoplateforme/protocol/openid-connect/token"
+)
+GEOPLATEFORME_LOGIN = get_key(DOTENV_PATH, "GEOPLATEFORME_LOGIN")
+GEOPLATEFORME_PASSWORD = get_key(DOTENV_PATH, "GEOPLATEFORME_PASSWORD")
+# Only for a service account. Left empty, the SDK authenticates with the login and the
+# password above, using the public client shipped in its default configuration.
+GEOPLATEFORME_CLIENT_ID = get_key(DOTENV_PATH, "GEOPLATEFORME_CLIENT_ID")
+GEOPLATEFORME_CLIENT_SECRET = get_key(DOTENV_PATH, "GEOPLATEFORME_CLIENT_SECRET")
+# Obtained by running `python -m sdk_entrepot_gpf me` once the credentials above are set.
+GEOPLATEFORME_DATASTORE_ID = get_key(DOTENV_PATH, "GEOPLATEFORME_DATASTORE_ID")
+GEOPLATEFORME_WORKFLOWS_LOCATION = STATIC_LOCATION / Path("geoplateforme")
+
+REGULATORY_AREAS_GEOPLATEFORME_UPLOAD_NAME = "regulatory_areas_cacem"
+REGULATORY_AREAS_GEOPLATEFORME_CSV_FILENAME = "regulatory_areas_cacem.csv"
+REGULATORY_AREAS_GEOPLATEFORME_SRS = "EPSG:4326"
+# Name of the stored data behind the published WFS, as listed by
+# `python -m sdk_entrepot_gpf stored_data`.
+# Base name of the stored data. Each run creates a new one, suffixed with the run date,
+# because the Géoplateforme's integration appends to an existing stored data.
+REGULATORY_AREAS_GEOPLATEFORME_STORED_DATA_NAME = "regulatory_areas_cacem"
+# Geoservice configuration and publication to point at the newly created stored data,
+# as listed by `python -m sdk_entrepot_gpf configuration` and `... offering`. They are
+# read from the environment because they change whenever the geoservice is recreated.
+REGULATORY_AREAS_GEOPLATEFORME_CONFIGURATION_ID = get_key(
+    DOTENV_PATH, "REGULATORY_AREAS_GEOPLATEFORME_CONFIGURATION_ID"
+)
+REGULATORY_AREAS_GEOPLATEFORME_OFFERING_ID = get_key(
+    DOTENV_PATH, "REGULATORY_AREAS_GEOPLATEFORME_OFFERING_ID"
+)
+REGULATORY_AREAS_GEOPLATEFORME_DATASHEET_NAME = "Zones réglementaires CACEM"
+REGULATORY_AREAS_GEOPLATEFORME_PRODUCER = "MonitorEnv"
 
 # Vessel repository XML
 VESSEL_FILES_GID = os.getenv("VESSEL_FILES_GID")
