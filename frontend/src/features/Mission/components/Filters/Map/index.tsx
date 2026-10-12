@@ -4,7 +4,6 @@ import { useGetThemesQuery } from '@api/themesAPI'
 import { CustomPeriodContainer, Italic } from '@components/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { FrontendError } from '@libs/FrontendError'
 import {
   Checkbox,
   CheckPicker,
@@ -108,9 +107,10 @@ function MapMissionsFiltersWithRef(
     selectedValues: MissionFiltersState[K]
   ) => {
     if (!Array.isArray(selectedValues)) {
-      throw new FrontendError('`selectedValues` should be an array.')
-    }
+      dispatch(updateFilters({ key: filterKey, value: undefined }))
 
+      return
+    }
     const nextSelectedValues = selectedValues.filter(selectedValue => selectedValue !== valueToDelete) as
       | string[]
       | number[]

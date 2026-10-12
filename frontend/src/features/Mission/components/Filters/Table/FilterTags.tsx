@@ -6,7 +6,6 @@ import { CustomPeriodContainer } from '@components/style'
 import { MissionDateRangeLabel } from '@features/Mission/components/MissionsList/type'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { FrontendError } from '@libs/FrontendError'
 import { customDayjs, type DateAsStringRange, DateRangePicker, SingleTag, useNewWindow } from '@mtes-mct/monitor-ui'
 import { deleteTagTag } from '@utils/deleteTagTag'
 import { DateRangeEnum } from 'domain/entities/dateRange'
@@ -64,7 +63,14 @@ export function FilterTags({
     selectedValues: MissionFiltersState[K]
   ) => {
     if (!Array.isArray(selectedValues)) {
-      throw new FrontendError('`selectedValues` should be an array.')
+      dispatch(
+        updateFilters({
+          key: filterKey,
+          value: typeof valueToDelete === 'boolean' ? false : undefined
+        })
+      )
+
+      return
     }
 
     const nextSelectedValues = selectedValues.filter(selectedValue => selectedValue !== valueToDelete) as
