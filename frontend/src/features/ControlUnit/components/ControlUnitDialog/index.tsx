@@ -63,11 +63,11 @@ export function ControlUnitDialog() {
   }
 
   const openFilteredMissions = (controlUnitId: number) => {
-    const sixMonthsAgo = customDayjs().subtract(6, 'month').toISOString()
+    const lastWeek = customDayjs().subtract(1, 'week').toISOString()
     dispatch(resetMissionFilters())
     dispatch(updateFilters({ key: MissionFiltersEnum.UNIT_FILTER, value: [controlUnitId] }))
     dispatch(updateFilters({ key: MissionFiltersEnum.PERIOD_FILTER, value: DateRangeEnum.CUSTOM }))
-    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: sixMonthsAgo }))
+    dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_AFTER_FILTER, value: lastWeek }))
     dispatch(updateFilters({ key: MissionFiltersEnum.STARTED_BEFORE_FILTER, value: customDayjs().toISOString() }))
     dispatch(sideWindowActions.focusAndGoTo(sideWindowPaths.MISSIONS))
   }
