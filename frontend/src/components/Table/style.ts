@@ -11,11 +11,18 @@ export const TotalResults = styled.h2`
   margin-top: 32px;
   line-height: 22px;
 `
-export const ThemesOrTagsContainer = styled.span`
+export const ThemesOrTagsContainer = styled.span<{ $withBreakWords?: boolean }>`
   color: ${p => p.theme.color.charcoal};
   font-weight: 500;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  ${p => {
+    if (!p.$withBreakWords) {
+      return `
+        text-overflow: ellipsis;
+        overflow: hidden;`
+    }
+
+    return 'white-space: break-spaces;'
+  }}
 `
 export const SubThemesOrSubTagsContainer = styled.span`
   color: ${p => p.theme.color.slateGray};

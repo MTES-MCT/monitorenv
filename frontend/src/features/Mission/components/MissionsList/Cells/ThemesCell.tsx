@@ -35,6 +35,7 @@ export function ThemesCell({ asDetails, themes }: { asDetails: boolean; themes: 
       {cellContent.map(({ component, title }) => (
         <ThemesOrTagsContainer
           key={title}
+          $withBreakWords={asDetails}
           as={asDetails ? 'li' : 'span'}
           data-cy="cell-envActions-themes"
           title={cellTitle}
