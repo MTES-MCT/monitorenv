@@ -1,14 +1,15 @@
 package fr.gouv.cacem.monitorenv.domain.entities.dashboard
 
+import fr.gouv.cacem.monitorenv.domain.entities.files.IImageEntity
 import java.util.UUID
 
 data class ImageEntity(
     val id: UUID?,
-    val name: String,
-    val content: ByteArray,
-    val mimeType: String,
-    val size: Int,
-) {
+    override val name: String,
+    override val content: ByteArray,
+    override val mimeType: String,
+    override val size: Int,
+) : IImageEntity {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

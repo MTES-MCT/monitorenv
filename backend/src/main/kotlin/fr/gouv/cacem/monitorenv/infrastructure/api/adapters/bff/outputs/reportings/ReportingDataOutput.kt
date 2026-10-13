@@ -6,6 +6,7 @@ import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetDetailsEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingImageDataOutput.Companion.fromImageEntity
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.reportings.ReportingSourceDataOutput.Companion.fromReportingSourceDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput.Companion.fromTagEntity
@@ -13,7 +14,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.T
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput.Companion.fromThemeEntity
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 data class ReportingDataOutput(
     val id: Int,
@@ -44,6 +45,7 @@ data class ReportingDataOutput(
     val isInfractionProven: Boolean,
     val theme: ThemeOutput,
     val tags: List<TagOutput>,
+    val images: List<ReportingImageDataOutput>,
 ) {
     companion object {
         fun fromReportingDTO(dto: ReportingDetailsDTO): ReportingDataOutput {
@@ -84,6 +86,7 @@ data class ReportingDataOutput(
                 isInfractionProven = dto.reporting.isInfractionProven,
                 tags = dto.reporting.tags.map { fromTagEntity(it) },
                 theme = fromThemeEntity(dto.reporting.theme),
+                images = dto.reporting.images.map { fromImageEntity(it) },
             )
         }
     }

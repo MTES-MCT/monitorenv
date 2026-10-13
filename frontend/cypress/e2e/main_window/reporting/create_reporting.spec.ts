@@ -53,6 +53,21 @@ context('Reporting', () => {
     cy.fill('Thématiques et sous-thématiques', ['Remise en état après occupation du DPM'])
     cy.fill('Tags et sous-tags', ['Mixte'])
 
+    cy.fixture('image.png', null).then(fileContent => {
+      cy.get('input[type=file]').selectFile(
+        {
+          contents: Cypress.Buffer.from(fileContent),
+          fileName: 'image.png',
+          mimeType: 'image/png'
+        },
+        {
+          action: 'select',
+          force: true,
+          log: true
+        }
+      )
+    })
+
     const { asApiDateTime, asDatePickerDateTime } = getUtcDateInMultipleFormats()
     cy.fill('Date et heure (UTC)', asDatePickerDateTime)
     cy.fill('Saisi par', 'XYZ')
@@ -102,6 +117,11 @@ context('Reporting', () => {
         },
         validityTime: 24
       })
+      // Not included in the above assertion because of content length
+      expect(interception.request.body.images).to.have.length(1)
+      expect(interception.request.body.images[0].name).equal('image.png')
+      expect(interception.request.body.images[0].size).equal(396656)
+      expect(interception.request.body.images[0].mimeType).equal('image/png')
     })
 
     cy.get('div').contains('Dernière modification le')

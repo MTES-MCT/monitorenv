@@ -455,6 +455,7 @@ class JpaReportingRepositoryITests : AbstractDBTests() {
                 isInfractionProven = true,
                 tags = tags,
                 theme = theme,
+                images = listOf(),
             )
 
         jpaReportingRepository.save(newReporting)

@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.entities.reporting
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.files.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.tags.TagEntity
 import fr.gouv.cacem.monitorenv.domain.entities.themes.ThemeEntity
 import org.locationtech.jts.geom.Geometry
@@ -35,6 +36,7 @@ data class ReportingEntity(
     val isInfractionProven: Boolean,
     val tags: List<TagEntity>,
     var theme: ThemeEntity,
+    val images: List<ImageEntity>,
 ) {
     fun validate() {
         reportingSources.forEach { it.validate() }

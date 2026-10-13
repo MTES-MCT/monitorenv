@@ -4,6 +4,7 @@ import { DeleteDialog } from '@components/Dialog/DeleteDialog'
 import { Italic } from '@components/style'
 import { AutoSaveTag } from '@features/commonComponents/AutoSaveTag'
 import { mainWindowActions } from '@features/MainWindow/slice'
+import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
 import { useSyncFormValuesWithRedux } from '@features/Reportings/hooks/useSyncFormValuesWithRedux'
 import { reportingActions } from '@features/Reportings/slice'
 import {
@@ -27,6 +28,8 @@ import { useAppSelector } from '@hooks/useAppSelector'
 import {
   CheckTreePicker,
   customDayjs,
+  type FileApi,
+  FileUploader,
   FormikEffect,
   FormikMultiRadio,
   FormikTextarea,
@@ -60,7 +63,7 @@ import {
 } from 'domain/use_cases/map/updateMapInteractionListeners'
 import { FieldArray, useFormikContext } from 'formik'
 import { isEmpty } from 'lodash'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { useDebouncedCallback } from 'use-debounce'
 
@@ -332,6 +335,28 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
     )
   }, [values.theme?.id, values.targetDetails, values.vehicleType])
 
+  const onUpload = useCallback(
+    (images: FileApi[]) => {
+      setFieldValue('images', images)
+    },
+    [setFieldValue]
+  )
+
+  const onError = useCallback(
+    (errorMessage: string) => {
+      dispatch(
+        addMainWindowBanner({
+          children: errorMessage,
+          isClosable: true,
+          isFixed: true,
+          level: Level.ERROR,
+          withAutomaticClosing: true
+        })
+      )
+    },
+    [dispatch]
+  )
+
   if (!selectedReporting || isEmpty(values)) {
     return null
   }
@@ -396,6 +421,13 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
           <FormikTextarea label="Description du signalement" name="description" />
           <DescriptionMessageText>La description est partagée dans Monitor Ext</DescriptionMessageText>
         </DescriptionContainer>
+        <FileUploader
+          files={selectedReporting.images}
+          isSideWindow={reportingContext === ReportingContext.SIDE_WINDOW}
+          onDelete={onUpload}
+          onError={onError}
+          onUpload={onUpload}
+        />
         <Separator />
 
         <div>

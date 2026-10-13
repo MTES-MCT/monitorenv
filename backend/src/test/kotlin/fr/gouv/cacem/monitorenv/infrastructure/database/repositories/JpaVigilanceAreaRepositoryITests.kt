@@ -3,9 +3,9 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.repositories
 import fr.gouv.cacem.monitorenv.config.CustomQueryCountListener
 import fr.gouv.cacem.monitorenv.config.DataSourceProxyBeanPostProcessor
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
+import fr.gouv.cacem.monitorenv.domain.entities.files.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.FrequencyEnum
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.SourceTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.VigilanceAreaPeriodEntity

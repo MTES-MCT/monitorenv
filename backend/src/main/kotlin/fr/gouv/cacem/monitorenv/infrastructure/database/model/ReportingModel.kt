@@ -131,6 +131,13 @@ class ReportingModel(
     var tags: List<TagReportingModel>,
     @Formula("created_at + INTERVAL '1 hour' * validity_time")
     val validityEndTime: Instant? = null,
+    @OneToMany(
+        mappedBy = "reporting",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.LAZY,
+    )
+    var images: MutableList<ReportingImageModel> = mutableListOf(),
 ) {
     fun toReporting(mapper: JsonMapper) =
         ReportingEntity(
@@ -167,6 +174,7 @@ class ReportingModel(
             isInfractionProven = isInfractionProven,
             tags = toTagEntities(tags.toList()),
             theme = toThemeEntities(themes.toList()).first(),
+            images = images.map { it.toImageEntity() },
         )
 
     fun toReportingListDTO(jsonMapper: JsonMapper): ReportingListDTO {
@@ -267,6 +275,7 @@ class ReportingModel(
                 isInfractionProven = reporting.isInfractionProven,
                 tags = listOf(),
                 themes = listOf(),
+                images = mutableListOf(),
             )
     }
 }

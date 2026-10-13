@@ -1,6 +1,6 @@
 /* eslint-disable typescript-sort-keys/string-enum */
 import { getTimeLeft } from '@features/Reportings/utils'
-import { customDayjs as dayjs } from '@mtes-mct/monitor-ui'
+import { customDayjs as dayjs, type FileApi } from '@mtes-mct/monitor-ui'
 
 import type { ActionSource, ActionTypeEnum, Mission } from './missions'
 import type { TagFromAPI } from './tags'
@@ -21,6 +21,7 @@ export type Reporting = {
   geom: GeoJSON.MultiPolygon | GeoJSON.MultiPoint | undefined
   hasNoUnitAvailable: boolean | undefined
   id: number | string
+  images?: FileApi[]
   isArchived: boolean
   isControlRequired: boolean | undefined
   isInfractionProven: boolean

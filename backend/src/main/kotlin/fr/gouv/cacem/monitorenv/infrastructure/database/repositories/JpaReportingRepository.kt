@@ -10,6 +10,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IReportingRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingImageModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingModel.Companion.fromReportingEntity
 import fr.gouv.cacem.monitorenv.infrastructure.database.model.ReportingSourceModel
@@ -219,6 +220,15 @@ class JpaReportingRepository(
                     )
                 }
             reportingModel.reportingSources.addAll(reportingsSourceModels)
+
+            val images =
+                reporting.images.map {
+                    ReportingImageModel.fromImageEntity(
+                        reportingModel = reportingModel,
+                        image = it,
+                    )
+                }
+            reportingModel.images.addAll(images)
 
             return dbReportingRepository.saveAndFlush(reportingModel).toReportingDetailsDTO(mapper)
         } catch (e: ObjectRetrievalFailureException) {

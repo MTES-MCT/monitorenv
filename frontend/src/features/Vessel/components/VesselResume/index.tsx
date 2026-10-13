@@ -147,16 +147,13 @@ export function Resume({ batchId, onClose, rowNumber, shipId }: ResumeProps) {
   }, [currentNbReportingsInfraction, dispatch])
 
   const currentReportingText = useMemo(() => {
-    if (currentNbObservations === 0) {
-      return undefined
-    }
-    if (currentNbReportingsInfraction > 0) {
+    if (currentNbObservations > 0 && currentNbReportingsInfraction > 0) {
       return {
         level: Level.ERROR,
         message: `${currentNbReportingsInfraction} ${pluralize('suspicion', currentNbReportingsInfraction)} d'infraction et ${currentNbObservations} ${pluralize('observation', currentNbObservations)} en cours`
       }
     }
-    if (currentNbReportingsInfraction === 0) {
+    if (currentNbObservations > 0 && currentNbReportingsInfraction === 0) {
       return {
         level: Level.INFO,
         message: `${currentNbObservations} ${pluralize('observation', currentNbObservations)} en cours`
