@@ -1,14 +1,19 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.missions
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
+import fr.gouv.cacem.monitorenv.domain.entities.files.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.semaphore.SemaphoreEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 object TestUtils {
     fun getReportingDTO(id: Int): ReportingDetailsDTO {
@@ -55,6 +60,16 @@ object TestUtils {
                     isInfractionProven = true,
                     tags = emptyList(),
                     theme = aTheme(),
+                    images =
+                        listOf(
+                            ImageEntity(
+                                id = 1,
+                                content = "TEST".toByteArray(),
+                                mimeType = "images/jpeg",
+                                name = "fichier1",
+                                size = 1024,
+                            ),
+                        ),
                 ),
             reportingSources =
                 listOf(
@@ -121,6 +136,16 @@ object TestUtils {
                     isInfractionProven = true,
                     tags = emptyList(),
                     theme = aTheme(),
+                    images =
+                        listOf(
+                            ImageEntity(
+                                id = 1,
+                                content = "TEST".toByteArray(),
+                                mimeType = "images/jpeg",
+                                name = "fichier1",
+                                size = 1024,
+                            ),
+                        ),
                 ),
             reportingSources =
                 listOf(

@@ -1,7 +1,13 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures
 
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
-import fr.gouv.cacem.monitorenv.domain.entities.reporting.*
+import fr.gouv.cacem.monitorenv.domain.entities.files.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingSourceEntity
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.SuspicionOfInfractions
+import fr.gouv.cacem.monitorenv.domain.entities.reporting.TargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingDetailsDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingListDTO
 import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.dtos.ReportingSourceDTO
@@ -9,7 +15,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Co
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 
 class ReportingFixture {
     companion object {
@@ -54,6 +60,16 @@ class ReportingFixture {
                 attachedEnvActionId = attachedEnvActionId,
                 tags = emptyList(),
                 theme = aTheme(),
+                images =
+                    listOf(
+                        ImageEntity(
+                            id = 1,
+                            content = "TEST".toByteArray(),
+                            mimeType = "images/jpeg",
+                            name = "fichier1",
+                            size = 1024,
+                        ),
+                    ),
             )
         }
 
@@ -132,7 +148,6 @@ class ReportingFixture {
 
         fun aSupicionOfInfraction(
             id: Int? = null,
-            validityTime: Int = 10,
             targetType: TargetTypeEnum? = TargetTypeEnum.VEHICLE,
             reportingSources: List<ReportingSourceEntity> = listOf(aReportingSourceSemaphore()),
         ): SuspicionOfInfractions =

@@ -1,9 +1,9 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards
 
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.ImageEntity
-import io.ktor.util.*
 import kotlinx.serialization.Serializable
 import java.util.UUID
+import kotlin.io.encoding.Base64
 
 data class ImageDataInput(
     val id: UUID?,
@@ -17,7 +17,7 @@ data class ImageDataInput(
         ImageEntity(
             id = id,
             name = name,
-            content = content.decodeBase64Bytes(),
+            content = Base64.decode(content),
             mimeType = mimeType,
             size = size,
         )

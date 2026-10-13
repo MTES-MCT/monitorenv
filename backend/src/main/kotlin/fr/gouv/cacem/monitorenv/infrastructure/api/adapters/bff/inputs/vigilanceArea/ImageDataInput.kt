@@ -1,8 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
-import io.ktor.util.*
+import fr.gouv.cacem.monitorenv.domain.entities.files.ImageEntity
 import kotlinx.serialization.Serializable
+import kotlin.io.encoding.Base64
 
 @Serializable
 data class ImageDataInput(
@@ -16,7 +16,7 @@ data class ImageDataInput(
         ImageEntity(
             id = id,
             name = name,
-            content = content.decodeBase64Bytes(),
+            content = Base64.decode(content),
             mimeType = mimeType,
             size = size,
         )

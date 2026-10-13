@@ -1,6 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.vigilanceAreas
 
-import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.ImageEntity
+import fr.gouv.cacem.monitorenv.domain.entities.files.ImageEntity
 import io.ktor.util.*
 import kotlinx.serialization.Serializable
 

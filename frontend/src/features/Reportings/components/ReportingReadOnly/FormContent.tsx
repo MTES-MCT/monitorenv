@@ -1,5 +1,5 @@
 import { useAppSelector } from '@hooks/useAppSelector'
-import { getOptionsFromLabelledEnum, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
+import { FilePreview, getOptionsFromLabelledEnum, Label, MultiRadio, TextInput, Toggle } from '@mtes-mct/monitor-ui'
 import { displaySubTags, displayTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes } from '@utils/getThemesAsOptions'
 import {
@@ -18,7 +18,7 @@ import { Validity } from './Validity'
 
 const EMPTY_VALUE = '--'
 
-export function FormContent({ reporting }: { reporting: Reporting }) {
+export function FormContent({ isSideWindow = false, reporting }: { isSideWindow?: boolean; reporting: Reporting }) {
   const isSuperUser = useAppSelector(state => state.account.isSuperUser)
   const sourceOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
   const reportTypeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
@@ -81,6 +81,12 @@ export function FormContent({ reporting }: { reporting: Reporting }) {
           plaintext
           value={reporting.description ?? 'Aucune description'}
         />
+        {reporting.images && reporting.images?.length > 0 && (
+          <div>
+            <Label>Image</Label>
+            <FilePreview files={reporting.images} isSideWindow={isSideWindow} />
+          </div>
+        )}
       </FirstPartContainer>
       <div>
         <AdditionnalInformations>COMPLEMENTS D&apos;INFORMATIONS</AdditionnalInformations>

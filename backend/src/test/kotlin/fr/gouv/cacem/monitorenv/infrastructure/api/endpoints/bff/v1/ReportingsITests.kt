@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
+import fr.gouv.cacem.monitorenv.domain.entities.files.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.SourceTypeEnum
@@ -27,6 +28,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.reportings.fixtures.ReportingFi
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.themes.fixtures.ThemeFixture.Companion.aTheme
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.CreateOrUpdateReportingDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ReportingSourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
@@ -56,6 +58,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
+import kotlin.io.encoding.Base64
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -138,6 +141,16 @@ class ReportingsITests {
                         isInfractionProven = true,
                         tags = tags,
                         theme = theme,
+                        images =
+                            listOf(
+                                ImageEntity(
+                                    id = 1,
+                                    content = "TEST".toByteArray(),
+                                    mimeType = "images/jpeg",
+                                    name = "fichier1",
+                                    size = 1024,
+                                ),
+                            ),
                     ),
                 reportingSources =
                     listOf(
@@ -152,7 +165,7 @@ class ReportingsITests {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                            Point,
+                                                Point,
                                 ),
                             controlUnit = null,
                         ),
@@ -194,6 +207,16 @@ class ReportingsITests {
                 isInfractionProven = true,
                 tags = emptyList(),
                 theme = ThemeInput(id = 1, name = "theme", startedAt = null, endedAt = null),
+                images =
+                    listOf(
+                        ImageDataInput(
+                            id = 1,
+                            content = Base64.encode("TEST".toByteArray()),
+                            mimeType = "images/jpeg",
+                            name = "fichier1",
+                            size = 1024,
+                        ),
+                    ),
             )
 
         given(createOrUpdateReporting.execute(any())).willReturn(reporting)
@@ -274,6 +297,16 @@ class ReportingsITests {
                         isInfractionProven = true,
                         tags = tags,
                         theme = theme,
+                        images =
+                            listOf(
+                                ImageEntity(
+                                    id = 1,
+                                    content = "TEST".toByteArray(),
+                                    mimeType = "images/jpeg",
+                                    name = "fichier1",
+                                    size = 1024,
+                                ),
+                            ),
                     ),
                 reportingSources =
                     listOf(
@@ -288,7 +321,7 @@ class ReportingsITests {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                            Point,
+                                                Point,
                                 ),
                             controlUnit = null,
                         ),
@@ -364,6 +397,16 @@ class ReportingsITests {
                         isInfractionProven = true,
                         tags = emptyList(),
                         theme = aTheme(),
+                        images =
+                            listOf(
+                                ImageEntity(
+                                    id = 1,
+                                    content = "TEST".toByteArray(),
+                                    mimeType = "images/jpeg",
+                                    name = "fichier1",
+                                    size = 1024,
+                                ),
+                            ),
                     ),
                 reportingSources = listOf(),
             )
@@ -429,6 +472,16 @@ class ReportingsITests {
                         isInfractionProven = true,
                         tags = listOf(aTag(id = 2)),
                         theme = aTheme(id = 1),
+                        images =
+                            listOf(
+                                ImageEntity(
+                                    id = 1,
+                                    content = "TEST".toByteArray(),
+                                    mimeType = "images/jpeg",
+                                    name = "fichier1",
+                                    size = 1024,
+                                ),
+                            ),
                     ),
                 reportingSources =
                     listOf(
@@ -466,6 +519,16 @@ class ReportingsITests {
                     isInfractionProven = true,
                     tags = emptyList(),
                     theme = ThemeInput(id = 1, name = "theme", startedAt = null, endedAt = null),
+                    images =
+                        listOf(
+                            ImageDataInput(
+                                id = 1,
+                                content = Base64.encode("TEST".toByteArray()),
+                                mimeType = "images/jpeg",
+                                name = "fichier1",
+                                size = 1024,
+                            ),
+                        ),
                 ),
             )
 
@@ -624,6 +687,16 @@ class ReportingsITests {
                             isInfractionProven = true,
                             tags = emptyList(),
                             theme = aTheme(id = 1, startedAt = null),
+                            images =
+                                listOf(
+                                    ImageEntity(
+                                        id = 1,
+                                        content = "TEST".toByteArray(),
+                                        mimeType = "images/jpeg",
+                                        name = "fichier1",
+                                        size = 1024,
+                                    ),
+                                ),
                         ),
                     reportingSources =
                         listOf(
@@ -707,7 +780,16 @@ class ReportingsITests {
                     "endedAt": null,
                     "subThemes":[]
                    },
-                  "tags":[]
+                  "tags":[],
+                    "images": [
+                        {
+                          "id": 1,
+                          "name": "fichier1",
+                          "content": "VEVTVA==",
+                          "mimeType": "images/jpeg",
+                          "size": 1024
+                        }
+                      ]
                     }""",
             )
     }

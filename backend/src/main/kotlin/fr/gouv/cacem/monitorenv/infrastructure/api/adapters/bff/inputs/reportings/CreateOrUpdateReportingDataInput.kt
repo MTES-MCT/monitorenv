@@ -37,6 +37,7 @@ data class CreateOrUpdateReportingDataInput(
     val isInfractionProven: Boolean,
     val tags: List<TagInput> = listOf(),
     val theme: ThemeInput,
+    val images: List<ImageDataInput> = listOf(),
 ) {
     fun toReportingEntity(): ReportingEntity =
         ReportingEntity(
@@ -66,5 +67,6 @@ data class CreateOrUpdateReportingDataInput(
             isInfractionProven = this.isInfractionProven,
             tags = this.tags.map { it.toTagEntity() },
             theme = theme.toThemeEntity(),
+            images = images.map { it.toImageEntity() },
         )
 }

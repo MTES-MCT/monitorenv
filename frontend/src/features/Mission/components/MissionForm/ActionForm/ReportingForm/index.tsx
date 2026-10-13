@@ -62,7 +62,7 @@ export function ReportingForm({
           Détacher de la mission
         </Button>
       </Header>
-      <FormContent reporting={reporting} />
+      <FormContent isSideWindow reporting={reporting} />
     </>
   )
 }
