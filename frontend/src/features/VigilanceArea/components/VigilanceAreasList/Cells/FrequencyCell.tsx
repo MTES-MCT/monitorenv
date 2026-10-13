@@ -54,9 +54,7 @@ const PeriodWrapper = styled.span`
   flex-direction: column;
   gap: 4px;
   > span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: break-spaces;
   }
 `
 const Title = styled.span`

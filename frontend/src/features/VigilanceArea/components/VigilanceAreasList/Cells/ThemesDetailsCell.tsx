@@ -27,14 +27,10 @@ export function ThemesDetailsCell({ themes }: { themes?: ThemeFromAPI[] }) {
 
 const ThemeText = styled.span`
   color: ${p => p.theme.color.charcoal};
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: break-spaces;
 `
 
 const SubThemesText = styled.div`
   color: ${p => p.theme.color.slateGray};
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: break-spaces;
 `
