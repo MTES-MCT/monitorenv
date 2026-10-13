@@ -68,8 +68,8 @@ export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
                         {period?.frequency && period.frequency !== VigilanceArea.Frequency.NONE && (
                           <Tooltip Icon={Icon.Reset}>
                             {[
-                              frequencyText(period.frequency, period.startDatePeriod, period.endDatePeriod, false),
-                              endingOccurenceText(period?.endingCondition, period?.computedEndDate, false)
+                              frequencyText(period.frequency, period.startDatePeriod, period.endDatePeriod),
+                              endingOccurenceText(period?.endingCondition, period?.computedEndDate)
                             ]
                               .filter(value => !!value)
                               .join(', ')}
@@ -104,8 +104,8 @@ export function PlanningBody({ vigilanceArea }: PlanningBodyProps) {
                         {period?.frequency && period.frequency !== VigilanceArea.Frequency.NONE && (
                           <Tooltip Icon={Icon.Reset}>
                             {[
-                              frequencyText(period?.frequency, period.startDatePeriod, period.endDatePeriod, false),
-                              endingOccurenceText(period?.endingCondition, period?.computedEndDate, false)
+                              frequencyText(period?.frequency, period.startDatePeriod, period.endDatePeriod),
+                              endingOccurenceText(period?.endingCondition, period?.computedEndDate)
                             ]
                               .filter(value => !!value)
                               .join(', ')}

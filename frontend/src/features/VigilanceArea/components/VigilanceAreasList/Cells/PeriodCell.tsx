@@ -15,8 +15,8 @@ export function PeriodCell({ period }: { period: VigilanceArea.VigilanceAreaPeri
       {period?.frequency && period.frequency !== VigilanceArea.Frequency.NONE && (
         <Tooltip Icon={Icon.Reset} isSideWindow>
           {[
-            frequencyText(period?.frequency, period.startDatePeriod, period.endDatePeriod, false),
-            endingOccurenceText(period?.endingCondition, period?.computedEndDate, false)
+            frequencyText(period?.frequency, period.startDatePeriod, period.endDatePeriod),
+            endingOccurenceText(period?.endingCondition, period?.computedEndDate)
           ].join(', ')}
         </Tooltip>
       )}

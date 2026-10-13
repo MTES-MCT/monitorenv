@@ -2,28 +2,20 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 
 import { VigilanceArea } from './types'
 
-export const endingOccurenceText = (
-  endingCondition?: VigilanceArea.EndingCondition,
-  computedEndDate?: string,
-  capitalize = true
-) => {
+export const endingOccurenceText = (endingCondition?: VigilanceArea.EndingCondition, computedEndDate?: string) => {
   if (!endingCondition) {
     return ''
   }
 
   if (endingCondition === VigilanceArea.EndingCondition.NEVER) {
-    const text = 'pas de fin de récurrence'
-
-    return capitalize ? capitalizeFirstLetter(text) : text
+    return 'pas de fin de récurrence'
   }
 
   if (!computedEndDate) {
     return ''
   }
 
-  const text = `fin le ${customDayjs(computedEndDate).utc().format('DD/MM/YYYY')}`
-
-  return capitalize ? capitalizeFirstLetter(text) : text
+  return `fin le ${customDayjs(computedEndDate).utc().format('DD/MM/YYYY')}`
 }
 function getUniqueDayNames(startDate: string, endDate: string): string[] {
   const days: string[] = []
@@ -31,7 +23,7 @@ function getUniqueDayNames(startDate: string, endDate: string): string[] {
   const end = customDayjs(endDate).utc()
 
   while (current.isSameOrBefore(end, 'day')) {
-    const dayName = capitalizeFirstLetter(current.format('dddd'))
+    const dayName = current.format('dddd')
     if (!days.includes(dayName)) {
       days.push(dayName)
     }
@@ -68,32 +60,23 @@ function computeWeeklyText(startDate: string | undefined, endDate: string | unde
 export const frequencyText = (
   frequency: VigilanceArea.Frequency | undefined,
   startDate: string | undefined,
-  endDate: string | undefined,
-  capitalize = true
+  endDate: string | undefined
 ) => {
   switch (frequency) {
     case VigilanceArea.Frequency.ALL_YEARS: {
-      const text = 'se répète tous les ans'
-
-      return capitalize ? capitalizeFirstLetter(text) : text
+      return 'Se répète tous les ans'
     }
     case VigilanceArea.Frequency.ALL_MONTHS: {
-      const text = 'se répète tous les mois'
-
-      return capitalize ? capitalizeFirstLetter(text) : text
+      return 'Se répète tous les mois'
     }
     case VigilanceArea.Frequency.ALL_WEEKS: {
-      const text = computeWeeklyText(startDate, endDate)
-
-      return capitalize ? capitalizeFirstLetter(text) : text
+      return computeWeeklyText(startDate, endDate)
     }
     case VigilanceArea.Frequency.NONE:
     default:
       return ''
   }
 }
-
-const capitalizeFirstLetter = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
 export function computeVigilanceAreaPeriod(
   period: VigilanceArea.VigilanceAreaPeriod | undefined,
@@ -102,15 +85,20 @@ export function computeVigilanceAreaPeriod(
   if (period?.isAtAllTimes) {
     return 'En tout temps'
   }
+
   if (period?.startDatePeriod) {
-    return `${[
-      `${period?.startDatePeriod ? `Du ${customDayjs(period?.startDatePeriod).utc().format('DD/MM/YY')}` : ''}
-      ${period?.endDatePeriod ? `au ${customDayjs(period?.endDatePeriod).utc().format('DD/MM/YY')}` : ''}`,
-      withReccurenceText ? frequencyText(period?.frequency, period?.startDatePeriod, period?.endDatePeriod, false) : '',
-      withReccurenceText ? endingOccurenceText(period?.endingCondition, period?.computedEndDate, false) : ''
-    ]
-      .filter(Boolean)
-      .join(', ')}`
+    const startText = period?.startDatePeriod
+      ? `Du ${customDayjs(period?.startDatePeriod).utc().format('DD/MM/YY')}`
+      : ''
+    const endText = period?.endDatePeriod ? ` au ${customDayjs(period?.endDatePeriod).utc().format('DD/MM/YY')}` : ''
+
+    const recurrenceText = withReccurenceText
+      ? frequencyText(period?.frequency, period?.startDatePeriod, period?.endDatePeriod)
+      : ''
+
+    const endingText = withReccurenceText ? endingOccurenceText(period?.endingCondition, period?.computedEndDate) : ''
+
+    return [`${startText}${endText}. ${recurrenceText}`, endingText].filter(Boolean).join(', ')
   }
 
   return ''
