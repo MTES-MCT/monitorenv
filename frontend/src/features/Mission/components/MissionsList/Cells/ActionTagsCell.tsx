@@ -60,8 +60,7 @@ export function ActionTagsCell({ envActions }: { envActions: EnvAction[] }) {
 const TagsAndSubTagsContainer = styled.span`
   color: ${p => p.theme.color.charcoal};
   font-weight: 500;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  white-space: break-spaces;
 `
 const SubTagsContainer = styled.span`
   color: ${p => p.theme.color.slateGray};

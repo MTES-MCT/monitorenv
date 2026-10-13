@@ -1,6 +1,7 @@
 import { ExpandedRowList, ExpandedRowValue } from '@components/Table/TableWithSelectableRows/style'
 import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
 import { ControlInfractionsTags } from '@features/Mission/components/ControlInfractionsTags'
+import { customDayjs } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 
 import { TargetTypeEnum, TargetTypeLabels } from '../../../../../domain/entities/targetType'
@@ -13,15 +14,26 @@ export function ControlsCell({ envActions }: { envActions: EnvAction[] }) {
     return UNKNOWN
   }
 
+  const sortedEnvActions = [...envActions].sort((a, b) => {
+    if (!a.actionStartDateTimeUtc) {
+      return 1
+    }
+    if (!b.actionStartDateTimeUtc) {
+      return -1
+    }
+
+    return customDayjs(b.actionStartDateTimeUtc).unix() - customDayjs(a.actionStartDateTimeUtc).unix()
+  })
+
   return (
     <ExpandedRowList>
-      {envActions
+      {sortedEnvActions
         .filter(envAction => envAction.actionType === 'CONTROL')
         .map(envAction => (
           <li key={envAction.id}>
             <ExpandedRowValue>
               {envAction.actionStartDateTimeUtc ? (
-                <>Le {getDateAsLocalizedStringVeryCompact(envAction.actionStartDateTimeUtc)}`</>
+                <>Le {getDateAsLocalizedStringVeryCompact(envAction.actionStartDateTimeUtc)}</>
               ) : (
                 ''
               )}
