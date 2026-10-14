@@ -86,8 +86,7 @@ export function ControlForm({
   const [isReportingListVisible, setIsReportingListVisible] = useState<boolean>(reportingIds?.length === 1)
 
   const currentActionErrors = (errors.envActions?.[envActionIndex] ?? undefined) as
-    | FormikErrors<EnvActionControl>
-    | undefined
+    FormikErrors<EnvActionControl> | undefined
 
   const numberOfInfractionTarget = useAppSelector(state => getNumberOfInfractionTarget(state.missionForms))
 

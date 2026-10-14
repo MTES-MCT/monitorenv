@@ -388,10 +388,7 @@ export type EnvActionForTimeline = EnvAction & {
 }
 
 export type ActionsTypeForTimeLine =
-  | ReportingForTimeline
-  | DetachedReportingForTimeline
-  | EnvActionForTimeline
-  | FishMissionAction.FishActionForTimeline
+  ReportingForTimeline | DetachedReportingForTimeline | EnvActionForTimeline | FishMissionAction.FishActionForTimeline
 
 export const getMissionStatus = ({
   endDateTimeUtc,

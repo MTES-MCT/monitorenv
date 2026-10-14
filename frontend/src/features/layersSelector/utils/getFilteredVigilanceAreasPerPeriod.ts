@@ -97,9 +97,7 @@ export function isMatchForRecurringOccurrence(
 
 export const getFilterVigilanceAreasPerPeriod = (
   vigilanceAreas: (
-    | VigilanceArea.VigilanceAreaLayer
-    | VigilanceArea.VigilanceAreaFromApi
-    | VigilanceArea.VigilanceArea
+    VigilanceArea.VigilanceAreaLayer | VigilanceArea.VigilanceAreaFromApi | VigilanceArea.VigilanceArea
   )[],
   periodFilter: VigilanceArea.VigilanceAreaFilterPeriod | undefined,
   vigilanceAreaSpecificPeriodFilter?: string[],

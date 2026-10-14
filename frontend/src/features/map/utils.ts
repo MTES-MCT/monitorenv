@@ -49,9 +49,7 @@ export const getOverlayItemsFromFeatures = (
         acc.push({
           layerType: type as RegulatoryOrAMPOrViglanceAreaLayerType,
           properties: properties as
-            | AMPProperties
-            | RegulatoryArea.RegulatoryAreaTilesProperties
-            | VigilanceArea.VigilanceAreaProperties
+            AMPProperties | RegulatoryArea.RegulatoryAreaTilesProperties | VigilanceArea.VigilanceAreaProperties
         })
       }
 
