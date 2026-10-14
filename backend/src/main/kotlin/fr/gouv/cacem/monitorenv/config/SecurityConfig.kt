@@ -14,7 +14,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.AuthenticationException
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler
@@ -32,6 +31,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.exchange
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -87,6 +87,8 @@ class SecurityConfig(
 
             private fun loadUserFromJwtUserInfo(userRequest: OidcUserRequest): OidcUser {
                 val userInfoUri = userRequest.clientRegistration.providerDetails.userInfoEndpoint.uri
+                    ?: throw OAuth2AuthenticationException("user-info-uri is missing")
+
                 val accessToken = userRequest.accessToken.tokenValue
 
                 logger.debug("Fetching JWT userinfo from: $userInfoUri")
@@ -97,11 +99,10 @@ class SecurityConfig(
                     }
 
                 val response =
-                    restTemplate.exchange(
+                    restTemplate.exchange<String>(
                         userInfoUri,
                         HttpMethod.GET,
                         HttpEntity<String>(headers),
-                        String::class.java,
                     )
 
                 val jwtToken = response.body ?: throw IllegalArgumentException("Empty userinfo response")
@@ -112,7 +113,7 @@ class SecurityConfig(
                 // Create OidcUserInfo and OidcUser with the decoded claims
                 val userInfo = OidcUserInfo(claims)
                 return DefaultOidcUser(
-                    emptyList<GrantedAuthority>(),
+                    emptyList(),
                     userRequest.idToken,
                     userInfo,
                 )
@@ -171,8 +172,10 @@ class SecurityConfig(
     }
 
     private fun oidcLogoutSuccessHandler(): LogoutSuccessHandler {
+        val repository =
+            clientRegistrationRepository ?: throw IllegalStateException("ClientRegistrationRepository is null")
         val oidcLogoutSuccessHandler =
-            OidcClientInitiatedLogoutSuccessHandler(this.clientRegistrationRepository)
+            OidcClientInitiatedLogoutSuccessHandler(repository)
 
         oidcLogoutSuccessHandler.setPostLogoutRedirectUri(oidcProperties.successUrl)
 

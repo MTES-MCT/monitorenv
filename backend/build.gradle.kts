@@ -54,12 +54,13 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-val ktorVersion = "3.6.0"
+val ktorVersion = "3.4.3"
 val testcontainersVersion = "1.21.4"
 val sentryVersion = "8.58.0"
 val flywayVersion = "12.5.0"
 
 dependencies {
+    implementation(platform("io.ktor:ktor-bom:${ktorVersion}"))
     implementation(platform("org.springframework.boot:spring-boot-dependencies:4.1.1"))
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
@@ -83,18 +84,18 @@ dependencies {
 
     // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
 
     // Jackson
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation("org.n52.jackson:jackson-datatype-jts:3.0.4")
 
     // HTTP Clients (Ktor)
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-java:$ktorVersion")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-client-core")
+    implementation("io.ktor:ktor-client-java")
+    implementation("io.ktor:ktor-client-content-negotiation")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
 
     // Monitoring & Logging
     implementation("io.sentry:sentry:$sentryVersion")
@@ -136,7 +137,7 @@ dependencies {
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     testImplementation("org.testcontainers:kafka:$testcontainersVersion")
-    testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-mock")
     testImplementation("jakarta.servlet:jakarta.servlet-api:6.1.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:5.5.0")
     testImplementation("net.ttddyy:datasource-proxy:1.11.0")

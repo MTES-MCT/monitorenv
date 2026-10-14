@@ -77,7 +77,8 @@ class OIDCClientConfig(
         val externalIssuer = oidcProperties.issuerUriExternal
 
         return JwtDecoderFactory { clientRegistration ->
-            val jwkSetUri = clientRegistration.providerDetails.jwkSetUri
+            val jwkSetUri =
+                clientRegistration.providerDetails.jwkSetUri ?: throw IllegalStateException("jwk-set-uri is missing")
             val jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build()
 
             // ⚠️ DEVELOPMENT ONLY: Custom issuer validation for Keycloak proxy
