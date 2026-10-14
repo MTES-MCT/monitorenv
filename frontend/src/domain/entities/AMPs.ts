@@ -1,8 +1,9 @@
 import type { GeoJSON } from '../types/GeoJSON'
 import type { Extent } from 'ol/extent'
 
-export type AMPFromAPI = {
+export type AMP = {
   designation: string
+  extent: Extent
   geom: GeoJSON.MultiPolygon
   id: number
   isNew: boolean
@@ -12,6 +13,5 @@ export type AMPFromAPI = {
   updatedAt?: string
   urlLegicem: string | undefined
 }
-export type AMP = AMPFromAPI & { extent: Extent }
 
 export type AMPProperties = Omit<AMP, 'geometry' | 'geom'>

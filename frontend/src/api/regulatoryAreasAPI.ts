@@ -62,6 +62,7 @@ export const regulatoryAreasAPI = monitorenvPrivateApi.injectEndpoints({
       RegulatoryArea.RegulatoryAreaFromAPI[],
       RegulatoryArea.RegulatoryAreaByIdsForApi
     >({
+      providesTags: result => [...(result ?? [])].map(({ id }) => ({ id, type: 'RegulatoryAreas' as const })), // successful query
       query: body => ({ body, method: 'POST', url: 'v1/regulatory-areas' }),
       transformErrorResponse: response => new FrontendApiError(GET_REGULATORY_AREAS_ERROR_MESSAGE, response)
     }),

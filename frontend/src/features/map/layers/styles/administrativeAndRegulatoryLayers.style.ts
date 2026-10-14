@@ -192,13 +192,13 @@ export const getAdministrativeLayersStyle = (code: String) => {
 
 export const getRegulatoryLayerStyle = (
   feature: FeatureLike,
-  isolateLayer?: IsolatedLayerType,
+  isolatedLayer?: IsolatedLayerType,
   metadataId?: string | number
 ) => {
   const layerTitle = getRegulatoryAreaTitle(feature.get('polyName'), feature.get('resume'))
   const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('tags'), layerTitle, feature.get('plan'))
 
-  return getStyle(colorWithAlpha, feature, isolateLayer, metadataId)
+  return getStyle(colorWithAlpha, feature, isolatedLayer, metadataId)
 }
 
 const getStyle = (

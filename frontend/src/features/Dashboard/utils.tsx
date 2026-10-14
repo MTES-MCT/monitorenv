@@ -33,7 +33,12 @@ export async function populateExtractAreaFromApi(
       ids: extractedAreaFromApi.regulatoryAreaIds
     })
   )
-  const { data: ampLayers } = await dispatch(ampsAPI.endpoints.getAMPs.initiate())
+  const { data: amps } = await dispatch(
+    ampsAPI.endpoints.getAMPsByIds.initiate({
+      axis: Axis.NORTH_SOUTH,
+      ids: extractedAreaFromApi.ampIds
+    })
+  )
   const { data: vigilanceAreas } = await dispatch(vigilanceAreasAPI.endpoints.getVigilanceAreas.initiate())
   const { data: reportings } = await dispatch(
     reportingsAPI.endpoints.getReportingsByIds.initiate(extractedAreaFromApi.reportingIds)
@@ -41,7 +46,7 @@ export async function populateExtractAreaFromApi(
 
   return {
     ...extractedAreaFromApi,
-    amps: Object.values(ampLayers?.entities ?? []).filter(amp => extractedAreaFromApi.ampIds.includes(amp.id)),
+    amps: amps ?? [],
     regulatoryAreas: regulatoryAreas ?? [],
     reportings: Object.values(reportings?.entities ?? []),
     vigilanceAreas: Object.values(vigilanceAreas?.entities ?? []).filter(vigilanceArea =>
@@ -53,7 +58,7 @@ export async function populateExtractAreaFromApi(
 export const extractFeatures = (
   dashboard: Dashboard.Dashboard | undefined,
   regulatoryLayers: RegulatoryArea.RegulatoryAreaFromAPI[] | undefined,
-  ampLayers: EntityState<AMP, number> | undefined,
+  ampLayers: AMP[] | undefined,
   vigilanceAreas: EntityState<VigilanceArea.VigilanceAreaLayer, number> | undefined
 ) => {
   const allFeatures: Feature[] = []
@@ -78,7 +83,7 @@ export const extractFeatures = (
   // AMP Features
   if (dashboard?.ampIds) {
     dashboard.ampIds.forEach(layerId => {
-      const layer = ampLayers?.entities[layerId]
+      const layer = ampLayers?.find(amp => amp.id === layerId)
       if (layer?.extent) {
         const feature = getAMPFeature({
           code: Dashboard.featuresCode.DASHBOARD_AMP,

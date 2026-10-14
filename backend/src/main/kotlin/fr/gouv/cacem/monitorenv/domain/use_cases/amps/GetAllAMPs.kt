@@ -2,6 +2,7 @@ package fr.gouv.cacem.monitorenv.domain.use_cases.amps
 
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
 import fr.gouv.cacem.monitorenv.domain.repositories.IAMPRepository
 import org.slf4j.LoggerFactory
 
@@ -11,9 +12,9 @@ class GetAllAMPs(
 ) {
     private val logger = LoggerFactory.getLogger(GetAllAMPs::class.java)
 
-    fun execute(): List<AMPEntity> {
+    fun execute(filters: SearchFilters): List<AMPEntity> {
         logger.info("Attempt to GET all AMPs")
-        val amps = ampRepository.findAll()
+        val amps = ampRepository.findAll(filters)
         logger.info("Found ${amps.size} AMPs")
 
         return amps

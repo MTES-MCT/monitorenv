@@ -3,11 +3,10 @@ import { groupBy, isEmpty } from 'lodash'
 import { useMemo, useState } from 'react'
 
 import { MyAMPLayerGroup } from './MyAMPLayerGroup'
-import { useGetAMPsQuery } from '../../../api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '../../../api/ampsAPI'
 import { useAppSelector } from '../../../hooks/useAppSelector'
+import { Axis } from '../../../types'
 import { LayerSelector } from '../utils/LayerSelector.style'
-
-import type { AMP } from '../../../domain/entities/AMPs'
 
 export function AMPLayersList() {
   const selectedAmpLayerIds = useAppSelector(state => state.amp.selectedAmpLayerIds)
@@ -16,15 +15,14 @@ export function AMPLayersList() {
 
   const [totalNumberOfZones, setTotalNumberOfZones] = useState(0)
 
-  const { currentData: amps, isLoading } = useGetAMPsQuery()
-  const selectedAmps = useMemo(
-    () => selectedAmpLayerIds.map(id => amps?.entities?.[id]).filter((layer): layer is AMP => !!layer),
-    [amps, selectedAmpLayerIds]
-  )
+  const { data: selectedAmps, isLoading } = useGetAMPsByIdsQuery({
+    axis: String(Axis.NORTH_SOUTH),
+    ids: selectedAmpLayerIds
+  })
   const layersByLayersName = useMemo(
     () =>
       groupBy(
-        selectedAmps.sort((a, b) => a?.name?.localeCompare(b?.name)),
+        [...(selectedAmps ?? [])].sort((a, b) => a?.name?.localeCompare(b?.name)),
         r => r?.name
       ),
     [selectedAmps]

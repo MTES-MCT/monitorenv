@@ -1,8 +1,9 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPByIdQuery } from '@api/ampsAPI'
 import { CenteredFingerprintLoader } from '@components/CenteredFingerprintLoader'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
+import { skipToken } from '@reduxjs/toolkit/query'
 import { getTitle } from 'domain/entities/layers/utils'
 import { useCallback } from 'react'
 
@@ -18,11 +19,8 @@ export function AmpMetadata() {
   const dispatch = useAppDispatch()
   const { metadataLayerId, metadataPanelIsOpen } = useAppSelector(state => state.layersMetadata)
 
-  const { ampMetadata } = useGetAMPsQuery(undefined, {
-    pollingInterval: FOUR_HOURS,
-    selectFromResult: result => ({
-      ampMetadata: metadataLayerId && result?.data?.entities[metadataLayerId]
-    })
+  const { data: ampMetadata } = useGetAMPByIdQuery(metadataLayerId ? +metadataLayerId : skipToken, {
+    pollingInterval: FOUR_HOURS
   })
 
   const onCloseIconClicked = useCallback(() => {

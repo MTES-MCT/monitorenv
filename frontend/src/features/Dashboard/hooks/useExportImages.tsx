@@ -1,4 +1,4 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useGetReportingsByIdsQuery } from '@api/reportingsAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
@@ -116,7 +116,13 @@ export function useExportImages() {
   const activeDashboard = dashboard?.dashboard
   const backgroundMap = dashboard?.backgroundMap
 
-  const { data: ampLayers } = useGetAMPsQuery(undefined, { skip: !dashboard })
+  const { data: ampLayers } = useGetAMPsByIdsQuery(
+    { axis: String(axis), ids: activeDashboard?.ampIds ?? [] },
+    {
+      skip: !dashboard || (activeDashboard?.ampIds ?? []).length === 0
+    }
+  )
+
   const { data: vigilanceAreas } = useGetVigilanceAreasQuery(undefined, { skip: !dashboard })
 
   const { data: regulatoryLayers } = useGetRegulatoryAreasByIdsQuery(

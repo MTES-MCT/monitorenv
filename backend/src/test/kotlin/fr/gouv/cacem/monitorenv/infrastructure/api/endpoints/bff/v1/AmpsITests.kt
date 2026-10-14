@@ -5,8 +5,11 @@ import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
+import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.SearchFilters
+import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAMPById
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPs
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPsByIds
+import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAmpsTiles
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.amps.AmpByIdsDataInput
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
@@ -37,7 +40,13 @@ class AmpsITests {
     private lateinit var getAllAMPs: GetAllAMPs
 
     @MockitoBean
+    private lateinit var getAllAmpsTiles: GetAllAmpsTiles
+
+    @MockitoBean
     private lateinit var getAllAMPByIds: GetAllAMPsByIds
+
+    @MockitoBean
+    private lateinit var getAMPById: GetAMPById
 
     @Autowired
     private lateinit var mapper: JsonMapper
@@ -58,9 +67,28 @@ class AmpsITests {
         )
 
     @Test
-    fun `should return AMPs as json`() {
+    fun `should return AMP by id`() {
         // Given
-        given(getAllAMPs.execute()).willReturn(listOf(amp))
+        given(getAMPById.execute(1)).willReturn(amp)
+
+        // When
+        mockMvc
+            .perform(get("/bff/v1/amps/1"))
+            // Then
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", equalTo(amp.id)))
+            .andExpect(jsonPath("$.designation", equalTo(amp.designation)))
+            .andExpect(jsonPath("$.geom").exists())
+            .andExpect(jsonPath("$.name", equalTo(amp.name)))
+            .andExpect(jsonPath("$.refReg", equalTo(amp.refReg)))
+            .andExpect(jsonPath("$.type", equalTo(amp.type)))
+            .andExpect(jsonPath("$.urlLegicem", equalTo(amp.urlLegicem)))
+    }
+
+    @Test
+    fun `should return AMPs`() {
+        // Given
+        given(getAllAMPs.execute(SearchFilters())).willReturn(listOf(amp))
 
         // When
         mockMvc
@@ -69,7 +97,7 @@ class AmpsITests {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].id", equalTo(amp.id)))
             .andExpect(jsonPath("$[0].designation", equalTo(amp.designation)))
-            .andExpect(jsonPath("$[0].geom").exists())
+            .andExpect(jsonPath("$[0].geom").isEmpty())
             .andExpect(jsonPath("$[0].name", equalTo(amp.name)))
             .andExpect(jsonPath("$[0].refReg", equalTo(amp.refReg)))
             .andExpect(jsonPath("$[0].type", equalTo(amp.type)))

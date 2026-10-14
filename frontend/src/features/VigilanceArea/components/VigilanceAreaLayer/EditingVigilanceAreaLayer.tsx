@@ -1,4 +1,4 @@
-import { useGetAMPsQuery } from '@api/ampsAPI'
+import { useGetAMPsByIdsQuery } from '@api/ampsAPI'
 import { useGetRegulatoryAreasByIdsQuery } from '@api/regulatoryAreasAPI'
 import { useGetVigilanceAreasQuery } from '@api/vigilanceAreasAPI'
 import { getAMPFeature } from '@features/map/layers/AMP/AMPGeometryHelpers'
@@ -101,21 +101,22 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
   regulatoryAreasVectorLayerRef.current.name = Layers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA.code
 
   // AMP Layer
-  const { data: ampLayers } = useGetAMPsQuery()
+  const { data: ampLayers } = useGetAMPsByIdsQuery({
+    axis: Axis.NORTH_SOUTH,
+    ids: regulatoryAreasToAdd
+  })
   const ampFeatures = useMemo(() => {
     if (!ampLayers || ampToAdd.length === 0) {
       return []
     }
 
-    return ampToAdd.reduce(
-      (feats: Feature[], AMPLayerId) => {
-        const ampLayer = ampLayers.entities[AMPLayerId]
-
-        if (ampLayer) {
+    return ampLayers.reduce(
+      (feats: Feature[], amp) => {
+        if (amp) {
           const feature = getAMPFeature({
             code: Layers.AMP_LINKED_TO_VIGILANCE_AREA.code,
             isolatedLayer,
-            layer: ampLayer
+            layer: amp
           })
           if (!feature) {
             return feats
@@ -136,7 +137,7 @@ export function EditingVigilanceAreaLayer({ map }: BaseMapChildrenProps) {
     new VectorLayer({
       renderBuffer: 7,
       source: ampVectorSourceRef.current,
-      style: getAMPLayerStyle,
+      style: feature => getAMPLayerStyle(feature),
       zIndex: Layers.AMP_LINKED_TO_VIGILANCE_AREA.zIndex
     })
   ) as MutableRefObject<VectorLayerWithName>
