@@ -8,12 +8,12 @@ plugins {
     id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "14.2.0"
-    kotlin("jvm") version "2.4.20"
-    kotlin("plugin.spring") version "2.4.20"
-    kotlin("plugin.allopen") version "2.4.20"
-    kotlin("plugin.noarg") version "2.4.20"
-    kotlin("plugin.jpa") version "2.4.20"
-    kotlin("plugin.serialization") version "2.4.20"
+    kotlin("jvm") version "2.3.21"
+    kotlin("plugin.spring") version "2.3.21"
+    kotlin("plugin.allopen") version "2.3.21"
+    kotlin("plugin.noarg") version "2.3.21"
+    kotlin("plugin.jpa") version "2.3.21"
+    kotlin("plugin.serialization") version "2.3.21"
 }
 
 repositories {
@@ -36,7 +36,7 @@ java {
 
 // https://github.com/JLLeitschuh/ktlint-gradle/issues/809
 ktlint {
-    version.set("1.4.1")
+    version.set("1.8.0")
 }
 
 noArg {
