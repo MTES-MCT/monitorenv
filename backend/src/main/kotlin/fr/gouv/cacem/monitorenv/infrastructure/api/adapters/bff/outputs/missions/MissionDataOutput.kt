@@ -79,7 +79,7 @@ data class MissionDataOutput(
                     (
                         dto.mission.envActions?.map {
                             when (it.actionType) {
-                                ActionTypeEnum.CONTROL ->
+                                ActionTypeEnum.CONTROL -> {
                                     EnvActionControlDataOutput
                                         .fromEnvActionControlEntity(
                                             envActionControlEntity =
@@ -92,6 +92,7 @@ data class MissionDataOutput(
                                                     }?.second
                                                     ?: listOf(),
                                         )
+                                }
 
                                 ActionTypeEnum.SURVEILLANCE -> {
                                     EnvActionSurveillanceDataOutput
@@ -107,10 +108,11 @@ data class MissionDataOutput(
                                         )
                                 }
 
-                                ActionTypeEnum.NOTE ->
+                                ActionTypeEnum.NOTE -> {
                                     EnvActionNoteDataOutput.fromEnvActionNoteEntity(
                                         it as EnvActionNoteEntity,
                                     )
+                                }
                             }
                         }
                     ),

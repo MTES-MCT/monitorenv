@@ -49,20 +49,23 @@ data class EnvActionDataInput(
 ) {
     private fun validate() {
         when (actionType) {
-            ActionTypeEnum.CONTROL ->
+            ActionTypeEnum.CONTROL -> {
                 require(this.reportingIds.isPresent && this.reportingIds.get().size < 2) {
                     "ReportingIds must not be null and maximum 1 id for Controls"
                 }
+            }
 
-            ActionTypeEnum.SURVEILLANCE ->
+            ActionTypeEnum.SURVEILLANCE -> {
                 require(this.reportingIds.isPresent) {
                     "ReportingIds must not be null for Surveillance Action"
                 }
+            }
 
-            ActionTypeEnum.NOTE ->
+            ActionTypeEnum.NOTE -> {
                 require(
                     !this.reportingIds.isPresent,
                 ) { "ReportingIds must not be present for Notes" }
+            }
         }
     }
 
@@ -70,7 +73,7 @@ data class EnvActionDataInput(
         this.validate()
 
         return when (this.actionType) {
-            ActionTypeEnum.CONTROL ->
+            ActionTypeEnum.CONTROL -> {
                 EnvActionControlEntity(
                     id = this.id,
                     actionEndDateTimeUtc = this.actionEndDateTimeUtc,
@@ -97,8 +100,9 @@ data class EnvActionDataInput(
                     tags = tags.map { it.toTagEntity() },
                     themes = themes.map { it.toThemeEntity() },
                 )
+            }
 
-            ActionTypeEnum.SURVEILLANCE ->
+            ActionTypeEnum.SURVEILLANCE -> {
                 EnvActionSurveillanceEntity(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
@@ -116,13 +120,15 @@ data class EnvActionDataInput(
                     tags = tags.map { it.toTagEntity() },
                     themes = themes.map { it.toThemeEntity() },
                 )
+            }
 
-            ActionTypeEnum.NOTE ->
+            ActionTypeEnum.NOTE -> {
                 EnvActionNoteEntity(
                     id = this.id,
                     actionStartDateTimeUtc = this.actionStartDateTimeUtc,
                     observations = this.observations,
                 )
+            }
         }
     }
 }

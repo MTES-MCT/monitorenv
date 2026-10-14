@@ -19,21 +19,24 @@ abstract class MissionEnvActionDataOutput(
     companion object {
         fun fromEnvActionEntity(envActionEntity: EnvActionEntity): MissionEnvActionDataOutput =
             when (envActionEntity) {
-                is EnvActionControlEntity ->
+                is EnvActionControlEntity -> {
                     MissionEnvActionControlDataOutput.fromEnvActionControlEntity(
                         envActionControlEntity = envActionEntity,
                     )
+                }
 
-                is EnvActionSurveillanceEntity ->
+                is EnvActionSurveillanceEntity -> {
                     MissionEnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
                         envActionSurveillanceEntity =
                         envActionEntity,
                     )
+                }
 
-                else ->
+                else -> {
                     MissionEnvActionNoteDataOutput.fromEnvActionNoteEntity(
                         envActionEntity as EnvActionNoteEntity,
                     )
+                }
             }
     }
 }

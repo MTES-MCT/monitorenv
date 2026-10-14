@@ -59,7 +59,7 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(
         propType: KClass<*>,
     ): Any =
         when (propType) {
-            Boolean::class ->
+            Boolean::class -> {
                 if (jsonNode.isBoolean) {
                     jsonNode.asBoolean()
                 } else {
@@ -69,8 +69,9 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(
                         propName,
                     )
                 }
+            }
 
-            Int::class ->
+            Int::class -> {
                 if (jsonNode.canConvertToInt()) {
                     jsonNode.asInt()
                 } else {
@@ -80,8 +81,9 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(
                         propName,
                     )
                 }
+            }
 
-            String::class ->
+            String::class -> {
                 if (jsonNode.isTextual) {
                     jsonNode.asText()
                 } else {
@@ -91,11 +93,14 @@ abstract class PatchableDataInput<T : PatchableDataInput<T>>(
                         propName,
                     )
                 }
+            }
 
-            else -> throw BackendUsageException(
-                BackendUsageErrorCode.UNVALID_PROPERTY,
-                "${this::class.simpleName}: Unsupported type `$propType` for property `$propName`.",
-                propName,
-            )
+            else -> {
+                throw BackendUsageException(
+                    BackendUsageErrorCode.UNVALID_PROPERTY,
+                    "${this::class.simpleName}: Unsupported type `$propType` for property `$propName`.",
+                    propName,
+                )
+            }
         }
 }

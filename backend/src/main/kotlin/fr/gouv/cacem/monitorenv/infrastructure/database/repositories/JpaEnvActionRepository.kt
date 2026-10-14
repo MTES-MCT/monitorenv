@@ -92,7 +92,9 @@ class JpaEnvActionRepository(
                             geomFactory.createMultiPointFromCoords(coordinates)
                         }
 
-                        else -> null
+                        else -> {
+                            null
+                        }
                     }
 
                 // convert LocalDateTime to ZonedDateTime

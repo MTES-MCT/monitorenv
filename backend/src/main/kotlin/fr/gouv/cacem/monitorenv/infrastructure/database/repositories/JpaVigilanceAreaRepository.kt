@@ -119,7 +119,7 @@ class JpaVigilanceAreaRepository(
                     } ?: emptyList()
                 }
 
-                SourceTypeEnum.OTHER, SourceTypeEnum.INTERNAL ->
+                SourceTypeEnum.OTHER, SourceTypeEnum.INTERNAL -> {
                     listOf(
                         VigilanceAreaSourceModel.fromVigilanceAreaSource(
                             source,
@@ -127,6 +127,7 @@ class JpaVigilanceAreaRepository(
                             vigilanceAreaModel,
                         ),
                     )
+                }
             }
         }
 
