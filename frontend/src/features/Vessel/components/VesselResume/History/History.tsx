@@ -52,11 +52,15 @@ export function History({ envActions, reportings, vessel }: SummaryProps) {
         : undefined,
       targetDetails: [
         {
-          externalReferenceNumber: vessel.immatriculation,
+          controlledPersonIdentity: `${vessel.ownerLastName} ${vessel.ownerFirstName}`,
           imo: vessel.imo,
           mmsi: vessel.mmsi,
-          size: vessel.length,
+          registrationNumber: vessel.immatriculation,
+          vesselBatchId: vessel.batchId,
           vesselName: vessel.shipName,
+          vesselRowNumber: vessel.rowNumber,
+          vesselShipId: vessel.shipId,
+          vesselSize: vessel.length,
           vesselType
         }
       ],

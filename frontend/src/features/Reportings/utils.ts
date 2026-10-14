@@ -90,13 +90,13 @@ export const getTargetDetailsAsText = ({
 
   if (targetDetails.length === 1) {
     if (targetType !== ReportingTargetTypeEnum.VEHICLE) {
-      targetDetailsAsText = targetDetails[0]?.operatorName ?? targetDetails[0]?.vesselName ?? ''
+      targetDetailsAsText = targetDetails[0]?.controlledPersonIdentity ?? targetDetails[0]?.vesselName ?? ''
     } else {
       targetDetailsAsText =
         targetDetails[0]?.vesselName ??
         targetDetails[0]?.mmsi ??
-        targetDetails[0]?.operatorName ??
-        targetDetails[0]?.externalReferenceNumber ??
+        targetDetails[0]?.controlledPersonIdentity ??
+        targetDetails[0]?.registrationNumber ??
         ''
     }
   } else if (targetDetails.length > 1) {
@@ -151,10 +151,10 @@ export function getTargetName({ target, targetType, vehicleType }) {
       return target?.vesselName ?? ''
     }
 
-    return target?.externalReferenceNumber ?? ''
+    return target?.registrationNumber ?? ''
   }
 
-  return target?.operatorName ?? ''
+  return target?.controlledPersonIdentity ?? ''
 }
 
 export function getTargetDetailsSubText({ target, targetType, vehicleType }) {
@@ -163,9 +163,9 @@ export function getTargetDetailsSubText({ target, targetType, vehicleType }) {
       let targetId = ''
       if (target?.mmsi) {
         targetId = `MMSI ${target?.mmsi}`
-      } else if (!target?.mmsi && target?.externalReferenceNumber) {
-        targetId = `Immat ${target?.externalReferenceNumber}`
-      } else if (!target?.mmsi && !target?.externalReferenceNumber && target?.imo) {
+      } else if (!target?.mmsi && target?.registrationNumber) {
+        targetId = `Immat ${target?.registrationNumber}`
+      } else if (!target?.mmsi && !target?.registrationNumber && target?.imo) {
         targetId = `IMO ${target?.imo}`
       }
 
@@ -176,7 +176,7 @@ export function getTargetDetailsSubText({ target, targetType, vehicleType }) {
       return `${target?.size ? `(${target?.size}m)` : ''}`
     }
 
-    return target?.operatorName
+    return target?.controlledPersonIdentity
   }
 
   return target?.vesselName

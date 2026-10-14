@@ -14,6 +14,7 @@ type SearchVesselsProps = {
   disabled?: boolean
   isLight?: boolean
   isSideWindow?: boolean
+  isTransparent?: boolean
   onChange?: (vessel: Vessel.Identity | undefined) => void
   optionsWidth?: string
   value?: Vessel.Identity
@@ -23,6 +24,7 @@ export function SearchVessel({
   disabled,
   isLight = true,
   isSideWindow = false,
+  isTransparent = false,
   onChange,
   optionsWidth,
   value
@@ -65,6 +67,7 @@ export function SearchVessel({
       isLabelHidden
       isLight={isLight}
       isSearchIconHidden
+      isTransparent={isTransparent}
       isUndefinedWhenDisabled
       label="Rechercher un navire"
       name="search-vessel"

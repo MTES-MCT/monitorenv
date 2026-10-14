@@ -25,9 +25,13 @@ export function TargetDetails({ reporting }: { reporting: Reporting }) {
                 <TextInput
                   isLight
                   label="Nom de la personne morale"
-                  name="operatorName"
+                  name="controlledPersonIdentity"
                   plaintext
-                  value={reporting.targetDetails.length > 0 ? reporting.targetDetails[0]?.operatorName : EMPTY_VALUE}
+                  value={
+                    reporting.targetDetails.length > 0
+                      ? reporting.targetDetails[0]?.controlledPersonIdentity
+                      : EMPTY_VALUE
+                  }
                 />
                 <TextInput
                   isLight
@@ -42,9 +46,13 @@ export function TargetDetails({ reporting }: { reporting: Reporting }) {
               <TextInput
                 isLight
                 label="Identité de la personne"
-                name="operatorName"
+                name="controlledPersonIdentity"
                 plaintext
-                value={reporting.targetDetails.length > 0 ? reporting?.targetDetails[0]?.operatorName : EMPTY_VALUE}
+                value={
+                  reporting.targetDetails.length > 0
+                    ? reporting?.targetDetails[0]?.controlledPersonIdentity
+                    : EMPTY_VALUE
+                }
               />
             )}
           </StyledVesselContainer>
@@ -69,16 +77,16 @@ export function TargetDetails({ reporting }: { reporting: Reporting }) {
                     <TextInput
                       isLight
                       label="Immatriculation"
-                      name={`targetDetails.${index}.externalReferenceNumber`}
+                      name={`targetDetails.${index}.registrationNumber`}
                       plaintext
-                      value={reporting.targetDetails[index]?.operatorName || EMPTY_VALUE}
+                      value={reporting.targetDetails[index]?.registrationNumber || EMPTY_VALUE}
                     />
                     <TextInput
                       isLight
                       label="Identité de la personne contrôlée"
-                      name={`targetDetails.${index}.operatorName`}
+                      name={`targetDetails.${index}.controlledPersonIdentity`}
                       plaintext
-                      value={reporting.targetDetails[index]?.operatorName || EMPTY_VALUE}
+                      value={reporting.targetDetails[index]?.controlledPersonIdentity || EMPTY_VALUE}
                     />
                   </>
                 )}
@@ -117,27 +125,31 @@ export function TargetDetails({ reporting }: { reporting: Reporting }) {
                       <TextInput
                         isLight
                         label="Nom du capitaine"
-                        name={`targetDetails.${index}.operatorName`}
+                        name={`targetDetails.${index}.controlledPersonIdentity`}
                         plaintext
-                        value={isSuperUser ? reporting.targetDetails[index]?.operatorName || EMPTY_VALUE : EMPTY_VALUE}
+                        value={
+                          isSuperUser
+                            ? reporting.targetDetails[index]?.controlledPersonIdentity || EMPTY_VALUE
+                            : EMPTY_VALUE
+                        }
                       />
                     </StyledVesselForm>
                     <StyledVesselForm>
                       <TextInput
                         isLight
                         label="Immatriculation"
-                        name={`targetDetails.${index}.externalReferenceNumber`}
+                        name={`targetDetails.${index}.registrationNumber`}
                         plaintext
-                        value={reporting.targetDetails[index]?.externalReferenceNumber || EMPTY_VALUE}
+                        value={reporting.targetDetails[index]?.registrationNumber || EMPTY_VALUE}
                       />
                       <TextInput
                         isLight
                         label="Taille"
-                        name={`targetDetails.${index}.size`}
+                        name={`targetDetails.${index}.vesselSize`}
                         plaintext
                         value={
-                          reporting.targetDetails[index]?.size
-                            ? String(reporting.targetDetails[index]?.size)
+                          reporting.targetDetails[index]?.vesselSize
+                            ? String(reporting.targetDetails[index]?.vesselSize)
                             : EMPTY_VALUE
                         }
                       />
@@ -145,7 +157,7 @@ export function TargetDetails({ reporting }: { reporting: Reporting }) {
                   </>
                 )}
               </StyledVesselContainer>
-              {!isSuperUser && reporting.targetDetails[index]?.operatorName && (
+              {!isSuperUser && reporting.targetDetails[index]?.controlledPersonIdentity && (
                 <Text>Le nom du capitaine peut être communiqué par téléphone par le CACEM</Text>
               )}
             </TargetWrapper>

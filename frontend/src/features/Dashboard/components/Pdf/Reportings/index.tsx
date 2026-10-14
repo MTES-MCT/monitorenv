@@ -247,7 +247,7 @@ export function Reportings({ reportings }: { reportings: Reporting[] }) {
               </View>
             </View>
             {reporting.targetDetails.map(target => (
-              <Fragment key={target.mmsi ?? target.imo ?? target.vesselName ?? target.externalReferenceNumber}>
+              <Fragment key={target.mmsi ?? target.imo ?? target.vesselName ?? target.registrationNumber}>
                 <View style={[layoutStyle.row, { rowGap: 2 }]}>
                   <View style={styles.description}>
                     <Text>Type de cible</Text>
@@ -293,7 +293,7 @@ export function Reportings({ reportings }: { reportings: Reporting[] }) {
                     <Text>Nom du capitaine</Text>
                   </View>
                   <View style={styles.details}>
-                    <Text>{target.operatorName ?? '-'}</Text>
+                    <Text>{target.controlledPersonIdentity ?? '-'}</Text>
                   </View>
                 </View>
                 <View style={[layoutStyle.row, { rowGap: 2 }]}>
@@ -301,7 +301,7 @@ export function Reportings({ reportings }: { reportings: Reporting[] }) {
                     <Text>Immatriculation</Text>
                   </View>
                   <View style={styles.details}>
-                    <Text>{target.externalReferenceNumber ?? '-'}</Text>
+                    <Text>{target.registrationNumber ?? '-'}</Text>
                   </View>
                 </View>
                 <View style={[layoutStyle.row, { rowGap: 2 }]}>
@@ -309,7 +309,7 @@ export function Reportings({ reportings }: { reportings: Reporting[] }) {
                     <Text>Taille</Text>
                   </View>
                   <View style={styles.details}>
-                    <Text>{target.size ? `${target.size} m` : '-'}</Text>
+                    <Text>{target.vesselSize ? `${target.vesselSize} m` : '-'}</Text>
                   </View>
                 </View>
                 <View style={[layoutStyle.row, { rowGap: 2 }]}>

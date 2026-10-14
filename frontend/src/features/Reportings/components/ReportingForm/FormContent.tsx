@@ -329,8 +329,8 @@ export function FormContent({ reducedReportingsOnContext, selectedReporting }: F
         target =>
           !target.vesselName ||
           !target.vesselType ||
-          !target.size ||
-          !(target.mmsi ?? target.imo ?? target.externalReferenceNumber)
+          !target.vesselSize ||
+          !(target.mmsi ?? target.imo ?? target.registrationNumber)
       ).length > 0
     )
   }, [values.theme?.id, values.targetDetails, values.vehicleType])

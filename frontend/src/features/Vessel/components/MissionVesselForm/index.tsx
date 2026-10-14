@@ -11,10 +11,11 @@ import type { Infraction } from '../../../../domain/entities/missions'
 type VesselFormProps = {
   envActionIndex: number
   isDisabled: boolean
+  isLight?: boolean
   path: string
 }
 
-export function VesselForm({ envActionIndex, isDisabled, path }: VesselFormProps) {
+export function VesselForm({ envActionIndex, isDisabled, isLight = true, path }: VesselFormProps) {
   const [envActionId] = useField(`envActions.${envActionIndex}.id`)
   const [{ value: infraction }] = useField<Infraction>(path)
   const isUnknown =
@@ -35,6 +36,7 @@ export function VesselForm({ envActionIndex, isDisabled, path }: VesselFormProps
       <VesselSearchForm
         batchId={infraction.vesselBatchId}
         envActionId={envActionId.value}
+        isLight={isLight}
         isUnknown={isUnknownVessel}
         onIsUnknown={isChecked => setIsUnknownVessel(!!isChecked)}
         path={path}

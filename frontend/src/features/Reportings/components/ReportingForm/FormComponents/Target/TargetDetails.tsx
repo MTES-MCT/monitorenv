@@ -1,22 +1,11 @@
-import { VesselTypeSelector } from '@features/commonComponents/VesselTypeSelector'
-import { HistoryOfInfractions } from '@features/Reportings/components/ReportingForm/FormComponents/Target/HistoryOfInfractions'
-import {
-  Accent,
-  Button,
-  FormikNumberInput,
-  FormikTextInput,
-  Icon,
-  Label,
-  THEME,
-  useForceUpdate,
-  usePrevious
-} from '@mtes-mct/monitor-ui'
+import { VesselForm } from '@features/Vessel/components/ReportingVesselForm'
+import { Accent, Button, FormikTextInput, Icon, Label, THEME, useForceUpdate, usePrevious } from '@mtes-mct/monitor-ui'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-import { StyledEmptyTarget, StyledVesselContainer, StyledVesselForm } from '../../../../style'
+import { StyledEmptyTarget, StyledVesselContainer } from '../../../../style'
 
 import type { FieldArrayRenderProps } from 'formik'
 
@@ -61,19 +50,27 @@ export function TargetDetails({ form, push, remove }: Pick<FieldArrayRenderProps
           <StyledVesselContainer>
             {form.values.targetType === ReportingTargetTypeEnum.COMPANY && (
               <>
-                <FormikTextInput isLight label="Nom de la personne morale" name="targetDetails.0.operatorName" />
+                <FormikTextInput
+                  isLight
+                  label="Nom de la personne morale"
+                  name="targetDetails.0.controlledPersonIdentity"
+                />
                 <FormikTextInput isLight label="Identité de la personne contrôlée" name="targetDetails.0.vesselName" />
               </>
             )}
             {form.values.targetType === ReportingTargetTypeEnum.INDIVIDUAL && (
-              <FormikTextInput isLight label="Identité de la personne" name="targetDetails.0.operatorName" />
+              <FormikTextInput
+                isLight
+                label="Identité de la personne"
+                name="targetDetails.0.controlledPersonIdentity"
+              />
             )}
           </StyledVesselContainer>
         </TargetWrapper>
       )}
 
       {form.values.targetType === ReportingTargetTypeEnum.VEHICLE && form?.values.targetDetails?.length > 0
-        ? form.values.targetDetails.map((targetDetail, index) => (
+        ? form.values.targetDetails.map((_, index) => (
             // eslint-disable-next-line react/no-array-index-key
             <TargetWrapper key={index}>
               <Label>
@@ -86,41 +83,17 @@ export function TargetDetails({ form, push, remove }: Pick<FieldArrayRenderProps
                     <FormikTextInput
                       isLight
                       label="Immatriculation"
-                      name={`targetDetails.${index}.externalReferenceNumber`}
+                      name={`targetDetails.${index}.registrationNumber`}
                     />
                     <FormikTextInput
                       isLight
                       label="Identité de la personne contrôlée"
-                      name={`targetDetails.${index}.operatorName`}
+                      name={`targetDetails.${index}.controlledPersonIdentity`}
                     />
                   </>
                 )}
                 {form.values.vehicleType === VehicleTypeEnum.VESSEL && (
-                  <>
-                    <HistoryOfInfractions mmsi={targetDetail.mmsi} reportingId={form.values.id} />
-
-                    <StyledVesselForm>
-                      <FormikTextInput isLight label="MMSI" name={`targetDetails.${index}.mmsi`} />
-                      <FormikTextInput isLight label="Nom du navire" name={`targetDetails.${index}.vesselName`} />
-                    </StyledVesselForm>
-                    <StyledVesselForm>
-                      <FormikTextInput isLight label="IMO" name={`targetDetails.${index}.imo`} />
-                      <FormikTextInput isLight label="Nom du capitaine" name={`targetDetails.${index}.operatorName`} />
-                    </StyledVesselForm>
-                    <StyledVesselForm>
-                      <FormikTextInput
-                        isLight
-                        label="Immatriculation"
-                        name={`targetDetails.${index}.externalReferenceNumber`}
-                      />
-                      <FormikNumberInput isLight label="Taille" name={`targetDetails.${index}.size`} />
-                    </StyledVesselForm>
-                    <VesselTypeSelector
-                      isLight
-                      name={`targetDetails.${index}.vesselType`}
-                      style={{ marginBottom: '8px', width: '200px' }}
-                    />
-                  </>
+                  <VesselForm index={index} isDisabled={false} path={`targetDetails.${index}`} />
                 )}
                 {index > 0 && (
                   <CancelTarget onClick={handleRemoveTargetDetails(index)}>

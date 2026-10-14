@@ -335,12 +335,12 @@ context('Reporting', () => {
           body: {
             targetDetails: [
               {
-                externalReferenceNumber: 'ABC123',
+                controlledPersonIdentity: 'John Doe',
                 imo: 'IMO123',
                 mmsi: '123456789',
-                operatorName: 'John Doe',
-                size: 45,
+                registrationNumber: 'ABC123',
                 vesselName: 'BALTIK',
+                vesselSize: 45,
                 vesselType: 'COMMERCIAL'
               }
             ],
@@ -359,9 +359,9 @@ context('Reporting', () => {
           expect(reportingUpdated.mmsi).equal('123456789')
           expect(reportingUpdated.vesselName).equal('BALTIK')
           expect(reportingUpdated.imo).equal('IMO123')
-          expect(reportingUpdated.operatorName).equal('John Doe')
-          expect(reportingUpdated.externalReferenceNumber).equal('ABC123')
-          expect(reportingUpdated.size).equal(45)
+          expect(reportingUpdated.controlledPersonIdentity).equal('John Doe')
+          expect(reportingUpdated.registrationNumber).equal('ABC123')
+          expect(reportingUpdated.vesselSize).equal(45)
           expect(reportingUpdated.vesselType).equal('COMMERCIAL')
 
           // clean

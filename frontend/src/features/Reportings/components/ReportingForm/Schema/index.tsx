@@ -82,12 +82,12 @@ export const ReportingSchema: Yup.Schema<
     targetDetails: Yup.array<TargetDetails>()
       .of(
         Yup.object().shape({
-          externalReferenceNumber: Yup.string().optional(),
+          controlledPersonIdentity: Yup.string().optional(),
           imo: Yup.string().optional(),
           mmsi: Yup.string().optional(),
-          operatorName: Yup.string().optional(),
-          size: Yup.number().optional(),
+          registrationNumber: Yup.string().optional(),
           vesselName: Yup.string().optional(),
+          vesselSize: Yup.number().optional(),
           vesselType: Yup.string<VesselTypeEnum>().optional()
         })
       )

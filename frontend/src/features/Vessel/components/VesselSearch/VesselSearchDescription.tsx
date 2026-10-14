@@ -33,13 +33,17 @@ export function VesselSearchDescription({ category, path }: VesselSearchDescript
       <Value>
         {category ? Vessel.CategoryLabel[category] : UNKNOWN} <Description>(Cat.)</Description>
       </Value>
-      <Value>
-        {infraction.vesselType ?? UNKNOWN} <Description>(Type)</Description>
-      </Value>
-      <Value>
-        {infraction.controlledPersonIdentity ?? UNKNOWN}
-        <Description>(Nom du capitaine)</Description>
-      </Value>
+      {infraction.vesselType && (
+        <Value>
+          {infraction.vesselType} <Description>(Type)</Description>
+        </Value>
+      )}
+      {infraction.controlledPersonIdentity && (
+        <Value>
+          {infraction.controlledPersonIdentity}
+          <Description>(Nom du capitaine)</Description>
+        </Value>
+      )}
     </Wrapper>
   )
 }

@@ -41,26 +41,26 @@ export function AddControlToReportingButton({
         switch (action.targetType) {
           case ReportingTargetTypeEnum.VEHICLE:
             return infractionFactory({
-              controlledPersonIdentity: target?.operatorName,
-              registrationNumber: target?.externalReferenceNumber,
+              controlledPersonIdentity: target?.controlledPersonIdentity,
+              registrationNumber: target?.registrationNumber,
               ...(action.vehicleType === VehicleTypeEnum.VESSEL && {
                 imo: target?.imo,
                 mmsi: target?.mmsi,
                 vesselName: target?.vesselName,
-                vesselSize: target?.size,
+                vesselSize: target?.vesselSize,
                 vesselType: target?.vesselType
               })
             })
 
           case ReportingTargetTypeEnum.COMPANY:
             return infractionFactory({
-              companyName: target?.operatorName,
+              companyName: target?.controlledPersonIdentity,
               controlledPersonIdentity: target?.vesselName
             })
 
           default:
             return infractionFactory({
-              controlledPersonIdentity: target?.operatorName
+              controlledPersonIdentity: target?.controlledPersonIdentity
             })
         }
       })
