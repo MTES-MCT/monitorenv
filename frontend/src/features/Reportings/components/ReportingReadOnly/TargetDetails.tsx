@@ -1,11 +1,10 @@
 import { StyledVesselForm } from '@features/Reportings/style'
+import { VesselHistoryOfInfractions } from '@features/Vessel/components/VesselHistoryOfInfractions'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Label, TextInput } from '@mtes-mct/monitor-ui'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import styled from 'styled-components'
-
-import { HistoryOfInfractions } from '../ReportingForm/FormComponents/Target/HistoryOfInfractions'
 
 import type { Reporting } from 'domain/entities/reporting'
 
@@ -92,7 +91,7 @@ export function TargetDetails({ reporting }: { reporting: Reporting }) {
                 )}
                 {reporting.vehicleType === VehicleTypeEnum.VESSEL && (
                   <>
-                    <HistoryOfInfractions
+                    <VesselHistoryOfInfractions
                       isReadOnly
                       mmsi={reporting.targetDetails[index]?.mmsi}
                       reportingId={reporting.id}

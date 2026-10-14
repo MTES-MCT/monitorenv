@@ -1,4 +1,4 @@
-import { VesselForm } from '@features/Vessel/components/ReportingVesselForm'
+import { TargetDetailsVesselForm } from '@features/Reportings/components/ReportingForm/FormComponents/Target/TargetDetailsVesselForm'
 import { Accent, Button, FormikTextInput, Icon, Label, THEME, useForceUpdate, usePrevious } from '@mtes-mct/monitor-ui'
 import { ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
@@ -93,7 +93,7 @@ export function TargetDetails({ form, push, remove }: Pick<FieldArrayRenderProps
                   </>
                 )}
                 {form.values.vehicleType === VehicleTypeEnum.VESSEL && (
-                  <VesselForm index={index} isDisabled={false} path={`targetDetails.${index}`} />
+                  <TargetDetailsVesselForm index={index} isDisabled={false} path={`targetDetails.${index}`} />
                 )}
                 {index > 0 && (
                   <CancelTarget onClick={handleRemoveTargetDetails(index)}>
