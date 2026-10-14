@@ -50,7 +50,7 @@ updates:
       semver-major-days: 30
     directory: "/pipeline"
     exclude-paths:
-      - "pipeline/poetry.lock"
+      - "poetry.lock"
     assignees:
       - "VincentAntoine"
     schedule:
@@ -77,7 +77,7 @@ updates:
       semver-major-days: 30
     directory: "/frontend"
     exclude-paths:
-      - "frontend/package-lock.json"
+      - "package-lock.json"
     assignees:
       - "claire2212"
       - "maximeperraultdev"
