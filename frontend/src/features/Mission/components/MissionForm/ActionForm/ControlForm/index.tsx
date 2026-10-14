@@ -240,13 +240,13 @@ export function ControlForm({
       switch (reporting.targetType) {
         case ReportingTargetTypeEnum.VEHICLE:
           return {
-            controlledPersonIdentity: target?.operatorName,
-            registrationNumber: target?.externalReferenceNumber,
+            controlledPersonIdentity: target?.controlledPersonIdentity,
+            registrationNumber: target?.registrationNumber,
             ...(reporting.vehicleType === VehicleTypeEnum.VESSEL && {
               imo: target?.imo,
               mmsi: target?.mmsi,
               vesselName: target?.vesselName,
-              vesselSize: target?.size,
+              vesselSize: target?.vesselSize,
               vesselType: target?.vesselType
             })
           }
@@ -254,8 +254,8 @@ export function ControlForm({
         case ReportingTargetTypeEnum.COMPANY:
           return {
             ...newInfraction,
-            companyName: target?.operatorName,
-            controlledPersonIdentity: target?.vesselName
+            controlledPersonIdentity: target?.controlledPersonIdentity,
+            vesselName: target?.vesselName
           }
 
         case ReportingTargetTypeEnum.INDIVIDUAL:

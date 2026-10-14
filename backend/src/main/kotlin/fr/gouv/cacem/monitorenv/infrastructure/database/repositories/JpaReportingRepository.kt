@@ -125,9 +125,9 @@ class JpaReportingRepository(
             listOf(
                 targetDetail.imo,
                 targetDetail.mmsi,
-                targetDetail.externalReferenceNumber,
+                targetDetail.registrationNumber,
                 targetDetail.vesselName,
-                targetDetail.operatorName,
+                targetDetail.controlledPersonIdentity,
                 targetDetail.vesselType?.name,
             ).any { field ->
                 !field.isNullOrBlank() &&

@@ -22,6 +22,8 @@ import type { Vessel } from '@features/Vessel/types'
 type VesselSearchFormProps = {
   batchId: number | undefined
   envActionId: string | undefined
+  isLight?: boolean
+  isTransparent?: boolean
   isUnknown: boolean | undefined
   onIsUnknown: (isUnknow: boolean | undefined) => void
   path: string
@@ -32,6 +34,8 @@ type VesselSearchFormProps = {
 export function VesselSearchForm({
   batchId,
   envActionId,
+  isLight = true,
+  isTransparent = false,
   isUnknown,
   onIsUnknown,
   path,
@@ -112,8 +116,9 @@ export function VesselSearchForm({
             <VesselSearchInputWrapper>
               <SearchVessel
                 disabled={isUnknown}
-                isLight={false}
+                isLight={isLight}
                 isSideWindow
+                isTransparent={isTransparent}
                 onChange={handleVesselChange}
                 value={selectedVessel}
               />

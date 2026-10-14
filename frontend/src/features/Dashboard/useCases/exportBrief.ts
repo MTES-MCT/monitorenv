@@ -253,11 +253,11 @@ export const exportBrief =
 
           const targetDetails = reporting.targetDetails.map(target => ({
             ...target,
-            externalReferenceNumber: target.externalReferenceNumber ?? '-',
+            controlledPersonIdentity: target.controlledPersonIdentity ?? '-',
             imo: target.imo ?? '-',
             mmsi: target.mmsi ?? '-',
-            operatorName: target.operatorName ?? '-',
-            size: target.size ? `${target.size} m` : '-',
+            registrationNumber: target.registrationNumber ?? '-',
+            vesselSize: target.vesselSize ? `${target.vesselSize} m` : '-',
             vesselType: target.vesselType ? vesselTypeLabel[target.vesselType] : '-'
           }))
 

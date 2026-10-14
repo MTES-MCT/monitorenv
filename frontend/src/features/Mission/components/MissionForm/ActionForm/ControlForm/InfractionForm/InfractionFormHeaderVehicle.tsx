@@ -77,6 +77,7 @@ export const VesselSearchWrapper = styled.div`
 `
 
 export const StyledLinkButton = styled(LinkButton)`
+  font-size: 11px;
   position: absolute;
   right: 32px;
   transform: translateY(50%);

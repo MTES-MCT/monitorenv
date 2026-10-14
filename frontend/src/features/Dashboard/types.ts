@@ -169,12 +169,12 @@ export namespace Dashboard {
   }
 
   export type TargetDetailsForEditableBrief = {
-    externalReferenceNumber?: string
+    controlledPersonIdentity?: string
     imo?: string
     mmsi?: string
-    operatorName?: string
-    size?: string
+    registrationNumber?: string
     vesselName?: string
+    vesselSize?: string
     vesselType?: string
   }
 

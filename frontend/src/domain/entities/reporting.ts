@@ -90,12 +90,15 @@ export enum ControlStatusLabels {
 }
 
 export type TargetDetails = {
-  externalReferenceNumber?: string
+  controlledPersonIdentity?: string
   imo?: string
   mmsi?: string
-  operatorName?: string
-  size?: number
+  registrationNumber?: string
+  vesselBatchId?: number
   vesselName?: string
+  vesselRowNumber?: number
+  vesselShipId?: number
+  vesselSize?: number
   vesselType?: VesselTypeEnum
 }
 

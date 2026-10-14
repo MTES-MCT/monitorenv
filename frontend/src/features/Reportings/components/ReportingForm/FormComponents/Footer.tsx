@@ -118,7 +118,7 @@ export function Footer({
         values.targetDetails.map(async target => {
           const targetInfos = `${target.vesselName ? `Nom du navire:${target.vesselName}\n` : ''}${
             target.mmsi ? `MMSI: ${target.mmsi}\n` : ''
-          }${target.size ? `Taille: ${target.size}m\n` : ''}`
+          }${target.vesselSize ? `Taille: ${target.vesselSize}m\n` : ''}`
 
           if (!target.mmsi) {
             return ''

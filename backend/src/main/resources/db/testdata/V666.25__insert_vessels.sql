@@ -16,19 +16,19 @@ VALUES (nextval('vessels_id_seq'), '11', 'A', 'PRO', false, 'IMO1111', '12345678
         '3120', '2000-01-01', 1, 1, '0123456', 9.23);
 INSERT INTO public.vessels (id, ship_id, status, category, is_banned, imo_number, mmsi_number, immatriculation,
                             ship_name, flag, batch_id, row_number, length)
-VALUES (nextval('vessels_id_seq'), '22', 'A', 'PLA', false, 'IMO2222', '22222',
+VALUES (nextval('vessels_id_seq'), '22', 'A', 'PLA', false, 'IMO2222', '222222222',
         'IMMAT222222', 'SHIPNAME 2', 'FRA', 1, 1, 24);
 INSERT INTO public.vessels (id, ship_id, status, category, is_banned, imo_number, mmsi_number, immatriculation,
                             ship_name, flag, batch_id, row_number, length)
-VALUES (nextval('vessels_id_seq'), '33', 'A', 'PRO', false, 'IMO2223', '22223',
+VALUES (nextval('vessels_id_seq'), '33', 'A', 'PRO', false, 'IMO2223', '222222223',
         'IMMAT222223', 'SMALL SHIPNAME 3', 'GLP', 1, 1, 10);
 INSERT INTO public.vessels (id, ship_id, status, category, is_banned, imo_number, mmsi_number, immatriculation,
                             ship_name, flag, batch_id, row_number)
-VALUES (nextval('vessels_id_seq'), '44', 'A', 'PLA', true, 'IMO2224', '22224',
+VALUES (nextval('vessels_id_seq'), '44', 'A', 'PLA', true, 'IMO2224', '222222224',
         'IMMAT222224', 'BANNED SHIP', 'REU', 1, 1);
 INSERT INTO public.vessels (id, ship_id, status, category, is_banned, imo_number, mmsi_number, immatriculation,
                             ship_name, flag, batch_id, row_number)
-VALUES (nextval('vessels_id_seq'), '55', 'D', 'PLA', false, 'IMO2225', '22225',
+VALUES (nextval('vessels_id_seq'), '55', 'D', 'PLA', false, 'IMO2225', '222222225',
         'IMMAT222225', 'DESTROYED SHIP', 'FRA', 1, 1);
 INSERT INTO public.vessels (id, ship_id, status, category, is_banned, imo_number, mmsi_number, immatriculation,
                             ship_name, batch_id, row_number)
