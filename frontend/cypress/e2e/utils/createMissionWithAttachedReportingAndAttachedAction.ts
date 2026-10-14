@@ -27,6 +27,8 @@ export function createMissionWithAttachedReportingAndAttachedAction() {
   cy.get('div[role="option"]').contains('Véhicule').click()
 
   cy.fill('Type de véhicule', 'Navire')
+  cy.fill('Navire absent de la base de données', true)
+
   cy.fill('Nom du navire', 'Le Bateau 2000')
   cy.fill('Nom du capitaine', 'Capitaine Crochet')
   cy.fill('Immatriculation', '123456789')

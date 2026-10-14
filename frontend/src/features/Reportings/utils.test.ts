@@ -42,7 +42,7 @@ const reporting3 = {
   description: undefined,
   targetDetails: [
     {
-      operatorName: 'Nom de la société',
+      controlledPersonIdentity: 'Nom de la société',
       vesselName: 'Personne contrôlée'
     }
   ],

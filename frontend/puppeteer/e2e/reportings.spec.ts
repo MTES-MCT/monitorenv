@@ -48,13 +48,15 @@ describe('Reportings Form', () => {
       /**
        * User A modify "Target details"
        */
-      const operatorName = await pageA.waitForSelector('[name="targetDetails.0.operatorName"]')
-      await operatorName.click({ clickCount: 10 })
-      await operatorName.type('A new company name', { delay: 50 })
+      const controlledPersonIdentity = await pageA.waitForSelector('[name="targetDetails.0.controlledPersonIdentity"]')
+      await controlledPersonIdentity.click({ clickCount: 10 })
+      await controlledPersonIdentity.type('A new company name', { delay: 50 })
       // Wait for the update to be sent
       await wait(2000)
       // Should send the update to the second page
-      expect(await getInputContent(pageB, '[name="targetDetails.0.operatorName"]')).toBe('A new company name')
+      expect(await getInputContent(pageB, '[name="targetDetails.0.controlledPersonIdentity"]')).toBe(
+        'A new company name'
+      )
 
       /**
        * User B delete attached mission

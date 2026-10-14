@@ -154,6 +154,7 @@ export function VesselSearchForm({
           {!selectedVessel && (
             <Checkbox
               checked={isUnknown}
+              data-cy={`vessel-unknown-checkbox-${path}`}
               inline
               isLight={false}
               label="Navire absent de la base de données"
