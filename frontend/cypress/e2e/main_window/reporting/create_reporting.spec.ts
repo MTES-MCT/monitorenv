@@ -318,6 +318,7 @@ context('Reporting', () => {
       // Fill in the vessel informations
       cy.fill('Type de cible', 'Véhicule')
       cy.fill('Type de véhicule', 'Navire')
+      cy.fill('Navire absent de la base de données', true)
       cy.fill('MMSI', '123456789')
       cy.contains("0 susp. d'infraction")
       cy.contains('1 infraction')
@@ -390,6 +391,7 @@ context('Reporting', () => {
       cy.getDataCy('reporting-target-info-message').should('not.exist')
 
       cy.fill('Type de véhicule', 'Navire')
+      cy.fill('Navire absent de la base de données', true)
       cy.getDataCy('reporting-target-info-message').should('exist')
 
       cy.fill('MMSI', '123456789')
@@ -399,10 +401,11 @@ context('Reporting', () => {
       cy.getDataCy('reporting-target-info-message').should('not.exist')
 
       cy.clickButton('Ajouter une cible')
+      cy.getDataCy('vessel-unknown-checkbox-targetDetails.1').click()
       cy.getDataCy('reporting-target-info-message').should('exist')
 
       cy.get('input[name="targetDetails.1.imo"]').type('123456789', { force: true })
-      cy.get('input[id="targetDetails.1.size"]').type('12', { force: true })
+      cy.get('input[id="targetDetails.1.vesselSize"]').type('12', { force: true })
       cy.get('input[name="targetDetails.1.vesselName"]').type('BALTIK', { force: true })
       cy.get('input[name="targetDetails.1.vesselType"]').click({ force: true })
       cy.get('span[title="Moteur"]').click({ force: true })

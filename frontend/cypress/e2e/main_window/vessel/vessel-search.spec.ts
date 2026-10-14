@@ -148,7 +148,7 @@ context('Search Places', () => {
     cy.getDataCy('reporting-title').contains('NOUVEAU SIGNALEMENT (1)')
     cy.get('input[name="targetType"]').should('have.value', 'VEHICLE')
     cy.get('input[name="vehicleType"]').should('have.value', 'VESSEL')
-    cy.get('input[name="targetDetails.0.mmsi"]').should('have.value', '123456789')
+    cy.contains('123456789')
     // Location
     cy.contains('47° 38.400′ N 003° 13.176′ W')
 

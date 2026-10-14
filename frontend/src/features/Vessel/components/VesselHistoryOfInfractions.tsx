@@ -34,11 +34,7 @@ export function VesselHistoryOfInfractions({
 
   const [debouncedMmsi] = useDebounce(mmsi, 300)
 
-  const canSearch = !!(
-    (forceSearch || reportingId || envActionId) &&
-    debouncedMmsi &&
-    debouncedMmsi.length === NB_CHAR_MMSI
-  )
+  const canSearch = !!((forceSearch || reportingId || envActionId) && debouncedMmsi?.length === NB_CHAR_MMSI)
 
   const getHistoryByMmsi = useGetHistoryOfInfractions()
 
@@ -104,11 +100,10 @@ export function VesselHistoryOfInfractions({
               <span>Pas d&apos;antécédent</span>
             ) : (
               <>
-                <>
-                  <BoldOrNormalText $isBold={totalSuspicionOfInfractions > 0}>
-                    {totalSuspicionOfInfractions} susp. d&apos;infraction,
-                  </BoldOrNormalText>
-                </>
+                <BoldOrNormalText $isBold={totalSuspicionOfInfractions > 0}>
+                  {totalSuspicionOfInfractions} susp. d&apos;infraction,
+                </BoldOrNormalText>
+
                 <BoldOrNormalText $isBold={history.totalInfraction > 0}>
                   {history.totalInfraction} {pluralize('infraction', history.totalInfraction)},
                 </BoldOrNormalText>
