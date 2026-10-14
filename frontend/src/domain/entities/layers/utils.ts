@@ -12,9 +12,7 @@ import type { AMPProperties } from 'domain/entities/AMPs'
 export const getTitle = (name?: string | undefined) => (name ? `${name?.replace(/[_]/g, ' ')}` : '')
 
 type GenericLayerType =
-  | AMPProperties
-  | RegulatoryArea.RegulatoryAreaTilesProperties
-  | VigilanceArea.VigilanceAreaProperties
+  AMPProperties | RegulatoryArea.RegulatoryAreaTilesProperties | VigilanceArea.VigilanceAreaProperties
 
 const isAMPLayer = (layerType: RegulatoryOrAMPOrViglanceAreaLayerType) =>
   layerType === MonitorEnvLayers.AMP ||

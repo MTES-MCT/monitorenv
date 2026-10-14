@@ -9,7 +9,6 @@ import { monitorenvPrivateApi } from './api'
 
 import type { RegulatoryArea } from '@features/RegulatoryArea/types'
 import type { HomeRootState } from '@store/index'
-import type { StringDigit } from 'type-fest/source/internal'
 
 const GET_REGULATORY_AREAS_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la/les zones réglementaires"
 const GET_REGULATORY_AREA_ERROR_MESSAGE = "Nous n'avons pas pu récupérer la zones réglementaire"
@@ -298,7 +297,7 @@ export const getRegulatoryAreasBySeaFront = createSelector([getBackofficeSortedR
 
       return acc
     },
-    {} as Record<StringDigit, RegulatoryArea.RegulatoryAreaGroup[]>
+    {} as Record<string, RegulatoryArea.RegulatoryAreaGroup[]>
   )
 })
 

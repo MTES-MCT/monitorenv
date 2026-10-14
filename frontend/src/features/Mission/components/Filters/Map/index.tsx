@@ -112,8 +112,7 @@ function MapMissionsFiltersWithRef(
       return
     }
     const nextSelectedValues = selectedValues.filter(selectedValue => selectedValue !== valueToDelete) as
-      | string[]
-      | number[]
+      string[] | number[]
     dispatch(updateFilters({ key: filterKey, value: nextSelectedValues.length === 0 ? undefined : nextSelectedValues }))
   }
 

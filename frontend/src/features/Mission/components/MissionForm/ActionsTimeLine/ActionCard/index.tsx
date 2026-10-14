@@ -12,10 +12,7 @@ import type { MouseEventHandler } from 'react'
 
 type ActionCardProps = {
   action:
-    | EnvActionForTimeline
-    | ReportingForTimeline
-    | DetachedReportingForTimeline
-    | FishMissionAction.FishActionForTimeline
+    EnvActionForTimeline | ReportingForTimeline | DetachedReportingForTimeline | FishMissionAction.FishActionForTimeline
   duplicateAction: MouseEventHandler
   hasError: boolean
   removeAction: MouseEventHandler
