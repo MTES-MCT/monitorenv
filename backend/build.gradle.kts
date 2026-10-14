@@ -60,7 +60,7 @@ val sentryVersion = "8.58.0"
 val flywayVersion = "12.5.0"
 
 dependencies {
-    implementation(platform("io.ktor:ktor-bom:${ktorVersion}"))
+    implementation(platform("io.ktor:ktor-bom:$ktorVersion"))
     implementation(platform("org.springframework.boot:spring-boot-dependencies:4.1.1"))
     // Spring Boot
     implementation("org.springframework.boot:spring-boot-starter-webmvc")

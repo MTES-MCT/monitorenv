@@ -24,12 +24,18 @@ data class ReportingSourceDataOutput(
                 sourceName = reportingSourceDTO.reportingSource.sourceName,
                 displayedSource =
                     when (reportingSourceDTO.reportingSource.sourceType) {
-                        SourceTypeEnum.SEMAPHORE ->
+                        SourceTypeEnum.SEMAPHORE -> {
                             reportingSourceDTO.semaphore?.unit
                                 ?: reportingSourceDTO.semaphore?.name
+                        }
 
-                        SourceTypeEnum.CONTROL_UNIT -> reportingSourceDTO.controlUnit?.name
-                        SourceTypeEnum.OTHER -> reportingSourceDTO.reportingSource.sourceName
+                        SourceTypeEnum.CONTROL_UNIT -> {
+                            reportingSourceDTO.controlUnit?.name
+                        }
+
+                        SourceTypeEnum.OTHER -> {
+                            reportingSourceDTO.reportingSource.sourceName
+                        }
                     } ?: "",
             )
     }

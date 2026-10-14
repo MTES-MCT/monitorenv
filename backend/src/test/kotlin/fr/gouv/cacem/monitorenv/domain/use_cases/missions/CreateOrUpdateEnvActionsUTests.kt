@@ -199,21 +199,25 @@ class CreateOrPatchEnvActionsUTests {
                             envActions =
                                 missionToUpdate.envActions?.map {
                                     when (it) {
-                                        is EnvActionControlEntity ->
+                                        is EnvActionControlEntity -> {
                                             it.copy(
                                                 facade = "La Face Ade",
                                                 department =
                                                     "Quequ'part",
                                             )
+                                        }
 
-                                        is EnvActionSurveillanceEntity ->
+                                        is EnvActionSurveillanceEntity -> {
                                             it.copy(
                                                 facade = "La Face Ade",
                                                 department =
                                                     "Quequ'part",
                                             )
+                                        }
 
-                                        else -> it
+                                        else -> {
+                                            it
+                                        }
                                     }
                                 },
                         )

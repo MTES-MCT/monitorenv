@@ -20,7 +20,7 @@ abstract class EnvActionDataOutput(
             envActionsAttachedToReportingIds: List<EnvActionAttachedToReportingIds>?,
         ): EnvActionDataOutput =
             when (envActionEntity.actionType) {
-                ActionTypeEnum.CONTROL ->
+                ActionTypeEnum.CONTROL -> {
                     EnvActionControlDataOutput.fromEnvActionControlEntity(
                         envActionControlEntity = envActionEntity as EnvActionControlEntity,
                         reportingIds =
@@ -29,8 +29,9 @@ abstract class EnvActionDataOutput(
                                 ?.second
                                 ?: listOf(),
                     )
+                }
 
-                ActionTypeEnum.SURVEILLANCE ->
+                ActionTypeEnum.SURVEILLANCE -> {
                     EnvActionSurveillanceDataOutput.fromEnvActionSurveillanceEntity(
                         envActionSurveillanceEntity =
                             envActionEntity as EnvActionSurveillanceEntity,
@@ -40,11 +41,13 @@ abstract class EnvActionDataOutput(
                                 ?.second
                                 ?: listOf(),
                     )
+                }
 
-                ActionTypeEnum.NOTE ->
+                ActionTypeEnum.NOTE -> {
                     EnvActionNoteDataOutput.fromEnvActionNoteEntity(
                         envActionEntity as EnvActionNoteEntity,
                     )
+                }
             }
     }
 }

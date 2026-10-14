@@ -14,14 +14,23 @@ fun getControlStatus(
             attachedMission
                 ?.envActions
                 ?.find { it.id == reporting.attachedEnvActionId }
-                ?.actionType == ActionTypeEnum.SURVEILLANCE ->
+                ?.actionType == ActionTypeEnum.SURVEILLANCE -> {
             ControlStatusEnum.SURVEILLANCE_DONE
+        }
+
         reporting.attachedEnvActionId != null &&
             attachedMission
                 ?.envActions
                 ?.find { it.id == reporting.attachedEnvActionId }
-                ?.actionType == ActionTypeEnum.CONTROL -> ControlStatusEnum.CONTROL_DONE
-        reporting.attachedEnvActionId == null && reporting.isControlRequired == true ->
+                ?.actionType == ActionTypeEnum.CONTROL -> {
+            ControlStatusEnum.CONTROL_DONE
+        }
+
+        reporting.attachedEnvActionId == null && reporting.isControlRequired == true -> {
             ControlStatusEnum.CONTROL_TO_BE_DONE
-        else -> null
+        }
+
+        else -> {
+            null
+        }
     }

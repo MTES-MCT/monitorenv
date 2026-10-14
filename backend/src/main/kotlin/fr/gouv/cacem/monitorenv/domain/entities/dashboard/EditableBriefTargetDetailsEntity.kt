@@ -16,7 +16,7 @@ data class EditableBriefTargetDetailsEntity(
     fun buildDetailsRows(reporting: EditableBriefReportingEntity): List<List<String>> {
         val targetLabel = "Type de cible"
         return when (reporting.targetType) {
-            TargetTypeEnum.INDIVIDUAL ->
+            TargetTypeEnum.INDIVIDUAL -> {
                 listOf(
                     listOf(
                         targetLabel,
@@ -27,8 +27,9 @@ data class EditableBriefTargetDetailsEntity(
                         "",
                     ),
                 )
+            }
 
-            TargetTypeEnum.COMPANY ->
+            TargetTypeEnum.COMPANY -> {
                 listOf(
                     listOf(
                         targetLabel,
@@ -39,11 +40,13 @@ data class EditableBriefTargetDetailsEntity(
                         vesselName ?: "",
                     ),
                 )
+            }
 
-            TargetTypeEnum.OTHER ->
+            TargetTypeEnum.OTHER -> {
                 listOf(
                     listOf(targetLabel, "Autre", "", "", "", ""),
                 )
+            }
 
             else -> {
                 if (reporting.vehicleType != VehicleTypeEnum.VESSEL) {

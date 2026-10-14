@@ -49,7 +49,7 @@ object EnvActionMapper {
     ): EnvActionEntity =
         try {
             when (actionType) {
-                ActionTypeEnum.SURVEILLANCE ->
+                ActionTypeEnum.SURVEILLANCE -> {
                     mapper
                         .readValue(
                             value,
@@ -68,8 +68,9 @@ object EnvActionMapper {
                             tags = tags,
                             themes = themes,
                         )
+                }
 
-                ActionTypeEnum.CONTROL ->
+                ActionTypeEnum.CONTROL -> {
                     mapper
                         .readValue(
                             value,
@@ -96,8 +97,9 @@ object EnvActionMapper {
                             hasDivingDuringOperation = hasDivingDuringOperation,
                             incidentDuringOperation = incidentDuringOperation,
                         )
+                }
 
-                ActionTypeEnum.NOTE ->
+                ActionTypeEnum.NOTE -> {
                     mapper
                         .readValue(
                             value,
@@ -108,6 +110,7 @@ object EnvActionMapper {
                             completion = completion,
                             observationsByUnit = observationsByUnit,
                         )
+                }
             }
         } catch (e: Exception) {
             val errorMessage = "Cannot parse envAction from JSON"
@@ -121,26 +124,29 @@ object EnvActionMapper {
     ): String =
         try {
             when (envAction.actionType) {
-                ActionTypeEnum.SURVEILLANCE ->
+                ActionTypeEnum.SURVEILLANCE -> {
                     mapper.writeValueAsString(
                         EnvActionSurveillanceProperties.fromEnvActionSurveillanceEntity(
                             envAction as EnvActionSurveillanceEntity,
                         ),
                     )
+                }
 
-                ActionTypeEnum.CONTROL ->
+                ActionTypeEnum.CONTROL -> {
                     mapper.writeValueAsString(
                         EnvActionControlProperties.fromEnvActionControlEntity(
                             envAction as EnvActionControlEntity,
                         ),
                     )
+                }
 
-                ActionTypeEnum.NOTE ->
+                ActionTypeEnum.NOTE -> {
                     mapper.writeValueAsString(
                         EnvActionNoteProperties.fromEnvActionNoteEntity(
                             envAction as EnvActionNoteEntity,
                         ),
                     )
+                }
             }
         } catch (e: Exception) {
             val errorMessage = "Cannot parse envAction to JSON"

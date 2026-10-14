@@ -86,8 +86,9 @@ class SecurityConfig(
                 }
 
             private fun loadUserFromJwtUserInfo(userRequest: OidcUserRequest): OidcUser {
-                val userInfoUri = userRequest.clientRegistration.providerDetails.userInfoEndpoint.uri
-                    ?: throw OAuth2AuthenticationException("user-info-uri is missing")
+                val userInfoUri =
+                    userRequest.clientRegistration.providerDetails.userInfoEndpoint.uri
+                        ?: throw OAuth2AuthenticationException("user-info-uri is missing")
 
                 val accessToken = userRequest.accessToken.tokenValue
 

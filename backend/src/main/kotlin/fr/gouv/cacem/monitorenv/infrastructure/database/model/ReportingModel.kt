@@ -183,8 +183,7 @@ class ReportingModel(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
             attachedMission =
-                if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
-                ) {
+                if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null) {
                     mission?.toMissionEntity(jsonMapper)
                 } else {
                     null
@@ -198,8 +197,7 @@ class ReportingModel(
             reporting = reporting,
             reportingSources = reportingSources.map { it.toReportingSourceDTO() },
             attachedMission =
-                if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null
-                ) {
+                if (detachedFromMissionAtUtc == null && attachedToMissionAtUtc != null) {
                     mission?.toMissionEntity(
                         jsonMapper,
                     )
