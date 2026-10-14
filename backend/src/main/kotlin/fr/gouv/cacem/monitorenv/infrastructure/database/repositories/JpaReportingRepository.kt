@@ -128,7 +128,7 @@ class JpaReportingRepository(
                 targetDetail.registrationNumber,
                 targetDetail.vesselName,
                 targetDetail.controlledPersonIdentity,
-                targetDetail.vesselType?.name,
+                targetDetail.vesselType,
             ).any { field ->
                 !field.isNullOrBlank() &&
                     normalizeField(field)

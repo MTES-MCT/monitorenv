@@ -5,7 +5,7 @@ import {
   VesselSearchInputWrapper,
   VesselSearchWrapper
 } from '@features/Mission/components/MissionForm/ActionForm/ControlForm/InfractionForm/InfractionFormHeaderVehicle'
-import { HistoryOfInfractions } from '@features/Reportings/components/ReportingForm/FormComponents/Target/HistoryOfInfractions'
+import { VesselHistoryOfInfractions } from '@features/Vessel/components/VesselHistoryOfInfractions'
 import { SearchVessel } from '@features/Vessel/components/VesselSearch'
 import { VesselSearchDescription } from '@features/Vessel/components/VesselSearch/VesselSearchDescription'
 import { vesselAction } from '@features/Vessel/slice'
@@ -17,26 +17,33 @@ import { useField, useFormikContext } from 'formik'
 import { useCallback, useEffect, useState } from 'react'
 
 import type { Vessel } from '@features/Vessel/types'
-import type { Reporting } from 'domain/entities/reporting'
 
 type VesselSearchFormProps = {
   batchId: number | undefined
+  envActionId?: string
+  forceHistorySearch?: boolean
+  isHistoryReadOnly?: boolean
   isLight?: boolean
   isTransparent?: boolean
   isUnknown: boolean | undefined
   onIsUnknown: (isUnknow: boolean | undefined) => void
   path: string
+  reportingId?: string
   rowNumber: number | undefined
   shipId: number | undefined
 }
 
 export function VesselSearchForm({
   batchId,
+  envActionId,
+  forceHistorySearch,
+  isHistoryReadOnly,
   isLight = true,
   isTransparent = false,
   isUnknown,
   onIsUnknown,
   path,
+  reportingId,
   rowNumber,
   shipId
 }: VesselSearchFormProps) {
@@ -45,7 +52,7 @@ export function VesselSearchForm({
   const [selectedVessel, setSelectedVessel] = useState<Vessel.Vessel | undefined>()
   const [getVessel, { isLoading }] = useLazyGetVesselQuery()
   const { data: vessel } = useGetVesselQuery(shipId ? { batchId, rowNumber, shipId } : skipToken)
-  const { setFieldValue } = useFormikContext<Reporting>()
+  const { setFieldValue } = useFormikContext()
 
   useEffect(() => {
     if (vessel) {
@@ -110,7 +117,13 @@ export function VesselSearchForm({
       {isVesselsEnabled() && (
         <>
           <VesselSearchWrapper>
-            <HistoryOfInfractions forceSearch mmsi={mmsi.value} />
+            <VesselHistoryOfInfractions
+              envActionId={envActionId}
+              forceSearch={forceHistorySearch}
+              isReadOnly={isHistoryReadOnly}
+              mmsi={mmsi.value}
+              reportingId={reportingId}
+            />
             <VesselSearchInputWrapper>
               <SearchVessel
                 disabled={isUnknown}

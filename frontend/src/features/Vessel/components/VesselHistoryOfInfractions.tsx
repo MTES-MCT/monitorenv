@@ -6,16 +6,16 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useDebounce } from 'use-debounce'
 
-import { ReportingContext } from '../../../../../../domain/shared_slices/Global'
+import { ReportingContext } from '../../../domain/shared_slices/Global'
 import {
   type HistoryOfInfractionsProps,
   initialHistory,
   useGetHistoryOfInfractions
-} from '../../hooks/useGetHistoryOfInfractions'
+} from '../../Reportings/components/ReportingForm/hooks/useGetHistoryOfInfractions'
 
 const NB_CHAR_MMSI = 9
 
-export function HistoryOfInfractions({
+export function VesselHistoryOfInfractions({
   envActionId,
   forceSearch = false,
   isReadOnly = false,

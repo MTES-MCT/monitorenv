@@ -1,4 +1,3 @@
-import { HistoryOfInfractions } from '@features/Reportings/components/ReportingForm/FormComponents/Target/HistoryOfInfractions'
 import { addReporting } from '@features/Reportings/useCases/addReporting'
 import { HistoryTimeline } from '@features/Vessel/components/VesselResume/History/HistoryTimeline'
 import { ReportingCard } from '@features/Vessel/components/VesselResume/History/ReportingCard'
@@ -13,6 +12,7 @@ import { ReportingTargetTypeEnum } from '../../../../../domain/entities/targetTy
 import { VehicleTypeEnum } from '../../../../../domain/entities/vehicleType'
 import { VesselTypeEnum } from '../../../../../domain/entities/vesselType'
 import { ReportingContext } from '../../../../../domain/shared_slices/Global'
+import { VesselHistoryOfInfractions } from '../../VesselHistoryOfInfractions'
 
 import type { EnvActionControlWithInfractions } from '../../../../../domain/entities/missions'
 import type { Reporting } from '../../../../../domain/entities/reporting'
@@ -80,7 +80,7 @@ export function History({ envActions, reportings, vessel }: SummaryProps) {
       <Section>
         <header>Derniers contrôles et signalements ({diff} dernières années)</header>
         <Body>
-          <HistoryOfInfractions forceSearch mmsi={vessel.mmsi} />
+          <VesselHistoryOfInfractions forceSearch mmsi={vessel.mmsi} />
           <CurrentReportingWrapper>
             <Button isFullWidth onClick={createReporting}>
               Ajouter un signalement

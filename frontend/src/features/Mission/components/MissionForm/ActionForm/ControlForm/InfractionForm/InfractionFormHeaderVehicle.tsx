@@ -1,4 +1,4 @@
-import { VesselForm } from '@features/Vessel/components/MissionVesselForm'
+import { InfractionVesselForm } from '@features/Mission/components/MissionForm/ActionForm/ControlForm/InfractionForm/InfractionVesselForm'
 import { FormikTextInput, LinkButton } from '@mtes-mct/monitor-ui'
 import { useField } from 'formik'
 import styled from 'styled-components'
@@ -41,7 +41,7 @@ export function InfractionFormHeaderVehicle({ envActionIndex, infractionPath, is
       )}
 
       {vehicleTypeField?.value === VehicleTypeEnum.VESSEL && (
-        <VesselForm envActionIndex={envActionIndex} isDisabled={isDisabled} path={infractionPath} />
+        <InfractionVesselForm envActionIndex={envActionIndex} isDisabled={isDisabled} path={infractionPath} />
       )}
     </FormGroup>
   )

@@ -1,7 +1,5 @@
 package fr.gouv.cacem.monitorenv.domain.entities.reporting
 
-import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
-
 data class TargetDetailsEntity(
     val registrationNumber: String? = null,
     val imo: String? = null,
@@ -12,5 +10,5 @@ data class TargetDetailsEntity(
     val vesselName: String? = null,
     val vesselRowNumber: Int? = null,
     val vesselShipId: Int? = null,
-    val vesselType: VesselTypeEnum? = null,
+    val vesselType: String? = null,
 )
