@@ -4,7 +4,7 @@ server:
   compression:
     enabled: true
     excluded-user-agents: ""
-    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/x-protobuf
     min-response-size: 2048
 
 host:
