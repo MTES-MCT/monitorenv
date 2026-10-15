@@ -85,6 +85,8 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       maxLifetime: 60000
+      maximum-pool-size: ${MONITORENV_POOL_SIZE}
+      minimum-idle: ${MONITORENV_POOL_SIZE}
   kafka:
     bootstrap-servers: ${MONITORENV_KAFKA_AIS_SERVERS}
     consumer:
