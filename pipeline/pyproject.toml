@@ -12,7 +12,7 @@ pandas = {extras = ["postgresql"], version = "^2.3.3"}
 geoalchemy2 = "^0.20.0"
 simplejson = "^4.1.1"
 pytz = "^2025.2"
-prefect = {version = "3.8.7", extras = ["docker"]}
+prefect = {version = "3.8.8", extras = ["docker"]}
 coverage = "^7.16.2"
 pytest = "^9.1.1"
 psycopg2-binary = "^2.9.11"
