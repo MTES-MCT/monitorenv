@@ -15,6 +15,7 @@ type VesselFormProps = {
 
 export function TargetDetailsVesselForm({ index, isDisabled, isLight = true, path }: VesselFormProps) {
   const [{ value }] = useField(`targetDetails.${index}`)
+  const [{ value: reportingId }] = useField('id')
 
   const isUnknown =
     !value.vesselShipId &&
@@ -38,7 +39,7 @@ export function TargetDetailsVesselForm({ index, isDisabled, isLight = true, pat
         isUnknown={isUnknownVessel}
         onIsUnknown={isChecked => setIsUnknownVessel(!!isChecked)}
         path={path}
-        reportingId={value.id}
+        reportingId={reportingId}
         rowNumber={value.vesselRowNumber}
         shipId={value.vesselShipId}
       />
