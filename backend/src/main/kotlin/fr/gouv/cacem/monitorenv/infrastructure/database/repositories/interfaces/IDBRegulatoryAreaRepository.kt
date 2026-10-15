@@ -70,21 +70,18 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                         )
                     ),
                     tags_agg AS (
-                        SELECT
-                            tr.regulatory_areas_id,
-                            STRING_AGG(DISTINCT
-                                CASE
-                                    WHEN subtag.id IS NOT NULL
-                                    THEN t.name || ', ' || subtag.name
+                    SELECT tr.regulatory_areas_id,
+                           STRING_AGG(DISTINCT
+                               CASE WHEN parent.id IS NOT NULL
+                                    THEN parent.name || ', ' || t.name
                                     ELSE t.name
-                                END
-                            , ',') AS tags
-                        FROM tags_regulatory_areas tr
-                        JOIN tags t ON tr.tags_id = t.id
-                        LEFT JOIN tags subtag ON subtag.parent_id = t.id
-                        WHERE tr.regulatory_areas_id IN (SELECT id FROM filtered_regs)
-                        GROUP BY tr.regulatory_areas_id
-                    )
+                               END, ',') AS tags
+                    FROM tags_regulatory_areas tr
+                    JOIN tags t ON t.id = tr.tags_id
+                    LEFT JOIN tags parent ON parent.id = t.parent_id
+                    WHERE tr.regulatory_areas_id IN (SELECT id FROM filtered_regs)
+                    GROUP BY tr.regulatory_areas_id
+                )
                 SELECT
                     filtered_regs.id as id,
                     CONCAT('REGULATORY_ENV_PREVIEW:', filtered_regs.id) as uid,

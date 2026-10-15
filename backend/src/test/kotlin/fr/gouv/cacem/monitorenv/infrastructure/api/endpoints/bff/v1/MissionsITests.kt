@@ -76,14 +76,14 @@ class MissionsITests {
 
     @MockitoBean
     private lateinit var createOrUpdateMissionWithActionsAndAttachedReporting:
-            CreateOrUpdateMissionWithActionsAndAttachedReporting
+        CreateOrUpdateMissionWithActionsAndAttachedReporting
 
     @MockitoBean
     private lateinit var getFullMissions: GetFullMissions
 
     @MockitoBean
     private lateinit var getFullMissionWithFishAndRapportNavActions:
-            GetFullMissionWithFishAndRapportNavActions
+        GetFullMissionWithFishAndRapportNavActions
 
     @MockitoBean
     private lateinit var deleteMission: DeleteMission
@@ -111,7 +111,7 @@ class MissionsITests {
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-                MultiPolygon
+            MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
 
     @Test
