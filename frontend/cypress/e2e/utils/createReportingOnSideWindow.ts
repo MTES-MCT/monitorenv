@@ -18,6 +18,7 @@ export function createReportingOnSideWindow() {
   cy.get('div[role="option"]').contains('Véhicule').click()
 
   cy.fill('Type de véhicule', 'Navire')
+  cy.fill('Navire absent de la base de données', true)
   cy.fill('Nom du navire', 'The Boat')
   cy.fill('Immatriculation', '987654321')
   cy.fill('Taille', 54)
