@@ -55,7 +55,29 @@ tag_final AS (
         jsonb_object_agg(parent_name, children) AS tags_json
     FROM tag_grouped
     GROUP BY ra_id
+),
+
+-- Geometries overshooting the valid longitude / latitude range by a fraction of a
+-- degree are rejected by the Géoplateforme, which refuses the whole delivery.
+valid_geometries AS (
+    SELECT
+        id,
+        CASE
+            WHEN ST_XMin(geom) < -180 OR ST_XMax(geom) > 180
+                OR ST_YMin(geom) < -90 OR ST_YMax(geom) > 90
+            -- Clipping rewrites the vertex order, so it is only applied to the
+            -- geometries that need it.
+            THEN ST_Multi(
+                ST_Intersection(
+                    ST_CurveToLine(geom),
+                    ST_MakeEnvelope(-180, -90, 180, 90, 4326)
+                )
+            )
+            ELSE ST_CurveToLine(geom)
+        END AS geometry
+    FROM public.regulatory_areas
 )
+
 SELECT
     ra.id,
     ra.creation::timestamp,
@@ -70,11 +92,11 @@ SELECT
     ra.date::timestamp,
     ra.date_fin::timestamp,
     ra.type,
-    ST_ASTEXT(ST_CurveToLine(ra.geom)) AS wkt,
+    ST_ASTEXT(ST_CurveToLine(valid_geometries.geometry)) AS wkt,
     ra.resume,
     ra.poly_name,
     ra.plan,
-    ra.geom AS geometry,
+    valid_geometries.geometry,
     ra.authorization_periods,
     ra.prohibition_periods,
     ra.additional_ref_reg,
@@ -82,6 +104,7 @@ SELECT
     COALESCE(theme_final.themes_json, '{}'::jsonb) AS themes,
     COALESCE(tag_final.tags_json, '{}'::jsonb) AS tags
 FROM public.regulatory_areas ra
+LEFT JOIN valid_geometries ON valid_geometries.id = ra.id
 LEFT JOIN theme_final ON theme_final.ra_id = ra.id
 LEFT JOIN tag_final ON tag_final.ra_id = ra.id
 WHERE ra.layer_name IS NOT NULL

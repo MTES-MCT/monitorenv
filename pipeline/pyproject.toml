@@ -21,6 +21,7 @@ css-inline = "^0.20.0"
 lxml = "^6.0.2"
 oracledb = "^3.4.2"
 requests-mock = "^1.11.0"
+sdk-entrepot-gpf = "^0.1.45"
 
 
 [tool.poetry.group.dev.dependencies]
