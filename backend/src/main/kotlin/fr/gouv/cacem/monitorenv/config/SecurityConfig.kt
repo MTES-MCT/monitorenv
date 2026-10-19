@@ -135,14 +135,6 @@ class SecurityConfig(
             }
 
             private fun validateAndProcessUser(oidcUser: OidcUser): OidcUser {
-                val organizationalUnitClaim = oidcUser.claims["organizational_unit"] as? String
-                logger.info("User organizational unit from JWT: $organizationalUnitClaim")
-
-                if (oidcProperties.bypassEmailDomainsFilter == "true") {
-                    logger.info("✅ OIDC is bypassing email domain checks.")
-                    return oidcUser
-                }
-
                 val emailClaim = oidcUser.claims["email"] as? String
                 logger.debug("User email from JWT: $emailClaim")
 
@@ -152,21 +144,7 @@ class SecurityConfig(
                     throw OAuth2AuthenticationException(errorMsg)
                 }
 
-                val emailDomain = emailClaim.substringAfterLast("@")
-
-                val isAuthorized =
-                    oidcProperties.authorizedEmailDomains.any { domain ->
-                        emailDomain.equals(domain, ignoreCase = true)
-                    }
-
-                if (!isAuthorized) {
-                    val errorMsg =
-                        "User not authorized. Email domain '$emailDomain' does not match any authorized domain: ${oidcProperties.authorizedEmailDomains}"
-                    logger.error("❌ $errorMsg")
-                    throw OAuth2AuthenticationException(errorMsg)
-                }
-
-                logger.info("✅ User authorized with email domain: $emailDomain")
+                logger.info("✅ User authorized with email $emailClaim")
                 return oidcUser
             }
         }
