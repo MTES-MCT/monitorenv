@@ -12,8 +12,10 @@ export function Register() {
     <Wrapper>
       <span>
         Merci de contacter{' '}
-        <a href="mailto:monitor@beta.gouv.fr?subject=Création de compte MonitorEnv">monitor@beta.gouv.fr</a> pour
-        accéder à MonitorEnv avec Cerbère.
+        <a href="mailto:cacem@developpement-durable.gouv.fr?subject=Création de compte MonitorEnv">
+          cacem@developpement-durable.gouv.fr
+        </a>{' '}
+        pour accéder à MonitorEnv avec Proconnect.
       </span>
       <Button onClick={goToLoginPage}>Retourner à la page de connexion</Button>
     </Wrapper>
