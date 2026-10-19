@@ -26,14 +26,14 @@ export function LayerLegend({
   legendKey?: string
   plan?: string
   size?: Size
-  type?: string
+  type?: string | number
 }) {
   switch (layerType) {
     case MonitorEnvLayers.AMP:
     case MonitorEnvLayers.AMP_PREVIEW:
     case MonitorEnvLayers.AMP_LINKED_TO_VIGILANCE_AREA:
     case Dashboard.Layer.DASHBOARD_AMP:
-      return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(type, legendKey, isDisabled)} />
+      return <Rectangle $size={size} $vectorLayerColor={getAMPColorWithAlpha(`${type}`, legendKey, isDisabled)} />
     case MonitorEnvLayers.REGULATORY_ENV:
     case MonitorEnvLayers.REGULATORY_ENV_PREVIEW:
     case MonitorEnvLayers.REGULATORY_AREAS_LINKED_TO_VIGILANCE_AREA:
@@ -48,11 +48,11 @@ export function LayerLegend({
         <Rectangle
           $border={border}
           $size={size}
-          $vectorLayerColor={getVigilanceAreaColorWithAlpha(type, legendKey, isDisabled)}
+          $vectorLayerColor={getVigilanceAreaColorWithAlpha(`${type}`, legendKey, isDisabled)}
         />
       )
     case MonitorEnvLayers.LOCALIZED_AREAS:
-      return <Rectangle $size={size} $vectorLayerColor={getLocalizedAreaColorWithAlpha(type)} />
+      return <Rectangle $size={size} $vectorLayerColor={getLocalizedAreaColorWithAlpha(`${type}`)} />
     default:
       return <Rectangle $size={size} />
   }

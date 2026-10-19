@@ -3,7 +3,6 @@ import { getRegulatoryEnvColorWithAlpha } from '@features/map/layers/styles/admi
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Text, View } from '@react-pdf/renderer'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
-import { displayTags } from '@utils/getTagsAsOptions'
 import { displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 
@@ -45,7 +44,7 @@ export function RegulatoryAreas({
                       areaStyle.layerLegend,
                       {
                         backgroundColor: getRegulatoryEnvColorWithAlpha(
-                          displayTags(regulatoryArea.tags),
+                          regulatoryArea.id,
                           getRegulatoryAreaTitle(regulatoryArea.polyName, regulatoryArea.resume),
                           regulatoryArea.plan
                         )
