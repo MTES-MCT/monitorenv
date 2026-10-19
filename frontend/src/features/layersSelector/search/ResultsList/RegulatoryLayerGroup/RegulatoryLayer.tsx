@@ -123,7 +123,7 @@ export function RegulatoryLayer({ groupName, layerId, searchedText }: Regulatory
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layerTitle ?? 'aucun'}
           plan={layer?.plan}
-          type={layer?.tags?.map(({ name }) => name).join(', ') ?? 'aucun'}
+          type={layer?.id ?? 'aucun'}
         />
         <LayerSelector.Name title={layerTitle}>
           <Highlighter

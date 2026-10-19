@@ -8,7 +8,6 @@ import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
-import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { setFitToExtent } from 'domain/shared_slices/Map'
 import { Projection, transformExtent } from 'ol/proj'
@@ -100,7 +99,7 @@ export function RegulatoryAreas({ regulatoryAreaIds }: { regulatoryAreaIds: numb
                     layerType={MonitorEnvLayers.REGULATORY_ENV}
                     legendKey={layerTitle ?? 'aucun'}
                     plan={regulatoryArea?.plan}
-                    type={displayTags(regulatoryArea?.tags) ?? 'aucun'}
+                    type={regulatoryArea?.id ?? 'aucun'}
                   />
                   <span title={layerTitle}>{layerTitle}</span>
                 </Name>

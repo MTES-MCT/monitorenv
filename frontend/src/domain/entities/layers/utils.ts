@@ -91,6 +91,6 @@ export const getLegendType = (layer: GenericLayerType, layerType: RegulatoryOrAM
       return (layer as VigilanceArea.VigilanceAreaProperties).name
 
     default:
-      return (layer as RegulatoryArea.RegulatoryAreaTilesProperties).tags
+      return (layer as RegulatoryArea.RegulatoryAreaTilesProperties).id
   }
 }

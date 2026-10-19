@@ -77,7 +77,7 @@ export function RegulatoryAreaItem({
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layerTitle}
           plan={regulatoryArea.plan}
-          type={regulatoryArea.type}
+          type={regulatoryArea.id}
         />
         <LayerSelector.Name title={layerTitle}>{layerTitle}</LayerSelector.Name>
       </ReStyledTransparentButton>

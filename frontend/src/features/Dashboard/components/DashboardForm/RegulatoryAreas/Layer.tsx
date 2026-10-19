@@ -6,7 +6,6 @@ import { LayerSelector } from '@features/layersSelector/utils/LayerSelector.styl
 import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton, OPENLAYERS_PROJECTION, THEME, WSG84_PROJECTION } from '@mtes-mct/monitor-ui'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
-import { displayTags } from '@utils/getTagsAsOptions'
 import { transformExtent } from 'ol/proj'
 import Projection from 'ol/proj/Projection'
 import { createRef } from 'react'
@@ -87,7 +86,7 @@ export function Layer({ isPinned = false, isSelected, layerId, regulatoryAreas }
           layerType={MonitorEnvLayers.REGULATORY_ENV}
           legendKey={layerTitle ?? 'aucun'}
           plan={layer?.plan}
-          type={displayTags(layer?.tags) ?? 'aucun'}
+          type={layer?.id ?? 'aucun'}
         />
         <LayerName
           data-cy={`dashboard-${isSelected ? 'selected-' : ''}regulatory-area-zone-${layer?.id}`}

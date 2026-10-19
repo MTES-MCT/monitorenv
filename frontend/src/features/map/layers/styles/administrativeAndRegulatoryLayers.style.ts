@@ -196,7 +196,7 @@ export const getRegulatoryLayerStyle = (
   metadataId?: string | number
 ) => {
   const layerTitle = getRegulatoryAreaTitle(feature.get('polyName'), feature.get('resume'))
-  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('tags'), layerTitle, feature.get('plan'))
+  const colorWithAlpha = getRegulatoryEnvColorWithAlpha(feature.get('id'), layerTitle, feature.get('plan'))
 
   return getStyle(colorWithAlpha, feature, isolateLayer, metadataId)
 }
@@ -248,7 +248,7 @@ const getStyle = (
 }
 
 export const getRegulatoryEnvColorWithAlpha = (
-  type: string = '',
+  type: string | number = '',
   name: string = '',
   plan: string = '',
   isDisabled = false
