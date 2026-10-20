@@ -24,7 +24,6 @@ import { CoordinatesFormat, customDayjs, getLocalizedDayjs, Level, THEME } from 
 import { formatCoordinatesAsText } from '@utils/coordinates'
 import { formatDateLabel } from '@utils/getDateAsLocalizedString'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
-import { displayTags } from '@utils/getTagsAsOptions'
 import { displaySubThemes, displayThemes } from '@utils/getThemesAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 import { type Reporting, ReportingTypeEnum } from 'domain/entities/reporting'
@@ -166,7 +165,7 @@ export const exportBrief =
 
       return {
         authorizationPeriods: regulatoryArea.authorizationPeriods,
-        color: getRegulatoryEnvColorWithAlpha(displayTags(regulatoryArea.tags), layerTitle, regulatoryArea.plan),
+        color: getRegulatoryEnvColorWithAlpha(regulatoryArea.id, layerTitle, regulatoryArea.plan),
         facade: regulatoryArea.facade,
         id: regulatoryArea.id,
         layerName: getTitle(formatLayerName(regulatoryArea.layerName, regulatoryArea.location)),

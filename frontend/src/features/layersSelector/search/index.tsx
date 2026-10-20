@@ -23,8 +23,8 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
   const { vigilanceAreas } = useGetFilteredVigilanceAreasQuery()
   const { totalCount } = useGetFilteredRegulatoryAreas()
 
-  const [query, setQuery] = useState<string | undefined>(undefined)
   const globalSearchText = useAppSelector(state => state.layerSearch.globalSearchText)
+  const [query, setQuery] = useState<string | undefined>(globalSearchText)
   const shouldFilterSearchOnMapExtent = useAppSelector(state => state.layerSearch.shouldFilterSearchOnMapExtent)
 
   const filteredVigilanceAreaPeriod = useAppSelector(state => state.vigilanceAreaFilters.period)
@@ -32,7 +32,10 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
   const displayRegFilters = useAppSelector(state => state.layerSidebar.areRegFiltersOpen)
   const displayLayersSidebar = useAppSelector(state => state.global.menus.displayLayersSidebar)
 
-  const debouncedSearch = useMemo(() => debounce(value => dispatch(setGlobalSearchText(value)), 300), [dispatch])
+  const debouncedSearch = useMemo(
+    () => debounce((value: string | undefined) => dispatch(setGlobalSearchText(value ?? '')), 300),
+    [dispatch]
+  )
 
   const handleSearchInputChange = useCallback(
     (searchedText: string | undefined) => {
@@ -57,7 +60,7 @@ export function LayerSearch({ numberOfFilters }: { numberOfFilters: number }) {
     <SearchContainer>
       <Search>
         <SearchInput
-          globalSearchText={query ?? globalSearchText}
+          globalSearchText={query}
           placeholder="Rechercher une zone"
           setGlobalSearchText={handleSearchInputChange}
         >

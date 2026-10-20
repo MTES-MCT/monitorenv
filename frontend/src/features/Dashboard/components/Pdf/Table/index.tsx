@@ -5,7 +5,6 @@ import { getVigilanceAreaColorWithAlpha } from '@features/VigilanceArea/componen
 import { THEME } from '@mtes-mct/monitor-ui'
 import { Image, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
-import { displayTags } from '@utils/getTagsAsOptions'
 import { getTitle } from 'domain/entities/layers/utils'
 
 import { layoutStyle } from '../style'
@@ -148,11 +147,7 @@ export function AreaTable({
                       style={[
                         styles.layerLegend,
                         {
-                          backgroundColor: getRegulatoryEnvColorWithAlpha(
-                            displayTags(layer.tags),
-                            layerTitle,
-                            layer.plan
-                          )
+                          backgroundColor: getRegulatoryEnvColorWithAlpha(layer.id, layerTitle, layer.plan)
                         }
                       ]}
                     />

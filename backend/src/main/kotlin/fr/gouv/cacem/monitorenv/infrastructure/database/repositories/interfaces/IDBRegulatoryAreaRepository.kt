@@ -56,6 +56,7 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                      AND (:query IS NULL 
                         OR UNACCENT(UPPER(poly_name)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
                         OR UNACCENT(UPPER(layer_name)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
+                        OR UNACCENT(UPPER(location)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
                         OR UNACCENT(UPPER(ref_reg)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
                         OR UNACCENT(UPPER(resume)) LIKE CONCAT('%', UNACCENT(UPPER(:query)), '%')
                         )
@@ -68,22 +69,6 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                     AND ((:minX IS NULL OR :minY IS NULL OR :maxX IS NULL OR :maxY IS NULL)
                         OR ST_Intersects(geom_3857, ST_MakeEnvelope(:minX, :minY, :maxX, :maxY, 3857))
                         )
-                    ),
-                    tags_agg AS (
-                        SELECT
-                            tr.regulatory_areas_id,
-                            STRING_AGG(DISTINCT
-                                CASE
-                                    WHEN subtag.id IS NOT NULL
-                                    THEN t.name || ', ' || subtag.name
-                                    ELSE t.name
-                                END
-                            , ',') AS tags
-                        FROM tags_regulatory_areas tr
-                        JOIN tags t ON tr.tags_id = t.id
-                        LEFT JOIN tags subtag ON subtag.parent_id = t.id
-                        WHERE tr.regulatory_areas_id IN (SELECT id FROM filtered_regs)
-                        GROUP BY tr.regulatory_areas_id
                     )
                 SELECT
                     filtered_regs.id as id,
@@ -95,10 +80,8 @@ interface IDBRegulatoryAreaRepository : JpaRepository<RegulatoryAreaModel, Int> 
                     filtered_regs.resume as "resume",
                     filtered_regs.plan as "plan",
                     ST_AsMVTGeom(filtered_regs.geom_3857, ST_TileEnvelope(:z, :x, :y), 4096, 64, true) AS geom,
-                    tags_agg.tags as "tags",
                     true AS "isFilled"
                 FROM filtered_regs
-                LEFT JOIN tags_agg ON tags_agg.regulatory_areas_id = filtered_regs.id
             ) AS tile
             WHERE geom IS NOT NULL
         """,

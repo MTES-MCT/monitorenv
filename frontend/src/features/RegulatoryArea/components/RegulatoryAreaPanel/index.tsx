@@ -5,7 +5,6 @@ import { LayerLegend } from '@features/layersSelector/utils/LayerLegend.style'
 import { Accent, Icon, IconButton, THEME } from '@mtes-mct/monitor-ui'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { getRegulatoryAreaTitle } from '@utils/getRegulatoryAreaTitle'
-import { displayTags } from '@utils/getTagsAsOptions'
 import { MonitorEnvLayers } from 'domain/entities/layers/constants'
 import { getTitle } from 'domain/entities/layers/utils'
 import { forwardRef } from 'react'
@@ -43,7 +42,7 @@ export const RegulatoryAreasPanel = forwardRef<HTMLDivElement, RegulatoryAreasPa
                 layerType={MonitorEnvLayers.REGULATORY_ENV}
                 legendKey={layerTitle}
                 plan={regulatoryMetadata.plan}
-                type={displayTags(regulatoryMetadata.tags)}
+                type={regulatoryMetadata.id}
               />
               <RegulatoryZoneName
                 title={getTitle(formatLayerName(regulatoryMetadata.layerName, regulatoryMetadata.location))}
