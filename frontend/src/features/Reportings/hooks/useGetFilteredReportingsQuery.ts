@@ -43,7 +43,7 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
       return undefined
     }
 
-    return isSuperUser ? [statusFilterApi] : [StatusFilterEnum.IN_PROGRESS]
+    return isSuperUser ? [statusFilter] : [StatusFilterEnum.IN_PROGRESS]
   }, [isSuperUser, statusFilter])
 
   const datesForApi = useMemo(

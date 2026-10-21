@@ -4,6 +4,7 @@ import { archiveReporting } from '@features/Reportings/useCases/archiveReporting
 import { duplicateReporting } from '@features/Reportings/useCases/duplicateReporting'
 import { editReportingInLocalStore } from '@features/Reportings/useCases/editReportingInLocalStore'
 import { useAppDispatch } from '@hooks/useAppDispatch'
+import { useAppSelector } from '@hooks/useAppSelector'
 import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { useState } from 'react'
@@ -13,12 +14,24 @@ export function ButtonsGroupRow({ geom, id }) {
   const dispatch = useAppDispatch()
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
 
+  const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
+  const isReportingFormDirty = useAppSelector(state =>
+    activeReportingId ? state.reporting.reportings[activeReportingId]?.isFormDirty : false
+  )
   const edit = () => {
     dispatch(editReportingInLocalStore(id, ReportingContext.SIDE_WINDOW))
   }
 
   const duplicate = () => {
     dispatch(duplicateReporting(id))
+  }
+
+  const archive = () => {
+    if (activeReportingId && id === activeReportingId && isReportingFormDirty) {
+      return setIsArchiveModalOpen(true)
+    }
+
+    return dispatch(archiveReporting(id))
   }
 
   const cancelArchiveReporting = () => {
@@ -56,6 +69,7 @@ export function ButtonsGroupRow({ geom, id }) {
             accent={Accent.TERTIARY}
             data-cy={`archive-reporting-${id}`}
             Icon={Icon.Archive}
+            onClick={archive}
             title="Archiver"
           />
         </li>

@@ -116,8 +116,7 @@ context('Reportings', () => {
   })
 
   it('Should filter reportings by status', () => {
-    cy.getDataCy('status-filter-En cours').click()
-    cy.getDataCy('status-filter-Archivés').click()
+    cy.fill('Statut', 'Archivés')
     cy.wait(500)
     cy.wait('@getReportings')
 
@@ -129,7 +128,7 @@ context('Reportings', () => {
 
   it('Should filter reportings attached to a mission', () => {
     // filter only attached reportings
-    cy.getDataCy('attach-to-mission-filter-ATTACHED').click()
+    cy.fill('Lien mission', 'Liés à une mission')
     cy.wait(500)
     cy.wait('@getReportings')
     cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
@@ -138,8 +137,7 @@ context('Reportings', () => {
     })
 
     // filter only unattached reportings
-    cy.getDataCy('attach-to-mission-filter-ATTACHED').click()
-    cy.getDataCy('attach-to-mission-filter-UNATTACHED').click()
+    cy.fill('Lien mission', 'Non liés')
     cy.wait(500)
     cy.wait('@getReportings')
     cy.getDataCy('reporting-row').should('have.length.to.be.greaterThan', 0)
