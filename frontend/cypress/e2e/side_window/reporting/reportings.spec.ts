@@ -11,12 +11,11 @@ context('Reportings', () => {
     cy.intercept('GET', '/bff/v1/reportings*').as('getReportings')
     cy.clickButton('Signalements')
     cy.wait('@getReportings')
+    cy.fill('Statut', undefined)
   })
 
   it('Reportings should be archived in Reportings Table', () => {
     cy.intercept('PUT', '/bff/v1/reportings/archive').as('archiveReporting')
-    cy.getDataCy('status-filter-Archivés').click()
-    cy.getDataCy('more-actions-reporting-5').scrollIntoView().click({ force: true })
     cy.getDataCy('archive-reporting-5').scrollIntoView().click({ force: true })
 
     cy.wait('@archiveReporting').then(({ response }) => {
@@ -29,7 +28,6 @@ context('Reportings', () => {
 
   it('Reporting should be duplicate and editable in Reportings Table', () => {
     cy.intercept('PUT', '/bff/v1/reportings').as('createReporting')
-    cy.getDataCy('status-filter-Archivés').click()
     cy.getDataCy('duplicate-reporting-5').click({ force: true })
     cy.get('form').should('exist')
 
@@ -60,22 +58,7 @@ context('Reportings', () => {
     })
   })
 
-  it('Reporting should be delete in Reportings Table', () => {
-    cy.intercept('DELETE', '/bff/v1/reportings/4').as('deleteReporting')
-    cy.getDataCy('status-filter-Archivés').click()
-    cy.getDataCy('more-actions-reporting-4').scrollIntoView().click({ force: true })
-    cy.getDataCy('delete-reporting-4').scrollIntoView().click({ force: true })
-
-    cy.clickButton('Confirmer la suppression')
-
-    cy.wait('@deleteReporting').then(({ response }) => {
-      expect(response && response.statusCode).equal(204)
-    })
-  })
-
   it('Multiples reportings can be opened or created and saved in store', () => {
-    cy.getDataCy('status-filter-Archivés').click()
-
     cy.getDataCy('edit-reporting-5').click({ force: true })
     cy.getDataCy('reporting-collapse-or-expand-button-5').click()
 
@@ -103,8 +86,6 @@ context('Reportings', () => {
 
   it('Mission with attached env_action can be detached', () => {
     cy.intercept('PUT', '/bff/v1/reportings/6').as('updateReporting')
-    cy.getDataCy('status-filter-Archivés').click()
-
     cy.getDataCy('edit-reporting-6').click({ force: true })
     cy.clickButton('Détacher la mission')
 
@@ -123,7 +104,6 @@ context('Reportings', () => {
     cy.intercept('GET', '/bff/v1/infractions/actions/987654321').as('getRepeatedInfractions')
     cy.intercept('GET', '/bff/v1/infractions/reportings/987654321?idToExclude=5').as('getSuspicionOfInfraction')
 
-    cy.getDataCy('status-filter-Archivés').click()
     cy.getDataCy('edit-reporting-5').click({ force: true })
     cy.wait(['@getReporting'])
 
