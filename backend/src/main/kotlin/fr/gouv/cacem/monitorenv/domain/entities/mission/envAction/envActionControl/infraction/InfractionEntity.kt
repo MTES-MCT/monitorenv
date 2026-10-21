@@ -15,10 +15,11 @@ data class InfractionEntity(
     val nbTarget: Int = 1,
     val controlledPersonIdentity: String? = null,
     val seizure: SeizureTypeEnum,
-    val vesselShipId: Int? = null,
     val vesselBatchId: Int? = null,
-    val vesselRowNumber: Int? = null,
+    val vesselFlag: String? = null,
     val vesselName: String? = null,
+    val vesselRowNumber: Int? = null,
+    val vesselShipId: Int? = null,
     val vesselSize: Number? = null,
     val vesselType: String? = null,
 )
