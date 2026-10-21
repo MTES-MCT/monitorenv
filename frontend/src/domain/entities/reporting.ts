@@ -95,6 +95,7 @@ export type TargetDetails = {
   mmsi?: string
   registrationNumber?: string
   vesselBatchId?: number
+  vesselFlag?: string
   vesselName?: string
   vesselRowNumber?: number
   vesselShipId?: number
