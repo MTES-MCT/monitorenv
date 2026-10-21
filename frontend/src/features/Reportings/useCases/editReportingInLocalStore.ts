@@ -1,7 +1,7 @@
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingActions } from '@features/Reportings/slice'
 import { Level } from '@mtes-mct/monitor-ui'
-import { setReportingFormVisibility, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
+import { ReportingContext, setReportingFormVisibility, VisibilityState } from 'domain/shared_slices/Global'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
 import { mainWindowActions } from '../../MainWindow/slice'
@@ -29,12 +29,10 @@ export const editReportingInLocalStore =
           throw Error()
         }
 
-        const reportingToSave = reportingResponse
-
         const newReporting = {
           context: reportingContext,
           isFormDirty: false,
-          reporting: reportingToSave
+          reporting: reportingResponse
         }
 
         setReporting(dispatch, reportingId, reportingContext, newReporting)

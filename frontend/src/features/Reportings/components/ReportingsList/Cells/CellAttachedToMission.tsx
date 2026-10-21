@@ -1,6 +1,6 @@
 import { LinkToMissionTag } from '../../LinkToMissionTag'
 
-export function CellAttachedtoMission({
+export function CellAttachedToMission({
   detachedFromMissionAtUtc,
   missionId
 }: {

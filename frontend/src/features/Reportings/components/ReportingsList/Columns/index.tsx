@@ -1,5 +1,4 @@
 import { DateCell } from '@components/Table/Cells/DateCell'
-import { LocalizeCell } from '@components/Table/Cells/LocalizeCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { getFormattedReportingId, sortTargetDetails } from '@features/Reportings/utils'
 import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
@@ -8,8 +7,7 @@ import styled from 'styled-components'
 import { ButtonsGroupRow } from '../Cells/ButtonsRowGroup'
 import { CellActionStatus } from '../Cells/CellActionStatus'
 import { CellActionTheme } from '../Cells/CellActionThemes'
-import { CellAttachedtoMission } from '../Cells/CellAttachedToMission'
-import { CellStatus } from '../Cells/CellStatus'
+import { CellAttachedToMission } from '../Cells/CellAttachedToMission'
 import { CellTarget } from '../Cells/CellTarget'
 import { CellValidityTime } from '../Cells/CellValidityTime'
 import { getReportType } from '../Cells/getReportType'
@@ -23,7 +21,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
       <TableWithSelectableRows.RowCheckbox
         checked={row.getIsSelected()}
         disabled={!row.getCanSelect()}
-        onChange={row.getToggleSelectedHandler(row)}
+        onChange={row.getToggleSelectedHandler()}
       >
         <HiddenLabel>{`Sélectionner le signalement ${getValue()}`}</HiddenLabel>
       </TableWithSelectableRows.RowCheckbox>
@@ -48,7 +46,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: false,
     header: () => '',
     id: 'reportingId',
-    size: 100 + legacyFirefoxOffset
+    size: 85 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.createdAt,
@@ -56,15 +54,15 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Date (UTC)',
     id: 'createdAt',
-    size: 153 + legacyFirefoxOffset
+    size: 150 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.validityTime,
     cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CellValidityTime row={row} />),
-    enableSorting: false, // TODO see how we can sort on timeLeft and not validityTime
+    enableSorting: false,
     header: () => 'Fin dans',
     id: 'validityTime',
-    size: 87 + legacyFirefoxOffset
+    size: 117 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.reportingSources?.map(source => source.displayedSource).join(', '),
@@ -79,7 +77,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Source',
     id: 'displayedSource',
-    size: 208 + legacyFirefoxOffset
+    size: 215 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.reportType,
@@ -87,7 +85,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Type',
     id: 'reportType',
-    size: 150 + legacyFirefoxOffset
+    size: 152 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.targetDetails,
@@ -104,7 +102,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
       ),
     header: () => 'Cible',
     id: 'targetDetails',
-    size: 190 + legacyFirefoxOffset,
+    size: 200 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => sortTargetDetails(rowA.original, rowB.original)
   },
   {
@@ -113,7 +111,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Thématique',
     id: 'theme',
-    size: 265 + legacyFirefoxOffset,
+    size: 253 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<any>, rowB: Row<any>) => rowA.original.theme?.name?.localeCompare(rowB.original.theme?.name)
   },
   {
@@ -122,25 +120,7 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
     enableSorting: true,
     header: () => 'Façade',
     id: 'seaFront',
-    size: 104 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.status,
-    cell: ({ row }) => (isFetching ? <StyledSkeletonRow /> : <CellStatus row={row} />),
-    enableSorting: true,
-    header: () => 'Statut',
-    id: 'isArchived',
-    size: 104 + legacyFirefoxOffset,
-    sortingFn: (rowA: Row<any>, rowB: Row<any>, columnId: string) => {
-      if (rowA.original[columnId] > rowB.original[columnId]) {
-        return -1
-      }
-      if (rowB.original[columnId] > rowA.original[columnId]) {
-        return 1
-      }
-
-      return 1
-    }
+    size: 158 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.missionId,
@@ -148,49 +128,35 @@ export const Columns = (legacyFirefoxOffset: number = 0, isFetching: boolean = f
       isFetching ? (
         <StyledSkeletonRow />
       ) : (
-        <CellAttachedtoMission
-          detachedFromMissionAtUtc={row.original.detachedFromMissionAtUtc}
-          missionId={row.original.missionId}
-        />
+        <TagWrapper>
+          <CellAttachedToMission
+            detachedFromMissionAtUtc={row.original.detachedFromMissionAtUtc}
+            missionId={row.original.missionId}
+          />
+          <CellActionStatus
+            controlStatus={row.original.controlStatus}
+            detachedFromMissionAtUtc={row.original.detachedFromMissionAtUtc}
+            isControlRequired={row.original.isControlRequired}
+            missionId={row.original.missionId}
+          />
+        </TagWrapper>
       ),
-    enableSorting: false,
-    header: () => '',
+    enableSorting: true,
+    header: () => 'Lien mission',
     id: 'missionId',
-    size: 106 + legacyFirefoxOffset
+    size: 250 + legacyFirefoxOffset
   },
   {
-    accessorFn: row => row.geom,
-    cell: ({ row }) =>
-      isFetching ? (
-        <StyledSkeletonRow />
-      ) : (
-        <CellActionStatus
-          controlStatus={row.original.controlStatus}
-          detachedFromMissionAtUtc={row.original.detachedFromMissionAtUtc}
-          isControlRequired={row.original.isControlRequired}
-          missionId={row.original.missionId}
-        />
-      ),
+    accessorFn: row => ({
+      geom: row.geom,
+      id: row.id
+    }),
+    cell: info =>
+      isFetching ? <StyledSkeletonRow /> : <ButtonsGroupRow geom={info.getValue().geom} id={info.getValue().id} />,
     enableSorting: false,
     header: () => '',
-    id: 'actionStatus',
-    size: 102 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.geom,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <LocalizeCell geom={info.getValue()} />),
-    enableSorting: false,
-    header: () => '',
-    id: 'geom',
-    size: 65 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.id,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <ButtonsGroupRow id={info.getValue()} />),
-    enableSorting: false,
-    header: () => '',
-    id: 'id',
-    size: 110 + legacyFirefoxOffset
+    id: 'actions',
+    size: 142 + legacyFirefoxOffset
   }
 ]
 
@@ -202,4 +168,9 @@ const HiddenLabel = styled.span`
   padding: 0;
   margin: 0;
   overflow: hidden;
+`
+
+const TagWrapper = styled.div`
+  display: flex;
+  gap: 8px;
 `

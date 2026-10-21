@@ -1,3 +1,4 @@
+import { ExpandedRowValueDetail } from '@components/Table/TableWithSelectableRows/style'
 import styled from 'styled-components'
 
 import type { TagFromAPI } from 'domain/entities/tags'
@@ -18,7 +19,11 @@ export function TagsDetailsCell({ tags }: { tags?: TagFromAPI[] }) {
       {formattedTags.map(tag => (
         <div key={tag.id}>
           <TagText title={tag.name}>{tag.name}</TagText>
-          {tag.subTags && <SubTagsText title={tag.subTags}>({tag.subTags})</SubTagsText>}
+          {tag.subTags && (
+            <ExpandedRowValueDetail as="div" title={tag.subTags}>
+              ({tag.subTags})
+            </ExpandedRowValueDetail>
+          )}
         </div>
       ))}
     </>
@@ -27,10 +32,5 @@ export function TagsDetailsCell({ tags }: { tags?: TagFromAPI[] }) {
 
 const TagText = styled.span`
   color: ${p => p.theme.color.charcoal};
-  white-space: break-spaces;
-`
-
-const SubTagsText = styled.div`
-  color: ${p => p.theme.color.slateGray};
   white-space: break-spaces;
 `

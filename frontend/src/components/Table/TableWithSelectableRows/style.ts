@@ -46,6 +46,7 @@ export const ExpandedRowLabel = styled.span`
 `
 export const ExpandedRowValue = styled.span`
   display: -webkit-box;
+  font-weight: 500;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 50;
   overflow: hidden;
@@ -56,4 +57,15 @@ export const ExpandedRowList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 16px;
+`
+
+export const ExpandedRowInlineItem = styled.li`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+`
+
+export const ExpandedRowValueDetail = styled.span`
+  color: ${p => p.theme.color.slateGray};
+  white-space: break-spaces;
 `

@@ -2,7 +2,7 @@ import { useGetReportingsQuery } from '@api/reportingsAPI'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { getDatesFromFilters } from '@utils/getDatesFromFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { StatusFilterEnum } from 'domain/entities/reporting'
+import { AttachToMissionFilterEnum, StatusFilterEnum } from 'domain/entities/reporting'
 import { filter } from 'lodash'
 import { useMemo } from 'react'
 
@@ -16,7 +16,6 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
 
   const {
     isAttachedToMissionFilter,
-    isUnattachedToMissionFilter,
     periodFilter,
     seaFrontFilter,
     searchQueryFilter,
@@ -32,16 +31,20 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
   } = useAppSelector(state => state.reportingFilters)
 
   const isAttachedOrNotToMissionFilter = useMemo(() => {
-    if (isAttachedToMissionFilter && !isUnattachedToMissionFilter) {
-      return Boolean(true)
+    if (!isAttachedToMissionFilter) {
+      return undefined
     }
 
-    if (!isAttachedToMissionFilter && isUnattachedToMissionFilter) {
-      return Boolean(false)
+    return isAttachedToMissionFilter === AttachToMissionFilterEnum.ATTACHED
+  }, [isAttachedToMissionFilter])
+
+  const statusFilterApi = useMemo(() => {
+    if (!statusFilter) {
+      return undefined
     }
 
-    return undefined
-  }, [isAttachedToMissionFilter, isUnattachedToMissionFilter])
+    return isSuperUser ? [statusFilterApi] : [StatusFilterEnum.IN_PROGRESS]
+  }, [isSuperUser, statusFilter])
 
   const datesForApi = useMemo(
     () => getDatesFromFilters({ periodFilter, startedAfter, startedBefore, withLast24Hours: true }),
@@ -60,7 +63,7 @@ export const useGetFilteredReportingsQuery = (skip = false) => {
       sourcesType: sourceTypeFilter,
       startedAfterDateTime: datesForApi.startedAfterDate,
       startedBeforeDateTime: datesForApi.startedBeforeDate,
-      status: isSuperUser ? statusFilter : [StatusFilterEnum.IN_PROGRESS],
+      status: statusFilterApi,
       targetTypes: targetTypeFilter
     },
     { pollingInterval: TWO_MINUTES, skip: hasCustomPeriodWithoutDates || skip }

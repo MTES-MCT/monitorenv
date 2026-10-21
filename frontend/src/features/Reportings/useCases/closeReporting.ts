@@ -2,7 +2,7 @@ import { mainWindowActions } from '@features/MainWindow/slice'
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingActions } from '@features/Reportings/slice'
 
-import { setReportingFormVisibility, ReportingContext, VisibilityState } from '../../../domain/shared_slices/Global'
+import { ReportingContext, setReportingFormVisibility, VisibilityState } from '../../../domain/shared_slices/Global'
 import {
   MapInteractionListenerEnum,
   updateMapInteractionListeners
@@ -29,9 +29,7 @@ export const closeReporting =
       )
 
       dispatch(reportingActions.setIsConfirmCancelDialogVisible(true))
-      if (reportingContextToClose === ReportingContext.MAP) {
-        dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(true))
-      }
+      dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(reportingContextToClose === ReportingContext.MAP))
       dispatch(
         setReportingFormVisibility({
           context: reportingContextToClose,

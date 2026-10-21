@@ -1,6 +1,7 @@
 import { useGetUnarchivedMissionsTagsQuery } from '@api/missionTagsAPI'
 import { TagsContainer } from '@components/style'
 import { ShowFilters } from '@components/Table/style'
+import { ResetButton } from '@features/commonComponents/ResetButton'
 import { MissionSearch } from '@features/Mission/MissionsSearch'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -20,7 +21,6 @@ import { forwardRef, memo, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 
 import { FilterTags } from './FilterTags'
-import { ResetButton } from '../../../../commonComponents/ResetButton'
 
 import type { MissionOptionsListType } from '..'
 

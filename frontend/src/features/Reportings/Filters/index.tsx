@@ -18,6 +18,7 @@ import { TableReportingsFilters } from './Table'
 import { useGetSeaFrontsQuery } from '../../../api/seaFrontsAPI'
 import { ReportingDateRangeLabels } from '../../../domain/entities/dateRange'
 import {
+  AttachToMissionFilterLabels,
   ReportingSourceEnum,
   ReportingSourceLabels,
   ReportingTypeLabels,
@@ -34,16 +35,18 @@ export enum ReportingFilterContext {
 }
 
 export type ReportingsOptionsListType = {
-  dateRangeOptions: Option<string>[]
-  seaFrontsOptions: Option<string>[]
+  attachMissionOptions: Option[]
+  dateRangeOptions: Option[]
+  seaFrontsOptions: Option[]
   sourceOptions: Option<SourceFilterProps>[]
-  sourceTypeOptions: Option<string>[]
-  statusOptions: Option<string>[]
+  sourceTypeOptions: Option[]
+  statusOptions: Option[]
   tagsOptions: TagOption[]
-  targetTypeOptions: Option<string>[]
+  targetTypeOptions: Option[]
   themesOptions: ThemeOption[]
-  typeOptions: Option<string>[]
+  typeOptions: Option[]
 }
+const attachMissionOptions = getOptionsFromLabelledEnum(AttachToMissionFilterLabels)
 const dateRangeOptions = getOptionsFromLabelledEnum(ReportingDateRangeLabels)
 const typeOptions = getOptionsFromLabelledEnum(ReportingTypeLabels)
 const sourceTypeOptions = getOptionsFromLabelledEnum(ReportingSourceLabels)
@@ -146,6 +149,7 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
 
   const optionsList = useMemo(
     () => ({
+      attachMissionOptions,
       dateRangeOptions,
       seaFrontsOptions,
       sourceOptions,
@@ -199,22 +203,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
     [dispatch]
   )
 
-  const updateCheckboxFilter = useCallback(
-    (isChecked, value, key, filter) => {
-      const updatedFilter = [...filter]
-
-      if (!isChecked && updatedFilter.includes(String(value))) {
-        const newFilter = updatedFilter.filter(status => status !== String(value))
-        dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
-      }
-      if (isChecked && !updatedFilter.includes(value)) {
-        const newFilter = [...updatedFilter, value]
-        dispatch(reportingsFiltersActions.updateFilters({ key, value: newFilter }))
-      }
-    },
-    [dispatch]
-  )
-
   const updateSourceTypeFilter = useCallback(
     types => {
       dispatch(reportingsFiltersActions.updateFilters({ key: ReportingsFiltersEnum.SOURCE_TYPE_FILTER, value: types }))
@@ -232,7 +220,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       ref={wrapperRef}
       optionsList={optionsList}
       resetFilters={resetFilters}
-      updateCheckboxFilter={updateCheckboxFilter}
       updateDateRangeFilter={updateDateRangeFilter}
       updatePeriodFilter={updatePeriodFilter}
       updateSimpleFilter={updateSimpleFilter}
@@ -243,7 +230,6 @@ export function ReportingsFilters({ context = ReportingFilterContext.TABLE }: { 
       ref={wrapperRef}
       optionsList={optionsList}
       resetFilters={resetFilters}
-      updateCheckboxFilter={updateCheckboxFilter}
       updateDateRangeFilter={updateDateRangeFilter}
       updatePeriodFilter={updatePeriodFilter}
       updateSimpleFilter={updateSimpleFilter}
