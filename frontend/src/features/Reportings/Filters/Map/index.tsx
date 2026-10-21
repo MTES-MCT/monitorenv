@@ -1,6 +1,5 @@
 import { CustomPeriodContainer, Italic } from '@components/style'
 import {
-  Checkbox,
   CheckPicker,
   CheckTreePicker,
   type DateAsStringRange,
@@ -15,17 +14,13 @@ import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, Fragment, memo } from 'react'
 import styled from 'styled-components'
 
-import {
-  AttachToMissionFilterEnum,
-  AttachToMissionFilterLabels,
-  ReportingSourceLabels
-} from '../../../../domain/entities/reporting'
+import { ReportingSourceLabels } from '../../../../domain/entities/reporting'
 import { ReportingTargetTypeLabels } from '../../../../domain/entities/targetType'
 import { useAppDispatch } from '../../../../hooks/useAppDispatch'
 import { useAppSelector } from '../../../../hooks/useAppSelector'
 import { ResetButton } from '../../../commonComponents/ResetButton'
 import { reportingsFiltersActions, ReportingsFiltersEnum } from '../slice'
-import { OptionValue, StyledSelect, StyledStatusFilter } from '../style'
+import { OptionValue, StyledSelect } from '../style'
 
 import type { ReportingsOptionsListType } from '..'
 import type { TagOption } from 'domain/entities/tags'
@@ -34,12 +29,6 @@ import type { ThemeOption } from 'domain/entities/themes'
 type MapReportingsFiltersProps = {
   optionsList: ReportingsOptionsListType
   resetFilters: () => void
-  updateCheckboxFilter: (
-    isChecked: boolean | undefined,
-    value: string,
-    filter: ReportingsFiltersEnum,
-    filterValues: string[]
-  ) => void
   updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
   updatePeriodFilter: (value: OptionValueType | undefined) => void
   updateSimpleFilter: (value: any | undefined, filter: ReportingsFiltersEnum) => void
@@ -50,7 +39,6 @@ export function MapReportingsFiltersWithRef(
   {
     optionsList,
     resetFilters,
-    updateCheckboxFilter,
     updateDateRangeFilter,
     updatePeriodFilter,
     updateSimpleFilter,
@@ -61,7 +49,6 @@ export function MapReportingsFiltersWithRef(
   const dispatch = useAppDispatch()
   const {
     isAttachedToMissionFilter,
-    isUnattachedToMissionFilter,
     nbOfFiltersSetted,
     periodFilter,
     sourceTypeFilter,
@@ -74,6 +61,7 @@ export function MapReportingsFiltersWithRef(
     typeFilter
   } = useAppSelector(state => state.reportingFilters)
   const {
+    attachMissionOptions,
     dateRangeOptions,
     sourceTypeOptions,
     statusOptions,
@@ -127,40 +115,6 @@ export function MapReportingsFiltersWithRef(
         ) : (
           <StyledItalic>Aucun filtre actif</StyledItalic>
         )}
-        <StyledStatusFilter $withBottomMargin>
-          {statusOptions.map(status => (
-            <Checkbox
-              key={status.label}
-              checked={statusFilter?.includes(String(status.value))}
-              data-cy={`status-filter-${status.label}`}
-              label={status.label}
-              name={status.label}
-              onChange={isChecked =>
-                updateCheckboxFilter(isChecked, status.value, ReportingsFiltersEnum.STATUS_FILTER, statusFilter)
-              }
-            />
-          ))}
-        </StyledStatusFilter>
-        <StyledStatusFilter $withBottomMargin>
-          <>
-            <Checkbox
-              checked={!!isAttachedToMissionFilter}
-              data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.ATTACHED}`}
-              label={AttachToMissionFilterLabels.ATTACHED}
-              name={AttachToMissionFilterLabels.ATTACHED}
-              onChange={isChecked => updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_ATTACHED_TO_MISSION_FILTER)}
-            />
-            <Checkbox
-              checked={!!isUnattachedToMissionFilter}
-              data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.UNATTACHED}`}
-              label={AttachToMissionFilterLabels.UNATTACHED}
-              name={AttachToMissionFilterLabels.UNATTACHED}
-              onChange={isChecked =>
-                updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_UNATTACHED_TO_MISSION_FILTER)
-              }
-            />
-          </>
-        </StyledStatusFilter>
 
         <StyledSelect
           cleanable={false}
@@ -327,6 +281,30 @@ export function MapReportingsFiltersWithRef(
             ))}
           </StyledTagsContainer>
         )}
+      </StyledBloc>
+      <StyledBloc>
+        <StyledSelect
+          data-cy="select-status-filter"
+          isLabelHidden
+          isTransparent
+          label="Statut"
+          name="status"
+          onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.STATUS_FILTER)}
+          options={statusOptions}
+          placeholder="Statut"
+          value={statusFilter}
+        />
+        <StyledSelect
+          data-cy="select-attach-mission-filter"
+          isLabelHidden
+          isTransparent
+          label="Lien mission"
+          name="mission-link"
+          onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.IS_ATTACHED_TO_MISSION_FILTER)}
+          options={attachMissionOptions}
+          placeholder="Lien mission"
+          value={isAttachedToMissionFilter}
+        />
       </StyledBloc>
     </FilterWrapper>
   )

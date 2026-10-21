@@ -1,7 +1,6 @@
 import { CustomPeriodContainer, CustomPeriodLabel } from '@components/style'
 import { useAppSelector } from '@hooks/useAppSelector.ts'
 import {
-  Checkbox,
   CheckPicker,
   CheckTreePicker,
   CustomSearch,
@@ -15,11 +14,10 @@ import { DateRangeEnum } from 'domain/entities/dateRange'
 import { forwardRef, memo, useMemo } from 'react'
 import styled from 'styled-components'
 
-import { AttachToMissionFilterEnum, AttachToMissionFilterLabels } from '../../../../domain/entities/reporting'
 import { ResetButton } from '../../../commonComponents/ResetButton'
 import { ReportingSearch } from '../ReportingSearch'
 import { ReportingsFiltersEnum, type SourceFilterProps } from '../slice'
-import { OptionValue, Separator, StyledSelect, StyledStatusFilter, StyledTagsContainer } from '../style'
+import { OptionValue, StyledSelect, StyledTagsContainer } from '../style'
 import { FilterTags } from './FilterTags'
 
 import type { ReportingsOptionsListType } from '..'
@@ -27,12 +25,6 @@ import type { ReportingsOptionsListType } from '..'
 type TableReportingsFiltersProps = {
   optionsList: ReportingsOptionsListType
   resetFilters: () => void
-  updateCheckboxFilter: (
-    isChecked: boolean | undefined,
-    value: string,
-    filter: ReportingsFiltersEnum,
-    filterValues: string[]
-  ) => void
   updateDateRangeFilter: (value: DateAsStringRange | undefined) => void
   updatePeriodFilter: (value: OptionValueType | undefined) => void
   updateSimpleFilter: (value: any, filter: ReportingsFiltersEnum) => void
@@ -43,7 +35,6 @@ export function TableReportingsFiltersWithRef(
   {
     optionsList,
     resetFilters,
-    updateCheckboxFilter,
     updateDateRangeFilter,
     updatePeriodFilter,
     updateSimpleFilter,
@@ -53,8 +44,7 @@ export function TableReportingsFiltersWithRef(
 ) {
   const { newWindowContainerRef } = useNewWindow()
   const {
-    isAttachedToMissionFilter,
-    isUnattachedToMissionFilter,
+    isAttachedToMissionFilter = undefined,
     nbOfFiltersSetted,
     periodFilter,
     seaFrontFilter = [],
@@ -62,13 +52,14 @@ export function TableReportingsFiltersWithRef(
     sourceTypeFilter = [],
     startedAfter,
     startedBefore,
-    statusFilter = [],
+    statusFilter = undefined,
     tagFilter = [],
     targetTypeFilter = [],
     themeFilter = [],
     typeFilter = undefined
   } = useAppSelector(state => state.reportingFilters)
   const {
+    attachMissionOptions,
     dateRangeOptions,
     seaFrontsOptions,
     sourceOptions,
@@ -94,48 +85,8 @@ export function TableReportingsFiltersWithRef(
   return (
     <>
       <FilterWrapper ref={ref}>
-        <StyledFiltersFirstLine>
-          <ReportingSearch />
-
-          <StyledStatusFilter>
-            {statusOptions.map(status => (
-              <Checkbox
-                key={status.label}
-                checked={statusFilter?.includes(String(status.value))}
-                data-cy={`status-filter-${status.label}`}
-                label={status.label}
-                name={status.label}
-                onChange={isChecked =>
-                  updateCheckboxFilter(isChecked, status.value, ReportingsFiltersEnum.STATUS_FILTER, statusFilter)
-                }
-              />
-            ))}
-            <Separator />
-            <>
-              <Checkbox
-                key={AttachToMissionFilterLabels.ATTACHED}
-                checked={!!isAttachedToMissionFilter}
-                data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.ATTACHED}`}
-                label={AttachToMissionFilterLabels.ATTACHED}
-                name={AttachToMissionFilterLabels.ATTACHED}
-                onChange={isChecked =>
-                  updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_ATTACHED_TO_MISSION_FILTER)
-                }
-              />
-              <Checkbox
-                key={AttachToMissionFilterLabels.UNATTACHED}
-                checked={!!isUnattachedToMissionFilter}
-                data-cy={`attach-to-mission-filter-${AttachToMissionFilterEnum.UNATTACHED}`}
-                label={AttachToMissionFilterLabels.UNATTACHED}
-                name={AttachToMissionFilterLabels.UNATTACHED}
-                onChange={isChecked =>
-                  updateSimpleFilter(isChecked, ReportingsFiltersEnum.IS_UNATTACHED_TO_MISSION_FILTER)
-                }
-              />
-            </>
-          </StyledStatusFilter>
-        </StyledFiltersFirstLine>
-        <StyledFiltersSecondLine>
+        <ReportingSearch />
+        <Filters>
           <StyledSelect
             cleanable={false}
             data-cy="select-period-filter"
@@ -262,7 +213,31 @@ export function TableReportingsFiltersWithRef(
             style={tagPickerStyle}
             value={seaFrontFilter}
           />
-        </StyledFiltersSecondLine>
+          <StyledSelect
+            data-cy="select-status-filter"
+            isLabelHidden
+            isTransparent
+            label="Statut"
+            name="status"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.STATUS_FILTER)}
+            options={statusOptions}
+            placeholder="Statut"
+            style={tagPickerStyle}
+            value={statusFilter}
+          />
+          <StyledSelect
+            data-cy="select-attach-mission-filter"
+            isLabelHidden
+            isTransparent
+            label="Lien mission"
+            name="mission-link"
+            onChange={value => updateSimpleFilter(value, ReportingsFiltersEnum.IS_ATTACHED_TO_MISSION_FILTER)}
+            options={attachMissionOptions}
+            placeholder="Lien mission"
+            style={tagPickerStyle}
+            value={isAttachedToMissionFilter}
+          />
+        </Filters>
       </FilterWrapper>
       <StyledTagsContainer $withTopMargin={isCustomPeriodVisible || nbOfFiltersSetted > 0}>
         {isCustomPeriodVisible && (
@@ -304,12 +279,8 @@ const FilterWrapper = styled.div`
   gap: 16px;
   padding-right: 2%;
 `
-const StyledFiltersFirstLine = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
 
-const StyledFiltersSecondLine = styled.div`
+const Filters = styled.div`
   display: flex;
   gap: 10px;
   flex-wrap: wrap;

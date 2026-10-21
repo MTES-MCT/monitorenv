@@ -2,10 +2,11 @@ import { customDayjs } from '@mtes-mct/monitor-ui'
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { reportingsFiltersMigrations } from '@store/migrations/reportingsFilters'
 import { DateRangeEnum } from 'domain/entities/dateRange'
-import { StatusFilterEnum } from 'domain/entities/reporting'
 import { isEqual } from 'lodash'
 import { createMigrate, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+
+import { StatusFilterEnum } from '../../../domain/entities/reporting'
 
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
@@ -14,7 +15,8 @@ export const LAST_30_DAYS = customDayjs.utc().subtract(30, 'day').toISOString()
 
 const migrations = {
   // Start at 4 because test platform and migrations cant downgrade
-  4: (state: any) => reportingsFiltersMigrations.v2(state)
+  4: (state: any) => reportingsFiltersMigrations.v2(state),
+  5: (state: any) => reportingsFiltersMigrations.v3(state)
 }
 
 export type SourceFilterProps = {
@@ -25,7 +27,6 @@ export type SourceFilterProps = {
 export enum ReportingsFiltersEnum {
   ACTIONS = 'actionsFilter',
   IS_ATTACHED_TO_MISSION_FILTER = 'isAttachedToMissionFilter',
-  IS_UNATTACHED_TO_MISSION_FILTER = 'isUnattachedToMissionFilter',
   PERIOD_FILTER = 'periodFilter',
   SEARCH_QUERY_FILTER = 'searchQueryFilter',
   SEA_FRONT_FILTER = 'seaFrontFilter',
@@ -42,8 +43,7 @@ export enum ReportingsFiltersEnum {
 
 type ReportingsFiltersSliceType = {
   actionsFilter?: string[]
-  isAttachedToMissionFilter?: boolean
-  isUnattachedToMissionFilter?: boolean
+  isAttachedToMissionFilter?: string
   nbOfFiltersSetted: number
   periodFilter: string
   seaFrontFilter: string[] | undefined
@@ -52,7 +52,7 @@ type ReportingsFiltersSliceType = {
   sourceTypeFilter: string[] | undefined
   startedAfter: string | undefined
   startedBefore?: string
-  statusFilter: string[]
+  statusFilter?: string | undefined
   tagFilter: TagOption[] | undefined
   targetTypeFilter?: string[] | undefined
   themeFilter: ThemeOption[] | undefined
@@ -61,8 +61,7 @@ type ReportingsFiltersSliceType = {
 
 export const INITIAL_STATE: ReportingsFiltersSliceType = {
   actionsFilter: [],
-  isAttachedToMissionFilter: false,
-  isUnattachedToMissionFilter: false,
+  isAttachedToMissionFilter: undefined,
   nbOfFiltersSetted: 0,
   periodFilter: DateRangeEnum.MONTH,
   seaFrontFilter: undefined,
@@ -71,7 +70,7 @@ export const INITIAL_STATE: ReportingsFiltersSliceType = {
   sourceTypeFilter: undefined,
   startedAfter: LAST_30_DAYS,
   startedBefore: undefined,
-  statusFilter: [StatusFilterEnum.IN_PROGRESS],
+  statusFilter: StatusFilterEnum.IN_PROGRESS,
   tagFilter: undefined,
   targetTypeFilter: undefined,
   themeFilter: undefined,
@@ -83,7 +82,7 @@ const persistConfig = {
   key: 'reportingFilters',
   migrate: createMigrate(migrations),
   storage,
-  version: 4
+  version: 5
 }
 
 const reportingFiltersSlice = createSlice({

@@ -92,6 +92,7 @@ export function VesselSearchForm({
           setFieldValue(`${path}.vesselName`, vesselFound.shipName)
           setFieldValue(`${path}.registrationNumber`, vesselFound.immatriculation)
           setFieldValue(`${path}.vesselSize`, vesselFound.length)
+          setFieldValue(`${path}.vesselFlag`, vesselFound.flag)
           setFieldValue(
             `${path}.vesselType`,
             vessel?.category === 'PLA' ? vesselFound.leisureType : vesselFound.professionalType
