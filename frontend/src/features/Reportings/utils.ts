@@ -99,8 +99,8 @@ export const getTargetDetailsAsText = ({
         targetDetails[0]?.registrationNumber ??
         ''
     }
-  } else if (targetDetails.length > 1) {
-    targetDetailsAsText = `${targetDetails.length} ${ReportingTargetTypeLabels[targetType]}s`
+  } else if (targetDetails.length > 1 && vehicleType) {
+    targetDetailsAsText = `${targetDetails.length} ${vehicleTypeLabels[vehicleType].label}s`
   }
 
   if (targetDetailsAsText === '') {

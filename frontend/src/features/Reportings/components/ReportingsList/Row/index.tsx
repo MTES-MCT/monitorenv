@@ -1,4 +1,3 @@
-import { useGetMissionsQuery } from '@api/missionsAPI'
 import {
   ExpandableRowCell,
   ExpandedRow,
@@ -42,12 +41,6 @@ export function Row({
   const dispatch = useAppDispatch()
   const reporting = row.original
   const { coordinatesFormat } = useAppSelector(state => state.map)
-  const { attachedMission } = useGetMissionsQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      attachedMission: data?.find(mission => mission.id === reporting.missionId && !reporting?.detachedFromMissionAtUtc)
-    }),
-    skip: !reporting.missionId && !reporting.detachedFromMissionAtUtc
-  })
 
   return (
     <Fragment key={row.id}>
@@ -115,33 +108,27 @@ export function Row({
                   {formatCoordinatesAsText(reporting?.geom?.coordinates[0] as Coordinate, coordinatesFormat) ?? UNKNOWN}
                 </ExpandedRowValue>
               </li>
-              <ul>
-                <ExpandedRowInlineItem>
-                  <CustomExpandedRowLabel>Type de cible :</CustomExpandedRowLabel>
-                  <ExpandedRowValue>{ReportingTargetTypeLabels[reporting.targetType] ?? UNKNOWN}</ExpandedRowValue>
-                </ExpandedRowInlineItem>
-                {reporting.targetType === ReportingTargetTypeEnum.VEHICLE && (
+              <li>
+                <ul>
                   <ExpandedRowInlineItem>
-                    <CustomExpandedRowLabel>Véhicule :</CustomExpandedRowLabel>
-                    <ExpandedRowValue>
-                      {reporting.vehicleType ? vehicleTypeLabels[reporting.vehicleType].label : UNKNOWN}
-                    </ExpandedRowValue>
+                    <CustomExpandedRowLabel>Type de cible :</CustomExpandedRowLabel>
+                    <ExpandedRowValue>{ReportingTargetTypeLabels[reporting.targetType] ?? UNKNOWN}</ExpandedRowValue>
                   </ExpandedRowInlineItem>
-                )}
-              </ul>
-              {reporting.targetDetails.length > 0 && (
-                <li>
-                  <ExpandedRowList>
-                    {reporting.targetDetails.map(target => (
-                      <li
-                        key={reporting.vehicleType === VehicleTypeEnum.VESSEL ? target.mmsi : target.registrationNumber}
-                      >
-                        <CellTarget target={target} vehiculeType={reporting.vehicleType} />
-                      </li>
-                    ))}
-                  </ExpandedRowList>
+                  {reporting.targetType === ReportingTargetTypeEnum.VEHICLE && (
+                    <ExpandedRowInlineItem>
+                      <CustomExpandedRowLabel>Véhicule :</CustomExpandedRowLabel>
+                      <ExpandedRowValue>
+                        {reporting.vehicleType ? vehicleTypeLabels[reporting.vehicleType].label : UNKNOWN}
+                      </ExpandedRowValue>
+                    </ExpandedRowInlineItem>
+                  )}
+                </ul>
+              </li>
+              {reporting.targetDetails.map(target => (
+                <li key={reporting.vehicleType === VehicleTypeEnum.VESSEL ? target.mmsi : target.registrationNumber}>
+                  <CellTarget target={target} vehiculeType={reporting.vehicleType} />
                 </li>
-              )}
+              ))}
             </ExpandedRowList>
           </ExpandedRowCell>
           <ExpandedRowCell colSpan={2}>
@@ -159,17 +146,26 @@ export function Row({
           <ExpandedRowCell colSpan={2}>
             <ExpandedRowLabel>Mission effectuée</ExpandedRowLabel>
             <ExpandedRowValue>
-              {attachedMission?.controlUnits.map(unit => unit.name).join(', ') ?? UNKNOWN}
+              {reporting.attachedMission?.controlUnits.map(unit => unit.name).join(', ') ?? UNKNOWN}
               <br />
               <ExpandedRowValueDetail>
-                {getDateAsLocalizedStringVeryCompact(attachedMission?.startDateTimeUtc, false, false, 'DD MMM YY')}
+                {getDateAsLocalizedStringVeryCompact(
+                  reporting.attachedMission?.startDateTimeUtc,
+                  false,
+                  false,
+                  'DD MMM YY'
+                )}
               </ExpandedRowValueDetail>
             </ExpandedRowValue>
 
-            {attachedMission && (
+            {reporting.attachedMission && (
               <StyledButton
                 accent={Accent.SECONDARY}
-                onClick={() => dispatch(editMissionInLocalStore(attachedMission.id, 'sideWindow'))}
+                onClick={() => {
+                  if (reporting.attachedMission?.id) {
+                    dispatch(editMissionInLocalStore(reporting.attachedMission.id, 'sideWindow'))
+                  }
+                }}
               >
                 Voir la mission
               </StyledButton>

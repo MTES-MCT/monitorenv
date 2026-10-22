@@ -29,8 +29,6 @@ export function ReportingsTable({
 
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -35 : 0
 
-  // TODO add highlight ?
-  // const openReportings = useAppSelector(state => state.reporting.reportings)
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'createdAt' }])
 
@@ -104,6 +102,6 @@ export function ReportingsTable({
 
 const StyledSelectableRowsTable = styled(SelectableRowsTable)`
   .rs-checkbox-checker {
-    padding: 9px 16px;
+    padding: 9px 16px !important;
   }
 `

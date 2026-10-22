@@ -62,7 +62,7 @@ describe('reporting', () => {
     expect(targetAsTextReporting1).toEqual("Avec super description un peu longue mais qui vaut le coup d'oeil")
     expect(targetAsTextReporting2).toEqual('Nom du véhicule')
     expect(targetAsTextReporting3).toEqual('Nom de la société')
-    expect(targetAsTextReporting4).toEqual('2 Véhicules')
+    expect(targetAsTextReporting4).toEqual('2 Navires')
   })
 
   it('sortTargetDetails should sort aphabetically target', async () => {

@@ -284,7 +284,7 @@ export function TableMissionsFiltersWithRef(
         )}
       </FilterWrapper>
       {nbOfFiltersSetted > 0 && (
-        <TagsContainer $withTopMargin={selectedPeriod === DateRangeEnum.CUSTOM}>
+        <TagsContainer>
           <FilterTags onUpdateDateRangeFilter={onUpdateDateRangeFilter} />
           <ResetButton onClick={onResetFilters} />
         </TagsContainer>

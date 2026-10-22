@@ -61,77 +61,87 @@ export function FilterTags() {
     return null
   }
 
+  const hasNoFilterTags =
+    !sourceTypeFilter?.length &&
+    !sourceFilter?.length &&
+    !targetTypeFilter?.length &&
+    !themeFilter?.length &&
+    !tagFilter?.length &&
+    !seaFrontFilter?.length
+
   return (
-    <StyledContainer data-cy="reportings-filter-tags">
-      {sourceTypeFilter &&
-        sourceTypeFilter.length > 0 &&
-        sourceTypeFilter.map(sourceType => (
-          <SingleTag
-            key={sourceType}
-            onDelete={() => onDeleteTag(sourceType, ReportingsFiltersEnum.SOURCE_TYPE_FILTER, sourceTypeFilter)}
-          >
-            {String(`Type ${ReportingSourceLabels[sourceType]}`)}
-          </SingleTag>
-        ))}
-      {sourceFilter &&
-        sourceFilter.length > 0 &&
-        sourceFilter.map(source => (
-          <SingleTag
-            key={`${source.id}-${source.label}`}
-            onDelete={() => onDeleteTag(source, ReportingsFiltersEnum.SOURCE_FILTER, sourceFilter)}
-          >
-            {String(`Source ${source.label}`)}
-          </SingleTag>
-        ))}
-      {targetTypeFilter &&
-        targetTypeFilter.length > 0 &&
-        targetTypeFilter.map(targetType => (
-          <SingleTag
-            key={targetType}
-            onDelete={() => onDeleteTag(targetType, ReportingsFiltersEnum.TARGET_TYPE_FILTER, targetTypeFilter)}
-          >
-            {String(`Cible ${ReportingTargetTypeLabels[targetType]}`)}
-          </SingleTag>
-        ))}
-      {themeFilter &&
-        themeFilter.length > 0 &&
-        themeFilter.map(theme => (
-          <>
-            <SingleTag key={theme.id} onDelete={() => onDeleteThemeTag(theme, themeFilter)}>
-              {String(`Thème ${theme.name}`)}
+    !hasNoFilterTags && (
+      <StyledContainer data-cy="reportings-filter-tags">
+        {sourceTypeFilter &&
+          sourceTypeFilter.length > 0 &&
+          sourceTypeFilter.map(sourceType => (
+            <SingleTag
+              key={sourceType}
+              onDelete={() => onDeleteTag(sourceType, ReportingsFiltersEnum.SOURCE_TYPE_FILTER, sourceTypeFilter)}
+            >
+              {String(`Type ${ReportingSourceLabels[sourceType]}`)}
             </SingleTag>
-            {theme.subThemes?.map(subTheme => (
-              <SingleTag key={subTheme.id} onDelete={() => onDeleteThemeTag(subTheme, themeFilter)}>
-                {String(`Sous-thème ${subTheme.name}`)}
-              </SingleTag>
-            ))}
-          </>
-        ))}
-      {tagFilter &&
-        tagFilter.length > 0 &&
-        tagFilter.map(tag => (
-          <>
-            <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, tagFilter)}>
-              {String(`Tag ${tag.name}`)}
+          ))}
+        {sourceFilter &&
+          sourceFilter.length > 0 &&
+          sourceFilter.map(source => (
+            <SingleTag
+              key={`${source.id}-${source.label}`}
+              onDelete={() => onDeleteTag(source, ReportingsFiltersEnum.SOURCE_FILTER, sourceFilter)}
+            >
+              {String(`Source ${source.label}`)}
             </SingleTag>
-            {tag.subTags?.map(subTag => (
-              <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, tagFilter)}>
-                {String(`Sous-tag ${subTag.name}`)}
+          ))}
+        {targetTypeFilter &&
+          targetTypeFilter.length > 0 &&
+          targetTypeFilter.map(targetType => (
+            <SingleTag
+              key={targetType}
+              onDelete={() => onDeleteTag(targetType, ReportingsFiltersEnum.TARGET_TYPE_FILTER, targetTypeFilter)}
+            >
+              {String(`Cible ${ReportingTargetTypeLabels[targetType]}`)}
+            </SingleTag>
+          ))}
+        {themeFilter &&
+          themeFilter.length > 0 &&
+          themeFilter.map(theme => (
+            <>
+              <SingleTag key={theme.id} onDelete={() => onDeleteThemeTag(theme, themeFilter)}>
+                {String(`Thème ${theme.name}`)}
               </SingleTag>
-            ))}
-          </>
-        ))}
-      {seaFrontFilter &&
-        seaFrontFilter.length > 0 &&
-        seaFrontFilter.map(seaFront => (
-          <SingleTag
-            key={seaFront}
-            onDelete={() => onDeleteTag(seaFront, ReportingsFiltersEnum.SEA_FRONT_FILTER, seaFrontFilter)}
-          >
-            {String(`Façade ${seaFront}`)}
-          </SingleTag>
-        ))}
-    </StyledContainer>
+              {theme.subThemes?.map(subTheme => (
+                <SingleTag key={subTheme.id} onDelete={() => onDeleteThemeTag(subTheme, themeFilter)}>
+                  {String(`Sous-thème ${subTheme.name}`)}
+                </SingleTag>
+              ))}
+            </>
+          ))}
+        {tagFilter &&
+          tagFilter.length > 0 &&
+          tagFilter.map(tag => (
+            <>
+              <SingleTag key={tag.id} onDelete={() => onDeleteTagTag(tag, tagFilter)}>
+                {String(`Tag ${tag.name}`)}
+              </SingleTag>
+              {tag.subTags?.map(subTag => (
+                <SingleTag key={subTag.id} onDelete={() => onDeleteTagTag(subTag, tagFilter)}>
+                  {String(`Sous-tag ${subTag.name}`)}
+                </SingleTag>
+              ))}
+            </>
+          ))}
+        {seaFrontFilter &&
+          seaFrontFilter.length > 0 &&
+          seaFrontFilter.map(seaFront => (
+            <SingleTag
+              key={seaFront}
+              onDelete={() => onDeleteTag(seaFront, ReportingsFiltersEnum.SEA_FRONT_FILTER, seaFrontFilter)}
+            >
+              {String(`Façade ${seaFront}`)}
+            </SingleTag>
+          ))}
+      </StyledContainer>
+    )
   )
 }
 

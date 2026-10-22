@@ -239,7 +239,7 @@ export function TableReportingsFiltersWithRef(
           />
         </Filters>
       </FilterWrapper>
-      <StyledTagsContainer $withTopMargin={isCustomPeriodVisible || nbOfFiltersSetted > 0}>
+      <StyledTagsContainer>
         {isCustomPeriodVisible && (
           <CustomPeriodContainer>
             <CustomPeriodLabel>Période spécifique</CustomPeriodLabel>
@@ -260,7 +260,6 @@ export function TableReportingsFiltersWithRef(
         )}
 
         <FilterTags />
-
         {nbOfFiltersSetted > 0 && <ResetButton onClick={resetFilters} />}
       </StyledTagsContainer>
     </>
