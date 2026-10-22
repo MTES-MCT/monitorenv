@@ -99,6 +99,7 @@ export const Flag = styled.img<{
 }>`
   font-size: 25px;
   width: 26px;
+  object-fit: contain;
 `
 
 const Header = styled.header`

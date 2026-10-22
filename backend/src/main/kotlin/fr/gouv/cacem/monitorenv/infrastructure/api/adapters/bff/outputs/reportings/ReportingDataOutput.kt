@@ -73,12 +73,10 @@ data class ReportingDataOutput(
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,
                 attachedMission =
-                    if (dto.attachedMission != null) {
+                    dto.attachedMission?.let {
                         ReportingMissionDataOutput.fromMission(
-                            dto.attachedMission,
+                            it,
                         )
-                    } else {
-                        null
                     },
                 controlStatus = dto.controlStatus,
                 updatedAtUtc = dto.reporting.updatedAtUtc,

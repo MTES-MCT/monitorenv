@@ -26,6 +26,7 @@ data class MissionEnvActionControlInfractionDataInput(
     val vesselName: String? = null,
     val vesselType: String? = null,
     val vesselSize: Number? = null,
+    val vesselFlag: String? = null,
 ) {
     fun toInfractionEntity() =
         InfractionEntity(
@@ -48,5 +49,6 @@ data class MissionEnvActionControlInfractionDataInput(
             vesselName = vesselName,
             vesselType = vesselType,
             vesselSize = vesselSize,
+            vesselFlag = vesselFlag,
         )
 }

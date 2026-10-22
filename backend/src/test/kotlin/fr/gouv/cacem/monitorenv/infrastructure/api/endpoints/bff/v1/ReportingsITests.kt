@@ -165,7 +165,7 @@ class ReportingsITests {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                                Point,
+                                            Point,
                                 ),
                             controlUnit = null,
                         ),
@@ -321,7 +321,7 @@ class ReportingsITests {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                                Point,
+                                            Point,
                                 ),
                             controlUnit = null,
                         ),

@@ -1,11 +1,12 @@
+import { mainWindowActions } from '@features/MainWindow/slice'
 import { attachMissionToReportingSliceActions } from '@features/Reportings/components/ReportingForm/AttachMission/slice'
 import { reportingActions } from '@features/Reportings/slice'
 import { addSideWindowBanner } from '@features/SideWindow/useCases/addSideWindowBanner'
 import { Level } from '@mtes-mct/monitor-ui'
-import { setReportingFormVisibility, ReportingContext, VisibilityState } from 'domain/shared_slices/Global'
+import { ReportingContext, setReportingFormVisibility, VisibilityState } from 'domain/shared_slices/Global'
 
 import { reportingsAPI } from '../../../api/reportingsAPI'
-import { getReportingInitialValues, createIdForNewReporting } from '../utils'
+import { createIdForNewReporting, getReportingInitialValues } from '../utils'
 
 export const duplicateReporting = (reportingId: number) => async (dispatch, getState) => {
   const { reportings } = getState().reporting
@@ -49,6 +50,7 @@ export const duplicateReporting = (reportingId: number) => async (dispatch, getS
       )
     )
 
+    dispatch(mainWindowActions.setHasFullHeightRightDialogOpen(false))
     dispatch(
       setReportingFormVisibility({
         context: ReportingContext.SIDE_WINDOW,

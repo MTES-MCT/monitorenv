@@ -11,4 +11,5 @@ data class TargetDetailsEntity(
     val vesselRowNumber: Int? = null,
     val vesselShipId: Int? = null,
     val vesselType: String? = null,
+    val vesselFlag: String? = null,
 )

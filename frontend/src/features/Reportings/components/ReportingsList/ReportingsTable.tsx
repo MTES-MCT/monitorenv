@@ -1,15 +1,8 @@
-import {
-  getPaddingValuesForVirtualizeTable,
-  PaddingForVirtualizeTable
-} from '@components/Table/PaddingForVirtualizeTable'
-import { TableContainer } from '@components/Table/style'
-import { TableWithSelectableRowsHeader } from '@components/Table/TableWithSelectableRows/Header'
+import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
-import { useAppSelector } from '@hooks/useAppSelector'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
-import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
-import { flexRender, type RowSelectionState, type SortingState } from '@tanstack/react-table'
+import { type RowSelectionState, type SortingState } from '@tanstack/react-table'
 import { isLegacyFirefox } from '@utils/isLegacyFirefox'
 import { paths } from 'paths'
 import { useMemo, useRef, useState } from 'react'
@@ -18,7 +11,9 @@ import styled from 'styled-components'
 
 import { Columns } from './Columns'
 import { GroupActions } from './GroupActions'
+import { Row } from './Row'
 
+import type { Row as RowType } from '@tanstack/table-core/build/lib/types'
 import type { Reporting } from 'domain/entities/reporting'
 
 export function ReportingsTable({
@@ -28,13 +23,12 @@ export function ReportingsTable({
 }: {
   isFetching: boolean
   isLoading: boolean
-  reportings: (Reporting | undefined)[]
+  reportings: Reporting[] | undefined
 }) {
   const { pathname } = useLocation()
 
   const legacyFirefoxOffset = pathname !== paths.sidewindow && isLegacyFirefox() ? -35 : 0
 
-  const openReportings = useAppSelector(state => state.reporting.reportings)
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const [sorting, setSorting] = useState<SortingState>([{ desc: true, id: 'createdAt' }])
 
@@ -49,6 +43,9 @@ export function ReportingsTable({
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : reportings), [isLoading, reportings])
 
   const table = useTable({
+    columnPinning: {
+      right: ['actions']
+    },
     columns,
     data: tableData,
     rowSelection,
@@ -61,7 +58,7 @@ export function ReportingsTable({
   const tableContainerRef = useRef<HTMLDivElement>(null)
 
   const { rows } = table.getRowModel()
-  const rowVirtualizer = useTableVirtualizer({ estimateSize: 30, ref: tableContainerRef, rows })
+  const rowVirtualizer = useTableVirtualizer({ estimateSize: 45, ref: tableContainerRef, rows })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
   const selectedIds = useMemo(
@@ -69,8 +66,6 @@ export function ReportingsTable({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [table, rowSelection]
   )
-
-  const [before, after] = getPaddingValuesForVirtualizeTable(virtualRows, rowVirtualizer)
 
   const resetSelection = () => {
     table.resetRowSelection(true)
@@ -83,112 +78,30 @@ export function ReportingsTable({
         reportingsIds={selectedIds}
         totalReportings={reportings?.length || 0}
       />
-      <TableContainer ref={tableContainerRef}>
-        <StyledTable $isSideWindowOpenInTab={pathname === paths.sidewindow} $withRowCheckbox>
-          <TableWithSelectableRows.Head>
-            {table.getHeaderGroups().map(headerGroup => (
-              <TableWithSelectableRowsHeader key={headerGroup.id} headerGroup={headerGroup} />
-            ))}
-          </TableWithSelectableRows.Head>
-
-          <tbody>
-            {before > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={before} name="before" />}
+      <StyledSelectableRowsTable
+        ref={tableContainerRef}
+        className="reportings-table"
+        columnsLength={columns.length}
+        rows={
+          <>
             {virtualRows?.map(virtualRow => {
-              const row = rows[virtualRow.index]
+              const row = rows[virtualRow.index] as RowType<Reporting>
 
-              return (
-                <TableWithSelectableRows.BodyTr
-                  key={virtualRow.key}
-                  ref={rowVirtualizer.measureElement} // measure dynamic row height
-                  $isHighlighted={!!Object.keys(openReportings).find(key => Number(key) === Number(row?.original.id))}
-                  data-cy="reporting-row"
-                  data-index={virtualRow.index} // needed for dynamic row height measurement
-                >
-                  {row?.getVisibleCells().map(cell => (
-                    <StyledTd
-                      key={cell.id}
-                      $hasRightBorder={cell.column.id === 'geom'}
-                      $isCenter={cell.column.id === 'geom' || cell.column.id === 'edit'}
-                      $isLegacyFirefox={!!legacyFirefoxOffset}
-                      style={{
-                        maxWidth: cell.column.getSize(),
-                        minWidth: cell.column.getSize(),
-                        width: cell.column.getSize()
-                      }}
-                    >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </StyledTd>
-                  ))}
-                </TableWithSelectableRows.BodyTr>
-              )
+              return <Row key={virtualRow.key} row={row} rowVirtualizer={rowVirtualizer} virtualRow={virtualRow} />
             })}
-            {after > 0 && <PaddingForVirtualizeTable columLength={columns.length} height={after} name="after" />}
-          </tbody>
-        </StyledTable>
-      </TableContainer>
+          </>
+        }
+        rowVirtualizer={rowVirtualizer}
+        stickyLeftBorderIndex={3}
+        table={table}
+        virtualRows={virtualRows}
+      />
     </>
   )
 }
 
-/*
-Hack to fix the strange checkbox vertical position inconsistency
-between the side window access via /side_window and the one opened as a new window.
-The position is correct when accessed via /side_window (and not when opened as a new window).
-*/
-const StyledTable = styled(TableWithSelectableRows.Table)<{ $isSideWindowOpenInTab: boolean }>`
-  .rs-checkbox {
-    > .rs-checkbox-checker {
-      > label {
-        line-height: inherit;
-      }
-    }
-  }
-
-  > thead {
-    > tr {
-      > th:first-child {
-        > .rs-checkbox {
-          > .rs-checkbox-checker {
-            > label {
-              .rs-checkbox-control {
-                ${p => !p.$isSideWindowOpenInTab && 'top:-8px;'}
-                left: -16px;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  > tbody {
-    > tr {
-      > td:first-child {
-        > .rs-checkbox {
-          > .rs-checkbox-checker {
-            > label {
-              .rs-checkbox-control {
-                ${p => !p.$isSideWindowOpenInTab && 'top:-8px;'}
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-const StyledTd = styled(TableWithSelectableRows.Td)<{ $isLegacyFirefox: boolean }>`
-  ${p =>
-    p.$isLegacyFirefox &&
-    `&:first-child {
-      padding-left: 16px !important;
-    }
-    `}
-
-  &:nth-child(11) {
-    padding: 4px 0px 4px 16px;
-  }
-  &:nth-child(12) {
-    padding: 4px;
+const StyledSelectableRowsTable = styled(SelectableRowsTable)`
+  .rs-checkbox-checker {
+    padding: 9px 16px !important;
   }
 `

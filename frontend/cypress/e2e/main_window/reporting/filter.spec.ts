@@ -9,9 +9,9 @@ context('Reporting', () => {
   describe('Menu button', () => {
     it('Should show the number of filter set', () => {
       cy.clickButton('Chercher des signalements')
-      cy.fill('Archivés', true)
+      cy.fill('Statut', 'Archivés')
       cy.getDataCy('reporting-number-filters').contains('1')
-      cy.fill('Liés à une mission', true)
+      cy.fill('Lien mission', 'Liés à une mission')
       cy.getDataCy('reporting-number-filters').contains('2')
       cy.fill('Période', 'Année en cours')
       cy.getDataCy('reporting-number-filters').contains('3')
@@ -26,8 +26,8 @@ context('Reporting', () => {
       cy.fill('Tags et sous-tags', ['AMP'])
       cy.getDataCy('reporting-number-filters').contains('8')
 
-      cy.fill('Archivés', false)
-      cy.fill('Liés à une mission', false)
+      cy.fill('Statut', 'En cours')
+      cy.fill('Lien mission', undefined)
       cy.fill('Période', '30 derniers jours')
       cy.fill('Type de source', undefined)
       cy.fill('Type de signalement', undefined)
@@ -41,7 +41,7 @@ context('Reporting', () => {
   it('Should reinitialize filters', () => {
     cy.clickButton('Chercher des signalements')
     cy.contains('Aucun filtre actif').should('be.visible')
-    cy.fill('Archivés', true)
+    cy.fill('Statut', 'Archivés')
     cy.contains('1 filtre actif').should('be.visible')
     cy.clickButton('Réinitialiser les filtres')
 

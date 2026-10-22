@@ -37,6 +37,7 @@ data class ReportingsDataOutput(
     val isArchived: Boolean,
     val openBy: String? = null,
     val missionId: Int? = null,
+    val attachedMission: ReportingMissionDataOutput? = null,
     val attachedToMissionAtUtc: ZonedDateTime? = null,
     val detachedFromMissionAtUtc: ZonedDateTime? = null,
     val attachedEnvActionId: UUID? = null,
@@ -69,6 +70,12 @@ data class ReportingsDataOutput(
                 isArchived = dto.reporting.isArchived,
                 openBy = dto.reporting.openBy,
                 missionId = dto.reporting.missionId,
+                attachedMission =
+                    dto.attachedMission?.let {
+                        ReportingMissionDataOutput.fromMission(
+                            it,
+                        )
+                    },
                 attachedToMissionAtUtc = dto.reporting.attachedToMissionAtUtc,
                 detachedFromMissionAtUtc = dto.reporting.detachedFromMissionAtUtc,
                 attachedEnvActionId = dto.reporting.attachedEnvActionId,

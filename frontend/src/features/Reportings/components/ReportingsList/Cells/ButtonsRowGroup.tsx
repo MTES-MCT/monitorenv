@@ -1,32 +1,23 @@
 import { ArchiveDialog } from '@components/Dialog/ArchiveDialog'
-import { DeleteDialog } from '@components/Dialog/DeleteDialog'
+import { LocalizeCell } from '@components/Table/Cells/LocalizeCell'
 import { archiveReporting } from '@features/Reportings/useCases/archiveReporting'
-import { deleteReporting } from '@features/Reportings/useCases/deleteReporting'
 import { duplicateReporting } from '@features/Reportings/useCases/duplicateReporting'
 import { editReportingInLocalStore } from '@features/Reportings/useCases/editReportingInLocalStore'
-import { displayReportingBanner } from '@features/Reportings/utils'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Dropdown, Icon, IconButton, Level } from '@mtes-mct/monitor-ui'
+import { Accent, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { ReportingContext } from 'domain/shared_slices/Global'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-const ACTIONS = {
-  ARCHIVE: 'ARCHIVE',
-  DELETE: 'DELETE'
-}
-
-export function ButtonsGroupRow({ id }) {
+export function ButtonsGroupRow({ geom, id }) {
   const dispatch = useAppDispatch()
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
+
   const activeReportingId = useAppSelector(state => state.reporting.activeReportingId)
   const isReportingFormDirty = useAppSelector(state =>
     activeReportingId ? state.reporting.reportings[activeReportingId]?.isFormDirty : false
   )
-
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false)
-
   const edit = () => {
     dispatch(editReportingInLocalStore(id, ReportingContext.SIDE_WINDOW))
   }
@@ -35,32 +26,12 @@ export function ButtonsGroupRow({ id }) {
     dispatch(duplicateReporting(id))
   }
 
-  const archiveOrDelete = action => {
-    if (action === ACTIONS.ARCHIVE) {
-      if (activeReportingId && id === activeReportingId && isReportingFormDirty) {
-        return setIsArchiveModalOpen(true)
-      }
-
-      return dispatch(archiveReporting(id))
+  const archive = () => {
+    if (activeReportingId && id === activeReportingId && isReportingFormDirty) {
+      return setIsArchiveModalOpen(true)
     }
 
-    return setIsDeleteModalOpen(true)
-  }
-
-  const cancelDeleteReporting = () => {
-    setIsDeleteModalOpen(false)
-  }
-  const confirmDeleteReporting = async () => {
-    try {
-      await dispatch(deleteReporting(id))
-    } catch (error) {
-      displayReportingBanner({
-        context: ReportingContext.SIDE_WINDOW,
-        dispatch,
-        level: Level.ERROR,
-        message: error instanceof Error ? error.message : String(error)
-      })
-    }
+    return dispatch(archiveReporting(id))
   }
 
   const cancelArchiveReporting = () => {
@@ -72,6 +43,9 @@ export function ButtonsGroupRow({ id }) {
   return (
     <>
       <ButtonsGroup>
+        <li>
+          <LocalizeCell geom={geom} />
+        </li>
         <li>
           <IconButton
             accent={Accent.TERTIARY}
@@ -91,40 +65,15 @@ export function ButtonsGroupRow({ id }) {
           />
         </li>
         <li>
-          <StyledDropdown
+          <IconButton
             accent={Accent.TERTIARY}
-            aria-label="Menu d'actions supplémentaires"
-            data-cy={`more-actions-reporting-${id}`}
-            Icon={Icon.More}
-            onSelect={archiveOrDelete}
-          >
-            <Dropdown.Item
-              accent={Accent.SECONDARY}
-              data-cy={`archive-reporting-${id}`}
-              eventKey={ACTIONS.ARCHIVE}
-              Icon={Icon.Archive}
-              title="Archiver"
-            />
-            <Dropdown.Item
-              accent={Accent.SECONDARY}
-              data-cy={`delete-reporting-${id}`}
-              eventKey={ACTIONS.DELETE}
-              Icon={Icon.Delete}
-              title="Supprimer"
-            />
-          </StyledDropdown>
+            data-cy={`archive-reporting-${id}`}
+            Icon={Icon.Archive}
+            onClick={archive}
+            title="Archiver"
+          />
         </li>
       </ButtonsGroup>
-      {isDeleteModalOpen && (
-        <DeleteDialog
-          context="reportings-table"
-          isAbsolute={false}
-          onCancel={cancelDeleteReporting}
-          onConfirm={confirmDeleteReporting}
-          textLine2="supprimer le signalement ?"
-          title="Supprimer le signalement"
-        />
-      )}
       {isArchiveModalOpen && (
         <ArchiveDialog
           context="reportings-table"
@@ -155,11 +104,5 @@ const ButtonsGroup = styled.ul`
     > button {
       padding: 0px;
     }
-  }
-`
-
-const StyledDropdown = styled(Dropdown)`
-  > button {
-    z-index: 0 !important;
   }
 `
