@@ -47,6 +47,16 @@ data class TagModel(
         )
 
     companion object {
+        fun toTagEntities(tags: List<TagModel>): List<TagEntity> {
+            val parents = tags.filter { it.parent === null }
+
+            return parents.map { parent ->
+                val subTags = tags.filter { it.parent?.id == parent.id }
+                parent.subTags = subTags
+                return@map parent.toTagEntity()
+            }
+        }
+
         fun fromTagEntity(
             tagEntity: TagEntity,
             parent: TagModel? = null,
