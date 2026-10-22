@@ -1,5 +1,5 @@
 import { FrontendApiError } from '@libs/FrontendApiError'
-import { type EntityState } from '@reduxjs/toolkit'
+import { createSelector, type EntityState } from '@reduxjs/toolkit'
 
 import { monitorenvPrivateApi } from './api'
 
@@ -29,3 +29,8 @@ export const tagsAPI = monitorenvPrivateApi.injectEndpoints({
 })
 
 export const { useGetTagsQuery } = tagsAPI
+
+export const getTagsByIds = createSelector(
+  [tagsAPI.endpoints.getTags.select(), (_, ids: number[]) => ids],
+  ({ data }, ids) => ids.map(id => data?.entities[id]).filter(tag => tag !== undefined)
+)

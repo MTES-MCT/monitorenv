@@ -26,17 +26,11 @@ export const getTagsAsOptions = (tags: TagFromAPI[], childrenKey: string = 'subT
     })
     .sort((a, b) => a.name.localeCompare(b.name))
 
-export const getTagsAsOptionsLegacy = (tags: TagFromAPI[], childrenKey: string = 'subTags'): CheckTreePickerOption[] =>
+export const getTagsAsOptionsLegacy = (tags: TagFromAPI[]): CheckTreePickerOption[] =>
   tags
     .map(tag => ({
-      [childrenKey]:
-        tag.subTags.length === 0
-          ? undefined
-          : tag.subTags
-              .map(({ name }) => ({ label: name, value: name }))
-              .sort((a, b) => a.label.localeCompare(b.label)),
       label: tag.name,
-      value: tag.name
+      value: tag.id
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
 

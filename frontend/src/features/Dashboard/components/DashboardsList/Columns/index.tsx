@@ -2,10 +2,11 @@ import { DateCell } from '@components/Table/Cells/DateCell'
 import { LocalizeCell } from '@components/Table/Cells/LocalizeCell'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
 import { type Row } from '@tanstack/react-table'
+import styled from 'styled-components'
 
 import { ControlUnitsCell } from '../Cells/ControlUnitsCell'
+import { DashboardThemesCell } from '../Cells/DashboardThemesCell'
 import { EditDashboardCell } from '../Cells/EditDashboardCell'
-import { RegulatoryAreasTagsCell } from '../Cells/RegulatoryAreasTagsCell'
 import { TotalSelectedItemsCell } from '../Cells/TotalSelectedItemsCell'
 
 import type { Dashboard } from '@features/Dashboard/types'
@@ -19,45 +20,45 @@ export const Columns = (
   isFetching: boolean = false
 ) => [
   {
-    accessorFn: row => row.seaFront,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <span title={info.getValue()}>{info.getValue()}</span>),
-    enableSorting: true,
-    header: () => 'Façade',
-    id: 'seaFront',
-    size: 104 + legacyFirefoxOffset
-  },
-  {
     accessorFn: row => row.name,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <span title={info.getValue()}>{info.getValue()}</span>),
     enableSorting: true,
     header: () => 'Nom',
     id: 'name',
-    size: 215 + legacyFirefoxOffset
+    size: 400 + legacyFirefoxOffset
+  },
+  {
+    accessorFn: row => row.seaFront,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <span title={info.getValue()}>{info.getValue()}</span>),
+    enableSorting: true,
+    header: () => 'Façade',
+    id: 'seaFront',
+    size: 160 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.createdAt,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} />),
     enableSorting: true,
-    header: () => 'Créé le ...',
+    header: () => 'Date de création',
     id: 'createdAt',
-    size: 212 + legacyFirefoxOffset
+    size: 160 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.updatedAt,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <DateCell date={info.getValue()} />),
     enableSorting: true,
-    header: () => 'Mis à jour le ...',
+    header: () => 'Date de modif.',
     id: 'updatedAt',
-    size: 212 + legacyFirefoxOffset,
+    size: 160 + legacyFirefoxOffset,
     sortUndefined: 'last' as const
   },
   {
     accessorFn: row => row.controlUnitIds,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <ControlUnitsCell controlUnitIds={info.getValue()} />),
     enableSorting: true,
-    header: () => 'Unité (Administration)',
+    header: () => 'Unité',
     id: 'controlUnitIds',
-    size: 343 + legacyFirefoxOffset,
+    size: 325 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<Dashboard.Dashboard>, rowB: Row<Dashboard.Dashboard>, columnId: string) => {
       const firstControlUnitIdA = rowA.original[columnId][0]
       const firstCcontrolUnitIdB = rowB.original[columnId][0]
@@ -70,13 +71,12 @@ export const Columns = (
     }
   },
   {
-    accessorFn: row => row.regulatoryAreaIds,
-    cell: info =>
-      isFetching ? <StyledSkeletonRow /> : <RegulatoryAreasTagsCell regulatoryAreaIds={info.getValue()} />,
+    accessorFn: row => row.themes,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <DashboardThemesCell themes={info.getValue()} />),
     enableSorting: true,
-    header: () => 'Tags des zones sélectionnées',
-    id: 'regulatoryAreaIds',
-    size: 365 + legacyFirefoxOffset,
+    header: () => 'Thématiques des zones sélectionnées',
+    id: 'themes',
+    size: 325 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<Dashboard.Dashboard>, rowB: Row<Dashboard.Dashboard>, columnId: string) => {
       const regIdA = rowA.original[columnId][0]
       const regIdB = rowB.original[columnId][0]
@@ -93,7 +93,7 @@ export const Columns = (
     enableSorting: true,
     header: () => "Nb d'éléments sélectionnés",
     id: 'totalSelectedItems',
-    size: 221 + legacyFirefoxOffset,
+    size: 150 + legacyFirefoxOffset,
     sortingFn: (rowA: Row<Dashboard.Dashboard>, rowB: Row<Dashboard.Dashboard>) => {
       const dashboardA = rowA.original
       const totalSelectedItemsA =
@@ -115,19 +115,25 @@ export const Columns = (
     }
   },
   {
-    accessorFn: row => row.geom,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <LocalizeCell geom={info.getValue()} />),
+    accessorFn: row => ({ geom: row.geom, id: row.id }),
+    cell: info =>
+      isFetching ? (
+        <StyledSkeletonRow />
+      ) : (
+        <ButtonsGroup>
+          <LocalizeCell geom={info.getValue().geom} />
+          <EditDashboardCell id={info.getValue().id} />
+        </ButtonsGroup>
+      ),
     enableSorting: false,
     header: () => '',
-    id: 'geom',
-    size: 52 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.id,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <EditDashboardCell id={info.getValue()} />),
-    enableSorting: false,
-    header: () => '',
-    id: 'edit',
-    size: 52 + legacyFirefoxOffset
+    id: 'actions',
+    size: 82 + legacyFirefoxOffset
   }
 ]
+
+const ButtonsGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+`

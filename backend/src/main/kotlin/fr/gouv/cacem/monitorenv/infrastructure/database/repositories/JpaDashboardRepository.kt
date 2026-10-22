@@ -60,7 +60,7 @@ class JpaDashboardRepository(
 
     override fun findAll(): List<DashboardEntity> =
         dashboardRepository.findAllByIsDeletedIsFalse().map {
-            it.toDashboardEntity(mapper)
+            it.toDashboardEntity(mapper, withThemesAndTags = true)
         }
 
     override fun findById(id: UUID): DashboardEntity? =
