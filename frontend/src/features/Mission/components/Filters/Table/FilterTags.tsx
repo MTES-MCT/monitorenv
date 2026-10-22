@@ -226,7 +226,6 @@ export function FilterTags({
 }
 
 const StyledContainer = styled.div`
-  margin-top: 10px;
   display: flex;
   flex-direction: row;
   gap: 8px 16px;

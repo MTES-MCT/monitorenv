@@ -51,13 +51,13 @@ export const CustomPeriodLabel = styled.div`
   color: ${p => p.theme.color.slateGray};
   font-size: 13px;
 `
-export const TagsContainer = styled.div<{ $withTopMargin?: boolean }>`
+export const TagsContainer = styled.div`
   align-items: end;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 16px;
-  margin-top: ${p => (p.$withTopMargin ? '16px' : '0px')};
+  margin-top: 10px;
   max-width: 100%;
 `
 
