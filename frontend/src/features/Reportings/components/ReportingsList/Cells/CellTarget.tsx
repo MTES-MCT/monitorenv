@@ -3,6 +3,7 @@ import { Flag } from '@features/Vessel/components/VesselSearch/VesselSearchItem'
 import { useAppSelector } from '@hooks/useAppSelector'
 import { GENERIC_TARGET_TYPE, ReportingTargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
+import countries from 'i18n-iso-countries'
 import Highlighter from 'react-highlight-words'
 import styled from 'styled-components'
 
@@ -62,7 +63,13 @@ const StyledHighlighter = styled(Highlighter)`
 `
 
 function Flags({ flags }: { flags: (string | undefined)[] }) {
-  return flags.map(flag => <Flag rel="preload" src={`/flags/${flag ? `${flag.toLowerCase()}.svg` : 'unknown.png'}`} />)
+  return flags.map(flag => {
+    const flagName = flag ? `${flag.toLowerCase()}.svg` : 'unknown.png'
+
+    const flagUrl = flag && `${window.location.origin}/flags/${flagName}`
+
+    return <Flag rel="preload" src={flagUrl} title={flag ? countries.getName(flag, 'fr') : 'Inconnu'} />
+  })
 }
 
 const Wrapper = styled.div`
