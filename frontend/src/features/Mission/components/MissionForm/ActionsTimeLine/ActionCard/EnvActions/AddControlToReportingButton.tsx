@@ -1,4 +1,4 @@
-import { Accent, Button, Icon } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { ReportingTargetTypeEnum, TargetTypeEnum } from 'domain/entities/targetType'
 import { VehicleTypeEnum } from 'domain/entities/vehicleType'
 import { useFormikContext } from 'formik'
@@ -111,18 +111,34 @@ export function AddControlToReportingButton({
   }, [action.attachedEnvActionId, values?.envActions])
 
   return (
-    <>
+    <Wrapper>
       {(!action.attachedEnvActionId || controlStatus === ControlStatusEnum.CONTROL_TO_BE_DONE) && (
-        <StyledButton accent={Accent.SECONDARY} Icon={Icon.ControlUnit} onClick={addAttachedControl}>
+        <Button accent={Accent.SECONDARY} Icon={Icon.ControlUnit} onClick={addAttachedControl}>
           Ajouter un contrôle
-        </StyledButton>
+        </Button>
       )}
-    </>
+      {action.images?.length !== 0 && (
+        <StyledTag backgroundColor={THEME.color.white} Icon={Icon.Attachment} iconColor={THEME.color.slateGray}>
+          {action.images?.length}
+        </StyledTag>
+      )}
+    </Wrapper>
   )
 }
 
-const StyledButton = styled(Button)`
-  position: absolute;
+const Wrapper = styled.div`
+  align-items: center;
   bottom: 16px;
-  right: 16px;
+  display: flex;
+  right: 0;
+  padding: 0 16px;
+  position: absolute;
+  width: 100%;
+`
+
+const StyledTag = styled(Tag)`
+  align-self: center;
+  padding: 3px 8px;
+  height: auto;
+  margin-left: auto;
 `
