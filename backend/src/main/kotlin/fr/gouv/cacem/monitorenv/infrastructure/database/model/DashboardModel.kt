@@ -2,6 +2,8 @@ package fr.gouv.cacem.monitorenv.infrastructure.database.model
 
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.LinkEntity
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.TagModel.Companion.toTagEntities
+import fr.gouv.cacem.monitorenv.infrastructure.database.model.ThemeModel.Companion.toThemeEntities
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -57,22 +59,35 @@ data class DashboardModel(
     @Type(JsonBinaryType::class)
     val links: JsonNode?,
 ) {
-    fun toDashboardEntity(mapper: JsonMapper): DashboardEntity {
+    fun toDashboardEntity(
+        mapper: JsonMapper,
+        withThemesAndTags: Boolean? = false,
+    ): DashboardEntity {
         val amps: MutableList<Int> = mutableListOf()
         val regulatoryAreas: MutableList<Int> = mutableListOf()
         val vigilanceAreas: MutableList<Int> = mutableListOf()
         val reportings: MutableList<Int> = mutableListOf()
         val controlUnits: MutableList<Int> = mutableListOf()
+        val tags: MutableList<TagModel> = mutableListOf()
+        val themes: MutableList<ThemeModel> = mutableListOf()
         var inseeCode: String? = null
         dashboardDatas.forEach { datas ->
             datas.amp?.id?.let { ampId ->
                 amps.add(ampId)
             }
-            datas.regulatoryAreaModel?.id?.let { regAreaId ->
-                regulatoryAreas.add(regAreaId)
+            datas.regulatoryAreaModel?.let { regArea ->
+                regulatoryAreas.add(regArea.id)
+                if (withThemesAndTags == true) {
+                    themes.addAll(regArea.themes.map { theme -> theme.theme })
+                    tags.addAll(regArea.tags.map { tag -> tag.tag })
+                }
             }
-            datas.vigilanceAreaModel?.id?.let { vigAreaId ->
-                vigilanceAreas.add(vigAreaId)
+            datas.vigilanceAreaModel?.let { vigilanceArea ->
+                vigilanceArea.id?.let { vigilanceAreas.add(it) }
+                if (withThemesAndTags == true) {
+                    tags.addAll(vigilanceArea.tags.map { tag -> tag.tag })
+                    themes.addAll(vigilanceArea.themes.map { theme -> theme.theme })
+                }
             }
             datas.reportingModel?.id?.let { reportingId ->
                 reportings.add(reportingId)
@@ -107,6 +122,8 @@ data class DashboardModel(
                         object : TypeReference<List<LinkEntity>>() {},
                     )
                 },
+            tags = toTagEntities(tags).distinct(),
+            themes = toThemeEntities(themes).distinct(),
         )
     }
 

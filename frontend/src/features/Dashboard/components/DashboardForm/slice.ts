@@ -89,10 +89,12 @@ export type DashboardFilters = {
 }
 
 export type DashboardsListFilters = {
+  administrations: number[]
   controlUnits: number[]
-  regulatoryTags: string[]
   seaFronts: string[]
   specificPeriod?: DateAsStringRange
+  tags: number[]
+  themes: number[]
   updatedAt: DateRangeEnum
 }
 
@@ -114,10 +116,12 @@ type DashboardFiltersState = {
 }
 
 export const INITIAL_LIST_FILTERS_STATE: DashboardsListFilters = {
+  administrations: [],
   controlUnits: [],
-  regulatoryTags: [],
   seaFronts: [],
   specificPeriod: undefined,
+  tags: [],
+  themes: [],
   updatedAt: DateRangeEnum.MONTH
 }
 
