@@ -1,7 +1,8 @@
 import { useGetControlUnitsQuery } from '@api/controlUnitsAPI'
 import { useGetRegulatoryAreasQuery } from '@api/regulatoryAreasAPI'
-import { Table } from '@components/Table'
+import { SelectableRowsTable } from '@components/Table/TableWithSelectableRows'
 import { StyledSkeletonRow } from '@features/commonComponents/Skeleton'
+import { Row } from '@features/Dashboard/components/DashboardsList/Row'
 import { useTable } from '@hooks/useTable'
 import { useTableVirtualizer } from '@hooks/useTableVirtualizer'
 import { type SortingState } from '@tanstack/react-table'
@@ -13,6 +14,7 @@ import { useLocation } from 'react-router'
 import { Columns } from './Columns'
 
 import type { Dashboard } from '@features/Dashboard/types'
+import type { Row as RowType } from '@tanstack/table-core/build/lib/types'
 
 interface DashboardsTableProps {
   dashboards: Dashboard.Dashboard[]
@@ -49,6 +51,10 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
   const tableData = useMemo(() => (isLoading ? Array(5).fill({}) : dashboards), [isLoading, dashboards])
 
   const table = useTable({
+    columnPinning: {
+      left: ['name'],
+      right: ['actions']
+    },
     columns,
     data: tableData,
     setSorting,
@@ -57,18 +63,32 @@ export function DashboardsTable({ dashboards, isFetching, isLoading }: Dashboard
   })
 
   const { rows } = table.getRowModel()
-  const rowVirtualizer = useTableVirtualizer({ estimateSize: 30, ref: tableContainerRef, rows })
+
+  const rowVirtualizer = useTableVirtualizer({
+    estimateSize: 45,
+    ref: tableContainerRef,
+    rows
+  })
 
   const virtualRows = rowVirtualizer.getVirtualItems()
 
   return (
-    <Table
+    <SelectableRowsTable
       ref={tableContainerRef}
+      className="missions-table"
       columnsLength={columns.length}
-      rows={rows}
+      rows={
+        <>
+          {virtualRows?.map(virtualRow => {
+            const row = rows[virtualRow.index] as RowType<Dashboard.Dashboard>
+
+            return <Row key={virtualRow.key} row={row} rowVirtualizer={rowVirtualizer} virtualRow={virtualRow} />
+          })}
+        </>
+      }
       rowVirtualizer={rowVirtualizer}
+      stickyLeftBorderIndex={3}
       table={table}
-      title="dashboard"
       virtualRows={virtualRows}
     />
   )

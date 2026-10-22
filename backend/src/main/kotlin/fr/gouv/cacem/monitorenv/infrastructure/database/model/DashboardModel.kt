@@ -63,16 +63,26 @@ data class DashboardModel(
         val vigilanceAreas: MutableList<Int> = mutableListOf()
         val reportings: MutableList<Int> = mutableListOf()
         val controlUnits: MutableList<Int> = mutableListOf()
+        val tags: MutableList<TagModel> = mutableListOf()
+        val themes: MutableList<ThemeModel> = mutableListOf()
         var inseeCode: String? = null
         dashboardDatas.forEach { datas ->
             datas.amp?.id?.let { ampId ->
                 amps.add(ampId)
             }
-            datas.regulatoryAreaModel?.id?.let { regAreaId ->
-                regulatoryAreas.add(regAreaId)
+            datas.regulatoryAreaModel?.let { regArea ->
+                {
+                    regulatoryAreas.add(regArea.id)
+                    themes.addAll(regArea.themes.map { theme -> theme.theme })
+                    tags.addAll(regArea.tags.map { tag -> tag.tag })
+                }
             }
-            datas.vigilanceAreaModel?.id?.let { vigAreaId ->
-                vigilanceAreas.add(vigAreaId)
+            datas.vigilanceAreaModel?.let { vigilanceArea ->
+                {
+                    vigilanceArea.id?.let { vigilanceAreas.add(it) }
+                    themes.addAll(vigilanceArea.themes.map { theme -> theme.theme })
+                    tags.addAll(vigilanceArea.tags.map { tag -> tag.tag })
+                }
             }
             datas.reportingModel?.id?.let { reportingId ->
                 reportings.add(reportingId)
@@ -107,6 +117,8 @@ data class DashboardModel(
                         object : TypeReference<List<LinkEntity>>() {},
                     )
                 },
+            tags = tags.distinct().map { it.toTagEntity() },
+            themes = themes.distinct().map { it.toThemeEntity() }
         )
     }
 
