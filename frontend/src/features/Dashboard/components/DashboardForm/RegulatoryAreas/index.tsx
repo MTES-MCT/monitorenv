@@ -45,6 +45,7 @@ export const RegulatoryAreas = forwardRef<HTMLDivElement, RegulatoriesAreasProps
     const selectedRegulatoryAreas = regulatoryAreas.filter(regulatoryArea =>
       selectedRegulatoryAreaIds.includes(regulatoryArea.id)
     )
+
     const selectedRegulatoryAreasByLayerName = groupBy(
       [...(selectedRegulatoryAreas ?? [])].sort((a, b) => (a?.layerName ?? '').localeCompare(b?.layerName ?? '')) ?? [],
       regulatory => formatLayerName(regulatory.layerName, regulatory.location)
