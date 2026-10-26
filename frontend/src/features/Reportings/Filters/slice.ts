@@ -52,7 +52,7 @@ type ReportingsFiltersSliceType = {
   sourceTypeFilter: string[] | undefined
   startedAfter: string | undefined
   startedBefore?: string
-  statusFilter?: string | undefined
+  statusFilter: string | undefined
   tagFilter: TagOption[] | undefined
   targetTypeFilter?: string[] | undefined
   themeFilter: ThemeOption[] | undefined

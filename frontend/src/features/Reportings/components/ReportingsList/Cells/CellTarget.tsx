@@ -68,7 +68,7 @@ function Flags({ flags }: { flags: (string | undefined)[] }) {
 
     const flagUrl = flag && `${window.location.origin}/flags/${flagName}`
 
-    return <Flag rel="preload" src={flagUrl} title={flag ? countries.getName(flag, 'fr') : 'Inconnu'} />
+    return <Flag key={flagName} rel="preload" src={flagUrl} title={flag ? countries.getName(flag, 'fr') : 'Inconnu'} />
   })
 }
 
