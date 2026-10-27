@@ -3,7 +3,6 @@ import {
   ExpandedRowLabel,
   ExpandedRowValue
 } from '@components/Table/TableWithSelectableRows/style'
-import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
 import { vesselAction } from '@features/Vessel/slice'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { Accent, Button } from '@mtes-mct/monitor-ui'
@@ -18,27 +17,37 @@ export function CellTarget({ target, vehiculeType }: { target: TargetDetails; ve
 
   if (vehiculeType === VehicleTypeEnum.VESSEL) {
     return (
-      <ul>
-        <ExpandedRowInlineItem>
-          <CustomExpandedRowLabel>Nom : </CustomExpandedRowLabel>
-          <ExpandedRowValue>{target.vesselName || UNKNOWN}</ExpandedRowValue>
-        </ExpandedRowInlineItem>
-        <ExpandedRowInlineItem>
-          <CustomExpandedRowLabel>MMSI : </CustomExpandedRowLabel>
-          <ExpandedRowValue>{target.mmsi || UNKNOWN}</ExpandedRowValue>
-        </ExpandedRowInlineItem>
-        <ExpandedRowInlineItem>
-          <CustomExpandedRowLabel>IMO : </CustomExpandedRowLabel>
-          <ExpandedRowValue>{target.imo || UNKNOWN}</ExpandedRowValue>
-        </ExpandedRowInlineItem>
-        <ExpandedRowInlineItem>
-          <CustomExpandedRowLabel>Immatriculation : </CustomExpandedRowLabel>
-          <ExpandedRowValue>{target.registrationNumber || UNKNOWN}</ExpandedRowValue>
-        </ExpandedRowInlineItem>
-        <ExpandedRowInlineItem>
-          <CustomExpandedRowLabel>Taille : </CustomExpandedRowLabel>
-          <ExpandedRowValue>{target.vesselSize ? `${target.vesselSize} m` : UNKNOWN}</ExpandedRowValue>
-        </ExpandedRowInlineItem>
+      <StyledList>
+        {target.vesselName && (
+          <ExpandedRowInlineItem>
+            <CustomExpandedRowLabel>Nom : </CustomExpandedRowLabel>
+            <ExpandedRowValue>{target.vesselName}</ExpandedRowValue>
+          </ExpandedRowInlineItem>
+        )}
+        {target.mmsi && (
+          <ExpandedRowInlineItem>
+            <CustomExpandedRowLabel>MMSI : </CustomExpandedRowLabel>
+            <ExpandedRowValue>{target.mmsi}</ExpandedRowValue>
+          </ExpandedRowInlineItem>
+        )}
+        {target.imo && (
+          <ExpandedRowInlineItem>
+            <CustomExpandedRowLabel>IMO : </CustomExpandedRowLabel>
+            <ExpandedRowValue>{target.imo}</ExpandedRowValue>
+          </ExpandedRowInlineItem>
+        )}
+        {target.registrationNumber && (
+          <ExpandedRowInlineItem>
+            <CustomExpandedRowLabel>Immatriculation : </CustomExpandedRowLabel>
+            <ExpandedRowValue>{target.registrationNumber}</ExpandedRowValue>
+          </ExpandedRowInlineItem>
+        )}
+        {target.vesselSize && (
+          <ExpandedRowInlineItem>
+            <CustomExpandedRowLabel>Taille : </CustomExpandedRowLabel>
+            <ExpandedRowValue>{`${target.vesselSize} m`}</ExpandedRowValue>
+          </ExpandedRowInlineItem>
+        )}
         {target.vesselShipId && (
           <li>
             <StyledButton
@@ -57,16 +66,18 @@ export function CellTarget({ target, vehiculeType }: { target: TargetDetails; ve
             </StyledButton>
           </li>
         )}
-      </ul>
+      </StyledList>
     )
   }
 
   if (vehiculeType === VehicleTypeEnum.VEHICLE_LAND) {
     return (
-      <ExpandedRowInlineItem key={target.registrationNumber}>
-        <CustomExpandedRowLabel>Immatriculation : </CustomExpandedRowLabel>
-        <ExpandedRowValue>{target.registrationNumber || UNKNOWN}</ExpandedRowValue>
-      </ExpandedRowInlineItem>
+      target.registrationNumber && (
+        <ExpandedRowInlineItem key={target.registrationNumber}>
+          <CustomExpandedRowLabel>Immatriculation : </CustomExpandedRowLabel>
+          <ExpandedRowValue>{target.registrationNumber}</ExpandedRowValue>
+        </ExpandedRowInlineItem>
+      )
     )
   }
 
@@ -79,4 +90,8 @@ const CustomExpandedRowLabel = styled(ExpandedRowLabel)`
 
 const StyledButton = styled(Button)`
   margin-top: 8px;
+`
+
+const StyledList = styled.ul`
+  padding-top: 0;
 `
