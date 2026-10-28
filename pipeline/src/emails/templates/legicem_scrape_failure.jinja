@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Monitorenv - Échec de l'extraction Legicem</title>
+        <style>
+            {% include "splendid.css" %}
+        </style>
+    </head>
+    <body>
+        <h2>Échec de l'extraction Legicem</h2>
+
+        <p>
+            L'extraction de Legicem du {{ failure_datetime }} n'a pas abouti.
+            Les données de l'extraction précédente ont été conservées : le suivi
+            des modifications Legicem ne détectera aucun changement tant que
+            l'extraction échouera.
+        </p>
+
+        <h3>Erreur</h3>
+        <pre style="white-space: pre-wrap; word-break: break-word;">{{ error_message }}</pre>
+
+        <h3>Que faire ?</h3>
+        <ul>
+            <li>
+                Consulter les logs de l'exécution <strong>{{ flow_run_name }}</strong>
+                du flow « Monitorenv - Scrape legicem » dans Prefect.
+            </li>
+            <li>
+                Vérifier que le site Legicem est accessible depuis le serveur du
+                pipeline (réseau RIE).
+            </li>
+            <li>
+                Si le message indique qu'aucune ligne n'a été extraite, la
+                structure HTML du site a peut-être changé : les sélecteurs du
+                spider sont à mettre à jour.
+            </li>
+        </ul>
+    </body>
+</html>

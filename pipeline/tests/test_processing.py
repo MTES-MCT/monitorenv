@@ -2,10 +2,10 @@ import datetime
 import logging
 import unittest
 from unittest.mock import Mock, patch
+from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
-import pytz
 from sqlalchemy import Column, Integer, MetaData, Table
 
 from src.processing import (
@@ -254,10 +254,9 @@ class TestProcessingMethods(unittest.TestCase):
 
         # Test date and datetime serialization
         i = datetime.datetime(2020, 3, 11, 20, 5, 12)
-        utc_tz = pytz.timezone("utc")
-        j = utc_tz.localize(datetime.datetime(2020, 3, 11, 20, 5, 12))
-        est_tz = pytz.timezone("est")
-        k = est_tz.localize(datetime.datetime(2020, 3, 11, 20, 5, 12))
+        j = datetime.datetime(2020, 3, 11, 20, 5, 12, tzinfo=ZoneInfo("UTC"))
+        est_tz = ZoneInfo("EST")
+        k = datetime.datetime(2020, 3, 11, 20, 5, 12, tzinfo=est_tz)
         m = datetime.date(2020, 12, 5)
 
         # Test nested dict containing None, np.nan, pandas `NaT`
@@ -270,8 +269,8 @@ class TestProcessingMethods(unittest.TestCase):
                 "numpy array": np.array([1, 2, 3]),
                 "date": datetime.date(2020, 12, 5),
                 "datetime": datetime.datetime(2020, 3, 11, 20, 5, 12),
-                "datetime_tz_est": est_tz.localize(
-                    datetime.datetime(2020, 3, 11, 20, 5, 12)
+                "datetime_tz_est": datetime.datetime(
+                    2020, 3, 11, 20, 5, 12, tzinfo=est_tz
                 ),
             }
         }
