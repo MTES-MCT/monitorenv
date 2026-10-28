@@ -2,6 +2,7 @@ import { ExpandedRowLabel, ExpandedRowList, ExpandedRowValue } from '@components
 import { getIconFromControlUnitResourceType } from '@features/ControlUnit/components/ControlUnitDialog/ControlUnitResourceList/utils'
 import { THEME } from '@mtes-mct/monitor-ui'
 import { type LegacyControlUnit } from 'domain/entities/legacyControlUnit'
+import { Fragment } from 'react'
 import styled from 'styled-components'
 
 export function UnitCell({ controlUnits }: { controlUnits: LegacyControlUnit[] }) {
@@ -23,21 +24,21 @@ export function UnitCell({ controlUnits }: { controlUnits: LegacyControlUnit[] }
         <li key={administration}>
           <ExpandedRowLabel>{administration}</ExpandedRowLabel>
           {units.map(unit => (
-            <ExpandedRowValue key={unit.id}>{unit.name}</ExpandedRowValue>
-          ))}
-          {units
-            .flatMap(unit => unit.resources)
-            .map(resource => {
-              const Icon = getIconFromControlUnitResourceType(resource.type)
+            <Fragment key={unit.id}>
+              <ExpandedRowValue>{unit.name}</ExpandedRowValue>
+              {unit.resources.map(resource => {
+                const Icon = getIconFromControlUnitResourceType(resource.type)
 
-              return (
-                <ExpandedRowValue key={resource.id}>
-                  <HAlign>
-                    {Icon ? <Icon color={THEME.color.slateGray} size={16} /> : undefined} {resource.name}
-                  </HAlign>
-                </ExpandedRowValue>
-              )
-            })}
+                return (
+                  <ExpandedRowValue key={resource.id}>
+                    <HAlign>
+                      {Icon ? <Icon color={THEME.color.slateGray} size={16} /> : undefined} {resource.name}
+                    </HAlign>
+                  </ExpandedRowValue>
+                )
+              })}
+            </Fragment>
+          ))}
         </li>
       ))}
     </ExpandedRowList>
