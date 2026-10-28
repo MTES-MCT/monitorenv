@@ -19,20 +19,20 @@ export const Columns = (
   isFetching: boolean = false
 ) => [
   {
-    accessorFn: row => row.seaFront,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <span title={info.getValue()}>{info.getValue()}</span>),
-    enableSorting: true,
-    header: () => 'Façade',
-    id: 'seaFront',
-    size: 104 + legacyFirefoxOffset
-  },
-  {
     accessorFn: row => row.name,
     cell: info => (isFetching ? <StyledSkeletonRow /> : <span title={info.getValue()}>{info.getValue()}</span>),
     enableSorting: true,
     header: () => 'Nom',
     id: 'name',
     size: 215 + legacyFirefoxOffset
+  },
+  {
+    accessorFn: row => row.seaFront,
+    cell: info => (isFetching ? <StyledSkeletonRow /> : <span title={info.getValue()}>{info.getValue()}</span>),
+    enableSorting: true,
+    header: () => 'Façade',
+    id: 'seaFront',
+    size: 104 + legacyFirefoxOffset
   },
   {
     accessorFn: row => row.createdAt,
@@ -115,19 +115,19 @@ export const Columns = (
     }
   },
   {
-    accessorFn: row => row.geom,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <LocalizeCell geom={info.getValue()} />),
+    accessorFn: row => ({ geom: row.geom, id: row.id }),
+    cell: info =>
+      isFetching ? (
+        <StyledSkeletonRow />
+      ) : (
+        <>
+          <LocalizeCell geom={info.getValue().geom} />
+          <EditDashboardCell id={info.getValue().id} />
+        </>
+      ),
     enableSorting: false,
     header: () => '',
-    id: 'geom',
-    size: 52 + legacyFirefoxOffset
-  },
-  {
-    accessorFn: row => row.id,
-    cell: info => (isFetching ? <StyledSkeletonRow /> : <EditDashboardCell id={info.getValue()} />),
-    enableSorting: false,
-    header: () => '',
-    id: 'edit',
+    id: 'actions',
     size: 52 + legacyFirefoxOffset
   }
 ]
