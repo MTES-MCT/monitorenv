@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>Legicem / Monitorenv - Vérification quotidienne</title>
+        <style>
+            {% include "splendid.css" %}
+        </style>
+    </head>
+    <body>
+        <h2>Legicem / Monitorenv</h2>
+        <h4>Vérification du {{ verification_date }}</h4>
+
+        {% if latest_extraction_datetime %}
+        <p>
+            Comparaison des extractions de Legicem du
+            {{ previous_extraction_datetime or "(aucune extraction précédente)" }}
+            et du {{ latest_extraction_datetime }}.
+            {{ n_references }} zones réglementaires et AMP de Monitorenv renvoient
+            vers Legicem.
+        </p>
+        {% else %}
+        <p>
+            <strong>Aucune extraction de Legicem n'est disponible.</strong>
+            Vérifiez que le flow « Monitorenv - Scrape legicem » s'exécute
+            correctement.
+        </p>
+        {% endif %}
+
+        <hr />
+        <h3>Documents ajoutés ou supprimés</h3>
+        {% if modified_documents %}
+        <p>
+            {{ n_modified_documents }} modification(s) de documents sur des pages
+            Legicem référencées dans Monitorenv :
+        </p>
+        {{ modified_documents | safe }}
+        <p>
+            Pensez à vérifier que les zones réglementaires et AMP correspondantes
+            sont à jour dans Monitorenv.
+        </p>
+        {% elif previous_extraction_datetime %}
+        <p>
+            Aucun document n'a été ajouté ou supprimé sur une page Legicem
+            référencée dans Monitorenv.
+        </p>
+        {% else %}
+        <p>
+            Pas d'extraction précédente à comparer : les modifications seront
+            détectées à partir de la prochaine extraction.
+        </p>
+        {% endif %}
+
+        <hr />
+        <h3>Liens Legicem introuvables</h3>
+        {% if unknown_links %}
+        <p>
+            {{ n_unknown_links }} lien(s) Legicem de Monitorenv ne correspondent à
+            aucun article trouvé lors de la dernière extraction (lien mort, article
+            déplacé, ou page hors des rubriques parcourues) :
+        </p>
+        {{ unknown_links | safe }}
+        {% else %}
+        <p>Tous les liens Legicem de Monitorenv ont été retrouvés.</p>
+        {% endif %}
+    </body>
+</html>
