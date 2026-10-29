@@ -1,15 +1,24 @@
 import { RegulatoryTagsFilter } from '@components/RegulatoryTagsFilter'
 import { RegulatoryThemesFilter } from '@components/RegulatoryThemesFilter'
-import { ResetButton } from '@features/commonComponents/ResetButton'
 import { OptionValue } from '@features/Reportings/Filters/style'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { CheckPicker, type DateAsStringRange, DateRangePicker, Select, Size, TextInput } from '@mtes-mct/monitor-ui'
+import {
+  CheckPicker,
+  type DateAsStringRange,
+  DateRangePicker,
+  getOptionsFromLabelledEnum,
+  Select,
+  Size,
+  TextInput
+} from '@mtes-mct/monitor-ui'
 import { debounce } from 'lodash'
 import { useCallback, useState } from 'react'
 import styled from 'styled-components'
 
+import { RegulatoryAreaFiltersTags } from './RegulatoryAreaFiltersTags'
 import { regulatoryAreaTableActions } from './slice'
+import { PeriodFilter, RegHelperFilter } from './types'
 import { useGetSeaFrontsQuery } from '../../../../api/seaFrontsAPI'
 
 import type { TagOption } from 'domain/entities/tags'
@@ -45,18 +54,8 @@ export function RegulatoryAreaFilters() {
     { label: 'Création / modif. (décroissant)', value: 'CREATE_DESC' }
   ]
 
-  const lastModificationOptions: { label: string; value: '1_MONTH' | '6_MONTHS' | 'ONE_YEAR' | 'CUSTOM' }[] = [
-    { label: 'Il y a plus d’un mois', value: '1_MONTH' },
-    { label: 'Il y a plus de 6 mois', value: '6_MONTHS' },
-    { label: 'Il y a plus d’un an', value: 'ONE_YEAR' },
-    { label: 'Période spécifique', value: 'CUSTOM' }
-  ]
-
-  const regHelperOptions: { label: string; value: 'WITHOUT_THEME' | 'WITHOUT_TAG' | 'OUTDATED' }[] = [
-    { label: 'Reg. sans thématique associée', value: 'WITHOUT_THEME' },
-    { label: 'Reg. sans tag associée', value: 'WITHOUT_TAG' },
-    { label: 'Reg. dont la date de validité est dépassée', value: 'OUTDATED' }
-  ]
+  const lastModificationOptions = getOptionsFromLabelledEnum(PeriodFilter)
+  const regHelperOptions = getOptionsFromLabelledEnum(RegHelperFilter)
 
   const [searchQuery, setSearchQuery] = useState(filters.searchQuery)
 
@@ -117,10 +116,6 @@ export function RegulatoryAreaFilters() {
     },
     [dispatch]
   )
-
-  const resetFilters = () => {
-    dispatch(regulatoryAreaTableActions.resetFilters())
-  }
 
   return (
     <Wrapper>
@@ -218,7 +213,8 @@ export function RegulatoryAreaFilters() {
           />
         )}
       </FiltersContainer>
-      {hasFilters && <ResetButton onClick={resetFilters} />}
+
+      {hasFilters && <RegulatoryAreaFiltersTags />}
     </Wrapper>
   )
 }
