@@ -4,7 +4,7 @@ import { set } from 'lodash/fp'
 import type { TagOption } from 'domain/entities/tags'
 import type { ThemeOption } from 'domain/entities/themes'
 
-type FiltersState = {
+export type FiltersState = {
   from?: string
   groupBy: 'CONTROL_PLAN' | 'SEA_FRONT'
   period?: '1_MONTH' | '6_MONTHS' | 'ONE_YEAR' | 'CUSTOM'
