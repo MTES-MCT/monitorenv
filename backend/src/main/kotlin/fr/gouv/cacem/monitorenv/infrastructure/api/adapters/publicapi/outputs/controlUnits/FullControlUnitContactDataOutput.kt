@@ -7,7 +7,7 @@ data class FullControlUnitContactDataOutput(
     val controlUnit: ControlUnitDataOutput,
     val controlUnitId: Int,
     val email: String? = null,
-    val name: String,
+    val name: String? = null,
     val phone: String? = null,
     val isEmailSubscriptionContact: Boolean? = false,
     val isSmsSubscriptionContact: Boolean? = false,

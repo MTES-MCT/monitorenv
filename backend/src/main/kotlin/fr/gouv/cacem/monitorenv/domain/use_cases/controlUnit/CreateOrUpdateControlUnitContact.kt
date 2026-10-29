@@ -75,7 +75,7 @@ class CreateOrUpdateControlUnitContact(
                 },
             isSmsSubscriptionContact =
                 if (controlUnitContact.isSmsSubscriptionContact &&
-                    controlUnitContact.phone == null
+                    controlUnitContact.cellPhone == null
                 ) {
                     false
                 } else {
@@ -86,18 +86,34 @@ class CreateOrUpdateControlUnitContact(
     private fun validatePhone(controlUnitContact: ControlUnitContactEntity) {
         val frenchPhoneRegex = Regex("^0[1-9]\\d{8}$")
         val internationalPhoneRegex = Regex("^00\\d{6,15}$")
-        controlUnitContact.phone?.let {
-            if (it.isNotBlank() &&
-                !(frenchPhoneRegex.matches(it) || internationalPhoneRegex.matches(it))
+
+        val phone = controlUnitContact.phone
+        val isPhoneValid: Boolean =
+            if (phone !=
+                null
             ) {
-                val errorMessage = "Invalid phone number"
-                logger.error(errorMessage)
-                throw BackendUsageException(
-                    BackendUsageErrorCode.UNVALID_PROPERTY,
-                    errorMessage,
-                    it,
-                )
+                frenchPhoneRegex.matches(phone) || internationalPhoneRegex.matches(phone)
+            } else {
+                true
             }
+
+        val cellPhone = controlUnitContact.cellPhone
+        val isCellPhoneValid: Boolean =
+            if (cellPhone !=
+                null
+            ) {
+                frenchPhoneRegex.matches(cellPhone) || internationalPhoneRegex.matches(cellPhone)
+            } else {
+                true
+            }
+
+        if (!isPhoneValid || !isCellPhoneValid) {
+            val errorMessage = "Invalid phone number"
+            logger.error(errorMessage)
+            throw BackendUsageException(
+                BackendUsageErrorCode.UNVALID_PROPERTY,
+                errorMessage,
+            )
         }
     }
 }

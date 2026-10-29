@@ -64,12 +64,14 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnitContact =
                     ControlUnitContactEntity(
                         id = 1,
+                        cellPhone = "0601xxxxxx",
                         controlUnitId = 10000,
                         email = "email_1",
+                        role = "Function 1",
                         isEmailSubscriptionContact = true,
                         isSmsSubscriptionContact = false,
                         name = "Contact 1",
-                        phone = "0601xxxxxx",
+                        phone = "0241xxxxxx",
                     ),
             ),
         )
@@ -90,8 +92,10 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnitContact =
                     ControlUnitContactEntity(
                         id = 3,
+                        cellPhone = "0601xxxxxx",
                         controlUnitId = 10003,
                         email = "email_3",
+                        role = "Function 3",
                         isEmailSubscriptionContact = false,
                         isSmsSubscriptionContact = true,
                         name = "Contact 3",
@@ -122,12 +126,14 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
                 controlUnitContact =
                     ControlUnitContactEntity(
                         id = 1,
+                        cellPhone = "0601xxxxxx",
                         controlUnitId = 10000,
                         email = "email_1",
+                        role = "Function 1",
                         isEmailSubscriptionContact = true,
                         isSmsSubscriptionContact = false,
                         name = "Contact 1",
-                        phone = "0601xxxxxx",
+                        phone = "0241xxxxxx",
                     ),
             ),
         )
@@ -141,8 +147,10 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
 
         val newControlUnitContact =
             ControlUnitContactEntity(
+                cellPhone = "0745102835",
                 controlUnitId = 10000,
                 email = "Adresse email",
+                role = "Function Name",
                 isEmailSubscriptionContact = false,
                 isSmsSubscriptionContact = true,
                 name = "Contact Name",
@@ -159,8 +167,10 @@ class JpaControlUnitContactRepositoryITests : AbstractDBTests() {
         val nextControlUnitContact =
             ControlUnitContactEntity(
                 id = 4,
+                cellPhone = "0645102835",
                 controlUnitId = 10001,
                 email = null,
+                role = "Function Name",
                 isEmailSubscriptionContact = true,
                 isSmsSubscriptionContact = true,
                 name = "Updated Contact Name",

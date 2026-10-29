@@ -35,7 +35,9 @@ class CreateOrUpdateControlUnitContactUTests {
         val newControlUnitContact =
             ControlUnitContactEntity(
                 controlUnitId = 2,
+                cellPhone = "0637298752",
                 email = "bob@example.org",
+                role = "Contact Function",
                 isEmailSubscriptionContact = true,
                 isSmsSubscriptionContact = true,
                 name = "Contact Name",
@@ -92,8 +94,10 @@ class CreateOrUpdateControlUnitContactUTests {
         val updatedControlUnitContact =
             ControlUnitContactEntity(
                 id = 1,
+                cellPhone = null,
                 controlUnitId = 2,
                 email = null,
+                role = "Contact Function",
                 isEmailSubscriptionContact = true,
                 isSmsSubscriptionContact = true,
                 name = "Contact Name",
@@ -162,8 +166,10 @@ class CreateOrUpdateControlUnitContactUTests {
         val updatedControlUnitContact =
             ControlUnitContactEntity(
                 id = 1,
+                cellPhone = "0637298752",
                 controlUnitId = 5,
                 email = "bob@example.org",
+                role = "Contact Function",
                 isEmailSubscriptionContact = true,
                 isSmsSubscriptionContact = false,
                 name = "Contact Name",
@@ -193,8 +199,10 @@ class CreateOrUpdateControlUnitContactUTests {
                     listOf(
                         ControlUnitContactEntity(
                             id = updatedControlUnitContact.id,
+                            cellPhone = null,
                             controlUnitId = 5,
                             email = "contact1@example.org",
+                            role = "Contact Function 1",
                             isEmailSubscriptionContact = false,
                             isSmsSubscriptionContact = false,
                             name = "Contact 1",
@@ -202,8 +210,10 @@ class CreateOrUpdateControlUnitContactUTests {
                         ),
                         ControlUnitContactEntity(
                             id = 2,
+                            cellPhone = null,
                             controlUnitId = 5,
                             email = "contact2@example.org",
+                            role = "Contact Function 2",
                             isEmailSubscriptionContact = true,
                             isSmsSubscriptionContact = false,
                             name = "Contact 2",
@@ -211,8 +221,10 @@ class CreateOrUpdateControlUnitContactUTests {
                         ),
                         ControlUnitContactEntity(
                             id = 3,
+                            cellPhone = null,
                             controlUnitId = 5,
                             email = "contact3@example.org",
+                            role = "Contact Function 3",
                             isEmailSubscriptionContact = true,
                             isSmsSubscriptionContact = false,
                             name = "Contact 3",
@@ -220,11 +232,13 @@ class CreateOrUpdateControlUnitContactUTests {
                         ),
                         ControlUnitContactEntity(
                             id = 4,
+                            cellPhone = null,
                             controlUnitId = 5,
                             email = "contact3@example.org",
+                            role = "Contact Function 4",
                             isEmailSubscriptionContact = false,
                             isSmsSubscriptionContact = false,
-                            name = "Contact 3",
+                            name = "Contact 4",
                             phone = null,
                         ),
                     ),
@@ -272,8 +286,10 @@ class CreateOrUpdateControlUnitContactUTests {
         val newControlUnitContact =
             ControlUnitContactEntity(
                 id = null,
+                cellPhone = null,
                 controlUnitId = 5,
                 email = "bob@example.org",
+                role = "Contact Function",
                 isEmailSubscriptionContact = true,
                 isSmsSubscriptionContact = false,
                 name = "Contact Name",
@@ -303,8 +319,10 @@ class CreateOrUpdateControlUnitContactUTests {
                     listOf(
                         ControlUnitContactEntity(
                             id = 1,
+                            cellPhone = null,
                             controlUnitId = 5,
                             email = "contact1@example.org",
+                            role = "Contact Function 1",
                             isEmailSubscriptionContact = true,
                             isSmsSubscriptionContact = true,
                             name = "Contact 1",
@@ -344,8 +362,10 @@ class CreateOrUpdateControlUnitContactUTests {
         // Given
         val newControlUnitContact =
             ControlUnitContactEntity(
+                cellPhone = "0637298752",
                 controlUnitId = 2,
                 email = "bob@example.org",
+                role = "Contact Function",
                 isEmailSubscriptionContact = true,
                 isSmsSubscriptionContact = true,
                 name = "Contact Name",
@@ -369,8 +389,10 @@ class CreateOrUpdateControlUnitContactUTests {
         // Given
         val newControlUnitContact =
             ControlUnitContactEntity(
+                cellPhone = null,
                 controlUnitId = 2,
                 email = "bob@example.org",
+                role = "Contact Function",
                 isEmailSubscriptionContact = true,
                 isSmsSubscriptionContact = true,
                 name = "Contact Name",
