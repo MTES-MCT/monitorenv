@@ -1,11 +1,21 @@
-import { Accent, Button, ControlUnit, Icon, IconButton, THEME, useKey } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  Button,
+  ControlUnit,
+  FormikSelect,
+  FormikTextInput,
+  Icon,
+  IconButton,
+  THEME,
+  useKey
+} from '@mtes-mct/monitor-ui'
 import { Formik } from 'formik'
 import styled from 'styled-components'
 
+import { FormikCellPhoneField } from './FormikCellPhoneField'
 import { FormikEmailField } from './FormikEmailField'
-import { FormikNameSelect } from './FormikNameSelect'
 import { FormikPhoneField } from './FormikPhoneField'
-import { CONTROL_UNIT_CONTACT_FORM_SCHEMA } from '../constants'
+import { CONTROL_UNIT_CONTACT_FORM_SCHEMA, SORTED_CONTROL_UNIT_CONTACT_PREDEFINED_NAMES_AS_OPTIONS } from '../constants'
 
 import type { ControlUnitContactFormValues } from '../types'
 import type { CSSProperties } from 'react'
@@ -37,8 +47,16 @@ export function Form({ className, controlUnit, initialValues, onCancel, onDelete
         <div className={className} style={style}>
           <Title>{isNew ? 'Ajouter un contact' : 'Éditer un contact'}</Title>
           <StyledForm data-cy="ControlUnitDialog-control-unit-contact-form" onSubmit={handleSubmit}>
-            <FormikNameSelect />
+            <FormikSelect
+              isLight
+              label="Fonction"
+              name="role"
+              options={SORTED_CONTROL_UNIT_CONTACT_PREDEFINED_NAMES_AS_OPTIONS}
+              searchable
+            />
+            <FormikTextInput autoFocus isLight label="Nom du contact" name="name" />
             <FormikPhoneField />
+            <FormikCellPhoneField />
             <FormikEmailField controlUnit={controlUnit} />
 
             <ActionBar>

@@ -22,17 +22,21 @@ data class ControlUnitContactModel(
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int? = null,
+    @Column(name = "cell_phone")
+    val cellPhone: String?,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_unit_id", nullable = false)
     val controlUnit: ControlUnitModel,
     @Column(name = "email")
     val email: String?,
+    @Column(name = "role")
+    val role: String?,
     @Column(name = "is_email_subscription_contact", nullable = false)
     val isEmailSubscriptionContact: Boolean,
     @Column(name = "is_sms_subscription_contact", nullable = false)
     val isSmsSubscriptionContact: Boolean,
-    @Column(name = "name", nullable = false)
-    val name: String,
+    @Column(name = "name")
+    val name: String? = null,
     @Column(name = "phone")
     val phone: String?,
     @Column(name = "created_at_utc", nullable = false, updatable = false)
@@ -49,8 +53,10 @@ data class ControlUnitContactModel(
         ): ControlUnitContactModel =
             ControlUnitContactModel(
                 id = controlUnitContact.id,
+                cellPhone = controlUnitContact.cellPhone,
                 controlUnit = controlUnitModel,
                 email = controlUnitContact.email,
+                role = controlUnitContact.role,
                 isEmailSubscriptionContact = controlUnitContact.isEmailSubscriptionContact,
                 isSmsSubscriptionContact = controlUnitContact.isSmsSubscriptionContact,
                 name = controlUnitContact.name,
@@ -61,8 +67,10 @@ data class ControlUnitContactModel(
     fun toControlUnitContact(): ControlUnitContactEntity =
         ControlUnitContactEntity(
             id,
+            cellPhone,
             controlUnitId = requireNotNull(controlUnit.id),
             email,
+            role,
             isEmailSubscriptionContact,
             isSmsSubscriptionContact,
             name,
