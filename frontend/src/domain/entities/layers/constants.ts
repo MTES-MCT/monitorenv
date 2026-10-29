@@ -28,6 +28,7 @@ export enum MonitorEnvLayers {
   AMP_PREVIEW = 'AMP_PREVIEW',
   AREA_ICON = 'AREA_ICON',
   BASE_LAYER = 'BASE_LAYER',
+  COASTAL_MUNICIPALITIES = 'COASTAL_MUNICIPALITIES',
   COMPETENCE_CROSS_AREA = 'COMPETENCE_CROSS_AREA',
   DASHBOARD = 'DASHBOARD',
   DASHBOARDS = 'DASHBOARDS',
@@ -105,6 +106,12 @@ export const Layers: Record<MonitorEnvLayers, Layer> = {
     name: 'Zones de compétences des CROSS',
     type: LayerType.ADMINISTRATIVE,
     zoneFieldKey: 'name'
+  },
+  [MonitorEnvLayers.COASTAL_MUNICIPALITIES]: {
+    code: 'coastal_municipalities_areas',
+    name: 'Communes côtières',
+    type: LayerType.ADMINISTRATIVE,
+    zoneFieldKey: 'nom_com'
   },
   [MonitorEnvLayers.FAO]: {
     code: 'fao_areas',

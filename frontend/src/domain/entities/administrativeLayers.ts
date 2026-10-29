@@ -17,5 +17,6 @@ export const administrativeLayers = [
   [Layers.TRANSVERSAL_SEA_LIMIT_AREAS],
   [Layers.SALTWATER_LIMIT_AREAS],
   [Layers.STRAIGHT_BASELINE],
-  [Layers.TERRITORIAL_SEAS]
+  [Layers.TERRITORIAL_SEAS],
+  [Layers.COASTAL_MUNICIPALITIES]
 ]
