@@ -38,17 +38,31 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
   return (
     <Wrapper data-cy="ControlUnitDialog-control-unit-contact" data-id={controlUnitContact.id}>
       <Left>
-        <NameAndContactContainer>
-          <Name
-            title={ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
-          >
-            {ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] || controlUnitContact.name}
-          </Name>
-          {controlUnitContact.phone && <span>{formatPhoneNumber(controlUnitContact.phone)}</span>}
-          {controlUnitContact.isSmsSubscriptionContact && (
-            <Icon.Subscription size={14} title="Numéro de diffusion pour les préavis et les rapports de contrôle" />
+        <div
+          title={`${
+            controlUnitContact.role ? ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.role] : undefined
+          } - ${controlUnitContact.name}`}
+        >
+          {controlUnitContact.role && (
+            <NameOrRole>{ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.role]}</NameOrRole>
           )}
-        </NameAndContactContainer>
+          {controlUnitContact.name && (
+            <NameOrRole>
+              {controlUnitContact.role ? ' - ' : ''}
+              {controlUnitContact.name}
+            </NameOrRole>
+          )}
+        </div>
+
+        <PhonesContainer>
+          <CellPhone>
+            {controlUnitContact.cellPhone && <span>{formatPhoneNumber(controlUnitContact.cellPhone)}</span>}
+            {controlUnitContact.isSmsSubscriptionContact && (
+              <Icon.Subscription size={14} title="Numéro de diffusion pour les préavis et les rapports de contrôle" />
+            )}
+          </CellPhone>
+          {controlUnitContact.phone && <span>{formatPhoneNumber(controlUnitContact.phone)}</span>}
+        </PhonesContainer>
         {controlUnitContact.email && (
           <MailContainer>
             <Link href={`mailto:${controlUnitContact.email}`} rel="noreferrer" target="_blank">
@@ -88,6 +102,7 @@ const Left = styled.div`
   flex-direction: column;
   flex-grow: 1;
   flex-wrap: wrap;
+  gap: 4px;
 `
 
 const Right = styled.div`
@@ -95,26 +110,28 @@ const Right = styled.div`
     padding: 0px;
   }
 `
-const NameAndContactContainer = styled.p`
-  align-items: end;
-  column-gap: 8px;
+const PhonesContainer = styled.p`
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
-  row-gap: 16px;
-  > span {
-    line-height: initial;
-  }
+  gap: 16px;
 `
 
-const Name = styled.span`
+const NameOrRole = styled.span`
   color: ${p => p.theme.color.gunMetal};
   font-weight: bold;
   overflow-wrap: anywhere;
   max-width: 450px;
 `
 
-const MailContainer = styled.p`
+const MailContainer = styled.span`
   align-items: end;
   display: flex;
+  gap: 8px;
+`
+
+const CellPhone = styled.div`
+  display: flex;
+  align-items: center;
   gap: 8px;
 `

@@ -61,8 +61,10 @@ class ControlUnitContactsITests {
         val requestDataAsDataInput =
             CreateControlUnitContactDataInputV1(
                 id = null,
+                cellPhone = "0762982109",
                 controlUnitId = 2,
                 email = "bob@example.org",
+                role = "Function Name",
                 name = "Contact Name",
                 phone = "0033123456789",
             )
@@ -71,8 +73,10 @@ class ControlUnitContactsITests {
         val useCaseInputExpectation =
             ControlUnitContactEntity(
                 id = null,
+                cellPhone = "0762982109",
                 controlUnitId = 2,
                 email = "bob@example.org",
+                role = "Function Name",
                 isEmailSubscriptionContact = false,
                 isSmsSubscriptionContact = false,
                 name = "Contact Name",
@@ -104,8 +108,10 @@ class ControlUnitContactsITests {
         val newControlUnitContactData =
             CreateOrUpdateControlUnitContactDataInputV2(
                 id = null,
+                cellPhone = "0762982109",
                 controlUnitId = 2,
                 email = "bob@example.org",
+                role = "Function Name",
                 isEmailSubscriptionContact = false,
                 isSmsSubscriptionContact = false,
                 name = "Contact Name",
@@ -116,8 +122,10 @@ class ControlUnitContactsITests {
         val useCaseInputExpectation =
             ControlUnitContactEntity(
                 id = null,
+                cellPhone = "0762982109",
                 controlUnitId = 2,
                 email = "bob@example.org",
+                role = "Function Name",
                 isEmailSubscriptionContact = false,
                 isSmsSubscriptionContact = false,
                 name = "Contact Name",
@@ -179,8 +187,10 @@ class ControlUnitContactsITests {
                 controlUnitContact =
                     ControlUnitContactEntity(
                         id = 1,
+                        cellPhone = "0762982109",
                         controlUnitId = 2,
                         email = "bob@example.org",
+                        role = "Function Name",
                         isEmailSubscriptionContact = false,
                         isSmsSubscriptionContact = false,
                         name = "Contact Name",
@@ -219,8 +229,10 @@ class ControlUnitContactsITests {
                     controlUnitContact =
                         ControlUnitContactEntity(
                             id = 1,
+                            cellPhone = "0762982109",
                             controlUnitId = 2,
                             email = "bob@example.org",
+                            role = "Function Name",
                             isEmailSubscriptionContact = false,
                             isSmsSubscriptionContact = false,
                             name = "Contact Name",
@@ -242,8 +254,10 @@ class ControlUnitContactsITests {
                     controlUnitContact =
                         ControlUnitContactEntity(
                             id = 4,
+                            cellPhone = "0762982109",
                             controlUnitId = 5,
                             email = "bob@example.org",
+                            role = "Function Name",
                             isEmailSubscriptionContact = false,
                             isSmsSubscriptionContact = false,
                             name = "Contact Name 2",
@@ -292,8 +306,10 @@ class ControlUnitContactsITests {
                 controlUnitContact =
                     ControlUnitContactEntity(
                         id = 1,
+                        cellPhone = "0762982109",
                         controlUnitId = 2,
                         email = "bob@example.org",
+                        role = "Function Name",
                         isEmailSubscriptionContact = false,
                         isSmsSubscriptionContact = false,
                         name = "Contact Name",
@@ -362,8 +378,10 @@ class ControlUnitContactsITests {
                 controlUnitContact =
                     ControlUnitContactEntity(
                         id = 1,
+                        cellPhone = "0762982109",
                         controlUnitId = 2,
                         email = "bob@example.org",
+                        role = "Function Name",
                         isEmailSubscriptionContact = false,
                         isSmsSubscriptionContact = false,
                         name = "Contact Name",

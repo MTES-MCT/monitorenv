@@ -2,10 +2,12 @@ package fr.gouv.cacem.monitorenv.domain.entities.controlUnit
 
 data class ControlUnitContactEntity(
     val id: Int? = null,
+    val cellPhone: String? = null,
     val controlUnitId: Int,
     val email: String? = null,
+    val role: String? = null,
     val isEmailSubscriptionContact: Boolean,
     val isSmsSubscriptionContact: Boolean,
-    val name: String,
+    val name: String? = null,
     val phone: String? = null,
 )
