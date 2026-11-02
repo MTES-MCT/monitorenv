@@ -98,13 +98,24 @@ export function ControlUnitContactSource({
                 }
                 label={
                   <Contact>
-                    <FirstLine>
-                      <Bold>
-                        {ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.name] ||
-                          controlUnitContact.name}
-                      </Bold>{' '}
-                      {controlUnitContact.phone && <Phone>{formatPhoneNumber(controlUnitContact.phone)}</Phone>}
-                    </FirstLine>{' '}
+                    <Bold>
+                      {controlUnitContact.role
+                        ? ControlUnit.ControlUnitContactPredefinedName[controlUnitContact.role]
+                        : ''}
+                      {controlUnitContact.name
+                        ? ` ${controlUnitContact.role ? '- ' : ''}${controlUnitContact.name}`
+                        : ''}
+                    </Bold>
+                    <div>
+                      {controlUnitContact.cellPhone && <Phone>{formatPhoneNumber(controlUnitContact.cellPhone)}</Phone>}
+                      {controlUnitContact.phone && (
+                        <>
+                          {controlUnitContact.cellPhone ? ' - ' : ''}
+                          <Phone>{formatPhoneNumber(controlUnitContact.phone)}</Phone>
+                        </>
+                      )}
+                    </div>
+
                     <Link href={`mailto:${controlUnitContact.email}`} rel="noreferrer" target="_blank">
                       {controlUnitContact.email}
                     </Link>
@@ -148,14 +159,6 @@ const Contact = styled.div`
   flex-direction: column;
   justify-content: space-between;
 `
-
-const FirstLine = styled.span`
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  margin-bottom: 4px;
-`
-
 const Phone = styled.span`
   color: ${$p => $p.theme.color.slateGray};
 `

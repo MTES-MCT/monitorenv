@@ -19,10 +19,10 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
     cy.clickButton('Ajouter')
 
-    cy.contains('Veuillez choisir un nom.').should('be.visible')
-    cy.contains('Veuillez entrer un téléphone ou un email.').should('be.visible')
+    cy.contains('Veuillez entrer un nom de contact ou une fonction').should('be.visible')
+    cy.contains('Veuillez entrer un téléphone, un portable ou un email.').should('be.visible')
 
-    cy.fill('Numéro de téléphone', '1111111111111')
+    cy.fill('Numéro de téléphone fixe', '1111111111111')
     cy.clickButton('Ajouter')
 
     cy.contains(
@@ -44,8 +44,10 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
     cy.clickButton('Ajouter un contact')
 
-    cy.fill('Nom du contact', 'Adjoint')
-    cy.fill('Numéro de téléphone', '0123456789')
+    cy.fill('Fonction', 'Adjoint')
+    cy.fill('Nom du contact', 'my name')
+    cy.fill('Numéro de téléphone fixe', '0123456789')
+    cy.fill('Numéro de téléphone mobile', '0623456789')
     cy.clickButton('Ajouter ce numéro à la liste de diffusion des préavis et des bilans d’activités de contrôle')
     cy.fill('Adresse mail', 'foo@example.org')
     cy.clickButton('Ajouter cette adresse à la liste de diffusion des préavis et des bilans d’activités de contrôle')
@@ -58,11 +60,13 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
       }
 
       assert.deepInclude(createInterception.request.body, {
+        cellPhone: '0623456789',
         email: 'foo@example.org',
         isEmailSubscriptionContact: true,
         isSmsSubscriptionContact: true,
-        name: 'ADJUNCT',
-        phone: '0123456789'
+        name: 'my name',
+        phone: '0123456789',
+        role: 'ADJUNCT'
       })
 
       const newControlUnitContactId = createInterception.response.body.id
@@ -81,8 +85,8 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
         .filter(`[data-id="${newControlUnitContactId}"]`)
         .clickButton('Éditer ce contact')
 
-      cy.fill('Nom du contact', 'Passerelle')
-      cy.fill('Numéro de téléphone', '0198765432')
+      cy.fill('Nom du contact', 'new name')
+      cy.fill('Numéro de téléphone fixe', '0198765432')
       cy.fill('Adresse mail', 'bar@example.org')
 
       cy.clickButton('Enregistrer les modifications')
@@ -93,18 +97,20 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
         }
 
         assert.deepInclude(interception.request.body, {
+          cellPhone: '0623456789',
           email: 'bar@example.org',
           id: newControlUnitContactId,
           isEmailSubscriptionContact: true,
           isSmsSubscriptionContact: true,
-          name: 'BRIDGE',
-          phone: '0198765432'
+          name: 'new name',
+          phone: '0198765432',
+          role: 'ADJUNCT'
         })
       })
 
       cy.get('p').contains('Éditer un contact').should('not.exist')
       cy.contains('Enregistrer les modifications').should('not.exist')
-      cy.contains('Passerelle').should('be.visible')
+      cy.contains('new name').should('be.visible')
 
       // -------------------------------------------------------------------------
       // Delete
@@ -185,7 +191,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
     cy.clickButton('Ajouter un contact')
     cy.fill('Nom du contact', 'Adjoint')
-    cy.fill('Numéro de téléphone', '0111111111')
+    cy.fill('Numéro de téléphone mobile', '0111111111')
     cy.fill('Adresse mail', 'first.contact@example.org')
     cy.clickButton('Ajouter')
 
@@ -198,7 +204,7 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
 
       cy.clickButton('Ajouter un contact')
       cy.fill('Nom du contact', 'Adjoint')
-      cy.fill('Numéro de téléphone', '0222222222')
+      cy.fill('Numéro de téléphone mobile', '0222222222')
       cy.fill('Adresse mail', 'second.contact@example.org')
       cy.clickButton('Ajouter')
 
@@ -248,11 +254,11 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
           }
 
           assert.deepInclude(patchInterception.request.body, {
+            cellPhone: '0111111111',
             email: 'first.contact@example.org',
             id: firstControlUnitContactId,
             isEmailSubscriptionContact: true,
-            isSmsSubscriptionContact: true,
-            phone: '0111111111'
+            isSmsSubscriptionContact: true
           })
         })
 
@@ -300,11 +306,11 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
           }
 
           assert.deepInclude(patchInterception.request.body, {
+            cellPhone: '0222222222',
             email: 'second.contact@example.org',
             id: secondControlUnitContactId,
             isEmailSubscriptionContact: true,
-            isSmsSubscriptionContact: true,
-            phone: '0222222222'
+            isSmsSubscriptionContact: true
           })
         })
 
@@ -341,11 +347,11 @@ context('Main Window > Control Unit Dialog > Contact List', () => {
           }
 
           assert.deepInclude(interception.request.body, {
+            cellPhone: '0222222222',
             email: 'second.contact@example.org',
             id: secondControlUnitContactId,
             isEmailSubscriptionContact: false,
-            isSmsSubscriptionContact: false,
-            phone: '0222222222'
+            isSmsSubscriptionContact: false
           })
         })
 

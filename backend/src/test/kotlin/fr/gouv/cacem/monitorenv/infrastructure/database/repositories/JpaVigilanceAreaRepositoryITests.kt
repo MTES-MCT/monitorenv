@@ -196,12 +196,14 @@ class JpaVigilanceAreaRepositoryITests : AbstractDBTests() {
         val controlUnitContact =
             ControlUnitContactEntity(
                 id = 1,
+                cellPhone = "0601xxxxxx",
                 controlUnitId = 10000,
                 email = "email_1",
                 isEmailSubscriptionContact = true,
                 isSmsSubscriptionContact = false,
                 name = "Contact 1",
-                phone = "0601xxxxxx",
+                phone = null,
+                role = null,
             )
         val updatedVigilanceArea =
             vigilanceArea!!.copy(
