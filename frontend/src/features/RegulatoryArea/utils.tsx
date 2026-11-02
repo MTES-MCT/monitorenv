@@ -36,19 +36,19 @@ export const getPeriodText = (startDate, endDate) => {
 }
 type GetDatesFromFiltersProps = {
   from?: string
-  periodFilter?: '1_MONTH' | '6_MONTHS' | 'ONE_YEAR' | 'CUSTOM'
+  periodFilter?: 'ONE_MONTH' | 'SIX_MONTHS' | 'ONE_YEAR' | 'CUSTOM'
   to?: string
 }
 
 export function getDatesFromFilters({ from, periodFilter, to }: GetDatesFromFiltersProps) {
-  let fromDate = from ?? undefined
-  const toDate = to ?? undefined
+  let fromDate = from
+  const toDate = to
   switch (periodFilter) {
-    case '1_MONTH':
+    case 'ONE_MONTH':
       fromDate = customDayjs().utc().startOf('day').subtract(1, 'month').toISOString()
       break
 
-    case '6_MONTHS':
+    case 'SIX_MONTHS':
       fromDate = customDayjs().utc().startOf('day').subtract(6, 'month').toISOString()
       break
 

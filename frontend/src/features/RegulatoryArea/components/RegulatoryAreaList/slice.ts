@@ -7,7 +7,7 @@ import type { ThemeOption } from 'domain/entities/themes'
 export type FiltersState = {
   from?: string
   groupBy: 'CONTROL_PLAN' | 'SEA_FRONT'
-  period?: '1_MONTH' | '6_MONTHS' | 'ONE_YEAR' | 'CUSTOM'
+  period?: 'ONE_MONTH' | 'SIX_MONTHS' | 'ONE_YEAR' | 'CUSTOM'
   regHelper?: 'WITHOUT_THEME' | 'WITHOUT_TAG' | 'OUTDATED'
   seaFronts?: string[]
   searchQuery?: string
