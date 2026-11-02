@@ -8,6 +8,7 @@ import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.repositories.IControlUnitContactRepository
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
+import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetAllNatinfs
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -18,6 +19,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.BDDMockito
 import org.mockito.Mock
 import org.mockito.Mockito.mock
+import org.slf4j.LoggerFactory
 import org.springframework.boot.test.system.CapturedOutput
 import org.springframework.boot.test.system.OutputCaptureExtension
 
@@ -28,6 +30,8 @@ class CreateOrUpdateControlUnitContactUTests {
 
     @Mock
     private val controlUnitContactRepository: IControlUnitContactRepository = mock()
+
+    private val logger = LoggerFactory.getLogger(CreateOrUpdateControlUnitContact::class.java)
 
     @Test
     fun `execute should return the expected result`(log: CapturedOutput) {
@@ -357,7 +361,7 @@ class CreateOrUpdateControlUnitContactUTests {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["invalide phone number", "111 222 333 444 555"])
+    @ValueSource(strings = ["Invalid phone number", "111 222 333 444 555"])
     fun `execute should throw BackendUsageException when phone is invalid`(phone: String) {
         // Given
         val newControlUnitContact =
@@ -379,9 +383,38 @@ class CreateOrUpdateControlUnitContactUTests {
                     controlUnitContactRepository,
                 ).execute(newControlUnitContact)
             }
+
         assertThat(backendUsageException.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
         assertThat(backendUsageException.message).isEqualTo("Invalid phone number")
         assertThat(backendUsageException.data).isEqualTo(newControlUnitContact.phone)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["Invalid cell phone number", "111 222 333 444 555"])
+    fun `execute should throw BackendUsageException when cell phone is invalid`(cellPhone: String) {
+        // Given
+        val newControlUnitContact =
+            ControlUnitContactEntity(
+                cellPhone = cellPhone,
+                controlUnitId = 2,
+                email = "bob@example.org",
+                role = "Contact Function",
+                isEmailSubscriptionContact = true,
+                isSmsSubscriptionContact = true,
+                name = "Contact Name",
+                phone = "0033123456789",
+            )
+        // When & Then
+        val backendUsageException =
+            assertThrows<BackendUsageException> {
+                CreateOrUpdateControlUnitContact(
+                    getControlUnitById,
+                    controlUnitContactRepository,
+                ).execute(newControlUnitContact)
+            }
+        assertThat(backendUsageException.code).isEqualTo(BackendUsageErrorCode.UNVALID_PROPERTY)
+        assertThat(backendUsageException.message).isEqualTo("Invalid phone number")
+        assertThat(backendUsageException.data).isEqualTo(newControlUnitContact.cellPhone)
     }
 
     @Test
@@ -389,7 +422,7 @@ class CreateOrUpdateControlUnitContactUTests {
         // Given
         val newControlUnitContact =
             ControlUnitContactEntity(
-                cellPhone = null,
+                cellPhone = "0637298752",
                 controlUnitId = 2,
                 email = "bob@example.org",
                 role = "Contact Function",

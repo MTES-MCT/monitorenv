@@ -323,11 +323,13 @@ class ControlUnitContactsITests {
             ControlUnitContactEntity(
                 id = 1,
                 controlUnitId = 2,
+                cellPhone = "0762982109",
                 email = "bob@example.org",
                 isEmailSubscriptionContact = false,
                 isSmsSubscriptionContact = false,
                 name = "Updated Contact Name", // Updated property
                 phone = "0033123456789",
+                role = "Function Name",
             )
         val secondUseCaseOutputMock = secondUseCaseInputExpectation
         given(createOrUpdateControlUnitContact.execute(secondUseCaseInputExpectation))
@@ -360,6 +362,8 @@ class ControlUnitContactsITests {
                     put("controlUnitId", 2)
                     put("name", "Updated Contact Name")
                     put("phone", "0033123456789")
+                    put("cellPhone", "0762982109")
+                    put("role", "Updated Function Name")
                 }.toString()
 
         val firstUseCaseOutputMock =
@@ -400,6 +404,8 @@ class ControlUnitContactsITests {
                 isSmsSubscriptionContact = false,
                 name = "Updated Contact Name", // Updated property
                 phone = "0033123456789",
+                cellPhone = "0762982109",
+                role = "Updated Function Name", // Updated property
             )
         val secondUseCaseOutputMock = secondUseCaseInputExpectation
         given(createOrUpdateControlUnitContact.execute(secondUseCaseInputExpectation))

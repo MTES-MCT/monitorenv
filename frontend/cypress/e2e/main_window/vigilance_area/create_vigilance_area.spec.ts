@@ -82,7 +82,7 @@ describe('Create Vigilance Area', () => {
 
     cy.clickButton('Ajouter une unité')
     cy.fill("Nom de l'unité", 'Cultures marines – DDTM 40', { force: true })
-    cy.get('label').contains('Contact 2 06 02 xx xx xx').click()
+    cy.get('label').contains('Contact 2').first().click()
     cy.clickButton('Valider')
 
     cy.clickButton('Ajouter une autre source externe')
