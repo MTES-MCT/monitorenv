@@ -78,40 +78,35 @@ export function RegulatoryAreaFiltersTags() {
           {PeriodFilter[filters.period]}
         </SingleTag>
       )}
-      {filters.themes &&
-        filters.themes.map(theme => (
-          <Wrapper key={theme.name}>
-            <SingleTag key={theme.name} onDelete={() => deleteThemeOrTagFilter('themes', theme.id)}>
-              {theme.name}
-            </SingleTag>
-            {theme.subThemes &&
-              theme.subThemes.map(subTheme => (
-                <SingleTag key={subTheme.name} onDelete={() => deleteSubThemeFilter(theme.id, subTheme.id)}>
-                  {subTheme.name}
-                </SingleTag>
-              ))}
-          </Wrapper>
-        ))}
-      {filters.tags &&
-        filters.tags.map(tag => (
-          <Wrapper key={tag.name}>
-            <SingleTag key={tag.name} onDelete={() => deleteThemeOrTagFilter('tags', tag.id)}>
-              {tag.name}
-            </SingleTag>
-            {tag.subTags &&
-              tag.subTags.map(subTag => (
-                <SingleTag key={subTag.name} onDelete={() => deleteSubTagFilter(tag.id, subTag.id)}>
-                  {subTag.name}
-                </SingleTag>
-              ))}
-          </Wrapper>
-        ))}
-      {filters.seaFronts &&
-        filters.seaFronts.map(seaFront => (
-          <SingleTag key={seaFront} onDelete={() => deleteSeaFrontFilter(seaFront)}>
-            {seaFront}
+      {filters.themes?.map(theme => (
+        <Wrapper key={theme.name}>
+          <SingleTag key={theme.name} onDelete={() => deleteThemeOrTagFilter('themes', theme.id)}>
+            {theme.name}
           </SingleTag>
-        ))}
+          {theme.subThemes?.map(subTheme => (
+            <SingleTag key={subTheme.name} onDelete={() => deleteSubThemeFilter(theme.id, subTheme.id)}>
+              {subTheme.name}
+            </SingleTag>
+          ))}
+        </Wrapper>
+      ))}
+      {filters.tags?.map(tag => (
+        <Wrapper key={tag.name}>
+          <SingleTag key={tag.name} onDelete={() => deleteThemeOrTagFilter('tags', tag.id)}>
+            {tag.name}
+          </SingleTag>
+          {tag.subTags?.map(subTag => (
+            <SingleTag key={subTag.name} onDelete={() => deleteSubTagFilter(tag.id, subTag.id)}>
+              {subTag.name}
+            </SingleTag>
+          ))}
+        </Wrapper>
+      ))}
+      {filters.seaFronts?.map(seaFront => (
+        <SingleTag key={seaFront} onDelete={() => deleteSeaFrontFilter(seaFront)}>
+          {seaFront}
+        </SingleTag>
+      ))}
       {filters.regHelper && (
         <SingleTag key="regHelper" onDelete={() => deleteSimpleFilter('regHelper')}>
           {RegHelperFilter[filters.regHelper]}
