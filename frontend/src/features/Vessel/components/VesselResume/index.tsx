@@ -1,4 +1,4 @@
-import { useLazyGetReportingsByMmsiQuery } from '@api/reportingsAPI'
+import { useGetReportingsByMmsiQuery } from '@api/reportingsAPI'
 import { useGetVesselQuery } from '@api/vesselsApi'
 import { Bold } from '@components/style'
 import {
@@ -36,7 +36,7 @@ import { transformExtent } from 'ol/proj'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { type Reporting, ReportingTypeEnum } from '../../../../domain/entities/reporting'
+import { ReportingTypeEnum } from '../../../../domain/entities/reporting'
 import { ReportingContext, VisibilityState } from '../../../../domain/shared_slices/Global'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
 import { Flag } from '../VesselSearch/VesselSearchItem'
@@ -63,9 +63,9 @@ export function Resume({ batchId, onClose, rowNumber, shipId }: ResumeProps) {
   const [page, setPage] = useState<ResumePages>('RESUME')
   const [activeButton, setActiveButton] = useState<ActiveButtons | undefined>(undefined)
   const [allHistory, setAllHistory] = useState<HistoryOfInfractionsProps | undefined>(undefined)
-  const [reportings, setReportings] = useState<Reporting[]>([])
   const getHistory = useGetHistoryOfInfractions(false)
-  const [getReportings] = useLazyGetReportingsByMmsiQuery()
+  const { data: reportingsByMmsi } = useGetReportingsByMmsiQuery(vessel?.mmsi ?? skipToken)
+  const reportings = useMemo(() => Object.values(reportingsByMmsi?.entities ?? {}), [reportingsByMmsi])
   const [isTrackSettingsOpen, setIsTrackOpen] = useState(false)
 
   useEffect(() => {
@@ -79,18 +79,7 @@ export function Resume({ batchId, onClose, rowNumber, shipId }: ResumeProps) {
       getHistory({ mmsi: vessel.mmsi }).then(setAllHistory)
     }
 
-    const fetchReportings = async () => {
-      if (!vessel?.mmsi) {
-        setReportings([])
-
-        return
-      }
-
-      getReportings(vessel.mmsi).then(({ data }) => setReportings(Object.values(data?.entities ?? [])))
-    }
-
     fetchHistory()
-    fetchReportings()
     dispatch(vesselAction.setDisplayedPositions(vessel?.positions))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, vessel?.mmsi, vessel?.positions])
@@ -257,7 +246,7 @@ export function Resume({ batchId, onClose, rowNumber, shipId }: ResumeProps) {
             {page === 'HISTORY' && (
               <History envActions={allHistory?.envActions ?? []} reportings={reportings} vessel={vessel} />
             )}
-            {page === 'ADDITIONAL_INFORMATION' && <AdditionalInformation vessel={vessel} />}
+            {page === 'ADDITIONAL_INFORMATION' && <AdditionalInformation reportings={reportings} vessel={vessel} />}
           </Body>
         </>
       </StyledMapMenuDialogContainer>

@@ -1,6 +1,6 @@
 import { Bold } from '@components/style'
 import { ReportingCard } from '@features/Vessel/components/VesselResume/History/ReportingCard'
-import { customDayjs, Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
+import { customDayjs, type FileApi, Icon, pluralize, THEME } from '@mtes-mct/monitor-ui'
 import { useState } from 'react'
 import styled from 'styled-components'
 
@@ -14,6 +14,7 @@ type YearTimelineProps = {
 
 export type EventProps = {
   date?: string
+  files?: FileApi[]
   isInfraction: boolean
   parentId?: string | number
   source?: string

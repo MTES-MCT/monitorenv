@@ -1,17 +1,35 @@
+import { Bold } from '@components/style'
 import { addMainWindowBanner } from '@features/MainWindow/useCases/addMainWindowBanner'
+import { editReportingInLocalStore } from '@features/Reportings/useCases/editReportingInLocalStore'
+import { getFormattedReportingId } from '@features/Reportings/utils'
 import { Vessel } from '@features/Vessel/types'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { type FileApi, FileUploader, Level } from '@mtes-mct/monitor-ui'
+import {
+  Accent,
+  type FileApi,
+  FilePreview,
+  FileUploader,
+  Icon,
+  IconButton,
+  Label,
+  Level,
+  THEME
+} from '@mtes-mct/monitor-ui'
+import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
+import { ReportingContext } from '../../../../../domain/shared_slices/Global'
 import { saveVesselFiles } from '../../../useCases/saveVesselFiles'
 
+import type { Reporting } from '../../../../../domain/entities/reporting'
+
 type AdditionalInformationProps = {
+  reportings: Reporting[]
   vessel: Vessel.Vessel
 }
 
-export function AdditionalInformation({ vessel }: AdditionalInformationProps) {
+export function AdditionalInformation({ reportings, vessel }: AdditionalInformationProps) {
   const dispatch = useAppDispatch()
 
   const onUpload = useCallback(
@@ -41,28 +59,57 @@ export function AdditionalInformation({ vessel }: AdditionalInformationProps) {
     [dispatch]
   )
 
+  const goToReporting = (id: number) => {
+    dispatch(editReportingInLocalStore(id, ReportingContext.MAP))
+  }
+
   return (
-    <AttachmentsSection>
-      <header>Pièce(s) jointe(s)</header>
-      <Wrapper>
-        <FileUploader
-          key="images"
-          files={vessel.files}
-          mode="IMAGES"
-          onDelete={onUpload}
-          onError={onError}
-          onUpload={onUpload}
-        />
-        <FileUploader
-          key="documents"
-          files={vessel.files}
-          mode="DOCUMENTS"
-          onDelete={onUpload}
-          onError={onError}
-          onUpload={onUpload}
-        />
-      </Wrapper>
-    </AttachmentsSection>
+    <>
+      <AttachmentsSection>
+        <header>Pièce(s) jointe(s)</header>
+        <Wrapper>
+          <FileUploader
+            key="images"
+            files={vessel.files}
+            mode="IMAGES"
+            onDelete={onUpload}
+            onError={onError}
+            onUpload={onUpload}
+          />
+          <FileUploader
+            key="documents"
+            files={vessel.files}
+            mode="DOCUMENTS"
+            onDelete={onUpload}
+            onError={onError}
+            onUpload={onUpload}
+          />
+        </Wrapper>
+      </AttachmentsSection>
+      {reportings.some(reporting => !!reporting.images?.length) && (
+        <AttachmentsSection>
+          <header>Documents ajoutés lors de contrôles et signalements</header>
+          {reportings.map(reporting => (
+            <Wrapper key={reporting.id}>
+              <TitleWrapper>
+                <Label>
+                  Signalement <Bold>{getFormattedReportingId(reporting.reportingId)}</Bold> du{' '}
+                  {getDateAsLocalizedStringVeryCompact(reporting.createdAt, true, true, 'HH MMM')}
+                </Label>
+                <IconButton
+                  accent={Accent.TERTIARY}
+                  color={THEME.color.slateGray}
+                  Icon={Icon.Edit}
+                  onClick={() => goToReporting(+reporting.id)}
+                  title="Éditer le signalement"
+                />
+              </TitleWrapper>
+              <FilePreview files={reporting.images} isSideWindow={false} />
+            </Wrapper>
+          ))}
+        </AttachmentsSection>
+      )}
+    </>
   )
 }
 
@@ -81,4 +128,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 8px;
   padding: 16px 20px;
+`
+
+const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `
