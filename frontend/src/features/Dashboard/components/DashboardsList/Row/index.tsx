@@ -1,20 +1,17 @@
+import { BaseRow } from '@components/Table/TableWithSelectableRows/BaseRow'
 import {
-  ExpandableRowCell,
   ExpandedRow,
   ExpandedRowCell,
   ExpandedRowLabel,
   ExpandedRowList,
   ExpandedRowValue
 } from '@components/Table/TableWithSelectableRows/style'
-import { createPinnedCellStyle, UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
+import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
 import { ControlUnitsWithAdminCell } from '@features/Dashboard/components/DashboardsList/Row/ControlUnitsWithAdminCell'
 import { Dashboard } from '@features/Dashboard/types'
 import { TagsDetailsCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/TagsDetailsCell'
 import { ThemesDetailsCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/ThemesDetailsCell'
-import { TableWithSelectableRows } from '@mtes-mct/monitor-ui'
-import { flexRender, type Row as RowType } from '@tanstack/react-table'
-import { Fragment } from 'react'
-import styled from 'styled-components'
+import { type Row as RowType } from '@tanstack/react-table'
 
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
@@ -30,29 +27,14 @@ export function Row({
   const dashboard = row.original
 
   return (
-    <Fragment key={row.id}>
-      <StyledTr
-        ref={(node: HTMLTableRowElement | null) => {
-          rowVirtualizer.measureElement(node)
-        }}
-        data-cy="dashboard-row"
-        data-index={virtualRow.index}
-      >
-        {row?.getVisibleCells().map((cell, index, rowCells) => {
-          const cellStyle = createPinnedCellStyle({
-            context: cell,
-            index,
-            rowLength: rowCells.length,
-            stickyLeftBorderIndex: 3
-          })
-
-          return (
-            <ExpandableRowCell key={cell.id} onClick={() => row.toggleExpanded()} style={cellStyle}>
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </ExpandableRowCell>
-          )
-        })}
-      </StyledTr>
+    <BaseRow
+      key={row.id}
+      data-cy="dashboard-row"
+      row={row}
+      rowVirtualizer={rowVirtualizer}
+      stickyLeftBorderIndex={0}
+      virtualRow={virtualRow}
+    >
       {row.getIsExpanded() && (
         <ExpandedRow data-cy="dashboard-row-expanded">
           <ExpandedRowCell colSpan={4}>
@@ -104,15 +86,6 @@ export function Row({
           </ExpandedRowCell>
         </ExpandedRow>
       )}
-    </Fragment>
+    </BaseRow>
   )
 }
-
-const StyledTr = styled(TableWithSelectableRows.BodyTr)`
-  td:nth-of-type(1),
-  td:nth-of-type(2),
-  td:nth-of-type(3),
-  td:nth-of-type(5) {
-    text-overflow: unset;
-  }
-`

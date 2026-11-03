@@ -17,7 +17,6 @@ import { FrequencyCell } from './Cells/FrequencyCell'
 import { TagsDetailsCell } from './Cells/TagsDetailsCell'
 import { ThemesDetailsCell } from './Cells/ThemesDetailsCell'
 import { ValidationDateDetailsCell } from './Cells/ValidationDateDetailsCell'
-import { BasePeriodCircle } from '../VigilanceAreaForm/Periods/Periods'
 
 export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>; table: any }) {
   const vigilanceArea: VigilanceArea.VigilanceArea = row.original
@@ -25,11 +24,10 @@ export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>;
   return (
     <>
       <TableWithSelectableRows.BodyTr key={row.id} data-cy="vigilance-area-row">
-        {row?.getVisibleCells().map((cell, index, rowCells) => {
+        {row?.getVisibleCells().map((cell, index) => {
           let cellStyle = createPinnedCellStyle({
             context: cell,
             index,
-            rowLength: rowCells.length,
             stickyLeftBorderIndex: 0
           })
           const isNew = table.options.meta?.isNew(row)
@@ -106,9 +104,6 @@ export function Row({ row, table }: { row: RowType<VigilanceArea.VigilanceArea>;
   )
 }
 
-export const StyledPeriodCircle = styled(BasePeriodCircle)`
-  margin-right: 8px;
-`
 const CreationWrapper = styled.div`
   display: flex;
   flex-direction: column;
