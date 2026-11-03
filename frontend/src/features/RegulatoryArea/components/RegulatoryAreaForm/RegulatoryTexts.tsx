@@ -1,7 +1,7 @@
-import { SubSubTitle, SubTitle } from '@features/RegulatoryArea/components/RegulatoryAreaForm/style'
 import { SubTitleWrapper } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/index'
 import { ReadOnlyOtherRefRegText } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/ReadOnlyOtherRefRegText'
 import { ReadOnlyRefRegText } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/ReadOnlyRefRegText'
+import { SubSubTitle, SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { Button, getOptionsFromLabelledEnum, Select } from '@mtes-mct/monitor-ui'
 import { noop } from 'lodash'

@@ -84,13 +84,19 @@ export namespace RegulatoryArea {
 
   export type RegulatoryAreaGroupToApi = {
     additionalRefReg?: AdditionalRegulatoryText[]
+    authorizationPeriods?: string
     date?: string
     dateFin?: string
+    facade?: string
+    geom?: GeoJSON.MultiPolygon
     id?: number
     layerName?: string
     location?: string
+    prohibitionPeriods?: string
     refReg?: string
     regulatoryAreaIds?: number[]
+    tags?: TagFromAPI[]
+    themes?: ThemeFromAPI[]
     type?: string
     url?: string
   }
