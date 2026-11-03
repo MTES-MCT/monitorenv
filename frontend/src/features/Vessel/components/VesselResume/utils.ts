@@ -37,6 +37,7 @@ export function toEvent(reporting: Reporting): EventProps {
 
   return {
     date: reporting.createdAt,
+    files: reporting.images,
     isInfraction: reporting.reportType === ReportingTypeEnum.INFRACTION_SUSPICION,
     parentId: reporting.id,
     source,

@@ -4,6 +4,7 @@ import { monitorenvPrivateApi } from './api'
 import { getQueryString } from '../utils/getQueryStringFormatted'
 
 import type { Reporting } from '../domain/entities/reporting'
+import type { TagDescription } from '@reduxjs/toolkit/query'
 
 type ReportingsFilter = {
   isAttachedToMission?: boolean | undefined
@@ -34,13 +35,21 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       })
     }),
     createReporting: build.mutation<Partial<Reporting>, Partial<Reporting>>({
-      invalidatesTags: (_, __, { missionId }) => [
-        { id: 'LIST', type: 'Reportings' },
-        { id: 'LIST', type: 'Missions' },
-        { id: missionId, type: 'Missions' },
-        'ExtractArea',
-        'InfractionsSuspicions'
-      ],
+      invalidatesTags: (_, __, { missionId, targetDetails }) => {
+        const vesselsToInvalidate: TagDescription<'Vessels'>[] = (targetDetails ?? [])
+          .map(({ vesselShipId }) => vesselShipId)
+          .filter(shipId => shipId !== undefined)
+          .map(shipId => ({ id: shipId, type: 'Vessels' }))
+
+        return [
+          { id: 'LIST', type: 'Reportings' },
+          { id: 'LIST', type: 'Missions' },
+          { id: missionId, type: 'Missions' },
+          'ExtractArea',
+          'InfractionsSuspicions',
+          ...vesselsToInvalidate
+        ]
+      },
       query: reporting => ({
         body: reporting,
         method: 'PUT',
@@ -94,14 +103,22 @@ export const reportingsAPI = monitorenvPrivateApi.injectEndpoints({
       transformResponse: (response: Reporting[]) => ReportingAdapter.setAll(initialState, response)
     }),
     updateReporting: build.mutation<Reporting, Partial<Reporting>>({
-      invalidatesTags: (_, __, { id, missionId }) => [
-        { id, type: 'Reportings' },
-        { id: 'LIST', type: 'Reportings' },
-        { id: 'LIST', type: 'Missions' },
-        { id: missionId, type: 'Missions' },
-        'ExtractArea',
-        'InfractionsSuspicions'
-      ],
+      invalidatesTags: (_, __, { id, missionId, targetDetails }) => {
+        const vesselsToInvalidate: TagDescription<'Vessels'>[] = (targetDetails ?? [])
+          .map(({ vesselShipId }) => vesselShipId)
+          .filter(shipId => shipId !== undefined)
+          .map(shipId => ({ id: shipId, type: 'Vessels' }))
+
+        return [
+          { id, type: 'Reportings' },
+          { id: 'LIST', type: 'Reportings' },
+          { id: 'LIST', type: 'Missions' },
+          { id: missionId, type: 'Missions' },
+          'ExtractArea',
+          'InfractionsSuspicions',
+          ...vesselsToInvalidate
+        ]
+      },
       query: ({ id, ...patch }) => ({
         body: { id, ...patch },
         method: 'PUT',
