@@ -2,7 +2,7 @@ import { Bold } from '@components/style'
 import { editMissionInLocalStore } from '@features/Mission/useCases/editMissionInLocalStore'
 import { editReportingInLocalStore } from '@features/Reportings/useCases/editReportingInLocalStore'
 import { useAppDispatch } from '@hooks/useAppDispatch'
-import { Accent, Button, Icon, THEME } from '@mtes-mct/monitor-ui'
+import { Accent, Button, Icon, Tag, THEME } from '@mtes-mct/monitor-ui'
 import { getDateAsLocalizedStringCompact } from '@utils/getDateAsLocalizedString'
 import styled from 'styled-components'
 
@@ -50,16 +50,23 @@ export function ReportingCard({ reporting }: ReportingCardProps) {
         </StyledButton>
       )}
       {reporting.type === 'REPORTING' && (
-        <StyledButton
-          accent={Accent.SECONDARY}
-          onClick={() => {
-            if (reporting.parentId) {
-              goToReporting(+reporting.parentId)
-            }
-          }}
-        >
-          Voir le signalement
-        </StyledButton>
+        <ButtonsWrapper>
+          <Button
+            accent={Accent.SECONDARY}
+            onClick={() => {
+              if (reporting.parentId) {
+                goToReporting(+reporting.parentId)
+              }
+            }}
+          >
+            Voir le signalement
+          </Button>
+          {reporting.files?.length !== 0 && (
+            <StyledTag backgroundColor={THEME.color.white} Icon={Icon.Attachment} iconColor={THEME.color.slateGray}>
+              {reporting.files?.length}
+            </StyledTag>
+          )}
+        </ButtonsWrapper>
       )}
     </Card>
   )
@@ -96,7 +103,20 @@ const StyledReportingIcon = styled(Icon.Report)`
   left: 16px;
 `
 
+const ButtonsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 16px;
+`
+
 const StyledButton = styled(Button)`
-  margin: 16px 0 8px;
+  margin-top: 16px;
   width: min-content;
+`
+
+const StyledTag = styled(Tag)`
+  align-self: center;
+  height: auto;
+  padding: 3px 8px;
 `

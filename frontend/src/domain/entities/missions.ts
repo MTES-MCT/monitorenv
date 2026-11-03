@@ -273,15 +273,6 @@ export type MissionData = Omit<Partial<Mission<EnvAction>>, 'attachedReportings'
 export type EnvAction = EnvActionControl | EnvActionSurveillance | EnvActionNote
 export type NewEnvAction = NewEnvActionControl | EnvActionSurveillance | EnvActionNote
 
-export type EnvActionControlWithControlUnit = {
-  actionStartDateTimeUtc?: string
-  actionType: ActionTypeEnum.CONTROL
-  controlUnits: LegacyControlUnit[]
-  id: string
-  infractions: Infraction[]
-  themes?: ThemeFromAPI[]
-}
-
 export type EnvActionCommonProperties = {
   actionStartDateTimeUtc?: string
   id: string
