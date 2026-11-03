@@ -1,6 +1,6 @@
 import { ValidateButton } from '@features/commonComponents/ValidateButton'
-import { SubSubTitle } from '@features/RegulatoryArea/components/RegulatoryAreaForm/style'
 import { ReadOnlyOtherRefRegText } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/ReadOnlyOtherRefRegText'
+import { SubSubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { Accent, Button, FormikDatePicker, FormikTextarea, Icon, IconButton } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'

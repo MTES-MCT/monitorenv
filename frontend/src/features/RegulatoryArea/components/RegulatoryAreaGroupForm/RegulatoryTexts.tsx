@@ -1,7 +1,7 @@
-import { SubTitle } from '@features/RegulatoryArea/components/RegulatoryAreaForm/style'
 import { SubTitleWrapper } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/index'
 import { OtherRefRegForm } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/OtherRefRegForm'
 import { RefRegForm } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/RefRegForm'
+import { SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { Button, customDayjs, CustomSearch, FormikSelect, getOptionsFromLabelledEnum } from '@mtes-mct/monitor-ui'
 import { useFormikContext } from 'formik'
