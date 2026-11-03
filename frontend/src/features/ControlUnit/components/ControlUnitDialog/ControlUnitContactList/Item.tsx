@@ -55,12 +55,14 @@ export function Item({ controlUnitContact, onEdit }: ItemProps) {
         </div>
 
         <PhonesContainer>
-          <CellPhone>
-            {controlUnitContact.cellPhone && <span>{formatPhoneNumber(controlUnitContact.cellPhone)}</span>}
-            {controlUnitContact.isSmsSubscriptionContact && (
-              <Icon.Subscription size={14} title="Numéro de diffusion pour les préavis et les rapports de contrôle" />
-            )}
-          </CellPhone>
+          {controlUnitContact.cellPhone && (
+            <CellPhone>
+              <span>{formatPhoneNumber(controlUnitContact.cellPhone)}</span>
+              {controlUnitContact.isSmsSubscriptionContact && (
+                <Icon.Subscription size={14} title="Numéro de diffusion pour les préavis et les rapports de contrôle" />
+              )}
+            </CellPhone>
+          )}
           {controlUnitContact.phone && <span>{formatPhoneNumber(controlUnitContact.phone)}</span>}
         </PhonesContainer>
         {controlUnitContact.email && (
