@@ -11,13 +11,12 @@ import { MapLayer } from '@features/map/layers/MapLayer'
 import { MapExtentController } from '@features/map/MapExtentController'
 import { ZoomListener } from '@features/map/ZoomListener'
 import { BackofficeRegulatoryAreaGroupLayer } from '@features/RegulatoryArea/components/Layers/BackofficeRegulatoryAreaGroupLayer'
-import { SubTitle } from '@features/RegulatoryArea/components/RegulatoryAreaForm/style'
 import { DuplicateWarningMessage } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/DuplicateWarningMessage'
 import { RegulatoryAreaGroupFormSchema } from '@features/RegulatoryArea/components/RegulatoryAreaGroupForm/Schema'
 import { RegulatoryAreaItem } from '@features/RegulatoryArea/components/RegulatoryAreaList/RegulatoryAreaItem'
 import { regulatoryAreaTableActions } from '@features/RegulatoryArea/components/RegulatoryAreaList/slice'
 import { RegulatoryAreasPanel } from '@features/RegulatoryArea/components/RegulatoryAreaPanel'
-import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper } from '@features/RegulatoryArea/style'
+import { MapContainer, RegulatoryWrapper, StyledBackofficeWrapper, SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import { createOrUpdateRegulatoryAreaGroup } from '@features/RegulatoryArea/useCases/createOrUpdateRegulatoryAreaGroup'
 import { useAppDispatch } from '@hooks/useAppDispatch'
@@ -29,6 +28,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
 
+import { GroupIdentification } from './GroupIdentification'
 import { RegulatoryTexts } from './RegulatoryTexts'
 import { getTitle } from '../../../../domain/entities/layers/utils'
 import { setFitToExtent } from '../../../../domain/shared_slices/Map'
@@ -47,12 +47,41 @@ const mapChildrensComponents = [
   <MapExtentController key="MapExtentController" />
 ]
 
+const DATA_FROM_GROUP = [
+  {
+    label: 'Tracé (dont façade)',
+    value: 'geom-from-group'
+  },
+  {
+    label: 'Thématiques et sous-thématiques',
+    value: 'themes-from-group'
+  },
+  {
+    label: 'Tags et sous-tags',
+    value: 'tags-from-group'
+  },
+  {
+    label: 'Résumé',
+    value: 'resume-from-group'
+  },
+  {
+    label: "Période d'autorisation",
+    value: 'periode-autorisation-from-group'
+  },
+  {
+    label: "Période d'interdiction",
+    value: 'periode-interdiction-from-group'
+  }
+]
+
 export function RegulatoryAreaGroupForm() {
   const navigate = useNavigate()
   const location = useLocation()
   const dispatch = useAppDispatch()
-  const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
   const { groupId } = useParams()
+
+  const openedRegulatoryAreaId = useAppSelector(state => state.regulatoryAreaTable.openedRegulatoryAreaId)
+
   const isNew = groupId === 'new'
   const { data: regulatoryAreaGroup } = useGetRegulatoryAreaGroupByIdQuery(
     groupId && !Number.isNaN(+groupId) ? +groupId : skipToken
@@ -77,16 +106,21 @@ export function RegulatoryAreaGroupForm() {
   const selectedBaseLayer = useAppSelector(state => state.regulatoryAreaBo.selectedBaseLayer)
 
   const [isCancelEditDialogOpen, setIsCancelEditDialogOpen] = useState(false)
+  const [selectedValuesToCopy, setSelectedValuesToCopy] = useState<string[]>([])
 
   const initialValues: RegulatoryArea.RegulatoryAreaGroupToApi = {
     additionalRefReg: regulatoryAreaGroup?.group.additionalRefReg,
+    authorizationPeriods: regulatoryAreaGroup?.group.authorizationPeriods,
     date: regulatoryAreaGroup?.group.date,
     dateFin: regulatoryAreaGroup?.group.dateFin,
     id: regulatoryAreaGroup?.group.id,
     layerName: regulatoryAreaGroup?.group.layerName,
     location: regulatoryAreaGroup?.group.location,
+    prohibitionPeriods: regulatoryAreaGroup?.group.prohibitionPeriods,
     refReg: regulatoryAreaGroup?.group.refReg,
     regulatoryAreaIds: regulatoryAreaGroup?.regulatoryAreas.map(({ id }) => id) ?? [],
+    tags: regulatoryAreaGroup?.group.tags,
+    themes: regulatoryAreaGroup?.group.themes,
     type: regulatoryAreaGroup?.group.type,
     url: regulatoryAreaGroup?.group.url
   }
@@ -143,6 +177,10 @@ export function RegulatoryAreaGroupForm() {
         }
       )
     }
+  }
+
+  const selectValuesToCopy = (value: string) => {
+    setSelectedValuesToCopy(prev => (prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]))
   }
 
   useEffect(() => {
@@ -239,8 +277,18 @@ export function RegulatoryAreaGroupForm() {
                       onChange={() => {}}
                       readOnly
                     />
+                    {DATA_FROM_GROUP.map(item => (
+                      <Checkbox
+                        key={item.value}
+                        checked={selectedValuesToCopy.includes(item.value)}
+                        label={item.label}
+                        name={item.value}
+                        onChange={() => selectValuesToCopy(item.value)}
+                      />
+                    ))}
                   </CommonPropertiesWrapper>
                 </section>
+                <GroupIdentification />
 
                 <RegulatoryTexts isNew={isNew} />
               </FormContent>

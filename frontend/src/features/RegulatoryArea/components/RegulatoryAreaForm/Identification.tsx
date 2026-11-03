@@ -6,6 +6,7 @@ import { Bold } from '@components/style'
 import { Tooltip } from '@components/Tooltip'
 import { BACK_OFFICE_MENU_PATH, BackOfficeMenuKey } from '@features/BackOffice/components/BackofficeMenu/constants'
 import { ResetButton } from '@features/commonComponents/ResetButton'
+import { SubTitle } from '@features/RegulatoryArea/style'
 import { RegulatoryArea } from '@features/RegulatoryArea/types'
 import {
   Checkbox,
@@ -28,7 +29,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
-import { SubTitle } from './style'
 import { formatLayerName } from '../../utils'
 
 import type { TagOption } from 'domain/entities/tags'
