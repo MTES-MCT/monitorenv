@@ -12,11 +12,10 @@ export function TableWithSelectableRowsHeader({
 }) {
   return (
     <tr key={headerGroup.id}>
-      {headerGroup.headers.map((header, index, headerCells) => {
+      {headerGroup.headers.map((header, index) => {
         const cellStyle = createPinnedCellStyle({
           context: header,
           index,
-          rowLength: headerCells.length,
           stickyLeftBorderIndex
         })
 
