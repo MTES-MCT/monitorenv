@@ -2,6 +2,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  readonly FRONTEND_FORM_USERS_EXT_URL: string
   readonly FRONTEND_GEOSERVER_NAMESPACE: string
   readonly FRONTEND_GEOSERVER_REMOTE_URL: string
   readonly FRONTEND_GOOGLEMAPS_API_KEY: string

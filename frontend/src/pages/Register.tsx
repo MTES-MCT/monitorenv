@@ -7,13 +7,12 @@ export function Register() {
   const goToLoginPage = () => {
     navigate('/login')
   }
+  const formUrl = () => import.meta.env.FRONTEND_FORM_USERS_EXT_URL
 
   return (
     <Wrapper>
       <span>
-        Merci de remplir{' '}
-        <a href="https://grist.numerique.gouv.fr/o/docs/2ssi28eE3JQQ/Document-sans-titre/f/4">ce formulaire</a> pour
-        accéder à MonitorEnv avec Proconnect.
+        Merci de remplir <a href={formUrl()}>ce formulaire</a> pour accéder à MonitorEnv avec Proconnect.
       </span>
       <Button onClick={goToLoginPage}>Retourner à la page de connexion</Button>
     </Wrapper>
