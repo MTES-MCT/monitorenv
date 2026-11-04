@@ -18,5 +18,20 @@ export const dashboardsFiltersMigrations = {
       ...state,
       nbOfFiltersSetted
     }
+  },
+  v3: (state: any) => {
+    if (!state) {
+      return state
+    }
+
+    return {
+      ...state,
+      filters: {
+        ...state.filters,
+        administrations: [],
+        tags: [],
+        themes: []
+      }
+    }
   }
 }

@@ -77,7 +77,22 @@ context('Side Window > Dashboard List > Filter Bar', () => {
 
     cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
     cy.getDataCy('dashboard-row').each(row => {
-      cy.wrap(row).should('contain', 'Mixte')
+      cy.wrap(row).click()
+      cy.getDataCy('dashboard-row-expanded').should('contain', 'Mixte')
+    })
+
+    cy.clickButton('Réinitialiser les filtres')
+  })
+
+  it('Should filter dashboard by themes', () => {
+    cy.wait(200)
+    cy.fill('Thématiques', ['Culture marine'])
+
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').each(row => {
+      cy.wrap(row).click()
+      cy.wrap(row).should('contain', 'Culture marine')
+      cy.getDataCy('dashboard-row-expanded').should('contain', 'Cultures marines')
     })
 
     cy.clickButton('Réinitialiser les filtres')
@@ -88,9 +103,21 @@ context('Side Window > Dashboard List > Filter Bar', () => {
 
     cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
     cy.getDataCy('dashboard-row').each(row => {
-      cy.wrap(row).should('contain', 'DML 2A (DDTM)')
+      cy.wrap(row).should('contain', 'DML 2A')
     })
 
+    cy.clickButton('Réinitialiser les filtres')
+  })
+
+  it('Should filter dashboards by admins', () => {
+    cy.fill('Administration', ['DDTM'])
+
+    cy.getDataCy('dashboard-row').should('have.length.to.be.greaterThan', 0)
+    cy.getDataCy('dashboard-row').each(row => {
+      cy.wrap(row).click()
+      cy.getDataCy('dashboard-row-expanded').should('contain', 'DDTM')
+      cy.getDataCy('dashboard-row-expanded').should('contain', 'Cultures marines – DDTM 40')
+    })
     cy.clickButton('Réinitialiser les filtres')
   })
 })

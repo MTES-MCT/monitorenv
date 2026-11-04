@@ -51,6 +51,9 @@ export namespace Dashboard {
     regulatoryAreaIds: number[]
     reportingIds: number[]
     seaFront?: string
+    // Tags and themes only for table view
+    tags?: TagFromAPI[]
+    themes?: ThemeFromAPI[]
     updatedAt?: string
     vigilanceAreaIds: number[]
   }
@@ -104,6 +107,9 @@ export namespace Dashboard {
     createdAt: string
     geom: GeoJSON.Geometry
     id: string
+    // Tags and themes only for table view
+    tags?: TagFromAPI[]
+    themes?: ThemeFromAPI[]
   }
 
   export type PopulatedDashboard = Omit<

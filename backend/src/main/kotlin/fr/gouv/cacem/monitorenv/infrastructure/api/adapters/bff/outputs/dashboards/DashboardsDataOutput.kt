@@ -1,6 +1,8 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.dashboards
 
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.DashboardEntity
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
+import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.themes.ThemeOutput
 import org.locationtech.jts.geom.Geometry
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -19,6 +21,8 @@ class DashboardsDataOutput(
     val reportingIds: List<Int>,
     val vigilanceAreaIds: List<Int>,
     val seaFront: String?,
+    val tags: List<TagOutput>,
+    val themes: List<ThemeOutput>,
 ) {
     companion object {
         fun fromDashboardEntity(dashboardEntity: DashboardEntity): DashboardsDataOutput =
@@ -36,6 +40,8 @@ class DashboardsDataOutput(
                 reportingIds = dashboardEntity.reportingIds,
                 seaFront = dashboardEntity.seaFront,
                 vigilanceAreaIds = dashboardEntity.vigilanceAreaIds,
+                tags = dashboardEntity.tags.map { TagOutput.fromTagEntity(it) },
+                themes = dashboardEntity.themes.map { ThemeOutput.fromThemeEntity(it) },
             )
     }
 }

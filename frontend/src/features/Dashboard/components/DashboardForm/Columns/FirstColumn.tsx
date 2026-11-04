@@ -1,9 +1,9 @@
 import { useObserverAccordion } from '@features/Dashboard/hooks/useObserverAccordion'
 import {
+  type DashboardType,
   getFilteredAmps,
   getFilteredRegulatoryAreas,
-  getFilteredVigilanceAreas,
-  type DashboardType
+  getFilteredVigilanceAreas
 } from '@features/Dashboard/slice'
 import { Dashboard } from '@features/Dashboard/types'
 import { useAppSelector } from '@hooks/useAppSelector'
@@ -16,7 +16,7 @@ import { VigilanceAreas } from '../VigilanceAreas'
 import { BaseColumn } from './style'
 import { type ColumnProps } from './utils'
 import { BriefParameters } from '../BriefParameters'
-import { getVigilanceAreaFilters, type DashboardFilters } from '../slice'
+import { type DashboardFilters, getVigilanceAreaFilters } from '../slice'
 
 type FirstColumnProps = {
   dashboard: DashboardType
