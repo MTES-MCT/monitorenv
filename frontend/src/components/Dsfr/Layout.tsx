@@ -18,7 +18,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <div className="fr-header__service">
                   <p className="fr-header__service-title">MonitorEnv</p>
                   <p className="fr-header__service-tagline">
-                    Appuyer, orienter et coordoner les unités concourant à la surveillance et au contrôle de
+                    Appuyer, orienter et coordonner les unités concourant à la surveillance et au contrôle de
                     l&apos;environnement marin
                   </p>
                 </div>
