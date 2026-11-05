@@ -97,6 +97,10 @@ MONITORENV_SENDER_EMAIL_ADDRESS = get_key(
 CACEM_EMAIL_ADDRESS = get_key(DOTENV_PATH, "CACEM_EMAIL_ADDRESS")
 CACEM_ANALYST_NAME = get_key(DOTENV_PATH, "CACEM_ANALYST_NAME")
 CACEM_ANALYST_EMAIL = get_key(DOTENV_PATH, "CACEM_ANALYST_EMAIL")
+# Recipient of the daily `Monitorenv - Legicem checkup` email
+LEGICEM_CHECKUP_EMAIL_ADDRESS = get_key(
+    DOTENV_PATH, "LEGICEM_CHECKUP_EMAIL_ADDRESS"
+)
 
 # Email actions to control units flow config
 EMAIL_ALL_UNITS = (
