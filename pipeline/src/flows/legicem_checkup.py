@@ -35,6 +35,9 @@ LEGICEM_ARTICLE_ID_REGEX = (
 
 EMAIL_SUBJECT = "[Monitorenv] Suivi des modifications Legicem"
 
+# Shown when an article is updated for the first time
+FIRST_UPDATE_LABEL = "Première mise à jour"
+
 REFERENCE_COLUMNS_LABELS = {
     "reference_type": "Type",
     "group_name": "Groupe",
@@ -99,6 +102,13 @@ def naive_utc_to_paris_string(dt: Optional[datetime.datetime]) -> Optional[str]:
         .astimezone(ZoneInfo("Europe/Paris"))
         .strftime("%d/%m/%Y %H:%M")
     )
+
+
+def iso_date_to_french_string(value) -> Optional[str]:
+    """'2026-10-30' (or `datetime.date`) -> '30/10/2026'. `None` if empty."""
+    if value is None or pd.isna(value):
+        return None
+    return pd.Timestamp(value).strftime("%d/%m/%Y")
 
 
 def to_html_table(df: pd.DataFrame) -> str:
@@ -279,19 +289,95 @@ def get_newly_missing_links(
 
 
 @task
+def get_updated_articles(
+    legicem: pd.DataFrame, references: pd.DataFrame
+) -> pd.DataFrame:
+    """
+    Returns the Legicem articles referenced by regulatory areas or AMPs of
+    Monitorenv whose update date changed between the `previous` and `latest`
+    extractions : the article was updated for the first time, or updated
+    again.
+
+    Articles present in only one of the two extractions, and articles whose
+    update date disappeared, are not considered.
+
+    The output has one row per (updated article, referencing area), with
+    formatted columns ready to be displayed in the email.
+    """
+    columns = list(REFERENCE_COLUMNS_LABELS) + [
+        "Référence réglementaire",
+        "Mise à jour précédente",
+        "Date de mise à jour",
+    ]
+
+    def updated_dates(occurence: str) -> pd.DataFrame:
+        # One row per page (the legicem table has one row per document)
+        return (
+            legicem.loc[
+                legicem.extraction_occurence == occurence,
+                ["article_id", "page_updated_date"],
+            ]
+            .dropna(subset=["article_id"])
+            .drop_duplicates(subset=["article_id"])
+            .assign(
+                page_updated_date=lambda df: df.page_updated_date.map(
+                    iso_date_to_french_string, na_action="ignore"
+                )
+            )
+        )
+
+    dates = pd.merge(
+        updated_dates("previous"),
+        updated_dates("latest"),
+        on="article_id",
+        suffixes=("_previous", "_latest"),
+    )
+    updated = dates[
+        dates.page_updated_date_latest.notna()
+        & (
+            dates.page_updated_date_previous.isna()
+            | (dates.page_updated_date_previous != dates.page_updated_date_latest)
+        )
+    ]
+
+    res = pd.merge(references, updated, on="article_id")
+    res["Référence réglementaire"] = make_html_hyperlinks(
+        res.url, res.reference
+    )
+    res["Mise à jour précédente"] = res.page_updated_date_previous.fillna(
+        FIRST_UPDATE_LABEL
+    )
+    res["Date de mise à jour"] = res.page_updated_date_latest
+
+    return (
+        res[columns]
+        .sort_values(list(REFERENCE_COLUMNS_LABELS) + ["Référence réglementaire"])
+        .rename(columns=REFERENCE_COLUMNS_LABELS)
+        .reset_index(drop=True)
+    )
+
+
+@task
 def has_changes(
-    modified_documents: pd.DataFrame, newly_missing_links: pd.DataFrame
+    modified_documents: pd.DataFrame,
+    newly_missing_links: pd.DataFrame,
+    updated_articles: pd.DataFrame,
 ) -> bool:
     """
     Returns `True` if Legicem changed since the previous extraction in a way
     that concerns Monitorenv : documents added to or removed from a referenced
-    page, or a referenced page that disappeared.
+    page, a referenced page that disappeared, or a referenced article whose
+    update date changed.
 
     Links that were already unknown in the previous extraction are not
     considered as changes, so that a dead link does not trigger an email every
     day.
     """
-    return len(modified_documents) > 0 or len(newly_missing_links) > 0
+    return (
+        len(modified_documents) > 0
+        or len(newly_missing_links) > 0
+        or len(updated_articles) > 0
+    )
 
 
 @task
@@ -314,6 +400,7 @@ def render(
     latest_extraction_datetime: Optional[str],
     n_references: int,
     modified_documents: pd.DataFrame,
+    updated_articles: pd.DataFrame,
     unknown_links: pd.DataFrame,
     utcnow: datetime.datetime,
 ) -> str:
@@ -327,6 +414,12 @@ def render(
         modified_documents=(
             to_html_table(modified_documents)
             if len(modified_documents) > 0
+            else None
+        ),
+        n_updated_articles=len(updated_articles),
+        updated_articles=(
+            to_html_table(updated_articles)
+            if len(updated_articles) > 0
             else None
         ),
         n_unknown_links=len(unknown_links),
@@ -387,6 +480,7 @@ def legicem_checkup_flow(
 
       - documents added to or removed from Legicem pages referenced by
         regulatory areas or AMPs of Monitorenv
+      - referenced Legicem articles whose update date changed
       - Legicem links of Monitorenv that were not found in the latest scraping
 
     No email is sent when there is no change (see `has_changes`).
@@ -416,9 +510,10 @@ def legicem_checkup_flow(
     )
     modified_documents = get_modified_documents(legicem, references)
     newly_missing_links = get_newly_missing_links(legicem, references)
+    updated_articles = get_updated_articles(legicem, references)
 
     if not send_if_no_change and not has_changes(
-        modified_documents, newly_missing_links
+        modified_documents, newly_missing_links, updated_articles
     ):
         logger.info("No change in Legicem since the previous extraction.")
         logger.info("No email sent.")
@@ -432,6 +527,7 @@ def legicem_checkup_flow(
         latest_extraction_datetime=latest_extraction_datetime,
         n_references=len(references),
         modified_documents=modified_documents,
+        updated_articles=updated_articles,
         unknown_links=unknown_links,
         utcnow=utcnow,
     )

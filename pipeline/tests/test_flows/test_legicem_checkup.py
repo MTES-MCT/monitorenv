@@ -13,6 +13,7 @@ from src.flows.legicem_checkup import (
     get_modified_documents,
     get_newly_missing_links,
     get_unknown_links,
+    get_updated_articles,
     has_changes,
     is_legicem_url,
     legicem_checkup_flow,
@@ -55,6 +56,9 @@ def legicem() -> pd.DataFrame:
                 f"{LEGICEM_URL}/ancien-arrete-a050.html",
                 URL_A101,
             ],
+            # Article 101 was updated for the first time between the two
+            # extractions
+            "page_updated_date": ["2026-10-21", None, None, None],
             "document_title": [
                 "Arrêté n°2026-101 - PDF",
                 None,
@@ -282,10 +286,104 @@ def test_has_changes(legicem, references):
     no_modified_documents = modified_documents.iloc[0:0]
     newly_missing_links = references.iloc[0:1]
     no_newly_missing_links = references.iloc[0:0]
+    updated_articles = get_updated_articles.fn(legicem, references)
+    no_updated_articles = updated_articles.iloc[0:0]
 
-    assert has_changes.fn(modified_documents, no_newly_missing_links)
-    assert has_changes.fn(no_modified_documents, newly_missing_links)
-    assert not has_changes.fn(no_modified_documents, no_newly_missing_links)
+    assert has_changes.fn(
+        modified_documents, no_newly_missing_links, no_updated_articles
+    )
+    assert has_changes.fn(
+        no_modified_documents, newly_missing_links, no_updated_articles
+    )
+    assert has_changes.fn(
+        no_modified_documents, no_newly_missing_links, updated_articles
+    )
+    assert not has_changes.fn(
+        no_modified_documents, no_newly_missing_links, no_updated_articles
+    )
+
+
+UPDATED_ARTICLES_COLUMNS = [
+    "Type",
+    "Groupe",
+    "Nom",
+    "Référence réglementaire",
+    "Mise à jour précédente",
+    "Date de mise à jour",
+]
+
+
+def with_updated_dates(
+    legicem: pd.DataFrame, previous: str, latest: str
+) -> pd.DataFrame:
+    """Sets the update dates of article 101 in both extractions."""
+    res = legicem.copy(deep=True)
+    is_101 = res.article_id == "101"
+    is_previous = res.extraction_occurence == "previous"
+    res.loc[is_101 & is_previous, "page_updated_date"] = previous
+    res.loc[is_101 & ~is_previous, "page_updated_date"] = latest
+    return res
+
+
+def test_get_updated_articles_first_update(legicem, references):
+    res = get_updated_articles.fn(legicem, references)
+
+    expected = pd.DataFrame(
+        {
+            "Type": ["Zone réglementaire"],
+            "Groupe": ["Mouillages Corse"],
+            "Nom": ["Zone de mouillage 1"],
+            "Référence réglementaire": [
+                f'<a href="{URL_A101}">Arrêté mouillages</a>'
+            ],
+            "Mise à jour précédente": ["Première mise à jour"],
+            "Date de mise à jour": ["21/10/2026"],
+        }
+    )
+    pd.testing.assert_frame_equal(res, expected)
+
+
+def test_get_updated_articles_new_update(legicem, references):
+    res = get_updated_articles.fn(
+        with_updated_dates(legicem, "2026-01-05", "2026-10-21"), references
+    )
+    assert res["Mise à jour précédente"].tolist() == ["05/01/2026"]
+    assert res["Date de mise à jour"].tolist() == ["21/10/2026"]
+
+
+@pytest.mark.parametrize(
+    "previous,latest",
+    [
+        # Same update date in both extractions
+        ("2026-10-21", "2026-10-21"),
+        # Never updated
+        (None, None),
+        # Update date that disappeared : not reported
+        ("2026-10-21", None),
+    ],
+)
+def test_get_updated_articles_no_update(legicem, references, previous, latest):
+    res = get_updated_articles.fn(
+        with_updated_dates(legicem, previous, latest), references
+    )
+    assert len(res) == 0
+    assert list(res.columns) == UPDATED_ARTICLES_COLUMNS
+
+
+def test_get_updated_articles_ignores_unreferenced_articles(
+    legicem, references
+):
+    res = get_updated_articles.fn(
+        legicem, references[references.article_id != "101"]
+    )
+    assert len(res) == 0
+
+
+def test_get_updated_articles_without_previous_extraction(
+    legicem, references
+):
+    latest_only = legicem[legicem.extraction_occurence == "latest"]
+    assert len(get_updated_articles.fn(latest_only, references)) == 0
 
 
 #################################### Flow #####################################
@@ -304,12 +402,25 @@ def no_change_in_legicem(insert_legicem_references):
                 """
                 DELETE FROM legicem WHERE extraction_occurence = 'previous';
 
-                INSERT INTO legicem
+                INSERT INTO legicem (
+                    extraction_datetime_utc,
+                    extraction_occurence,
+                    page_title,
+                    page_url,
+                    page_url_extranet,
+                    page_published_date,
+                    page_updated_date,
+                    document_title,
+                    document_url
+                )
                 SELECT
                     extraction_datetime_utc - INTERVAL '1 day',
                     'previous',
                     page_title,
                     page_url,
+                    page_url_extranet,
+                    page_published_date,
+                    page_updated_date,
                     document_title,
                     document_url
                 FROM legicem
@@ -342,6 +453,10 @@ def test_flow(insert_legicem_references):
     assert "Suppression de document" in html_content
     assert DOC_2025 in html_content
     assert DOC_2026 in html_content
+
+    # Article referenced by regulatory area 9001 updated for the first time
+    assert "1 article(s) Legicem" in html_content
+    assert "21/10/2026" in html_content
 
     # Legicem link of regulatory area 9002 not found in the latest scraping
     assert "1 lien(s) Legicem" in html_content
@@ -391,3 +506,44 @@ def test_flow_does_not_send_email_when_nothing_changed(no_change_in_legicem):
     assert state.is_completed()
     assert state.result() is None
     mock_send_email.assert_not_called()
+
+
+@pytest.fixture
+def only_update_date_changed(no_change_in_legicem):
+    """
+    Same documents in both extractions, but article 101 has an older update
+    date in the `previous` extraction.
+    """
+    e = create_engine("monitorenv_remote")
+    with e.begin() as connection:
+        connection.execute(
+            text(
+                """
+                UPDATE legicem
+                SET page_updated_date = '2026-10-01'
+                WHERE extraction_occurence = 'previous'
+                  AND page_url = :url_a101;
+                """
+            ),
+            {"url_a101": URL_A101},
+        )
+
+
+def test_flow_sends_email_when_only_update_date_changed(
+    only_update_date_changed,
+):
+    with patch(
+        "src.flows.legicem_checkup.send_email", return_value={}
+    ) as mock_send_email:
+        state = legicem_checkup_flow(is_integration=False, return_state=True)
+
+    assert state.is_completed()
+    mock_send_email.assert_called_once()
+
+    html_content = state.result().get_content()
+    assert "1 article(s) Legicem" in html_content
+    assert "01/10/2026" in html_content
+    assert "21/10/2026" in html_content
+    # No document was added or removed
+    assert "Ajout de document" not in html_content
+    assert "Suppression de document" not in html_content

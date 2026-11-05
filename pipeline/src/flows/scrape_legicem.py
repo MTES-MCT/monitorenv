@@ -29,7 +29,15 @@ SCRAPED_FILE_LOCATION = LIBRARY_LOCATION / "data"
 SCRAPED_FILENAME = "legicem.csv"
 SCRAPED_FILEPATH = SCRAPED_FILE_LOCATION / SCRAPED_FILENAME
 
-LEGICEM_COLUMNS = ["page_title", "page_url", "document_title", "document_url"]
+LEGICEM_COLUMNS = [
+    "page_title",
+    "page_url",
+    "page_url_extranet",
+    "page_published_date",
+    "page_updated_date",
+    "document_title",
+    "document_url",
+]
 
 FAILURE_EMAIL_SUBJECT = "[Monitorenv] Échec de l'extraction Legicem"
 

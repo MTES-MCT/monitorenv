@@ -3,6 +3,7 @@ SELECT
     extraction_occurence::VARCHAR AS extraction_occurence,
     page_title,
     page_url,
+    page_updated_date::VARCHAR AS page_updated_date,
     document_title,
     document_url
 FROM legicem

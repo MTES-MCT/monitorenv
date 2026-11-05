@@ -17,6 +17,7 @@ from src.flows.scrape_legicem import (
 from src.read_query import read_query
 
 LEGICEM_URL = "https://legicem.metier.e2.rie.gouv.fr"
+EXTRANET_URL = "https://extranet.legicem.metier.developpement-durable.gouv.fr"
 
 LEGICEM_QUERY = """
 SELECT
@@ -24,6 +25,9 @@ SELECT
     extraction_occurence::VARCHAR AS extraction_occurence,
     page_title,
     page_url,
+    page_url_extranet,
+    page_published_date::VARCHAR AS page_published_date,
+    page_updated_date::VARCHAR AS page_updated_date,
     document_title,
     document_url
 FROM legicem
@@ -77,6 +81,19 @@ def initial_legicem() -> pd.DataFrame:
                 f"{LEGICEM_URL}/ancien-arrete-a050.html",
                 f"{LEGICEM_URL}/arrete-prefectoral-mouillages-a101.html",
             ],
+            "page_url_extranet": [
+                f"{EXTRANET_URL}/arrete-prefectoral-mouillages-a101.html",
+                f"{EXTRANET_URL}/arrete-zone-de-baignade-a102.html",
+                f"{EXTRANET_URL}/ancien-arrete-a050.html",
+                f"{EXTRANET_URL}/arrete-prefectoral-mouillages-a101.html",
+            ],
+            "page_published_date": [
+                "2025-03-12",
+                "2026-09-15",
+                "2024-06-01",
+                "2025-03-12",
+            ],
+            "page_updated_date": ["2026-10-21", None, None, None],
             "document_title": [
                 "Arrêté n°2026-101 - PDF",
                 None,
@@ -125,6 +142,27 @@ def expected_final_legicem() -> pd.DataFrame:
                 f"{LEGICEM_URL}/arrete-prefectoral-mouillages-a101.html",
                 f"{LEGICEM_URL}/arrete-zone-de-baignade-a102.html",
             ],
+            "page_url_extranet": [
+                f"{EXTRANET_URL}/arrete-prefectoral-mouillages-a101.html",
+                f"{EXTRANET_URL}/arrete-prefectoral-mouillages-a101.html",
+                f"{EXTRANET_URL}/arrete-zone-de-baignade-a102.html",
+                f"{EXTRANET_URL}/arrete-prefectoral-mouillages-a101.html",
+                f"{EXTRANET_URL}/arrete-zone-de-baignade-a102.html",
+            ],
+            "page_published_date": [
+                "2025-03-12",
+                "2025-03-12",
+                "2026-09-15",
+                "2025-03-12",
+                "2026-09-15",
+            ],
+            "page_updated_date": [
+                "2026-10-30",
+                "2026-10-30",
+                None,
+                "2026-10-21",
+                None,
+            ],
             "document_title": [
                 "Annexe cartographique - PDF",
                 "Arrêté n°2026-101 - PDF",
@@ -152,6 +190,9 @@ def test_read_legicem_csv(tmp_path):
     assert list(legicem.columns) == [
         "page_title",
         "page_url",
+        "page_url_extranet",
+        "page_published_date",
+        "page_updated_date",
         "document_title",
         "document_url",
         "extraction_datetime_utc",
@@ -163,6 +204,7 @@ def test_read_legicem_csv(tmp_path):
     ).all()
     assert (legicem.extraction_occurence == "latest").all()
     assert legicem.document_url.isna().tolist() == [False, False, True]
+    assert legicem.page_updated_date.isna().tolist() == [False, False, True]
 
 
 def test_read_legicem_csv_raises_if_file_is_missing(tmp_path):
@@ -181,7 +223,11 @@ def test_read_legicem_csv_raises_if_file_is_empty(tmp_path):
 
 def test_read_legicem_csv_raises_if_file_has_no_rows(tmp_path):
     filepath = tmp_path / "legicem.csv"
-    filepath.write_text("page_title,page_url,document_title,document_url\n")
+    filepath.write_text(
+        "page_title,page_url,page_url_extranet,page_published_date,"
+        "page_updated_date,"
+        "document_title,document_url\n"
+    )
     with pytest.raises(ValueError, match="no rows"):
         read_legicem_csv.fn(filepath, MOCK_EXTRACTION_DATETIME_UTC)
 

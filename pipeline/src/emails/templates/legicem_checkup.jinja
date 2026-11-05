@@ -52,6 +52,25 @@
         {% endif %}
 
         <hr />
+        <h3>Articles mis à jour</h3>
+        {% if updated_articles %}
+        <p>
+            {{ n_updated_articles }} article(s) Legicem référencé(s) dans
+            Monitorenv ont une nouvelle date de mise à jour :
+        </p>
+        {{ updated_articles | safe }}
+        <p>
+            Le contenu de ces articles a pu changer sans ajout ni suppression de
+            document : pensez à vérifier les zones réglementaires et AMP
+            correspondantes.
+        </p>
+        {% elif previous_extraction_datetime %}
+        <p>
+            Aucun article Legicem référencé dans Monitorenv n'a été mis à jour.
+        </p>
+        {% endif %}
+
+        <hr />
         <h3>Liens Legicem introuvables</h3>
         {% if unknown_links %}
         <p>
