@@ -127,6 +127,67 @@ VALUES
     md5(COALESCE(st_multi (ST_SimplifyPreserveTopology (ST_CurveToLine ('MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))'::geometry), 0.00001))::text, '') || COALESCE('ref_reg2'::text, ''))
   );
 
+
+INSERT INTO
+  public.regulatory_areas (
+    id,
+    creation,
+    geom,
+    url,
+    layer_name,
+    facade,
+    ref_reg,
+    editeur,
+    source,
+    observation,
+    type,
+    date,
+    date_fin,
+    edition_cacem,
+    edition_bo,
+    resume,
+    poly_name,
+    plan,
+    authorization_periods,
+    prohibition_periods,
+    location,
+    area_type,
+    additional_ref_reg,
+    row_hash
+  )
+VALUES
+  (
+    1000000,
+    '2025-01-01',
+    /* creation */
+    'MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))',
+    'url3',
+    'layer_name2',
+    'NAMO',
+    'ref_reg3',
+    'editeur3',
+    'source3',
+    'obs3',
+    'type3',
+    '2025-01-13',
+    /* date */
+    '2026-04-13',
+    /* date_fin */
+    '2025-01-13',
+    /* edition_cacem */
+    '2025-07-21',
+    /* edition_bo */
+    'resume3',
+    'poly_name3 qui est différent du CACEM',
+    'plan3',
+    'période d''autorisation3',
+    'période de prohibition3',
+    'location2',
+    'GROUP',
+    null,
+    md5(COALESCE(st_multi (ST_SimplifyPreserveTopology (ST_CurveToLine ('MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))'::geometry), 0.00001))::text, '') || COALESCE('ref_reg2'::text, ''))
+  );
+
 INSERT INTO
   themes_regulatory_areas (regulatory_areas_id, themes_id)
 VALUES
