@@ -59,32 +59,34 @@ tag_final AS (
 SELECT
     ra.id,
     ra.creation::timestamp,
-    ra.url,
+    COALESCE(grp.url, ra.url)                           AS url,
     ra.layer_name,
     ra.facade,
-    ra.ref_reg,
+    COALESCE(grp.ref_reg, ra.ref_reg)                   AS ref_reg,
     GREATEST(ra.edition_bo::timestamp, ra.edition_cacem::timestamp) AS edition,
     ra.editeur,
     ra.source,
     ra.observation,
-    ra.date::timestamp,
-    ra.date_fin::timestamp,
-    ra.type,
-    ST_ASTEXT(ST_CurveToLine(ra.geom)) AS wkt,
+    COALESCE(grp.date, ra.date)::timestamp              AS date,
+    COALESCE(grp.date_fin, ra.date_fin)::timestamp      AS date_fin,
+    COALESCE(grp.type, ra.type)                         AS type,
+    ST_ASTEXT(ST_CurveToLine(ra.geom))                  AS wkt,
     ra.resume,
     ra.poly_name,
     ra.plan,
-    ra.geom AS geometry,
+    ra.geom                                             AS geometry,
     ra.authorization_periods,
     ra.prohibition_periods,
-    ra.additional_ref_reg,
+    COALESCE(grp.additional_ref_reg, ra.additional_ref_reg) AS additional_ref_reg,
     ra.location,
-    COALESCE(theme_final.themes_json, '{}'::jsonb) AS themes,
-    COALESCE(tag_final.tags_json, '{}'::jsonb) AS tags
+    COALESCE(theme_final.themes_json, '{}'::jsonb)      AS themes,
+    COALESCE(tag_final.tags_json, '{}'::jsonb)          AS tags
 FROM public.regulatory_areas ra
+LEFT JOIN public.regulatory_areas grp 
+  ON grp.layer_name = ra.layer_name 
+  AND grp.location = ra.location 
+  AND grp.area_type = 'GROUP'
 LEFT JOIN theme_final ON theme_final.ra_id = ra.id
-LEFT JOIN tag_final ON tag_final.ra_id = ra.id
+LEFT JOIN tag_final   ON tag_final.ra_id   = ra.id
 WHERE ra.layer_name IS NOT NULL
   AND ra.area_type = 'ZONE';
-
-

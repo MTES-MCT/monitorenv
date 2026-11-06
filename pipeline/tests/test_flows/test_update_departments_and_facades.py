@@ -77,15 +77,15 @@ def test_update_facade_and_department_for_regulatory_areas(reset_test_data):
 
     expected_initial_regulatory_areas = pd.DataFrame(
         {
-            "id": [1, 2],
-            "facade": ["MED", "NAMO"],
+            "id": [1, 2, 1000000],
+            "facade": ["MED", "NAMO", "NAMO"],
         }
     )
 
     expected_final_regulatory_areas = pd.DataFrame(
         {
-            "id": [1, 2],
-            "facade": ["Facade A", None],
+            "id": [1, 2, 1000000],
+            "facade": ["Facade A", None, None],
         }
     )
 
