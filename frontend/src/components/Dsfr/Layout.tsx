@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { paths } from '../../paths'
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
@@ -16,7 +18,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <div className="fr-header__service">
                   <p className="fr-header__service-title">MonitorEnv</p>
                   <p className="fr-header__service-tagline">
-                    Appuyer, orienter et coordiner les unités concourant à la surveillance et au contrôle de
+                    Appuyer, orienter et coordonner les unités concourant à la surveillance et au contrôle de
                     l&apos;environnement marin
                   </p>
                 </div>
@@ -54,6 +56,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 ))}
               </ul>
             </div>
+          </div>
+          <div className="fr-footer__bottom">
+            <ul className="fr-footer__bottom-list">
+              <li className="fr-footer__bottom-item">
+                <a className="fr-footer__bottom-link" href={paths.accessibilityStatement}>
+                  Accessibilité : non conforme
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </footer>

@@ -7,15 +7,12 @@ export function Register() {
   const goToLoginPage = () => {
     navigate('/login')
   }
+  const formUrl = () => import.meta.env.FRONTEND_FORM_USERS_EXT_URL
 
   return (
     <Wrapper>
       <span>
-        Merci de contacter{' '}
-        <a href="mailto:cacem@developpement-durable.gouv.fr?subject=Création de compte MonitorEnv">
-          cacem@developpement-durable.gouv.fr
-        </a>{' '}
-        pour accéder à MonitorEnv avec Proconnect.
+        Merci de remplir <a href={formUrl()}>ce formulaire</a> pour accéder à MonitorEnv avec Proconnect.
       </span>
       <Button onClick={goToLoginPage}>Retourner à la page de connexion</Button>
     </Wrapper>
@@ -37,6 +34,7 @@ const Wrapper = styled.div`
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
+
   > span > a {
     color: ${p => p.theme.color.white};
     text-decoration: underline;
