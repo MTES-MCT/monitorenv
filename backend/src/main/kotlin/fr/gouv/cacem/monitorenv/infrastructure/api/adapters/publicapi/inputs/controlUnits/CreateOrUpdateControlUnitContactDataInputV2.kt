@@ -5,10 +5,8 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.PatchableDataInput
 
 data class CreateOrUpdateControlUnitContactDataInputV2(
     val id: Int?,
-    val cellPhone: String?,
     val controlUnitId: Int,
     val email: String?,
-    val role: String?,
     val isEmailSubscriptionContact: Boolean,
     val isSmsSubscriptionContact: Boolean,
     val name: String?,
@@ -19,10 +17,8 @@ data class CreateOrUpdateControlUnitContactDataInputV2(
     fun toControlUnitContact(): ControlUnitContactEntity =
         ControlUnitContactEntity(
             id = this.id,
-            cellPhone = this.cellPhone,
             controlUnitId = this.controlUnitId,
             email = this.email,
-            role = this.role,
             isEmailSubscriptionContact = this.isEmailSubscriptionContact,
             isSmsSubscriptionContact = this.isSmsSubscriptionContact,
             name = this.name,
@@ -35,10 +31,8 @@ data class CreateOrUpdateControlUnitContactDataInputV2(
         ): CreateOrUpdateControlUnitContactDataInputV2 =
             CreateOrUpdateControlUnitContactDataInputV2(
                 id = controlUnitContact.id,
-                cellPhone = controlUnitContact.cellPhone,
                 controlUnitId = controlUnitContact.controlUnitId,
                 email = controlUnitContact.email,
-                role = controlUnitContact.role,
                 isEmailSubscriptionContact = controlUnitContact.isEmailSubscriptionContact,
                 isSmsSubscriptionContact = controlUnitContact.isSmsSubscriptionContact,
                 name = controlUnitContact.name,

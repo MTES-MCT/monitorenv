@@ -1,4 +1,4 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1
 
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitContact
@@ -26,16 +26,16 @@ import org.springframework.web.bind.annotation.RestController
 import tools.jackson.databind.json.JsonMapper
 
 @RestController
-@RequestMapping("/api")
-@Tag(name = "Public.Control Unit Contacts")
-class ControlUnitContacts(
+@RequestMapping("/api/v1/control_unit_contacts")
+@Tag(name = "Public.Control Unit Contacts V1")
+class ControlUnitContactsV1(
     private val createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact,
     private val deleteControlUnitContact: DeleteControlUnitContact,
     private val getControlUnitContacts: GetControlUnitContacts,
     private val getControlUnitContactById: GetControlUnitContactById,
     private val jsonMapper: JsonMapper,
 ) {
-    @PostMapping("/v1/control_unit_contacts", consumes = ["application/json"])
+    @PostMapping("", consumes = ["application/json"])
     @Operation(summary = "Create a control unit contact")
     @ResponseStatus(HttpStatus.CREATED)
     @Deprecated("Use POST /api/v2/control_unit_contacts")
@@ -45,22 +45,10 @@ class ControlUnitContacts(
         val newControlUnitContact = createControlUnitContactDataInput.toControlUnitContact()
         val createdControlUnitContact = createOrUpdateControlUnitContact.execute(newControlUnitContact)
 
-        return ControlUnitContactDataOutput.fromControlUnitContact(createdControlUnitContact)
+        return ControlUnitContactDataOutput.Companion.fromControlUnitContact(createdControlUnitContact)
     }
 
-    @PostMapping("/v2/control_unit_contacts", consumes = ["application/json"])
-    @Operation(summary = "Create a control unit contact")
-    @ResponseStatus(HttpStatus.CREATED)
-    fun createV2(
-        @RequestBody createControlUnitContactDataInput: CreateOrUpdateControlUnitContactDataInputV2,
-    ): ControlUnitContactDataOutput {
-        val newControlUnitContact = createControlUnitContactDataInput.toControlUnitContact()
-        val createdControlUnitContact = createOrUpdateControlUnitContact.execute(newControlUnitContact)
-
-        return ControlUnitContactDataOutput.fromControlUnitContact(createdControlUnitContact)
-    }
-
-    @DeleteMapping("/v1/control_unit_contacts/{controlUnitContactId}")
+    @DeleteMapping("/{controlUnitContactId}")
     @Operation(summary = "Delete a control unit contact")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteV1(
@@ -71,7 +59,7 @@ class ControlUnitContacts(
         deleteControlUnitContact.execute(controlUnitContactId)
     }
 
-    @GetMapping("/v1/control_unit_contacts/{controlUnitContactId}")
+    @GetMapping("/{controlUnitContactId}")
     @Operation(summary = "Get a control unit contact by its ID")
     fun getV1(
         @PathParam("Control unit contact ID")
@@ -80,18 +68,22 @@ class ControlUnitContacts(
     ): FullControlUnitContactDataOutput {
         val foundFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
 
-        return FullControlUnitContactDataOutput.fromFullControlUnitContact(foundFullControlUnitContact)
+        return FullControlUnitContactDataOutput.Companion.fromFullControlUnitContact(foundFullControlUnitContact)
     }
 
-    @GetMapping("/v1/control_unit_contacts")
+    @GetMapping("")
     @Operation(summary = "List control unit contacts")
     fun getAllV1(): List<FullControlUnitContactDataOutput> {
         val foundFullControlUnitContacts = getControlUnitContacts.execute()
 
-        return foundFullControlUnitContacts.map { FullControlUnitContactDataOutput.fromFullControlUnitContact(it) }
+        return foundFullControlUnitContacts.map {
+            FullControlUnitContactDataOutput.Companion.fromFullControlUnitContact(
+                it,
+            )
+        }
     }
 
-    @PatchMapping(value = ["/v1/control_unit_contacts/{controlUnitContactId}"], consumes = ["application/json"])
+    @PatchMapping(value = ["/{controlUnitContactId}"], consumes = ["application/json"])
     @Operation(summary = "Patch a control unit contact")
     fun patchV1(
         @PathParam("Control unit contact ID")
@@ -101,16 +93,16 @@ class ControlUnitContacts(
     ): ControlUnitContactDataOutput {
         val existingFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
         val patchedControlUnitContact =
-            CreateOrUpdateControlUnitContactDataInputV2
+            CreateOrUpdateControlUnitContactDataInputV2.Companion
                 .fromControlUnitContact(existingFullControlUnitContact.controlUnitContact)
                 .patchFromRequestData(jsonMapper, partialControlUnitContactAsJson)
                 .toControlUnitContact()
         val updatedControlUnitContact = createOrUpdateControlUnitContact.execute(patchedControlUnitContact)
 
-        return ControlUnitContactDataOutput.fromControlUnitContact(updatedControlUnitContact)
+        return ControlUnitContactDataOutput.Companion.fromControlUnitContact(updatedControlUnitContact)
     }
 
-    @PutMapping(value = ["/v1/control_unit_contacts/{controlUnitContactId}"], consumes = ["application/json"])
+    @PutMapping(value = ["/{controlUnitContactId}"], consumes = ["application/json"])
     @Operation(summary = "Update a control unit contact")
     @Deprecated("Use PATCH /api/v2/control_unit_contacts/{controlUnitContactId}")
     fun updateV1(
@@ -123,12 +115,12 @@ class ControlUnitContacts(
 
         val existingFullControlUnitContact = getControlUnitContactById.execute(controlUnitContactId)
         val patchedControlUnitContact =
-            CreateOrUpdateControlUnitContactDataInputV2
+            CreateOrUpdateControlUnitContactDataInputV2.Companion
                 .fromControlUnitContact(existingFullControlUnitContact.controlUnitContact)
                 .patchFromRequestData(jsonMapper, incompleteControlUnitContactAsJson)
                 .toControlUnitContact()
         val updatedControlUnitContact = createOrUpdateControlUnitContact.execute(patchedControlUnitContact)
 
-        return ControlUnitContactDataOutput.fromControlUnitContact(updatedControlUnitContact)
+        return ControlUnitContactDataOutput.Companion.fromControlUnitContact(updatedControlUnitContact)
     }
 }

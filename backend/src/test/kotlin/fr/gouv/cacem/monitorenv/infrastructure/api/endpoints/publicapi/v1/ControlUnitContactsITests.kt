@@ -1,22 +1,20 @@
-package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
+package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1
 
 import fr.gouv.cacem.monitorenv.config.MapperConfiguration
 import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitContactEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
-import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
+import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.CreateOrUpdateControlUnitContact
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.DeleteControlUnitContact
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContactById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitContacts
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitContactDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateControlUnitContactDataInputV1
-import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateOrUpdateControlUnitContactDataInputV2
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito
-import org.mockito.BDDMockito.given
-import org.mockito.Mockito.mock
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
@@ -24,18 +22,14 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import tools.jackson.databind.json.JsonMapper
 
 @Import(SentryConfig::class, MapperConfiguration::class)
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(value = [(ControlUnitContacts::class)])
+@WebMvcTest(value = [(ControlUnitContactsV1::class)])
 class ControlUnitContactsITests {
     @Autowired
     private lateinit var mockMvc: MockMvc
@@ -44,16 +38,16 @@ class ControlUnitContactsITests {
     private lateinit var jsonMapper: JsonMapper
 
     @MockitoBean
-    private val createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact = mock()
+    private val createOrUpdateControlUnitContact: CreateOrUpdateControlUnitContact = Mockito.mock()
 
     @MockitoBean
-    private val deleteControlUnitContact: DeleteControlUnitContact = mock()
+    private val deleteControlUnitContact: DeleteControlUnitContact = Mockito.mock()
 
     @MockitoBean
-    private val getControlUnitContactById: GetControlUnitContactById = mock()
+    private val getControlUnitContactById: GetControlUnitContactById = Mockito.mock()
 
     @MockitoBean
-    private val getControlUnitContacts: GetControlUnitContacts = mock()
+    private val getControlUnitContacts: GetControlUnitContacts = Mockito.mock()
 
     @Test
     fun `createV1 should create a contact`() {
@@ -61,10 +55,8 @@ class ControlUnitContactsITests {
         val requestDataAsDataInput =
             CreateControlUnitContactDataInputV1(
                 id = null,
-                cellPhone = "0762982109",
                 controlUnitId = 2,
                 email = "bob@example.org",
-                role = "Function Name",
                 name = "Contact Name",
                 phone = "0033123456789",
             )
@@ -73,10 +65,8 @@ class ControlUnitContactsITests {
         val useCaseInputExpectation =
             ControlUnitContactEntity(
                 id = null,
-                cellPhone = "0762982109",
                 controlUnitId = 2,
                 email = "bob@example.org",
-                role = "Function Name",
                 isEmailSubscriptionContact = false,
                 isSmsSubscriptionContact = false,
                 name = "Contact Name",
@@ -86,62 +76,15 @@ class ControlUnitContactsITests {
             useCaseInputExpectation.copy(
                 id = 1,
             )
-        given(createOrUpdateControlUnitContact.execute(useCaseInputExpectation))
+        BDDMockito
+            .given(createOrUpdateControlUnitContact.execute(useCaseInputExpectation))
             .willReturn(useCaseOutputMock)
 
         // When
         mockMvc
             .perform(
-                post("/api/v1/control_unit_contacts")
-                    .content(requestDataAsJson)
-                    .contentType(MediaType.APPLICATION_JSON),
-            ).andDo(MockMvcResultHandlers.print())
-            // Then
-            .andExpect(MockMvcResultMatchers.status().isCreated)
-
-        BDDMockito.verify(createOrUpdateControlUnitContact).execute(useCaseInputExpectation)
-    }
-
-    @Test
-    fun `createV2 should create a contact`() {
-        // Given
-        val newControlUnitContactData =
-            CreateOrUpdateControlUnitContactDataInputV2(
-                id = null,
-                cellPhone = "0762982109",
-                controlUnitId = 2,
-                email = "bob@example.org",
-                role = "Function Name",
-                isEmailSubscriptionContact = false,
-                isSmsSubscriptionContact = false,
-                name = "Contact Name",
-                phone = "0033123456789",
-            )
-        val requestDataAsJson = jsonMapper.writeValueAsString(newControlUnitContactData)
-
-        val useCaseInputExpectation =
-            ControlUnitContactEntity(
-                id = null,
-                cellPhone = "0762982109",
-                controlUnitId = 2,
-                email = "bob@example.org",
-                role = "Function Name",
-                isEmailSubscriptionContact = false,
-                isSmsSubscriptionContact = false,
-                name = "Contact Name",
-                phone = "0033123456789",
-            )
-        val useCaseOutputMock =
-            useCaseInputExpectation.copy(
-                id = 1,
-            )
-        given(createOrUpdateControlUnitContact.execute(useCaseInputExpectation))
-            .willReturn(useCaseOutputMock)
-
-        // When
-        mockMvc
-            .perform(
-                post("/api/v2/control_unit_contacts")
+                MockMvcRequestBuilders
+                    .post("/api/v1/control_unit_contacts")
                     .content(requestDataAsJson)
                     .contentType(MediaType.APPLICATION_JSON),
             ).andDo(MockMvcResultHandlers.print())
@@ -158,7 +101,7 @@ class ControlUnitContactsITests {
 
         // When
         mockMvc
-            .perform(delete("/api/v1/control_unit_contacts/$requestedId"))
+            .perform(MockMvcRequestBuilders.delete("/api/v1/control_unit_contacts/$requestedId"))
             .andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isNoContent)
@@ -177,7 +120,7 @@ class ControlUnitContactsITests {
                     ControlUnitEntity(
                         id = 2,
                         administrationId = 3,
-                        administration = anAdministration(),
+                        administration = AdministrationFixture.Companion.anAdministration(),
                         areaNote = null,
                         departmentAreaInseeCode = null,
                         isArchived = false,
@@ -187,21 +130,19 @@ class ControlUnitContactsITests {
                 controlUnitContact =
                     ControlUnitContactEntity(
                         id = 1,
-                        cellPhone = "0762982109",
                         controlUnitId = 2,
                         email = "bob@example.org",
-                        role = "Function Name",
                         isEmailSubscriptionContact = false,
                         isSmsSubscriptionContact = false,
                         name = "Contact Name",
                         phone = "0033123456789",
                     ),
             )
-        given(getControlUnitContactById.execute(requestedId)).willReturn(useCaseOutputMock)
+        BDDMockito.given(getControlUnitContactById.execute(requestedId)).willReturn(useCaseOutputMock)
 
         // When
         mockMvc
-            .perform(get("/api/v1/control_unit_contacts/$requestedId"))
+            .perform(MockMvcRequestBuilders.get("/api/v1/control_unit_contacts/$requestedId"))
             .andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -219,7 +160,7 @@ class ControlUnitContactsITests {
                         ControlUnitEntity(
                             id = 2,
                             administrationId = 3,
-                            administration = anAdministration(),
+                            administration = AdministrationFixture.Companion.anAdministration(),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -229,10 +170,8 @@ class ControlUnitContactsITests {
                     controlUnitContact =
                         ControlUnitContactEntity(
                             id = 1,
-                            cellPhone = "0762982109",
                             controlUnitId = 2,
                             email = "bob@example.org",
-                            role = "Function Name",
                             isEmailSubscriptionContact = false,
                             isSmsSubscriptionContact = false,
                             name = "Contact Name",
@@ -244,7 +183,7 @@ class ControlUnitContactsITests {
                         ControlUnitEntity(
                             id = 5,
                             administrationId = 6,
-                            administration = anAdministration(),
+                            administration = AdministrationFixture.Companion.anAdministration(),
                             areaNote = null,
                             departmentAreaInseeCode = null,
                             isArchived = false,
@@ -254,10 +193,8 @@ class ControlUnitContactsITests {
                     controlUnitContact =
                         ControlUnitContactEntity(
                             id = 4,
-                            cellPhone = "0762982109",
                             controlUnitId = 5,
                             email = "bob@example.org",
-                            role = "Function Name",
                             isEmailSubscriptionContact = false,
                             isSmsSubscriptionContact = false,
                             name = "Contact Name 2",
@@ -265,11 +202,11 @@ class ControlUnitContactsITests {
                         ),
                 ),
             )
-        given(getControlUnitContacts.execute()).willReturn(useCaseOutputMock)
+        BDDMockito.given(getControlUnitContacts.execute()).willReturn(useCaseOutputMock)
 
         // When
         mockMvc
-            .perform(get("/api/v1/control_unit_contacts"))
+            .perform(MockMvcRequestBuilders.get("/api/v1/control_unit_contacts"))
             .andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(MockMvcResultMatchers.status().isOk)
@@ -296,7 +233,7 @@ class ControlUnitContactsITests {
                     ControlUnitEntity(
                         id = 2,
                         administrationId = 3,
-                        administration = anAdministration(),
+                        administration = AdministrationFixture.Companion.anAdministration(),
                         areaNote = "Area Note",
                         departmentAreaInseeCode = "12345",
                         isArchived = false,
@@ -306,39 +243,38 @@ class ControlUnitContactsITests {
                 controlUnitContact =
                     ControlUnitContactEntity(
                         id = 1,
-                        cellPhone = "0762982109",
                         controlUnitId = 2,
                         email = "bob@example.org",
-                        role = "Function Name",
                         isEmailSubscriptionContact = false,
                         isSmsSubscriptionContact = false,
                         name = "Contact Name",
                         phone = "0033123456789",
                     ),
             )
-        given(getControlUnitContactById.execute(requestedId))
+        BDDMockito
+            .given(getControlUnitContactById.execute(requestedId))
             .willReturn(firstUseCaseOutputMock)
 
         val secondUseCaseInputExpectation =
             ControlUnitContactEntity(
                 id = 1,
                 controlUnitId = 2,
-                cellPhone = "0762982109",
                 email = "bob@example.org",
                 isEmailSubscriptionContact = false,
                 isSmsSubscriptionContact = false,
                 name = "Updated Contact Name", // Updated property
                 phone = "0033123456789",
-                role = "Function Name",
             )
         val secondUseCaseOutputMock = secondUseCaseInputExpectation
-        given(createOrUpdateControlUnitContact.execute(secondUseCaseInputExpectation))
+        BDDMockito
+            .given(createOrUpdateControlUnitContact.execute(secondUseCaseInputExpectation))
             .willReturn(secondUseCaseOutputMock)
 
         // When
         mockMvc
             .perform(
-                patch("/api/v1/control_unit_contacts/$requestedId")
+                MockMvcRequestBuilders
+                    .patch("/api/v1/control_unit_contacts/$requestedId")
                     .content(requestDataAsJson)
                     .contentType(MediaType.APPLICATION_JSON),
             ).andDo(MockMvcResultHandlers.print())
@@ -372,7 +308,7 @@ class ControlUnitContactsITests {
                     ControlUnitEntity(
                         id = 2,
                         administrationId = 3,
-                        administration = anAdministration(),
+                        administration = AdministrationFixture.Companion.anAdministration(),
                         areaNote = "Area Note",
                         departmentAreaInseeCode = "12345",
                         isArchived = false,
@@ -382,17 +318,16 @@ class ControlUnitContactsITests {
                 controlUnitContact =
                     ControlUnitContactEntity(
                         id = 1,
-                        cellPhone = "0762982109",
                         controlUnitId = 2,
                         email = "bob@example.org",
-                        role = "Function Name",
                         isEmailSubscriptionContact = false,
                         isSmsSubscriptionContact = false,
                         name = "Contact Name",
                         phone = "0033123456789",
                     ),
             )
-        given(getControlUnitContactById.execute(requestedId))
+        BDDMockito
+            .given(getControlUnitContactById.execute(requestedId))
             .willReturn(firstUseCaseOutputMock)
 
         val secondUseCaseInputExpectation =
@@ -404,17 +339,17 @@ class ControlUnitContactsITests {
                 isSmsSubscriptionContact = false,
                 name = "Updated Contact Name", // Updated property
                 phone = "0033123456789",
-                cellPhone = "0762982109",
-                role = "Updated Function Name", // Updated property
             )
         val secondUseCaseOutputMock = secondUseCaseInputExpectation
-        given(createOrUpdateControlUnitContact.execute(secondUseCaseInputExpectation))
+        BDDMockito
+            .given(createOrUpdateControlUnitContact.execute(secondUseCaseInputExpectation))
             .willReturn(secondUseCaseOutputMock)
 
         // When
         mockMvc
             .perform(
-                put("/api/v1/control_unit_contacts/$requestedId")
+                MockMvcRequestBuilders
+                    .put("/api/v1/control_unit_contacts/$requestedId")
                     .content(requestDataAsJson)
                     .contentType(MediaType.APPLICATION_JSON),
             ).andDo(MockMvcResultHandlers.print())
