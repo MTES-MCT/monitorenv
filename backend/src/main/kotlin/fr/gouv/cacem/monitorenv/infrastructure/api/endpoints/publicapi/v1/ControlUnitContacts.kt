@@ -104,7 +104,7 @@ class ControlUnitContactsV1(
 
     @PutMapping(value = ["/{controlUnitContactId}"], consumes = ["application/json"])
     @Operation(summary = "Update a control unit contact")
-    @Deprecated("Use PATCH /api/v2/control_unit_contacts/{controlUnitContactId}")
+    @Deprecated("Use PATCH /api/v3/control_unit_contacts/{controlUnitContactId}")
     fun updateV1(
         @PathParam("Control unit contact ID")
         @PathVariable(name = "controlUnitContactId")

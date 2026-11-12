@@ -14,7 +14,7 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
       query: newControlUnitContactData => ({
         body: newControlUnitContactData,
         method: 'POST',
-        url: `/v2/control_unit_contacts`
+        url: `/v3/control_unit_contacts`
       })
     }),
 
@@ -63,7 +63,7 @@ export const controlUnitContactsAPI = monitorenvPublicApi.injectEndpoints({
       query: nextControlUnitContactData => ({
         body: nextControlUnitContactData,
         method: 'PATCH',
-        url: `/v1/control_unit_contacts/${nextControlUnitContactData.id}`
+        url: `/v2/control_unit_contacts/${nextControlUnitContactData.id}`
       })
     })
   })
