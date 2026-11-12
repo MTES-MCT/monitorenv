@@ -1,5 +1,6 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.authorization
 
+import fr.gouv.cacem.monitorenv.config.OIDCProperties
 import fr.gouv.cacem.monitorenv.config.UseCase
 import fr.gouv.cacem.monitorenv.domain.entities.authorization.AuthorizedUser
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
@@ -11,16 +12,19 @@ import org.slf4j.LoggerFactory
 @UseCase
 class GetAuthorizedUser(
     private val userAuthorizationRepository: IUserAuthorizationRepository,
+    private val oidcProperties: OIDCProperties
 ) {
     private val logger = LoggerFactory.getLogger(GetAuthorizedUser::class.java)
 
     fun execute(email: String?): AuthorizedUser {
-        if (email == null) {
-            logger.info("⚠ No email provided (OIDC disabled), defaulting to super-user=true")
+        if (oidcProperties.enabled == false) {
             return AuthorizedUser(
                 email = null,
                 isSuperUser = true,
             )
+        }
+        if (email == null) {
+            throw IllegalArgumentException("email cannot be null")
         }
         val hashedEmail = hash(email)
         logger.info("Attempt to GET user $hashedEmail")

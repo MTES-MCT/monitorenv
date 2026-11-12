@@ -13,17 +13,17 @@ import org.springframework.stereotype.Repository
 class JpaUserAuthorizationRepository(
     private val dbUserAuthorizationRepository: IDBUserAuthorizationRepository,
 ) : IUserAuthorizationRepository {
-    @Cacheable(value = ["user_authorization"])
+    @Cacheable(value = ["user_authorization"], key = "#hashedEmail")
     override fun findByHashedEmail(hashedEmail: String): UserAuthorization? =
         dbUserAuthorizationRepository.findByHashedEmail(hashedEmail)?.toUserAuthorization()
 
-    @CacheEvict(value = ["user_authorization"])
+    @CacheEvict(value = ["user_authorization"], key = "#user.hashedEmail")
     @Modifying
     override fun save(user: UserAuthorization) {
         dbUserAuthorizationRepository.save(UserAuthorizationModel.fromUserAuthorization(user))
     }
 
-    @CacheEvict(value = ["user_authorization"])
+    @CacheEvict(value = ["user_authorization"], allEntries = true)
     @Modifying
     override fun saveAll(users: List<UserAuthorization>) {
         dbUserAuthorizationRepository.saveAll(
@@ -35,7 +35,7 @@ class JpaUserAuthorizationRepository(
         )
     }
 
-    @CacheEvict(value = ["user_authorization"])
+    @CacheEvict(value = ["user_authorization"], key = "#hashedEmail")
     @Modifying
     override fun delete(hashedEmail: String) {
         dbUserAuthorizationRepository.deleteById(hashedEmail)

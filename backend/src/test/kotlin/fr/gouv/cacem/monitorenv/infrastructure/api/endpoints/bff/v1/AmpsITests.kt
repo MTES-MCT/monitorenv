@@ -1,22 +1,22 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.nhaarman.mockitokotlin2.given
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.amp.AMPEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPs
 import fr.gouv.cacem.monitorenv.domain.use_cases.amps.GetAllAMPsByIds
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.amps.AmpByIdsDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -26,10 +26,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+
 @WebMvcTest(value = [(Amps::class)])
-class AmpsITests {
+@WithMockUser
+class AmpsITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -56,6 +56,14 @@ class AmpsITests {
             type = "mon type",
             urlLegicem = "mon url legicem",
         )
+
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(get("/bff/v1/amps"))
+            .andExpect(status().isForbidden)
+    }
 
     @Test
     fun `should return AMPs as json`() {
@@ -101,6 +109,7 @@ class AmpsITests {
             .perform(
                 MockMvcRequestBuilders
                     .post("/bff/v1/amps")
+                    .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(body)),
             ).andDo(MockMvcResultHandlers.print())

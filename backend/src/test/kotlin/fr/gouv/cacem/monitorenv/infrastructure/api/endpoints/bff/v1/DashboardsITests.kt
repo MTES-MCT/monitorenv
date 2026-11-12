@@ -2,8 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.nhaarman.mockitokotlin2.given
 import com.nhaarman.mockitokotlin2.verify
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.BriefFileEntity
 import fr.gouv.cacem.monitorenv.domain.entities.dashboard.EditableBriefRecentActivityEntity
@@ -19,16 +17,17 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.SaveDashboard
 import fr.gouv.cacem.monitorenv.domain.use_cases.dashboard.fixtures.DashboardFixture.Companion.aDashboard
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.DashboardDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.dashboards.ImageDataInput
-import io.ktor.util.*
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasSize
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.io.WKTReader
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -41,11 +40,11 @@ import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
+import kotlin.io.encoding.Base64
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser(roles = ["SUPER_USER"])
 @WebMvcTest(value = [(Dashboards::class)])
-class DashboardsITests {
+class DashboardsITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -71,6 +70,26 @@ class DashboardsITests {
     private lateinit var jsonMapper: JsonMapper
 
     val geometry = "MULTIPOINT ((-1.548 44.315),(-1.245 44.305))"
+
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(
+                get("/bff/v1/dashboards").contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isForbidden)
+    }
+
+    @Test
+    @WithMockUser
+    fun `getAll() should return 403 when the user is authenticated with role USER`() {
+        mockMvc
+            .perform(
+                get("/bff/v1/dashboards").contentType(MediaType.APPLICATION_JSON),
+            )
+            .andExpect(status().isForbidden)
+    }
 
     @Test
     fun `extract should response ok with reportings, regulatory areas, amps, vigilance area and departement that intersect the given geometry`() {
@@ -230,7 +249,7 @@ class DashboardsITests {
                         ImageEntity(
                             id = imageId,
                             name = "image1",
-                            content = "content1".decodeBase64Bytes(),
+                            content = Base64.decode("content1"),
                             size = 1,
                             mimeType = MediaType.IMAGE_JPEG.toString(),
                         ),
@@ -242,6 +261,7 @@ class DashboardsITests {
         mockMvc
             .perform(
                 put("/bff/v1/dashboards")
+                    .with(csrf())
                     .content(jsonMapper.writeValueAsString(input))
                     .contentType(MediaType.APPLICATION_JSON),
             )
@@ -352,12 +372,30 @@ class DashboardsITests {
         // When
         mockMvc
             .perform(
-                delete("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON),
+                delete("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
 
         verify(deleteDashboard).execute(id)
+    }
+
+    @WithMockUser(roles = ["USER"])
+    @Test
+    fun `delete response should be forbidden if user is not superuser`() {
+        // Given
+        val id = UUID.randomUUID()
+
+        // When
+        mockMvc
+            .perform(
+                delete("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
+            )
+            // Then
+            .andExpect(status().isForbidden)
+
     }
 
     @Test
@@ -396,6 +434,7 @@ class DashboardsITests {
         mockMvc
             .perform(
                 post("/bff/v1/dashboards/export-brief")
+                    .with(csrf())
                     .content(jsonMapper.writeValueAsString(brief))
                     .contentType(MediaType.APPLICATION_JSON),
             )

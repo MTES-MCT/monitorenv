@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties(prefix = "monitorenv.api.protected")
 class ProtectedPathsAPIProperties {
     var paths: List<String> = listOf()
-    var superUserPaths: List<String> = listOf()
     var publicPaths: List<String> = listOf()
     var apiKey: String = ""
 }

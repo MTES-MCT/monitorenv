@@ -2,8 +2,6 @@ package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.files.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.reporting.ReportingEntity
@@ -31,6 +29,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reporting
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ImageDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.reportings.ReportingSourceDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.Reportings
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.reportings.SSEReporting
 import org.assertj.core.api.Assertions
@@ -41,11 +40,12 @@ import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -60,12 +60,11 @@ import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import kotlin.io.encoding.Base64
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser
 @WebMvcTest(value = [Reportings::class, SSEReporting::class])
-class ReportingsITests {
+class ReportingsITests : AbstractEndpointTests() {
     @Autowired
-    private lateinit var mockedApi: MockMvc
+    private lateinit var mockMvc: MockMvc
 
     @Autowired
     private lateinit var jsonMapper: JsonMapper
@@ -100,6 +99,82 @@ class ReportingsITests {
     @Autowired
     private lateinit var sseReporting: SSEReporting
 
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(get("/bff/v1/reportings"))
+            .andExpect(status().isForbidden)
+    }
+
+    @Test
+    @WithMockUser
+    fun `create() should return 403 when the user is authenticated with role USER`() {
+
+        val request =
+            CreateOrUpdateReportingDataInput(
+                reportingSources =
+                    listOf(
+                        ReportingSourceDataInput(
+                            id = null,
+                            sourceType = SourceTypeEnum.SEMAPHORE,
+                            semaphoreId = 1,
+                            reportingId = null,
+                            controlUnitId = null,
+                            sourceName = null,
+                        ),
+                    ),
+                targetType = TargetTypeEnum.VEHICLE,
+                vehicleType = VehicleTypeEnum.VESSEL,
+                geom = WKTReader()
+                    .read(
+                        "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
+                    ),
+                description = "description",
+                reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
+                actionTaken = "actions effectuées blabla",
+                isControlRequired = true,
+                hasNoUnitAvailable = true,
+                createdAt =
+                    ZonedDateTime.parse(
+                        "2022-01-15T04:50:09Z",
+                    ),
+                validityTime = 10,
+                isArchived = false,
+                openBy = "CDA",
+                updatedAtUtc =
+                    ZonedDateTime.parse(
+                        "2022-01-15T14:50:09Z",
+                    ),
+                isInfractionProven = true,
+                tags = emptyList(),
+                theme = ThemeInput(id = 1, name = "theme", startedAt = null, endedAt = null),
+                images =
+                    listOf(
+                        ImageDataInput(
+                            id = 1,
+                            content = Base64.encode("TEST".toByteArray()),
+                            mimeType = "images/jpeg",
+                            name = "fichier1",
+                            size = 1024,
+                        ),
+                    ),
+            )
+        mockMvc
+            .perform(
+                put("/bff/v1/reportings")
+                    .contentType(
+                        MediaType.APPLICATION_JSON,
+                    ).content(
+                        jsonMapper.writeValueAsString(
+                            request,
+                        ),
+                    ).with(csrf()),
+            )
+            .andExpect(status().isForbidden)
+    }
+
+    @WithMockUser(roles = ["SUPER_USER"])
     @Test
     fun `Should create a new Reporting`() {
         // Given
@@ -165,7 +240,7 @@ class ReportingsITests {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                            Point,
+                                                Point,
                                 ),
                             controlUnit = null,
                         ),
@@ -221,7 +296,7 @@ class ReportingsITests {
 
         given(createOrUpdateReporting.execute(any())).willReturn(reporting)
         // When
-        mockedApi
+        mockMvc
             .perform(
                 put("/bff/v1/reportings")
                     .contentType(
@@ -230,7 +305,7 @@ class ReportingsITests {
                         jsonMapper.writeValueAsString(
                             request,
                         ),
-                    ),
+                    ).with(csrf()),
             )
             // Then
             .andExpect(status().isCreated)
@@ -321,7 +396,7 @@ class ReportingsITests {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                            Point,
+                                                Point,
                                 ),
                             controlUnit = null,
                         ),
@@ -331,7 +406,7 @@ class ReportingsITests {
         given(getReportingById.execute(any())).willReturn(reporting)
 
         // When
-        mockedApi
+        mockMvc
             .perform(
                 get("/bff/v1/reportings/1")
                     .contentType(
@@ -428,12 +503,13 @@ class ReportingsITests {
         ).willReturn(listOf(reporting))
 
         // When
-        mockedApi
+        mockMvc
             .perform(get("/bff/v1/reportings"))
             // Then
             .andExpect(status().isOk)
     }
 
+    @WithMockUser(roles = ["SUPER_USER"])
     @Test
     fun `Should update a reporting`() {
         // Given
@@ -535,13 +611,13 @@ class ReportingsITests {
         given(createOrUpdateReporting.execute(any())).willReturn(updatedReporting)
 
         // When
-        mockedApi
+        mockMvc
             .perform(
                 put("/bff/v1/reportings/1")
                     .content(updateRequestBody)
                     .contentType(
                         MediaType.APPLICATION_JSON,
-                    ),
+                    ).with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -567,25 +643,27 @@ class ReportingsITests {
             .andExpect(jsonPath("$.theme.name").value("theme"))
     }
 
+    @WithMockUser(roles = ["SUPER_USER"])
     @Test
     fun `Should delete a reporting`() {
         // When
-        mockedApi
-            .perform(delete("/bff/v1/reportings/123"))
+        mockMvc
+            .perform(delete("/bff/v1/reportings/123").with(csrf()))
             // Then
             .andExpect(status().isNoContent())
 
         Mockito.verify(deleteReporting).execute(123)
     }
 
+    @WithMockUser(roles = ["SUPER_USER"])
     @Test
     fun `Should archive multiple reportings`() {
         // When
-        mockedApi
+        mockMvc
             .perform(
                 put("/bff/v1/reportings/archive")
                     .content(jsonMapper.writeValueAsString(listOf(1, 2, 3)))
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
             )
             // Then
             .andExpect(status().isNoContent())
@@ -593,14 +671,15 @@ class ReportingsITests {
         Mockito.verify(archiveReportings).execute(listOf(1, 2, 3))
     }
 
+    @WithMockUser(roles = ["SUPER_USER"])
     @Test
     fun `Should delete multiple reportings`() {
         // When
-        mockedApi
+        mockMvc
             .perform(
                 put("/bff/v1/reportings/delete")
                     .content(jsonMapper.writeValueAsString(listOf(1, 2, 3)))
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
             )
             // Then
             .andExpect(status().isNoContent())
@@ -620,11 +699,11 @@ class ReportingsITests {
             ),
         )
         // When
-        mockedApi
+        mockMvc
             .perform(
                 post("/bff/v1/reportings")
                     .content(jsonMapper.writeValueAsString(ids))
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -633,6 +712,7 @@ class ReportingsITests {
             .andExpect(jsonPath("$[2].id").value(3))
     }
 
+    @WithMockUser(roles = ["SUPER_USER"])
     @Test
     fun `Should retrieve reportings that match mmsi`() {
         // Given
@@ -643,7 +723,7 @@ class ReportingsITests {
             ),
         )
         // When
-        mockedApi
+        mockMvc
             .perform(
                 get("/bff/v1/reportings/mmsi/$mmsi")
                     .contentType(MediaType.APPLICATION_JSON),
@@ -652,6 +732,7 @@ class ReportingsITests {
             .andExpect(status().isOk)
     }
 
+    @WithMockUser(roles = ["SUPER_USER"])
     @Test
     fun `Should receive an event When listening to reporting updates`() {
         // Given
@@ -723,7 +804,7 @@ class ReportingsITests {
 
         // Then
         val reportingUpdateEvent =
-            mockedApi
+            mockMvc
                 .perform(get("/bff/reportings/sse"))
                 .andExpect(status().isOk)
                 .andExpect(MockMvcResultMatchers.request().asyncStarted())

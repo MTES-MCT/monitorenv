@@ -1,18 +1,18 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.natinf.NatinfEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetAllNatinfs
 import fr.gouv.cacem.monitorenv.domain.use_cases.natinfs.GetNatinfsByThemes
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -21,10 +21,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser(roles = ["SUPER_USER"])
 @WebMvcTest(value = [(Natinfs::class)])
-class NatinfsITests {
+class NatinfsITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -36,6 +35,22 @@ class NatinfsITests {
 
     @MockitoBean
     private lateinit var getNatinfsByThemes: GetNatinfsByThemes
+
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(get("/bff/v1/natinfs"))
+            .andExpect(status().isForbidden)
+    }
+
+    @Test
+    @WithMockUser
+    fun `getAll() should return 403 when the user is authenticated with role USER`() {
+        mockMvc
+            .perform(get("/bff/v1/natinfs"))
+            .andExpect(status().isForbidden)
+    }
 
     @Test
     fun `Should get all infractions`() {
@@ -78,7 +93,7 @@ class NatinfsITests {
             .perform(
                 post("/bff/v1/natinfs/themes")
                     .content(jsonMapper.writeValueAsString(themeIds))
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
             )
             // Then
             .andExpect(status().isOk)

@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.nhaarman.mockitokotlin2.any
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.VesselTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
@@ -42,6 +40,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.actions.E
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.CreateOrUpdateMissionTagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.missions.MissionTagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
@@ -50,10 +49,11 @@ import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.verify
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -67,23 +67,22 @@ import java.time.ZonedDateTime
 import java.util.Optional
 import java.util.UUID
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser(roles = ["SUPER_USER"])
 @WebMvcTest(value = [(Missions::class)])
-class MissionsITests {
+class MissionsITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
     @MockitoBean
     private lateinit var createOrUpdateMissionWithActionsAndAttachedReporting:
-        CreateOrUpdateMissionWithActionsAndAttachedReporting
+            CreateOrUpdateMissionWithActionsAndAttachedReporting
 
     @MockitoBean
     private lateinit var getFullMissions: GetFullMissions
 
     @MockitoBean
     private lateinit var getFullMissionWithFishAndRapportNavActions:
-        GetFullMissionWithFishAndRapportNavActions
+            GetFullMissionWithFishAndRapportNavActions
 
     @MockitoBean
     private lateinit var deleteMission: DeleteMission
@@ -111,8 +110,24 @@ class MissionsITests {
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-            MultiPolygon
+                MultiPolygon
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
+
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(get("/bff/v1/missions"))
+            .andExpect(status().isForbidden)
+    }
+
+    @Test
+    @WithMockUser
+    fun `getAll() should return 403 when the user is authenticated with role USER`() {
+        mockMvc
+            .perform(get("/bff/v1/missions"))
+            .andExpect(status().isForbidden)
+    }
 
     @Test
     fun `Should create a new mission`() {
@@ -166,7 +181,8 @@ class MissionsITests {
             .perform(
                 put("/bff/v1/missions")
                     .content(requestbody)
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             )
             // Then
             .andDo(MockMvcResultHandlers.print())
@@ -788,6 +804,7 @@ class MissionsITests {
             .perform(
                 put("/bff/v1/missions/14")
                     .content(jsonMapper.writeValueAsString(requestBody))
+                    .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON),
             )
             // Then
@@ -826,7 +843,10 @@ class MissionsITests {
         val source = MissionSourceEnum.MONITORENV
         val missionId = 20
         mockMvc
-            .perform(delete("/bff/v1/missions/$missionId"))
+            .perform(
+                delete("/bff/v1/missions/$missionId")
+                    .with(csrf()),
+            )
             // Then
             .andExpect(status().isOk)
         verify(deleteMission).execute(missionId, source)
@@ -880,6 +900,7 @@ class MissionsITests {
         mockMvc
             .perform(
                 put("/bff/v1/missions/tags")
+                    .with(csrf())
                     .content(jsonMapper.writeValueAsString(inputData))
                     .contentType(MediaType.APPLICATION_JSON),
             )

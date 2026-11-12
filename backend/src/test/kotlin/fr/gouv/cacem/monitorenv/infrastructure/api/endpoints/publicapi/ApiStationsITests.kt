@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import com.nhaarman.mockitokotlin2.any
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.station.StationEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.CanDeleteStation
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.CreateOrUpdateStation
@@ -11,6 +9,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.station.GetStationById
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.GetStations
 import fr.gouv.cacem.monitorenv.domain.use_cases.station.dtos.FullStationDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.stations.CreateOrUpdateStationDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v1.ApiStationsController
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
@@ -18,9 +17,7 @@ import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
@@ -33,10 +30,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(ApiStationsController::class)])
-class ApiStationsITests {
+class ApiStationsITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 

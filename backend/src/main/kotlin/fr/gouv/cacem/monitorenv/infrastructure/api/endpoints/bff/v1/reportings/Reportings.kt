@@ -21,6 +21,7 @@ import jakarta.websocket.server.PathParam
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -34,9 +35,10 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.time.ZonedDateTime
 
-// TODO: remove "/v1" from the path for BFF (BFF endpoints should not be versionned)
+// TODO: remove "/v1" from the path for BFF (BFF endpoints should not be versioned)
 @RestController
 @RequestMapping("/bff")
+@PreAuthorize("hasRole('SUPER_USER')")
 @Tag(description = "API des Signalements", name = "BFF.Reportings")
 class Reportings(
     private val createOrUpdateReporting: CreateOrUpdateReporting,
@@ -90,6 +92,7 @@ class Reportings(
     }
 
     @GetMapping("/v1/reportings/{id}")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get reporting by id")
     fun get(
         @PathParam("reporting id")
@@ -98,6 +101,7 @@ class Reportings(
     ): ReportingDataOutput = getReportingById.execute(id).let { ReportingDataOutput.fromReportingDTO(it) }
 
     @PostMapping("/v1/reportings")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get reportings by ids")
     fun getAll(
         @RequestBody
@@ -105,6 +109,7 @@ class Reportings(
     ): List<ReportingDataOutput> = getReportingByIds.execute(ids).map { ReportingDataOutput.fromReportingDTO(it) }
 
     @GetMapping("/v1/reportings")
+    @PreAuthorize("hasRole('USER')")
     @Operation(summary = "Get reportings")
     fun getAll(
         @Parameter(description = "Is Attached to mission")
@@ -142,8 +147,8 @@ class Reportings(
         @Parameter(description = "Search query")
         @RequestParam(name = "searchQuery", required = false)
         searchQuery: String?,
-    ): List<ReportingsDataOutput> =
-        getReportings
+    ): List<ReportingsDataOutput> {
+        return getReportings
             .execute(
                 pageNumber = pageNumber,
                 pageSize = pageSize,
@@ -157,13 +162,14 @@ class Reportings(
                 isAttachedToMission = isAttachedToMission,
                 searchQuery = searchQuery,
             ).map { ReportingsDataOutput.fromReportingDTO(it) }
+    }
 
     @PutMapping(value = ["/v1/reportings/{id}"], consumes = ["application/json"])
+    @PreAuthorize("hasRole('SUPER_USER')")
     @Operation(summary = "update a reporting")
     fun update(
         @PathParam("reporting id")
-        @PathVariable(name = "id")
-        id: Int,
+        @PathVariable id: Int,
         @RequestBody reporting: CreateOrUpdateReportingDataInput,
     ): ReportingDataOutput {
         require(id == reporting.id) { "id in path and body must be the same" }
@@ -176,8 +182,7 @@ class Reportings(
     @GetMapping("/v1/reportings/mmsi/{mmsi}")
     @Operation(summary = "Get all reportings by mmsi")
     fun getSuspicionOfInfraction(
-        @PathVariable(name = "mmsi")
-        mmsi: String,
+        @PathVariable mmsi: String,
     ): List<ReportingDataOutput> =
         getReportingsByMmsi.execute(mmsi).map {
             ReportingDataOutput.fromReportingDTO(it)
