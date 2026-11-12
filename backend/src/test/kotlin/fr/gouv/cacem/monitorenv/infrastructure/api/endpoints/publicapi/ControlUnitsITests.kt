@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi
 
 import com.nhaarman.mockitokotlin2.any
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.administration.AdministrationEntity
 import fr.gouv.cacem.monitorenv.domain.entities.controlUnit.ControlUnitEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.administration.fixtures.AdministrationFixture.Companion.anAdministration
@@ -14,6 +12,7 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnitById
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.GetControlUnits
 import fr.gouv.cacem.monitorenv.domain.use_cases.controlUnit.dtos.FullControlUnitDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.publicapi.inputs.controlUnits.CreateOrUpdateControlUnitDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.publicapi.v2.ControlUnits
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
@@ -21,9 +20,7 @@ import org.mockito.BDDMockito
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
@@ -36,10 +33,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(value = [(ControlUnits::class)])
-class ControlUnitsITests {
+class ControlUnitsITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 

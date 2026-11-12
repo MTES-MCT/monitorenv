@@ -1,20 +1,20 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.GetTags
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.GetTagsByRegulatoryAreas
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.SaveTag
 import fr.gouv.cacem.monitorenv.domain.use_cases.tags.fixtures.TagFixture.Companion.aTag
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.CreateOrUpdateTagInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -25,10 +25,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser
 @WebMvcTest(value = [(Tags::class)])
-class TagsITest {
+class TagsITest : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -43,6 +42,14 @@ class TagsITest {
 
     @MockitoBean
     private lateinit var saveTag: SaveTag
+
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(get("/bff/v1/tags"))
+            .andExpect(status().isForbidden)
+    }
 
     @Test
     fun `Should get all tags`() {
@@ -111,7 +118,7 @@ class TagsITest {
             .perform(
                 post("/bff/v1/tags/regulatoryAreas")
                     .content(jsonMapper.writeValueAsString(ids))
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -157,7 +164,7 @@ class TagsITest {
             .perform(
                 put("/bff/v1/tags")
                     .content(jsonMapper.writeValueAsString(tagInput))
-                    .contentType(MediaType.APPLICATION_JSON),
+                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
             )
             // Then
             .andExpect(status().isOk)

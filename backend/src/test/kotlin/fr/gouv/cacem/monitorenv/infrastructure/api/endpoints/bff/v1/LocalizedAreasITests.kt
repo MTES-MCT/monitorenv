@@ -1,18 +1,17 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.localizedArea.LocalizedAreaEntity
 import fr.gouv.cacem.monitorenv.domain.use_cases.localizedArea.GetAllLocalizedAreas
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -20,10 +19,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser
 @WebMvcTest(value = [(LocalizedAreas::class)])
-class LocalizedAreasITests {
+class LocalizedAreasITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -35,6 +33,14 @@ class LocalizedAreasITests {
     private val multipolygonString =
         "MULTIPOLYGON (((-4.54877816747593 48.305559876971, -4.54997332394943 48.3059760121399, -4.54998501370013 48.3071882334181, -4.54879290083417 48.3067746138142, -4.54877816747593 48.305559876971)))"
     private val polygon = wktReader.read(multipolygonString) as MultiPolygon
+
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(get("/bff/v1/localized_areas"))
+            .andExpect(status().isForbidden)
+    }
 
     @Test
     fun `Should get all localized Areas`() {

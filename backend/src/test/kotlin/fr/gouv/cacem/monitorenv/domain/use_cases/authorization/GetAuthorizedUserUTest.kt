@@ -1,6 +1,7 @@
 package fr.gouv.cacem.monitorenv.domain.use_cases.authorization
 
 import com.nhaarman.mockitokotlin2.given
+import fr.gouv.cacem.monitorenv.config.OIDCProperties
 import fr.gouv.cacem.monitorenv.domain.entities.authorization.UserAuthorization
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.hash
@@ -16,14 +17,16 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 @ExtendWith(OutputCaptureExtension::class)
 class GetAuthorizedUserUTest {
     private val userAuthorizationRepository: IUserAuthorizationRepository = mock()
-    private val getAuthorizedUser = GetAuthorizedUser(userAuthorizationRepository)
+    private val oidcProperties: OIDCProperties = mock()
+    private val getAuthorizedUser = GetAuthorizedUser(userAuthorizationRepository, oidcProperties)
 
     @Test
-    fun `execute should return authorized user`(log: CapturedOutput) {
+    fun `execute should return authorized user when oidc is enabled`(log: CapturedOutput) {
         // Given
         val email = "test@test.com"
         val hashedEmail = hash(email)
         val isSuperUser = true
+        given(oidcProperties.enabled).willReturn(true)
         given(userAuthorizationRepository.findByHashedEmail(hashedEmail)).willReturn(
             UserAuthorization(
                 hashedEmail,
@@ -41,10 +44,24 @@ class GetAuthorizedUserUTest {
     }
 
     @Test
-    fun `execute should throw an error when user does not exist`(log: CapturedOutput) {
+    fun `execute should return authorized user without email when oidc is not enabled`(log: CapturedOutput) {
+        // Given
+        given(oidcProperties.enabled).willReturn(false)
+
+        // When
+        val user = getAuthorizedUser.execute(null)
+
+        // Then
+        assertThat(user.isSuperUser).isEqualTo(true)
+        assertThat(user.email).isNull()
+    }
+
+    @Test
+    fun `execute should throw an error when user does not exist and oidc is enabled`(log: CapturedOutput) {
         // Given
         val email = "test@test.com"
         val hashedEmail = hash(email)
+        given(oidcProperties.enabled).willReturn(true)
         given(userAuthorizationRepository.findByHashedEmail(hashedEmail)).willReturn(null)
 
         // When

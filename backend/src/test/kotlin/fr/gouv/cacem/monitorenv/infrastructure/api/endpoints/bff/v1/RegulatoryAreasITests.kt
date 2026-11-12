@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v2
 
 import com.nhaarman.mockitokotlin2.argThat
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.AreaTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.regulatoryArea.RegulatoryAreaEntity
@@ -25,32 +23,32 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulator
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.regulatoryArea.RegulatoryAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.TagInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.themes.ThemeInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1.RegulatoryAreas
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
-@ExtendWith(SpringExtension::class)
+@WithMockUser
 @WebMvcTest(value = [(RegulatoryAreas::class)])
-class RegulatoryAreasITests {
+class RegulatoryAreasITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -95,6 +93,14 @@ class RegulatoryAreasITests {
 
     private val refReg =
         "Arrêté inter-préfectoral N°2020118-0003 autorisant l'occupation temporaire du domaine public maritime par une zone de mouillages et d'équipements légers au lit-dit \"Cale de Quérlen\" sur le littoral de la commune de Roscanvel"
+
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(get("/bff/v1/regulatory-areas"))
+            .andExpect(status().isForbidden)
+    }
 
     private val regulatoryArea =
         RegulatoryAreaEntity(
@@ -145,57 +151,57 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas"))
+            .perform(get("/bff/v1/regulatory-areas"))
             // Then
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(status().isOk)
             .andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer.[0].group.layerName",
                     Matchers.equalTo("ZMEL_Cale_Querlen"),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].id",
                     Matchers.equalTo(regulatoryArea.id),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].layerName",
                     Matchers.equalTo(regulatoryArea.layerName),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].refReg",
                     Matchers.equalTo(regulatoryArea.refReg),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].tags[0].name",
                     Matchers.equalTo("Mouillage"),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].type",
                     Matchers.equalTo(regulatoryArea.type),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].themes[0].name",
                     Matchers.equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].plan",
                     Matchers.equalTo("PIRC"),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].polyName",
                     Matchers.equalTo("Zone au sud de la cale"),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].resume",
                     Matchers.equalTo("Descriptif de la zone réglementaire"),
                 ),
@@ -209,21 +215,22 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/17"))
+            .perform(get("/bff/v1/regulatory-areas/17"))
             // Then
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(regulatoryArea.id)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.layerName", Matchers.equalTo(regulatoryArea.layerName)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.refReg", Matchers.equalTo(regulatoryArea.refReg)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.tags[0].name", Matchers.equalTo("Mouillage")))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", Matchers.equalTo(regulatoryArea.id)))
+            .andExpect(jsonPath("$.layerName", Matchers.equalTo(regulatoryArea.layerName)))
+            .andExpect(jsonPath("$.refReg", Matchers.equalTo(regulatoryArea.refReg)))
+            .andExpect(jsonPath("$.tags[0].name", Matchers.equalTo("Mouillage")))
             .andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "$.themes[0].name",
                     Matchers.equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
                 ),
-            ).andExpect(MockMvcResultMatchers.jsonPath("$.plan", Matchers.equalTo("PIRC")))
+            ).andExpect(jsonPath("$.plan", Matchers.equalTo("PIRC")))
     }
+
 
     @Test
     fun `Should return not found when regulatory area does not exist`() {
@@ -232,10 +239,10 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/999"))
+            .perform(get("/bff/v1/regulatory-areas/999"))
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist())
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$").doesNotExist())
     }
 
     @Test
@@ -261,16 +268,16 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/layer-names"))
+            .perform(get("/bff/v1/regulatory-areas/layer-names"))
             // Then
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].group.layerName").value("ZMEL_Cale_Querlen"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].total").value(1))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[1].group.layerName").value("AMP_Zone_1"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[1].total").value(1))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[2].group.layerName").value("PIRC_Area_2"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[2].total").value(1))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].group.layerName").value("ZMEL_Cale_Querlen"))
+            .andExpect(jsonPath("$[0].total").value(1))
+            .andExpect(jsonPath("$[1].group.layerName").value("AMP_Zone_1"))
+            .andExpect(jsonPath("$[1].total").value(1))
+            .andExpect(jsonPath("$[2].group.layerName").value("PIRC_Area_2"))
+            .andExpect(jsonPath("$[2].total").value(1))
     }
 
     @Test
@@ -280,10 +287,10 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/layer-names"))
+            .perform(get("/bff/v1/regulatory-areas/layer-names"))
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$").isEmpty)
     }
 
     @Test
@@ -317,10 +324,10 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas/to-complete"))
+            .perform(get("/bff/v1/regulatory-areas/to-complete"))
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.equalTo(regulatoryArea.id)))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].id", Matchers.equalTo(regulatoryArea.id)))
     }
 
     @Test
@@ -341,16 +348,16 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?seaFronts=NAMO"))
+            .perform(get("/bff/v1/regulatory-areas?seaFronts=NAMO"))
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(status().isOk)
             .andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].group.layerName",
                     Matchers.equalTo("ZMEL_Cale_Querlen"),
                 ),
             ).andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].facade",
                     Matchers.equalTo("NAMO"),
                 ),
@@ -375,11 +382,11 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?searchQuery=Querlen"))
+            .perform(get("/bff/v1/regulatory-areas?searchQuery=Querlen"))
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(status().isOk)
             .andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].layerName",
                     Matchers.equalTo("ZMEL_Cale_Querlen"),
                 ),
@@ -398,10 +405,10 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?searchQuery=NonExistent"))
+            .perform(get("/bff/v1/regulatory-areas?searchQuery=NonExistent"))
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("totalCount", Matchers.equalTo(0)))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("totalCount", Matchers.equalTo(0)))
     }
 
     @Test
@@ -422,11 +429,11 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?tags=5"))
+            .perform(get("/bff/v1/regulatory-areas?tags=5"))
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(status().isOk)
             .andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].tags[0].name",
                     Matchers.equalTo("Mouillage"),
                 ),
@@ -451,11 +458,11 @@ class RegulatoryAreasITests {
 
         // When
         mockMvc
-            .perform(MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?themes=101"))
+            .perform(get("/bff/v1/regulatory-areas?themes=101"))
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(status().isOk)
             .andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].themes[0].name",
                     Matchers.equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
                 ),
@@ -478,12 +485,12 @@ class RegulatoryAreasITests {
         // When
         mockMvc
             .perform(
-                MockMvcRequestBuilders.get("/bff/v1/regulatory-areas?lastModificationFrom=2020-01-01T00:00:00.000Z"),
+                get("/bff/v1/regulatory-areas?lastModificationFrom=2020-01-01T00:00:00.000Z"),
             )
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(status().isOk)
             .andExpect(
-                MockMvcResultMatchers.jsonPath(
+                jsonPath(
                     "regulatoryAreasByLayer[0].regulatoryAreas[0].themes[0].name",
                     Matchers.equalTo("Zone de mouillage et d'équipement léger (ZMEL)"),
                 ),
@@ -576,20 +583,21 @@ class RegulatoryAreasITests {
                 MockMvcRequestBuilders
                     .put("/bff/v1/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(requestBody)),
+                    .content(mapper.writeValueAsString(requestBody))
+                    .with(csrf()),
             )
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(9999)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.layerName", Matchers.equalTo("New_Layer")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.facade", Matchers.equalTo("MED")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.refReg", Matchers.equalTo("New regulation reference")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.resume", Matchers.equalTo("New zone description")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.plan", Matchers.equalTo("PIRC")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.polyName", Matchers.equalTo("New Zone")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.type", Matchers.equalTo("ZPM")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.tags[0].name", Matchers.equalTo("Mouillage")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.themes[0].name", Matchers.equalTo("AMP")))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", Matchers.equalTo(9999)))
+            .andExpect(jsonPath("$.layerName", Matchers.equalTo("New_Layer")))
+            .andExpect(jsonPath("$.facade", Matchers.equalTo("MED")))
+            .andExpect(jsonPath("$.refReg", Matchers.equalTo("New regulation reference")))
+            .andExpect(jsonPath("$.resume", Matchers.equalTo("New zone description")))
+            .andExpect(jsonPath("$.plan", Matchers.equalTo("PIRC")))
+            .andExpect(jsonPath("$.polyName", Matchers.equalTo("New Zone")))
+            .andExpect(jsonPath("$.type", Matchers.equalTo("ZPM")))
+            .andExpect(jsonPath("$.tags[0].name", Matchers.equalTo("Mouillage")))
+            .andExpect(jsonPath("$.themes[0].name", Matchers.equalTo("AMP")))
     }
 
     @Test
@@ -696,18 +704,18 @@ class RegulatoryAreasITests {
                 MockMvcRequestBuilders
                     .put("/bff/v1/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(requestBody)),
+                    .content(mapper.writeValueAsString(requestBody)).with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(17)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.layerName", Matchers.equalTo("ZMEL_Cale_Querlen_Updated")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.facade", Matchers.equalTo("NAMO")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.resume", Matchers.equalTo("Description mise à jour")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.polyName", Matchers.equalTo("Zone mise à jour")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.type", Matchers.equalTo("AMP")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.tags.length()", Matchers.equalTo(2)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.themes.length()", Matchers.equalTo(1)))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.id", Matchers.equalTo(17)))
+            .andExpect(jsonPath("$.layerName", Matchers.equalTo("ZMEL_Cale_Querlen_Updated")))
+            .andExpect(jsonPath("$.facade", Matchers.equalTo("NAMO")))
+            .andExpect(jsonPath("$.resume", Matchers.equalTo("Description mise à jour")))
+            .andExpect(jsonPath("$.polyName", Matchers.equalTo("Zone mise à jour")))
+            .andExpect(jsonPath("$.type", Matchers.equalTo("AMP")))
+            .andExpect(jsonPath("$.tags.length()", Matchers.equalTo(2)))
+            .andExpect(jsonPath("$.themes.length()", Matchers.equalTo(1)))
     }
 
     @Test
@@ -757,18 +765,18 @@ class RegulatoryAreasITests {
                 MockMvcRequestBuilders
                     .post("/bff/v1/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(body)),
+                    .content(mapper.writeValueAsString(body)).with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             // Then
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize<Any>(2)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.equalTo(17)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].layerName", Matchers.equalTo("ZMEL_Cale_Querlen")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].facade", Matchers.equalTo("NAMO")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].plan", Matchers.equalTo("PIRC")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[1].id", Matchers.equalTo(18)))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[1].layerName", Matchers.equalTo("AMP_Test_Zone")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[1].facade", Matchers.equalTo("MED")))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[1].plan", Matchers.equalTo("AMP")))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$", Matchers.hasSize<Any>(2)))
+            .andExpect(jsonPath("$[0].id", Matchers.equalTo(17)))
+            .andExpect(jsonPath("$[0].layerName", Matchers.equalTo("ZMEL_Cale_Querlen")))
+            .andExpect(jsonPath("$[0].facade", Matchers.equalTo("NAMO")))
+            .andExpect(jsonPath("$[0].plan", Matchers.equalTo("PIRC")))
+            .andExpect(jsonPath("$[1].id", Matchers.equalTo(18)))
+            .andExpect(jsonPath("$[1].layerName", Matchers.equalTo("AMP_Test_Zone")))
+            .andExpect(jsonPath("$[1].facade", Matchers.equalTo("MED")))
+            .andExpect(jsonPath("$[1].plan", Matchers.equalTo("AMP")))
     }
 }

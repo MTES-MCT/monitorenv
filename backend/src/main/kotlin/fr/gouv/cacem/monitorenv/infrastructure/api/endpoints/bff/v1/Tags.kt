@@ -7,6 +7,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.tags.Crea
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.tags.TagOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -18,6 +19,7 @@ import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/bff/v1/tags")
+@PreAuthorize("hasRole('USER')")
 @Tag(description = "API Tags", name = "BFF.Tags")
 class Tags(
     private val getTags: GetTags,

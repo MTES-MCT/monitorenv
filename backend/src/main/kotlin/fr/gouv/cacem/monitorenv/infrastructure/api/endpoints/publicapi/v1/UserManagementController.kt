@@ -40,8 +40,7 @@ class UserManagementController(
     @DeleteMapping(value = ["/{email}"])
     @Operation(summary = "Delete a given user")
     fun deleteUser(
-        @PathParam("User email")
-        @PathVariable(name = "email")
+        @PathVariable @PathParam("User email")
         email: String,
     ) = deleteUser.execute(email)
 
@@ -74,6 +73,6 @@ class UserManagementController(
         val userAuthorizations = csvImportUser.parse(file = file, isSuperUser = false)
         val importedUsers = importUsers.execute(userAuthorizations)
 
-        return ResponseEntity.ok("Imported ${importedUsers.size} super-users")
+        return ResponseEntity.ok("Imported ${importedUsers.size} users")
     }
 }
