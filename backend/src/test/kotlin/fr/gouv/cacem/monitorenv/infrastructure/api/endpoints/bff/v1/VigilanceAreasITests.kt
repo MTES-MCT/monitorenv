@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.nhaarman.mockitokotlin2.any
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.AxisEnum
 import fr.gouv.cacem.monitorenv.domain.entities.files.ImageEntity
 import fr.gouv.cacem.monitorenv.domain.entities.vigilanceArea.EndingConditionEnum
@@ -25,6 +23,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilance
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaByIdsDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataInput
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vigilanceArea.VigilanceAreaDataPeriodInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.nullValue
 import org.junit.jupiter.api.Test
@@ -32,10 +31,11 @@ import org.locationtech.jts.geom.MultiPolygon
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -47,10 +47,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser
 @WebMvcTest(value = [(VigilanceAreas::class)])
-class VigilanceAreasITests {
+class VigilanceAreasITests : AbstractEndpointTests() {
     val createdAt = "2025-12-31T23:59:59Z"
 
     val updatedAt = "2026-12-31T23:59:59Z"
@@ -202,6 +201,14 @@ class VigilanceAreasITests {
                     ),
                 ),
         )
+
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(get("/bff/v1/vigilance_areas"))
+            .andExpect(status().isForbidden)
+    }
 
     @Test
     fun `Should get all vigilance areas`() {
@@ -387,7 +394,8 @@ class VigilanceAreasITests {
             .perform(
                 put("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput)),
+                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput))
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -490,7 +498,8 @@ class VigilanceAreasITests {
             .perform(
                 put("/bff/v1/vigilance_areas/1")
                     .contentType("application/json")
-                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput)),
+                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput))
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -525,7 +534,7 @@ class VigilanceAreasITests {
         val vigilanceAreaId = 20
         // When
         mockMvc
-            .perform(delete("/bff/v1/vigilance_areas/$vigilanceAreaId"))
+            .perform(delete("/bff/v1/vigilance_areas/$vigilanceAreaId").with(csrf()))
             // Then
             .andExpect(status().isNoContent())
     }
@@ -557,7 +566,8 @@ class VigilanceAreasITests {
             .perform(
                 post("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(jsonMapper.writeValueAsString(body)),
+                    .content(jsonMapper.writeValueAsString(body))
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -578,7 +588,8 @@ class VigilanceAreasITests {
             .perform(
                 post("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(jsonMapper.writeValueAsString(body)),
+                    .content(jsonMapper.writeValueAsString(body))
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)

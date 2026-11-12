@@ -27,14 +27,12 @@ monitorenv:
     dsn: ${SENTRY_DSN}
   oidc:
     enabled: ${MONITORENV_OIDC_ENABLED}
-    bypassEmailDomainsFilter: ${MONITORENV_OIDC_BYPASS_DOMAINS_FILTER:false}
     clientId: ${MONITORENV_OIDC_CLIENT_ID:}
     clientSecret: ${MONITORENV_OIDC_CLIENT_SECRET:}
     redirectUri: ${MONITORENV_OIDC_REDIRECT_URI:}
     loginUrl: ${MONITORENV_OIDC_LOGIN_URL}
     successUrl: ${MONITORENV_OIDC_SUCCESS_URL}
     errorUrl: ${MONITORENV_OIDC_ERROR_URL}
-    authorizedEmailDomains: ${MONITORENV_OIDC_AUTHORIZED_EMAIL_DOMAINS:}
     issuerUri: ${MONITORENV_OIDC_ISSUER_URI:}
     issuerUriExternal: ${MONITORENV_OIDC_ISSUER_URI_EXTERNAL}
     authorizationUri: ${MONITORENV_OIDC_AUTHORIZATION_URI:}
@@ -45,7 +43,6 @@ monitorenv:
   api:
     protected:
       paths: /bff/v1/*
-      super-user-paths: /bff/v1/missions/*,/bff/v1/reportings/*,/bff/v1/semaphores/*,/bff/v1/stations/*
       public-paths: /api/v1/authorization/management/*
       api-key: ${MONITORENV_API_KEY}
   brief:

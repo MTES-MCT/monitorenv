@@ -1,22 +1,22 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.entities.VehicleTypeEnum
 import fr.gouv.cacem.monitorenv.domain.entities.mission.envAction.envActionControl.ActionTargetTypeEnum
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.GetRecentControlsActivity
 import fr.gouv.cacem.monitorenv.domain.use_cases.recentActivity.dtos.RecentControlsActivityListDTO
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.recentActivity.RecentControlsActivityDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.locationtech.jts.geom.Point
 import org.locationtech.jts.io.WKTReader
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -27,10 +27,9 @@ import tools.jackson.databind.json.JsonMapper
 import java.time.ZonedDateTime
 import java.util.UUID
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser
 @WebMvcTest(value = [(RecentActivity::class)])
-class RecentActivityITests {
+class RecentActivityITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -41,6 +40,33 @@ class RecentActivityITests {
     private lateinit var getRecentControlsActivity: GetRecentControlsActivity
 
     private val point = WKTReader().read("POINT (-4.54877816747593 48.305559876971)") as Point
+
+    @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        // Given
+        val request =
+            RecentControlsActivityDataInput(
+                startedAfter = ZonedDateTime.parse("2022-01-01T10:54:00Z"),
+                startedBefore = ZonedDateTime.parse("2050-08-08T00:00:00Z"),
+                controlUnitIds = null,
+                administrationIds = null,
+                themeIds = null,
+                geometry = null,
+            )
+
+        // When
+        mockMvc
+            .perform(
+                post("/bff/v1/recent-activity/controls")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        jsonMapper.writeValueAsString(
+                            request,
+                        ),
+                    ).with(csrf()),
+            ).andExpect(status().isForbidden)
+    }
 
     @Test
     fun `Should get all controls`() {
@@ -96,7 +122,7 @@ class RecentActivityITests {
                         jsonMapper.writeValueAsString(
                             request,
                         ),
-                    ),
+                    ).with(csrf()),
             )
             // Then
             .andExpect(status().isOk)

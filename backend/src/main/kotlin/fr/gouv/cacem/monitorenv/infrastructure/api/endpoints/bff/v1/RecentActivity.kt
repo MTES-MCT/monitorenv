@@ -5,6 +5,7 @@ import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.recentAct
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.outputs.recentActivities.RecentControlsActivityDataOutput
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/bff/v1/recent-activity")
+@PreAuthorize("hasRole('USER')")
 @Tag(description = "API Recent Activity", name = "BFF.RecentActivity")
 class RecentActivity(
     private val getRecentControlActivity: GetRecentControlsActivity,

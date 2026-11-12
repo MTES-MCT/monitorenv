@@ -19,6 +19,7 @@ class DeleteUserUTest {
     fun `execute should delete user from email`(log: CapturedOutput) {
         // Given
         val email = "test@test.com"
+        println(hash("brieuc.le-roch@developpement-durable.gouv.fr"))
 
         // When
         deleteUser.execute(email)

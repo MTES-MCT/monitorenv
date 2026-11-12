@@ -7,14 +7,15 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties(prefix = "monitorenv.oidc")
 class OIDCProperties {
     var enabled: Boolean? = false
-    var bypassEmailDomainsFilter: String? = "false"
     var clientId: String = ""
     var clientSecret: String = ""
     var redirectUri: String = ""
     var loginUrl: String = ""
     var successUrl: String = ""
     var errorUrl: String = ""
-    var authorizedEmailDomains: List<String> = listOf()
+
+    /** Defaults to the origin of `successUrl`. */
+    var allowedOrigins: List<String> = listOf()
     var issuerUri: String = ""
 
     /**

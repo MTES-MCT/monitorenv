@@ -1,8 +1,6 @@
 package fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.bff.v1
 
 import com.nhaarman.mockitokotlin2.any
-import fr.gouv.cacem.monitorenv.config.MapperConfiguration
-import fr.gouv.cacem.monitorenv.config.SentryConfig
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageErrorCode
 import fr.gouv.cacem.monitorenv.domain.exceptions.BackendUsageException
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.GetVesselByShipId
@@ -13,15 +11,17 @@ import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.VesselFixture.
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.VesselFixture.Companion.aVesselAdditionalInformation
 import fr.gouv.cacem.monitorenv.domain.use_cases.vessels.fixtures.VesselFixture.Companion.aVesselFile
 import fr.gouv.cacem.monitorenv.infrastructure.api.adapters.bff.inputs.vessel.VesselFileDataInput
+import fr.gouv.cacem.monitorenv.infrastructure.api.endpoints.AbstractEndpointTests
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithAnonymousUser
+import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -30,12 +30,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 
-@Import(SentryConfig::class, MapperConfiguration::class)
-@AutoConfigureMockMvc(addFilters = false)
+@WithMockUser(roles = ["SUPER_USER"])
 @WebMvcTest(value = [(Vessels::class)])
-class VesselsITest {
+class VesselsITest : AbstractEndpointTests() {
     @Autowired
-    private lateinit var api: MockMvc
+    private lateinit var mockMvc: MockMvc
 
     @MockitoBean
     private lateinit var getVesselByShipId: GetVesselByShipId
@@ -53,13 +52,29 @@ class VesselsITest {
     private lateinit var jsonMapper: JsonMapper
 
     @Test
+    @WithAnonymousUser
+    fun `getAll() should return 403 when the user is authenticated without roles`() {
+        mockMvc
+            .perform(get("/bff/v1/vessels/search").param("searched", "VESSEL"))
+            .andExpect(status().isForbidden)
+    }
+
+    @Test
+    @WithMockUser
+    fun `getAll() should return 403 when the user is authenticated with role USER`() {
+        mockMvc
+            .perform(get("/bff/v1/vessels/search").param("searched", "VESSEL"))
+            .andExpect(status().isForbidden)
+    }
+
+    @Test
     fun `Should search for a vessel`() {
         // Given
         val vessel = aVessel()
         given(searchVessels.execute(any())).willReturn(listOf(vessel))
 
         // When
-        api
+        mockMvc
             .perform(get("/bff/v1/vessels/search").param("searched", "VESSEL"))
             // Then
             .andExpect(status().isOk)
@@ -91,7 +106,7 @@ class VesselsITest {
         ).willReturn(vessel)
 
         // When
-        api
+        mockMvc
             .perform(get("/bff/v1/vessels/$id").param("batchId", "1").param("rowNumber", "1"))
             // Then
             .andExpect(status().isOk)
@@ -135,7 +150,7 @@ class VesselsITest {
         ).willThrow(BackendUsageException(BackendUsageErrorCode.ENTITY_NOT_FOUND))
 
         // When
-        api
+        mockMvc
             .perform(get("/bff/v1/vessels/$id"))
             // Then
             .andExpect(status().isNotFound)
@@ -148,11 +163,12 @@ class VesselsITest {
         given(saveVesselAdditionalInformation.execute(any(), any())).willReturn(vesselAdditionalInformation)
 
         // When
-        api
+        mockMvc
             .perform(
                 put("/bff/v1/vessels/additional_information")
                     .content(jsonMapper.writeValueAsString(vesselAdditionalInformation))
                     .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
                     .param("shipId", "3")
                     .param("batchId", "1")
                     .param("rowNumber", "2"),
@@ -171,7 +187,7 @@ class VesselsITest {
         ).willReturn(vesselFiles)
 
         // When
-        api
+        mockMvc
             .perform(
                 put("/bff/v1/vessels/files")
                     .content(
@@ -187,6 +203,7 @@ class VesselsITest {
                             ),
                         ),
                     ).contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf())
                     .param("shipId", "123")
                     .param("batchId", "1")
                     .param("rowNumber", "2"),
