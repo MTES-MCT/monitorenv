@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class ApiHealthcheckITests : AbstractEndpointTests() {
     @Autowired
     private lateinit var mockMvc: MockMvc
-    
+
     @MockitoBean
     private val getHealthcheck: GetHealthcheck = mock()
 

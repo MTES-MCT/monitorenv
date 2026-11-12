@@ -40,8 +40,7 @@ class InfractionsITest : AbstractEndpointTests() {
             .perform(
                 get("/bff/v1/infractions/actions/$mmsi")
                     .contentType(MediaType.APPLICATION_JSON),
-            )
-            .andExpect(status().isForbidden)
+            ).andExpect(status().isForbidden)
     }
 
     @Test

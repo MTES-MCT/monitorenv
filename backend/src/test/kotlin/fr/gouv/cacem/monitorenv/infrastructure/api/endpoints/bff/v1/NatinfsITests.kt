@@ -93,7 +93,8 @@ class NatinfsITests : AbstractEndpointTests() {
             .perform(
                 post("/bff/v1/natinfs/themes")
                     .content(jsonMapper.writeValueAsString(themeIds))
-                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)

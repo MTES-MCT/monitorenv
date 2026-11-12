@@ -231,7 +231,6 @@ class RegulatoryAreasITests : AbstractEndpointTests() {
             ).andExpect(jsonPath("$.plan", Matchers.equalTo("PIRC")))
     }
 
-
     @Test
     fun `Should return not found when regulatory area does not exist`() {
         // Given
@@ -704,7 +703,8 @@ class RegulatoryAreasITests : AbstractEndpointTests() {
                 MockMvcRequestBuilders
                     .put("/bff/v1/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(requestBody)).with(csrf()),
+                    .content(mapper.writeValueAsString(requestBody))
+                    .with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(status().isOk)
@@ -765,7 +765,8 @@ class RegulatoryAreasITests : AbstractEndpointTests() {
                 MockMvcRequestBuilders
                     .post("/bff/v1/regulatory-areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(body)).with(csrf()),
+                    .content(mapper.writeValueAsString(body))
+                    .with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             // Then
             .andExpect(status().isOk)

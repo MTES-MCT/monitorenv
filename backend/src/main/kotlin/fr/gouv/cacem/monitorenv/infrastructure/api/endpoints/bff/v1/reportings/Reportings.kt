@@ -147,8 +147,8 @@ class Reportings(
         @Parameter(description = "Search query")
         @RequestParam(name = "searchQuery", required = false)
         searchQuery: String?,
-    ): List<ReportingsDataOutput> {
-        return getReportings
+    ): List<ReportingsDataOutput> =
+        getReportings
             .execute(
                 pageNumber = pageNumber,
                 pageSize = pageSize,
@@ -162,7 +162,6 @@ class Reportings(
                 isAttachedToMission = isAttachedToMission,
                 searchQuery = searchQuery,
             ).map { ReportingsDataOutput.fromReportingDTO(it) }
-    }
 
     @PutMapping(value = ["/v1/reportings/{id}"], consumes = ["application/json"])
     @PreAuthorize("hasRole('SUPER_USER')")

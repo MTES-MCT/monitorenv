@@ -24,7 +24,7 @@ class ApiPublicFilterConfig(
         if (registrationBean.urlPatterns.isEmpty()) {
             logger.warn(
                 "WARNING: Public paths are not protected." +
-                        "See `monitorenv.api.protected.public-paths` application property.",
+                    "See `monitorenv.api.protected.public-paths` application property.",
             )
         }
 

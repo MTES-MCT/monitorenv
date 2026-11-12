@@ -83,7 +83,7 @@ class VigilanceAreasITests : AbstractEndpointTests() {
             .read(
                 "MULTIPOLYGON (((-4.54877817 48.30555988, -4.54997332 48.30597601, -4.54998501 48.30718823, -4.5487929 48.30677461, -4.54877817 48.30555988)))",
             ) as
-                MultiPolygon
+            MultiPolygon
 
     private val vigilanceArea1 =
         VigilanceAreaEntity(
@@ -394,7 +394,8 @@ class VigilanceAreasITests : AbstractEndpointTests() {
             .perform(
                 put("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput)).with(csrf()),
+                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput))
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -497,7 +498,8 @@ class VigilanceAreasITests : AbstractEndpointTests() {
             .perform(
                 put("/bff/v1/vigilance_areas/1")
                     .contentType("application/json")
-                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput)).with(csrf()),
+                    .content(jsonMapper.writeValueAsString(vigilanceAreaDataInput))
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -564,7 +566,8 @@ class VigilanceAreasITests : AbstractEndpointTests() {
             .perform(
                 post("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(jsonMapper.writeValueAsString(body)).with(csrf()),
+                    .content(jsonMapper.writeValueAsString(body))
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -585,7 +588,8 @@ class VigilanceAreasITests : AbstractEndpointTests() {
             .perform(
                 post("/bff/v1/vigilance_areas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(jsonMapper.writeValueAsString(body)).with(csrf()),
+                    .content(jsonMapper.writeValueAsString(body))
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
