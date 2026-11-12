@@ -118,7 +118,8 @@ class TagsITest : AbstractEndpointTests() {
             .perform(
                 post("/bff/v1/tags/regulatoryAreas")
                     .content(jsonMapper.writeValueAsString(ids))
-                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)
@@ -164,7 +165,8 @@ class TagsITest : AbstractEndpointTests() {
             .perform(
                 put("/bff/v1/tags")
                     .content(jsonMapper.writeValueAsString(tagInput))
-                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)

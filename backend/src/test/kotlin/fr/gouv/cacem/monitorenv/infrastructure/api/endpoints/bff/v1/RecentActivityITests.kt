@@ -65,8 +65,7 @@ class RecentActivityITests : AbstractEndpointTests() {
                             request,
                         ),
                     ).with(csrf()),
-            )
-            .andExpect(status().isForbidden)
+            ).andExpect(status().isForbidden)
     }
 
     @Test

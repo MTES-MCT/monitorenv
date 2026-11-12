@@ -110,7 +110,6 @@ class ReportingsITests : AbstractEndpointTests() {
     @Test
     @WithMockUser
     fun `create() should return 403 when the user is authenticated with role USER`() {
-
         val request =
             CreateOrUpdateReportingDataInput(
                 reportingSources =
@@ -126,10 +125,11 @@ class ReportingsITests : AbstractEndpointTests() {
                     ),
                 targetType = TargetTypeEnum.VEHICLE,
                 vehicleType = VehicleTypeEnum.VESSEL,
-                geom = WKTReader()
-                    .read(
-                        "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
-                    ),
+                geom =
+                    WKTReader()
+                        .read(
+                            "MULTIPOLYGON (((-61.0 14.0, -61.0 15.0, -60.0 15.0, -60.0 14.0, -61.0 14.0)))",
+                        ),
                 description = "description",
                 reportType = ReportingTypeEnum.INFRACTION_SUSPICION,
                 actionTaken = "actions effectuées blabla",
@@ -170,8 +170,7 @@ class ReportingsITests : AbstractEndpointTests() {
                             request,
                         ),
                     ).with(csrf()),
-            )
-            .andExpect(status().isForbidden)
+            ).andExpect(status().isForbidden)
     }
 
     @WithMockUser(roles = ["SUPER_USER"])
@@ -240,7 +239,7 @@ class ReportingsITests : AbstractEndpointTests() {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                                Point,
+                                            Point,
                                 ),
                             controlUnit = null,
                         ),
@@ -396,7 +395,7 @@ class ReportingsITests : AbstractEndpointTests() {
                                             .read(
                                                 "POINT (-61.0 14.0)",
                                             ) as
-                                                Point,
+                                            Point,
                                 ),
                             controlUnit = null,
                         ),
@@ -663,7 +662,8 @@ class ReportingsITests : AbstractEndpointTests() {
             .perform(
                 put("/bff/v1/reportings/archive")
                     .content(jsonMapper.writeValueAsString(listOf(1, 2, 3)))
-                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isNoContent())
@@ -679,7 +679,8 @@ class ReportingsITests : AbstractEndpointTests() {
             .perform(
                 put("/bff/v1/reportings/delete")
                     .content(jsonMapper.writeValueAsString(listOf(1, 2, 3)))
-                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isNoContent())
@@ -703,7 +704,8 @@ class ReportingsITests : AbstractEndpointTests() {
             .perform(
                 post("/bff/v1/reportings")
                     .content(jsonMapper.writeValueAsString(ids))
-                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             )
             // Then
             .andExpect(status().isOk)

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 @UseCase
 class GetAuthorizedUser(
     private val userAuthorizationRepository: IUserAuthorizationRepository,
-    private val oidcProperties: OIDCProperties
+    private val oidcProperties: OIDCProperties,
 ) {
     private val logger = LoggerFactory.getLogger(GetAuthorizedUser::class.java)
 

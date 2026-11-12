@@ -127,7 +127,8 @@ class AdministrationsITests : AbstractEndpointTests() {
             .perform(
                 post("/api/v1/administrations")
                     .content(requestBody)
-                    .contentType(MediaType.APPLICATION_JSON).with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated)
     }
@@ -226,7 +227,8 @@ class AdministrationsITests : AbstractEndpointTests() {
             .perform(
                 put("/api/v1/administrations/1")
                     .content(requestBody)
-                    .contentType(MediaType.APPLICATION_JSON).with(csrf()),
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .with(csrf()),
             ).andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk)
     }

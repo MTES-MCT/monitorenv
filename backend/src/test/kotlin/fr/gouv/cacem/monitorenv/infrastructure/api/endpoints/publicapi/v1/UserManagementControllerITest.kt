@@ -55,16 +55,17 @@ class UserManagementControllerITests : AbstractEndpointTests() {
 
     @Test
     fun `Should reject a request without api key`() {
-        mockMvc.perform(delete("$baseUrl/john.doe@gouv.fr"))
+        mockMvc
+            .perform(delete("$baseUrl/john.doe@gouv.fr"))
             .andExpect(status().isUnauthorized)
     }
 
     @Test
     fun `Should reject a request with the wrong key api key`() {
-        mockMvc.perform(
-            delete("$baseUrl/john.doe@gouv.fr").header("x-api-key", "wrong-key")
-        )
-            .andExpect(status().isUnauthorized)
+        mockMvc
+            .perform(
+                delete("$baseUrl/john.doe@gouv.fr").header("x-api-key", "wrong-key"),
+            ).andExpect(status().isUnauthorized)
     }
 
     @Test
@@ -91,7 +92,7 @@ class UserManagementControllerITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                delete("$baseUrl/john.doe@gouv.fr").header("x-api-key", "test-key")
+                delete("$baseUrl/john.doe@gouv.fr").header("x-api-key", "test-key"),
             )
             // Then
             .andExpect(status().isOk)
@@ -110,7 +111,7 @@ class UserManagementControllerITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                multipart("$baseUrl/import/super-users").file(file).header("x-api-key", "test-key")
+                multipart("$baseUrl/import/super-users").file(file).header("x-api-key", "test-key"),
             )
             // Then
             .andExpect(status().isOk)
@@ -125,7 +126,7 @@ class UserManagementControllerITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                multipart("$baseUrl/import/super-users").file(file).header("x-api-key", "test-key")
+                multipart("$baseUrl/import/super-users").file(file).header("x-api-key", "test-key"),
             )
             // Then
             .andExpect(status().isBadRequest)
@@ -142,7 +143,7 @@ class UserManagementControllerITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                multipart("$baseUrl/import/super-users").file(file).header("x-api-key", "test-key")
+                multipart("$baseUrl/import/super-users").file(file).header("x-api-key", "test-key"),
             )
             // Then
             .andExpect(status().isBadRequest)
@@ -156,7 +157,7 @@ class UserManagementControllerITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                multipart("$baseUrl/import/super-users").header("x-api-key", "test-key")
+                multipart("$baseUrl/import/super-users").header("x-api-key", "test-key"),
             )
             // Then
             .andExpect(status().isBadRequest)
@@ -173,7 +174,7 @@ class UserManagementControllerITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                multipart("$baseUrl/import/users").file(file).header("x-api-key", "test-key")
+                multipart("$baseUrl/import/users").file(file).header("x-api-key", "test-key"),
             )
             // Then
             .andExpect(status().isOk)
@@ -188,7 +189,7 @@ class UserManagementControllerITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                multipart("$baseUrl/import/users").file(file).header("x-api-key", "test-key")
+                multipart("$baseUrl/import/users").file(file).header("x-api-key", "test-key"),
             )
             // Then
             .andExpect(status().isBadRequest)
@@ -203,7 +204,7 @@ class UserManagementControllerITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                multipart("$baseUrl/import/users").file(file).header("x-api-key", "test-key")
+                multipart("$baseUrl/import/users").file(file).header("x-api-key", "test-key"),
             )
             // Then
             .andExpect(status().isBadRequest)

@@ -56,7 +56,7 @@ import java.net.URISyntaxException
 class SecurityConfig(
     val oidcProperties: OIDCProperties,
     val clientRegistrationRepository: ClientRegistrationRepository?,
-    private val getAuthorizedUser: GetAuthorizedUser
+    private val getAuthorizedUser: GetAuthorizedUser,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(SecurityConfig::class.java)
 
@@ -167,21 +167,22 @@ class SecurityConfig(
                         )
                     }
 
-                val authorities = if (isSuperUser) {
-                    listOf(SimpleGrantedAuthority("ROLE_SUPER_USER"), SimpleGrantedAuthority("ROLE_USER"))
-                } else {
-                    listOf(SimpleGrantedAuthority("ROLE_USER"))
-                }
+                val authorities =
+                    if (isSuperUser) {
+                        listOf(SimpleGrantedAuthority("ROLE_SUPER_USER"), SimpleGrantedAuthority("ROLE_USER"))
+                    } else {
+                        listOf(SimpleGrantedAuthority("ROLE_USER"))
+                    }
 
                 logger.info(
                     "User $emailClaim authenticated with authorities: {}",
-                    authorities
+                    authorities,
                 )
 
                 return DefaultOidcUser(
                     authorities,
                     oidcUser.idToken,
-                    oidcUser.userInfo
+                    oidcUser.userInfo,
                 )
             }
         }
@@ -354,7 +355,6 @@ class SecurityConfig(
         // as Keycloak pages are served with `Referrer-Policy: no-referrer`
         source.registerCorsConfiguration("/realms/**", externalApiConfiguration)
         source.registerCorsConfiguration("/**", sessionConfiguration)
-
 
         return source
     }

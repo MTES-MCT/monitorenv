@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import tools.jackson.databind.json.JsonMapper
 
-
 @WebMvcTest(value = [(Amps::class)])
 @WithMockUser
 class AmpsITests : AbstractEndpointTests() {

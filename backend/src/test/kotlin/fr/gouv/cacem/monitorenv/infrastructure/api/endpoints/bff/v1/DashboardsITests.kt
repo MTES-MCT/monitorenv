@@ -77,8 +77,7 @@ class DashboardsITests : AbstractEndpointTests() {
         mockMvc
             .perform(
                 get("/bff/v1/dashboards").contentType(MediaType.APPLICATION_JSON),
-            )
-            .andExpect(status().isForbidden)
+            ).andExpect(status().isForbidden)
     }
 
     @Test
@@ -87,8 +86,7 @@ class DashboardsITests : AbstractEndpointTests() {
         mockMvc
             .perform(
                 get("/bff/v1/dashboards").contentType(MediaType.APPLICATION_JSON),
-            )
-            .andExpect(status().isForbidden)
+            ).andExpect(status().isForbidden)
     }
 
     @Test
@@ -372,7 +370,8 @@ class DashboardsITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                delete("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON)
+                delete("/bff/v1/dashboards/$id")
+                    .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf()),
             )
             // Then
@@ -390,12 +389,12 @@ class DashboardsITests : AbstractEndpointTests() {
         // When
         mockMvc
             .perform(
-                delete("/bff/v1/dashboards/$id").contentType(MediaType.APPLICATION_JSON)
+                delete("/bff/v1/dashboards/$id")
+                    .contentType(MediaType.APPLICATION_JSON)
                     .with(csrf()),
             )
             // Then
             .andExpect(status().isForbidden)
-
     }
 
     @Test
