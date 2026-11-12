@@ -1,5 +1,5 @@
+import { BaseRow } from '@components/Table/TableWithSelectableRows/BaseRow'
 import {
-  ExpandableRowCell,
   ExpandedRow,
   ExpandedRowCell,
   ExpandedRowInlineItem,
@@ -8,17 +8,16 @@ import {
   ExpandedRowValue,
   ExpandedRowValueDetail
 } from '@components/Table/TableWithSelectableRows/style'
-import { createPinnedCellStyle, UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
+import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
 import { editMissionInLocalStore } from '@features/Mission/useCases/editMissionInLocalStore'
 import { TagsDetailsCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/TagsDetailsCell'
 import { ThemesDetailsCell } from '@features/VigilanceArea/components/VigilanceAreasList/Cells/ThemesDetailsCell'
 import { useAppDispatch } from '@hooks/useAppDispatch'
 import { useAppSelector } from '@hooks/useAppSelector'
-import { Accent, Button, customDayjs, TableWithSelectableRows } from '@mtes-mct/monitor-ui'
-import { flexRender, type Row as RowType } from '@tanstack/react-table'
+import { Accent, Button, customDayjs } from '@mtes-mct/monitor-ui'
+import { type Row as RowType } from '@tanstack/react-table'
 import { formatCoordinatesAsText } from '@utils/coordinates'
 import { getDateAsLocalizedStringVeryCompact } from '@utils/getDateAsLocalizedString'
-import { Fragment } from 'react/jsx-runtime'
 import styled from 'styled-components'
 
 import { CellTarget } from './CellTarget'
@@ -43,29 +42,14 @@ export function Row({
   const { coordinatesFormat } = useAppSelector(state => state.map)
 
   return (
-    <Fragment key={row.id}>
-      <StyledTr
-        ref={(node: HTMLTableRowElement | null) => {
-          rowVirtualizer.measureElement(node)
-        }}
-        data-cy="reporting-row"
-        data-index={virtualRow.index}
-      >
-        {row?.getVisibleCells().map((cell, index, rowCells) => {
-          const cellStyle = createPinnedCellStyle({
-            context: cell,
-            index,
-            rowLength: rowCells.length,
-            stickyLeftBorderIndex: 0
-          })
-
-          return (
-            <ExpandableRowCell key={cell.id} onClick={() => row.toggleExpanded()} style={cellStyle}>
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </ExpandableRowCell>
-          )
-        })}
-      </StyledTr>
+    <BaseRow
+      key={row.id}
+      data-cy="reporting-row"
+      row={row}
+      rowVirtualizer={rowVirtualizer}
+      stickyLeftBorderIndex={0}
+      virtualRow={virtualRow}
+    >
       {row.getIsExpanded() && (
         <ExpandedRow data-cy="reporting-row-expanded">
           <ExpandedRowCell colSpan={2}>
@@ -173,18 +157,9 @@ export function Row({
           </ExpandedRowCell>
         </ExpandedRow>
       )}
-    </Fragment>
+    </BaseRow>
   )
 }
-
-const StyledTr = styled(TableWithSelectableRows.BodyTr)`
-  td:nth-of-type(1),
-  td:nth-of-type(2),
-  td:nth-of-type(3),
-  td:nth-of-type(5) {
-    text-overflow: unset;
-  }
-`
 
 const CustomExpandedRowLabel = styled(ExpandedRowLabel)`
   flex: 0;

@@ -46,6 +46,16 @@ data class ThemeModel(
         )
 
     companion object {
+        fun toThemeEntities(themes: List<ThemeModel>): List<ThemeEntity> {
+            val parents = themes.filter { it.parent === null }
+
+            return parents.map { parent ->
+                val subThemes = themes.filter { it.parent?.id == parent.id }
+                parent.subThemes = subThemes
+                return@map parent.toThemeEntity()
+            }
+        }
+
         fun fromThemeEntity(
             themeEntity: ThemeEntity,
             parent: ThemeModel? = null,

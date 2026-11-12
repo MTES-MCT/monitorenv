@@ -1,21 +1,19 @@
+import { BaseRow } from '@components/Table/TableWithSelectableRows/BaseRow'
 import {
-  ExpandableRowCell,
   ExpandedRow,
   ExpandedRowCell,
   ExpandedRowLabel,
   ExpandedRowList,
   ExpandedRowValue
 } from '@components/Table/TableWithSelectableRows/style'
-import { createPinnedCellStyle, UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
+import { UNKNOWN } from '@components/Table/TableWithSelectableRows/utils'
 import { ActionTagsCell } from '@features/Mission/components/MissionsList/Cells/ActionTagsCell'
 import { ControlsCell } from '@features/Mission/components/MissionsList/Cells/ControlsCell'
 import { ThemesCell } from '@features/Mission/components/MissionsList/Cells/ThemesCell'
 import { UnitCell } from '@features/Mission/components/MissionsList/Cells/UnitCell'
 import { getAllThemes } from '@features/Mission/utils'
-import { TableWithSelectableRows, Tag, THEME } from '@mtes-mct/monitor-ui'
-import { flexRender, type Row as RowType } from '@tanstack/react-table'
-import { Fragment } from 'react'
-import styled from 'styled-components'
+import { Tag, THEME } from '@mtes-mct/monitor-ui'
+import { type Row as RowType } from '@tanstack/react-table'
 
 import type { Mission } from '../../../../domain/entities/missions'
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
@@ -32,29 +30,14 @@ export function Row({
   const mission = row.original
 
   return (
-    <Fragment key={row.id}>
-      <StyledTr
-        ref={(node: HTMLTableRowElement | null) => {
-          rowVirtualizer.measureElement(node)
-        }}
-        data-cy="mission-row"
-        data-index={virtualRow.index}
-      >
-        {row?.getVisibleCells().map((cell, index, rowCells) => {
-          const cellStyle = createPinnedCellStyle({
-            context: cell,
-            index,
-            rowLength: rowCells.length,
-            stickyLeftBorderIndex: 3
-          })
-
-          return (
-            <ExpandableRowCell key={cell.id} onClick={() => row.toggleExpanded()} style={cellStyle}>
-              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-            </ExpandableRowCell>
-          )
-        })}
-      </StyledTr>
+    <BaseRow
+      key={row.id}
+      data-cy="mission-row"
+      row={row}
+      rowVirtualizer={rowVirtualizer}
+      stickyLeftBorderIndex={3}
+      virtualRow={virtualRow}
+    >
       {row.getIsExpanded() && (
         <ExpandedRow data-cy="mission-row-expanded">
           <ExpandedRowCell colSpan={5}>
@@ -111,15 +94,6 @@ export function Row({
           </ExpandedRowCell>
         </ExpandedRow>
       )}
-    </Fragment>
+    </BaseRow>
   )
 }
-
-const StyledTr = styled(TableWithSelectableRows.BodyTr)`
-  td:nth-of-type(1),
-  td:nth-of-type(2),
-  td:nth-of-type(3),
-  td:nth-of-type(5) {
-    text-overflow: unset;
-  }
-`
