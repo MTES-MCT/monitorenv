@@ -199,10 +199,10 @@ def regulatory_areas_for_geoplateforme_csv() -> pd.DataFrame:
                 pd.to_datetime("2025-01-01 00:00:00"),
                 pd.to_datetime("2025-01-01 00:00:00"),
             ],
-            "url": ["url1", "url2"],
+            "url": ["url1", "url3"],
             "layer_name": ["layer_name1", "layer_name2"],
             "facade": ["MED", "NAMO"],
-            "ref_reg": ["ref_reg1", "ref_reg2"],
+            "ref_reg": ["ref_reg1", "ref_reg3"],
             "edition": [
                 pd.to_datetime("2025-06-06 00:00:00"),
                 pd.to_datetime("2025-07-21 00:00:00"),
@@ -211,35 +211,39 @@ def regulatory_areas_for_geoplateforme_csv() -> pd.DataFrame:
             "observation": ["obs1", "obs2"],
             "date": [
                 pd.to_datetime("2025-01-01 00:00:00"),
-                pd.to_datetime("2025-01-12 00:00:00"),
+                pd.to_datetime("2025-01-13 00:00:00"),
             ],
             "date_fin": [
                 pd.to_datetime("2025-12-31 00:00:00"),
-                pd.to_datetime("2026-04-12 00:00:00"),
+                pd.to_datetime("2026-04-13 00:00:00"),
             ],
-            "type": ["type1", "type2"],
+            "type": ["type1", "type3"],
             "wkt": [
                 "MULTIPOLYGON(((0 0,10 0,10 10,0 10,0 0)))",
                 "MULTIPOLYGON(((120 -20,135 -20,135 -10,120 -10,120 -20)))",
             ],
-            "resume": ["resume1", "resume2"],
+            "resume": ["resume1", "resume3"],
             "poly_name": ["poly_name1 qui est différent du CACEM", "poly_name2 qui est différent du CACEM"],
             "plan": ["plan1", "plan2"],
+            "geometry": [
+                make_square_multipolygon(0, 0, 10, 10),
+                make_square_multipolygon(120, -20, 15, 10),
+            ],
             "authorization_periods": [
                 "période d'autorisation1",
-                "période d'autorisation2",
+                "période d'autorisation3",
             ],
             "prohibition_periods": [
                 "période de prohibition1",
-                "période de prohibition2",
+                "période de prohibition3",
             ],
             "additional_ref_reg": [
                 [{"id": "55a403ba-3077-40aa-8241-967be5314b8c", "refReg": "Arrêté interpréfectoral du 22 décembre..."}],
                 None,
             ],
-            "themes": [{'Pêche à pied': [], 'AMP sans réglementation particulière': []}, {}],
-            "tags": [{'tag1': ['sub-tag1']}, {}],
             "location": ["location1", "location2"],
+            "themes": [{'Pêche à pied': [], 'AMP sans réglementation particulière': []}, {'Pêche à pied': [], 'Arrêté à visa environnemental': []}],
+            "tags": [{'tag1': ['sub-tag1']}, {'tag2': []}],
         }
     )
 
