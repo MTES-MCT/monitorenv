@@ -55,7 +55,29 @@ tag_final AS (
         jsonb_object_agg(parent_name, children) AS tags_json
     FROM tag_grouped
     GROUP BY ra_id
+),
+
+-- Geometries overshooting the valid longitude / latitude range by a fraction of a
+-- degree are rejected by the Géoplateforme, which refuses the whole delivery.
+valid_geometries AS (
+    SELECT
+        id,
+        CASE
+            WHEN ST_XMin(geom) < -180 OR ST_XMax(geom) > 180
+                OR ST_YMin(geom) < -90 OR ST_YMax(geom) > 90
+            -- Clipping rewrites the vertex order, so it is only applied to the
+            -- geometries that need it.
+            THEN ST_Multi(
+                ST_Intersection(
+                    ST_CurveToLine(geom),
+                    ST_MakeEnvelope(-180, -90, 180, 90, 4326)
+                )
+            )
+            ELSE ST_CurveToLine(geom)
+        END AS geometry
+    FROM public.regulatory_areas
 )
+
 SELECT
     ra.id,
     ra.creation::timestamp,
